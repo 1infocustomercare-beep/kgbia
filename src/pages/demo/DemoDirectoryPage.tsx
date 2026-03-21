@@ -326,7 +326,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
                 </span>
               )}
             </div>
-            <p className="text-[0.58rem] sm:text-[0.65rem] text-foreground/30 truncate">{subtitle}</p>
+            <p className="text-[0.58rem] sm:text-[0.65rem] text-foreground/60 truncate">{subtitle}</p>
           </div>
 
           {/* Actions */}
