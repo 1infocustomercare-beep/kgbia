@@ -450,7 +450,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Owner / Partner login/signup ───
   const isPartnerMode = mode === "partner";
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark auth-contrast">
       <DarkPremiumBg />
       <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
         <button onClick={() => { setMode("choose"); setError(""); setIsSignUp(false); }}
