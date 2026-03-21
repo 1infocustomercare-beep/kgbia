@@ -188,7 +188,7 @@ export default function EmpireTeamStory() {
               Empire AI
             </span>
           </h2>
-          <p className="text-muted-foreground/70 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+          <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base leading-relaxed" style={{ color: "hsl(0 0% 100% / 0.78)" }}>
             Non un semplice software — un organismo digitale in continua evoluzione. 
             Ogni milestone è una mutazione che ha reso la nostra piattaforma più intelligente, più potente, più adattiva.
           </p>
