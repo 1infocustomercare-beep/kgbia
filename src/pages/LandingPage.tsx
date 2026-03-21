@@ -3555,10 +3555,17 @@ const LandingPage = () => {
                 ))}
                 {/* Center title */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.span className="text-[0.8rem] sm:text-xl lg:text-2xl font-heading font-black tracking-[4px] sm:tracking-[6px] uppercase text-foreground/70"
-                    style={{ textShadow: "0 0 30px hsl(210 80% 55% / 0.2)" }}
-                    animate={{ opacity: [0.6, 1, 0.6] }}
-                    transition={{ duration: 4, repeat: Infinity }}>
+                  <motion.span className="text-[0.8rem] sm:text-xl lg:text-2xl font-heading font-black tracking-[4px] sm:tracking-[6px] uppercase bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage: "linear-gradient(135deg, hsl(210 100% 62%), hsl(250 90% 68%), hsl(172 80% 48%), hsl(38 80% 55%))",
+                      backgroundSize: "200% 200%",
+                      filter: "drop-shadow(0 0 20px hsl(210 80% 55% / 0.35)) drop-shadow(0 0 40px hsl(250 70% 60% / 0.2))",
+                    }}
+                    animate={{
+                      opacity: [0.7, 1, 0.7],
+                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
                     EMPIRE AI GROUP
                   </motion.span>
                 </div>
