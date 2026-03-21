@@ -6855,7 +6855,7 @@ const LandingPage = () => {
                 <AnimatePresence>
                   {openFaq === i &&
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}>
-                      <p className="px-5 pb-5 text-xs sm:text-sm text-foreground/40 leading-[1.7]">{faq.a}</p>
+                      <p className="px-5 pb-5 text-xs sm:text-sm text-foreground/65 leading-[1.7]">{faq.a}</p>
                     </motion.div>
                 }
                 </AnimatePresence>
