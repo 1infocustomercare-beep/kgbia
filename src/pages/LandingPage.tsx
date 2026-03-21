@@ -3491,8 +3491,7 @@ const LandingPage = () => {
               {/* Subtitle */}
               <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] text-muted-foreground max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-                App dedicata, 98+ agenti IA, CRM, prenotazioni,
-                pagamenti e marketing — <span className="font-bold text-foreground/80">tutto integrato per <span className="font-semibold text-primary">25+ settori</span></span>. Zero canone mensile, solo risultati.
+                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business. <span className="font-bold text-foreground/80">98+ agenti IA · <span className="font-semibold text-primary">25+ settori</span></span> · Zero canone.
               </motion.p>
 
               {/* ═══ CIRCUIT SCHEMA — Empire AI Group ═══ */}
