@@ -114,7 +114,7 @@ const QuickAction = ({ label, icon: Icon, accentHsl, onClick }: {
         <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `hsla(${accentHsl} / 0.1)` }}>
           <Icon className="w-4 h-4" style={{ color: `hsl(${accentHsl})` }} />
         </div>
-        <span className="text-sm font-medium text-foreground/80">{label}</span>
+        <span className="text-sm font-medium text-foreground/90">{label}</span>
       </CardContent>
     </Card>
   </motion.div>
