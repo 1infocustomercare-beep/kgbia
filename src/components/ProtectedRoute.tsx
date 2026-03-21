@@ -33,7 +33,8 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     } else if (blockRole === "super_admin" || roles.includes("super_admin")) {
       return <Navigate to="/superadmin" replace />;
     } else {
-      return <Navigate to="/app" replace />;
+      const partnerOnly = (roles.includes("partner") || roles.includes("team_leader")) && !roles.includes("restaurant_admin");
+      return <Navigate to={partnerOnly ? "/partner" : "/app"} replace />;
     }
   }
 
@@ -45,7 +46,7 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     !roles.includes("restaurant_admin") &&
     !roles.includes("super_admin")
   ) {
-    return <Navigate to="/app" replace />;
+    return <Navigate to="/partner" replace />;
   }
 
   // Check required role (super_admin bypasses all, team_leader can access partner routes)
@@ -56,7 +57,7 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     }
     // partner-only users trying to access restaurant_admin routes → redirect to app
     if (roles.includes("partner") || roles.includes("team_leader")) {
-      return <Navigate to="/app" replace />;
+      return <Navigate to="/partner" replace />;
     }
     return <Navigate to="/app" replace />;
   }
