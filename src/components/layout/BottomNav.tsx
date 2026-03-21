@@ -233,8 +233,14 @@ export function BottomNav() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        className="flex md:hidden fixed bottom-0 inset-x-0 z-50 h-16 bg-background/80 backdrop-blur-2xl border-t border-border/40"
-        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+        className="flex md:hidden fixed bottom-0 inset-x-0 z-50 h-14"
+        style={{
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+          background: "linear-gradient(180deg, hsl(228 22% 11% / 0.97) 0%, hsl(228 22% 8% / 0.99) 100%)",
+          backdropFilter: "blur(24px) saturate(1.3)",
+          borderTop: "1px solid hsl(228 20% 18% / 0.5)",
+          boxShadow: "0 -4px 20px hsl(228 22% 4% / 0.6), inset 0 1px 0 hsl(228 20% 22% / 0.15)"
+        }}
       >
         {items.map(item => {
           const Icon = ICON_MAP[item.icon] || Home;
@@ -246,8 +252,8 @@ export function BottomNav() {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 min-w-0 transition-all duration-300 ${
-                active ? "text-primary" : "text-muted-foreground"
+              className={`flex-1 flex flex-col items-center justify-center gap-0 py-2 min-w-0 transition-all duration-300 ${
+                active ? "text-primary" : "text-muted-foreground/70"
               }`}
             >
               <div className="relative">
@@ -255,14 +261,11 @@ export function BottomNav() {
                 {active && (
                   <motion.span
                     layoutId="bottomNavIndicator"
-                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-primary"
+                    className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-primary"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
               </div>
-              <span className={`text-[10px] uppercase tracking-wider font-medium transition-all duration-300 ${active ? 'text-primary' : ''}`}>
-                {item.label}
-              </span>
             </Link>
           );
         })}
@@ -270,21 +273,18 @@ export function BottomNav() {
         {/* More button */}
         <button
           onClick={() => setMoreOpen(true)}
-          className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 min-w-0 transition-all duration-300 ${
-            moreActive ? "text-primary" : "text-muted-foreground"
+          className={`flex-1 flex flex-col items-center justify-center gap-0 py-2 min-w-0 transition-all duration-300 ${
+            moreActive ? "text-primary" : "text-muted-foreground/70"
           }`}
         >
           <div className="relative">
             <MoreHorizontal className={`w-5 h-5 transition-transform duration-300 ${moreActive ? 'scale-110' : ''}`} />
             {moreActive && (
               <motion.span
-                className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-primary"
+                className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-primary"
               />
             )}
           </div>
-          <span className={`text-[10px] uppercase tracking-wider font-medium transition-all duration-300 ${moreActive ? 'text-primary' : ''}`}>
-            Altro
-          </span>
         </button>
       </motion.nav>
 
