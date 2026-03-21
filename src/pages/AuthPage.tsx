@@ -248,8 +248,8 @@ export default function AuthPage() {
                 <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   className="space-y-5">
                   <div className="text-center">
-                    <h1 className="text-xl font-heading font-bold text-white mb-1">Chi sei?</h1>
-                    <p className="text-sm text-gray-300">Seleziona il tuo ruolo per iniziare</p>
+                    <h1 className="text-xl font-heading font-bold text-foreground mb-1">Chi sei?</h1>
+                    <p className="text-sm text-foreground/85">Seleziona il tuo ruolo per iniziare</p>
                   </div>
                   <div className="grid grid-cols-1 gap-3">
                     {([
@@ -259,21 +259,21 @@ export default function AuthPage() {
                       <button key={r.id} onClick={() => { setRole(r.id); setStep(2); }}
                         className="flex items-center gap-4 p-4 rounded-xl text-left transition-all hover:scale-[1.02] active:scale-[0.98]"
                         style={{ background: r.color, border: `1px solid ${r.border}` }}>
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white"
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center text-foreground"
                           style={{ background: r.border }}>
                           {r.icon}
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-white">{r.title}</p>
-                          <p className="text-xs text-gray-300">{r.desc}</p>
+                          <p className="text-sm font-bold text-foreground">{r.title}</p>
+                          <p className="text-xs text-foreground/80">{r.desc}</p>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-white/50 ml-auto" />
+                        <ArrowRight className="w-4 h-4 text-foreground/60 ml-auto" />
                       </button>
                     ))}
                   </div>
-                  <p className="text-xs text-center text-gray-400">
+                  <p className="text-xs text-center text-foreground/75">
                     Hai già un account?{" "}
-                    <button onClick={() => setMode("login")} className="text-purple-400 hover:text-purple-300 font-semibold">Accedi</button>
+                    <button onClick={() => setMode("login")} className="text-primary font-semibold underline underline-offset-4 decoration-primary/50 hover:text-primary/80">Accedi</button>
                   </p>
                 </motion.div>
               )}
@@ -281,7 +281,7 @@ export default function AuthPage() {
               {step === 2 && (
                 <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   className="space-y-4">
-                  <button onClick={() => setStep(1)} className="flex items-center gap-1 text-xs text-amber-400/80 hover:text-amber-300">
+                  <button onClick={() => setStep(1)} className="flex items-center gap-1 text-xs text-primary hover:text-primary/80">
                     <ArrowLeft className="w-3 h-3" /> Indietro
                   </button>
                   <div className="text-center">
