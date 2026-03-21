@@ -174,16 +174,15 @@ export default function DemoDirectoryPage() {
           <button onClick={() => navigate("/home")}
             className="p-2 rounded-xl transition-all duration-200 hover:scale-105"
             style={{ background: "hsla(265,30%,30%,0.12)", border: "1px solid hsla(265,30%,40%,0.1)" }}>
-            <ArrowLeft className="w-4 h-4 text-foreground/60" />
+            <ArrowLeft className="w-4 h-4 text-foreground/85" />
           </button>
           <div className="flex-1 min-w-0">
             <h1 className="text-base font-bold text-foreground font-heading tracking-tight">Esplora i Settori</h1>
-            <p className="text-[0.7rem] sm:text-xs text-foreground/75 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
+            <p className="text-[0.72rem] sm:text-xs text-foreground/90 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
           </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-            style={{ background: "hsla(150,40%,40%,0.16)", border: "1px solid hsla(150,45%,45%,0.28)" }}>
-            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsla(150,70%,60%,0.95)" }} />
-            <span className="text-[0.55rem] font-semibold tracking-wider text-foreground/90">LIVE</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/45 bg-primary/20 shadow-sm shadow-primary/20">
+            <div className="w-1.5 h-1.5 rounded-full animate-pulse bg-primary" />
+            <span className="text-[0.6rem] font-bold tracking-wider text-foreground">LIVE</span>
           </div>
         </div>
       </div>
@@ -191,12 +190,12 @@ export default function DemoDirectoryPage() {
       <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
         {/* ═══ SEARCH ═══ */}
         <div className="relative mb-6">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/65" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/80" />
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cerca settore..."
-            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/55 text-sm"
+            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/70 text-sm"
             style={{
               background: "hsla(240,18%,12%,0.95)",
               border: "1px solid hsla(265,25%,35%,0.28)",
@@ -235,7 +234,7 @@ export default function DemoDirectoryPage() {
                   <div className="flex items-center gap-2.5 mb-3 px-1">
                     <div className="h-px flex-1 max-w-[20px]"
                       style={{ background: "linear-gradient(90deg, hsla(265,40%,50%,0.25), transparent)" }} />
-                    <span className="text-[0.62rem] font-bold tracking-[2.5px] uppercase text-foreground/75">{cat.label}</span>
+                    <span className="text-[0.64rem] font-bold tracking-[2.5px] uppercase text-foreground/90">{cat.label}</span>
                     <div className="h-px flex-1"
                       style={{ background: "linear-gradient(90deg, transparent, hsla(265,30%,40%,0.08))" }} />
                   </div>
@@ -320,13 +319,13 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <div className="flex items-center gap-2 mb-0.5">
               <h3 className="font-bold text-[0.8rem] sm:text-sm text-foreground font-heading truncate">{label}</h3>
               {isFeatured && (
-                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full font-bold tracking-[1.5px] uppercase flex items-center gap-0.5 flex-shrink-0 text-foreground/95"
-                  style={{ background: `${color}26`, border: `1px solid ${color}42` }}>
+                <span className="text-[0.56rem] sm:text-[0.6rem] px-2 py-0.5 rounded-full font-bold tracking-[1.4px] uppercase flex items-center gap-0.5 flex-shrink-0 text-foreground"
+                  style={{ background: `${color}30`, border: `1px solid ${color}58` }}>
                   <Crown className="w-2 h-2" /> PREMIUM
                 </span>
               )}
             </div>
-            <p className="text-[0.7rem] sm:text-xs text-foreground/90 truncate">{subtitle}</p>
+            <p className="text-[0.72rem] sm:text-xs text-foreground/95 truncate">{subtitle}</p>
           </div>
 
           {/* Actions */}
@@ -339,16 +338,16 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
                 color: "#fff",
                 boxShadow: `0 3px 12px ${color}25`
               } : {
-                background: "hsla(265,20%,25%,0.35)",
-                border: "1px solid hsla(265,20%,35%,0.3)",
-                color: "hsla(0,0%,100%,0.8)"
+                background: "hsl(var(--secondary) / 0.82)",
+                border: "1px solid hsl(var(--border) / 0.9)",
+                color: "hsl(var(--foreground) / 0.96)"
               }}
               whileTap={{ scale: 0.95 }}>
               {isFeatured ? "Demo Live" : "Apri Demo"} <ArrowRight className="w-2.5 h-2.5" />
             </motion.button>
             <div className="w-6 h-6 rounded-lg flex items-center justify-center"
-              style={{ background: "hsla(265,20%,25%,0.22)" }}>
-              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/70" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/70" />}
+              style={{ background: "hsl(var(--secondary) / 0.72)" }}>
+              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/85" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/85" />}
             </div>
           </div>
         </div>
