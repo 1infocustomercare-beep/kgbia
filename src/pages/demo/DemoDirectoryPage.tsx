@@ -12,6 +12,7 @@ import {
   Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles
 } from "lucide-react";
 import IndustryPhoneShowcase, { SectorAppIcon } from "@/components/public/IndustryPhoneShowcase";
+import { buildPublicSiteUrl } from "@/lib/public-site-path";
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
@@ -299,13 +300,28 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
 
         {/* Main row */}
         <div className="flex items-center gap-3 p-3.5 sm:p-4 cursor-pointer" onClick={onToggle}>
-          {/* Icon node — Premium iOS App Icon */}
+          {/* Round live preview bubble */}
           <div className="relative flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
-            <SectorAppIcon id={id} size={44} />
+            <div
+              className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 shadow-lg"
+              style={{
+                borderColor: `${color}60`,
+                boxShadow: `0 0 16px ${color}30`,
+              }}
+            >
+              <iframe
+                src={buildPublicSiteUrl(DEMO_SLUGS[id], id)}
+                className="w-[390px] h-[844px] border-0 pointer-events-none select-none"
+                style={{ transform: "scale(0.133)", transformOrigin: "top left" }}
+                title={`Preview ${label}`}
+                loading="lazy"
+                tabIndex={-1}
+              />
+            </div>
             {isFeatured && (
-              <motion.div className="absolute inset-0 rounded-[12px] pointer-events-none"
+              <motion.div className="absolute inset-0 rounded-full pointer-events-none"
                 style={{ border: `1px solid ${color}25` }}
-                animate={{ scale: [1, 1.25], opacity: [0.5, 0] }}
+                animate={{ scale: [1, 1.3], opacity: [0.5, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity }} />
             )}
           </div>
