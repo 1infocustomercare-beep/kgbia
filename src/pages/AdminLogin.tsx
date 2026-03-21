@@ -449,8 +449,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   const isPartnerMode = mode === "partner";
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
-      <Blob className="w-[500px] h-[500px] -top-20 -left-40 animate-blob-float" color="bg-violet-600" />
-      <Blob className="w-[400px] h-[400px] bottom-10 -right-20 animate-blob-float-reverse" color="bg-orange-500" />
+      <DarkPremiumBg />
       <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
         <button onClick={() => { setMode("choose"); setError(""); setIsSignUp(false); }}
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
