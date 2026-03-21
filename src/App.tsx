@@ -534,7 +534,7 @@ function App() {
                       <Route path="/demo/:slug/admin" element={<DemoAdminPage />} />
                       <Route path="/r/:slug" element={<RestaurantPage />} />
                       <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
-                      <Route path="/admin" element={<AdminLogin />} />
+                      <Route path="/admin" element={<AuthPage />} />
                       <Route path="/kitchen" element={<KitchenView />} />
                       <Route path="/partner/register" element={<PartnerRegister />} />
                       <Route path="/privacy" element={<PrivacyPolicy />} />
