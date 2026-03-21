@@ -6959,7 +6959,7 @@ const LandingPage = () => {
                 { label: "Partner Program", href: "#partner" },
                 { label: "Demo Live", href: "/demo" }].
                 map((link, i) =>
-                <a key={i} href={link.href} className="block text-white/25 hover:text-white/60 transition-colors flex items-center gap-2">
+                <a key={i} href={link.href} className="block text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full" style={{ background: "hsla(265,70%,60%,0.4)" }} />
                     {link.label}
                   </a>
