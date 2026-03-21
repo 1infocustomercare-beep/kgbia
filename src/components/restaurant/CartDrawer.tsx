@@ -60,7 +60,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
           >
             {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 rounded-full bg-muted-foreground/20" />
+              <div className="w-10 h-1 rounded-full" style={{ background: "hsla(30, 20%, 40%, 0.4)" }} />
             </div>
 
             {/* Header */}
