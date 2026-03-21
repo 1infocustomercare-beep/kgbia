@@ -57,46 +57,96 @@ const FEATURED_DEMOS = [
   { id: "ncc" as IndustryId, name: "NCC & Trasporto Premium", tagline: "Flotta · Tratte · Booking · Autisti", route: "/b/amalfi-luxury-transfer", color: "#C9A84C" },
 ];
 
-/* ═══ iPhone Preview ═══ */
-function LivePhonePreview({ route, color, name }: { route: string; color: string; name: string }) {
-  const [loaded, setLoaded] = useState(false);
+/* ═══ Mockup Gallery Component ═══ */
+function MockupGallery({ sectorId, color }: { sectorId: string; color: string }) {
+  const [idx, setIdx] = useState(0);
+  const catalog = SECTOR_MOCKUP_CATALOG[sectorId];
+
+  // Flatten all images for this sector, prioritize home images first
+  const allImages = useMemo(() => {
+    if (!catalog) return [];
+    const homes: MockupImage[] = [];
+    const rest: MockupImage[] = [];
+    catalog.projects.forEach(p => {
+      p.images.forEach(img => {
+        if (img.type === "home") homes.push(img);
+        else rest.push(img);
+      });
+    });
+    return [...homes, ...rest];
+  }, [catalog]);
+
+  // Limit displayed to first 24 for performance
+  const displayImages = allImages.slice(0, 24);
+  const count = displayImages.length;
+
+  if (count === 0) {
+    return (
+      <div className="text-center py-6 text-foreground/50 text-xs">
+        <Images className="w-6 h-6 mx-auto mb-2 opacity-50" />
+        Preview in arrivo
+      </div>
+    );
+  }
+
   return (
-    <div className="relative flex-shrink-0">
-      <div className="absolute -inset-4 rounded-[36px] blur-3xl opacity-15 pointer-events-none"
-        style={{ background: `radial-gradient(circle, ${color}50, transparent 70%)` }} />
-      <div className="relative rounded-[26px] overflow-hidden w-[160px] sm:w-[200px]"
-        style={{
-          border: "2.5px solid rgba(255,255,255,0.15)",
-          background: "linear-gradient(180deg, #2c2c2e 0%, #1c1c1e 3%, #0a0a0a 100%)",
-          boxShadow: `0 30px 80px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.1)`,
-          aspectRatio: "9/19.2",
-        }}>
-        <div className="flex items-center justify-between px-3 pt-1.5 pb-0">
-          <span className="text-[5.5px] font-semibold text-white/60 tracking-tight" style={{ fontFamily: "system-ui" }}>9:41</span>
-          <div className="flex items-center gap-[3px]">
-            <span className="text-[5px] text-white/50 font-medium">5G</span>
-            <svg viewBox="0 0 25 12" className="w-[14px] h-[7px]">
-              <rect x="0" y="0.5" width="21" height="11" rx="2" stroke="white" strokeOpacity="0.35" strokeWidth="1" fill="none" />
-              <rect x="1.5" y="2" width="14" height="8" rx="1" fill="white" fillOpacity="0.5" />
-            </svg>
-          </div>
-        </div>
-        <div className="flex justify-center pt-0.5 pb-0.5">
-          <div className="w-[46px] h-[13px] bg-black rounded-full" style={{ boxShadow: "0 0 0 0.5px rgba(255,255,255,0.06)" }} />
-        </div>
-        <div className="relative mx-[3px] mb-[3px] rounded-b-[22px] overflow-hidden" style={{ height: "calc(100% - 30px)" }}>
-          {!loaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/90 z-10">
-              <motion.div className="w-5 h-5 rounded-full border-2 border-t-transparent" style={{ borderColor: color }}
-                animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
-            </div>
-          )}
-          <iframe src={route} title={name}
-            className="w-[375px] h-[812px] origin-top-left border-0"
-            style={{ transform: `scale(${160 / 375})`, transformOrigin: "top left", pointerEvents: "none" }}
-            onLoad={() => setLoaded(true)} loading="lazy" />
+    <div className="space-y-3">
+      {/* Main image */}
+      <div className="relative rounded-xl overflow-hidden mx-auto max-w-[280px]"
+        style={{ aspectRatio: "9/19.5", boxShadow: `0 8px 40px ${color}15, 0 0 0 1px ${color}20` }}>
+        <img
+          src={displayImages[idx]?.url}
+          alt={`Mockup ${idx + 1}`}
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        {/* Nav arrows */}
+        {count > 1 && (
+          <>
+            <button onClick={() => setIdx((idx - 1 + count) % count)}
+              className="absolute left-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center bg-black/60 hover:bg-black/80 transition-colors"
+              aria-label="Precedente">
+              <ChevronLeft className="w-3.5 h-3.5 text-white" />
+            </button>
+            <button onClick={() => setIdx((idx + 1) % count)}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center bg-black/60 hover:bg-black/80 transition-colors"
+              aria-label="Successivo">
+              <ChevronRightIcon className="w-3.5 h-3.5 text-white" />
+            </button>
+          </>
+        )}
+        {/* Counter badge */}
+        <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-[0.55rem] font-bold text-white/90 bg-black/50 backdrop-blur-sm">
+          {idx + 1}/{count}
         </div>
       </div>
+
+      {/* Thumbnail strip */}
+      {count > 1 && (
+        <div className="flex gap-1.5 overflow-x-auto pb-1 px-1 scrollbar-hide">
+          {displayImages.slice(0, 12).map((img, i) => (
+            <button key={i} onClick={() => setIdx(i)}
+              className="flex-shrink-0 w-10 h-[18px] rounded-md overflow-hidden transition-all duration-200"
+              style={{
+                border: i === idx ? `2px solid ${color}` : "1px solid hsla(0,0%,100%,0.1)",
+                opacity: i === idx ? 1 : 0.6,
+              }}>
+              <img src={img.url} alt="" className="w-full h-full object-cover" loading="lazy" />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Mockup count badge */}
+      {catalog && (
+        <div className="flex justify-center">
+          <span className="text-[0.6rem] px-2.5 py-1 rounded-full font-semibold text-foreground/70"
+            style={{ background: `${color}15`, border: `1px solid ${color}25` }}>
+            <Images className="w-3 h-3 inline mr-1 -mt-0.5" />
+            {catalog.totalCount} mockup professionali
+          </span>
+        </div>
+      )}
     </div>
   );
 }
