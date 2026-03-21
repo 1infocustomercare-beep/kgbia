@@ -2399,7 +2399,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                   </div>
                   <div className="text-left">
                     <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Potenzia con Agenti IA</p>
-                    <p className="text-[0.55rem] text-foreground/35">
+                    <p className="text-[0.55rem] text-foreground/55">
                       {plan.includedAgents > 0 ? `${plan.includedAgents} inclus${plan.includedAgents > 1 ? "i" : "o"} nel piano · Aggiungi gli altri a prezzo scontato` : "Aggiungi automazioni intelligenti al tuo piano"}
                     </p>
                   </div>
