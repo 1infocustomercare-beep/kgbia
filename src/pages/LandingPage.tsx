@@ -3470,89 +3470,158 @@ const LandingPage = () => {
               <motion.div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl mb-4 sm:mb-5"
               style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <div className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)))", boxShadow: "0 2px 8px hsl(var(--primary) / 0.3)" }}>
-                  <Bot className="w-2.5 h-2.5 text-white" />
+                  <Crown className="w-2.5 h-2.5 text-white" />
                 </div>
-                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/80">Studio di App & AI</span>
+                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/80">Piattaforma AI All-in-One per PMI</span>
               </motion.div>
 
               {/* Headline */}
               <motion.h1 className="text-[1.6rem] leading-[1.12] sm:text-[2.6rem] lg:text-[3.4rem] font-heading font-bold tracking-[-0.03em] relative px-1"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
               style={{ textWrap: "balance" as any }}>
-                <span className="text-foreground">Progettiamo app che le persone amano</span>
+                <span className="text-foreground">Gestione, IA e</span>
+                <br />
+                <span className="text-foreground">Automazione per il</span>
+                <br />
+                <span className="text-vivid-gradient">Tuo Business</span>
               </motion.h1>
-
-              {/* ═══ PARTICLE SPHERE — Neural Core Effect ═══ */}
-              <motion.div className="relative mt-5 sm:mt-8 mx-auto flex items-center justify-center"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.8, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
-                {/* Premium glow behind sphere */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="rounded-full" style={{
-                    width: IS_MOBILE_LP ? 240 : 440,
-                    height: IS_MOBILE_LP ? 240 : 440,
-                    background: "radial-gradient(circle, hsl(265 50% 55% / 0.12), hsl(248 45% 55% / 0.04) 55%, transparent 80%)",
-                    filter: "blur(40px)",
-                  }} />
-                </div>
-                <InteractiveParticleSphere size={IS_MOBILE_LP ? 180 : 340} />
-              </motion.div>
 
               {/* Subtitle */}
               <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] text-muted-foreground max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}>
-                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
-                <span className="font-medium text-foreground/70"> 98+ agenti IA · <span className="font-semibold text-primary">25+ settori</span> · Zero canone.</span>
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
+                App dedicata, 98+ agenti IA, CRM, prenotazioni,
+                pagamenti e marketing — <span className="font-bold text-foreground/80">tutto integrato per <span className="font-semibold text-primary">25+ settori</span></span>. Zero canone mensile, solo risultati.
               </motion.p>
 
+              {/* ═══ CIRCUIT SCHEMA — Empire AI Group ═══ */}
+              <motion.div className="relative mt-6 sm:mt-10 mx-auto w-full max-w-[600px] aspect-[16/10] rounded-2xl overflow-hidden"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.9, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  background: "linear-gradient(160deg, hsl(228 22% 10% / 0.9), hsl(232 24% 8% / 0.95))",
+                  border: "1px solid hsl(var(--border) / 0.25)",
+                  boxShadow: "0 20px 60px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
+                }}>
+                {/* Grid lines */}
+                <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                  <defs>
+                    <pattern id="hero-grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="hsl(210 60% 50%)" strokeWidth="0.3" opacity="0.12" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#hero-grid)" />
+                  {/* Connection lines */}
+                  <line x1="50%" y1="50%" x2="18%" y2="20%" stroke="hsl(210 80% 55%)" strokeWidth="0.8" opacity="0.25" />
+                  <line x1="50%" y1="50%" x2="82%" y2="18%" stroke="hsl(210 80% 55%)" strokeWidth="0.8" opacity="0.25" />
+                  <line x1="50%" y1="50%" x2="15%" y2="75%" stroke="hsl(170 70% 50%)" strokeWidth="0.8" opacity="0.2" />
+                  <line x1="50%" y1="50%" x2="85%" y2="78%" stroke="hsl(265 60% 55%)" strokeWidth="0.8" opacity="0.2" />
+                  <line x1="50%" y1="50%" x2="50%" y2="12%" stroke="hsl(38 50% 55%)" strokeWidth="0.8" opacity="0.25" />
+                  <line x1="50%" y1="50%" x2="25%" y2="50%" stroke="hsl(210 80% 55%)" strokeWidth="0.8" opacity="0.2" />
+                  <line x1="50%" y1="50%" x2="78%" y2="48%" stroke="hsl(170 70% 50%)" strokeWidth="0.8" opacity="0.2" />
+                  <line x1="50%" y1="50%" x2="50%" y2="88%" stroke="hsl(265 60% 55%)" strokeWidth="0.8" opacity="0.2" />
+                  {/* Center glow */}
+                  <circle cx="50%" cy="50%" r="24" fill="hsl(210 80% 55%)" opacity="0.08" />
+                  <circle cx="50%" cy="50%" r="4" fill="hsl(210 80% 55%)" opacity="0.5" />
+                  {/* Node dots */}
+                  <circle cx="18%" cy="20%" r="3" fill="hsl(170 70% 50%)" opacity="0.5" />
+                  <circle cx="82%" cy="18%" r="3" fill="hsl(210 80% 55%)" opacity="0.5" />
+                  <circle cx="50%" cy="12%" r="3" fill="hsl(38 50% 55%)" opacity="0.5" />
+                  <circle cx="15%" cy="75%" r="3" fill="hsl(265 60% 55%)" opacity="0.5" />
+                  <circle cx="85%" cy="78%" r="3" fill="hsl(210 80% 55%)" opacity="0.5" />
+                  <circle cx="25%" cy="50%" r="3" fill="hsl(170 70% 50%)" opacity="0.5" />
+                  <circle cx="78%" cy="48%" r="3" fill="hsl(38 50% 55%)" opacity="0.5" />
+                  <circle cx="50%" cy="88%" r="3" fill="hsl(265 60% 55%)" opacity="0.5" />
+                </svg>
+                {/* Labels */}
+                {[
+                  { label: "AI ENGINE", x: "50%", y: "8%", color: "hsl(38 50% 55%)" },
+                  { label: "CRM", x: "84%", y: "14%", color: "hsl(210 80% 55%)" },
+                  { label: "ORDINI", x: "16%", y: "16%", color: "hsl(170 70% 50%)" },
+                  { label: "BOOKING", x: "22%", y: "47%", color: "hsl(170 70% 50%)" },
+                  { label: "ANALYTICS", x: "80%", y: "75%", color: "hsl(210 80% 55%)" },
+                  { label: "MARKETING", x: "50%", y: "86%", color: "hsl(265 60% 55%)" },
+                  { label: "INVENTORY", x: "12%", y: "72%", color: "hsl(265 60% 55%)" },
+                  { label: "CATALOGO", x: "80%", y: "45%", color: "hsl(38 50% 55%)" },
+                ].map((node, i) => (
+                  <motion.div key={i} className="absolute text-[0.42rem] sm:text-[0.55rem] font-heading font-bold tracking-[1.5px] uppercase"
+                    style={{ left: node.x, top: node.y, transform: "translate(-50%, -50%)", color: node.color, textShadow: `0 0 12px ${node.color}40` }}
+                    initial={{ opacity: 0 }} animate={{ opacity: [0.5, 0.9, 0.5] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.3 }}>
+                    {node.label}
+                  </motion.div>
+                ))}
+                {/* Center title */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <motion.span className="text-[0.8rem] sm:text-xl lg:text-2xl font-heading font-black tracking-[4px] sm:tracking-[6px] uppercase text-foreground/70"
+                    style={{ textShadow: "0 0 30px hsl(210 80% 55% / 0.2)" }}
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 4, repeat: Infinity }}>
+                    EMPIRE AI GROUP
+                  </motion.span>
+                </div>
+                {/* Ambient glow */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                  background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsl(210 80% 55% / 0.06), transparent 70%)"
+                }} />
+              </motion.div>
+
               {/* CTA */}
-              <motion.div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}>
+              <motion.div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full"
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}>
                 <motion.button
                   onClick={() => scrollTo("pricing")}
-                  className="group relative w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-primary-foreground font-bold text-[0.72rem] sm:text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden bg-vibrant-gradient"
+                  className="group relative w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-primary-foreground font-bold text-[0.72rem] sm:text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden"
                   style={{
-                    boxShadow: "0 4px 20px hsl(var(--primary) / 0.3), 0 0 0 1px hsl(var(--primary) / 0.2)"
+                    background: "linear-gradient(135deg, hsl(280 60% 55%), hsl(320 70% 55%), hsl(38 80% 55%))",
+                    boxShadow: "0 4px 20px hsl(300 50% 50% / 0.3), 0 0 0 1px hsl(300 50% 50% / 0.2)"
                   }}
-                  whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(var(--primary) / 0.45)" }}
+                  whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(300 50% 50% / 0.45)" }}
                   whileTap={{ scale: 0.97 }}>
                   <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
                   <span className="relative flex items-center justify-center gap-2">
-                    Avvia il tuo progetto <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    🚀 PRENOTA DEMO GRATUITA <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>
                 <motion.button
                   onClick={() => navigate("/demo")}
                   className="w-full sm:w-auto px-5 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-[0.72rem] sm:text-[0.75rem] font-semibold font-heading tracking-wide transition-all flex items-center justify-center gap-2 text-foreground/60 border border-border/40 bg-background/50 backdrop-blur-sm"
                   whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.3)" }}>
-                  <Eye className="w-3.5 h-3.5 text-primary" /> Guarda i nostri lavori
+                  <Play className="w-3.5 h-3.5 text-primary" /> Vedi Demo Live
                 </motion.button>
               </motion.div>
 
-              {/* Metrics — centered */}
-              <motion.div className="mt-6 sm:mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-lg sm:max-w-xl mx-auto"
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.8 }}>
-                {metrics.map((m, i) =>
+              {/* ═══ STAT CARDS — Premium glass 2x2 grid ═══ */}
+              <motion.div className="mt-6 sm:mt-8 grid grid-cols-2 gap-2.5 sm:gap-3 w-full max-w-lg sm:max-w-xl mx-auto"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.8 }}>
+                {[
+                  { value: 847, suffix: "+", label: "ATTIVITÀ ATTIVE", color: "hsl(195 100% 55%)" },
+                  { value: 25, suffix: "+", label: "SETTORI COPERTI", color: "hsl(195 100% 55%)" },
+                  { value: 40, suffix: "%", prefix: "+", label: "AUMENTO FATTURATO", color: "hsl(170 70% 50%)" },
+                  { value: 99.8, suffix: "%", label: "SODDISFAZIONE", color: "hsl(320 70% 55%)" },
+                ].map((m, i) =>
                 <motion.div
                   key={i}
-                  className="relative group text-center px-3 py-3 sm:px-4 sm:py-4 rounded-2xl overflow-hidden"
+                  className="relative group text-center px-3 py-4 sm:px-4 sm:py-5 rounded-2xl overflow-hidden"
                   style={{
-                    background: "hsl(228 20% 12% / 0.7)",
+                    background: "linear-gradient(160deg, hsl(228 20% 14% / 0.85), hsl(232 22% 11% / 0.9))",
                     backdropFilter: "blur(16px)",
                     WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid hsl(var(--border) / 0.4)",
-                    boxShadow: "0 2px 12px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.05)"
+                    border: "1px solid hsl(var(--border) / 0.3)",
+                    boxShadow: "0 4px 20px hsl(0 0% 0% / 0.3), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
                   }}
                   whileHover={{ y: -2, boxShadow: "0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(0 0% 100% / 0.08)" }}
                   transition={{ duration: 0.25 }}
                 >
-                  <span className="absolute inset-0 bg-gradient-to-br from-accent/[0.04] via-transparent to-accent/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <p className="relative text-lg sm:text-2xl font-heading font-bold text-foreground">
+                  <div className="absolute inset-0 pointer-events-none rounded-2xl" style={{
+                    background: `radial-gradient(ellipse at 50% 0%, ${m.color}08, transparent 70%)`
+                  }} />
+                  <p className="relative text-xl sm:text-3xl font-heading font-bold" style={{ color: m.color }}>
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="relative text-[0.48rem] sm:text-[0.55rem] tracking-[1.2px] sm:tracking-[1.5px] uppercase font-heading font-semibold text-muted-foreground mt-0.5 sm:mt-1">{m.label}</p>
+                  <p className="relative text-[0.42rem] sm:text-[0.5rem] tracking-[1.8px] uppercase font-heading font-semibold text-muted-foreground mt-1 sm:mt-1.5">{m.label}</p>
                 </motion.div>
                 )}
               </motion.div>
