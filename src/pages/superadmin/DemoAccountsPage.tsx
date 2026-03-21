@@ -87,7 +87,7 @@ const DemoAccountsPage = () => {
   return (
     <div className="min-h-screen landing-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
       {/* Header */}
-      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+      <div className="sticky top-0 z-50 backdrop-blur-md border-b border-border/30" style={{ background: "hsl(228 18% 8% / 0.9)" }}>
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <button onClick={() => navigate("/superadmin")} className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
