@@ -3481,11 +3481,11 @@ const LandingPage = () => {
               <motion.h1 className="text-[1.6rem] leading-[1.12] sm:text-[2.6rem] lg:text-[3.4rem] font-heading font-bold tracking-[-0.03em] relative px-1"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
               style={{ textWrap: "balance" as any }}>
-                <span className="text-foreground">Progettiamo app che</span>
+                <span className="text-white">Progettiamo app che</span>
                 <br />
-                <span className="text-foreground">le persone</span>
+                <span className="text-white">le persone</span>
                 <br />
-                <span className="text-vivid-gradient">amano</span>
+                <span className="text-vivid-gradient" style={{ filter: "brightness(1.3)" }}>amano</span>
               </motion.h1>
 
               {/* Subtitle */}
