@@ -239,9 +239,10 @@ export default function EmpireTeamStory() {
                   <motion.div
                     className="relative p-4 sm:p-5 rounded-2xl overflow-hidden group"
                     style={{
-                      background: "linear-gradient(135deg, hsla(230,12%,12%,0.7), hsla(265,15%,14%,0.5))",
-                      border: "1px solid hsla(265,50%,50%,0.1)",
-                      backdropFilter: "blur(16px)",
+                      background: "linear-gradient(155deg, hsla(265,22%,16%,0.95), hsla(250,20%,12%,0.93), hsla(265,18%,10%,0.96))",
+                      border: "1px solid hsla(265,50%,55%,0.18)",
+                      backdropFilter: "blur(20px)",
+                      boxShadow: "0 8px 32px hsla(265,50%,20%,0.25), inset 0 1px 0 hsla(265,60%,70%,0.08)",
                     }}
                     whileHover={{ borderColor: "hsla(265,70%,60%,0.3)", y: -4, boxShadow: `0 16px 40px ${m.glowColor}` }}
                     transition={{ duration: 0.35 }}
