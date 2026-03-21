@@ -568,7 +568,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
         </form>
 
         <button onClick={() => { setIsSignUp(!isSignUp); setError(""); }}
-          className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+          className="w-full text-center text-sm text-gray-400 hover:text-white transition-colors">
           {isSignUp
             ? (isPartnerMode ? "Hai già un account Partner? Accedi" : "Hai già un account? Accedi")
             : (isPartnerMode ? "Nuovo qui? Registrati come Partner" : "Nuovo qui? Crea account")}
