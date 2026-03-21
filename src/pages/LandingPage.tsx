@@ -1928,7 +1928,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                                 <span className="text-foreground/30">Costo totale finale</span>
                                 <span className="text-foreground/50 font-bold">€{(installments === 3 ? total3 : total6).toLocaleString("it-IT")}</span>
                               </div>
-                              <p className="text-[0.45rem] text-foreground/20 text-center mt-1.5">
+                              <p className="text-[0.45rem] text-foreground/35 text-center mt-1.5">
                                 Addebito automatico · {installments === 3 ? "Tasso Zero garantito" : "TAEG 6,08%"} · Dopo le {installments} rate solo {packageTotalMonthly > 0 ? `€${packageTotalMonthly}/mese` : "€0/mese"}
                               </p>
                               {installments === 6 &&
