@@ -2431,7 +2431,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className={`text-xs font-semibold truncate ${isActive ? "text-foreground" : "text-foreground/60"}`}>{addon.name}</p>
-                              <p className="text-[0.55rem] text-foreground/30 truncate">{addon.desc}</p>
+                              <p className="text-[0.55rem] text-foreground/50 truncate">{addon.desc}</p>
                             </div>
                             <div className="text-right flex-shrink-0">
                               {isFree ?
