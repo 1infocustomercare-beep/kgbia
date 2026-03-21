@@ -5305,7 +5305,7 @@ const LandingPage = () => {
 
         <div className="text-center mb-14">
           <SectionLabel text="Su Misura" icon={<Sparkles className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.8rem,5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.05] mb-4"
+          <motion.h2 className="text-[clamp(1.8rem,5vw,3.2rem)] font-heading font-bold text-white leading-[1.05] mb-4"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Costruiamo <span className="text-shimmer">Qualsiasi Cosa</span>
           </motion.h2>
