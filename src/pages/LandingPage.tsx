@@ -2081,7 +2081,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                         <p className={`text-xl font-heading font-bold mt-1 ${
                     p.id === selectedPackage ? "text-foreground" : "text-foreground/40"}`
                     }>€{p.price.toLocaleString("it-IT")}</p>
-                        <p className="text-[0.45rem] text-foreground/25 mt-0.5">oppure da €{Math.round(p.price / 6)}/mese ×6</p>
+                        <p className="text-[0.45rem] text-foreground/40 mt-0.5">oppure da €{Math.round(p.price / 6)}/mese ×6</p>
                         {p.id === "empire" && <p className="text-[0.4rem] text-accent/70 font-bold mt-0.5">🏆 Tutto Incluso</p>}
                       </div>
                   )}
