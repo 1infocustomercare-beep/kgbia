@@ -175,7 +175,7 @@ export default function AuthPage() {
                   className="space-y-5">
                   <div className="text-center">
                     <h1 className="text-xl font-heading font-bold text-white mb-1">Chi sei?</h1>
-                    <p className="text-sm text-white/50">Seleziona il tuo ruolo per iniziare</p>
+                    <p className="text-sm text-gray-300">Seleziona il tuo ruolo per iniziare</p>
                   </div>
                   <div className="grid grid-cols-1 gap-3">
                     {([
