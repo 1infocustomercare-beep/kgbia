@@ -178,7 +178,7 @@ export default function DemoDirectoryPage() {
           </button>
           <div className="flex-1 min-w-0">
             <h1 className="text-base font-bold text-foreground font-heading tracking-tight">Esplora i Settori</h1>
-            <p className="text-[0.6rem] text-foreground/30 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
+            <p className="text-[0.6rem] text-foreground/55 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
           </div>
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
             style={{ background: "hsla(150,40%,40%,0.08)", border: "1px solid hsla(150,40%,40%,0.1)" }}>
@@ -191,7 +191,7 @@ export default function DemoDirectoryPage() {
       <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
         {/* ═══ SEARCH ═══ */}
         <div className="relative mb-6">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/20" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/40" />
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -235,7 +235,7 @@ export default function DemoDirectoryPage() {
                   <div className="flex items-center gap-2.5 mb-3 px-1">
                     <div className="h-px flex-1 max-w-[20px]"
                       style={{ background: "linear-gradient(90deg, hsla(265,40%,50%,0.25), transparent)" }} />
-                    <span className="text-[0.55rem] font-bold tracking-[2.5px] uppercase text-foreground/25">{cat.label}</span>
+                    <span className="text-[0.55rem] font-bold tracking-[2.5px] uppercase text-foreground/50">{cat.label}</span>
                     <div className="h-px flex-1"
                       style={{ background: "linear-gradient(90deg, transparent, hsla(265,30%,40%,0.08))" }} />
                   </div>
@@ -326,7 +326,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
                 </span>
               )}
             </div>
-            <p className="text-[0.58rem] sm:text-[0.65rem] text-foreground/30 truncate">{subtitle}</p>
+            <p className="text-[0.58rem] sm:text-[0.65rem] text-foreground/60 truncate">{subtitle}</p>
           </div>
 
           {/* Actions */}
@@ -341,14 +341,14 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
               } : {
                 background: "hsla(265,20%,20%,0.2)",
                 border: "1px solid hsla(265,20%,25%,0.15)",
-                color: "hsla(0,0%,100%,0.6)"
+                color: "hsla(0,0%,100%,0.8)"
               }}
               whileTap={{ scale: 0.95 }}>
               {isFeatured ? "Demo Live" : "Apri Demo"} <ArrowRight className="w-2.5 h-2.5" />
             </motion.button>
             <div className="w-6 h-6 rounded-lg flex items-center justify-center"
               style={{ background: "hsla(265,20%,20%,0.1)" }}>
-              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/25" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/25" />}
+              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/50" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/50" />}
             </div>
           </div>
         </div>
