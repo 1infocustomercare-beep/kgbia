@@ -592,13 +592,13 @@ const SuperAdminDashboard = () => {
               onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : setActiveTab(tab.id)}
               className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px]`}
               style={activeTab === tab.id ? {
-                background: "linear-gradient(160deg, hsl(265 60% 45%), hsl(265 50% 35%))",
+                background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",
                 color: "white",
-                boxShadow: "0 0 16px hsl(265 85% 65% / 0.3), inset 0 1px 0 hsl(265 50% 60% / 0.2)"
+                boxShadow: "0 0 20px hsl(250 85% 65% / 0.35), inset 0 1px 0 hsl(250 50% 70% / 0.25)"
               } : {
-                background: "linear-gradient(160deg, hsl(228 20% 14% / 0.8), hsl(232 22% 12% / 0.7))",
-                color: "hsl(228 15% 60%)",
-                border: "1px solid hsl(228 20% 18% / 0.4)"
+                background: "linear-gradient(160deg, hsl(230 20% 16%), hsl(232 22% 13%))",
+                color: "hsl(220 15% 75%)",
+                border: "1px solid hsl(250 30% 30% / 0.3)"
               }}>
               <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
               <span className="leading-tight truncate w-full text-center">{tab.label}</span>
