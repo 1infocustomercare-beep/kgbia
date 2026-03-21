@@ -140,7 +140,7 @@ export default function DemoDirectoryPage() {
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Rich gradient base */}
         <div className="absolute inset-0" style={{
-          background: "linear-gradient(165deg, #08070e 0%, #0d0b18 20%, #0a0912 40%, #0e0c15 60%, #080710 80%, #050508 100%)"
+          background: "linear-gradient(165deg, hsl(265 20% 6%) 0%, hsl(255 18% 8%) 20%, hsl(260 16% 7%) 40%, hsl(265 20% 9%) 60%, hsl(255 18% 6%) 80%, hsl(260 20% 5%) 100%)"
         }} />
 
         {/* Ambient orbs — deep, rich, luxurious */}
