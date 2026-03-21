@@ -231,6 +231,28 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* Auth readability lock (login/register forms on dark themes) */
+.auth-contrast input,
+.auth-contrast textarea,
+.auth-contrast select {
+  color: hsl(var(--foreground));
+}
+
+.auth-contrast input::placeholder,
+.auth-contrast textarea::placeholder {
+  color: hsl(var(--foreground) / 0.55);
+}
+
+.landing-dark.auth-contrast input:-webkit-autofill,
+.landing-dark.auth-contrast input:-webkit-autofill:hover,
+.landing-dark.auth-contrast input:-webkit-autofill:focus,
+.landing-dark.auth-contrast textarea:-webkit-autofill,
+.landing-dark.auth-contrast select:-webkit-autofill {
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  transition: background-color 9999s ease-out 0s;
+  box-shadow: 0 0 0px 1000px hsl(var(--background) / 0.88) inset !important;
+}
+
 /* ═══ GLOBAL OPACITY BOOST — Light-mode surface overrides ═══ */
 .bg-background\/80 { background-color: hsl(220 20% 97% / 0.92) !important; }
 .bg-background\/60 { background-color: hsl(220 20% 97% / 0.88) !important; }
