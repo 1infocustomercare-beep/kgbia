@@ -178,7 +178,7 @@ export default function DemoDirectoryPage() {
           </button>
           <div className="flex-1 min-w-0">
             <h1 className="text-base font-bold text-foreground font-heading tracking-tight">Esplora i Settori</h1>
-            <p className="text-[0.6rem] text-foreground/30 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
+            <p className="text-[0.6rem] text-foreground/55 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
           </div>
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
             style={{ background: "hsla(150,40%,40%,0.08)", border: "1px solid hsla(150,40%,40%,0.1)" }}>
