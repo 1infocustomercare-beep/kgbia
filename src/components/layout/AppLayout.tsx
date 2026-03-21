@@ -48,13 +48,15 @@ export default function AppLayout() {
     <SidebarProvider>
       
       <div className="min-h-[100dvh] flex w-full relative overflow-hidden" style={{ background: `linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)` }}>
+        {/* Fully opaque base layer — blocks any underlying animation/DNA background */}
+        <div className="fixed inset-0 z-0" style={{ background: "hsl(228 22% 7%)" }} />
         {/* Premium sector-themed admin background */}
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          <div className="absolute top-[-10%] right-[10%] w-[600px] h-[600px] rounded-full opacity-[0.06]"
+        <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
+          <div className="absolute top-[-10%] right-[10%] w-[600px] h-[600px] rounded-full opacity-[0.07]"
             style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 65%)`, filter: "blur(140px)" }} />
-          <div className="absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.04]"
+          <div className="absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
             style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 70%)`, filter: "blur(160px)" }} />
-          <div className="absolute top-[40%] left-[50%] w-[400px] h-[400px] rounded-full opacity-[0.025]"
+          <div className="absolute top-[40%] left-[50%] w-[400px] h-[400px] rounded-full opacity-[0.03]"
             style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 60%)`, filter: "blur(120px)" }} />
           <div className="absolute inset-0" style={{ opacity: 0.015, backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
         </div>

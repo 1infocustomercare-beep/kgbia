@@ -236,10 +236,9 @@ export function BottomNav() {
         className="flex md:hidden fixed bottom-0 inset-x-0 z-50 h-14"
         style={{
           paddingBottom: "env(safe-area-inset-bottom, 0px)",
-          background: "linear-gradient(180deg, hsl(228 22% 11% / 0.97) 0%, hsl(228 22% 8% / 0.99) 100%)",
-          backdropFilter: "blur(24px) saturate(1.3)",
-          borderTop: "1px solid hsl(228 20% 18% / 0.5)",
-          boxShadow: "0 -4px 20px hsl(228 22% 4% / 0.6), inset 0 1px 0 hsl(228 20% 22% / 0.15)"
+          background: "linear-gradient(180deg, hsl(228 22% 10%) 0%, hsl(228 22% 7%) 100%)",
+          borderTop: "1px solid hsl(228 20% 16% / 0.5)",
+          boxShadow: "0 -4px 20px hsl(228 22% 4% / 0.8), inset 0 1px 0 hsl(228 20% 20% / 0.12)"
         }}
       >
         {items.map(item => {

@@ -448,9 +448,15 @@ const SuperAdminDashboard = () => {
   }, [payments, fiscoMissing, blockedTenants]);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-x-hidden" style={{ isolation: "isolate" }}>
-      {/* Opaque overlay to block EmpireDNABackground from bleeding through */}
-      <div className="fixed inset-0 bg-background/95 -z-[1]" />
+    <div className="min-h-screen relative overflow-x-hidden" style={{ isolation: "isolate", background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
+      {/* Fully opaque base — blocks underlying animations */}
+      <div className="fixed inset-0 z-0" style={{ background: "hsl(228 22% 7%)" }} />
+      {/* Premium violet/gold luxury ambient */}
+      <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
+        <div className="absolute top-[-8%] left-[20%] w-[500px] h-[500px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsl(265 70% 55%), transparent 65%)", filter: "blur(140px)" }} />
+        <div className="absolute bottom-[10%] right-[-5%] w-[400px] h-[400px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsl(38 50% 55%), transparent 70%)", filter: "blur(160px)" }} />
+        <div className="absolute inset-0" style={{ opacity: 0.012, backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+      </div>
       
       {/* Header */}
       <div className="relative overflow-hidden border-b border-empire-violet-deep/30 bg-gradient-to-br from-empire-violet-surface via-background to-empire-violet/5">
@@ -579,14 +585,21 @@ const SuperAdminDashboard = () => {
       </div>
 
       {/* Tab bar — compact grid for mobile */}
-      <div className="px-3 py-2">
+      <div className="px-3 py-2 relative z-10">
         <div className="grid grid-cols-5 gap-1">
           {tabs.map((tab) => (
             <button key={tab.id}
               onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px] ${
-                activeTab === tab.id ? "bg-empire-violet text-white shadow-[0_0_16px_hsl(265_85%_65%/0.3)]" : "bg-empire-violet-surface/50 text-muted-foreground hover:bg-empire-violet-surface"
-              }`}>
+              className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px]`}
+              style={activeTab === tab.id ? {
+                background: "linear-gradient(160deg, hsl(265 60% 45%), hsl(265 50% 35%))",
+                color: "white",
+                boxShadow: "0 0 16px hsl(265 85% 65% / 0.3), inset 0 1px 0 hsl(265 50% 60% / 0.2)"
+              } : {
+                background: "linear-gradient(160deg, hsl(228 20% 14% / 0.8), hsl(232 22% 12% / 0.7))",
+                color: "hsl(228 15% 60%)",
+                border: "1px solid hsl(228 20% 18% / 0.4)"
+              }}>
               <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
               <span className="leading-tight truncate w-full text-center">{tab.label}</span>
             </button>
