@@ -400,7 +400,7 @@ export default function EmpireTeamStory() {
 
         {/* ── Values strip ── */}
         <motion.div
-          className="mt-14 sm:mt-20 grid grid-cols-3 gap-3 sm:gap-5"
+          className="mt-14 sm:mt-20 grid grid-cols-1 min-[380px]:grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={vpOnce}
@@ -412,14 +412,13 @@ export default function EmpireTeamStory() {
           ].map((v, i) => (
             <div
               key={i}
-              className="text-center p-4 sm:p-6 rounded-2xl"
-              style={{ background: "linear-gradient(165deg, hsla(230,10%,15%,0.82), hsla(230,15%,9%,0.9))", border: "1px solid hsla(38,50%,55%,0.18)" }}
+              className="text-center min-w-0 p-4 sm:p-6 rounded-2xl bg-background/70 border border-border/40"
             >
               <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: v.color }}>
                 <v.icon className="w-4 h-4 text-foreground/90" />
               </div>
-              <p className="text-[0.6rem] sm:text-xs tracking-[2px] uppercase text-muted-foreground/70 mb-1">{v.label}</p>
-              <p className="text-sm sm:text-lg font-bold text-foreground">{v.value}</p>
+              <p className="text-[0.62rem] sm:text-xs tracking-[1.6px] uppercase text-foreground/75 mb-1">{v.label}</p>
+              <p className="text-sm sm:text-lg font-bold text-foreground leading-tight break-words">{v.value}</p>
             </div>
           ))}
         </motion.div>
