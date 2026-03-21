@@ -91,9 +91,9 @@ const KPICard = ({
           <div className="space-y-2"><Skeleton className="h-7 w-16" /><Skeleton className="h-3 w-24" /></div>
         ) : (
           <>
-            <p className="text-2xl font-bold font-heading tracking-tight">{value}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
-            {subtitle && <p className="text-[10px] text-muted-foreground/60 mt-1">{subtitle}</p>}
+            <p className="text-2xl font-bold font-heading tracking-tight text-foreground">{value}</p>
+            <p className="text-xs text-muted-foreground/90 mt-0.5">{label}</p>
+            {subtitle && <p className="text-[10px] text-muted-foreground/70 mt-1">{subtitle}</p>}
           </>
         )}
       </CardContent>
