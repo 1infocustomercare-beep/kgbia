@@ -48,12 +48,86 @@ export default function AuthPage() {
   useEffect(() => {
     if (authLoading || !rolesReady || !user) return;
 
-    if (roles.includes("super_admin")) {
-      navigate("/superadmin", { replace: true });
-      return;
-    }
+    let cancelled = false;
 
-    navigate("/app", { replace: true });
+    const resolveDestination = async () => {
+      if (roles.includes("super_admin")) {
+        navigate("/superadmin", { replace: true });
+        return;
+      }
+
+      if (roles.includes("staff")) {
+        navigate("/staff", { replace: true });
+        return;
+      }
+
+      if ((roles.includes("partner") || roles.includes("team_leader")) && !roles.includes("restaurant_admin")) {
+        navigate("/partner", { replace: true });
+        return;
+      }
+
+      if (roles.includes("customer") && !roles.includes("restaurant_admin")) {
+        navigate("/onboarding", { replace: true });
+        return;
+      }
+
+      if (roles.includes("restaurant_admin")) {
+        const { data: membership } = await supabase
+          .from("company_memberships")
+          .select("company_id")
+          .eq("user_id", user.id)
+          .limit(1)
+          .maybeSingle();
+
+        let companyIndustry: string | null = null;
+
+        if (membership?.company_id) {
+          const { data: company } = await supabase
+            .from("companies")
+            .select("industry")
+            .eq("id", membership.company_id)
+            .maybeSingle();
+          companyIndustry = company?.industry ?? null;
+        } else {
+          const { data: ownedCompany } = await supabase
+            .from("companies")
+            .select("industry")
+            .eq("owner_id", user.id)
+            .limit(1)
+            .maybeSingle();
+          companyIndustry = ownedCompany?.industry ?? null;
+        }
+
+        if (cancelled) return;
+
+        if (companyIndustry) {
+          navigate(companyIndustry === "food" ? "/dashboard" : "/app", { replace: true });
+          return;
+        }
+
+        const { data: ownedRestaurant } = await supabase
+          .from("restaurants")
+          .select("id")
+          .eq("owner_id", user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (cancelled) return;
+
+        if (ownedRestaurant?.id) {
+          navigate("/dashboard", { replace: true });
+          return;
+        }
+      }
+
+      navigate("/app", { replace: true });
+    };
+
+    void resolveDestination();
+
+    return () => {
+      cancelled = true;
+    };
   }, [authLoading, rolesReady, user, roles, navigate]);
 
   const allSectors = Object.entries(INDUSTRY_CONFIGS).map(([id, cfg]) => ({
