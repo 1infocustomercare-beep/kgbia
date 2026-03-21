@@ -395,10 +395,8 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
                 {/* Separator */}
                 <div className="h-px mb-4" style={{ background: `linear-gradient(90deg, transparent, ${color}15, transparent)` }} />
 
-                <div className="flex justify-center mb-4">
-                  <LivePhonePreview route={route} color={color} name={label} />
-                </div>
-                <IndustryPhoneShowcase industryId={id} />
+                {/* Mockup Gallery */}
+                <MockupGallery sectorId={id} color={color} />
 
                 {/* CTA */}
                 <div className="flex justify-center mt-4">
