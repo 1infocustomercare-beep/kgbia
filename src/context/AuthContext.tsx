@@ -87,7 +87,37 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
   const [rolesReady, setRolesReady] = useState(false);
   const [roles, setRoles] = useState<AppRole[]>([]);
 
-  const fetchRoles = async (userId: string): Promise<AppRole[]> => {
+  const reconcileSignupRole = async (userId: string, currentRoles: AppRole[]): Promise<void> => {
+    try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) return;
+
+      const meta = authUser.user_metadata;
+      const signupRole = meta?.signup_role as SignupRole | undefined;
+      if (!signupRole) return; // not a new signup, nothing to reconcile
+
+      // Check if intended role is already assigned
+      if (signupRole === "partner" && currentRoles.includes("partner")) return;
+      if (signupRole === "customer" && currentRoles.includes("customer")) return;
+
+      // Role mismatch — call the assign function to fix it
+      console.log(`[Auth] Reconciling signup role: intended=${signupRole}, current=[${currentRoles.join(",")}]`);
+      const functionName = signupRole === "partner" ? "assign-partner-role" : "assign-customer-role";
+      const { error } = await supabase.functions.invoke(functionName, {
+        body: { user_id: userId },
+      });
+
+      if (error) {
+        console.error("[Auth] Role reconciliation failed:", error);
+      } else {
+        console.log("[Auth] Role reconciliation succeeded");
+      }
+    } catch (err) {
+      console.error("[Auth] Reconciliation error:", err);
+    }
+  };
+
+  const fetchRoles = async (userId: string, shouldReconcile = false): Promise<AppRole[]> => {
     try {
       const [{ data, error }, { data: isSuperAdmin, error: superAdminError }] = await Promise.all([
         supabase
@@ -110,7 +140,24 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
         roleSet.add("super_admin");
       }
 
-      return Array.from(roleSet);
+      let finalRoles = Array.from(roleSet);
+
+      // On login, reconcile if signup role doesn't match
+      if (shouldReconcile) {
+        await reconcileSignupRole(userId, finalRoles);
+        // Re-fetch roles after reconciliation
+        const { data: refreshed } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userId);
+        if (refreshed) {
+          const refreshedSet = new Set<AppRole>(refreshed.map((r: { role: AppRole }) => r.role));
+          if (isSuperAdmin === true) refreshedSet.add("super_admin");
+          finalRoles = Array.from(refreshedSet);
+        }
+      }
+
+      return finalRoles;
     } catch (error) {
       console.error("Unexpected role fetch error", error);
       return [];
@@ -149,7 +196,8 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
         setRolesReady(false);
 
         window.setTimeout(async () => {
-          const fetchedRoles = await fetchRoles(nextSession.user.id);
+          const shouldReconcile = event === "SIGNED_IN";
+          const fetchedRoles = await fetchRoles(nextSession.user.id, shouldReconcile);
           if (!isMounted) return;
           setRoles(fetchedRoles);
           setRolesReady(true);
