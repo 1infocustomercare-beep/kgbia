@@ -6590,8 +6590,8 @@ const LandingPage = () => {
                     animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
                       </div>
                       <h4 className="font-heading text-xs font-semibold mb-0.5 text-foreground">{t.name}</h4>
-                      <p className="text-[0.58rem] mb-4 text-foreground/50">{t.role}</p>
-                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1 text-foreground/65">
+                      <p className="text-[0.58rem] mb-4 text-foreground/60">{t.role}</p>
+                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1 text-foreground/75">
                         <Quote className="w-3.5 h-3.5 mx-auto mb-2 text-primary/30" />
                         "{t.quote}"
                       </blockquote>
