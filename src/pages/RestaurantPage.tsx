@@ -476,7 +476,7 @@ const RestaurantPage = () => {
           {/* ── Full Menu — Category Tabs + Compact List ── */}
           <div>
             {/* Sticky Category Bar */}
-            <div className="sticky top-[56px] z-20 -mx-4 px-4 sm:mx-0 sm:px-0 py-3 bg-background/80 backdrop-blur-2xl border-b border-border/5 mb-4 sm:mb-5">
+            <div className="sticky top-[56px] z-20 -mx-4 px-4 sm:mx-0 sm:px-0 py-3 mb-4 sm:mb-5 backdrop-blur-2xl" style={{ background: "hsl(20 10% 4% / 0.92)", borderBottom: "1px solid hsla(30, 20%, 25%, 0.15)" }}>
               {/* Desktop: horizontal scroll pills */}
               <div className="hidden sm:flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
                 {menuCategories.map((cat) => {
