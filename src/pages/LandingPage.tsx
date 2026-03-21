@@ -6765,7 +6765,7 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Domande<br /><span className="text-shimmer">Frequenti</span>
             </h2>
-            <p className="text-sm text-foreground/55 leading-[1.7] max-w-xs mx-auto lg:mx-0">
+            <p className="text-sm text-foreground/75 leading-[1.7] max-w-xs mx-auto lg:mx-0">
               Tutto su Empire: settori, costi, sicurezza, capacità e partnership.
             </p>
           </motion.div>
