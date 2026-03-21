@@ -196,7 +196,8 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
         setRolesReady(false);
 
         window.setTimeout(async () => {
-          const fetchedRoles = await fetchRoles(nextSession.user.id);
+          const shouldReconcile = event === "SIGNED_IN";
+          const fetchedRoles = await fetchRoles(nextSession.user.id, shouldReconcile);
           if (!isMounted) return;
           setRoles(fetchedRoles);
           setRolesReady(true);
