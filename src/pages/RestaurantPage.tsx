@@ -276,7 +276,7 @@ const RestaurantPage = () => {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              className="md:hidden glass-strong border-b border-border/20 overflow-hidden">
+              className="md:hidden overflow-hidden backdrop-blur-2xl" style={{ background: "hsl(20 10% 4% / 0.98)", borderBottom: "1px solid hsla(30, 20%, 25%, 0.2)" }}>
               <div className="flex flex-col items-center py-4 gap-1">
                 {navLinks.map((link) => (
                   <button key={link.id} onClick={() => scrollToSection(link.id)}
