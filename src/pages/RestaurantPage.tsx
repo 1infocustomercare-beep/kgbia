@@ -523,7 +523,7 @@ const RestaurantPage = () => {
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
                 {catItems.map((item, i) => (
                   <motion.div key={item.id}
-                    className="group flex items-center gap-3 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-card/80 hover:bg-card border border-border/10 hover:border-primary/15 transition-all duration-300 cursor-pointer active:scale-[0.98]"
+                    className="group flex items-center gap-3 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl cote-card transition-all duration-300 cursor-pointer active:scale-[0.98]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.03, duration: 0.35 }}
                     onClick={() => setSelectedItem(item)}>
