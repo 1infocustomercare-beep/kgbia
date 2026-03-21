@@ -1159,16 +1159,16 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
         </motion.div>
 
         {/* Sector Selector — Lucide Icons */}
-        <motion.div className="max-w-lg mx-auto mt-4" initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <p className="text-[0.55rem] font-heading text-foreground/30 tracking-[2px] uppercase text-center mb-2">Il tuo settore</p>
-          <div className="flex flex-wrap justify-center gap-1.5">
+        <motion.div className="max-w-lg mx-auto mt-5" initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <p className="text-[0.6rem] font-heading text-foreground/35 tracking-[2px] uppercase text-center mb-2.5">Il tuo settore</p>
+          <div className="flex flex-wrap justify-center gap-2">
             {PRICING_SECTORS.map((s) => {
               const isActive = selectedSector === s.id;
               return (
                 <button
                   key={s.id}
                   onClick={() => {setSelectedSector(s.id);setSelectedAddons(new Set());}}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[0.6rem] font-heading font-semibold transition-all border ${
+                  className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold transition-all border ${
                     isActive
                       ? "border-primary/40 bg-primary/10 text-primary shadow-[0_0_12px_hsla(265,70%,60%,0.15)]"
                       : "border-border/20 bg-foreground/[0.02] text-foreground/40 hover:text-foreground/60 hover:border-border/40"
@@ -1181,9 +1181,9 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             })}
           </div>
           {sectorFeatures.length > 0 &&
-          <div className="flex flex-wrap justify-center gap-1.5 mt-2.5">
+          <div className="flex flex-wrap justify-center gap-2 mt-3">
               {sectorFeatures.slice(0, 3).map((f, i) =>
-            <span key={i} className="px-2 py-0.5 rounded-full text-[0.5rem] bg-primary/[0.08] text-primary/70 font-medium">{f}</span>
+            <span key={i} className="px-2.5 py-1 rounded-full text-[0.6rem] bg-primary/[0.08] text-primary/70 font-medium">{f}</span>
             )}
             </div>
           }
