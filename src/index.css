@@ -190,22 +190,23 @@
 .bg-background\/95 { background-color: hsl(220 20% 97% / 0.96) !important; }
 
 /* Dark scope overrides for global opacity classes */
-.landing-dark .bg-background\/80 { background-color: hsl(228 22% 8% / 0.92) !important; }
-.landing-dark .bg-background\/60 { background-color: hsl(228 22% 8% / 0.88) !important; }
-.landing-dark .bg-card\/90 { background-color: hsl(228 20% 11% / 0.92) !important; }
-.landing-dark .bg-card\/80 { background-color: hsl(228 20% 11% / 0.88) !important; }
-.landing-dark .bg-background\/95 { background-color: hsl(228 22% 8% / 0.96) !important; }
+.landing-dark .bg-background\/80 { background-color: hsl(228 18% 7% / 0.98) !important; }
+.landing-dark .bg-background\/60 { background-color: hsl(228 18% 7% / 0.96) !important; }
+.landing-dark .bg-card\/90 { background-color: hsl(225 14% 11% / 0.98) !important; }
+.landing-dark .bg-card\/80 { background-color: hsl(225 14% 11% / 0.97) !important; }
+.landing-dark .bg-background\/95 { background-color: hsl(228 18% 7% / 0.99) !important; }
 
-@layer utilities {
-  .font-heading {
-    font-family: 'Space Grotesk', sans-serif;
-  }
-
-  .glass {
-    background: hsla(0, 0%, 100%, 0.78);
-    backdrop-filter: blur(24px) saturate(1.2);
-    border: 1px solid hsl(var(--border) / 0.5);
-  }
+.landing-dark .glass {
+  background: hsla(225, 14%, 13%, 0.92);
+  border: 1px solid hsla(210, 20%, 96%, 0.08);
+}
+.landing-dark .glass-strong {
+  background: hsla(225, 14%, 11%, 0.96);
+  border: 1px solid hsla(210, 20%, 96%, 0.08);
+}
+.landing-dark .gold-glow {
+  box-shadow: 0 0 30px hsla(172, 80%, 48%, 0.2), 0 0 60px hsla(210, 100%, 62%, 0.08);
+}
 
   .glass-strong {
     background: hsla(0, 0%, 100%, 0.9);
