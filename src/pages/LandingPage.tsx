@@ -6420,7 +6420,7 @@ const LandingPage = () => {
                              TESTIMONIALS — Auto-scroll carousel
                             ═══════════════════════════════════════════ */}
       <Section id="testimonials" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 25% 96%) 50%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6726,7 +6726,7 @@ const LandingPage = () => {
                              FAQ
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(248 18% 96%) 50%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(240 20% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
