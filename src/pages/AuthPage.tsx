@@ -214,7 +214,7 @@ export default function AuthPage() {
                     <h1 className="text-xl font-heading font-bold text-white mb-1">
                       {role === "partner" ? "Registrati come Partner" : "Crea il tuo Account"}
                     </h1>
-                    <p className="text-sm text-white/50">Compila i dati per iniziare</p>
+                    <p className="text-sm text-gray-300">Compila i dati per iniziare</p>
                   </div>
                   <div className="space-y-3">
                     <div className="relative">
