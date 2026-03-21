@@ -207,7 +207,7 @@ export default function AuthPage() {
               {step === 2 && (
                 <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   className="space-y-4">
-                  <button onClick={() => setStep(1)} className="flex items-center gap-1 text-xs text-white/40 hover:text-white/60">
+                  <button onClick={() => setStep(1)} className="flex items-center gap-1 text-xs text-amber-400/80 hover:text-amber-300">
                     <ArrowLeft className="w-3 h-3" /> Indietro
                   </button>
                   <div className="text-center">
