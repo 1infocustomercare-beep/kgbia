@@ -5589,7 +5589,7 @@ const LandingPage = () => {
             <h3 className="text-base sm:text-lg font-heading font-bold text-foreground mb-2">
               "Se puoi immaginarlo, <span className="text-shimmer">noi lo costruiamo.</span>"
             </h3>
-            <p className="text-[0.7rem] text-foreground/50 mb-6 max-w-md mx-auto">
+            <p className="text-[0.7rem] text-foreground/65 mb-6 max-w-md mx-auto">
               Il tuo business merita una soluzione costruita su misura. Non un compromesso.
             </p>
             <motion.button
