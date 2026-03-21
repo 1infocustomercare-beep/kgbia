@@ -197,7 +197,7 @@ export default function AuthPage() {
                       </button>
                     ))}
                   </div>
-                  <p className="text-xs text-center text-white/40">
+                  <p className="text-xs text-center text-gray-400">
                     Hai già un account?{" "}
                     <button onClick={() => setMode("login")} className="text-purple-400 hover:text-purple-300 font-semibold">Accedi</button>
                   </p>
