@@ -288,7 +288,7 @@ const PartnerDashboard = () => {
       
       {/* Back integrated in header */}
       {/* Header — Vibrant FLAVR style */}
-      <div className="relative flex flex-col items-center px-3 pt-3 pb-2 border-b border-empire-violet-deep/20 safe-top overflow-hidden" style={{ background: 'var(--gradient-dna-subtle)' }}>
+      <div className="relative flex flex-col items-center px-3 pt-3 pb-2 border-b safe-top overflow-hidden" style={{ background: 'linear-gradient(180deg, hsla(265,22%,12%,0.98), hsla(255,20%,9%,0.96))', borderColor: 'hsla(265,50%,50%,0.15)', boxShadow: '0 4px 20px hsla(265,40%,15%,0.3)' }}>
         {/* DNA scan line */}
         <motion.div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: 'var(--gradient-dna)' }} animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 3, repeat: Infinity }} />
         
