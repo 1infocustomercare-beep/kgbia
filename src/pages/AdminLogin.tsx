@@ -397,8 +397,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }}>
               <ChefHat className="w-8 h-8 text-primary-foreground" />
             </motion.div>
-            <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Kitchen View</h1>
-            <p className="text-sm text-muted-foreground mt-1">Inserisci il PIN</p>
+            <h1 className="text-2xl font-heading font-bold text-white">Kitchen View</h1>
+            <p className="text-sm text-gray-300 mt-1">Inserisci il PIN</p>
           </div>
 
           {/* PIN dots display */}
