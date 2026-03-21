@@ -427,8 +427,8 @@ function DashboardShell({
             <HeroIcon className="w-5 h-5" style={{ color: `hsl(${accent})` }} />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold font-heading tracking-tight">{title}</h1>
-            {subtitle && <p className="text-xs text-muted-foreground mt-0.5 max-w-md">{subtitle}</p>}
+            <h1 className="text-xl sm:text-2xl font-bold font-heading tracking-tight text-foreground">{title}</h1>
+            {subtitle && <p className="text-xs text-muted-foreground/80 mt-0.5 max-w-md">{subtitle}</p>}
           </div>
         </div>
       </motion.div>
