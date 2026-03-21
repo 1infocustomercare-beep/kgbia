@@ -3442,8 +3442,8 @@ const LandingPage = () => {
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-24 sm:pt-28 pb-8 sm:pb-16"
       style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Clean premium gradient ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(220 25% 97%) 0%, hsl(230 18% 96%) 25%, hsl(248 14% 96%) 50%, hsl(220 20% 96%) 75%, hsl(210 20% 97%) 100%)" }} />
+        {/* ═══ LAYER 0: Clean premium dark gradient ═══ */}
+        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(228 22% 10%) 0%, hsl(235 20% 8%) 25%, hsl(248 18% 9%) 50%, hsl(230 22% 8%) 75%, hsl(225 20% 10%) 100%)" }} />
 
         {/* ═══ LAYER 1: Premium ambient blobs ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
