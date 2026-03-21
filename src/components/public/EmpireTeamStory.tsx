@@ -261,7 +261,7 @@ export default function EmpireTeamStory() {
                     </div>
 
                     <h4 className="text-[0.85rem] sm:text-base font-bold text-foreground leading-tight">{m.label}</h4>
-                    <p className="text-[0.7rem] sm:text-xs text-muted-foreground/55 mt-2 leading-relaxed">{m.desc}</p>
+                    <p className="text-[0.7rem] sm:text-xs mt-2 leading-relaxed" style={{ color: "hsl(0 0% 100% / 0.72)" }}>{m.desc}</p>
 
                     {/* Metric badge */}
                     <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: m.color, border: `1px solid ${m.color}` }}>
