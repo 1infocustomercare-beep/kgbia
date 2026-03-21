@@ -38,7 +38,7 @@ const PatternOverlay = ({ pattern, accent }: { pattern: string; accent: string }
 };
 
 export default function AppLayout() {
-  const { industry, loading, resolved } = useIndustry();
+  const { industry, loading, resolved, company } = useIndustry();
   const location = useLocation();
 
   if (loading || !resolved) {
