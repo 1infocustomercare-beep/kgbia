@@ -285,41 +285,41 @@ export default function AuthPage() {
                     <ArrowLeft className="w-3 h-3" /> Indietro
                   </button>
                   <div className="text-center">
-                    <h1 className="text-xl font-heading font-bold text-white mb-1">
+                    <h1 className="text-xl font-heading font-bold text-foreground mb-1">
                       {role === "partner" ? "Registrati come Partner" : "Crea il tuo Account"}
                     </h1>
-                    <p className="text-sm text-gray-300">Compila i dati per iniziare</p>
+                    <p className="text-sm text-foreground/85">Compila i dati per iniziare</p>
                   </div>
                   <div className="space-y-3">
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input placeholder="Nome completo" value={fullName} onChange={e => setFullName(e.target.value)}
-                        className="pl-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
+                        className="pl-10 bg-white/8 border-white/15 text-foreground placeholder:text-foreground/55 focus:border-primary/55" />
                     </div>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                        className="pl-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
+                        className="pl-10 bg-white/8 border-white/15 text-foreground placeholder:text-foreground/55 focus:border-primary/55" />
                     </div>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input type={showPw ? "text" : "password"} placeholder="Password (min 8 caratteri)" value={password} onChange={e => setPassword(e.target.value)}
-                        className="pl-10 pr-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
-                      <button onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/80">
+                        className="pl-10 pr-10 bg-white/8 border-white/15 text-foreground placeholder:text-foreground/55 focus:border-primary/55" />
+                      <button onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
                         {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
                     {role === "partner" && (
                       <div className="relative">
-                      <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
-                        className="pl-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
+                        className="pl-10 bg-white/8 border-white/15 text-foreground placeholder:text-foreground/55 focus:border-primary/55" />
                       </div>
                     )}
 
                     {/* Sector selection */}
                     <div>
-                      <p className="text-xs text-white font-medium mb-2">
+                      <p className="text-xs text-foreground font-medium mb-2">
                         {role === "partner" ? "Settore di competenza" : "Il tuo settore"}
                       </p>
                       <div className="grid grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-1">
@@ -334,8 +334,8 @@ export default function AuthPage() {
                                 background: selected ? `${color}25` : "hsla(0,0%,100%,0.05)",
                                 border: `1px solid ${selected ? `${color}60` : "hsla(0,0%,100%,0.12)"}`,
                               }}>
-                              <Icon className="w-4 h-4" style={{ color: selected ? color : "hsla(0,0%,100%,0.6)" }} />
-                              <span className="text-[10px] font-medium leading-tight" style={{ color: selected ? "#fff" : "hsla(0,0%,100%,0.7)" }}>
+                              <Icon className="w-4 h-4" style={{ color: selected ? color : "hsl(var(--foreground) / 0.6)" }} />
+                              <span className="text-[10px] font-medium leading-tight" style={{ color: selected ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.72)" }}>
                                 {s.label}
                               </span>
                             </button>
@@ -345,7 +345,7 @@ export default function AuthPage() {
                     </div>
                   </div>
                   <Button onClick={handleRegister} disabled={loading || !sector} className="w-full py-3 rounded-xl font-bold text-sm"
-                    style={{ background: "linear-gradient(135deg, hsl(265 70% 58%), hsl(250 60% 50%))", color: "#fff" }}>
+                    style={{ background: "linear-gradient(135deg, hsl(265 70% 58%), hsl(250 60% 50%))", color: "hsl(var(--primary-foreground))" }}>
                     {loading ? "Registrazione..." : "Crea Account"}
                   </Button>
                 </motion.div>
