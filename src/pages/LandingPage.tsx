@@ -6816,7 +6816,7 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.5rem,4vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Garanzia <span className="text-shimmer">Risultati Garantiti</span>
             </h2>
-            <p className="text-sm text-foreground/40 max-w-md mx-auto leading-[1.8] mb-6">
+            <p className="text-sm text-foreground/75 max-w-md mx-auto leading-[1.8] mb-6">
                Prova Empire per 90 giorni senza impegno. Se non vedi risultati concreti, ti rimborsiamo. Zero rischi. Il tuo successo è la nostra priorità.
              </p>
              <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
