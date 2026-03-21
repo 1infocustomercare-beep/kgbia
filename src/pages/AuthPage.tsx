@@ -191,9 +191,9 @@ export default function AuthPage() {
                         </div>
                         <div>
                           <p className="text-sm font-bold text-white">{r.title}</p>
-                          <p className="text-xs text-white/50">{r.desc}</p>
+                          <p className="text-xs text-gray-300">{r.desc}</p>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-white/30 ml-auto" />
+                        <ArrowRight className="w-4 h-4 text-white/50 ml-auto" />
                       </button>
                     ))}
                   </div>
