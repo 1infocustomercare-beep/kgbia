@@ -6764,7 +6764,7 @@ const LandingPage = () => {
                 </motion.div>
                 <div className="text-left sm:text-center">
                   <p className="text-sm font-bold text-foreground font-heading">{s.title}</p>
-                  <p className="text-[0.6rem] text-foreground/50">{s.desc}</p>
+                  <p className="text-[0.6rem] text-foreground/65">{s.desc}</p>
                 </div>
                 {i < 2 && <ArrowRight className="hidden sm:block w-5 h-5 text-primary/15 mx-6 flex-shrink-0" />}
               </div>
