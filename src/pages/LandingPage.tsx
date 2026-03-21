@@ -4170,9 +4170,9 @@ const LandingPage = () => {
             className="px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center gap-2"
             style={{
               border: "1px solid hsl(var(--border) / 0.4)",
-              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))",
+              background: "linear-gradient(160deg, hsl(228 20% 14% / 0.85), hsl(248 18% 12% / 0.8))",
               backdropFilter: "blur(12px)",
-              boxShadow: "0 2px 12px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
+              boxShadow: "0 2px 12px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
             }}
             whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
             
