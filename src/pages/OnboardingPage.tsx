@@ -137,7 +137,7 @@ export default function OnboardingPage() {
             status: "trialing",
             billing_cycle: "monthly",
             trial_ends_at: new Date(Date.now() + 90 * 86400000).toISOString(),
-          }).catch(() => {});
+          }).then(() => {}).catch?.(() => {});
         }
       }
 
