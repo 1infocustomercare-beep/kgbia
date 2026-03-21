@@ -188,7 +188,7 @@ export default function EmpireTeamStory() {
               Empire AI
             </span>
           </h2>
-          <p className="text-muted-foreground/70 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+          <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base leading-relaxed" style={{ color: "hsl(0 0% 100% / 0.78)" }}>
             Non un semplice software — un organismo digitale in continua evoluzione. 
             Ogni milestone è una mutazione che ha reso la nostra piattaforma più intelligente, più potente, più adattiva.
           </p>
@@ -261,7 +261,7 @@ export default function EmpireTeamStory() {
                     </div>
 
                     <h4 className="text-[0.85rem] sm:text-base font-bold text-foreground leading-tight">{m.label}</h4>
-                    <p className="text-[0.7rem] sm:text-xs text-muted-foreground/55 mt-2 leading-relaxed">{m.desc}</p>
+                    <p className="text-[0.7rem] sm:text-xs mt-2 leading-relaxed" style={{ color: "hsl(0 0% 100% / 0.72)" }}>{m.desc}</p>
 
                     {/* Metric badge */}
                     <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: m.color, border: `1px solid ${m.color}` }}>
@@ -308,7 +308,7 @@ export default function EmpireTeamStory() {
               Empire AI
             </span>
           </h2>
-          <p className="text-muted-foreground/70 max-w-xl mx-auto text-sm sm:text-base">
+          <p className="max-w-xl mx-auto text-sm sm:text-base" style={{ color: "hsl(0 0% 100% / 0.75)" }}>
             Un team multidisciplinare unito dalla passione per l'innovazione e la tecnologia applicata al business.
           </p>
         </motion.div>
@@ -412,12 +412,18 @@ export default function EmpireTeamStory() {
           ].map((v, i) => (
             <div
               key={i}
-              className="text-center min-w-0 p-4 sm:p-6 rounded-2xl bg-background/70 border border-border/40"
+              className="text-center min-w-0 p-4 sm:p-6 rounded-2xl"
+              style={{
+                background: "linear-gradient(155deg, hsla(228,20%,15%,0.94), hsla(232,22%,11%,0.92))",
+                border: "1px solid hsla(265,50%,50%,0.15)",
+                backdropFilter: "blur(20px)",
+                boxShadow: "0 6px 28px hsla(0,0%,0%,0.3), inset 0 1px 0 hsla(0,0%,100%,0.05)",
+              }}
             >
               <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: v.color }}>
                 <v.icon className="w-4 h-4 text-foreground/90" />
               </div>
-              <p className="text-[0.62rem] sm:text-xs tracking-[1.6px] uppercase text-foreground/75 mb-1">{v.label}</p>
+              <p className="text-[0.62rem] sm:text-xs tracking-[1.6px] uppercase text-foreground/85 mb-1">{v.label}</p>
               <p className="text-sm sm:text-lg font-bold text-foreground leading-tight break-words">{v.value}</p>
             </div>
           ))}
