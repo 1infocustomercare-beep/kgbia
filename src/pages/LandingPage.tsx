@@ -3709,11 +3709,11 @@ const LandingPage = () => {
           <motion.div key={i} variants={popIn}
           className="relative p-3.5 rounded-2xl overflow-hidden text-center group"
           style={{
-            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.85))",
+            background: "linear-gradient(160deg, hsl(228 20% 14% / 0.92), hsl(232 22% 12% / 0.85))",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
-            border: `1px solid hsl(${f.color} / 0.1)`,
-            boxShadow: `0 2px 16px hsl(${f.color} / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)`
+            border: `1px solid hsl(${f.color} / 0.15)`,
+            boxShadow: `0 2px 16px hsl(${f.color} / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.04)`
           }}>
             {/* Top accent line */}
             <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, hsl(${f.color} / 0.25), transparent)` }} />
