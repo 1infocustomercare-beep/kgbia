@@ -3866,7 +3866,7 @@ const LandingPage = () => {
                 <div
                   className="absolute inset-0 sm:hidden z-0 rounded-2xl"
                   style={{
-                    background: "linear-gradient(160deg, hsla(220,20%,98%,0.97), hsla(220,18%,97%,0.98))",
+                    background: "linear-gradient(160deg, hsl(228 20% 12% / 0.97), hsl(230 20% 10% / 0.98))",
                     border: "1px solid hsl(var(--border) / 0.18)"
                   }} />
                 
@@ -5535,8 +5535,8 @@ const LandingPage = () => {
 
         {/* ═══ Scrolling Capabilities Ticker ═══ */}
         <div className="relative mb-14 -mx-5 sm:-mx-6 overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(220 20% 97%), transparent)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(220 20% 97%), transparent)" }} />
+          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(228 22% 8%), transparent)" }} />
+          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(228 22% 8%), transparent)" }} />
           {[0, 1].map((row) =>
           <div key={row} className="flex whitespace-nowrap mb-2" style={{ animation: `carousel-scroll ${row === 0 ? "40s" : "45s"} linear infinite ${row === 1 ? "reverse" : ""}` }}>
               {[...Array(2)].map((_, rep) =>
@@ -7026,7 +7026,7 @@ const LandingPage = () => {
       <AnimatePresence>
         {ctaVisible &&
         <motion.div className={`fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] border-t border-border/20 ${IS_MOBILE_LP ? "" : "backdrop-blur-2xl"}`}
-        style={{ background: IS_MOBILE_LP ? "hsla(228,20%,14%,0.86)" : "linear-gradient(180deg, hsla(228,20%,14%,0.86), hsla(220,20%,98%,0.94))" }}
+        style={{ background: IS_MOBILE_LP ? "hsla(228,20%,14%,0.86)" : "linear-gradient(180deg, hsla(228,20%,14%,0.92), hsla(228,22%,10%,0.96))" }}
         initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} transition={{ type: "spring", damping: 25 }}>
             <div className="flex gap-2 max-w-md mx-auto">
               <motion.button onClick={() => scrollTo("pricing")}
