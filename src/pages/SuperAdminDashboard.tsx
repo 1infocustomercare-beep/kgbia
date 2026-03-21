@@ -658,22 +658,22 @@ const SuperAdminDashboard = () => {
 
             {/* KPI Cards */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-4 rounded-2xl bg-card border border-primary/20">
+              <div className="p-4 rounded-2xl admin-card-accent">
                 <DollarSign className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-primary">€{mrr.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground">MRR</p>
               </div>
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <TrendingUp className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-foreground">€{arr.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground">ARR</p>
               </div>
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <Store className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-foreground">{activeTenants}/{tenants.length}</p>
                 <p className="text-xs text-muted-foreground">Tenant attivi</p>
               </div>
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card-accent">
                 <Crown className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-primary">€{totalFee.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground">Fee 2% totali</p>
