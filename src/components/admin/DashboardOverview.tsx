@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TrendingUp, ShoppingCart, DollarSign, Users, Star, CalendarDays, ChefHat, ExternalLink, Sparkles, Loader2, Zap, Crown, X } from "lucide-react";
+import { TrendingUp, ShoppingCart, DollarSign, Users, Star, CalendarDays, ChefHat, ExternalLink, Sparkles, Loader2, Zap, Crown, X, Flame } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
-import cartoonDashboard from "@/assets/cartoon-dashboard.png";
 
 interface DashboardOverviewProps {
   todayRevenue: number;
@@ -38,13 +37,19 @@ const DashboardOverview = ({
   const pendingReservations = reservations.filter((r: any) => r.status === "pending");
 
   return (
-    <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      {/* Cartoon illustration */}
-      <div className="flex flex-col items-center text-center gap-2 py-2">
-        <img src={cartoonDashboard} alt="" className="w-24 h-24 object-contain" />
+    <motion.div className="space-y-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      {/* Restaurant header — COTE style */}
+      <div className="flex flex-col items-center text-center gap-3 py-4">
+        <motion.div
+          className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20"
+          initial={{ scale: 0.8 }} animate={{ scale: 1 }}
+          transition={{ type: "spring", damping: 15 }}
+        >
+          <Flame className="w-7 h-7 text-primary" />
+        </motion.div>
         <div>
-          <h2 className="text-lg font-display font-bold text-foreground">{restaurantName}</h2>
-          <p className="text-[0.6rem] uppercase tracking-[3px] text-muted-foreground/50 font-semibold">Command Center · Oggi</p>
+          <h2 className="text-xl font-display font-bold text-foreground tracking-wide uppercase">{restaurantName}</h2>
+          <p className="text-[0.6rem] uppercase tracking-[4px] text-primary/60 font-semibold mt-1">Command Center · Oggi</p>
         </div>
         <InfoGuide
           title="Dashboard Principale"
@@ -57,49 +62,73 @@ const DashboardOverview = ({
         />
       </div>
 
-      {/* Main KPIs — 2x2 grid */}
+      {/* Main KPIs — 2x2 grid with COTE copper borders */}
       <div className="grid grid-cols-2 gap-3">
-        <motion.div className="p-3.5 rounded-2xl bg-card border border-primary/20 cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("profit")}>
-          <DollarSign className="w-5 h-5 text-primary mb-1.5" />
+        <motion.div
+          className="cote-card-accent p-4 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform"
+          onClick={() => onNavigate("profit")}
+          whileTap={{ scale: 0.97 }}
+        >
+          <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center mb-2">
+            <DollarSign className="w-5 h-5 text-primary" />
+          </div>
           <p className="text-2xl font-display font-bold text-primary leading-tight">€{todayRevenue.toFixed(0)}</p>
-          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">Revenue Giornaliero</p>
+          <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">Revenue Giornaliero</p>
         </motion.div>
-        <motion.div className="p-3.5 rounded-2xl bg-card cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")}>
-          <ShoppingCart className="w-5 h-5 text-primary mb-1.5" />
+        <motion.div
+          className="cote-card p-4 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform"
+          onClick={() => onNavigate("orders")}
+          whileTap={{ scale: 0.97 }}
+        >
+          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-2">
+            <ShoppingCart className="w-5 h-5 text-primary" />
+          </div>
           <p className="text-2xl font-display font-bold text-foreground leading-tight">{todayOrderCount}</p>
-          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">Ordini Ricevuti</p>
+          <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">Ordini Ricevuti</p>
         </motion.div>
-        <motion.div className="p-3.5 rounded-2xl bg-card cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")}>
-          <ChefHat className="w-5 h-5 text-primary mb-1.5" />
+        <motion.div
+          className="cote-card p-4 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform"
+          onClick={() => onNavigate("orders")}
+          whileTap={{ scale: 0.97 }}
+        >
+          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-2">
+            <ChefHat className="w-5 h-5 text-primary" />
+          </div>
           <div className="flex items-center gap-2">
             <p className="text-2xl font-display font-bold text-foreground leading-tight">{activeOrderCount}</p>
             {activeOrderCount > 0 && <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />}
           </div>
-          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">In Preparazione</p>
+          <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">In Preparazione</p>
         </motion.div>
-        <motion.div className="p-3.5 rounded-2xl bg-card cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("studio")}>
-          <TrendingUp className="w-5 h-5 text-primary mb-1.5" />
+        <motion.div
+          className="cote-card p-4 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform"
+          onClick={() => onNavigate("studio")}
+          whileTap={{ scale: 0.97 }}
+        >
+          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-2">
+            <TrendingUp className="w-5 h-5 text-primary" />
+          </div>
           <p className="text-2xl font-display font-bold text-foreground leading-tight">{menuItemCount}</p>
-          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">Catalogo Piatti</p>
+          <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">Catalogo Piatti</p>
         </motion.div>
       </div>
 
       {/* Reviews & Reservations */}
       <div className="grid grid-cols-2 gap-3">
-        <motion.div className="p-3 rounded-2xl bg-card border border-border/50 cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("profit")}>
-          <div className="flex items-center gap-1.5 mb-1">
+        <motion.div className="cote-card p-3.5 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("profit")} whileTap={{ scale: 0.97 }}>
+          <div className="flex items-center gap-1.5 mb-1.5">
             <Star className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold">Reputazione</span>
+            <span className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold">Reputazione</span>
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl font-display font-bold text-primary">{avgRating}</span>
             <span className="text-[10px] text-muted-foreground">({reviews.length})</span>
           </div>
         </motion.div>
-        <motion.div className="p-3 rounded-2xl bg-card border border-border/50 cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")}>
-          <div className="flex items-center gap-1.5 mb-1">
+        <motion.div className="cote-card p-3.5 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")} whileTap={{ scale: 0.97 }}>
+          <div className="flex items-center gap-1.5 mb-1.5">
             <CalendarDays className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold">Prenotazioni</span>
+            <span className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold">Prenotazioni</span>
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl font-display font-bold text-foreground">{todayReservations.length}</span>
@@ -114,9 +143,9 @@ const DashboardOverview = ({
         </motion.div>
       </div>
 
-      {/* AI Tokens */}
-      <div className="p-3 rounded-2xl bg-primary/5 border border-primary/20 relative">
-        <div className="absolute top-2 right-2">
+      {/* AI Tokens — copper accent */}
+      <div className="cote-card-accent p-4 rounded-2xl relative">
+        <div className="absolute top-3 right-3">
           <InfoGuide
             title="Gettoni IA"
             description="I gettoni alimentano le funzionalità AI: creazione menu da foto, generazione immagini food e traduzione automatica in più lingue."
@@ -128,26 +157,26 @@ const DashboardOverview = ({
           />
         </div>
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-            <Sparkles className="w-4 h-4 text-primary" />
+          <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0 border border-primary/20">
+            <Sparkles className="w-5 h-5 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground">Intelligenza Artificiale</p>
-            <p className="text-[0.55rem] uppercase tracking-[1.5px] text-muted-foreground/50 font-semibold truncate">Menu · Photo · Translate</p>
+            <p className="text-sm font-semibold text-foreground">Intelligenza Artificiale</p>
+            <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold truncate">Menu · Photo · Translate</p>
           </div>
           <span className={`text-lg font-display font-bold flex-shrink-0 ${aiTokens <= 5 ? "text-destructive" : "text-primary"}`}>{aiTokens}</span>
         </div>
 
         {aiTokens <= 10 && (
           <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-            className="mt-2 p-2 rounded-lg bg-destructive/10 border border-destructive/20 text-[11px] text-destructive text-center">
+            className="mt-3 p-2.5 rounded-xl bg-destructive/10 border border-destructive/20 text-[11px] text-destructive text-center font-medium">
             ⚠️ Gettoni in esaurimento! Ricarica per continuare ad usare le funzioni IA.
           </motion.div>
         )}
 
         <motion.button
           onClick={() => setShowTokenShop(true)}
-          className="w-full mt-3 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2 min-h-[44px]"
+          className="w-full mt-3 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center gap-2 min-h-[44px] gold-glow"
           whileTap={{ scale: 0.97 }}
         >
           <Zap className="w-4 h-4" /> Acquista Gettoni IA
@@ -158,10 +187,10 @@ const DashboardOverview = ({
       <AnimatePresence>
         {showTokenShop && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
             onClick={() => setShowTokenShop(false)}>
             <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }}
-              className="w-full max-w-sm bg-card border border-border rounded-2xl p-5 space-y-4 shadow-xl"
+              className="w-full max-w-sm cote-card rounded-2xl p-5 space-y-4 shadow-xl"
               onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between">
                 <div>
@@ -204,8 +233,8 @@ const DashboardOverview = ({
                     disabled={!!buyingPack}
                     className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left relative overflow-hidden min-h-[60px] ${
                       pack.popular
-                        ? "border-primary bg-primary/5 ring-1 ring-primary/30"
-                        : "border-border bg-secondary/30 hover:border-primary/40"
+                        ? "cote-card-accent ring-1 ring-primary/30"
+                        : "cote-card hover:border-primary/40"
                     } ${buyingPack === pack.id ? "opacity-70" : ""}`}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -240,16 +269,16 @@ const DashboardOverview = ({
       </AnimatePresence>
 
       {/* Quick Actions */}
-      <div className="space-y-2">
-        <p className="text-[0.55rem] uppercase tracking-[3px] text-muted-foreground/40 font-semibold">Accesso Rapido</p>
-        <div className="grid grid-cols-2 gap-2">
+      <div className="space-y-2.5">
+        <p className="text-[0.5rem] uppercase tracking-[3px] text-primary/50 font-semibold">Accesso Rapido</p>
+        <div className="grid grid-cols-2 gap-2.5">
           <motion.button onClick={() => window.open(menuUrl, "_blank")}
-            className="flex items-center gap-2 p-3 rounded-xl bg-secondary/50 text-sm text-foreground min-h-[48px] active:bg-secondary transition-colors"
+            className="cote-card flex items-center gap-2.5 p-3.5 rounded-xl text-sm text-foreground min-h-[48px] active:scale-[0.97] transition-all font-medium"
             whileTap={{ scale: 0.97 }}>
             <ExternalLink className="w-4 h-4 text-primary flex-shrink-0" /> Vedi Menu
           </motion.button>
           <motion.button onClick={() => window.open("/kitchen", "_blank")}
-            className="flex items-center gap-2 p-3 rounded-xl bg-secondary/50 text-sm text-foreground min-h-[48px] active:bg-secondary transition-colors"
+            className="cote-card flex items-center gap-2.5 p-3.5 rounded-xl text-sm text-foreground min-h-[48px] active:scale-[0.97] transition-all font-medium"
             whileTap={{ scale: 0.97 }}>
             <ChefHat className="w-4 h-4 text-primary flex-shrink-0" /> Cucina
           </motion.button>

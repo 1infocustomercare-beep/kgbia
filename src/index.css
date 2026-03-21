@@ -264,6 +264,103 @@
   box-shadow: 0 0 30px hsla(172, 80%, 48%, 0.2), 0 0 60px hsla(210, 100%, 62%, 0.08);
 }
 
+/* ═══ COTE LUXURY — Food Admin & Customer Dark Theme ═══ */
+.cote-luxury {
+  --background: 20 10% 4%;
+  --foreground: 30 20% 92%;
+  --card: 20 8% 8%;
+  --card-foreground: 30 20% 92%;
+  --popover: 20 8% 8%;
+  --popover-foreground: 30 20% 92%;
+  --primary: 30 55% 50%;
+  --primary-foreground: 20 10% 4%;
+  --secondary: 20 8% 12%;
+  --secondary-foreground: 30 20% 85%;
+  --muted: 20 6% 14%;
+  --muted-foreground: 30 12% 60%;
+  --accent: 30 65% 55%;
+  --accent-foreground: 20 10% 4%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 30 15% 18%;
+  --input: 30 12% 16%;
+  --ring: 30 55% 50%;
+  --glass: 20 8% 8% / 0.95;
+  --glass-border: 30 20% 30% / 0.3;
+  --gold-glow: 30 55% 50% / 0.25;
+  color: hsl(30 20% 92%);
+}
+.cote-luxury .glass,
+.cote-luxury .glass-strong {
+  background: hsla(20, 8%, 6%, 0.96);
+  border: 1px solid hsla(30, 20%, 30%, 0.25);
+  backdrop-filter: blur(24px);
+}
+.cote-luxury .gold-glow {
+  box-shadow: 0 0 24px hsla(30, 55%, 50%, 0.3), 0 0 48px hsla(30, 45%, 40%, 0.12);
+}
+.cote-luxury .bg-card {
+  background: linear-gradient(160deg, hsl(20 8% 9%), hsl(20 6% 7%)) !important;
+  border: 1px solid hsla(30, 20%, 25%, 0.3);
+}
+.cote-luxury .bg-secondary {
+  background-color: hsl(20 8% 11%) !important;
+}
+.cote-luxury .bg-secondary\/50 {
+  background-color: hsl(20 8% 10% / 0.9) !important;
+}
+.cote-luxury .bg-secondary\/40 {
+  background-color: hsl(20 8% 10% / 0.8) !important;
+}
+.cote-luxury .bg-background {
+  background-color: hsl(20 10% 4%) !important;
+}
+.cote-luxury .border-border\/50 {
+  border-color: hsla(30, 20%, 25%, 0.3) !important;
+}
+.cote-luxury input,
+.cote-luxury textarea,
+.cote-luxury select {
+  background-color: hsl(20 8% 8%) !important;
+  color: hsl(30 20% 92%);
+  border-color: hsla(30, 20%, 25%, 0.35) !important;
+}
+.cote-luxury input::placeholder,
+.cote-luxury textarea::placeholder {
+  color: hsla(30, 12%, 50%, 0.6);
+}
+.cote-luxury input:focus,
+.cote-luxury textarea:focus,
+.cote-luxury select:focus {
+  border-color: hsla(30, 55%, 50%, 0.5) !important;
+  box-shadow: 0 0 0 2px hsla(30, 55%, 50%, 0.15);
+}
+
+/* COTE card with copper glow border */
+.cote-card {
+  background: linear-gradient(160deg, hsl(20 8% 10%), hsl(20 6% 7%));
+  border: 1px solid hsla(30, 25%, 28%, 0.4);
+  box-shadow: 0 4px 24px -4px hsla(20, 10%, 4%, 0.6), inset 0 1px 0 hsla(30, 30%, 40%, 0.08);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.cote-card:hover, .cote-card:active {
+  border-color: hsla(30, 55%, 50%, 0.4);
+  box-shadow: 0 4px 32px -4px hsla(30, 55%, 50%, 0.15), inset 0 1px 0 hsla(30, 30%, 40%, 0.12);
+}
+
+/* COTE accent card — highlighted copper */
+.cote-card-accent {
+  background: linear-gradient(160deg, hsl(20 10% 11%), hsl(20 8% 8%));
+  border: 1px solid hsla(30, 40%, 40%, 0.45);
+  box-shadow: 0 4px 24px -4px hsla(30, 55%, 50%, 0.12), inset 0 1px 0 hsla(30, 40%, 50%, 0.1);
+}
+
+/* COTE bottom nav */
+.cote-luxury .cote-bottom-nav {
+  background: linear-gradient(180deg, hsl(20 8% 6% / 0.98), hsl(20 10% 4%));
+  border-top: 1px solid hsla(30, 20%, 25%, 0.25);
+}
+
 /* ═══ ADMIN VISIBLE CARD — high-contrast glassmorphism for dark dashboards ═══ */
 .landing-dark .admin-card {
   background: linear-gradient(160deg, hsla(230, 18%, 16%, 0.95), hsla(228, 20%, 12%, 0.9));
