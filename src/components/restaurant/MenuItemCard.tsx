@@ -23,7 +23,7 @@ const MenuItemCard = ({ item, index, onSelect }: MenuItemCardProps) => {
 
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-2xl bg-card cursor-pointer food-card-shadow"
+      className="group relative overflow-hidden rounded-2xl cote-card cursor-pointer"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
