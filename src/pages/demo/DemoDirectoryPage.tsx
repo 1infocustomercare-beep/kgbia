@@ -135,12 +135,12 @@ export default function DemoDirectoryPage() {
   const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: "#050508" }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(265 20% 5%) 0%, hsl(250 18% 7%) 30%, hsl(265 16% 6%) 60%, hsl(250 20% 5%) 100%)" }}>
       {/* ═══ PREMIUM BACKGROUND — fully opaque, no DNA bleed ═══ */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Rich gradient base */}
         <div className="absolute inset-0" style={{
-          background: "linear-gradient(165deg, #08070e 0%, #0d0b18 20%, #0a0912 40%, #0e0c15 60%, #080710 80%, #050508 100%)"
+          background: "linear-gradient(165deg, hsl(265 20% 6%) 0%, hsl(255 18% 8%) 20%, hsl(260 16% 7%) 40%, hsl(265 20% 9%) 60%, hsl(255 18% 6%) 80%, hsl(260 20% 5%) 100%)"
         }} />
 
         {/* Ambient orbs — deep, rich, luxurious */}
@@ -283,10 +283,11 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
         className={`relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
         style={{
           background: isFeatured
-            ? `linear-gradient(155deg, hsla(240,16%,14%,1), hsla(240,20%,10%,1))`
-            : `linear-gradient(155deg, hsla(240,14%,13%,1), hsla(240,18%,9%,1))`,
-          border: `1px solid ${isFeatured ? `${color}40` : "hsla(265,20%,35%,0.25)"}`,
-          ...(isExpanded ? { boxShadow: `0 0 0 1px ${color}30` } : {}),
+            ? `linear-gradient(155deg, hsla(265,22%,16%,0.95), hsla(255,20%,12%,0.93))`
+            : `linear-gradient(155deg, hsla(260,20%,15%,0.94), hsla(255,18%,11%,0.92))`,
+          border: `1px solid ${isFeatured ? `${color}40` : "hsla(265,40%,50%,0.18)"}`,
+          boxShadow: `0 4px 20px hsla(265,40%,15%,0.2), inset 0 1px 0 hsla(265,50%,70%,0.06)`,
+          ...(isExpanded ? { boxShadow: `0 8px 32px hsla(265,50%,20%,0.3), 0 0 0 1px ${color}30, inset 0 1px 0 hsla(265,50%,70%,0.08)` } : {}),
         }}>
 
         {/* Top accent — featured only */}
