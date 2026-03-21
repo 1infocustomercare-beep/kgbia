@@ -3558,7 +3558,7 @@ const LandingPage = () => {
                   <p className="relative text-xl sm:text-3xl font-heading font-bold" style={{ color: m.color }}>
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="relative text-[0.42rem] sm:text-[0.5rem] tracking-[1.8px] uppercase font-heading font-semibold text-muted-foreground mt-1 sm:mt-1.5">{m.label}</p>
+                  <p className="relative text-[0.42rem] sm:text-[0.5rem] tracking-[1.8px] uppercase font-heading font-semibold text-white/60 mt-1 sm:mt-1.5">{m.label}</p>
                 </motion.div>
                 )}
               </motion.div>
