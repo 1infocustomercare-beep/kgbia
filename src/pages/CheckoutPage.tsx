@@ -196,16 +196,16 @@ const CheckoutPage = () => {
   ) && (minOrder <= 0 || grandTotal >= minOrder);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen cote-luxury" style={{ background: "linear-gradient(180deg, hsl(20 10% 3%), hsl(20 8% 5%))" }}>
       {/* Header */}
-      <div className="flex items-center gap-3 px-5 pt-6 pb-4 sticky top-0 z-10 glass-strong">
+      <div className="flex items-center gap-3 px-5 pt-6 pb-4 sticky top-0 z-10 backdrop-blur-2xl" style={{ background: "hsl(20 10% 4% / 0.96)", borderBottom: "1px solid hsla(30, 20%, 25%, 0.2)" }}>
         <button
           onClick={() => navigate(-1)}
-          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center"
+          className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "hsl(20 8% 12%)", border: "1px solid hsla(30, 20%, 25%, 0.3)" }}
         >
           <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
-        <h1 className="text-xl font-display font-bold text-foreground">Checkout</h1>
+        <h1 className="text-xl font-display font-bold text-foreground tracking-wide">Checkout</h1>
         <span className="ml-auto text-sm text-muted-foreground">{items.length} articoli</span>
       </div>
 
