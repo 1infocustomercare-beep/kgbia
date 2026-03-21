@@ -105,7 +105,7 @@ export default function AuthPage() {
 
       {/* Back button */}
       <button onClick={() => navigate("/home")}
-        className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors">
+        className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors">
         <ArrowLeft className="w-4 h-4" /> Home
       </button>
 
