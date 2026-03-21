@@ -281,7 +281,7 @@ const PartnerDashboard = () => {
       <div className="fixed inset-0 z-0" style={{ background: "hsl(260 20% 6%)" }} />
       {/* Premium violet luxury ambient */}
       <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
-        <div className="absolute top-[-10%] right-[15%] w-[500px] h-[500px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsl(265 70% 55%), transparent 65%)", filter: "blur(140px)" }} />
+        <div className="absolute top-[-10%] right-[15%] w-[500px] h-[500px] rounded-full opacity-[0.07]" style={{ background: "radial-gradient(circle, hsl(265 70% 55%), transparent 65%)", filter: "blur(140px)" }} />
         <div className="absolute bottom-[15%] left-[-5%] w-[400px] h-[400px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsl(38 50% 55%), transparent 70%)", filter: "blur(160px)" }} />
         <div className="absolute inset-0" style={{ opacity: 0.012, backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
       </div>
