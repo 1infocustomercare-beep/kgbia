@@ -105,7 +105,7 @@ export default function AuthPage() {
 
       {/* Back button */}
       <button onClick={() => navigate("/home")}
-        className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors">
+        className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors">
         <ArrowLeft className="w-4 h-4" /> Home
       </button>
 
@@ -134,19 +134,19 @@ export default function AuthPage() {
             <div className="space-y-5">
               <div className="text-center">
                 <h1 className="text-xl font-heading font-bold text-white mb-1">Bentornato</h1>
-                <p className="text-sm text-white/50">Accedi al tuo account Empire</p>
+                <p className="text-sm text-gray-300">Accedi al tuo account Empire</p>
               </div>
               <div className="space-y-3">
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                   <Input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                    className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50" />
+                    className="pl-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                   <Input type={showPw ? "text" : "password"} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-                    className="pl-10 pr-10 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50" />
-                  <button onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60">
+                    className="pl-10 pr-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
+                  <button onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/80">
                     {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
@@ -156,10 +156,10 @@ export default function AuthPage() {
                 {loading ? "Accesso..." : "Accedi"}
               </Button>
               <div className="text-center space-y-2">
-                <button onClick={() => navigate("/reset-password")} className="text-xs text-white/40 hover:text-white/60 transition-colors">
+                <button onClick={() => navigate("/reset-password")} className="text-xs text-white/60 hover:text-white/80 transition-colors">
                   Password dimenticata?
                 </button>
-                <p className="text-xs text-white/40">
+                <p className="text-xs text-gray-400">
                   Non hai un account?{" "}
                   <button onClick={() => { setMode("register"); setStep(1); }} className="text-purple-400 hover:text-purple-300 font-semibold">
                     Registrati
@@ -175,7 +175,7 @@ export default function AuthPage() {
                   className="space-y-5">
                   <div className="text-center">
                     <h1 className="text-xl font-heading font-bold text-white mb-1">Chi sei?</h1>
-                    <p className="text-sm text-white/50">Seleziona il tuo ruolo per iniziare</p>
+                    <p className="text-sm text-gray-300">Seleziona il tuo ruolo per iniziare</p>
                   </div>
                   <div className="grid grid-cols-1 gap-3">
                     {([
@@ -191,13 +191,13 @@ export default function AuthPage() {
                         </div>
                         <div>
                           <p className="text-sm font-bold text-white">{r.title}</p>
-                          <p className="text-xs text-white/50">{r.desc}</p>
+                          <p className="text-xs text-gray-300">{r.desc}</p>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-white/30 ml-auto" />
+                        <ArrowRight className="w-4 h-4 text-white/50 ml-auto" />
                       </button>
                     ))}
                   </div>
-                  <p className="text-xs text-center text-white/40">
+                  <p className="text-xs text-center text-gray-400">
                     Hai già un account?{" "}
                     <button onClick={() => setMode("login")} className="text-purple-400 hover:text-purple-300 font-semibold">Accedi</button>
                   </p>
@@ -207,45 +207,45 @@ export default function AuthPage() {
               {step === 2 && (
                 <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   className="space-y-4">
-                  <button onClick={() => setStep(1)} className="flex items-center gap-1 text-xs text-white/40 hover:text-white/60">
+                  <button onClick={() => setStep(1)} className="flex items-center gap-1 text-xs text-amber-400/80 hover:text-amber-300">
                     <ArrowLeft className="w-3 h-3" /> Indietro
                   </button>
                   <div className="text-center">
                     <h1 className="text-xl font-heading font-bold text-white mb-1">
                       {role === "partner" ? "Registrati come Partner" : "Crea il tuo Account"}
                     </h1>
-                    <p className="text-sm text-white/50">Compila i dati per iniziare</p>
+                    <p className="text-sm text-gray-300">Compila i dati per iniziare</p>
                   </div>
                   <div className="space-y-3">
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                       <Input placeholder="Nome completo" value={fullName} onChange={e => setFullName(e.target.value)}
-                        className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50" />
+                        className="pl-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
                     </div>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                       <Input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                        className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50" />
+                        className="pl-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
                     </div>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                       <Input type={showPw ? "text" : "password"} placeholder="Password (min 8 caratteri)" value={password} onChange={e => setPassword(e.target.value)}
-                        className="pl-10 pr-10 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50" />
-                      <button onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60">
+                        className="pl-10 pr-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
+                      <button onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/80">
                         {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
                     {role === "partner" && (
                       <div className="relative">
-                        <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                        <Input placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
-                          className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50" />
+                      <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <Input placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
+                        className="pl-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
                       </div>
                     )}
 
                     {/* Sector selection */}
                     <div>
-                      <p className="text-xs text-white/50 mb-2">
+                      <p className="text-xs text-white font-medium mb-2">
                         {role === "partner" ? "Settore di competenza" : "Il tuo settore"}
                       </p>
                       <div className="grid grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-1">
@@ -257,11 +257,11 @@ export default function AuthPage() {
                             <button key={s.id} onClick={() => setSector(s.id)}
                               className="flex flex-col items-center gap-1 p-2 rounded-lg text-center transition-all"
                               style={{
-                                background: selected ? `${color}25` : "hsla(0,0%,100%,0.03)",
-                                border: `1px solid ${selected ? `${color}60` : "hsla(0,0%,100%,0.06)"}`,
+                                background: selected ? `${color}25` : "hsla(0,0%,100%,0.05)",
+                                border: `1px solid ${selected ? `${color}60` : "hsla(0,0%,100%,0.12)"}`,
                               }}>
-                              <Icon className="w-4 h-4" style={{ color: selected ? color : "hsla(0,0%,100%,0.4)" }} />
-                              <span className="text-[10px] font-medium leading-tight" style={{ color: selected ? "#fff" : "hsla(0,0%,100%,0.5)" }}>
+                              <Icon className="w-4 h-4" style={{ color: selected ? color : "hsla(0,0%,100%,0.6)" }} />
+                              <span className="text-[10px] font-medium leading-tight" style={{ color: selected ? "#fff" : "hsla(0,0%,100%,0.7)" }}>
                                 {s.label}
                               </span>
                             </button>

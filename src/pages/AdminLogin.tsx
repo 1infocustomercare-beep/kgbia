@@ -297,8 +297,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             >
               <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover" />
             </motion.div>
-            <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Area Riservata</h1>
-            <p className="text-sm text-muted-foreground mt-1">Seleziona il tuo accesso</p>
+            <h1 className="text-2xl font-heading font-bold text-white">Area Riservata</h1>
+            <p className="text-sm text-gray-300 mt-1">Seleziona il tuo accesso</p>
           </div>
 
           {[
@@ -309,8 +309,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <motion.button
               key={item.key}
               onClick={() => { setMode(item.key); if (item.key !== "partner") setIsSignUp(false); }}
-              className={`w-full p-5 rounded-2xl glass border transition-all text-left flex items-center gap-4 hover:-translate-y-0.5 min-h-[72px] ${
-                item.accent ? "border-primary/30 hover:border-primary/60" : "border-border/30 hover:border-primary/40"
+              className={`w-full p-5 rounded-2xl glass transition-all text-left flex items-center gap-4 hover:-translate-y-0.5 min-h-[72px] ${
+                item.accent ? "border border-primary/30 hover:border-primary/60" : "border border-white/[0.12] hover:border-white/25"
               }`}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -323,8 +323,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
                 <item.icon className={`w-6 h-6 ${item.accent ? "text-primary-foreground" : "text-primary"}`} />
               </div>
               <div>
-                <p className="text-base font-semibold text-foreground">{item.title}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
+                <p className="text-base font-semibold text-white">{item.title}</p>
+                <p className="text-xs text-gray-300 mt-0.5">{item.desc}</p>
               </div>
             </motion.button>
           ))}
@@ -339,8 +339,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <DarkPremiumBg />
         <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-          <button onClick={() => { setMode("owner"); setError(""); setForgotSent(false); }}
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <button onClick={() => { setMode("owner"); setError(""); setForgotSent(false); }}
+            className="flex items-center gap-1 text-sm text-amber-400/80 hover:text-amber-300 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Indietro
           </button>
 
@@ -348,24 +348,24 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <div className="w-16 h-16 rounded-2xl bg-vibrant-gradient flex items-center justify-center mb-4 vibrant-glow">
               <KeyRound className="w-8 h-8 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Recupera Password</h1>
-            <p className="text-sm text-muted-foreground mt-1">Riceverai un link per reimpostare la password</p>
+            <h1 className="text-2xl font-heading font-bold text-white">Recupera Password</h1>
+            <p className="text-sm text-gray-300 mt-1">Riceverai un link per reimpostare la password</p>
           </div>
 
           {forgotSent ? (
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
               className="p-6 rounded-2xl bg-primary/10 border border-primary/20 text-center space-y-3">
               <Mail className="w-10 h-10 text-primary mx-auto" />
-              <p className="text-foreground font-semibold">Email inviata!</p>
-              <p className="text-sm text-muted-foreground">Controlla la tua casella di posta e clicca sul link per reimpostare la password.</p>
+              <p className="text-white font-semibold">Email inviata!</p>
+              <p className="text-sm text-gray-300">Controlla la tua casella di posta e clicca sul link per reimpostare la password.</p>
             </motion.div>
           ) : (
             <form onSubmit={handleForgotPassword} className="space-y-4">
               <div>
-                <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-2">Email</label>
+                <label className="text-xs text-gray-400 uppercase tracking-wider block mb-2">Email</label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="titolare@ristorante.it"
-                  className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
                   required />
               </div>
               {error && <motion.p className="text-sm text-accent text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{error}</motion.p>}
@@ -387,8 +387,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <DarkPremiumBg />
         <motion.div className="w-full max-w-xs space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-          <button onClick={() => { setMode("choose"); setError(""); setKitchenPin(""); }}
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <button onClick={() => { setMode("choose"); setError(""); setKitchenPin(""); }}
+            className="flex items-center gap-1 text-sm text-amber-400/80 hover:text-amber-300 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Indietro
           </button>
 
@@ -397,8 +397,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }}>
               <ChefHat className="w-8 h-8 text-primary-foreground" />
             </motion.div>
-            <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Kitchen View</h1>
-            <p className="text-sm text-muted-foreground mt-1">Inserisci il PIN</p>
+            <h1 className="text-2xl font-heading font-bold text-white">Kitchen View</h1>
+            <p className="text-sm text-gray-300 mt-1">Inserisci il PIN</p>
           </div>
 
           {/* PIN dots display */}
@@ -452,7 +452,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       <DarkPremiumBg />
       <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
         <button onClick={() => { setMode("choose"); setError(""); setIsSignUp(false); }}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          className="flex items-center gap-1 text-sm text-amber-400/80 hover:text-amber-300 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Indietro
         </button>
 
@@ -461,12 +461,12 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 200, damping: 15 }}>
             {isPartnerMode ? <Users className="w-8 h-8 text-primary-foreground" /> : <img src={empireLogoNew} alt="Empire AI" className="w-12 h-12 rounded-full object-cover" style={{ boxShadow: "0 0 0 2px hsla(38,50%,55%,0.3)" }} />}
           </motion.div>
-          <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">
+          <h1 className="text-2xl font-heading font-bold text-white">
             {isPartnerMode
               ? (isSignUp ? "Registrati come Partner" : "Accesso Partner")
               : (isSignUp ? "Crea Account" : "Accesso Titolare")}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-gray-300 mt-1">
             {isPartnerMode
               ? (isSignUp ? (refCode ? "Sei stato invitato da un Team Leader!" : "Unisciti e guadagna €997/vendita") : "Accedi alla tua dashboard Partner")
               : (isSignUp ? "Un account unico per gestire tutto" : "Accedi al pannello di gestione")}
@@ -484,31 +484,31 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           {isSignUp && (
             <>
               <div>
-                <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Nome completo</label>
+                <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Nome completo</label>
                 <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                   placeholder={isPartnerMode ? "Marco Bianchi" : "Mario Rossi"}
-                  className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30" />
               </div>
               {isPartnerMode && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Telefono</label>
+                      <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Telefono</label>
                       <input type="tel" value={partnerPhone} onChange={e => setPartnerPhone(e.target.value)}
                         placeholder="+39 333..."
-                        className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                     <div>
-                      <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Città</label>
+                      <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Città</label>
                       <input type="text" value={partnerCity} onChange={e => setPartnerCity(e.target.value)}
                         placeholder="Roma"
-                        className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Settore di interesse</label>
+                    <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Settore di interesse</label>
                     <select value={partnerSector} onChange={e => setPartnerSector(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
+                      className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
                       <option value="">Seleziona settore...</option>
                       {INDUSTRY_LIST.map(ind => (
                         <option key={ind.id} value={ind.id}>{ind.emoji} {ind.label}</option>
@@ -521,21 +521,21 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           )}
 
           <div>
-            <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Email</label>
+            <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
               placeholder={isPartnerMode ? "partner@email.com" : "titolare@ristorante.it"}
-              className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
               required />
           </div>
           <div>
-            <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Password</label>
+            <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Password</label>
             <div className="relative">
               <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 pr-11 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full px-4 py-3 pr-11 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
                 required minLength={6} />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/80">
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
@@ -544,7 +544,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           {/* Remember me + Forgot password */}
           {!isSignUp && (
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
+              <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
                 <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded border-border accent-primary" />
                 Ricordami
@@ -568,7 +568,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
         </form>
 
         <button onClick={() => { setIsSignUp(!isSignUp); setError(""); }}
-          className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+          className="w-full text-center text-sm text-gray-400 hover:text-white transition-colors">
           {isSignUp
             ? (isPartnerMode ? "Hai già un account Partner? Accedi" : "Hai già un account? Accedi")
             : (isPartnerMode ? "Nuovo qui? Registrati come Partner" : "Nuovo qui? Crea account")}
