@@ -284,9 +284,9 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
         className={`relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
         style={{
           background: isFeatured
-            ? `linear-gradient(155deg, hsla(240,16%,10%,1), hsla(240,20%,7%,1))`
-            : `linear-gradient(155deg, hsla(240,14%,9%,1), hsla(240,18%,6%,1))`,
-          border: `1px solid ${isFeatured ? `${color}20` : "hsla(265,20%,22%,0.12)"}`,
+            ? `linear-gradient(155deg, hsla(240,16%,14%,1), hsla(240,20%,10%,1))`
+            : `linear-gradient(155deg, hsla(240,14%,13%,1), hsla(240,18%,9%,1))`,
+          border: `1px solid ${isFeatured ? `${color}40` : "hsla(265,20%,35%,0.25)"}`,
           ...(isExpanded ? { boxShadow: `0 0 0 1px ${color}30` } : {}),
         }}>
 
@@ -301,8 +301,8 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
           {/* Icon node — premium circle with gradient ring */}
           <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
             style={{
-              background: `linear-gradient(145deg, ${color}18, ${color}08)`,
-              boxShadow: `0 0 0 1px ${color}20, 0 2px 8px ${color}06`,
+              background: `linear-gradient(145deg, ${color}30, ${color}15)`,
+              boxShadow: `0 0 0 1px ${color}35, 0 2px 8px ${color}12`,
               color: color
             }}>
             {getIcon(cfg.icon)}
@@ -326,7 +326,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
                 </span>
               )}
             </div>
-            <p className="text-[0.68rem] sm:text-xs text-foreground/78 truncate">{subtitle}</p>
+            <p className="text-[0.7rem] sm:text-xs text-foreground/90 truncate">{subtitle}</p>
           </div>
 
           {/* Actions */}
@@ -339,15 +339,15 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
                 color: "#fff",
                 boxShadow: `0 3px 12px ${color}25`
               } : {
-                background: "hsla(265,20%,20%,0.2)",
-                border: "1px solid hsla(265,20%,25%,0.15)",
+                background: "hsla(265,20%,25%,0.35)",
+                border: "1px solid hsla(265,20%,35%,0.3)",
                 color: "hsla(0,0%,100%,0.8)"
               }}
               whileTap={{ scale: 0.95 }}>
               {isFeatured ? "Demo Live" : "Apri Demo"} <ArrowRight className="w-2.5 h-2.5" />
             </motion.button>
             <div className="w-6 h-6 rounded-lg flex items-center justify-center"
-              style={{ background: "hsla(265,20%,20%,0.1)" }}>
+              style={{ background: "hsla(265,20%,25%,0.22)" }}>
               {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/70" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/70" />}
             </div>
           </div>
