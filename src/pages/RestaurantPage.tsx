@@ -299,7 +299,7 @@ const RestaurantPage = () => {
         <motion.div className="absolute inset-0" style={{ scale: heroScale }}>
           <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/30 to-background/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/80" />
 
         <motion.div className="relative z-10 text-center px-5" style={{ opacity: heroOpacity }}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
