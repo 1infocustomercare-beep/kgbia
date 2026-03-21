@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from "react";
+import { clearIndustryCache } from "@/hooks/useIndustry";
 
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -109,38 +110,51 @@ export default function OnboardingPage() {
       if (fnError) throw new Error(fnError.message || "Errore nella creazione");
       if (data?.error) throw new Error(data.error);
 
-      const companyId = data?.company_id || data?.id;
+      const companyId = data?.companyId || data?.company_id || data?.id;
 
-      // Create public_site_config
+      // Create public_site_config (optional — table may not exist yet)
       if (companyId) {
-        await supabase.from("public_site_config" as any).upsert({
-          company_id: companyId,
-          headline: form.name,
-          tagline: selectedConfig?.description || null,
-          primary_color: form.primaryColor,
-          font_heading: form.fontFamily,
-          font_body: "Inter",
-          whatsapp_number: form.whatsapp || form.phone || null,
-          booking_enabled: true,
-        }, { onConflict: "company_id" });
+        try {
+          await supabase.from("public_site_config" as any).upsert({
+            company_id: companyId,
+            headline: form.name,
+            tagline: selectedConfig?.description || null,
+            primary_color: form.primaryColor,
+            font_heading: form.fontFamily,
+            font_body: "Inter",
+            whatsapp_number: form.whatsapp || form.phone || null,
+            booking_enabled: true,
+          }, { onConflict: "company_id" });
+        } catch {}
 
         // Create tenant_subscription with starter plan
-        const { data: plans } = await supabase.from("subscription_plans" as any).select("id, name").order("price_monthly");
-        const planMap: Record<string, string> = {};
-        (plans || []).forEach((p: any) => { planMap[p.name] = p.id; });
-        const planId = planMap[form.plan] || planMap["starter"] || (plans as any)?.[0]?.id;
-        if (planId) {
-          await supabase.from("tenant_subscriptions" as any).insert({
-            company_id: companyId,
-            plan_id: planId,
-            status: "trialing",
-            billing_cycle: "monthly",
-            trial_ends_at: new Date(Date.now() + 90 * 86400000).toISOString(),
-          });
-        }
+        try {
+          const { data: plans } = await supabase.from("subscription_plans" as any).select("id, name").order("price_monthly");
+          const planMap: Record<string, string> = {};
+          (plans || []).forEach((p: any) => { planMap[p.name] = p.id; });
+          const planId = planMap[form.plan] || planMap["starter"] || (plans as any)?.[0]?.id;
+          if (planId) {
+            await supabase.from("tenant_subscriptions" as any).insert({
+              company_id: companyId,
+              plan_id: planId,
+              status: "trialing",
+              billing_cycle: "monthly",
+              trial_ends_at: new Date(Date.now() + 90 * 86400000).toISOString(),
+            });
+          }
+        } catch {}
       }
 
+      // Clear industry cache so useIndustry fetches the new company
+      clearIndustryCache();
+
+      // Force session refresh so AuthContext picks up the new restaurant_admin role
+      await supabase.auth.refreshSession();
+
       toast.success("Azienda creata con successo! Trial 90 giorni attivo.");
+
+      // Small delay to let auth state propagate before navigating
+      await new Promise(r => setTimeout(r, 500));
       navigate("/app");
     } catch (err: any) {
       toast.error(err.message || "Errore nella creazione");
