@@ -126,21 +126,29 @@ const HeroPhoneCarousel = ({ sectors }: { sectors: { screens: [string, string, s
 
   const PhoneFrame = ({ src, alt, size, rounding, extraClass, style: extraStyle }: {
     src: string; alt: string; size: string; rounding: string; extraClass?: string; style?: React.CSSProperties;
-  }) => (
-    <div className={`relative ${size} aspect-[9/19.5] ${rounding} overflow-hidden ${extraClass || ""}`}
-      style={{ border: "2.5px solid hsl(220 12% 82%)", background: "#0a0a12",
-        boxShadow: "0 30px 60px hsla(0,0%,0%,0.22), 0 8px 24px hsla(265,30%,30%,0.1), inset 0 1px 0 hsla(0,0%,100%,0.06)",
-        ...extraStyle }}>
-      <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[36px] sm:w-[48px] h-[11px] sm:h-[14px] bg-black rounded-full z-30"
-        style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
-      <div className={`absolute inset-[2px] ${rounding === "rounded-[26px] sm:rounded-[36px]" ? "rounded-[24px] sm:rounded-[34px]" : "rounded-[22px] sm:rounded-[30px]"} overflow-hidden`}>
-        <img src={src} alt={alt} className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} loading="lazy" />
-        <div className="absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.35), transparent)" }} />
+  }) => {
+    const innerRounding = rounding === "rounded-[26px] sm:rounded-[36px]" ? "rounded-[23px] sm:rounded-[33px]" : "rounded-[21px] sm:rounded-[29px]";
+    return (
+      <div className={`relative ${size} aspect-[9/19.5] ${rounding} overflow-hidden ${extraClass || ""}`}
+        style={{ border: "2.5px solid hsl(220 12% 82%)", background: "#0a0a12",
+          boxShadow: "0 30px 60px hsla(0,0%,0%,0.22), 0 8px 24px hsla(265,30%,30%,0.1), inset 0 1px 0 hsla(0,0%,100%,0.06)",
+          ...extraStyle }}>
+        {/* Dynamic Island */}
+        <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[34%] max-w-[48px] h-[10px] sm:h-[14px] bg-black rounded-full z-30"
+          style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
+        {/* Screen content */}
+        <div className={`absolute inset-[3px] ${innerRounding} overflow-hidden`}>
+          <img src={src} alt={alt} className="w-full h-full object-cover object-top" loading="lazy" />
+          {/* Status bar fade */}
+          <div className="absolute inset-x-0 top-0 h-8" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.3), transparent)" }} />
+        </div>
+        {/* Home indicator */}
+        <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[30%] h-[3px] bg-white/20 rounded-full z-20" />
+        {/* Glass reflection */}
+        <div className={`absolute inset-0 ${rounding} pointer-events-none`} style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.08) 0%, transparent 40%)" }} />
       </div>
-      <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[32%] h-[3px] bg-white/20 rounded-full z-20" />
-      <div className={`absolute inset-0 ${rounding} pointer-events-none`} style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.08) 0%, transparent 40%)" }} />
-    </div>
-  );
+    );
+  };
 
   return (
     <motion.div className="relative mt-10 flex flex-col items-center"
