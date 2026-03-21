@@ -2359,7 +2359,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     }
                     {isSelected && <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />}
 
-                    <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
+                    <p className="text-[0.6rem] font-heading font-semibold text-foreground/70 tracking-[3px] uppercase">{p.name}</p>
                     <div className="flex items-baseline gap-1 mt-2">
                       <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{displayPrice}</span>
                       <span className="text-xs text-foreground/30">/mese</span>
