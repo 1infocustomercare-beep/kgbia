@@ -3442,20 +3442,20 @@ const LandingPage = () => {
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-24 sm:pt-28 pb-8 sm:pb-16"
       style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Clean premium gradient with green-tech tint ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(220 25% 96%) 0%, hsl(170 18% 94%) 25%, hsl(165 14% 95%) 50%, hsl(180 20% 94%) 75%, hsl(200 20% 96%) 100%)" }} />
+        {/* ═══ LAYER 0: Clean premium gradient ═══ */}
+        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(220 25% 97%) 0%, hsl(230 18% 96%) 25%, hsl(248 14% 96%) 50%, hsl(220 20% 96%) 75%, hsl(210 20% 97%) 100%)" }} />
 
-        {/* ═══ LAYER 1: Green-tech AI ambient blobs ═══ */}
+        {/* ═══ LAYER 1: Premium ambient blobs ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
           <div className="aurora-blob-1 absolute w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(160 65% 42% / 0.16), hsl(155 55% 50% / 0.06) 50%, transparent 70%)", filter: "blur(80px)", top: "0%", left: "5%" }} />
+            style={{ background: "radial-gradient(circle, hsl(265 55% 55% / 0.1), hsl(248 50% 60% / 0.04) 50%, transparent 70%)", filter: "blur(80px)", top: "0%", left: "5%" }} />
           <div className="aurora-blob-2 absolute w-[450px] h-[450px] sm:w-[650px] sm:h-[650px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(168 72% 38% / 0.18), hsl(175 50% 45% / 0.06) 50%, transparent 70%)", filter: "blur(80px)", top: "10%", right: "0%" }} />
+            style={{ background: "radial-gradient(circle, hsl(210 65% 55% / 0.12), hsl(220 50% 60% / 0.04) 50%, transparent 70%)", filter: "blur(80px)", top: "10%", right: "0%" }} />
           <div className="aurora-blob-3 absolute w-[400px] h-[400px] sm:w-[550px] sm:h-[550px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(150 60% 36% / 0.15), hsl(145 50% 45% / 0.05) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
-          {/* Central emerald glow behind sphere */}
+            style={{ background: "radial-gradient(circle, hsl(38 55% 50% / 0.08), hsl(35 50% 55% / 0.03) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
+          {/* Central glow behind sphere */}
           <div className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ background: "radial-gradient(circle, hsl(160 70% 40% / 0.12), hsl(168 60% 45% / 0.04) 55%, transparent 75%)", filter: "blur(100px)" }} />
+            style={{ background: "radial-gradient(circle, hsl(265 50% 55% / 0.08), hsl(248 45% 60% / 0.03) 55%, transparent 75%)", filter: "blur(100px)" }} />
         </div>
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
