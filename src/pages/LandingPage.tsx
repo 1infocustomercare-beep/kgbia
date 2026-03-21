@@ -665,29 +665,29 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     <motion.div
       className={`relative rounded-2xl border overflow-hidden group/card ${className}`}
       style={{
-        background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.88), hsl(248 18% 97% / 0.85))",
+        background: "linear-gradient(160deg, hsl(228 20% 14% / 0.92), hsl(232 22% 12% / 0.88), hsl(248 18% 11% / 0.85))",
         backdropFilter: isMobileDevice ? undefined : "blur(24px) saturate(1.4)",
         WebkitBackdropFilter: isMobileDevice ? undefined : "blur(24px) saturate(1.4)",
         borderColor: "hsl(var(--border) / 0.35)",
-        boxShadow: "0 2px 24px hsl(var(--primary) / 0.06), 0 0 0 1px hsl(var(--primary) / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
+        boxShadow: "0 2px 24px hsl(var(--primary) / 0.08), 0 0 0 1px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.05)"
       }}
       whileHover={hover && !isMobileDevice ? {
         y: -6,
-        borderColor: "hsl(var(--primary) / 0.18)",
-        boxShadow: "0 20px 60px hsl(var(--primary) / 0.1), 0 0 30px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
+        borderColor: "hsl(var(--primary) / 0.25)",
+        boxShadow: "0 20px 60px hsl(var(--primary) / 0.15), 0 0 30px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.08)",
         transition: { duration: 0.4, ease: "easeOut" }
       } : undefined}>
       
     {/* Top accent shimmer line */}
     <div className="absolute top-0 left-0 right-0 h-px z-10"
-      style={{ background: "linear-gradient(90deg, transparent 10%, hsl(var(--primary) / 0.12) 30%, hsl(38 50% 55% / 0.15) 50%, hsl(var(--accent) / 0.1) 70%, transparent 90%)" }} />
+      style={{ background: "linear-gradient(90deg, transparent 10%, hsl(var(--primary) / 0.2) 30%, hsl(38 50% 55% / 0.2) 50%, hsl(var(--accent) / 0.15) 70%, transparent 90%)" }} />
       
     {/* Inner glass reflection */}
-    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.45) 0%, transparent 30%)" }} />
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.04) 0%, transparent 30%)" }} />
     
     {/* Subtle hover gradient overlay */}
     <div className="absolute inset-0 pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
-      style={{ background: "radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.04), transparent 70%)" }} />
+      style={{ background: "radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.06), transparent 70%)" }} />
     
     <div className="relative z-10">{children}</div>
   </motion.div>);
