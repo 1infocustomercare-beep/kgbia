@@ -6833,7 +6833,7 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Domande<br /><span className="text-shimmer">Frequenti</span>
             </h2>
-            <p className="text-sm text-foreground/35 leading-[1.7] max-w-xs mx-auto lg:mx-0">
+            <p className="text-sm text-foreground/55 leading-[1.7] max-w-xs mx-auto lg:mx-0">
               Tutto su Empire: settori, costi, sicurezza, capacità e partnership.
             </p>
           </motion.div>
@@ -6844,10 +6844,10 @@ const LandingPage = () => {
             <motion.div key={i} className="rounded-xl glow-card overflow-hidden" variants={fadeUp}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
               className="relative z-10 w-full flex items-center justify-between p-5 text-left hover:bg-foreground/[0.02] transition-colors">
-                  <span className="text-xs sm:text-sm font-semibold text-foreground pr-3 font-heading">{faq.q}</span>
+                  <span className="text-xs sm:text-sm font-semibold text-foreground/90 pr-3 font-heading">{faq.q}</span>
                   <motion.div
                   animate={{ rotate: openFaq === i ? 45 : 0 }}
-                  className="w-7 h-7 rounded-full bg-primary/[0.08] flex items-center justify-center flex-shrink-0 text-primary text-sm font-heading font-bold">
+                  className="w-7 h-7 rounded-full bg-primary/[0.12] flex items-center justify-center flex-shrink-0 text-primary/80 text-sm font-heading font-bold">
                   
                     +
                   </motion.div>
@@ -6855,7 +6855,7 @@ const LandingPage = () => {
                 <AnimatePresence>
                   {openFaq === i &&
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}>
-                      <p className="px-5 pb-5 text-xs sm:text-sm text-foreground/40 leading-[1.7]">{faq.a}</p>
+                      <p className="px-5 pb-5 text-xs sm:text-sm text-foreground/65 leading-[1.7]">{faq.a}</p>
                     </motion.div>
                 }
                 </AnimatePresence>
