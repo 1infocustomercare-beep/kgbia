@@ -320,8 +320,8 @@ export default function EmpireTeamStory() {
               key={member.name}
               className="group relative rounded-2xl overflow-hidden"
               style={{
-                background: "linear-gradient(165deg, hsla(265,20%,12%,0.7), hsla(230,15%,8%,0.9))",
-                border: "1px solid hsla(265,60%,55%,0.08)",
+                background: "linear-gradient(165deg, hsla(265,20%,12%,0.9), hsla(230,15%,8%,0.96))",
+                border: "1px solid hsla(265,60%,55%,0.16)",
                 backdropFilter: "blur(20px)",
               }}
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
@@ -330,12 +330,12 @@ export default function EmpireTeamStory() {
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{
                 y: -8,
-                borderColor: "hsla(265,60%,55%,0.3)",
-                boxShadow: `0 25px 60px -15px ${member.accent}, 0 0 30px -10px hsla(265,70%,60%,0.15)`,
+                borderColor: "hsla(265,60%,55%,0.35)",
+                boxShadow: `0 25px 60px -15px ${member.accent}, 0 0 30px -10px hsla(265,70%,60%,0.2)`,
               }}
             >
               {/* Top DNA accent line */}
-              <div className="absolute top-0 inset-x-0 h-[2px] z-10" style={{ background: `linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.6) 30%, hsl(38,50%,55%) 70%, transparent 95%)` }} />
+              <div className="absolute top-0 inset-x-0 h-[2px] z-10" style={{ background: `linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.7) 30%, hsl(38,50%,55%) 70%, transparent 95%)` }} />
 
               {/* Orbital corner glow */}
               <motion.div
@@ -353,7 +353,7 @@ export default function EmpireTeamStory() {
                   loading="lazy"
                 />
                 {/* Cinematic gradient overlay */}
-                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsla(265,30%,10%,0.1) 0%, transparent 30%, hsla(265,20%,8%,0.4) 60%, hsla(230,15%,6%,0.97) 100%)" }} />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsla(265,30%,10%,0.12) 0%, transparent 30%, hsla(265,20%,8%,0.45) 60%, hsla(230,15%,6%,0.98) 100%)" }} />
 
                 {/* Scan line effect on hover */}
                 <motion.div
@@ -370,25 +370,25 @@ export default function EmpireTeamStory() {
                       animate={{ opacity: [0.4, 1, 0.4] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
-                    <p className="text-[0.5rem] sm:text-[0.6rem] font-bold tracking-[3px] uppercase" style={{ color: "hsl(265,60%,65%)" }}>{member.role}</p>
+                    <p className="text-[0.5rem] sm:text-[0.6rem] font-bold tracking-[3px] uppercase text-foreground/85">{member.role}</p>
                   </div>
-                  <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight leading-tight">{member.name}</h3>
+                  <h3 className="text-sm sm:text-lg font-bold text-foreground tracking-tight leading-tight">{member.name}</h3>
                 </div>
               </div>
 
               {/* Bio + Links */}
               <div className="p-3 sm:p-5 pt-3 space-y-3">
-                <p className="text-[0.65rem] sm:text-xs leading-relaxed line-clamp-3" style={{ color: "hsla(230,20%,75%,0.5)" }}>{member.bio}</p>
+                <p className="text-[0.65rem] sm:text-xs leading-relaxed line-clamp-3 text-foreground/75">{member.bio}</p>
 
                 {/* LinkedIn — always visible with premium style */}
                 <div className="flex items-center gap-2 pt-1">
                   <div
                     className="w-6 h-6 rounded-md flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                    style={{ background: "hsla(265,60%,55%,0.1)", border: "1px solid hsla(265,60%,55%,0.15)" }}
+                    style={{ background: "hsla(265,60%,55%,0.16)", border: "1px solid hsla(265,60%,55%,0.24)" }}
                   >
-                    <Linkedin className="w-3 h-3" style={{ color: "hsl(265,60%,55%)" }} />
+                    <Linkedin className="w-3 h-3" style={{ color: "hsl(265,60%,72%)" }} />
                   </div>
-                  <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, hsla(265,60%,55%,0.15), transparent)" }} />
+                  <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, hsla(265,60%,55%,0.3), transparent)" }} />
                 </div>
               </div>
 
@@ -406,15 +406,19 @@ export default function EmpireTeamStory() {
           viewport={vpOnce}
         >
           {[
-            { icon: Brain, label: "Innovazione", value: "95+ Agenti IA", color: "hsla(265,60%,55%,0.2)" },
-            { icon: Heart, label: "Passione", value: "25+ Settori", color: "hsla(338,60%,55%,0.2)" },
-            { icon: Target, label: "Risultati", value: "500+ Clienti", color: "hsla(38,50%,55%,0.2)" },
+            { icon: Brain, label: "Innovazione", value: "95+ Agenti IA", color: "hsla(265,60%,55%,0.24)" },
+            { icon: Heart, label: "Passione", value: "25+ Settori", color: "hsla(338,60%,55%,0.24)" },
+            { icon: Target, label: "Risultati", value: "500+ Clienti", color: "hsla(38,50%,55%,0.24)" },
           ].map((v, i) => (
-            <div key={i} className="text-center p-4 sm:p-6 rounded-2xl" style={{ background: "hsla(230,10%,15%,0.4)", border: "1px solid hsla(38,50%,55%,0.06)" }}>
+            <div
+              key={i}
+              className="text-center p-4 sm:p-6 rounded-2xl"
+              style={{ background: "linear-gradient(165deg, hsla(230,10%,15%,0.82), hsla(230,15%,9%,0.9))", border: "1px solid hsla(38,50%,55%,0.18)" }}
+            >
               <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: v.color }}>
-                <v.icon className="w-4 h-4 text-foreground/80" />
+                <v.icon className="w-4 h-4 text-foreground/90" />
               </div>
-              <p className="text-[0.6rem] sm:text-xs tracking-[2px] uppercase text-muted-foreground/40 mb-1">{v.label}</p>
+              <p className="text-[0.6rem] sm:text-xs tracking-[2px] uppercase text-muted-foreground/70 mb-1">{v.label}</p>
               <p className="text-sm sm:text-lg font-bold text-foreground">{v.value}</p>
             </div>
           ))}
