@@ -287,7 +287,7 @@ const SectionLabel = forwardRef<HTMLDivElement, {text: string;icon?: React.React
           }}>
           <span className="text-white [&>svg]:w-3 [&>svg]:h-3">{icon || <Sparkles className="w-3 h-3" />}</span>
         </div>
-        <span className="text-[0.65rem] font-heading font-bold tracking-[2.5px] uppercase text-white/80 relative z-10">{text}</span>
+        <span className="text-[0.65rem] font-heading font-bold tracking-[2.5px] uppercase text-white/90 relative z-10">{text}</span>
       </div>
     </motion.div>
 
