@@ -1262,7 +1262,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* Header row: Name + Discount */}
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <p className="text-[0.55rem] font-heading font-semibold text-foreground/35 tracking-[3px] uppercase">{p.name}</p>
+                          <p className="text-[0.55rem] font-heading font-semibold text-foreground/55 tracking-[3px] uppercase">{p.name}</p>
                           <div className="flex items-baseline gap-2 mt-1">
                             <span className="text-[1.6rem] font-heading font-extrabold text-foreground leading-none">€{p.price.toLocaleString("it-IT")}</span>
                             <div className="flex flex-col">
