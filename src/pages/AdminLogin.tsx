@@ -362,10 +362,10 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           ) : (
             <form onSubmit={handleForgotPassword} className="space-y-4">
               <div>
-                <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-2">Email</label>
+                <label className="text-xs text-gray-400 uppercase tracking-wider block mb-2">Email</label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="titolare@ristorante.it"
-                  className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
                   required />
               </div>
               {error && <motion.p className="text-sm text-accent text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{error}</motion.p>}
