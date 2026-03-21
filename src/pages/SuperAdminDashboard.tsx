@@ -682,7 +682,7 @@ const SuperAdminDashboard = () => {
 
             {/* Revenue Chart */}
             {revenueByMonth.length > 0 && (
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Revenue Mensile</h3>
                 <ResponsiveContainer width="100%" height={180}>
                   <BarChart data={revenueByMonth}>
@@ -699,7 +699,7 @@ const SuperAdminDashboard = () => {
 
             {/* Industry Distribution */}
             {industryDistribution.length > 0 && (
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Distribuzione Settori</h3>
                 <div className="flex items-center gap-4">
                   <ResponsiveContainer width={120} height={120}>
@@ -863,11 +863,11 @@ const SuperAdminDashboard = () => {
         {!loading && activeTab === "payments" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="grid grid-cols-3 gap-2">
-              <div className="p-3 rounded-2xl bg-card border border-border text-center">
+              <div className="p-3 rounded-2xl admin-card text-center">
                 <p className="text-2xl font-display font-bold text-foreground">{payments.length}</p>
                 <p className="text-[10px] text-muted-foreground">Contratti</p>
               </div>
-              <div className="p-3 rounded-2xl bg-card border border-border text-center">
+              <div className="p-3 rounded-2xl admin-card text-center">
                 <p className="text-2xl font-display font-bold text-primary">€{payments.reduce((s, p) => s + p.amountPaid, 0).toLocaleString()}</p>
                 <p className="text-[10px] text-muted-foreground">Incassato</p>
               </div>
@@ -879,7 +879,7 @@ const SuperAdminDashboard = () => {
 
             {/* Revenue by sector chart */}
             {industryDistribution.length > 0 && (
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Revenue per Settore</h3>
                 <ResponsiveContainer width="100%" height={160}>
                   <BarChart data={industryDistribution} layout="vertical">
@@ -1019,17 +1019,17 @@ const SuperAdminDashboard = () => {
                       <p className="text-2xl font-display font-bold text-primary">{activeSubs.length}</p>
                       <p className="text-[10px] text-muted-foreground">Abbonamenti Attivi</p>
                     </div>
-                    <div className="p-3 rounded-2xl bg-card border border-border">
+                    <div className="p-3 rounded-2xl admin-card">
                       <DollarSign className="w-4 h-4 text-primary mb-1" />
                       <p className="text-2xl font-display font-bold text-foreground">€{totalMRRSubs.toLocaleString()}</p>
                       <p className="text-[10px] text-muted-foreground">MRR Abbonamenti</p>
                     </div>
-                    <div className="p-3 rounded-2xl bg-card border border-border">
+                    <div className="p-3 rounded-2xl admin-card">
                       <Clock className="w-4 h-4 text-blue-400 mb-1" />
                       <p className="text-2xl font-display font-bold text-blue-400">{trialSubs.length}</p>
                       <p className="text-[10px] text-muted-foreground">In Prova</p>
                     </div>
-                    <div className="p-3 rounded-2xl bg-card border border-border">
+                    <div className="p-3 rounded-2xl admin-card">
                       <AlertCircle className="w-4 h-4 text-amber-400 mb-1" />
                       <p className="text-2xl font-display font-bold text-amber-400">{cancelingSubs.length}</p>
                       <p className="text-[10px] text-muted-foreground">In Cancellazione</p>
@@ -1037,7 +1037,7 @@ const SuperAdminDashboard = () => {
                   </div>
 
                   {/* Plan distribution */}
-                  <div className="p-4 rounded-2xl bg-card border border-border">
+                  <div className="p-4 rounded-2xl admin-card">
                     <h3 className="text-sm font-semibold text-foreground mb-3">Distribuzione Piani</h3>
                     <div className="space-y-2">
                       {Object.entries(planCounts).sort((a, b) => b[1] - a[1]).map(([plan, count]) => {
@@ -1091,7 +1091,7 @@ const SuperAdminDashboard = () => {
 
                       return (
                         <motion.div key={sub.id}
-                          className="p-4 rounded-2xl bg-card border border-border"
+                          className="p-4 rounded-2xl admin-card"
                           layout>
                           {/* Header */}
                           <div className="flex items-start justify-between mb-2">
@@ -1263,7 +1263,7 @@ const SuperAdminDashboard = () => {
               <div className="p-4 rounded-2xl bg-card"><p className="text-xs text-muted-foreground">Fee 2%</p><p className="text-xl font-display font-bold text-primary">€{totalFee.toLocaleString()}</p></div>
             </div>
 
-            <div className="rounded-2xl bg-card border border-border overflow-hidden">
+            <div className="rounded-2xl admin-card overflow-hidden">
               <div className="px-4 py-3 border-b border-border flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-foreground">Report Commissioni</h3>
                 <div className="flex gap-2">
@@ -1326,7 +1326,7 @@ const SuperAdminDashboard = () => {
               ))}
             </div>
 
-            <div className="rounded-2xl bg-card border border-border overflow-hidden">
+            <div className="rounded-2xl admin-card overflow-hidden">
               <div className="h-80 overflow-y-auto p-4 space-y-3 scrollbar-hide">
                 {maryMessages.map((msg, i) => (
                   <motion.div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
