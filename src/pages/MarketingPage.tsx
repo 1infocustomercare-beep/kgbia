@@ -269,7 +269,7 @@ const PricingSection = () => {
                   <Button
                     className={`w-full ${p.popular ? "bg-vibrant-gradient text-white" : ""}`}
                     variant={p.popular ? "default" : "outline"}
-                    onClick={() => navigate("/admin")}
+                    onClick={() => navigate("/auth")}
                   >
                     Inizia Gratis
                   </Button>
