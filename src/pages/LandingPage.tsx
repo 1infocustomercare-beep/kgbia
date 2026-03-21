@@ -1316,7 +1316,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     }
 
                       {/* Tagline */}
-                      <p className="text-[0.6rem] text-foreground/30 mt-2.5 leading-relaxed italic">{p.tagline}</p>
+                      <p className="text-[0.6rem] text-foreground/45 mt-2.5 leading-relaxed italic">{p.tagline}</p>
 
                       {/* Features with expand */}
                       <ul className="mt-3 space-y-1.5">
