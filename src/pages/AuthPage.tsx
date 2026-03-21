@@ -156,10 +156,10 @@ export default function AuthPage() {
                 {loading ? "Accesso..." : "Accedi"}
               </Button>
               <div className="text-center space-y-2">
-                <button onClick={() => navigate("/reset-password")} className="text-xs text-white/40 hover:text-white/60 transition-colors">
+                <button onClick={() => navigate("/reset-password")} className="text-xs text-white/60 hover:text-white/80 transition-colors">
                   Password dimenticata?
                 </button>
-                <p className="text-xs text-white/40">
+                <p className="text-xs text-gray-400">
                   Non hai un account?{" "}
                   <button onClick={() => { setMode("register"); setStep(1); }} className="text-purple-400 hover:text-purple-300 font-semibold">
                     Registrati
