@@ -280,7 +280,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Mode Chooser ───
   if (mode === "choose") {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark auth-contrast">
         <DarkPremiumBg />
         <BackButton to="/" theme="glass" />
 
