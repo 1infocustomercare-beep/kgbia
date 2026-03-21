@@ -191,7 +191,7 @@ export default function DemoDirectoryPage() {
       <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
         {/* ═══ SEARCH ═══ */}
         <div className="relative mb-6">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/20" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/40" />
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
