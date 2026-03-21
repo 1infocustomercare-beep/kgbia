@@ -3400,7 +3400,7 @@ const LandingPage = () => {
               initial={{ opacity: 0, x: -24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.07, type: "spring", damping: 22 }}
-              className="w-full text-center py-3.5 text-xs font-medium text-foreground/45 hover:text-foreground hover:bg-primary/[0.08] rounded-xl transition-all font-heading tracking-[0.2em] uppercase relative group">
+              className="w-full text-center py-3.5 text-xs font-medium text-white/60 hover:text-white hover:bg-primary/[0.08] rounded-xl transition-all font-heading tracking-[0.2em] uppercase relative group">
                     {link.label}
                     {/* Active indicator — glowing dot */}
                     <motion.div
