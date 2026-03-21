@@ -3332,7 +3332,7 @@ const LandingPage = () => {
 
             {/* Premium CTA button — diamond-cut with holographic glow */}
             <motion.button
-              onClick={() => scrollTo("contact")}
+              onClick={() => navigate("/auth")}
               className="ml-5 px-8 py-3 rounded-full text-primary-foreground text-[0.65rem] font-bold font-heading tracking-[0.22em] uppercase relative overflow-hidden group"
               style={{
                 background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1), hsla(30,45%,38%,1))",
@@ -3453,7 +3453,7 @@ const LandingPage = () => {
                 
                   </motion.a>
               )}
-                <motion.button onClick={() => {scrollTo("contact");setMobileMenuOpen(false);}}
+                <motion.button onClick={() => {navigate("/auth");setMobileMenuOpen(false);}}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, type: "spring", damping: 18 }}

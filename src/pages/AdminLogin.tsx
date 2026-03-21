@@ -85,7 +85,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
     } else if (roles.includes("staff")) {
       navigate("/staff", { replace: true });
     } else if ((roles.includes("partner") || roles.includes("team_leader")) && !roles.includes("restaurant_admin")) {
-      navigate("/partner", { replace: true });
+      navigate("/app", { replace: true });
     } else if (roles.includes("restaurant_admin")) {
       const checkDestination = async () => {
         const { data: membership } = await supabase
@@ -137,7 +137,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       };
       checkDestination();
     } else if (roles.includes("partner") || roles.includes("team_leader")) {
-      navigate("/partner", { replace: true });
+      navigate("/app", { replace: true });
     } else {
       navigate("/app", { replace: true });
     }
@@ -225,7 +225,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           const { error: updateError } = await supabase.auth.updateUser({ data: { partner_signup: null, team_leader_id: null } });
           if (updateError) throw updateError;
 
-          window.location.href = "/partner";
+          window.location.href = "/app";
           return;
         }
       }

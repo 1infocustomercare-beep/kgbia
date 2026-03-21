@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
@@ -33,7 +33,7 @@ type AuthMode = "login" | "register";
 
 export default function AuthPage() {
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user, roles, rolesReady, loading: authLoading } = useAuth();
   const [mode, setMode] = useState<AuthMode>("login");
   const [step, setStep] = useState(1);
   const [role, setRole] = useState<RoleType | null>(null);
@@ -44,6 +44,17 @@ export default function AuthPage() {
   const [companyName, setCompanyName] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (authLoading || !rolesReady || !user) return;
+
+    if (roles.includes("super_admin")) {
+      navigate("/superadmin", { replace: true });
+      return;
+    }
+
+    navigate("/app", { replace: true });
+  }, [authLoading, rolesReady, user, roles, navigate]);
 
   const allSectors = Object.entries(INDUSTRY_CONFIGS).map(([id, cfg]) => ({
     id, label: cfg.label,
@@ -59,12 +70,31 @@ export default function AuthPage() {
   };
 
   const handleRegister = async () => {
-    if (!email || !password || !fullName) { toast.error("Compila tutti i campi"); return; }
+    if (!email || !password || !fullName || !role || !sector) { toast.error("Compila tutti i campi"); return; }
     if (password.length < 8) { toast.error("La password deve avere almeno 8 caratteri"); return; }
+
     setLoading(true);
-    const { error } = await signUp(email, password, fullName);
+    const { error, userId } = await signUp(email, password, {
+      fullName,
+      role,
+      sector,
+      companyName: role === "partner" ? companyName : undefined,
+    });
+
+    if (!error && userId) {
+      const functionName = role === "partner" ? "assign-partner-role" : "assign-customer-role";
+      const { error: assignRoleError } = await supabase.functions.invoke(functionName, {
+        body: { user_id: userId },
+      });
+
+      if (assignRoleError) {
+        console.error("Role assignment failed", assignRoleError);
+      }
+    }
+
     setLoading(false);
     if (error) { toast.error(error.message); return; }
+
     toast.success("Registrazione completata! Controlla la tua email per confermare l'account.");
     setMode("login");
   };
