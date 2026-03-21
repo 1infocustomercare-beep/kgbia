@@ -233,6 +233,7 @@ const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
 const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
 const DemoAccountsPage = lazy(() => import("./pages/superadmin/DemoAccountsPage"));
+const ConnectionsPage = lazy(() => import("./pages/superadmin/ConnectionsPage"));
 
 // Part 6 — AI Marketplace + Sector pages
 const AIMarketplacePage = lazy(() => import("./pages/app/AIMarketplacePage"));
