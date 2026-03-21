@@ -348,8 +348,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <div className="w-16 h-16 rounded-2xl bg-vibrant-gradient flex items-center justify-center mb-4 vibrant-glow">
               <KeyRound className="w-8 h-8 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Recupera Password</h1>
-            <p className="text-sm text-muted-foreground mt-1">Riceverai un link per reimpostare la password</p>
+            <h1 className="text-2xl font-heading font-bold text-white">Recupera Password</h1>
+            <p className="text-sm text-gray-300 mt-1">Riceverai un link per reimpostare la password</p>
           </div>
 
           {forgotSent ? (
