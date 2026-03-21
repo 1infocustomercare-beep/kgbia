@@ -135,7 +135,7 @@ export default function DemoDirectoryPage() {
   const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(265 20% 5%) 0%, hsl(250 18% 7%) 30%, hsl(265 16% 6%) 60%, hsl(250 20% 5%) 100%)" }}>
+    <div className="min-h-screen relative overflow-hidden landing-dark" style={{ background: "linear-gradient(180deg, hsl(265 20% 5%) 0%, hsl(250 18% 7%) 30%, hsl(265 16% 6%) 60%, hsl(250 20% 5%) 100%)" }}>
       {/* ═══ PREMIUM BACKGROUND — fully opaque, no DNA bleed ═══ */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Rich gradient base */}
