@@ -165,7 +165,7 @@ const PartnerRegister = () => {
             </p>
           )}
           <button
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate("/auth")}
             className="px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm tracking-wide"
           >
             Vai al Login
