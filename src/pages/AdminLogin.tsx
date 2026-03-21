@@ -510,7 +510,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
                   <div>
                     <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Settore di interesse</label>
                     <select value={partnerSector} onChange={e => setPartnerSector(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
+                      className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-white text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
                       <option value="">Seleziona settore...</option>
                       {INDUSTRY_LIST.map(ind => (
                         <option key={ind.id} value={ind.id}>{ind.emoji} {ind.label}</option>
