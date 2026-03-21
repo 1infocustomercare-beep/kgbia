@@ -276,7 +276,7 @@ const AdminDashboard = () => {
   const activeOrders = orders.filter(o => ["pending", "preparing", "ready"].includes(o.status));
 
   if (restLoading) return (
-    <div className="min-h-screen landing-dark flex items-center justify-center" style={{ background: "hsl(228 22% 7%)" }}>
+    <div className="min-h-screen cote-luxury flex items-center justify-center" style={{ background: "hsl(20 10% 4%)" }}>
       <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
   );
