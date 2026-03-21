@@ -1218,7 +1218,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             </div>
 
             {/* Package Cards — mobile conversion-optimized */}
-            <div className="sm:hidden space-y-3 mb-5">
+            <div className="sm:hidden space-y-4 mb-5">
               {PACKAGE_TIERS.map((p, idx) => {
               const isSelected = selectedPackage === p.id;
               const isEmpire = p.id === "empire";
@@ -1227,16 +1227,16 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
               return (
                 <motion.div key={p.id}
                 onClick={() => setSelectedPackage(p.id)}
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
+                transition={{ delay: idx * 0.12 }}
                 className={`relative w-full rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                 isEmpire ?
-                "border-2 border-accent/40 shadow-[0_4px_30px_hsla(35,45%,50%,0.12)] scale-[1.01]" :
+                "border-2 border-accent/50 shadow-[0_8px_40px_hsla(35,45%,50%,0.15)]" :
                 isSelected ?
-                "border-2 border-primary/35 shadow-[0_4px_24px_hsla(265,50%,55%,0.08)]" :
-                "border border-border/30 shadow-[0_2px_16px_hsla(0,0%,0%,0.06)]"}`
+                "border-2 border-primary/40 shadow-[0_4px_24px_hsla(265,50%,55%,0.1)]" :
+                "border border-border/25"}`
                 }
                 style={{
                   background: isEmpire ?
@@ -1246,11 +1246,11 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 whileTap={{ scale: 0.985 }}>
 
                     {/* Top gradient bar */}
-                    <div className={`h-[3px] w-full ${isEmpire ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : isGrowth ? "bg-vibrant-gradient" : "bg-gradient-to-r from-primary/60 to-primary/30"}`} />
+                    <div className={`h-1 w-full ${isEmpire ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : isGrowth ? "bg-vibrant-gradient" : "bg-gradient-to-r from-primary/60 to-primary/30"}`} />
 
                     {/* Badge */}
                     {p.badge &&
-                  <div className={`absolute top-0 right-0 px-3 py-1.5 rounded-bl-2xl text-[0.55rem] font-bold tracking-[1.5px] font-heading uppercase ${
+                  <div className={`absolute top-0 right-0 px-4 py-2 rounded-bl-2xl text-[0.6rem] font-bold tracking-[1.5px] font-heading uppercase ${
                   isEmpire ?
                   "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
                   p.badge === "Più Scelto" ? "bg-vibrant-gradient text-primary-foreground" :
@@ -1258,45 +1258,45 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                   }>{p.badge}</div>
                   }
 
-                    <div className="p-4">
-                      {/* Header row: Name + Discount */}
-                      <div className="flex items-start justify-between mb-2">
+                    <div className="p-5">
+                      {/* Header row: Name + Price */}
+                      <div className="flex items-start justify-between mb-3">
                         <div>
-                          <p className="text-[0.55rem] font-heading font-semibold text-foreground/55 tracking-[3px] uppercase">{p.name}</p>
-                          <div className="flex items-baseline gap-2 mt-1">
-                            <span className="text-[1.6rem] font-heading font-extrabold text-foreground leading-none">€{p.price.toLocaleString("it-IT")}</span>
+                          <p className={`text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase ${isEmpire ? "text-accent/80" : "text-foreground/50"}`}>{p.name}</p>
+                          <div className="flex items-baseline gap-2.5 mt-1.5">
+                            <span className="text-[2rem] font-heading font-extrabold text-white leading-none">€{p.price.toLocaleString("it-IT")}</span>
                             <div className="flex flex-col">
-                              <span className="text-[0.65rem] text-foreground/35 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
-                              <span className="text-[0.5rem] text-foreground/40">una tantum</span>
+                              <span className="text-sm text-foreground/30 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
+                              <span className="text-[0.6rem] text-foreground/35">una tantum</span>
                             </div>
                           </div>
                         </div>
                         <motion.div
-                        className={`px-2.5 py-2 rounded-xl text-center ${isEmpire ? "bg-accent/15 border border-accent/20" : "bg-primary/10 border border-primary/15"}`}
-                        animate={isEmpire ? { scale: [1, 1.05, 1] } : {}}
+                        className={`px-3 py-2.5 rounded-xl text-center ${isEmpire ? "bg-accent/15 border border-accent/25" : "bg-primary/10 border border-primary/15"}`}
+                        animate={isEmpire ? { scale: [1, 1.06, 1] } : {}}
                         transition={{ duration: 2, repeat: Infinity }}>
-                          <span className={`text-xl font-heading font-black ${isEmpire ? "text-accent" : "text-primary"}`}>-{discountPct}%</span>
+                          <span className={`text-2xl font-heading font-black ${isEmpire ? "text-accent" : "text-primary"}`}>-{discountPct}%</span>
                         </motion.div>
                       </div>
 
                       {/* Installment info */}
-                      <p className="text-[0.55rem] text-foreground/55 leading-snug">
-                        oppure <strong className="text-foreground/75">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%)
+                      <p className="text-xs text-foreground/50">
+                        oppure <strong className="text-foreground/75">€{Math.round(p.price / 3)}/mese ×3</strong> <span className="text-green-400/80 font-semibold">(TAN 0%)</span>
                       </p>
 
-                      {/* Monthly + Commission pills — KEY conversion element */}
-                      <div className="flex items-center gap-2 mt-3">
-                        <span className={`flex-1 text-center py-2 rounded-xl text-[0.65rem] font-bold border ${
+                      {/* Monthly + Commission pills */}
+                      <div className="flex items-center gap-2.5 mt-4">
+                        <span className={`flex-1 text-center py-2.5 rounded-xl text-xs font-bold border ${
                       p.monthlyFee === 0 ?
                       "bg-accent/12 text-accent border-accent/25" :
-                      "bg-foreground/[0.03] text-foreground/45 border-border/15"}`
+                      "bg-foreground/[0.03] text-foreground/50 border-border/15"}`
                       }>
                           {p.monthlyFee === 0 ? "€0/mese ✓" : `poi €${p.monthlyFee}/mese`}
                         </span>
-                        <span className={`flex-1 text-center py-2 rounded-xl text-[0.65rem] font-bold border ${
+                        <span className={`flex-1 text-center py-2.5 rounded-xl text-xs font-bold border ${
                       p.commission === "0%" ?
                       "bg-accent/12 text-accent border-accent/25" :
-                      "bg-foreground/[0.03] text-foreground/45 border-border/15"}`
+                      "bg-foreground/[0.03] text-foreground/50 border-border/15"}`
                       }>
                           {p.commission === "0%" ? "0% commissioni ✓" : `${p.commission} transazioni`}
                         </span>
@@ -1305,36 +1305,36 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* Empire daily cost nudge */}
                       {isEmpire &&
                     <motion.div
-                      className="mt-3 p-3 rounded-xl bg-accent/[0.08] border border-accent/20 text-center"
-                      animate={{ boxShadow: ["0 0 0px hsla(35,45%,50%,0)", "0 0 20px hsla(35,45%,50%,0.1)", "0 0 0px hsla(35,45%,50%,0)"] }}
+                      className="mt-4 p-3.5 rounded-xl bg-accent/[0.08] border border-accent/20 text-center"
+                      animate={{ boxShadow: ["0 0 0px hsla(35,45%,50%,0)", "0 0 25px hsla(35,45%,50%,0.12)", "0 0 0px hsla(35,45%,50%,0)"] }}
                       transition={{ duration: 3, repeat: Infinity }}>
-                          <p className="text-[0.7rem] text-accent font-bold">
+                          <p className="text-sm text-accent font-bold">
                             💰 Solo €11/giorno per 24 mesi
                           </p>
-                          <p className="text-[0.5rem] text-accent/50 mt-0.5">Poi è tutto tuo, per sempre. Meno di un caffè al bar.</p>
+                          <p className="text-[0.6rem] text-accent/50 mt-1">Poi è tutto tuo, per sempre. Meno di un caffè al bar.</p>
                         </motion.div>
                     }
 
                       {/* Tagline */}
-                      <p className="text-[0.6rem] text-foreground/45 mt-2.5 leading-relaxed italic">{p.tagline}</p>
+                      <p className="text-xs text-foreground/45 mt-3 leading-relaxed italic">{p.tagline}</p>
 
-                      {/* Features with expand */}
-                      <ul className="mt-3 space-y-1.5">
+                      {/* Features */}
+                      <ul className="mt-4 space-y-2">
                         {p.features.slice(0, isSelected ? p.features.length : 4).map((f, fi) =>
-                      <li key={fi} className="flex items-start gap-1.5 text-[0.62rem] text-foreground/70">
-                            <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                      <li key={fi} className="flex items-start gap-2 text-xs text-foreground/70">
+                            <div className={`w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${
                         f.includes("ZERO") || f.includes("0%") ? "bg-accent/15" : "bg-primary/10"}`
                         }>
-                              <Check className={`w-2 h-2 ${
+                              <Check className={`w-3 h-3 ${
                           f.includes("ZERO") || f.includes("0%") ? "text-accent" : "text-primary"}`
                           } />
                             </div>
-                            <span className={`leading-snug break-words ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/85" : ""}`}>{f}</span>
+                            <span className={`leading-snug ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") || f.startsWith("✅") ? "font-semibold text-foreground/85" : ""}`}>{f}</span>
                           </li>
                       )}
                         {!isSelected && p.features.length > 4 &&
-                      <li className="text-[0.6rem] text-primary/70 font-semibold pl-6 pt-1 flex items-center gap-1">
-                            <ChevronDown className="w-3 h-3" />
+                      <li className="text-xs text-primary/70 font-semibold pl-7 pt-1 flex items-center gap-1 cursor-pointer">
+                            <ChevronDown className="w-3.5 h-3.5" />
                             Vedi +{p.features.length - 4} funzionalità
                           </li>
                       }
@@ -1343,29 +1343,29 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* Bonus inclusi */}
                       {isSelected &&
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                    className="mt-3 pt-3 border-t border-border/15 overflow-hidden">
-                          <p className="text-[0.5rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-1.5">
-                            <Gift className="w-3 h-3 inline mr-1" />Bonus inclusi
+                    className="mt-4 pt-4 border-t border-border/15 overflow-hidden">
+                          <p className="text-[0.6rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-2">
+                            <Gift className="w-3.5 h-3.5 inline mr-1.5" />Bonus inclusi
                           </p>
                           {p.extras.map((e, ei) =>
-                      <p key={ei} className="text-[0.6rem] text-foreground/50 flex items-center gap-1.5 mb-0.5">
-                              <Star className="w-2.5 h-2.5 text-accent/40 flex-shrink-0" /> {e}
+                      <p key={ei} className="text-xs text-foreground/50 flex items-center gap-2 mb-1">
+                              <Star className="w-3 h-3 text-accent/40 flex-shrink-0" /> {e}
                             </p>
                       )}
                         </motion.div>
                     }
 
                       {/* Savings bar */}
-                      <div className={`mt-3 p-2 rounded-xl text-[0.55rem] font-bold text-center leading-snug ${
+                      <div className={`mt-4 p-3 rounded-xl text-xs font-bold text-center leading-snug ${
                     isEmpire ? "bg-accent/10 text-accent border border-accent/15" : "bg-primary/[0.05] text-primary/70 border border-primary/10"}`
                     }>
                         💸 {p.savings}
                       </div>
 
-                      {/* CTA button per card */}
+                      {/* CTA button */}
                       <motion.button
                       onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth");}}
-                      className={`w-full mt-3 py-3 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
+                      className={`w-full mt-4 py-4 rounded-xl text-sm font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
                       isEmpire ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
                       isGrowth ?
@@ -1378,7 +1378,6 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)" }}
                       animate={{ x: ["-200%", "300%"] }}
                       transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
-
                       }
                         <span className="relative z-10">
                           {isEmpire ? "👑 Scelgo Empire" : isGrowth ? "🚀 Scelgo Growth AI" : "Inizia con Digital Start"}
@@ -1387,8 +1386,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       {/* Empire upsell on non-empire cards */}
                       {!isEmpire &&
-                    <div className="mt-2 p-2 rounded-lg bg-accent/[0.04] border border-accent/10 cursor-pointer" onClick={(e) => {e.stopPropagation();setSelectedPackage("empire");}}>
-                          <p className="text-[0.45rem] text-accent/70 text-center leading-snug">
+                    <div className="mt-3 p-2.5 rounded-xl bg-accent/[0.04] border border-accent/10 cursor-pointer" onClick={(e) => {e.stopPropagation();setSelectedPackage("empire");}}>
+                          <p className="text-[0.6rem] text-accent/70 text-center leading-snug">
                             ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> e 0% commissioni →
                           </p>
                         </div>
