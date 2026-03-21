@@ -38,7 +38,7 @@ const MenuItemCard = ({ item, index, onSelect }: MenuItemCardProps) => {
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[hsl(20_8%_8%)] via-transparent to-transparent" />
 
         {/* Popular badge */}
         {item.isPopular && (
