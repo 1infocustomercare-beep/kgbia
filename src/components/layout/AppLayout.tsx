@@ -53,7 +53,10 @@ export default function AppLayout() {
     );
   }
 
-  if (industry === "food") {
+  // Only redirect to /dashboard if the user actually HAS a food business
+  // (company is not null and industry is food). Without this check,
+  // users with no company default to "food" and enter an infinite redirect loop.
+  if (company && industry === "food") {
     return <Navigate to="/dashboard" replace />;
   }
 
