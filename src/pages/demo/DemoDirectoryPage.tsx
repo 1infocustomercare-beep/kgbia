@@ -341,7 +341,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
               } : {
                 background: "hsla(265,20%,20%,0.2)",
                 border: "1px solid hsla(265,20%,25%,0.15)",
-                color: "hsla(0,0%,100%,0.6)"
+                color: "hsla(0,0%,100%,0.8)"
               }}
               whileTap={{ scale: 0.95 }}>
               {isFeatured ? "Demo Live" : "Apri Demo"} <ArrowRight className="w-2.5 h-2.5" />
