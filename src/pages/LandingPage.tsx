@@ -3474,7 +3474,7 @@ const LandingPage = () => {
                 <div className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)))", boxShadow: "0 2px 8px hsl(var(--primary) / 0.3)" }}>
                   <Crown className="w-2.5 h-2.5 text-white" />
                 </div>
-                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/80">Piattaforma AI All-in-One per PMI</span>
+                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-white/90">Piattaforma AI All-in-One per PMI</span>
               </motion.div>
 
               {/* Headline */}
