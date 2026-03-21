@@ -235,7 +235,7 @@ export default function DemoDirectoryPage() {
                   <div className="flex items-center gap-2.5 mb-3 px-1">
                     <div className="h-px flex-1 max-w-[20px]"
                       style={{ background: "linear-gradient(90deg, hsla(265,40%,50%,0.25), transparent)" }} />
-                    <span className="text-[0.55rem] font-bold tracking-[2.5px] uppercase text-foreground/25">{cat.label}</span>
+                    <span className="text-[0.55rem] font-bold tracking-[2.5px] uppercase text-foreground/50">{cat.label}</span>
                     <div className="h-px flex-1"
                       style={{ background: "linear-gradient(90deg, transparent, hsla(265,30%,40%,0.08))" }} />
                   </div>
