@@ -64,7 +64,7 @@ export default function AppLayout() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-[100dvh] flex w-full relative overflow-hidden">
+      <div className="min-h-[100dvh] flex w-full relative overflow-hidden landing-dark">
         {/* Opaque base — exact sector bgGradient from admin-layout-config */}
         <div className="fixed inset-0 z-0" style={{ background: layout.bgGradient }} />
 
