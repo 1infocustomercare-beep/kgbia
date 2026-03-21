@@ -61,7 +61,7 @@ export default function AuthPage() {
         return;
       }
 
-      if ((roles.includes("partner") || roles.includes("team_leader")) && !roles.includes("restaurant_admin")) {
+      if (roles.includes("partner") || roles.includes("team_leader")) {
         navigate("/partner", { replace: true });
         return;
       }
