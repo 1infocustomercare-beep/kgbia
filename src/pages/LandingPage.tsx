@@ -5574,10 +5574,10 @@ const LandingPage = () => {
                 transition={{ delay: i * 0.1, duration: 0.4 }}
                 className="relative flex flex-col items-center text-center p-3 rounded-2xl overflow-hidden group"
                 style={{
-                  background: "linear-gradient(160deg, hsl(228 20% 14% / 0.8), hsl(248 18% 97% / 0.85))",
+                  background: "linear-gradient(160deg, hsl(228 20% 16% / 0.95), hsl(232 22% 11% / 0.95))",
                   backdropFilter: "blur(16px)",
-                  border: "1px solid hsl(var(--border) / 0.3)",
-                  boxShadow: "0 2px 16px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.06)"
+                  border: "1px solid hsl(var(--border) / 0.35)",
+                  boxShadow: "0 2px 16px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.08)"
                 }}>
                   {/* Top accent line */}
                   <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
