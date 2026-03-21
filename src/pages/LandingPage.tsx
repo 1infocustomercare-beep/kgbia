@@ -2338,46 +2338,82 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             </motion.div>
 
             {/* Plan Cards */}
-            <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto mb-6" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-              {PLAN_TIERS.map((p) => {const isSelected = selectedPlan === p.id;const displayPrice = Math.round(p.price * planDiscount);return (
+            <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4 max-w-3xl mx-auto mb-6" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+              {PLAN_TIERS.map((p) => {const isSelected = selectedPlan === p.id;const displayPrice = Math.round(p.price * planDiscount);const isEnterprise = p.id === "enterprise";return (
                   <motion.div key={p.id} variants={fadeScale}
                   onClick={() => {setSelectedPlan(p.id);if (p.includedAgents > 0) setShowAddons(true);}}
                   className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                   isSelected ?
                   "border-2 border-primary/40 shadow-[0_0_40px_hsla(38,50%,55%,0.1)]" :
-                  "border border-border/30 hover:border-primary/20"}`}
+                  "border border-border/25 hover:border-primary/20"}`}
                   style={{
                     background: isSelected ?
-                    "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.92) 40%, hsla(0,0%,4%,0.99) 100%)" :
-                    "linear-gradient(180deg, hsla(0,0%,4%,0.97) 0%, hsla(0,0%,5%,0.95) 100%)"
+                    "linear-gradient(165deg, hsl(228 20% 14% / 0.98), hsl(38 14% 11% / 0.92))" :
+                    "linear-gradient(165deg, hsl(228 20% 14% / 0.97), hsl(232 22% 12% / 0.94))"
                   }}>
+                    {/* Top bar */}
+                    <div className={`absolute top-0 left-0 right-0 h-1 ${isEnterprise ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : isSelected ? "bg-vibrant-gradient" : "bg-transparent"}`} />
+                    
                     {p.badge &&
-                    <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
+                    <div className={`absolute top-0 right-0 px-4 py-1.5 rounded-bl-2xl text-[0.6rem] font-bold tracking-[1.5px] font-heading uppercase ${
                     p.badge === "Max Revenue" ? "bg-gradient-to-r from-accent to-primary text-primary-foreground" : "bg-vibrant-gradient text-primary-foreground"}`
                     }>{p.badge}</div>
                     }
-                    {isSelected && <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />}
 
-                    <p className="text-[0.6rem] font-heading font-semibold text-foreground/70 tracking-[3px] uppercase">{p.name}</p>
-                    <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{displayPrice}</span>
-                      <span className="text-xs text-foreground/30">/mese</span>
+                    <p className={`text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase ${isEnterprise ? "text-accent/70" : "text-foreground/50"}`}>{p.name}</p>
+                    <div className="flex items-baseline gap-1.5 mt-2">
+                      <span className="text-[2rem] sm:text-4xl font-heading font-bold text-white">€{displayPrice}</span>
+                      <span className="text-sm text-foreground/30">/mese</span>
                     </div>
                     {billingCycle === "annual" &&
-                    <p className="text-[0.55rem] text-accent font-semibold mt-0.5">Risparmi €{Math.round(p.price * 12 * 0.2)}/anno</p>
+                    <p className="text-xs text-accent font-semibold mt-1">Risparmi €{Math.round(p.price * 12 * 0.2)}/anno</p>
                     }
-                    <p className="text-[0.6rem] text-foreground/35 mt-1.5 leading-relaxed">{p.desc}</p>
+                    <p className="text-xs text-foreground/40 mt-2 leading-relaxed">{p.desc}</p>
+
+                    {/* Commission info */}
+                    <div className="mt-3 flex gap-2">
+                      <span className="px-2.5 py-1 rounded-lg text-[0.6rem] font-bold bg-foreground/[0.04] text-foreground/40 border border-border/15">
+                        {p.id === "starter" ? "2% transazioni" : p.id === "professional" ? "1% transazioni" : "0.5% transazioni"}
+                      </span>
+                      {p.includedAgents > 0 &&
+                      <span className="px-2.5 py-1 rounded-lg text-[0.6rem] font-bold bg-primary/10 text-primary border border-primary/15">
+                        {p.includedAgents} Agenti IA inclusi
+                      </span>
+                      }
+                    </div>
 
                     <ul className="mt-4 space-y-2">
                       {p.features.map((f, fi) =>
-                      <li key={fi} className="flex items-start gap-2 text-[0.65rem] sm:text-xs text-foreground/50">
-                          <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected ? "bg-primary/15" : "bg-foreground/[0.05]"}`}>
-                            <Check className={`w-2.5 h-2.5 ${isSelected ? "text-primary" : "text-foreground/30"}`} />
+                      <li key={fi} className="flex items-start gap-2 text-xs text-foreground/60">
+                          <div className={`w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected ? "bg-primary/15" : "bg-foreground/[0.05]"}`}>
+                            <Check className={`w-3 h-3 ${isSelected ? "text-primary" : "text-foreground/30"}`} />
                           </div>
-                          <span className={f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""}>{f}</span>
+                          <span className={f.startsWith("Tutto") ? "font-semibold text-foreground/70" : ""}>{f}</span>
                         </li>
                       )}
                     </ul>
+
+                    {/* CTA */}
+                    <motion.button
+                    onClick={(e) => {e.stopPropagation();setSelectedPlan(p.id);navigate("/auth");}}
+                    className={`w-full mt-5 py-3.5 rounded-xl text-xs font-heading font-bold tracking-wider uppercase relative overflow-hidden transition-all ${
+                    isEnterprise ?
+                    "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
+                    isSelected ?
+                    "bg-vibrant-gradient text-primary-foreground" :
+                    "bg-primary/10 text-primary border border-primary/20"}`
+                    }
+                    whileTap={{ scale: 0.97 }}>
+                      {(isEnterprise || isSelected) &&
+                    <motion.div className="absolute inset-0 pointer-events-none"
+                    style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)" }}
+                    animate={{ x: ["-200%", "300%"] }}
+                    transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
+                    }
+                      <span className="relative z-10">
+                        {isEnterprise ? "👑 Scelgo Enterprise" : `Scelgo ${p.name}`}
+                      </span>
+                    </motion.button>
 
                     {isSelected &&
                     <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-vibrant-gradient"
