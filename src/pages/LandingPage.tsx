@@ -359,7 +359,7 @@ const LiveFeedSimulator = () => {
             <span className="text-[0.6rem] font-bold text-foreground/90 truncate">{item.agent}</span>
             <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-400 font-bold tracking-wider uppercase">LIVE</span>
           </div>
-          <p className="text-[0.52rem] text-foreground/45 truncate">{item.action}</p>
+          <p className="text-[0.52rem] text-foreground/60 truncate">{item.action}</p>
         </div>
         <span className="text-[0.42rem] text-foreground/25 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
       </div>);
