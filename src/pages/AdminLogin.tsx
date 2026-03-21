@@ -356,8 +356,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
               className="p-6 rounded-2xl bg-primary/10 border border-primary/20 text-center space-y-3">
               <Mail className="w-10 h-10 text-primary mx-auto" />
-              <p className="text-foreground font-semibold">Email inviata!</p>
-              <p className="text-sm text-muted-foreground">Controlla la tua casella di posta e clicca sul link per reimpostare la password.</p>
+              <p className="text-white font-semibold">Email inviata!</p>
+              <p className="text-sm text-gray-300">Controlla la tua casella di posta e clicca sul link per reimpostare la password.</p>
             </motion.div>
           ) : (
             <form onSubmit={handleForgotPassword} className="space-y-4">
