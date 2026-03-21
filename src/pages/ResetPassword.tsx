@@ -35,7 +35,7 @@ export default function ResetPassword() {
     } else {
       setDone(true);
       toast({ title: "Password aggiornata!", description: "Verrai reindirizzato al login." });
-      setTimeout(() => navigate("/admin", { replace: true }), 2000);
+      setTimeout(() => navigate("/auth", { replace: true }), 2000);
     }
     setLoading(false);
   };
