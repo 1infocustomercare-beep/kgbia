@@ -143,9 +143,9 @@ export default function AuthPage() {
                     className="pl-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                   <Input type={showPw ? "text" : "password"} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-                    className="pl-10 pr-10 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50" />
+                    className="pl-10 pr-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
                   <button onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60">
                     {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
