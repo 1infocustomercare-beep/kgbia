@@ -6847,7 +6847,7 @@ const LandingPage = () => {
                   <span className="text-xs sm:text-sm font-semibold text-foreground/90 pr-3 font-heading">{faq.q}</span>
                   <motion.div
                   animate={{ rotate: openFaq === i ? 45 : 0 }}
-                  className="w-7 h-7 rounded-full bg-primary/[0.08] flex items-center justify-center flex-shrink-0 text-primary text-sm font-heading font-bold">
+                  className="w-7 h-7 rounded-full bg-primary/[0.12] flex items-center justify-center flex-shrink-0 text-primary/80 text-sm font-heading font-bold">
                   
                     +
                   </motion.div>
