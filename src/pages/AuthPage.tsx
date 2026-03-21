@@ -317,7 +317,7 @@ export default function AuthPage() {
                       <div className="relative">
                       <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
-                        className="pl-10 bg-white/8 border-white/15 text-foreground placeholder:text-foreground/55 focus:border-primary/55" />
+                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
                       </div>
                     )}
 
