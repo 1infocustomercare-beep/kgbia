@@ -1348,7 +1348,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                             <Gift className="w-3 h-3 inline mr-1" />Bonus inclusi
                           </p>
                           {p.extras.map((e, ei) =>
-                      <p key={ei} className="text-[0.6rem] text-foreground/35 flex items-center gap-1.5 mb-0.5">
+                      <p key={ei} className="text-[0.6rem] text-foreground/50 flex items-center gap-1.5 mb-0.5">
                               <Star className="w-2.5 h-2.5 text-accent/40 flex-shrink-0" /> {e}
                             </p>
                       )}
