@@ -6670,7 +6670,7 @@ const LandingPage = () => {
                   <motion.p className="text-lg sm:text-2xl font-heading font-bold text-vibrant-gradient"
                 animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
                 transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
-                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/70 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/85 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
                 </PremiumCard>
               </motion.div>
             )}
@@ -6680,7 +6680,7 @@ const LandingPage = () => {
         {/* Career path */}
         <motion.div className="p-6 rounded-2xl glow-card mb-10"
         variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/50 text-center mb-6 tracking-[3px] uppercase">Percorso di Carriera</h3>
+          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/75 text-center mb-6 tracking-[3px] uppercase">Percorso di Carriera</h3>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-0">
             {[
             { title: "Partner", desc: "€997 per ogni vendita chiusa", icon: <Handshake className="w-5 h-5" /> },
@@ -6696,7 +6696,7 @@ const LandingPage = () => {
                 </motion.div>
                 <div className="text-left sm:text-center">
                   <p className="text-sm font-bold text-foreground font-heading">{s.title}</p>
-                  <p className="text-[0.6rem] text-foreground/65">{s.desc}</p>
+                  <p className="text-[0.6rem] text-foreground/80">{s.desc}</p>
                 </div>
                 {i < 2 && <ArrowRight className="hidden sm:block w-5 h-5 text-primary/15 mx-6 flex-shrink-0" />}
               </div>
@@ -6707,10 +6707,10 @@ const LandingPage = () => {
         {/* Scenario */}
         <motion.div className="p-6 rounded-2xl glow-card max-w-sm mx-auto"
         variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/50 text-center mb-4 tracking-[3px] uppercase">Scenario: 5 vendite/mese</h3>
+          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/75 text-center mb-4 tracking-[3px] uppercase">Scenario: 5 vendite/mese</h3>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-foreground/55 text-xs">5× Commissioni</span><span className="font-bold text-foreground text-sm">€4.985</span></div>
-            <div className="flex justify-between"><span className="text-foreground/55 text-xs">Bonus Elite (5+)</span><span className="font-bold text-foreground text-sm">€1.500</span></div>
+            <div className="flex justify-between"><span className="text-foreground/75 text-xs">5× Commissioni</span><span className="font-bold text-foreground text-sm">€4.985</span></div>
+            <div className="flex justify-between"><span className="text-foreground/75 text-xs">Bonus Elite (5+)</span><span className="font-bold text-foreground text-sm">€1.500</span></div>
             <div className="flex justify-between pt-3 border-t border-border/30">
               <span className="font-semibold text-foreground text-sm">Totale mensile</span>
               <span className="text-2xl font-heading font-bold text-vibrant-gradient">€6.485</span>
