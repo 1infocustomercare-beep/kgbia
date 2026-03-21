@@ -1119,12 +1119,14 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
       </div>
       <div className="text-center mb-8 sm:mb-12">
         <SectionLabel text="Piani & Prezzi" icon={<Gem className="w-3 h-3 text-accent" />} />
-        <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
-        initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold leading-[1.08] mb-3"
+        initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        style={{ color: "white" }}>
           Scegli Come <span className="text-shimmer">Dominare</span> il Tuo Mercato
         </motion.h2>
-        <motion.p className="text-foreground/40 max-w-[440px] mx-auto leading-[1.7] text-xs sm:text-sm"
-        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+        <motion.p className="max-w-[440px] mx-auto leading-[1.7] text-xs sm:text-sm"
+        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+        style={{ color: "hsl(38 30% 82%)" }}>
           Pacchetto completo o abbonamento flessibile — in entrambi i casi, il tuo business cambia per sempre.
         </motion.p>
 
