@@ -1266,8 +1266,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                           <div className="flex items-baseline gap-2 mt-1">
                             <span className="text-[1.6rem] font-heading font-extrabold text-foreground leading-none">€{p.price.toLocaleString("it-IT")}</span>
                             <div className="flex flex-col">
-                              <span className="text-[0.65rem] text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
-                              <span className="text-[0.5rem] text-foreground/25">una tantum</span>
+                              <span className="text-[0.65rem] text-foreground/35 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
+                              <span className="text-[0.5rem] text-foreground/40">una tantum</span>
                             </div>
                           </div>
                         </div>
