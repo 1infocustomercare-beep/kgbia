@@ -3488,12 +3488,12 @@ const LandingPage = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.8, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
-                {/* Green tech glow behind sphere */}
+                {/* Premium glow behind sphere */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="rounded-full" style={{
                     width: IS_MOBILE_LP ? 240 : 440,
                     height: IS_MOBILE_LP ? 240 : 440,
-                    background: "radial-gradient(circle, hsl(160 65% 42% / 0.18), hsl(168 55% 40% / 0.06) 55%, transparent 80%)",
+                    background: "radial-gradient(circle, hsl(265 50% 55% / 0.12), hsl(248 45% 55% / 0.04) 55%, transparent 80%)",
                     filter: "blur(40px)",
                   }} />
                 </div>
