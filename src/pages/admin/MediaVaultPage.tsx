@@ -325,7 +325,7 @@ const MediaVaultPage = () => {
   const customCount = useMemo(() => (siteAssets || []).filter(a => !!a.url).length, [siteAssets]);
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-6">
+    <div className="min-h-screen p-4 sm:p-6 landing-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
       <BackButton />
       {/* Hidden replace file input */}
       <input ref={replaceFileRef} type="file" accept="video/*,image/*" className="hidden"

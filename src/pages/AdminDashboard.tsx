@@ -276,7 +276,7 @@ const AdminDashboard = () => {
   const activeOrders = orders.filter(o => ["pending", "preparing", "ready"].includes(o.status));
 
   if (restLoading) return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="min-h-screen landing-dark flex items-center justify-center" style={{ background: "hsl(228 22% 7%)" }}>
       <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
   );
@@ -297,7 +297,7 @@ const AdminDashboard = () => {
   // Kill-switch: blocked restaurant
   if (restaurant?.is_blocked) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 text-center">
+      <div className="min-h-screen landing-dark flex flex-col items-center justify-center px-6 text-center" style={{ background: "hsl(228 22% 7%)" }}>
         <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center mb-5">
           <Settings className="w-10 h-10 text-destructive" />
         </div>
@@ -316,7 +316,7 @@ const AdminDashboard = () => {
   const sectorAccent = settingsPrimaryColor || "#C8963E";
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "linear-gradient(145deg, #0c0a14 0%, #0a0a12 40%, #0d0b10 100%)" }}>
+    <div className="min-h-screen flex flex-col relative overflow-hidden landing-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
       {/* Premium sector-themed admin background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.06]"

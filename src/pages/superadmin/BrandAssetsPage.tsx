@@ -180,7 +180,7 @@ export default function BrandAssetsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-6">
+    <div className="min-h-screen p-4 sm:p-6 landing-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
