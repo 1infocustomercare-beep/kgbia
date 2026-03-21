@@ -4130,11 +4130,11 @@ const LandingPage = () => {
             <motion.div key={item.label}
               className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl border cursor-default overflow-hidden"
               style={{
-                background: "linear-gradient(160deg, hsl(0 0% 100% / 0.88), hsl(248 20% 97% / 0.82))",
+                background: "linear-gradient(160deg, hsl(228 20% 14% / 0.88), hsl(248 20% 12% / 0.82))",
                 backdropFilter: "blur(16px)",
                 WebkitBackdropFilter: "blur(16px)",
-                borderColor: "hsl(var(--primary) / 0.1)",
-                boxShadow: "0 2px 16px hsl(var(--primary) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)",
+                borderColor: "hsl(var(--primary) / 0.15)",
+                boxShadow: "0 2px 16px hsl(var(--primary) / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
               }}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
