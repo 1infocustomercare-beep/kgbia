@@ -544,7 +544,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           {/* Remember me + Forgot password */}
           {!isSignUp && (
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
+              <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
                 <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded border-border accent-primary" />
                 Ricordami
