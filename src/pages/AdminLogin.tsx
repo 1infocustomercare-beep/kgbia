@@ -468,7 +468,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               ? (isSignUp ? "Registrati come Partner" : "Accesso Partner")
               : (isSignUp ? "Crea Account" : "Accesso Titolare")}
           </h1>
-          <p className="text-sm text-gray-300 mt-1">
+          <p className="text-sm text-foreground/85 mt-1">
             {isPartnerMode
               ? (isSignUp ? (refCode ? "Sei stato invitato da un Team Leader!" : "Unisciti e guadagna €997/vendita") : "Accedi alla tua dashboard Partner")
               : (isSignUp ? "Un account unico per gestire tutto" : "Accedi al pannello di gestione")}
@@ -486,31 +486,31 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           {isSignUp && (
             <>
               <div>
-                <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Nome completo</label>
+                <label className="text-xs text-foreground/75 uppercase tracking-wider block mb-1.5">Nome completo</label>
                 <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                   placeholder={isPartnerMode ? "Marco Bianchi" : "Mario Rossi"}
-                  className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-foreground text-base placeholder:text-foreground/55 focus:outline-none focus:ring-2 focus:ring-primary/30" />
               </div>
               {isPartnerMode && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Telefono</label>
+                      <label className="text-xs text-foreground/75 uppercase tracking-wider block mb-1.5">Telefono</label>
                       <input type="tel" value={partnerPhone} onChange={e => setPartnerPhone(e.target.value)}
                         placeholder="+39 333..."
-                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-foreground text-base placeholder:text-foreground/55 focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                     <div>
-                      <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Città</label>
+                      <label className="text-xs text-foreground/75 uppercase tracking-wider block mb-1.5">Città</label>
                       <input type="text" value={partnerCity} onChange={e => setPartnerCity(e.target.value)}
                         placeholder="Roma"
-                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-foreground text-base placeholder:text-foreground/55 focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Settore di interesse</label>
+                    <label className="text-xs text-foreground/75 uppercase tracking-wider block mb-1.5">Settore di interesse</label>
                     <select value={partnerSector} onChange={e => setPartnerSector(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
+                      className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
                       <option value="">Seleziona settore...</option>
                       {INDUSTRY_LIST.map(ind => (
                         <option key={ind.id} value={ind.id}>{ind.emoji} {ind.label}</option>
@@ -523,21 +523,21 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           )}
 
           <div>
-            <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Email</label>
+            <label className="text-xs text-foreground/75 uppercase tracking-wider block mb-1.5">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
               placeholder={isPartnerMode ? "partner@email.com" : "titolare@ristorante.it"}
-              className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-foreground text-base placeholder:text-foreground/55 focus:outline-none focus:ring-2 focus:ring-primary/30"
               required />
           </div>
           <div>
-            <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Password</label>
+            <label className="text-xs text-foreground/75 uppercase tracking-wider block mb-1.5">Password</label>
             <div className="relative">
               <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 pr-11 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full px-4 py-3 pr-11 rounded-xl bg-white/8 border border-white/15 text-foreground text-base placeholder:text-foreground/55 focus:outline-none focus:ring-2 focus:ring-primary/30"
                 required minLength={6} />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/80">
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
@@ -546,7 +546,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           {/* Remember me + Forgot password */}
           {!isSignUp && (
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+              <label className="flex items-center gap-2 text-sm text-foreground/75 cursor-pointer">
                 <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded border-border accent-primary" />
                 Ricordami
@@ -570,7 +570,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
         </form>
 
         <button onClick={() => { setIsSignUp(!isSignUp); setError(""); }}
-          className="w-full text-center text-sm text-gray-400 hover:text-white transition-colors">
+          className="w-full text-center text-sm text-primary font-semibold hover:text-primary/80 underline underline-offset-4 decoration-primary/50 transition-colors">
           {isSignUp
             ? (isPartnerMode ? "Hai già un account Partner? Accedi" : "Hai già un account? Accedi")
             : (isPartnerMode ? "Nuovo qui? Registrati come Partner" : "Nuovo qui? Crea account")}
