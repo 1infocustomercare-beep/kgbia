@@ -177,7 +177,6 @@ const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
-const GuidedSetup = lazy(() => import("./pages/GuidedSetup"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
 const BusinessPage = lazy(() => import("./pages/BusinessPage"));
@@ -608,9 +607,7 @@ function App() {
                           <AdminDashboard />
                         </ProtectedRoute>
                       } />
-                      <Route path="/setup" element={
-                        <ProtectedRoute><GuidedSetup /></ProtectedRoute>
-                      } />
+                      <Route path="/setup" element={<Navigate to="/onboarding" replace />} />
 
                       {/* ═══ Adaptive App Routes (industry-aware) ═══ */}
                       <Route path="/app" element={
