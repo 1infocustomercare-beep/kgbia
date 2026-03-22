@@ -38,6 +38,9 @@ const normalizeOnboardingPlan = (plan: string | undefined) => {
 export default function OnboardingPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const signupSector = (user?.user_metadata?.signup_sector as IndustryId | undefined) ?? "";
+  const signupPlan = normalizeOnboardingPlan(user?.user_metadata?.signup_plan as string | undefined);
+
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [searchIndustry, setSearchIndustry] = useState("");
@@ -46,14 +49,14 @@ export default function OnboardingPage() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [form, setForm] = useState({
     name: "",
-    industry: "" as IndustryId | "",
+    industry: signupSector,
     phone: "",
     city: "",
     address: "",
-    email: "",
+    email: user?.email ?? "",
     whatsapp: "",
     piva: "",
-    plan: "smart_ia",
+    plan: signupPlan,
     primaryColor: "#C8963E",
     fontFamily: "Inter",
     staffName: "",
