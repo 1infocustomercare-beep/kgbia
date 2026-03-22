@@ -44,6 +44,14 @@ const PartnerRegister = () => {
   const referralId = searchParams.get("ref");
   const { user } = useAuth();
 
+  // Redirect to unified auth page — this standalone form is deprecated
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set("role", "partner");
+    if (referralId) params.set("ref", referralId);
+    navigate(`/auth?${params.toString()}`, { replace: true });
+  }, [navigate, referralId]);
+
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -57,11 +65,6 @@ const PartnerRegister = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  // If already logged in as partner, redirect
-  if (user) {
-    // Don't render, will check roles in dashboard
-  }
 
   const handleChange = (field: keyof typeof form, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));

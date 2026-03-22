@@ -96,23 +96,20 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
 
       const meta = authUser.user_metadata;
       const signupRole = meta?.signup_role as SignupRole | undefined;
-      if (!signupRole) return; // not a new signup, nothing to reconcile
+      // Only reconcile partner role — customers get restaurant_admin from DB trigger automatically
+      if (signupRole !== "partner") return;
+      if (currentRoles.includes("partner")) return;
 
-      // Check if intended role is already assigned
-      if (signupRole === "partner" && currentRoles.includes("partner")) return;
-      if (signupRole === "customer" && currentRoles.includes("customer")) return;
-
-      // Role mismatch — call the assign function to fix it
-      console.log(`[Auth] Reconciling signup role: intended=${signupRole}, current=[${currentRoles.join(",")}]`);
-      const functionName = signupRole === "partner" ? "assign-partner-role" : "assign-customer-role";
-      const { error } = await supabase.functions.invoke(functionName, {
+      // Partner role missing — call the assign function to fix it
+      console.log(`[Auth] Reconciling partner role: current=[${currentRoles.join(",")}]`);
+      const { error } = await supabase.functions.invoke("assign-partner-role", {
         body: { user_id: userId },
       });
 
       if (error) {
-        console.error("[Auth] Role reconciliation failed:", error);
+        console.error("[Auth] Partner role reconciliation failed:", error);
       } else {
-        console.log("[Auth] Role reconciliation succeeded");
+        console.log("[Auth] Partner role reconciliation succeeded");
       }
     } catch (err) {
       console.error("[Auth] Reconciliation error:", err);

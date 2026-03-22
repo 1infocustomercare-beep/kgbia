@@ -169,20 +169,18 @@ export default function AuthPage() {
       companyName: role === "partner" ? companyName : undefined,
     });
 
-    if (!error && userId) {
-      const functionName = role === "partner" ? "assign-partner-role" : "assign-customer-role";
+    // Only call assign-partner-role for partners.
+    // Customers get restaurant_admin from DB trigger — no edge function needed.
+    if (!error && userId && role === "partner") {
       try {
-        const { error: assignRoleError } = await supabase.functions.invoke(functionName, {
-          body: role === "partner"
-            ? { user_id: userId, team_leader_id: referralId || null }
-            : { user_id: userId },
+        const { error: assignRoleError } = await supabase.functions.invoke("assign-partner-role", {
+          body: { user_id: userId, team_leader_id: referralId || null },
         });
-
         if (assignRoleError) {
-          console.error("Role assignment failed (will retry on login)", assignRoleError);
+          console.error("Partner role assignment failed (will retry on login)", assignRoleError);
         }
       } catch (invokeErr) {
-        console.error("Role assignment invoke failed (will retry on login)", invokeErr);
+        console.error("Partner role assignment invoke failed (will retry on login)", invokeErr);
       }
     }
 
