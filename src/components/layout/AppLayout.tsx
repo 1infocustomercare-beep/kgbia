@@ -72,8 +72,8 @@ export default function AppLayout() {
     return <Navigate to="/onboarding" replace />;
   }
 
-  // Food businesses use the legacy /dashboard UI
-  if (industry === "food") {
+  // Only legacy food restaurants use /dashboard
+  if (industry === "food" && company.entity_type === "restaurant") {
     return <Navigate to="/dashboard" replace />;
   }
 

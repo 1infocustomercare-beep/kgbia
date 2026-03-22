@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import BackButton from "@/components/BackButton";
 import { motion, AnimatePresence } from "framer-motion";
 import { LayoutDashboard, UtensilsCrossed, ShoppingCart, TrendingUp, LogOut, Settings, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useMyRestaurant } from "@/hooks/useMyRestaurant";
 import { supabase } from "@/integrations/supabase/client";
@@ -282,8 +282,7 @@ const AdminDashboard = () => {
   );
 
   if (!restaurant) {
-    navigate("/setup");
-    return null;
+    return <Navigate to="/app" replace />;
   }
 
   const bottomTabs: { id: MainTab; label: string; icon: React.ReactNode }[] = [

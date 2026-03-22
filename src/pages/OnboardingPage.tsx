@@ -174,7 +174,7 @@ export default function OnboardingPage() {
 
       // Small delay to let auth state propagate before navigating
       await new Promise(r => setTimeout(r, 500));
-      navigate(form.industry === "food" ? "/dashboard" : "/app");
+      navigate("/app");
     } catch (err: any) {
       toast.error(err.message || "Errore nella creazione");
     } finally {
@@ -183,7 +183,7 @@ export default function OnboardingPage() {
   };
 
   const selectedConfig = form.industry ? INDUSTRY_CONFIGS[form.industry as IndustryId] : null;
-  const sitePrefix = form.industry === "food" ? "/r/" : "/b/";
+  const sitePrefix = "/b/";
   const generatedSlug = form.name ? form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : "mia-azienda";
 
   return (

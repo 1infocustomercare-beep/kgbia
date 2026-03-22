@@ -85,6 +85,20 @@ export default function AuthPage() {
         return;
       }
 
+      const { data: ownedRestaurant } = await supabase
+        .from("restaurants")
+        .select("id")
+        .eq("owner_id", user.id)
+        .limit(1)
+        .maybeSingle();
+
+      if (cancelled) return;
+
+      if (ownedRestaurant?.id) {
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
       const { data: membership } = await supabase
         .from("company_memberships")
         .select("company_id")
@@ -114,21 +128,7 @@ export default function AuthPage() {
       if (cancelled) return;
 
       if (companyIndustry) {
-        navigate(companyIndustry === "food" ? "/dashboard" : "/app", { replace: true });
-        return;
-      }
-
-      const { data: ownedRestaurant } = await supabase
-        .from("restaurants")
-        .select("id")
-        .eq("owner_id", user.id)
-        .limit(1)
-        .maybeSingle();
-
-      if (cancelled) return;
-
-      if (ownedRestaurant?.id) {
-        navigate("/dashboard", { replace: true });
+        navigate("/app", { replace: true });
         return;
       }
 
