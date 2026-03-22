@@ -64,6 +64,15 @@ export default function OnboardingPage() {
     staffPin: "",
   });
 
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      industry: prev.industry || signupSector,
+      email: prev.email || user?.email || "",
+      plan: prev.plan || signupPlan,
+    }));
+  }, [signupSector, signupPlan, user?.email]);
+
   const filteredIndustries = useMemo(() => {
     const all = Object.values(INDUSTRY_CONFIGS);
     if (!searchIndustry.trim()) return all;
