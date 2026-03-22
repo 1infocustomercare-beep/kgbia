@@ -33,10 +33,15 @@ type AuthMode = "login" | "register";
 
 export default function AuthPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { signIn, signUp, user, roles, rolesReady, loading: authLoading } = useAuth();
-  const [mode, setMode] = useState<AuthMode>("login");
-  const [step, setStep] = useState(1);
-  const [role, setRole] = useState<RoleType | null>(null);
+
+  // Pre-fill from landing page package selection
+  const preselectedPlan = searchParams.get("plan") || "";
+
+  const [mode, setMode] = useState<AuthMode>(preselectedPlan ? "register" : "login");
+  const [step, setStep] = useState(preselectedPlan ? 2 : 1);
+  const [role, setRole] = useState<RoleType | null>(preselectedPlan ? "customer" : null);
   const [sector, setSector] = useState<string>("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
