@@ -2146,7 +2146,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     {PACKAGE_TIERS.map((p) =>
                   <div key={p.id} className="p-3 text-center">
                         <motion.button
-                      onClick={() => {setSelectedPackage(p.id);navigate("/auth?plan=" + p.id + "navigate("/auth?plan=" + p.id + "navigate("/auth?plan=" + p.id);sector=" + selectedSector);sector=" + selectedSector);}}
+                      onClick={() => {setSelectedPackage(p.id);navigate("/auth?plan=" + p.id + "&sector=" + selectedSector);}}
                       className={`w-full px-3 py-2 rounded-lg text-[0.55rem] font-heading font-bold tracking-wider uppercase transition-all ${
                       p.id === "empire" ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
