@@ -55,10 +55,6 @@ export default function AppLayout() {
     return <Navigate to="/partner" replace />;
   }
 
-  if (roles.includes("customer") && !roles.includes("restaurant_admin")) {
-    return <Navigate to="/onboarding" replace />;
-  }
-
   if (loading || !resolved) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -71,10 +67,13 @@ export default function AppLayout() {
     );
   }
 
-  // Only redirect to /dashboard if the user actually HAS a food business
-  // (company is not null and industry is food). Without this check,
-  // users with no company default to "food" and enter an infinite redirect loop.
-  if (company && industry === "food") {
+  // No business yet → send to onboarding instead of rendering wrong sector shell
+  if (!company) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  // Food businesses use the legacy /dashboard UI
+  if (industry === "food") {
     return <Navigate to="/dashboard" replace />;
   }
 
