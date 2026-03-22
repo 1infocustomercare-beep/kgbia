@@ -15,9 +15,25 @@ import { Check, ArrowRight, ArrowLeft, Sparkles, Search, Upload, UserPlus, QrCod
 import { toast } from "sonner";
 
 const PLANS = [
-  { id: "essential", label: "Essential", price: "€29/mese", features: ["Dashboard base", "1 utente", "50 gettoni IA/mese", "Supporto email"] },
-  { id: "smart_ia", label: "Smart IA", price: "€59/mese", features: ["Dashboard avanzata", "5 utenti", "200 gettoni IA/mese", "AI assistant", "Supporto prioritario"], popular: true },
-  { id: "empire_pro", label: "Empire Pro", price: "€89/mese", features: ["Tutto incluso", "Utenti illimitati", "500 gettoni IA/mese", "AI avanzata", "Account manager dedicato"] },
+  {
+    id: "essential",
+    label: "Digital Start",
+    price: "€1.997 una tantum + €49/mese",
+    features: ["Setup completo", "App white-label", "Dashboard operativa", "Supporto dedicato"],
+  },
+  {
+    id: "smart_ia",
+    label: "Growth AI",
+    price: "€4.997 una tantum + €29/mese",
+    features: ["Tutto di Digital Start", "AI & automazioni", "CRM avanzato", "Supporto prioritario"],
+    popular: true,
+  },
+  {
+    id: "empire_pro",
+    label: "Empire Domination",
+    price: "€7.997 una tantum + €0/mese",
+    features: ["Tutto incluso", "0% commissioni", "AI avanzata", "Account manager dedicato"],
+  },
 ];
 
 const FONT_OPTIONS = [
@@ -40,8 +56,9 @@ export default function OnboardingPage() {
   const navigate = useNavigate();
   const signupSector = (user?.user_metadata?.signup_sector as IndustryId | undefined) ?? "";
   const signupPlan = normalizeOnboardingPlan(user?.user_metadata?.signup_plan as string | undefined);
+  const hasPresetCheckoutSelection = Boolean(signupSector && user?.user_metadata?.signup_plan);
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(hasPresetCheckoutSelection ? 1 : 0);
   const [loading, setLoading] = useState(false);
   const [searchIndustry, setSearchIndustry] = useState("");
   const logoInputRef = useRef<HTMLInputElement>(null);
@@ -72,6 +89,12 @@ export default function OnboardingPage() {
       plan: prev.plan || signupPlan,
     }));
   }, [signupSector, signupPlan, user?.email]);
+
+  useEffect(() => {
+    if (hasPresetCheckoutSelection && step === 0) {
+      setStep(1);
+    }
+  }, [hasPresetCheckoutSelection, step]);
 
   const filteredIndustries = useMemo(() => {
     const all = Object.values(INDUSTRY_CONFIGS);

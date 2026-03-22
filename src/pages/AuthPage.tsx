@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
@@ -42,6 +42,7 @@ export default function AuthPage() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const { signIn, signUp, user, roles, rolesReady, loading: authLoading } = useAuth();
+  const autoProvisionAttemptRef = useRef<string | null>(null);
 
   const preselectedPlan = normalizeSignupPlan(searchParams.get("plan") || "");
   const preselectedSector = searchParams.get("sector") || "";
@@ -130,6 +131,47 @@ export default function AuthPage() {
       if (companyIndustry) {
         navigate("/app", { replace: true });
         return;
+      }
+
+      const signupRole = user.user_metadata?.signup_role as string | undefined;
+      const signupSector = user.user_metadata?.signup_sector as IndustryId | undefined;
+      const signupPlan = normalizeSignupPlan((user.user_metadata?.signup_plan as string | undefined) || "");
+
+      const canAutoProvisionCompany =
+        signupRole !== "partner" &&
+        !!signupSector &&
+        !!signupPlan &&
+        autoProvisionAttemptRef.current !== user.id;
+
+      if (canAutoProvisionCompany) {
+        autoProvisionAttemptRef.current = user.id;
+
+        const metaCompanyName = (user.user_metadata?.company_name as string | undefined)?.trim();
+        const metaFullName = (user.user_metadata?.full_name as string | undefined)?.trim();
+        const fallbackName = metaCompanyName || (metaFullName ? `Business ${metaFullName}` : null) || user.email?.split("@")[0] || "Nuova Attività";
+        const slugBase = fallbackName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "") || "nuova-attivita";
+
+        const { data: autoProvisionData, error: autoProvisionError } = await supabase.functions.invoke("create-company", {
+          body: {
+            name: fallbackName,
+            slug: `${slugBase}-${Date.now().toString(36)}`,
+            industry: signupSector,
+            email: user.email || null,
+            plan: signupPlan,
+            primary_color: INDUSTRY_CONFIGS[signupSector]?.defaultPrimaryColor || "#C8963E",
+          },
+        });
+
+        if (!cancelled && !autoProvisionError && !autoProvisionData?.error) {
+          await supabase.auth.refreshSession();
+          navigate("/app", { replace: true });
+          return;
+        }
+
+        console.error("Auto-provisioning company failed, falling back to onboarding", autoProvisionError || autoProvisionData?.error);
       }
 
       navigate("/onboarding", { replace: true });
