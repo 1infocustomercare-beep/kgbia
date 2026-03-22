@@ -3503,13 +3503,13 @@ const LandingPage = () => {
             style={{ background: "radial-gradient(circle, hsl(265 50% 55% / 0.15), hsl(248 45% 60% / 0.05) 55%, transparent 75%)", filter: "blur(100px)" }} />
         </div>
 
-        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
+        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full overflow-hidden" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           
           {/* ═══ CENTERED LAYOUT: Text → Metrics → Phones ═══ */}
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center overflow-hidden">
             
             {/* CENTER: Text content */}
-            <div className="text-center max-w-[680px] mx-auto px-4 sm:px-0">
+            <div className="text-center max-w-[680px] mx-auto px-5 sm:px-0 w-full box-border">
 
               {/* Badge */}
               <motion.div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl mb-4 sm:mb-5"
