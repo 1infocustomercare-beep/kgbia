@@ -30,19 +30,33 @@ const SECTOR_COLORS: Record<string, string> = {
 
 type RoleType = "partner" | "customer";
 type AuthMode = "login" | "register";
+const normalizeSignupPlan = (plan: string) => {
+  if (plan === "base" || plan === "starter" || plan === "essential") return "essential";
+  if (plan === "growth" || plan === "professional" || plan === "smart_ia") return "smart_ia";
+  if (plan === "empire" || plan === "enterprise" || plan === "empire_pro") return "empire_pro";
+  return "";
+};
 
 export default function AuthPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const { signIn, signUp, user, roles, rolesReady, loading: authLoading } = useAuth();
 
-  // Pre-fill from landing page package selection
-  const preselectedPlan = searchParams.get("plan") || "";
+  const preselectedPlan = normalizeSignupPlan(searchParams.get("plan") || "");
+  const preselectedSector = searchParams.get("sector") || "";
+  const referralId = searchParams.get("ref") || "";
+  const roleParam = searchParams.get("role");
 
-  const [mode, setMode] = useState<AuthMode>(preselectedPlan ? "register" : "login");
-  const [step, setStep] = useState(preselectedPlan ? 2 : 1);
-  const [role, setRole] = useState<RoleType | null>(preselectedPlan ? "customer" : null);
-  const [sector, setSector] = useState<string>("");
+  const isPartnerSignupFlow =
+    roleParam === "partner" || location.pathname === "/partner/register" || !!referralId;
+
+  const [mode, setMode] = useState<AuthMode>(preselectedPlan || isPartnerSignupFlow ? "register" : "login");
+  const [step, setStep] = useState(preselectedPlan || isPartnerSignupFlow ? 2 : 1);
+  const [role, setRole] = useState<RoleType | null>(
+    isPartnerSignupFlow ? "partner" : preselectedPlan ? "customer" : null
+  );
+  const [sector, setSector] = useState<string>(preselectedSector);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
