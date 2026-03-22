@@ -400,7 +400,7 @@ export default function OnboardingPage() {
                   </div>
                   <div className="flex gap-2 mt-3">
                     <Button variant="outline" size="sm" className="flex-1 text-xs h-9 min-h-[36px]"
-                      onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/r/${generatedSlug}`); toast.success("Link copiato!"); }}>
+                      onClick={() => { navigator.clipboard.writeText(`${window.location.origin}${sitePrefix}${generatedSlug}`); toast.success("Link copiato!"); }}>
                       📋 Copia Link
                     </Button>
                     <Button variant="outline" size="sm" className="flex-1 text-xs h-9 min-h-[36px]"
