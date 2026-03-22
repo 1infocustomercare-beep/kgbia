@@ -1372,7 +1372,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       {/* CTA button */}
                       <motion.button
-                      onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth?plan=" + p.id + "navigate("/auth?plan=" + p.id + "navigate("/auth?plan=" + p.id);sector=" + selectedSector);sector=" + selectedSector);}}
+                      onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth?plan=" + p.id + "&sector=" + selectedSector);}}
                       className={`w-full mt-4 py-4 rounded-xl text-sm font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
                       isEmpire ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
