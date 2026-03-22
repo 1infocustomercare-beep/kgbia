@@ -255,7 +255,7 @@ export default function AuthPage() {
                 </button>
                 <p className="text-xs text-foreground/75">
                   Non hai un account?{" "}
-                  <button onClick={() => { setMode("register"); setStep(1); }} className="text-primary font-semibold underline underline-offset-4 decoration-primary/50 hover:text-primary/80">
+                  <button onClick={() => { setMode("register"); setStep(isPartnerSignupFlow || preselectedPlan ? 2 : 1); if (isPartnerSignupFlow) setRole("partner"); }} className="text-primary font-semibold underline underline-offset-4 decoration-primary/50 hover:text-primary/80">
                     Registrati
                   </button>
                 </p>
