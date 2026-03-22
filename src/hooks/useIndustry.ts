@@ -12,6 +12,7 @@ export interface CompanyData {
   id: string;
   name: string;
   industry: IndustryId;
+  entity_type: "company" | "restaurant";
   slug: string;
   logo_url: string | null;
   primary_color: string | null;
@@ -83,6 +84,7 @@ export function useIndustry() {
               id: companyData.id,
               name: companyData.name,
               industry: companyData.industry || "food",
+              entity_type: "company",
               slug: companyData.slug,
               logo_url: companyData.logo_url,
               primary_color: companyData.primary_color,
@@ -111,6 +113,7 @@ export function useIndustry() {
             id: restaurant.id,
             name: restaurant.name,
             industry: "food",
+            entity_type: "restaurant",
             slug: restaurant.slug,
             logo_url: restaurant.logo_url,
             primary_color: restaurant.primary_color,
