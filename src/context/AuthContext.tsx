@@ -278,6 +278,8 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
       if (options?.role) metadata.signup_role = options.role;
       if (options?.sector) metadata.signup_sector = options.sector;
       if (options?.companyName) metadata.company_name = options.companyName;
+      if (options?.plan) metadata.signup_plan = options.plan;
+      if (options?.referralId) metadata.partner_referral = options.referralId;
 
       const { data, error } = await supabase.auth.signUp({
         email,
