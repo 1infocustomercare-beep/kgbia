@@ -118,9 +118,11 @@ export default function AuthPage() {
           navigate("/dashboard", { replace: true });
           return;
         }
-      }
 
-      navigate("/app", { replace: true });
+        // restaurant_admin with NO company and NO restaurant → needs onboarding
+        navigate("/onboarding", { replace: true });
+        return;
+      }
     };
 
     void resolveDestination();
