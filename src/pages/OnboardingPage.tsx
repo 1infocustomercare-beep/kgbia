@@ -174,7 +174,7 @@ export default function OnboardingPage() {
 
       // Small delay to let auth state propagate before navigating
       await new Promise(r => setTimeout(r, 500));
-      navigate("/app");
+      navigate(form.industry === "food" ? "/dashboard" : "/app");
     } catch (err: any) {
       toast.error(err.message || "Errore nella creazione");
     } finally {
