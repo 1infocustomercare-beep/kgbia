@@ -396,7 +396,7 @@ export default function OnboardingPage() {
                   </div>
                   <div className="flex items-center gap-2 bg-background/50 rounded-lg p-2">
                     <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                    <code className="text-xs text-primary truncate">{window.location.origin}/r/{generatedSlug}</code>
+                    <code className="text-xs text-primary truncate">{window.location.origin}{sitePrefix}{generatedSlug}</code>
                   </div>
                   <div className="flex gap-2 mt-3">
                     <Button variant="outline" size="sm" className="flex-1 text-xs h-9 min-h-[36px]"
