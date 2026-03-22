@@ -535,7 +535,7 @@ function App() {
                       <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
                       <Route path="/admin" element={<AuthPage />} />
                       <Route path="/kitchen" element={<KitchenView />} />
-                      <Route path="/partner/register" element={<PartnerRegister />} />
+                      <Route path="/partner/register" element={<AuthPage />} />
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/cookie-policy" element={<CookiePolicy />} />
                       <Route path="/reset-password" element={<ResetPassword />} />
