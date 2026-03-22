@@ -404,7 +404,7 @@ export default function OnboardingPage() {
                       📋 Copia Link
                     </Button>
                     <Button variant="outline" size="sm" className="flex-1 text-xs h-9 min-h-[36px]"
-                      onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`Guarda il mio sito: ${window.location.origin}/r/${generatedSlug}`)}`, "_blank")}>
+                      onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`Guarda il mio sito: ${window.location.origin}${sitePrefix}${generatedSlug}`)}`, "_blank")}>
                       <Share2 className="w-3 h-3 mr-1" /> WhatsApp
                     </Button>
                   </div>
