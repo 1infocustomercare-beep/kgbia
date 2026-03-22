@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -30,19 +30,33 @@ const SECTOR_COLORS: Record<string, string> = {
 
 type RoleType = "partner" | "customer";
 type AuthMode = "login" | "register";
+const normalizeSignupPlan = (plan: string) => {
+  if (plan === "base" || plan === "starter" || plan === "essential") return "essential";
+  if (plan === "growth" || plan === "professional" || plan === "smart_ia") return "smart_ia";
+  if (plan === "empire" || plan === "enterprise" || plan === "empire_pro") return "empire_pro";
+  return "";
+};
 
 export default function AuthPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const { signIn, signUp, user, roles, rolesReady, loading: authLoading } = useAuth();
 
-  // Pre-fill from landing page package selection
-  const preselectedPlan = searchParams.get("plan") || "";
+  const preselectedPlan = normalizeSignupPlan(searchParams.get("plan") || "");
+  const preselectedSector = searchParams.get("sector") || "";
+  const referralId = searchParams.get("ref") || "";
+  const roleParam = searchParams.get("role");
 
-  const [mode, setMode] = useState<AuthMode>(preselectedPlan ? "register" : "login");
-  const [step, setStep] = useState(preselectedPlan ? 2 : 1);
-  const [role, setRole] = useState<RoleType | null>(preselectedPlan ? "customer" : null);
-  const [sector, setSector] = useState<string>("");
+  const isPartnerSignupFlow =
+    roleParam === "partner" || location.pathname === "/partner/register" || !!referralId;
+
+  const [mode, setMode] = useState<AuthMode>(preselectedPlan || isPartnerSignupFlow ? "register" : "login");
+  const [step, setStep] = useState(preselectedPlan || isPartnerSignupFlow ? 2 : 1);
+  const [role, setRole] = useState<RoleType | null>(
+    isPartnerSignupFlow ? "partner" : preselectedPlan ? "customer" : null
+  );
+  const [sector, setSector] = useState<string>(preselectedSector);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -71,63 +85,54 @@ export default function AuthPage() {
         return;
       }
 
-      if (roles.includes("customer") && !roles.includes("restaurant_admin")) {
-        navigate("/onboarding", { replace: true });
-        return;
-      }
+      const { data: membership } = await supabase
+        .from("company_memberships")
+        .select("company_id")
+        .eq("user_id", user.id)
+        .limit(1)
+        .maybeSingle();
 
-      if (roles.includes("restaurant_admin")) {
-        const { data: membership } = await supabase
-          .from("company_memberships")
-          .select("company_id")
-          .eq("user_id", user.id)
-          .limit(1)
+      let companyIndustry: string | null = null;
+
+      if (membership?.company_id) {
+        const { data: company } = await supabase
+          .from("companies")
+          .select("industry")
+          .eq("id", membership.company_id)
           .maybeSingle();
-
-        let companyIndustry: string | null = null;
-
-        if (membership?.company_id) {
-          const { data: company } = await supabase
-            .from("companies")
-            .select("industry")
-            .eq("id", membership.company_id)
-            .maybeSingle();
-          companyIndustry = company?.industry ?? null;
-        } else {
-          const { data: ownedCompany } = await supabase
-            .from("companies")
-            .select("industry")
-            .eq("owner_id", user.id)
-            .limit(1)
-            .maybeSingle();
-          companyIndustry = ownedCompany?.industry ?? null;
-        }
-
-        if (cancelled) return;
-
-        if (companyIndustry) {
-          navigate(companyIndustry === "food" ? "/dashboard" : "/app", { replace: true });
-          return;
-        }
-
-        const { data: ownedRestaurant } = await supabase
-          .from("restaurants")
-          .select("id")
+        companyIndustry = company?.industry ?? null;
+      } else {
+        const { data: ownedCompany } = await supabase
+          .from("companies")
+          .select("industry")
           .eq("owner_id", user.id)
           .limit(1)
           .maybeSingle();
+        companyIndustry = ownedCompany?.industry ?? null;
+      }
 
-        if (cancelled) return;
+      if (cancelled) return;
 
-        if (ownedRestaurant?.id) {
-          navigate("/dashboard", { replace: true });
-          return;
-        }
-
-        // restaurant_admin with NO company and NO restaurant → needs onboarding
-        navigate("/onboarding", { replace: true });
+      if (companyIndustry) {
+        navigate(companyIndustry === "food" ? "/dashboard" : "/app", { replace: true });
         return;
       }
+
+      const { data: ownedRestaurant } = await supabase
+        .from("restaurants")
+        .select("id")
+        .eq("owner_id", user.id)
+        .limit(1)
+        .maybeSingle();
+
+      if (cancelled) return;
+
+      if (ownedRestaurant?.id) {
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
+      navigate("/onboarding", { replace: true });
     };
 
     void resolveDestination();
@@ -159,6 +164,8 @@ export default function AuthPage() {
       fullName,
       role,
       sector,
+      plan: preselectedPlan || undefined,
+      referralId: role === "partner" ? referralId || undefined : undefined,
       companyName: role === "partner" ? companyName : undefined,
     });
 
@@ -166,7 +173,9 @@ export default function AuthPage() {
       const functionName = role === "partner" ? "assign-partner-role" : "assign-customer-role";
       try {
         const { error: assignRoleError } = await supabase.functions.invoke(functionName, {
-          body: { user_id: userId },
+          body: role === "partner"
+            ? { user_id: userId, team_leader_id: referralId || null }
+            : { user_id: userId },
         });
 
         if (assignRoleError) {
@@ -246,7 +255,7 @@ export default function AuthPage() {
                 </button>
                 <p className="text-xs text-foreground/75">
                   Non hai un account?{" "}
-                  <button onClick={() => { setMode("register"); setStep(1); }} className="text-primary font-semibold underline underline-offset-4 decoration-primary/50 hover:text-primary/80">
+                  <button onClick={() => { setMode("register"); setStep(isPartnerSignupFlow || preselectedPlan ? 2 : 1); if (isPartnerSignupFlow) setRole("partner"); }} className="text-primary font-semibold underline underline-offset-4 decoration-primary/50 hover:text-primary/80">
                     Registrati
                   </button>
                 </p>

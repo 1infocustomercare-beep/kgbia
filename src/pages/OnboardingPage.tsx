@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { clearIndustryCache } from "@/hooks/useIndustry";
 
 import { useNavigate } from "react-router-dom";
@@ -28,9 +28,19 @@ const FONT_OPTIONS = [
   { value: "Lora", label: "Lora (Classico)" },
 ];
 
+const normalizeOnboardingPlan = (plan: string | undefined) => {
+  if (plan === "base" || plan === "starter" || plan === "essential") return "essential";
+  if (plan === "growth" || plan === "professional" || plan === "smart_ia") return "smart_ia";
+  if (plan === "empire" || plan === "enterprise" || plan === "empire_pro") return "empire_pro";
+  return "smart_ia";
+};
+
 export default function OnboardingPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const signupSector = (user?.user_metadata?.signup_sector as IndustryId | undefined) ?? "";
+  const signupPlan = normalizeOnboardingPlan(user?.user_metadata?.signup_plan as string | undefined);
+
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [searchIndustry, setSearchIndustry] = useState("");
@@ -39,20 +49,29 @@ export default function OnboardingPage() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [form, setForm] = useState({
     name: "",
-    industry: "" as IndustryId | "",
+    industry: signupSector,
     phone: "",
     city: "",
     address: "",
-    email: "",
+    email: user?.email ?? "",
     whatsapp: "",
     piva: "",
-    plan: "smart_ia",
+    plan: signupPlan,
     primaryColor: "#C8963E",
     fontFamily: "Inter",
     staffName: "",
     staffEmail: "",
     staffPin: "",
   });
+
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      industry: prev.industry || signupSector,
+      email: prev.email || user?.email || "",
+      plan: prev.plan || signupPlan,
+    }));
+  }, [signupSector, signupPlan, user?.email]);
 
   const filteredIndustries = useMemo(() => {
     const all = Object.values(INDUSTRY_CONFIGS);
