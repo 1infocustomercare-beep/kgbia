@@ -164,6 +164,8 @@ export default function AuthPage() {
       fullName,
       role,
       sector,
+      plan: preselectedPlan || undefined,
+      referralId: role === "partner" ? referralId || undefined : undefined,
       companyName: role === "partner" ? companyName : undefined,
     });
 
@@ -171,7 +173,9 @@ export default function AuthPage() {
       const functionName = role === "partner" ? "assign-partner-role" : "assign-customer-role";
       try {
         const { error: assignRoleError } = await supabase.functions.invoke(functionName, {
-          body: { user_id: userId },
+          body: role === "partner"
+            ? { user_id: userId, team_leader_id: referralId || null }
+            : { user_id: userId },
         });
 
         if (assignRoleError) {
