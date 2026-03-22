@@ -174,7 +174,7 @@ export default function OnboardingPage() {
 
       // Small delay to let auth state propagate before navigating
       await new Promise(r => setTimeout(r, 500));
-      navigate("/app");
+      navigate(form.industry === "food" ? "/dashboard" : "/app");
     } catch (err: any) {
       toast.error(err.message || "Errore nella creazione");
     } finally {
@@ -183,6 +183,7 @@ export default function OnboardingPage() {
   };
 
   const selectedConfig = form.industry ? INDUSTRY_CONFIGS[form.industry as IndustryId] : null;
+  const sitePrefix = form.industry === "food" ? "/r/" : "/b/";
   const generatedSlug = form.name ? form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : "mia-azienda";
 
   return (
@@ -395,15 +396,15 @@ export default function OnboardingPage() {
                   </div>
                   <div className="flex items-center gap-2 bg-background/50 rounded-lg p-2">
                     <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                    <code className="text-xs text-primary truncate">{window.location.origin}/r/{generatedSlug}</code>
+                    <code className="text-xs text-primary truncate">{window.location.origin}{sitePrefix}{generatedSlug}</code>
                   </div>
                   <div className="flex gap-2 mt-3">
                     <Button variant="outline" size="sm" className="flex-1 text-xs h-9 min-h-[36px]"
-                      onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/r/${generatedSlug}`); toast.success("Link copiato!"); }}>
+                      onClick={() => { navigator.clipboard.writeText(`${window.location.origin}${sitePrefix}${generatedSlug}`); toast.success("Link copiato!"); }}>
                       📋 Copia Link
                     </Button>
                     <Button variant="outline" size="sm" className="flex-1 text-xs h-9 min-h-[36px]"
-                      onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`Guarda il mio sito: ${window.location.origin}/r/${generatedSlug}`)}`, "_blank")}>
+                      onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`Guarda il mio sito: ${window.location.origin}${sitePrefix}${generatedSlug}`)}`, "_blank")}>
                       <Share2 className="w-3 h-3 mr-1" /> WhatsApp
                     </Button>
                   </div>
