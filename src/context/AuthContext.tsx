@@ -11,6 +11,8 @@ type SignUpOptions = {
   role?: SignupRole;
   sector?: string;
   companyName?: string;
+  plan?: string;
+  referralId?: string;
 };
 
 interface AuthContextType {
