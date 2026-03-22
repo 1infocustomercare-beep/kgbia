@@ -174,7 +174,6 @@ const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
-const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
@@ -182,12 +181,12 @@ const GuidedSetup = lazy(() => import("./pages/GuidedSetup"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
 const BusinessPage = lazy(() => import("./pages/BusinessPage"));
-const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
+const OnboardingPage = lazy(() => importWithRetry(() => import("./pages/OnboardingPage")));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-const AuthPage = lazy(() => import("./pages/AuthPage"));
+const AuthPage = lazy(() => importWithRetry(() => import("./pages/AuthPage")));
 
 // App layout + adaptive pages
-const AppLayout = lazy(() => import("./components/layout/AppLayout"));
+const AppLayout = lazy(() => importWithRetry(() => import("./components/layout/AppLayout")));
 const AdaptiveDashboard = lazy(() => import("./pages/app/AdaptiveDashboard"));
 const LeadsPage = lazy(() => import("./pages/LeadsPage"));
 const StaffPage = lazy(() => import("./pages/app/StaffPage"));
