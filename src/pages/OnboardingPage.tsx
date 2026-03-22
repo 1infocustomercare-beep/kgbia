@@ -28,6 +28,13 @@ const FONT_OPTIONS = [
   { value: "Lora", label: "Lora (Classico)" },
 ];
 
+const normalizeOnboardingPlan = (plan: string | undefined) => {
+  if (plan === "base" || plan === "starter" || plan === "essential") return "essential";
+  if (plan === "growth" || plan === "professional" || plan === "smart_ia") return "smart_ia";
+  if (plan === "empire" || plan === "enterprise" || plan === "empire_pro") return "empire_pro";
+  return "smart_ia";
+};
+
 export default function OnboardingPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
