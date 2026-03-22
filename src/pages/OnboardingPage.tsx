@@ -183,6 +183,7 @@ export default function OnboardingPage() {
   };
 
   const selectedConfig = form.industry ? INDUSTRY_CONFIGS[form.industry as IndustryId] : null;
+  const sitePrefix = form.industry === "food" ? "/r/" : "/b/";
   const generatedSlug = form.name ? form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : "mia-azienda";
 
   return (
