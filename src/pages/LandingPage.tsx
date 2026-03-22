@@ -1372,7 +1372,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       {/* CTA button */}
                       <motion.button
-                      onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth");}}
+                      onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth?plan=" + p.id);}}
                       className={`w-full mt-4 py-4 rounded-xl text-sm font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
                       isEmpire ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
@@ -2048,7 +2048,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* CTA */}
                       <div className="px-4 pb-4">
                         <motion.button
-                        onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth");}}
+                        onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth?plan=" + p.id);}}
                         className={`w-full py-2.5 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase transition-all ${
                         isEmpire ?
                         "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
@@ -2146,7 +2146,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     {PACKAGE_TIERS.map((p) =>
                   <div key={p.id} className="p-3 text-center">
                         <motion.button
-                      onClick={() => {setSelectedPackage(p.id);navigate("/auth");}}
+                      onClick={() => {setSelectedPackage(p.id);navigate("/auth?plan=" + p.id);}}
                       className={`w-full px-3 py-2 rounded-lg text-[0.55rem] font-heading font-bold tracking-wider uppercase transition-all ${
                       p.id === "empire" ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
@@ -2403,7 +2403,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                     {/* CTA */}
                     <motion.button
-                    onClick={(e) => {e.stopPropagation();setSelectedPlan(p.id);navigate("/auth");}}
+                    onClick={(e) => {e.stopPropagation();setSelectedPlan(p.id);navigate("/auth?plan=" + p.id);}}
                     className={`w-full mt-5 py-3.5 rounded-xl text-xs font-heading font-bold tracking-wider uppercase relative overflow-hidden transition-all ${
                     isEnterprise ?
                     "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
