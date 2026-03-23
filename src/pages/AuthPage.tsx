@@ -144,8 +144,21 @@ export default function AuthPage() {
       const signupSector = user.user_metadata?.signup_sector as IndustryId | undefined;
       const signupPlan = normalizeSignupPlan((user.user_metadata?.signup_plan as string | undefined) || "");
 
+      // Partners without a company should go to /partner, not onboarding
+      if (signupRole === "partner") {
+        // Ensure partner role exists (may have been assigned during signup)
+        try {
+          await supabase.functions.invoke("assign-partner-role", {
+            body: { user_id: user.id, team_leader_id: user.user_metadata?.referral_id || null },
+          });
+        } catch (e) {
+          console.warn("Partner role re-assignment attempt:", e);
+        }
+        navigate("/partner", { replace: true });
+        return;
+      }
+
       const canAutoProvisionCompany =
-        signupRole !== "partner" &&
         !!signupSector &&
         !!signupPlan &&
         autoProvisionAttemptRef.current !== user.id;
