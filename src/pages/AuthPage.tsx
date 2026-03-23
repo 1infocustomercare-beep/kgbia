@@ -174,7 +174,9 @@ export default function AuthPage() {
 
         if (!cancelled && !autoProvisionError && !autoProvisionData?.error) {
           await supabase.auth.refreshSession();
-          navigate("/app", { replace: true });
+          // Food sector creates a restaurant → go to /dashboard; others → /app
+          const dest = signupSector === "food" ? "/dashboard" : "/app";
+          navigate(dest, { replace: true });
           return;
         }
 

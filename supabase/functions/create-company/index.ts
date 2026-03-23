@@ -34,7 +34,7 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { name, industry, phone, city, plan, slug, primary_color, tagline, modules_enabled } = body;
+    const { name, industry, phone, city, plan, slug, primary_color, tagline, modules_enabled, email } = body;
 
     if (!name || !industry || !slug) {
       return new Response(JSON.stringify({ error: "Missing required fields: name, industry, slug" }), {
@@ -43,7 +43,16 @@ serve(async (req) => {
       });
     }
 
-    // ── 1. Create company ────────────────────────────────────────────
+    // ── FOOD SECTOR → create restaurant (same model as imperioroma) ──
+    if (industry === "food") {
+      const result = await createFoodRestaurant(supabase, user, { name, slug, phone, city, plan, primary_color, tagline, email });
+      return new Response(
+        JSON.stringify(result),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // ── ALL OTHER SECTORS → create company ───────────────────────────
     const { data: company, error: companyError } = await supabase
       .from("companies")
       .insert({
@@ -57,6 +66,7 @@ serve(async (req) => {
         tagline: tagline || "Benvenuti",
         modules_enabled: modules_enabled || [],
         subscription_plan: plan || "essential",
+        email: email || user.email || null,
       })
       .select("id")
       .single();
@@ -64,27 +74,21 @@ serve(async (req) => {
     if (companyError) throw companyError;
     const companyId = company.id;
 
-    // ── 2. Company membership (admin) ────────────────────────────────
     await supabase.from("company_memberships").insert({
       company_id: companyId,
       user_id: user.id,
       role: "admin",
     });
 
-    // ── 3. Update profile ────────────────────────────────────────────
     await supabase.from("profiles").update({
       full_name: user.user_metadata?.full_name || user.email?.split("@")[0],
     }).eq("user_id", user.id);
 
-    // ── 4. Assign user role (restaurant_admin covers all business types) ──
     await supabase.from("user_roles").upsert(
       { user_id: user.id, role: "restaurant_admin" },
       { onConflict: "user_id,role" }
     );
 
-    // ── 5. Business subscription (90-day trial) ──────────────────────
-    // Note: DB trigger handle_new_company_subscription fires on insert,
-    // but we also explicitly insert to ensure it exists
     const trialEnd = new Date();
     trialEnd.setDate(trialEnd.getDate() + 90);
     await supabase.from("business_subscriptions").upsert(
@@ -98,7 +102,7 @@ serve(async (req) => {
       { onConflict: "company_id" }
     );
 
-    // ── 6. Industry-specific demo data ───────────────────────────────
+    // Industry-specific demo data
     if (industry === "ncc") {
       await seedNCCDemo(supabase, companyId);
     } else if (industry === "beauty") {
@@ -107,7 +111,6 @@ serve(async (req) => {
       await seedRetailDemo(supabase, companyId);
     }
 
-    // ── 7. Common demo data ──────────────────────────────────────────
     await seedCommonDemo(supabase, companyId, industry);
 
     return new Response(
@@ -121,6 +124,116 @@ serve(async (req) => {
     );
   }
 });
+
+// ── FOOD: Create full restaurant with demo data (like imperioroma) ──
+async function createFoodRestaurant(
+  supabase: any,
+  user: any,
+  opts: { name: string; slug: string; phone?: string; city?: string; plan?: string; primary_color?: string; tagline?: string; email?: string }
+) {
+  const restaurantId = crypto.randomUUID();
+
+  // 1. Create restaurant record
+  const { error: restError } = await supabase.from("restaurants").insert({
+    id: restaurantId,
+    name: opts.name,
+    slug: opts.slug,
+    owner_id: user.id,
+    tagline: opts.tagline || "Benvenuti nel nostro ristorante",
+    primary_color: opts.primary_color || "#C8963E",
+    phone: opts.phone || "",
+    address: opts.city ? `Via Principale 1, ${opts.city}` : "",
+    city: opts.city || "",
+    email: opts.email || user.email || "",
+    is_active: true,
+    policy_accepted: true,
+    policy_accepted_at: new Date().toISOString(),
+    setup_paid: true,
+  });
+
+  if (restError) throw restError;
+
+  // Note: DB trigger handle_new_restaurant will auto-create:
+  // - ai_tokens record
+  // - fisco_configs record
+  // - restaurant_memberships record
+
+  // 2. Ensure user role
+  await supabase.from("user_roles").upsert(
+    { user_id: user.id, role: "restaurant_admin" },
+    { onConflict: "user_id,role" }
+  );
+
+  // 3. Update profile
+  await supabase.from("profiles").update({
+    full_name: user.user_metadata?.full_name || user.email?.split("@")[0],
+  }).eq("user_id", user.id);
+
+  // 4. Seed full menu (same categories as imperioroma)
+  await supabase.from("menu_items").insert([
+    { restaurant_id: restaurantId, name: "Bruschetta Classica", description: "Pomodorini freschi, basilico e olio EVO su pane toscano", price: 8, category: "Antipasti", is_active: true, is_popular: true, sort_order: 1 },
+    { restaurant_id: restaurantId, name: "Tagliere Misto", description: "Selezione di salumi e formaggi stagionati", price: 16, category: "Antipasti", is_active: true, is_popular: false, sort_order: 2 },
+    { restaurant_id: restaurantId, name: "Carpaccio di Manzo", description: "Con rucola, parmigiano e limone", price: 14, category: "Antipasti", is_active: true, is_popular: false, sort_order: 3 },
+    { restaurant_id: restaurantId, name: "Spaghetti Carbonara", description: "Guanciale croccante, pecorino romano, tuorlo d'uovo", price: 14, category: "Primi", is_active: true, is_popular: true, sort_order: 4 },
+    { restaurant_id: restaurantId, name: "Risotto ai Funghi Porcini", description: "Riso Carnaroli mantecato con porcini freschi", price: 16, category: "Primi", is_active: true, is_popular: false, sort_order: 5 },
+    { restaurant_id: restaurantId, name: "Paccheri all'Amatriciana", description: "Sugo di pomodoro San Marzano, guanciale, pecorino", price: 13, category: "Primi", is_active: true, is_popular: false, sort_order: 6 },
+    { restaurant_id: restaurantId, name: "Pizza Margherita", description: "Mozzarella di bufala, pomodoro, basilico fresco", price: 12, category: "Pizze", is_active: true, is_popular: true, sort_order: 7 },
+    { restaurant_id: restaurantId, name: "Pizza Diavola", description: "Salamino piccante, mozzarella, peperoncino", price: 14, category: "Pizze", is_active: true, is_popular: false, sort_order: 8 },
+    { restaurant_id: restaurantId, name: "Pizza Quattro Formaggi", description: "Mozzarella, gorgonzola, fontina, parmigiano", price: 15, category: "Pizze", is_active: true, is_popular: false, sort_order: 9 },
+    { restaurant_id: restaurantId, name: "Tagliata di Manzo", description: "Controfiletto alla griglia con rucola e grana", price: 22, category: "Secondi", is_active: true, is_popular: false, sort_order: 10 },
+    { restaurant_id: restaurantId, name: "Branzino al Forno", description: "Con patate, olive taggiasche e capperi", price: 20, category: "Secondi", is_active: true, is_popular: false, sort_order: 11 },
+    { restaurant_id: restaurantId, name: "Tiramisù", description: "Mascarpone, savoiardi, caffè espresso, cacao", price: 7, category: "Dolci", is_active: true, is_popular: true, sort_order: 12 },
+    { restaurant_id: restaurantId, name: "Panna Cotta", description: "Con coulis di frutti di bosco", price: 6, category: "Dolci", is_active: true, is_popular: false, sort_order: 13 },
+    { restaurant_id: restaurantId, name: "Espresso", description: "Caffè 100% arabica", price: 2, category: "Bevande", is_active: true, is_popular: false, sort_order: 14 },
+    { restaurant_id: restaurantId, name: "Prosecco Valdobbiadene", description: "Calice di bollicine venete", price: 6, category: "Bevande", is_active: true, is_popular: false, sort_order: 15 },
+    { restaurant_id: restaurantId, name: "Acqua Minerale", description: "Naturale o frizzante 75cl", price: 3, category: "Bevande", is_active: true, is_popular: false, sort_order: 16 },
+  ]);
+
+  // 5. Seed tables
+  await supabase.from("restaurant_tables").insert([
+    { restaurant_id: restaurantId, table_number: 1, seats: 2, status: "free", label: "Tavolo 1", pos_x: 15, pos_y: 20 },
+    { restaurant_id: restaurantId, table_number: 2, seats: 4, status: "free", label: "Tavolo 2", pos_x: 38, pos_y: 20 },
+    { restaurant_id: restaurantId, table_number: 3, seats: 4, status: "occupied", label: "Tavolo 3", pos_x: 62, pos_y: 20 },
+    { restaurant_id: restaurantId, table_number: 4, seats: 6, status: "free", label: "Tavolo 4", pos_x: 85, pos_y: 20 },
+    { restaurant_id: restaurantId, table_number: 5, seats: 2, status: "occupied", label: "Tavolo 5", pos_x: 15, pos_y: 60 },
+    { restaurant_id: restaurantId, table_number: 6, seats: 4, status: "free", label: "Tavolo 6", pos_x: 38, pos_y: 60 },
+    { restaurant_id: restaurantId, table_number: 7, seats: 8, status: "free", label: "Tavolo 7", pos_x: 62, pos_y: 60 },
+    { restaurant_id: restaurantId, table_number: 8, seats: 4, status: "free", label: "Tavolo 8", pos_x: 85, pos_y: 60 },
+  ]);
+
+  // 6. Seed sample orders
+  await supabase.from("orders").insert([
+    { restaurant_id: restaurantId, customer_name: "Marco Rossi", customer_phone: "+39 333 1234567", order_type: "table", table_number: 3, status: "preparing", total: 36, items: [{ name: "Carbonara", qty: 2, price: 14 }, { name: "Bruschetta", qty: 1, price: 8 }], notes: "Senza pepe" },
+    { restaurant_id: restaurantId, customer_name: "Laura Bianchi", customer_phone: "+39 334 9876543", order_type: "delivery", table_number: null, status: "pending", total: 38, items: [{ name: "Pizza Margherita", qty: 2, price: 12 }, { name: "Tiramisù", qty: 2, price: 7 }] },
+    { restaurant_id: restaurantId, customer_name: "Giovanni Paoli", customer_phone: "+39 335 5551234", order_type: "takeaway", table_number: null, status: "ready", total: 38, items: [{ name: "Risotto ai Funghi", qty: 1, price: 16 }, { name: "Tagliata", qty: 1, price: 22 }], notes: "Extra limone" },
+  ]);
+
+  // 7. Kitchen access pin
+  await supabase.from("kitchen_access_pins").insert([
+    { restaurant_id: restaurantId, pin_code: "1234", label: "Cucina Principale", is_active: true },
+  ]);
+
+  // 8. Reviews
+  await supabase.from("reviews").insert([
+    { restaurant_id: restaurantId, rating: 5, customer_name: "Marco R.", comment: "Ottima esperienza! Carbonara perfetta.", is_public: true },
+    { restaurant_id: restaurantId, rating: 5, customer_name: "Sara T.", comment: "Servizio impeccabile, tornerò sicuramente.", is_public: true },
+    { restaurant_id: restaurantId, rating: 4, customer_name: "Paolo V.", comment: "Buona pizza, ambiente accogliente.", is_public: true },
+    { restaurant_id: restaurantId, rating: 2, customer_name: "Anna L.", comment: "Attesa troppo lunga.", is_public: false },
+  ]);
+
+  // 9. Reservations
+  const today = new Date().toISOString().split("T")[0];
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().split("T")[0];
+  const dayAfter = new Date(Date.now() + 172800000).toISOString().split("T")[0];
+
+  await supabase.from("reservations").insert([
+    { restaurant_id: restaurantId, customer_name: "Marco Rossi", customer_phone: "+39 333 1234567", reservation_date: today, reservation_time: "20:30", guests: 4, status: "pending" },
+    { restaurant_id: restaurantId, customer_name: "Laura Bianchi", customer_phone: "+39 334 9876543", reservation_date: tomorrow, reservation_time: "21:00", guests: 2, status: "pending" },
+    { restaurant_id: restaurantId, customer_name: "Giovanni Paoli", customer_phone: "+39 335 5551234", reservation_date: dayAfter, reservation_time: "20:00", guests: 6, status: "confirmed" },
+  ]);
+
+  return { success: true, restaurantId, slug: opts.slug, entity_type: "restaurant" };
+}
 
 // ── NCC Demo Data ──────────────────────────────────────────────────
 async function seedNCCDemo(supabase: any, companyId: string) {
@@ -194,7 +307,6 @@ async function seedCommonDemo(supabase: any, companyId: string, industry: string
     { company_id: companyId, full_name: "Giovanni Verdi", role: roles[1], email: "giovanni@demo.it", hourly_rate: 12, is_active: true },
   ]);
 
-  // Seed demo leads
   await supabase.from("leads").insert([
     { company_id: companyId, name: "Azienda Alfa S.r.l.", email: "info@alfa.it", phone: "+39 06 1234567", status: "new", source: "website", value: 5000 },
     { company_id: companyId, name: "Hotel Belvedere", email: "booking@belvedere.it", phone: "+39 06 9876543", status: "contacted", source: "referral", value: 3000 },
