@@ -2902,8 +2902,7 @@ const LandingPage = () => {
   const navLinks = [
   { href: "#industries", label: "Settori" },
   { href: "#services", label: "Funzionalità" },
-  { href: "#pricing", label: "Prezzi" },
-  { href: "#partner", label: "Partner" }];
+  { href: "#pricing", label: "Prezzi" }];
 
 
   const whyUs = [
@@ -6596,182 +6595,7 @@ const LandingPage = () => {
                             ═══════════════════════════════════════════ */}
       <PricingConfigurator navigate={navigate} />
 
-      {/* <SectionDivider /> — hidden redesign */}
-
-      {/* ═══════════════════════════════════════════
-                             PARTNER PROGRAM
-                            ═══════════════════════════════════════════ */}
-      <Section id="partner" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
-      }}>
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
-          <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-[15%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
-          <div className="absolute bottom-[28%] right-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(100px)" }} />
-          <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
-          style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(38,55%,50%,0.22), hsla(265,50%,55%,0.12), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.04]"
-          style={{ background: "linear-gradient(180deg, hsla(38,55%,50%,0.4), transparent)" }} />
-          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(228,22%,10%,0.5))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
-          }} />
-        </div>
-        <div className="text-center mb-12">
-          <SectionLabel text="Partner Program" icon={<Handshake className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Guadagna Vendendo <span className="text-shimmer">Empire</span>
-          </motion.h2>
-        </div>
-
-        <div className="relative mb-10 rounded-2xl overflow-hidden isolate">
-          {/* Opaque mobile panel */}
-          <div
-            className="absolute inset-0 sm:hidden z-0"
-            style={{
-              background: "linear-gradient(155deg, hsl(228 20% 14% / 0.86), hsl(232 22% 12% / 0.84))",
-              border: "1px solid hsl(var(--border) / 0.3)"
-            }} />
-          
-
-          {/* Mobile hyper-tech communication schema between KPI icons */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1] sm:hidden" viewBox="0 0 300 190" preserveAspectRatio="xMidYMid meet">
-            <defs>
-              <radialGradient id="partnerKpiHubGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
-              </radialGradient>
-              <linearGradient id="partnerKpiLink" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
-                <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.2" />
-              </linearGradient>
-            </defs>
-
-            {/* Central hub */}
-            <circle cx="150" cy="95" r="17" fill="url(#partnerKpiHubGlow)" />
-            <circle cx="150" cy="95" r="8" fill="none" stroke="hsl(var(--primary) / 0.32)" strokeWidth="0.6" strokeDasharray="2,3" />
-            <circle cx="150" cy="95" r="3" fill="hsl(var(--primary) / 0.55)">
-              <animate attributeName="r" values="2.4;3.8;2.4" dur="2.8s" repeatCount="indefinite" />
-              <animate attributeName="opacity" values="0.5;1;0.5" dur="2.8s" repeatCount="indefinite" />
-            </circle>
-
-            {/* Curved spokes to each KPI */}
-            <path d="M150,95 Q115,74 78,52" fill="none" stroke="url(#partnerKpiLink)" strokeWidth="0.75" strokeDasharray="3,4" />
-            <path d="M150,95 Q185,74 222,52" fill="none" stroke="url(#partnerKpiLink)" strokeWidth="0.75" strokeDasharray="3,4" />
-            <path d="M150,95 Q115,116 78,138" fill="none" stroke="url(#partnerKpiLink)" strokeWidth="0.75" strokeDasharray="3,4" />
-            <path d="M150,95 Q185,116 222,138" fill="none" stroke="url(#partnerKpiLink)" strokeWidth="0.75" strokeDasharray="3,4" />
-
-            {/* Secondary communication loops between KPI nodes */}
-            <path d="M78,52 Q150,30 222,52" fill="none" stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.5" strokeDasharray="2,5" />
-            <path d="M78,138 Q150,160 222,138" fill="none" stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.5" strokeDasharray="2,5" />
-            <path d="M78,52 Q56,95 78,138" fill="none" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.45" strokeDasharray="2,4" />
-            <path d="M222,52 Q244,95 222,138" fill="none" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.45" strokeDasharray="2,4" />
-
-            {/* Corner + relay nodes */}
-            {[[78, 52], [222, 52], [78, 138], [222, 138], [114, 75], [186, 75], [114, 115], [186, 115]].map(([cx, cy], i) =>
-            <circle key={`partner-kpi-node-${i}`} cx={cx} cy={cy} r={i < 4 ? "1.9" : "1.2"} fill="hsl(var(--primary) / 0.5)">
-                <animate attributeName="opacity" values="0.3;0.85;0.3" dur={`${2 + i * 0.28}s`} repeatCount="indefinite" />
-              </circle>
-            )}
-
-            {/* Data pulses on communication routes */}
-            <circle r="1.7" fill="hsl(var(--primary) / 0.9)">
-              <animateMotion dur="3.8s" repeatCount="indefinite" path="M78,52 Q115,74 150,95 Q185,116 222,138" />
-              <animate attributeName="opacity" values="0;0.85;0" dur="3.8s" repeatCount="indefinite" />
-            </circle>
-            <circle r="1.5" fill="hsl(var(--accent) / 0.94)">
-              <animateMotion dur="4.6s" begin="0.9s" repeatCount="indefinite" path="M222,52 Q185,74 150,95 Q115,116 78,138" />
-              <animate attributeName="opacity" values="0;0.8;0" dur="4.6s" begin="0.9s" repeatCount="indefinite" />
-            </circle>
-          </svg>
-
-          <motion.div className="relative z-[2] grid grid-cols-2 sm:grid-cols-4 gap-3 p-2 sm:p-0"
-          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-            {[
-            { value: "€997", label: "Per vendita", icon: <Trophy className="w-2.5 h-2.5 sm:w-5 sm:h-5" /> },
-            { value: "€50", label: "Override TL", icon: <Award className="w-2.5 h-2.5 sm:w-5 sm:h-5" /> },
-            { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-2.5 h-2.5 sm:w-5 sm:h-5" /> },
-            { value: "€1.500", label: "Bonus Elite", icon: <Rocket className="w-2.5 h-2.5 sm:w-5 sm:h-5" /> }].
-            map((s, i) =>
-            <motion.div key={i} variants={popIn}>
-                <PremiumCard glow scan delay={i} className="p-3.5 sm:p-6 text-center">
-                  <div className="flex justify-center mb-2.5 sm:mb-3">
-                    <PremiumIcon gradient="from-primary/20 to-accent/15" size={IS_MOBILE_LP ? "sm" : "md"} delay={i * 0.4}>
-                      <span className="text-primary">{s.icon}</span>
-                    </PremiumIcon>
-                  </div>
-                  <motion.p className="text-lg sm:text-2xl font-heading font-bold text-vibrant-gradient"
-                animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
-                transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
-                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/85 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
-                </PremiumCard>
-              </motion.div>
-            )}
-          </motion.div>
-        </div>
-
-        {/* Career path */}
-        <motion.div className="p-6 rounded-2xl glow-card mb-10"
-        variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/75 text-center mb-6 tracking-[3px] uppercase">Percorso di Carriera</h3>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-0">
-            {[
-            { title: "Partner", desc: "€997 per ogni vendita chiusa", icon: <Handshake className="w-5 h-5" /> },
-            { title: "3 Vendite", desc: "Promozione automatica", icon: <TrendingUp className="w-5 h-5" /> },
-            { title: "Team Leader", desc: "+€50 override per vendita team", icon: <Crown className="w-5 h-5" /> }].
-            map((s, i) =>
-            <div key={i} className="flex sm:flex-col items-center gap-3.5 text-center w-full sm:w-auto">
-                <motion.div
-                className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0"
-                whileHover={{ scale: 1.1, rotate: 5 }}>
-                
-                  {s.icon}
-                </motion.div>
-                <div className="text-left sm:text-center">
-                  <p className="text-sm font-bold text-foreground font-heading">{s.title}</p>
-                  <p className="text-[0.6rem] text-foreground/80">{s.desc}</p>
-                </div>
-                {i < 2 && <ArrowRight className="hidden sm:block w-5 h-5 text-primary/15 mx-6 flex-shrink-0" />}
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Scenario */}
-        <motion.div className="p-6 rounded-2xl glow-card max-w-sm mx-auto"
-        variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/75 text-center mb-4 tracking-[3px] uppercase">Scenario: 5 vendite/mese</h3>
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-foreground/75 text-xs">5× Commissioni</span><span className="font-bold text-foreground text-sm">€4.985</span></div>
-            <div className="flex justify-between"><span className="text-foreground/75 text-xs">Bonus Elite (5+)</span><span className="font-bold text-foreground text-sm">€1.500</span></div>
-            <div className="flex justify-between pt-3 border-t border-border/30">
-              <span className="font-semibold text-foreground text-sm">Totale mensile</span>
-              <span className="text-2xl font-heading font-bold text-vibrant-gradient">€6.485</span>
-            </div>
-          </div>
-        </motion.div>
-
-        <div className="text-center mt-8">
-          <motion.button
-            onClick={() => navigate("/partner/register")}
-            className="px-8 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.2)" }}
-            whileTap={{ scale: 0.97 }}>
-            
-            Diventa Partner <ArrowRight className="w-4 h-4" />
-          </motion.button>
-        </div>
-      </Section>
+      {/* Partner section removed — dedicated page at /join */}
 
       {/* ═══════════════════════════════════════════
                              FAQ
@@ -6913,12 +6737,6 @@ const LandingPage = () => {
                 
                 Sono un Imprenditore <ArrowRight className="w-4 h-4" />
               </motion.button>
-              <motion.button onClick={() => navigate("/partner/register")}
-              className="w-full sm:w-auto px-9 py-4 rounded-full border border-foreground/10 text-foreground/70 font-bold text-sm font-heading tracking-wide hover:border-primary/30 hover:text-foreground transition-all backdrop-blur-sm"
-              whileHover={{ scale: 1.02 }}>
-                
-                Diventa Partner
-              </motion.button>
             </div>
           </div>
         </div>
@@ -6999,7 +6817,7 @@ const LandingPage = () => {
                 { label: "Automazioni IA", href: "#capacita" },
                 { label: "ROI Calculator", href: "#calculator" },
                 { label: "Piani & Prezzi", href: "#pricing" },
-                { label: "Partner Program", href: "#partner" },
+                { label: "Piani & Prezzi", href: "#pricing" },
                 { label: "Demo Live", href: "/demo" }].
                 map((link, i) =>
                 <a key={i} href={link.href} className="block text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">

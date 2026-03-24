@@ -175,6 +175,7 @@ const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const JoinPartnerPage = lazy(() => import("./pages/JoinPartnerPage"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
@@ -535,6 +536,7 @@ function App() {
                       <Route path="/admin" element={<AuthPage />} />
                       <Route path="/kitchen" element={<KitchenView />} />
                       <Route path="/partner/register" element={<AuthPage />} />
+                      <Route path="/join" element={<JoinPartnerPage />} />
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/cookie-policy" element={<CookiePolicy />} />
                       <Route path="/reset-password" element={<ResetPassword />} />
