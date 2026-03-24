@@ -20,10 +20,12 @@ import { lazy, Suspense, useRef, useCallback } from "react";
 import empireMonkeyMascot from "@/assets/empire-monkey.png";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
-import { INDUSTRY_CONFIGS } from "@/config/industry-config";
-import { AllIndustriesShowcase } from "@/components/public/IndustryPhoneShowcase";
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
+
+const AllIndustriesShowcase = lazy(() =>
+  import("@/components/public/IndustryPhoneShowcase").then((module) => ({ default: module.AllIndustriesShowcase }))
+);
 
 interface CompanyTenant {
   id: string;
@@ -1015,7 +1017,7 @@ const SuperAdminDashboard = () => {
                         <span>€{tenant.revenue.toLocaleString()} transato</span>
                         <span>{tenant.orders} ordini</span>
                         <span className="text-primary font-medium">+€{tenant.fee2percent}</span>
-                        <button onClick={() => navigate(`/r/${tenant.slug}`)}
+                        <button onClick={() => navigate(tenant.industry === "food" ? `/r/${tenant.slug}` : `/b/${tenant.slug}`)}
                           className="ml-auto flex items-center gap-1 text-primary hover:text-primary/80">
                           <ExternalLink className="w-3 h-3" /> Entra
                         </button>
@@ -1539,12 +1541,14 @@ const SuperAdminDashboard = () => {
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="text-center">
               <h2 className="text-lg font-display font-bold text-foreground">Showcase Settori</h2>
-              <p className="text-xs text-muted-foreground">Preview iPhone Pro di tutti i {Object.keys(INDUSTRY_CONFIGS).length} settori con link ai demo live</p>
+              <p className="text-xs text-muted-foreground">Preview iPhone Pro di tutti i {Object.keys(INDUSTRY_LABELS).length} settori con link ai demo live</p>
             </div>
-            <AllIndustriesShowcase onViewDemo={(id, slug) => {
-              if (id === "food") navigate(`/r/${slug}`);
-              else navigate(`/demo/${slug}`);
-            }} />
+            <Suspense fallback={<div className="flex justify-center py-10"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+              <AllIndustriesShowcase onViewDemo={(id, slug) => {
+                if (id === "food") navigate(`/r/${slug}`);
+                else navigate(`/demo/${slug}`);
+              }} />
+            </Suspense>
           </motion.div>
         )}
         {/* ===== INTEGRATIONS ===== */}
