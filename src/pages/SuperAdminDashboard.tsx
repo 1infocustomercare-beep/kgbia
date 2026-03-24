@@ -425,19 +425,30 @@ const SuperAdminDashboard = () => {
         teamMap[t.team_leader_id].push(t.partner_id);
       });
 
-      const network = partnerRoles.map((pr: any) => ({
-        id: pr.user_id,
-        email: profileEmailMap[pr.user_id] || "—",
-        fullName: profileNameMap[pr.user_id] || "—",
-        role: pr.role,
-        teamLeaderId: partnerTeamsData.find((t: any) => t.partner_id === pr.user_id)?.team_leader_id || null,
-        createdAt: regs.find((r) => r.id === pr.user_id)?.createdAt || "",
-        subPartners: (teamMap[pr.user_id] || []).map((spId) => ({
-          id: spId,
-          email: profileEmailMap[spId] || "—",
-          fullName: profileNameMap[spId] || "—",
-        })),
-      }));
+      const network = partnerRoles.map((pr: any) => {
+        const ps = salesByPartner[pr.user_id] || { count: 0, revenue: 0, commission: 0 };
+        return {
+          id: pr.user_id,
+          email: profileEmailMap[pr.user_id] || "—",
+          fullName: profileNameMap[pr.user_id] || "—",
+          role: pr.role,
+          teamLeaderId: partnerTeamsData.find((t: any) => t.partner_id === pr.user_id)?.team_leader_id || null,
+          createdAt: regs.find((r) => r.id === pr.user_id)?.createdAt || "",
+          salesCount: ps.count,
+          salesRevenue: ps.revenue,
+          salesCommission: ps.commission,
+          subPartners: (teamMap[pr.user_id] || []).map((spId) => {
+            const sps = salesByPartner[spId] || { count: 0, revenue: 0, commission: 0 };
+            return {
+              id: spId,
+              email: profileEmailMap[spId] || "—",
+              fullName: profileNameMap[spId] || "—",
+              salesCount: sps.count,
+              salesRevenue: sps.revenue,
+            };
+          }),
+        };
+      });
       setPartnerNetwork(network);
 
       if (errors.length > 0) {
