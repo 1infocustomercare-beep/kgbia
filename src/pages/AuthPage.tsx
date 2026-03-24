@@ -180,6 +180,7 @@ export default function AuthPage() {
       }
 
       const canAutoProvisionCompany =
+        signupRole !== "partner" &&
         !!signupSector &&
         !!signupPlan &&
         autoProvisionAttemptRef.current !== user.id;
