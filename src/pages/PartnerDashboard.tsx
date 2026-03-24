@@ -576,6 +576,31 @@ const PartnerDashboard = () => {
               <div data-guide-section="leaderboard">
                 <PartnerLeaderboard currentUserSales={salesCount} />
               </div>
+
+              {/* === RECRUITMENT LINK === */}
+              <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
+                <div className="flex items-center gap-2">
+                  <UserPlus className="w-5 h-5 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Recluta Sotto-Venditori</h3>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Condividi il tuo link personale. Chi si registra tramite questo link verrà assegnato automaticamente al tuo team nella gerarchia partner.
+                </p>
+                <div className="p-3 rounded-xl bg-secondary/50 border border-border/30">
+                  <p className="text-[10px] text-muted-foreground mb-1 font-medium">Il tuo link di reclutamento:</p>
+                  <p className="text-xs text-foreground font-mono break-all select-all">
+                    {window.location.origin}/auth?role=partner&ref={user?.id}
+                  </p>
+                </div>
+                <motion.button
+                  onClick={handleCopyInviteLink}
+                  className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2"
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {inviteCopied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {inviteCopied ? "Link Copiato!" : "Copia Link di Reclutamento"}
+                </motion.button>
+              </div>
             </motion.div>
           )}
 
