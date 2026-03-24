@@ -2491,6 +2491,22 @@ const SuperAdminDashboard = () => {
                     </span>
                   </div>
 
+                  {/* Sales Stats */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-lg bg-emerald-500/10 p-2 text-center">
+                      <p className="text-lg font-bold text-emerald-400">{p.salesCount}</p>
+                      <p className="text-[0.5rem] text-muted-foreground">Vendite</p>
+                    </div>
+                    <div className="rounded-lg bg-blue-500/10 p-2 text-center">
+                      <p className="text-sm font-bold text-blue-400">€{p.salesRevenue.toLocaleString("it-IT")}</p>
+                      <p className="text-[0.5rem] text-muted-foreground">Fatturato</p>
+                    </div>
+                    <div className="rounded-lg bg-amber-500/10 p-2 text-center">
+                      <p className="text-sm font-bold text-amber-400">€{p.salesCommission.toLocaleString("it-IT")}</p>
+                      <p className="text-[0.5rem] text-muted-foreground">Commissioni</p>
+                    </div>
+                  </div>
+
                   {/* Team Leader ID */}
                   {p.teamLeaderId && (
                     <p className="text-[0.55rem] text-muted-foreground">
@@ -2503,9 +2519,12 @@ const SuperAdminDashboard = () => {
                     <div className="pl-4 border-l-2 border-purple-500/20 space-y-1.5">
                       <p className="text-[0.55rem] font-bold text-foreground/60 uppercase tracking-wider">Sotto-partner ({p.subPartners.length})</p>
                       {p.subPartners.map(sp => (
-                        <div key={sp.id} className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-purple-400/50" />
-                          <span className="text-[0.6rem] text-foreground/80">{sp.fullName}</span>
+                        <div key={sp.id} className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-purple-400/50" />
+                            <span className="text-[0.6rem] text-foreground/80">{sp.fullName}</span>
+                          </div>
+                          <span className="text-[0.55rem] font-semibold text-emerald-400">{sp.salesCount} vendite · €{sp.salesRevenue.toLocaleString("it-IT")}</span>
                         </div>
                       ))}
                     </div>
