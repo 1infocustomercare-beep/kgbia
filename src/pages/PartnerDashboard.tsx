@@ -302,15 +302,25 @@ const PartnerDashboard = () => {
         
         {/* Top row: back/home + actions */}
         <div className="flex items-center justify-between w-full relative z-10 mb-1">
-          <div className="flex items-center gap-1">
-            {!demoMode && (
-              <button onClick={() => navigate("/home")} className="p-1.5 rounded-full hover:bg-secondary/60 min-w-[36px] min-h-[36px] flex items-center justify-center" title="Home">
-                <ArrowLeft className="w-4 h-4 text-muted-foreground" />
-              </button>
-            )}
-          </div>
+           <div className="flex items-center gap-1">
+298:             {!demoMode && (
+299:               <button onClick={() => navigate("/home")} className="p-1.5 rounded-full hover:bg-secondary/60 min-w-[36px] min-h-[36px] flex items-center justify-center" title="Home">
+300:                 <ArrowLeft className="w-4 h-4 text-muted-foreground" />
+301:               </button>
+302:             )}
+303:           </div>
           <div className="flex items-center gap-1.5">
             <GuidesToggle />
+            {/* Homepage preview for client demos */}
+            <motion.button
+              onClick={() => navigate("/home?from=partner")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold bg-secondary text-muted-foreground hover:text-foreground transition-all"
+              whileTap={{ scale: 0.95 }}
+              title="Mostra homepage ai clienti"
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              SITO
+            </motion.button>
             <motion.button
               onClick={() => {
                 setDemoMode(!demoMode);
