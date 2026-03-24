@@ -6933,7 +6933,7 @@ const LandingPage = () => {
           }}
           whileTap={{ scale: 0.95 }}
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4" />
           Torna al Pannello
         </motion.button>
       )}
