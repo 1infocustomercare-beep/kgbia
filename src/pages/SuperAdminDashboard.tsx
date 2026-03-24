@@ -136,7 +136,7 @@ const SuperAdminDashboard = () => {
   const [intFilter, setIntFilter] = useState<{ status: "all" | "connected" | "missing" | "disabled"; category: "all" | "admin" | "client"; sector: string; account: "all" | "subscribed" | "extra" | "requested" | "none"; search: string }>({ status: "all", category: "all", sector: "all", account: "all", search: "" });
   // Registrations & Partner Network
   const [allRegistrations, setAllRegistrations] = useState<{ id: string; email: string; fullName: string; sector: string; role: string; createdAt: string }[]>([]);
-  const [partnerNetwork, setPartnerNetwork] = useState<{ id: string; email: string; fullName: string; role: string; teamLeaderId: string | null; createdAt: string; subPartners: { id: string; email: string; fullName: string }[] }[]>([]);
+  const [partnerNetwork, setPartnerNetwork] = useState<{ id: string; email: string; fullName: string; role: string; teamLeaderId: string | null; createdAt: string; salesCount: number; salesRevenue: number; salesCommission: number; subPartners: { id: string; email: string; fullName: string; salesCount: number; salesRevenue: number }[] }[]>([]);
   // AI-Mary
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
     { role: "assistant", content: "Ciao! Sono **Mary**, il tuo agente IA per il controllo centralizzato di Empire.\n\n📊 Chiedi: revenue, tenant attivi, vault non configurati, churn rate\n🔔 Azioni: invia reminder, genera report, analisi settore" }
@@ -161,6 +161,7 @@ const SuperAdminDashboard = () => {
         membershipsRes,
         restMembershipsRes,
         partnerTeamsRes,
+        partnerSalesRes,
       ] = await Promise.all([
         supabase
           .from("companies")
@@ -197,6 +198,9 @@ const SuperAdminDashboard = () => {
         supabase
           .from("partner_teams")
           .select("partner_id, team_leader_id"),
+        supabase
+          .from("partner_sales")
+          .select("partner_id, sale_amount, partner_commission, team_leader_id, team_leader_override, sale_month, created_at"),
       ]);
 
       const errors = [
@@ -210,6 +214,7 @@ const SuperAdminDashboard = () => {
         membershipsRes.error,
         restMembershipsRes.error,
         partnerTeamsRes.error,
+        partnerSalesRes.error,
       ].filter(Boolean);
 
       if (errors.length > 0) {
@@ -226,6 +231,16 @@ const SuperAdminDashboard = () => {
       const membershipsData = membershipsRes.data || [];
       const restMembershipsData = restMembershipsRes.data || [];
       const partnerTeamsData = partnerTeamsRes.data || [];
+      const partnerSalesData = partnerSalesRes.data || [];
+
+      // Build sales aggregation per partner
+      const salesByPartner: Record<string, { count: number; revenue: number; commission: number }> = {};
+      (partnerSalesData as any[]).forEach((s) => {
+        if (!salesByPartner[s.partner_id]) salesByPartner[s.partner_id] = { count: 0, revenue: 0, commission: 0 };
+        salesByPartner[s.partner_id].count += 1;
+        salesByPartner[s.partner_id].revenue += Number(s.sale_amount || 0);
+        salesByPartner[s.partner_id].commission += Number(s.partner_commission || 0);
+      });
 
       // Merge: prefer companies, fallback to restaurants
       const allTenants: CompanyTenant[] = [];
@@ -410,19 +425,30 @@ const SuperAdminDashboard = () => {
         teamMap[t.team_leader_id].push(t.partner_id);
       });
 
-      const network = partnerRoles.map((pr: any) => ({
-        id: pr.user_id,
-        email: profileEmailMap[pr.user_id] || "—",
-        fullName: profileNameMap[pr.user_id] || "—",
-        role: pr.role,
-        teamLeaderId: partnerTeamsData.find((t: any) => t.partner_id === pr.user_id)?.team_leader_id || null,
-        createdAt: regs.find((r) => r.id === pr.user_id)?.createdAt || "",
-        subPartners: (teamMap[pr.user_id] || []).map((spId) => ({
-          id: spId,
-          email: profileEmailMap[spId] || "—",
-          fullName: profileNameMap[spId] || "—",
-        })),
-      }));
+      const network = partnerRoles.map((pr: any) => {
+        const ps = salesByPartner[pr.user_id] || { count: 0, revenue: 0, commission: 0 };
+        return {
+          id: pr.user_id,
+          email: profileEmailMap[pr.user_id] || "—",
+          fullName: profileNameMap[pr.user_id] || "—",
+          role: pr.role,
+          teamLeaderId: partnerTeamsData.find((t: any) => t.partner_id === pr.user_id)?.team_leader_id || null,
+          createdAt: regs.find((r) => r.id === pr.user_id)?.createdAt || "",
+          salesCount: ps.count,
+          salesRevenue: ps.revenue,
+          salesCommission: ps.commission,
+          subPartners: (teamMap[pr.user_id] || []).map((spId) => {
+            const sps = salesByPartner[spId] || { count: 0, revenue: 0, commission: 0 };
+            return {
+              id: spId,
+              email: profileEmailMap[spId] || "—",
+              fullName: profileNameMap[spId] || "—",
+              salesCount: sps.count,
+              salesRevenue: sps.revenue,
+            };
+          }),
+        };
+      });
       setPartnerNetwork(network);
 
       if (errors.length > 0) {
@@ -2465,6 +2491,22 @@ const SuperAdminDashboard = () => {
                     </span>
                   </div>
 
+                  {/* Sales Stats */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-lg bg-emerald-500/10 p-2 text-center">
+                      <p className="text-lg font-bold text-emerald-400">{p.salesCount}</p>
+                      <p className="text-[0.5rem] text-muted-foreground">Vendite</p>
+                    </div>
+                    <div className="rounded-lg bg-blue-500/10 p-2 text-center">
+                      <p className="text-sm font-bold text-blue-400">€{p.salesRevenue.toLocaleString("it-IT")}</p>
+                      <p className="text-[0.5rem] text-muted-foreground">Fatturato</p>
+                    </div>
+                    <div className="rounded-lg bg-amber-500/10 p-2 text-center">
+                      <p className="text-sm font-bold text-amber-400">€{p.salesCommission.toLocaleString("it-IT")}</p>
+                      <p className="text-[0.5rem] text-muted-foreground">Commissioni</p>
+                    </div>
+                  </div>
+
                   {/* Team Leader ID */}
                   {p.teamLeaderId && (
                     <p className="text-[0.55rem] text-muted-foreground">
@@ -2477,9 +2519,12 @@ const SuperAdminDashboard = () => {
                     <div className="pl-4 border-l-2 border-purple-500/20 space-y-1.5">
                       <p className="text-[0.55rem] font-bold text-foreground/60 uppercase tracking-wider">Sotto-partner ({p.subPartners.length})</p>
                       {p.subPartners.map(sp => (
-                        <div key={sp.id} className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-purple-400/50" />
-                          <span className="text-[0.6rem] text-foreground/80">{sp.fullName}</span>
+                        <div key={sp.id} className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-purple-400/50" />
+                            <span className="text-[0.6rem] text-foreground/80">{sp.fullName}</span>
+                          </div>
+                          <span className="text-[0.55rem] font-semibold text-emerald-400">{sp.salesCount} vendite · €{sp.salesRevenue.toLocaleString("it-IT")}</span>
                         </div>
                       ))}
                     </div>
