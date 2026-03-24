@@ -22,7 +22,7 @@ import {
   Network, Atom, Radar, BrainCircuit, CircuitBoard, Waypoints, Binary,
   GraduationCap, Waves, Wrench, Leaf } from
 "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import empireLogoNew from "@/assets/empire-logo-new.png";
 import heroLandingDefault from "@/assets/hero-landing.jpg";
