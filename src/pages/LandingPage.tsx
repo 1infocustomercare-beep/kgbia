@@ -3331,10 +3331,29 @@ const LandingPage = () => {
               </motion.a>
             )}
 
+            {/* Accedi button */}
+            <motion.button
+              onClick={() => navigate("/auth?mode=login")}
+              className="ml-3 px-6 py-3 rounded-full text-white/80 text-[0.65rem] font-medium font-heading tracking-[0.18em] uppercase relative overflow-hidden group hover:text-white transition-colors"
+              style={{
+                background: "hsla(0,0%,100%,0.06)",
+                border: "1px solid hsla(0,0%,100%,0.12)",
+              }}
+              whileHover={{ scale: 1.04, backgroundColor: "hsla(0,0%,100%,0.1)" }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: -14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65, type: "spring", damping: 18 }}>
+              <span className="relative z-10 flex items-center gap-2">
+                <Lock className="w-3.5 h-3.5 opacity-70" />
+                Accedi
+              </span>
+            </motion.button>
+
             {/* Premium CTA button — diamond-cut with holographic glow */}
             <motion.button
               onClick={() => navigate("/auth")}
-              className="ml-5 px-8 py-3 rounded-full text-primary-foreground text-[0.65rem] font-bold font-heading tracking-[0.22em] uppercase relative overflow-hidden group"
+              className="ml-2 px-8 py-3 rounded-full text-primary-foreground text-[0.65rem] font-bold font-heading tracking-[0.22em] uppercase relative overflow-hidden group"
               style={{
                 background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1), hsla(30,45%,38%,1))",
                 boxShadow: "0 4px 28px hsla(38,55%,50%,0.3), 0 0 0 1px hsla(38,55%,60%,0.2), 0 12px 40px hsla(38,55%,50%,0.08)"
