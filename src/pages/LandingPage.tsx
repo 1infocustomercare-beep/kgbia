@@ -6596,11 +6596,9 @@ const LandingPage = () => {
                             ═══════════════════════════════════════════ */}
       <PricingConfigurator navigate={navigate} />
 
-      {/* <SectionDivider /> — hidden redesign */}
+      {/* Partner section removed — dedicated page at /join */}
 
-      {/* ═══════════════════════════════════════════
-                             PARTNER PROGRAM
-                            ═══════════════════════════════════════════ */}
+      {/*
       <Section id="partner" className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
