@@ -9,7 +9,7 @@ import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import {
   ArrowLeft, ArrowRight, Store, ChefHat, Car, Scissors, Heart,
   Dumbbell, Building, Umbrella, Wrench, Zap, Camera, Truck, GraduationCap,
-  Baby, Sparkles, Eye, EyeOff, Mail, Lock, User, Briefcase
+  Baby, Sparkles, Eye, EyeOff, Mail, Lock, User, Briefcase, Handshake
 } from "lucide-react";
 import empireLogoNew from "@/assets/empire-logo-new.png";
 import { toast } from "sonner";
@@ -180,6 +180,7 @@ export default function AuthPage() {
       }
 
       const canAutoProvisionCompany =
+        signupRole !== "partner" &&
         !!signupSector &&
         !!signupPlan &&
         autoProvisionAttemptRef.current !== user.id;
@@ -259,15 +260,18 @@ export default function AuthPage() {
   };
 
   const handleRegister = async () => {
-    if (!email || !password || !fullName || !role || !sector) { toast.error("Compila tutti i campi"); return; }
+    // Partners don't need a sector — they sell for Empire, they don't own a business
+    const needsSector = role !== "partner";
+    if (!email || !password || !fullName || !role) { toast.error("Compila tutti i campi"); return; }
+    if (needsSector && !sector) { toast.error("Seleziona il tuo settore"); return; }
     if (password.length < 8) { toast.error("La password deve avere almeno 8 caratteri"); return; }
 
     setLoading(true);
     const { error, userId } = await signUp(email, password, {
       fullName,
       role,
-      sector,
-      plan: preselectedPlan || undefined,
+      sector: needsSector ? sector : undefined,
+      plan: needsSector ? (preselectedPlan || undefined) : undefined,
       referralId: role === "partner" ? referralId || undefined : undefined,
       companyName: role === "partner" ? companyName : undefined,
     });
@@ -415,45 +419,61 @@ export default function AuthPage() {
                         <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                         <Input placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
                           className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
-                      </div>
+                    </div>
                     )}
 
-                    {shouldLockCustomerSector ? (
-                      <div className="rounded-xl border border-primary/30 bg-primary/10 px-3 py-2.5">
-                        <p className="text-[11px] text-foreground/70">Settore selezionato dalla homepage</p>
-                        <p className="text-sm font-semibold text-foreground">{preselectedSectorLabel}</p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p className="text-xs text-foreground font-medium mb-2">
-                          {role === "partner" ? "Settore di competenza" : "Il tuo settore"}
+                    {/* Sector selection — only for customers, NOT for partners */}
+                    {role !== "partner" && (
+                      <>
+                        {shouldLockCustomerSector ? (
+                          <div className="rounded-xl border border-primary/30 bg-primary/10 px-3 py-2.5">
+                            <p className="text-[11px] text-foreground/70">Settore selezionato dalla homepage</p>
+                            <p className="text-sm font-semibold text-foreground">{preselectedSectorLabel}</p>
+                          </div>
+                        ) : (
+                          <div>
+                            <p className="text-xs text-foreground font-medium mb-2">Il tuo settore</p>
+                            <div className="grid grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-1">
+                              {allSectors.map(s => {
+                                const Icon = SECTOR_ICONS[s.id] || Sparkles;
+                                const color = SECTOR_COLORS[s.id] || "#8b5cf6";
+                                const selected = sector === s.id;
+                                return (
+                                  <button key={s.id} type="button" onClick={() => setSector(s.id)}
+                                    className="flex flex-col items-center gap-1 p-2 rounded-lg text-center transition-all"
+                                    style={{
+                                      background: selected ? `${color}25` : "hsla(0,0%,100%,0.05)",
+                                      border: `1px solid ${selected ? `${color}60` : "hsla(0,0%,100%,0.12)"}`,
+                                    }}>
+                                    <Icon className="w-4 h-4" style={{ color: selected ? color : "hsl(var(--foreground) / 0.6)" }} />
+                                    <span className="text-[10px] font-medium leading-tight" style={{ color: selected ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.72)" }}>
+                                      {s.label}
+                                    </span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {/* Partner info box */}
+                    {role === "partner" && (
+                      <div className="rounded-xl border border-purple-500/20 bg-purple-500/[0.06] px-3 py-2.5">
+                        <p className="text-xs font-bold text-foreground flex items-center gap-2">
+                          <Handshake className="w-3.5 h-3.5 text-purple-400" /> Stai registrando un account Venditore Empire
                         </p>
-                        <div className="grid grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-1">
-                          {allSectors.map(s => {
-                            const Icon = SECTOR_ICONS[s.id] || Sparkles;
-                            const color = SECTOR_COLORS[s.id] || "#8b5cf6";
-                            const selected = sector === s.id;
-                            return (
-                              <button key={s.id} type="button" onClick={() => setSector(s.id)}
-                                className="flex flex-col items-center gap-1 p-2 rounded-lg text-center transition-all"
-                                style={{
-                                  background: selected ? `${color}25` : "hsla(0,0%,100%,0.05)",
-                                  border: `1px solid ${selected ? `${color}60` : "hsla(0,0%,100%,0.12)"}`,
-                                }}>
-                                <Icon className="w-4 h-4" style={{ color: selected ? color : "hsl(var(--foreground) / 0.6)" }} />
-                                <span className="text-[10px] font-medium leading-tight" style={{ color: selected ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.72)" }}>
-                                  {s.label}
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
+                        <p className="text-[0.6rem] text-foreground/60 mt-1">Dopo la registrazione accederai al pannello partner con strumenti di vendita, demo e gestione team.</p>
+                        {referralId && (
+                          <p className="text-[0.55rem] text-purple-400 mt-1">🔗 Registrazione tramite link di reclutamento</p>
+                        )}
                       </div>
                     )}
                   </div>
-                  <Button onClick={handleRegister} disabled={loading || !sector} className="w-full py-3 rounded-xl font-bold text-sm"
-                    style={{ background: "linear-gradient(135deg, hsl(265 70% 58%), hsl(250 60% 50%))", color: "hsl(var(--primary-foreground))" }}>
-                    {loading ? "Registrazione..." : "Crea Account"}
+                  <Button onClick={handleRegister} disabled={loading || (role !== "partner" && !sector)} className="w-full py-3 rounded-xl font-bold text-sm"
+                    style={{ background: role === "partner" ? "linear-gradient(135deg, hsl(270 60% 55%), hsl(285 50% 45%))" : "linear-gradient(135deg, hsl(265 70% 58%), hsl(250 60% 50%))", color: "hsl(var(--primary-foreground))" }}>
+                    {loading ? "Registrazione..." : role === "partner" ? "Registrati come Venditore" : "Crea Account"}
                   </Button>
                   <p className="text-xs text-center text-foreground/75">
                     Hai già un account?{" "}
