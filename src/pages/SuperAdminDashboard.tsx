@@ -314,7 +314,14 @@ const SuperAdminDashboard = () => {
     setAllRegistrations(regs);
 
     // Build partner network
-    const partnerRoles = (rolesData || []).filter(r => r.role === "partner" || r.role === "team_leader");
+    const partnerRolesRaw = (rolesData || []).filter(r => r.role === "partner" || r.role === "team_leader");
+    // Deduplicate by user_id — prefer team_leader over partner
+    const partnerRolesMap = new Map<string, typeof partnerRolesRaw[0]>();
+    partnerRolesRaw.forEach(r => {
+      const existing = partnerRolesMap.get(r.user_id);
+      if (!existing || r.role === "team_leader") partnerRolesMap.set(r.user_id, r);
+    });
+    const partnerRoles = Array.from(partnerRolesMap.values());
     const teamMap: Record<string, string[]> = {};
     (partnerTeamsData || []).forEach((t: any) => {
       if (!teamMap[t.team_leader_id]) teamMap[t.team_leader_id] = [];
