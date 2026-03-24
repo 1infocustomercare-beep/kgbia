@@ -46,7 +46,10 @@ const PartnerDashboard = () => {
   const { signOut, isTeamLeader, user } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [showROI, setShowROI] = useState(false);
-  const [demoMode, setDemoMode] = useState(false);
+  // Persist demoMode in sessionStorage so it survives navigation to homepage and back
+  const [demoMode, setDemoMode] = useState(() => {
+    return sessionStorage.getItem("partner_demo_mode") === "true";
+  });
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [teamSales, setTeamSales] = useState<any[]>([]);
   const [salesCount, setSalesCount] = useState(0);
@@ -61,6 +64,11 @@ const PartnerDashboard = () => {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [savingDemo, setSavingDemo] = useState(false);
   const logoFileRef = useRef<HTMLInputElement>(null);
+
+  // Persist demoMode changes
+  useEffect(() => {
+    sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false");
+  }, [demoMode]);
 
   // Sync edit fields when demoRestaurant loads
   useEffect(() => {
@@ -232,10 +240,10 @@ const PartnerDashboard = () => {
   };
 
   const handleCopyInviteLink = () => {
-    const link = `${window.location.origin}/auth?ref=${user?.id}`;
+    const link = `${window.location.origin}/auth?role=partner&ref=${user?.id}`;
     navigator.clipboard.writeText(link);
     setInviteCopied(true);
-    toast({ title: "Link copiato!", description: "Condividi il link con i tuoi reclutati." });
+    toast({ title: "Link copiato!", description: "Chi si registra con questo link sarà nel tuo team." });
     setTimeout(() => setInviteCopied(false), 2000);
   };
 
@@ -303,6 +311,16 @@ const PartnerDashboard = () => {
           </div>
           <div className="flex items-center gap-1.5">
             <GuidesToggle />
+            {/* Homepage preview for client demos */}
+            <motion.button
+              onClick={() => navigate("/home?from=partner")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold bg-secondary text-muted-foreground hover:text-foreground transition-all"
+              whileTap={{ scale: 0.95 }}
+              title="Mostra homepage ai clienti"
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              SITO
+            </motion.button>
             <motion.button
               onClick={() => {
                 setDemoMode(!demoMode);
@@ -557,6 +575,31 @@ const PartnerDashboard = () => {
               {/* === LEADERBOARD === */}
               <div data-guide-section="leaderboard">
                 <PartnerLeaderboard currentUserSales={salesCount} />
+              </div>
+
+              {/* === RECRUITMENT LINK === */}
+              <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
+                <div className="flex items-center gap-2">
+                  <UserPlus className="w-5 h-5 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Recluta Sotto-Venditori</h3>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Condividi il tuo link personale. Chi si registra tramite questo link verrà assegnato automaticamente al tuo team nella gerarchia partner.
+                </p>
+                <div className="p-3 rounded-xl bg-secondary/50 border border-border/30">
+                  <p className="text-[10px] text-muted-foreground mb-1 font-medium">Il tuo link di reclutamento:</p>
+                  <p className="text-xs text-foreground font-mono break-all select-all">
+                    {window.location.origin}/auth?role=partner&ref={user?.id}
+                  </p>
+                </div>
+                <motion.button
+                  onClick={handleCopyInviteLink}
+                  className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2"
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {inviteCopied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {inviteCopied ? "Link Copiato!" : "Copia Link di Reclutamento"}
+                </motion.button>
               </div>
             </motion.div>
           )}

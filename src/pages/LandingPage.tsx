@@ -22,7 +22,7 @@ import {
   Network, Atom, Radar, BrainCircuit, CircuitBoard, Waypoints, Binary,
   GraduationCap, Waves, Wrench, Leaf } from
 "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import empireLogoNew from "@/assets/empire-logo-new.png";
 import heroLandingDefault from "@/assets/hero-landing.jpg";
@@ -2679,6 +2679,8 @@ const MobileIPhoneCarousel = ({ items, navigate }: {items: CarouselItem[];naviga
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isFromPartner = searchParams.get("from") === "partner";
   const {
     heroLanding, videoHero, heroTechCommand, heroAiPlatform, heroPartnerLuxury,
     mockupCliente, mockupAdmin, mockupCucina,
@@ -6916,6 +6918,25 @@ const LandingPage = () => {
       </AnimatePresence>
       {/* ATLAS Voice Agent */}
       <SafeEmpireVoiceAgent />
+
+      {/* Partner: floating back button */}
+      {isFromPartner && (
+        <motion.button
+          onClick={() => navigate("/partner")}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="fixed top-4 left-4 z-[60] flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-xs shadow-lg"
+          style={{
+            background: "linear-gradient(135deg, hsl(265 60% 50%), hsl(265 50% 40%))",
+            color: "white",
+            boxShadow: "0 4px 20px hsla(265,60%,40%,0.4)",
+          }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Torna al Pannello
+        </motion.button>
+      )}
     </div>);
 
 };
