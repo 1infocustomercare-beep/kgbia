@@ -2246,6 +2246,157 @@ const SuperAdminDashboard = () => {
             </div>
           </motion.div>
         )}
+        {/* ===== REGISTRAZIONI ===== */}
+        {!loading && activeTab === "registrations" && (
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-bold text-foreground">Tutte le Registrazioni</h2>
+              <span className="text-[0.55rem] px-2 py-1 rounded-full bg-primary/10 text-primary font-bold">{allRegistrations.length} utenti</span>
+            </div>
+            
+            {/* Link condivisibile partner */}
+            <div className="rounded-xl border border-primary/20 bg-primary/[0.04] p-3 space-y-2">
+              <p className="text-xs font-bold text-foreground flex items-center gap-2">
+                <Link2 className="w-3.5 h-3.5 text-primary" /> Link Reclutamento Partner
+              </p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
+                  {window.location.origin}/join
+                </code>
+                <motion.button
+                  onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join`); toast({ title: "Link copiato!" }); }}
+                  className="shrink-0 w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center text-primary"
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </motion.button>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="rounded-xl border border-border overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-[0.6rem]">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/30">
+                      <th className="text-left px-3 py-2 font-bold text-foreground/70">Nome</th>
+                      <th className="text-left px-3 py-2 font-bold text-foreground/70">Ruolo</th>
+                      <th className="text-left px-3 py-2 font-bold text-foreground/70">Settore</th>
+                      <th className="text-left px-3 py-2 font-bold text-foreground/70">Data</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {allRegistrations.map(reg => (
+                      <tr key={reg.id} className="border-b border-border/50 hover:bg-muted/10">
+                        <td className="px-3 py-2 text-foreground font-medium">{reg.fullName}</td>
+                        <td className="px-3 py-2">
+                          <span className={`px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold ${
+                            reg.role === "super_admin" ? "bg-amber-500/15 text-amber-400" :
+                            reg.role === "partner" || reg.role === "team_leader" ? "bg-purple-500/15 text-purple-400" :
+                            reg.role === "restaurant_admin" ? "bg-primary/15 text-primary" :
+                            "bg-muted text-muted-foreground"
+                          }`}>
+                            {reg.role === "super_admin" ? "Super Admin" :
+                             reg.role === "team_leader" ? "Team Leader" :
+                             reg.role === "partner" ? "Partner" :
+                             reg.role === "restaurant_admin" ? "Admin" :
+                             reg.role === "staff" ? "Staff" : reg.role}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2">
+                          {reg.sector !== "—" ? (
+                            <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold" style={{ background: `${INDUSTRY_COLORS[reg.sector] || "#666"}20`, color: INDUSTRY_COLORS[reg.sector] || "#666" }}>
+                              {INDUSTRY_LABELS[reg.sector] || reg.sector}
+                            </span>
+                          ) : <span className="text-muted-foreground">—</span>}
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground">{new Date(reg.createdAt).toLocaleDateString("it-IT")}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ===== RETE PARTNER ===== */}
+        {!loading && activeTab === "partner_network" && (
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-bold text-foreground">Rete Venditori</h2>
+              <span className="text-[0.55rem] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 font-bold">{partnerNetwork.length} partner</span>
+            </div>
+
+            {/* Link condivisibile */}
+            <div className="rounded-xl border border-purple-500/20 bg-purple-500/[0.04] p-3 space-y-2">
+              <p className="text-xs font-bold text-foreground flex items-center gap-2">
+                <Handshake className="w-3.5 h-3.5 text-purple-400" /> Condividi questo link per reclutare partner
+              </p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
+                  {window.location.origin}/join
+                </code>
+                <motion.button
+                  onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join`); toast({ title: "Link copiato!" }); }}
+                  className="shrink-0 w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center text-purple-400"
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </motion.button>
+              </div>
+            </div>
+
+            {/* Partner Cards */}
+            <div className="space-y-3">
+              {partnerNetwork.map(p => (
+                <div key={p.id} className="rounded-xl border border-border admin-card p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${p.role === "team_leader" ? "bg-amber-500/15" : "bg-purple-500/15"}`}>
+                        {p.role === "team_leader" ? <Crown className="w-5 h-5 text-amber-400" /> : <Users className="w-5 h-5 text-purple-400" />}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-foreground">{p.fullName}</p>
+                        <p className="text-[0.55rem] text-muted-foreground">{p.createdAt ? new Date(p.createdAt).toLocaleDateString("it-IT") : "—"}</p>
+                      </div>
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-[0.5rem] font-bold ${p.role === "team_leader" ? "bg-amber-500/15 text-amber-400" : "bg-purple-500/15 text-purple-400"}`}>
+                      {p.role === "team_leader" ? "Team Leader" : "Partner"}
+                    </span>
+                  </div>
+
+                  {/* Team Leader ID */}
+                  {p.teamLeaderId && (
+                    <p className="text-[0.55rem] text-muted-foreground">
+                      Sotto: <span className="text-foreground font-medium">{partnerNetwork.find(x => x.id === p.teamLeaderId)?.fullName || p.teamLeaderId.slice(0, 8)}</span>
+                    </p>
+                  )}
+
+                  {/* Sub-partners */}
+                  {p.subPartners.length > 0 && (
+                    <div className="pl-4 border-l-2 border-purple-500/20 space-y-1.5">
+                      <p className="text-[0.55rem] font-bold text-foreground/60 uppercase tracking-wider">Sotto-partner ({p.subPartners.length})</p>
+                      {p.subPartners.map(sp => (
+                        <div key={sp.id} className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-purple-400/50" />
+                          <span className="text-[0.6rem] text-foreground/80">{sp.fullName}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+              {partnerNetwork.length === 0 && (
+                <div className="text-center py-12 text-muted-foreground text-sm">
+                  <Handshake className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                  <p>Nessun partner registrato ancora</p>
+                  <p className="text-xs mt-1">Condividi il link /join per iniziare</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );
