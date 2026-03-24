@@ -46,7 +46,10 @@ const PartnerDashboard = () => {
   const { signOut, isTeamLeader, user } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [showROI, setShowROI] = useState(false);
-  const [demoMode, setDemoMode] = useState(false);
+  // Persist demoMode in sessionStorage so it survives navigation to homepage and back
+  const [demoMode, setDemoMode] = useState(() => {
+    return sessionStorage.getItem("partner_demo_mode") === "true";
+  });
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [teamSales, setTeamSales] = useState<any[]>([]);
   const [salesCount, setSalesCount] = useState(0);
@@ -61,6 +64,11 @@ const PartnerDashboard = () => {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [savingDemo, setSavingDemo] = useState(false);
   const logoFileRef = useRef<HTMLInputElement>(null);
+
+  // Persist demoMode changes
+  useEffect(() => {
+    sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false");
+  }, [demoMode]);
 
   // Sync edit fields when demoRestaurant loads
   useEffect(() => {
