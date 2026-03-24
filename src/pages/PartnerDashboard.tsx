@@ -240,10 +240,10 @@ const PartnerDashboard = () => {
   };
 
   const handleCopyInviteLink = () => {
-    const link = `${window.location.origin}/auth?ref=${user?.id}`;
+    const link = `${window.location.origin}/auth?role=partner&ref=${user?.id}`;
     navigator.clipboard.writeText(link);
     setInviteCopied(true);
-    toast({ title: "Link copiato!", description: "Condividi il link con i tuoi reclutati." });
+    toast({ title: "Link copiato!", description: "Chi si registra con questo link sarà nel tuo team." });
     setTimeout(() => setInviteCopied(false), 2000);
   };
 
