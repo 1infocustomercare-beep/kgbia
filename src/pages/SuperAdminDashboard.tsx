@@ -512,6 +512,8 @@ const SuperAdminDashboard = () => {
     { id: "whatsapp" as SuperTab, label: "WhatsApp", icon: <MessageCircle className="w-5 h-5" /> },
     { id: "demo_accounts" as SuperTab, label: "Demo", icon: <Key className="w-5 h-5" /> },
     { id: "connections" as SuperTab, label: "Connessioni", icon: <Link2 className="w-5 h-5" /> },
+    { id: "registrations" as SuperTab, label: "Registrazioni", icon: <Users className="w-5 h-5" /> },
+    { id: "partner_network" as SuperTab, label: "Rete Partner", icon: <Handshake className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/auth"); };
