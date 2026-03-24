@@ -2902,8 +2902,7 @@ const LandingPage = () => {
   const navLinks = [
   { href: "#industries", label: "Settori" },
   { href: "#services", label: "Funzionalità" },
-  { href: "#pricing", label: "Prezzi" },
-  { href: "#partner", label: "Partner" }];
+  { href: "#pricing", label: "Prezzi" }];
 
 
   const whyUs = [
@@ -6738,12 +6737,6 @@ const LandingPage = () => {
                 
                 Sono un Imprenditore <ArrowRight className="w-4 h-4" />
               </motion.button>
-              <motion.button onClick={() => navigate("/partner/register")}
-              className="w-full sm:w-auto px-9 py-4 rounded-full border border-foreground/10 text-foreground/70 font-bold text-sm font-heading tracking-wide hover:border-primary/30 hover:text-foreground transition-all backdrop-blur-sm"
-              whileHover={{ scale: 1.02 }}>
-                
-                Diventa Partner
-              </motion.button>
             </div>
           </div>
         </div>
@@ -6824,7 +6817,7 @@ const LandingPage = () => {
                 { label: "Automazioni IA", href: "#capacita" },
                 { label: "ROI Calculator", href: "#calculator" },
                 { label: "Piani & Prezzi", href: "#pricing" },
-                { label: "Partner Program", href: "#partner" },
+                { label: "Piani & Prezzi", href: "#pricing" },
                 { label: "Demo Live", href: "/demo" }].
                 map((link, i) =>
                 <a key={i} href={link.href} className="block text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
