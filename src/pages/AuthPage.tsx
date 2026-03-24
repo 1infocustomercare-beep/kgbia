@@ -221,25 +221,11 @@ export default function AuthPage() {
 
   const openRegister = () => {
     setMode("register");
-    if (isPartnerSignupFlow) {
-      setRole("partner");
-      setStep(2);
-      return;
-    }
-    if (preselectedPlan) {
-      setRole("customer");
-      setStep(2);
-      return;
-    }
-    setStep(role ? 2 : 1);
+    setStep(2);
   };
 
   const handleBackFromRegisterDetails = () => {
-    if (isPartnerSignupFlow || preselectedPlan) {
-      openLogin();
-      return;
-    }
-    setStep(1);
+    openLogin();
   };
 
   const handleLogin = async () => {
