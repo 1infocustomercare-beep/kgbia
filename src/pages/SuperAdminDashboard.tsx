@@ -161,6 +161,7 @@ const SuperAdminDashboard = () => {
         membershipsRes,
         restMembershipsRes,
         partnerTeamsRes,
+        partnerSalesRes,
       ] = await Promise.all([
         supabase
           .from("companies")
@@ -197,6 +198,9 @@ const SuperAdminDashboard = () => {
         supabase
           .from("partner_teams")
           .select("partner_id, team_leader_id"),
+        supabase
+          .from("partner_sales")
+          .select("partner_id, sale_amount, partner_commission, team_leader_id, team_leader_override, sale_month, created_at"),
       ]);
 
       const errors = [
