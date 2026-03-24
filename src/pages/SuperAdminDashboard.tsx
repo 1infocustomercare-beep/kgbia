@@ -132,6 +132,9 @@ const SuperAdminDashboard = () => {
   const [disabledSectors, setDisabledSectors] = useState<Record<string, boolean>>({});
   const [expandedSection, setExpandedSection] = useState<"admin" | "client" | "functions" | null>("admin");
   const [intFilter, setIntFilter] = useState<{ status: "all" | "connected" | "missing" | "disabled"; category: "all" | "admin" | "client"; sector: string; account: "all" | "subscribed" | "extra" | "requested" | "none"; search: string }>({ status: "all", category: "all", sector: "all", account: "all", search: "" });
+  // Registrations & Partner Network
+  const [allRegistrations, setAllRegistrations] = useState<{ id: string; email: string; fullName: string; sector: string; role: string; createdAt: string }[]>([]);
+  const [partnerNetwork, setPartnerNetwork] = useState<{ id: string; email: string; fullName: string; role: string; teamLeaderId: string | null; createdAt: string; subPartners: { id: string; email: string; fullName: string }[] }[]>([]);
   // AI-Mary
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
     { role: "assistant", content: "Ciao! Sono **Mary**, il tuo agente IA per il controllo centralizzato di Empire.\n\n📊 Chiedi: revenue, tenant attivi, vault non configurati, churn rate\n🔔 Azioni: invia reminder, genera report, analisi settore" }
