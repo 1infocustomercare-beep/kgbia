@@ -9,7 +9,7 @@ import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import {
   ArrowLeft, ArrowRight, Store, ChefHat, Car, Scissors, Heart,
   Dumbbell, Building, Umbrella, Wrench, Zap, Camera, Truck, GraduationCap,
-  Baby, Sparkles, Eye, EyeOff, Mail, Lock, User, Briefcase
+  Baby, Sparkles, Eye, EyeOff, Mail, Lock, User, Briefcase, Handshake
 } from "lucide-react";
 import empireLogoNew from "@/assets/empire-logo-new.png";
 import { toast } from "sonner";
