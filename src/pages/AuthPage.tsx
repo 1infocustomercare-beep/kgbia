@@ -60,9 +60,9 @@ export default function AuthPage() {
   const shouldDefaultToRegister = !isForcedLoginFlow && (Boolean(preselectedPlan) || isPartnerSignupFlow);
 
   const [mode, setMode] = useState<AuthMode>(shouldDefaultToRegister ? "register" : "login");
-  const [step, setStep] = useState(shouldDefaultToRegister ? 2 : 1);
-  const [role, setRole] = useState<RoleType | null>(
-    isPartnerSignupFlow ? "partner" : preselectedPlan ? "customer" : null
+  const [step, setStep] = useState(2); // Always step 2 — no role selection step
+  const [role, setRole] = useState<RoleType>(
+    isPartnerSignupFlow ? "partner" : "customer"
   );
   const [sector, setSector] = useState<string>(preselectedSector);
   const [email, setEmail] = useState("");
