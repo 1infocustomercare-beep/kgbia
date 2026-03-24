@@ -259,15 +259,18 @@ export default function AuthPage() {
   };
 
   const handleRegister = async () => {
-    if (!email || !password || !fullName || !role || !sector) { toast.error("Compila tutti i campi"); return; }
+    // Partners don't need a sector — they sell for Empire, they don't own a business
+    const needsSector = role !== "partner";
+    if (!email || !password || !fullName || !role) { toast.error("Compila tutti i campi"); return; }
+    if (needsSector && !sector) { toast.error("Seleziona il tuo settore"); return; }
     if (password.length < 8) { toast.error("La password deve avere almeno 8 caratteri"); return; }
 
     setLoading(true);
     const { error, userId } = await signUp(email, password, {
       fullName,
       role,
-      sector,
-      plan: preselectedPlan || undefined,
+      sector: needsSector ? sector : undefined,
+      plan: needsSector ? (preselectedPlan || undefined) : undefined,
       referralId: role === "partner" ? referralId || undefined : undefined,
       companyName: role === "partner" ? companyName : undefined,
     });
