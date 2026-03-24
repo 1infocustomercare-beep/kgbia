@@ -267,7 +267,7 @@ const SuperAdminDashboard = () => {
     // Fetch all registrations (profiles + user_roles)
     const { data: profilesData } = await supabase
       .from("profiles")
-      .select("user_id, full_name, created_at")
+      .select("user_id, full_name, email, created_at")
       .order("created_at", { ascending: false });
 
     const { data: rolesData } = await supabase
@@ -289,9 +289,24 @@ const SuperAdminDashboard = () => {
       .from("partner_teams")
       .select("partner_id, team_leader_id");
 
-    // Build role map
+    // Build role map with priority (avoid wrong role when user has multiple roles)
+    const rolePriority: Record<string, number> = {
+      super_admin: 100,
+      team_leader: 90,
+      partner: 80,
+      restaurant_admin: 70,
+      staff: 60,
+      customer: 10,
+    };
     const roleMap: Record<string, string> = {};
-    (rolesData || []).forEach(r => { roleMap[r.user_id] = r.role; });
+    (rolesData || []).forEach((r) => {
+      const current = roleMap[r.user_id];
+      const currentPriority = current ? rolePriority[current] ?? 0 : -1;
+      const nextPriority = rolePriority[r.role] ?? 0;
+      if (!current || nextPriority > currentPriority) {
+        roleMap[r.user_id] = r.role;
+      }
+    });
 
     // Build sector map
     const sectorMap: Record<string, string> = {};
@@ -302,46 +317,51 @@ const SuperAdminDashboard = () => {
       if (!sectorMap[m.user_id]) sectorMap[m.user_id] = "food";
     });
 
+    const profileNameMap: Record<string, string> = {};
+    const profileEmailMap: Record<string, string> = {};
+    (profilesData || []).forEach((p) => {
+      profileNameMap[p.user_id] = p.full_name || "—";
+      profileEmailMap[p.user_id] = p.email || "—";
+    });
+
     // Build registrations list
-    const regs = (profilesData || []).map(p => ({
+    const regs = (profilesData || []).map((p) => ({
       id: p.user_id,
-      email: "—", // we don't have email from profiles
+      email: p.email || "—",
       fullName: p.full_name || "—",
       sector: sectorMap[p.user_id] || "—",
       role: roleMap[p.user_id] || "customer",
-      createdAt: p.created_at,
+      createdAt: p.created_at || "",
     }));
     setAllRegistrations(regs);
 
     // Build partner network
-    const partnerRolesRaw = (rolesData || []).filter(r => r.role === "partner" || r.role === "team_leader");
+    const partnerRolesRaw = (rolesData || []).filter((r) => r.role === "partner" || r.role === "team_leader");
     // Deduplicate by user_id — prefer team_leader over partner
-    const partnerRolesMap = new Map<string, typeof partnerRolesRaw[0]>();
-    partnerRolesRaw.forEach(r => {
+    const partnerRolesMap = new Map<string, (typeof partnerRolesRaw)[number]>();
+    partnerRolesRaw.forEach((r) => {
       const existing = partnerRolesMap.get(r.user_id);
       if (!existing || r.role === "team_leader") partnerRolesMap.set(r.user_id, r);
     });
     const partnerRoles = Array.from(partnerRolesMap.values());
+
     const teamMap: Record<string, string[]> = {};
     (partnerTeamsData || []).forEach((t: any) => {
       if (!teamMap[t.team_leader_id]) teamMap[t.team_leader_id] = [];
       teamMap[t.team_leader_id].push(t.partner_id);
     });
 
-    const profileMap: Record<string, string> = {};
-    (profilesData || []).forEach(p => { profileMap[p.user_id] = p.full_name || "—"; });
-
-    const network = partnerRoles.map(pr => ({
+    const network = partnerRoles.map((pr) => ({
       id: pr.user_id,
-      email: "—",
-      fullName: profileMap[pr.user_id] || "—",
+      email: profileEmailMap[pr.user_id] || "—",
+      fullName: profileNameMap[pr.user_id] || "—",
       role: pr.role,
       teamLeaderId: (partnerTeamsData || []).find((t: any) => t.partner_id === pr.user_id)?.team_leader_id || null,
-      createdAt: regs.find(r => r.id === pr.user_id)?.createdAt || "",
-      subPartners: (teamMap[pr.user_id] || []).map(spId => ({
+      createdAt: regs.find((r) => r.id === pr.user_id)?.createdAt || "",
+      subPartners: (teamMap[pr.user_id] || []).map((spId) => ({
         id: spId,
-        email: "—",
-        fullName: profileMap[spId] || "—",
+        email: profileEmailMap[spId] || "—",
+        fullName: profileNameMap[spId] || "—",
       })),
     }));
     setPartnerNetwork(network);
@@ -677,7 +697,7 @@ const SuperAdminDashboard = () => {
         <div className="grid grid-cols-5 gap-1">
           {tabs.map((tab) => (
             <button key={tab.id}
-              onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : setActiveTab(tab.id)}
+              onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : setActiveTab(tab.id)}
               className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px]`}
               style={activeTab === tab.id ? {
                 background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",
@@ -2287,6 +2307,7 @@ const SuperAdminDashboard = () => {
                   <thead>
                     <tr className="border-b border-border bg-muted/30">
                       <th className="text-left px-3 py-2 font-bold text-foreground/70">Nome</th>
+                      <th className="text-left px-3 py-2 font-bold text-foreground/70">Email</th>
                       <th className="text-left px-3 py-2 font-bold text-foreground/70">Ruolo</th>
                       <th className="text-left px-3 py-2 font-bold text-foreground/70">Settore</th>
                       <th className="text-left px-3 py-2 font-bold text-foreground/70">Data</th>
@@ -2296,6 +2317,7 @@ const SuperAdminDashboard = () => {
                     {allRegistrations.map(reg => (
                       <tr key={reg.id} className="border-b border-border/50 hover:bg-muted/10">
                         <td className="px-3 py-2 text-foreground font-medium">{reg.fullName}</td>
+                        <td className="px-3 py-2 text-foreground/80">{reg.email || "—"}</td>
                         <td className="px-3 py-2">
                           <span className={`px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold ${
                             reg.role === "super_admin" ? "bg-amber-500/15 text-amber-400" :
@@ -2317,7 +2339,7 @@ const SuperAdminDashboard = () => {
                             </span>
                           ) : <span className="text-muted-foreground">—</span>}
                         </td>
-                        <td className="px-3 py-2 text-muted-foreground">{new Date(reg.createdAt).toLocaleDateString("it-IT")}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{reg.createdAt ? new Date(reg.createdAt).toLocaleDateString("it-IT") : "—"}</td>
                       </tr>
                     ))}
                   </tbody>
