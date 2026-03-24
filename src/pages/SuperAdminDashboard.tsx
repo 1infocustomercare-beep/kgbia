@@ -146,227 +146,292 @@ const SuperAdminDashboard = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    
-    // Fetch companies (new multi-tenant system)
-    const { data: companies } = await supabase
-      .from("companies")
-      .select("*")
-      .order("created_at", { ascending: false });
 
-    // Also fetch legacy restaurants for backward compat
-    const { data: restaurants } = await supabase
-      .from("restaurants")
-      .select("id, name, slug, is_active, city, is_blocked, created_at, updated_at")
-      .order("created_at", { ascending: false });
+    try {
+      const [
+        companiesRes,
+        restaurantsRes,
+        fiscoRes,
+        paymentsRes,
+        subsRes,
+        profilesRes,
+        rolesRes,
+        membershipsRes,
+        restMembershipsRes,
+        partnerTeamsRes,
+      ] = await Promise.all([
+        supabase
+          .from("companies")
+          .select("*")
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("restaurants")
+          .select("id, name, slug, is_active, city, is_blocked, created_at, updated_at")
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("fisco_configs")
+          .select("id, restaurant_id, provider, configured, updated_at, restaurants(name)"),
+        supabase
+          .from("restaurant_payments")
+          .select("*, restaurants(name)")
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("business_subscriptions")
+          .select("*, companies(name, industry)")
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("profiles")
+          .select("user_id, full_name, email, created_at")
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("user_roles")
+          .select("user_id, role"),
+        supabase
+          .from("company_memberships")
+          .select("user_id, company_id, companies(industry)"),
+        supabase
+          .from("restaurant_memberships")
+          .select("user_id, restaurant_id"),
+        supabase
+          .from("partner_teams")
+          .select("partner_id, team_leader_id"),
+      ]);
 
-    // Merge: prefer companies, fallback to restaurants
-    const allTenants: CompanyTenant[] = [];
-    
-    if (companies?.length) {
+      const errors = [
+        companiesRes.error,
+        restaurantsRes.error,
+        fiscoRes.error,
+        paymentsRes.error,
+        subsRes.error,
+        profilesRes.error,
+        rolesRes.error,
+        membershipsRes.error,
+        restMembershipsRes.error,
+        partnerTeamsRes.error,
+      ].filter(Boolean);
+
+      if (errors.length > 0) {
+        console.error("[SuperAdmin] fetchData errors", errors);
+      }
+
+      const companies = companiesRes.data || [];
+      const restaurants = restaurantsRes.data || [];
+      const fisco = fiscoRes.data || [];
+      const paymentsData = paymentsRes.data || [];
+      const subsData = subsRes.data || [];
+      const profilesData = profilesRes.data || [];
+      const rolesData = rolesRes.data || [];
+      const membershipsData = membershipsRes.data || [];
+      const restMembershipsData = restMembershipsRes.data || [];
+      const partnerTeamsData = partnerTeamsRes.data || [];
+
+      // Merge: prefer companies, fallback to restaurants
+      const allTenants: CompanyTenant[] = [];
+
       for (const c of companies) {
         allTenants.push({
-          id: c.id, name: c.name, slug: c.slug, industry: c.industry || "food",
-          plan: c.subscription_plan || "essential", active: c.is_active, blocked: c.is_blocked,
-          city: c.city || "—", createdAt: c.created_at, lastAccess: c.updated_at,
-          revenue: 0, orders: 0, fee2percent: 0,
+          id: c.id,
+          name: c.name,
+          slug: c.slug,
+          industry: c.industry || "food",
+          plan: c.subscription_plan || "essential",
+          active: c.is_active,
+          blocked: c.is_blocked,
+          city: c.city || "—",
+          createdAt: c.created_at,
+          lastAccess: c.updated_at,
+          revenue: 0,
+          orders: 0,
+          fee2percent: 0,
         });
       }
-    }
-    
-    if (restaurants?.length) {
+
       for (const r of restaurants) {
-        if (!allTenants.find(t => t.slug === r.slug)) {
+        if (!allTenants.find((t) => t.slug === r.slug)) {
           allTenants.push({
-            id: r.id, name: r.name, slug: r.slug, industry: "food",
-            plan: "essential", active: r.is_active, blocked: r.is_blocked || false,
-            city: r.city || "—", createdAt: r.created_at, lastAccess: r.updated_at,
-            revenue: 0, orders: 0, fee2percent: 0,
+            id: r.id,
+            name: r.name,
+            slug: r.slug,
+            industry: "food",
+            plan: "essential",
+            active: r.is_active,
+            blocked: r.is_blocked || false,
+            city: r.city || "—",
+            createdAt: r.created_at,
+            lastAccess: r.updated_at,
+            revenue: 0,
+            orders: 0,
+            fee2percent: 0,
           });
         }
       }
-    }
 
-    // Fetch orders for revenue data
-    if (restaurants?.length) {
-      const { data: orders } = await supabase
-        .from("orders")
-        .select("restaurant_id, total")
-        .in("restaurant_id", restaurants.map(r => r.id));
+      // Fetch orders for revenue data (only if restaurant ids exist)
+      if (restaurants.length > 0) {
+        const restaurantIds = restaurants.map((r) => r.id);
+        const { data: orders, error: ordersError } = await supabase
+          .from("orders")
+          .select("restaurant_id, total")
+          .in("restaurant_id", restaurantIds);
 
-      const orderMap: Record<string, { revenue: number; count: number }> = {};
-      (orders || []).forEach(o => {
-        if (!orderMap[o.restaurant_id]) orderMap[o.restaurant_id] = { revenue: 0, count: 0 };
-        orderMap[o.restaurant_id].revenue += Number(o.total);
-        orderMap[o.restaurant_id].count += 1;
-      });
+        if (ordersError) {
+          console.error("[SuperAdmin] orders fetch error", ordersError);
+        }
 
-      for (const t of allTenants) {
-        if (orderMap[t.id]) {
-          t.revenue = orderMap[t.id].revenue;
-          t.orders = orderMap[t.id].count;
-          t.fee2percent = Math.round(orderMap[t.id].revenue * 0.02);
+        const orderMap: Record<string, { revenue: number; count: number }> = {};
+        (orders || []).forEach((o) => {
+          if (!orderMap[o.restaurant_id]) orderMap[o.restaurant_id] = { revenue: 0, count: 0 };
+          orderMap[o.restaurant_id].revenue += Number(o.total);
+          orderMap[o.restaurant_id].count += 1;
+        });
+
+        for (const t of allTenants) {
+          if (orderMap[t.id]) {
+            t.revenue = orderMap[t.id].revenue;
+            t.orders = orderMap[t.id].count;
+            t.fee2percent = Math.round(orderMap[t.id].revenue * 0.02);
+          }
         }
       }
-    }
 
-    setTenants(allTenants);
+      setTenants(allTenants);
 
-    // Fetch fisco
-    const { data: fisco } = await supabase
-      .from("fisco_configs")
-      .select("id, restaurant_id, provider, configured, updated_at, restaurants(name)");
-    if (fisco) {
-      setFiscoStatuses(fisco.map(f => ({
-        id: f.id, restaurantId: f.restaurant_id,
-        tenantName: (f as any).restaurants?.name || "—",
-        provider: f.provider, configured: f.configured, updatedAt: f.updated_at,
-      })));
-    }
+      setFiscoStatuses(
+        fisco.map((f: any) => ({
+          id: f.id,
+          restaurantId: f.restaurant_id,
+          tenantName: f.restaurants?.name || "—",
+          provider: f.provider,
+          configured: f.configured,
+          updatedAt: f.updated_at,
+        })),
+      );
 
-    // Fetch payments
-    const { data: paymentsData } = await supabase
-      .from("restaurant_payments")
-      .select("*, restaurants(name)")
-      .order("created_at", { ascending: false });
-    if (paymentsData) {
-      setPayments(paymentsData.map((p: any) => ({
-        id: p.id, restaurantId: p.restaurant_id, tenantName: p.restaurants?.name || "—",
-        planType: p.plan_type, totalAmount: Number(p.total_amount), amountPaid: Number(p.amount_paid),
-        installmentAmount: Number(p.installment_amount), installmentsPaid: p.installments_paid,
-        installmentsTotal: p.installments_total, isOverdue: p.is_overdue,
-        nextDueDate: p.next_due_date, gracePeriodDays: p.grace_period_days,
-        blockedAt: p.blocked_at, createdAt: p.created_at,
-      })));
-    }
+      setPayments(
+        paymentsData.map((p: any) => ({
+          id: p.id,
+          restaurantId: p.restaurant_id,
+          tenantName: p.restaurants?.name || "—",
+          planType: p.plan_type,
+          totalAmount: Number(p.total_amount),
+          amountPaid: Number(p.amount_paid),
+          installmentAmount: Number(p.installment_amount),
+          installmentsPaid: p.installments_paid,
+          installmentsTotal: p.installments_total,
+          isOverdue: p.is_overdue,
+          nextDueDate: p.next_due_date,
+          gracePeriodDays: p.grace_period_days,
+          blockedAt: p.blocked_at,
+          createdAt: p.created_at,
+        })),
+      );
 
-    // Fetch subscriptions
-    const { data: subsData } = await supabase
-      .from("business_subscriptions")
-      .select("*, companies(name, industry)")
-      .order("created_at", { ascending: false });
-    if (subsData) {
-      setSubscriptions(subsData.map((s: any) => ({
-        id: s.id,
-        companyId: s.company_id,
-        companyName: s.companies?.name || "—",
-        companyIndustry: s.companies?.industry || "custom",
-        plan: s.plan,
-        status: s.status,
-        trialStart: s.trial_start,
-        trialEnd: s.trial_end,
-        currentPeriodStart: s.current_period_start,
-        currentPeriodEnd: s.current_period_end,
-        cancelAtPeriodEnd: s.cancel_at_period_end,
-        stripeCustomerId: s.stripe_customer_id,
-        stripeSubscriptionId: s.stripe_subscription_id,
-        createdAt: s.created_at,
-        updatedAt: s.updated_at,
-      })));
-    }
+      setSubscriptions(
+        subsData.map((s: any) => ({
+          id: s.id,
+          companyId: s.company_id,
+          companyName: s.companies?.name || "—",
+          companyIndustry: s.companies?.industry || "custom",
+          plan: s.plan,
+          status: s.status,
+          trialStart: s.trial_start,
+          trialEnd: s.trial_end,
+          currentPeriodStart: s.current_period_start,
+          currentPeriodEnd: s.current_period_end,
+          cancelAtPeriodEnd: s.cancel_at_period_end,
+          stripeCustomerId: s.stripe_customer_id,
+          stripeSubscriptionId: s.stripe_subscription_id,
+          createdAt: s.created_at,
+          updatedAt: s.updated_at,
+        })),
+      );
 
-    // Fetch all registrations (profiles + user_roles)
-    const { data: profilesData } = await supabase
-      .from("profiles")
-      .select("user_id, full_name, email, created_at")
-      .order("created_at", { ascending: false });
+      // Build role map with priority (avoid wrong role when user has multiple roles)
+      const rolePriority: Record<string, number> = {
+        super_admin: 100,
+        team_leader: 90,
+        partner: 80,
+        restaurant_admin: 70,
+        staff: 60,
+        customer: 10,
+      };
+      const roleMap: Record<string, string> = {};
+      rolesData.forEach((r: any) => {
+        const current = roleMap[r.user_id];
+        const currentPriority = current ? rolePriority[current] ?? 0 : -1;
+        const nextPriority = rolePriority[r.role] ?? 0;
+        if (!current || nextPriority > currentPriority) {
+          roleMap[r.user_id] = r.role;
+        }
+      });
 
-    const { data: rolesData } = await supabase
-      .from("user_roles")
-      .select("user_id, role");
+      // Build sector map
+      const sectorMap: Record<string, string> = {};
+      membershipsData.forEach((m: any) => {
+        if (m.companies?.industry) sectorMap[m.user_id] = m.companies.industry;
+      });
+      restMembershipsData.forEach((m: any) => {
+        if (!sectorMap[m.user_id]) sectorMap[m.user_id] = "food";
+      });
 
-    // Fetch company memberships to get sectors
-    const { data: membershipsData } = await supabase
-      .from("company_memberships")
-      .select("user_id, company_id, companies(industry)");
+      const profileNameMap: Record<string, string> = {};
+      const profileEmailMap: Record<string, string> = {};
+      profilesData.forEach((p: any) => {
+        profileNameMap[p.user_id] = p.full_name || "—";
+        profileEmailMap[p.user_id] = p.email || "—";
+      });
 
-    // Fetch restaurant memberships for food sector
-    const { data: restMembershipsData } = await supabase
-      .from("restaurant_memberships")
-      .select("user_id, restaurant_id");
+      // Build registrations list
+      const regs = profilesData.map((p: any) => ({
+        id: p.user_id,
+        email: p.email || "—",
+        fullName: p.full_name || "—",
+        sector: sectorMap[p.user_id] || "—",
+        role: roleMap[p.user_id] || "customer",
+        createdAt: p.created_at || "",
+      }));
+      setAllRegistrations(regs);
 
-    // Fetch partner teams
-    const { data: partnerTeamsData } = await supabase
-      .from("partner_teams")
-      .select("partner_id, team_leader_id");
+      // Build partner network
+      const partnerRolesRaw = rolesData.filter((r: any) => r.role === "partner" || r.role === "team_leader");
+      const partnerRolesMap = new Map<string, (typeof partnerRolesRaw)[number]>();
+      partnerRolesRaw.forEach((r: any) => {
+        const existing = partnerRolesMap.get(r.user_id);
+        if (!existing || r.role === "team_leader") partnerRolesMap.set(r.user_id, r);
+      });
+      const partnerRoles = Array.from(partnerRolesMap.values());
 
-    // Build role map with priority (avoid wrong role when user has multiple roles)
-    const rolePriority: Record<string, number> = {
-      super_admin: 100,
-      team_leader: 90,
-      partner: 80,
-      restaurant_admin: 70,
-      staff: 60,
-      customer: 10,
-    };
-    const roleMap: Record<string, string> = {};
-    (rolesData || []).forEach((r) => {
-      const current = roleMap[r.user_id];
-      const currentPriority = current ? rolePriority[current] ?? 0 : -1;
-      const nextPriority = rolePriority[r.role] ?? 0;
-      if (!current || nextPriority > currentPriority) {
-        roleMap[r.user_id] = r.role;
+      const teamMap: Record<string, string[]> = {};
+      partnerTeamsData.forEach((t: any) => {
+        if (!t.team_leader_id) return;
+        if (!teamMap[t.team_leader_id]) teamMap[t.team_leader_id] = [];
+        teamMap[t.team_leader_id].push(t.partner_id);
+      });
+
+      const network = partnerRoles.map((pr: any) => ({
+        id: pr.user_id,
+        email: profileEmailMap[pr.user_id] || "—",
+        fullName: profileNameMap[pr.user_id] || "—",
+        role: pr.role,
+        teamLeaderId: partnerTeamsData.find((t: any) => t.partner_id === pr.user_id)?.team_leader_id || null,
+        createdAt: regs.find((r) => r.id === pr.user_id)?.createdAt || "",
+        subPartners: (teamMap[pr.user_id] || []).map((spId) => ({
+          id: spId,
+          email: profileEmailMap[spId] || "—",
+          fullName: profileNameMap[spId] || "—",
+        })),
+      }));
+      setPartnerNetwork(network);
+
+      if (errors.length > 0) {
+        toast({ title: "Alcuni dati non sono stati caricati", description: "Ricarica la pagina se manca qualche sezione." });
       }
-    });
-
-    // Build sector map
-    const sectorMap: Record<string, string> = {};
-    (membershipsData || []).forEach((m: any) => {
-      if (m.companies?.industry) sectorMap[m.user_id] = m.companies.industry;
-    });
-    (restMembershipsData || []).forEach((m: any) => {
-      if (!sectorMap[m.user_id]) sectorMap[m.user_id] = "food";
-    });
-
-    const profileNameMap: Record<string, string> = {};
-    const profileEmailMap: Record<string, string> = {};
-    (profilesData || []).forEach((p) => {
-      profileNameMap[p.user_id] = p.full_name || "—";
-      profileEmailMap[p.user_id] = p.email || "—";
-    });
-
-    // Build registrations list
-    const regs = (profilesData || []).map((p) => ({
-      id: p.user_id,
-      email: p.email || "—",
-      fullName: p.full_name || "—",
-      sector: sectorMap[p.user_id] || "—",
-      role: roleMap[p.user_id] || "customer",
-      createdAt: p.created_at || "",
-    }));
-    setAllRegistrations(regs);
-
-    // Build partner network
-    const partnerRolesRaw = (rolesData || []).filter((r) => r.role === "partner" || r.role === "team_leader");
-    // Deduplicate by user_id — prefer team_leader over partner
-    const partnerRolesMap = new Map<string, (typeof partnerRolesRaw)[number]>();
-    partnerRolesRaw.forEach((r) => {
-      const existing = partnerRolesMap.get(r.user_id);
-      if (!existing || r.role === "team_leader") partnerRolesMap.set(r.user_id, r);
-    });
-    const partnerRoles = Array.from(partnerRolesMap.values());
-
-    const teamMap: Record<string, string[]> = {};
-    (partnerTeamsData || []).forEach((t: any) => {
-      if (!teamMap[t.team_leader_id]) teamMap[t.team_leader_id] = [];
-      teamMap[t.team_leader_id].push(t.partner_id);
-    });
-
-    const network = partnerRoles.map((pr) => ({
-      id: pr.user_id,
-      email: profileEmailMap[pr.user_id] || "—",
-      fullName: profileNameMap[pr.user_id] || "—",
-      role: pr.role,
-      teamLeaderId: (partnerTeamsData || []).find((t: any) => t.partner_id === pr.user_id)?.team_leader_id || null,
-      createdAt: regs.find((r) => r.id === pr.user_id)?.createdAt || "",
-      subPartners: (teamMap[pr.user_id] || []).map((spId) => ({
-        id: spId,
-        email: profileEmailMap[spId] || "—",
-        fullName: profileNameMap[spId] || "—",
-      })),
-    }));
-    setPartnerNetwork(network);
-
-    setLoading(false);
+    } catch (error) {
+      console.error("[SuperAdmin] fetchData fatal error", error);
+      toast({ title: "Errore caricamento Super Admin", description: "Non riesco a caricare alcuni dati. Riprova." });
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Computed values
@@ -716,7 +781,7 @@ const SuperAdminDashboard = () => {
       </div>
 
       {/* Content */}
-      <div className="px-4 pb-8">
+      <div className="relative z-10 px-4 pb-8">
         {loading && (
           <div className="flex items-center justify-center py-20">
             <div className="w-8 h-8 border-2 border-empire-violet border-t-transparent rounded-full animate-spin" />
