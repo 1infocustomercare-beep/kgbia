@@ -214,6 +214,7 @@ const SuperAdminDashboard = () => {
         membershipsRes.error,
         restMembershipsRes.error,
         partnerTeamsRes.error,
+        partnerSalesRes.error,
       ].filter(Boolean);
 
       if (errors.length > 0) {
@@ -230,6 +231,16 @@ const SuperAdminDashboard = () => {
       const membershipsData = membershipsRes.data || [];
       const restMembershipsData = restMembershipsRes.data || [];
       const partnerTeamsData = partnerTeamsRes.data || [];
+      const partnerSalesData = partnerSalesRes.data || [];
+
+      // Build sales aggregation per partner
+      const salesByPartner: Record<string, { count: number; revenue: number; commission: number }> = {};
+      (partnerSalesData as any[]).forEach((s) => {
+        if (!salesByPartner[s.partner_id]) salesByPartner[s.partner_id] = { count: 0, revenue: 0, commission: 0 };
+        salesByPartner[s.partner_id].count += 1;
+        salesByPartner[s.partner_id].revenue += Number(s.sale_amount || 0);
+        salesByPartner[s.partner_id].commission += Number(s.partner_commission || 0);
+      });
 
       // Merge: prefer companies, fallback to restaurants
       const allTenants: CompanyTenant[] = [];
