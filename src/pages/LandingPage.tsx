@@ -3473,11 +3473,25 @@ const LandingPage = () => {
                 
                   </motion.a>
               )}
+                <motion.button onClick={() => {navigate("/auth?mode=login");setMobileMenuOpen(false);}}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, type: "spring", damping: 18 }}
+              className="mt-3 w-full py-3 rounded-xl text-white/80 text-xs font-medium tracking-[0.18em] uppercase font-heading"
+              style={{
+                background: "hsla(0,0%,100%,0.06)",
+                border: "1px solid hsla(0,0%,100%,0.12)",
+              }}>
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    <Lock className="w-3.5 h-3.5 opacity-70" />
+                    Accedi
+                  </span>
+                </motion.button>
                 <motion.button onClick={() => {navigate("/auth");setMobileMenuOpen(false);}}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, type: "spring", damping: 18 }}
-              className="mt-4 w-full py-3.5 rounded-xl text-primary-foreground text-xs font-bold tracking-[0.2em] uppercase font-heading relative overflow-hidden"
+              className="mt-2 w-full py-3.5 rounded-xl text-primary-foreground text-xs font-bold tracking-[0.2em] uppercase font-heading relative overflow-hidden"
               style={{
                 background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1), hsla(30,45%,38%,1))",
                 boxShadow: "0 4px 24px hsla(38,55%,50%,0.3), 0 0 0 1px hsla(38,55%,60%,0.15)"
@@ -3492,7 +3506,7 @@ const LandingPage = () => {
                     <motion.div animate={{ rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: "linear" }}>
                       <Sparkles className="w-3.5 h-3.5 opacity-85" />
                     </motion.div>
-                    Inizia Ora
+                    Registrati
                   </span>
                 </motion.button>
               </div>
