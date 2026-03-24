@@ -2679,6 +2679,8 @@ const MobileIPhoneCarousel = ({ items, navigate }: {items: CarouselItem[];naviga
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isFromPartner = searchParams.get("from") === "partner";
   const {
     heroLanding, videoHero, heroTechCommand, heroAiPlatform, heroPartnerLuxury,
     mockupCliente, mockupAdmin, mockupCucina,
