@@ -60,9 +60,9 @@ export default function AuthPage() {
   const shouldDefaultToRegister = !isForcedLoginFlow && (Boolean(preselectedPlan) || isPartnerSignupFlow);
 
   const [mode, setMode] = useState<AuthMode>(shouldDefaultToRegister ? "register" : "login");
-  const [step, setStep] = useState(shouldDefaultToRegister ? 2 : 1);
-  const [role, setRole] = useState<RoleType | null>(
-    isPartnerSignupFlow ? "partner" : preselectedPlan ? "customer" : null
+  const [step, setStep] = useState(2); // Always step 2 — no role selection step
+  const [role, setRole] = useState<RoleType>(
+    isPartnerSignupFlow ? "partner" : "customer"
   );
   const [sector, setSector] = useState<string>(preselectedSector);
   const [email, setEmail] = useState("");
@@ -221,25 +221,11 @@ export default function AuthPage() {
 
   const openRegister = () => {
     setMode("register");
-    if (isPartnerSignupFlow) {
-      setRole("partner");
-      setStep(2);
-      return;
-    }
-    if (preselectedPlan) {
-      setRole("customer");
-      setStep(2);
-      return;
-    }
-    setStep(role ? 2 : 1);
+    setStep(2);
   };
 
   const handleBackFromRegisterDetails = () => {
-    if (isPartnerSignupFlow || preselectedPlan) {
-      openLogin();
-      return;
-    }
-    setStep(1);
+    openLogin();
   };
 
   const handleLogin = async () => {
@@ -372,40 +358,6 @@ export default function AuthPage() {
             </div>
           ) : (
             <AnimatePresence mode="wait">
-              {step === 1 && (
-                <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-                  className="space-y-5">
-                  <div className="text-center">
-                    <h1 className="text-xl font-heading font-bold text-foreground mb-1">Chi sei?</h1>
-                    <p className="text-sm text-foreground/85">Seleziona il tuo ruolo per iniziare</p>
-                  </div>
-                  <div className="grid grid-cols-1 gap-3">
-                    {([
-                      { id: "partner" as RoleType, icon: <Briefcase className="w-5 h-5" />, title: "Venditore / Partner", desc: "Vendi soluzioni Empire ai tuoi clienti", color: "hsla(38,65%,58%,0.15)", border: "hsla(38,65%,58%,0.3)" },
-                      { id: "customer" as RoleType, icon: <Store className="w-5 h-5" />, title: "Cliente / Imprenditore", desc: "Vuoi digitalizzare la tua attività", color: "hsla(265,60%,60%,0.15)", border: "hsla(265,60%,60%,0.3)" },
-                    ]).map(r => (
-                      <button key={r.id} type="button" onClick={() => { setRole(r.id); setStep(2); }}
-                        className="flex items-center gap-4 p-4 rounded-xl text-left transition-all hover:scale-[1.02] active:scale-[0.98]"
-                        style={{ background: r.color, border: `1px solid ${r.border}` }}>
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center text-foreground"
-                          style={{ background: r.border }}>
-                          {r.icon}
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold text-foreground">{r.title}</p>
-                          <p className="text-xs text-foreground/80">{r.desc}</p>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-foreground/60 ml-auto" />
-                      </button>
-                    ))}
-                  </div>
-                  <p className="text-xs text-center text-foreground/75">
-                    Hai già un account?{" "}
-                    <button type="button" onClick={openLogin} className="text-primary font-semibold underline underline-offset-4 decoration-primary/50 hover:text-primary/80">Accedi</button>
-                  </p>
-                </motion.div>
-              )}
-
               {step === 2 && (
                 <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   className="space-y-4">
