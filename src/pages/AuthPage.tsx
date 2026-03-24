@@ -154,6 +154,27 @@ export default function AuthPage() {
         } catch (e) {
           console.warn("Partner role re-assignment attempt:", e);
         }
+        // Small delay to let role assignment propagate
+        await new Promise(r => setTimeout(r, 1500));
+        // Force refresh roles
+        const { data: refreshedRoles } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id);
+        const hasPartnerRole = refreshedRoles?.some(r => r.role === "partner" || r.role === "team_leader");
+        if (hasPartnerRole) {
+          navigate("/partner", { replace: true });
+          return;
+        }
+        // If still no role, try again
+        try {
+          await supabase.functions.invoke("assign-partner-role", {
+            body: { user_id: user.id, team_leader_id: user.user_metadata?.referral_id || null },
+          });
+          await new Promise(r => setTimeout(r, 1000));
+        } catch (e2) {
+          console.warn("Second partner role assignment attempt:", e2);
+        }
         navigate("/partner", { replace: true });
         return;
       }
