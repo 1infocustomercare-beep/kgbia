@@ -2387,6 +2387,7 @@ const SuperAdminDashboard = () => {
                       </div>
                       <div>
                         <p className="text-sm font-bold text-foreground">{p.fullName}</p>
+                        <p className="text-[0.55rem] text-muted-foreground">{p.email || "—"}</p>
                         <p className="text-[0.55rem] text-muted-foreground">{p.createdAt ? new Date(p.createdAt).toLocaleDateString("it-IT") : "—"}</p>
                       </div>
                     </div>
