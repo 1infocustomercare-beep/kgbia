@@ -264,6 +264,81 @@ const SuperAdminDashboard = () => {
       })));
     }
 
+    // Fetch all registrations (profiles + user_roles)
+    const { data: profilesData } = await supabase
+      .from("profiles")
+      .select("user_id, full_name, created_at")
+      .order("created_at", { ascending: false });
+
+    const { data: rolesData } = await supabase
+      .from("user_roles")
+      .select("user_id, role");
+
+    // Fetch company memberships to get sectors
+    const { data: membershipsData } = await supabase
+      .from("company_memberships")
+      .select("user_id, company_id, companies(industry)");
+
+    // Fetch restaurant memberships for food sector
+    const { data: restMembershipsData } = await supabase
+      .from("restaurant_memberships")
+      .select("user_id, restaurant_id");
+
+    // Fetch partner teams
+    const { data: partnerTeamsData } = await supabase
+      .from("partner_teams")
+      .select("partner_id, team_leader_id");
+
+    // Build role map
+    const roleMap: Record<string, string> = {};
+    (rolesData || []).forEach(r => { roleMap[r.user_id] = r.role; });
+
+    // Build sector map
+    const sectorMap: Record<string, string> = {};
+    (membershipsData || []).forEach((m: any) => {
+      if (m.companies?.industry) sectorMap[m.user_id] = m.companies.industry;
+    });
+    (restMembershipsData || []).forEach((m: any) => {
+      if (!sectorMap[m.user_id]) sectorMap[m.user_id] = "food";
+    });
+
+    // Build registrations list
+    const regs = (profilesData || []).map(p => ({
+      id: p.user_id,
+      email: "—", // we don't have email from profiles
+      fullName: p.full_name || "—",
+      sector: sectorMap[p.user_id] || "—",
+      role: roleMap[p.user_id] || "customer",
+      createdAt: p.created_at,
+    }));
+    setAllRegistrations(regs);
+
+    // Build partner network
+    const partnerRoles = (rolesData || []).filter(r => r.role === "partner" || r.role === "team_leader");
+    const teamMap: Record<string, string[]> = {};
+    (partnerTeamsData || []).forEach((t: any) => {
+      if (!teamMap[t.team_leader_id]) teamMap[t.team_leader_id] = [];
+      teamMap[t.team_leader_id].push(t.partner_id);
+    });
+
+    const profileMap: Record<string, string> = {};
+    (profilesData || []).forEach(p => { profileMap[p.user_id] = p.full_name || "—"; });
+
+    const network = partnerRoles.map(pr => ({
+      id: pr.user_id,
+      email: "—",
+      fullName: profileMap[pr.user_id] || "—",
+      role: pr.role,
+      teamLeaderId: (partnerTeamsData || []).find((t: any) => t.partner_id === pr.user_id)?.team_leader_id || null,
+      createdAt: regs.find(r => r.id === pr.user_id)?.createdAt || "",
+      subPartners: (teamMap[pr.user_id] || []).map(spId => ({
+        id: spId,
+        email: "—",
+        fullName: profileMap[spId] || "—",
+      })),
+    }));
+    setPartnerNetwork(network);
+
     setLoading(false);
   };
 
