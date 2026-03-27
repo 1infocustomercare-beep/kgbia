@@ -871,7 +871,7 @@ const PartnerDashboard = () => {
                     </motion.a>
                   )}
                   {activeChannel === "whatsapp" && (
-                    <motion.a whileTap={{ scale: 0.97 }} href="https://wa.me/" target="_blank" rel="noopener noreferrer"
+                    <motion.a whileTap={{ scale: 0.97 }} href={`https://wa.me/?text=${encodeURIComponent(useNames ? currentTemplate : currentTemplate.replace(/\[NOME\]/g, "").replace(/\[TUO NOME\]/g, "").replace(/  +/g, " ").trim())}`} target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#25D366", color: "#fff" }}>
                       <MessageCircle className="w-4 h-4" /> Apri WhatsApp
                     </motion.a>
