@@ -115,22 +115,27 @@ const DEFAULT_TEMPLATES = {
 };
 
 /* ═══════════════════════════════════════════
-   SECTOR CARDS
+   SECTOR CARDS — ALL industries + custom
    ═══════════════════════════════════════════ */
-const SECTOR_CARDS = Object.entries(PORTFOLIO_PROJECTS).map(([key, project]) => {
+const ALL_INDUSTRY_IDS = Object.keys(INDUSTRY_CONFIGS) as (keyof typeof INDUSTRY_CONFIGS)[];
+
+const SECTOR_CARDS = ALL_INDUSTRY_IDS.map(key => {
+  const config = INDUSTRY_CONFIGS[key];
+  const project = PORTFOLIO_PROJECTS[key as keyof typeof PORTFOLIO_PROJECTS];
   const portfolio = SECTOR_PORTFOLIO.find(sp => sp.sectorId === key);
   const firstBrand = portfolio?.brands?.[0];
   const firstStyle = firstBrand?.styles?.[0];
   const screens = firstStyle?.screens?.slice(0, 3) || [];
   return {
     id: key,
-    name: project!.name,
-    description: project!.description,
-    tags: project!.tags,
+    name: project?.name || config.label,
+    description: project?.description || config.description,
+    tags: project?.tags || [config.label],
     screens,
-    accent: project!.accent,
+    accent: project?.accent || "#a78bfa",
+    emoji: config.emoji,
   };
-}).filter(c => c.screens.length > 0);
+});
 
 /* ═══════════════════════════════════════════
    MAIN COMPONENT
