@@ -538,6 +538,7 @@ const PartnerDashboard = () => {
         )}
 
         {/* ═══════ CANALE DI ACQUISIZIONE ═══════ */}
+        {!demoMode && (
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-8">
           <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>Canale di Acquisizione</h3>
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
@@ -558,7 +559,11 @@ const PartnerDashboard = () => {
             })}
           </div>
         </section>
+        )}
 
+        {/* ═══════ SELEZIONA PROGETTO + TEMPLATES ═══════ */}
+        {!demoMode && (
+        <>
         {/* ═══════ SELEZIONA PROGETTO ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
           <div className="p-5 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -755,6 +760,8 @@ const PartnerDashboard = () => {
             </div>
           )}
         </section>
+        </>
+        )}
 
         {/* ═══════ DEMO PERSONALIZZATA — UNIVERSALE ═══════ */}
         {!demoMode && (
@@ -967,7 +974,7 @@ const PartnerDashboard = () => {
 
         {/* ═══════ PORTFOLIO GRID — Click opens detail overlay ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-8">
-          <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-6" style={{ color: "#9ca3af" }}>Portfolio Progetti — Clicca per esplorare</h3>
+          <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-6" style={{ color: "#9ca3af" }}>{demoMode ? "Catalogo Principale — Preview Settori" : "Portfolio Progetti — Clicca per esplorare"}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {SECTOR_CARDS.slice(0, showFullPortfolio ? undefined : 6).map((card, i) => (
               <motion.div key={card.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
