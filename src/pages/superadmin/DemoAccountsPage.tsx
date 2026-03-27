@@ -35,7 +35,7 @@ const PASSWORD = "Empire2024!";
 const CUSTOMER_ACCOUNTS = [
   { email: "cliente-food@empire-test.com", name: "Marco Rossi", industry: "food" },
   { email: "cliente-beauty@empire-test.com", name: "Giulia Bianchi", industry: "beauty" },
-  { email: "cliente-ncc@empire-test.com", name: "Luca Verdi (anche Admin NCC Premium)", industry: "ncc" },
+  { email: "cliente-ncc@empire-test.com", name: "Luca Verdi", industry: "ncc" },
   { email: "cliente-fitness@empire-test.com", name: "Sara Colombo", industry: "fitness" },
   { email: "cliente-healthcare@empire-test.com", name: "Paolo Moretti", industry: "healthcare" },
   { email: "cliente-hotel@empire-test.com", name: "Anna Ferrari", industry: "hospitality" },
@@ -51,13 +51,7 @@ const DemoAccountsPage = () => {
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"admin" | "customer">("admin");
 
-  // Override emails for premium accounts
-  const PREMIUM_EMAILS: Record<string, string> = {
-    food: "imperioroma@test.com",
-    ncc: "cliente-ncc@empire-test.com",
-  };
-
-  const getAdminEmail = (industry: string) => PREMIUM_EMAILS[industry] || `admin-${industry}@empire-test.com`;
+  const getAdminEmail = (industry: string) => `admin-${industry}@empire-test.com`;
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
