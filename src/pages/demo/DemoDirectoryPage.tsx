@@ -63,7 +63,7 @@ const HERO_SECTORS: { id: IndustryId; label: string; color: string }[] = [
   { id: "beauty", label: "Beauty", color: "300 60% 60%" },
   { id: "ncc", label: "NCC", color: "43 70% 54%" },
   { id: "fitness", label: "Fitness", color: "142 60% 50%" },
-  { id: "hotel", label: "Hotel", color: "220 70% 55%" },
+  { id: "hospitality", label: "Hotel", color: "220 70% 55%" },
   { id: "healthcare", label: "Healthcare", color: "174 60% 50%" },
 ];
 
