@@ -640,14 +640,6 @@ const PartnerDashboard = () => {
               )}
             </div>
           )}
-              {currentTemplate}
-            </div>
-            {!selectedProject && (
-              <p className="text-[10px] text-center py-2 rounded-lg" style={{ background: "rgba(245,158,11,0.08)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.15)" }}>
-                💡 Seleziona un progetto sopra per ottenere template personalizzati per settore
-              </p>
-            )}
-          </div>
         </section>
 
         {/* ═══════ DEMO PERSONALIZZATA — UNIVERSALE ═══════ */}
