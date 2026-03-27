@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Copy, ExternalLink, Shield, Eye, EyeOff, Search, Users, Bot } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { DEMO_SLUGS } from "@/data/demo-industries";
 
 const INDUSTRIES = [
   "food", "ncc", "beauty", "healthcare", "retail", "fitness",
@@ -13,17 +14,7 @@ const INDUSTRIES = [
 ] as const;
 
 const SLUGS: Record<string, string> = {
-  food: "impero-roma", ncc: "royal-transfer-roma", beauty: "glow-beauty-milano",
-  healthcare: "studio-salus-torino", retail: "bottega-artigiana-firenze",
-  fitness: "iron-gym-milano", hospitality: "villa-belvedere", beach: "lido-azzurro-rimini",
-  plumber: "idraulica-rapida-bologna", electrician: "elettrica-moderna-verona",
-  agriturismo: "podere-del-sole", cleaning: "pulitopro-modena",
-  legal: "studio-martini-napoli", accounting: "studio-rossi-padova",
-  garage: "autofficina-rossi-brescia", photography: "luce-studio-firenze",
-  construction: "edil-costruzioni-bergamo", gardening: "verde-vivo-lucca",
-  veterinary: "clinica-amica-genova", tattoo: "ink-factory-bologna",
-  childcare: "piccoli-passi-parma", education: "accademia-sapere-bologna",
-  events: "dream-events-milano", logistics: "flash-logistica-piacenza",
+  ...DEMO_SLUGS,
   custom: "demo-custom",
 };
 
@@ -67,14 +58,16 @@ const DemoAccountsPage = () => {
 
   const getAdminUrl = (industry: string) => {
     const slug = SLUGS[industry];
-    if (industry === "food") return `/dashboard`;
-    return `/app`;
+    if (!slug) return "/demo";
+    return `/demo/${slug}/admin`;
   };
 
   const getPublicUrl = (industry: string) => {
     const slug = SLUGS[industry];
+    if (!slug) return "/demo";
     if (industry === "food") return `/r/${slug}`;
-    return `/b/${slug}`;
+    if (industry === "ncc") return `/b/${slug}`;
+    return `/demo/${slug}`;
   };
 
   const filtered = INDUSTRIES.filter(i => {
