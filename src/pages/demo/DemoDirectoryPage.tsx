@@ -505,10 +505,11 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
           {/* Round mockup preview bubble */}
           <div className="relative flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
             <div
-              className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 shadow-lg bg-black/40"
+              className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 shadow-lg"
               style={{
                 borderColor: `${color}60`,
                 boxShadow: `0 0 16px ${color}30`,
+                background: `linear-gradient(135deg, ${color}25, ${color}10)`,
               }}
             >
               {(() => {
@@ -517,11 +518,19 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
                 return heroUrl ? (
                   <img src={heroUrl} alt={label} className="w-full h-full object-cover" loading="lazy" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-lg">
-                    {cfg.icon ? getIcon(cfg.icon) : "⚡"}
+                  <div className="w-full h-full flex items-center justify-center" style={{ color }}>
+                    {getIcon(cfg.icon)}
                   </div>
                 );
               })()}
+            </div>
+            {/* Always-visible icon badge */}
+            <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center shadow-md"
+              style={{
+                background: `linear-gradient(135deg, ${color}, ${color}cc)`,
+                border: "2px solid hsla(260,20%,12%,0.95)",
+              }}>
+              <span className="text-white [&_svg]:!w-2.5 [&_svg]:!h-2.5">{getIcon(cfg.icon)}</span>
             </div>
             {isFeatured && (
               <motion.div className="absolute inset-0 rounded-full pointer-events-none"
