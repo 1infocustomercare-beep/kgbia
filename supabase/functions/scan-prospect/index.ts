@@ -5,11 +5,53 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const channelRules: Record<string, string> = {
+  dm: `FORMATO: DM Instagram/Social
+- MAX 500 caratteri (Instagram tronca i messaggi lunghi)
+- 3-4 righe massimo, diretto e incisivo
+- Apri con un complimento SPECIFICO sul loro profilo
+- Chiudi con il link demo e una domanda aperta
+- Tono: informale ma professionale, come un collega del settore
+- Usa 2-3 emoji massimo
+- NO oggetto, NO firma formale`,
+
+  whatsapp: `FORMATO: Messaggio WhatsApp
+- MAX 800 caratteri
+- Usa formattazione WhatsApp: *grassetto*, _corsivo_
+- Struttura: saluto → complimento → proposta → link → CTA
+- Tono: cordiale, diretto, come un consulente che ti scrive
+- 3-4 emoji massimo
+- Includi il link demo cliccabile
+- Chiudi con "Posso chiamarti 2 minuti per mostrarti?"`,
+
+  email: `FORMATO: Email Professionale Premium
+- Struttura completa con Oggetto (in prima riga, formato "Oggetto: ...")
+- 4-5 paragrafi ben strutturati
+- Sezione dedicata al link demo del settore e al link catalogo completo
+- Includi pricing sintetico (da €79/mese, 90gg gratis)
+- Firma professionale con Empire AI Group
+- Tono: autorevole, consulenziale, premium
+- Emoji solo nei bullet points`,
+
+  pitch: `FORMATO: Script Porta a Porta / Chiamata
+- Struttura: APERTURA (10 sec) → PROBLEMA (15 sec) → SOLUZIONE (20 sec) → DEMO (mostra link) → CHIUSURA
+- Linguaggio parlato, naturale, persuasivo
+- Includi obiezioni comuni e risposte pronte
+- Indica dove mostrare il telefono con la demo
+- Tono: sicuro, entusiasta ma non aggressivo`,
+
+  link: `FORMATO: Messaggio breve per condivisione link
+- MAX 300 caratteri
+- Una frase d'impatto + link demo + CTA
+- Perfetto per bio link, stories, post caption
+- Diretto e memorabile`,
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { instagram, website, sector } = await req.json();
+    const { instagram, website, sector, channel, demoLink, allDemosLink, contactInfo } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
@@ -17,27 +59,34 @@ serve(async (req) => {
     if (instagram) targetInfo.push(`Instagram handle: @${instagram.replace("@", "")}`);
     if (website) targetInfo.push(`Website: ${website}`);
 
+    const ch = channel || "dm";
+    const formatRules = channelRules[ch] || channelRules.dm;
+
     const systemPrompt = `Sei un esperto di vendita B2B per Empire AI Group, un'agenzia che vende app e piattaforme digitali personalizzate per attività locali.
 
-Il tuo compito è analizzare il profilo/sito di un prospect e generare un messaggio di vendita ULTRA personalizzato.
+Il tuo compito è analizzare il profilo/sito di un prospect e generare un messaggio di vendita ULTRA personalizzato, OTTIMIZZATO per il canale di comunicazione specificato.
 
-REGOLE:
+${formatRules}
+
+REGOLE GENERALI:
 - Cita dettagli SPECIFICI del loro business (nome, tipo di servizi, stile, location)
 - Identifica i loro PAIN POINTS specifici basandoti sul settore
 - Proponi la soluzione Empire come naturale evoluzione del loro business
-- Il tono deve essere professionale ma amichevole, come un consulente esperto
 - NON usare frasi generiche, tutto deve sembrare scritto apposta per loro
-- Includi emoji appropriate ma non esagerare
-- Il messaggio deve essere lungo 4-6 paragrafi
-- Includi il placeholder {{DEMO_LINK}} dove va il link demo
-- Includi il placeholder {{CONTACT_INFO}} dove va il contatto
-- NON inventare dati che non puoi sapere, usa deduzioni logiche`;
+- NON inventare dati che non puoi sapere, usa deduzioni logiche
 
-    const userPrompt = `Analizza questo prospect nel settore "${sector || "generico"}" e genera un messaggio DM Instagram ultra-personalizzato per convertirlo:
+LINK DA INSERIRE NEL MESSAGGIO:
+- Link demo settore: ${demoLink || "{{DEMO_LINK}}"}
+- Catalogo completo: ${allDemosLink || "{{ALL_DEMOS_LINK}}"}
+- Contatto: ${contactInfo || "{{CONTACT_INFO}}"}
+
+Inserisci i link nel punto più naturale del messaggio, NON come placeholder.`;
+
+    const userPrompt = `Analizza questo prospect nel settore "${sector || "generico"}" e genera un messaggio di vendita ultra-personalizzato per il canale "${ch}":
 
 ${targetInfo.join("\n")}
 
-Genera il messaggio di vendita personalizzato. Ricorda: deve sembrare che hai studiato a fondo la loro attività.`;
+Genera il messaggio ottimizzato. Ricorda: deve sembrare scritto apposta per loro e deve rispettare PERFETTAMENTE il formato del canale.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
