@@ -246,23 +246,44 @@ export default function DemoDirectoryPage() {
         </div>
       </div>
 
-      {/* ═══ HERO CTA BANNER ═══ */}
+      {/* ═══ HERO CTA BANNER (code-only) ═══ */}
       <div className="relative z-10 mx-4 mt-5 mb-6 rounded-2xl overflow-hidden"
-        style={{ boxShadow: "0 8px 40px hsla(265,50%,10%,0.5)" }}>
-        <img src={demoHeroCta} alt="Pronti a trasformare la vostra idea di app?"
-          className="w-full h-auto object-cover rounded-2xl" loading="eager" />
-        {/* Overlay buttons for mobile */}
-        <div className="absolute bottom-4 left-4 right-4 flex gap-2">
-          <button onClick={() => navigate("/auth")}
-            className="flex-1 py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5"
-            style={{ background: "linear-gradient(135deg, hsl(174 60% 45%), hsl(190 55% 40%))", boxShadow: "0 4px 16px hsla(174,60%,30%,0.4)" }}>
-            Contattaci <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-          <button onClick={() => { const el = document.getElementById("demo-list"); el?.scrollIntoView({ behavior: "smooth" }); }}
-            className="flex-1 py-2.5 rounded-xl text-xs font-bold text-foreground/90 flex items-center justify-center gap-1.5"
-            style={{ background: "hsla(265,20%,15%,0.8)", border: "1px solid hsla(265,30%,50%,0.3)", backdropFilter: "blur(12px)" }}>
-            <Eye className="w-3.5 h-3.5" /> Guarda i lavori
-          </button>
+        style={{
+          background: "linear-gradient(135deg, hsla(265,50%,12%,1) 0%, hsla(280,40%,18%,1) 50%, hsla(200,50%,15%,1) 100%)",
+          boxShadow: "0 8px 40px hsla(265,50%,10%,0.5)",
+          border: "1px solid hsla(265,30%,40%,0.2)",
+        }}>
+        {/* Decorative circles */}
+        <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full opacity-15" style={{ background: "radial-gradient(circle, hsl(174 60% 45%), transparent 70%)" }} />
+        <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-10" style={{ background: "radial-gradient(circle, hsl(265 60% 60%), transparent 70%)" }} />
+
+        <div className="relative px-5 py-7 sm:px-8 sm:py-10 text-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-4"
+            style={{ background: "hsla(174,60%,45%,0.15)", border: "1px solid hsla(174,60%,45%,0.3)" }}>
+            <Sparkles className="w-3 h-3 text-[hsl(174,60%,55%)]" />
+            <span className="text-[0.65rem] font-bold tracking-widest uppercase text-[hsl(174,60%,65%)]">25+ Settori</span>
+          </div>
+
+          <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Trasforma la tua attività<br />
+            <span className="text-[hsl(174,60%,55%)]">in un'esperienza digitale</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-white/55 max-w-md mx-auto mb-6">
+            Dashboard AI, ordini, prenotazioni e CRM — tutto pronto in pochi minuti
+          </p>
+
+          <div className="flex gap-2.5 justify-center">
+            <button onClick={() => navigate("/auth")}
+              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-transform hover:scale-105"
+              style={{ background: "linear-gradient(135deg, hsl(174 60% 45%), hsl(190 55% 40%))", boxShadow: "0 4px 16px hsla(174,60%,30%,0.4)" }}>
+              Contattaci <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+            <button onClick={() => { const el = document.getElementById("demo-list"); el?.scrollIntoView({ behavior: "smooth" }); }}
+              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white/80 flex items-center gap-1.5 transition-transform hover:scale-105"
+              style={{ background: "hsla(265,20%,20%,0.6)", border: "1px solid hsla(265,30%,50%,0.3)", backdropFilter: "blur(12px)" }}>
+              <Eye className="w-3.5 h-3.5" /> Guarda i lavori
+            </button>
+          </div>
         </div>
       </div>
 
