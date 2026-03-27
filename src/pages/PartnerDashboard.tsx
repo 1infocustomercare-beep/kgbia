@@ -641,15 +641,55 @@ const PartnerDashboard = () => {
             </div>
           ) : (
             <div className="space-y-4">
+              {/* ── Smart Analysis Inputs ── */}
+              <div className="p-4 rounded-2xl space-y-3" style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)" }}>
+                <div className="flex items-center gap-2 mb-1">
+                  <Target className="w-4 h-4" style={{ color: "#818cf8" }} />
+                  <span className="text-xs font-bold text-white">Analisi Target (opzionale)</span>
+                </div>
+                <p className="text-[10px]" style={{ color: "#9ca3af" }}>Inserisci l'Instagram o il sito del prospect per un messaggio mirato e persuasivo</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="relative">
+                    <Instagram className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#E4405F" }} />
+                    <input
+                      type="text"
+                      placeholder="@nomeprofilo"
+                      value={targetIg}
+                      onChange={e => { setTargetIg(e.target.value); setMessageVariant(prev => prev); }}
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl text-xs bg-transparent outline-none placeholder:text-gray-600"
+                      style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#d1d5db" }}
+                    />
+                  </div>
+                  <div className="relative">
+                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#10B981" }} />
+                    <input
+                      type="text"
+                      placeholder="www.sitoattivita.it"
+                      value={targetWebsite}
+                      onChange={e => { setTargetWebsite(e.target.value); setMessageVariant(prev => prev); }}
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl text-xs bg-transparent outline-none placeholder:text-gray-600"
+                      style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#d1d5db" }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* ── Template Message ── */}
               <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-white">{templateLabel}</span>
                     {selectedProjectName && <span className="px-2 py-0.5 rounded text-[9px] font-semibold" style={{ background: "rgba(167,139,250,0.15)", color: "#a78bfa" }}>{selectedProjectName}</span>}
+                    <span className="px-2 py-0.5 rounded text-[9px]" style={{ background: "rgba(255,255,255,0.05)", color: "#6b7280" }}>v{(messageVariant % Math.max(variants.length, 1)) + 1}/{variants.length}</span>
                   </div>
-                  <button onClick={handleCopyTemplate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-                    <Copy className="w-3 h-3" style={{ color: "#a78bfa" }} /><span className="text-white">Copia</span>
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button onClick={handleRegenerate} title="Genera variante diversa" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}>
+                      <RefreshCw className="w-3 h-3" style={{ color: "#34d399" }} /><span style={{ color: "#34d399" }}>Rigenera</span>
+                    </button>
+                    <button onClick={handleCopyTemplate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
+                      <Copy className="w-3 h-3" style={{ color: "#a78bfa" }} /><span className="text-white">Copia</span>
+                    </button>
+                  </div>
                 </div>
                 <div className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "#d1d5db" }}>
                   {currentTemplate.split(/(\[(?:NOME|TUO NOME)\])/).map((part: string, i: number) =>
@@ -658,15 +698,19 @@ const PartnerDashboard = () => {
                     ) : part
                   )}
                 </div>
+                <div className="flex items-center gap-2 p-2.5 rounded-xl" style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.1)" }}>
+                  <Mail className="w-3.5 h-3.5" style={{ color: "#818cf8" }} />
+                  <span className="text-[10px]" style={{ color: "#a5b4fc" }}>Email Agency inclusa: <strong>{agencyEmail}</strong></span>
+                </div>
                 <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Sostituisci [NOME] con il nome dell'attività e [TUO NOME] con il tuo nome</p>
                 {!selectedProject && (
                   <p className="text-[10px] text-center py-2 rounded-lg" style={{ background: "rgba(245,158,11,0.08)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.15)" }}>💡 Seleziona un settore sopra per template personalizzati</p>
                 )}
                 <div className="flex flex-wrap gap-2 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                   {activeChannel === "instagram" && (
-                    <motion.a whileTap={{ scale: 0.97 }} href="https://www.instagram.com/direct/inbox/" target="_blank" rel="noopener noreferrer"
+                    <motion.a whileTap={{ scale: 0.97 }} href={targetIg ? `https://www.instagram.com/${targetIg.replace("@", "")}/` : "https://www.instagram.com/direct/inbox/"} target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>
-                      <Instagram className="w-4 h-4" /> Apri Instagram DM
+                      <Instagram className="w-4 h-4" /> {targetIg ? `Apri @${targetIg.replace("@", "")}` : "Apri Instagram DM"}
                     </motion.a>
                   )}
                   {activeChannel === "whatsapp" && (
@@ -676,7 +720,7 @@ const PartnerDashboard = () => {
                     </motion.a>
                   )}
                   {activeChannel === "email" && (
-                    <motion.a whileTap={{ scale: 0.97 }} href={`mailto:?subject=${encodeURIComponent(currentTemplate.split('\n')[0].replace('Oggetto: ', ''))}`}
+                    <motion.a whileTap={{ scale: 0.97 }} href={`mailto:?subject=${encodeURIComponent(currentTemplate.split('\n')[0].replace('Oggetto: ', ''))}&body=${encodeURIComponent(currentTemplate)}`}
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#3B82F6", color: "#fff" }}>
                       <Mail className="w-4 h-4" /> Componi Email
                     </motion.a>
@@ -690,6 +734,10 @@ const PartnerDashboard = () => {
                   <motion.button whileTap={{ scale: 0.97 }} onClick={handleCopyTemplate}
                     className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#d1d5db" }}>
                     <Copy className="w-4 h-4" /> Copia Testo
+                  </motion.button>
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={handleRegenerate}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)", color: "#34d399" }}>
+                    <RefreshCw className="w-4 h-4" /> Messaggio Diverso
                   </motion.button>
                 </div>
               </div>
