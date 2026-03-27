@@ -178,10 +178,18 @@ const PartnerDashboard = () => {
   
   const currentTemplate = activeChannel === "email" ? currentTemplates.email
     : activeChannel === "field" ? currentTemplates.pitch
+    : activeChannel === "whatsapp" ? (currentTemplates as any).whatsapp || DEFAULT_TEMPLATES.whatsapp
+    : activeChannel === "site" ? ""
     : currentTemplates.dm;
+
+  const currentObjections = activeChannel === "field"
+    ? ((currentTemplates as any).objections || DEFAULT_TEMPLATES.objections || [])
+    : [];
 
   const templateLabel = activeChannel === "email" ? "TEMPLATE EMAIL"
     : activeChannel === "field" ? "PITCH SCRIPT"
+    : activeChannel === "whatsapp" ? "TEMPLATE WHATSAPP"
+    : activeChannel === "site" ? "LINK SITO"
     : "TEMPLATE DM";
 
   const handleResetDemo = async () => {
