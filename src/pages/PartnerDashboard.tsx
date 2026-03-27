@@ -10,7 +10,7 @@ import {
   ExternalLink, ChefHat, Smartphone, ArrowLeft,
   Mail, MapPin, Instagram, Send, RefreshCw,
   Pencil, Upload, Save, X as XIcon,
-  Globe
+  Globe, MessageCircle, Link2, Wand2, Phone
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
@@ -30,52 +30,87 @@ import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
    ACQUISITION CHANNELS
    ═══════════════════════════════════════════ */
 const ACQUISITION_CHANNELS = [
-  { id: "email", icon: Mail, label: "Email", desc: "Template professionali pronti da inviare" },
-  { id: "field", icon: MapPin, label: "Porta a Porta", desc: "Pitch dal vivo con link e preview pronte" },
-  { id: "instagram", icon: Instagram, label: "DM Instagram", desc: "Messaggi brevi e diretti per i social" },
+  { id: "instagram", icon: Instagram, label: "DM Instagram", desc: "Messaggi brevi e diretti per i social", color: "#E4405F" },
+  { id: "whatsapp", icon: MessageCircle, label: "WhatsApp", desc: "Messaggio diretto al titolare", color: "#25D366" },
+  { id: "email", icon: Mail, label: "Email", desc: "Template professionali pronti da inviare", color: "#3B82F6" },
+  { id: "field", icon: MapPin, label: "Porta a Porta", desc: "Pitch dal vivo con script e obiezioni", color: "#F59E0B" },
+  { id: "site", icon: Link2, label: "Link Sito", desc: "Condividi il link della demo direttamente", color: "#10B981" },
 ] as const;
 
 /* ═══════════════════════════════════════════
-   SECTOR-SPECIFIC SALES TEMPLATES
+   SECTOR-SPECIFIC SALES TEMPLATES (conversion-optimized)
    ═══════════════════════════════════════════ */
-const SECTOR_TEMPLATES: Record<string, { dm: string; email: string; pitch: string }> = {
+const SECTOR_TEMPLATES: Record<string, { dm: string; whatsapp: string; email: string; pitch: string; objections: string[] }> = {
   food: {
-    dm: `Ciao! 🍽️ Ho visto il vostro ristorante su Instagram ed è fantastico! Sapevate che con un'app personalizzata potete gestire ordini, menu digitale e prenotazioni tutto in un click? I vostri clienti ordinano direttamente dal tavolo con QR code, e voi riducete i tempi di attesa del 40%. Vi mostro un esempio reale? 👉`,
-    email: `Oggetto: Più ordini, meno stress — La vostra app ristorante personalizzata\n\nGentili proprietari,\n\nAmministrate [NOME RISTORANTE] con passione, e noi vorremmo aiutarvi a crescere. La nostra piattaforma permette ai vostri clienti di:\n\n✅ Ordinare dal tavolo via QR code\n✅ Prenotare online 24/7\n✅ Ricevere notifiche su offerte speciali\n✅ Pagare in modo contactless\n\nI ristoranti che usano la nostra app vedono in media +35% di ordini e -25% di chiamate per prenotazioni.\n\nPosso mostrarvi una demo gratuita in 10 minuti?`,
-    pitch: `"Il vostro ristorante merita un'app che lavori per voi anche quando chiudete. Menu digitale, ordini QR, cucina display in tempo reale — tutto questo è già pronto, personalizzato con il vostro brand."`,
+    dm: `Ciao [NOME]! 🍽️ Ho visto le foto del vostro locale — complimenti!\n\nVolevo chiedervi: quanto tempo perdete ogni giorno tra chiamate per prenotazioni, menu da aggiornare e ordini scritti a mano?\n\nHo qualcosa che vi farà risparmiare 3 ore al giorno e aumentare gli ordini del 35%. Vi mando un link per vedere come funziona? 👇`,
+    whatsapp: `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\nHo notato [NOME] e vorrei farvi vedere qualcosa di speciale: un'app personalizzata con il vostro brand dove i clienti ordinano dal tavolo con QR code, prenotano 24/7 e voi gestite tutto da UN unico pannello.\n\n🔥 I ristoranti che la usano vedono +35% ordini e -70% chiamate.\n\nPosso mandarvi un link per provarla in 2 minuti? È completamente gratuito.`,
+    email: `Oggetto: [NOME] — Più ordini, zero stress (proposta riservata)\n\nBuongiorno,\n\nMi chiamo [TUO NOME] e mi occupo di digitalizzazione per ristoranti.\n\nHo analizzato il vostro locale e credo che stiate perdendo almeno il 30% degli ordini possibili. Ecco perché:\n\n❌ I clienti chiamano e trovano occupato → prenotazione persa\n❌ Il menu cartaceo non mostra foto → scontrino medio basso\n❌ Nessun sistema per riportare i clienti che non tornano\n\nLa nostra piattaforma risolve tutto questo:\n\n✅ Menu digitale con QR — ordini diretti dal tavolo (+22% scontrino medio)\n✅ Prenotazioni online 24/7 — mai più chiamate perse\n✅ Sistema "Clienti Persi" — recupera il 30% dei clienti inattivi automaticamente\n✅ Kitchen Display — zero ordini persi, cucina sincronizzata\n✅ Review Shield — solo le recensioni migliori diventano pubbliche\n\n🎯 Tutto brandizzato con il VOSTRO logo e colori. I clienti vedono solo [NOME], mai il nostro nome.\n\n💰 Investimento: da €79/mese — si ripaga con 2 ordini in più al giorno.\n\nPosso mostrarvi una demo dal vivo in 10 minuti? Nessun impegno.`,
+    pitch: `APERTURA: "Buongiorno! Mi chiamo [TUO NOME]. Non vendo pubblicità né volantini. Ho una domanda veloce: quante prenotazioni perdete al mese per telefonate senza risposta?"\n\nPROBLEMA: "Il 70% dei ristoranti perde 15-20 prenotazioni al mese. Ogni prenotazione persa = €50-80 di fatturato. Sono €1.000/mese che volano via."\n\nSOLUZIONE: "Noi diamo a [NOME] un'app personalizzata dove i clienti ordinano dal tavolo, prenotano 24/7, e voi gestite tutto da un pannello. Tutto con il vostro brand."\n\nPROVA: [Mostra demo dal telefono]\n\nCHIUSURA: "L'investimento è €79/mese — meno di 2 coperti. Si ripaga dal primo giorno. Possiamo attivarlo questa settimana."`,
+    objections: [
+      "\"Costa troppo\" → \"€79/mese sono meno di 2 coperti. In media i ristoranti recuperano €1.200/mese di prenotazioni perse. ROI dal primo giorno.\"",
+      "\"Ho già JustEat/Glovo\" → \"Perfetto, ma loro prendono il 30% di commissione. Con noi solo il 2%. Su €3.000/mese di ordini risparmi €840.\"",
+      "\"Non ho tempo\" → \"Proprio per questo serve: automatizza prenotazioni, ordini e marketing. Vi libera 3 ore al giorno.\"",
+      "\"Devo pensarci\" → \"Capisco! Vi lascio il link alla demo — provatela con calma. Nessun impegno, nessun dato richiesto. La richiamo tra 2 giorni?\""
+    ],
   },
   beauty: {
-    dm: `Ciao! 💅 Il vostro salone è stupendo! Sapevate che con un'app personalizzata i clienti possono prenotare trattamenti 24/7, scegliere lo stilista preferito e accumulare punti fedeltà? Niente più chiamate perse = più appuntamenti. Vi faccio vedere come funziona? ✨`,
-    email: `Oggetto: Zero appuntamenti persi — L'app per il vostro salone\n\nBuongiorno,\n\nGestire le prenotazioni telefoniche toglie tempo prezioso al vostro lavoro creativo. La nostra app permette ai clienti di:\n\n✅ Prenotare servizi e scegliere l'operatore\n✅ Ricevere promemoria automatici (addio no-show!)\n✅ Accumulare punti fedeltà\n✅ Acquistare prodotti dal vostro shop integrato\n\nI saloni che usano la nostra piattaforma riducono i no-show del 60% e aumentano i clienti ricorrenti del 40%.\n\nVi mostro una demo in 10 minuti?`,
-    pitch: `"Il vostro salone è un'esperienza — la vostra app deve esserlo altrettanto. Prenotazioni smart, programma fedeltà e shop integrato, tutto con il vostro stile unico."`,
+    dm: `Ciao [NOME]! 💅 Il vostro salone è fantastico!\n\nDomanda veloce: quanti appuntamenti perdete a settimana per no-show o chiamate senza risposta?\n\nHo qualcosa che elimina il problema e vi porta +40% clienti ricorrenti. Vi mando un link? ✨`,
+    whatsapp: `Buongiorno! Sono [TUO NOME] di Empire.\n\nHo visto [NOME] e volevo proporvi una cosa: un'app personalizzata con il vostro brand dove i clienti prenotano 24/7, scelgono l'operatore, e accumulano punti fedeltà.\n\n✂️ I saloni che la usano riducono i no-show del 60%.\n\nVi mando il link per provarla?`,
+    email: `Oggetto: [NOME] — Zero no-show, +40% clienti ricorrenti\n\nBuongiorno,\n\nOgni no-show vi costa €50-100. Con 5 no-show a settimana, sono €1.500/mese persi.\n\nLa nostra app per [NOME] risolve tutto:\n\n✅ Prenotazione online 24/7 con scelta operatore e servizio\n✅ Promemoria automatici WhatsApp/Push (addio no-show!)\n✅ Programma fedeltà integrato (+40% clienti ricorrenti)\n✅ Gestione agenda smart per tutto lo staff\n\n💰 Da €79/mese — si ripaga eliminando 2 no-show a settimana.\n\nDemo gratuita in 10 minuti?`,
+    pitch: `APERTURA: "Buongiorno! Domanda veloce: quanti appuntamenti saltano ogni settimana senza preavviso?"\n\nPROBLEMA: "In media un salone perde 5-8 no-show a settimana. A €60 di media, sono €1.500/mese."\n\nSOLUZIONE: "Con la nostra app i clienti prenotano online, ricevono promemoria automatici, e accumulano punti. I no-show calano del 60%."\n\nCHIUSURA: "€79/mese. Si ripaga eliminando 2 no-show a settimana. Attivabile in 24 ore."`,
+    objections: [
+      "\"Uso già Instagram per le prenotazioni\" → \"Instagram non manda promemoria, non gestisce l'agenda, e non fidelizza. Con noi i no-show calano del 60%.\"",
+      "\"I clienti preferiscono chiamare\" → \"Il 73% dei clienti under 45 preferisce prenotare online. Chi chiama e trova occupato, va altrove.\"",
+    ],
   },
   ncc: {
-    dm: `Ciao! 🚗 Gestite un servizio NCC? Con la nostra app i clienti prenotano transfer in 30 secondi, vedono la flotta disponibile e pagano online. Voi gestite autisti, tariffe e prenotazioni da un unico pannello. Volete una demo? 🏎️`,
-    email: `Oggetto: Più prenotazioni, gestione flotta automatica — App NCC\n\nGentili,\n\nSappiamo quanto è complesso gestire un servizio NCC tra chiamate, preventivi e coordinamento autisti. La nostra piattaforma offre:\n\n✅ Prenotazione transfer online con calcolo automatico\n✅ Gestione flotta e autisti in tempo reale\n✅ Pagamenti sicuri e fatturazione automatica\n✅ App cliente con tracking del veicolo\n\nI servizi NCC che usano la nostra app aumentano le prenotazioni del 50% riducendo il tempo amministrativo.\n\nPosso mostrarvi una demo personalizzata?`,
-    pitch: `"I vostri clienti VIP meritano un'esperienza di prenotazione premium. Con la nostra app prenotano in 30 secondi, tracciano il veicolo e pagano online — tutto brandizzato con il vostro logo."`,
+    dm: `Ciao [NOME]! 🚗 Ho visto il vostro servizio NCC.\n\nQuanto tempo perdete ogni giorno tra preventivi via email, coordinamento autisti e pagamenti da rincorrere?\n\nAbbiamo un sistema che automatizza tutto — prenotazione, pricing, fleet management. Vi mostro? 🏎️`,
+    whatsapp: `Buongiorno! Sono [TUO NOME].\n\nHo una proposta per [NOME]: un'app dove i clienti prenotano transfer in 30 secondi, vedono la flotta, e pagano online.\n\nVoi gestite autisti, tariffe e prenotazioni da un unico pannello.\n\n📈 +50% prenotazioni, zero tempo perso in preventivi.\n\nVi mando il link della demo?`,
+    email: `Oggetto: [NOME] — Prenotazioni automatiche, flotta sotto controllo\n\nGentili,\n\nOgni preventivo via email vi porta via 10-15 minuti. Con 10 richieste al giorno, sono 2+ ore perse.\n\nLa nostra piattaforma per [NOME]:\n\n✅ Prenotazione transfer con calcolo automatico prezzo\n✅ Gestione flotta e autisti in tempo reale\n✅ Pagamenti online sicuri e fatturazione automatica\n✅ App cliente premium con tracking veicolo\n\n💰 Da €99/mese — si ripaga con 1 transfer in più a settimana.\n\nDemo in 10 minuti?`,
+    pitch: `APERTURA: "Quante ore al giorno passate a fare preventivi via email o WhatsApp?"\n\nPROBLEMA: "10 minuti per preventivo × 10 richieste = quasi 2 ore al giorno. Più il coordinamento autisti e i pagamenti da rincorrere."\n\nSOLUZIONE: "La nostra app calcola i prezzi automaticamente, il cliente prenota e paga in 30 secondi, e voi vedete tutto su un pannello."\n\nCHIUSURA: "€99/mese. Un transfer in più a settimana e siete in positivo."`,
+    objections: [
+      "\"Lavoro solo con il telefono\" → \"Perfetto, ma quante chiamate perdete mentre guidate? L'app lavora per voi 24/7, anche di notte.\"",
+    ],
   },
   fitness: {
-    dm: `Ciao! 💪 La vostra palestra ha un potenziale enorme! Con un'app personalizzata i membri prenotano corsi, tracciano i progressi e rinnovano l'abbonamento tutto dal telefono. Risultato? Più retention e meno lavoro amministrativo. Vi mostro un esempio? 🏋️`,
-    email: `Oggetto: Più iscritti, meno abbandoni — App per la vostra palestra\n\nBuongiorno,\n\nLa sfida più grande per una palestra è mantenere i membri attivi. La nostra app vi aiuta con:\n\n✅ Prenotazione corsi e personal trainer\n✅ Tracking progressi e sfide gamificate\n✅ Rinnovo abbonamento automatico\n✅ Notifiche push per promozioni e nuovi corsi\n\nLe palestre che usano la nostra piattaforma vedono +45% di retention e +30% di nuove iscrizioni da referral.\n\nDemo gratuita in 10 minuti?`,
-    pitch: `"La vostra palestra non è solo un posto dove allenarsi — è una community. La nostra app la rende digitale: prenotazioni, progressi, sfide e social, tutto in un'app con il vostro brand."`,
+    dm: `Ciao [NOME]! 💪 La vostra palestra è top!\n\nQuanti iscritti non rinnovano l'abbonamento ogni mese? Con un'app personalizzata potete aumentare la retention del 45% e ottenere +30% nuovi iscritti da referral.\n\nVi mostro come? 🏋️`,
+    whatsapp: `Buongiorno! Sono [TUO NOME].\n\n[NOME] ha un potenziale enorme. Con la nostra app i membri prenotano corsi, tracciano progressi e partecipano a sfide gamificate.\n\n💪 +45% retention, +30% nuovi iscritti.\n\nLink demo?`,
+    email: `Oggetto: [NOME] — +45% retention, meno abbandoni\n\nBuongiorno,\n\nLa sfida più grande: mantenere i membri attivi. Il 50% abbandona nei primi 3 mesi.\n\nLa nostra app per [NOME]:\n\n✅ Prenotazione corsi e personal trainer\n✅ Tracking progressi con sfide gamificate\n✅ Rinnovo abbonamento automatico\n✅ Community e social features\n\n💰 Da €79/mese — si ripaga mantenendo 2 iscritti in più.\n\nDemo in 10 minuti?`,
+    pitch: `APERTURA: "Quale percentuale dei vostri iscritti rinnova l'abbonamento?"\n\nPROBLEMA: "La media è 40-50%. Ogni iscritto perso = €500-1.000/anno."\n\nSOLUZIONE: "La nostra app crea engagement: corsi prenotabili, progressi tracciati, sfide tra membri. La retention sale al 70-80%."\n\nCHIUSURA: "€79/mese. Basta mantenere 2 iscritti in più per essere in positivo."`,
+    objections: [
+      "\"Abbiamo già un gestionale\" → \"Non è un gestionale, è un'app per i VOSTRI clienti. Il gestionale gestisce voi, l'app fidelizza loro.\"",
+    ],
   },
   healthcare: {
-    dm: `Ciao! 🏥 Ho notato il vostro studio medico. Sapevate che con un'app personalizzata i pazienti prenotano visite, ricevono referti digitali e comunicano con voi in modo sicuro? Meno telefonate, più efficienza. Vi interessa una demo? 👨‍⚕️`,
-    email: `Oggetto: Meno code, più efficienza — App per il vostro studio medico\n\nGentile Dottore/Dottoressa,\n\nLa gestione di un studio medico richiede tempo e precisione. La nostra piattaforma offre:\n\n✅ Prenotazione visite online con calendario smart\n✅ Cartella paziente digitale (GDPR compliant)\n✅ Telemedicina integrata\n✅ Promemoria automatici per follow-up\n\nGli studi che usano la nostra app riducono le chiamate del 70% e migliorano la soddisfazione dei pazienti.\n\nPosso mostrarle una demo in 10 minuti?`,
-    pitch: `"I vostri pazienti meritano un'esperienza moderna. Prenotazioni online, referti digitali e telemedicina — tutto sicuro, conforme al GDPR e personalizzato con la vostra identità."`,
+    dm: `Ciao! 🏥 Gestite uno studio medico?\n\nQuante ore al giorno passa la segretaria al telefono per prenotazioni? Con la nostra app i pazienti prenotano online, ricevono referti e comunicano in modo sicuro.\n\n-70% chiamate, +30% soddisfazione pazienti. Vi interessa? 👨‍⚕️`,
+    whatsapp: `Buongiorno! Sono [TUO NOME].\n\nProposta per [NOME]: un'app GDPR compliant dove i pazienti prenotano visite, ricevono referti e comunicano con voi in modo sicuro.\n\n🏥 -70% chiamate, -50% no-show.\n\nPosso mostrarvi la demo?`,
+    email: `Oggetto: [NOME] — Meno code, più efficienza (GDPR compliant)\n\nGentile Dottore/Dottoressa,\n\nLa segretaria passa 4+ ore al giorno al telefono. Ogni chiamata = 3-5 minuti. Il 30% dei pazienti non riesce a prenotare.\n\nLa nostra piattaforma:\n\n✅ Prenotazione visite online 24/7\n✅ Cartella paziente digitale (GDPR compliant)\n✅ Telemedicina integrata\n✅ Promemoria automatici\n\n💰 Da €99/mese — si ripaga liberando ore della segretaria.\n\nDemo in 10 minuti?`,
+    pitch: `APERTURA: "Quanto tempo passa la segretaria al telefono ogni giorno?"\n\nPROBLEMA: "In media 4 ore. Il 30% dei pazienti non riesce a prenotare perché trova occupato."\n\nSOLUZIONE: "I pazienti prenotano dall'app, ricevono promemoria, e i referti arrivano digitali. La segretaria è libera per attività a valore."\n\nCHIUSURA: "€99/mese. GDPR compliant. Attivabile in 48 ore."`,
+    objections: [
+      "\"I miei pazienti sono anziani\" → \"L'app è semplicissima, grandi pulsanti. E chi chiama continua a chiamare — l'app serve per il 60% che preferisce prenotare online.\"",
+    ],
   },
   hotel: {
-    dm: `Ciao! 🏨 Il vostro hotel ha un'atmosfera incredibile! Sapevate che con un'app personalizzata gli ospiti possono fare check-in digitale, ordinare room service e prenotare esperienze? Più comfort per loro, più revenue per voi. Demo? ⭐`,
-    email: `Oggetto: Esperienza ospiti premium — App per il vostro hotel\n\nGentili,\n\nGli ospiti moderni si aspettano un'esperienza digitale. La nostra piattaforma offre:\n\n✅ Check-in/check-out digitale\n✅ Room service e concierge in-app\n✅ Prenotazione spa, ristorante, escursioni\n✅ Comunicazione diretta con lo staff\n\nGli hotel che usano la nostra app vedono +25% di revenue da servizi ancillari e recensioni migliori.\n\nPosso mostrarvi una demo personalizzata?`,
-    pitch: `"I vostri ospiti vogliono un'esperienza seamless. Con la nostra app hanno tutto a portata di mano: check-in, room service, spa — tutto brandizzato con il vostro stile luxury."`,
+    dm: `Ciao [NOME]! 🏨 Il vostro hotel è splendido!\n\nSapevate che il 40% del revenue extra (spa, ristorante, escursioni) si perde perché gli ospiti non sanno cosa offrite?\n\nCon un'app personalizzata recuperate tutto. Vi mostro? ⭐`,
+    whatsapp: `Buongiorno! Sono [TUO NOME].\n\nProposta per [NOME]: un'app dove gli ospiti fanno check-in digitale, ordinano room service e prenotano esperienze.\n\n🏨 +25% revenue da servizi ancillari.\n\nVi mando la demo?`,
+    email: `Oggetto: [NOME] — +25% revenue da servizi ancillari\n\nGentili,\n\nIl 40% del revenue da servizi extra si perde perché gli ospiti non sanno cosa offrite.\n\nLa nostra app:\n\n✅ Check-in/check-out digitale\n✅ Room service e concierge in-app\n✅ Prenotazione spa, ristorante, escursioni\n✅ Comunicazione diretta con lo staff\n\n💰 Da €149/mese — si ripaga con 3-4 room service in più.\n\nDemo personalizzata in 15 minuti?`,
+    pitch: `APERTURA: "Quale percentuale dei vostri ospiti usa il room service o prenota la spa?"\n\nPROBLEMA: "In media il 20-30%. Il resto non sa cosa offrite o non vuole chiamare la reception."\n\nSOLUZIONE: "Con l'app vedono tutto: room service, spa, escursioni. Prenotano con un tocco. Revenue ancillari +25%."\n\nCHIUSURA: "€149/mese. Con 3-4 room service in più siete già in positivo."`,
+    objections: [
+      "\"Abbiamo già un booking engine\" → \"Non è un booking engine, è un concierge digitale per CHI È GIÀ IN HOTEL. Complementa il vostro sistema.\"",
+    ],
   },
 };
 
-// Fallback template for sectors without specific content
 const DEFAULT_TEMPLATES = {
-  dm: `Ciao! 🤩 Abbiamo notato la vostra attività e siamo rimasti colpiti! Con un'app personalizzata potete gestire prenotazioni, clienti e pagamenti in modo smart. I vostri clienti vi trovano, prenotano e pagano tutto dal telefono. Vi mostro un esempio reale? 👉`,
-  email: `Oggetto: La vostra app personalizzata — Più clienti, meno stress\n\nBuongiorno,\n\nSappiamo quanto è impegnativo gestire un'attività tra chiamate, prenotazioni e amministrazione. La nostra piattaforma vi offre:\n\n✅ Prenotazioni online 24/7\n✅ Gestione clienti e CRM integrato\n✅ Pagamenti digitali e fatturazione\n✅ Marketing automatizzato\n\nLe attività che usano la nostra app vedono in media +40% di prenotazioni e -50% di tempo amministrativo.\n\nPosso mostrarvi una demo gratuita in 10 minuti?`,
-  pitch: `"La vostra attività merita un'app che lavori per voi 24/7. Prenotazioni automatiche, gestione clienti smart e marketing integrato — tutto personalizzato con il vostro brand."`,
+  dm: `Ciao [NOME]! 🤩 Ho notato la vostra attività — complimenti!\n\nDomanda veloce: quanto tempo perdete ogni giorno in prenotazioni telefoniche e gestione manuale?\n\nAbbiamo un'app personalizzata con il VOSTRO brand che automatizza tutto. Vi mostro in 2 minuti? 👉`,
+  whatsapp: `Buongiorno! Sono [TUO NOME] di Empire.\n\n[NOME] potrebbe beneficiare enormemente della nostra piattaforma: un'app brandizzata dove i clienti prenotano 24/7, pagano online, e voi gestite tutto da un pannello.\n\n📈 +40% prenotazioni, -50% tempo amministrativo.\n\nVi mando il link della demo?`,
+  email: `Oggetto: [NOME] — Più clienti, meno stress (proposta riservata)\n\nBuongiorno,\n\nMi chiamo [TUO NOME] e aiuto attività come la vostra a crescere con la tecnologia.\n\nI vostri potenziali clienti:\n\n❌ Chiamano e trovano occupato → prenotazione persa\n❌ Non vi trovano facilmente online → vanno dalla concorrenza\n❌ Non tornano → nessun sistema di fidelizzazione\n\nLa nostra piattaforma risolve tutto:\n\n✅ App personalizzata con il VOSTRO brand\n✅ Prenotazioni online 24/7\n✅ Gestione clienti e CRM integrato\n✅ Marketing automatizzato\n\n💰 Da €79/mese — si ripaga con 2 clienti in più al mese.\n\nDemo gratuita in 10 minuti?`,
+  pitch: `APERTURA: "Buongiorno! Non vendo pubblicità. Una domanda: quanti clienti perdete ogni mese perché non riescono a contattarvi?"\n\nPROBLEMA: "Il 40% dei potenziali clienti non riesce a prenotare al primo tentativo. Ognuno vale €50-100."\n\nSOLUZIONE: "Noi creiamo un'app con il VOSTRO brand dove i clienti prenotano 24/7, pagano online, e voi gestite tutto da un pannello."\n\nCHIUSURA: "€79/mese. Si ripaga con 2 clienti in più. Possiamo attivarlo questa settimana."`,
+  objections: [
+    "\"Costa troppo\" → \"€79/mese sono meno di una cena. In media le attività recuperano €800-1.200/mese di prenotazioni perse.\"",
+    "\"Non ho tempo per imparare\" → \"Il setup lo facciamo noi in 24 ore. L'app è intuitiva come WhatsApp.\"",
+    "\"Devo pensarci\" → \"Capisco! Vi lascio il link alla demo gratuita — provatela con calma, zero impegno. La richiamo tra 2 giorni?\"",
+  ],
 };
 
 /* ═══════════════════════════════════════════
@@ -143,10 +178,18 @@ const PartnerDashboard = () => {
   
   const currentTemplate = activeChannel === "email" ? currentTemplates.email
     : activeChannel === "field" ? currentTemplates.pitch
+    : activeChannel === "whatsapp" ? (currentTemplates as any).whatsapp || DEFAULT_TEMPLATES.whatsapp
+    : activeChannel === "site" ? ""
     : currentTemplates.dm;
+
+  const currentObjections = activeChannel === "field"
+    ? ((currentTemplates as any).objections || DEFAULT_TEMPLATES.objections || [])
+    : [];
 
   const templateLabel = activeChannel === "email" ? "TEMPLATE EMAIL"
     : activeChannel === "field" ? "PITCH SCRIPT"
+    : activeChannel === "whatsapp" ? "TEMPLATE WHATSAPP"
+    : activeChannel === "site" ? "LINK SITO"
     : "TEMPLATE DM";
 
   const handleResetDemo = async () => {
@@ -433,19 +476,19 @@ const PartnerDashboard = () => {
         {/* ═══════ CANALE DI ACQUISIZIONE ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-8">
           <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>Canale di Acquisizione</h3>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
             {ACQUISITION_CHANNELS.map(ch => {
               const isActive = activeChannel === ch.id;
               return (
                 <motion.button key={ch.id} onClick={() => setActiveChannel(ch.id)} whileTap={{ scale: 0.97 }}
-                  className="p-4 rounded-xl text-left transition-all relative overflow-hidden"
+                  className="flex-shrink-0 p-3 sm:p-4 rounded-xl text-left transition-all relative overflow-hidden min-w-[90px] sm:min-w-[130px]"
                   style={{
-                    background: isActive ? "rgba(167,139,250,0.12)" : "rgba(255,255,255,0.03)",
-                    border: `1px solid ${isActive ? "rgba(167,139,250,0.35)" : "rgba(255,255,255,0.06)"}`,
+                    background: isActive ? `${ch.color}18` : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${isActive ? `${ch.color}50` : "rgba(255,255,255,0.06)"}`,
                   }}>
-                  <ch.icon className="w-5 h-5 mb-3" style={{ color: isActive ? "#a78bfa" : "#6b7280" }} />
-                  <p className="text-sm font-semibold" style={{ color: isActive ? "#ffffff" : "#d1d5db" }}>{ch.label}</p>
-                  <p className="text-[10px] mt-1 line-clamp-2" style={{ color: "#9ca3af" }}>{ch.desc}</p>
+                  <ch.icon className="w-5 h-5 mb-2" style={{ color: isActive ? ch.color : "#6b7280" }} />
+                  <p className="text-[11px] font-semibold" style={{ color: isActive ? "#ffffff" : "#d1d5db" }}>{ch.label}</p>
+                  {isActive && <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: ch.color }} />}
                 </motion.button>
               );
             })}
@@ -456,7 +499,7 @@ const PartnerDashboard = () => {
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
           <div className="p-5 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
             <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>
-              Seleziona Progetto {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
+              Seleziona Settore {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
             </h3>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 max-h-[320px] overflow-y-auto pr-1">
               {SECTOR_CARDS.map(card => {
@@ -488,33 +531,115 @@ const PartnerDashboard = () => {
           </div>
         </section>
 
-        {/* ═══════ DYNAMIC TEMPLATE (changes with channel + sector) ═══════ */}
+        {/* ═══════ TEMPLATE / SITE LINK ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#9ca3af" }}>
-              {templateLabel} {selectedProjectName && <span style={{ color: "#a78bfa" }}>· {selectedProjectName}</span>}
-            </p>
-          </div>
-          <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-white">{templateLabel}</span>
-                <span className="text-xs">🇮🇹</span>
+          {activeChannel === "site" ? (
+            <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.15)" }}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(16,185,129,0.15)" }}>
+                  <Link2 className="w-5 h-5" style={{ color: "#34d399" }} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-white">Link Demo Diretto</p>
+                  <p className="text-[10px]" style={{ color: "#9ca3af" }}>Condividi al cliente per fargli provare la demo</p>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <button onClick={handleCopyTemplate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all"
-                  style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-                  <Copy className="w-3 h-3" style={{ color: "#a78bfa" }} />
-                  <span className="text-white">Copia</span>
-                </button>
-                <button onClick={() => toast({ title: "✨ Template rigenerato!" })} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all"
-                  style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-                  <RefreshCw className="w-3 h-3" style={{ color: "#a78bfa" }} />
-                  <span className="text-white">Rigenera</span>
-                </button>
-              </div>
+              {selectedProject ? (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                    <p className="text-[10px] mb-1 font-medium" style={{ color: "#6b7280" }}>Link Sito Demo:</p>
+                    <p className="text-xs font-mono break-all select-all" style={{ color: "#34d399" }}>{window.location.origin}/demo/{selectedProject}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/demo/${selectedProject}`); toast({ title: "✅ Link Sito copiato!" }); }}
+                      className="py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", color: "#34d399" }}>
+                      <Copy className="w-3.5 h-3.5" /> Copia Link Sito
+                    </motion.button>
+                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/demo/${selectedProject}/admin`); toast({ title: "✅ Link Admin copiato!" }); }}
+                      className="py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.3)", color: "#a78bfa" }}>
+                      <Copy className="w-3.5 h-3.5" /> Copia Link Admin
+                    </motion.button>
+                  </div>
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={() => {
+                    const text = `Ciao! 👋 Ecco la demo del tuo sito personalizzato:\n\n🌐 Sito: ${window.location.origin}/demo/${selectedProject}\n⚙️ Admin: ${window.location.origin}/demo/${selectedProject}/admin\n\nProvalo gratis, nessun impegno!`;
+                    navigator.clipboard.writeText(text); toast({ title: "✅ Messaggio + link copiato!" });
+                  }} className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "#7c3aed", color: "#ffffff" }}>
+                    <Send className="w-3.5 h-3.5" /> Copia Messaggio con Link
+                  </motion.button>
+                </div>
+              ) : (
+                <p className="text-[10px] text-center py-3 rounded-lg" style={{ background: "rgba(245,158,11,0.08)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.15)" }}>☝️ Seleziona un settore sopra per generare i link demo</p>
+              )}
             </div>
-            <div className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "#d1d5db" }}>
+          ) : (
+            <div className="space-y-4">
+              <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-white">{templateLabel}</span>
+                    {selectedProjectName && <span className="px-2 py-0.5 rounded text-[9px] font-semibold" style={{ background: "rgba(167,139,250,0.15)", color: "#a78bfa" }}>{selectedProjectName}</span>}
+                  </div>
+                  <button onClick={handleCopyTemplate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
+                    <Copy className="w-3 h-3" style={{ color: "#a78bfa" }} /><span className="text-white">Copia</span>
+                  </button>
+                </div>
+                <div className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "#d1d5db" }}>
+                  {currentTemplate.split(/(\[(?:NOME|TUO NOME)\])/).map((part: string, i: number) =>
+                    part.match(/\[(?:NOME|TUO NOME)\]/) ? (
+                      <span key={i} className="px-1 py-0.5 rounded font-bold" style={{ background: "rgba(167,139,250,0.2)", color: "#c4b5fd" }}>{part}</span>
+                    ) : part
+                  )}
+                </div>
+                <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Sostituisci [NOME] con il nome dell'attività e [TUO NOME] con il tuo nome</p>
+                {!selectedProject && (
+                  <p className="text-[10px] text-center py-2 rounded-lg" style={{ background: "rgba(245,158,11,0.08)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.15)" }}>💡 Seleziona un settore sopra per template personalizzati</p>
+                )}
+                <div className="flex flex-wrap gap-2 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                  {activeChannel === "instagram" && (
+                    <motion.a whileTap={{ scale: 0.97 }} href="https://www.instagram.com/direct/inbox/" target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>
+                      <Instagram className="w-4 h-4" /> Apri Instagram DM
+                    </motion.a>
+                  )}
+                  {activeChannel === "whatsapp" && (
+                    <motion.a whileTap={{ scale: 0.97 }} href="https://wa.me/" target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#25D366", color: "#fff" }}>
+                      <MessageCircle className="w-4 h-4" /> Apri WhatsApp
+                    </motion.a>
+                  )}
+                  {activeChannel === "email" && (
+                    <motion.a whileTap={{ scale: 0.97 }} href={`mailto:?subject=${encodeURIComponent(currentTemplate.split('\n')[0].replace('Oggetto: ', ''))}`}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#3B82F6", color: "#fff" }}>
+                      <Mail className="w-4 h-4" /> Componi Email
+                    </motion.a>
+                  )}
+                  {activeChannel === "field" && selectedProject && (
+                    <motion.a whileTap={{ scale: 0.97 }} href={`/demo/${selectedProject}`} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#F59E0B", color: "#000" }}>
+                      <Smartphone className="w-4 h-4" /> Apri Demo
+                    </motion.a>
+                  )}
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={handleCopyTemplate}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#d1d5db" }}>
+                    <Copy className="w-4 h-4" /> Copia Testo
+                  </motion.button>
+                </div>
+              </div>
+              {activeChannel === "field" && currentObjections.length > 0 && (
+                <div className="p-5 rounded-2xl space-y-3" style={{ background: "rgba(245,158,11,0.04)", border: "1px solid rgba(245,158,11,0.12)" }}>
+                  <div className="flex items-center gap-2">
+                    <Wand2 className="w-4 h-4" style={{ color: "#f59e0b" }} />
+                    <p className="text-xs font-bold text-white">Gestione Obiezioni</p>
+                  </div>
+                  <div className="space-y-2">
+                    {currentObjections.map((obj: string, i: number) => (
+                      <div key={i} className="p-3 rounded-xl text-[11px] leading-relaxed" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", color: "#d1d5db" }}>{obj}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
               {currentTemplate}
             </div>
             {!selectedProject && (
