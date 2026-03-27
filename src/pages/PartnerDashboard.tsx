@@ -458,8 +458,8 @@ const PartnerDashboard = () => {
             <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>
               Seleziona Progetto {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
             </h3>
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 max-h-[260px] overflow-y-auto pr-1">
-              {SECTOR_CARDS.slice(0, 10).map(card => {
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 max-h-[320px] overflow-y-auto pr-1">
+              {SECTOR_CARDS.map(card => {
                 const isSelected = selectedProject === card.id;
                 return (
                   <motion.button key={card.id} onClick={() => setSelectedProject(isSelected ? null : card.id)} whileTap={{ scale: 0.95 }}
@@ -478,7 +478,7 @@ const PartnerDashboard = () => {
                       </div>
                     )}
                     <span className="text-[10px] font-semibold text-center leading-tight" style={{ color: isSelected ? "#ffffff" : "#d1d5db" }}>
-                      {card.name.split(" ")[0]}
+                      {card.name.split("&")[0].trim().split(" ")[0]}
                     </span>
                     {isSelected && <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#a78bfa" }} />}
                   </motion.button>
@@ -525,81 +525,133 @@ const PartnerDashboard = () => {
           </div>
         </section>
 
-        {/* ═══════ DEMO RESTAURANT SECTION ═══════ */}
-        {demoRestaurant && !demoMode && (
+        {/* ═══════ DEMO PERSONALIZZATA — UNIVERSALE ═══════ */}
+        {!demoMode && (
           <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
-            <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div className="p-5 rounded-2xl space-y-5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  {demoRestaurant.logo_url ? <img src={demoRestaurant.logo_url} alt="" className="w-10 h-10 rounded-xl object-cover" style={{ border: "1px solid rgba(255,255,255,0.1)" }} /> :
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(167,139,250,0.1)" }}><ChefHat className="w-5 h-5" style={{ color: "#a78bfa" }} /></div>}
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: selectedProject ? `${PORTFOLIO_PROJECTS[selectedProject as keyof typeof PORTFOLIO_PROJECTS]?.accent || "#a78bfa"}15` : "rgba(167,139,250,0.1)" }}>
+                    <Sparkles className="w-5 h-5" style={{ color: selectedProject ? (PORTFOLIO_PROJECTS[selectedProject as keyof typeof PORTFOLIO_PROJECTS]?.accent || "#a78bfa") : "#a78bfa" }} />
+                  </div>
                   <div>
-                    <h3 className="text-sm font-bold text-white">{demoRestaurant.name}</h3>
-                    <p className="text-[10px]" style={{ color: "#9ca3af" }}>Demo Ristorante · Personalizzabile</p>
+                    <h3 className="text-sm font-bold text-white">Demo Personalizzata</h3>
+                    <p className="text-[10px]" style={{ color: "#9ca3af" }}>
+                      {selectedProject ? `Settore: ${selectedProjectName}` : "Seleziona un settore sopra"} · Pronta da mostrare
+                    </p>
                   </div>
                 </div>
-                <div className="flex gap-1.5">
-                  <button onClick={() => setEditingDemo(!editingDemo)} className="p-2 rounded-lg transition-colors" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                    {editingDemo ? <XIcon className="w-3.5 h-3.5" style={{ color: "#9ca3af" }} /> : <Pencil className="w-3.5 h-3.5" style={{ color: "#9ca3af" }} />}
-                  </button>
-                  <button onClick={() => setShowResetConfirm(true)} disabled={resettingDemo} className="p-2 rounded-lg transition-colors" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <RefreshCw className={`w-3.5 h-3.5 ${resettingDemo ? "animate-spin" : ""}`} style={{ color: "#9ca3af" }} />
-                  </button>
-                </div>
+                <button onClick={() => setEditingDemo(!editingDemo)} className="p-2 rounded-lg transition-colors" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  {editingDemo ? <XIcon className="w-3.5 h-3.5" style={{ color: "#9ca3af" }} /> : <Pencil className="w-3.5 h-3.5" style={{ color: "#9ca3af" }} />}
+                </button>
               </div>
+
+              {/* Customization panel */}
               <AnimatePresence>
                 {editingDemo && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
                     <div className="p-4 rounded-xl space-y-3" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                      <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: "#a78bfa" }}>
+                        Personalizza per il cliente
+                      </p>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-medium" style={{ color: "#9ca3af" }}>Nome</label>
+                        <label className="text-[10px] font-medium" style={{ color: "#9ca3af" }}>Nome Attività del Cliente</label>
                         <input type="text" value={editName} onChange={e => setEditName(e.target.value)}
+                          placeholder="Es: Ristorante Da Mario, Salone Bella, NCC Luxury..."
                           className="w-full px-3 py-2 rounded-lg text-sm bg-white !text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400/30" />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-medium" style={{ color: "#9ca3af" }}>Colore</label>
-                        <div className="flex items-center gap-2">
+                        <label className="text-[10px] font-medium" style={{ color: "#9ca3af" }}>Colori Brand</label>
+                        <div className="flex items-center gap-2 flex-wrap">
                           <input type="color" value={editColor} onChange={e => setEditColor(e.target.value)} className="w-8 h-8 rounded-lg cursor-pointer bg-transparent" style={{ border: "1px solid rgba(255,255,255,0.15)" }} />
-                          {["#C8963E", "#1A1A2E", "#E74C3C", "#2ECC71", "#3498DB", "#8E44AD"].map(c => (
+                          {["#C8963E", "#1A1A2E", "#E74C3C", "#2ECC71", "#3498DB", "#8E44AD", "#ec4899", "#f97316"].map(c => (
                             <button key={c} onClick={() => setEditColor(c)} className={`w-6 h-6 rounded-lg transition-all ${editColor === c ? "scale-110 ring-2 ring-white" : ""}`} style={{ backgroundColor: c, border: editColor === c ? "2px solid white" : "2px solid transparent" }} />
                           ))}
                         </div>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-medium" style={{ color: "#9ca3af" }}>Logo</label>
+                        <label className="text-[10px] font-medium" style={{ color: "#9ca3af" }}>Logo del Cliente</label>
                         <input type="file" accept="image/*" ref={logoFileRef} onChange={handleUploadLogo} className="hidden" />
                         <button onClick={() => logoFileRef.current?.click()} disabled={uploadingLogo}
                           className="w-full flex items-center justify-center gap-2 p-2.5 rounded-lg border border-dashed text-xs"
                           style={{ borderColor: "rgba(255,255,255,0.15)", color: "#d1d5db" }}>
                           <Upload className={`w-3.5 h-3.5 ${uploadingLogo ? "animate-pulse" : ""}`} />
-                          {uploadingLogo ? "Caricamento..." : "Carica Logo"}
+                          {uploadingLogo ? "Caricamento..." : "Carica Logo Cliente"}
                         </button>
                       </div>
-                      <button onClick={handleSaveDemoCustomization} disabled={savingDemo}
-                        className="w-full py-2.5 rounded-xl font-semibold text-xs disabled:opacity-50 flex items-center justify-center gap-2"
-                        style={{ background: "#7c3aed", color: "#ffffff" }}>
-                        <Save className={`w-3.5 h-3.5 ${savingDemo ? "animate-spin" : ""}`} />
-                        {savingDemo ? "Salvataggio..." : "Salva"}
-                      </button>
+                      {demoRestaurant && (
+                        <button onClick={handleSaveDemoCustomization} disabled={savingDemo}
+                          className="w-full py-2.5 rounded-xl font-semibold text-xs disabled:opacity-50 flex items-center justify-center gap-2"
+                          style={{ background: "#7c3aed", color: "#ffffff" }}>
+                          <Save className={`w-3.5 h-3.5 ${savingDemo ? "animate-spin" : ""}`} />
+                          {savingDemo ? "Salvataggio..." : "Salva Personalizzazione"}
+                        </button>
+                      )}
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { label: "Cliente", emoji: "👤", href: `/r/${demoRestaurant.slug}` },
-                  { label: "Admin", emoji: "⚙️", href: `/r/${demoRestaurant.slug}?view=admin` },
-                  { label: "Cucina", emoji: "👨‍🍳", href: `/kitchen` },
-                ].map((link, i) => (
-                  <a key={i} href={link.href} target="_blank" rel="noopener noreferrer"
-                    className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all text-center"
-                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <span className="text-lg">{link.emoji}</span>
-                    <span className="text-[10px] font-semibold text-white">{link.label}</span>
-                  </a>
-                ))}
+
+              {/* Action buttons — universal for any sector */}
+              <div className="grid grid-cols-2 gap-3">
+                <a href={selectedProject ? `/demo/${selectedProject}` : "#"}
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={e => { if (!selectedProject) { e.preventDefault(); toast({ title: "Seleziona un settore", description: "Scegli un progetto dal catalogo sopra per aprire la demo." }); }}}
+                  className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all text-center group"
+                  style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(16,185,129,0.15)" }}>
+                    <Globe className="w-5 h-5" style={{ color: "#34d399" }} />
+                  </div>
+                  <span className="text-xs font-bold text-white">Sito Cliente</span>
+                  <span className="text-[9px]" style={{ color: "#6b7280" }}>Mostra al cliente come appare</span>
+                </a>
+                <a href={selectedProject ? `/demo/${selectedProject}/admin` : "#"}
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={e => { if (!selectedProject) { e.preventDefault(); toast({ title: "Seleziona un settore", description: "Scegli un progetto dal catalogo sopra per aprire l'admin." }); }}}
+                  className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all text-center group"
+                  style={{ background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.15)" }}>
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(167,139,250,0.15)" }}>
+                    <LayoutDashboard className="w-5 h-5" style={{ color: "#a78bfa" }} />
+                  </div>
+                  <span className="text-xs font-bold text-white">Dashboard Admin</span>
+                  <span className="text-[9px]" style={{ color: "#6b7280" }}>Mostra le funzionalità</span>
+                </a>
               </div>
-              <p className="text-[9px] text-center" style={{ color: "#6b7280" }}>PIN Cucina: <span className="font-mono font-bold text-white">1234</span></p>
+
+              {/* Food demo restaurant quick links */}
+              {demoRestaurant && selectedProject === "food" && (
+                <div className="space-y-2">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "#d4af37" }}>🍽️ Demo Ristorante Personalizzata</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { label: "Cliente", emoji: "👤", href: `/r/${demoRestaurant.slug}` },
+                      { label: "Admin", emoji: "⚙️", href: `/r/${demoRestaurant.slug}?view=admin` },
+                      { label: "Cucina", emoji: "👨‍🍳", href: `/kitchen` },
+                    ].map((link, i) => (
+                      <a key={i} href={link.href} target="_blank" rel="noopener noreferrer"
+                        className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all text-center"
+                        style={{ background: "rgba(212,175,55,0.06)", border: "1px solid rgba(212,175,55,0.15)" }}>
+                        <span className="text-lg">{link.emoji}</span>
+                        <span className="text-[10px] font-semibold text-white">{link.label}</span>
+                      </a>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[9px]" style={{ color: "#6b7280" }}>PIN Cucina: <span className="font-mono font-bold text-white">1234</span></p>
+                    <button onClick={() => setShowResetConfirm(true)} disabled={resettingDemo}
+                      className="flex items-center gap-1 text-[9px] font-medium px-2 py-1 rounded-lg"
+                      style={{ background: "rgba(255,255,255,0.05)", color: "#9ca3af" }}>
+                      <RefreshCw className={`w-3 h-3 ${resettingDemo ? "animate-spin" : ""}`} /> Reset Demo
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {!selectedProject && (
+                <p className="text-[10px] text-center py-2 rounded-lg" style={{ background: "rgba(245,158,11,0.06)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.12)" }}>
+                  ☝️ Seleziona un settore dal catalogo per attivare la demo personalizzata
+                </p>
+              )}
             </div>
           </section>
         )}
