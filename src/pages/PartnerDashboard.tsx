@@ -637,7 +637,7 @@ const PartnerDashboard = () => {
                     </motion.a>
                   )}
                   {activeChannel === "field" && selectedProject && (
-                    <motion.a whileTap={{ scale: 0.97 }} href={`/demo/${selectedProject}`} target="_blank" rel="noopener noreferrer"
+                    <motion.a whileTap={{ scale: 0.97 }} href={getDemoSiteUrl(selectedProject)} target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#F59E0B", color: "#000" }}>
                       <Smartphone className="w-4 h-4" /> Apri Demo
                     </motion.a>
