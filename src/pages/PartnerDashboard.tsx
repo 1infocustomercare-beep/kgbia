@@ -185,8 +185,11 @@ const PartnerDashboard = () => {
   const [targetIg, setTargetIg] = useState("");
   const [targetWebsite, setTargetWebsite] = useState("");
   const [messageVariant, setMessageVariant] = useState(0);
-  const [agencyEmail] = useState("info@empireai.agency");
+  const [agencyEmail, setAgencyEmail] = useState("info@empireaigroup.com");
+  const [agencyPhone, setAgencyPhone] = useState("");
   const [useNames, setUseNames] = useState(false);
+  const [scanningProspect, setScanningProspect] = useState(false);
+  const [aiGeneratedMessage, setAiGeneratedMessage] = useState<string | null>(null);
 
   // Persist demoMode
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
@@ -209,6 +212,35 @@ const PartnerDashboard = () => {
   const igMention = targetIg ? `@${targetIg.replace("@", "")}` : "";
   const siteMention = targetWebsite || "";
   const hasAnalysis = !!(targetIg || targetWebsite);
+  const contactInfo = agencyPhone ? `📞 ${agencyPhone}` : `📩 ${agencyEmail}`;
+
+  // AI scan function
+  const handleScanProspect = async () => {
+    if (!targetIg && !targetWebsite) {
+      toast({ title: "Inserisci un profilo", description: "Inserisci l'Instagram o il sito web del prospect.", variant: "destructive" });
+      return;
+    }
+    setScanningProspect(true);
+    setAiGeneratedMessage(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("scan-prospect", {
+        body: { instagram: targetIg, website: targetWebsite, sector: sectorLabel },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      let msg = data.message || "";
+      // Replace placeholders
+      msg = msg.replace(/\{\{DEMO_LINK\}\}/g, demoLink);
+      msg = msg.replace(/\{\{CONTACT_INFO\}\}/g, contactInfo);
+      setAiGeneratedMessage(msg);
+      toast({ title: "🤖 Messaggio AI generato!", description: "Messaggio ultra-personalizzato pronto." });
+    } catch (err: any) {
+      console.error("Scan error:", err);
+      toast({ title: "Errore scansione", description: err.message || "Riprova.", variant: "destructive" });
+    } finally {
+      setScanningProspect(false);
+    }
+  };
 
   // Smart prefix that injects IG/website context into any template
   const analysisPrefix = (() => {
@@ -224,37 +256,41 @@ const PartnerDashboard = () => {
     : DEFAULT_TEMPLATES;
 
   const DM_VARIANTS = [
+    ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
     hasAnalysis
-      ? `Ciao [NOME]! 👋 ${analysisPrefix}Complimenti per quello che fate nel ${sectorLabel}!\n\n${currentTemplates.dm.split('\n\n').slice(1).join('\n\n')}\n\n🎯 Ecco una demo del vostro settore: ${demoLink}\n📩 Per info: ${agencyEmail}`
+      ? `Ciao [NOME]! 👋 ${analysisPrefix}Complimenti per quello che fate nel ${sectorLabel}!\n\n${currentTemplates.dm.split('\n\n').slice(1).join('\n\n')}\n\n🎯 Ecco una demo del vostro settore: ${demoLink}\n${contactInfo}`
       : currentTemplates.dm,
-    `Ciao [NOME]! 👋 ${igMention ? `Ho appena visto il profilo ${igMention} — ` : ""}Lavorate nel settore ${sectorLabel}${siteMention ? ` e ho dato un'occhiata al vostro sito (${siteMention})` : ""}.\n\nHo una domanda: state usando qualche strumento digitale per gestire prenotazioni e clienti?\n\nAbbiamo creato qualcosa di specifico per ${sectorLabel} che vi farebbe risparmiare ore ogni giorno. Ecco una demo gratuita: ${demoLink}\n\n📩 Per info: ${agencyEmail}`,
-    `Hey [NOME]! 🔥 ${igMention ? `Seguo ${igMention} da un po' — ` : ""}Complimenti per quello che fate!\n\nVi faccio una proposta diretta: ho un'app personalizzata per ${sectorLabel} che automatizza prenotazioni, pagamenti e fidelizzazione clienti.\n\n🎯 Guardate questa demo creata per il vostro settore: ${demoLink}\n\nSe vi interessa, scrivetemi o mandate una mail a ${agencyEmail} — vi mostro tutto in 5 minuti!`,
+    `Ciao [NOME]! 👋 ${igMention ? `Ho appena visto il profilo ${igMention} — ` : ""}Lavorate nel settore ${sectorLabel}${siteMention ? ` e ho dato un'occhiata al vostro sito (${siteMention})` : ""}.\n\nHo una domanda: state usando qualche strumento digitale per gestire prenotazioni e clienti?\n\nAbbiamo creato qualcosa di specifico per ${sectorLabel} che vi farebbe risparmiare ore ogni giorno. Ecco una demo gratuita: ${demoLink}\n\n${contactInfo}`,
+    `Hey [NOME]! 🔥 ${igMention ? `Seguo ${igMention} da un po' — ` : ""}Complimenti per quello che fate!\n\nVi faccio una proposta diretta: ho un'app personalizzata per ${sectorLabel} che automatizza prenotazioni, pagamenti e fidelizzazione clienti.\n\n🎯 Guardate questa demo creata per il vostro settore: ${demoLink}\n\nSe vi interessa, scrivetemi — ${contactInfo}. Vi mostro tutto in 5 minuti!`,
   ];
   const WA_VARIANTS = [
+    ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
     hasAnalysis
-      ? `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${analysisPrefix}${(currentTemplates as any).whatsapp?.split('\n\n').slice(1).join('\n\n') || DEFAULT_TEMPLATES.whatsapp.split('\n\n').slice(1).join('\n\n')}\n\n👉 Demo: ${demoLink}\n📩 Info: ${agencyEmail}`
+      ? `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${analysisPrefix}${(currentTemplates as any).whatsapp?.split('\n\n').slice(1).join('\n\n') || DEFAULT_TEMPLATES.whatsapp.split('\n\n').slice(1).join('\n\n')}\n\n👉 Demo: ${demoLink}\n${contactInfo}`
       : ((currentTemplates as any).whatsapp || DEFAULT_TEMPLATES.whatsapp),
-    `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${siteMention ? `Ho visitato il vostro sito (${siteMention}) e ` : ""}Ho una proposta specifica per [NOME] nel settore ${sectorLabel}.\n\n🚀 Abbiamo un'app personalizzata con il VOSTRO brand che include:\n• Prenotazioni 24/7 automatiche\n• Gestione clienti e CRM\n• Marketing automatizzato\n\n👉 Provate la demo: ${demoLink}\n\n📩 Info: ${agencyEmail}\n\nPosso mostrarvi tutto in 2 minuti?`,
-    `Ciao! Sono [TUO NOME]. Vi contatto perché lavoriamo con diverse realtà nel ${sectorLabel}.\n\n${igMention ? `Ho visto ${igMention} e credo che ` : ""}[NOME] potrebbe beneficiare enormemente della nostra piattaforma.\n\n✅ Demo gratuita: ${demoLink}\n✅ Contatto: ${agencyEmail}\n\nNessun impegno — date un'occhiata e ditemi cosa ne pensate!`,
+    `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${siteMention ? `Ho visitato il vostro sito (${siteMention}) e ` : ""}Ho una proposta specifica per [NOME] nel settore ${sectorLabel}.\n\n🚀 Abbiamo un'app personalizzata con il VOSTRO brand che include:\n• Prenotazioni 24/7 automatiche\n• Gestione clienti e CRM\n• Marketing automatizzato\n\n👉 Provate la demo: ${demoLink}\n\n${contactInfo}\n\nPosso mostrarvi tutto in 2 minuti?`,
+    `Ciao! Sono [TUO NOME]. Vi contatto perché lavoriamo con diverse realtà nel ${sectorLabel}.\n\n${igMention ? `Ho visto ${igMention} e credo che ` : ""}[NOME] potrebbe beneficiare enormemente della nostra piattaforma.\n\n✅ Demo gratuita: ${demoLink}\n✅ ${contactInfo}\n\nNessun impegno — date un'occhiata e ditemi cosa ne pensate!`,
   ];
   const EMAIL_VARIANTS = [
+    ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
     hasAnalysis
       ? currentTemplates.email.replace(
           /Buongiorno,\n\n/,
           `Buongiorno,\n\n${analysisPrefix.charAt(0).toUpperCase() + analysisPrefix.slice(1)}e volevo presentarvi una proposta.\n\n`
         )
       : currentTemplates.email,
-    `Oggetto: [NOME] — Proposta digitalizzazione ${sectorLabel} (demo inclusa)\n\nBuongiorno,\n\nMi chiamo [TUO NOME] e mi occupo di digitalizzazione per il settore ${sectorLabel}.\n\n${siteMention ? `Ho analizzato il vostro sito (${siteMention}) e ` : ""}Credo che [NOME] stia perdendo opportunità per mancanza di strumenti digitali adeguati.\n\nAbbiamo creato una piattaforma specifica per ${sectorLabel} che include:\n\n✅ App personalizzata con il VOSTRO brand\n✅ Prenotazioni online 24/7\n✅ CRM e gestione clienti automatizzata\n✅ Marketing e fidelizzazione integrati\n\n🎯 Guardate la demo del vostro settore: ${demoLink}\n\n💰 Investimento: da €79/mese — si ripaga in pochi giorni.\n\nPer qualsiasi domanda: ${agencyEmail}\n\nRestiamo a disposizione per una presentazione di 10 minuti.\n\nCordiali saluti,\n[TUO NOME]\nEmpire AI Agency`,
-    `Oggetto: Esclusiva per [NOME] — ${sectorLabel} digitale\n\nGentili,\n\n${siteMention ? `Ho visitato ${siteMention} e ` : ""}Volevo presentarvi una soluzione su misura per ${sectorLabel}.\n\nI numeri parlano chiaro:\n📈 +35% prenotazioni\n⏰ -70% tempo gestione\n💰 ROI dal primo mese\n\n🔗 Demo interattiva: ${demoLink}\n📩 Contatto diretto: ${agencyEmail}\n\nNessun impegno — la demo è gratuita.\n\n[TUO NOME] — Empire AI Agency`,
+    `Oggetto: [NOME] — Proposta digitalizzazione ${sectorLabel} (demo inclusa)\n\nBuongiorno,\n\nMi chiamo [TUO NOME] e mi occupo di digitalizzazione per il settore ${sectorLabel}.\n\n${siteMention ? `Ho analizzato il vostro sito (${siteMention}) e ` : ""}Credo che [NOME] stia perdendo opportunità per mancanza di strumenti digitali adeguati.\n\nAbbiamo creato una piattaforma specifica per ${sectorLabel} che include:\n\n✅ App personalizzata con il VOSTRO brand\n✅ Prenotazioni online 24/7\n✅ CRM e gestione clienti automatizzata\n✅ Marketing e fidelizzazione integrati\n\n🎯 Guardate la demo del vostro settore: ${demoLink}\n\n💰 Investimento: da €79/mese — si ripaga in pochi giorni.\n\n${contactInfo}\n\nRestiamo a disposizione per una presentazione di 10 minuti.\n\nCordiali saluti,\n[TUO NOME]\nEmpire AI Group`,
+    `Oggetto: Esclusiva per [NOME] — ${sectorLabel} digitale\n\nGentili,\n\n${siteMention ? `Ho visitato ${siteMention} e ` : ""}Volevo presentarvi una soluzione su misura per ${sectorLabel}.\n\nI numeri parlano chiaro:\n📈 +35% prenotazioni\n⏰ -70% tempo gestione\n💰 ROI dal primo mese\n\n🔗 Demo interattiva: ${demoLink}\n${contactInfo}\n\nNessun impegno — la demo è gratuita.\n\n[TUO NOME] — Empire AI Group`,
   ];
   const PITCH_VARIANTS = [
+    ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
     hasAnalysis
       ? currentTemplates.pitch.replace(
           /APERTURA: "/,
           `APERTURA: "${analysisPrefix}`
         )
       : currentTemplates.pitch,
-    `APERTURA: "Buongiorno! ${siteMention ? `Ho visto il vostro sito — ` : ""}Una domanda: quanto fatturato perdete ogni mese per inefficienze nella gestione?"\n\nPROBLEMA: "Nel settore ${sectorLabel}, le attività perdono il 30-40% dei potenziali clienti per mancanza di strumenti digitali."\n\nSOLUZIONE: "Noi creiamo un'app con il VOSTRO brand specifica per ${sectorLabel}. I clienti prenotano, pagano e tornano — tutto automatizzato."\n\nDEMO: "Guardate: ${demoLink} — è una demo reale del vostro settore."\n\nCHIUSURA: "Per info complete scriveteci a ${agencyEmail}. Possiamo attivare tutto in 48 ore."`,
+    `APERTURA: "Buongiorno! ${siteMention ? `Ho visto il vostro sito — ` : ""}Una domanda: quanto fatturato perdete ogni mese per inefficienze nella gestione?"\n\nPROBLEMA: "Nel settore ${sectorLabel}, le attività perdono il 30-40% dei potenziali clienti per mancanza di strumenti digitali."\n\nSOLUZIONE: "Noi creiamo un'app con il VOSTRO brand specifica per ${sectorLabel}. I clienti prenotano, pagano e tornano — tutto automatizzato."\n\nDEMO: "Guardate: ${demoLink} — è una demo reale del vostro settore."\n\nCHIUSURA: "${contactInfo}. Possiamo attivare tutto in 48 ore."`,
   ];
 
   const getVariants = () => {
@@ -715,9 +751,28 @@ const PartnerDashboard = () => {
                     />
                   </div>
                 </div>
+                {/* AI Scan Button */}
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleScanProspect}
+                  disabled={scanningProspect || (!targetIg && !targetWebsite)}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold disabled:opacity-40 transition-all"
+                  style={{ background: "linear-gradient(135deg, rgba(129,140,248,0.2), rgba(16,185,129,0.2))", border: "1px solid rgba(129,140,248,0.3)", color: "#a5b4fc" }}
+                >
+                  {scanningProspect ? (
+                    <><RefreshCw className="w-3.5 h-3.5 animate-spin" /> Scansione IA in corso...</>
+                  ) : (
+                    <><Wand2 className="w-3.5 h-3.5" /> 🤖 Scansiona & Genera Messaggio AI</>
+                  )}
+                </motion.button>
+                {aiGeneratedMessage && (
+                  <div className="p-3 rounded-xl text-[10px]" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)", color: "#34d399" }}>
+                    ✅ Messaggio AI personalizzato generato — è la prima variante nei template
+                  </div>
+                )}
                 {hasAnalysis && (
                   <button
-                    onClick={() => { setTargetIg(""); setTargetWebsite(""); }}
+                    onClick={() => { setTargetIg(""); setTargetWebsite(""); setAiGeneratedMessage(null); }}
                     className="text-[9px] font-medium px-2 py-1 rounded-lg transition-all"
                     style={{ background: "rgba(239,68,68,0.08)", color: "#f87171", border: "1px solid rgba(239,68,68,0.15)" }}
                   >
@@ -776,6 +831,28 @@ const PartnerDashboard = () => {
                   <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Seleziona un settore per includere il link demo nel messaggio</p>
                 )}
 
+                {/* Editable contact info */}
+                <div className="space-y-2 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <p className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>Contatto nei messaggi</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3" style={{ color: "#818cf8" }} />
+                      <input type="email" value={agencyEmail} onChange={e => setAgencyEmail(e.target.value)}
+                        placeholder="Email contatto"
+                        className="w-full pl-8 pr-3 py-2 rounded-lg text-[11px] bg-transparent outline-none transition-all"
+                        style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#d1d5db" }} />
+                    </div>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3" style={{ color: "#34d399" }} />
+                      <input type="tel" value={agencyPhone} onChange={e => setAgencyPhone(e.target.value)}
+                        placeholder="Cellulare (opzionale — sostituisce email)"
+                        className="w-full pl-8 pr-3 py-2 rounded-lg text-[11px] bg-transparent outline-none transition-all"
+                        style={{ border: `1px solid ${agencyPhone ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.1)"}`, color: "#d1d5db" }} />
+                    </div>
+                  </div>
+                  <p className="text-[8px]" style={{ color: "#4b5563" }}>{agencyPhone ? "📞 Il numero sarà usato come contatto nei messaggi" : "📩 L'email sarà usata come contatto nei messaggi"}</p>
+                </div>
+
                 {useNames && (
                   <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Sostituisci [NOME] con il nome dell'attività e [TUO NOME] con il tuo nome</p>
                 )}
@@ -794,7 +871,7 @@ const PartnerDashboard = () => {
                     </motion.a>
                   )}
                   {activeChannel === "whatsapp" && (
-                    <motion.a whileTap={{ scale: 0.97 }} href="https://wa.me/" target="_blank" rel="noopener noreferrer"
+                    <motion.a whileTap={{ scale: 0.97 }} href={`https://wa.me/?text=${encodeURIComponent(useNames ? currentTemplate : currentTemplate.replace(/\[NOME\]/g, "").replace(/\[TUO NOME\]/g, "").replace(/  +/g, " ").trim())}`} target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#25D366", color: "#fff" }}>
                       <MessageCircle className="w-4 h-4" /> Apri WhatsApp
                     </motion.a>
