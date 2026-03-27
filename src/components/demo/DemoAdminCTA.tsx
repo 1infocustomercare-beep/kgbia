@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { DEMO_SLUGS } from "@/data/demo-industries";
+import { toast } from "sonner";
 import { Monitor, ArrowRight, Lock, LayoutDashboard, Sparkles } from "lucide-react";
 
 interface Props {
@@ -15,20 +19,60 @@ interface Props {
   variant: "hero" | "section" | "sticky";
 }
 
+const DEMO_PASSWORD = "Empire2024!";
+
+const PREMIUM_ADMIN_EMAILS: Record<string, string> = {
+  food: "admin-food@empire-test.com",
+  ncc: "admin-ncc@empire-test.com",
+};
+
+const resolveSectorFromSlug = (slug: string) => {
+  const matched = Object.entries(DEMO_SLUGS).find(([, demoSlug]) => demoSlug === slug)?.[0];
+  return matched || slug;
+};
+
+const isFoodSector = (sector: string) => sector === "food" || sector === "bakery";
+
 export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }: Props) {
   const navigate = useNavigate();
-  const goAdmin = () => navigate(`/demo/${slug}/admin`);
+  const [loading, setLoading] = useState(false);
+
+  const goAdmin = async () => {
+    const sector = resolveSectorFromSlug(slug);
+    const email = PREMIUM_ADMIN_EMAILS[sector] || `admin-${sector}@empire-test.com`;
+
+    setLoading(true);
+    try {
+      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signInWithPassword({ email, password: DEMO_PASSWORD });
+
+      if (error) {
+        toast.error("Accesso account reale non riuscito", { description: "Apro la demo admin pubblica come fallback" });
+        navigate(`/demo/${slug}/admin`);
+        return;
+      }
+
+      toast.success("Accesso account reale completato", { description: `Dashboard ${sectorName}` });
+      navigate(isFoodSector(sector) ? "/dashboard" : "/app");
+    } catch {
+      toast.error("Errore accesso", { description: "Apro la demo admin pubblica come fallback" });
+      navigate(`/demo/${slug}/admin`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (variant === "hero") {
     return (
       <Button
         onClick={goAdmin}
+        disabled={loading}
         variant="outline"
         className="text-xs font-bold border-2 gap-2 hover:scale-[1.02] transition-all"
         style={{ borderColor: `${accentColor}60`, color: accentColor }}
       >
         <Monitor className="w-4 h-4" />
-        Esplora Dashboard Admin →
+        {loading ? "Accesso..." : "Esplora Dashboard Admin →"}
       </Button>
     );
   }
@@ -44,11 +88,12 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
         <div className="px-3 py-2.5 backdrop-blur-xl border-t" style={{ background: `${accentColor}15`, borderColor: `${accentColor}30` }}>
           <button
             onClick={goAdmin}
+            disabled={loading}
             className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold text-white transition-all active:scale-[0.98]"
             style={{ background: accentColor }}
           >
             <LayoutDashboard className="w-4 h-4" />
-            Prova la Dashboard Admin Demo
+            {loading ? "Accesso..." : "Prova la Dashboard Admin Demo"}
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
           <p className="text-center text-[0.5rem] text-white/40 mt-1">
@@ -107,12 +152,13 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
 
           <Button
             onClick={goAdmin}
+            disabled={loading}
             size="lg"
             className="text-sm font-bold gap-2 hover:scale-[1.02] transition-all px-8"
             style={{ background: accentColor }}
           >
             <Monitor className="w-5 h-5" />
-            Entra nella Dashboard Demo
+            {loading ? "Accesso..." : "Entra nella Dashboard Demo"}
             <ArrowRight className="w-4 h-4" />
           </Button>
           <p className="text-[0.6rem] text-white/30 mt-3">
