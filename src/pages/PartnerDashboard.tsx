@@ -225,7 +225,7 @@ const PartnerDashboard = () => {
     setAiGeneratedMessage(null);
     try {
       const { data, error } = await supabase.functions.invoke("scan-prospect", {
-        body: { instagram: targetIg, website: targetWebsite, sector: sectorLabel },
+        body: { instagram: targetIg, website: targetWebsite, sector: sectorLabel, channel: activeChannel, demoLink, allDemosLink, contactInfo },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
