@@ -212,6 +212,35 @@ const PartnerDashboard = () => {
   const igMention = targetIg ? `@${targetIg.replace("@", "")}` : "";
   const siteMention = targetWebsite || "";
   const hasAnalysis = !!(targetIg || targetWebsite);
+  const contactInfo = agencyPhone ? `📞 ${agencyPhone}` : `📩 ${agencyEmail}`;
+
+  // AI scan function
+  const handleScanProspect = async () => {
+    if (!targetIg && !targetWebsite) {
+      toast({ title: "Inserisci un profilo", description: "Inserisci l'Instagram o il sito web del prospect.", variant: "destructive" });
+      return;
+    }
+    setScanningProspect(true);
+    setAiGeneratedMessage(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("scan-prospect", {
+        body: { instagram: targetIg, website: targetWebsite, sector: sectorLabel },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      let msg = data.message || "";
+      // Replace placeholders
+      msg = msg.replace(/\{\{DEMO_LINK\}\}/g, demoLink);
+      msg = msg.replace(/\{\{CONTACT_INFO\}\}/g, contactInfo);
+      setAiGeneratedMessage(msg);
+      toast({ title: "🤖 Messaggio AI generato!", description: "Messaggio ultra-personalizzato pronto." });
+    } catch (err: any) {
+      console.error("Scan error:", err);
+      toast({ title: "Errore scansione", description: err.message || "Riprova.", variant: "destructive" });
+    } finally {
+      setScanningProspect(false);
+    }
+  };
 
   // Smart prefix that injects IG/website context into any template
   const analysisPrefix = (() => {
