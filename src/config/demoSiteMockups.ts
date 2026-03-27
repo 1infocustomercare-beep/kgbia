@@ -475,72 +475,84 @@ function localProject(name: string, slug: string, images: { url: string; type: M
 const ELECTRICIAN_PROJECTS: MockupProject[] = [
   localProject("Elettrica Moderna", "elettrica-moderna", [
     { url: electricianHome, type: "home" }, { url: electricianDetail, type: "detail" },
+    { url: electricianServicesMockup, type: "services" },
   ]),
 ];
 
 const AGRITURISMO_PROJECTS: MockupProject[] = [
   localProject("Podere del Sole", "podere-del-sole", [
     { url: agriturismoHome, type: "home" }, { url: agriturismoActivities, type: "services" },
+    { url: agriturismoRoomsMockup, type: "rooms" },
   ]),
 ];
 
 const CLEANING_PROJECTS: MockupProject[] = [
   localProject("PulitoPro", "pulitopro", [
     { url: cleaningHome, type: "home" }, { url: cleaningBooking, type: "booking" },
+    { url: cleaningScheduleMockup, type: "services" },
   ]),
 ];
 
 const LEGAL_PROJECTS: MockupProject[] = [
   localProject("Studio Legale Martini", "studio-martini", [
     { url: legalHome, type: "home" }, { url: legalCase, type: "detail" },
+    { url: legalDeadlinesMockup, type: "services" },
   ]),
 ];
 
 const ACCOUNTING_PROJECTS: MockupProject[] = [
   localProject("Studio Rossi", "studio-rossi", [
     { url: accountingHome, type: "home" }, { url: accountingInvoice, type: "detail" },
+    { url: accountingDeadlinesMockup, type: "services" },
   ]),
 ];
 
 const GARAGE_PROJECTS: MockupProject[] = [
   localProject("Autofficina Rossi", "autofficina-rossi", [
     { url: garageHome, type: "home" }, { url: garageDetail, type: "detail" },
+    { url: garageRepairsMockup, type: "services" },
   ]),
 ];
 
 const PHOTOGRAPHY_PROJECTS: MockupProject[] = [
   localProject("Luce Studio", "luce-studio", [
     { url: photographyHome, type: "home" }, { url: photographyGallery, type: "portfolio" },
+    { url: photographyCalendarMockup, type: "booking" },
   ]),
 ];
 
 const GARDENING_PROJECTS: MockupProject[] = [
   localProject("Verde Vivo", "verde-vivo", [
     { url: gardeningHome, type: "home" }, { url: gardeningProject, type: "projects" },
+    { url: gardeningJobsMockup, type: "services" },
   ]),
 ];
 
 const TATTOO_PROJECTS: MockupProject[] = [
   localProject("Ink Factory", "ink-factory", [
     { url: tattooHome, type: "home" }, { url: tattooArtist, type: "portfolio" },
+    { url: tattooPortfolioMockup, type: "booking" },
   ]),
 ];
 
 const EDUCATION_PROJECTS: MockupProject[] = [
   localProject("Accademia Sapere", "accademia-sapere", [
     { url: educationHome, type: "home" }, { url: educationCourse, type: "detail" },
+    { url: educationCalendarMockup, type: "services" },
   ]),
 ];
 
 const EVENTS_PROJECTS: MockupProject[] = [
   localProject("Dream Events", "dream-events", [
     { url: eventsHome, type: "home" }, { url: eventsDetail, type: "detail" },
+    { url: eventsTimelineMockup, type: "services" },
   ]),
 ];
 
 const LOGISTICS_PROJECTS: MockupProject[] = [
   localProject("Flash Logistica", "flash-logistica", [
     { url: logisticsHome, type: "home" }, { url: logisticsTracking, type: "detail" },
+    { url: logisticsFleetMockup, type: "services" },
   ]),
 ];
 
