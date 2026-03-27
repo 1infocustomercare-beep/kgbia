@@ -26,6 +26,21 @@ import { toast } from "@/hooks/use-toast";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
 import { PORTFOLIO_PROJECTS } from "@/data/portfolio-showcase-data";
 import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
+import { DEMO_SLUGS } from "@/data/demo-industries";
+
+/* Helper: resolve demo URLs — Food & NCC use real premium dashboards */
+const getDemoSiteUrl = (sectorId: string) => {
+  if (sectorId === "food") return "/r/impero-roma";
+  if (sectorId === "ncc") return "/b/amalfi-luxury-transfer";
+  const slug = DEMO_SLUGS[sectorId as keyof typeof DEMO_SLUGS] || sectorId;
+  return `/demo/${slug}`;
+};
+const getDemoAdminUrl = (sectorId: string) => {
+  if (sectorId === "food") return "/r/impero-roma?view=admin";
+  if (sectorId === "ncc") return "/b/amalfi-luxury-transfer?view=admin";
+  const slug = DEMO_SLUGS[sectorId as keyof typeof DEMO_SLUGS] || sectorId;
+  return `/demo/${slug}/admin`;
+};
 
 /* ═══════════════════════════════════════════
    ACQUISITION CHANNELS
