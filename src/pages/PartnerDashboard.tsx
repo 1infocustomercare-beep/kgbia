@@ -476,19 +476,19 @@ const PartnerDashboard = () => {
         {/* ═══════ CANALE DI ACQUISIZIONE ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-8">
           <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>Canale di Acquisizione</h3>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
             {ACQUISITION_CHANNELS.map(ch => {
               const isActive = activeChannel === ch.id;
               return (
                 <motion.button key={ch.id} onClick={() => setActiveChannel(ch.id)} whileTap={{ scale: 0.97 }}
-                  className="p-4 rounded-xl text-left transition-all relative overflow-hidden"
+                  className="flex-shrink-0 p-3 sm:p-4 rounded-xl text-left transition-all relative overflow-hidden min-w-[90px] sm:min-w-[130px]"
                   style={{
-                    background: isActive ? "rgba(167,139,250,0.12)" : "rgba(255,255,255,0.03)",
-                    border: `1px solid ${isActive ? "rgba(167,139,250,0.35)" : "rgba(255,255,255,0.06)"}`,
+                    background: isActive ? `${ch.color}18` : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${isActive ? `${ch.color}50` : "rgba(255,255,255,0.06)"}`,
                   }}>
-                  <ch.icon className="w-5 h-5 mb-3" style={{ color: isActive ? "#a78bfa" : "#6b7280" }} />
-                  <p className="text-sm font-semibold" style={{ color: isActive ? "#ffffff" : "#d1d5db" }}>{ch.label}</p>
-                  <p className="text-[10px] mt-1 line-clamp-2" style={{ color: "#9ca3af" }}>{ch.desc}</p>
+                  <ch.icon className="w-5 h-5 mb-2" style={{ color: isActive ? ch.color : "#6b7280" }} />
+                  <p className="text-[11px] font-semibold" style={{ color: isActive ? "#ffffff" : "#d1d5db" }}>{ch.label}</p>
+                  {isActive && <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: ch.color }} />}
                 </motion.button>
               );
             })}
@@ -499,7 +499,7 @@ const PartnerDashboard = () => {
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
           <div className="p-5 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
             <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>
-              Seleziona Progetto {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
+              Seleziona Settore {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
             </h3>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 max-h-[320px] overflow-y-auto pr-1">
               {SECTOR_CARDS.map(card => {
@@ -531,33 +531,115 @@ const PartnerDashboard = () => {
           </div>
         </section>
 
-        {/* ═══════ DYNAMIC TEMPLATE (changes with channel + sector) ═══════ */}
+        {/* ═══════ TEMPLATE / SITE LINK ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#9ca3af" }}>
-              {templateLabel} {selectedProjectName && <span style={{ color: "#a78bfa" }}>· {selectedProjectName}</span>}
-            </p>
-          </div>
-          <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-white">{templateLabel}</span>
-                <span className="text-xs">🇮🇹</span>
+          {activeChannel === "site" ? (
+            <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.15)" }}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(16,185,129,0.15)" }}>
+                  <Link2 className="w-5 h-5" style={{ color: "#34d399" }} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-white">Link Demo Diretto</p>
+                  <p className="text-[10px]" style={{ color: "#9ca3af" }}>Condividi al cliente per fargli provare la demo</p>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <button onClick={handleCopyTemplate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all"
-                  style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-                  <Copy className="w-3 h-3" style={{ color: "#a78bfa" }} />
-                  <span className="text-white">Copia</span>
-                </button>
-                <button onClick={() => toast({ title: "✨ Template rigenerato!" })} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all"
-                  style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-                  <RefreshCw className="w-3 h-3" style={{ color: "#a78bfa" }} />
-                  <span className="text-white">Rigenera</span>
-                </button>
-              </div>
+              {selectedProject ? (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                    <p className="text-[10px] mb-1 font-medium" style={{ color: "#6b7280" }}>Link Sito Demo:</p>
+                    <p className="text-xs font-mono break-all select-all" style={{ color: "#34d399" }}>{window.location.origin}/demo/{selectedProject}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/demo/${selectedProject}`); toast({ title: "✅ Link Sito copiato!" }); }}
+                      className="py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", color: "#34d399" }}>
+                      <Copy className="w-3.5 h-3.5" /> Copia Link Sito
+                    </motion.button>
+                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/demo/${selectedProject}/admin`); toast({ title: "✅ Link Admin copiato!" }); }}
+                      className="py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.3)", color: "#a78bfa" }}>
+                      <Copy className="w-3.5 h-3.5" /> Copia Link Admin
+                    </motion.button>
+                  </div>
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={() => {
+                    const text = `Ciao! 👋 Ecco la demo del tuo sito personalizzato:\n\n🌐 Sito: ${window.location.origin}/demo/${selectedProject}\n⚙️ Admin: ${window.location.origin}/demo/${selectedProject}/admin\n\nProvalo gratis, nessun impegno!`;
+                    navigator.clipboard.writeText(text); toast({ title: "✅ Messaggio + link copiato!" });
+                  }} className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "#7c3aed", color: "#ffffff" }}>
+                    <Send className="w-3.5 h-3.5" /> Copia Messaggio con Link
+                  </motion.button>
+                </div>
+              ) : (
+                <p className="text-[10px] text-center py-3 rounded-lg" style={{ background: "rgba(245,158,11,0.08)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.15)" }}>☝️ Seleziona un settore sopra per generare i link demo</p>
+              )}
             </div>
-            <div className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "#d1d5db" }}>
+          ) : (
+            <div className="space-y-4">
+              <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-white">{templateLabel}</span>
+                    {selectedProjectName && <span className="px-2 py-0.5 rounded text-[9px] font-semibold" style={{ background: "rgba(167,139,250,0.15)", color: "#a78bfa" }}>{selectedProjectName}</span>}
+                  </div>
+                  <button onClick={handleCopyTemplate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
+                    <Copy className="w-3 h-3" style={{ color: "#a78bfa" }} /><span className="text-white">Copia</span>
+                  </button>
+                </div>
+                <div className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "#d1d5db" }}>
+                  {currentTemplate.split(/(\[(?:NOME|TUO NOME)\])/).map((part: string, i: number) =>
+                    part.match(/\[(?:NOME|TUO NOME)\]/) ? (
+                      <span key={i} className="px-1 py-0.5 rounded font-bold" style={{ background: "rgba(167,139,250,0.2)", color: "#c4b5fd" }}>{part}</span>
+                    ) : part
+                  )}
+                </div>
+                <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Sostituisci [NOME] con il nome dell'attività e [TUO NOME] con il tuo nome</p>
+                {!selectedProject && (
+                  <p className="text-[10px] text-center py-2 rounded-lg" style={{ background: "rgba(245,158,11,0.08)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.15)" }}>💡 Seleziona un settore sopra per template personalizzati</p>
+                )}
+                <div className="flex flex-wrap gap-2 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                  {activeChannel === "instagram" && (
+                    <motion.a whileTap={{ scale: 0.97 }} href="https://www.instagram.com/direct/inbox/" target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>
+                      <Instagram className="w-4 h-4" /> Apri Instagram DM
+                    </motion.a>
+                  )}
+                  {activeChannel === "whatsapp" && (
+                    <motion.a whileTap={{ scale: 0.97 }} href="https://wa.me/" target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#25D366", color: "#fff" }}>
+                      <MessageCircle className="w-4 h-4" /> Apri WhatsApp
+                    </motion.a>
+                  )}
+                  {activeChannel === "email" && (
+                    <motion.a whileTap={{ scale: 0.97 }} href={`mailto:?subject=${encodeURIComponent(currentTemplate.split('\n')[0].replace('Oggetto: ', ''))}`}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#3B82F6", color: "#fff" }}>
+                      <Mail className="w-4 h-4" /> Componi Email
+                    </motion.a>
+                  )}
+                  {activeChannel === "field" && selectedProject && (
+                    <motion.a whileTap={{ scale: 0.97 }} href={`/demo/${selectedProject}`} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#F59E0B", color: "#000" }}>
+                      <Smartphone className="w-4 h-4" /> Apri Demo
+                    </motion.a>
+                  )}
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={handleCopyTemplate}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#d1d5db" }}>
+                    <Copy className="w-4 h-4" /> Copia Testo
+                  </motion.button>
+                </div>
+              </div>
+              {activeChannel === "field" && currentObjections.length > 0 && (
+                <div className="p-5 rounded-2xl space-y-3" style={{ background: "rgba(245,158,11,0.04)", border: "1px solid rgba(245,158,11,0.12)" }}>
+                  <div className="flex items-center gap-2">
+                    <Wand2 className="w-4 h-4" style={{ color: "#f59e0b" }} />
+                    <p className="text-xs font-bold text-white">Gestione Obiezioni</p>
+                  </div>
+                  <div className="space-y-2">
+                    {currentObjections.map((obj: string, i: number) => (
+                      <div key={i} className="p-3 rounded-xl text-[11px] leading-relaxed" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", color: "#d1d5db" }}>{obj}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
               {currentTemplate}
             </div>
             {!selectedProject && (
