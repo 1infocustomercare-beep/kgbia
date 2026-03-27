@@ -732,7 +732,7 @@ const PartnerDashboard = () => {
 
               {/* Action buttons — universal for any sector */}
               <div className="grid grid-cols-2 gap-3">
-                <a href={selectedProject ? `/demo/${selectedProject}` : "#"}
+                <a href={selectedProject ? getDemoSiteUrl(selectedProject) : "#"}
                   target="_blank" rel="noopener noreferrer"
                   onClick={e => { if (!selectedProject) { e.preventDefault(); toast({ title: "Seleziona un settore", description: "Scegli un progetto dal catalogo sopra per aprire la demo." }); }}}
                   className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all text-center group"
@@ -743,7 +743,7 @@ const PartnerDashboard = () => {
                   <span className="text-xs font-bold text-white">Sito Cliente</span>
                   <span className="text-[9px]" style={{ color: "#6b7280" }}>Mostra al cliente come appare</span>
                 </a>
-                <a href={selectedProject ? `/demo/${selectedProject}/admin` : "#"}
+                <a href={selectedProject ? getDemoAdminUrl(selectedProject) : "#"}
                   target="_blank" rel="noopener noreferrer"
                   onClick={e => { if (!selectedProject) { e.preventDefault(); toast({ title: "Seleziona un settore", description: "Scegli un progetto dal catalogo sopra per aprire l'admin." }); }}}
                   className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all text-center group"
