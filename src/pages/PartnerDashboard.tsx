@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import ROICalculator from "@/components/partner/ROICalculator";
@@ -114,22 +115,27 @@ const DEFAULT_TEMPLATES = {
 };
 
 /* ═══════════════════════════════════════════
-   SECTOR CARDS
+   SECTOR CARDS — ALL industries + custom
    ═══════════════════════════════════════════ */
-const SECTOR_CARDS = Object.entries(PORTFOLIO_PROJECTS).map(([key, project]) => {
+const ALL_INDUSTRY_IDS = Object.keys(INDUSTRY_CONFIGS) as (keyof typeof INDUSTRY_CONFIGS)[];
+
+const SECTOR_CARDS = ALL_INDUSTRY_IDS.map(key => {
+  const config = INDUSTRY_CONFIGS[key];
+  const project = PORTFOLIO_PROJECTS[key as keyof typeof PORTFOLIO_PROJECTS];
   const portfolio = SECTOR_PORTFOLIO.find(sp => sp.sectorId === key);
   const firstBrand = portfolio?.brands?.[0];
   const firstStyle = firstBrand?.styles?.[0];
   const screens = firstStyle?.screens?.slice(0, 3) || [];
   return {
     id: key,
-    name: project!.name,
-    description: project!.description,
-    tags: project!.tags,
+    name: project?.name || config.label,
+    description: project?.description || config.description,
+    tags: project?.tags || [config.label],
     screens,
-    accent: project!.accent,
+    accent: project?.accent || "#a78bfa",
+    emoji: config.emoji,
   };
-}).filter(c => c.screens.length > 0);
+});
 
 /* ═══════════════════════════════════════════
    MAIN COMPONENT
@@ -501,29 +507,29 @@ const PartnerDashboard = () => {
             <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>
               Seleziona Settore {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
             </h3>
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 max-h-[320px] overflow-y-auto pr-1">
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-[400px] overflow-y-auto pr-1">
               {SECTOR_CARDS.map(card => {
                 const isSelected = selectedProject === card.id;
                 return (
                   <motion.button key={card.id} onClick={() => setSelectedProject(isSelected ? null : card.id)} whileTap={{ scale: 0.95 }}
-                    className="flex flex-col items-center gap-2 p-3 rounded-xl transition-all"
+                    className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl transition-all"
                     style={{
-                      background: isSelected ? "rgba(167,139,250,0.12)" : "rgba(255,255,255,0.02)",
-                      border: `1px solid ${isSelected ? "rgba(167,139,250,0.35)" : "rgba(255,255,255,0.06)"}`,
+                      background: isSelected ? `${card.accent}20` : "rgba(255,255,255,0.02)",
+                      border: `1px solid ${isSelected ? `${card.accent}50` : "rgba(255,255,255,0.06)"}`,
                     }}>
                     {card.screens[0] ? (
-                      <div className="w-12 h-12 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+                      <div className="w-10 h-10 rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
                         <img src={card.screens[0]} alt={card.name} className="w-full h-full object-cover" loading="lazy" />
                       </div>
                     ) : (
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "rgba(167,139,250,0.1)" }}>
-                        <Smartphone className="w-5 h-5" style={{ color: "#a78bfa" }} />
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style={{ background: `${card.accent}15` }}>
+                        {card.emoji}
                       </div>
                     )}
-                    <span className="text-[10px] font-semibold text-center leading-tight" style={{ color: isSelected ? "#ffffff" : "#d1d5db" }}>
-                      {card.name.split("&")[0].trim().split(" ")[0]}
+                    <span className="text-[9px] font-semibold text-center leading-tight line-clamp-2" style={{ color: isSelected ? "#ffffff" : "#d1d5db" }}>
+                      {card.name.split("&")[0].trim().split(" ").slice(0, 2).join(" ")}
                     </span>
-                    {isSelected && <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#a78bfa" }} />}
+                    {isSelected && <div className="w-1.5 h-1.5 rounded-full" style={{ background: card.accent }} />}
                   </motion.button>
                 );
               })}
