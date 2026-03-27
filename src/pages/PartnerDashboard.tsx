@@ -831,6 +831,28 @@ const PartnerDashboard = () => {
                   <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Seleziona un settore per includere il link demo nel messaggio</p>
                 )}
 
+                {/* Editable contact info */}
+                <div className="space-y-2 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <p className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>Contatto nei messaggi</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3" style={{ color: "#818cf8" }} />
+                      <input type="email" value={agencyEmail} onChange={e => setAgencyEmail(e.target.value)}
+                        placeholder="Email contatto"
+                        className="w-full pl-8 pr-3 py-2 rounded-lg text-[11px] bg-transparent outline-none transition-all"
+                        style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#d1d5db" }} />
+                    </div>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3" style={{ color: "#34d399" }} />
+                      <input type="tel" value={agencyPhone} onChange={e => setAgencyPhone(e.target.value)}
+                        placeholder="Cellulare (opzionale — sostituisce email)"
+                        className="w-full pl-8 pr-3 py-2 rounded-lg text-[11px] bg-transparent outline-none transition-all"
+                        style={{ border: `1px solid ${agencyPhone ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.1)"}`, color: "#d1d5db" }} />
+                    </div>
+                  </div>
+                  <p className="text-[8px]" style={{ color: "#4b5563" }}>{agencyPhone ? "📞 Il numero sarà usato come contatto nei messaggi" : "📩 L'email sarà usata come contatto nei messaggi"}</p>
+                </div>
+
                 {useNames && (
                   <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Sostituisci [NOME] con il nome dell'attività e [TUO NOME] con il tuo nome</p>
                 )}
