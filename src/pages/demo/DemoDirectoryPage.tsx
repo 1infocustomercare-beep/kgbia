@@ -11,7 +11,8 @@ import {
   Umbrella, Wrench, Zap, Wheat, SprayCan, Scale, Calculator,
   Settings, Camera, HardHat, Flower2, Stethoscope, Pen,
   Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles, Eye,
-  ChevronLeft, ChevronRight as ChevronRightIcon, Images
+  ChevronLeft, ChevronRight as ChevronRightIcon, Images,
+  Trees, Cog, Leaf
 } from "lucide-react";
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
 import demoHeroCta from "@/assets/demo-hero-cta.jpg";
@@ -32,6 +33,7 @@ const INDUSTRY_ICONS: Record<string, React.ReactNode> = {
   Zap: <Zap className="w-4 h-4" />,
   Wheat: <Wheat className="w-4 h-4" />,
   SprayCan: <SprayCan className="w-4 h-4" />,
+  SprayCanIcon: <SprayCan className="w-4 h-4" />,
   Scale: <Scale className="w-4 h-4" />,
   Calculator: <Calculator className="w-4 h-4" />,
   Settings: <Settings className="w-4 h-4" />,
@@ -45,6 +47,9 @@ const INDUSTRY_ICONS: Record<string, React.ReactNode> = {
   PartyPopper: <PartyPopper className="w-4 h-4" />,
   Truck: <Truck className="w-4 h-4" />,
   Puzzle: <Puzzle className="w-4 h-4" />,
+  Trees: <Trees className="w-4 h-4" />,
+  Cog: <Cog className="w-4 h-4" />,
+  Leaf: <Leaf className="w-4 h-4" />,
 };
 
 function getIcon(iconName: string) {
