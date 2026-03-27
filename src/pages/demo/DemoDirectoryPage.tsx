@@ -57,6 +57,10 @@ function getIcon(iconName: string) {
   return INDUSTRY_ICONS[iconName] || <Puzzle className="w-4 h-4" />;
 }
 
+function uniqueImageSources(sources: Array<string | null | undefined>) {
+  return Array.from(new Set(sources.filter((source): source is string => Boolean(source && source.trim()))));
+}
+
 /* ═══ Hero Phone Showcase — rotating sector previews in iPhone frame ═══ */
 const HERO_SECTORS: { id: IndustryId; label: string; color: string }[] = [
   { id: "food", label: "Food", color: "25 95% 53%" },
@@ -69,6 +73,7 @@ const HERO_SECTORS: { id: IndustryId; label: string; color: string }[] = [
 
 const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
   const [activeIdx, setActiveIdx] = useState(0);
+  const [imageIdx, setImageIdx] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => setActiveIdx(i => (i + 1) % HERO_SECTORS.length), 3000);
@@ -76,8 +81,23 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
   }, []);
 
   const sector = HERO_SECTORS[activeIdx];
-  const mockups = SECTOR_MOCKUP_IMAGES[sector.id] || [];
-  const currentImage = mockups[0] || "";
+  const heroImageSources = useMemo(
+    () => uniqueImageSources([
+      ...(SECTOR_MOCKUP_IMAGES[sector.id] || []),
+      ...getSectorHeroImages(sector.id),
+      SECTOR_MOCKUP_CATALOG[sector.id]?.heroImage,
+    ]),
+    [sector.id]
+  );
+  const currentImage = heroImageSources[imageIdx] || "";
+
+  useEffect(() => {
+    setImageIdx(0);
+  }, [sector.id]);
+
+  const onHeroImageError = useCallback(() => {
+    setImageIdx((prev) => Math.min(prev + 1, heroImageSources.length));
+  }, [heroImageSources.length]);
 
   return (
     <div className="relative z-10 mx-4 mt-5 mb-6 rounded-2xl overflow-hidden"
@@ -162,16 +182,29 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-[3.5%] rounded-b-xl z-20" style={{ background: "hsl(220,20%,5%)" }} />
             {/* Screen */}
             <AnimatePresence mode="wait">
-              <motion.img
-                key={sector.id}
-                src={currentImage}
-                alt={sector.label}
-                className="absolute inset-0 w-full h-full object-cover object-top"
-                initial={{ opacity: 0, scale: 1.05 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              />
+              {currentImage ? (
+                <motion.img
+                  key={`${sector.id}-${imageIdx}`}
+                  src={currentImage}
+                  alt={sector.label}
+                  className="absolute inset-0 w-full h-full object-cover object-top"
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  onError={onHeroImageError}
+                />
+              ) : (
+                <motion.div
+                  key={`${sector.id}-fallback`}
+                  className="absolute inset-0 flex items-center justify-center text-white/70"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {getIcon(INDUSTRY_CONFIGS[sector.id].icon)}
+                </motion.div>
+              )}
             </AnimatePresence>
             {/* Screen overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
@@ -207,11 +240,23 @@ const FEATURED_DEMOS = [
 /* ═══ Mockup Gallery Component ═══ */
 function MockupGallery({ sectorId, color }: { sectorId: string; color: string }) {
   const [idx, setIdx] = useState(0);
+  const [brokenUrls, setBrokenUrls] = useState<Set<string>>(new Set());
   const catalog = SECTOR_MOCKUP_CATALOG[sectorId];
+  const curatedImages = SECTOR_MOCKUP_IMAGES[sectorId as IndustryId] || [];
 
   // Flatten all images for this sector, prioritize home images first
   const allImages = useMemo(() => {
-    if (!catalog) return [];
+    const curated: MockupImage[] = curatedImages.map((url, index) => ({
+      url,
+      type: "home",
+      style: `priority-${index + 1}`,
+      device: "mobile",
+    }));
+
+    if (!catalog) {
+      return curated;
+    }
+
     const homes: MockupImage[] = [];
     const rest: MockupImage[] = [];
     catalog.projects.forEach(p => {
@@ -220,12 +265,40 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
         else rest.push(img);
       });
     });
-    return [...homes, ...rest];
-  }, [catalog]);
+    const merged = [...curated, ...homes, ...rest];
+    const unique = new Map<string, MockupImage>();
+    merged.forEach((image) => {
+      if (!unique.has(image.url)) unique.set(image.url, image);
+    });
+    return Array.from(unique.values());
+  }, [catalog, curatedImages]);
 
-  // Limit displayed to first 24 for performance
-  const displayImages = allImages.slice(0, 24);
+  useEffect(() => {
+    setBrokenUrls(new Set());
+    setIdx(0);
+  }, [sectorId]);
+
+  const markAsBroken = useCallback((url: string | undefined) => {
+    if (!url) return;
+    setBrokenUrls((prev) => {
+      if (prev.has(url)) return prev;
+      const next = new Set(prev);
+      next.add(url);
+      return next;
+    });
+  }, []);
+
+  const displayImages = useMemo(
+    () => allImages.filter((image) => !brokenUrls.has(image.url)),
+    [allImages, brokenUrls]
+  );
   const count = displayImages.length;
+
+  useEffect(() => {
+    if (idx >= count && count > 0) {
+      setIdx(count - 1);
+    }
+  }, [count, idx]);
 
   if (count === 0) {
     return (
@@ -246,6 +319,7 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
           alt={`Mockup ${idx + 1}`}
           className="w-full h-full object-cover"
           loading="lazy"
+          onError={() => markAsBroken(displayImages[idx]?.url)}
         />
         {/* Nav arrows */}
         {count > 1 && (
@@ -278,7 +352,7 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
                 border: i === idx ? `2px solid ${color}` : "1px solid hsla(0,0%,100%,0.1)",
                 opacity: i === idx ? 1 : 0.6,
               }}>
-              <img src={img.url} alt="" className="w-full h-full object-cover" loading="lazy" />
+              <img src={img.url} alt="" className="w-full h-full object-cover" loading="lazy" onError={() => markAsBroken(img.url)} />
             </button>
           ))}
         </div>
@@ -290,7 +364,7 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
           <span className="text-[0.6rem] px-2.5 py-1 rounded-full font-semibold text-foreground/70"
             style={{ background: `${color}15`, border: `1px solid ${color}25` }}>
             <Images className="w-3 h-3 inline mr-1 -mt-0.5" />
-            {catalog.totalCount} mockup professionali
+            {catalog ? `${count}/${catalog.totalCount} mockup caricati` : `${count} mockup caricati`}
           </span>
         </div>
       )}
@@ -477,6 +551,24 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
   const label = featured?.name || cfg.label;
   const subtitle = featured?.tagline || `${demo.companyName} · ${cfg.description}`;
   const route = featured?.route || (id === "food" ? `/r/${DEMO_SLUGS[id]}` : `/b/${DEMO_SLUGS[id]}`);
+  const previewSources = useMemo(
+    () => uniqueImageSources([
+      ...getSectorHeroImages(id),
+      ...(SECTOR_MOCKUP_IMAGES[id] || []),
+      SECTOR_MOCKUP_CATALOG[id]?.heroImage,
+    ]),
+    [id]
+  );
+  const [previewIdx, setPreviewIdx] = useState(0);
+  const previewUrl = previewSources[previewIdx] || "";
+
+  useEffect(() => {
+    setPreviewIdx(0);
+  }, [id]);
+
+  const onPreviewError = useCallback(() => {
+    setPreviewIdx((prev) => Math.min(prev + 1, previewSources.length));
+  }, [previewSources.length]);
 
   return (
     <motion.div
@@ -512,17 +604,13 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
                 background: `linear-gradient(135deg, ${color}25, ${color}10)`,
               }}
             >
-              {(() => {
-                const heroImages = getSectorHeroImages(id);
-                const heroUrl = heroImages[0] || SECTOR_MOCKUP_CATALOG[id]?.heroImage;
-                return heroUrl ? (
-                  <img src={heroUrl} alt={label} className="w-full h-full object-cover" loading="lazy" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center" style={{ color }}>
-                    {getIcon(cfg.icon)}
-                  </div>
-                );
-              })()}
+              {previewUrl ? (
+                <img src={previewUrl} alt={label} className="w-full h-full object-cover" loading="lazy" onError={onPreviewError} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center" style={{ color }}>
+                  {getIcon(cfg.icon)}
+                </div>
+              )}
             </div>
             {/* Always-visible icon badge */}
             <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center shadow-md"
