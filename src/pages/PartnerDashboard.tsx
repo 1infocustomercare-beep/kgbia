@@ -6,7 +6,7 @@ import {
   Crown, Trophy,
   Sparkles, Target,
   Eye, EyeOff, Users,
-  Copy, CheckCircle, UserPlus,
+  Copy, CheckCircle, UserPlus, ChevronRight,
   ExternalLink, ChefHat, Smartphone, ArrowLeft,
   Mail, MapPin, Instagram, Send, RefreshCw,
   Pencil, Upload, Save, X as XIcon,
