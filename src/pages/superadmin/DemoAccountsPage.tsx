@@ -32,6 +32,11 @@ const LABELS: Record<string, string> = {
 
 const PASSWORD = "Empire2024!";
 
+const PREMIUM_ADMIN_EMAILS: Record<string, string> = {
+  food: "admin-food@empire-test.com",
+  ncc: "admin-ncc@empire-test.com",
+};
+
 const CUSTOMER_ACCOUNTS = [
   { email: "cliente-food@empire-test.com", name: "Marco Rossi", industry: "food" },
   { email: "cliente-beauty@empire-test.com", name: "Giulia Bianchi", industry: "beauty" },
@@ -51,7 +56,7 @@ const DemoAccountsPage = () => {
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"admin" | "customer">("admin");
 
-  const getAdminEmail = (industry: string) => `admin-${industry}@empire-test.com`;
+  const getAdminEmail = (industry: string) => PREMIUM_ADMIN_EMAILS[industry] || `admin-${industry}@empire-test.com`;
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
