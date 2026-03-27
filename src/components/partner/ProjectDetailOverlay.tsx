@@ -198,7 +198,7 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                             <p className="text-[9px]" style={{ color: "#6b7280" }}>{brand.name}</p>
                           </div>
                           <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ background: `${project.accent}15`, color: project.accent }}>
-                            {style.screens.length} schermate
+                            {style.screens.length + ((style as any).desktopScreens?.length || 0)} schermate
                           </span>
                         </div>
                         {/* All screens — mobile + desktop combined */}
