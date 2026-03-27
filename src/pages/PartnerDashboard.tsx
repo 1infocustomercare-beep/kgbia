@@ -3,16 +3,14 @@ import empireMonkeyMascot from "@/assets/empire-monkey.png";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, DollarSign, LogOut,
-  Crown, TrendingUp, Trophy,
-  ChevronRight, Sparkles,
-  Play, Target, CreditCard, BookOpen,
-  Eye, EyeOff, Briefcase, BarChart3,
-  Users, Award, Star, FolderDown,
-  Link2, Copy, CheckCircle, UserPlus,
-  ExternalLink, ChefHat, Smartphone, Monitor, ArrowLeft,
+  Crown, Trophy,
+  Sparkles, Target,
+  Eye, EyeOff, Users,
+  Copy, CheckCircle, UserPlus, ChevronRight,
+  ExternalLink, ChefHat, Smartphone, ArrowLeft,
   Mail, MapPin, Instagram, Send, RefreshCw,
-  Palette, Pencil, Upload, Save, X as XIcon,
-  Globe, ChevronDown, Phone, MessageSquare
+  Pencil, Upload, Save, X as XIcon,
+  Globe
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
@@ -22,6 +20,7 @@ import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import ROICalculator from "@/components/partner/ROICalculator";
 import DemoCreditsWallet from "@/components/partner/DemoCreditsWallet";
+import ProjectDetailOverlay from "@/components/partner/ProjectDetailOverlay";
 import { toast } from "@/hooks/use-toast";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
 import { PORTFOLIO_PROJECTS } from "@/data/portfolio-showcase-data";
@@ -37,7 +36,50 @@ const ACQUISITION_CHANNELS = [
 ] as const;
 
 /* ═══════════════════════════════════════════
-   SECTOR PROJECT CARDS
+   SECTOR-SPECIFIC SALES TEMPLATES
+   ═══════════════════════════════════════════ */
+const SECTOR_TEMPLATES: Record<string, { dm: string; email: string; pitch: string }> = {
+  food: {
+    dm: `Ciao! 🍽️ Ho visto il vostro ristorante su Instagram ed è fantastico! Sapevate che con un'app personalizzata potete gestire ordini, menu digitale e prenotazioni tutto in un click? I vostri clienti ordinano direttamente dal tavolo con QR code, e voi riducete i tempi di attesa del 40%. Vi mostro un esempio reale? 👉`,
+    email: `Oggetto: Più ordini, meno stress — La vostra app ristorante personalizzata\n\nGentili proprietari,\n\nAmministrate [NOME RISTORANTE] con passione, e noi vorremmo aiutarvi a crescere. La nostra piattaforma permette ai vostri clienti di:\n\n✅ Ordinare dal tavolo via QR code\n✅ Prenotare online 24/7\n✅ Ricevere notifiche su offerte speciali\n✅ Pagare in modo contactless\n\nI ristoranti che usano la nostra app vedono in media +35% di ordini e -25% di chiamate per prenotazioni.\n\nPosso mostrarvi una demo gratuita in 10 minuti?`,
+    pitch: `"Il vostro ristorante merita un'app che lavori per voi anche quando chiudete. Menu digitale, ordini QR, cucina display in tempo reale — tutto questo è già pronto, personalizzato con il vostro brand."`,
+  },
+  beauty: {
+    dm: `Ciao! 💅 Il vostro salone è stupendo! Sapevate che con un'app personalizzata i clienti possono prenotare trattamenti 24/7, scegliere lo stilista preferito e accumulare punti fedeltà? Niente più chiamate perse = più appuntamenti. Vi faccio vedere come funziona? ✨`,
+    email: `Oggetto: Zero appuntamenti persi — L'app per il vostro salone\n\nBuongiorno,\n\nGestire le prenotazioni telefoniche toglie tempo prezioso al vostro lavoro creativo. La nostra app permette ai clienti di:\n\n✅ Prenotare servizi e scegliere l'operatore\n✅ Ricevere promemoria automatici (addio no-show!)\n✅ Accumulare punti fedeltà\n✅ Acquistare prodotti dal vostro shop integrato\n\nI saloni che usano la nostra piattaforma riducono i no-show del 60% e aumentano i clienti ricorrenti del 40%.\n\nVi mostro una demo in 10 minuti?`,
+    pitch: `"Il vostro salone è un'esperienza — la vostra app deve esserlo altrettanto. Prenotazioni smart, programma fedeltà e shop integrato, tutto con il vostro stile unico."`,
+  },
+  ncc: {
+    dm: `Ciao! 🚗 Gestite un servizio NCC? Con la nostra app i clienti prenotano transfer in 30 secondi, vedono la flotta disponibile e pagano online. Voi gestite autisti, tariffe e prenotazioni da un unico pannello. Volete una demo? 🏎️`,
+    email: `Oggetto: Più prenotazioni, gestione flotta automatica — App NCC\n\nGentili,\n\nSappiamo quanto è complesso gestire un servizio NCC tra chiamate, preventivi e coordinamento autisti. La nostra piattaforma offre:\n\n✅ Prenotazione transfer online con calcolo automatico\n✅ Gestione flotta e autisti in tempo reale\n✅ Pagamenti sicuri e fatturazione automatica\n✅ App cliente con tracking del veicolo\n\nI servizi NCC che usano la nostra app aumentano le prenotazioni del 50% riducendo il tempo amministrativo.\n\nPosso mostrarvi una demo personalizzata?`,
+    pitch: `"I vostri clienti VIP meritano un'esperienza di prenotazione premium. Con la nostra app prenotano in 30 secondi, tracciano il veicolo e pagano online — tutto brandizzato con il vostro logo."`,
+  },
+  fitness: {
+    dm: `Ciao! 💪 La vostra palestra ha un potenziale enorme! Con un'app personalizzata i membri prenotano corsi, tracciano i progressi e rinnovano l'abbonamento tutto dal telefono. Risultato? Più retention e meno lavoro amministrativo. Vi mostro un esempio? 🏋️`,
+    email: `Oggetto: Più iscritti, meno abbandoni — App per la vostra palestra\n\nBuongiorno,\n\nLa sfida più grande per una palestra è mantenere i membri attivi. La nostra app vi aiuta con:\n\n✅ Prenotazione corsi e personal trainer\n✅ Tracking progressi e sfide gamificate\n✅ Rinnovo abbonamento automatico\n✅ Notifiche push per promozioni e nuovi corsi\n\nLe palestre che usano la nostra piattaforma vedono +45% di retention e +30% di nuove iscrizioni da referral.\n\nDemo gratuita in 10 minuti?`,
+    pitch: `"La vostra palestra non è solo un posto dove allenarsi — è una community. La nostra app la rende digitale: prenotazioni, progressi, sfide e social, tutto in un'app con il vostro brand."`,
+  },
+  healthcare: {
+    dm: `Ciao! 🏥 Ho notato il vostro studio medico. Sapevate che con un'app personalizzata i pazienti prenotano visite, ricevono referti digitali e comunicano con voi in modo sicuro? Meno telefonate, più efficienza. Vi interessa una demo? 👨‍⚕️`,
+    email: `Oggetto: Meno code, più efficienza — App per il vostro studio medico\n\nGentile Dottore/Dottoressa,\n\nLa gestione di un studio medico richiede tempo e precisione. La nostra piattaforma offre:\n\n✅ Prenotazione visite online con calendario smart\n✅ Cartella paziente digitale (GDPR compliant)\n✅ Telemedicina integrata\n✅ Promemoria automatici per follow-up\n\nGli studi che usano la nostra app riducono le chiamate del 70% e migliorano la soddisfazione dei pazienti.\n\nPosso mostrarle una demo in 10 minuti?`,
+    pitch: `"I vostri pazienti meritano un'esperienza moderna. Prenotazioni online, referti digitali e telemedicina — tutto sicuro, conforme al GDPR e personalizzato con la vostra identità."`,
+  },
+  hotel: {
+    dm: `Ciao! 🏨 Il vostro hotel ha un'atmosfera incredibile! Sapevate che con un'app personalizzata gli ospiti possono fare check-in digitale, ordinare room service e prenotare esperienze? Più comfort per loro, più revenue per voi. Demo? ⭐`,
+    email: `Oggetto: Esperienza ospiti premium — App per il vostro hotel\n\nGentili,\n\nGli ospiti moderni si aspettano un'esperienza digitale. La nostra piattaforma offre:\n\n✅ Check-in/check-out digitale\n✅ Room service e concierge in-app\n✅ Prenotazione spa, ristorante, escursioni\n✅ Comunicazione diretta con lo staff\n\nGli hotel che usano la nostra app vedono +25% di revenue da servizi ancillari e recensioni migliori.\n\nPosso mostrarvi una demo personalizzata?`,
+    pitch: `"I vostri ospiti vogliono un'esperienza seamless. Con la nostra app hanno tutto a portata di mano: check-in, room service, spa — tutto brandizzato con il vostro stile luxury."`,
+  },
+};
+
+// Fallback template for sectors without specific content
+const DEFAULT_TEMPLATES = {
+  dm: `Ciao! 🤩 Abbiamo notato la vostra attività e siamo rimasti colpiti! Con un'app personalizzata potete gestire prenotazioni, clienti e pagamenti in modo smart. I vostri clienti vi trovano, prenotano e pagano tutto dal telefono. Vi mostro un esempio reale? 👉`,
+  email: `Oggetto: La vostra app personalizzata — Più clienti, meno stress\n\nBuongiorno,\n\nSappiamo quanto è impegnativo gestire un'attività tra chiamate, prenotazioni e amministrazione. La nostra piattaforma vi offre:\n\n✅ Prenotazioni online 24/7\n✅ Gestione clienti e CRM integrato\n✅ Pagamenti digitali e fatturazione\n✅ Marketing automatizzato\n\nLe attività che usano la nostra app vedono in media +40% di prenotazioni e -50% di tempo amministrativo.\n\nPosso mostrarvi una demo gratuita in 10 minuti?`,
+  pitch: `"La vostra attività merita un'app che lavori per voi 24/7. Prenotazioni automatiche, gestione clienti smart e marketing integrato — tutto personalizzato con il vostro brand."`,
+};
+
+/* ═══════════════════════════════════════════
+   SECTOR CARDS
    ═══════════════════════════════════════════ */
 const SECTOR_CARDS = Object.entries(PORTFOLIO_PROJECTS).map(([key, project]) => {
   const portfolio = SECTOR_PORTFOLIO.find(sp => sp.sectorId === key);
@@ -55,10 +97,8 @@ const SECTOR_CARDS = Object.entries(PORTFOLIO_PROJECTS).map(([key, project]) => 
 }).filter(c => c.screens.length > 0);
 
 /* ═══════════════════════════════════════════
-   DM TEMPLATE
+   MAIN COMPONENT
    ═══════════════════════════════════════════ */
-const dmTemplate = `"Ciao! 🤩 Abbiamo notato la vostra attività su Instagram e siamo rimasti colpiti. Gestire prenotazioni, ordini e fidelizzare i clienti può essere una sfida, e proprio per questo abbiamo sviluppato app personalizzate che semplificano questi processi. Date un'occhiata qui! 👉 Vi va di fare una breve chiacchierata per capire se potremmo fare lo stesso per voi?"`;
-
 const PartnerDashboard = () => {
   const navigate = useNavigate();
   const { signOut, isTeamLeader, user } = useAuth();
@@ -83,6 +123,7 @@ const PartnerDashboard = () => {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [showEarnings, setShowEarnings] = useState(false);
   const [showFullPortfolio, setShowFullPortfolio] = useState(false);
+  const [detailProject, setDetailProject] = useState<string | null>(null);
 
   // Persist demoMode
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
@@ -94,6 +135,19 @@ const PartnerDashboard = () => {
       setEditColor(demoRestaurant.primary_color || "#C8963E");
     }
   }, [demoRestaurant]);
+
+  // Get dynamic template based on selected project + channel
+  const currentTemplates = selectedProject
+    ? (SECTOR_TEMPLATES[selectedProject] || DEFAULT_TEMPLATES)
+    : DEFAULT_TEMPLATES;
+  
+  const currentTemplate = activeChannel === "email" ? currentTemplates.email
+    : activeChannel === "field" ? currentTemplates.pitch
+    : currentTemplates.dm;
+
+  const templateLabel = activeChannel === "email" ? "TEMPLATE EMAIL"
+    : activeChannel === "field" ? "PITCH SCRIPT"
+    : "TEMPLATE DM";
 
   const handleResetDemo = async () => {
     if (resettingDemo) return;
@@ -197,6 +251,11 @@ const PartnerDashboard = () => {
     setTimeout(() => setInviteCopied(false), 2000);
   };
 
+  const handleCopyTemplate = () => {
+    navigator.clipboard.writeText(currentTemplate);
+    toast({ title: "✅ Copiato!", description: `${templateLabel} copiato negli appunti.` });
+  };
+
   const totalBonuses = monthlyBonuses.reduce((s, b) => s + Number(b.bonus_amount), 0);
   const estimatedCommissions = salesCount * 997;
   const calculateOverrides = () => {
@@ -214,6 +273,10 @@ const PartnerDashboard = () => {
   const currentMonthBonus = monthlyBonuses.find(b => b.bonus_month === currentMonth);
   const currentMonthSales = currentMonthBonus?.sales_count || 0;
   const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
+
+  const selectedProjectName = selectedProject
+    ? PORTFOLIO_PROJECTS[selectedProject as keyof typeof PORTFOLIO_PROJECTS]?.name || selectedProject
+    : null;
 
   return (
     <div className="min-h-screen flex flex-col relative" style={{ background: "#0a0a14" }}>
@@ -263,7 +326,6 @@ const PartnerDashboard = () => {
                 </div>
               </div>
               
-              {/* Action buttons */}
               <div className="flex flex-wrap gap-2">
                 {!demoMode && (
                   <button onClick={() => setShowEarnings(!showEarnings)}
@@ -291,7 +353,6 @@ const PartnerDashboard = () => {
               </div>
             </div>
 
-            {/* Right: Tagline */}
             <div className="text-left sm:text-right max-w-md">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider mb-3"
                 style={{ background: "rgba(167,139,250,0.12)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
@@ -327,7 +388,6 @@ const PartnerDashboard = () => {
             {showEarnings && (
               <motion.section initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
                 <div className="max-w-5xl mx-auto px-4 sm:px-8 py-6 space-y-4">
-                  {/* Net Earnings Hero */}
                   <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
                     <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: "#6ee7b7" }}>Guadagni Netti</p>
                     <p className="text-4xl font-bold text-white">€{netEarnings.toLocaleString()}</p>
@@ -337,7 +397,6 @@ const PartnerDashboard = () => {
                       {totalBonuses > 0 && <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: "#fbbf24" }} /><span className="text-[10px]" style={{ color: "#9ca3af" }}>Bonus €{totalBonuses.toLocaleString()}</span></div>}
                     </div>
                   </div>
-                  {/* Stats Row */}
                   <div className="grid grid-cols-3 gap-3">
                     {[
                       { icon: Trophy, value: salesCount, label: "Vendite", color: "#a78bfa" },
@@ -351,7 +410,6 @@ const PartnerDashboard = () => {
                       </div>
                     ))}
                   </div>
-                  {/* Bonus Progress */}
                   <div className="p-4 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-xs font-bold text-white flex items-center gap-2"><Sparkles className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} /> Bonus Mensile</h3>
@@ -384,9 +442,7 @@ const PartnerDashboard = () => {
                   style={{
                     background: isActive ? "rgba(167,139,250,0.12)" : "rgba(255,255,255,0.03)",
                     border: `1px solid ${isActive ? "rgba(167,139,250,0.35)" : "rgba(255,255,255,0.06)"}`,
-                    boxShadow: isActive ? "0 0 30px rgba(167,139,250,0.08)" : "none",
                   }}>
-                  {isActive && <div className="absolute top-0 right-0 w-24 h-24 rounded-full opacity-20 -translate-y-1/2 translate-x-1/2" style={{ background: "radial-gradient(circle, #7c3aed, transparent)" }} />}
                   <ch.icon className="w-5 h-5 mb-3" style={{ color: isActive ? "#a78bfa" : "#6b7280" }} />
                   <p className="text-sm font-semibold" style={{ color: isActive ? "#ffffff" : "#d1d5db" }}>{ch.label}</p>
                   <p className="text-[10px] mt-1 line-clamp-2" style={{ color: "#9ca3af" }}>{ch.desc}</p>
@@ -399,7 +455,9 @@ const PartnerDashboard = () => {
         {/* ═══════ SELEZIONA PROGETTO ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
           <div className="p-5 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>Seleziona Progetto</h3>
+            <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>
+              Seleziona Progetto {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
+            </h3>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 max-h-[260px] overflow-y-auto pr-1">
               {SECTOR_CARDS.slice(0, 10).map(card => {
                 const isSelected = selectedProject === card.id;
@@ -430,31 +488,40 @@ const PartnerDashboard = () => {
           </div>
         </section>
 
-        {/* ═══════ DM TEMPLATE (AI-Powered) ═══════ */}
+        {/* ═══════ DYNAMIC TEMPLATE (changes with channel + sector) ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
-          <p className="text-[10px] text-center font-semibold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Template DM Generato con AI</p>
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#9ca3af" }}>
+              {templateLabel} {selectedProjectName && <span style={{ color: "#a78bfa" }}>· {selectedProjectName}</span>}
+            </p>
+          </div>
           <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-white">TEMPLATE DM</span>
+                <span className="text-xs font-bold text-white">{templateLabel}</span>
                 <span className="text-xs">🇮🇹</span>
               </div>
               <div className="flex gap-2">
-                {[
-                  { label: "Copia", icon: Copy, action: () => { navigator.clipboard.writeText(dmTemplate); toast({ title: "Copiato!" }); } },
-                  { label: "Rigenera", icon: RefreshCw, action: () => toast({ title: "Template rigenerato!" }) },
-                ].map(btn => (
-                  <button key={btn.label} onClick={btn.action} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all"
-                    style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-                    <btn.icon className="w-3 h-3" style={{ color: "#a78bfa" }} />
-                    <span className="text-white">{btn.label}</span>
-                  </button>
-                ))}
+                <button onClick={handleCopyTemplate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all"
+                  style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
+                  <Copy className="w-3 h-3" style={{ color: "#a78bfa" }} />
+                  <span className="text-white">Copia</span>
+                </button>
+                <button onClick={() => toast({ title: "✨ Template rigenerato!" })} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all"
+                  style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
+                  <RefreshCw className="w-3 h-3" style={{ color: "#a78bfa" }} />
+                  <span className="text-white">Rigenera</span>
+                </button>
               </div>
             </div>
-            <p className="text-xs italic leading-relaxed" style={{ color: "#d1d5db" }}>
-              {dmTemplate}
-            </p>
+            <div className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "#d1d5db" }}>
+              {currentTemplate}
+            </div>
+            {!selectedProject && (
+              <p className="text-[10px] text-center py-2 rounded-lg" style={{ background: "rgba(245,158,11,0.08)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.15)" }}>
+                💡 Seleziona un progetto sopra per ottenere template personalizzati per settore
+              </p>
+            )}
           </div>
         </section>
 
@@ -480,8 +547,6 @@ const PartnerDashboard = () => {
                   </button>
                 </div>
               </div>
-
-              {/* Edit panel */}
               <AnimatePresence>
                 {editingDemo && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
@@ -520,8 +585,6 @@ const PartnerDashboard = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-
-              {/* Quick links */}
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { label: "Cliente", emoji: "👤", href: `/r/${demoRestaurant.slug}` },
@@ -568,8 +631,6 @@ const PartnerDashboard = () => {
         {isTeamLeader && !demoMode && (
           <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4 space-y-4">
             <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#9ca3af" }}>Il Tuo Team ({teamMembers.length} membri)</h3>
-            
-            {/* Leader status */}
             {(() => {
               const isActive = salesCount >= 4 && teamMembers.length >= 2;
               return (
@@ -584,15 +645,11 @@ const PartnerDashboard = () => {
                 </div>
               );
             })()}
-
-            {/* Override Revenue */}
             <div className="p-5 rounded-2xl" style={{ background: "rgba(56,189,248,0.06)", border: "1px solid rgba(56,189,248,0.15)" }}>
               <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: "#7dd3fc" }}>Revenue da Management</p>
               <p className="text-3xl font-bold text-white">€{totalOverrides.toLocaleString()}</p>
               <p className="text-[10px] font-medium mt-2" style={{ color: "#38bdf8" }}>€50 × vendite idonee (dalla 5ª per membro)</p>
             </div>
-
-            {/* Team Ledger */}
             {teamMembers.length > 0 && (
               <div className="space-y-2">
                 <div className="grid grid-cols-12 gap-2 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>
@@ -625,19 +682,15 @@ const PartnerDashboard = () => {
           </section>
         )}
 
-        {/* ═══════ PORTFOLIO GRID ═══════ */}
+        {/* ═══════ PORTFOLIO GRID — Click opens detail overlay ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-8">
-          <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-6" style={{ color: "#9ca3af" }}>Portfolio Progetti</h3>
+          <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-6" style={{ color: "#9ca3af" }}>Portfolio Progetti — Clicca per esplorare</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {SECTOR_CARDS.slice(0, showFullPortfolio ? undefined : 6).map((card, i) => (
               <motion.div key={card.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
                 className="rounded-2xl overflow-hidden cursor-pointer group transition-all hover:scale-[1.02]"
                 style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
-                onClick={() => {
-                  if (card.id === "food") navigate(`/r/demo-partner-${user?.id?.substring(0, 8)}`);
-                  else navigate(`/demo/${card.id}`);
-                }}>
-                {/* Mockup previews */}
+                onClick={() => setDetailProject(card.id)}>
                 <div className="p-4 flex gap-2 justify-center overflow-hidden h-[160px] items-end" style={{ background: `linear-gradient(135deg, ${card.accent}15, rgba(10,10,20,0.9))` }}>
                   {card.screens.slice(0, 3).map((src, j) => (
                     <div key={j} className={`${j === 1 ? "w-[80px]" : "w-[65px]"} aspect-[9/19.5] rounded-[12px] overflow-hidden flex-shrink-0 transition-transform group-hover:scale-105`} style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
@@ -645,7 +698,6 @@ const PartnerDashboard = () => {
                     </div>
                   ))}
                 </div>
-                {/* Info */}
                 <div className="p-4 space-y-2">
                   <div className="flex flex-wrap gap-1.5">
                     {card.tags.slice(0, 2).map(tag => (
@@ -654,6 +706,9 @@ const PartnerDashboard = () => {
                   </div>
                   <h4 className="text-sm font-bold text-white uppercase tracking-wide">{card.name}</h4>
                   <p className="text-[11px] line-clamp-2" style={{ color: "#9ca3af" }}>{card.description}</p>
+                  <p className="text-[10px] font-semibold flex items-center gap-1" style={{ color: "#a78bfa" }}>
+                    Vedi tutti gli stili <ChevronRight className="w-3 h-3" />
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -699,20 +754,22 @@ const PartnerDashboard = () => {
           </div>
         </section>
 
-        {/* ═══════ FOOTER ═══════ */}
         <footer className="py-8 text-center" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="w-12 h-0.5 rounded-full mx-auto mb-4" style={{ background: "rgba(255,255,255,0.1)" }} />
           <p className="text-[11px]" style={{ color: "#6b7280" }}>Riservato ai partner commerciali — Empire © {new Date().getFullYear()}</p>
         </footer>
       </div>
 
-      {/* ═══════ VOICE AGENT ═══════ */}
+      {/* ═══════ PROJECT DETAIL OVERLAY ═══════ */}
+      <AnimatePresence>
+        {detailProject && (
+          <ProjectDetailOverlay sectorId={detailProject} onClose={() => setDetailProject(null)} />
+        )}
+      </AnimatePresence>
+
       <PartnerVoiceAgent activeTab="dashboard" demoMode={demoMode} />
-      
-      {/* ROI Calculator */}
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
 
-      {/* Reset Confirm Dialog */}
       <AnimatePresence>
         {showResetConfirm && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
