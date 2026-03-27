@@ -28,7 +28,7 @@ import { PORTFOLIO_PROJECTS } from "@/data/portfolio-showcase-data";
 import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 
-/* Helper: resolve demo URLs — Food & NCC use real premium dashboards */
+/* Helper: resolve demo URLs — all use /demo/:slug pattern for consistency */
 const getDemoSiteUrl = (sectorId: string) => {
   if (sectorId === "food") return "/r/impero-roma";
   if (sectorId === "ncc") return "/b/amalfi-luxury-transfer";
@@ -36,8 +36,6 @@ const getDemoSiteUrl = (sectorId: string) => {
   return `/demo/${slug}`;
 };
 const getDemoAdminUrl = (sectorId: string) => {
-  if (sectorId === "food") return "/r/impero-roma?view=admin";
-  if (sectorId === "ncc") return "/b/amalfi-luxury-transfer?view=admin";
   const slug = DEMO_SLUGS[sectorId as keyof typeof DEMO_SLUGS] || sectorId;
   return `/demo/${slug}/admin`;
 };
@@ -858,7 +856,7 @@ const PartnerDashboard = () => {
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { label: "Cliente", emoji: "👤", href: `/r/${demoRestaurant.slug}` },
-                      { label: "Admin", emoji: "⚙️", href: `/r/${demoRestaurant.slug}?view=admin` },
+                      { label: "Admin", emoji: "⚙️", href: `/demo/impero-roma/admin` },
                       { label: "Cucina", emoji: "👨‍🍳", href: `/kitchen` },
                     ].map((link, i) => (
                       <a key={i} href={link.href} target="_blank" rel="noopener noreferrer"

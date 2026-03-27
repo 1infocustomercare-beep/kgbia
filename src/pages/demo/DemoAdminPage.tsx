@@ -1037,7 +1037,11 @@ export default function DemoAdminPage() {
   const resolvedSector = useMemo(() => resolveIndustryFromSlug(slug || "food"), [slug]);
   const config = getSectorConfig(resolvedSector || "food");
   const allAgents = useMemo(() => getAllAgentsForSector(resolvedSector || "food"), [resolvedSector]);
-  const sectorKey = resolvedSector || "food";
+  // Normalize industry IDs to data keys (some data maps use legacy short names)
+  const DATA_KEY_ALIASES: Record<string, string> = {
+    accounting: "accountant", photography: "photographer", gardening: "gardener",
+  };
+  const sectorKey = DATA_KEY_ALIASES[resolvedSector || ""] || resolvedSector || "food";
   const layoutConfig = useMemo(() => getAdminLayout(sectorKey), [sectorKey]);
   const revenueData = useMemo(() => generateRevenueData(sectorKey), [sectorKey]);
   const calendarData = useMemo(generateCalendarDays, []);
