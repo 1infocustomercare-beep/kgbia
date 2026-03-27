@@ -185,8 +185,11 @@ const PartnerDashboard = () => {
   const [targetIg, setTargetIg] = useState("");
   const [targetWebsite, setTargetWebsite] = useState("");
   const [messageVariant, setMessageVariant] = useState(0);
-  const [agencyEmail] = useState("info@empireai.agency");
+  const [agencyEmail, setAgencyEmail] = useState("info@empireaigroup.com");
+  const [agencyPhone, setAgencyPhone] = useState("");
   const [useNames, setUseNames] = useState(false);
+  const [scanningProspect, setScanningProspect] = useState(false);
+  const [aiGeneratedMessage, setAiGeneratedMessage] = useState<string | null>(null);
 
   // Persist demoMode
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
