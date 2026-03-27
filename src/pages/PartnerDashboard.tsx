@@ -181,6 +181,12 @@ const PartnerDashboard = () => {
   const [showFullPortfolio, setShowFullPortfolio] = useState(false);
   const [detailProject, setDetailProject] = useState<string | null>(null);
 
+  // Smart messaging state
+  const [targetIg, setTargetIg] = useState("");
+  const [targetWebsite, setTargetWebsite] = useState("");
+  const [messageVariant, setMessageVariant] = useState(0);
+  const [agencyEmail] = useState("info@empireai.agency");
+
   // Persist demoMode
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
