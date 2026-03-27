@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
@@ -246,90 +246,8 @@ export default function DemoDirectoryPage() {
         </div>
       </div>
 
-      {/* ═══ HERO CTA BANNER (photo-realistic code-only) ═══ */}
-      <div className="relative z-10 mx-4 mt-5 mb-6 rounded-2xl overflow-hidden"
-        style={{
-          minHeight: "220px",
-          background: "linear-gradient(135deg, hsl(220 35% 8%) 0%, hsl(240 25% 12%) 25%, hsl(265 30% 15%) 50%, hsl(220 35% 10%) 75%, hsl(200 25% 8%) 100%)",
-          boxShadow: "0 12px 50px hsla(265,50%,8%,0.6), inset 0 1px 0 hsla(265,40%,60%,0.1)",
-          border: "1px solid hsla(265,30%,35%,0.25)",
-        }}>
-        {/* Simulated city skyline / tech atmosphere layers */}
-        <div className="absolute inset-0">
-          {/* Bottom buildings silhouette */}
-          <div className="absolute bottom-0 left-0 right-0 h-[45%]" style={{
-            background: "linear-gradient(0deg, hsla(220,30%,4%,0.95) 0%, hsla(240,20%,8%,0.7) 40%, transparent 100%)"
-          }} />
-          {/* Tall building shapes */}
-          <div className="absolute bottom-0 left-[8%] w-[6%] h-[38%] rounded-t-sm" style={{ background: "hsla(220,20%,12%,0.8)" }} />
-          <div className="absolute bottom-0 left-[16%] w-[4%] h-[52%] rounded-t-sm" style={{ background: "hsla(230,25%,10%,0.7)" }} />
-          <div className="absolute bottom-0 left-[22%] w-[8%] h-[42%] rounded-t-sm" style={{ background: "hsla(240,20%,11%,0.75)" }} />
-          <div className="absolute bottom-0 right-[10%] w-[5%] h-[48%] rounded-t-sm" style={{ background: "hsla(225,22%,11%,0.7)" }} />
-          <div className="absolute bottom-0 right-[18%] w-[7%] h-[35%] rounded-t-sm" style={{ background: "hsla(235,20%,13%,0.65)" }} />
-          <div className="absolute bottom-0 right-[28%] w-[3%] h-[55%] rounded-t-sm" style={{ background: "hsla(240,25%,9%,0.8)" }} />
-          {/* Window lights */}
-          {[...Array(12)].map((_, i) => (
-            <div key={i} className="absolute w-[2px] h-[2px] rounded-full animate-pulse"
-              style={{
-                background: `hsla(${40 + i * 15}, 70%, 70%, ${0.3 + Math.random() * 0.5})`,
-                bottom: `${8 + (i % 4) * 8}%`,
-                left: `${10 + i * 7}%`,
-                animationDelay: `${i * 0.4}s`,
-                animationDuration: `${2 + Math.random() * 3}s`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Ambient glow orbs */}
-        <div className="absolute top-[-20%] right-[10%] w-[200px] h-[200px] rounded-full" style={{ background: "radial-gradient(circle, hsla(265,60%,40%,0.2), transparent 60%)", filter: "blur(60px)" }} />
-        <div className="absolute bottom-[10%] left-[5%] w-[180px] h-[180px] rounded-full" style={{ background: "radial-gradient(circle, hsla(200,50%,35%,0.15), transparent 60%)", filter: "blur(50px)" }} />
-        <div className="absolute top-[30%] left-[40%] w-[120px] h-[120px] rounded-full" style={{ background: "radial-gradient(circle, hsla(174,60%,40%,0.12), transparent 60%)", filter: "blur(40px)" }} />
-
-        {/* Diagonal light streaks */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-[50%] -right-[20%] w-[300px] h-[600px] rotate-[25deg] opacity-[0.04]"
-            style={{ background: "linear-gradient(180deg, transparent, hsla(265,50%,70%,0.6), transparent)" }} />
-          <div className="absolute -top-[30%] right-[30%] w-[150px] h-[500px] rotate-[15deg] opacity-[0.03]"
-            style={{ background: "linear-gradient(180deg, transparent, hsla(174,60%,60%,0.5), transparent)" }} />
-        </div>
-
-        {/* Noise texture overlay */}
-        <div className="absolute inset-0 opacity-[0.035]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-          backgroundSize: "128px 128px"
-        }} />
-
-        {/* Content */}
-        <div className="relative px-5 py-8 sm:px-8 sm:py-10 text-center" style={{ zIndex: 2 }}>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-4"
-            style={{ background: "hsla(174,60%,45%,0.15)", border: "1px solid hsla(174,60%,45%,0.3)" }}>
-            <Sparkles className="w-3 h-3 text-[hsl(174,60%,55%)]" />
-            <span className="text-[0.65rem] font-bold tracking-widest uppercase text-[hsl(174,60%,65%)]">25+ Settori</span>
-          </div>
-
-          <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "'Playfair Display', serif", textShadow: "0 2px 20px hsla(0,0%,0%,0.5)" }}>
-            Trasforma la tua attività<br />
-            <span className="text-[hsl(174,60%,55%)]">in un'esperienza digitale</span>
-          </h2>
-          <p className="text-xs sm:text-sm text-white/60 max-w-md mx-auto mb-6" style={{ textShadow: "0 1px 8px hsla(0,0%,0%,0.4)" }}>
-            Dashboard AI, ordini, prenotazioni e CRM — tutto pronto in pochi minuti
-          </p>
-
-          <div className="flex gap-2.5 justify-center">
-            <button onClick={() => navigate("/auth")}
-              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-transform hover:scale-105"
-              style={{ background: "linear-gradient(135deg, hsl(174 60% 45%), hsl(190 55% 40%))", boxShadow: "0 4px 20px hsla(174,60%,30%,0.5)" }}>
-              Contattaci <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-            <button onClick={() => { const el = document.getElementById("demo-list"); el?.scrollIntoView({ behavior: "smooth" }); }}
-              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white/85 flex items-center gap-1.5 transition-transform hover:scale-105"
-              style={{ background: "hsla(220,20%,18%,0.7)", border: "1px solid hsla(265,30%,50%,0.3)", backdropFilter: "blur(12px)" }}>
-              <Eye className="w-3.5 h-3.5" /> Guarda i lavori
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* ═══ HERO CTA — iPhone with rotating sector previews ═══ */}
+      <HeroPhoneShowcase navigate={navigate} />
 
       <div id="demo-list" className="max-w-5xl mx-auto px-4 py-2 relative z-10">
         {/* ═══ SEARCH ═══ */}
