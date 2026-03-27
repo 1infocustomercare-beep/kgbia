@@ -417,6 +417,9 @@ const BEACH_PROJECTS: MockupProject[] = [
       { url: m("Miami%20Watersports/style-g-mobile-home.png"), type: "home", style: "g", device: "mobile" },
     ],
   },
+  localProject("Lido Azzurro", "lido-azzurro", [
+    { url: beachHomeMockup, type: "home" }, { url: beachBookingMockup, type: "booking" },
+  ]),
 ];
 
 // ═══════════════════════════════════════════
