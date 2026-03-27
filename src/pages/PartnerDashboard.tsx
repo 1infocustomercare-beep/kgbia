@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import ROICalculator from "@/components/partner/ROICalculator";
