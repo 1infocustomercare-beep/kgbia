@@ -26,6 +26,21 @@ import { toast } from "@/hooks/use-toast";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
 import { PORTFOLIO_PROJECTS } from "@/data/portfolio-showcase-data";
 import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
+import { DEMO_SLUGS } from "@/data/demo-industries";
+
+/* Helper: resolve demo URLs — Food & NCC use real premium dashboards */
+const getDemoSiteUrl = (sectorId: string) => {
+  if (sectorId === "food") return "/r/impero-roma";
+  if (sectorId === "ncc") return "/b/amalfi-luxury-transfer";
+  const slug = DEMO_SLUGS[sectorId as keyof typeof DEMO_SLUGS] || sectorId;
+  return `/demo/${slug}`;
+};
+const getDemoAdminUrl = (sectorId: string) => {
+  if (sectorId === "food") return "/r/impero-roma?view=admin";
+  if (sectorId === "ncc") return "/b/amalfi-luxury-transfer?view=admin";
+  const slug = DEMO_SLUGS[sectorId as keyof typeof DEMO_SLUGS] || sectorId;
+  return `/demo/${slug}/admin`;
+};
 
 /* ═══════════════════════════════════════════
    ACQUISITION CHANNELS
@@ -554,20 +569,22 @@ const PartnerDashboard = () => {
                 <div className="space-y-3">
                   <div className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                     <p className="text-[10px] mb-1 font-medium" style={{ color: "#6b7280" }}>Link Sito Demo:</p>
-                    <p className="text-xs font-mono break-all select-all" style={{ color: "#34d399" }}>{window.location.origin}/demo/{selectedProject}</p>
+                    <p className="text-xs font-mono break-all select-all" style={{ color: "#34d399" }}>{window.location.origin}{getDemoSiteUrl(selectedProject!)}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/demo/${selectedProject}`); toast({ title: "✅ Link Sito copiato!" }); }}
+                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}${getDemoSiteUrl(selectedProject!)}`); toast({ title: "✅ Link Sito copiato!" }); }}
                       className="py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", color: "#34d399" }}>
                       <Copy className="w-3.5 h-3.5" /> Copia Link Sito
                     </motion.button>
-                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/demo/${selectedProject}/admin`); toast({ title: "✅ Link Admin copiato!" }); }}
+                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}${getDemoAdminUrl(selectedProject!)}`); toast({ title: "✅ Link Admin copiato!" }); }}
                       className="py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.3)", color: "#a78bfa" }}>
                       <Copy className="w-3.5 h-3.5" /> Copia Link Admin
                     </motion.button>
                   </div>
                   <motion.button whileTap={{ scale: 0.97 }} onClick={() => {
-                    const text = `Ciao! 👋 Ecco la demo del tuo sito personalizzato:\n\n🌐 Sito: ${window.location.origin}/demo/${selectedProject}\n⚙️ Admin: ${window.location.origin}/demo/${selectedProject}/admin\n\nProvalo gratis, nessun impegno!`;
+                    const siteUrl = `${window.location.origin}${getDemoSiteUrl(selectedProject!)}`;
+                    const adminUrl = `${window.location.origin}${getDemoAdminUrl(selectedProject!)}`;
+                    const text = `Ciao! 👋 Ecco la demo del tuo sito personalizzato:\n\n🌐 Sito: ${siteUrl}\n⚙️ Admin: ${adminUrl}\n\nProvalo gratis, nessun impegno!`;
                     navigator.clipboard.writeText(text); toast({ title: "✅ Messaggio + link copiato!" });
                   }} className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "#7c3aed", color: "#ffffff" }}>
                     <Send className="w-3.5 h-3.5" /> Copia Messaggio con Link
@@ -620,7 +637,7 @@ const PartnerDashboard = () => {
                     </motion.a>
                   )}
                   {activeChannel === "field" && selectedProject && (
-                    <motion.a whileTap={{ scale: 0.97 }} href={`/demo/${selectedProject}`} target="_blank" rel="noopener noreferrer"
+                    <motion.a whileTap={{ scale: 0.97 }} href={getDemoSiteUrl(selectedProject)} target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "#F59E0B", color: "#000" }}>
                       <Smartphone className="w-4 h-4" /> Apri Demo
                     </motion.a>
@@ -717,7 +734,7 @@ const PartnerDashboard = () => {
 
               {/* Action buttons — universal for any sector */}
               <div className="grid grid-cols-2 gap-3">
-                <a href={selectedProject ? `/demo/${selectedProject}` : "#"}
+                <a href={selectedProject ? getDemoSiteUrl(selectedProject) : "#"}
                   target="_blank" rel="noopener noreferrer"
                   onClick={e => { if (!selectedProject) { e.preventDefault(); toast({ title: "Seleziona un settore", description: "Scegli un progetto dal catalogo sopra per aprire la demo." }); }}}
                   className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all text-center group"
@@ -728,7 +745,7 @@ const PartnerDashboard = () => {
                   <span className="text-xs font-bold text-white">Sito Cliente</span>
                   <span className="text-[9px]" style={{ color: "#6b7280" }}>Mostra al cliente come appare</span>
                 </a>
-                <a href={selectedProject ? `/demo/${selectedProject}/admin` : "#"}
+                <a href={selectedProject ? getDemoAdminUrl(selectedProject) : "#"}
                   target="_blank" rel="noopener noreferrer"
                   onClick={e => { if (!selectedProject) { e.preventDefault(); toast({ title: "Seleziona un settore", description: "Scegli un progetto dal catalogo sopra per aprire l'admin." }); }}}
                   className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all text-center group"
