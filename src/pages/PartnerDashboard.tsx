@@ -184,6 +184,7 @@ const PartnerDashboard = () => {
   const [targetWebsite, setTargetWebsite] = useState("");
   const [messageVariant, setMessageVariant] = useState(0);
   const [agencyEmail] = useState("info@empireai.agency");
+  const [useNames, setUseNames] = useState(false);
 
   // Persist demoMode
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
@@ -382,7 +383,11 @@ const PartnerDashboard = () => {
   };
 
   const handleCopyTemplate = () => {
-    navigator.clipboard.writeText(currentTemplate);
+    let text = currentTemplate;
+    if (!useNames) {
+      text = text.replace(/\[NOME\]/g, "").replace(/\[TUO NOME\]/g, "").replace(/  +/g, " ").trim();
+    }
+    navigator.clipboard.writeText(text);
     toast({ title: "✅ Copiato!", description: `${templateLabel} copiato negli appunti.` });
   };
 
@@ -727,31 +732,59 @@ const PartnerDashboard = () => {
                     {selectedProjectName && <span className="px-2 py-0.5 rounded text-[9px] font-semibold" style={{ background: "rgba(167,139,250,0.15)", color: "#a78bfa" }}>{selectedProjectName}</span>}
                     <span className="px-2 py-0.5 rounded text-[9px]" style={{ background: "rgba(255,255,255,0.05)", color: "#6b7280" }}>v{(messageVariant % Math.max(variants.length, 1)) + 1}/{variants.length}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <button onClick={handleRegenerate} title="Genera variante diversa" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}>
-                      <RefreshCw className="w-3 h-3" style={{ color: "#34d399" }} /><span style={{ color: "#34d399" }}>Rigenera</span>
-                    </button>
-                    <button onClick={handleCopyTemplate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-                      <Copy className="w-3 h-3" style={{ color: "#a78bfa" }} /><span className="text-white">Copia</span>
-                    </button>
-                  </div>
+                  <button onClick={handleRegenerate} title="Genera variante diversa" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}>
+                    <RefreshCw className="w-3 h-3" style={{ color: "#34d399" }} /><span style={{ color: "#34d399" }}>Rigenera</span>
+                  </button>
                 </div>
+
+                {/* Toggle: con/senza nomi */}
+                <div className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.12)" }}>
+                  <span className="text-[10px] font-medium" style={{ color: "#9ca3af" }}>Personalizza con [NOME] e [TUO NOME]</span>
+                  <button
+                    onClick={() => setUseNames(!useNames)}
+                    className="px-3 py-1 rounded-lg text-[10px] font-bold transition-all"
+                    style={{
+                      background: useNames ? "rgba(167,139,250,0.2)" : "rgba(255,255,255,0.06)",
+                      border: `1px solid ${useNames ? "rgba(167,139,250,0.4)" : "rgba(255,255,255,0.1)"}`,
+                      color: useNames ? "#c4b5fd" : "#6b7280",
+                    }}
+                  >
+                    {useNames ? "✓ Attivo — modifica i nomi" : "Off — pronto da inviare"}
+                  </button>
+                </div>
+
                 <div className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "#d1d5db" }}>
-                  {currentTemplate.split(/(\[(?:NOME|TUO NOME)\])/).map((part: string, i: number) =>
-                    part.match(/\[(?:NOME|TUO NOME)\]/) ? (
-                      <span key={i} className="px-1 py-0.5 rounded font-bold" style={{ background: "rgba(167,139,250,0.2)", color: "#c4b5fd" }}>{part}</span>
-                    ) : part
-                  )}
+                  {useNames
+                    ? currentTemplate.split(/(\[(?:NOME|TUO NOME)\])/).map((part: string, i: number) =>
+                        part.match(/\[(?:NOME|TUO NOME)\]/) ? (
+                          <span key={i} className="px-1 py-0.5 rounded font-bold" style={{ background: "rgba(167,139,250,0.2)", color: "#c4b5fd" }}>{part}</span>
+                        ) : part
+                      )
+                    : currentTemplate.replace(/\[NOME\]/g, "").replace(/\[TUO NOME\]/g, "").replace(/  +/g, " ").trim()
+                  }
                 </div>
-                <div className="flex items-center gap-2 p-2.5 rounded-xl" style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.1)" }}>
-                  <Mail className="w-3.5 h-3.5" style={{ color: "#818cf8" }} />
-                  <span className="text-[10px]" style={{ color: "#a5b4fc" }}>Email Agency inclusa: <strong>{agencyEmail}</strong></span>
-                </div>
-                <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Sostituisci [NOME] con il nome dell'attività e [TUO NOME] con il tuo nome</p>
+
+                {/* Demo link preview */}
+                {selectedProject ? (
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.12)" }}>
+                    <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#34d399" }} />
+                    <span className="text-[10px] font-mono break-all" style={{ color: "#34d399" }}>{window.location.origin}{getDemoSiteUrl(selectedProject)}</span>
+                  </div>
+                ) : (
+                  <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Seleziona un settore per includere il link demo nel messaggio</p>
+                )}
+
+                {useNames && (
+                  <p className="text-[9px] italic" style={{ color: "#6b7280" }}>💡 Sostituisci [NOME] con il nome dell'attività e [TUO NOME] con il tuo nome</p>
+                )}
                 {!selectedProject && (
                   <p className="text-[10px] text-center py-2 rounded-lg" style={{ background: "rgba(245,158,11,0.08)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.15)" }}>💡 Seleziona un settore sopra per template personalizzati</p>
                 )}
-                <div className="flex flex-wrap gap-2 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="flex flex-wrap gap-2 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={handleCopyTemplate}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold" style={{ background: "#7c3aed", color: "#ffffff" }}>
+                    <Copy className="w-4 h-4" /> Copia & Invia
+                  </motion.button>
                   {activeChannel === "instagram" && (
                     <motion.a whileTap={{ scale: 0.97 }} href={targetIg ? `https://www.instagram.com/${targetIg.replace("@", "")}/` : "https://www.instagram.com/direct/inbox/"} target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>
@@ -776,14 +809,6 @@ const PartnerDashboard = () => {
                       <Smartphone className="w-4 h-4" /> Apri Demo
                     </motion.a>
                   )}
-                  <motion.button whileTap={{ scale: 0.97 }} onClick={handleCopyTemplate}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#d1d5db" }}>
-                    <Copy className="w-4 h-4" /> Copia Testo
-                  </motion.button>
-                  <motion.button whileTap={{ scale: 0.97 }} onClick={handleRegenerate}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)", color: "#34d399" }}>
-                    <RefreshCw className="w-4 h-4" /> Messaggio Diverso
-                  </motion.button>
                 </div>
               </div>
               {activeChannel === "field" && currentObjections.length > 0 && (
