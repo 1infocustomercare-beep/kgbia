@@ -751,9 +751,28 @@ const PartnerDashboard = () => {
                     />
                   </div>
                 </div>
+                {/* AI Scan Button */}
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleScanProspect}
+                  disabled={scanningProspect || (!targetIg && !targetWebsite)}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold disabled:opacity-40 transition-all"
+                  style={{ background: "linear-gradient(135deg, rgba(129,140,248,0.2), rgba(16,185,129,0.2))", border: "1px solid rgba(129,140,248,0.3)", color: "#a5b4fc" }}
+                >
+                  {scanningProspect ? (
+                    <><RefreshCw className="w-3.5 h-3.5 animate-spin" /> Scansione IA in corso...</>
+                  ) : (
+                    <><Wand2 className="w-3.5 h-3.5" /> 🤖 Scansiona & Genera Messaggio AI</>
+                  )}
+                </motion.button>
+                {aiGeneratedMessage && (
+                  <div className="p-3 rounded-xl text-[10px]" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)", color: "#34d399" }}>
+                    ✅ Messaggio AI personalizzato generato — è la prima variante nei template
+                  </div>
+                )}
                 {hasAnalysis && (
                   <button
-                    onClick={() => { setTargetIg(""); setTargetWebsite(""); }}
+                    onClick={() => { setTargetIg(""); setTargetWebsite(""); setAiGeneratedMessage(null); }}
                     className="text-[9px] font-medium px-2 py-1 rounded-lg transition-all"
                     style={{ background: "rgba(239,68,68,0.08)", color: "#f87171", border: "1px solid rgba(239,68,68,0.15)" }}
                   >
