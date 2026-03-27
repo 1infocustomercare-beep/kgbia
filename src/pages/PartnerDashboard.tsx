@@ -569,20 +569,22 @@ const PartnerDashboard = () => {
                 <div className="space-y-3">
                   <div className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                     <p className="text-[10px] mb-1 font-medium" style={{ color: "#6b7280" }}>Link Sito Demo:</p>
-                    <p className="text-xs font-mono break-all select-all" style={{ color: "#34d399" }}>{window.location.origin}/demo/{selectedProject}</p>
+                    <p className="text-xs font-mono break-all select-all" style={{ color: "#34d399" }}>{window.location.origin}{getDemoSiteUrl(selectedProject!)}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/demo/${selectedProject}`); toast({ title: "✅ Link Sito copiato!" }); }}
+                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}${getDemoSiteUrl(selectedProject!)}`); toast({ title: "✅ Link Sito copiato!" }); }}
                       className="py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", color: "#34d399" }}>
                       <Copy className="w-3.5 h-3.5" /> Copia Link Sito
                     </motion.button>
-                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/demo/${selectedProject}/admin`); toast({ title: "✅ Link Admin copiato!" }); }}
+                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}${getDemoAdminUrl(selectedProject!)}`); toast({ title: "✅ Link Admin copiato!" }); }}
                       className="py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.3)", color: "#a78bfa" }}>
                       <Copy className="w-3.5 h-3.5" /> Copia Link Admin
                     </motion.button>
                   </div>
                   <motion.button whileTap={{ scale: 0.97 }} onClick={() => {
-                    const text = `Ciao! 👋 Ecco la demo del tuo sito personalizzato:\n\n🌐 Sito: ${window.location.origin}/demo/${selectedProject}\n⚙️ Admin: ${window.location.origin}/demo/${selectedProject}/admin\n\nProvalo gratis, nessun impegno!`;
+                    const siteUrl = `${window.location.origin}${getDemoSiteUrl(selectedProject!)}`;
+                    const adminUrl = `${window.location.origin}${getDemoAdminUrl(selectedProject!)}`;
+                    const text = `Ciao! 👋 Ecco la demo del tuo sito personalizzato:\n\n🌐 Sito: ${siteUrl}\n⚙️ Admin: ${adminUrl}\n\nProvalo gratis, nessun impegno!`;
                     navigator.clipboard.writeText(text); toast({ title: "✅ Messaggio + link copiato!" });
                   }} className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2" style={{ background: "#7c3aed", color: "#ffffff" }}>
                     <Send className="w-3.5 h-3.5" /> Copia Messaggio con Link
