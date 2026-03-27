@@ -404,6 +404,133 @@ const TRADES_PROJECTS: MockupProject[] = [
 ];
 
 // ═══════════════════════════════════════════
+// 12. BEACH (using Miami Watersports + Asinara)
+// ═══════════════════════════════════════════
+const BEACH_PROJECTS: MockupProject[] = [
+  {
+    name: "Miami Watersports",
+    slug: "miami-watersports",
+    images: [
+      { url: m("Miami%20Watersports/style-a-mobile-home.png"), type: "home", style: "a", device: "mobile" },
+      { url: m("Miami%20Watersports/style-a-mobile-activities.png"), type: "services", style: "a", device: "mobile" },
+      { url: m("Miami%20Watersports/style-e-mobile-home.png"), type: "home", style: "e", device: "mobile" },
+      { url: m("Miami%20Watersports/style-g-mobile-home.png"), type: "home", style: "g", device: "mobile" },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════
+// 13-24. LOCAL ASSET SECTORS
+// ═══════════════════════════════════════════
+import electricianHome from "@/assets/mockups/electrician-home.png";
+import electricianDetail from "@/assets/mockups/electrician-detail.png";
+import agriturismoHome from "@/assets/mockups/agriturismo-home.png";
+import agriturismoActivities from "@/assets/mockups/agriturismo-activities.png";
+import cleaningHome from "@/assets/mockups/cleaning-home.png";
+import cleaningBooking from "@/assets/mockups/cleaning-booking.png";
+import legalHome from "@/assets/mockups/legal-home.png";
+import legalCase from "@/assets/mockups/legal-case.png";
+import accountingHome from "@/assets/mockups/accounting-home.png";
+import accountingInvoice from "@/assets/mockups/accounting-invoice.png";
+import garageHome from "@/assets/mockups/garage-home.png";
+import garageDetail from "@/assets/mockups/garage-detail.png";
+import photographyHome from "@/assets/mockups/photography-home.png";
+import photographyGallery from "@/assets/mockups/photography-gallery.png";
+import gardeningHome from "@/assets/mockups/gardening-home.png";
+import gardeningProject from "@/assets/mockups/gardening-project.png";
+import tattooHome from "@/assets/mockups/tattoo-home.png";
+import tattooArtist from "@/assets/mockups/tattoo-artist.png";
+import educationHome from "@/assets/mockups/education-home.png";
+import educationCourse from "@/assets/mockups/education-course.png";
+import eventsHome from "@/assets/mockups/events-home.png";
+import eventsDetail from "@/assets/mockups/events-detail.png";
+import logisticsHome from "@/assets/mockups/logistics-home.png";
+import logisticsTracking from "@/assets/mockups/logistics-tracking.png";
+import retailHomeMockup from "@/assets/mockups/retail-home.png";
+import retailDetailMockup from "@/assets/mockups/retail-detail.png";
+import constructionHomeMockup from "@/assets/mockups/construction-home.png";
+import constructionTimelineMockup from "@/assets/mockups/construction-timeline.png";
+
+function localProject(name: string, slug: string, images: { url: string; type: MockupImage["type"] }[]): MockupProject {
+  return {
+    name, slug,
+    images: images.map(img => ({ ...img, style: "premium", device: "mobile" as const })),
+  };
+}
+
+const ELECTRICIAN_PROJECTS: MockupProject[] = [
+  localProject("Elettrica Moderna", "elettrica-moderna", [
+    { url: electricianHome, type: "home" }, { url: electricianDetail, type: "detail" },
+  ]),
+];
+
+const AGRITURISMO_PROJECTS: MockupProject[] = [
+  localProject("Podere del Sole", "podere-del-sole", [
+    { url: agriturismoHome, type: "home" }, { url: agriturismoActivities, type: "services" },
+  ]),
+];
+
+const CLEANING_PROJECTS: MockupProject[] = [
+  localProject("PulitoPro", "pulitopro", [
+    { url: cleaningHome, type: "home" }, { url: cleaningBooking, type: "booking" },
+  ]),
+];
+
+const LEGAL_PROJECTS: MockupProject[] = [
+  localProject("Studio Legale Martini", "studio-martini", [
+    { url: legalHome, type: "home" }, { url: legalCase, type: "detail" },
+  ]),
+];
+
+const ACCOUNTING_PROJECTS: MockupProject[] = [
+  localProject("Studio Rossi", "studio-rossi", [
+    { url: accountingHome, type: "home" }, { url: accountingInvoice, type: "detail" },
+  ]),
+];
+
+const GARAGE_PROJECTS: MockupProject[] = [
+  localProject("Autofficina Rossi", "autofficina-rossi", [
+    { url: garageHome, type: "home" }, { url: garageDetail, type: "detail" },
+  ]),
+];
+
+const PHOTOGRAPHY_PROJECTS: MockupProject[] = [
+  localProject("Luce Studio", "luce-studio", [
+    { url: photographyHome, type: "home" }, { url: photographyGallery, type: "portfolio" },
+  ]),
+];
+
+const GARDENING_PROJECTS: MockupProject[] = [
+  localProject("Verde Vivo", "verde-vivo", [
+    { url: gardeningHome, type: "home" }, { url: gardeningProject, type: "projects" },
+  ]),
+];
+
+const TATTOO_PROJECTS: MockupProject[] = [
+  localProject("Ink Factory", "ink-factory", [
+    { url: tattooHome, type: "home" }, { url: tattooArtist, type: "portfolio" },
+  ]),
+];
+
+const EDUCATION_PROJECTS: MockupProject[] = [
+  localProject("Accademia Sapere", "accademia-sapere", [
+    { url: educationHome, type: "home" }, { url: educationCourse, type: "detail" },
+  ]),
+];
+
+const EVENTS_PROJECTS: MockupProject[] = [
+  localProject("Dream Events", "dream-events", [
+    { url: eventsHome, type: "home" }, { url: eventsDetail, type: "detail" },
+  ]),
+];
+
+const LOGISTICS_PROJECTS: MockupProject[] = [
+  localProject("Flash Logistica", "flash-logistica", [
+    { url: logisticsHome, type: "home" }, { url: logisticsTracking, type: "detail" },
+  ]),
+];
+
+// ═══════════════════════════════════════════
 // MASTER CATALOG
 // ═══════════════════════════════════════════
 
@@ -443,10 +570,12 @@ export const SECTOR_MOCKUP_CATALOG: Record<string, SectorMockups> = {
   retail: {
     sectorId: "retail",
     label: "Retail & Negozi",
-    projects: RETAIL_PROJECTS,
+    projects: [...RETAIL_PROJECTS, localProject("Bottega Artigiana", "bottega-artigiana", [
+      { url: retailHomeMockup, type: "home" }, { url: retailDetailMockup, type: "detail" },
+    ])],
     designReferences: ["eataly.com", "rinascente.it"],
     heroImage: m("Mercato%20Di%20Nonna/warm-tuscan-home.png"),
-    totalCount: 8,
+    totalCount: 10,
   },
   fitness: {
     sectorId: "fitness",
@@ -463,6 +592,14 @@ export const SECTOR_MOCKUP_CATALOG: Record<string, SectorMockups> = {
     designReferences: ["aman.com", "borgoegnazia.com"],
     heroImage: m("Grand%20Palladium%20Resort/mobile-a-home.png"),
     totalCount: 60,
+  },
+  beach: {
+    sectorId: "beach",
+    label: "Stabilimento Balneare",
+    projects: BEACH_PROJECTS,
+    designReferences: ["miamiwatersports.com"],
+    heroImage: m("Miami%20Watersports/style-a-mobile-home.png"),
+    totalCount: 4,
   },
   childcare: {
     sectorId: "childcare",
@@ -483,18 +620,124 @@ export const SECTOR_MOCKUP_CATALOG: Record<string, SectorMockups> = {
   construction: {
     sectorId: "construction",
     label: "Edilizia & Cantieri",
-    projects: CONSTRUCTION_PROJECTS,
+    projects: [...CONSTRUCTION_PROJECTS, localProject("Edil Costruzioni", "edil-costruzioni", [
+      { url: constructionHomeMockup, type: "home" }, { url: constructionTimelineMockup, type: "detail" },
+    ])],
     designReferences: ["lendlease.com", "skanska.com"],
     heroImage: m("Elite%20Costruzioni%20Roma/mobile-a-home.png"),
-    totalCount: 32,
+    totalCount: 34,
   },
   plumber: {
     sectorId: "plumber",
-    label: "Artigiani & Servizi",
+    label: "Idraulico",
     projects: TRADES_PROJECTS,
-    designReferences: ["poltronafrau.com", "brunellocucinelli.com"],
+    designReferences: ["poltronafrau.com"],
     heroImage: m("Bottega%20Del%20Mobile/classic-walnut-home.png"),
     totalCount: 8,
+  },
+  electrician: {
+    sectorId: "electrician",
+    label: "Elettricista",
+    projects: ELECTRICIAN_PROJECTS,
+    designReferences: [],
+    heroImage: electricianHome,
+    totalCount: 2,
+  },
+  agriturismo: {
+    sectorId: "agriturismo",
+    label: "Agriturismo",
+    projects: AGRITURISMO_PROJECTS,
+    designReferences: [],
+    heroImage: agriturismoHome,
+    totalCount: 2,
+  },
+  cleaning: {
+    sectorId: "cleaning",
+    label: "Impresa Pulizie",
+    projects: CLEANING_PROJECTS,
+    designReferences: [],
+    heroImage: cleaningHome,
+    totalCount: 2,
+  },
+  legal: {
+    sectorId: "legal",
+    label: "Studio Legale",
+    projects: LEGAL_PROJECTS,
+    designReferences: [],
+    heroImage: legalHome,
+    totalCount: 2,
+  },
+  accounting: {
+    sectorId: "accounting",
+    label: "Commercialista",
+    projects: ACCOUNTING_PROJECTS,
+    designReferences: [],
+    heroImage: accountingHome,
+    totalCount: 2,
+  },
+  garage: {
+    sectorId: "garage",
+    label: "Autofficina",
+    projects: GARAGE_PROJECTS,
+    designReferences: [],
+    heroImage: garageHome,
+    totalCount: 2,
+  },
+  photography: {
+    sectorId: "photography",
+    label: "Fotografo",
+    projects: PHOTOGRAPHY_PROJECTS,
+    designReferences: [],
+    heroImage: photographyHome,
+    totalCount: 2,
+  },
+  gardening: {
+    sectorId: "gardening",
+    label: "Giardiniere",
+    projects: GARDENING_PROJECTS,
+    designReferences: [],
+    heroImage: gardeningHome,
+    totalCount: 2,
+  },
+  tattoo: {
+    sectorId: "tattoo",
+    label: "Tatuatore",
+    projects: TATTOO_PROJECTS,
+    designReferences: [],
+    heroImage: tattooHome,
+    totalCount: 2,
+  },
+  education: {
+    sectorId: "education",
+    label: "Formazione",
+    projects: EDUCATION_PROJECTS,
+    designReferences: [],
+    heroImage: educationHome,
+    totalCount: 2,
+  },
+  events: {
+    sectorId: "events",
+    label: "Eventi",
+    projects: EVENTS_PROJECTS,
+    designReferences: [],
+    heroImage: eventsHome,
+    totalCount: 2,
+  },
+  logistics: {
+    sectorId: "logistics",
+    label: "Logistica",
+    projects: LOGISTICS_PROJECTS,
+    designReferences: [],
+    heroImage: logisticsHome,
+    totalCount: 2,
+  },
+  custom: {
+    sectorId: "custom",
+    label: "Personalizzato",
+    projects: [],
+    designReferences: [],
+    heroImage: "",
+    totalCount: 0,
   },
 };
 
