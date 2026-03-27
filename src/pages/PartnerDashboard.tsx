@@ -54,8 +54,9 @@ const ACQUISITION_CHANNELS = [
    SECTOR PROJECT CARDS
    ═══════════════════════════════════════════ */
 const SECTOR_CARDS = Object.entries(PORTFOLIO_PROJECTS).map(([key, project]) => {
-  const portfolio = SECTOR_PORTFOLIO[key as keyof typeof SECTOR_PORTFOLIO];
-  const firstStyle = portfolio?.styles?.[0];
+  const portfolio = SECTOR_PORTFOLIO.find(sp => sp.sectorId === key);
+  const firstBrand = portfolio?.brands?.[0];
+  const firstStyle = firstBrand?.styles?.[0];
   const screens = firstStyle?.screens?.slice(0, 3) || [];
   return {
     id: key,
