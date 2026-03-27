@@ -15,7 +15,7 @@ import {
   Trees, Cog, Leaf
 } from "lucide-react";
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
-import demoHeroCta from "@/assets/demo-hero-cta.jpg";
+
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
