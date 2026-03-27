@@ -36,6 +36,8 @@ const getDemoSiteUrl = (sectorId: string) => {
   return `/demo/${slug}`;
 };
 const getDemoAdminUrl = (sectorId: string) => {
+  if (sectorId === "food") return "/dashboard";
+  if (sectorId === "ncc") return "/app";
   const slug = DEMO_SLUGS[sectorId as keyof typeof DEMO_SLUGS] || sectorId;
   return `/demo/${slug}/admin`;
 };
