@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { SECTOR_MOCKUP_CATALOG, getSectorHeroImages, type MockupImage } from "@/config/demoSiteMockups";
+import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { Input } from "@/components/ui/input";
 import {
   ArrowLeft, Search, ArrowRight, ChevronDown, ChevronUp, Crown,
@@ -55,6 +56,147 @@ const INDUSTRY_ICONS: Record<string, React.ReactNode> = {
 function getIcon(iconName: string) {
   return INDUSTRY_ICONS[iconName] || <Puzzle className="w-4 h-4" />;
 }
+
+/* ═══ Hero Phone Showcase — rotating sector previews in iPhone frame ═══ */
+const HERO_SECTORS: { id: IndustryId; label: string; color: string }[] = [
+  { id: "food", label: "Food", color: "25 95% 53%" },
+  { id: "beauty", label: "Beauty", color: "300 60% 60%" },
+  { id: "ncc", label: "NCC", color: "43 70% 54%" },
+  { id: "fitness", label: "Fitness", color: "142 60% 50%" },
+  { id: "hotel", label: "Hotel", color: "220 70% 55%" },
+  { id: "healthcare", label: "Healthcare", color: "174 60% 50%" },
+];
+
+const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setActiveIdx(i => (i + 1) % HERO_SECTORS.length), 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const sector = HERO_SECTORS[activeIdx];
+  const mockups = SECTOR_MOCKUP_IMAGES[sector.id] || [];
+  const currentImage = mockups[0] || "";
+
+  return (
+    <div className="relative z-10 mx-4 mt-5 mb-6 rounded-2xl overflow-hidden"
+      style={{
+        background: "linear-gradient(160deg, hsl(220 20% 6%) 0%, hsl(240 18% 10%) 40%, hsl(265 22% 13%) 70%, hsl(220 20% 8%) 100%)",
+        boxShadow: "0 16px 60px hsla(265,50%,6%,0.7), inset 0 1px 0 hsla(265,40%,60%,0.08)",
+        border: "1px solid hsla(265,30%,30%,0.2)",
+      }}>
+      {/* Subtle noise */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+        backgroundSize: "128px 128px"
+      }} />
+
+      {/* Ambient orbs */}
+      <div className="absolute top-[-30%] right-[5%] w-[200px] h-[200px] rounded-full" style={{ background: `radial-gradient(circle, hsla(${sector.color} / 0.15), transparent 60%)`, filter: "blur(60px)", transition: "background 1s ease" }} />
+      <div className="absolute bottom-[-20%] left-[10%] w-[160px] h-[160px] rounded-full" style={{ background: "radial-gradient(circle, hsla(265,50%,40%,0.12), transparent 60%)", filter: "blur(50px)" }} />
+
+      <div className="relative flex flex-col sm:flex-row items-center gap-4 px-5 py-8 sm:px-10 sm:py-10" style={{ zIndex: 2 }}>
+        {/* Left: Text */}
+        <div className="flex-1 text-center sm:text-left">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-3"
+            style={{ background: "hsla(174,60%,45%,0.12)", border: "1px solid hsla(174,60%,45%,0.25)" }}>
+            <Sparkles className="w-3 h-3 text-[hsl(174,60%,55%)]" />
+            <span className="text-[0.6rem] font-bold tracking-widest uppercase text-[hsl(174,60%,65%)]">25+ Settori</span>
+          </div>
+
+          <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Il tuo business,<br />
+            <span style={{ color: `hsl(${sector.color})`, transition: "color 0.8s ease" }}>digitalizzato.</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-white/50 max-w-sm mb-5">
+            Dashboard IA, ordini, prenotazioni e CRM — pronto in 5 minuti per ogni settore.
+          </p>
+
+          {/* Sector pills */}
+          <div className="flex flex-wrap gap-1.5 justify-center sm:justify-start mb-5">
+            {HERO_SECTORS.map((s, i) => (
+              <button key={s.id} onClick={() => setActiveIdx(i)}
+                className="px-2.5 py-1 rounded-full text-[0.6rem] font-semibold tracking-wide transition-all duration-300"
+                style={{
+                  background: i === activeIdx ? `hsla(${s.color} / 0.2)` : "hsla(220,20%,20%,0.5)",
+                  border: `1px solid ${i === activeIdx ? `hsla(${s.color} / 0.5)` : "hsla(220,15%,25%,0.4)"}`,
+                  color: i === activeIdx ? `hsl(${s.color})` : "hsla(220,10%,70%,0.7)",
+                }}>
+                {s.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex gap-2.5 justify-center sm:justify-start">
+            <button onClick={() => navigate("/auth")}
+              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-transform hover:scale-105"
+              style={{ background: "linear-gradient(135deg, hsl(174 60% 45%), hsl(190 55% 40%))", boxShadow: "0 4px 20px hsla(174,60%,30%,0.4)" }}>
+              Inizia Gratis <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+            <button onClick={() => { const el = document.getElementById("demo-list"); el?.scrollIntoView({ behavior: "smooth" }); }}
+              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white/80 flex items-center gap-1.5 transition-transform hover:scale-105"
+              style={{ background: "hsla(220,20%,16%,0.7)", border: "1px solid hsla(265,30%,45%,0.25)", backdropFilter: "blur(12px)" }}>
+              <Eye className="w-3.5 h-3.5" /> Vedi Demo
+            </button>
+          </div>
+        </div>
+
+        {/* Right: iPhone with rotating preview */}
+        <div className="relative flex-shrink-0 w-[180px] sm:w-[200px]">
+          {/* Glow behind phone */}
+          <div className="absolute inset-0 rounded-[2rem]" style={{
+            background: `radial-gradient(ellipse at center, hsla(${sector.color} / 0.2), transparent 70%)`,
+            filter: "blur(30px)", transform: "scale(1.3)", transition: "background 1s ease"
+          }} />
+          {/* iPhone frame */}
+          <div className="relative rounded-[2rem] overflow-hidden border-[3px]"
+            style={{
+              borderColor: "hsla(220,15%,25%,0.6)",
+              boxShadow: `0 20px 50px hsla(0,0%,0%,0.5), 0 0 30px hsla(${sector.color} / 0.15)`,
+              aspectRatio: "9/19.5",
+              background: "hsl(220,20%,5%)",
+              transition: "box-shadow 1s ease",
+            }}>
+            {/* Notch */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-[3.5%] rounded-b-xl z-20" style={{ background: "hsl(220,20%,5%)" }} />
+            {/* Screen */}
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={sector.id}
+                src={currentImage}
+                alt={sector.label}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              />
+            </AnimatePresence>
+            {/* Screen overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
+            {/* Home indicator */}
+            <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[30%] h-[3px] rounded-full bg-white/20" />
+          </div>
+          {/* Sector label floating */}
+          <motion.div
+            key={sector.id + "-label"}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[0.55rem] font-bold tracking-wider uppercase whitespace-nowrap"
+            style={{
+              background: `hsla(${sector.color} / 0.2)`,
+              border: `1px solid hsla(${sector.color} / 0.4)`,
+              color: `hsl(${sector.color})`,
+              backdropFilter: "blur(10px)",
+            }}>
+            {sector.label}
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 /* ═══ FEATURED DEMOS ═══ */
 const FEATURED_DEMOS = [
