@@ -450,6 +450,20 @@ import retailHomeMockup from "@/assets/mockups/retail-home.png";
 import retailDetailMockup from "@/assets/mockups/retail-detail.png";
 import constructionHomeMockup from "@/assets/mockups/construction-home.png";
 import constructionTimelineMockup from "@/assets/mockups/construction-timeline.png";
+import beachHomeMockup from "@/assets/mockups/beach-home.png";
+import beachBookingMockup from "@/assets/mockups/beach-booking.png";
+import electricianServicesMockup from "@/assets/mockups/electrician-services.png";
+import agriturismoRoomsMockup from "@/assets/mockups/agriturismo-rooms.png";
+import cleaningScheduleMockup from "@/assets/mockups/cleaning-schedule.png";
+import legalDeadlinesMockup from "@/assets/mockups/legal-deadlines.png";
+import accountingDeadlinesMockup from "@/assets/mockups/accounting-deadlines.png";
+import garageRepairsMockup from "@/assets/mockups/garage-repairs.png";
+import photographyCalendarMockup from "@/assets/mockups/photography-calendar.png";
+import gardeningJobsMockup from "@/assets/mockups/gardening-jobs.png";
+import tattooPortfolioMockup from "@/assets/mockups/tattoo-portfolio.png";
+import educationCalendarMockup from "@/assets/mockups/education-calendar.png";
+import eventsTimelineMockup from "@/assets/mockups/events-timeline.png";
+import logisticsFleetMockup from "@/assets/mockups/logistics-fleet.png";
 
 function localProject(name: string, slug: string, images: { url: string; type: MockupImage["type"] }[]): MockupProject {
   return {
