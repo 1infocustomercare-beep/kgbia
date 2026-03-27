@@ -35,7 +35,7 @@ const PASSWORD = "Empire2024!";
 const CUSTOMER_ACCOUNTS = [
   { email: "cliente-food@empire-test.com", name: "Marco Rossi", industry: "food" },
   { email: "cliente-beauty@empire-test.com", name: "Giulia Bianchi", industry: "beauty" },
-  { email: "cliente-ncc@empire-test.com", name: "Luca Verdi", industry: "ncc" },
+  { email: "cliente-ncc@empire-test.com", name: "Luca Verdi (anche Admin NCC Premium)", industry: "ncc" },
   { email: "cliente-fitness@empire-test.com", name: "Sara Colombo", industry: "fitness" },
   { email: "cliente-healthcare@empire-test.com", name: "Paolo Moretti", industry: "healthcare" },
   { email: "cliente-hotel@empire-test.com", name: "Anna Ferrari", industry: "hospitality" },
@@ -50,6 +50,14 @@ const DemoAccountsPage = () => {
   const [showPasswords, setShowPasswords] = useState(false);
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"admin" | "customer">("admin");
+
+  // Override emails for premium accounts
+  const PREMIUM_EMAILS: Record<string, string> = {
+    food: "imperioroma@test.com",
+    ncc: "cliente-ncc@empire-test.com",
+  };
+
+  const getAdminEmail = (industry: string) => PREMIUM_EMAILS[industry] || `admin-${industry}@empire-test.com`;
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -73,7 +81,7 @@ const DemoAccountsPage = () => {
   const filtered = INDUSTRIES.filter(i => {
     if (!search) return true;
     const label = LABELS[i]?.toLowerCase() || i;
-    const email = `admin-${i}@empire-test.com`;
+    const email = getAdminEmail(i);
     return label.includes(search.toLowerCase()) || email.includes(search.toLowerCase()) || i.includes(search.toLowerCase());
   });
 
@@ -143,7 +151,7 @@ const DemoAccountsPage = () => {
       {view === "admin" && (
         <div className="px-4 py-3 space-y-2">
           {filtered.map((industry, i) => {
-            const email = `admin-${industry}@empire-test.com`;
+            const email = getAdminEmail(industry);
             const label = LABELS[industry] || industry;
             const slug = SLUGS[industry];
 

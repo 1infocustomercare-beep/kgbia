@@ -12,8 +12,8 @@ import { toast } from "sonner";
 const DEMO_PASSWORD = "Empire2024!";
 
 const DEMO_EMAILS: Record<string, string> = {
-  food: "admin-food@empire-test.com",
-  ncc: "admin-ncc@empire-test.com",
+  food: "imperioroma@test.com",
+  ncc: "cliente-ncc@empire-test.com",
   beauty: "admin-beauty@empire-test.com",
   healthcare: "admin-healthcare@empire-test.com",
   retail: "admin-retail@empire-test.com",
@@ -37,7 +37,7 @@ const DEMO_EMAILS: Record<string, string> = {
   events: "admin-events@empire-test.com",
   logistics: "admin-logistics@empire-test.com",
   custom: "admin-custom@empire-test.com",
-  bakery: "admin-food@empire-test.com",
+  bakery: "imperioroma@test.com",
   luxury: "admin-hospitality@empire-test.com",
   trades: "admin-plumber@empire-test.com",
 };
