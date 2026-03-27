@@ -201,13 +201,49 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                             {style.screens.length} schermate
                           </span>
                         </div>
-                        {/* Screens row — scrollable horizontally */}
-                        <div className="flex gap-2 px-4 pb-4 overflow-x-auto snap-x">
-                          {style.screens.map((screen, i) => (
-                            <IPhoneFrame key={i} src={screen} alt={`${brand.name} ${style.name} ${i + 1}`} size="sm"
-                              onClick={() => setLightbox({ screens: style.screens, index: i })} />
-                          ))}
-                        </div>
+                        {/* All screens — mobile + desktop combined */}
+                        {(() => {
+                          const allScreens = [
+                            ...style.screens,
+                            ...((style as any).desktopScreens || []),
+                          ];
+                          return (
+                            <div className="px-4 pb-4 space-y-2">
+                              {/* Mobile screens */}
+                              <p className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>
+                                📱 Mobile ({style.screens.length})
+                              </p>
+                              <div className="flex gap-2 overflow-x-auto snap-x pb-1">
+                                {style.screens.map((screen, i) => (
+                                  <IPhoneFrame key={`m-${i}`} src={screen} alt={`${brand.name} ${style.name} mobile ${i + 1}`} size="sm"
+                                    onClick={() => setLightbox({ screens: allScreens, index: i })} />
+                                ))}
+                              </div>
+                              {/* Desktop screens if available */}
+                              {(style as any).desktopScreens?.length > 0 && (
+                                <>
+                                  <p className="text-[9px] font-semibold uppercase tracking-wider pt-2" style={{ color: "#6b7280" }}>
+                                    🖥 Desktop ({(style as any).desktopScreens.length})
+                                  </p>
+                                  <div className="flex gap-3 overflow-x-auto snap-x pb-1">
+                                    {(style as any).desktopScreens.map((screen: string, i: number) => (
+                                      <button key={`d-${i}`} onClick={() => setLightbox({ screens: allScreens, index: style.screens.length + i })}
+                                        className="flex-shrink-0 group relative rounded-lg overflow-hidden border transition-transform hover:scale-105"
+                                        style={{ width: 200, aspectRatio: "16/10", borderColor: "rgba(255,255,255,0.1)", background: "#0a0a12", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
+                                        <img src={screen} alt={`${brand.name} ${style.name} desktop ${i + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                                          <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+                                          </div>
+                                        </div>
+                                      </button>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </div>
                     ))}
                   </div>
