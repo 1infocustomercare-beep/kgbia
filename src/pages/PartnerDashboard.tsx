@@ -976,7 +976,7 @@ const PartnerDashboard = () => {
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-8">
           <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-6" style={{ color: "#9ca3af" }}>{demoMode ? "Catalogo Principale — Preview Settori" : "Portfolio Progetti — Clicca per esplorare"}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {SECTOR_CARDS.slice(0, showFullPortfolio ? undefined : 6).map((card, i) => (
+            {SECTOR_CARDS.map((card, i) => (
               <motion.div key={card.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
                 className="rounded-2xl overflow-hidden cursor-pointer group transition-all hover:scale-[1.02]"
                 style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
@@ -1004,14 +1004,6 @@ const PartnerDashboard = () => {
             ))}
           </div>
           
-          {SECTOR_CARDS.length > 6 && (
-            <div className="text-center mt-6">
-              <button onClick={() => setShowFullPortfolio(!showFullPortfolio)} className="px-6 py-2.5 rounded-xl text-xs font-semibold transition-all"
-                style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
-                {showFullPortfolio ? "Mostra meno" : `Vedi tutti (${SECTOR_CARDS.length})`}
-              </button>
-            </div>
-          )}
         </section>
 
         {/* ═══════ CTA SECTION ═══════ */}
