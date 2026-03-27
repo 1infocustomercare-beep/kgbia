@@ -256,37 +256,41 @@ const PartnerDashboard = () => {
     : DEFAULT_TEMPLATES;
 
   const DM_VARIANTS = [
+    ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
     hasAnalysis
-      ? `Ciao [NOME]! 👋 ${analysisPrefix}Complimenti per quello che fate nel ${sectorLabel}!\n\n${currentTemplates.dm.split('\n\n').slice(1).join('\n\n')}\n\n🎯 Ecco una demo del vostro settore: ${demoLink}\n📩 Per info: ${agencyEmail}`
+      ? `Ciao [NOME]! 👋 ${analysisPrefix}Complimenti per quello che fate nel ${sectorLabel}!\n\n${currentTemplates.dm.split('\n\n').slice(1).join('\n\n')}\n\n🎯 Ecco una demo del vostro settore: ${demoLink}\n${contactInfo}`
       : currentTemplates.dm,
-    `Ciao [NOME]! 👋 ${igMention ? `Ho appena visto il profilo ${igMention} — ` : ""}Lavorate nel settore ${sectorLabel}${siteMention ? ` e ho dato un'occhiata al vostro sito (${siteMention})` : ""}.\n\nHo una domanda: state usando qualche strumento digitale per gestire prenotazioni e clienti?\n\nAbbiamo creato qualcosa di specifico per ${sectorLabel} che vi farebbe risparmiare ore ogni giorno. Ecco una demo gratuita: ${demoLink}\n\n📩 Per info: ${agencyEmail}`,
-    `Hey [NOME]! 🔥 ${igMention ? `Seguo ${igMention} da un po' — ` : ""}Complimenti per quello che fate!\n\nVi faccio una proposta diretta: ho un'app personalizzata per ${sectorLabel} che automatizza prenotazioni, pagamenti e fidelizzazione clienti.\n\n🎯 Guardate questa demo creata per il vostro settore: ${demoLink}\n\nSe vi interessa, scrivetemi o mandate una mail a ${agencyEmail} — vi mostro tutto in 5 minuti!`,
+    `Ciao [NOME]! 👋 ${igMention ? `Ho appena visto il profilo ${igMention} — ` : ""}Lavorate nel settore ${sectorLabel}${siteMention ? ` e ho dato un'occhiata al vostro sito (${siteMention})` : ""}.\n\nHo una domanda: state usando qualche strumento digitale per gestire prenotazioni e clienti?\n\nAbbiamo creato qualcosa di specifico per ${sectorLabel} che vi farebbe risparmiare ore ogni giorno. Ecco una demo gratuita: ${demoLink}\n\n${contactInfo}`,
+    `Hey [NOME]! 🔥 ${igMention ? `Seguo ${igMention} da un po' — ` : ""}Complimenti per quello che fate!\n\nVi faccio una proposta diretta: ho un'app personalizzata per ${sectorLabel} che automatizza prenotazioni, pagamenti e fidelizzazione clienti.\n\n🎯 Guardate questa demo creata per il vostro settore: ${demoLink}\n\nSe vi interessa, scrivetemi — ${contactInfo}. Vi mostro tutto in 5 minuti!`,
   ];
   const WA_VARIANTS = [
+    ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
     hasAnalysis
-      ? `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${analysisPrefix}${(currentTemplates as any).whatsapp?.split('\n\n').slice(1).join('\n\n') || DEFAULT_TEMPLATES.whatsapp.split('\n\n').slice(1).join('\n\n')}\n\n👉 Demo: ${demoLink}\n📩 Info: ${agencyEmail}`
+      ? `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${analysisPrefix}${(currentTemplates as any).whatsapp?.split('\n\n').slice(1).join('\n\n') || DEFAULT_TEMPLATES.whatsapp.split('\n\n').slice(1).join('\n\n')}\n\n👉 Demo: ${demoLink}\n${contactInfo}`
       : ((currentTemplates as any).whatsapp || DEFAULT_TEMPLATES.whatsapp),
-    `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${siteMention ? `Ho visitato il vostro sito (${siteMention}) e ` : ""}Ho una proposta specifica per [NOME] nel settore ${sectorLabel}.\n\n🚀 Abbiamo un'app personalizzata con il VOSTRO brand che include:\n• Prenotazioni 24/7 automatiche\n• Gestione clienti e CRM\n• Marketing automatizzato\n\n👉 Provate la demo: ${demoLink}\n\n📩 Info: ${agencyEmail}\n\nPosso mostrarvi tutto in 2 minuti?`,
-    `Ciao! Sono [TUO NOME]. Vi contatto perché lavoriamo con diverse realtà nel ${sectorLabel}.\n\n${igMention ? `Ho visto ${igMention} e credo che ` : ""}[NOME] potrebbe beneficiare enormemente della nostra piattaforma.\n\n✅ Demo gratuita: ${demoLink}\n✅ Contatto: ${agencyEmail}\n\nNessun impegno — date un'occhiata e ditemi cosa ne pensate!`,
+    `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${siteMention ? `Ho visitato il vostro sito (${siteMention}) e ` : ""}Ho una proposta specifica per [NOME] nel settore ${sectorLabel}.\n\n🚀 Abbiamo un'app personalizzata con il VOSTRO brand che include:\n• Prenotazioni 24/7 automatiche\n• Gestione clienti e CRM\n• Marketing automatizzato\n\n👉 Provate la demo: ${demoLink}\n\n${contactInfo}\n\nPosso mostrarvi tutto in 2 minuti?`,
+    `Ciao! Sono [TUO NOME]. Vi contatto perché lavoriamo con diverse realtà nel ${sectorLabel}.\n\n${igMention ? `Ho visto ${igMention} e credo che ` : ""}[NOME] potrebbe beneficiare enormemente della nostra piattaforma.\n\n✅ Demo gratuita: ${demoLink}\n✅ ${contactInfo}\n\nNessun impegno — date un'occhiata e ditemi cosa ne pensate!`,
   ];
   const EMAIL_VARIANTS = [
+    ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
     hasAnalysis
       ? currentTemplates.email.replace(
           /Buongiorno,\n\n/,
           `Buongiorno,\n\n${analysisPrefix.charAt(0).toUpperCase() + analysisPrefix.slice(1)}e volevo presentarvi una proposta.\n\n`
         )
       : currentTemplates.email,
-    `Oggetto: [NOME] — Proposta digitalizzazione ${sectorLabel} (demo inclusa)\n\nBuongiorno,\n\nMi chiamo [TUO NOME] e mi occupo di digitalizzazione per il settore ${sectorLabel}.\n\n${siteMention ? `Ho analizzato il vostro sito (${siteMention}) e ` : ""}Credo che [NOME] stia perdendo opportunità per mancanza di strumenti digitali adeguati.\n\nAbbiamo creato una piattaforma specifica per ${sectorLabel} che include:\n\n✅ App personalizzata con il VOSTRO brand\n✅ Prenotazioni online 24/7\n✅ CRM e gestione clienti automatizzata\n✅ Marketing e fidelizzazione integrati\n\n🎯 Guardate la demo del vostro settore: ${demoLink}\n\n💰 Investimento: da €79/mese — si ripaga in pochi giorni.\n\nPer qualsiasi domanda: ${agencyEmail}\n\nRestiamo a disposizione per una presentazione di 10 minuti.\n\nCordiali saluti,\n[TUO NOME]\nEmpire AI Agency`,
-    `Oggetto: Esclusiva per [NOME] — ${sectorLabel} digitale\n\nGentili,\n\n${siteMention ? `Ho visitato ${siteMention} e ` : ""}Volevo presentarvi una soluzione su misura per ${sectorLabel}.\n\nI numeri parlano chiaro:\n📈 +35% prenotazioni\n⏰ -70% tempo gestione\n💰 ROI dal primo mese\n\n🔗 Demo interattiva: ${demoLink}\n📩 Contatto diretto: ${agencyEmail}\n\nNessun impegno — la demo è gratuita.\n\n[TUO NOME] — Empire AI Agency`,
+    `Oggetto: [NOME] — Proposta digitalizzazione ${sectorLabel} (demo inclusa)\n\nBuongiorno,\n\nMi chiamo [TUO NOME] e mi occupo di digitalizzazione per il settore ${sectorLabel}.\n\n${siteMention ? `Ho analizzato il vostro sito (${siteMention}) e ` : ""}Credo che [NOME] stia perdendo opportunità per mancanza di strumenti digitali adeguati.\n\nAbbiamo creato una piattaforma specifica per ${sectorLabel} che include:\n\n✅ App personalizzata con il VOSTRO brand\n✅ Prenotazioni online 24/7\n✅ CRM e gestione clienti automatizzata\n✅ Marketing e fidelizzazione integrati\n\n🎯 Guardate la demo del vostro settore: ${demoLink}\n\n💰 Investimento: da €79/mese — si ripaga in pochi giorni.\n\n${contactInfo}\n\nRestiamo a disposizione per una presentazione di 10 minuti.\n\nCordiali saluti,\n[TUO NOME]\nEmpire AI Group`,
+    `Oggetto: Esclusiva per [NOME] — ${sectorLabel} digitale\n\nGentili,\n\n${siteMention ? `Ho visitato ${siteMention} e ` : ""}Volevo presentarvi una soluzione su misura per ${sectorLabel}.\n\nI numeri parlano chiaro:\n📈 +35% prenotazioni\n⏰ -70% tempo gestione\n💰 ROI dal primo mese\n\n🔗 Demo interattiva: ${demoLink}\n${contactInfo}\n\nNessun impegno — la demo è gratuita.\n\n[TUO NOME] — Empire AI Group`,
   ];
   const PITCH_VARIANTS = [
+    ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
     hasAnalysis
       ? currentTemplates.pitch.replace(
           /APERTURA: "/,
           `APERTURA: "${analysisPrefix}`
         )
       : currentTemplates.pitch,
-    `APERTURA: "Buongiorno! ${siteMention ? `Ho visto il vostro sito — ` : ""}Una domanda: quanto fatturato perdete ogni mese per inefficienze nella gestione?"\n\nPROBLEMA: "Nel settore ${sectorLabel}, le attività perdono il 30-40% dei potenziali clienti per mancanza di strumenti digitali."\n\nSOLUZIONE: "Noi creiamo un'app con il VOSTRO brand specifica per ${sectorLabel}. I clienti prenotano, pagano e tornano — tutto automatizzato."\n\nDEMO: "Guardate: ${demoLink} — è una demo reale del vostro settore."\n\nCHIUSURA: "Per info complete scriveteci a ${agencyEmail}. Possiamo attivare tutto in 48 ore."`,
+    `APERTURA: "Buongiorno! ${siteMention ? `Ho visto il vostro sito — ` : ""}Una domanda: quanto fatturato perdete ogni mese per inefficienze nella gestione?"\n\nPROBLEMA: "Nel settore ${sectorLabel}, le attività perdono il 30-40% dei potenziali clienti per mancanza di strumenti digitali."\n\nSOLUZIONE: "Noi creiamo un'app con il VOSTRO brand specifica per ${sectorLabel}. I clienti prenotano, pagano e tornano — tutto automatizzato."\n\nDEMO: "Guardate: ${demoLink} — è una demo reale del vostro settore."\n\nCHIUSURA: "${contactInfo}. Possiamo attivare tutto in 48 ore."`,
   ];
 
   const getVariants = () => {
