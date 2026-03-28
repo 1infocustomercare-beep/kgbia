@@ -69,15 +69,8 @@ import sectorHeroLegal from "@/assets/sector-hero-legal.jpg";
 import sectorHeroAccounting from "@/assets/sector-hero-accounting.jpg";
 import sectorHeroElectrician from "@/assets/sector-hero-electrician.jpg";
 import sectorHeroCustom from "@/assets/sector-hero-custom.jpg";
-import testimonialMarco from "@/assets/testimonial-marco.png";
-import testimonialAlessandra from "@/assets/testimonial-alessandra.png";
-import testimonialValentina from "@/assets/testimonial-valentina.png";
-import testimonialLuca from "@/assets/testimonial-luca.png";
-import testimonialSimone from "@/assets/testimonial-simone.png";
-import testimonialGiulia from "@/assets/testimonial-giulia.png";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
-const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory"));
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
 function useLandingAssets() {
@@ -301,125 +294,6 @@ const SectionLabel = forwardRef<HTMLDivElement, {text: string;icon?: React.React
 
 );
 SectionLabel.displayName = "SectionLabel";
-
-/* ═══ LIVE FEED SIMULATOR — auto-cycling agent actions ═══ */
-const LIVE_ACTIONS = [
-{ agent: "GhostManager™", action: "Ha processato 12 ordini simultanei", icon: <Bot className="w-3.5 h-3.5" />, color: "hsla(265,70%,60%,1)", time: "2s fa" },
-{ agent: "Concierge AI", action: "Ha risposto a cliente in tedesco", icon: <Globe className="w-3.5 h-3.5" />, color: "hsla(200,70%,55%,1)", time: "5s fa" },
-{ agent: "Review Shield™", action: "Ha intercettato recensione negativa", icon: <Shield className="w-3.5 h-3.5" />, color: "hsla(150,70%,50%,1)", time: "8s fa" },
-{ agent: "Predictive Engine", action: "Previsione domanda: +35% weekend", icon: <BarChart3 className="w-3.5 h-3.5" />, color: "hsla(38,80%,55%,1)", time: "12s fa" },
-{ agent: "AutoPilot Marketing", action: "Campagna WhatsApp inviata a 847 clienti", icon: <Rocket className="w-3.5 h-3.5" />, color: "hsla(25,90%,55%,1)", time: "15s fa" },
-{ agent: "Invoice AI", action: "Fattura elettronica #2847 generata", icon: <CreditCard className="w-3.5 h-3.5" />, color: "hsla(210,60%,55%,1)", time: "18s fa" },
-{ agent: "Smart Notifier", action: "Push inviata: offerta pranzo 12-14", icon: <Bell className="w-3.5 h-3.5" />, color: "hsla(45,90%,55%,1)", time: "22s fa" },
-{ agent: "Loyalty Angel", action: "Riattivato cliente inattivo da 30gg", icon: <Heart className="w-3.5 h-3.5" />, color: "hsla(340,70%,55%,1)", time: "25s fa" },
-{ agent: "Voice Assistant", action: "Prenotazione telefonica completata", icon: <Headphones className="w-3.5 h-3.5" />, color: "hsla(250,60%,55%,1)", time: "28s fa" },
-{ agent: "Social Creator", action: "Post Instagram generato e schedulato", icon: <Sparkles className="w-3.5 h-3.5" />, color: "hsla(280,60%,55%,1)", time: "31s fa" },
-{ agent: "Analytics Brain", action: "Report settimanale pronto", icon: <Brain className="w-3.5 h-3.5" />, color: "hsla(270,65%,55%,1)", time: "35s fa" },
-{ agent: "Data Guardian", action: "Audit GDPR completato — 100% OK", icon: <Lock className="w-3.5 h-3.5" />, color: "hsla(220,30%,50%,1)", time: "40s fa" }];
-
-
-const LiveFeedSimulator = () => {
-  const [offset, setOffset] = useState(0);
-  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
-  const VISIBLE = isMobile ? 1 : 4;
-
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < 640);
-    window.addEventListener("resize", onResize, { passive: true });
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setOffset((o) => (o + 1) % LIVE_ACTIONS.length);
-    }, isMobile ? 4200 : 2800);
-    return () => clearInterval(interval);
-  }, [isMobile]);
-
-  const visible = useMemo(() => {
-    const items = [];
-    for (let i = 0; i < VISIBLE; i++) {
-      items.push(LIVE_ACTIONS[(offset + i) % LIVE_ACTIONS.length]);
-    }
-    return items;
-  }, [offset, VISIBLE]);
-
-  if (isMobile) {
-    const item = visible[0];
-    if (!item) return null;
-
-    return (
-      <div
-        className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${item.color}14, ${item.color}05)`,
-          border: `1px solid ${item.color}24`
-        }}>
-        
-        <div
-          className="relative w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: `${item.color}18`, color: item.color, border: `1px solid ${item.color}25` }}>
-          
-          {item.icon}
-        </div>
-        <div className="flex-1 min-w-0 relative z-10">
-          <div className="flex items-center gap-1.5 mb-0.5">
-            <span className="text-[0.6rem] font-bold text-foreground/90 truncate">{item.agent}</span>
-            <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-400 font-bold tracking-wider uppercase">LIVE</span>
-          </div>
-          <p className="text-[0.52rem] text-foreground/60 truncate">{item.action}</p>
-        </div>
-        <span className="text-[0.42rem] text-foreground/40 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
-      </div>);
-
-  }
-
-  return (
-    <AnimatePresence mode="popLayout">
-      {visible.map((item, i) =>
-      <motion.div
-        key={`${item.agent}-${(offset + i) % LIVE_ACTIONS.length}`}
-        initial={{ opacity: 0, x: -30, scale: 0.9 }}
-        animate={{ opacity: 1, x: 0, scale: 1 }}
-        exit={{ opacity: 0, x: 30, scale: 0.9 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl overflow-hidden"
-        style={{
-          background: i === 0 ?
-          `linear-gradient(135deg, ${item.color}18, ${item.color}06)` :
-          "hsla(230,20%,12%,0.4)",
-          border: i === 0 ? `1px solid ${item.color}30` : "1px solid hsla(215,30%,25%,0.08)"
-        }}>
-        
-          {/* Scanning beam on active item */}
-          {i === 0 &&
-        <motion.div className="absolute inset-0 pointer-events-none"
-        style={{ background: `linear-gradient(90deg, transparent 30%, ${item.color}12 50%, transparent 70%)` }}
-        animate={{ x: ["-150%", "250%"] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
-        }
-          <div className="relative w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-        style={{ background: `${item.color}18`, color: item.color, border: `1px solid ${item.color}25` }}>
-            {item.icon}
-            {i === 0 &&
-          <motion.div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400"
-          animate={{ scale: [1, 1.4, 1], opacity: [0.8, 1, 0.8] }}
-          transition={{ duration: 1.2, repeat: Infinity }} />
-          }
-          </div>
-          <div className="flex-1 min-w-0 relative z-10">
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <span className="text-[0.6rem] font-bold text-foreground/90 truncate">{item.agent}</span>
-              {i === 0 && <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-400 font-bold tracking-wider uppercase">LIVE</span>}
-            </div>
-            <p className="text-[0.52rem] text-foreground/60 truncate">{item.action}</p>
-          </div>
-          <span className="text-[0.42rem] text-foreground/40 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
-        </motion.div>
-      )}
-    </AnimatePresence>);
-
-};
 
 const NeuralCellsBackground = () => null;
 
@@ -2447,7 +2321,7 @@ const LandingPage = () => {
   const [expandBenefits, setExpandBenefits] = useState(false);
   const [expandServices, setExpandServices] = useState(false);
   const [expandMockups, setExpandMockups] = useState(false);
-  const [expandTestimonials, setExpandTestimonials] = useState(false);
+  
 
   /* Build hero carousel sectors from real mockup data — 3 screens per sector */
   const heroCarouselSectors = useMemo(() => {
@@ -2628,13 +2502,6 @@ const LandingPage = () => {
   { value: 99.8, suffix: "%", label: "Soddisfazione" }];
 
 
-  const testimonials = [
-  { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dalla piattaforma alla mia app. Risparmio €3.200 al mese netti.", metric: "−€3.200/mese", industry: "Food", emoji: "🍽️", photo: testimonialMarco },
-  { name: "Alessandra Conti", role: "NCC Premium Transfer · Milano", quote: "Prima gestivo le prenotazioni via WhatsApp. Ora ho un sistema automatizzato con flotta, tratte e pagamenti integrati.", metric: "+40% fatturato", industry: "NCC", emoji: "🚘", photo: testimonialAlessandra },
-  { name: "Valentina Rossi", role: "Beauty Lab · Firenze", quote: "I clienti prenotano dall'app, ricevono promemoria automatici e il no-show è crollato del 70%.", metric: "−70% no-show", industry: "Beauty", emoji: "💅", photo: testimonialValentina },
-  { name: "Dr. Luca Bianchi", role: "Studio Dentistico · Torino", quote: "Agenda digitale, schede paziente, fatturazione elettronica. Ho eliminato 2 ore di burocrazia al giorno.", metric: "−2h/giorno", industry: "Healthcare", emoji: "🏥", photo: testimonialLuca },
-  { name: "Simone Moretti", role: "CrossFit Arena · Bologna", quote: "Gestione corsi, abbonamenti e pagamenti in un'unica piattaforma. Il tasso di rinnovo è salito all'87%.", metric: "87% rinnovi", industry: "Fitness", emoji: "💪", photo: testimonialSimone },
-  { name: "Giulia De Luca", role: "Boutique Eleganza · Napoli", quote: "Il catalogo digitale ha trasformato il mio negozio. Le vendite online sono il 35% del totale.", metric: "+35% vendite", industry: "Retail", emoji: "🛍️", photo: testimonialGiulia }];
 
 
   const faqs = [
