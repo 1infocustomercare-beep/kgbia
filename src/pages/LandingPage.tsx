@@ -4615,129 +4615,7 @@ const LandingPage = () => {
       })()}
 
 
-      {/* ═══════════════════════════════════════════
-                             TESTIMONIALS — Auto-scroll carousel
-                            ═══════════════════════════════════════════ */}
-      <Section id="testimonials" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
-      }}>
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
-          <div className="absolute top-[32%] left-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-[15%] right-[28%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
-          <div className="absolute bottom-[30%] left-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
-          <div className="absolute top-[12%] left-[32%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(38,50%,50%,0.12), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]"
-          style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
-          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(228,22%,10%,0.5))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
-          }} />
-        </div>
 
-        <div className="text-center mb-14 sm:mb-16">
-          <SectionLabel text="Storie di Successo" icon={<Star className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Risultati Reali, <span className="text-shimmer">Settori Diversi</span>
-          </motion.h2>
-          <motion.p className="text-foreground/35 max-w-[440px] mx-auto text-sm leading-relaxed"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "-30px" }}>
-            Imprenditori come te che hanno trasformato il loro business
-          </motion.p>
-        </div>
-
-        <AnimatePresence mode="wait">
-          {expandTestimonials ?
-          <motion.div key="testimonials-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {testimonials.map((t, i) =>
-            <div key={i} className="relative p-4 rounded-xl overflow-hidden"
-            style={{
-              background: "linear-gradient(165deg, hsl(228 20% 14% / 0.85), hsl(248 15% 97% / 0.92))",
-              border: "1px solid hsl(var(--primary) / 0.12)",
-              backdropFilter: "blur(24px)"
-            }}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <img src={t.photo} alt={t.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                style={{ border: "2px solid hsl(var(--primary) / 0.2)" }} />
-                    <div>
-                      <h4 className="font-heading text-[0.7rem] font-semibold text-foreground">{t.name}</h4>
-                      <p className="text-[0.5rem] text-foreground/50">{t.role}</p>
-                    </div>
-                    <span className="ml-auto text-base">{t.emoji}</span>
-                  </div>
-                  <p className="text-[0.65rem] leading-[1.7] mb-2 text-foreground/65">"{t.quote}"</p>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[0.55rem] font-semibold font-heading"
-              style={{ background: "hsl(var(--primary) / 0.08)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
-                    <TrendingUp className="w-2.5 h-2.5" /> {t.metric}
-                  </div>
-                </div>
-            )}
-            </motion.div> :
-
-          <motion.div key="testimonials-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <PremiumCarousel speed="slow" itemWidth={290} fullWidth>
-                {testimonials.map((t, i) =>
-              <div key={i} className="group relative h-full">
-                    <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
-                style={{
-                  background: "linear-gradient(165deg, hsl(228 20% 16% / 0.92), hsl(232 22% 11% / 0.92))",
-                  border: "1px solid hsl(var(--primary) / 0.1)",
-                  boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)",
-                  backdropFilter: "blur(24px)"
-                }}>
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "linear-gradient(105deg, transparent 40%, hsl(var(--primary) / 0.04) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
-                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.15)" }} />
-                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.1)" }} />
-                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
-                      <div className="relative mb-4 mt-1">
-                        <img src={t.photo} alt={t.name} className="w-14 h-14 rounded-full object-cover mx-auto"
-                    style={{ border: "2px solid hsl(var(--primary) / 0.2)", boxShadow: "0 4px 16px hsl(var(--primary) / 0.1)" }} />
-                        <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
-                    style={{ background: "hsl(228 20% 14% / 0.8)", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 8px hsl(var(--primary) / 0.08)" }}>
-                          {t.emoji}
-                        </div>
-                        <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
-                    style={{ border: "1px dashed hsl(var(--primary) / 0.1)" }}
-                    animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
-                      </div>
-                      <h4 className="font-heading text-xs font-semibold mb-0.5 text-foreground">{t.name}</h4>
-                      <p className="text-[0.58rem] mb-4 text-foreground/60">{t.role}</p>
-                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1 text-foreground/75">
-                        <Quote className="w-3.5 h-3.5 mx-auto mb-2 text-primary/30" />
-                        "{t.quote}"
-                      </blockquote>
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider"
-                  style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
-                        <TrendingUp className="w-3 h-3" /> {t.metric}
-                      </div>
-                      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                  style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent 70%)" }} />
-                    </div>
-                  </div>
-              )}
-              </PremiumCarousel>
-            </motion.div>
-          }
-        </AnimatePresence>
-        <div className="flex justify-center mt-4">
-          <button onClick={() => setExpandTestimonials((p) => !p)}
-          className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
-            <Layers className="w-3 h-3" /> {expandTestimonials ? "Chiudi" : "Vedi Tutti"}
-          </button>
-        </div>
-      </Section>
 
       {/* ═══════════════════════════════════════════
                              PRICING — Interactive Configurator
@@ -4852,10 +4730,8 @@ const LandingPage = () => {
       </Section>
 
 
-      {/* EMPIRE STORY & TEAM */}
-      <Suspense fallback={null}>
-        <EmpireTeamStory />
-      </Suspense>
+
+
 
       {/* ═══════ FINAL CTA ═══════ */}
       <Section style={{ background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(234 20% 10%) 50%, hsl(228 22% 8%) 100%)" }}>
