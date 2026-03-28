@@ -69,15 +69,8 @@ import sectorHeroLegal from "@/assets/sector-hero-legal.jpg";
 import sectorHeroAccounting from "@/assets/sector-hero-accounting.jpg";
 import sectorHeroElectrician from "@/assets/sector-hero-electrician.jpg";
 import sectorHeroCustom from "@/assets/sector-hero-custom.jpg";
-import testimonialMarco from "@/assets/testimonial-marco.png";
-import testimonialAlessandra from "@/assets/testimonial-alessandra.png";
-import testimonialValentina from "@/assets/testimonial-valentina.png";
-import testimonialLuca from "@/assets/testimonial-luca.png";
-import testimonialSimone from "@/assets/testimonial-simone.png";
-import testimonialGiulia from "@/assets/testimonial-giulia.png";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
-const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory"));
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
 function useLandingAssets() {
@@ -301,125 +294,6 @@ const SectionLabel = forwardRef<HTMLDivElement, {text: string;icon?: React.React
 
 );
 SectionLabel.displayName = "SectionLabel";
-
-/* ═══ LIVE FEED SIMULATOR — auto-cycling agent actions ═══ */
-const LIVE_ACTIONS = [
-{ agent: "GhostManager™", action: "Ha processato 12 ordini simultanei", icon: <Bot className="w-3.5 h-3.5" />, color: "hsla(265,70%,60%,1)", time: "2s fa" },
-{ agent: "Concierge AI", action: "Ha risposto a cliente in tedesco", icon: <Globe className="w-3.5 h-3.5" />, color: "hsla(200,70%,55%,1)", time: "5s fa" },
-{ agent: "Review Shield™", action: "Ha intercettato recensione negativa", icon: <Shield className="w-3.5 h-3.5" />, color: "hsla(150,70%,50%,1)", time: "8s fa" },
-{ agent: "Predictive Engine", action: "Previsione domanda: +35% weekend", icon: <BarChart3 className="w-3.5 h-3.5" />, color: "hsla(38,80%,55%,1)", time: "12s fa" },
-{ agent: "AutoPilot Marketing", action: "Campagna WhatsApp inviata a 847 clienti", icon: <Rocket className="w-3.5 h-3.5" />, color: "hsla(25,90%,55%,1)", time: "15s fa" },
-{ agent: "Invoice AI", action: "Fattura elettronica #2847 generata", icon: <CreditCard className="w-3.5 h-3.5" />, color: "hsla(210,60%,55%,1)", time: "18s fa" },
-{ agent: "Smart Notifier", action: "Push inviata: offerta pranzo 12-14", icon: <Bell className="w-3.5 h-3.5" />, color: "hsla(45,90%,55%,1)", time: "22s fa" },
-{ agent: "Loyalty Angel", action: "Riattivato cliente inattivo da 30gg", icon: <Heart className="w-3.5 h-3.5" />, color: "hsla(340,70%,55%,1)", time: "25s fa" },
-{ agent: "Voice Assistant", action: "Prenotazione telefonica completata", icon: <Headphones className="w-3.5 h-3.5" />, color: "hsla(250,60%,55%,1)", time: "28s fa" },
-{ agent: "Social Creator", action: "Post Instagram generato e schedulato", icon: <Sparkles className="w-3.5 h-3.5" />, color: "hsla(280,60%,55%,1)", time: "31s fa" },
-{ agent: "Analytics Brain", action: "Report settimanale pronto", icon: <Brain className="w-3.5 h-3.5" />, color: "hsla(270,65%,55%,1)", time: "35s fa" },
-{ agent: "Data Guardian", action: "Audit GDPR completato — 100% OK", icon: <Lock className="w-3.5 h-3.5" />, color: "hsla(220,30%,50%,1)", time: "40s fa" }];
-
-
-const LiveFeedSimulator = () => {
-  const [offset, setOffset] = useState(0);
-  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
-  const VISIBLE = isMobile ? 1 : 4;
-
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < 640);
-    window.addEventListener("resize", onResize, { passive: true });
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setOffset((o) => (o + 1) % LIVE_ACTIONS.length);
-    }, isMobile ? 4200 : 2800);
-    return () => clearInterval(interval);
-  }, [isMobile]);
-
-  const visible = useMemo(() => {
-    const items = [];
-    for (let i = 0; i < VISIBLE; i++) {
-      items.push(LIVE_ACTIONS[(offset + i) % LIVE_ACTIONS.length]);
-    }
-    return items;
-  }, [offset, VISIBLE]);
-
-  if (isMobile) {
-    const item = visible[0];
-    if (!item) return null;
-
-    return (
-      <div
-        className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${item.color}14, ${item.color}05)`,
-          border: `1px solid ${item.color}24`
-        }}>
-        
-        <div
-          className="relative w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: `${item.color}18`, color: item.color, border: `1px solid ${item.color}25` }}>
-          
-          {item.icon}
-        </div>
-        <div className="flex-1 min-w-0 relative z-10">
-          <div className="flex items-center gap-1.5 mb-0.5">
-            <span className="text-[0.6rem] font-bold text-foreground/90 truncate">{item.agent}</span>
-            <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-400 font-bold tracking-wider uppercase">LIVE</span>
-          </div>
-          <p className="text-[0.52rem] text-foreground/60 truncate">{item.action}</p>
-        </div>
-        <span className="text-[0.42rem] text-foreground/40 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
-      </div>);
-
-  }
-
-  return (
-    <AnimatePresence mode="popLayout">
-      {visible.map((item, i) =>
-      <motion.div
-        key={`${item.agent}-${(offset + i) % LIVE_ACTIONS.length}`}
-        initial={{ opacity: 0, x: -30, scale: 0.9 }}
-        animate={{ opacity: 1, x: 0, scale: 1 }}
-        exit={{ opacity: 0, x: 30, scale: 0.9 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl overflow-hidden"
-        style={{
-          background: i === 0 ?
-          `linear-gradient(135deg, ${item.color}18, ${item.color}06)` :
-          "hsla(230,20%,12%,0.4)",
-          border: i === 0 ? `1px solid ${item.color}30` : "1px solid hsla(215,30%,25%,0.08)"
-        }}>
-        
-          {/* Scanning beam on active item */}
-          {i === 0 &&
-        <motion.div className="absolute inset-0 pointer-events-none"
-        style={{ background: `linear-gradient(90deg, transparent 30%, ${item.color}12 50%, transparent 70%)` }}
-        animate={{ x: ["-150%", "250%"] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
-        }
-          <div className="relative w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-        style={{ background: `${item.color}18`, color: item.color, border: `1px solid ${item.color}25` }}>
-            {item.icon}
-            {i === 0 &&
-          <motion.div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400"
-          animate={{ scale: [1, 1.4, 1], opacity: [0.8, 1, 0.8] }}
-          transition={{ duration: 1.2, repeat: Infinity }} />
-          }
-          </div>
-          <div className="flex-1 min-w-0 relative z-10">
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <span className="text-[0.6rem] font-bold text-foreground/90 truncate">{item.agent}</span>
-              {i === 0 && <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-400 font-bold tracking-wider uppercase">LIVE</span>}
-            </div>
-            <p className="text-[0.52rem] text-foreground/60 truncate">{item.action}</p>
-          </div>
-          <span className="text-[0.42rem] text-foreground/40 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
-        </motion.div>
-      )}
-    </AnimatePresence>);
-
-};
 
 const NeuralCellsBackground = () => null;
 
@@ -2447,7 +2321,7 @@ const LandingPage = () => {
   const [expandBenefits, setExpandBenefits] = useState(false);
   const [expandServices, setExpandServices] = useState(false);
   const [expandMockups, setExpandMockups] = useState(false);
-  const [expandTestimonials, setExpandTestimonials] = useState(false);
+  
 
   /* Build hero carousel sectors from real mockup data — 3 screens per sector */
   const heroCarouselSectors = useMemo(() => {
@@ -2628,13 +2502,6 @@ const LandingPage = () => {
   { value: 99.8, suffix: "%", label: "Soddisfazione" }];
 
 
-  const testimonials = [
-  { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dalla piattaforma alla mia app. Risparmio €3.200 al mese netti.", metric: "−€3.200/mese", industry: "Food", emoji: "🍽️", photo: testimonialMarco },
-  { name: "Alessandra Conti", role: "NCC Premium Transfer · Milano", quote: "Prima gestivo le prenotazioni via WhatsApp. Ora ho un sistema automatizzato con flotta, tratte e pagamenti integrati.", metric: "+40% fatturato", industry: "NCC", emoji: "🚘", photo: testimonialAlessandra },
-  { name: "Valentina Rossi", role: "Beauty Lab · Firenze", quote: "I clienti prenotano dall'app, ricevono promemoria automatici e il no-show è crollato del 70%.", metric: "−70% no-show", industry: "Beauty", emoji: "💅", photo: testimonialValentina },
-  { name: "Dr. Luca Bianchi", role: "Studio Dentistico · Torino", quote: "Agenda digitale, schede paziente, fatturazione elettronica. Ho eliminato 2 ore di burocrazia al giorno.", metric: "−2h/giorno", industry: "Healthcare", emoji: "🏥", photo: testimonialLuca },
-  { name: "Simone Moretti", role: "CrossFit Arena · Bologna", quote: "Gestione corsi, abbonamenti e pagamenti in un'unica piattaforma. Il tasso di rinnovo è salito all'87%.", metric: "87% rinnovi", industry: "Fitness", emoji: "💪", photo: testimonialSimone },
-  { name: "Giulia De Luca", role: "Boutique Eleganza · Napoli", quote: "Il catalogo digitale ha trasformato il mio negozio. Le vendite online sono il 35% del totale.", metric: "+35% vendite", industry: "Retail", emoji: "🛍️", photo: testimonialGiulia }];
 
 
   const faqs = [
@@ -4748,129 +4615,7 @@ const LandingPage = () => {
       })()}
 
 
-      {/* ═══════════════════════════════════════════
-                             TESTIMONIALS — Auto-scroll carousel
-                            ═══════════════════════════════════════════ */}
-      <Section id="testimonials" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
-      }}>
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
-          <div className="absolute top-[32%] left-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-[15%] right-[28%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
-          <div className="absolute bottom-[30%] left-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
-          <div className="absolute top-[12%] left-[32%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(38,50%,50%,0.12), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]"
-          style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
-          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(228,22%,10%,0.5))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
-          }} />
-        </div>
 
-        <div className="text-center mb-14 sm:mb-16">
-          <SectionLabel text="Storie di Successo" icon={<Star className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Risultati Reali, <span className="text-shimmer">Settori Diversi</span>
-          </motion.h2>
-          <motion.p className="text-foreground/35 max-w-[440px] mx-auto text-sm leading-relaxed"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "-30px" }}>
-            Imprenditori come te che hanno trasformato il loro business
-          </motion.p>
-        </div>
-
-        <AnimatePresence mode="wait">
-          {expandTestimonials ?
-          <motion.div key="testimonials-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {testimonials.map((t, i) =>
-            <div key={i} className="relative p-4 rounded-xl overflow-hidden"
-            style={{
-              background: "linear-gradient(165deg, hsl(228 20% 14% / 0.85), hsl(248 15% 97% / 0.92))",
-              border: "1px solid hsl(var(--primary) / 0.12)",
-              backdropFilter: "blur(24px)"
-            }}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <img src={t.photo} alt={t.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                style={{ border: "2px solid hsl(var(--primary) / 0.2)" }} />
-                    <div>
-                      <h4 className="font-heading text-[0.7rem] font-semibold text-foreground">{t.name}</h4>
-                      <p className="text-[0.5rem] text-foreground/50">{t.role}</p>
-                    </div>
-                    <span className="ml-auto text-base">{t.emoji}</span>
-                  </div>
-                  <p className="text-[0.65rem] leading-[1.7] mb-2 text-foreground/65">"{t.quote}"</p>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[0.55rem] font-semibold font-heading"
-              style={{ background: "hsl(var(--primary) / 0.08)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
-                    <TrendingUp className="w-2.5 h-2.5" /> {t.metric}
-                  </div>
-                </div>
-            )}
-            </motion.div> :
-
-          <motion.div key="testimonials-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <PremiumCarousel speed="slow" itemWidth={290} fullWidth>
-                {testimonials.map((t, i) =>
-              <div key={i} className="group relative h-full">
-                    <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
-                style={{
-                  background: "linear-gradient(165deg, hsl(228 20% 16% / 0.92), hsl(232 22% 11% / 0.92))",
-                  border: "1px solid hsl(var(--primary) / 0.1)",
-                  boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)",
-                  backdropFilter: "blur(24px)"
-                }}>
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "linear-gradient(105deg, transparent 40%, hsl(var(--primary) / 0.04) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
-                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.15)" }} />
-                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.1)" }} />
-                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
-                      <div className="relative mb-4 mt-1">
-                        <img src={t.photo} alt={t.name} className="w-14 h-14 rounded-full object-cover mx-auto"
-                    style={{ border: "2px solid hsl(var(--primary) / 0.2)", boxShadow: "0 4px 16px hsl(var(--primary) / 0.1)" }} />
-                        <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
-                    style={{ background: "hsl(228 20% 14% / 0.8)", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 8px hsl(var(--primary) / 0.08)" }}>
-                          {t.emoji}
-                        </div>
-                        <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
-                    style={{ border: "1px dashed hsl(var(--primary) / 0.1)" }}
-                    animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
-                      </div>
-                      <h4 className="font-heading text-xs font-semibold mb-0.5 text-foreground">{t.name}</h4>
-                      <p className="text-[0.58rem] mb-4 text-foreground/60">{t.role}</p>
-                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1 text-foreground/75">
-                        <Quote className="w-3.5 h-3.5 mx-auto mb-2 text-primary/30" />
-                        "{t.quote}"
-                      </blockquote>
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider"
-                  style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
-                        <TrendingUp className="w-3 h-3" /> {t.metric}
-                      </div>
-                      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                  style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent 70%)" }} />
-                    </div>
-                  </div>
-              )}
-              </PremiumCarousel>
-            </motion.div>
-          }
-        </AnimatePresence>
-        <div className="flex justify-center mt-4">
-          <button onClick={() => setExpandTestimonials((p) => !p)}
-          className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
-            <Layers className="w-3 h-3" /> {expandTestimonials ? "Chiudi" : "Vedi Tutti"}
-          </button>
-        </div>
-      </Section>
 
       {/* ═══════════════════════════════════════════
                              PRICING — Interactive Configurator
@@ -4946,49 +4691,7 @@ const LandingPage = () => {
         </div>
       </Section>
 
-      <SectionDivider />
 
-      {/* ═══════════════════════════════════════════
-                             GARANZIA TOTALE — Risk Reversal
-                            ═══════════════════════════════════════════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 22% 10%) 50%, hsl(228 22% 8%) 100%)" }}>
-        <motion.div className="relative max-w-2xl mx-auto p-8 sm:p-12 rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background to-accent/[0.03] text-center overflow-hidden"
-        initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
-          <div className="absolute inset-0 premium-holo-grid opacity-20 pointer-events-none" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          <div className="relative z-10">
-            <motion.div
-              initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}>
-              <Shield className="w-14 h-14 mx-auto text-primary mb-5 drop-shadow-[0_0_30px_hsla(265,70%,60%,0.3)]" />
-            </motion.div>
-            <h2 className="text-[clamp(1.5rem,4vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
-              Garanzia <span className="text-shimmer">Risultati Garantiti</span>
-            </h2>
-            <p className="text-sm text-foreground/75 max-w-md mx-auto leading-[1.8] mb-6">
-               Prova Empire per 90 giorni senza impegno. Se non vedi risultati concreti, ti rimborsiamo. Zero rischi. Il tuo successo è la nostra priorità.
-             </p>
-             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-               {[
-               { icon: <Check className="w-4 h-4" />, text: "90 giorni senza impegno" },
-               { icon: <Check className="w-4 h-4" />, text: "Assistenza dedicata inclusa" },
-               { icon: <Check className="w-4 h-4" />, text: "Cancella quando vuoi" }].
-              map((g, i) =>
-              <div key={i} className="flex items-center gap-2 text-xs text-foreground/80">
-                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">{g.icon}</div>
-                  <span className="font-heading font-semibold">{g.text}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      </Section>
-
-
-      {/* EMPIRE STORY & TEAM */}
-      <Suspense fallback={null}>
-        <EmpireTeamStory />
-      </Suspense>
 
       {/* ═══════ FINAL CTA ═══════ */}
       <Section style={{ background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(234 20% 10%) 50%, hsl(228 22% 8%) 100%)" }}>
