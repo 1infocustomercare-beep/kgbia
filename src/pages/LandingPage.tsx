@@ -4691,46 +4691,6 @@ const LandingPage = () => {
         </div>
       </Section>
 
-      <SectionDivider />
-
-      {/* ═══════════════════════════════════════════
-                             GARANZIA TOTALE — Risk Reversal
-                            ═══════════════════════════════════════════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 22% 10%) 50%, hsl(228 22% 8%) 100%)" }}>
-        <motion.div className="relative max-w-2xl mx-auto p-8 sm:p-12 rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background to-accent/[0.03] text-center overflow-hidden"
-        initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
-          <div className="absolute inset-0 premium-holo-grid opacity-20 pointer-events-none" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          <div className="relative z-10">
-            <motion.div
-              initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}>
-              <Shield className="w-14 h-14 mx-auto text-primary mb-5 drop-shadow-[0_0_30px_hsla(265,70%,60%,0.3)]" />
-            </motion.div>
-            <h2 className="text-[clamp(1.5rem,4vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
-              Garanzia <span className="text-shimmer">Risultati Garantiti</span>
-            </h2>
-            <p className="text-sm text-foreground/75 max-w-md mx-auto leading-[1.8] mb-6">
-               Prova Empire per 90 giorni senza impegno. Se non vedi risultati concreti, ti rimborsiamo. Zero rischi. Il tuo successo è la nostra priorità.
-             </p>
-             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-               {[
-               { icon: <Check className="w-4 h-4" />, text: "90 giorni senza impegno" },
-               { icon: <Check className="w-4 h-4" />, text: "Assistenza dedicata inclusa" },
-               { icon: <Check className="w-4 h-4" />, text: "Cancella quando vuoi" }].
-              map((g, i) =>
-              <div key={i} className="flex items-center gap-2 text-xs text-foreground/80">
-                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">{g.icon}</div>
-                  <span className="font-heading font-semibold">{g.text}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      </Section>
-
-
-
 
 
       {/* ═══════ FINAL CTA ═══════ */}
