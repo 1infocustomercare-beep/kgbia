@@ -3274,7 +3274,7 @@ const LandingPage = () => {
       {/* ═══════ SCROLL MOCKUP SHOWCASE — activetheory.net style ═══════ */}
       <ScrollMockupShowcase />
 
-
+      {/* ═══════════════════════════════════════════
                              COSA FA EMPIRE — Quick Feature Grid
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
