@@ -551,7 +551,7 @@ export default function LandingPage() {
                 style={{
                   background: plan.popular ? "linear-gradient(160deg, #0e0d16, #18173a)" : "#fff",
                   border: plan.popular ? "none" : "1px solid rgba(0,0,0,0.08)",
-                  ringColor: plan.popular ? "#6c3ce0" : undefined,
+                  ...(plan.popular ? { "--tw-ring-color": "#6c3ce0" } as any : {}),
                   boxShadow: plan.popular ? "0 20px 60px rgba(108,60,224,0.15)" : "0 4px 20px rgba(0,0,0,0.04)",
                 }}>
                 {plan.popular && (
