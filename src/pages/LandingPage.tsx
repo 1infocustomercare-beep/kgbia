@@ -3131,144 +3131,112 @@ const LandingPage = () => {
       </nav>
 
       {/* ═══════════════════════════════════════════
-                             HERO
+                             HERO — Ultra Premium Minimal
                             ═══════════════════════════════════════════ */}
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-24 sm:pt-28 pb-8 sm:pb-16"
       style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Clean premium dark gradient ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(228 22% 10%) 0%, hsl(235 20% 8%) 25%, hsl(248 18% 9%) 50%, hsl(230 22% 8%) 75%, hsl(225 20% 10%) 100%)" }} />
+        {/* Clean dark gradient base */}
+        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(225 18% 7%) 0%, hsl(230 22% 6%) 40%, hsl(240 20% 5%) 70%, hsl(228 18% 7%) 100%)" }} />
 
-        {/* ═══ LAYER 1: Premium ambient blobs ═══ */}
+        {/* Subtle ambient orbs — less is more */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
-          <div className="aurora-blob-1 absolute w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(265 55% 55% / 0.2), hsl(248 50% 60% / 0.08) 50%, transparent 70%)", filter: "blur(80px)", top: "0%", left: "5%" }} />
-          <div className="aurora-blob-2 absolute w-[450px] h-[450px] sm:w-[650px] sm:h-[650px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(210 65% 55% / 0.22), hsl(220 50% 60% / 0.08) 50%, transparent 70%)", filter: "blur(80px)", top: "10%", right: "0%" }} />
-          <div className="aurora-blob-3 absolute w-[400px] h-[400px] sm:w-[550px] sm:h-[550px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(38 55% 50% / 0.12), hsl(35 50% 55% / 0.05) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
-          {/* Central glow behind sphere */}
-          <div className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ background: "radial-gradient(circle, hsl(265 50% 55% / 0.15), hsl(248 45% 60% / 0.05) 55%, transparent 75%)", filter: "blur(100px)" }} />
+          <div className="absolute w-[500px] h-[500px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(215 65% 55% / 0.08), transparent 65%)", filter: "blur(100px)", top: "-10%", right: "10%" }} />
+          <div className="absolute w-[400px] h-[400px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(265 55% 55% / 0.06), transparent 65%)", filter: "blur(100px)", bottom: "10%", left: "5%" }} />
         </div>
 
-        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full overflow-hidden" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
+        {/* Subtle grid overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, opacity: 0.02, backgroundImage: "linear-gradient(hsla(0,0%,100%,0.1) 1px, transparent 1px), linear-gradient(90deg, hsla(0,0%,100%,0.1) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+
+        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           
-          {/* ═══ CENTERED LAYOUT: Text → Metrics → Phones ═══ */}
-          <div className="flex flex-col items-center overflow-hidden">
-            
-            {/* CENTER: Text content */}
-            <div className="text-center max-w-[680px] mx-auto px-5 sm:px-0 w-full box-border">
+          <div className="flex flex-col items-center text-center">
 
-              {/* Badge */}
-              <motion.div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl mb-4 sm:mb-5"
-              style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
+            {/* Minimal badge */}
+            <motion.div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full mb-6"
+              style={{ background: "hsla(0,0%,100%,0.04)", border: "1px solid hsla(0,0%,100%,0.08)" }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <div className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)))", boxShadow: "0 2px 8px hsl(var(--primary) / 0.3)" }}>
-                  <Crown className="w-2.5 h-2.5 text-white" />
-                </div>
-                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-white/90">Piattaforma AI All-in-One per PMI</span>
-              </motion.div>
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[0.55rem] font-bold tracking-[3px] uppercase text-white/60" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                AI-Powered Digital Agency · Italia
+              </span>
+            </motion.div>
 
-              {/* Headline */}
-              <motion.h1 className="text-[1.6rem] leading-[1.12] sm:text-[2.6rem] lg:text-[3.4rem] font-heading font-bold tracking-[-0.03em] relative px-1"
+            {/* Headline — dramatic, clean */}
+            <motion.h1 className="text-[clamp(2rem,6vw,4.5rem)] font-bold tracking-[-0.04em] leading-[1.05] relative"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
-              style={{ textWrap: "balance" as any }}>
-                <span className="text-white">Progettiamo app che</span>
-                <br />
-                <span className="text-white">le persone</span>
-                <br />
-                <span className="text-vivid-gradient" style={{ filter: "brightness(1.3)" }}>amano</span>
-              </motion.h1>
+              style={{ fontFamily: "'Space Grotesk', sans-serif", textWrap: "balance" as any }}>
+              <span className="text-white">Progettiamo</span>
+              <br />
+              <span className="text-white">esperienze che</span>
+              <br />
+              <span className="inline-block text-vivid-gradient" style={{ filter: "brightness(1.25)" }}>convertono</span>
+            </motion.h1>
 
-              {/* Subtitle */}
-              <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0" style={{ color: "hsl(38 30% 82%)" }}
+            {/* Subtitle — elegant */}
+            <motion.p className="mt-5 sm:mt-6 text-[0.85rem] sm:text-[1rem] max-w-[540px] mx-auto leading-[1.8]" style={{ color: "hsl(220 15% 70%)", fontFamily: "'Space Grotesk', sans-serif" }}
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business. <span className="font-bold text-white/90">98+ agenti IA · <span className="font-semibold text-primary">25+ settori</span></span> · Zero canone.
-              </motion.p>
+              App, siti e gestionali completi con IA integrata.
+              <span className="text-white/80 font-medium"> 25+ settori · 98+ agenti IA autonomi</span> · Tutto white-label, tutto su misura.
+            </motion.p>
 
-              {/* ═══ EMPIRE INTERACTIVE SPHERE — originale (click to morph text) ═══ */}
-              <motion.div className="relative mt-4 sm:mt-6 w-full flex items-center justify-center overflow-hidden"
-                style={{ maxHeight: IS_MOBILE_LP ? 200 : 320 }}
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.9, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}>
-                <div className="absolute inset-0 pointer-events-none"
-                  style={{ background: "radial-gradient(ellipse 60% 80% at 50% 50%, hsl(var(--primary) / 0.12), transparent 70%)", filter: "blur(28px)" }} />
-                <InteractiveParticleSphere size={IS_MOBILE_LP ? 340 : 580} />
-              </motion.div>
+            {/* CTA — clean duo */}
+            <motion.div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 w-full"
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}>
+              <motion.button
+                onClick={() => scrollTo("pricing")}
+                className="group relative w-full sm:w-auto px-8 py-3.5 rounded-full text-white font-bold text-[0.8rem] tracking-wider uppercase overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, hsl(215 90% 52%), hsl(248 60% 56%))",
+                  boxShadow: "0 4px 24px hsl(215 80% 50% / 0.35), 0 0 0 1px hsl(215 80% 50% / 0.2)",
+                  fontFamily: "'Space Grotesk', sans-serif",
+                }}
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(215 80% 50% / 0.5)" }}
+                whileTap={{ scale: 0.97 }}>
+                <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                <span className="relative flex items-center justify-center gap-2.5">
+                  Inizia il Tuo Progetto <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </motion.button>
+              <motion.button
+                onClick={() => navigate("/demo")}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-full text-[0.8rem] font-semibold tracking-wide transition-all flex items-center justify-center gap-2 text-white/50 hover:text-white/70"
+                style={{
+                  border: "1px solid hsla(0,0%,100%,0.1)",
+                  background: "hsla(0,0%,100%,0.03)",
+                  fontFamily: "'Space Grotesk', sans-serif",
+                }}
+                whileHover={{ borderColor: "hsla(0,0%,100%,0.2)", background: "hsla(0,0%,100%,0.06)" }}>
+                <Play className="w-4 h-4" /> Vedi Demo Live
+              </motion.button>
+            </motion.div>
 
-              {/* CTA */}
-              <motion.div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}>
-                <motion.button
-                  onClick={() => scrollTo("pricing")}
-                  className="group relative w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-primary-foreground font-bold text-[0.72rem] sm:text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden"
-                  style={{
-                    background: "linear-gradient(135deg, hsl(280 60% 55%), hsl(320 70% 55%), hsl(38 80% 55%))",
-                    boxShadow: "0 4px 20px hsl(300 50% 50% / 0.3), 0 0 0 1px hsl(300 50% 50% / 0.2)"
-                  }}
-                  whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(300 50% 50% / 0.45)" }}
-                  whileTap={{ scale: 0.97 }}>
-                  <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-                  <span className="relative flex items-center justify-center gap-2">
-                    🚀 PRENOTA DEMO GRATUITA <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </motion.button>
-                <motion.button
-                  onClick={() => navigate("/demo")}
-                  className="w-full sm:w-auto px-5 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-[0.72rem] sm:text-[0.75rem] font-semibold font-heading tracking-wide transition-all flex items-center justify-center gap-2 text-foreground/60 border border-border/40 bg-background/50 backdrop-blur-sm"
-                  whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.3)" }}>
-                  <Play className="w-3.5 h-3.5 text-primary" /> Vedi Demo Live
-                </motion.button>
-              </motion.div>
-
-              {/* ═══ STAT CARDS — Premium glass 2x2 grid ═══ */}
-              <motion.div className="mt-6 sm:mt-8 grid grid-cols-2 gap-2.5 sm:gap-3 w-full max-w-lg sm:max-w-xl mx-auto"
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.8 }}>
-                {[
-                  { value: 847, suffix: "+", label: "ATTIVITÀ ATTIVE", color: "hsl(195 100% 55%)" },
-                  { value: 25, suffix: "+", label: "SETTORI COPERTI", color: "hsl(195 100% 55%)" },
-                  { value: 40, suffix: "%", prefix: "+", label: "AUMENTO FATTURATO", color: "hsl(170 70% 50%)" },
-                  { value: 99.8, suffix: "%", label: "SODDISFAZIONE", color: "hsl(320 70% 55%)" },
-                ].map((m, i) =>
-                <motion.div
-                  key={i}
-                  className="relative group text-center px-3 py-4 sm:px-4 sm:py-5 rounded-2xl overflow-hidden"
-                  style={{
-                    background: "linear-gradient(160deg, hsl(228 20% 14% / 0.85), hsl(232 22% 11% / 0.9))",
-                    backdropFilter: "blur(16px)",
-                    WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid hsl(var(--border) / 0.3)",
-                    boxShadow: "0 4px 20px hsl(0 0% 0% / 0.3), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
-                  }}
-                  whileHover={{ y: -2, boxShadow: "0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(0 0% 100% / 0.08)" }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <div className="absolute inset-0 pointer-events-none rounded-2xl" style={{
-                    background: `radial-gradient(ellipse at 50% 0%, ${m.color}08, transparent 70%)`
-                  }} />
-                  <p className="relative text-xl sm:text-3xl font-heading font-bold" style={{ color: m.color }}>
-                    <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
-                  </p>
-                  <p className="relative text-[0.42rem] sm:text-[0.5rem] tracking-[1.8px] uppercase font-heading font-semibold text-white/60 mt-1 sm:mt-1.5">{m.label}</p>
-                </motion.div>
-                )}
-              </motion.div>
-            </div>
-
-            {/* PHONES: Each sector shows 3 real mockup screens (home, services, detail) */}
-            <HeroPhoneCarousel sectors={heroCarouselSectors} />
+            {/* Minimal stat row */}
+            <motion.div className="mt-10 sm:mt-14 flex items-center gap-6 sm:gap-10"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
+              {[
+                { value: "847+", label: "Attività" },
+                { value: "25+", label: "Settori" },
+                { value: "+40%", label: "Revenue" },
+                { value: "99.8%", label: "Uptime" },
+              ].map((s, i) => (
+                <div key={i} className="text-center">
+                  <p className="text-lg sm:text-2xl font-bold text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{s.value}</p>
+                  <p className="text-[0.5rem] sm:text-[0.55rem] text-white/30 tracking-[2px] uppercase" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{s.label}</p>
+                </div>
+              ))}
+            </motion.div>
           </div>
         </motion.div>
 
         {/* Scroll indicator */}
-        <motion.div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-20"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
-          <span className="text-[7px] text-foreground/40 tracking-[4px] uppercase font-heading">Scopri</span>
-          <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-            <ChevronDown className="w-3.5 h-3.5 text-primary/50" />
+        <motion.div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-20"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
+          <span className="text-[7px] text-white/25 tracking-[4px] uppercase" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Scroll</span>
+          <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
+            <ChevronDown className="w-4 h-4 text-white/20" />
           </motion.div>
         </motion.div>
       </motion.section>
