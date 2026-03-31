@@ -139,12 +139,11 @@ export default function SectorAIChatBubble({ sector, sectorLabel, sectorEmoji, a
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  const send = useCallback(async () => {
-    const text = input.trim();
-    if (!text || isStreaming) return;
+  const sendMessage = useCallback(async (text: string) => {
+    if (!text.trim() || isStreaming) return;
     setInput("");
 
-    const userMsg: Msg = { role: "user", content: text };
+    const userMsg: Msg = { role: "user", content: text.trim() };
     setMessages(prev => [...prev, userMsg]);
     setIsStreaming(true);
 
@@ -175,7 +174,9 @@ export default function SectorAIChatBubble({ sector, sectorLabel, sectorEmoji, a
       },
       signal: controller.signal,
     });
-  }, [input, isStreaming, messages, sector, companyName]);
+  }, [isStreaming, messages, sector, companyName]);
+
+  const send = useCallback(() => sendMessage(input), [input, sendMessage]);
 
   const quickQuestions = [
     "Cosa potete fare per il mio business?",
