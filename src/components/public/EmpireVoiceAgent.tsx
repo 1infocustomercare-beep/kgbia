@@ -1256,7 +1256,8 @@ const EmpireVoiceAgent: React.FC = () => {
         if (i >= words.length) {
           clearInterval(typeInterval);
           setIsLoading(false);
-          if (voiceEnabledRef.current && !abortRef.current) {
+          // Always speak the response aloud
+          if (!abortRef.current) {
             setIsSpeaking(true);
             speakText(fallback, audioRef, abortRef, useBrowserFallbackRef).then(() => {
               if (!abortRef.current) setIsSpeaking(false);
