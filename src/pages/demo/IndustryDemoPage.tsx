@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
-const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
+const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
 import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
 import DemoAdminCTA from "@/components/demo/DemoAdminCTA";
