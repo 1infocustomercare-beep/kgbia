@@ -4,6 +4,7 @@ import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 const StickyScrollShowcase = lazy(() => import("@/components/public/StickyScrollShowcase"));
+const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
