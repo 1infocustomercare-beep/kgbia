@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
-const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
+const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
 import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
 import DemoAdminCTA from "@/components/demo/DemoAdminCTA";
@@ -476,7 +476,13 @@ export default function IndustryDemoPage() {
         <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="sticky" />
         <DemoFooterSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
         <Suspense fallback={null}>
-          <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={accentColor} />
+          <SectorAIChatBubble
+            sector={resolvedIndustry}
+            sectorLabel={industryConfig.label}
+            sectorEmoji={industryConfig.emoji}
+            accentColor={accentColor}
+            companyName={companyName}
+          />
         </Suspense>
       </div>
     );
@@ -999,7 +1005,13 @@ export default function IndustryDemoPage() {
       </div>
 
       <Suspense fallback={null}>
-        <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={theme.accent} />
+        <SectorAIChatBubble
+          sector={resolvedIndustry}
+          sectorLabel={industryConfig.label}
+          sectorEmoji={industryConfig.emoji}
+          accentColor={theme.accent}
+          companyName={companyName}
+        />
       </Suspense>
     </div>
   );
