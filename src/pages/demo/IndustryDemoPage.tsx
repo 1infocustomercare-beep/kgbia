@@ -3,29 +3,15 @@ import BackButton from "@/components/BackButton";
 const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
 import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
-
-import DemoTestimonialsSection from "@/components/demo/DemoTestimonialsSection";
 import DemoPricingSection from "@/components/demo/DemoPricingSection";
 import DemoFooterSection from "@/components/demo/DemoFooterSection";
 import { useParams, useNavigate, useSearchParams, Link } from "react-router-dom";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { DEMO_INDUSTRY_DATA, DEMO_SLUGS, type DemoService } from "@/data/demo-industries";
+import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
-import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
-import NCCPublicSite from "@/pages/public/NCCPublicSite";
-import BeautyPublicSite from "@/pages/public/BeautyPublicSite";
-import HealthcarePublicSite from "@/pages/public/HealthcarePublicSite";
-import RetailPublicSite from "@/pages/public/RetailPublicSite";
-import FitnessPublicSite from "@/pages/public/FitnessPublicSite";
-import HotelPublicSite from "@/pages/public/HotelPublicSite";
-import BeachPublicSite from "@/pages/public/BeachPublicSite";
-import FoodPublicSite from "@/pages/public/FoodPublicSite";
-import BakeryPublicSite from "@/pages/public/BakeryPublicSite";
-import TradesPublicSite from "@/pages/public/TradesPublicSite";
-import LuxuryPublicSite from "@/pages/public/LuxuryPublicSite";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,17 +21,16 @@ import { toast } from "sonner";
 import {
   Star, Phone, Mail, MapPin, Clock, ArrowLeft, Shield, Zap,
   Heart, Award, Users, Sparkles, ChevronRight, Send, CheckCircle,
-  Menu as MenuIcon, X, Leaf, Camera, Truck, GraduationCap,
-  Calendar, Globe, Package, Coffee, Sun, Waves, Baby, BookOpen,
-  Settings, TrendingUp, Calculator, Palette, Image, Monitor,
-  Wrench, FileText, HardHat, Bike, Wine, Stethoscope, Dumbbell,
+  Menu as MenuIcon, X, Calendar, Globe, Package,
+  Settings, TrendingUp, CreditCard, Layers,
   ArrowRight, MessageCircle, BarChart3, QrCode, Bell, Bot,
-  Smartphone, CreditCard, Lock, Layers, Radio, Eye, ChefHat,
-  Scissors, Building, Car, Store, Dumbbell as Gym
+  Smartphone, Lock, Eye, ChefHat,
+  Scissors, Building, Car, Store, Monitor, Wrench, FileText,
+  Palette, Image, Camera, Truck
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════
-   SECTOR-SPECIFIC THEME CONFIGS
+   SECTOR HERO CONFIGS — Empire-centric messaging
    ═══════════════════════════════════════════ */
 
 interface SectorTheme {
@@ -56,8 +41,16 @@ interface SectorTheme {
   bgTo: string;
   heroEmoji: string;
   heroVideo: string;
-  platformFeatures: { icon: React.ReactNode; title: string; desc: string }[];
+  headline: string;
+  subheadline: string;
+  benefits: { emoji: string; title: string; desc: string }[];
+  stats: { value: number; suffix: string; label: string }[];
+  whyEmpire: { icon: React.ReactNode; title: string; desc: string }[];
+  problemsWeSolve: string[];
 }
+
+const makeBenefits = (items: { emoji: string; title: string; desc: string }[]) => items;
+const makeStats = (items: { value: number; suffix: string; label: string }[]) => items;
 
 const SECTOR_THEMES: Record<string, SectorTheme> = {
   food: {
@@ -68,7 +61,19 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgTo: "#0d0d0d",
     heroEmoji: "🍽️",
     heroVideo: "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4",
-    platformFeatures: [
+    headline: "Rivoluziona il Tuo Ristorante con l'AI",
+    subheadline: "Menu digitale QR, ordini automatizzati, CRM clienti, agenti AI che vendono per te — tutto in un'unica piattaforma. Aumenta i coperti del 40% e taglia i costi operativi.",
+    benefits: makeBenefits([
+      { emoji: "📲", title: "Menu QR Interattivo", desc: "I clienti scansionano, sfogliano e ordinano dal tavolo. Zero errori, +30% velocità servizio." },
+      { emoji: "🤖", title: "AI Sommelier & Upselling", desc: "L'AI suggerisce abbinamenti e promozioni personalizzate. +22% scontrino medio." },
+      { emoji: "📊", title: "Dashboard Vendite Live", desc: "Revenue, piatti top, food cost e trend — tutto in tempo reale sul tuo smartphone." },
+      { emoji: "💬", title: "WhatsApp Marketing Auto", desc: "Recupera clienti persi, invia offerte e ricevi ordini via WhatsApp con chatbot AI." },
+      { emoji: "👨‍🍳", title: "Display Cucina Smart", desc: "Ordini in cucina con priorità, tempi e note — elimina i comandi cartacei." },
+      { emoji: "💳", title: "Pagamenti & Fatturazione", desc: "Incassi digitali, split bill, fattura elettronica automatica." },
+    ]),
+    stats: makeStats([{ value: 40, suffix: "%", label: "Più Coperti" }, { value: 22, suffix: "%", label: "Scontrino Medio" }, { value: 70, suffix: "%", label: "Meno No-Show" }]),
+    problemsWeSolve: ["Ordini confusi su carta", "Clienti persi senza follow-up", "Zero dati sulle vendite", "Gestione prenotazioni manuale", "Food cost non tracciato", "Nessuna fidelizzazione"],
+    whyEmpire: [
       { icon: <QrCode className="w-5 h-5" />, title: "Menu Digitale QR", desc: "I clienti scansionano e ordinano dal tavolo" },
       { icon: <BarChart3 className="w-5 h-5" />, title: "Dashboard Vendite", desc: "Revenue, piatti top e trend in tempo reale" },
       { icon: <Bell className="w-5 h-5" />, title: "Ordini in Cucina", desc: "Display cucina con priorità e tempi" },
@@ -85,7 +90,19 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgTo: "#0d0d0d",
     heroEmoji: "🚘",
     heroVideo: "https://videos.pexels.com/video-files/5765383/5765383-uhd_2560_1440_25fps.mp4",
-    platformFeatures: [
+    headline: "Digitalizza il Tuo Servizio NCC",
+    subheadline: "Prenotazioni online 24/7, gestione flotta completa, pricing per tratta e sito web premium che converte — tutto automatizzato con AI.",
+    benefits: makeBenefits([
+      { emoji: "📅", title: "Booking Automatico 24/7", desc: "Prenotazioni online con conferma istantanea e assegnazione autista intelligente." },
+      { emoji: "🚗", title: "Gestione Flotta Completa", desc: "Veicoli, scadenze assicurative, manutenzione e documenti — tutto in un click." },
+      { emoji: "💰", title: "Pricing Dinamico", desc: "Tariffe per tratta, veicolo, stagione — il cliente vede il prezzo e prenota subito." },
+      { emoji: "👤", title: "Gestione Autisti", desc: "Assegnazione intelligente, licenze, rating e tracking in tempo reale." },
+      { emoji: "🌐", title: "Sito Web Premium", desc: "Landing page professionale che converte visitatori in prenotazioni." },
+      { emoji: "💬", title: "WhatsApp Integrato", desc: "Comunicazione diretta con i clienti e conferme automatiche." },
+    ]),
+    stats: makeStats([{ value: 60, suffix: "%", label: "Più Prenotazioni" }, { value: 35, suffix: "%", label: "Meno Chiamate" }, { value: 90, suffix: "%", label: "Clienti Soddisfatti" }]),
+    problemsWeSolve: ["Prenotazioni solo telefoniche", "Nessun listino online", "Flotta non monitorata", "Zero visibilità web", "Gestione autisti caotica"],
+    whyEmpire: [
       { icon: <Car className="w-5 h-5" />, title: "Gestione Flotta", desc: "Veicoli, scadenze, manutenzione in un click" },
       { icon: <Calendar className="w-5 h-5" />, title: "Prenotazioni Online", desc: "Booking automatico con conferma istantanea" },
       { icon: <BarChart3 className="w-5 h-5" />, title: "Pricing Dinamico", desc: "Tariffe per tratta, veicolo e stagione" },
@@ -102,7 +119,19 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgTo: "#0d0d0d",
     heroEmoji: "💅",
     heroVideo: "https://videos.pexels.com/video-files/6724370/6724370-uhd_2560_1440_25fps.mp4",
-    platformFeatures: [
+    headline: "Il Tuo Salone, Potenziato dall'AI",
+    subheadline: "Agenda smart, reminder automatici, fidelity digitale e app per i tuoi clienti — riduci i no-show del 70% e fai tornare ogni cliente.",
+    benefits: makeBenefits([
+      { emoji: "📅", title: "Agenda Intelligente", desc: "Prenotazioni online con slot automatici e conferma istantanea." },
+      { emoji: "💆", title: "Schede Clienti Complete", desc: "Storico trattamenti, allergie, preferenze — ogni dettaglio ricordato." },
+      { emoji: "📱", title: "Reminder Automatici", desc: "SMS/WhatsApp prima dell'appuntamento — no-show -70%." },
+      { emoji: "⭐", title: "Fidelity Card Digitale", desc: "Tessera punti nel telefono del cliente — tornano più spesso." },
+      { emoji: "📊", title: "Analytics Salone", desc: "Servizi top, orari di punta, revenue per operatore." },
+      { emoji: "🎨", title: "App Personalizzata", desc: "I clienti prenotano, pagano e accumulano punti dal telefono." },
+    ]),
+    stats: makeStats([{ value: 70, suffix: "%", label: "Meno No-Show" }, { value: 45, suffix: "%", label: "Più Ritorni" }, { value: 30, suffix: "%", label: "Revenue +30%" }]),
+    problemsWeSolve: ["Appuntamenti mancati", "Nessuno storico trattamenti", "Clienti che non tornano", "Agenda cartacea", "Zero marketing"],
+    whyEmpire: [
       { icon: <Calendar className="w-5 h-5" />, title: "Agenda Intelligente", desc: "Prenotazioni online con slot automatici" },
       { icon: <Users className="w-5 h-5" />, title: "Schede Clienti", desc: "Storico trattamenti, allergie, preferenze" },
       { icon: <Bell className="w-5 h-5" />, title: "Reminder Automatici", desc: "SMS/WhatsApp prima dell'appuntamento" },
@@ -111,78 +140,12 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
       { icon: <Smartphone className="w-5 h-5" />, title: "App Clienti", desc: "Prenota, paga e accumula punti dal telefono" },
     ],
   },
-  healthcare: {
-    gradient: "from-cyan-400 via-teal-500 to-emerald-600",
-    accent: "#14b8a6",
-    accentRgb: "20, 184, 166",
-    bgFrom: "#0a1a1a",
-    bgTo: "#0d0d0d",
-    heroEmoji: "🏥",
-    heroVideo: "https://videos.pexels.com/video-files/7579658/7579658-uhd_2560_1440_25fps.mp4",
-    platformFeatures: [
-      { icon: <Calendar className="w-5 h-5" />, title: "Agenda Medica", desc: "Prenotazioni online con slot per specialità" },
-      { icon: <FileText className="w-5 h-5" />, title: "Cartelle Pazienti", desc: "Storico visite, referti e prescrizioni" },
-      { icon: <Bell className="w-5 h-5" />, title: "Reminder Visite", desc: "Notifiche automatiche pre-appuntamento" },
-      { icon: <Lock className="w-5 h-5" />, title: "GDPR Compliant", desc: "Dati sanitari protetti e criptati" },
-      { icon: <BarChart3 className="w-5 h-5" />, title: "Report & Analytics", desc: "Visite, revenue e statistiche studio" },
-      { icon: <CreditCard className="w-5 h-5" />, title: "Fatturazione", desc: "Fatture elettroniche automatiche" },
-    ],
-  },
-  retail: {
-    gradient: "from-violet-400 via-purple-500 to-indigo-600",
-    accent: "#8b5cf6",
-    accentRgb: "139, 92, 246",
-    bgFrom: "#0d0a1a",
-    bgTo: "#0d0d0d",
-    heroEmoji: "🛍️",
-    heroVideo: "https://videos.pexels.com/video-files/5585378/5585378-uhd_2560_1440_30fps.mp4",
-    platformFeatures: [
-      { icon: <Package className="w-5 h-5" />, title: "Catalogo Prodotti", desc: "Gestisci inventario con foto e varianti" },
-      { icon: <Store className="w-5 h-5" />, title: "E-Commerce", desc: "Negozio online integrato con spedizioni" },
-      { icon: <QrCode className="w-5 h-5" />, title: "QR Vetrina", desc: "I clienti acquistano scannerizzando" },
-      { icon: <Users className="w-5 h-5" />, title: "CRM Clienti", desc: "Preferenze, ordini e programma fedeltà" },
-      { icon: <TrendingUp className="w-5 h-5" />, title: "Analytics Vendite", desc: "Bestseller, margini e previsioni" },
-      { icon: <Bell className="w-5 h-5" />, title: "Marketing Auto", desc: "Email e offerte personalizzate" },
-    ],
-  },
-  fitness: {
-    gradient: "from-lime-400 via-green-500 to-emerald-600",
-    accent: "#22c55e",
-    accentRgb: "34, 197, 94",
-    bgFrom: "#0a1a0a",
-    bgTo: "#0d0d0d",
-    heroEmoji: "💪",
-    heroVideo: "https://videos.pexels.com/video-files/4761437/4761437-uhd_2560_1440_25fps.mp4",
-    platformFeatures: [
-      { icon: <Calendar className="w-5 h-5" />, title: "Prenotazione Corsi", desc: "Iscrizione online a lezioni e personal" },
-      { icon: <Users className="w-5 h-5" />, title: "Gestione Iscritti", desc: "Abbonamenti, scadenze e check-in" },
-      { icon: <CreditCard className="w-5 h-5" />, title: "Pagamenti Ricorrenti", desc: "Addebito automatico abbonamenti" },
-      { icon: <BarChart3 className="w-5 h-5" />, title: "Dashboard Palestra", desc: "Iscritti attivi, revenue, retention" },
-      { icon: <Smartphone className="w-5 h-5" />, title: "App Membri", desc: "Prenota, check-in e tracking allenamenti" },
-      { icon: <Bell className="w-5 h-5" />, title: "Notifiche Smart", desc: "Reminder scadenze e nuovi corsi" },
-    ],
-  },
-  hospitality: {
-    gradient: "from-amber-300 via-orange-400 to-rose-500",
-    accent: "#f59e0b",
-    accentRgb: "245, 158, 11",
-    bgFrom: "#1a140a",
-    bgTo: "#0d0d0d",
-    heroEmoji: "🏨",
-    heroVideo: "https://videos.pexels.com/video-files/6394054/6394054-uhd_2560_1440_25fps.mp4",
-    platformFeatures: [
-      { icon: <Calendar className="w-5 h-5" />, title: "Booking Engine", desc: "Prenotazioni dirette senza commissioni OTA" },
-      { icon: <Building className="w-5 h-5" />, title: "Gestione Camere", desc: "Disponibilità, tariffe e pulizie" },
-      { icon: <Users className="w-5 h-5" />, title: "Guest Management", desc: "Check-in digitale e preferenze ospiti" },
-      { icon: <BarChart3 className="w-5 h-5" />, title: "Revenue Management", desc: "Occupancy, ADR e RevPAR in tempo reale" },
-      { icon: <Globe className="w-5 h-5" />, title: "Sito Web & SEO", desc: "Sito multilingue ottimizzato per Google" },
-      { icon: <Star className="w-5 h-5" />, title: "Recensioni", desc: "Gestione reputazione e risposte automatiche" },
-    ],
-  },
 };
 
 const getTheme = (industry: string): SectorTheme => {
-  return SECTOR_THEMES[industry] || {
+  if (SECTOR_THEMES[industry]) return SECTOR_THEMES[industry];
+  // Generate generic theme for any sector
+  return {
     gradient: "from-blue-400 via-indigo-500 to-purple-600",
     accent: "#6366f1",
     accentRgb: "99, 102, 241",
@@ -190,7 +153,19 @@ const getTheme = (industry: string): SectorTheme => {
     bgTo: "#0d0d0d",
     heroEmoji: "⚡",
     heroVideo: "https://videos.pexels.com/video-files/3255275/3255275-uhd_2560_1440_25fps.mp4",
-    platformFeatures: [
+    headline: "Rivoluziona il Tuo Business con Empire AI",
+    subheadline: "Piattaforma completa con sito web, gestionale, CRM, automazioni AI e app personalizzata — tutto su misura per la tua attività.",
+    benefits: [
+      { emoji: "🎯", title: "Sito Web & App Premium", desc: "Design professionale su misura che converte visitatori in clienti." },
+      { emoji: "🤖", title: "Agenti AI 24/7", desc: "Assistenti virtuali che rispondono, vendono e gestiscono per te." },
+      { emoji: "📊", title: "Dashboard Analytics", desc: "KPI, revenue e insight predittivi in tempo reale." },
+      { emoji: "📅", title: "CRM & Prenotazioni", desc: "Gestione clienti e agenda smart con reminder automatici." },
+      { emoji: "💳", title: "Pagamenti & Fatturazione", desc: "Incassi digitali e fatturazione elettronica automatica." },
+      { emoji: "📣", title: "Marketing Automatizzato", desc: "Campagne, notifiche push e recupero clienti persi." },
+    ],
+    stats: [{ value: 40, suffix: "%", label: "Più Clienti" }, { value: 60, suffix: "%", label: "Meno Lavoro Manuale" }, { value: 95, suffix: "%", label: "Soddisfazione" }],
+    problemsWeSolve: ["Gestione manuale inefficiente", "Zero presenza digitale", "Clienti persi senza follow-up", "Nessun dato sul business", "Marketing inesistente"],
+    whyEmpire: [
       { icon: <Calendar className="w-5 h-5" />, title: "Prenotazioni", desc: "Sistema di booking integrato" },
       { icon: <Users className="w-5 h-5" />, title: "CRM Clienti", desc: "Gestione clientela completa" },
       { icon: <BarChart3 className="w-5 h-5" />, title: "Analytics", desc: "Dashboard con KPI in tempo reale" },
@@ -204,7 +179,6 @@ const getTheme = (industry: string): SectorTheme => {
 /* ═══════════════════════════════════════════
    ANIMATED HELPERS
    ═══════════════════════════════════════════ */
-
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref as any, { once: true });
@@ -241,39 +215,21 @@ function AnimSection({ id, children, className = "", delay = 0, style }: { id?: 
 }
 
 /* ═══════════════════════════════════════════
-   ICON RESOLVER
-   ═══════════════════════════════════════════ */
-const ICON_MAP: Record<string, any> = {
-  Shield, Zap, Heart, Award, Users, Sparkles, Star, Clock,
-  Leaf, Camera, Truck, GraduationCap, Calendar, Globe, Package,
-  Coffee, Sun, Waves, Baby, BookOpen, Settings, TrendingUp,
-  Calculator, Palette, Image, Monitor, Wrench, FileText, HardHat,
-  Bike, Wine, Stethoscope, Dumbbell, Phone, Mail, MapPin, Send,
-  ChefHat: Star, Scissors, Building, Car, Store,
-};
-const resolveIcon = (name: string) => ICON_MAP[name] || Star;
-
-/* ═══════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════ */
-
 export default function IndustryDemoPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
-  const [bookingSubmitted, setBookingSubmitted] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>({});
+  const [bookingSubmitted, setBookingSubmitted] = useState(false);
 
-  // ── Partner branding overrides from URL params ──
   const brandOverride = searchParams.get("brand");
   const colorOverride = searchParams.get("color");
   const taglineOverride = searchParams.get("tagline");
   const logoOverride = searchParams.get("logo");
   const isPartnerBranded = !!brandOverride;
 
-  // Try DB first
   const { data: company } = useQuery({
     queryKey: ["demo-company", slug],
     queryFn: async () => {
@@ -291,42 +247,27 @@ export default function IndustryDemoPage() {
 
   const resolvedIndustry: IndustryId | null = useMemo(() => {
     if (company?.industry) return company.industry as IndustryId;
-    // Match by demo slug value (e.g. "amalfi-luxury-transfer" → ncc)
     for (const [ind, s] of Object.entries(DEMO_SLUGS)) {
       if (s === slug) return ind as IndustryId;
     }
-    // Also accept industry ID directly as slug (e.g. /demo/ncc, /demo/food)
     if (slug && slug in INDUSTRY_CONFIGS) return slug as IndustryId;
     return null;
   }, [company, slug]);
 
-  // Use fallback for hooks (hooks must run unconditionally)
   const safeIndustry: IndustryId = resolvedIndustry || "custom";
   const industryConfig = INDUSTRY_CONFIGS[safeIndustry];
   const demoData = DEMO_INDUSTRY_DATA[safeIndustry];
   const theme = getTheme(safeIndustry);
-  const companyName = brandOverride || company?.name || demoData.companyName;
-  const tagline = taglineOverride || company?.tagline || demoData.tagline;
+  const companyName = brandOverride || company?.name || demoData?.companyName || "Empire AI";
+  const tagline = taglineOverride || company?.tagline || demoData?.tagline || "";
+  const accentColor = colorOverride || industryConfig?.defaultPrimaryColor || theme.accent;
 
-  // Categories
-  const categories = useMemo(() => {
-    const cats: string[] = [];
-    demoData.services.forEach(s => { if (!cats.includes(s.category)) cats.push(s.category); });
-    return cats;
-  }, [demoData]);
+  // Parallax hero
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const [activeCat, setActiveCat] = useState("");
-  const effectiveCat = activeCat || categories[0] || "";
-  const filteredServices = useMemo(
-    () => demoData.services.filter(s => s.category === effectiveCat),
-    [demoData, effectiveCat]
-  );
-  const popularServices = useMemo(
-    () => demoData.services.filter(s => s.popular),
-    [demoData]
-  );
-
-  // 404 fallback for unknown slugs (after all hooks)
   if (!resolvedIndustry) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
@@ -342,432 +283,260 @@ export default function IndustryDemoPage() {
     );
   }
 
-  const scrollTo = (id: string) => {
-    setMobileMenuOpen(false);
-    setActiveSection(id);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
-
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) { toast.error("Inserisci nome e telefono"); return; }
     setBookingSubmitted(true);
-    toast.success("Richiesta inviata con successo! (Demo)");
+    toast.success("Richiesta inviata! Ti contatteremo a breve.");
     setFormData({});
     setTimeout(() => setBookingSubmitted(false), 5000);
   };
-
-  const navLinks = [
-    { id: "home", label: "Home" },
-    { id: "services", label: industryConfig.terminology.items || "Servizi" },
-    { id: "platform", label: "La Piattaforma" },
-    { id: "reviews", label: "Recensioni" },
-    { id: "booking", label: demoData.bookingLabel },
-    { id: "contact", label: "Contatti" },
-  ];
-
-  const fieldLabels: Record<string, string> = {
-    name: "Nome *", phone: "Telefono *", email: "Email", date: "Data", time: "Ora",
-    guests: "Ospiti", service: "Servizio", pickup: "Partenza", dropoff: "Destinazione",
-    address: "Indirizzo", passengers: "Passeggeri", notes: "Note aggiuntive",
-  };
-
-  // ═══ PREMIUM TEMPLATE ROUTING ═══
-  const PREMIUM_TEMPLATES: Record<string, React.ComponentType<{ company: any; afterHero?: React.ReactNode }>> = {
-    ncc: NCCPublicSite,
-    beauty: BeautyPublicSite,
-    healthcare: HealthcarePublicSite,
-    retail: RetailPublicSite,
-    fitness: FitnessPublicSite,
-    hospitality: HotelPublicSite,
-    hotel: HotelPublicSite,
-    agriturismo: HotelPublicSite,
-    beach: BeachPublicSite,
-    food: FoodPublicSite,
-    restaurant: FoodPublicSite,
-    bakery: BakeryPublicSite,
-    plumber: TradesPublicSite,
-    electrician: TradesPublicSite,
-    cleaning: TradesPublicSite,
-    gardening: TradesPublicSite,
-    construction: TradesPublicSite,
-    garage: TradesPublicSite,
-    photography: TradesPublicSite,
-    veterinary: TradesPublicSite,
-    tattoo: TradesPublicSite,
-    childcare: TradesPublicSite,
-    education: TradesPublicSite,
-    events: TradesPublicSite,
-    logistics: TradesPublicSite,
-    legal: TradesPublicSite,
-    accounting: TradesPublicSite,
-  };
-
-  const PremiumTemplate = PREMIUM_TEMPLATES[resolvedIndustry];
-  if (PremiumTemplate) {
-    const demoCompany = company || {
-      id: "00000000-0000-0000-0000-000000000001",
-      name: companyName,
-      slug: slug || "demo",
-      industry: resolvedIndustry,
-      tagline: tagline,
-      primary_color: colorOverride || industryConfig.defaultPrimaryColor,
-      logo_url: logoOverride || null,
-      address: demoData.address,
-      city: demoData.city,
-      phone: demoData.phone,
-      email: demoData.email,
-      opening_hours: demoData.hours,
-      social_links: {},
-    };
-    // Apply branding overrides even when company exists in DB
-    if (isPartnerBranded) {
-      demoCompany.name = brandOverride!;
-      if (colorOverride) demoCompany.primary_color = colorOverride;
-      if (taglineOverride) demoCompany.tagline = taglineOverride;
-      if (logoOverride) demoCompany.logo_url = logoOverride;
-    }
-    const accentColor = demoCompany.primary_color || industryConfig.defaultPrimaryColor;
-
-    const phoneShowcaseSection = (
-      <div className="py-10 sm:py-14 px-3 sm:px-4" style={{ background: "linear-gradient(180deg, #0a0a0a, #111)" }}>
-        <div className="max-w-4xl mx-auto text-center mb-6 sm:mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] mb-3">
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
-            <span className="text-[9px] font-bold tracking-[3px] uppercase text-white/50">14 Interfacce · Stili Unici</span>
-          </div>
-          <h3 className="text-lg sm:text-2xl font-bold text-white/90">
-            Scopri come potrebbe essere il tuo{" "}
-            <span style={{ color: accentColor }}>{industryConfig.label}</span>
-          </h3>
-          <p className="text-[10px] sm:text-xs text-white/35 mt-1.5 max-w-lg mx-auto leading-relaxed">
-            Dalla vetrina al CRM, ogni schermata è progettata su misura — dashboard, prenotazioni, analytics e agenti AI
-          </p>
-        </div>
-        <IndustryPhoneShowcase industryId={resolvedIndustry} />
-      </div>
-    );
-
-    return (
-      <div className="pb-16" style={{ background: "#0a0a0a" }}>
-        <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
-        {/* Partner branding banner */}
-        {isPartnerBranded && (
-          <div className="fixed top-0 inset-x-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10 px-4 py-2.5 flex items-center justify-between">
-            <div className="flex items-center gap-3 min-w-0">
-              {logoOverride && <img src={logoOverride} alt="" className="w-7 h-7 rounded-lg object-cover border border-white/10" />}
-              <div className="min-w-0">
-                <p className="text-xs font-bold text-white truncate">{brandOverride}</p>
-                <p className="text-[9px] text-white/40">Bozza demo personalizzata — Empire Platform</p>
-              </div>
-            </div>
-            <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colorOverride || accentColor }} />
-          </div>
-        )}
-        <div style={isPartnerBranded ? { paddingTop: "52px" } : {}}>
-          <PremiumTemplate company={demoCompany} afterHero={phoneShowcaseSection} />
-        </div>
-        {/* Full Features + Agents + Admin CTA sections */}
-        <DemoFeaturesSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
-        <DemoTestimonialsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
-        
-        <DemoAgentsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
-        <DemoPricingSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
-        
-        <DemoFooterSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
-        <Suspense fallback={null}>
-          <EmpireVoiceAgent />
-        </Suspense>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen text-white overflow-x-hidden" style={{ background: `linear-gradient(180deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
       <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
 
-      {/* ═══════ NAVBAR ═══════ */}
-      <nav className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b border-white/5"
-        style={{ background: `${theme.bgFrom}dd` }}>
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-4 h-14">
-          <div className="flex items-center gap-2">
-            <button onClick={() => navigate("/home")} className="mr-2 p-1.5 rounded-lg hover:bg-white/10 transition" title="Torna alla Home">
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <span className="text-lg">{theme.heroEmoji}</span>
-            <span className="font-bold text-sm truncate max-w-[150px] sm:max-w-none">{companyName}</span>
+      {/* Partner branding banner */}
+      {isPartnerBranded && (
+        <div className="fixed top-0 inset-x-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10 px-4 py-2.5 flex items-center justify-between">
+          <div className="flex items-center gap-3 min-w-0">
+            {logoOverride && <img src={logoOverride} alt="" className="w-7 h-7 rounded-lg object-cover border border-white/10" />}
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-white truncate">{brandOverride}</p>
+              <p className="text-[9px] text-white/40">Bozza demo — Empire Platform</p>
+            </div>
           </div>
-
-          <div className="hidden md:flex items-center gap-1">
-            {navLinks.map(l => (
-              <button key={l.id} onClick={() => scrollTo(l.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-                  activeSection === l.id
-                    ? "text-white"
-                    : "text-white/50 hover:text-white hover:bg-white/5"
-                }`}
-                style={activeSection === l.id ? { backgroundColor: `${theme.accent}30` } : {}}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
-
-          <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
-          </button>
+          <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
         </div>
+      )}
 
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              className="md:hidden overflow-hidden border-t border-white/5" style={{ background: theme.bgFrom }}>
-              {navLinks.map(l => (
-                <button key={l.id} onClick={() => scrollTo(l.id)}
-                  className="block w-full text-left px-6 py-3.5 text-sm text-white/70 hover:text-white transition"
-                  style={activeSection === l.id ? { color: theme.accent } : {}}>
-                  {l.label}
-                </button>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+      {/* ═══════════════════════════════════════
+         HERO — Empire capabilities for this sector
+         ═══════════════════════════════════════ */}
+      <section ref={heroRef} className="relative pt-0">
+        <div className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
+          {/* Video Background with parallax */}
+          <motion.div className="absolute inset-0" style={{ y: heroY }}>
+            <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover scale-110"
+              src={theme.heroVideo} />
+            <div className="absolute inset-0 bg-black/70" />
+            <div className="absolute inset-0 opacity-40"
+              style={{ background: `linear-gradient(135deg, ${theme.accent}50 0%, transparent 50%, ${theme.accent}30 100%)` }} />
+            <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${theme.bgFrom} 0%, transparent 50%)` }} />
+          </motion.div>
 
-      {/* ═══════ HERO ═══════ */}
-      <section id="home" className="relative pt-14">
-        <div className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden">
-          {/* Video Background */}
-          <div className="absolute inset-0">
-            <video
-              autoPlay muted loop playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-              src={theme.heroVideo}
-            />
-            {/* Dark overlay with accent tint */}
-            <div className="absolute inset-0 bg-black/60" />
-            <div className="absolute inset-0 opacity-30"
-              style={{ background: `linear-gradient(135deg, ${theme.accent}40 0%, transparent 50%, ${theme.accent}20 100%)` }}
-            />
-            {/* Bottom vignette */}
-            <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${theme.bgFrom} 0%, transparent 40%)` }} />
-          </div>
-
-          <div className="relative text-center px-6 py-20 max-w-3xl mx-auto">
-
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}>
-              <Badge className="mb-4 text-xs font-medium px-3 py-1 border-0"
-                style={{ backgroundColor: `${theme.accent}20`, color: theme.accent }}>
-                {industryConfig.emoji} {industryConfig.label}
-              </Badge>
-
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-5 leading-[1.05] tracking-tight">
-                {demoData.heroTitle.split(" ").map((word, i, arr) => (
-                  <span key={i}>
-                    {i >= arr.length - 2 ? (
-                      <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>{word} </span>
-                    ) : (
-                      <>{word} </>
-                    )}
-                  </span>
-                ))}
-              </h1>
-
-              <p className="text-lg sm:text-xl text-white/50 mb-8 max-w-xl mx-auto leading-relaxed">
-                {demoData.heroSubtitle}
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button onClick={() => scrollTo("services")} size="lg"
-                  className="h-13 px-8 font-bold rounded-xl text-white border-0 text-base"
-                  style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)` }}>
-                  {demoData.ctaLabel} <ChevronRight className="w-5 h-5 ml-1" />
-                </Button>
-                
+          <motion.div className="relative text-center px-6 py-24 max-w-4xl mx-auto" style={{ opacity: heroOpacity }}>
+            {/* Empire Badge */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.05] backdrop-blur-sm mb-6">
+                <span className="text-lg">{theme.heroEmoji}</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-white/60">Empire AI × {industryConfig?.label}</span>
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
               </div>
             </motion.div>
 
-            {/* Stats */}
-            <motion.div className="mt-14 grid grid-cols-3 gap-4 max-w-md mx-auto"
+            <motion.h1
+              className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 leading-[1.05] tracking-tight"
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}
+            >
+              {theme.headline.split(" ").map((word, i, arr) => (
+                <span key={i}>
+                  {i >= arr.length - 2 ? (
+                    <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>{word} </span>
+                  ) : (
+                    <>{word} </>
+                  )}
+                </span>
+              ))}
+            </motion.h1>
+
+            <motion.p
+              className="text-base sm:text-lg text-white/50 mb-10 max-w-2xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+            >
+              {theme.subheadline}
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div className="flex flex-col sm:flex-row gap-4 justify-center mb-14"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+              <Button onClick={() => document.getElementById("consulenza")?.scrollIntoView({ behavior: "smooth" })}
+                size="lg" className="h-14 px-10 font-bold rounded-2xl text-white border-0 text-base shadow-2xl"
+                style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`, boxShadow: `0 12px 40px ${theme.accent}40` }}>
+                Richiedi Consulenza Gratuita <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button onClick={() => document.getElementById("preview")?.scrollIntoView({ behavior: "smooth" })}
+                size="lg" variant="outline"
+                className="h-14 px-10 font-bold rounded-2xl border-white/20 text-white/80 hover:bg-white/10 text-base backdrop-blur-sm">
+                <Eye className="w-5 h-5 mr-2" /> Vedi le Preview
+              </Button>
+            </motion.div>
+
+            {/* Animated Stats */}
+            <motion.div className="grid grid-cols-3 gap-6 max-w-lg mx-auto"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-              {[
-                { value: 500, suffix: "+", label: "Clienti" },
-                { value: 98, suffix: "%", label: "Soddisfatti" },
-                { value: 5, suffix: "★", label: "Rating" },
-              ].map((s, i) => (
+              {theme.stats.map((s, i) => (
                 <div key={i} className="text-center">
-                  <p className="text-2xl sm:text-3xl font-bold" style={{ color: theme.accent }}>
+                  <p className="text-3xl sm:text-4xl font-black" style={{ color: theme.accent }}>
                     <AnimatedNumber value={s.value} suffix={s.suffix} />
                   </p>
-                  <p className="text-[10px] text-white/30 uppercase tracking-widest mt-1">{s.label}</p>
+                  <p className="text-[10px] text-white/30 uppercase tracking-[2px] mt-1 font-semibold">{s.label}</p>
                 </div>
               ))}
             </motion.div>
-          </div>
+          </motion.div>
 
           {/* Scroll indicator */}
-          <motion.div className="absolute bottom-6 left-1/2 -translate-x-1/2"
-            animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-            <ChevronRight className="w-5 h-5 text-white/20 rotate-90" />
+          <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+            <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-1.5">
+              <motion.div className="w-1.5 h-1.5 rounded-full bg-white/50"
+                animate={{ y: [0, 16, 0] }} transition={{ duration: 2, repeat: Infinity }} />
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ═══════ PHONE SHOWCASE — Right after hero ═══════ */}
-      <AnimSection className="py-10 sm:py-14 px-3 sm:px-4" style={{ background: `linear-gradient(180deg, ${theme.bgFrom}, ${theme.accent}06, ${theme.bgTo})` }}>
-        <div className="max-w-4xl mx-auto text-center mb-6 sm:mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] mb-3">
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
-            <span className="text-[9px] font-bold tracking-[3px] uppercase text-white/50">8 Interfacce · 8 Stili Diversi</span>
-          </div>
-          <motion.h3 className="text-lg sm:text-2xl font-bold text-white/90"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Ogni Schermata, un Design Unico
-          </motion.h3>
-          <motion.p className="text-[10px] sm:text-xs text-white/35 mt-1.5 max-w-lg mx-auto leading-relaxed"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Dalla vetrina al CRM, ogni sezione ha il suo stile dedicato — colori, layout e contenuti personalizzati per <span className="font-semibold" style={{ color: theme.accent }}>{industryConfig.label}</span>
-          </motion.p>
-        </div>
-        <IndustryPhoneShowcase industryId={resolvedIndustry} />
-      </AnimSection>
-
-      <AnimSection className="border-y border-white/5" style={{ background: `linear-gradient(180deg, ${theme.accent}08, transparent)` } as any}>
-        <div className="max-w-5xl mx-auto py-10 px-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {demoData.features.map((f, i) => {
-            const Icon = resolveIcon(f.icon);
-            return (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }} viewport={{ once: true }}
-                className="flex items-start gap-4 group">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
-                  style={{ backgroundColor: `${theme.accent}15`, border: `1px solid ${theme.accent}20` }}>
-                  <Icon className="w-5 h-5" style={{ color: theme.accent }} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-sm text-white mb-0.5">{f.label}</h3>
-                  <p className="text-xs text-white/40 leading-relaxed">{f.desc}</p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </AnimSection>
-
-      {/* ═══════ WHY US — VALUE PROPOSITION ═══════ */}
-      <AnimSection className="max-w-5xl mx-auto py-16 px-4">
-          <div className="text-center mb-10">
-            <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-              🚀 Tutto Incluso
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold">
-              Tutto Ciò di Cui Hai Bisogno, in Un'unica Piattaforma
-            </h2>
-            <p className="text-sm text-white/40 mt-3 max-w-lg mx-auto leading-relaxed">
-              Non servono 10 strumenti diversi. Gestiamo ogni aspetto del tuo business con un ecosistema integrato, intelligente e sempre attivo.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { emoji: "🎯", title: "Sito Web & App su Misura", desc: "Design premium personalizzato per il tuo settore, ottimizzato per convertire visitatori in clienti." },
-              { emoji: "🤖", title: "Intelligenza Artificiale Integrata", desc: "Agenti AI che rispondono, vendono e gestiscono per te — 24 ore su 24, 7 giorni su 7." },
-              { emoji: "📊", title: "Dashboard & Analytics Avanzati", desc: "Monitora fatturato, clienti, performance e trend in tempo reale con insight predittivi." },
-              { emoji: "📅", title: "Prenotazioni & CRM Automatico", desc: "Agenda smart, gestione clienti, reminder automatici e fidelizzazione integrata." },
-              { emoji: "💳", title: "Pagamenti & Fatturazione", desc: "Incassi online, fatture automatiche, reportistica fiscale — tutto in un click." },
-              { emoji: "📣", title: "Marketing & Automazioni", desc: "Campagne, notifiche push, recupero clienti persi e upselling — tutto automatizzato." },
-            ].map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }} viewport={{ once: true }}>
-                <div className="group relative p-5 rounded-2xl border border-white/5 hover:border-white/15 transition-all duration-500 cursor-pointer overflow-hidden h-full"
-                  style={{ background: `linear-gradient(135deg, ${theme.accent}08, transparent)` }}>
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{ background: `radial-gradient(ellipse at center, ${theme.accent}10, transparent 70%)` }} />
-                  <div className="relative">
-                    <div className="flex items-center gap-2.5 mb-3">
-                      <span className="text-2xl">{item.emoji}</span>
-                      <h3 className="font-bold text-sm text-white">{item.title}</h3>
-                    </div>
-                    <p className="text-xs text-white/40 leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </AnimSection>
-
-      {/* ═══════ FULL SERVICE LIST ═══════ */}
-      <AnimSection id="services" className="max-w-5xl mx-auto py-16 px-4">
-        <div className="text-center mb-10">
-          <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-            📋 Catalogo Completo
-          </Badge>
-          <h2 className="text-2xl sm:text-3xl font-bold">
-            {industryConfig.terminology.items || "I Nostri Servizi"}
-          </h2>
-        </div>
-
-        {/* Category tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none justify-center flex-wrap">
-          {categories.map(cat => (
-            <button key={cat} onClick={() => setActiveCat(cat)}
-              className="whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-semibold transition-all min-h-[40px]"
-              style={effectiveCat === cat
-                ? { backgroundColor: theme.accent, color: "#000" }
-                : { backgroundColor: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)" }
-              }>
-              {cat}
-            </button>
+      {/* ═══════ TRUST BAR ═══════ */}
+      <div className="border-y border-white/5 py-4" style={{ background: `linear-gradient(90deg, ${theme.accent}08, transparent, ${theme.accent}08)` }}>
+        <div className="max-w-5xl mx-auto flex items-center justify-center gap-8 flex-wrap px-4">
+          {[
+            { icon: <Shield className="w-4 h-4" />, label: "GDPR Compliant" },
+            { icon: <Zap className="w-4 h-4" />, label: "Setup in 48h" },
+            { icon: <Bot className="w-4 h-4" />, label: "AI Integrata" },
+            { icon: <Lock className="w-4 h-4" />, label: "100% Sicuro" },
+            { icon: <Smartphone className="w-4 h-4" />, label: "Mobile First" },
+          ].map((item, i) => (
+            <div key={i} className="flex items-center gap-2 text-white/30 text-xs font-semibold">
+              <span style={{ color: theme.accent }}>{item.icon}</span>
+              {item.label}
+            </div>
           ))}
         </div>
+      </div>
 
-        <div className="space-y-3">
-          <AnimatePresence mode="popLayout">
-            {filteredServices.map((s, i) => (
-              <motion.div key={s.name}
-                initial={{ opacity: 0, x: -15 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 15 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <div className="flex items-center gap-4 p-4 rounded-xl border border-white/5 hover:border-white/15 transition-all group cursor-pointer"
-                  style={{ background: `linear-gradient(135deg, ${theme.accent}04, transparent)` }}>
-                  <span className="text-2xl shrink-0 group-hover:scale-110 transition-transform">{s.emoji || "📋"}</span>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm text-white">{s.name}</h3>
-                    <p className="text-xs text-white/40 mt-0.5">{s.description}</p>
-                    {s.duration && !s.duration.startsWith("/") && (
-                      <p className="text-[10px] text-white/30 mt-0.5 flex items-center gap-1"><Clock className="w-3 h-3" /> {s.duration}</p>
-                    )}
-                  </div>
-                  <span className="font-bold text-sm shrink-0" style={{ color: theme.accent }}>
-                    {s.price === 0 ? "Gratis" : `€${s.price.toLocaleString("it-IT")}`}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      </AnimSection>
-
-      {/* ═══════ PLATFORM CAPABILITIES ═══════ */}
-      <AnimSection id="platform" className="py-20 px-4"
-        style={{ background: `linear-gradient(180deg, transparent, ${theme.accent}06, transparent)` } as any}>
+      {/* ═══════ PROBLEMS WE SOLVE ═══════ */}
+      <AnimSection className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-              🚀 La Piattaforma
+              ⚠️ Ti Riconosci?
             </Badge>
             <h2 className="text-2xl sm:text-4xl font-bold mb-3">
-              Tutto Ciò che <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>Gestisce per Te</span>
+              I Problemi che <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>Eliminiamo</span>
             </h2>
-            <p className="text-white/40 max-w-lg mx-auto text-sm leading-relaxed">
-              Un pannello di controllo completo che automatizza, organizza e fa crescere il tuo business. Zero complessità, risultati immediati.
+            <p className="text-sm text-white/40 max-w-lg mx-auto">
+              Ogni giorno migliaia di attività nel settore {industryConfig?.label} perdono clienti e fatturato per questi motivi
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {theme.platformFeatures.map((feat, i) => (
+            {theme.problemsWeSolve.map((problem, i) => (
+              <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.08 }} viewport={{ once: true }}>
+                <div className="p-5 rounded-2xl border border-red-500/10 bg-red-500/[0.03] group hover:border-red-500/20 transition-all">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0 text-red-400 text-sm font-bold">✗</div>
+                    <div>
+                      <p className="text-sm font-semibold text-white/80">{problem}</p>
+                      <p className="text-xs text-white/30 mt-1">Empire lo risolve automaticamente</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </AnimSection>
+
+      {/* ═══════ WHAT WE BUILD FOR YOU ═══════ */}
+      <AnimSection className="py-20 px-4" style={{ background: `linear-gradient(180deg, transparent, ${theme.accent}06, transparent)` }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
+              🚀 La Soluzione Completa
+            </Badge>
+            <h2 className="text-2xl sm:text-4xl font-bold mb-3">
+              Cosa Creiamo per il Tuo{" "}
+              <span style={{ color: theme.accent }}>{industryConfig?.label}</span>
+            </h2>
+            <p className="text-sm text-white/40 max-w-xl mx-auto">
+              Non un semplice sito web — un ecosistema digitale completo che lavora per te 24/7
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {theme.benefits.map((item, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }} viewport={{ once: true }}>
+                <div className="group relative p-6 rounded-2xl border border-white/5 hover:border-white/15 transition-all duration-500 h-full overflow-hidden"
+                  style={{ background: `linear-gradient(135deg, ${theme.accent}08, transparent)` }}>
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ background: `radial-gradient(ellipse at center, ${theme.accent}12, transparent 70%)` }} />
+                  <div className="relative">
+                    <span className="text-3xl block mb-3">{item.emoji}</span>
+                    <h3 className="font-bold text-base text-white mb-2">{item.title}</h3>
+                    <p className="text-sm text-white/40 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Extra: "Tutto personalizzabile" */}
+          <motion.div className="mt-10 p-6 rounded-2xl border border-white/5 text-center"
+            style={{ background: `linear-gradient(135deg, ${theme.accent}05, transparent)` }}
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <Sparkles className="w-6 h-6 mx-auto mb-3" style={{ color: theme.accent }} />
+            <h3 className="font-bold text-lg text-white mb-2">Tutto Personalizzabile al 100%</h3>
+            <p className="text-sm text-white/40 max-w-lg mx-auto">
+              Design, funzionalità, workflow — ogni aspetto è costruito su misura per le tue esigenze specifiche.
+              <br />Non trovi una funzione? <strong style={{ color: theme.accent }}>Chiedi ad Arianna</strong> — la nostra AI trova soluzioni a qualsiasi problema.
+            </p>
+          </motion.div>
+        </div>
+      </AnimSection>
+
+      {/* ═══════ PHONE SHOWCASE PREVIEW ═══════ */}
+      <AnimSection id="preview" className="py-16 px-3 sm:px-4" style={{ background: `linear-gradient(180deg, ${theme.bgFrom}, ${theme.accent}06, ${theme.bgTo})` }}>
+        <div className="max-w-4xl mx-auto text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] mb-3">
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
+            <span className="text-[9px] font-bold tracking-[3px] uppercase text-white/50">PREVIEW REALI · DESIGN SU MISURA</span>
+          </div>
+          <motion.h3 className="text-xl sm:text-3xl font-bold text-white/90"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Ecco Come Potrebbe Essere la Tua{" "}
+            <span style={{ color: theme.accent }}>App</span>
+          </motion.h3>
+          <motion.p className="text-xs sm:text-sm text-white/35 mt-2 max-w-lg mx-auto leading-relaxed"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Dalla vetrina al gestionale, ogni schermata progettata per{" "}
+            <span className="font-semibold" style={{ color: theme.accent }}>{industryConfig?.label}</span>
+            — dashboard, prenotazioni, analytics e agenti AI
+          </motion.p>
+        </div>
+        <IndustryPhoneShowcase industryId={resolvedIndustry!} />
+      </AnimSection>
+
+      {/* ═══════ PLATFORM CAPABILITIES GRID ═══════ */}
+      <AnimSection id="platform" className="py-20 px-4"
+        style={{ background: `linear-gradient(180deg, transparent, ${theme.accent}06, transparent)` }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
+              ⚡ La Piattaforma
+            </Badge>
+            <h2 className="text-2xl sm:text-4xl font-bold mb-3">
+              Un Ecosistema che <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>Lavora per Te</span>
+            </h2>
+            <p className="text-white/40 max-w-lg mx-auto text-sm">
+              Non servono 10 strumenti diversi. Tutto è integrato, automatizzato e sempre attivo.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {theme.whyEmpire.map((feat, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08, duration: 0.5 }} viewport={{ once: true }}>
                 <div className="group relative p-6 rounded-2xl border border-white/5 hover:border-white/15 transition-all duration-500 h-full overflow-hidden"
@@ -794,7 +563,7 @@ export default function IndustryDemoPage() {
               { emoji: "🔒", label: "GDPR Compliant" },
               { emoji: "📱", label: "PWA Mobile" },
               { emoji: "🤖", label: "AI Integrata" },
-              { emoji: "⚡", label: "Setup in 5 Min" },
+              { emoji: "⚡", label: "Setup Veloce" },
             ].map((b, i) => (
               <div key={i} className="text-center p-4 rounded-xl border border-white/5" style={{ background: `${theme.accent}04` }}>
                 <span className="text-xl block mb-1">{b.emoji}</span>
@@ -805,54 +574,25 @@ export default function IndustryDemoPage() {
         </div>
       </AnimSection>
 
-      {/* ═══════ REVIEWS ═══════ */}
-      <AnimSection id="reviews" className="py-16 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-              ⭐ Recensioni
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold">Cosa Dicono di Noi</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {demoData.reviews.map((r, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }} viewport={{ once: true }}>
-                <div className="p-6 rounded-2xl border border-white/5 h-full relative overflow-hidden"
-                  style={{ background: `linear-gradient(135deg, ${theme.accent}06, transparent)` }}>
-                  <div className="flex gap-0.5 mb-3">
-                    {[...Array(r.rating)].map((_, j) => (
-                      <Star key={j} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                    {[...Array(5 - r.rating)].map((_, j) => (
-                      <Star key={j} className="w-4 h-4 text-white/10" />
-                    ))}
-                  </div>
-                  <p className="text-sm text-white/60 mb-4 italic leading-relaxed">"{r.comment}"</p>
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                      style={{ backgroundColor: `${theme.accent}20`, color: theme.accent }}>
-                      {r.name[0]}
-                    </div>
-                    <span className="text-xs font-semibold text-white/80">{r.name}</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </AnimSection>
+      {/* ═══════ FULL FEATURES & AGENTS ═══════ */}
+      <DemoFeaturesSection sector={resolvedIndustry!} accentColor={accentColor} sectorName={industryConfig?.label || ""} />
+      <DemoAgentsSection sector={resolvedIndustry!} accentColor={accentColor} sectorName={industryConfig?.label || ""} />
+      <DemoPricingSection sector={resolvedIndustry!} accentColor={accentColor} sectorName={industryConfig?.label || ""} />
 
-      {/* ═══════ BOOKING FORM ═══════ */}
-      <AnimSection id="booking" className="py-20 px-4"
-        style={{ background: `linear-gradient(180deg, transparent, ${theme.accent}08, transparent)` } as any}>
+      {/* ═══════ CONSULENZA GRATUITA FORM ═══════ */}
+      <AnimSection id="consulenza" className="py-20 px-4"
+        style={{ background: `linear-gradient(180deg, transparent, ${theme.accent}08, transparent)` }}>
         <div className="max-w-xl mx-auto">
           <div className="text-center mb-8">
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-              📩 Contattaci
+              🎯 Consulenza Gratuita
             </Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-2">{demoData.bookingLabel}</h2>
-            <p className="text-sm text-white/40">Compila il form e ti ricontattiamo noi</p>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2">
+              Scopri Come Possiamo Trasformare il Tuo Business
+            </h2>
+            <p className="text-sm text-white/40">
+              Compila il form — ti chiamiamo noi per una consulenza personalizzata gratuita
+            </p>
           </div>
 
           {bookingSubmitted ? (
@@ -862,116 +602,67 @@ export default function IndustryDemoPage() {
                 <CheckCircle className="w-10 h-10" style={{ color: theme.accent }} />
               </div>
               <h3 className="text-2xl font-bold mb-2">Richiesta Inviata!</h3>
-              <p className="text-sm text-white/40">Ti ricontatteremo al più presto.</p>
+              <p className="text-sm text-white/40">Ti contatteremo entro 24 ore per la tua consulenza gratuita.</p>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4 p-6 rounded-2xl border border-white/5"
-              style={{ background: `linear-gradient(135deg, ${theme.accent}04, transparent)` }}>
+            <form onSubmit={handleSubmit} className="space-y-4 p-8 rounded-2xl border border-white/10 backdrop-blur-sm"
+              style={{ background: `linear-gradient(135deg, ${theme.accent}08, ${theme.accent}03)` }}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {demoData.bookingFields.map(field => (
-                  <div key={field} className={field === "notes" ? "sm:col-span-2" : ""}>
-                    <label className="text-xs text-white/40 mb-1.5 block font-medium">{fieldLabels[field] || field}</label>
-                    {field === "notes" ? (
-                      <Textarea
-                        value={formData[field] || ""}
-                        onChange={e => setFormData(p => ({ ...p, [field]: e.target.value }))}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-white/20 min-h-[80px] focus:border-white/20"
-                        placeholder="Note aggiuntive..."
-                      />
-                    ) : field === "service" ? (
-                      <select
-                        value={formData[field] || ""}
-                        onChange={e => setFormData(p => ({ ...p, [field]: e.target.value }))}
-                        className="w-full h-11 min-h-[44px] rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:border-white/20 transition"
-                      >
-                        <option value="">Seleziona...</option>
-                        {demoData.services.map((s, i) => (
-                          <option key={i} value={s.name} className="bg-slate-900">{s.name}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <Input
-                        type={field === "date" ? "date" : field === "time" ? "time" : field === "email" ? "email" : field === "phone" ? "tel" : "text"}
-                        value={formData[field] || ""}
-                        onChange={e => setFormData(p => ({ ...p, [field]: e.target.value }))}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-11 focus:border-white/20"
-                        placeholder={fieldLabels[field]?.replace(" *", "")}
-                      />
-                    )}
+                {[
+                  { key: "name", label: "Nome e Cognome *", type: "text" },
+                  { key: "phone", label: "Telefono *", type: "tel" },
+                  { key: "email", label: "Email", type: "email" },
+                  { key: "business", label: "Nome Attività", type: "text" },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label className="text-xs text-white/40 mb-1.5 block font-medium">{f.label}</label>
+                    <Input
+                      type={f.type}
+                      value={formData[f.key] || ""}
+                      onChange={e => setFormData(p => ({ ...p, [f.key]: e.target.value }))}
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-11 focus:border-white/20"
+                      placeholder={f.label.replace(" *", "")}
+                    />
                   </div>
                 ))}
               </div>
-              <Button type="submit" className="w-full h-12 font-bold rounded-xl text-white border-0 text-sm"
-                style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)` }}>
-                <Send className="w-4 h-4 mr-2" /> Invia Richiesta
+              <div>
+                <label className="text-xs text-white/40 mb-1.5 block font-medium">Raccontaci le tue esigenze</label>
+                <Textarea
+                  value={formData.notes || ""}
+                  onChange={e => setFormData(p => ({ ...p, notes: e.target.value }))}
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/20 min-h-[80px] focus:border-white/20"
+                  placeholder="Cosa vorresti migliorare nel tuo business? Quali funzionalità ti servono?"
+                />
+              </div>
+              <Button type="submit" className="w-full h-13 font-bold rounded-xl text-white border-0 text-base shadow-xl"
+                style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`, boxShadow: `0 8px 30px ${theme.accent}30` }}>
+                <Send className="w-5 h-5 mr-2" /> Richiedi Consulenza Gratuita
               </Button>
-              <p className="text-[10px] text-white/20 text-center">Questo è un sito demo. Nessun dato viene salvato.</p>
+              <p className="text-[10px] text-white/20 text-center flex items-center justify-center gap-1">
+                <Lock className="w-3 h-3" /> I tuoi dati sono al sicuro — niente spam, lo promettiamo.
+              </p>
             </form>
           )}
         </div>
       </AnimSection>
 
-      {/* ═══════ CONTACT & HOURS ═══════ */}
-      <AnimSection id="contact" className="py-16 px-4 border-t border-white/5">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Info */}
-          <div className="p-6 rounded-2xl border border-white/5" style={{ background: `${theme.accent}04` }}>
-            <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
-              <MapPin className="w-4 h-4" style={{ color: theme.accent }} /> Dove Siamo
-            </h3>
-            <p className="text-sm text-white/60 mb-2">{demoData.address}</p>
-            <p className="text-sm text-white/60 mb-4">{demoData.city}</p>
-            <div className="space-y-2">
-              <a href={`tel:${demoData.phone}`} className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition">
-                <Phone className="w-4 h-4" style={{ color: theme.accent }} /> {demoData.phone}
-              </a>
-              <a href={`mailto:${demoData.email}`} className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition">
-                <Mail className="w-4 h-4" style={{ color: theme.accent }} /> {demoData.email}
-              </a>
-            </div>
-          </div>
-
-          {/* Hours */}
-          <div className="p-6 rounded-2xl border border-white/5" style={{ background: `${theme.accent}04` }}>
-            <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4" style={{ color: theme.accent }} /> Orari
-            </h3>
-            <div className="space-y-2">
-              {demoData.hours.map((h, i) => (
-                <div key={i} className="flex justify-between items-center text-sm">
-                  <span className="text-white/60">{h.day}</span>
-                  <span className="font-medium text-white/80">{h.hours}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* CTA */}
-          <div className="p-6 rounded-2xl border border-white/5 flex flex-col items-center justify-center text-center"
-            style={{ background: `linear-gradient(135deg, ${theme.accent}08, ${theme.accent}04)` }}>
-            <span className="text-4xl mb-3">{theme.heroEmoji}</span>
-            <h3 className="font-bold text-sm mb-2">Vuoi un Sito Così?</h3>
-            <p className="text-xs text-white/40 mb-4">Questo è solo un assaggio. La piattaforma completa include gestionale, automazioni e molto altro.</p>
-            <Button onClick={() => navigate("/home")} className="rounded-xl font-semibold text-xs h-10 border-0 text-white"
-              style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)` }}>
-              Scopri Empire <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          </div>
-        </div>
-      </AnimSection>
-
-      {/* Phone showcase moved to after hero */}
-
-      {/* ═══════ FULL FEATURES & AGENTS ═══════ */}
-      <DemoFeaturesSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
-      <DemoTestimonialsSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
-      
-      <DemoAgentsSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
-      <DemoPricingSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
-
       {/* ═══════ FOOTER ═══════ */}
-      <DemoFooterSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
+      <DemoFooterSection sector={resolvedIndustry!} accentColor={accentColor} sectorName={industryConfig?.label || ""} companyName={companyName} tagline={tagline} />
 
+      {/* ═══════ FLOATING CTA ═══════ */}
+      <div className="fixed bottom-6 right-4 z-50">
+        <motion.button
+          onClick={() => document.getElementById("consulenza")?.scrollIntoView({ behavior: "smooth" })}
+          className="h-12 px-5 rounded-full flex items-center gap-2 shadow-2xl font-bold text-sm text-white border-0"
+          style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`, boxShadow: `0 8px 25px ${theme.accent}40` }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Send className="w-4 h-4" />
+          <span className="hidden sm:inline">Consulenza Gratuita</span>
+        </motion.button>
+      </div>
 
       {/* ═══════ FLOATING BACK BUTTON (mobile) ═══════ */}
       <div className="fixed bottom-6 left-4 z-50 sm:hidden">
@@ -980,20 +671,6 @@ export default function IndustryDemoPage() {
           style={{ background: `${theme.bgFrom}ee` }}>
           <ArrowLeft className="w-5 h-5 text-white/70" />
         </button>
-      </div>
-
-      {/* ═══════ FLOATING CTA ═══════ */}
-      <div className="fixed bottom-6 right-4 z-50">
-        <motion.button
-          onClick={() => scrollTo("booking")}
-          className="h-12 px-5 rounded-full flex items-center gap-2 shadow-2xl font-bold text-sm text-white border-0"
-          style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)` }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Send className="w-4 h-4" />
-          <span className="hidden sm:inline">{demoData.bookingLabel}</span>
-        </motion.button>
       </div>
 
       <Suspense fallback={null}>
