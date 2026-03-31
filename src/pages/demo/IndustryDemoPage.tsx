@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
-const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
+const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
 import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
 
