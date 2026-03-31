@@ -3,7 +3,7 @@ import BackButton from "@/components/BackButton";
 const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
 import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
-import DemoAdminCTA from "@/components/demo/DemoAdminCTA";
+
 import DemoTestimonialsSection from "@/components/demo/DemoTestimonialsSection";
 import DemoPricingSection from "@/components/demo/DemoPricingSection";
 import DemoFooterSection from "@/components/demo/DemoFooterSection";
