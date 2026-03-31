@@ -3,6 +3,7 @@ import InteractiveParticleSphere from "@/components/public/InteractiveParticleSp
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
+const StickyScrollShowcase = lazy(() => import("@/components/public/StickyScrollShowcase"));
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
@@ -3187,15 +3188,15 @@ const LandingPage = () => {
                 Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business. <span className="font-bold text-white/90">98+ agenti IA · <span className="font-semibold text-primary">25+ settori</span></span> · Zero canone.
               </motion.p>
 
-              {/* ═══ EMPIRE INTERACTIVE SPHERE — originale (click to morph text) ═══ */}
-              <motion.div className="relative mt-4 sm:mt-6 w-full flex items-center justify-center overflow-hidden"
-                style={{ maxHeight: IS_MOBILE_LP ? 200 : 320 }}
+              {/* ═══ EMPIRE INTERACTIVE SPHERE — minimal version ═══ */}
+              <motion.div className="relative mt-4 sm:mt-5 w-full flex items-center justify-center overflow-hidden"
+                style={{ maxHeight: IS_MOBILE_LP ? 140 : 200 }}
                 initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.9, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}>
                 <div className="absolute inset-0 pointer-events-none"
-                  style={{ background: "radial-gradient(ellipse 60% 80% at 50% 50%, hsl(var(--primary) / 0.12), transparent 70%)", filter: "blur(28px)" }} />
-                <InteractiveParticleSphere size={IS_MOBILE_LP ? 340 : 580} />
+                  style={{ background: "radial-gradient(ellipse 60% 80% at 50% 50%, hsl(var(--primary) / 0.08), transparent 70%)", filter: "blur(28px)" }} />
+                <InteractiveParticleSphere size={IS_MOBILE_LP ? 240 : 380} />
               </motion.div>
 
               {/* CTA */}
