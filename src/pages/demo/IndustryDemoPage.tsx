@@ -590,7 +590,7 @@ export default function IndustryDemoPage() {
                   style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)` }}>
                   {demoData.ctaLabel} <ChevronRight className="w-5 h-5 ml-1" />
                 </Button>
-                <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="hero" />
+                
               </div>
             </motion.div>
 
