@@ -93,6 +93,7 @@ if (typeof window !== "undefined" && window.speechSynthesis) {
 const SPEECH_START_GUARD_MS = 5000;
 const SPEECH_HARD_TIMEOUT_MS = 60000;
 const SPEECH_VOICE_WARMUP_RETRIES = 12;
+const VOICE_INPUT_SETTLE_MS = 1800;
 const BROWSER_ONLY_TTS_KEY = "empire_voice_browser_only";
 const BROWSER_ONLY_TTS_TTL_MS = 15 * 60 * 1000;
 
@@ -561,6 +562,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const preferImmediateNarrationRef = useRef(false);
   const voiceInputSettleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const voiceFinalTranscriptRef = useRef("");
+  const voiceInterimTranscriptRef = useRef("");
 
   // Track if quota is the reason for disconnects — skip reconnect loop
   const elevenlabsQuotaFailedRef = useRef(false);
@@ -1270,6 +1272,24 @@ const EmpireVoiceAgent: React.FC = () => {
   }, [startIntroNarration, enqueueSectionNarration]);
 
   // ── Send user message ──
+  const speakAssistantReply = useCallback(async (text: string) => {
+    const clean = text.trim();
+    if (!clean || abortRef.current) return;
+
+    setIsSpeaking(true);
+    const firstTry = await speakText(clean, audioRef, abortRef, useBrowserFallbackRef);
+
+    if (!firstTry && !abortRef.current) {
+      // Retry once in browser-only mode to avoid silent responses on strict autoplay environments
+      useBrowserFallbackRef.current = true;
+      setBrowserOnlyTTS(true);
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      await speakText(clean, audioRef, abortRef, useBrowserFallbackRef);
+    }
+
+    if (!abortRef.current) setIsSpeaking(false);
+  }, []);
+
   const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isLoading) return;
     stopAll();
@@ -1302,10 +1322,7 @@ const EmpireVoiceAgent: React.FC = () => {
           setIsLoading(false);
           // Always speak the response aloud
           if (!abortRef.current) {
-            setIsSpeaking(true);
-            speakText(fallback, audioRef, abortRef, useBrowserFallbackRef).then(() => {
-              if (!abortRef.current) setIsSpeaking(false);
-            });
+            void speakAssistantReply(fallback);
           }
         }
       }, 50);
@@ -1334,9 +1351,7 @@ const EmpireVoiceAgent: React.FC = () => {
           setIsLoading(false);
           // Always speak the response aloud when done streaming
           if (full.length > 0 && !abortRef.current) {
-            setIsSpeaking(true);
-            await speakText(full, audioRef, abortRef, useBrowserFallbackRef);
-            if (!abortRef.current) setIsSpeaking(false);
+            await speakAssistantReply(full);
           }
         },
         onCreditError: () => {
@@ -1344,10 +1359,7 @@ const EmpireVoiceAgent: React.FC = () => {
           setMessages((prev) => [...prev, { role: "assistant", content: fallback }]);
           setIsLoading(false);
           if (!abortRef.current) {
-            setIsSpeaking(true);
-            speakText(fallback, audioRef, abortRef, useBrowserFallbackRef).then(() => {
-              if (!abortRef.current) setIsSpeaking(false);
-            });
+            void speakAssistantReply(fallback);
           }
         },
       });
@@ -1357,7 +1369,7 @@ const EmpireVoiceAgent: React.FC = () => {
       const message = error instanceof Error ? error.message : fallbackMessage;
       setMessages((prev) => [...prev, { role: "assistant", content: message || fallbackMessage }]);
     }
-  }, [currentSection, isLoading, stopAll]);
+  }, [currentSection, isLoading, speakAssistantReply, stopAll]);
 
   // ── Voice recognition ──
   const startListening = useCallback(async () => {
@@ -1385,14 +1397,50 @@ const EmpireVoiceAgent: React.FC = () => {
     recognition.continuous = true;
     recognitionRef.current = recognition;
     voiceFinalTranscriptRef.current = "";
+    voiceInterimTranscriptRef.current = "";
+
+    const clearSettleTimer = () => {
+      if (voiceInputSettleTimerRef.current) {
+        clearTimeout(voiceInputSettleTimerRef.current);
+        voiceInputSettleTimerRef.current = null;
+      }
+    };
+
+    const scheduleFlush = (delay = VOICE_INPUT_SETTLE_MS) => {
+      clearSettleTimer();
+      if (!voiceFinalTranscriptRef.current.trim()) return;
+      if (voiceInterimTranscriptRef.current.trim()) return;
+      voiceInputSettleTimerRef.current = setTimeout(() => {
+        flushFinalTranscript();
+      }, delay);
+    };
 
     const flushFinalTranscript = () => {
       const finalText = voiceFinalTranscriptRef.current.trim();
       if (!finalText) return;
+
+      clearSettleTimer();
       voiceFinalTranscriptRef.current = "";
+      voiceInterimTranscriptRef.current = "";
       setLiveTranscript("");
       setIsListening(false);
-      sendMessage(finalText);
+
+      const activeRecognition = recognitionRef.current;
+      recognitionRef.current = null;
+
+      if (activeRecognition) {
+        activeRecognition.onresult = null;
+        activeRecognition.onerror = null;
+        activeRecognition.onend = null;
+        activeRecognition.onspeechend = null;
+        try {
+          activeRecognition.stop();
+        } catch {
+          // noop
+        }
+      }
+
+      void sendMessage(finalText);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1407,36 +1455,32 @@ const EmpireVoiceAgent: React.FC = () => {
         }
       }
 
-      setLiveTranscript(interim.trim());
+      const cleanInterim = interim.trim();
+      voiceInterimTranscriptRef.current = cleanInterim;
+      setLiveTranscript(cleanInterim);
 
-      if (voiceInputSettleTimerRef.current) {
-        clearTimeout(voiceInputSettleTimerRef.current);
-      }
+      // Send only when there is a final transcript AND no ongoing interim speech
+      scheduleFlush();
+    };
 
-      // Wait for a real pause before sending, so user can finish speaking naturally
-      voiceInputSettleTimerRef.current = setTimeout(() => {
-        flushFinalTranscript();
-      }, 1200);
+    recognition.onspeechend = () => {
+      // User paused speaking: wait a bit more before sending to avoid cutting off sentence endings
+      scheduleFlush(VOICE_INPUT_SETTLE_MS);
     };
 
     recognition.onerror = () => {
-      if (voiceInputSettleTimerRef.current) {
-        clearTimeout(voiceInputSettleTimerRef.current);
-        voiceInputSettleTimerRef.current = null;
-      }
+      clearSettleTimer();
       flushFinalTranscript();
       setIsListening(false);
       setLiveTranscript("");
     };
 
     recognition.onend = () => {
-      if (voiceInputSettleTimerRef.current) {
-        clearTimeout(voiceInputSettleTimerRef.current);
-        voiceInputSettleTimerRef.current = null;
-      }
+      clearSettleTimer();
       flushFinalTranscript();
       setIsListening(false);
       setLiveTranscript("");
+      voiceInterimTranscriptRef.current = "";
       recognitionRef.current = null;
     };
 
