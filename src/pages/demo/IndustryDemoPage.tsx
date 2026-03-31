@@ -476,13 +476,7 @@ export default function IndustryDemoPage() {
         
         <DemoFooterSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
         <Suspense fallback={null}>
-          <SectorAIChatBubble
-            sector={resolvedIndustry}
-            sectorLabel={industryConfig.label}
-            sectorEmoji={industryConfig.emoji}
-            accentColor={accentColor}
-            companyName={companyName}
-          />
+          <EmpireVoiceAgent />
         </Suspense>
       </div>
     );
