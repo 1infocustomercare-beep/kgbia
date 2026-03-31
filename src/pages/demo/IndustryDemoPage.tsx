@@ -1005,7 +1005,13 @@ export default function IndustryDemoPage() {
       </div>
 
       <Suspense fallback={null}>
-        <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={theme.accent} />
+        <SectorAIChatBubble
+          sector={resolvedIndustry}
+          sectorLabel={industryConfig.label}
+          sectorEmoji={industryConfig.emoji}
+          accentColor={theme.accent}
+          companyName={companyName}
+        />
       </Suspense>
     </div>
   );
