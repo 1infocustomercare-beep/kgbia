@@ -4921,6 +4921,16 @@ const LandingPage = () => {
           Torna al Pannello
         </motion.button>
       )}
+
+      <Suspense fallback={null}>
+        <SectorAIChatBubble
+          sector="custom"
+          sectorLabel="Tutti i Settori"
+          sectorEmoji="🏢"
+          accentColor="#C8963E"
+          companyName="Empire AI Group"
+        />
+      </Suspense>
     </div>);
 
 };
