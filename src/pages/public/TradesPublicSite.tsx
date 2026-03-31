@@ -878,7 +878,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
       <AutomationShowcase accentColor={A} accentBg={`bg-[${A}]`} sectorName={config.label.toLowerCase()} darkMode={true} />
 
       <DemoRichFooter company={company} accentColor={A} darkMode={true} bgColor={D} sectorLabel={config.label.toUpperCase()} fontFamily="'Inter', sans-serif" />
-      <DemoAdminAccessButton sector="trades" accentColor="#2563eb" />
+      
     </div>
   );
 }

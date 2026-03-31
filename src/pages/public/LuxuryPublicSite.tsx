@@ -732,7 +732,7 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-6 h-6" />
         </a>
       )}
-      <DemoAdminAccessButton sector={company.industry || "custom"} accentColor={p?.accentHex || "#8b5cf6"} />
+      
     </div>
   );
 }

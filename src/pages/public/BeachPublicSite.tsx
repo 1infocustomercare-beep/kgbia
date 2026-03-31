@@ -361,7 +361,7 @@ export default function BeachPublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-7 h-7 text-white" />
         </motion.a>
       )}
-      <DemoAdminAccessButton sector="beach" accentColor="#0891b2" />
+      
     </div>
   );
 }

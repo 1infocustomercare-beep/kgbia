@@ -429,7 +429,7 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-7 h-7 text-white" />
         </motion.a>
       )}
-      <DemoAdminAccessButton sector="healthcare" accentColor="#2d9596" />
+      
     </div>
   );
 }

@@ -922,7 +922,13 @@ const RestaurantPage = () => {
       </Suspense>
       {isDemo && (
         <Suspense fallback={null}>
-          <DemoSalesAgent industry="food" companyName={restaurantName} />
+          <SectorAIChatBubble
+            sector="food"
+            sectorLabel="Ristorazione"
+            sectorEmoji="🍽️"
+            accentColor="#e85d04"
+            companyName={restaurantName}
+          />
         </Suspense>
       )}
     </div>

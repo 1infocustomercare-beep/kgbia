@@ -252,12 +252,14 @@ export default function BusinessPage() {
       {/* Empire Team — credibility & trust */}
       <EmpireTeamStory />
 
-      {/* DemoSalesAgent — AI sales consultant with voice */}
+      {/* AI Conversion Chat */}
       <Suspense fallback={null}>
-        <DemoSalesAgent
-          industry={industry}
-          companyName={company.name || config.label}
+        <SectorAIChatBubble
+          sector={industry}
+          sectorLabel={config.label}
+          sectorEmoji={config.emoji}
           accentColor={accentHex}
+          companyName={company.name || config.label}
         />
       </Suspense>
     </Suspense>

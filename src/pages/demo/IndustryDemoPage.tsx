@@ -978,8 +978,6 @@ export default function IndustryDemoPage() {
       {/* ═══════ FOOTER ═══════ */}
       <DemoFooterSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
 
-      {/* Sticky mobile admin CTA */}
-      <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="sticky" />
 
       {/* ═══════ FLOATING BACK BUTTON (mobile) ═══════ */}
       <div className="fixed bottom-6 left-4 z-50 sm:hidden">
