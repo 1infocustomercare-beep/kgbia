@@ -251,7 +251,9 @@ export default function SectorAIChatBubble({ sector, sectorLabel, sectorEmoji, a
                   {quickQuestions.map((q, i) => (
                     <button
                       key={i}
-                      onClick={() => { setInput(q); setTimeout(() => send(), 50); }}
+                      onClick={() => {
+                        setInput(q);
+                      }}
                       className="text-[10px] px-2.5 py-1.5 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/20 transition"
                     >
                       {q}
