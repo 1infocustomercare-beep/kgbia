@@ -560,56 +560,92 @@ const EmpireVoiceAgent: React.FC = () => {
   const unlockInFlightRef = useRef(false);
   const preferImmediateNarrationRef = useRef(false);
 
+  // Track if quota is the reason for disconnects — skip reconnect loop
+  const elevenlabsQuotaFailedRef = useRef(false);
+
   // ── ElevenLabs Conversational AI hook ──
   const conversation = useConversation({
     onConnect: () => {
       console.log("[Arianna LIVE] ✅ Connessa — sessione avviata");
       elevenlabsSessionStartRef.current = Date.now();
       elevenlabsReconnectCountRef.current = 0;
+      elevenlabsQuotaFailedRef.current = false;
       setMessages(prev => [...prev, { role: "assistant", content: "📞 Arianna in linea! Parlami pure, ti ascolto..." }]);
     },
     onDisconnect: () => {
       const sessionDuration = Date.now() - elevenlabsSessionStartRef.current;
       console.log(`[Arianna LIVE] 🔌 Disconnessa dopo ${sessionDuration}ms (intentional: ${elevenlabsIntentionalStopRef.current})`);
-      
-      // If session was very short (<8s) and not intentionally stopped, auto-reconnect (up to 2 times)
-      if (
-        !elevenlabsIntentionalStopRef.current &&
-        sessionDuration < 8000 &&
-        elevenlabsReconnectCountRef.current < 2
-      ) {
-        elevenlabsReconnectCountRef.current += 1;
-        console.log(`[Arianna LIVE] ⚡ Riconnessione automatica #${elevenlabsReconnectCountRef.current}...`);
-        setMessages(prev => [...prev, { role: "assistant", content: `🔄 Riconnessione in corso... (tentativo ${elevenlabsReconnectCountRef.current})` }]);
-        
-        // Small delay then reconnect
-        setTimeout(() => {
-          // Re-trigger connection
-          startElevenlabsConversationRef.current?.();
-        }, 1500);
+
+      // If quota failed, don't reconnect — switch to free voice immediately
+      if (elevenlabsQuotaFailedRef.current) {
+        console.log("[Arianna LIVE] 🔄 Quota esaurita — passo alla voce gratuita");
+        releaseVoiceAgent("arianna-live");
+        setVoiceMode("legacy");
+        abortRef.current = false;
+        useBrowserFallbackRef.current = true;
+        setBrowserOnlyTTS(true);
+        setMessages(prev => [...prev, { role: "assistant", content: "Sono passata alla voce gratuita. Continuiamo a parlare! 🎤" }]);
         return;
       }
       
+      // If session was very short (<8s) and not intentionally stopped, auto-reconnect (up to 1 time only)
+      if (
+        !elevenlabsIntentionalStopRef.current &&
+        sessionDuration < 8000 &&
+        elevenlabsReconnectCountRef.current < 1
+      ) {
+        elevenlabsReconnectCountRef.current += 1;
+        console.log(`[Arianna LIVE] ⚡ Riconnessione automatica #${elevenlabsReconnectCountRef.current}...`);
+        setTimeout(() => {
+          startElevenlabsConversationRef.current?.();
+        }, 2000);
+        return;
+      }
+      
+      // Give up — fall back to legacy with free voice
+      releaseVoiceAgent("arianna-live");
       setVoiceMode("legacy");
-      if (!elevenlabsIntentionalStopRef.current && sessionDuration < 8000) {
-        setMessages(prev => [...prev, { role: "assistant", content: "⚠️ La chiamata si è interrotta. Riprova tra qualche secondo oppure usa la chat testuale." }]);
+      abortRef.current = false;
+      useBrowserFallbackRef.current = true;
+      setBrowserOnlyTTS(true);
+      if (!elevenlabsIntentionalStopRef.current) {
+        setMessages(prev => [...prev, { role: "assistant", content: "Sono passata alla voce gratuita. Scrivi o parlami, sono qui! 🎤" }]);
       }
     },
     onMessage: (message: any) => {
-      console.log("[Arianna LIVE] 📨 Message:", message?.type);
-      if (message?.type === "user_transcript") {
-        const text = message?.user_transcription_event?.user_transcript;
-        if (text) setMessages(prev => [...prev, { role: "user", content: text }]);
-      } else if (message?.type === "agent_response") {
-        const text = message?.agent_response_event?.agent_response;
-        if (text) setMessages(prev => [...prev, { role: "assistant", content: text }]);
+      // Safely handle message — SDK may send different structures
+      try {
+        const msgType = message?.type || message?._type;
+        console.log("[Arianna LIVE] 📨 Message:", JSON.stringify({ _type: msgType, value: typeof message }));
+        if (msgType === "user_transcript") {
+          const text = message?.user_transcription_event?.user_transcript;
+          if (text) setMessages(prev => [...prev, { role: "user", content: text }]);
+        } else if (msgType === "agent_response") {
+          const text = message?.agent_response_event?.agent_response;
+          if (text) setMessages(prev => [...prev, { role: "assistant", content: text }]);
+        }
+      } catch (e) {
+        console.warn("[Arianna LIVE] Message parse error:", e);
       }
     },
     onError: (error: any) => {
-      console.error("[Arianna LIVE] ❌ Error:", error);
+      // Safely handle — the SDK may pass undefined or malformed error objects
+      try {
+        const errorType = error?.error_type || error?.type || error?.message || "unknown";
+        console.error("[Arianna LIVE] ❌ Error:", errorType);
+        
+        // Check if it's a quota/billing error
+        const errorStr = JSON.stringify(error || {}).toLowerCase();
+        if (errorStr.includes("quota") || errorStr.includes("credit") || errorStr.includes("billing") || errorStr.includes("limit")) {
+          elevenlabsQuotaFailedRef.current = true;
+        }
+      } catch {
+        console.error("[Arianna LIVE] ❌ Error (unparseable)");
+      }
+      
+      // Mark as quota failed so onDisconnect falls back to free voice
+      elevenlabsQuotaFailedRef.current = true;
       setElevenlabsAvailable(false);
-      setVoiceMode("legacy");
-      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Errore di connessione con l'agente vocale. Usa la chat testuale." }]);
     },
   });
 
