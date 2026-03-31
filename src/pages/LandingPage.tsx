@@ -4,7 +4,7 @@ import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 const StickyScrollShowcase = lazy(() => import("@/components/public/StickyScrollShowcase"));
-const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
+
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
@@ -4922,15 +4922,6 @@ const LandingPage = () => {
         </motion.button>
       )}
 
-      <Suspense fallback={null}>
-        <SectorAIChatBubble
-          sector="custom"
-          sectorLabel="Tutti i Settori"
-          sectorEmoji="🏢"
-          accentColor="#C8963E"
-          companyName="Empire AI Group"
-        />
-      </Suspense>
     </div>);
 
 };

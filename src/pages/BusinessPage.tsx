@@ -10,7 +10,7 @@ import EmpireTeamStory from "@/components/public/EmpireTeamStory";
 import { LuxuryTicker } from "@/components/public/LuxuryTicker";
 import { motion, AnimatePresence } from "framer-motion";
 
-const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
+const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 
 /* ── Branded splash screen for business sites ── */
 function BusinessSplash({ name, logoUrl, accentColor, emoji, onComplete }: {
@@ -252,15 +252,9 @@ export default function BusinessPage() {
       {/* Empire Team — credibility & trust */}
       <EmpireTeamStory />
 
-      {/* AI Conversion Chat */}
+      {/* Arianna Voice Agent */}
       <Suspense fallback={null}>
-        <SectorAIChatBubble
-          sector={industry}
-          sectorLabel={config.label}
-          sectorEmoji={config.emoji}
-          accentColor={accentHex}
-          companyName={company.name || config.label}
-        />
+        <EmpireVoiceAgent />
       </Suspense>
     </Suspense>
   );

@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
-const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
+const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
 import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
 
@@ -476,13 +476,7 @@ export default function IndustryDemoPage() {
         
         <DemoFooterSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
         <Suspense fallback={null}>
-          <SectorAIChatBubble
-            sector={resolvedIndustry}
-            sectorLabel={industryConfig.label}
-            sectorEmoji={industryConfig.emoji}
-            accentColor={accentColor}
-            companyName={companyName}
-          />
+          <EmpireVoiceAgent />
         </Suspense>
       </div>
     );
@@ -1003,13 +997,7 @@ export default function IndustryDemoPage() {
       </div>
 
       <Suspense fallback={null}>
-        <SectorAIChatBubble
-          sector={resolvedIndustry}
-          sectorLabel={industryConfig.label}
-          sectorEmoji={industryConfig.emoji}
-          accentColor={theme.accent}
-          companyName={companyName}
-        />
+        <EmpireVoiceAgent />
       </Suspense>
     </div>
   );
