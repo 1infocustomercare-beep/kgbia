@@ -3,6 +3,7 @@ import InteractiveParticleSphere from "@/components/public/InteractiveParticleSp
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
+const StickyScrollShowcase = lazy(() => import("@/components/public/StickyScrollShowcase"));
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
