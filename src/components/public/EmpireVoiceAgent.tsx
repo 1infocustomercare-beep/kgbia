@@ -366,12 +366,57 @@ async function speakText(
   return await speakWithBrowserTTS(normalizedText, abortRef, options);
 }
 
+// ── Local fallback responses when AI credits exhausted ──
+const LOCAL_FALLBACK_RESPONSES: Record<string, string> = {
+  default: "Grazie per il tuo interesse! 🌟 Empire AI può trasformare il tuo business con soluzioni digitali personalizzate: menu QR, CRM, agenti AI, automazioni e molto altro. **Prenota una consulenza gratuita** per scoprire tutto ciò che possiamo fare per te!",
+  pricing: "I nostri pacchetti partono da **€1.997** (rateizzabile in 6 rate da €333) con Digital Start, fino a **€7.997** con Empire Domination che include TUTTO. Oppure scegli il mensile da **€55/mese**. Contattaci per un preventivo personalizzato!",
+  sector: "Empire copre **25+ settori**: ristorazione, hotel, beauty, NCC, healthcare, fitness, retail, edilizia e molti altri. Ogni soluzione è costruita su misura con funzionalità specifiche per il tuo mercato. Dimmi il tuo settore e ti mostro cosa possiamo fare!",
+  custom: "Certamente! Noi di Empire sviluppiamo soluzioni **100% su misura**. Se non trovi una funzionalità specifica, la costruiamo noi per te: app custom, integrazioni API, agenti AI specializzati, workflow automatizzati. Contattaci per una consulenza gratuita!",
+  contact: "Puoi contattarci per una **consulenza gratuita** e senza impegno. Ti mostreremo una demo personalizzata per il tuo settore in soli 10 minuti. Visita la sezione contatti sul sito o scrivi direttamente qui!",
+};
+
+function getLocalFallbackResponse(userMessage: string): string {
+  const lower = userMessage.toLowerCase();
+  if (/prezz|cost|quant|euro|budget|rata|pagament/i.test(lower)) return LOCAL_FALLBACK_RESPONSES.pricing;
+  if (/settor|ristorante|hotel|beauty|salon|palestra|ncc|medic|negoz/i.test(lower)) return LOCAL_FALLBACK_RESPONSES.sector;
+  if (/personalizz|custom|su misura|non trovo|manca|funzion/i.test(lower)) return LOCAL_FALLBACK_RESPONSES.custom;
+  if (/contatt|telefon|email|parlare|consulenz|demo|appuntament/i.test(lower)) return LOCAL_FALLBACK_RESPONSES.contact;
+  return LOCAL_FALLBACK_RESPONSES.default;
+}
+
+// Track credit exhaustion for chat (separate from TTS)
+const CHAT_CREDITS_KEY = "empire_chat_credits_exhausted";
+const CHAT_CREDITS_TTL_MS = 5 * 60 * 1000; // 5 min cooldown
+
+function setChatCreditsExhausted(exhausted: boolean) {
+  try {
+    if (exhausted) {
+      localStorage.setItem(CHAT_CREDITS_KEY, String(Date.now() + CHAT_CREDITS_TTL_MS));
+    } else {
+      localStorage.removeItem(CHAT_CREDITS_KEY);
+    }
+  } catch {}
+}
+
+function isChatCreditsExhausted(): boolean {
+  try {
+    const raw = localStorage.getItem(CHAT_CREDITS_KEY);
+    if (!raw) return false;
+    const until = Number(raw);
+    if (!Number.isFinite(until) || Date.now() > until) {
+      localStorage.removeItem(CHAT_CREDITS_KEY);
+      return false;
+    }
+    return true;
+  } catch { return false; }
+}
+
 // ── Stream chat helper ──
 async function streamChat({
-  messages, mode, pageContent, sectionId, onDelta, onDone,
+  messages, mode, pageContent, sectionId, onDelta, onDone, onCreditError,
 }: {
   messages: Msg[]; mode?: string; pageContent?: string; sectionId?: string;
-  onDelta: (t: string) => void; onDone: () => void;
+  onDelta: (t: string) => void; onDone: () => void; onCreditError?: () => void;
 }) {
   const resp = await fetch(CHAT_URL, {
     method: "POST",
@@ -383,15 +428,22 @@ async function streamChat({
   });
 
   if (!resp.ok) {
+    // Credit exhaustion — switch to local fallback silently
+    if (resp.status === 402 || resp.status === 429) {
+      setChatCreditsExhausted(true);
+      onCreditError?.();
+      return;
+    }
     let errorMessage = `Richiesta fallita (${resp.status})`;
     try {
       const errorBody = await resp.json();
       errorMessage = errorBody?.error || errorMessage;
-    } catch {
-      // noop
-    }
+    } catch {}
     throw new Error(errorMessage);
   }
+
+  // Successful response — credits are working
+  setChatCreditsExhausted(false);
 
   if (!resp.body) {
     throw new Error("Nessun flusso di risposta ricevuto");
@@ -450,9 +502,7 @@ async function streamChat({
         const parsed = JSON.parse(jsonStr);
         const content = parsed.choices?.[0]?.delta?.content as string | undefined;
         if (content) onDelta(content);
-      } catch {
-        // ignore leftover partial
-      }
+      } catch {}
     }
   }
 
