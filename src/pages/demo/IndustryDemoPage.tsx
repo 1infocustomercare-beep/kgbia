@@ -473,7 +473,7 @@ export default function IndustryDemoPage() {
         
         <DemoAgentsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
         <DemoPricingSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
-        <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="sticky" />
+        
         <DemoFooterSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
         <Suspense fallback={null}>
           <SectorAIChatBubble
