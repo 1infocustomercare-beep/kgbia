@@ -4289,324 +4289,174 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              PRIMA vs DOPO — Trasformazione Reale
                             ═══════════════════════════════════════════ */}
-      {(() => {
-        const transformations = [
-          { metric: "Ordini", before: "45 min", after: "3 min", icon: <Timer className="w-3 h-3" />, improvement: "-93%", color: "265" },
-          { metric: "Recensioni", before: "12/mese", after: "0", icon: <Shield className="w-3 h-3" />, improvement: "-100%", color: "150" },
-          { metric: "Clienti persi", before: "34%", after: "2%", icon: <Users className="w-3 h-3" />, improvement: "-94%", color: "210" },
-          { metric: "Revenue AI", before: "0€", after: "+2.4K€", icon: <TrendingUp className="w-3 h-3" />, improvement: "+∞", color: "38" },
-          { metric: "Fatturazione", before: "2h/g", after: "Auto", icon: <Receipt className="w-3 h-3" />, improvement: "-100%", color: "200" },
-          { metric: "Marketing", before: "Manuale", after: "AI 24/7", icon: <Rocket className="w-3 h-3" />, improvement: "Auto", color: "35" },
-        ];
+      <section className="relative py-16 sm:py-32 px-4 sm:px-6 overflow-hidden"
+      style={{ background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 20% 10%) 50%, hsl(228 22% 8%) 100%)" }}>
+        {/* Ambient orbs */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-[10%] right-[12%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(circle, hsla(150,60%,50%,0.5), transparent 65%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-[15%] left-[8%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
+          style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.4), transparent 65%)", filter: "blur(120px)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[70%] h-px"
+          style={{ background: "linear-gradient(90deg, transparent, hsla(150,55%,50%,0.2), hsla(265,50%,55%,0.15), transparent)" }} />
+        </div>
 
-        const impactNumbers = [
-          { value: "847", label: "Business trasformati", suffix: "+" },
-          { value: "3.2M", label: "Ordini IA", suffix: "" },
-          { value: "94", label: "Ore risparmiate", suffix: "h" },
-          { value: "40", label: "Revenue medio", suffix: "%" },
-        ];
-
-        /* Node positions for mobile circuit (% based, 2-col 3-row) */
-        const nodePos = [
-          { x: 25, y: 15 }, { x: 75, y: 15 },
-          { x: 25, y: 43 }, { x: 75, y: 43 },
-          { x: 25, y: 71 }, { x: 75, y: 71 },
-        ];
-        const circuits = [
-          { from: 0, to: 1 }, { from: 0, to: 2 }, { from: 1, to: 3 },
-          { from: 2, to: 3 }, { from: 2, to: 4 }, { from: 3, to: 5 },
-          { from: 4, to: 5 },
-        ];
-
-        return (
-        <section className="relative py-14 sm:py-28 px-4 sm:px-6 overflow-hidden"
-        style={mobilifyBg({
-          background: "linear-gradient(180deg, hsla(228,22%,10%,0.7) 0%, hsla(232,20%,9%,0.65) 50%, hsla(228,22%,10%,0.7) 100%)"
-        })}>
-          {/* Ambient */}
-          <div className="absolute inset-0 pointer-events-none z-0">
-            <div className="absolute top-[10%] right-[15%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
-            style={{ background: "radial-gradient(circle, hsla(150,60%,50%,0.5), transparent 65%)", filter: "blur(120px)" }} />
-            <div className="absolute bottom-[20%] left-[10%] w-[400px] h-[400px] rounded-full opacity-[0.035]"
-            style={{ background: "radial-gradient(circle, hsla(38,60%,50%,0.4), transparent 65%)", filter: "blur(110px)" }} />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-            style={{ background: "linear-gradient(90deg, transparent, hsla(150,55%,50%,0.18), hsla(265,50%,55%,0.12), transparent)" }} />
+        <div className="max-w-[1100px] mx-auto relative z-10">
+          {/* Header with word scroll reveal */}
+          <div className="text-center mb-6 sm:mb-10">
+            <SectionLabel text="Risultati Reali" icon={<TrendingUp className="w-3 h-3 text-primary" />} />
           </div>
 
-          <div className="max-w-[1100px] mx-auto relative z-10">
-            {/* Header */}
-            <div className="text-center mb-6 sm:mb-14">
-              <SectionLabel text="Risultati Reali" icon={<TrendingUp className="w-3 h-3 text-primary" />} />
-              <motion.h2 className="text-[clamp(1.3rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-2"
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-                Prima vs Dopo <span className="text-shimmer">Empire</span>
-              </motion.h2>
-              <motion.p className="text-foreground/40 text-[0.65rem] sm:text-sm max-w-md mx-auto leading-relaxed"
-              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.15 }}>
-                Dati reali dai nostri clienti. La trasformazione inizia dal primo giorno.
-              </motion.p>
-            </div>
+          <WordScrollReveal
+            text="Il tuo business prima di Empire è lento, manuale e prevedibile. Dopo Empire è automatizzato, intelligente e inarrestabile. Questi sono i numeri reali dei nostri clienti."
+            className="text-[clamp(1.1rem,3.5vw,2.2rem)] max-w-[750px] mx-auto text-center mb-10 sm:mb-16"
+            highlightWords={["automatizzato", "intelligente", "inarrestabile", "reali"]}
+          />
 
-            {/* ═══ IMPACT NUMBERS — compact 4-col ═══ */}
-            <motion.div className="grid grid-cols-4 gap-1.5 sm:gap-3 mb-6 sm:mb-12"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-              {impactNumbers.map((n, i) => (
-                <div key={i} className="relative rounded-lg sm:rounded-xl overflow-hidden py-3 px-1.5 sm:p-4 text-center"
-                style={{
-                  background: "linear-gradient(160deg, hsl(228 20% 14% / 0.85), hsl(232 22% 12% / 0.82))",
-                  border: `1px solid hsla(${[265,150,38,210][i]},40%,50%,0.15)`
-                }}>
-                  <div className="absolute top-0 left-0 right-0 h-[1px]"
-                  style={{ background: `linear-gradient(90deg, transparent, hsla(${[265,150,38,210][i]},60%,55%,0.4), transparent)` }} />
-                  <div className="text-[clamp(1rem,3.5vw,2.2rem)] font-heading font-bold text-foreground leading-none mb-0.5">
-                    {n.value}<span className="text-primary/70 text-[0.55em]">{n.suffix}</span>
-                  </div>
-                  <div className="text-foreground/30 text-[0.45rem] sm:text-xs tracking-wide uppercase leading-tight">{n.label}</div>
-                </div>
+          {/* ═══ IMPACT NUMBERS — horizontal scroll on mobile ═══ */}
+          <div className="mb-10 sm:mb-16 overflow-x-auto scrollbar-hide -mx-4 px-4">
+            <div className="flex sm:grid sm:grid-cols-4 gap-3 sm:gap-4 min-w-max sm:min-w-0">
+              {[
+                { value: "847", label: "Business Trasformati", suffix: "+", color: "265" },
+                { value: "3.2M", label: "Operazioni Automatizzate", suffix: "", color: "150" },
+                { value: "94", label: "Ore Risparmiate / Mese", suffix: "h", color: "38" },
+                { value: "+40", label: "Revenue Medio", suffix: "%", color: "210" },
+              ].map((n, i) => (
+                <ScrollRevealStat key={i} value={n.value} label={n.label} suffix={n.suffix} color={n.color} index={i} />
               ))}
-            </motion.div>
+            </div>
+          </div>
 
-            {/* ═══ CIRCUIT NETWORK — Mobile ═══ */}
-            <motion.div className="relative mb-6 sm:mb-12"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.1 }}>
+          {/* ═══ BEFORE → AFTER TRANSFORMATION CARDS ═══ */}
+          <ParallaxLayer speed={0.06} className="mb-10 sm:mb-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+              {[
+                { metric: "Gestione Ordini", before: "45 min manuale", after: "3 min automatico", icon: <Timer className="w-4 h-4" />, improvement: "-93%", color: "265", desc: "Da carta e caos a flusso digitale istantaneo" },
+                { metric: "Recensioni Negative", before: "12 al mese", after: "0 intercettate", icon: <Shield className="w-4 h-4" />, improvement: "-100%", color: "150", desc: "L'IA intercetta e risolve prima della pubblicazione" },
+                { metric: "Clienti Persi", before: "34% tasso abbandono", after: "2% con retention AI", icon: <Users className="w-4 h-4" />, improvement: "-94%", color: "210", desc: "Automazioni di ri-engagement che funzionano" },
+                { metric: "Revenue Addizionale", before: "0€ da canali AI", after: "+2.400€ / mese", icon: <TrendingUp className="w-4 h-4" />, improvement: "+∞", color: "38", desc: "Upselling, cross-selling e conversioni automatiche" },
+                { metric: "Fatturazione", before: "2 ore al giorno", after: "Completamente auto", icon: <Receipt className="w-4 h-4" />, improvement: "-100%", color: "200", desc: "Fatture elettroniche generate e inviate dall'IA" },
+                { metric: "Marketing", before: "Manuale e sporadico", after: "AI attivo 24/7", icon: <Rocket className="w-4 h-4" />, improvement: "∞", color: "320", desc: "Campagne, social e follow-up senza il tuo intervento" },
+              ].map((t, i) => (
+                <motion.div key={i}
+                  className="group relative rounded-2xl overflow-hidden"
+                  style={{
+                    background: "linear-gradient(160deg, hsl(228 20% 14% / 0.92), hsl(232 22% 12% / 0.88))",
+                    border: `1px solid hsla(${t.color},35%,50%,0.15)`,
+                    boxShadow: `0 4px 24px hsla(${t.color},40%,40%,0.06)`,
+                  }}
+                  initial={{ opacity: 0, y: 30, rotateX: 6 }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ delay: i * 0.07, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -6, borderColor: `hsla(${t.color},50%,55%,0.3)`, boxShadow: `0 16px 50px hsla(${t.color},50%,40%,0.12)` }}
+                >
+                  {/* Top accent */}
+                  <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, hsla(${t.color},65%,55%,0.4), transparent)` }} />
 
-              {/* ── Mobile: Circuit network with SVG paths ── */}
-              <div className="block sm:hidden relative" style={{ minHeight: "520px" }}>
-                {/* SVG Circuit Lines overlay */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 100 84" preserveAspectRatio="none">
-                  <defs>
-                    <filter id="trf-glow">
-                      <feGaussianBlur stdDeviation="0.3" result="blur" />
-                      <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                    </filter>
-                  </defs>
-                  {circuits.map((p, i) => {
-                    const f = nodePos[p.from];
-                    const t2 = nodePos[p.to];
-                    const isVert = f.x === t2.x;
-                    const midY = (f.y + t2.y) / 2;
-                    const midX = (f.x + t2.x) / 2;
-                    const d = isVert
-                      ? `M ${f.x} ${f.y + 6} L ${f.x} ${t2.y - 6}`
-                      : `M ${f.x + 10} ${f.y} Q ${midX} ${f.y} ${midX} ${midY} Q ${midX} ${t2.y} ${t2.x - 10} ${t2.y}`;
-                    const hue = transformations[p.from]?.color || "265";
-                    return (
-                      <g key={i}>
-                        <path d={d} fill="none" stroke={`hsla(${hue},40%,45%,0.1)`} strokeWidth="0.25" />
-                        <circle r="0.5" fill={`hsla(${hue},65%,60%,0.6)`} filter="url(#trf-glow)">
-                          <animateMotion dur={`${2.5 + i * 0.4}s`} repeatCount="indefinite" path={d} />
-                        </circle>
-                      </g>
-                    );
-                  })}
-                  {/* Junction nodes */}
-                  {nodePos.map((pos, i) => (
-                    <circle key={`j-${i}`} cx={pos.x} cy={pos.y} r="0.8"
-                    fill={`hsla(${transformations[i].color},50%,50%,0.18)`}
-                    stroke={`hsla(${transformations[i].color},50%,50%,0.12)`} strokeWidth="0.25" />
-                  ))}
-                </svg>
-
-                {/* Node cards grid */}
-                <div className="relative z-10 grid grid-cols-2 gap-x-2.5 gap-y-2.5 px-0.5">
-                  {transformations.map((t, i) => (
-                    <motion.div key={i}
-                    className="relative rounded-xl overflow-hidden"
-                    style={{
-                      background: "linear-gradient(160deg, hsl(228 20% 14% / 0.86), hsl(232 22% 12% / 0.84))",
-                      border: `1px solid hsla(${t.color},35%,50%,0.18)`,
-                      boxShadow: `0 2px 16px hsla(${t.color},40%,50%,0.06)`
-                    }}
-                    initial={{ opacity: 0, scale: 0.92 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={vpOnce}
-                    transition={{ delay: i * 0.06 }}>
-                      {/* HUD corner brackets */}
-                      <div className="absolute top-0 left-0 w-2 h-2 border-t border-l rounded-tl-xl" style={{ borderColor: `hsla(${t.color},50%,50%,0.25)` }} />
-                      <div className="absolute top-0 right-0 w-2 h-2 border-t border-r rounded-tr-xl" style={{ borderColor: `hsla(${t.color},50%,50%,0.25)` }} />
-                      <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l rounded-bl-xl" style={{ borderColor: `hsla(${t.color},50%,50%,0.12)` }} />
-                      <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r rounded-br-xl" style={{ borderColor: `hsla(${t.color},50%,50%,0.12)` }} />
-
-                      <div className="p-2.5">
-                        {/* Icon + metric + badge */}
-                        <div className="flex items-center gap-1.5 mb-2">
-                          <div className="w-5 h-5 rounded-md flex items-center justify-center"
-                          style={{ background: `hsla(${t.color},50%,50%,0.12)`, color: `hsla(${t.color},65%,60%,1)` }}>
-                            {t.icon}
-                          </div>
-                          <span className="text-foreground/55 text-[0.55rem] font-medium leading-tight flex-1">{t.metric}</span>
-                          <span className="text-[0.45rem] font-bold px-1.5 py-0.5 rounded-full"
-                          style={{ background: `hsla(${t.color},50%,50%,0.1)`, color: `hsla(${t.color},65%,60%,0.85)` }}>
-                            {t.improvement}
-                          </span>
-                        </div>
-
-                        {/* Before → After */}
-                        <div className="flex items-center gap-1">
-                          <div className="flex-1 rounded-lg py-1.5 px-1.5 text-center"
-                          style={{ background: "hsla(0,40%,50%,0.12)", border: "1px solid hsla(0,40%,50%,0.1)" }}>
-                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/45 mb-0.5">Prima</div>
-                            <div className="text-[0.65rem] font-bold text-red-500/75 leading-tight">{t.before}</div>
-                          </div>
-                          <ArrowRight className="w-2.5 h-2.5 flex-shrink-0" style={{ color: `hsla(${t.color},55%,50%,0.6)` }} />
-                          <div className="flex-1 rounded-lg py-1.5 px-1.5 text-center"
-                          style={{ background: `hsla(${t.color},40%,50%,0.06)`, border: `1px solid hsla(${t.color},40%,50%,0.12)` }}>
-                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/45 mb-0.5">Dopo</div>
-                            <div className="text-[0.65rem] font-bold leading-tight" style={{ color: `hsla(${t.color},65%,42%,0.95)` }}>{t.after}</div>
-                          </div>
-                        </div>
+                  <div className="p-4 sm:p-5">
+                    {/* Header */}
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div className="w-8 h-8 rounded-xl flex items-center justify-center"
+                        style={{ background: `hsla(${t.color},50%,50%,0.12)`, color: `hsla(${t.color},65%,60%,1)` }}>
+                        {t.icon}
                       </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* ── Desktop: 3-col with circuit mesh ── */}
-              <div className="hidden sm:block relative">
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" preserveAspectRatio="none">
-                  <defs>
-                    <filter id="trf-glow-d">
-                      <feGaussianBlur stdDeviation="2" result="blur" />
-                      <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                    </filter>
-                  </defs>
-                  {[0, 1].map(row => (
-                    <g key={`r-${row}`}>
-                      <line x1="17%" y1={`${30 + row * 50}%`} x2="83%" y2={`${30 + row * 50}%`}
-                      stroke="hsla(265,35%,40%,0.08)" strokeWidth="1" />
-                      <motion.circle r="3" fill="hsla(265,60%,60%,0.5)" filter="url(#trf-glow-d)">
-                        <animateMotion dur={`${3 + row}s`} repeatCount="indefinite"
-                        path={`M 0 0 L 500 0`} />
-                      </motion.circle>
-                    </g>
-                  ))}
-                  {[0, 1, 2].map(col => (
-                    <line key={`c-${col}`} x1={`${17 + col * 33}%`} y1="30%" x2={`${17 + col * 33}%`} y2="80%"
-                    stroke="hsla(150,35%,40%,0.06)" strokeWidth="1" />
-                  ))}
-                </svg>
-
-                <div className="relative z-10 grid grid-cols-3 gap-4">
-                  {transformations.map((t, i) => (
-                    <motion.div key={i}
-                    className="relative rounded-2xl overflow-hidden"
-                    style={{
-                      background: "linear-gradient(160deg, hsl(228 20% 14% / 0.86), hsl(232 22% 12% / 0.84))",
-                      border: `1px solid hsla(${t.color},30%,50%,0.15)`,
-                      boxShadow: `0 2px 20px hsla(${t.color},50%,50%,0.06)`
-                    }}
-                    initial={{ opacity: 0, y: 25 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={vpOnce}
-                    transition={{ delay: i * 0.08 }}>
-                      <div className="absolute top-0 left-0 w-4 h-4 border-t border-l rounded-tl-2xl" style={{ borderColor: `hsla(${t.color},50%,50%,0.2)` }} />
-                      <div className="absolute top-0 right-0 w-4 h-4 border-t border-r rounded-tr-2xl" style={{ borderColor: `hsla(${t.color},50%,50%,0.2)` }} />
-                      <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l rounded-bl-2xl" style={{ borderColor: `hsla(${t.color},50%,50%,0.12)` }} />
-                      <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r rounded-br-2xl" style={{ borderColor: `hsla(${t.color},50%,50%,0.12)` }} />
-
-                      <div className="p-5">
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-                          style={{ background: `hsla(${t.color},50%,50%,0.12)`, color: `hsla(${t.color},65%,60%,1)` }}>
-                            {React.cloneElement(t.icon as React.ReactElement, { className: "w-4 h-4" })}
-                          </div>
-                          <span className="text-foreground/60 text-xs font-medium">{t.metric}</span>
-                          <span className="ml-auto text-[0.6rem] font-bold px-2 py-0.5 rounded-full"
-                          style={{ background: `hsla(${t.color},50%,50%,0.1)`, color: `hsla(${t.color},65%,60%,0.9)`, border: `1px solid hsla(${t.color},40%,45%,0.15)` }}>
-                            {t.improvement}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="flex-1 rounded-xl p-3 text-center"
-                          style={{ background: "hsla(0,40%,50%,0.12)", border: "1px solid hsla(0,40%,50%,0.12)" }}>
-                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/45 mb-1">Prima</div>
-                            <div className="text-sm font-bold text-red-500/80">{t.before}</div>
-                          </div>
-                          <motion.div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ background: `hsla(${t.color},50%,50%,0.15)` }}
-                          animate={{ scale: [1, 1.15, 1] }}
-                          transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}>
-                            <ArrowRight className="w-3.5 h-3.5" style={{ color: `hsla(${t.color},65%,60%,1)` }} />
-                          </motion.div>
-                          <div className="flex-1 rounded-xl p-3 text-center"
-                          style={{ background: `hsla(${t.color},40%,50%,0.06)`, border: `1px solid hsla(${t.color},40%,50%,0.15)` }}>
-                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/45 mb-1">Dopo</div>
-                            <div className="text-sm font-bold" style={{ color: `hsla(${t.color},65%,45%,0.95)` }}>{t.after}</div>
-                          </div>
-                        </div>
+                      <div className="flex-1">
+                        <h4 className="text-xs sm:text-sm font-heading font-bold text-foreground">{t.metric}</h4>
+                        <p className="text-[0.5rem] sm:text-[0.6rem] text-foreground/30">{t.desc}</p>
                       </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+                      <span className="text-[0.5rem] sm:text-[0.6rem] font-bold px-2 py-1 rounded-full"
+                        style={{ background: `hsla(${t.color},50%,50%,0.1)`, color: `hsla(${t.color},65%,60%,0.9)` }}>
+                        {t.improvement}
+                      </span>
+                    </div>
 
-            {/* ═══ TRUST GUARANTEE ═══ */}
-            <motion.div className="relative rounded-xl sm:rounded-2xl overflow-hidden p-4 sm:p-8"
+                    {/* Before → After with animated arrow */}
+                    <div className="flex items-stretch gap-2">
+                      <div className="flex-1 rounded-xl p-2.5 sm:p-3 text-center relative overflow-hidden"
+                        style={{ background: "hsla(0,40%,50%,0.08)", border: "1px solid hsla(0,40%,50%,0.12)" }}>
+                        <div className="text-[0.4rem] sm:text-[0.5rem] uppercase tracking-[0.15em] text-foreground/35 mb-1 font-medium">Prima</div>
+                        <div className="text-[0.7rem] sm:text-sm font-bold" style={{ color: "hsla(0,55%,55%,0.8)" }}>{t.before}</div>
+                      </div>
+                      <div className="flex items-center">
+                        <motion.div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center"
+                          style={{ background: `hsla(${t.color},50%,50%,0.12)` }}
+                          animate={{ scale: [1, 1.15, 1], x: [0, 2, 0] }}
+                          transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.2 }}>
+                          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ color: `hsla(${t.color},65%,60%,1)` }} />
+                        </motion.div>
+                      </div>
+                      <div className="flex-1 rounded-xl p-2.5 sm:p-3 text-center relative overflow-hidden"
+                        style={{ background: `hsla(${t.color},40%,50%,0.06)`, border: `1px solid hsla(${t.color},40%,50%,0.15)` }}>
+                        <div className="text-[0.4rem] sm:text-[0.5rem] uppercase tracking-[0.15em] text-foreground/35 mb-1 font-medium">Dopo</div>
+                        <div className="text-[0.7rem] sm:text-sm font-bold" style={{ color: `hsla(${t.color},65%,50%,1)` }}>{t.after}</div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </ParallaxLayer>
+
+          {/* ═══ TRUST GUARANTEE — compact ═══ */}
+          <motion.div className="relative rounded-2xl overflow-hidden p-4 sm:p-8"
             style={{
-              background: "linear-gradient(160deg, hsl(228 20% 14% / 0.86), hsl(248 18% 13% / 0.84))",
+              background: "linear-gradient(160deg, hsl(228 20% 14% / 0.9), hsl(248 18% 13% / 0.86))",
               border: "1px solid hsl(var(--primary) / 0.12)"
             }}
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-              <div className="absolute top-0 left-0 right-0 h-[1px]"
-              style={{ background: "linear-gradient(90deg, transparent, hsla(38,60%,55%,0.3), hsla(265,50%,55%,0.2), transparent)" }} />
-              <div className="absolute top-0 left-0 w-3 h-3 border-t border-l rounded-tl-xl" style={{ borderColor: "hsla(150,50%,50%,0.2)" }} />
-              <div className="absolute top-0 right-0 w-3 h-3 border-t border-r rounded-tr-xl" style={{ borderColor: "hsla(150,50%,50%,0.2)" }} />
-              
-              <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-8">
-                <div className="flex-shrink-0 w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]"
+              style={{ background: "linear-gradient(90deg, transparent, hsla(150,55%,50%,0.35), hsla(265,50%,55%,0.2), transparent)" }} />
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+              <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center"
                 style={{ background: "linear-gradient(135deg, hsla(150,50%,45%,0.15), hsla(265,40%,50%,0.1))", border: "1px solid hsla(150,40%,45%,0.15)" }}>
-                  <Shield className="w-5 h-5 sm:w-7 sm:h-7" style={{ color: "hsla(150,65%,55%,0.9)" }} />
-                </div>
-                <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-xs sm:text-lg font-heading font-bold text-foreground mb-0.5 sm:mb-1.5">
-                    Garanzia Risultati 90 Giorni
-                  </h3>
-                  <p className="text-foreground/40 text-[0.55rem] sm:text-sm leading-relaxed max-w-lg">
-                    Se non vedi miglioramenti misurabili nei primi 90 giorni, ti rimborsiamo. Zero rischi.
-                  </p>
-                </div>
-                <div className="flex gap-2 flex-shrink-0">
-                  {[
-                    { icon: <Lock className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />, label: "GDPR" },
-                    { icon: <Fingerprint className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />, label: "Sicuro" },
-                    { icon: <CircleCheck className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />, label: "Certificato" },
-                  ].map((b, i) => (
-                    <div key={i} className="flex flex-col items-center gap-0.5 sm:gap-1.5">
-                      <div className="w-6 h-6 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl flex items-center justify-center"
-                      style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.1)", color: "hsl(var(--primary) / 0.7)" }}>
-                        {b.icon}
-                      </div>
-                      <span className="text-[0.35rem] sm:text-[0.5rem] text-foreground/30 tracking-wider uppercase">{b.label}</span>
-                    </div>
-                  ))}
-                </div>
+                <Shield className="w-6 h-6 sm:w-7 sm:h-7" style={{ color: "hsla(150,65%,55%,0.9)" }} />
               </div>
-            </motion.div>
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-sm sm:text-lg font-heading font-bold text-foreground mb-1">
+                  Garanzia Risultati 90 Giorni
+                </h3>
+                <p className="text-foreground/40 text-xs sm:text-sm leading-relaxed max-w-lg">
+                  Se non vedi miglioramenti misurabili nei primi 90 giorni, ti rimborsiamo integralmente. Zero rischi, zero vincoli.
+                </p>
+              </div>
+              <div className="flex gap-3 flex-shrink-0">
+                {[
+                  { icon: <Lock className="w-3.5 h-3.5" />, label: "GDPR" },
+                  { icon: <Fingerprint className="w-3.5 h-3.5" />, label: "Sicuro" },
+                  { icon: <CircleCheck className="w-3.5 h-3.5" />, label: "Certificato" },
+                ].map((b, i) => (
+                  <div key={i} className="flex flex-col items-center gap-1">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center"
+                      style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.1)", color: "hsl(var(--primary) / 0.7)" }}>
+                      {b.icon}
+                    </div>
+                    <span className="text-[0.45rem] sm:text-[0.5rem] text-foreground/30 tracking-wider uppercase">{b.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
 
-            {/* CTA */}
-            <motion.div className="text-center mt-5 sm:mt-10"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.3 }}>
-              <button
-                onClick={() => { const el = document.getElementById("pricing"); if (el) el.scrollIntoView({ behavior: "smooth" }); }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 sm:px-7 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
-                style={{
-                  background: "linear-gradient(135deg, hsl(var(--primary)), hsla(265,55%,45%,1))",
-                  color: "#fff",
-                  boxShadow: "0 4px 20px hsla(265,60%,45%,0.2), 0 1px 3px hsla(0,0%,0%,0.2)"
-                }}>
-                <Rocket className="w-3.5 h-3.5" />
-                Inizia la Trasformazione
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-              <p className="text-foreground/20 text-[0.45rem] sm:text-[0.5rem] mt-2 tracking-wider">
-                Setup in 48h · Nessun rischio · Supporto dedicato
-              </p>
-            </motion.div>
-          </div>
-        </section>
-        );
-      })()}
+          {/* CTA */}
+          <motion.div className="text-center mt-8 sm:mt-12"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+            <motion.button
+              onClick={() => scrollTo("pricing")}
+              className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase"
+              style={{ boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.25), inset 0 1px 0 hsl(0 0% 100% / 0.15)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.3)" }}
+              whileTap={{ scale: 0.97 }}>
+              <Rocket className="w-4 h-4" />
+              Inizia la Trasformazione
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </motion.button>
+            <p className="text-foreground/20 text-[0.5rem] mt-2 tracking-wider">
+              Setup in 48h · Nessun rischio · Supporto dedicato
+            </p>
+          </motion.div>
+        </div>
+      </section>
 
 
 
