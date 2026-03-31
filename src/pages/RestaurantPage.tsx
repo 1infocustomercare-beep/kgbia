@@ -922,13 +922,7 @@ const RestaurantPage = () => {
       </Suspense>
       {isDemo && (
         <Suspense fallback={null}>
-          <SectorAIChatBubble
-            sector="food"
-            sectorLabel="Ristorazione"
-            sectorEmoji="🍽️"
-            accentColor="#e85d04"
-            companyName={restaurantName}
-          />
+          <EmpireVoiceAgent />
         </Suspense>
       )}
     </div>
