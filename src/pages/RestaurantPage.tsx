@@ -28,7 +28,7 @@ import { useCart } from "@/context/CartContext";
 import { applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
 import { getBusinessTypeConfig, normalizeBusinessType } from "@/lib/business-type";
 const RestaurantVoiceAgent = lazy(() => import("@/components/restaurant/RestaurantVoiceAgent"));
-const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
+const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
 
 const RestaurantPage = () => {
