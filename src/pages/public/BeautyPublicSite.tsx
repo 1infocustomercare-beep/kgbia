@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
-import DemoAdminAccessButton from "@/components/public/DemoAdminAccessButton";
+
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -596,8 +596,6 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
         </div>
       </footer>
 
-      {/* Admin Access Button */}
-      <DemoAdminAccessButton sector="beauty" accentColor="#8b5cf6" />
     </div>
   );
 }

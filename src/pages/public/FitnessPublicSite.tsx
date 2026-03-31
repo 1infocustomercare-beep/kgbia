@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
-import DemoAdminAccessButton from "@/components/public/DemoAdminAccessButton";
+
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
@@ -433,7 +433,7 @@ export default function FitnessPublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-7 h-7" style={{ color: CARBON }} />
         </motion.a>
       )}
-      <DemoAdminAccessButton sector="fitness" accentColor="#FF6B00" />
+      
     </div>
   );
 }

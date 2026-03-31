@@ -3,7 +3,7 @@ import BackButton from "@/components/BackButton";
 const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
 import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
-import DemoAdminCTA from "@/components/demo/DemoAdminCTA";
+
 import DemoTestimonialsSection from "@/components/demo/DemoTestimonialsSection";
 import DemoPricingSection from "@/components/demo/DemoPricingSection";
 import DemoFooterSection from "@/components/demo/DemoFooterSection";
@@ -470,10 +470,10 @@ export default function IndustryDemoPage() {
         {/* Full Features + Agents + Admin CTA sections */}
         <DemoFeaturesSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
         <DemoTestimonialsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
-        <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="section" />
+        
         <DemoAgentsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
         <DemoPricingSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
-        <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="sticky" />
+        
         <DemoFooterSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
         <Suspense fallback={null}>
           <SectorAIChatBubble
@@ -590,7 +590,7 @@ export default function IndustryDemoPage() {
                   style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)` }}>
                   {demoData.ctaLabel} <ChevronRight className="w-5 h-5 ml-1" />
                 </Button>
-                <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="hero" />
+                
               </div>
             </motion.div>
 
@@ -971,15 +971,13 @@ export default function IndustryDemoPage() {
       {/* ═══════ FULL FEATURES & AGENTS ═══════ */}
       <DemoFeaturesSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
       <DemoTestimonialsSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
-      <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="section" />
+      
       <DemoAgentsSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
       <DemoPricingSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
 
       {/* ═══════ FOOTER ═══════ */}
       <DemoFooterSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
 
-      {/* Sticky mobile admin CTA */}
-      <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="sticky" />
 
       {/* ═══════ FLOATING BACK BUTTON (mobile) ═══════ */}
       <div className="fixed bottom-6 left-4 z-50 sm:hidden">

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
-import DemoAdminAccessButton from "@/components/public/DemoAdminAccessButton";
+
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
@@ -361,7 +361,7 @@ export default function BeachPublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-7 h-7 text-white" />
         </motion.a>
       )}
-      <DemoAdminAccessButton sector="beach" accentColor="#0891b2" />
+      
     </div>
   );
 }
