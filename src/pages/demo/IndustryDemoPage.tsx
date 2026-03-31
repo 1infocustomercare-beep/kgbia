@@ -997,13 +997,7 @@ export default function IndustryDemoPage() {
       </div>
 
       <Suspense fallback={null}>
-        <SectorAIChatBubble
-          sector={resolvedIndustry}
-          sectorLabel={industryConfig.label}
-          sectorEmoji={industryConfig.emoji}
-          accentColor={theme.accent}
-          companyName={companyName}
-        />
+        <EmpireVoiceAgent />
       </Suspense>
     </div>
   );
