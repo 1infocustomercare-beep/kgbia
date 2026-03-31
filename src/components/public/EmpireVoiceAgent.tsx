@@ -559,6 +559,8 @@ const EmpireVoiceAgent: React.FC = () => {
   const userInteractedRef = useRef(false);
   const unlockInFlightRef = useRef(false);
   const preferImmediateNarrationRef = useRef(false);
+  const voiceInputSettleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const voiceFinalTranscriptRef = useRef("");
 
   // Track if quota is the reason for disconnects — skip reconnect loop
   const elevenlabsQuotaFailedRef = useRef(false);
@@ -981,6 +983,12 @@ const EmpireVoiceAgent: React.FC = () => {
     queueProcessingRef.current = false;
     narrationAttemptsRef.current = {};
 
+    if (voiceInputSettleTimerRef.current) {
+      clearTimeout(voiceInputSettleTimerRef.current);
+      voiceInputSettleTimerRef.current = null;
+    }
+    voiceFinalTranscriptRef.current = "";
+
     // Stop browser TTS
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
@@ -1374,22 +1382,63 @@ const EmpireVoiceAgent: React.FC = () => {
     const recognition = new SpeechRecognition();
     recognition.lang = "it-IT";
     recognition.interimResults = true;
-    recognition.continuous = false;
+    recognition.continuous = true;
     recognitionRef.current = recognition;
+    voiceFinalTranscriptRef.current = "";
+
+    const flushFinalTranscript = () => {
+      const finalText = voiceFinalTranscriptRef.current.trim();
+      if (!finalText) return;
+      voiceFinalTranscriptRef.current = "";
+      setLiveTranscript("");
+      setIsListening(false);
+      sendMessage(finalText);
+    };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recognition.onresult = (e: any) => {
       let interim = "";
-      let final = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) final += e.results[i][0].transcript;
-        else interim += e.results[i][0].transcript;
+        const transcript = e.results[i][0]?.transcript || "";
+        if (e.results[i].isFinal) {
+          voiceFinalTranscriptRef.current = `${voiceFinalTranscriptRef.current} ${transcript}`.trim();
+        } else {
+          interim += transcript;
+        }
       }
-      setLiveTranscript(interim);
-      if (final) { setLiveTranscript(""); setIsListening(false); sendMessage(final); }
+
+      setLiveTranscript(interim.trim());
+
+      if (voiceInputSettleTimerRef.current) {
+        clearTimeout(voiceInputSettleTimerRef.current);
+      }
+
+      // Wait for a real pause before sending, so user can finish speaking naturally
+      voiceInputSettleTimerRef.current = setTimeout(() => {
+        flushFinalTranscript();
+      }, 1200);
     };
-    recognition.onerror = () => { setIsListening(false); setLiveTranscript(""); };
-    recognition.onend = () => { setIsListening(false); setLiveTranscript(""); };
+
+    recognition.onerror = () => {
+      if (voiceInputSettleTimerRef.current) {
+        clearTimeout(voiceInputSettleTimerRef.current);
+        voiceInputSettleTimerRef.current = null;
+      }
+      flushFinalTranscript();
+      setIsListening(false);
+      setLiveTranscript("");
+    };
+
+    recognition.onend = () => {
+      if (voiceInputSettleTimerRef.current) {
+        clearTimeout(voiceInputSettleTimerRef.current);
+        voiceInputSettleTimerRef.current = null;
+      }
+      flushFinalTranscript();
+      setIsListening(false);
+      setLiveTranscript("");
+      recognitionRef.current = null;
+    };
 
     try {
       recognition.start();
