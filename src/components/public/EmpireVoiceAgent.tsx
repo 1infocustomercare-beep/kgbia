@@ -1433,9 +1433,9 @@ const EmpireVoiceAgent: React.FC = () => {
 
       {/* Floating Phone Button — "Chiama Arianna" */}
       <AnimatePresence>
-        {isVisible && (
+        {isVisible && !isOpen && (
           <motion.button
-            className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-4 z-[201] group touch-manipulation"
+            className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-[9998] group touch-manipulation"
             onClick={toggleOpen}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
