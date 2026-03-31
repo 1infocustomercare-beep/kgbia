@@ -1237,6 +1237,36 @@ const EmpireVoiceAgent: React.FC = () => {
     setIsLoading(true);
     setInputText("");
 
+    // If credits known exhausted, use local fallback immediately (no network call)
+    if (isChatCreditsExhausted()) {
+      const fallback = getLocalFallbackResponse(text);
+      // Simulate typing effect
+      let i = 0;
+      const words = fallback.split(" ");
+      const typeInterval = setInterval(() => {
+        i++;
+        const partial = words.slice(0, i).join(" ");
+        setMessages((prev) => {
+          const last = prev[prev.length - 1];
+          if (last?.role === "assistant") {
+            return prev.map((m, idx) => (idx === prev.length - 1 ? { ...m, content: partial } : m));
+          }
+          return [...prev, { role: "assistant", content: partial }];
+        });
+        if (i >= words.length) {
+          clearInterval(typeInterval);
+          setIsLoading(false);
+          if (voiceEnabledRef.current && !abortRef.current) {
+            setIsSpeaking(true);
+            speakText(fallback, audioRef, abortRef, useBrowserFallbackRef).then(() => {
+              if (!abortRef.current) setIsSpeaking(false);
+            });
+          }
+        }
+      }, 50);
+      return;
+    }
+
     let full = "";
     const upsert = (chunk: string) => {
       full += chunk;
@@ -1263,6 +1293,18 @@ const EmpireVoiceAgent: React.FC = () => {
           setIsSpeaking(true);
           await speakText(full, audioRef, abortRef, useBrowserFallbackRef);
           if (!abortRef.current) setIsSpeaking(false);
+        },
+        onCreditError: () => {
+          // Credits exhausted mid-conversation — serve local fallback seamlessly
+          const fallback = getLocalFallbackResponse(text);
+          setMessages((prev) => [...prev, { role: "assistant", content: fallback }]);
+          setIsLoading(false);
+          if (voiceEnabledRef.current && !abortRef.current) {
+            setIsSpeaking(true);
+            speakText(fallback, audioRef, abortRef, useBrowserFallbackRef).then(() => {
+              if (!abortRef.current) setIsSpeaking(false);
+            });
+          }
         },
       });
     } catch (error) {
