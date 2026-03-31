@@ -73,6 +73,7 @@ import sectorHeroElectrician from "@/assets/sector-hero-electrician.jpg";
 import sectorHeroCustom from "@/assets/sector-hero-custom.jpg";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
+import { WordScrollReveal, ParallaxLayer, ScrollRevealStat } from "@/components/public/LusionScrollReveal";
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
 function useLandingAssets() {
@@ -3470,86 +3471,89 @@ const LandingPage = () => {
             backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
-        <div className="text-center mb-8">
+
+        {/* ═══ LUSION-STYLE WORD REVEAL — "Scopri Empire" ═══ */}
+        <div className="mb-6">
           <SectionLabel text="Scopri Empire" icon={<Play className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
-          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Non Siamo un Software. <span className="text-shimmer">Siamo il Futuro.</span>
-          </motion.h2>
-          <motion.p className="text-foreground/70 max-w-[560px] mx-auto text-[0.9rem] leading-[1.85] tracking-wide font-light"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Oltre 98 Agenti IA autonomi, dashboard predittive, CRM intelligente, gestione flotta e prenotazioni, cataloghi digitali con OCR, automazioni multi-canale, fatturazione elettronica, analytics in tempo reale, voice agent, generazione foto e contenuti AI — un ecosistema white-label completo che lavora 24/7 per ogni settore, senza intervento umano.
-          </motion.p>
         </div>
-        <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
-        initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-        transition={{ duration: 0.6 }}>
-          <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
-          <FunnelDNAVisual />
-          <div className="absolute inset-0 pointer-events-none rounded-2xl"
-          style={{ background: "linear-gradient(180deg, transparent 60%, hsla(0,0%,4%,0.94) 100%)" }} />
-        </motion.div>
 
-        {/* Premium feature badges — below video */}
-        <motion.div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mt-6 max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.25 }}>
-          {[
-            { label: "Dashboard IA", icon: "✦" },
-            { label: "CRM Intelligente", icon: "◈" },
-            { label: "Automazioni", icon: "⚡" },
-            { label: "Fatturazione", icon: "◆" },
-          ].map((item, i) =>
-            <motion.div key={item.label}
-              className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl border cursor-default overflow-hidden"
-              style={{
-                background: "linear-gradient(160deg, hsl(228 20% 14% / 0.88), hsl(248 20% 12% / 0.82))",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-                borderColor: "hsl(var(--primary) / 0.15)",
-                boxShadow: "0 2px 16px hsl(var(--primary) / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
-              }}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 + i * 0.08 }}
-              whileHover={{ scale: 1.04, borderColor: "hsl(var(--primary) / 0.2)", boxShadow: "0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.08)" }}>
-              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.12), transparent)" }} />
-              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 25%)" }} />
-              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: "radial-gradient(circle at center, hsl(var(--primary) / 0.05), transparent 70%)" }} />
-              <span className="relative z-10 text-[0.55rem] sm:text-[0.65rem] font-heading font-bold tracking-[0.15em] uppercase text-foreground/80 group-hover:text-primary transition-colors flex items-center gap-1.5">
-                <span className="text-primary/50 text-[0.5rem]">{item.icon}</span>
-                {item.label}
-              </span>
-            </motion.div>
-          )}
-        </motion.div>
+        {/* Word-by-word scroll reveal headline */}
+        <WordScrollReveal
+          text="Non creiamo software. Costruiamo sistemi operativi digitali che lavorano al posto tuo. 98 agenti IA autonomi, dashboard predittive, CRM intelligente e automazioni multi-canale — un ecosistema completo che trasforma il tuo business mentre dormi."
+          className="text-[clamp(1.3rem,3.8vw,2.6rem)] max-w-[800px] mx-auto text-center mb-10 sm:mb-14"
+          highlightWords={["sistemi", "operativi", "digitali", "98", "agenti", "IA", "autonomi", "trasforma"]}
+        />
 
-        {/* CTA buttons under video */}
+        {/* Parallax capabilities grid */}
+        <ParallaxLayer speed={0.08} className="mb-8 sm:mb-12">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 max-w-3xl mx-auto">
+            {[
+              { icon: <BrainCircuit className="w-4 h-4" />, label: "Agenti IA Autonomi", desc: "98+ modelli specializzati", hue: "265" },
+              { icon: <Gauge className="w-4 h-4" />, label: "Dashboard Predittive", desc: "Decisioni data-driven", hue: "150" },
+              { icon: <Workflow className="w-4 h-4" />, label: "Automazioni 24/7", desc: "Zero intervento umano", hue: "38" },
+              { icon: <Fingerprint className="w-4 h-4" />, label: "White-Label Custom", desc: "Il tuo brand, la nostra tech", hue: "210" },
+            ].map((cap, i) => (
+              <motion.div
+                key={cap.label}
+                className="relative rounded-2xl overflow-hidden p-4 sm:p-5 group cursor-default"
+                style={{
+                  background: "linear-gradient(160deg, hsl(228 20% 14% / 0.9), hsl(232 22% 12% / 0.86))",
+                  border: `1px solid hsla(${cap.hue},40%,50%,0.15)`,
+                  boxShadow: `0 2px 20px hsla(${cap.hue},50%,40%,0.06)`,
+                }}
+                initial={{ opacity: 0, y: 20, rotateX: 8 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -4, borderColor: `hsla(${cap.hue},50%,55%,0.3)`, boxShadow: `0 12px 40px hsla(${cap.hue},50%,40%,0.12)` }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, hsla(${cap.hue},60%,55%,0.3), transparent)` }} />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center mb-3"
+                  style={{ background: `hsla(${cap.hue},50%,50%,0.12)`, color: `hsla(${cap.hue},65%,60%,1)` }}>
+                  {cap.icon}
+                </div>
+                <h4 className="text-[0.7rem] sm:text-sm font-heading font-bold text-foreground mb-0.5">{cap.label}</h4>
+                <p className="text-[0.55rem] sm:text-xs text-foreground/35 leading-relaxed">{cap.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </ParallaxLayer>
+
+        {/* DNA Visual */}
+        <ParallaxLayer speed={0.05}>
+          <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
+          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+          transition={{ duration: 0.6 }}>
+            <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
+            <FunnelDNAVisual />
+            <div className="absolute inset-0 pointer-events-none rounded-2xl"
+            style={{ background: "linear-gradient(180deg, transparent 60%, hsla(0,0%,4%,0.94) 100%)" }} />
+          </motion.div>
+        </ParallaxLayer>
+
+        {/* CTA buttons */}
         <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10"
-        initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
-          <motion.button
-            onClick={() => scrollTo("pricing")}
-            className="group px-7 py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-            style={{ boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.25), inset 0 1px 0 hsl(0 0% 100% / 0.15)" }}
-            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.3)" }}
-            whileTap={{ scale: 0.97 }}>
-            
-            Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </motion.button>
-          <motion.button
-            onClick={() => navigate("/demo")}
-            className="px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center gap-2"
-            style={{
-              border: "1px solid hsl(var(--border) / 0.4)",
-              background: "linear-gradient(160deg, hsl(228 20% 14% / 0.85), hsl(248 18% 12% / 0.8))",
-              backdropFilter: "blur(12px)",
-              boxShadow: "0 2px 12px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
-            }}
-            whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
-            
-            <Play className="w-4 h-4 text-primary/60" /> Esplora le Demo
-          </motion.button>
+          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+            <motion.button
+              onClick={() => scrollTo("pricing")}
+              className="group px-7 py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
+              style={{ boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.25), inset 0 1px 0 hsl(0 0% 100% / 0.15)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.3)" }}
+              whileTap={{ scale: 0.97 }}>
+              Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </motion.button>
+            <motion.button
+              onClick={() => navigate("/demo")}
+              className="px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center gap-2"
+              style={{
+                border: "1px solid hsl(var(--border) / 0.4)",
+                background: "linear-gradient(160deg, hsl(228 20% 14% / 0.85), hsl(248 18% 12% / 0.8))",
+                backdropFilter: "blur(12px)",
+                boxShadow: "0 2px 12px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
+              }}
+              whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
+              <Play className="w-4 h-4 text-primary/60" /> Esplora le Demo
+            </motion.button>
         </motion.div>
       </Section>
 
