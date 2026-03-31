@@ -10,7 +10,7 @@ import EmpireTeamStory from "@/components/public/EmpireTeamStory";
 import { LuxuryTicker } from "@/components/public/LuxuryTicker";
 import { motion, AnimatePresence } from "framer-motion";
 
-const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
+const SectorAIChatBubble = lazy(() => import("@/components/public/SectorAIChatBubble"));
 
 /* ── Branded splash screen for business sites ── */
 function BusinessSplash({ name, logoUrl, accentColor, emoji, onComplete }: {
