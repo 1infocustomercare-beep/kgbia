@@ -1287,19 +1287,18 @@ const EmpireVoiceAgent: React.FC = () => {
         onDelta: upsert,
         onDone: async () => {
           setIsLoading(false);
-          const shouldSpeak = voiceEnabledRef.current && full.length > 0 && full.length < 2000 && !abortRef.current;
-          if (!shouldSpeak) return;
-
-          setIsSpeaking(true);
-          await speakText(full, audioRef, abortRef, useBrowserFallbackRef);
-          if (!abortRef.current) setIsSpeaking(false);
+          // Always speak the response aloud when done streaming
+          if (full.length > 0 && !abortRef.current) {
+            setIsSpeaking(true);
+            await speakText(full, audioRef, abortRef, useBrowserFallbackRef);
+            if (!abortRef.current) setIsSpeaking(false);
+          }
         },
         onCreditError: () => {
-          // Credits exhausted mid-conversation — serve local fallback seamlessly
           const fallback = getLocalFallbackResponse(text);
           setMessages((prev) => [...prev, { role: "assistant", content: fallback }]);
           setIsLoading(false);
-          if (voiceEnabledRef.current && !abortRef.current) {
+          if (!abortRef.current) {
             setIsSpeaking(true);
             speakText(fallback, audioRef, abortRef, useBrowserFallbackRef).then(() => {
               if (!abortRef.current) setIsSpeaking(false);
