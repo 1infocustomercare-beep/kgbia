@@ -983,6 +983,12 @@ const EmpireVoiceAgent: React.FC = () => {
     queueProcessingRef.current = false;
     narrationAttemptsRef.current = {};
 
+    if (voiceInputSettleTimerRef.current) {
+      clearTimeout(voiceInputSettleTimerRef.current);
+      voiceInputSettleTimerRef.current = null;
+    }
+    voiceFinalTranscriptRef.current = "";
+
     // Stop browser TTS
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
