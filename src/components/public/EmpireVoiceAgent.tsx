@@ -559,6 +559,8 @@ const EmpireVoiceAgent: React.FC = () => {
   const userInteractedRef = useRef(false);
   const unlockInFlightRef = useRef(false);
   const preferImmediateNarrationRef = useRef(false);
+  const voiceInputSettleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const voiceFinalTranscriptRef = useRef("");
 
   // Track if quota is the reason for disconnects — skip reconnect loop
   const elevenlabsQuotaFailedRef = useRef(false);
