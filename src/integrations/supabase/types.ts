@@ -2127,44 +2127,210 @@ export type Database = {
           },
         ]
       }
+      lead_automations: {
+        Row: {
+          ai_time_optimize: boolean | null
+          channel: string | null
+          company_id: string
+          created_at: string | null
+          day_of_week: string | null
+          description: string | null
+          exact_time: string | null
+          frequency: string | null
+          id: string
+          is_active: boolean | null
+          last_run_at: string | null
+          max_per_run: number | null
+          min_score: number | null
+          name: string
+          skip_if_replied: boolean | null
+          target_sector: string | null
+          target_stage: string | null
+          time_slot: string | null
+          total_sent: number | null
+        }
+        Insert: {
+          ai_time_optimize?: boolean | null
+          channel?: string | null
+          company_id: string
+          created_at?: string | null
+          day_of_week?: string | null
+          description?: string | null
+          exact_time?: string | null
+          frequency?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_run_at?: string | null
+          max_per_run?: number | null
+          min_score?: number | null
+          name: string
+          skip_if_replied?: boolean | null
+          target_sector?: string | null
+          target_stage?: string | null
+          time_slot?: string | null
+          total_sent?: number | null
+        }
+        Update: {
+          ai_time_optimize?: boolean | null
+          channel?: string | null
+          company_id?: string
+          created_at?: string | null
+          day_of_week?: string | null
+          description?: string | null
+          exact_time?: string | null
+          frequency?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_run_at?: string | null
+          max_per_run?: number | null
+          min_score?: number | null
+          name?: string
+          skip_if_replied?: boolean | null
+          target_sector?: string | null
+          target_stage?: string | null
+          time_slot?: string | null
+          total_sent?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_automations_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_campaigns: {
+        Row: {
+          channel: string | null
+          company_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          min_score: number | null
+          name: string
+          opened_count: number | null
+          reply_count: number | null
+          sent_count: number | null
+          status: string | null
+          target_city: string | null
+          target_leads_count: number | null
+          target_sector: string | null
+          template_text: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          channel?: string | null
+          company_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          min_score?: number | null
+          name: string
+          opened_count?: number | null
+          reply_count?: number | null
+          sent_count?: number | null
+          status?: string | null
+          target_city?: string | null
+          target_leads_count?: number | null
+          target_sector?: string | null
+          template_text?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          channel?: string | null
+          company_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          min_score?: number | null
+          name?: string
+          opened_count?: number | null
+          reply_count?: number | null
+          sent_count?: number | null
+          status?: string | null
+          target_city?: string | null
+          target_leads_count?: number | null
+          target_sector?: string | null
+          template_text?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_campaigns_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
+          ai_score: number | null
+          ai_search_query: string | null
+          ai_summary: string | null
           assigned_to: string | null
+          channels_available: string[] | null
+          city: string | null
           company_id: string
+          contact_stage: string | null
           created_at: string
           email: string | null
           id: string
+          lead_platform: string | null
           name: string
           notes: string | null
+          pain_points: string[] | null
           phone: string | null
+          sector: string | null
           source: string | null
           status: string
           updated_at: string
           value: number
         }
         Insert: {
+          ai_score?: number | null
+          ai_search_query?: string | null
+          ai_summary?: string | null
           assigned_to?: string | null
+          channels_available?: string[] | null
+          city?: string | null
           company_id: string
+          contact_stage?: string | null
           created_at?: string
           email?: string | null
           id?: string
+          lead_platform?: string | null
           name: string
           notes?: string | null
+          pain_points?: string[] | null
           phone?: string | null
+          sector?: string | null
           source?: string | null
           status?: string
           updated_at?: string
           value?: number
         }
         Update: {
+          ai_score?: number | null
+          ai_search_query?: string | null
+          ai_summary?: string | null
           assigned_to?: string | null
+          channels_available?: string[] | null
+          city?: string | null
           company_id?: string
+          contact_stage?: string | null
           created_at?: string
           email?: string | null
           id?: string
+          lead_platform?: string | null
           name?: string
           notes?: string | null
+          pain_points?: string[] | null
           phone?: string | null
+          sector?: string | null
           source?: string | null
           status?: string
           updated_at?: string
