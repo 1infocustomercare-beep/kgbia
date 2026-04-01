@@ -70,7 +70,7 @@ export default function OperatorsPage() {
         {filtered.map((s: any) => (
           <Card key={s.id}><CardContent className="p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><User className="w-5 h-5 text-primary" /></div>
-            <div><p className="font-semibold">{s.name}</p><p className="text-xs text-muted-foreground">{s.role || "Operatore"}</p></div>
+            <div><p className="font-semibold">{s.full_name}</p><p className="text-xs text-muted-foreground">{s.role || "Operatore"}</p></div>
             <Badge variant="outline" className="ml-auto">{s.is_active !== false ? "Attivo" : "Inattivo"}</Badge>
           </CardContent></Card>
         ))}
