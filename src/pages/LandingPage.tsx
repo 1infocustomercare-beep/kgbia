@@ -2487,15 +2487,15 @@ const LandingPage = () => {
 
 
   const services = [
-  { icon: <Brain className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni.", tag: "IA", color: "from-primary to-accent" },
-  { icon: <Smartphone className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale con il TUO brand, colori e dominio. Nessun logo di terzi.", tag: "APP", color: "from-violet-500 to-primary" },
-  { icon: <Calendar className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini e prenotazioni da un unico pannello.", tag: "OPS", color: "from-indigo-400 to-violet-500" },
-  { icon: <Shield className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano private. Solo le migliori vanno online.", tag: "BRAND", color: "from-purple-400 to-violet-500" },
-  { icon: <Users className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà. Clienti ricorrenti.", tag: "GROWTH", color: "from-fuchsia-500/80 to-purple-500" },
-  { icon: <BarChart3 className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, trend e fatturazione elettronica.", tag: "FINANCE", color: "from-indigo-500 to-violet-400" },
-  { icon: <Package className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, alert automatici, controlli igienico-sanitari.", tag: "OPS", color: "from-purple-500 to-primary" },
-  { icon: <Bell className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push, email, WhatsApp, promozioni mirate e segmentazione.", tag: "MARKETING", color: "from-accent to-violet-500" },
-  { icon: <Lock className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR, backup automatici, audit trail.", tag: "SECURITY", color: "from-violet-400/60 to-indigo-400/60" }];
+  { icon: <Brain className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "AI Menu & Catalogo Digitale", desc: "Carica una foto del menu o listino prezzi — l'AI estrae voci, prezzi, allergeni e genera immagini professionali in 60 secondi. Traduzione multilingua automatica. Per ristoranti, negozi, spa, cliniche.", tag: "AI", color: "from-primary to-accent" },
+  { icon: <Smartphone className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "PWA White Label di Proprietà", desc: "App installabile come nativa con il TUO brand — logo, colori, dominio personalizzato. Ordini, prenotazioni, catalogo. Zero commissioni marketplace. Adatta a ogni settore.", tag: "APP", color: "from-violet-500 to-primary" },
+  { icon: <Users className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "CRM Clienti & Fidelizzazione", desc: "Database clienti unificato con storico acquisti, preferenze e segmentazione automatica. Campagne push mirate. Loyalty program con wallet pass digitali. +40% tasso di ritorno garantito.", tag: "CRM", color: "from-fuchsia-500/80 to-purple-500" },
+  { icon: <BarChart3 className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Staff, Turni & Payroll Automatico", desc: "Gestione completa del personale: profili, turni drag-and-drop, timbrature con QR, calcolo automatico ore e buste paga. Straordinari, ferie, assenze — tutto in una dashboard.", tag: "HR", color: "from-indigo-500 to-violet-400" },
+  { icon: <Shield className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Review Shield™ & Reputazione", desc: "Le recensioni negative restano private, le 4-5★ vanno automaticamente su Google. CRM clienti con blacklist intelligente. Monitoraggio reputazione in real-time.", tag: "BRAND", color: "from-purple-400 to-violet-500" },
+  { icon: <Wallet className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Finance, Fatture & Analisi", desc: "Dashboard finanziaria live: revenue giornaliero, settimanale, mensile. Fatturazione B2B elettronica. Analisi margini per prodotto/servizio. Registro HACCP digitale per il food.", tag: "FINANCE", color: "from-indigo-400 to-violet-500" },
+  { icon: <Bot className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "AI Concierge & Assistente Clienti", desc: "Chatbot AI addestrato sul tuo business che risponde ai clienti 24/7: orari, prenotazioni, domande FAQ, preventivi. Si integra con WhatsApp e il sito web.", tag: "AI+", color: "from-primary to-accent" },
+  { icon: <Zap className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Empire Nexus AI — Content Engine", desc: "Genera testi, immagini social, video reel e post programmati con un click. 98+ agenti AI che lavorano per te. Dal ristorante all'hotel, dal salone all'e-commerce.", tag: "AI", color: "from-accent to-violet-500" },
+  { icon: <MapPin className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Prenotazioni, Tavoli & Agenda", desc: "Calendario prenotazioni online con conferma automatica via SMS/WhatsApp. Mappa tavoli drag-and-drop per ristorazione. Gestione appuntamenti per beauty, healthcare e fitness.", tag: "BOOKING", color: "from-purple-500 to-primary" }];
 
 
   const metrics = [
@@ -3474,14 +3474,14 @@ const LandingPage = () => {
 
         {/* ═══ LUSION-STYLE WORD REVEAL — "Scopri Empire" ═══ */}
         <div className="mb-6">
-          <SectionLabel text="Scopri Empire" icon={<Play className="w-3 h-3 text-primary" />} />
+          <SectionLabel text="Non Siamo un Software. Siamo il Futuro." icon={<Atom className="w-3 h-3 text-primary" />} />
         </div>
 
         {/* Word-by-word scroll reveal headline */}
         <WordScrollReveal
-          text="Non creiamo software. Costruiamo sistemi operativi digitali che lavorano al posto tuo. 98 agenti IA autonomi, dashboard predittive, CRM intelligente e automazioni multi-canale — un ecosistema completo che trasforma il tuo business mentre dormi."
+          text="Mentre i tuoi competitor perdono clienti, noi costruiamo il tuo vantaggio competitivo. Un ecosistema completo di 98 agenti IA autonomi, dashboard predittive, CRM intelligente e automazioni multi-canale che lavora 24 ore su 24 — generando fatturato, fidelizzando clienti e ottimizzando ogni processo. Non ti vendiamo un prodotto. Ti costruiamo un impero digitale."
           className="text-[clamp(1.3rem,3.8vw,2.6rem)] max-w-[800px] mx-auto text-center mb-10 sm:mb-14"
-          highlightWords={["sistemi", "operativi", "digitali", "98", "agenti", "IA", "autonomi", "trasforma"]}
+          highlightWords={["vantaggio", "competitivo", "98", "agenti", "IA", "autonomi", "fatturato", "impero", "digitale"]}
         />
 
         {/* Parallax capabilities grid */}
@@ -4308,9 +4308,9 @@ const LandingPage = () => {
           </div>
 
           <WordScrollReveal
-            text="Il tuo business prima di Empire è lento, manuale e prevedibile. Dopo Empire è automatizzato, intelligente e inarrestabile. Questi sono i numeri reali dei nostri clienti."
+            text="I tuoi competitor stanno ancora usando fogli Excel e WhatsApp personale. I nostri clienti hanno automatizzato tutto: ordini, prenotazioni, marketing, fatturazione. Il risultato? Più fatturato, meno stress, zero errori. Ecco i numeri."
             className="text-[clamp(1.1rem,3.5vw,2.2rem)] max-w-[750px] mx-auto text-center mb-10 sm:mb-16"
-            highlightWords={["automatizzato", "intelligente", "inarrestabile", "reali"]}
+            highlightWords={["automatizzato", "fatturato", "stress", "zero", "errori", "numeri"]}
           />
 
           {/* ═══ IMPACT NUMBERS — horizontal scroll on mobile ═══ */}
@@ -4331,12 +4331,12 @@ const LandingPage = () => {
           <ParallaxLayer speed={0.06} className="mb-10 sm:mb-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
               {[
-                { metric: "Gestione Ordini", before: "45 min manuale", after: "3 min automatico", icon: <Timer className="w-4 h-4" />, improvement: "-93%", color: "265", desc: "Da carta e caos a flusso digitale istantaneo" },
-                { metric: "Recensioni Negative", before: "12 al mese", after: "0 intercettate", icon: <Shield className="w-4 h-4" />, improvement: "-100%", color: "150", desc: "L'IA intercetta e risolve prima della pubblicazione" },
-                { metric: "Clienti Persi", before: "34% tasso abbandono", after: "2% con retention AI", icon: <Users className="w-4 h-4" />, improvement: "-94%", color: "210", desc: "Automazioni di ri-engagement che funzionano" },
-                { metric: "Revenue Addizionale", before: "0€ da canali AI", after: "+2.400€ / mese", icon: <TrendingUp className="w-4 h-4" />, improvement: "+∞", color: "38", desc: "Upselling, cross-selling e conversioni automatiche" },
-                { metric: "Fatturazione", before: "2 ore al giorno", after: "Completamente auto", icon: <Receipt className="w-4 h-4" />, improvement: "-100%", color: "200", desc: "Fatture elettroniche generate e inviate dall'IA" },
-                { metric: "Marketing", before: "Manuale e sporadico", after: "AI attivo 24/7", icon: <Rocket className="w-4 h-4" />, improvement: "∞", color: "320", desc: "Campagne, social e follow-up senza il tuo intervento" },
+                { metric: "Gestione Ordini & Prenotazioni", before: "45 min manuali al giorno", after: "3 min — tutto automatico", icon: <Timer className="w-4 h-4" />, improvement: "-93%", color: "265", desc: "Ordini, prenotazioni, conferme WhatsApp — tutto in autopilot senza intervento umano" },
+                { metric: "Reputazione Online", before: "12 recensioni negative/mese", after: "0 — intercettate dall'IA", icon: <Shield className="w-4 h-4" />, improvement: "-100%", color: "150", desc: "Review Shield™ filtra le negative in privato e amplifica le 4-5★ su Google automaticamente" },
+                { metric: "Clienti Persi & Fidelizzazione", before: "34% tasso abbandono", after: "2% con retention AI", icon: <Users className="w-4 h-4" />, improvement: "-94%", color: "210", desc: "L'IA identifica i clienti a rischio e lancia campagne personalizzate per trattenerli" },
+                { metric: "Revenue da Canali Digitali", before: "€0 da automazioni", after: "+€2.400/mese in media", icon: <TrendingUp className="w-4 h-4" />, improvement: "+∞", color: "38", desc: "Upselling intelligente, cross-selling e conversioni WhatsApp/Push automatiche" },
+                { metric: "Fatturazione & Amministrazione", before: "2 ore al giorno", after: "Completamente automatica", icon: <Receipt className="w-4 h-4" />, improvement: "-100%", color: "200", desc: "Fatture B2B elettroniche generate, inviate e archiviate dall'IA. Zero errori" },
+                { metric: "Marketing & Social Media", before: "Manuale, sporadico, costoso", after: "AI Content Engine 24/7", icon: <Rocket className="w-4 h-4" />, improvement: "∞", color: "320", desc: "Post social, campagne email, follow-up clienti — tutto generato e pubblicato dall'IA" },
               ].map((t, i) => (
                 <motion.div key={i}
                   className="group relative rounded-2xl overflow-hidden"
