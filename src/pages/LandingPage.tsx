@@ -3165,7 +3165,7 @@ const LandingPage = () => {
           <div className="flex flex-col items-center overflow-hidden">
             
             {/* CENTER: Text content — cinematic reveal */}
-            <div className="text-center max-w-[900px] mx-auto px-5 sm:px-0 w-full box-border flex flex-col items-center sm:items-start sm:text-left">
+            <div className="text-center max-w-[900px] mx-auto px-5 sm:px-0 w-full box-border flex flex-col items-center">
 
               {/* Minimal agency badge */}
               <motion.div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full mb-8"
