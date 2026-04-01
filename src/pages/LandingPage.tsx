@@ -3474,14 +3474,14 @@ const LandingPage = () => {
 
         {/* ═══ LUSION-STYLE WORD REVEAL — "Scopri Empire" ═══ */}
         <div className="mb-6">
-          <SectionLabel text="Scopri Empire" icon={<Play className="w-3 h-3 text-primary" />} />
+          <SectionLabel text="Non Siamo un Software. Siamo il Futuro." icon={<Atom className="w-3 h-3 text-primary" />} />
         </div>
 
         {/* Word-by-word scroll reveal headline */}
         <WordScrollReveal
-          text="Non creiamo software. Costruiamo sistemi operativi digitali che lavorano al posto tuo. 98 agenti IA autonomi, dashboard predittive, CRM intelligente e automazioni multi-canale — un ecosistema completo che trasforma il tuo business mentre dormi."
+          text="Mentre i tuoi competitor perdono clienti, noi costruiamo il tuo vantaggio competitivo. Un ecosistema completo di 98 agenti IA autonomi, dashboard predittive, CRM intelligente e automazioni multi-canale che lavora 24 ore su 24 — generando fatturato, fidelizzando clienti e ottimizzando ogni processo. Non ti vendiamo un prodotto. Ti costruiamo un impero digitale."
           className="text-[clamp(1.3rem,3.8vw,2.6rem)] max-w-[800px] mx-auto text-center mb-10 sm:mb-14"
-          highlightWords={["sistemi", "operativi", "digitali", "98", "agenti", "IA", "autonomi", "trasforma"]}
+          highlightWords={["vantaggio", "competitivo", "98", "agenti", "IA", "autonomi", "fatturato", "impero", "digitale"]}
         />
 
         {/* Parallax capabilities grid */}
