@@ -1219,15 +1219,19 @@
       inset 0 1px 0 hsl(0 0% 100% / 0.06) !important;
   }
 
-  .landing-premium-luxury [class*="text-foreground/20"] { color: hsl(var(--foreground) / 0.56) !important; }
-  .landing-premium-luxury [class*="text-foreground/25"] { color: hsl(var(--foreground) / 0.6) !important; }
-  .landing-premium-luxury [class*="text-foreground/30"] { color: hsl(var(--foreground) / 0.64) !important; }
-  .landing-premium-luxury [class*="text-foreground/35"] { color: hsl(var(--foreground) / 0.68) !important; }
-  .landing-premium-luxury [class*="text-foreground/40"] { color: hsl(var(--foreground) / 0.74) !important; }
-  .landing-premium-luxury [class*="text-foreground/45"] { color: hsl(var(--foreground) / 0.78) !important; }
-  .landing-premium-luxury [class*="text-foreground/50"] { color: hsl(var(--foreground) / 0.8) !important; }
+  .landing-premium-luxury [class*="text-foreground/20"] { color: hsl(var(--foreground) / 0.62) !important; }
+  .landing-premium-luxury [class*="text-foreground/25"] { color: hsl(var(--foreground) / 0.66) !important; }
+  .landing-premium-luxury [class*="text-foreground/30"] { color: hsl(var(--foreground) / 0.72) !important; }
+  .landing-premium-luxury [class*="text-foreground/35"] { color: hsl(var(--foreground) / 0.76) !important; }
+  .landing-premium-luxury [class*="text-foreground/40"] { color: hsl(var(--foreground) / 0.8) !important; }
+  .landing-premium-luxury [class*="text-foreground/45"] { color: hsl(var(--foreground) / 0.84) !important; }
+  .landing-premium-luxury [class*="text-foreground/50"] { color: hsl(var(--foreground) / 0.88) !important; }
 
-  .landing-premium-luxury [class*="text-white/40"] { color: hsl(0 0% 100% / 0.76) !important; }
+  .landing-premium-luxury [class*="text-white/30"] { color: hsl(0 0% 100% / 0.65) !important; }
+  .landing-premium-luxury [class*="text-white/35"] { color: hsl(0 0% 100% / 0.72) !important; }
+  .landing-premium-luxury [class*="text-white/40"] { color: hsl(0 0% 100% / 0.8) !important; }
+  .landing-premium-luxury [class*="text-white/45"] { color: hsl(0 0% 100% / 0.84) !important; }
+  .landing-premium-luxury [class*="text-white/50"] { color: hsl(0 0% 100% / 0.88) !important; }
 
   .landing-premium-luxury .neon-card,
   .landing-premium-luxury .glow-card {
