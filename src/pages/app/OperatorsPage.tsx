@@ -23,7 +23,7 @@ export default function OperatorsPage() {
     queryKey: ["staff_operators", companyId],
     enabled: !!companyId,
     queryFn: async () => {
-      const { data } = await supabase.from("staff").select("*").eq("company_id", companyId!).order("name");
+      const { data } = await supabase.from("staff").select("*").eq("company_id", companyId!).order("full_name");
       return data || [];
     },
   });
