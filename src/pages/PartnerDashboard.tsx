@@ -872,7 +872,7 @@ const PartnerDashboard = () => {
               <input
                 value={sectorSearch}
                 onChange={e => setSectorSearch(e.target.value)}
-                placeholder="Cerca settore... (es. ristorante, parrucchiere, hotel)"
+                placeholder="Cerca settore o attività... (es. pizzeria, dentista, palestra, taxi, tattoo)"
                 className="w-full pl-9 pr-4 py-2 rounded-xl text-xs text-white placeholder:text-gray-500"
                 style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
               />
