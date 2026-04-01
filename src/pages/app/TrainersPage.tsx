@@ -54,7 +54,7 @@ export default function TrainersPage() {
           <DialogTrigger asChild><Button className="h-11"><Plus className="w-4 h-4 mr-2" /> Aggiungi</Button></DialogTrigger>
           <DialogContent><DialogHeader><DialogTitle>Nuovo Trainer</DialogTitle></DialogHeader>
             <div className="space-y-4 pt-4">
-              <div><Label>Nome</Label><Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="h-11" /></div>
+              <div><Label>Nome</Label><Input value={form.full_name} onChange={e => setForm(p => ({ ...p, full_name: e.target.value }))} className="h-11" /></div>
               <div><Label>Specializzazione</Label><Input value={form.role} onChange={e => setForm(p => ({ ...p, role: e.target.value }))} className="h-11" placeholder="es. Personal Trainer, Yoga" /></div>
               <div><Label>Telefono</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} className="h-11" /></div>
               <div><Label>Email</Label><Input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className="h-11" /></div>
