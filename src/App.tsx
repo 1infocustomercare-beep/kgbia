@@ -683,6 +683,27 @@ function App() {
                         <Route path="telemedicine" element={<TelemedicinePage />} />
                         <Route path="project-timeline" element={<ProjectTimelinePage />} />
                         <Route path="field-dispatch" element={<FieldDispatchPage />} />
+                        {/* Sector-specific modules */}
+                        <Route path="billing" element={<BillingPage />} />
+                        <Route path="catalog" element={<CatalogPage />} />
+                        <Route path="classes" element={<ClassesPage />} />
+                        <Route path="crm-clients" element={<CRMClientsPage2 />} />
+                        <Route path="all-clients" element={<ClientsPage />} />
+                        <Route path="destinations" element={<DestinationsPage />} />
+                        <Route path="all-drivers" element={<DriversPage />} />
+                        <Route path="general-settings" element={<GenericSettingsPage />} />
+                        <Route path="guests" element={<GuestsPage />} />
+                        <Route path="housekeeping" element={<HousekeepingPage />} />
+                        <Route path="member-subscriptions" element={<MemberSubscriptionsPage />} />
+                        <Route path="members" element={<MembersPage />} />
+                        <Route path="ncc-dashboard" element={<NCCDashboardView />} />
+                        <Route path="ncc-settings" element={<NCCSettingsPage />} />
+                        <Route path="operators" element={<OperatorsPage />} />
+                        <Route path="patients" element={<PatientsPage />} />
+                        <Route path="rooms" element={<RoomsPage />} />
+                        <Route path="services" element={<ServicesPage />} />
+                        <Route path="trainers" element={<TrainersPage />} />
+                        <Route path="treatments" element={<TreatmentsPage />} />
                         {/* Catch-all for industry modules in development */}
                         <Route path="*" element={<GenericModulePage />} />
                       </Route>
