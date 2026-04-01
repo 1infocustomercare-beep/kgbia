@@ -58,7 +58,7 @@ export default function OperatorsPage() {
               <div><Label>Ruolo</Label><Input value={form.role} onChange={e => setForm(p => ({ ...p, role: e.target.value }))} className="h-11" /></div>
               <div><Label>Telefono</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} className="h-11" /></div>
               <div><Label>Email</Label><Input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className="h-11" /></div>
-              <Button className="w-full h-11" onClick={() => addOperator.mutate()} disabled={!form.name}>Aggiungi</Button>
+              <Button className="w-full h-11" onClick={() => addOperator.mutate()} disabled={!form.full_name}>Aggiungi</Button>
             </div>
           </DialogContent>
         </Dialog>
