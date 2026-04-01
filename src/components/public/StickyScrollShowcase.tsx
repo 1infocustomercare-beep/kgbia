@@ -1,8 +1,8 @@
-import { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 import sectorHeroFood from "@/assets/sector-hero-food.jpg";
 import sectorHeroNcc from "@/assets/sector-hero-ncc.jpg";
@@ -13,84 +13,77 @@ import sectorHeroFitness from "@/assets/sector-hero-fitness.jpg";
 import sectorHeroHotel from "@/assets/sector-hero-hotel.jpg";
 
 const SECTORS = [
-  { id: "food", name: "Food & Ristorazione", desc: "Menu digitale, ordini, QR, cucina live", color: "#e85d04", image: sectorHeroFood },
-  { id: "ncc", name: "NCC & Trasporto", desc: "Flotta, tratte, booking, autisti", color: "#C9A84C", image: sectorHeroNcc },
-  { id: "beauty", name: "Beauty & Wellness", desc: "Agenda, clienti, trattamenti, fidelity", color: "#e91e8c", image: sectorHeroBeauty },
-  { id: "healthcare", name: "Healthcare", desc: "Schede paziente, agenda, fatturazione", color: "#0ea5e9", image: sectorHeroHealthcare },
-  { id: "retail", name: "Retail & Negozi", desc: "Catalogo, inventario, POS, promozioni", color: "#8b5cf6", image: sectorHeroRetail },
-  { id: "fitness", name: "Fitness & Sport", desc: "Abbonamenti, corsi, check-in, pagamenti", color: "#f97316", image: sectorHeroFitness },
-  { id: "hospitality", name: "Hospitality", desc: "Camere, booking, ospiti, concierge", color: "#10b981", image: sectorHeroHotel },
+  { id: "food", name: "Food & Ristorazione", desc: "Menu digitale, ordini QR, cucina live, delivery integrato, loyalty program", color: "#e85d04", image: sectorHeroFood, stats: "4.200+ ristoranti" },
+  { id: "ncc", name: "NCC & Trasporto", desc: "Gestione flotta, tratte, booking automatico, tracking autisti in tempo reale", color: "#C9A84C", image: sectorHeroNcc, stats: "680+ flotte" },
+  { id: "beauty", name: "Beauty & Wellness", desc: "Agenda smart, clienti, trattamenti, fidelity card, marketing automatico", color: "#e91e8c", image: sectorHeroBeauty, stats: "2.100+ saloni" },
+  { id: "healthcare", name: "Healthcare", desc: "Schede paziente, agenda medica, fatturazione elettronica, telemedicina", color: "#0ea5e9", image: sectorHeroHealthcare, stats: "950+ studi" },
+  { id: "retail", name: "Retail & Negozi", desc: "Catalogo digitale, inventario AI, POS integrato, promozioni smart", color: "#8b5cf6", image: sectorHeroRetail, stats: "1.800+ negozi" },
+  { id: "fitness", name: "Fitness & Sport", desc: "Abbonamenti, corsi, check-in, pagamenti ricorrenti, app membri", color: "#f97316", image: sectorHeroFitness, stats: "720+ palestre" },
+  { id: "hospitality", name: "Hospitality", desc: "Camere, booking, gestione ospiti, concierge digitale, housekeeping", color: "#10b981", image: sectorHeroHotel, stats: "1.400+ strutture" },
 ];
 
-function PhoneFrame({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
+function PhoneFrame({ src, alt, className = "", glowColor }: { src: string; alt: string; className?: string; glowColor?: string }) {
   return (
     <div className={`relative aspect-[9/19.5] overflow-hidden ${className}`}
       style={{
-        borderRadius: "clamp(24px, 5vw, 44px)",
-        border: "2.5px solid hsla(0,0%,100%,0.12)",
+        borderRadius: "clamp(20px, 4vw, 44px)",
+        border: "2px solid hsla(0,0%,100%,0.1)",
         background: "#050508",
-        boxShadow: "0 40px 100px hsla(0,0%,0%,0.6), 0 8px 32px hsla(250,40%,30%,0.15), inset 0 1px 0 hsla(0,0%,100%,0.08)",
+        boxShadow: glowColor
+          ? `0 30px 80px hsla(0,0%,0%,0.6), 0 0 60px ${glowColor}20`
+          : "0 30px 80px hsla(0,0%,0%,0.6)",
       }}>
-      <div className="absolute top-[7px] sm:top-[9px] left-1/2 -translate-x-1/2 w-[36%] max-w-[56px] h-[14px] sm:h-[18px] bg-black rounded-full z-30"
+      <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[34%] max-w-[50px] h-[12px] sm:h-[16px] bg-black rounded-full z-30"
         style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.05)" }} />
-      <div className="absolute inset-[3px] overflow-hidden bg-black" style={{ borderRadius: "clamp(21px, 4.5vw, 41px)" }}>
+      <div className="absolute inset-[2px] overflow-hidden bg-black" style={{ borderRadius: "clamp(18px, 3.8vw, 42px)" }}>
         <img src={src} alt={alt} className="w-full h-full object-cover object-top" loading="lazy" />
-        <div className="absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.35), transparent)" }} />
       </div>
-      <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[28%] h-[3px] bg-white/15 rounded-full z-20" />
-      <div className="absolute inset-0 pointer-events-none" style={{ borderRadius: "clamp(24px, 5vw, 44px)", background: "linear-gradient(135deg, hsla(0,0%,100%,0.06) 0%, transparent 35%)" }} />
+      <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[26%] h-[3px] bg-white/12 rounded-full z-20" />
     </div>
   );
 }
 
-/**
- * StickyScrollShowcase — Active Theory inspired
- * Sticky scroll section where phones dramatically enter and stack with 3D transforms.
- * Works on BOTH mobile and desktop.
- */
 export default function StickyScrollShowcase() {
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
-  const sectorCount = SECTORS.length;
   const [activeIdx, setActiveIdx] = useState(0);
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    const segSize = 1 / (sectorCount + 1);
-    const idx = Math.min(Math.floor(v / segSize), sectorCount - 1);
+    // First 8% = intro, then evenly split the rest
+    const adjusted = Math.max(0, (v - 0.08) / 0.88);
+    const idx = Math.min(Math.floor(adjusted * SECTORS.length), SECTORS.length - 1);
     setActiveIdx(Math.max(0, idx));
   });
 
+  const activeSector = SECTORS[activeIdx];
+  const slug = DEMO_SLUGS[activeSector.id as keyof typeof DEMO_SLUGS];
+  const demoPath = activeSector.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+
   return (
-    <div ref={containerRef} className="relative" style={{ height: `${(sectorCount + 1.5) * 100}vh` }}>
-      <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
+    <div ref={containerRef} className="relative" style={{ height: `${(SECTORS.length + 2) * 100}vh` }}>
+      <div className="sticky top-0 h-[100dvh] overflow-hidden"
         style={{ background: "linear-gradient(180deg, hsl(228 24% 4%) 0%, hsl(235 22% 6%) 50%, hsl(228 24% 4%) 100%)" }}>
 
-        {/* Ambient orbs */}
+        {/* Ambient glow */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.div className="absolute w-[800px] h-[800px] rounded-full blur-[250px] opacity-[0.04]"
-            style={{ background: "hsl(250 55% 55%)", top: "5%", left: "0%" }}
-            animate={{ x: [0, 40, 0] }} transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }} />
-          <motion.div className="absolute w-[600px] h-[600px] rounded-full blur-[220px] opacity-[0.03]"
-            style={{ background: "hsl(320 60% 50%)", bottom: "5%", right: "0%" }}
-            animate={{ x: [0, -30, 0] }} transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 5 }} />
-          {/* Active sector color glow */}
           <motion.div
-            className="absolute w-[600px] h-[600px] rounded-full blur-[200px] opacity-[0.08] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            animate={{ background: SECTORS[activeIdx]?.color || "#8b5cf6" }}
-            transition={{ duration: 0.8 }}
+            className="absolute w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full blur-[200px] opacity-[0.07] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            animate={{ background: activeSector.color }}
+            transition={{ duration: 0.6 }}
           />
-          <div className="absolute inset-0 opacity-[0.02]"
-            style={{ backgroundImage: "linear-gradient(hsla(250,50%,70%,0.3) 1px, transparent 1px), linear-gradient(90deg, hsla(250,50%,70%,0.3) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+          <div className="absolute inset-0 opacity-[0.015]"
+            style={{ backgroundImage: "linear-gradient(hsla(250,50%,70%,0.3) 1px, transparent 1px), linear-gradient(90deg, hsla(250,50%,70%,0.3) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
         </div>
 
-        {/* Title */}
-        <div className="absolute top-[5%] sm:top-[7%] left-1/2 -translate-x-1/2 text-center z-20 px-4 w-full max-w-lg">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-3"
+        {/* Header */}
+        <div className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 text-center z-20 px-4 w-full max-w-lg">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-2"
             style={{ background: "hsla(0,0%,100%,0.04)", border: "1px solid hsla(0,0%,100%,0.08)" }}>
-            <span className="text-[0.55rem] font-heading font-semibold tracking-[3px] uppercase text-white/50">I nostri settori</span>
+            <Sparkles className="w-3 h-3 text-white/40" />
+            <span className="text-[0.55rem] font-heading font-semibold tracking-[3px] uppercase text-white/40">I nostri settori</span>
           </div>
-          <h2 className="text-[clamp(1.4rem,4vw,2.8rem)] font-heading font-bold text-white leading-[1.05]">
+          <h2 className="text-[clamp(1.2rem,3.5vw,2.5rem)] font-heading font-bold text-white leading-[1.1]">
             Un sistema.{" "}
             <span style={{
               background: "linear-gradient(135deg, hsl(195 100% 60%), hsl(250 85% 65%), hsl(320 70% 55%))",
@@ -100,139 +93,178 @@ export default function StickyScrollShowcase() {
           </h2>
         </div>
 
-        {/* Phone stack — center with 3D perspective */}
-        <div className="relative z-10 flex items-center justify-center" style={{ perspective: "1400px", perspectiveOrigin: "50% 45%" }}>
+        {/* ===== PHONE GALLERY — center area ===== */}
+        <div className="absolute inset-0 flex items-center justify-center z-10 px-4"
+          style={{ perspective: "1200px" }}>
+          
+          {/* Mobile: show 3 stacked phones */}
+          <div className="flex lg:hidden items-center justify-center relative"
+            style={{ width: "100%", maxWidth: "340px", height: "55vh" }}>
+            {SECTORS.map((sector, i) => {
+              const isActive = i === activeIdx;
+              const offset = i - activeIdx;
+              const absOffset = Math.abs(offset);
+
+              if (absOffset > 2) return null;
+
+              return (
+                <motion.div
+                  key={sector.id}
+                  className="absolute cursor-pointer"
+                  animate={{
+                    x: offset * 35,
+                    y: absOffset * 12,
+                    scale: isActive ? 0.85 : 0.65 - absOffset * 0.06,
+                    rotateY: offset * -8,
+                    rotateZ: offset * 2,
+                    opacity: isActive ? 1 : absOffset === 1 ? 0.5 : 0.2,
+                    zIndex: 10 - absOffset,
+                  }}
+                  transition={{ type: "spring", stiffness: 200, damping: 28 }}
+                  onClick={() => navigate(
+                    sector.id === "food" ? `/r/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}` : `/demo/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}`
+                  )}
+                  style={{ transformStyle: "preserve-3d" }}
+                >
+                  <PhoneFrame src={sector.image} alt={sector.name} className="w-[140px]" glowColor={isActive ? sector.color : undefined} />
+                  {isActive && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap"
+                    >
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded-full"
+                        style={{ background: `${sector.color}25`, border: `1px solid ${sector.color}40` }}>
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: sector.color }} />
+                        <span className="text-[7px] font-heading font-bold text-white/60 uppercase tracking-wider">Live</span>
+                      </div>
+                    </motion.div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Desktop: show 5 phones spread out */}
+          <div className="hidden lg:flex items-center justify-center relative"
+            style={{ width: "900px", height: "65vh" }}>
+            {SECTORS.map((sector, i) => {
+              const isActive = i === activeIdx;
+              const offset = i - activeIdx;
+              const absOffset = Math.abs(offset);
+
+              if (absOffset > 3) return null;
+
+              return (
+                <motion.div
+                  key={sector.id}
+                  className="absolute cursor-pointer group"
+                  animate={{
+                    x: offset * 95,
+                    y: absOffset * 15,
+                    scale: isActive ? 0.95 : 0.7 - absOffset * 0.05,
+                    rotateY: offset * -10,
+                    rotateZ: offset * 1.5,
+                    opacity: isActive ? 1 : absOffset === 1 ? 0.6 : absOffset === 2 ? 0.3 : 0.15,
+                    zIndex: 10 - absOffset,
+                  }}
+                  transition={{ type: "spring", stiffness: 180, damping: 26 }}
+                  onClick={() => navigate(
+                    sector.id === "food" ? `/r/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}` : `/demo/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}`
+                  )}
+                  style={{ transformStyle: "preserve-3d" }}
+                  whileHover={{ scale: isActive ? 1.0 : 0.75 }}
+                >
+                  <PhoneFrame src={sector.image} alt={sector.name} className="w-[220px]" glowColor={isActive ? sector.color : undefined} />
+                  
+                  {/* Label below active phone */}
+                  {isActive && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap"
+                    >
+                      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full"
+                        style={{ background: `${sector.color}20`, border: `1px solid ${sector.color}35` }}>
+                        <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: sector.color }} />
+                        <span className="text-[8px] font-heading font-bold text-white/60 uppercase tracking-wider">Live Preview</span>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Glow */}
+                  {isActive && (
+                    <div className="absolute -inset-10 rounded-[60px] -z-10 blur-[80px] opacity-20"
+                      style={{ background: sector.color }} />
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ===== SECTOR INFO ===== */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSector.id}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.35 }}
+            className="absolute z-20 px-4
+              bottom-[15%] left-1/2 -translate-x-1/2 text-center w-full max-w-xs
+              lg:bottom-auto lg:left-[6%] lg:translate-x-0 lg:top-1/2 lg:-translate-y-1/2 lg:text-left lg:max-w-[240px]"
+          >
+            <div className="w-8 h-1 rounded-full mb-3 mx-auto lg:mx-0"
+              style={{ background: activeSector.color, boxShadow: `0 0 20px ${activeSector.color}50` }} />
+            <p className="text-[0.6rem] font-heading font-bold tracking-[3px] uppercase mb-1.5"
+              style={{ color: activeSector.color }}>{activeSector.name}</p>
+            <p className="text-[0.7rem] sm:text-[0.8rem] text-white/40 leading-relaxed mb-2 hidden sm:block">{activeSector.desc}</p>
+            <p className="text-[0.6rem] text-white/25 mb-3">{activeSector.stats}</p>
+            <button
+              onClick={() => navigate(demoPath)}
+              className="inline-flex items-center gap-1.5 text-[0.6rem] font-heading font-semibold tracking-wider uppercase text-white/40 hover:text-white transition-colors group/btn">
+              Esplora {activeSector.name.split(" ")[0]}
+              <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
+            </button>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* ===== DOT INDICATORS ===== */}
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 sm:gap-2.5">
           {SECTORS.map((sector, i) => (
-            <ScrollPhone key={sector.id} index={i} total={sectorCount} scrollProgress={scrollYProgress} sector={sector} navigate={navigate} />
+            <button key={sector.id} className="flex flex-col items-center gap-1 group/dot"
+              onClick={() => {
+                // Scroll to the right position
+                if (containerRef.current) {
+                  const totalH = containerRef.current.scrollHeight - window.innerHeight;
+                  const targetScroll = containerRef.current.offsetTop + (0.08 + (i / SECTORS.length) * 0.88) * totalH;
+                  window.scrollTo({ top: targetScroll, behavior: "smooth" });
+                }
+              }}>
+              <div className={`rounded-full transition-all duration-400 ${i === activeIdx ? "w-6 sm:w-7 h-1.5 sm:h-2" : "w-1.5 sm:w-2 h-1.5 sm:h-2"}`}
+                style={{
+                  background: i === activeIdx ? sector.color : `${sector.color}30`,
+                  boxShadow: i === activeIdx ? `0 0 12px ${sector.color}50` : "none",
+                }}
+              />
+              <span className={`text-[5px] sm:text-[6px] font-heading font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-300
+                ${i === activeIdx ? "text-white/50 scale-100" : "text-transparent sm:text-white/15 scale-90"}`}>
+                {sector.name.split(" ")[0]}
+              </span>
+            </button>
           ))}
         </div>
 
-        {/* Active sector info panel — desktop left, mobile bottom */}
-        <ActiveSectorInfo sector={SECTORS[activeIdx]} navigate={navigate} />
-
-        {/* Progress indicator */}
-        <SectorIndicator scrollProgress={scrollYProgress} sectors={SECTORS} activeIdx={activeIdx} />
-      </div>
-    </div>
-  );
-}
-
-function ScrollPhone({
-  index, total, scrollProgress, sector, navigate
-}: {
-  index: number; total: number; scrollProgress: any; sector: typeof SECTORS[0]; navigate: any;
-}) {
-  const segmentSize = 1 / (total + 1.5);
-  const entryStart = index * segmentSize;
-  const entryMid = entryStart + segmentSize * 0.5;
-  const stayEnd = (index + 1) * segmentSize;
-  const exitEnd = Math.min(stayEnd + segmentSize * 0.5, 1);
-
-  const fromRight = index % 2 === 0;
-  const spreadX = (index - total / 2) * 18;
-
-  const y = useTransform(scrollProgress, [entryStart, entryMid, stayEnd, exitEnd], [300, 0, 0, -250]);
-  const x = useTransform(scrollProgress, [entryStart, entryMid, stayEnd, exitEnd], [fromRight ? 150 : -150, spreadX, spreadX, fromRight ? -100 : 100]);
-  const scale = useTransform(scrollProgress, [entryStart, entryMid, stayEnd, exitEnd], [0.4, 0.85 + (total - index) * 0.02, 0.85 + (total - index) * 0.02, 0.3]);
-  const opacity = useTransform(scrollProgress, [entryStart, entryStart + segmentSize * 0.12, stayEnd - segmentSize * 0.08, exitEnd], [0, 1, 1, 0]);
-  const rotateY = useTransform(scrollProgress, [entryStart, entryMid], [fromRight ? 40 : -40, -2 + index * 1.5]);
-  const rotateZ = useTransform(scrollProgress, [entryStart, entryMid], [fromRight ? 15 : -15, -1 + index * 0.8]);
-  const rotateX = useTransform(scrollProgress, [entryStart, entryMid], [12, 0]);
-  const zIndex = total - index;
-
-  const slug = DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS];
-  const demoPath = sector.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
-
-  return (
-    <motion.div
-      className="absolute cursor-pointer group"
-      style={{ y, x, scale, opacity, rotateY, rotateZ, rotateX, zIndex, transformStyle: "preserve-3d", willChange: "transform" }}
-      onClick={() => navigate(demoPath)}
-      whileHover={{ scale: 0.9 }}>
-
-      <div className="relative">
-        <PhoneFrame src={sector.image} alt={sector.name} className="w-[160px] sm:w-[210px] lg:w-[250px]" />
-
-        {/* Label overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 pt-10 z-20"
-          style={{ borderRadius: "0 0 clamp(24px, 5vw, 44px) clamp(24px, 5vw, 44px)", background: "linear-gradient(to top, hsla(0,0%,0%,0.92) 30%, transparent)" }}>
-          <div className="flex items-center gap-1.5 mb-1">
-            <span className="w-2 h-2 rounded-full" style={{ background: sector.color, boxShadow: `0 0 10px ${sector.color}` }} />
-            <span className="text-[7px] sm:text-[8px] font-heading font-bold tracking-wider uppercase text-white/50">Live Preview</span>
-          </div>
-          <p className="text-[11px] sm:text-[13px] font-bold text-white leading-tight">{sector.name}</p>
-          <p className="text-[7px] sm:text-[9px] text-white/35 mt-0.5">{sector.desc}</p>
-        </div>
-
-        {/* Color glow behind phone */}
-        <div className="absolute -inset-8 rounded-[60px] -z-10 blur-[60px] opacity-25 group-hover:opacity-45 transition-opacity duration-500"
-          style={{ background: sector.color }} />
-      </div>
-    </motion.div>
-  );
-}
-
-/* Active sector info — shows at bottom on mobile, left on desktop */
-function ActiveSectorInfo({ sector, navigate }: { sector: typeof SECTORS[0]; navigate: any }) {
-  const slug = DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS];
-  const demoPath = sector.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
-
-  return (
-    <>
-      {/* Desktop — left panel */}
-      <div className="absolute left-[5%] sm:left-[7%] top-1/2 -translate-y-1/2 z-20 hidden lg:block">
+        {/* Scroll hint at bottom */}
         <motion.div
-          key={sector.id}
-          initial={{ opacity: 0, x: -15 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 15 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="w-[220px]"
+          className="absolute bottom-1 left-1/2 -translate-x-1/2 z-10"
+          animate={{ opacity: [0.2, 0.5, 0.2] }}
+          transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="w-10 h-1.5 rounded-full mb-5" style={{ background: sector.color, boxShadow: `0 0 15px ${sector.color}60` }} />
-          <p className="text-[0.65rem] font-heading font-bold tracking-[3px] uppercase mb-2.5" style={{ color: sector.color }}>{sector.name}</p>
-          <p className="text-[0.8rem] text-white/45 leading-[1.7] mb-5">{sector.desc}</p>
-          <button
-            onClick={() => navigate(demoPath)}
-            className="text-[0.65rem] font-heading font-semibold tracking-wider uppercase text-white/50 hover:text-white transition-colors flex items-center gap-2 group/btn">
-            Esplora <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
-          </button>
+          <div className="w-[1px] h-4 bg-gradient-to-b from-white/30 to-transparent" />
         </motion.div>
       </div>
-
-      {/* Mobile — bottom info bar */}
-      <div className="absolute bottom-[12%] left-1/2 -translate-x-1/2 z-20 lg:hidden px-4 w-full max-w-sm">
-        <motion.div
-          key={sector.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center"
-        >
-          <p className="text-[0.7rem] font-heading font-bold mb-1" style={{ color: sector.color }}>{sector.name}</p>
-          <button
-            onClick={() => navigate(demoPath)}
-            className="text-[0.6rem] font-heading font-medium tracking-wider uppercase text-white/40 hover:text-white/70 transition-colors inline-flex items-center gap-1.5">
-            Prova Demo <ArrowRight className="w-3 h-3" />
-          </button>
-        </motion.div>
-      </div>
-    </>
-  );
-}
-
-function SectorIndicator({ scrollProgress, sectors, activeIdx }: { scrollProgress: any; sectors: typeof SECTORS; activeIdx: number }) {
-  return (
-    <div className="absolute bottom-[5%] sm:bottom-[6%] left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 sm:gap-3">
-      {sectors.map((sector, i) => (
-        <div key={sector.id} className="flex flex-col items-center gap-1.5">
-          <div className={`relative overflow-hidden rounded-full transition-all duration-500 ${i === activeIdx ? "w-7 h-2" : "w-2 h-2"}`}
-            style={{ background: i === activeIdx ? sector.color : `${sector.color}40`, boxShadow: i === activeIdx ? `0 0 12px ${sector.color}60` : "none" }}
-          />
-          <span className={`text-[6px] sm:text-[7px] font-heading font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-300 hidden sm:block ${i === activeIdx ? "text-white/60" : "text-white/20"}`}>
-            {sector.name.split(" ")[0]}
-          </span>
-        </div>
-      ))}
     </div>
   );
 }
