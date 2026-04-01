@@ -3138,27 +3138,34 @@ const LandingPage = () => {
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-24 sm:pt-28 pb-8 sm:pb-16"
       style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Deep premium gradient ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(228 24% 6%) 0%, hsl(235 22% 5%) 25%, hsl(250 20% 7%) 50%, hsl(230 24% 5%) 75%, hsl(225 22% 6%) 100%)" }} />
+        {/* ═══ LAYER 0: Deep premium gradient with radial center glow ═══ */}
+        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(228 24% 4%) 0%, hsl(235 22% 5%) 25%, hsl(250 20% 6%) 50%, hsl(230 24% 5%) 75%, hsl(225 22% 4%) 100%)" }} />
+        {/* Center radial spotlight */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2, background: "radial-gradient(ellipse 80% 60% at 50% 40%, hsl(250 50% 35% / 0.2), transparent 70%)" }} />
 
-        {/* ═══ LAYER 1: Refined ambient orbs — more sophisticated ═══ */}
+        {/* ═══ LAYER 1: Animated ambient orbs ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
-          <motion.div className="absolute w-[700px] h-[700px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(250 60% 50% / 0.18), transparent 65%)", filter: "blur(120px)", top: "-10%", left: "-5%" }}
-            animate={{ x: [0, 30, 0], y: [0, 20, 0] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }} />
+          <motion.div className="absolute w-[800px] h-[800px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(260 65% 55% / 0.2), transparent 60%)", filter: "blur(140px)", top: "-15%", left: "10%" }}
+            animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
+            transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }} />
           <motion.div className="absolute w-[600px] h-[600px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(210 70% 50% / 0.15), transparent 60%)", filter: "blur(100px)", top: "20%", right: "-10%" }}
-            animate={{ x: [0, -25, 0], y: [0, -15, 0] }}
+            style={{ background: "radial-gradient(circle, hsl(200 80% 55% / 0.12), transparent 60%)", filter: "blur(120px)", top: "30%", right: "0%" }}
+            animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
             transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 3 }} />
-          <motion.div className="absolute w-[400px] h-[400px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(170 60% 45% / 0.1), transparent 65%)", filter: "blur(100px)", bottom: "10%", left: "40%" }}
-            animate={{ x: [0, 15, 0] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 5 }} />
+          <motion.div className="absolute w-[500px] h-[500px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(320 60% 50% / 0.08), transparent 65%)", filter: "blur(110px)", bottom: "5%", left: "30%" }}
+            animate={{ x: [0, 20, 0] }}
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 5 }} />
+          {/* Horizontal light beam */}
+          <motion.div className="absolute top-[45%] left-0 right-0 h-px"
+            style={{ background: "linear-gradient(90deg, transparent, hsl(250 60% 60% / 0.15), hsl(200 70% 60% / 0.1), transparent)" }}
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} />
         </div>
 
-        {/* ═══ LAYER 2: Grid pattern overlay — tech feel ═══ */}
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, opacity: 0.04, backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255,255,255,0.04) 49px, rgba(255,255,255,0.04) 50px), repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255,255,255,0.04) 49px, rgba(255,255,255,0.04) 50px)" }} />
+        {/* ═══ LAYER 2: Subtle dot pattern ═══ */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, opacity: 0.025, backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full overflow-hidden" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           
