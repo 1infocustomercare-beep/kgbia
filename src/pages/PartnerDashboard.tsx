@@ -862,7 +862,7 @@ const PartnerDashboard = () => {
                 Seleziona Settore {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
               </h3>
               <span className="text-[9px] px-2 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.1)", color: "#a78bfa" }}>
-                {SECTOR_CARDS.length} settori
+                {sectorSearch.trim() ? `${SECTOR_CARDS.filter(c => matchesSectorSearch(c, sectorSearch)).length}/` : ""}{SECTOR_CARDS.length} settori
               </span>
             </div>
 
