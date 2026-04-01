@@ -3295,6 +3295,11 @@ const LandingPage = () => {
         <StickyScrollShowcase />
       </Suspense>
 
+      {/* ═══════ PORTFOLIO GRID — Lowengeld Style ═══════ */}
+      <Suspense fallback={null}>
+        <PortfolioGrid />
+      </Suspense>
+
       {/* ═══════════════════════════════════════════
                              COSA FA EMPIRE — Quick Feature Grid
                             ═══════════════════════════════════════════ */}
