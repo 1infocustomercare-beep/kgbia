@@ -17,7 +17,7 @@ export default function TrainersPage() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [form, setForm] = useState({ name: "", role: "trainer", phone: "", email: "" });
+  const [form, setForm] = useState({ full_name: "", role: "trainer", phone: "", email: "" });
 
   const { data: trainers = [], isLoading } = useQuery({
     queryKey: ["trainers", companyId],
