@@ -324,6 +324,42 @@ const PartnerDashboard = () => {
     toast({ title: "🔄 Nuovo messaggio generato!", description: "Variante diversa pronta." });
   };
 
+  // AI Sector Advisor
+  const handleAiAdvisor = async () => {
+    if (!aiAdvisorQuery.trim()) {
+      toast({ title: "Inserisci un input", description: "Scrivi un URL, un profilo Instagram o una descrizione.", variant: "destructive" });
+      return;
+    }
+    setAiAdvisorLoading(true);
+    setAiAdvisorResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("recommend-sector", {
+        body: { query: aiAdvisorQuery.trim(), source: aiAdvisorSource },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setAiAdvisorResult(data);
+      // Auto-select the recommended sector
+      if (data?.sector_id && SECTOR_CARDS.find(c => c.id === data.sector_id)) {
+        setSelectedProject(data.sector_id);
+      }
+      // Auto-set suggested channel
+      if (data?.suggested_channel) {
+        const channelMap: Record<string, string> = { dm: "instagram", whatsapp: "whatsapp", email: "email", field: "field", porta_a_porta: "field" };
+        const mapped = channelMap[data.suggested_channel] || data.suggested_channel;
+        if (ACQUISITION_CHANNELS.find(c => c.id === mapped)) {
+          setActiveChannel(mapped);
+        }
+      }
+      toast({ title: "🎯 Settore consigliato!", description: `${data.sector_label} (${data.confidence}% sicurezza)` });
+    } catch (err: any) {
+      console.error("AI Advisor error:", err);
+      toast({ title: "Errore analisi", description: err.message || "Riprova.", variant: "destructive" });
+    } finally {
+      setAiAdvisorLoading(false);
+    }
+  };
+
   const handleResetDemo = async () => {
     if (resettingDemo) return;
     setShowResetConfirm(false);
