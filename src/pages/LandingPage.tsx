@@ -3210,7 +3210,7 @@ const LandingPage = () => {
               </motion.p>
 
               {/* CTA — clean duo buttons */}
-              <motion.div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 w-full sm:w-auto"
+              <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}>
                 <motion.button
                   onClick={() => scrollTo("pricing")}
