@@ -986,6 +986,56 @@ export type Database = {
           },
         ]
       }
+      classes: {
+        Row: {
+          capacity: number | null
+          company_id: string
+          created_at: string
+          day_of_week: string | null
+          duration_minutes: number | null
+          enrolled: number | null
+          id: string
+          instructor: string | null
+          is_active: boolean | null
+          name: string
+          time: string | null
+        }
+        Insert: {
+          capacity?: number | null
+          company_id: string
+          created_at?: string
+          day_of_week?: string | null
+          duration_minutes?: number | null
+          enrolled?: number | null
+          id?: string
+          instructor?: string | null
+          is_active?: boolean | null
+          name: string
+          time?: string | null
+        }
+        Update: {
+          capacity?: number | null
+          company_id?: string
+          created_at?: string
+          day_of_week?: string | null
+          duration_minutes?: number | null
+          enrolled?: number | null
+          id?: string
+          instructor?: string | null
+          is_active?: boolean | null
+          name?: string
+          time?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classes_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clock_entries: {
         Row: {
           clock_in: string
@@ -3899,6 +3949,50 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rooms: {
+        Row: {
+          company_id: string
+          created_at: string
+          floor: number | null
+          id: string
+          notes: string | null
+          price_per_night: number | null
+          room_number: string
+          room_type: string | null
+          status: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          floor?: number | null
+          id?: string
+          notes?: string | null
+          price_per_night?: number | null
+          room_number: string
+          room_type?: string | null
+          status?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          floor?: number | null
+          id?: string
+          notes?: string | null
+          price_per_night?: number | null
+          room_number?: string
+          room_type?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rooms_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
