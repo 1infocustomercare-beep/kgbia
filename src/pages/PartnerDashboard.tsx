@@ -192,6 +192,17 @@ const PartnerDashboard = () => {
   const [scanningProspect, setScanningProspect] = useState(false);
   const [aiGeneratedMessage, setAiGeneratedMessage] = useState<string | null>(null);
 
+  // Sector search + AI advisor state
+  const [sectorSearch, setSectorSearch] = useState("");
+  const [aiAdvisorQuery, setAiAdvisorQuery] = useState("");
+  const [aiAdvisorSource, setAiAdvisorSource] = useState<"instagram" | "website" | "google_maps" | "text">("website");
+  const [aiAdvisorLoading, setAiAdvisorLoading] = useState(false);
+  const [aiAdvisorResult, setAiAdvisorResult] = useState<{
+    sector_id: string; sector_label: string; confidence: number;
+    analysis: string; reason: string; suggested_channel: string;
+    channel_reason: string; pain_points: string[]; opening_line: string;
+  } | null>(null);
+
   // Persist demoMode
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
