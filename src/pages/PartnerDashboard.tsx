@@ -311,35 +311,50 @@ const PartnerDashboard = () => {
     ? (SECTOR_TEMPLATES[selectedProject] || DEFAULT_TEMPLATES)
     : DEFAULT_TEMPLATES;
 
-  // ── DM: BREVE, diretto, max 3-4 righe con link demo ──
+  // Portfolio reference helper — finds the closest project name for the selected sector
+  const getPortfolioRef = () => {
+    const refs: Record<string, string> = {
+      food: "COTE Miami", beauty: "Neo Nails Brickell", ncc: "Amalfi Luxury Transfer",
+      fitness: "City Padel Milano", healthcare: "FAR Medical", veterinary: "Aloha Pet Resort",
+      childcare: "Little Diamond Nursery", plumber: "Nick's Plumbing", beach: "Miami Watersports",
+      retail: "Store Premium", hotel: "MMI Resident Hub", tattoo: "Ink Masters Studio",
+      photography: "Vision Photography", events: "Elite Events", logistics: "FastTrack Logistics",
+      construction: "Premium Costruzioni", gardening: "Verde & Giardini", electrician: "Elite Electrical",
+      agriturismo: "Tuscan Country Estate", cleaning: "Premium Clean", legal: "Studio Legale",
+      accounting: "Studio Commercialista Pro", garage: "Speed Auto Service", education: "Academy Pro",
+    };
+    return selectedProject ? (refs[selectedProject] || "un progetto simile") : "un progetto simile";
+  };
+  const portfolioRef = getPortfolioRef();
+
+  // ── DM: BREVE, diretto, max 3-4 righe con link demo + portfolio reference ──
   const DM_VARIANTS = [
     ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
-    `Ciao [NOME]! 👋 ${igMention ? `Seguo ${igMention} — ` : ""}Complimenti per la vostra attività nel ${sectorLabel}!\n\nAbbiamo creato un'app specifica per il vostro settore — guardate qui: ${demoLink}\n\nVi mostro in 2 min? ${contactInfo}`,
-    `Hey [NOME]! 🔥 ${analysisPrefix}Ho qualcosa di interessante per ${sectorLabel}: un'app personalizzata con il VOSTRO brand.\n\n👉 Demo: ${demoLink}\n\nScrivetemi — ${contactInfo}`,
-    `Ciao! ${igMention ? `Visto ${igMention}, ` : ""}avete mai pensato a un'app brandizzata per [NOME]?\n\nDemo del vostro settore: ${demoLink}\n\n${contactInfo} 🚀`,
+    `Ciao [NOME]! 👋 ${igMention ? `Seguo ${igMention} — ` : ""}Abbiamo creato qualcosa di simile a "${portfolioRef}" per il vostro settore.\n\nGuardate: ${demoLink}\n\nVi mostro in 2 min? ${contactInfo}`,
+    `Hey [NOME]! 🔥 ${analysisPrefix}Pensiamo che un'app come "${portfolioRef}" potrebbe aiutarvi a gestire le prenotazioni in modo smart.\n\n👉 Demo: ${demoLink}\n\n${contactInfo}`,
+    `Ciao! ${igMention ? `Visto ${igMention}, ` : ""}abbiamo già realizzato "${portfolioRef}" per attività come la vostra.\n\nDemo: ${demoLink}\n\n${contactInfo} 🚀`,
   ];
 
-  // ── WHATSAPP: Medio, max 6-8 righe, bullet points, link demo ──
+  // ── WHATSAPP: Medio, max 6-8 righe, bullet points, portfolio ref ──
   const WA_VARIANTS = [
     ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
-    `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${analysisPrefix}Proposta per [NOME] nel settore ${sectorLabel}:\n\n✅ App brandizzata con il vostro logo\n✅ Prenotazioni 24/7\n✅ CRM + fidelizzazione clienti\n\n👉 Demo: ${demoLink}\n\n${contactInfo}\nPosso mostrarvi tutto in 2 minuti?`,
-    `Ciao! Sono [TUO NOME]. ${siteMention ? `Ho visto il vostro sito (${siteMention}) e ` : ""}lavoriamo con realtà nel ${sectorLabel}.\n\n[NOME] potrebbe beneficiare della nostra piattaforma:\n• Prenotazioni automatiche\n• Marketing integrato\n• Gestione clienti\n\n🎯 Provate: ${demoLink}\n${contactInfo}`,
-    `Buongiorno [NOME]! 👋\n\nAbbiamo un'app personalizzata per ${sectorLabel} — prenotazioni, CRM e marketing in un'unica soluzione.\n\n🔗 Demo settore: ${demoLink}\n📂 Tutti i settori: ${allDemosLink}\n\n${contactInfo}`,
+    `Buongiorno! 👋 Sono [TUO NOME] di Empire.\n\n${analysisPrefix}Proposta per [NOME]: abbiamo già creato *"${portfolioRef}"* per un'attività simile alla vostra.\n\n✅ App brandizzata con il vostro logo\n✅ Prenotazioni 24/7\n✅ CRM + fidelizzazione\n\n👉 Demo: ${demoLink}\n\n${contactInfo}\nPosso mostrarvi in 2 minuti?`,
+    `Ciao! Sono [TUO NOME]. ${siteMention ? `Ho visto ${siteMention} e ` : ""}lavoriamo con realtà nel ${sectorLabel}.\n\nAbbiamo già realizzato *"${portfolioRef}"* — [NOME] potrebbe avere qualcosa di simile.\n\n🎯 Provate: ${demoLink}\n${contactInfo}`,
+    `Buongiorno [NOME]! 👋\n\nAbbiamo creato *"${portfolioRef}"* per il settore ${sectorLabel} — pensate possa funzionare anche per voi?\n\n🔗 Demo: ${demoLink}\n📂 Tutti i settori: ${allDemosLink}\n\n${contactInfo}`,
   ];
 
-  // ── EMAIL: Lungo, professionale, formattato, con link demo + link tutti i settori ──
+  // ── EMAIL: Lungo, professionale, con portfolio case study ──
   const EMAIL_VARIANTS = [
     ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
-    `Oggetto: [NOME] — La vostra app personalizzata per ${sectorLabel} è pronta da vedere\n\nBuongiorno,\n\n${analysisPrefix ? analysisPrefix.charAt(0).toUpperCase() + analysisPrefix.slice(1) + "\n\n" : ""}Mi chiamo [TUO NOME] e lavoro con Empire AI Group, un'agenzia specializzata nella digitalizzazione di attività locali.\n\nAbbiamo sviluppato una piattaforma specifica per il settore ${sectorLabel} che risolve i problemi più comuni:\n\n❌ Clienti che chiamano e trovano occupato → prenotazione persa\n❌ Nessun sistema di fidelizzazione → clienti che non tornano\n❌ Gestione manuale → ore perse ogni giorno\n\nLa nostra soluzione:\n\n✅ App personalizzata con il VOSTRO brand e logo\n✅ Prenotazioni online 24/7 automatiche\n✅ CRM clienti con storico e preferenze\n✅ Marketing automatizzato e notifiche push\n✅ Assistente IA integrato 24/7\n✅ Dashboard analytics in tempo reale\n\n━━━━━━━━━━━━━━━━━━━━\n🎯 DEMO DEL VOSTRO SETTORE:\n${demoLink}\n\n📂 TUTTI I NOSTRI SETTORI:\n${allDemosLink}\n━━━━━━━━━━━━━━━━━━━━\n\n💰 Investimento: da €79/mese — si ripaga con 2 clienti in più.\n📅 90 giorni di prova gratuita, senza vincoli.\n\nSono disponibile per una presentazione di 10 minuti.\n\n${contactInfo}\n\nCordiali saluti,\n[TUO NOME]\nEmpire AI Group\n${allDemosLink}`,
-    `Oggetto: Esclusiva per [NOME] — Digitalizzazione ${sectorLabel}\n\nGentili,\n\n${siteMention ? `Ho analizzato ${siteMention} e ` : ""}volevo presentarvi una proposta riservata.\n\nI numeri del settore ${sectorLabel}:\n📈 +35% prenotazioni con app dedicata\n⏰ -70% tempo gestione amministrativa\n💰 ROI positivo dal primo mese\n\n━━━━━━━━━━━━━━━━━━━━\n🔗 Demo interattiva ${sectorLabel}:\n${demoLink}\n\n📂 Portfolio completo (tutti i settori):\n${allDemosLink}\n━━━━━━━━━━━━━━━━━━━━\n\n90 giorni gratis. Nessun vincolo.\n\n${contactInfo}\n\n[TUO NOME] — Empire AI Group`,
-    `Oggetto: [NOME] — ${sectorLabel} digitale: demo + proposta personalizzata\n\nBuongiorno,\n\nSono [TUO NOME] di Empire AI Group.\n\nAbbiamo creato un ecosistema completo per ${sectorLabel}: un'app con il VOSTRO brand, prenotazioni automatiche, CRM, marketing e IA integrata.\n\n▸ Guardate la demo del vostro settore:\n  ${demoLink}\n\n▸ Esplorate tutti i settori che copriamo:\n  ${allDemosLink}\n\nLa piattaforma include:\n• Menu/Catalogo digitale con QR code\n• Prenotazioni e ordini online 24/7\n• CRM con storico clienti e wallet fedeltà\n• Marketing automatizzato (email, push, WhatsApp)\n• Assistente IA per voi e i vostri clienti\n• Dashboard analytics in tempo reale\n• App PWA installabile su smartphone\n\n💰 Da €79/mese · 90 giorni gratis · Zero vincoli\n\n${contactInfo}\n\nA presto,\n[TUO NOME]\nEmpire AI Group`,
+    `Oggetto: [NOME] — Vi mostriamo "${portfolioRef}", un progetto simile al vostro\n\nBuongiorno,\n\n${analysisPrefix ? analysisPrefix.charAt(0).toUpperCase() + analysisPrefix.slice(1) + "\n\n" : ""}Mi chiamo [TUO NOME] di Empire AI Group.\n\nAbbiamo recentemente realizzato "${portfolioRef}" — un'app completa per il settore ${sectorLabel} che ha trasformato il modo in cui l'attività gestisce prenotazioni, clienti e marketing.\n\nI risultati per attività simili:\n\n📈 +35% prenotazioni con booking online 24/7\n⏰ -70% tempo in gestione amministrativa\n💰 ROI positivo dal primo mese\n\nPotete vedere la demo interattiva qui:\n🎯 ${demoLink}\n\nLa piattaforma include:\n• App personalizzata con il VOSTRO brand\n• Prenotazioni automatiche con conferma\n• CRM clienti con storico e preferenze\n• Marketing automatizzato\n• Assistente IA integrato 24/7\n\n💰 Da €79/mese · 90 giorni gratis · Zero vincoli\n\nSono disponibile per una presentazione di 10 minuti.\n\n${contactInfo}\n\nCordiali saluti,\n[TUO NOME]\nEmpire AI Group\n${allDemosLink}`,
+    `Oggetto: "${portfolioRef}" per [NOME] — Proposta personalizzata\n\nGentili,\n\n${siteMention ? `Ho analizzato ${siteMention} e ` : ""}volevo mostrarvi un caso concreto: abbiamo realizzato "${portfolioRef}" per il settore ${sectorLabel}.\n\nI numeri parlano:\n📈 +35% prenotazioni\n⏰ -70% gestione manuale\n💰 ROI dal primo mese\n\n🔗 Demo interattiva: ${demoLink}\n📂 Portfolio completo: ${allDemosLink}\n\n90 giorni gratis. Nessun vincolo.\n\n${contactInfo}\n\n[TUO NOME] — Empire AI Group`,
   ];
 
-  // ── PITCH: Strutturato per vendita porta a porta, con link demo ──
+  // ── PITCH: Con riferimento a progetto reale da mostrare dal telefono ──
   const PITCH_VARIANTS = [
     ...(aiGeneratedMessage ? [aiGeneratedMessage] : []),
-    `APERTURA: "Buongiorno! ${analysisPrefix}Una domanda: quanti clienti perdete ogni mese perché non riescono a contattarvi o prenotare?"\n\nPROBLEMA: "Nel ${sectorLabel}, il 40% dei potenziali clienti non riesce a prenotare al primo tentativo. Ognuno vale €50-100."\n\nSOLUZIONE: "Noi creiamo un'app con il VOSTRO brand dove i clienti prenotano 24/7, pagano e tornano automaticamente."\n\nDEMO: "Guardate — ${demoLink} — è una demo reale del vostro settore. Provatela ora dal telefono."\n\nCATALOGO: "E qui trovate tutti i settori che copriamo: ${allDemosLink}"\n\nCHIUSURA: "€79/mese, 90 giorni gratis. ${contactInfo}. Possiamo attivare tutto in 48 ore."`,
-    `APERTURA: "${siteMention ? `Ho visto il vostro sito (${siteMention}). ` : ""}Quanto fatturato pensate di perdere ogni mese per inefficienze?"\n\nDATI: "Le attività nel ${sectorLabel} perdono il 30-40% dei clienti per mancanza di strumenti digitali."\n\nSOLUZIONE: "Un'app con il VOSTRO brand: prenotazioni, pagamenti, fidelizzazione. Tutto automatico."\n\nMOSTRA DEMO SUL TELEFONO: "${demoLink}"\n\nCHIUSURA: "${contactInfo} — attivazione in 48 ore, 90 giorni gratis."`,
+    `APERTURA: "Buongiorno! ${analysisPrefix}Una domanda: quanti clienti perdete perché non riescono a prenotare?"\n\nAGGANCIO: "Abbiamo realizzato '${portfolioRef}' per un'attività simile alla vostra — [mostra telefono] guardate come appare."\n\nDEMO: "${demoLink}"\n\nSOLUZIONE: "La stessa cosa, personalizzata con il VOSTRO brand, i VOSTRI colori, il VOSTRO logo."\n\nCHIUSURA: "€79/mese, 90 giorni gratis. ${contactInfo}. Attivazione in 48 ore."`,
+    `APERTURA: "${siteMention ? `Ho visto ${siteMention}. ` : ""}Mi chiamo [TUO NOME]. Quanto fatturato perdete per inefficienze?"\n\nPORTFOLIO: [mostra telefono] "Guardate '${portfolioRef}' — l'abbiamo fatto per un'attività simile."\n\nDEMO: "${demoLink}"\n\nCHIUSURA: "${contactInfo} — 90 giorni gratis, zero rischio."`,
   ];
 
   const getVariants = () => {
