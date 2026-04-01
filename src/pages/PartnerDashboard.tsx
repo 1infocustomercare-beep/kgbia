@@ -1294,6 +1294,11 @@ const PartnerDashboard = () => {
           </section>
         )}
 
+        {/* ═══════ CRM CONTATTI ═══════ */}
+        {!demoMode && user?.id && (
+          <PartnerOutreachCRM partnerId={user.id} />
+        )}
+
         {/* ═══════ RECRUITMENT SECTION ═══════ */}
         {!demoMode && (
           <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
