@@ -58,7 +58,7 @@ export default function TrainersPage() {
               <div><Label>Specializzazione</Label><Input value={form.role} onChange={e => setForm(p => ({ ...p, role: e.target.value }))} className="h-11" placeholder="es. Personal Trainer, Yoga" /></div>
               <div><Label>Telefono</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} className="h-11" /></div>
               <div><Label>Email</Label><Input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className="h-11" /></div>
-              <Button className="w-full h-11" onClick={() => addTrainer.mutate()} disabled={!form.name}>Aggiungi</Button>
+              <Button className="w-full h-11" onClick={() => addTrainer.mutate()} disabled={!form.full_name}>Aggiungi</Button>
             </div>
           </DialogContent>
         </Dialog>
