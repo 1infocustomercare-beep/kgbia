@@ -42,7 +42,7 @@ export default function OperatorsPage() {
     onError: () => toast.error("Errore nel salvataggio"),
   });
 
-  const filtered = staff.filter((s: any) => s.name?.toLowerCase().includes(search.toLowerCase()));
+  const filtered = staff.filter((s: any) => s.full_name?.toLowerCase().includes(search.toLowerCase()));
 
   if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20" />)}</div>;
 
