@@ -3495,17 +3495,17 @@ const LandingPage = () => {
             ].map((cap, i) => (
               <motion.div
                 key={cap.label}
-                className="relative rounded-2xl overflow-hidden p-4 sm:p-5 group cursor-default"
+                className="relative rounded-2xl overflow-hidden p-4 sm:p-5 group cursor-default landing-card-interactive"
                 style={{
                   background: "linear-gradient(160deg, hsl(228 20% 14% / 0.9), hsl(232 22% 12% / 0.86))",
-                  border: `1px solid hsla(${cap.hue},40%,50%,0.15)`,
-                  boxShadow: `0 2px 20px hsla(${cap.hue},50%,40%,0.06)`,
+                  border: `1px solid hsla(${cap.hue},40%,50%,0.18)`,
+                  boxShadow: `0 2px 20px hsla(${cap.hue},50%,40%,0.08)`,
                 }}
-                initial={{ opacity: 0, y: 20, rotateX: 8 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                initial={{ opacity: 0, y: 25, rotateX: 8, filter: "blur(3px)" }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -4, borderColor: `hsla(${cap.hue},50%,55%,0.3)`, boxShadow: `0 12px 40px hsla(${cap.hue},50%,40%,0.12)` }}
+                transition={{ delay: i * 0.1, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -6, scale: 1.03, borderColor: `hsla(${cap.hue},50%,55%,0.35)`, boxShadow: `0 16px 50px hsla(${cap.hue},50%,40%,0.14), 0 0 25px hsla(${cap.hue},60%,50%,0.06)` }}
               >
                 <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, hsla(${cap.hue},60%,55%,0.3), transparent)` }} />
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center mb-3"
@@ -4339,17 +4339,17 @@ const LandingPage = () => {
                 { metric: "Marketing & Social Media", before: "Manuale, sporadico, costoso", after: "AI Content Engine 24/7", icon: <Rocket className="w-4 h-4" />, improvement: "∞", color: "320", desc: "Post social, campagne email, follow-up clienti — tutto generato e pubblicato dall'IA" },
               ].map((t, i) => (
                 <motion.div key={i}
-                  className="group relative rounded-2xl overflow-hidden"
+                  className="group relative rounded-2xl overflow-hidden landing-card-interactive"
                   style={{
                     background: "linear-gradient(160deg, hsl(228 20% 14% / 0.92), hsl(232 22% 12% / 0.88))",
-                    border: `1px solid hsla(${t.color},35%,50%,0.15)`,
-                    boxShadow: `0 4px 24px hsla(${t.color},40%,40%,0.06)`,
+                    border: `1px solid hsla(${t.color},35%,50%,0.18)`,
+                    boxShadow: `0 4px 24px hsla(${t.color},40%,40%,0.08)`,
                   }}
-                  initial={{ opacity: 0, y: 30, rotateX: 6 }}
-                  whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                  initial={{ opacity: 0, y: 35, rotateX: 8, filter: "blur(4px)" }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
                   viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: i * 0.07, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                  whileHover={{ y: -6, borderColor: `hsla(${t.color},50%,55%,0.3)`, boxShadow: `0 16px 50px hsla(${t.color},50%,40%,0.12)` }}
+                  transition={{ delay: i * 0.08, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -8, scale: 1.02, borderColor: `hsla(${t.color},50%,55%,0.35)`, boxShadow: `0 20px 60px hsla(${t.color},50%,40%,0.15), 0 0 30px hsla(${t.color},60%,50%,0.08)` }}
                 >
                   {/* Top accent */}
                   <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, hsla(${t.color},65%,55%,0.4), transparent)` }} />
