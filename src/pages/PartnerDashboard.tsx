@@ -884,12 +884,7 @@ const PartnerDashboard = () => {
             </div>
 
             <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-[400px] overflow-y-auto pr-1">
-              {SECTOR_CARDS.filter(card => {
-                if (!sectorSearch.trim()) return true;
-                const q = sectorSearch.toLowerCase();
-                return card.name.toLowerCase().includes(q) || card.id.toLowerCase().includes(q) ||
-                  card.description?.toLowerCase().includes(q) || card.tags?.some(t => t.toLowerCase().includes(q));
-              }).map(card => {
+              {SECTOR_CARDS.filter(card => matchesSectorSearch(card, sectorSearch)).map(card => {
                 const isSelected = selectedProject === card.id;
                 const isRecommended = aiAdvisorResult?.sector_id === card.id;
                 return (
