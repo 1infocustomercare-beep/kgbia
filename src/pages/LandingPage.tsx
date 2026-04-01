@@ -2535,7 +2535,7 @@ const LandingPage = () => {
 
   return (
     <div
-      className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury landing-dark"
+      className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury landing-dark landing-grain"
       style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(228 22% 8%) 0%, hsl(230 24% 7%) 40%, hsl(232 20% 6%) 64%, hsl(234 26% 5%) 100%)" }}>
       
 
@@ -3158,75 +3158,55 @@ const LandingPage = () => {
         </div>
 
         {/* ═══ LAYER 2: Grid pattern overlay — tech feel ═══ */}
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, opacity: 0.03, backgroundImage: "linear-gradient(hsla(250,50%,70%,0.3) 1px, transparent 1px), linear-gradient(90deg, hsla(250,50%,70%,0.3) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4, opacity: 0.04, backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255,255,255,0.04) 49px, rgba(255,255,255,0.04) 50px), repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255,255,255,0.04) 49px, rgba(255,255,255,0.04) 50px)" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full overflow-hidden" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           
           <div className="flex flex-col items-center overflow-hidden">
             
             {/* CENTER: Text content — cinematic reveal */}
-            <div className="text-center max-w-[720px] mx-auto px-5 sm:px-0 w-full box-border">
+            <div className="text-center max-w-[900px] mx-auto px-5 sm:px-0 w-full box-border flex flex-col items-center sm:items-start sm:text-left">
 
               {/* Minimal agency badge */}
-              <motion.div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full mb-6"
+              <motion.div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full mb-8"
               style={{ background: "hsla(0,0%,100%,0.04)", border: "1px solid hsla(0,0%,100%,0.08)" }}
               initial={{ opacity: 0, y: 20, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.8 }}>
                 <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[0.6rem] font-heading font-semibold tracking-[3px] uppercase text-white/60">Digital Agency · Roma, Italia</span>
+                <span className="text-[0.6rem] font-heading font-semibold tracking-[3px] uppercase text-white/50">Agenzia Digitale Italiana ✦ Est. 2024</span>
               </motion.div>
 
-              {/* Cinematic headline — word-by-word reveal */}
-              <div className="overflow-hidden mb-4">
-                <motion.h1 className="text-[2rem] leading-[1.05] sm:text-[3.2rem] lg:text-[4.2rem] font-heading font-bold tracking-[-0.04em]"
-                initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                style={{ textWrap: "balance" as any }}>
-                  <span className="text-white">Creiamo</span>{" "}
-                  <span style={{
-                    background: "linear-gradient(135deg, hsl(195 100% 60%), hsl(250 85% 68%), hsl(320 70% 60%), hsl(35 90% 60%))",
-                    backgroundSize: "300% 100%",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    animation: "gradientShift 6s ease infinite",
-                  }}>esperienze digitali</span>
-                  <br />
-                  <span className="text-white/90">che trasformano</span>{" "}
-                  <span className="text-white">il business</span>
-                </motion.h1>
-              </div>
+              {/* ═══ CINEMATIC HEADLINE — clipPath line-by-line reveal ═══ */}
+              <h1 className="font-heading font-extrabold leading-[0.92] tracking-[-0.03em] mb-6"
+                style={{ fontSize: "clamp(3rem, 10vw, 8rem)" }}>
+                <span className="block overflow-hidden">
+                  <span className="block hero-line-reveal hero-line-reveal-1 text-white">
+                    TRASFORMIAMO
+                  </span>
+                </span>
+                <span className="block overflow-hidden">
+                  <span className="block hero-line-reveal hero-line-reveal-2 hero-text-outline">
+                    IL DIGITALE
+                  </span>
+                </span>
+                <span className="block overflow-hidden">
+                  <span className="block hero-line-reveal hero-line-reveal-3 text-white">
+                    IN REVENUE
+                  </span>
+                </span>
+              </h1>
 
               {/* Sub-headline — elegant */}
-              <motion.p className="text-[0.85rem] sm:text-[1.05rem] text-white/40 max-w-[520px] mx-auto leading-[1.8] font-light"
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }}>
-                App, piattaforme e sistemi IA personalizzati per{" "}
-                <span className="text-white/70 font-medium">25+ settori</span>.
-                <br className="hidden sm:block" />
-                Dal concept al lancio, con intelligenza artificiale integrata.
+              <motion.p className="text-[0.95rem] sm:text-[1.1rem] text-white/40 max-w-[600px] leading-[1.7] font-light mb-8"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0, duration: 0.8 }}>
+                98+ agenti IA · 25+ settori · Risultati reali
               </motion.p>
 
-              {/* Metrics — ultra-clean horizontal strip */}
-              <motion.div className="flex items-center justify-center gap-6 sm:gap-10 mt-8 sm:mt-10"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
-                {[
-                  { value: 847, suffix: "+", label: "Progetti" },
-                  { value: 25, suffix: "+", label: "Settori" },
-                  { value: 98, suffix: "", label: "Agenti IA" },
-                  { value: 99.8, suffix: "%", label: "Uptime" },
-                ].map((m, i) =>
-                <div key={i} className="text-center">
-                  <p className="text-lg sm:text-2xl font-heading font-bold text-white">
-                    <AnimatedNumber value={m.value} suffix={m.suffix} />
-                  </p>
-                  <p className="text-[0.5rem] sm:text-[0.55rem] tracking-[2px] uppercase text-white/30 font-heading mt-0.5">{m.label}</p>
-                </div>
-                )}
-              </motion.div>
-
               {/* CTA — clean duo buttons */}
-              <motion.div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 w-full"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}>
+              <motion.div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 w-full sm:w-auto"
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}>
                 <motion.button
                   onClick={() => scrollTo("pricing")}
-                  className="group relative w-full sm:w-auto px-8 py-4 rounded-full text-primary-foreground font-bold text-[0.8rem] font-heading tracking-wider uppercase overflow-hidden"
+                  className="group relative w-full sm:w-auto px-8 py-4 rounded-full text-white font-bold text-[0.8rem] font-heading tracking-wider uppercase overflow-hidden"
                   style={{
                     background: "linear-gradient(135deg, hsl(250 55% 52%), hsl(280 60% 50%), hsl(320 65% 52%))",
                     boxShadow: "0 4px 30px hsl(280 50% 50% / 0.3), 0 0 0 1px hsl(280 50% 55% / 0.2)"
@@ -3237,14 +3217,14 @@ const LandingPage = () => {
                     animate={{ x: ["-200%", "200%"] }}
                     transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }} />
                   <span className="relative flex items-center justify-center gap-2">
-                    Inizia il Tuo Progetto <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    Scopri i Progetti <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>
                 <motion.button
                   onClick={() => navigate("/demo")}
-                  className="w-full sm:w-auto px-7 py-4 rounded-full text-[0.8rem] font-medium font-heading tracking-wide text-white/50 border border-white/10 hover:border-white/20 hover:text-white/70 transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-7 py-4 rounded-full text-[0.8rem] font-medium font-heading tracking-wide text-white/50 border border-white/15 hover:border-white/25 hover:text-white/70 transition-all flex items-center justify-center gap-2"
                   whileHover={{ scale: 1.01 }}>
-                  <Play className="w-4 h-4" /> Esplora le Demo
+                  Piani & Prezzi
                 </motion.button>
               </motion.div>
             </div>
@@ -3254,12 +3234,11 @@ const LandingPage = () => {
           </div>
         </motion.div>
 
-        {/* Scroll indicator — minimal line */}
-        <motion.div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20"
+        {/* Scroll indicator — minimal line with label */}
+        <motion.div className="absolute bottom-6 right-8 sm:right-14 flex flex-col items-center gap-3 z-20"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }}>
-          <motion.div className="w-px h-8 origin-top" style={{ background: "linear-gradient(180deg, hsl(var(--primary) / 0.4), transparent)" }}
-            animate={{ scaleY: [0, 1, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+          <span className="text-[0.55rem] tracking-[2px] uppercase text-white/25 font-heading">scroll</span>
+          <div className="w-[2px] h-6 scroll-indicator-line" style={{ background: "linear-gradient(180deg, hsl(var(--neon-cyan)), transparent)" }} />
         </motion.div>
       </motion.section>
 
@@ -3292,6 +3271,120 @@ const LandingPage = () => {
           )}
         </div>
       </div>
+
+      {/* ═══════════════════════════════════════════
+                             STICKY SHOWCASE — Phone transforms on scroll
+                            ═══════════════════════════════════════════ */}
+      {!IS_MOBILE_LP && (() => {
+        const showcaseSteps = [
+          { number: "01", title: "App Mobile AI", desc: "Applicazioni native per ogni settore, costruite con intelligenza artificiale. Ordini, prenotazioni, fidelizzazione — tutto in un'app con il tuo brand." },
+          { number: "02", title: "Web Design Premium", desc: "Siti web ad alta conversione, veloci, belli. Dal ristorante all'immobiliare, ogni pixel è progettato per convertire visitatori in clienti." },
+          { number: "03", title: "Gestionale & Automazioni", desc: "Piattaforme complete con CRM, fatturazione, analytics, staff management e 98+ agenti IA che lavorano per te 24/7." },
+        ];
+        const showcaseScreens = heroCarouselSectors.slice(0, 3);
+
+        const ShowcaseSection = () => {
+          const containerRef = useRef<HTMLDivElement>(null);
+          const { scrollYProgress: showcaseProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
+          
+          const activeStep = useTransform(showcaseProgress, [0, 0.33, 0.34, 0.66, 0.67, 1], [0, 0, 1, 1, 2, 2]);
+          const [currentStep, setCurrentStep] = React.useState(0);
+          
+          React.useEffect(() => {
+            const unsub = activeStep.on("change", (v: number) => setCurrentStep(Math.round(v)));
+            return unsub;
+          }, [activeStep]);
+
+          const phone1X = useTransform(showcaseProgress, [0, 0.33], [0, -350]);
+          const phone1Opacity = useTransform(showcaseProgress, [0, 0.33], [1, 0]);
+          const phone1RotateY = useTransform(showcaseProgress, [0, 0.33], [-15, 20]);
+          
+          const phone2X = useTransform(showcaseProgress, [0, 0.33, 0.66], [140, 0, -350]);
+          const phone2Opacity = useTransform(showcaseProgress, [0, 0.33, 0.66], [0.4, 1, 0]);
+          const phone2Scale = useTransform(showcaseProgress, [0, 0.33, 0.66], [0.85, 1, 1]);
+          const phone2RotateY = useTransform(showcaseProgress, [0, 0.33, 0.66], [-25, -15, 20]);
+          
+          const phone3X = useTransform(showcaseProgress, [0, 0.33, 0.66], [240, 140, 0]);
+          const phone3Opacity = useTransform(showcaseProgress, [0, 0.33, 0.66, 1], [0.2, 0.4, 1, 1]);
+          const phone3Scale = useTransform(showcaseProgress, [0, 0.33, 0.66], [0.7, 0.85, 1]);
+          const phone3RotateY = useTransform(showcaseProgress, [0, 0.33, 0.66], [-35, -25, -15]);
+
+          return (
+            <div ref={containerRef} className="relative" style={{ height: "300vh", background: "hsl(228 22% 6%)" }}>
+              <div className="sticky top-0 h-screen flex items-center overflow-hidden" style={{ perspective: "1200px" }}>
+                <div className="max-w-[1300px] mx-auto w-full px-8 sm:px-14 flex items-center justify-between gap-8">
+                  
+                  {/* LEFT: Text steps */}
+                  <div className="flex-1 max-w-[420px] relative" style={{ minHeight: "220px" }}>
+                    {showcaseSteps.map((step, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute top-0 left-0 w-full"
+                        animate={{ opacity: currentStep === i ? 1 : 0, y: currentStep === i ? 0 : (currentStep > i ? -30 : 30) }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+                        <span className="block text-[0.7rem] font-heading font-semibold tracking-[3px] uppercase mb-3 step-number-glow" style={{ color: "hsl(var(--neon-cyan))" }}>
+                          {step.number}
+                        </span>
+                        <h3 className="text-[clamp(1.8rem,4vw,2.5rem)] font-heading font-bold text-white mb-3 leading-[1.15]">
+                          {step.title}
+                        </h3>
+                        <p className="text-[0.9rem] text-white/40 leading-[1.7]">
+                          {step.desc}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* RIGHT: Phone devices with 3D transforms */}
+                  <div className="flex-1 relative flex items-center justify-center" style={{ height: "500px", transformStyle: "preserve-3d" }}>
+                    {showcaseScreens.length > 0 && showcaseScreens.map((sector, i) => {
+                      const xVal = i === 0 ? phone1X : i === 1 ? phone2X : phone3X;
+                      const opVal = i === 0 ? phone1Opacity : i === 1 ? phone2Opacity : phone3Opacity;
+                      const scaleVal = i === 0 ? undefined : i === 1 ? phone2Scale : phone3Scale;
+                      const rotYVal = i === 0 ? phone1RotateY : i === 1 ? phone2RotateY : phone3RotateY;
+
+                      return (
+                        <motion.div
+                          key={i}
+                          className="absolute"
+                          style={{
+                            x: xVal,
+                            opacity: opVal,
+                            scale: scaleVal,
+                            rotateY: rotYVal,
+                            rotateX: 5,
+                            transformStyle: "preserve-3d",
+                          }}>
+                          <div className="w-[250px] h-[520px] rounded-[36px] overflow-hidden relative showcase-phone-frame"
+                            style={{ background: "#1a1a2e" }}>
+                            <div className="absolute top-[8px] left-1/2 -translate-x-1/2 w-[90px] h-[24px] rounded-full z-10" style={{ background: "#1a1a2e" }} />
+                            <div className="absolute inset-[3px] rounded-[33px] overflow-hidden">
+                              <img src={sector.screens[0]} alt={sector.label} className="w-full h-full object-cover object-top" loading="lazy" />
+                              <div className="absolute inset-x-0 top-0 h-8" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.3), transparent)" }} />
+                            </div>
+                            <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[28%] h-[3px] bg-white/20 rounded-full z-20" />
+                            <div className="absolute inset-0 rounded-[36px] pointer-events-none" style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.08) 0%, transparent 40%)" }} />
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Progress dots */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+                  {showcaseSteps.map((_, i) => (
+                    <div key={i} className={`rounded-full transition-all duration-300 ${currentStep === i ? "w-6 h-2" : "w-2 h-2"}`}
+                      style={{ background: currentStep === i ? "hsl(var(--neon-cyan))" : "rgba(255,255,255,0.2)" }} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        return <ShowcaseSection />;
+      })()}
 
       {/* ═══════════════════════════════════════════
                              COSA FA EMPIRE — Quick Feature Grid
