@@ -30,13 +30,13 @@ export default function OperatorsPage() {
 
   const addOperator = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("staff").insert({ company_id: companyId!, ...form });
+      const { error } = await supabase.from("staff").insert({ company_id: companyId!, full_name: form.full_name, role: form.role, phone: form.phone, email: form.email });
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["staff_operators"] });
       setOpen(false);
-      setForm({ name: "", role: "operator", phone: "", email: "" });
+      setForm({ full_name: "", role: "operator", phone: "", email: "" });
       toast.success("Operatore aggiunto!");
     },
     onError: () => toast.error("Errore nel salvataggio"),
