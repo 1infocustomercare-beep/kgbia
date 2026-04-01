@@ -244,6 +244,27 @@ const TelemedicinePage = lazy(() => import("./pages/app/TelemedicinePage"));
 const ProjectTimelinePage = lazy(() => import("./pages/app/ProjectTimelinePage"));
 const FieldDispatchPage = lazy(() => import("./pages/app/FieldDispatchPage"));
 
+// Sector-specific pages
+const BillingPage = lazy(() => import("./pages/app/BillingPage"));
+const CatalogPage = lazy(() => import("./pages/app/CatalogPage"));
+const ClassesPage = lazy(() => import("./pages/app/ClassesPage"));
+const ClientsPage = lazy(() => import("./pages/app/ClientsPage"));
+const CRMClientsPage2 = lazy(() => import("./pages/app/CRMClientsPage"));
+const DestinationsPage = lazy(() => import("./pages/app/DestinationsPage"));
+const DriversPage = lazy(() => import("./pages/app/DriversPage"));
+const GenericSettingsPage = lazy(() => import("./pages/app/GenericSettingsPage"));
+const GuestsPage = lazy(() => import("./pages/app/GuestsPage"));
+const HousekeepingPage = lazy(() => import("./pages/app/HousekeepingPage"));
+const MemberSubscriptionsPage = lazy(() => import("./pages/app/MemberSubscriptionsPage"));
+const MembersPage = lazy(() => import("./pages/app/MembersPage"));
+const NCCDashboardView = lazy(() => import("./pages/app/NCCDashboardView"));
+const OperatorsPage = lazy(() => import("./pages/app/OperatorsPage"));
+const PatientsPage = lazy(() => import("./pages/app/PatientsPage"));
+const RoomsPage = lazy(() => import("./pages/app/RoomsPage"));
+const ServicesPage = lazy(() => import("./pages/app/ServicesPage"));
+const TrainersPage = lazy(() => import("./pages/app/TrainersPage"));
+const TreatmentsPage = lazy(() => import("./pages/app/TreatmentsPage"));
+
 // Agent Marketplace
 const AgentMarketplace = lazy(() => import("./pages/AgentMarketplace"));
 const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
