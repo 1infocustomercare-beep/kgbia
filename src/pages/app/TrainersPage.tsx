@@ -42,7 +42,7 @@ export default function TrainersPage() {
     onError: () => toast.error("Errore"),
   });
 
-  const filtered = trainers.filter((t: any) => t.name?.toLowerCase().includes(search.toLowerCase()));
+  const filtered = trainers.filter((t: any) => t.full_name?.toLowerCase().includes(search.toLowerCase()));
 
   if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20" />)}</div>;
 
