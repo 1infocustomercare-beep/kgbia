@@ -19,6 +19,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
+import PartnerOutreachCRM from "@/components/partner/PartnerOutreachCRM";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import ROICalculator from "@/components/partner/ROICalculator";
 import DemoCreditsWallet from "@/components/partner/DemoCreditsWallet";
