@@ -3177,28 +3177,36 @@ const LandingPage = () => {
 
               {/* ═══ CINEMATIC HEADLINE — clipPath line-by-line reveal ═══ */}
               <h1 className="font-heading font-extrabold leading-[0.92] tracking-[-0.03em] mb-6"
-                style={{ fontSize: "clamp(3rem, 10vw, 8rem)" }}>
+                style={{ fontSize: "clamp(2.2rem, 8vw, 5.5rem)" }}>
                 <span className="block overflow-hidden">
                   <span className="block hero-line-reveal hero-line-reveal-1 text-white">
-                    TRASFORMIAMO
+                    Trasformiamo le
                   </span>
                 </span>
                 <span className="block overflow-hidden">
-                  <span className="block hero-line-reveal hero-line-reveal-2 hero-text-outline">
-                    IL DIGITALE
+                  <span className="block hero-line-reveal hero-line-reveal-2" style={{
+                    background: "linear-gradient(135deg, hsl(195 100% 60%), hsl(250 85% 65%), hsl(320 70% 55%))",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}>
+                    Imprese Italiane
                   </span>
                 </span>
                 <span className="block overflow-hidden">
-                  <span className="block hero-line-reveal hero-line-reveal-3 text-white">
-                    IN REVENUE
+                  <span className="block hero-line-reveal hero-line-reveal-3 hero-text-outline">
+                    con l'IA
                   </span>
                 </span>
               </h1>
 
               {/* Sub-headline — elegant */}
-              <motion.p className="text-[0.95rem] sm:text-[1.1rem] text-white/40 max-w-[600px] leading-[1.7] font-light mb-8"
+              <motion.p className="text-[0.85rem] sm:text-[1.05rem] text-white/50 max-w-[600px] leading-[1.8] font-light mb-4"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0, duration: 0.8 }}>
-                98+ agenti IA · 25+ settori · Risultati reali
+                La prima piattaforma AI all-in-one che gestisce, automatizza e fa crescere il tuo business.
+              </motion.p>
+              <motion.p className="text-[0.75rem] sm:text-[0.85rem] text-white/35 max-w-[500px] leading-[1.7] font-medium mb-8 tracking-wide"
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}>
+                98+ agenti IA · 25+ settori · Zero canone fisso
               </motion.p>
 
               {/* CTA — clean duo buttons */}
