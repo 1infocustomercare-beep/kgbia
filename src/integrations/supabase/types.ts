@@ -3052,6 +3052,51 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_outreach: {
+        Row: {
+          channel: string
+          created_at: string
+          id: string
+          message_sent: string | null
+          next_followup_at: string | null
+          notes: string | null
+          partner_id: string
+          prospect_contact: string | null
+          prospect_name: string
+          sector_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          id?: string
+          message_sent?: string | null
+          next_followup_at?: string | null
+          notes?: string | null
+          partner_id: string
+          prospect_contact?: string | null
+          prospect_name: string
+          sector_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          id?: string
+          message_sent?: string | null
+          next_followup_at?: string | null
+          notes?: string | null
+          partner_id?: string
+          prospect_contact?: string | null
+          prospect_name?: string
+          sector_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       partner_sales: {
         Row: {
           bonus_amount: number
