@@ -19,6 +19,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
+import PartnerOutreachCRM from "@/components/partner/PartnerOutreachCRM";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import ROICalculator from "@/components/partner/ROICalculator";
 import DemoCreditsWallet from "@/components/partner/DemoCreditsWallet";
@@ -511,6 +512,18 @@ const PartnerDashboard = () => {
     }
     navigator.clipboard.writeText(text);
     toast({ title: "✅ Copiato!", description: `${templateLabel} copiato negli appunti.` });
+    // Auto-log outreach
+    if (user?.id && targetIg || targetWebsite) {
+      supabase.from("partner_outreach" as any).insert({
+        partner_id: user!.id,
+        prospect_name: targetIg || targetWebsite || "Prospect",
+        prospect_contact: targetIg || targetWebsite || null,
+        channel: activeChannel,
+        sector_id: selectedProject || null,
+        message_sent: text.slice(0, 500),
+        status: "sent",
+      }).then(() => {});
+    }
   };
 
   const totalBonuses = monthlyBonuses.reduce((s, b) => s + Number(b.bonus_amount), 0);
@@ -1291,6 +1304,11 @@ const PartnerDashboard = () => {
               )}
             </div>
           </section>
+        )}
+
+        {/* ═══════ CRM CONTATTI ═══════ */}
+        {!demoMode && user?.id && (
+          <PartnerOutreachCRM partnerId={user.id} />
         )}
 
         {/* ═══════ RECRUITMENT SECTION ═══════ */}
