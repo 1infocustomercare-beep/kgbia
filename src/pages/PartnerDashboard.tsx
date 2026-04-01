@@ -512,6 +512,18 @@ const PartnerDashboard = () => {
     }
     navigator.clipboard.writeText(text);
     toast({ title: "✅ Copiato!", description: `${templateLabel} copiato negli appunti.` });
+    // Auto-log outreach
+    if (user?.id && targetIg || targetWebsite) {
+      supabase.from("partner_outreach" as any).insert({
+        partner_id: user!.id,
+        prospect_name: targetIg || targetWebsite || "Prospect",
+        prospect_contact: targetIg || targetWebsite || null,
+        channel: activeChannel,
+        sector_id: selectedProject || null,
+        message_sent: text.slice(0, 500),
+        status: "sent",
+      }).then(() => {});
+    }
   };
 
   const totalBonuses = monthlyBonuses.reduce((s, b) => s + Number(b.bonus_amount), 0);
