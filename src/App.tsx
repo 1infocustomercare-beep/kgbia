@@ -244,6 +244,27 @@ const TelemedicinePage = lazy(() => import("./pages/app/TelemedicinePage"));
 const ProjectTimelinePage = lazy(() => import("./pages/app/ProjectTimelinePage"));
 const FieldDispatchPage = lazy(() => import("./pages/app/FieldDispatchPage"));
 
+// Sector-specific pages
+const BillingPage = lazy(() => import("./pages/app/BillingPage"));
+const CatalogPage = lazy(() => import("./pages/app/CatalogPage"));
+const ClassesPage = lazy(() => import("./pages/app/ClassesPage"));
+const ClientsPage = lazy(() => import("./pages/app/ClientsPage"));
+const CRMClientsPage2 = lazy(() => import("./pages/app/CRMClientsPage"));
+const DestinationsPage = lazy(() => import("./pages/app/DestinationsPage"));
+const DriversPage = lazy(() => import("./pages/app/DriversPage"));
+const GenericSettingsPage = lazy(() => import("./pages/app/GenericSettingsPage"));
+const GuestsPage = lazy(() => import("./pages/app/GuestsPage"));
+const HousekeepingPage = lazy(() => import("./pages/app/HousekeepingPage"));
+const MemberSubscriptionsPage = lazy(() => import("./pages/app/MemberSubscriptionsPage"));
+const MembersPage = lazy(() => import("./pages/app/MembersPage"));
+const NCCDashboardView = lazy(() => import("./pages/app/NCCDashboardView"));
+const OperatorsPage = lazy(() => import("./pages/app/OperatorsPage"));
+const PatientsPage = lazy(() => import("./pages/app/PatientsPage"));
+const RoomsPage = lazy(() => import("./pages/app/RoomsPage"));
+const ServicesPage = lazy(() => import("./pages/app/ServicesPage"));
+const TrainersPage = lazy(() => import("./pages/app/TrainersPage"));
+const TreatmentsPage = lazy(() => import("./pages/app/TreatmentsPage"));
+
 // Agent Marketplace
 const AgentMarketplace = lazy(() => import("./pages/AgentMarketplace"));
 const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
@@ -662,6 +683,27 @@ function App() {
                         <Route path="telemedicine" element={<TelemedicinePage />} />
                         <Route path="project-timeline" element={<ProjectTimelinePage />} />
                         <Route path="field-dispatch" element={<FieldDispatchPage />} />
+                        {/* Sector-specific modules */}
+                        <Route path="billing" element={<BillingPage />} />
+                        <Route path="catalog" element={<CatalogPage />} />
+                        <Route path="classes" element={<ClassesPage />} />
+                        <Route path="crm-clients" element={<CRMClientsPage2 />} />
+                        <Route path="all-clients" element={<ClientsPage />} />
+                        <Route path="destinations" element={<DestinationsPage />} />
+                        <Route path="all-drivers" element={<DriversPage />} />
+                        <Route path="general-settings" element={<GenericSettingsPage />} />
+                        <Route path="guests" element={<GuestsPage />} />
+                        <Route path="housekeeping" element={<HousekeepingPage />} />
+                        <Route path="member-subscriptions" element={<MemberSubscriptionsPage />} />
+                        <Route path="members" element={<MembersPage />} />
+                        <Route path="ncc-dashboard" element={<NCCDashboardView />} />
+                        <Route path="ncc-settings" element={<NCCSettingsPage />} />
+                        <Route path="operators" element={<OperatorsPage />} />
+                        <Route path="patients" element={<PatientsPage />} />
+                        <Route path="rooms" element={<RoomsPage />} />
+                        <Route path="services" element={<ServicesPage />} />
+                        <Route path="trainers" element={<TrainersPage />} />
+                        <Route path="treatments" element={<TreatmentsPage />} />
                         {/* Catch-all for industry modules in development */}
                         <Route path="*" element={<GenericModulePage />} />
                       </Route>
