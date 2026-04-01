@@ -4,6 +4,7 @@ import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 const StickyScrollShowcase = lazy(() => import("@/components/public/StickyScrollShowcase"));
+const PortfolioGrid = lazy(() => import("@/components/public/PortfolioGrid"));
 
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
