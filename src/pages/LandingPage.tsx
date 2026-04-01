@@ -4308,9 +4308,9 @@ const LandingPage = () => {
           </div>
 
           <WordScrollReveal
-            text="Il tuo business prima di Empire è lento, manuale e prevedibile. Dopo Empire è automatizzato, intelligente e inarrestabile. Questi sono i numeri reali dei nostri clienti."
+            text="I tuoi competitor stanno ancora usando fogli Excel e WhatsApp personale. I nostri clienti hanno automatizzato tutto: ordini, prenotazioni, marketing, fatturazione. Il risultato? Più fatturato, meno stress, zero errori. Ecco i numeri."
             className="text-[clamp(1.1rem,3.5vw,2.2rem)] max-w-[750px] mx-auto text-center mb-10 sm:mb-16"
-            highlightWords={["automatizzato", "intelligente", "inarrestabile", "reali"]}
+            highlightWords={["automatizzato", "fatturato", "stress", "zero", "errori", "numeri"]}
           />
 
           {/* ═══ IMPACT NUMBERS — horizontal scroll on mobile ═══ */}
@@ -4331,8 +4331,8 @@ const LandingPage = () => {
           <ParallaxLayer speed={0.06} className="mb-10 sm:mb-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
               {[
-                { metric: "Gestione Ordini", before: "45 min manuale", after: "3 min automatico", icon: <Timer className="w-4 h-4" />, improvement: "-93%", color: "265", desc: "Da carta e caos a flusso digitale istantaneo" },
-                { metric: "Recensioni Negative", before: "12 al mese", after: "0 intercettate", icon: <Shield className="w-4 h-4" />, improvement: "-100%", color: "150", desc: "L'IA intercetta e risolve prima della pubblicazione" },
+                { metric: "Gestione Ordini & Prenotazioni", before: "45 min manuali al giorno", after: "3 min — tutto automatico", icon: <Timer className="w-4 h-4" />, improvement: "-93%", color: "265", desc: "Ordini, prenotazioni, conferme WhatsApp — tutto in autopilot senza intervento umano" },
+                { metric: "Reputazione Online", before: "12 recensioni negative/mese", after: "0 — intercettate dall'IA", icon: <Shield className="w-4 h-4" />, improvement: "-100%", color: "150", desc: "Review Shield™ filtra le negative in privato e amplifica le 4-5★ su Google automaticamente" },
                 { metric: "Clienti Persi", before: "34% tasso abbandono", after: "2% con retention AI", icon: <Users className="w-4 h-4" />, improvement: "-94%", color: "210", desc: "Automazioni di ri-engagement che funzionano" },
                 { metric: "Revenue Addizionale", before: "0€ da canali AI", after: "+2.400€ / mese", icon: <TrendingUp className="w-4 h-4" />, improvement: "+∞", color: "38", desc: "Upselling, cross-selling e conversioni automatiche" },
                 { metric: "Fatturazione", before: "2 ore al giorno", after: "Completamente auto", icon: <Receipt className="w-4 h-4" />, improvement: "-100%", color: "200", desc: "Fatture elettroniche generate e inviate dall'IA" },
