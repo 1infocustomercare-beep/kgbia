@@ -3200,11 +3200,11 @@ const LandingPage = () => {
               </h1>
 
               {/* Sub-headline — elegant */}
-              <motion.p className="text-[0.85rem] sm:text-[1.05rem] text-white/50 max-w-[600px] leading-[1.8] font-light mb-4"
+              <motion.p className="text-[0.85rem] sm:text-[1.05rem] text-white/50 max-w-[600px] mx-auto leading-[1.8] font-light mb-4"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0, duration: 0.8 }}>
                 La prima piattaforma AI all-in-one che gestisce, automatizza e fa crescere il tuo business.
               </motion.p>
-              <motion.p className="text-[0.75rem] sm:text-[0.85rem] text-white/35 max-w-[500px] leading-[1.7] font-medium mb-8 tracking-wide"
+              <motion.p className="text-[0.75rem] sm:text-[0.85rem] text-white/35 max-w-[500px] mx-auto leading-[1.7] font-medium mb-8 tracking-wide"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}>
                 98+ agenti IA · 25+ settori · Zero canone fisso
               </motion.p>
