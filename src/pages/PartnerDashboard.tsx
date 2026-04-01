@@ -672,22 +672,196 @@ const PartnerDashboard = () => {
         {/* ═══════ SELEZIONA PROGETTO + TEMPLATES ═══════ */}
         {!demoMode && (
         <>
+        {/* ═══════ AI SECTOR ADVISOR ═══════ */}
+        <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
+          <div className="p-5 rounded-2xl" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.06), rgba(59,130,246,0.04))", border: "1px solid rgba(124,58,237,0.15)" }}>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(124,58,237,0.2)" }}>
+                <Bot className="w-4 h-4" style={{ color: "#a78bfa" }} />
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-white">🎯 AI Sector Advisor</h3>
+                <p className="text-[9px]" style={{ color: "#9ca3af" }}>Analizza il prospect e trova il settore + demo perfetti</p>
+              </div>
+            </div>
+
+            {/* Source selector */}
+            <div className="flex gap-1.5 mb-3 flex-wrap">
+              {([
+                { id: "website" as const, icon: Globe, label: "Sito Web" },
+                { id: "instagram" as const, icon: Instagram, label: "Instagram" },
+                { id: "google_maps" as const, icon: Map, label: "Google Maps" },
+                { id: "text" as const, icon: Search, label: "Testo libero" },
+              ]).map(src => (
+                <button key={src.id} onClick={() => setAiAdvisorSource(src.id)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
+                  style={{
+                    background: aiAdvisorSource === src.id ? "rgba(124,58,237,0.2)" : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${aiAdvisorSource === src.id ? "rgba(124,58,237,0.4)" : "rgba(255,255,255,0.06)"}`,
+                    color: aiAdvisorSource === src.id ? "#c4b5fd" : "#9ca3af",
+                  }}>
+                  <src.icon className="w-3 h-3" />
+                  {src.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Input + button */}
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
+                <input
+                  value={aiAdvisorQuery}
+                  onChange={e => setAiAdvisorQuery(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && handleAiAdvisor()}
+                  placeholder={
+                    aiAdvisorSource === "instagram" ? "@handle o link profilo..."
+                    : aiAdvisorSource === "website" ? "https://esempio.it..."
+                    : aiAdvisorSource === "google_maps" ? "Nome attività su Google Maps..."
+                    : "Descrivi l'attività del prospect..."
+                  }
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl text-xs text-white placeholder:text-gray-500"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
+                />
+              </div>
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={handleAiAdvisor}
+                disabled={aiAdvisorLoading}
+                className="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shrink-0"
+                style={{
+                  background: aiAdvisorLoading ? "rgba(124,58,237,0.3)" : "linear-gradient(135deg, #7c3aed, #3b82f6)",
+                  color: "#ffffff",
+                  opacity: aiAdvisorLoading ? 0.7 : 1,
+                }}>
+                {aiAdvisorLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+                {aiAdvisorLoading ? "Analizzo..." : "Analizza"}
+              </motion.button>
+            </div>
+
+            {/* AI Result */}
+            <AnimatePresence>
+              {aiAdvisorResult && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  className="mt-4 p-4 rounded-xl space-y-3"
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(124,58,237,0.2)" }}>
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center text-sm" style={{ background: "rgba(16,185,129,0.15)" }}>
+                        {SECTOR_CARDS.find(c => c.id === aiAdvisorResult.sector_id)?.emoji || "🎯"}
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white">{aiAdvisorResult.sector_label}</p>
+                        <p className="text-[9px]" style={{ color: "#6b7280" }}>Sicurezza: {aiAdvisorResult.confidence}%</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-1.5 w-16 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
+                        <div className="h-full rounded-full transition-all" style={{
+                          width: `${aiAdvisorResult.confidence}%`,
+                          background: aiAdvisorResult.confidence > 80 ? "#10b981" : aiAdvisorResult.confidence > 50 ? "#f59e0b" : "#ef4444",
+                        }} />
+                      </div>
+                      <motion.button whileTap={{ scale: 0.95 }}
+                        onClick={() => { setSelectedProject(aiAdvisorResult.sector_id); toast({ title: `✅ ${aiAdvisorResult.sector_label} selezionato!` }); }}
+                        className="px-3 py-1 rounded-lg text-[9px] font-bold flex items-center gap-1"
+                        style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", color: "#34d399" }}>
+                        <ArrowRight className="w-3 h-3" /> Usa
+                      </motion.button>
+                    </div>
+                  </div>
+
+                  {/* Analysis */}
+                  <p className="text-[11px] leading-relaxed" style={{ color: "#d1d5db" }}>{aiAdvisorResult.analysis}</p>
+
+                  {/* Pain points */}
+                  {aiAdvisorResult.pain_points?.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {aiAdvisorResult.pain_points.map((pp, i) => (
+                        <span key={i} className="px-2 py-0.5 rounded-md text-[9px] font-medium" style={{ background: "rgba(239,68,68,0.1)", color: "#fca5a5", border: "1px solid rgba(239,68,68,0.15)" }}>
+                          ❌ {pp}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Channel suggestion */}
+                  <div className="flex items-center gap-2 p-2 rounded-lg" style={{ background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.15)" }}>
+                    <MessageCircle className="w-3.5 h-3.5" style={{ color: "#60a5fa" }} />
+                    <p className="text-[10px]" style={{ color: "#93c5fd" }}>
+                      <span className="font-bold">Canale consigliato:</span> {aiAdvisorResult.suggested_channel} — {aiAdvisorResult.channel_reason}
+                    </p>
+                  </div>
+
+                  {/* Opening line */}
+                  {aiAdvisorResult.opening_line && (
+                    <div className="p-2.5 rounded-lg" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
+                      <p className="text-[9px] font-semibold mb-1" style={{ color: "#6b7280" }}>💬 Frase di apertura suggerita:</p>
+                      <p className="text-[11px] italic" style={{ color: "#d1d5db" }}>"{aiAdvisorResult.opening_line}"</p>
+                      <button onClick={() => { navigator.clipboard.writeText(aiAdvisorResult.opening_line); toast({ title: "✅ Copiata!" }); }}
+                        className="mt-1.5 text-[9px] font-semibold flex items-center gap-1" style={{ color: "#34d399" }}>
+                        <Copy className="w-3 h-3" /> Copia
+                      </button>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </section>
+
         {/* ═══════ SELEZIONA PROGETTO ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
           <div className="p-5 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>
-              Seleziona Settore {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
-            </h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#9ca3af" }}>
+                Seleziona Settore {selectedProjectName && <span style={{ color: "#a78bfa" }}>— {selectedProjectName}</span>}
+              </h3>
+              <span className="text-[9px] px-2 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.1)", color: "#a78bfa" }}>
+                {SECTOR_CARDS.length} settori
+              </span>
+            </div>
+
+            {/* Search bar */}
+            <div className="relative mb-3">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
+              <input
+                value={sectorSearch}
+                onChange={e => setSectorSearch(e.target.value)}
+                placeholder="Cerca settore... (es. ristorante, parrucchiere, hotel)"
+                className="w-full pl-9 pr-4 py-2 rounded-xl text-xs text-white placeholder:text-gray-500"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+              />
+              {sectorSearch && (
+                <button onClick={() => setSectorSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <XIcon className="w-3 h-3" style={{ color: "#6b7280" }} />
+                </button>
+              )}
+            </div>
+
             <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-[400px] overflow-y-auto pr-1">
-              {SECTOR_CARDS.map(card => {
+              {SECTOR_CARDS.filter(card => {
+                if (!sectorSearch.trim()) return true;
+                const q = sectorSearch.toLowerCase();
+                return card.name.toLowerCase().includes(q) || card.id.toLowerCase().includes(q) ||
+                  card.description?.toLowerCase().includes(q) || card.tags?.some(t => t.toLowerCase().includes(q));
+              }).map(card => {
                 const isSelected = selectedProject === card.id;
+                const isRecommended = aiAdvisorResult?.sector_id === card.id;
                 return (
                   <motion.button key={card.id} onClick={() => setSelectedProject(isSelected ? null : card.id)} whileTap={{ scale: 0.95 }}
-                    className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl transition-all"
+                    className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl transition-all relative"
                     style={{
-                      background: isSelected ? `${card.accent}20` : "rgba(255,255,255,0.02)",
-                      border: `1px solid ${isSelected ? `${card.accent}50` : "rgba(255,255,255,0.06)"}`,
+                      background: isSelected ? `${card.accent}20` : isRecommended ? "rgba(16,185,129,0.08)" : "rgba(255,255,255,0.02)",
+                      border: `1px solid ${isSelected ? `${card.accent}50` : isRecommended ? "rgba(16,185,129,0.3)" : "rgba(255,255,255,0.06)"}`,
                     }}>
+                    {isRecommended && (
+                      <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px]" style={{ background: "#10b981", color: "#ffffff" }}>
+                        ✓
+                      </div>
+                    )}
                     {card.screens[0] ? (
                       <div className="w-10 h-10 rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
                         <img src={card.screens[0]} alt={card.name} className="w-full h-full object-cover" loading="lazy" />
