@@ -30,13 +30,13 @@ export default function TrainersPage() {
 
   const addTrainer = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("staff").insert({ company_id: companyId!, ...form });
+      const { error } = await supabase.from("staff").insert({ company_id: companyId!, full_name: form.full_name, role: form.role, phone: form.phone, email: form.email });
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["trainers"] });
       setOpen(false);
-      setForm({ name: "", role: "trainer", phone: "", email: "" });
+      setForm({ full_name: "", role: "trainer", phone: "", email: "" });
       toast.success("Trainer aggiunto!");
     },
     onError: () => toast.error("Errore"),
