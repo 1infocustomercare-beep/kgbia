@@ -4333,10 +4333,10 @@ const LandingPage = () => {
               {[
                 { metric: "Gestione Ordini & Prenotazioni", before: "45 min manuali al giorno", after: "3 min — tutto automatico", icon: <Timer className="w-4 h-4" />, improvement: "-93%", color: "265", desc: "Ordini, prenotazioni, conferme WhatsApp — tutto in autopilot senza intervento umano" },
                 { metric: "Reputazione Online", before: "12 recensioni negative/mese", after: "0 — intercettate dall'IA", icon: <Shield className="w-4 h-4" />, improvement: "-100%", color: "150", desc: "Review Shield™ filtra le negative in privato e amplifica le 4-5★ su Google automaticamente" },
-                { metric: "Clienti Persi", before: "34% tasso abbandono", after: "2% con retention AI", icon: <Users className="w-4 h-4" />, improvement: "-94%", color: "210", desc: "Automazioni di ri-engagement che funzionano" },
-                { metric: "Revenue Addizionale", before: "0€ da canali AI", after: "+2.400€ / mese", icon: <TrendingUp className="w-4 h-4" />, improvement: "+∞", color: "38", desc: "Upselling, cross-selling e conversioni automatiche" },
-                { metric: "Fatturazione", before: "2 ore al giorno", after: "Completamente auto", icon: <Receipt className="w-4 h-4" />, improvement: "-100%", color: "200", desc: "Fatture elettroniche generate e inviate dall'IA" },
-                { metric: "Marketing", before: "Manuale e sporadico", after: "AI attivo 24/7", icon: <Rocket className="w-4 h-4" />, improvement: "∞", color: "320", desc: "Campagne, social e follow-up senza il tuo intervento" },
+                { metric: "Clienti Persi & Fidelizzazione", before: "34% tasso abbandono", after: "2% con retention AI", icon: <Users className="w-4 h-4" />, improvement: "-94%", color: "210", desc: "L'IA identifica i clienti a rischio e lancia campagne personalizzate per trattenerli" },
+                { metric: "Revenue da Canali Digitali", before: "€0 da automazioni", after: "+€2.400/mese in media", icon: <TrendingUp className="w-4 h-4" />, improvement: "+∞", color: "38", desc: "Upselling intelligente, cross-selling e conversioni WhatsApp/Push automatiche" },
+                { metric: "Fatturazione & Amministrazione", before: "2 ore al giorno", after: "Completamente automatica", icon: <Receipt className="w-4 h-4" />, improvement: "-100%", color: "200", desc: "Fatture B2B elettroniche generate, inviate e archiviate dall'IA. Zero errori" },
+                { metric: "Marketing & Social Media", before: "Manuale, sporadico, costoso", after: "AI Content Engine 24/7", icon: <Rocket className="w-4 h-4" />, improvement: "∞", color: "320", desc: "Post social, campagne email, follow-up clienti — tutto generato e pubblicato dall'IA" },
               ].map((t, i) => (
                 <motion.div key={i}
                   className="group relative rounded-2xl overflow-hidden"
