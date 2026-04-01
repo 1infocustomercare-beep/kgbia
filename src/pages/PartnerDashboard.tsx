@@ -135,6 +135,35 @@ const DEFAULT_TEMPLATES = {
    ═══════════════════════════════════════════ */
 const ALL_INDUSTRY_IDS = Object.keys(INDUSTRY_CONFIGS) as (keyof typeof INDUSTRY_CONFIGS)[];
 
+/* Extended keyword map for deep search across all sectors & subcategories */
+const SECTOR_KEYWORDS: Record<string, string[]> = {
+  food: ["ristorante","pizzeria","bar","caffè","trattoria","osteria","pub","bistrot","sushi","bakery","pasticceria","gelateria","paninoteca","tavola calda","fast food","street food","gastronomia","rosticceria","enoteca","wine bar","cocktail bar","birreria","hamburgheria","poke","kebab","cucina","chef","menu","pranzo","cena","delivery","asporto","take away","food truck","catering","mensa"],
+  ncc: ["noleggio conducente","transfer","taxi","limousine","auto con autista","trasporto privato","shuttle","aeroporto","ncc","chauffeur","van","minibus","tour","escursione","gita","navetta","bus","pullman","charter","noleggio auto","rent","driver","autista"],
+  beauty: ["parrucchiere","salone","barbiere","estetista","spa","centro estetico","nail","manicure","pedicure","massaggi","solarium","trucco","makeup","sopracciglia","extension","ciglia","depilazione","laser","trattamento viso","corpo","capelli","acconciatura","colore","taglio","piega","hair","barber shop","wellness","benessere"],
+  healthcare: ["medico","dottore","clinica","studio medico","dentista","odontoiatra","fisioterapia","osteopata","psicologo","farmacia","laboratorio","ambulatorio","poliambulatorio","chirurgo","ortopedico","cardiologo","dermatologo","oculista","ginecologo","pediatra","nutrizionista","logopedista","infermiere","salute","visita","esame","analisi","terapia","riabilitazione"],
+  retail: ["negozio","shop","boutique","abbigliamento","scarpe","gioielleria","profumeria","cartoleria","ferramenta","supermercato","minimarket","emporio","e-commerce","vendita","commercio","articoli","accessori","calzature","pelletteria","ottica","telefonia","elettronica","casalinghi","giocattoli","libreria","edicola","tabaccheria"],
+  fitness: ["palestra","gym","crossfit","yoga","pilates","piscina","centro sportivo","personal trainer","sport","allenamento","workout","bodybuilding","arti marziali","boxe","danza","ballo","spinning","functional","calisthenics","running","calcio","tennis","padel","basket","nuoto","acquagym"],
+  hospitality: ["hotel","albergo","b&b","bed breakfast","resort","pensione","casa vacanze","affittacamere","ostello","motel","residence","aparthotel","villa","suite","room","camera","reception","concierge","check-in","booking","prenotazione","soggiorno","ospitalità","turismo","vacanza"],
+  beach: ["lido","stabilimento balneare","spiaggia","beach club","chalet","mare","ombrellone","lettino","sdraio","cabina","piscina","bar spiaggia","ristorante spiaggia","bagno","bagnino","tuffi","nuoto","windsurf","sup","kayak","vela","snorkeling"],
+  plumber: ["idraulico","plumber","tubazioni","impianti idrici","riscaldamento","caldaia","termoidraulica","bagno","rubinetto","perdita","tubo","scarico","fognatura","condizionamento","clima","termosifone","boiler","pompa","impianto termico"],
+  electrician: ["elettricista","impianti elettrici","domotica","fotovoltaico","pannelli solari","cablaggio","quadro elettrico","illuminazione","presa","interruttore","automazione","citofono","videocitofono","allarme","antifurto","telecamera","videosorveglianza","energia"],
+  agriturismo: ["agriturismo","fattoria","azienda agricola","cantina","vino","olio","frantoio","agricoltura","biologico","km zero","degustazione","vendemmia","raccolta","orto","campagna","rurale","masseria","cascina","podere"],
+  cleaning: ["pulizie","impresa pulizia","sanificazione","disinfezione","lavanderia","tintoria","stireria","igienizzazione","detergente","detersivo","lucidatura","pavimenti","vetri","moquette","tappezzeria","sgrassatura"],
+  legal: ["avvocato","studio legale","notaio","consulenza legale","diritto","tribunale","causa","contratto","mediazione","arbitrato","penale","civile","lavoro","famiglia","immobiliare","commerciale","societario","brevetto","marchio"],
+  accounting: ["commercialista","contabilità","consulente fiscale","caf","patronato","dichiarazione","iva","fattura","bilancio","revisione","partita iva","730","f24","tasse","tributi","paghe","buste paga","consulenza aziendale","ragioniere"],
+  garage: ["officina","meccanico","carrozzeria","autolavaggio","gommista","revisione","tagliando","auto","moto","riparazione","motore","freni","olio","pneumatici","cerchi","diagnosi","elettrauto","ricambi","accessori auto"],
+  photography: ["fotografo","studio fotografico","videografo","wedding","matrimonio","eventi","ritratto","book","servizio fotografico","video","drone","post produzione","editing","fotoritocco","portfolio","shooting","moda","still life","food photography"],
+  construction: ["impresa edile","costruzioni","ristrutturazioni","muratore","geometra","architetto","ingegnere","cantiere","edilizia","casa","appartamento","immobile","progetto","permesso","bonus","110","superbonus","cappotto","tetto","pavimento","piastrelle","intonaco"],
+  gardening: ["giardiniere","vivaio","garden center","paesaggista","manutenzione verde","giardino","piante","fiori","prato","potatura","irrigazione","siepe","albero","aiuola","terrazzo","balcone","orto","landscaping"],
+  veterinary: ["veterinario","clinica veterinaria","animali","pet shop","toelettatura","cane","gatto","cavallo","uccello","rettile","vaccinazione","sterilizzazione","microchip","pensione animali","dog sitter","cat sitter","pet","allevamento"],
+  tattoo: ["tatuatore","tattoo","piercing","body art","studio tatuaggi","ink","tatuaggio","disegno","flash","cover up","laser rimozione","dermopigmentazione","microblading","sopracciglia tattoo"],
+  childcare: ["asilo","nido","scuola infanzia","ludoteca","baby sitter","doposcuola","bambini","bimbi","educazione","gioco","attività","laboratorio","animazione","feste","compleanno","colonia","campo estivo","materna"],
+  education: ["scuola","corsi","formazione","accademia","università","tutor","lezioni","ripetizioni","lingua","inglese","musica","arte","informatica","coding","certificazione","master","diploma","laurea","e-learning","online","webinar"],
+  events: ["eventi","catering","wedding planner","organizzazione","feste","location","sala ricevimenti","cerimonia","matrimonio","battesimo","comunione","compleanno","conferenza","congresso","fiera","spettacolo","dj","intrattenimento","allestimento"],
+  logistics: ["corriere","spedizioni","logistica","magazzino","trasporti","consegne","pacco","collo","tracking","tracciamento","deposito","stoccaggio","distribuzione","movimentazione","e-commerce fulfillment","last mile"],
+  custom: ["altro","personalizzato","custom","generico","artigiano","servizi","consulenza","freelance","professionista","studio","agenzia","cooperative","associazione"],
+};
+
 const SECTOR_CARDS = ALL_INDUSTRY_IDS.map(key => {
   const config = INDUSTRY_CONFIGS[key];
   const project = PORTFOLIO_PROJECTS[key as keyof typeof PORTFOLIO_PROJECTS];
@@ -150,8 +179,21 @@ const SECTOR_CARDS = ALL_INDUSTRY_IDS.map(key => {
     screens,
     accent: project?.accent || "#a78bfa",
     emoji: config.emoji,
+    keywords: SECTOR_KEYWORDS[key] || [],
   };
 });
+
+/* Smart search: matches name, id, description, tags AND deep keywords */
+const matchesSectorSearch = (card: typeof SECTOR_CARDS[0], query: string): boolean => {
+  if (!query.trim()) return true;
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const haystack = [
+    card.name, card.id, card.description || "",
+    ...(card.tags || []),
+    ...(card.keywords || []),
+  ].join(" ").toLowerCase();
+  return terms.every(t => haystack.includes(t));
+};
 
 /* ═══════════════════════════════════════════
    MAIN COMPONENT
