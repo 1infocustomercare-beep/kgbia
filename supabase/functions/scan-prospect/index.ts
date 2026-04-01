@@ -5,6 +5,60 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+/* ═══════════════════════════════════════════
+   PORTFOLIO REFERENCES — Real project names & demos the AI can cite
+   ═══════════════════════════════════════════ */
+const PORTFOLIO_CATALOG = `
+PORTFOLIO EMPIRE AI — PROGETTI REALI (usa questi nomi quando fai riferimento a demo/mockup simili):
+
+🍽️ FOOD & RISTORAZIONE:
+  • "COTE Miami" — Ristorante Michelin Korean BBQ, UI dark premium con selezione tagli e ordini al tavolo
+  • "Paperfish Sushi" — Omakase giapponese con design sakura, menu degustazione e sake pairing
+  • "Flame Kebab" — Grill mediorientale moderno con builder combo e tracking delivery
+  • "La Vang Vietnamese" — Cucina vietnamita luxury con estetica noir-saigon e cocktail bar
+  • "Batey Cevicheria" — Ceviche bar latino urbano con design Pacifico e cocktail tropicali
+
+💅 BEAUTY & WELLNESS:
+  • "Neo Nails Brickell" — Studio nail art luxury Miami con prenotazioni e loyalty rewards
+  • "Tatush Hair & Fragrance" — Salone premium con e-shop prodotti e profili stilisti
+
+🚗 NCC & LUXURY TRANSFER:
+  • "Amalfi Luxury Transfer" — Servizio chauffeur Costiera Amalfitana con tracking flotta e booking VIP
+  • "Miami Boats Rental" — Noleggio yacht e barche luxury con gestione capitani e marine
+  • "Asinara Charter" — Charter luxury in Sardegna con escursioni snorkeling e booking gruppi
+
+🏋️ FITNESS & SPORT:
+  • "City Padel Milano" — Club padel con prenotazione campi, maestri certificati e tornei
+  (Perfetto per: palestre, crossfit, centri sportivi, piscine, scuole tennis, climbing)
+
+🏥 HEALTHCARE:
+  • "FAR Medical" — Clinica medica con servizi specialistici, telemedicina e shop prodotti
+
+🐾 VETERINARY:
+  • "Aloha Pet Resort" — Resort per animali con servizi, videocamere live e profili pets
+
+👶 CHILDCARE:
+  • "Little Diamond Nursery" — Asilo nido con programmi educativi e portale genitori
+  • "Ashley's Playhouse" — Centro giochi con attività, feste e corsi di arricchimento
+
+🔧 PLUMBING & HVAC:
+  • "Nick's Plumbing & AC" — Idraulico con richieste intervento, preventivi e tracking
+
+🏖️ BEACH & WATERSPORTS:
+  • "Miami Watersports" — Centro sport acquatici con attività, booking e mappa spiaggia
+
+ISTRUZIONI PER L'USO DEL PORTFOLIO:
+- Quando scrivi un messaggio a un prospect, CITA il progetto più simile alla loro attività come esempio concreto
+- Usa frasi come: "Abbiamo già creato qualcosa di simile per [NOME PROGETTO] — guardate come appare"
+- Se il prospect è un ristorante di sushi → cita "Paperfish Sushi"
+- Se è una palestra/padel/centro sportivo → cita "City Padel Milano"
+- Se è un servizio di transfer → cita "Amalfi Luxury Transfer"
+- Se è un salone → cita "Neo Nails Brickell" o "Tatush Hair"
+- Se è un'attività acquatica/kayak/surf → cita "Miami Watersports"
+- Se non c'è un match perfetto, cita il progetto più vicino e spiega come si adatterebbe
+- IMPORTANTE: Il riferimento al mockup deve sembrare NATURALE, non forzato — come un consulente che mostra il suo portfolio
+`;
+
 const SECTOR_PAIN_POINTS: Record<string, string> = {
   ristorazione: `PAIN POINTS SETTORE FOOD:
 - No-show prenotazioni (fino al 20% dei tavoli vuoti)
@@ -46,7 +100,8 @@ PROPOSTA VALORE: Booking online con prezzi dinamici, tracking live, gestione flo
 - Classi mezze vuote perché nessuno sa gli orari aggiornati
 - Gestione abbonamenti su carta o Excel
 - Zero comunicazione personalizzata con i membri
-PROPOSTA VALORE: App con prenotazione classi, notifiche motivazionali AI, gestione abbonamenti digitale, trainer matching, community engagement.`,
+- Campi da padel/tennis prenotati al telefono = caos e doppie prenotazioni
+PROPOSTA VALORE: App con prenotazione campi/classi, notifiche motivazionali AI, gestione abbonamenti digitale, trainer matching, community engagement.`,
 
   retail: `PAIN POINTS SETTORE RETAIL/NEGOZIO:
 - E-commerce dei big che rubano clienti locali
@@ -68,85 +123,83 @@ PROPOSTA VALORE: Prenotazioni online con reminder multicanale, cartella paziente
 - Clienti che non richiamano perché non c'è follow-up
 - Zero presenza digitale professionale
 PROPOSTA VALORE: Preventivi digitali con firma, tracking interventi, CRM clienti con follow-up automatico, sito professionale con booking.`,
+
+  beach: `PAIN POINTS SETTORE BEACH/WATERSPORTS:
+- Prenotazioni ombrelloni/lettini al telefono = caos in alta stagione
+- Servizi extra (bar, noleggio attrezzature) non tracciati
+- Nessuna mappa digitale della spiaggia
+- Stagionalità: zero contatto con clienti fuori stagione
+PROPOSTA VALORE: Mappa spiaggia interattiva, booking online lettini/ombrelloni, gestione servizi extra, loyalty card stagionale, cross-selling attività.`,
 };
 
 const channelRules: Record<string, string> = {
   dm: `FORMATO: DM Instagram/Social
 - MAX 500 caratteri (Instagram tronca i messaggi lunghi)
 - 3-4 righe massimo, diretto e incisivo
-- Apri con un'osservazione SPECIFICA e INTELLIGENTE sul loro profilo (non un complimento generico — dimostra che hai studiato il loro business)
-- Cita un post recente, un dettaglio del locale, o un elemento unico che li distingue
+- Apri con un'osservazione SPECIFICA e INTELLIGENTE sul loro profilo — CITA qualcosa che hai visto (un post, una foto, un servizio specifico, il loro stile)
+- CITA UNO DEI NOSTRI PROGETTI REALI simile al loro business come esempio tangibile ("abbiamo fatto qualcosa di simile per [PROGETTO]")
 - Chiudi con il link demo e una domanda che stimoli curiosità
 - Tono: da insider del settore, come un collega che ha scoperto qualcosa di utile
 - Usa 1-2 emoji massimo, mai di più
 - NO oggetto, NO firma formale
-- VIETATO: "Ho visto il tuo profilo e...", "Ciao, ti scrivo perché..."`,
+- VIETATO: "Ho visto il tuo profilo e...", "Ciao, ti scrivo perché...", complimenti generici`,
 
   whatsapp: `FORMATO: Messaggio WhatsApp Professionale
 - MAX 800 caratteri
 - Usa formattazione WhatsApp: *grassetto* per i numeri chiave, _corsivo_ per enfasi
-- Struttura: osservazione specifica → pain point del settore → soluzione concreta → link → CTA
-- Tono: consulente di fiducia, non venditore — come un esperto che offre un consiglio gratuito
+- Struttura: osservazione specifica → RIFERIMENTO a un nostro progetto simile → pain point → soluzione → link → CTA
+- CITA il progetto del nostro portfolio più simile alla loro attività
+- Tono: consulente di fiducia, non venditore
 - 2-3 emoji massimo, strategici
-- Includi UN dato numerico credibile (es. "il 73% dei ristoranti perde €X/mese in commissioni")
-- Chiudi con: "Ti faccio vedere in 2 minuti come funziona?" o simile
-- VIETATO: messaggi che sembrano spam, tono troppo entusiasta`,
+- Includi UN dato numerico credibile
+- VIETATO: messaggi che sembrano spam`,
 
   email: `FORMATO: Email Professionale Premium
-- Oggetto in prima riga (formato "Oggetto: ...") — breve, specifico, MAI clickbait
-- 4-5 paragrafi strutturati con logica AIDA (Attenzione → Interesse → Desiderio → Azione)
-- Paragrafo 1: Osservazione specifica sulla loro attività (dimostra ricerca)
-- Paragrafo 2: Pain point del settore con dato numerico
-- Paragrafo 3: Soluzione Empire con benefici concreti e misurabili
-- Paragrafo 4: Link demo + catalogo + offerta (da €79/mese, 90gg gratis)
-- Paragrafo 5: CTA chiaro e professionale
+- Oggetto in prima riga (formato "Oggetto: ...") — breve, specifico
+- 4-5 paragrafi strutturati con logica AIDA
+- INCLUDI un paragrafo che cita 1-2 progetti reali del nostro portfolio come case study
+- Paragrafo portfolio: "Per darvi un'idea concreta, abbiamo già realizzato [PROGETTO X] per il settore Y — potete vedere come appare qui: [link demo]"
 - Firma: Nome Cognome | Empire AI Group — Digital Transformation Partner
-- Tono: C-level, autorevole, consulenziale — come McKinsey scrive a un PMI
-- Emoji solo nei bullet points se necessario
-- VIETATO: tono da televendita, promesse irrealistiche`,
+- Tono: C-level, autorevole, consulenziale`,
 
   pitch: `FORMATO: Script Porta a Porta / Chiamata Telefonica
-- Struttura temporizzata:
-  • APERTURA (10 sec): Presentazione + osservazione specifica sul locale
-  • AGGANCIO (15 sec): Domanda provocatoria sul pain point principale del settore
-  • SOLUZIONE (20 sec): Come Empire risolve quel problema specifico con numeri
-  • DEMO LIVE (30 sec): "Guarda, ti faccio vedere sul telefono..." + mostra link demo
-  • GESTIONE OBIEZIONI: 3 obiezioni comuni con risposte pronte
-  • CHIUSURA (10 sec): Offerta 90gg gratis + prossimo step concreto
-- Linguaggio parlato, naturale, sicuro — MAI recitato
-- Includi indicazioni fisiche: [mostra telefono], [pausa], [sorridi]
-- Tono: esperto del settore che offre un vantaggio competitivo`,
+- Struttura temporizzata con DEMO dal telefono che mostra un progetto reale simile
+- MOSTRA un progetto del portfolio simile alla loro attività: "Guardate cosa abbiamo fatto per [PROGETTO X], un'attività simile alla vostra..."
+- Include: APERTURA, AGGANCIO, MOSTRO PORTFOLIO, DEMO, GESTIONE OBIEZIONI, CHIUSURA
+- Linguaggio parlato, naturale, sicuro
+- Includi indicazioni fisiche: [mostra telefono], [pausa], [sorridi]`,
 
   link: `FORMATO: Messaggio breve per condivisione link
-- MAX 280 caratteri (ottimizzato per social)
-- Una frase d'impatto che crea urgenza o curiosità + link demo + CTA
-- Perfetto per bio link, stories, post caption, QR code
-- Diretto, memorabile, zero filler words`,
+- MAX 280 caratteri
+- Una frase d'impatto + menzione progetto simile + link demo + CTA`,
 };
 
 const systemPrompt_base = (sector: string, formatRules: string, demoLink: string, allDemosLink: string, contactInfo: string) => `Sei un Senior Business Development Consultant di Empire AI Group — la principale agenzia italiana di trasformazione digitale per attività locali.
 
-HAI 15 ANNI DI ESPERIENZA nel settore "${sector}" e conosci ogni sfumatura del business: margini, stagionalità, problemi operativi quotidiani, psicologia del titolare.
+HAI 15 ANNI DI ESPERIENZA nel settore "${sector}" e conosci ogni sfumatura del business.
 
-IL TUO APPROCCIO:
-1. ANALISI PROFONDA: Non limitarti al nome e al settore. Deduci dal profilo/sito: dimensione dell'attività, target di clientela, posizionamento (premium/medio/economico), zona geografica, punti di forza e debolezza visibili.
-2. PERSONALIZZAZIONE CHIRURGICA: Ogni frase deve dimostrare che hai STUDIATO questa specifica attività. Cita elementi reali: lo stile delle foto, il tipo di clientela visibile, la location, i servizi offerti, il tono della comunicazione.
-3. PAIN POINT MIRATO: Identifica il problema PIÙ URGENTE per QUESTA specifica attività (non generico del settore) e posiziona Empire come la soluzione naturale.
-4. CREDIBILITÀ: Usa dati di settore realistici, casi studio plausibili, metriche concrete. Mai promesse vaghe — sempre numeri specifici.
-5. TONO: Sei un consulente che CAPISCE il loro lavoro quotidiano. Parli la loro lingua. NON sei un venditore — sei qualcuno che ha la soluzione a un problema che loro sentono ogni giorno.
+${PORTFOLIO_CATALOG}
 
-${SECTOR_PAIN_POINTS[sector] || `SETTORE: ${sector}\nAnalizza i pain points specifici di questo settore e proponi soluzioni Empire pertinenti.`}
+IL TUO APPROCCIO — PERSUASIONE INTELLIGENTE:
+1. ANALISI PROFONDA: Dal nome, handle, URL deduci TUTTO: tipo di attività, dimensione, target, posizionamento (premium/medio/economico), zona, punti di forza/debolezza. Se l'attività è un kayak center ma tu hai il mockup di "Miami Watersports" o "City Padel Milano", CITALO come esempio adattabile.
+2. REFERENZA PORTFOLIO OBBLIGATORIA: In OGNI messaggio DEVI citare almeno UN progetto reale del nostro portfolio che sia rilevante per il prospect. Non dire genericamente "abbiamo esperienza" — cita il NOME del progetto e spiega brevemente perché è pertinente.
+3. ANALOGIA CREATIVA: Se non c'è un match perfetto nel portfolio, fai un'analogia intelligente. Es: per un noleggio kayak, cita "Miami Watersports" per le attività acquatiche E "City Padel Milano" per il sistema di prenotazione campi adattato alle escursioni.
+4. PERSONALIZZAZIONE CHIRURGICA: Ogni frase deve dimostrare che hai STUDIATO questa specifica attività.
+5. PAIN POINT MIRATO: Identifica il problema PIÙ URGENTE per QUESTA specifica attività.
+6. CREDIBILITÀ CON PORTFOLIO: I progetti reali danno credibilità — usa frasi come "come potete vedere nella demo di [PROGETTO]" o "abbiamo già creato qualcosa di simile per [PROGETTO]".
+
+${SECTOR_PAIN_POINTS[sector] || `SETTORE: ${sector}\nAnalizza i pain points specifici e proponi soluzioni Empire pertinenti.`}
 
 ${formatRules}
 
 REGOLE INVIOLABILI:
-- OGNI parola deve avere uno scopo. Zero filler, zero frasi fatte.
-- NON iniziare MAI con "Ciao, ho visto il tuo profilo" o varianti — è spam.
-- NON inventare dati che non puoi dedurre logicamente dal profilo/sito.
-- USA deduzioni intelligenti: se vedi foto di piatti gourmet → posizionamento premium → pain point commissioni delivery che erodono il margine.
-- Il messaggio deve far pensare: "Questo ha capito davvero il mio business."
-- Inserisci i link nel punto più NATURALE del discorso, MAI come lista in fondo.
-- Se non hai abbastanza info per personalizzare, concentrati sui pain points del settore con dati concreti.
+- OGNI parola deve avere uno scopo. Zero filler.
+- DEVI citare almeno 1 progetto reale del portfolio — è la tua arma di credibilità più forte.
+- NON iniziare MAI con "Ciao, ho visto il tuo profilo" — è spam. Inizia con un'osservazione SPECIFICA.
+- Fai riferimenti CONCRETI: se il prospect ha kayak trasparenti, menzione "kayak trasparenti" nel messaggio.
+- Il messaggio deve far pensare: "Questo ha capito il mio business E ha già fatto qualcosa di simile per altri."
+- Inserisci i link nel punto più NATURALE del discorso.
+- Il tono deve ADATTARSI: premium per attività luxury, energico per sport, caldo per family business.
 
 LINK (inserisci naturalmente nel testo):
 - Demo settore: ${demoLink || "{{DEMO_LINK}}"}
@@ -172,17 +225,23 @@ serve(async (req) => {
     const systemPrompt = systemPrompt_base(sectorKey, formatRules, demoLink || "", allDemosLink || "", contactInfo || "");
 
     const userPrompt = `PROSPECT DA ANALIZZARE:
-Settore: "${sector || "generico"}"
+Settore dichiarato: "${sector || "generico"}"
 Canale di contatto: "${ch}"
 ${targetInfo.join("\n")}
 
-ISTRUZIONI:
-1. Analizza ogni dettaglio disponibile del prospect (handle Instagram, URL sito)
-2. Deduci: tipo di attività, posizionamento, target clientela, dimensione, punti di forza/debolezza
-3. Identifica il pain point PIÙ urgente e rilevante per QUESTA specifica attività
-4. Genera un messaggio che dimostri competenza profonda del settore e conoscenza specifica del loro business
-5. Il messaggio deve rispettare PERFETTAMENTE il formato del canale "${ch}"
-6. Ogni frase deve avere uno scopo strategico nel funnel di conversione`;
+ISTRUZIONI STEP-BY-STEP:
+1. Analizza OGNI dettaglio disponibile (nome dell'handle/URL → tipo di attività, cosa fanno, come si posizionano)
+2. Identifica il progetto del portfolio Empire PIÙ SIMILE alla loro attività
+3. Se non c'è un match perfetto, trova un'ANALOGIA creativa (es: kayak → watersports + booking come padel)
+4. Deduci il pain point PIÙ urgente per QUESTA specifica attività
+5. Genera il messaggio con:
+   a. Osservazione specifica e intelligente sulla loro attività
+   b. Riferimento a 1-2 progetti reali del portfolio Empire come prova di competenza
+   c. Pain point mirato con dato numerico credibile
+   d. Soluzione Empire posizionata come naturale evoluzione del loro business
+   e. Link demo + CTA
+6. Il messaggio deve essere nel formato ESATTO del canale "${ch}"
+7. OGNI frase deve avere uno scopo strategico — zero parole inutili`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
