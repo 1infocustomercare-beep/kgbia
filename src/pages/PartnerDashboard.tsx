@@ -10,7 +10,8 @@ import {
   ExternalLink, ChefHat, Smartphone, ArrowLeft,
   Mail, MapPin, Instagram, Send, RefreshCw,
   Pencil, Upload, Save, X as XIcon,
-  Globe, MessageCircle, Link2, Wand2, Phone
+  Globe, MessageCircle, Link2, Wand2, Phone,
+  Search, Bot, Loader2, Zap, ArrowRight, Map
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
