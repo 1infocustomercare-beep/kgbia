@@ -20,6 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import PartnerOutreachCRM from "@/components/partner/PartnerOutreachCRM";
+import PartnerProfileSection from "@/components/partner/PartnerProfileSection";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import ROICalculator from "@/components/partner/ROICalculator";
 import DemoCreditsWallet from "@/components/partner/DemoCreditsWallet";
@@ -742,6 +743,11 @@ const PartnerDashboard = () => {
         {/* ═══════ SELEZIONA PROGETTO + TEMPLATES ═══════ */}
         {!demoMode && (
         <>
+        {/* ═══════ PARTNER PROFILE ═══════ */}
+        {!demoMode && user?.id && (
+          <PartnerProfileSection userId={user.id} userName={userName} userEmail={user.email || ""} />
+        )}
+
         {/* ═══════ AI SECTOR ADVISOR ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
           <div className="p-5 rounded-2xl" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.06), rgba(59,130,246,0.04))", border: "1px solid rgba(124,58,237,0.15)" }}>
