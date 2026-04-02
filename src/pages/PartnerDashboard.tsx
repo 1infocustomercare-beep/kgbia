@@ -245,6 +245,8 @@ const PartnerDashboard = () => {
     sector_id: string; sector_label: string; confidence: number;
     analysis: string; reason: string; suggested_channel: string;
     channel_reason: string; pain_points: string[]; opening_line: string;
+    recommended_previews?: { project_name: string; why_this: string; similarity_score?: number }[];
+    demo_path?: string;
   } | null>(null);
 
   // Persist demoMode
