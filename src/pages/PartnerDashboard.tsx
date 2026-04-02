@@ -245,6 +245,8 @@ const PartnerDashboard = () => {
     sector_id: string; sector_label: string; confidence: number;
     analysis: string; reason: string; suggested_channel: string;
     channel_reason: string; pain_points: string[]; opening_line: string;
+    recommended_previews?: { project_name: string; why_this: string; similarity_score?: number }[];
+    demo_path?: string;
   } | null>(null);
 
   // Persist demoMode
@@ -871,6 +873,39 @@ const PartnerDashboard = () => {
                           ❌ {pp}
                         </span>
                       ))}
+                    </div>
+                  )}
+
+                  {/* Recommended Previews */}
+                  {aiAdvisorResult.recommended_previews?.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#a78bfa" }}>📱 Preview da inviare al prospect</p>
+                      {aiAdvisorResult.recommended_previews.map((preview: any, i: number) => (
+                        <div key={i} className="flex items-start gap-3 p-2.5 rounded-xl transition-all" style={{ background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.15)" }}>
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm font-bold" style={{ background: i === 0 ? "rgba(16,185,129,0.2)" : "rgba(124,58,237,0.15)", color: i === 0 ? "#34d399" : "#a78bfa" }}>
+                            {i === 0 ? "★" : (i + 1)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-0.5">
+                              <p className="text-[11px] font-bold text-white truncate">{preview.project_name}</p>
+                              {preview.similarity_score && (
+                                <span className="text-[8px] px-1.5 py-0.5 rounded-full shrink-0 font-bold" style={{ background: preview.similarity_score > 80 ? "rgba(16,185,129,0.15)" : "rgba(245,158,11,0.15)", color: preview.similarity_score > 80 ? "#34d399" : "#fbbf24" }}>
+                                  {preview.similarity_score}% match
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-[10px] leading-relaxed" style={{ color: "#9ca3af" }}>{preview.why_this}</p>
+                          </div>
+                        </div>
+                      ))}
+                      {aiAdvisorResult.demo_path && (
+                        <motion.button whileTap={{ scale: 0.97 }}
+                          onClick={() => { window.open(aiAdvisorResult.demo_path, "_blank"); }}
+                          className="w-full py-2 rounded-xl text-[10px] font-bold flex items-center justify-center gap-2"
+                          style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.2), rgba(59,130,246,0.15))", border: "1px solid rgba(124,58,237,0.3)", color: "#c4b5fd" }}>
+                          <ExternalLink className="w-3 h-3" /> Apri Demo {aiAdvisorResult.sector_label}
+                        </motion.button>
+                      )}
                     </div>
                   )}
 
