@@ -640,16 +640,36 @@ const PartnerDashboard = () => {
             </div>
 
             <div className="text-left sm:text-right max-w-md">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider mb-3"
-                style={{ background: "rgba(167,139,250,0.12)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
-                <LayoutDashboard className="w-3 h-3" /> Area Partner
-              </span>
+              <motion.span
+                drag="y"
+                dragConstraints={{ top: 0, bottom: 0 }}
+                dragElastic={0.3}
+                onDragEnd={(_e, info) => {
+                  if (Math.abs(info.offset.y) > 30) {
+                    setDemoMode(prev => !prev);
+                    toast({ title: demoMode ? "🔓 Modalità Normale" : "🔒 Modalità Presentazione", description: demoMode ? "Dati completi visibili" : "Dati sensibili nascosti" });
+                  }
+                }}
+                whileDrag={{ scale: 1.08, boxShadow: "0 0 20px rgba(167,139,250,0.4)" }}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider mb-3 cursor-grab active:cursor-grabbing select-none touch-none"
+                style={{
+                  background: demoMode ? "rgba(245,158,11,0.15)" : "rgba(167,139,250,0.12)",
+                  border: `1px solid ${demoMode ? "rgba(245,158,11,0.35)" : "rgba(167,139,250,0.25)"}`,
+                  color: demoMode ? "#f59e0b" : "#a78bfa",
+                }}>
+                {demoMode ? <EyeOff className="w-3 h-3" /> : <LayoutDashboard className="w-3 h-3" />}
+                {demoMode ? "Presentazione" : "Area Partner"}
+                <ChevronRight className="w-3 h-3 rotate-[-90deg] opacity-50" />
+              </motion.span>
               <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
                 Il tuo catalogo app,<br />
                 <span style={{ color: "#a78bfa" }}>pronto da mostrare.</span>
               </h2>
               <p className="text-sm mt-2" style={{ color: "#9ca3af" }}>
-                Sfoglia i progetti, seleziona uno stile e mostra le preview direttamente al cliente.
+                {demoMode
+                  ? "Modalità presentazione attiva — trascina il badge ↕ per tornare alla modalità normale."
+                  : "Sfoglia i progetti, seleziona uno stile e mostra le preview. Trascina il badge ↕ per la modalità presentazione."
+                }
               </p>
             </div>
           </div>
