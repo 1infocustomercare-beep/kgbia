@@ -627,15 +627,6 @@ const PartnerDashboard = () => {
                   <Globe className="w-4 h-4" style={{ color: "#9ca3af" }} />
                   <span style={{ color: "#d1d5db" }}>Mostra Sito</span>
                 </button>
-                <button onClick={() => setDemoMode(!demoMode)}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
-                  style={{
-                    background: demoMode ? "rgba(245,158,11,0.15)" : "rgba(255,255,255,0.05)",
-                    border: `1px solid ${demoMode ? "rgba(245,158,11,0.35)" : "rgba(255,255,255,0.1)"}`
-                  }}>
-                  {demoMode ? <EyeOff className="w-4 h-4" style={{ color: "#f59e0b" }} /> : <Eye className="w-4 h-4" style={{ color: "#9ca3af" }} />}
-                  <span style={{ color: demoMode ? "#f59e0b" : "#d1d5db" }}>{demoMode ? "Modalità Live" : "Modalità Demo"}</span>
-                </button>
               </div>
             </div>
 
