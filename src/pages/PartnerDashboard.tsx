@@ -683,6 +683,15 @@ const PartnerDashboard = () => {
           </div>
         </section>
 
+        {/* ═══════ PROFILE EDIT (collapsible from hero pencil button) ═══════ */}
+        <AnimatePresence>
+          {showProfileEdit && !demoMode && user?.id && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
+              <PartnerProfileSection userId={user.id} userName={userName} userEmail={user.email || ""} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* ═══════ DEMO MODE BANNER ═══════ */}
         <AnimatePresence>
           {demoMode && (
