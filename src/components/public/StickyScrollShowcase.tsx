@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence }
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import { ArrowRight, Sparkles } from "lucide-react";
+import ProjectDetailOverlay from "@/components/partner/ProjectDetailOverlay";
 
 import sectorHeroFood from "@/assets/sector-hero-food.jpg";
 import sectorHeroNcc from "@/assets/sector-hero-ncc.jpg";
@@ -48,6 +49,7 @@ export default function StickyScrollShowcase() {
   const navigate = useNavigate();
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
   const [activeIdx, setActiveIdx] = useState(0);
+  const [detailSector, setDetailSector] = useState<string | null>(null);
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     // First 8% = intro, then evenly split the rest
@@ -121,9 +123,7 @@ export default function StickyScrollShowcase() {
                     zIndex: 10 - absOffset,
                   }}
                   transition={{ type: "spring", stiffness: 200, damping: 28 }}
-                  onClick={() => navigate(
-                    sector.id === "food" ? `/r/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}` : `/demo/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}`
-                  )}
+                  onClick={() => setDetailSector(sector.id === "hospitality" ? "hospitality" : sector.id)}
                   style={{ transformStyle: "preserve-3d" }}
                 >
                   <PhoneFrame src={sector.image} alt={sector.name} className="w-[140px]" glowColor={isActive ? sector.color : undefined} />
@@ -169,9 +169,7 @@ export default function StickyScrollShowcase() {
                     zIndex: 10 - absOffset,
                   }}
                   transition={{ type: "spring", stiffness: 180, damping: 26 }}
-                  onClick={() => navigate(
-                    sector.id === "food" ? `/r/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}` : `/demo/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}`
-                  )}
+                  onClick={() => setDetailSector(sector.id === "hospitality" ? "hospitality" : sector.id)}
                   style={{ transformStyle: "preserve-3d" }}
                   whileHover={{ scale: isActive ? 1.0 : 0.75 }}
                 >
@@ -265,6 +263,13 @@ export default function StickyScrollShowcase() {
           <div className="w-[1px] h-4 bg-gradient-to-b from-white/30 to-transparent" />
         </motion.div>
       </div>
+
+      {/* ═══ PROJECT DETAIL OVERLAY ═══ */}
+      <AnimatePresence>
+        {detailSector && (
+          <ProjectDetailOverlay sectorId={detailSector} onClose={() => setDetailSector(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
