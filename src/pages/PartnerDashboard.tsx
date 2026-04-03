@@ -609,9 +609,23 @@ const PartnerDashboard = () => {
                   initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
                   <img src={empireMonkeyMascot} alt="Empire" className="w-12 h-12 object-contain" />
                 </motion.div>
-                <div>
-                  <p className="text-xs" style={{ color: "#9ca3af" }}>Benvenuto,</p>
-                  <h1 className="text-xl font-bold text-white">{userName}</h1>
+                <div className="flex items-center gap-2">
+                  <div>
+                    <p className="text-xs" style={{ color: "#9ca3af" }}>Benvenuto,</p>
+                    <h1 className="text-xl font-bold text-white">{userName}</h1>
+                  </div>
+                  {!demoMode && (
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setShowProfileEdit(prev => !prev)}
+                      className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
+                      style={{
+                        background: showProfileEdit ? "rgba(167,139,250,0.25)" : "rgba(255,255,255,0.06)",
+                        border: `1px solid ${showProfileEdit ? "rgba(167,139,250,0.4)" : "rgba(255,255,255,0.1)"}`,
+                      }}>
+                      <Pencil className="w-3.5 h-3.5" style={{ color: showProfileEdit ? "#c4b5fd" : "#9ca3af" }} />
+                    </motion.button>
+                  )}
                 </div>
               </div>
               
