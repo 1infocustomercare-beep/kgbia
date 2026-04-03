@@ -32,7 +32,6 @@ const EMPTY: ProfileData = {
 };
 
 export default function PartnerProfileSection({ userId, userName, userEmail }: Props) {
-  const [open, setOpen] = useState(false);
   const [profile, setProfile] = useState<ProfileData>({ ...EMPTY, full_name: userName, email: userEmail });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
