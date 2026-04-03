@@ -169,9 +169,7 @@ export default function StickyScrollShowcase() {
                     zIndex: 10 - absOffset,
                   }}
                   transition={{ type: "spring", stiffness: 180, damping: 26 }}
-                  onClick={() => navigate(
-                    sector.id === "food" ? `/r/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}` : `/demo/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}`
-                  )}
+                  onClick={() => setDetailSector(sector.id === "hospitality" ? "hospitality" : sector.id)}
                   style={{ transformStyle: "preserve-3d" }}
                   whileHover={{ scale: isActive ? 1.0 : 0.75 }}
                 >
