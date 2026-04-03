@@ -204,6 +204,7 @@ const PartnerDashboard = () => {
   const navigate = useNavigate();
   const { signOut, isTeamLeader, user } = useAuth();
   const [showROI, setShowROI] = useState(false);
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [teamSales, setTeamSales] = useState<any[]>([]);
