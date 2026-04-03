@@ -263,6 +263,13 @@ export default function StickyScrollShowcase() {
           <div className="w-[1px] h-4 bg-gradient-to-b from-white/30 to-transparent" />
         </motion.div>
       </div>
+
+      {/* ═══ PROJECT DETAIL OVERLAY ═══ */}
+      <AnimatePresence>
+        {detailSector && (
+          <ProjectDetailOverlay sectorId={detailSector} onClose={() => setDetailSector(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
