@@ -123,9 +123,7 @@ export default function StickyScrollShowcase() {
                     zIndex: 10 - absOffset,
                   }}
                   transition={{ type: "spring", stiffness: 200, damping: 28 }}
-                  onClick={() => navigate(
-                    sector.id === "food" ? `/r/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}` : `/demo/${DEMO_SLUGS[sector.id as keyof typeof DEMO_SLUGS]}`
-                  )}
+                  onClick={() => setDetailSector(sector.id === "hospitality" ? "hospitality" : sector.id)}
                   style={{ transformStyle: "preserve-3d" }}
                 >
                   <PhoneFrame src={sector.image} alt={sector.name} className="w-[140px]" glowColor={isActive ? sector.color : undefined} />
