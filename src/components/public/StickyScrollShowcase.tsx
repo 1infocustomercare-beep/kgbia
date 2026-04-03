@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence }
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import { ArrowRight, Sparkles } from "lucide-react";
+import ProjectDetailOverlay from "@/components/partner/ProjectDetailOverlay";
 
 import sectorHeroFood from "@/assets/sector-hero-food.jpg";
 import sectorHeroNcc from "@/assets/sector-hero-ncc.jpg";
