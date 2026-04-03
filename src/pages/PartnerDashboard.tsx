@@ -204,6 +204,7 @@ const PartnerDashboard = () => {
   const navigate = useNavigate();
   const { signOut, isTeamLeader, user } = useAuth();
   const [showROI, setShowROI] = useState(false);
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [teamSales, setTeamSales] = useState<any[]>([]);
@@ -608,9 +609,23 @@ const PartnerDashboard = () => {
                   initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
                   <img src={empireMonkeyMascot} alt="Empire" className="w-12 h-12 object-contain" />
                 </motion.div>
-                <div>
-                  <p className="text-xs" style={{ color: "#9ca3af" }}>Benvenuto,</p>
-                  <h1 className="text-xl font-bold text-white">{userName}</h1>
+                <div className="flex items-center gap-2">
+                  <div>
+                    <p className="text-xs" style={{ color: "#9ca3af" }}>Benvenuto,</p>
+                    <h1 className="text-xl font-bold text-white">{userName}</h1>
+                  </div>
+                  {!demoMode && (
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setShowProfileEdit(prev => !prev)}
+                      className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
+                      style={{
+                        background: showProfileEdit ? "rgba(167,139,250,0.25)" : "rgba(255,255,255,0.06)",
+                        border: `1px solid ${showProfileEdit ? "rgba(167,139,250,0.4)" : "rgba(255,255,255,0.1)"}`,
+                      }}>
+                      <Pencil className="w-3.5 h-3.5" style={{ color: showProfileEdit ? "#c4b5fd" : "#9ca3af" }} />
+                    </motion.button>
+                  )}
                 </div>
               </div>
               
@@ -667,6 +682,15 @@ const PartnerDashboard = () => {
             </div>
           </div>
         </section>
+
+        {/* ═══════ PROFILE EDIT (collapsible from hero pencil button) ═══════ */}
+        <AnimatePresence>
+          {showProfileEdit && !demoMode && user?.id && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
+              <PartnerProfileSection userId={user.id} userName={userName} userEmail={user.email || ""} />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* ═══════ DEMO MODE BANNER ═══════ */}
         <AnimatePresence>
@@ -756,10 +780,6 @@ const PartnerDashboard = () => {
         {/* ═══════ SELEZIONA PROGETTO + TEMPLATES ═══════ */}
         {!demoMode && (
         <>
-        {/* ═══════ PARTNER PROFILE ═══════ */}
-        {!demoMode && user?.id && (
-          <PartnerProfileSection userId={user.id} userName={userName} userEmail={user.email || ""} />
-        )}
 
         {/* ═══════ AI SECTOR ADVISOR ═══════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
