@@ -49,6 +49,7 @@ export default function StickyScrollShowcase() {
   const navigate = useNavigate();
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
   const [activeIdx, setActiveIdx] = useState(0);
+  const [detailSector, setDetailSector] = useState<string | null>(null);
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     // First 8% = intro, then evenly split the rest
