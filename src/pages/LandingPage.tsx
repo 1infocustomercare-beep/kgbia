@@ -3220,28 +3220,28 @@ const LandingPage = () => {
               </motion.p>
 
               {/* CTA — clean duo buttons */}
-              <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}>
+              <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
+              initial={{ opacity: 0, y: 15, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ delay: 1.3 }}>
                 <motion.button
                   onClick={() => scrollTo("pricing")}
-                  className="group relative w-full sm:w-auto px-8 py-4 rounded-full text-white font-bold text-[0.8rem] font-heading tracking-wider uppercase overflow-hidden"
+                  className="btn-press group relative w-full sm:w-auto px-10 py-4.5 rounded-full text-white font-bold text-[0.85rem] font-heading tracking-wider uppercase overflow-hidden"
                   style={{
                     background: "linear-gradient(135deg, hsl(250 55% 52%), hsl(280 60% 50%), hsl(320 65% 52%))",
-                    boxShadow: "0 4px 30px hsl(280 50% 50% / 0.3), 0 0 0 1px hsl(280 50% 55% / 0.2)"
+                    boxShadow: "0 6px 40px hsl(280 50% 50% / 0.35), 0 0 0 1px hsl(280 50% 55% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.15)"
                   }}
-                  whileHover={{ scale: 1.03, boxShadow: "0 12px 50px hsl(280 50% 50% / 0.45)" }}
-                  whileTap={{ scale: 0.97 }}>
-                  <motion.span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
+                  whileHover={{ scale: 1.05, boxShadow: "0 16px 60px hsl(280 50% 50% / 0.5), 0 0 80px hsl(265 70% 60% / 0.15)" }}
+                  whileTap={{ scale: 0.96 }}>
+                  <motion.span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/25 to-white/0"
                     animate={{ x: ["-200%", "200%"] }}
-                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }} />
+                    transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }} />
                   <span className="relative flex items-center justify-center gap-2">
-                    Scopri i Progetti <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    Scopri i Progetti <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                   </span>
                 </motion.button>
                 <motion.button
                   onClick={() => navigate("/demo")}
-                  className="w-full sm:w-auto px-7 py-4 rounded-full text-[0.8rem] font-medium font-heading tracking-wide text-white/50 border border-white/15 hover:border-white/25 hover:text-white/70 transition-all flex items-center justify-center gap-2"
-                  whileHover={{ scale: 1.01 }}>
+                  className="btn-press w-full sm:w-auto px-8 py-4 rounded-full text-[0.85rem] font-semibold font-heading tracking-wide text-white/60 border border-white/20 hover:border-white/40 hover:text-white/80 hover:bg-white/[0.04] transition-all duration-400 flex items-center justify-center gap-2 backdrop-blur-sm"
+                  whileHover={{ scale: 1.02 }}>
                   Piani & Prezzi
                 </motion.button>
               </motion.div>
