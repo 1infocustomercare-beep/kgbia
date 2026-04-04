@@ -3308,16 +3308,17 @@ const LandingPage = () => {
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 24% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
-        <div className="text-center mb-10">
+        <div className="text-center mb-12">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
-          <motion.h2 className="text-[clamp(1.5rem,4.5vw,3rem)] font-heading font-bold text-white leading-[1.08] mb-4"
-          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
+          <motion.h2 className="text-[clamp(1.6rem,5vw,3.2rem)] font-heading font-bold text-white leading-[1.05] mb-5 text-glow-pulse"
+          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={vpOnce}
+          transition={{ duration: 0.8, ease: smoothEase }}>
             Creiamo <span className="text-vivid-gradient">App, Siti e Gestionali</span>
             <br />
-            <span className="text-white/80">Potenziati dall'IA</span>
+            <span className="text-white/85">Potenziati dall'IA</span>
           </motion.h2>
-          <motion.p className="text-[0.82rem] text-foreground/60 max-w-lg mx-auto leading-[1.75]"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
+          <motion.p className="text-[0.85rem] text-foreground/65 max-w-lg mx-auto leading-[1.8]"
+          initial={{ opacity: 0, filter: "blur(6px)" }} whileInView={{ opacity: 1, filter: "blur(0px)" }} viewport={vpOnce} transition={{ delay: 0.2, duration: 0.7 }}>
             Progettiamo e sviluppiamo applicazioni dedicate, web app professionali e sistemi gestionali completi
             per qualsiasi settore — personalizzati al 100% sulle tue esigenze, con intelligenza artificiale integrata
             e automazioni che lavorano per te 24/7.
