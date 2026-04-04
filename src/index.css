@@ -1900,3 +1900,129 @@ video::-webkit-media-controls-enclosure {
 .step-number-glow {
   text-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.4);
 }
+
+/* ═══════════════════════════════════════════
+   LUSION-INSPIRED SCROLL & INTERACTIVE EFFECTS
+   ═══════════════════════════════════════════ */
+
+/* Smooth scroll reveal — staggered children */
+@keyframes lusionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.97);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+.lusion-reveal {
+  opacity: 0;
+  animation: lusionReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.lusion-reveal-1 { animation-delay: 0.1s; }
+.lusion-reveal-2 { animation-delay: 0.2s; }
+.lusion-reveal-3 { animation-delay: 0.35s; }
+.lusion-reveal-4 { animation-delay: 0.5s; }
+
+/* Horizontal line expand — Lusion style dividers */
+@keyframes lineExpand {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.lusion-line {
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: lineExpand 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Text glow pulse — subtle breathing effect for headings */
+@keyframes textGlowPulse {
+  0%, 100% { text-shadow: 0 0 0px transparent; }
+  50% { text-shadow: 0 0 30px hsl(var(--empire-violet) / 0.15), 0 0 60px hsl(var(--primary) / 0.08); }
+}
+
+.text-glow-pulse {
+  animation: textGlowPulse 4s ease-in-out infinite;
+}
+
+/* Vivid gradient text — more impactful than text-shimmer */
+.text-vivid-gradient {
+  background: linear-gradient(
+    135deg,
+    hsl(195 100% 65%) 0%,
+    hsl(250 85% 70%) 40%,
+    hsl(320 70% 60%) 70%,
+    hsl(195 100% 65%) 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer 6s ease-in-out infinite;
+}
+
+/* Card magnetic hover — slight perspective tilt */
+.magnetic-card {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
+}
+.magnetic-card:hover {
+  transform: translateY(-8px) rotateX(2deg) rotateY(-1deg);
+  box-shadow: 0 30px 80px hsl(var(--empire-violet) / 0.15), 0 0 40px hsl(var(--primary) / 0.06);
+}
+
+/* Section entrance — smooth slide up with blur */
+@keyframes sectionEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(80px);
+    filter: blur(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Interactive button press */
+.btn-press {
+  transition: transform 0.15s ease, box-shadow 0.3s ease;
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+.btn-press:hover {
+  box-shadow: 0 12px 40px hsl(var(--empire-violet) / 0.25), 0 0 0 1px hsl(var(--primary) / 0.15);
+}
+
+/* Gradient border animation */
+@keyframes gradientBorderSpin {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient-border {
+  background: linear-gradient(90deg, hsl(var(--empire-violet)), hsl(var(--primary)), hsl(var(--neon-cyan)), hsl(var(--empire-violet)));
+  background-size: 300% 100%;
+  animation: gradientBorderSpin 4s ease infinite;
+}
+
+/* Floating tag — smooth bouncing label */
+@keyframes floatTag {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+}
+.float-tag {
+  animation: floatTag 3s ease-in-out infinite;
+}
+
+/* Smooth counter glow */
+.stat-glow {
+  text-shadow: 0 0 20px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--empire-violet) / 0.15);
+}
