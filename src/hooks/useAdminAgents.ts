@@ -7,7 +7,8 @@ const SECTORS = [
   "all", "food", "ncc", "beauty", "healthcare", "construction", "retail",
   "fitness", "hospitality", "beach", "plumber", "agriturismo", "cleaning",
   "legal", "accounting", "garage", "photography", "gardening", "veterinary",
-  "tattoo", "childcare", "education", "events", "logistics"
+  "tattoo", "childcare", "education", "events", "logistics", "bakery",
+  "electrician", "tourism", "custom"
 ] as const;
 
 const CATEGORIES = [

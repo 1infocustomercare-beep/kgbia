@@ -23,7 +23,8 @@ const SECTOR_LABELS: Record<string, string> = {
   accounting: "Contabilità", garage: "Officina", photography: "Foto",
   gardening: "Giardinaggio", veterinary: "Veterinario", tattoo: "Tattoo",
   childcare: "Asilo", education: "Formazione", events: "Eventi",
-  logistics: "Logistica",
+  logistics: "Logistica", bakery: "Bakery", electrician: "Elettricista",
+  tourism: "Turismo", custom: "Custom",
 };
 
 export default function AgentCard({ agent, index, installs, successRate, onToggle, onClick }: Props) {
