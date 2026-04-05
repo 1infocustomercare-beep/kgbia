@@ -171,6 +171,7 @@ const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
+const StaticIframePage = lazy(() => import("./pages/StaticIframePage"));
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
