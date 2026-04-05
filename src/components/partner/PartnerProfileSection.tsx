@@ -76,7 +76,7 @@ export default function PartnerProfileSection({ userId, userName, userEmail }: P
       const { data: urlData } = supabase.storage.from("partner-assets").getPublicUrl(path);
       const url = urlData.publicUrl + "?t=" + Date.now();
       setProfile(p => ({ ...p, avatar_url: url }));
-      await supabase.from("profiles").update({ avatar_url: url } as any).eq("user_id", userId);
+      await supabase.from("profiles").update({ avatar_url: url }).eq("user_id", userId);
       toast({ title: "✅ Foto aggiornata!" });
     } catch (err: any) {
       toast({ title: "Errore", description: err.message, variant: "destructive" });
@@ -156,7 +156,7 @@ export default function PartnerProfileSection({ userId, userName, userEmail }: P
             <p className="text-xs font-bold text-white">Foto Profilo</p>
             <p className="text-[10px]" style={{ color: "#9ca3af" }}>JPG, PNG, max 2MB. Visibile ai clienti.</p>
             {profile.avatar_url && (
-              <button onClick={async () => { setProfile(p => ({ ...p, avatar_url: "" })); await supabase.from("profiles").update({ avatar_url: null } as any).eq("user_id", userId); }}
+              <button onClick={async () => { setProfile(p => ({ ...p, avatar_url: "" })); await supabase.from("profiles").update({ avatar_url: null }).eq("user_id", userId); }}
                 className="text-[9px] flex items-center gap-1" style={{ color: "#f87171" }}>
                 <X className="w-3 h-3" /> Rimuovi foto
               </button>
