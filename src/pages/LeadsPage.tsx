@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Users, Target, BarChart3, Kanban, List } from "lucide-react";
+import { Search, Target, Kanban, Zap } from "lucide-react";
 import LeadSearchPanel from "@/components/leads/LeadSearchPanel";
 import LeadResultCard from "@/components/leads/LeadResultCard";
-import LeadAnalysisPanel from "@/components/leads/LeadAnalysisPanel";
-import LeadMessageGenerator from "@/components/leads/LeadMessageGenerator";
+import LeadCommandPanel from "@/components/leads/LeadCommandPanel";
 import LeadPipelineBoard from "@/components/leads/LeadPipelineBoard";
 import { generateMockLeads, MockLead, SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { toast } from "sonner";
@@ -16,15 +15,13 @@ export default function LeadsPage() {
   const [results, setResults] = useState<MockLead[]>([]);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState<"score" | "rating" | "name">("score");
-  const [analyzeLead, setAnalyzeLead] = useState<MockLead | null>(null);
-  const [messageLead, setMessageLead] = useState<MockLead | null>(null);
+  const [activeLead, setActiveLead] = useState<{ lead: MockLead; tab: "analyze" | "message" } | null>(null);
   const [savedLeads, setSavedLeads] = useState<MockLead[]>([]);
   const [lastSearch, setLastSearch] = useState<{ sector: string; city: string } | null>(null);
 
-  const handleSearch = (filters: { sector: string; city: string; minRating: number; minReviews: number }) => {
+  const handleSearch = useCallback((filters: { sector: string; city: string; minRating: number; minReviews: number }) => {
     setLoading(true);
     setLastSearch({ sector: filters.sector, city: filters.city });
-    // Simulate API delay
     setTimeout(() => {
       let leads = generateMockLeads(filters.sector, filters.city, 18 + Math.floor(Math.random() * 8));
       if (filters.minRating > 0) leads = leads.filter(l => l.googleRating >= filters.minRating);
@@ -32,17 +29,21 @@ export default function LeadsPage() {
       setResults(leads);
       setLoading(false);
       toast.success(`${leads.length} lead trovati a ${filters.city}!`);
-    }, 1200 + Math.random() * 800);
-  };
+    }, 900 + Math.random() * 600);
+  }, []);
 
-  const handleSaveLead = (lead: MockLead) => {
+  const handleSaveLead = useCallback((lead: MockLead) => {
     if (savedLeads.find(l => l.id === lead.id)) {
       toast.info("Lead già salvato nel CRM");
       return;
     }
     setSavedLeads(prev => [...prev, lead]);
     toast.success(`${lead.businessName} salvato nel CRM!`);
-  };
+  }, [savedLeads]);
+
+  const openLead = useCallback((lead: MockLead, initialTab: "analyze" | "message") => {
+    setActiveLead({ lead, tab: initialTab });
+  }, []);
 
   const sortedResults = [...results].sort((a, b) => {
     if (sortBy === "score") return b.opportunityScore - a.opportunityScore;
@@ -51,24 +52,32 @@ export default function LeadsPage() {
   });
 
   const sectorLabel = lastSearch ? SECTOR_OPTIONS.find(s => s.value === lastSearch.sector)?.label : "";
+  const hotLeads = results.filter(l => l.opportunityScore >= 70).length;
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-lg font-bold text-white flex items-center gap-2">
             <Target className="w-5 h-5" style={{ color: "#10b981" }} /> LeadEngine Scout
           </h1>
-          <p className="text-[11px] mt-0.5" style={{ color: "#6b7280" }}>Trova, analizza e converti lead in clienti</p>
+          <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>Trova · Analizza · Converti</p>
         </div>
+        {results.length > 0 && (
+          <div className="flex items-center gap-1.5">
+            <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.1)", color: "#10b981" }}>
+              <Zap className="w-3 h-3 inline mr-0.5" />{hotLeads} caldi
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Tabs */}
       <div className="flex gap-2">
         {([
           { id: "search" as Tab, icon: Search, label: "Ricerca", count: results.length },
-          { id: "pipeline" as Tab, icon: Kanban, label: "Pipeline CRM", count: savedLeads.length },
+          { id: "pipeline" as Tab, icon: Kanban, label: "Pipeline", count: savedLeads.length },
         ]).map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all"
@@ -87,11 +96,10 @@ export default function LeadsPage() {
         <>
           <LeadSearchPanel onSearch={handleSearch} loading={loading} />
 
-          {/* Results */}
           {results.length > 0 && (
-            <div className="space-y-3">
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold text-white">{results.length} risultati — {sectorLabel} a {lastSearch?.city}</p>
+                <p className="text-[11px] font-semibold text-white">{results.length} risultati — {sectorLabel} a {lastSearch?.city}</p>
                 <div className="flex gap-1">
                   {(["score", "rating", "name"] as const).map(s => (
                     <button key={s} onClick={() => setSortBy(s)}
@@ -109,7 +117,9 @@ export default function LeadsPage() {
               <div className="space-y-2">
                 {sortedResults.map((lead, i) => (
                   <LeadResultCard key={lead.id} lead={lead} index={i}
-                    onAnalyze={setAnalyzeLead} onMessage={setMessageLead} onSave={handleSaveLead} />
+                    onAnalyze={(l) => openLead(l, "analyze")}
+                    onMessage={(l) => openLead(l, "message")}
+                    onSave={handleSaveLead} />
                 ))}
               </div>
             </div>
@@ -117,9 +127,9 @@ export default function LeadsPage() {
 
           {!loading && results.length === 0 && (
             <div className="text-center py-16">
-              <Search className="w-12 h-12 mx-auto mb-4 opacity-20 text-white" />
-              <p className="text-sm font-medium text-white/60">Seleziona settore e città per iniziare la ricerca</p>
-              <p className="text-xs mt-1 text-white/30">I risultati includeranno score di opportunità e analisi AI</p>
+              <Search className="w-10 h-10 mx-auto mb-3 opacity-20 text-white" />
+              <p className="text-sm font-medium text-white/50">Seleziona settore e città per iniziare</p>
+              <p className="text-[10px] mt-1 text-white/25">Score di opportunità + analisi AI automatica</p>
             </div>
           )}
         </>
@@ -129,15 +139,15 @@ export default function LeadsPage() {
         <LeadPipelineBoard savedLeads={savedLeads} />
       )}
 
-      {/* Panels */}
+      {/* Unified Command Panel */}
       <AnimatePresence>
-        {analyzeLead && !messageLead && (
-          <LeadAnalysisPanel lead={analyzeLead} onClose={() => setAnalyzeLead(null)} onMessage={(l) => { setAnalyzeLead(null); setMessageLead(l); }} />
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {messageLead && (
-          <LeadMessageGenerator lead={messageLead} onClose={() => setMessageLead(null)} />
+        {activeLead && (
+          <LeadCommandPanel
+            lead={activeLead.lead}
+            initialTab={activeLead.tab}
+            onClose={() => setActiveLead(null)}
+            onSave={handleSaveLead}
+          />
         )}
       </AnimatePresence>
     </div>
