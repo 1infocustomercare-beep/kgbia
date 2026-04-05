@@ -1,8 +1,471 @@
 <!DOCTYPE html>
 <html lang="it">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Empire.AI — Homepage</title>
-<style>body{margin:0;font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh}
-.placeholder{text-align:center;padding:2rem}.placeholder h1{font-size:2.5rem;background:linear-gradient(135deg,#a78bfa,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.placeholder p{color:#9ca3af;margin-top:1rem}</style>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Empire.AI — Trasformiamo le Imprese Italiane con l'IA</title>
+<meta name="description" content="Empire.AI: piattaforma AI all-in-one per digitalizzare e automatizzare qualsiasi impresa italiana. App white-label, agenti AI, lead generation per 25+ settori.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#020204;--surface:#0a0b10;--card:#111219;--border:#1e2030;
+  --teal:#7eb7be;--violet:#6c3ce0;--gold:#d4a855;
+  --text:#f0f0f5;--text-muted:#8a8ea0;--text-dim:#555770;
+  --font-heading:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(2,2,4,.75);border-bottom:1px solid var(--border);transition:all .3s}
+nav .inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}
+nav .logo{font-family:var(--font-heading);font-weight:700;font-size:1.3rem;background:linear-gradient(135deg,var(--teal),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav .links{display:flex;gap:28px;align-items:center}
+nav .links a{font-size:.85rem;color:var(--text-muted);transition:color .25s}
+nav .links a:hover{color:var(--teal)}
+.nav-cta{padding:8px 20px;border-radius:10px;font-size:.82rem;font-weight:600;background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(126,183,190,.3)}
+@media(max-width:768px){nav .links{display:none}}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;z-index:0}
+.hero-content{position:relative;z-index:2;max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:99px;background:rgba(126,183,190,.08);border:1px solid rgba(126,183,190,.2);font-size:.75rem;color:var(--teal);margin-bottom:24px;font-weight:500}
+.hero h1{font-family:var(--font-heading);font-size:clamp(2.2rem,5.5vw,4.2rem);font-weight:700;line-height:1.1;margin-bottom:20px}
+.hero h1 .gradient{background:linear-gradient(135deg,var(--teal),var(--violet),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:gradShift 4s ease infinite}
+@keyframes gradShift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+.hero p{font-size:1.1rem;color:var(--text-muted);max-width:600px;margin:0 auto 32px;line-height:1.65}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-primary{padding:14px 32px;border-radius:12px;font-size:.95rem;font-weight:600;background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff;border:none;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .3s}
+.btn-primary:hover::after{opacity:1}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(108,60,224,.35)}
+.btn-outline{padding:14px 32px;border-radius:12px;font-size:.95rem;font-weight:600;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;transition:all .25s}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
+
+/* MARQUEE */
+.marquee-section{padding:24px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;background:rgba(10,11,16,.6)}
+.marquee-track{display:flex;gap:48px;animation:marquee 30s linear infinite;white-space:nowrap}
+.marquee-track span{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);display:flex;align-items:center;gap:8px}
+.marquee-track span::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--teal);opacity:.5}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* SECTION UTILS */
+section{padding:100px 0}
+.section-label{font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--teal);margin-bottom:12px;font-weight:600}
+.section-title{font-family:var(--font-heading);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;margin-bottom:16px;line-height:1.15}
+.section-desc{color:var(--text-muted);max-width:600px;line-height:1.65;font-size:.95rem}
+.section-header{text-align:center;margin-bottom:60px}
+.section-header .section-desc{margin:0 auto}
+
+/* SHOWCASE */
+.showcase{background:var(--surface)}
+.showcase-grid{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;perspective:1200px}
+.phone-mock{width:220px;flex-shrink:0;border-radius:24px;overflow:hidden;border:2px solid var(--border);background:var(--card);box-shadow:0 20px 60px rgba(0,0,0,.5);transition:transform .5s cubic-bezier(.22,1,.36,1);position:relative}
+.phone-mock:hover{transform:rotateY(-8deg) rotateX(4deg) translateY(-10px)}
+.phone-mock img{width:100%;display:block;aspect-ratio:9/19.5;object-fit:cover}
+.phone-mock .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:80px;height:24px;background:#000;border-radius:12px;z-index:2}
+@media(max-width:768px){.phone-mock{width:160px}}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.features-grid{grid-template-columns:1fr}}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;transition:all .35s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--violet));opacity:0;transition:opacity .3s}
+.feature-card:hover{transform:translateY(-4px);border-color:rgba(126,183,190,.25);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.feature-card:hover::before{opacity:1}
+.feature-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:1.3rem}
+.feature-card h3{font-family:var(--font-heading);font-size:1.05rem;font-weight:600;margin-bottom:8px;color:var(--text)}
+.feature-card p{font-size:.85rem;color:var(--text-muted);line-height:1.6}
+
+/* METRICS */
+.metrics{background:linear-gradient(135deg,rgba(108,60,224,.06),rgba(126,183,190,.06))}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+@media(max-width:768px){.metrics-grid{grid-template-columns:repeat(2,1fr)}}
+.metric-item h3{font-family:var(--font-heading);font-size:clamp(2rem,4vw,3.2rem);font-weight:700;margin-bottom:4px}
+.metric-item h3 .num{background:linear-gradient(135deg,var(--teal),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.metric-item p{font-size:.85rem;color:var(--text-muted)}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+@media(max-width:768px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}}
+.price-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 24px;position:relative;transition:all .35s;display:flex;flex-direction:column}
+.price-card.featured{border-color:var(--violet);box-shadow:0 0 40px rgba(108,60,224,.15)}
+.price-card .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:4px 16px;border-radius:99px;font-size:.7rem;font-weight:700;background:linear-gradient(135deg,var(--violet),var(--teal));color:#fff;letter-spacing:1px;text-transform:uppercase}
+.price-card h3{font-family:var(--font-heading);font-size:1.15rem;font-weight:600;margin-bottom:8px;color:var(--text)}
+.price-card .price{font-family:var(--font-heading);font-size:2rem;font-weight:700;color:var(--teal);margin-bottom:4px}
+.price-card .price-sub{font-size:.8rem;color:var(--text-muted);margin-bottom:20px}
+.price-card ul{list-style:none;flex:1;margin-bottom:24px}
+.price-card ul li{font-size:.85rem;color:var(--text-muted);padding:6px 0;display:flex;align-items:center;gap:8px}
+.price-card ul li::before{content:'✓';color:var(--teal);font-weight:700;font-size:.75rem}
+.price-card button{width:100%;padding:12px;border-radius:12px;font-weight:600;cursor:pointer;transition:all .25s;border:none;font-size:.9rem}
+.price-card.featured button{background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff}
+.price-card:not(.featured) button{background:transparent;border:1px solid var(--border);color:var(--text)}
+.price-card button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(108,60,224,.25)}
+
+/* FAQ */
+.faq-list{max-width:700px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{width:100%;background:none;border:none;color:var(--text);font-family:var(--font-body);font-size:.95rem;font-weight:500;padding:20px 0;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-q:hover{color:var(--teal)}
+.faq-q .arrow{transition:transform .3s;font-size:1.2rem;color:var(--text-dim)}
+.faq-item.open .arrow{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 0}
+.faq-item.open .faq-a{max-height:300px;padding:0 0 20px}
+.faq-a p{font-size:.88rem;color:var(--text-muted);line-height:1.7}
+
+/* CTA */
+.cta-section{text-align:center;padding:100px 24px;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(108,60,224,.12),transparent 70%)}
+.cta-section h2{font-family:var(--font-heading);font-size:clamp(2rem,4vw,3rem);font-weight:700;margin-bottom:16px;position:relative}
+.cta-section p{color:var(--text-muted);margin-bottom:32px;position:relative}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:48px 24px;background:var(--surface)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;max-width:1200px;margin:0 auto}
+@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
+.footer-brand .logo{font-family:var(--font-heading);font-weight:700;font-size:1.2rem;background:linear-gradient(135deg,var(--teal),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.footer-brand p{font-size:.82rem;color:var(--text-dim);line-height:1.6}
+.footer-col h4{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;font-weight:600}
+.footer-col a{display:block;font-size:.85rem;color:var(--text-dim);padding:4px 0;transition:color .2s}
+.footer-col a:hover{color:var(--teal)}
+.footer-bottom{text-align:center;padding-top:24px;margin-top:32px;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-dim);max-width:1200px;margin-left:auto;margin-right:auto}
+
+/* CHATBOT */
+.chatbot-btn{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--teal));border:none;cursor:pointer;z-index:200;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(108,60,224,.4);transition:all .3s;font-size:1.4rem;color:#fff}
+.chatbot-btn:hover{transform:scale(1.08);box-shadow:0 8px 32px rgba(108,60,224,.5)}
+.chatbot-panel{position:fixed;bottom:90px;right:24px;width:340px;max-height:480px;background:var(--card);border:1px solid var(--border);border-radius:20px;z-index:200;display:none;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.5);overflow:hidden}
+.chatbot-panel.open{display:flex}
+.chatbot-header{padding:16px;background:linear-gradient(135deg,var(--violet),var(--teal));display:flex;align-items:center;gap:10px}
+.chatbot-header .avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.chatbot-header .info h4{font-size:.9rem;font-weight:600;color:#fff}
+.chatbot-header .info p{font-size:.7rem;color:rgba(255,255,255,.7)}
+.chatbot-messages{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.chat-msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:.82rem;line-height:1.5}
+.chat-msg.bot{background:rgba(126,183,190,.1);border:1px solid rgba(126,183,190,.15);color:var(--text);align-self:flex-start}
+.chat-msg.user{background:var(--violet);color:#fff;align-self:flex-end}
+.chatbot-input{display:flex;padding:12px;gap:8px;border-top:1px solid var(--border)}
+.chatbot-input input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.82rem;outline:none}
+.chatbot-input input::placeholder{color:var(--text-dim)}
+.chatbot-input button{width:36px;height:36px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+@media(max-width:480px){.chatbot-panel{right:12px;left:12px;width:auto;bottom:84px}}
+
+/* SCROLL REVEAL */
+.sr{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.sr.visible{opacity:1;transform:translateY(0)}
+
+/* GRAIN OVERLAY */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+</style>
 </head>
-<body><div class="placeholder"><h1>Empire.AI</h1><p>Homepage content — replace this file with your final HTML.</p></div></body>
+<body>
+<div class="grain"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="logo">Empire.AI</div>
+    <div class="links">
+      <a href="#features">Funzionalità</a>
+      <a href="#pricing">Prezzi</a>
+      <a href="/catalogo">Portfolio</a>
+      <a href="#faq">FAQ</a>
+      <button class="nav-cta" onclick="location.href='/auth'">Inizia Gratis →</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content sr">
+    <div class="hero-badge">✨ La piattaforma AI #1 per le imprese italiane</div>
+    <h1>Trasformiamo le<br><span class="gradient">Imprese Italiane</span><br>con l'IA</h1>
+    <p>Un unico ecosistema per digitalizzare, automatizzare e scalare qualsiasi attività. App white-label, agenti AI e strumenti enterprise per 25+ settori.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="location.href='/auth'">Prenota una Demo Gratuita</button>
+      <button class="btn-outline" onclick="location.href='/catalogo'">Vedi il Portfolio</button>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marquee">
+    <span>Ristoranti</span><span>Hotel</span><span>Beauty & Spa</span><span>NCC & Transfer</span>
+    <span>Palestre & Fitness</span><span>Studi Medici</span><span>Retail & Shop</span><span>Artigiani</span>
+    <span>Stabilimenti Balneari</span><span>Panifici & Pasticcerie</span><span>Tattoo Studio</span>
+    <span>Agenzie Immobiliari</span><span>Pet Care</span><span>Centri Yoga</span><span>Fotografi</span>
+    <span>Wedding Planner</span><span>Scuole di Musica</span><span>Autolavaggi</span><span>Fioristi</span>
+    <span>Ristoranti</span><span>Hotel</span><span>Beauty & Spa</span><span>NCC & Transfer</span>
+    <span>Palestre & Fitness</span><span>Studi Medici</span><span>Retail & Shop</span><span>Artigiani</span>
+    <span>Stabilimenti Balneari</span><span>Panifici & Pasticcerie</span><span>Tattoo Studio</span>
+    <span>Agenzie Immobiliari</span><span>Pet Care</span><span>Centri Yoga</span><span>Fotografi</span>
+    <span>Wedding Planner</span><span>Scuole di Musica</span><span>Autolavaggi</span><span>Fioristi</span>
+  </div>
+</div>
+
+<!-- SHOWCASE -->
+<section class="showcase" id="showcase">
+  <div class="container">
+    <div class="section-header sr">
+      <div class="section-label">Portfolio Live</div>
+      <h2 class="section-title">App che parlano da sole</h2>
+      <p class="section-desc">Ogni progetto è un'app white-label unica, brandizzata al 100% per il cliente. Zero compromessi sul design.</p>
+    </div>
+    <div class="showcase-grid">
+      <div class="phone-mock sr"><div class="notch"></div><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/food/food-mobile-1.webp" alt="App Ristorante" loading="lazy"></div>
+      <div class="phone-mock sr" style="margin-top:40px"><div class="notch"></div><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/beauty/beauty-mobile-1.webp" alt="App Beauty" loading="lazy"></div>
+      <div class="phone-mock sr"><div class="notch"></div><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/hotel/hotel-mobile-1.webp" alt="App Hotel" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-header sr">
+      <div class="section-label">Funzionalità</div>
+      <h2 class="section-title">Tutto ciò che serve, in un'unica piattaforma</h2>
+      <p class="section-desc">Ogni strumento progettato per generare risultati misurabili, non solo impressionare.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card sr">
+        <div class="feature-icon" style="background:rgba(126,183,190,.1)">📱</div>
+        <h3>App White-Label</h3>
+        <p>Un'app completamente brandizzata con il logo, i colori e il nome del tuo cliente. Nessun nostro marchio visibile.</p>
+      </div>
+      <div class="feature-card sr">
+        <div class="feature-icon" style="background:rgba(108,60,224,.1)">🤖</div>
+        <h3>98+ Agenti AI</h3>
+        <p>Chatbot, voice agent, inventory manager, review shield — agenti specializzati per ogni esigenza di settore.</p>
+      </div>
+      <div class="feature-card sr">
+        <div class="feature-icon" style="background:rgba(212,168,85,.1)">🎯</div>
+        <h3>Lead Generation</h3>
+        <p>LeadEngine Scout trova prospect reali con scoring AI, analisi digital e messaggi personalizzati multi-canale.</p>
+      </div>
+      <div class="feature-card sr">
+        <div class="feature-icon" style="background:rgba(126,183,190,.1)">📊</div>
+        <h3>Analytics Avanzati</h3>
+        <p>Dashboard real-time con revenue tracking, customer insights, previsioni AI e KPI operativi personalizzati.</p>
+      </div>
+      <div class="feature-card sr">
+        <div class="feature-icon" style="background:rgba(108,60,224,.1)">🏢</div>
+        <h3>25+ Settori</h3>
+        <p>Food, Beauty, Hotel, NCC, Fitness, Healthcare, Retail, Trades e altri 17 verticali con template pre-configurati.</p>
+      </div>
+      <div class="feature-card sr">
+        <div class="feature-icon" style="background:rgba(212,168,85,.1)">⚡</div>
+        <h3>Scalabilità Infinita</h3>
+        <p>Architettura multi-tenant enterprise. Gestisci 1 o 1.000 aziende dalla stessa piattaforma senza limiti.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="metrics">
+  <div class="container">
+    <div class="metrics-grid">
+      <div class="metric-item sr"><h3><span class="num" data-target="98">0</span>+</h3><p>Agenti IA Attivi</p></div>
+      <div class="metric-item sr"><h3><span class="num" data-target="25">0</span>+</h3><p>Settori Coperti</p></div>
+      <div class="metric-item sr"><h3><span class="num" data-target="500">0</span>+</h3><p>Clienti Soddisfatti</p></div>
+      <div class="metric-item sr"><h3><span class="num" data-target="99">0</span>.9%</h3><p>Uptime Garantito</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header sr">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Investimento che si ripaga dal primo mese</h2>
+      <p class="section-desc">Nessun costo nascosto. Trial 90 giorni. TAN 0% disponibile.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card sr">
+        <h3>Digital Start</h3>
+        <div class="price">€1.997</div>
+        <div class="price-sub">Una tantum + €49/mese</div>
+        <ul>
+          <li>Setup completo</li>
+          <li>App white-label</li>
+          <li>Dashboard operativa</li>
+          <li>Menu / Catalogo digitale</li>
+          <li>QR Code & Prenotazioni</li>
+          <li>Supporto email</li>
+        </ul>
+        <button onclick="location.href='/auth?plan=essential'">Inizia con Digital Start</button>
+      </div>
+      <div class="price-card featured sr">
+        <div class="badge">Più Scelto</div>
+        <h3>Growth AI</h3>
+        <div class="price">€4.997</div>
+        <div class="price-sub">Una tantum + €29/mese</div>
+        <ul>
+          <li>Tutto di Digital Start</li>
+          <li>AI Agents completi</li>
+          <li>CRM avanzato</li>
+          <li>Marketing Automation</li>
+          <li>WhatsApp Bot</li>
+          <li>Supporto prioritario</li>
+        </ul>
+        <button onclick="location.href='/auth?plan=smart_ia'">Scegli Growth AI</button>
+      </div>
+      <div class="price-card sr">
+        <h3>Empire Domination</h3>
+        <div class="price">€7.997</div>
+        <div class="price-sub">Una tantum + €0/mese</div>
+        <ul>
+          <li>Tutto incluso per sempre</li>
+          <li>0% commissioni</li>
+          <li>AI avanzata illimitata</li>
+          <li>Account Manager dedicato</li>
+          <li>Formazione team</li>
+          <li>SLA garantito</li>
+        </ul>
+        <button onclick="location.href='/auth?plan=empire_pro'">Vai con Empire</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header sr">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">Domande Frequenti</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q">Quanto tempo ci vuole per essere operativi? <span class="arrow">▾</span></button><div class="faq-a"><p>In media 48-72 ore dal momento dell'ordine. Il nostro team si occupa di tutto: configurazione, branding, importazione dati e formazione.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Serve esperienza tecnica? <span class="arrow">▾</span></button><div class="faq-a"><p>Assolutamente no. La piattaforma è progettata per imprenditori, non per programmatori. Tutto è drag & drop e guidato da AI.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Posso personalizzare completamente l'app? <span class="arrow">▾</span></button><div class="faq-a"><p>Sì al 100%. Logo, colori, font, contenuti, moduli — ogni aspetto è personalizzabile. I tuoi clienti vedranno solo il TUO brand.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Come funziona il trial di 90 giorni? <span class="arrow">▾</span></button><div class="faq-a"><p>Accedi a tutte le funzionalità senza limiti per 90 giorni. Se non sei soddisfatto, annulli senza costi. Nessuna carta di credito richiesta per iniziare.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Offrite finanziamento? <span class="arrow">▾</span></button><div class="faq-a"><p>Sì, tutti i piani possono essere finanziati con TAN 0% fino a 12 mesi. Contattaci per i dettagli personalizzati.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Quali settori coprite? <span class="arrow">▾</span></button><div class="faq-a"><p>Oltre 25 settori: ristorazione, hotel, beauty, fitness, NCC, healthcare, retail, artigiani, stabilimenti balneari, tattoo, fotografia, wedding e molti altri.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="sr">Pronto a Trasformare la Tua Impresa?</h2>
+  <p class="sr">Unisciti a centinaia di imprenditori italiani che hanno già scelto Empire.AI</p>
+  <div class="sr">
+    <button class="btn-primary" onclick="location.href='/auth'" style="font-size:1.05rem;padding:16px 40px">Inizia il Trial Gratuito di 90 Giorni →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Empire.AI</div>
+      <p>La piattaforma AI all-in-one per digitalizzare qualsiasi impresa italiana. Made with ❤️ in Italy.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Prodotto</h4>
+      <a href="#features">Funzionalità</a>
+      <a href="#pricing">Prezzi</a>
+      <a href="/catalogo">Portfolio</a>
+      <a href="/demo">Demo Live</a>
+    </div>
+    <div class="footer-col">
+      <h4>Azienda</h4>
+      <a href="/partner/register">Diventa Partner</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/cookie">Cookie</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contatti</h4>
+      <a href="mailto:info@empireaigroup.com">info@empireaigroup.com</a>
+      <a href="tel:+390612345678">+39 06 123 456 78</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Empire.AI Group — Tutti i diritti riservati. P.IVA IT12345678901</div>
+</footer>
+
+<!-- CHATBOT ARIANNA -->
+<button class="chatbot-btn" id="chatToggle" aria-label="Chat con Arianna">💬</button>
+<div class="chatbot-panel" id="chatPanel">
+  <div class="chatbot-header">
+    <div class="avatar">🤖</div>
+    <div class="info"><h4>Arianna</h4><p>AI Sales Assistant • Online</p></div>
+  </div>
+  <div class="chatbot-messages" id="chatMessages">
+    <div class="chat-msg bot">Ciao! 👋 Sono Arianna, l'assistente AI di Empire. Come posso aiutarti oggi?</div>
+  </div>
+  <div class="chatbot-input">
+    <input type="text" id="chatInput" placeholder="Scrivi un messaggio..." autocomplete="off">
+    <button id="chatSend">➤</button>
+  </div>
+</div>
+
+<script>
+// Particle canvas
+(function(){
+  const c=document.getElementById('hero-canvas'),ctx=c.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight}
+  window.addEventListener('resize',resize);resize();
+  class P{
+    constructor(){this.reset()}
+    reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.5+.5;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.alpha=Math.random()*.4+.1;this.color=Math.random()>.5?'126,183,190':'108,60,224'}
+    update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1}
+    draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${this.alpha})`;ctx.fill()}
+  }
+  for(let i=0;i<80;i++)particles.push(new P());
+  function loop(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();p.draw()});
+    for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(126,183,190,${.08*(1-d/120)})`;ctx.stroke()}
+    }
+    requestAnimationFrame(loop)}
+  loop();
+})();
+
+// GSAP ScrollReveal
+gsap.registerPlugin(ScrollTrigger);
+document.querySelectorAll('.sr').forEach(el=>{
+  gsap.fromTo(el,{opacity:0,y:40},{opacity:1,y:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}});
+});
+
+// Counter animation
+document.querySelectorAll('.num').forEach(el=>{
+  const target=parseInt(el.dataset.target);
+  ScrollTrigger.create({trigger:el,start:'top 85%',onEnter:()=>{
+    gsap.to({v:0},{v:target,duration:2,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(this.targets()[0].v)}})
+  }});
+});
+
+// FAQ
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const item=btn.parentElement;
+    document.querySelectorAll('.faq-item').forEach(i=>{if(i!==item)i.classList.remove('open')});
+    item.classList.toggle('open');
+  });
+});
+
+// Chatbot
+const chatToggle=document.getElementById('chatToggle'),chatPanel=document.getElementById('chatPanel'),chatInput=document.getElementById('chatInput'),chatSend=document.getElementById('chatSend'),chatMessages=document.getElementById('chatMessages');
+chatToggle.addEventListener('click',()=>chatPanel.classList.toggle('open'));
+const RESPONSES={'pricing':['I nostri piani partono da €1.997 una tantum + €49/mese. Il piano Growth AI a €4.997 è il più scelto! Vuoi che ti mostri un confronto dettagliato?'],'demo':['Certo! Puoi provare una demo live di qualsiasi settore su /demo. Quale settore ti interessa di più?'],'settori':['Copriamo 25+ settori: ristorazione, hotel, beauty, fitness, NCC, healthcare, retail e molti altri. Ognuno con template e agenti AI specializzati!'],'default':['Ottima domanda! Per una risposta dettagliata ti consiglio di prenotare una demo gratuita. Il nostro team ti mostrerà tutto in 15 minuti.','Capisco! Empire.AI è la soluzione ideale per digitalizzare qualsiasi attività. Vuoi sapere di più su un settore specifico?']};
+function getReply(msg){const m=msg.toLowerCase();if(m.includes('prezz')||m.includes('cost')||m.includes('pian'))return RESPONSES.pricing[0];if(m.includes('demo')||m.includes('prova'))return RESPONSES.demo[0];if(m.includes('settor'))return RESPONSES.settori[0];return RESPONSES.default[Math.floor(Math.random()*RESPONSES.default.length)]}
+function sendMsg(){const v=chatInput.value.trim();if(!v)return;chatMessages.innerHTML+=`<div class="chat-msg user">${v}</div>`;chatInput.value='';chatMessages.scrollTop=chatMessages.scrollHeight;setTimeout(()=>{chatMessages.innerHTML+=`<div class="chat-msg bot">${getReply(v)}</div>`;chatMessages.scrollTop=chatMessages.scrollHeight},800)}
+chatSend.addEventListener('click',sendMsg);chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg()});
+</script>
+</body>
 </html>
