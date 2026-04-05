@@ -72,10 +72,10 @@ export default function LeadsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-bold flex items-center gap-2" style={{ color: "#f3f4f6" }}>
-            <Target className="w-5 h-5" style={{ color: "#10b981" }} /> LeadEngine Scout
+          <h1 className="text-lg font-bold flex items-center gap-2 text-white">
+            <Target className="w-5 h-5 text-emerald-400" /> LeadEngine Scout
           </h1>
-          <p className="text-[10px] mt-0.5" style={{ color: "#9ca3af" }}>Trova · Analizza · Converti — il tuo CRM intelligente</p>
+          <p className="text-[10px] mt-0.5 text-gray-300">Trova · Analizza · Converti — il tuo CRM intelligente</p>
         </div>
         {results.length > 0 && (
           <div className="flex items-center gap-1.5">
