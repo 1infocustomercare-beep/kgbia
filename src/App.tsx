@@ -171,6 +171,7 @@ const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
+const StaticIframePage = lazy(() => import("./pages/StaticIframePage"));
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
@@ -564,6 +565,8 @@ function App() {
                       <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/login" element={<AuthPage />} />
+                      <Route path="/landing" element={<StaticIframePage src="/homepage.html" title="Empire.AI" />} />
+                      <Route path="/catalogo" element={<StaticIframePage src="/catalogo-completo.html" title="Catalogo Completo" />} />
 
                       {/* Onboarding */}
                       <Route path="/onboarding" element={
