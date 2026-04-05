@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Target, Kanban, Zap, TrendingUp, ArrowUpDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import LeadSearchPanel, { SearchFilters } from "@/components/leads/LeadSearchPanel";
 import LeadResultCard from "@/components/leads/LeadResultCard";
 import LeadCommandPanel from "@/components/leads/LeadCommandPanel";
@@ -11,18 +12,18 @@ import { toast } from "sonner";
 type Tab = "search" | "pipeline";
 
 export default function LeadsPage() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>("search");
   const [results, setResults] = useState<MockLead[]>([]);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState<"score" | "rating" | "name">("score");
-  const [activeLead, setActiveLead] = useState<{ lead: MockLead; tab: "analyze" | "message" } | null>(null);
+  const [activeLead, setActiveLead] = useState<MockLead | null>(null);
   const [savedLeads, setSavedLeads] = useState<MockLead[]>([]);
   const [lastSearch, setLastSearch] = useState<SearchFilters | null>(null);
 
   const handleSearch = useCallback((filters: SearchFilters) => {
     setLoading(true);
     setLastSearch(filters);
-    // Simulate realistic search delay
     const delay = 800 + Math.random() * 700;
     setTimeout(() => {
       const count = 15 + Math.floor(Math.random() * 12);
@@ -44,9 +45,17 @@ export default function LeadsPage() {
     toast.success(`${lead.businessName} aggiunto alla Pipeline!`);
   }, [savedLeads]);
 
-  const openLead = useCallback((lead: MockLead, initialTab: "analyze" | "message") => {
-    setActiveLead({ lead, tab: initialTab });
-  }, []);
+  const handleMessage = useCallback((lead: MockLead) => {
+    // Navigate to PartnerDashboard with lead data pre-filled
+    const params = new URLSearchParams();
+    params.set("sector", lead.sector);
+    if (lead.instagram) params.set("ig", lead.instagram);
+    if (lead.website) params.set("website", lead.website);
+    const bestChannel = lead.digitalStatus === "none" ? "whatsapp" : lead.googleRating < 3.5 ? "email" : "instagram";
+    params.set("channel", bestChannel);
+    params.set("lead_name", lead.businessName);
+    navigate(`/partner?${params.toString()}`);
+  }, [navigate]);
 
   const sortedResults = [...results].sort((a, b) => {
     if (sortBy === "score") return b.opportunityScore - a.opportunityScore;
@@ -128,8 +137,8 @@ export default function LeadsPage() {
               <div className="space-y-2">
                 {sortedResults.map((lead, i) => (
                   <LeadResultCard key={lead.id} lead={lead} index={i}
-                    onAnalyze={(l) => openLead(l, "analyze")}
-                    onMessage={(l) => openLead(l, "message")}
+                    onAnalyze={(l) => setActiveLead(l)}
+                    onMessage={handleMessage}
                     onSave={handleSaveLead} />
                 ))}
               </div>
@@ -150,12 +159,11 @@ export default function LeadsPage() {
         <LeadPipelineBoard savedLeads={savedLeads} />
       )}
 
-      {/* Command Panel */}
+      {/* Analysis Panel */}
       <AnimatePresence>
         {activeLead && (
           <LeadCommandPanel
-            lead={activeLead.lead}
-            initialTab={activeLead.tab}
+            lead={activeLead}
             onClose={() => setActiveLead(null)}
             onSave={handleSaveLead}
           />
