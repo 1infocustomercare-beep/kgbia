@@ -254,6 +254,31 @@ const PartnerDashboard = () => {
   // Persist demoMode
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
+  // ── Read lead data from URL params (from LeadEngine Scout) ──
+  useEffect(() => {
+    const sector = searchParams.get("sector");
+    const ig = searchParams.get("ig");
+    const website = searchParams.get("website");
+    const channel = searchParams.get("channel");
+    const leadName = searchParams.get("lead_name");
+
+    if (sector || ig || website) {
+      if (sector) setSelectedProject(sector);
+      if (ig) setTargetIg(ig);
+      if (website) setTargetWebsite(website);
+      if (channel) {
+        const channelMap: Record<string, string> = { whatsapp: "whatsapp", email: "email", instagram: "instagram", phone: "field" };
+        setActiveChannel(channelMap[channel] || "instagram");
+      }
+      // Clear params from URL without re-render
+      setSearchParams({}, { replace: true });
+      // Show toast
+      if (leadName) {
+        toast({ title: `📍 Lead: ${leadName}`, description: `Settore e contatto pre-compilati. Genera il messaggio!` });
+      }
+    }
+  }, []); // Run once on mount
+
   // Sync edit fields
   useEffect(() => {
     if (demoRestaurant) {
