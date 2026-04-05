@@ -684,7 +684,7 @@ function App() {
                         <Route path="automations" element={<AutomationsPage />} />
                         <Route path="whatsapp" element={<WhatsAppPage />} />
                         {/* Common modules */}
-                        <Route path="leads" element={<LeadsPage />} />
+                        {/* leads removed from /app — only available via /partner/leads */}
                         <Route path="staff" element={<StaffPage />} />
                         <Route path="haccp" element={<HACCPPage />} />
                         <Route path="payroll" element={<PayrollPage />} />
