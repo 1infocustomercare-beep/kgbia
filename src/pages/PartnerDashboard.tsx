@@ -13,7 +13,7 @@ import {
   Globe, MessageCircle, Link2, Wand2, Phone,
   Search, Bot, Loader2, Zap, ArrowRight, Map
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -202,6 +202,7 @@ const matchesSectorSearch = (card: typeof SECTOR_CARDS[0], query: string): boole
    ═══════════════════════════════════════════ */
 const PartnerDashboard = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { signOut, isTeamLeader, user } = useAuth();
   const [showROI, setShowROI] = useState(false);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
@@ -252,6 +253,31 @@ const PartnerDashboard = () => {
 
   // Persist demoMode
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
+
+  // ── Read lead data from URL params (from LeadEngine Scout) ──
+  useEffect(() => {
+    const sector = searchParams.get("sector");
+    const ig = searchParams.get("ig");
+    const website = searchParams.get("website");
+    const channel = searchParams.get("channel");
+    const leadName = searchParams.get("lead_name");
+
+    if (sector || ig || website) {
+      if (sector) setSelectedProject(sector);
+      if (ig) setTargetIg(ig);
+      if (website) setTargetWebsite(website);
+      if (channel) {
+        const channelMap: Record<string, string> = { whatsapp: "whatsapp", email: "email", instagram: "instagram", phone: "field" };
+        setActiveChannel(channelMap[channel] || "instagram");
+      }
+      // Clear params from URL without re-render
+      setSearchParams({}, { replace: true });
+      // Show toast
+      if (leadName) {
+        toast({ title: `📍 Lead: ${leadName}`, description: `Settore e contatto pre-compilati. Genera il messaggio!` });
+      }
+    }
+  }, []); // Run once on mount
 
   // Sync edit fields
   useEffect(() => {
