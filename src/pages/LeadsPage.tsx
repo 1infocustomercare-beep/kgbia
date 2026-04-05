@@ -1,266 +1,145 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Plus, Search, Filter, Phone, Mail, Calendar, MoreHorizontal,
-  User, ArrowRight, TrendingUp, Target, Users
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/context/AuthContext";
-import { useIndustry } from "@/hooks/useIndustry";
+import { Search, Users, Target, BarChart3, Kanban, List } from "lucide-react";
+import LeadSearchPanel from "@/components/leads/LeadSearchPanel";
+import LeadResultCard from "@/components/leads/LeadResultCard";
+import LeadAnalysisPanel from "@/components/leads/LeadAnalysisPanel";
+import LeadMessageGenerator from "@/components/leads/LeadMessageGenerator";
+import LeadPipelineBoard from "@/components/leads/LeadPipelineBoard";
+import { generateMockLeads, MockLead, SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { toast } from "sonner";
 
-type LeadStatus = "new" | "contacted" | "qualified" | "converted" | "lost";
-
-interface Lead {
-  id: string;
-  name: string;
-  email: string | null;
-  phone: string | null;
-  status: LeadStatus;
-  source: string | null;
-  notes: string | null;
-  value: number;
-  created_at: string;
-  company_id: string;
-}
-
-const STATUS_CONFIG: Record<LeadStatus, { label: string; color: string; bg: string }> = {
-  new: { label: "Nuovo", color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/30" },
-  contacted: { label: "Contattato", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/30" },
-  qualified: { label: "Qualificato", color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/30" },
-  converted: { label: "Convertito", color: "text-green-400", bg: "bg-green-400/10 border-green-400/30" },
-  lost: { label: "Perso", color: "text-red-400", bg: "bg-red-400/10 border-red-400/30" },
-};
-
-const PIPELINE_ORDER: LeadStatus[] = ["new", "contacted", "qualified", "converted", "lost"];
+type Tab = "search" | "pipeline";
 
 export default function LeadsPage() {
-  const { user } = useAuth();
-  const { companyId, terminology } = useIndustry();
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState<string>("all");
-  const [showAdd, setShowAdd] = useState(false);
-  const [viewMode, setViewMode] = useState<"kanban" | "list">("list");
+  const [tab, setTab] = useState<Tab>("search");
+  const [results, setResults] = useState<MockLead[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState<"score" | "rating" | "name">("score");
+  const [analyzeLead, setAnalyzeLead] = useState<MockLead | null>(null);
+  const [messageLead, setMessageLead] = useState<MockLead | null>(null);
+  const [savedLeads, setSavedLeads] = useState<MockLead[]>([]);
+  const [lastSearch, setLastSearch] = useState<{ sector: string; city: string } | null>(null);
 
-  // Form state
-  const [form, setForm] = useState({ name: "", email: "", phone: "", source: "", notes: "", value: "0" });
-
-  const fetchLeads = async () => {
-    if (!companyId) return;
-    const { data, error } = await supabase
-      .from("leads" as any)
-      .select("*")
-      .eq("company_id", companyId)
-      .order("created_at", { ascending: false });
-
-    if (!error && data) setLeads(data as unknown as Lead[]);
-    setLoading(false);
+  const handleSearch = (filters: { sector: string; city: string; minRating: number; minReviews: number }) => {
+    setLoading(true);
+    setLastSearch({ sector: filters.sector, city: filters.city });
+    // Simulate API delay
+    setTimeout(() => {
+      let leads = generateMockLeads(filters.sector, filters.city, 18 + Math.floor(Math.random() * 8));
+      if (filters.minRating > 0) leads = leads.filter(l => l.googleRating >= filters.minRating);
+      if (filters.minReviews > 0) leads = leads.filter(l => l.reviewCount >= filters.minReviews);
+      setResults(leads);
+      setLoading(false);
+      toast.success(`${leads.length} lead trovati a ${filters.city}!`);
+    }, 1200 + Math.random() * 800);
   };
 
-  useEffect(() => { fetchLeads(); }, [companyId]);
-
-  const addLead = async () => {
-    if (!form.name.trim() || !companyId) return;
-    const { error } = await supabase.from("leads" as any).insert({
-      name: form.name,
-      email: form.email || null,
-      phone: form.phone || null,
-      source: form.source || null,
-      notes: form.notes || null,
-      value: parseFloat(form.value) || 0,
-      status: "new",
-      company_id: companyId,
-    });
-    if (error) { toast.error("Errore nel salvataggio"); return; }
-    toast.success("Lead aggiunto!");
-    setShowAdd(false);
-    setForm({ name: "", email: "", phone: "", source: "", notes: "", value: "0" });
-    fetchLeads();
+  const handleSaveLead = (lead: MockLead) => {
+    if (savedLeads.find(l => l.id === lead.id)) {
+      toast.info("Lead già salvato nel CRM");
+      return;
+    }
+    setSavedLeads(prev => [...prev, lead]);
+    toast.success(`${lead.businessName} salvato nel CRM!`);
   };
 
-  const updateStatus = async (id: string, status: LeadStatus) => {
-    await supabase.from("leads" as any).update({ status }).eq("id", id);
-    fetchLeads();
-  };
-
-  const filtered = leads.filter((l) => {
-    const matchSearch = l.name.toLowerCase().includes(search.toLowerCase()) ||
-      (l.email || "").toLowerCase().includes(search.toLowerCase());
-    const matchStatus = filterStatus === "all" || l.status === filterStatus;
-    return matchSearch && matchStatus;
+  const sortedResults = [...results].sort((a, b) => {
+    if (sortBy === "score") return b.opportunityScore - a.opportunityScore;
+    if (sortBy === "rating") return b.googleRating - a.googleRating;
+    return a.businessName.localeCompare(b.businessName);
   });
 
-  // KPI
-  const totalLeads = leads.length;
-  const convertedLeads = leads.filter((l) => l.status === "converted").length;
-  const conversionRate = totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0;
-  const totalValue = leads.filter((l) => l.status === "converted").reduce((sum, l) => sum + (l.value || 0), 0);
+  const sectorLabel = lastSearch ? SECTOR_OPTIONS.find(s => s.value === lastSearch.sector)?.label : "";
 
   return (
-    <div className="space-y-6">
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: "Lead Totali", value: totalLeads, icon: Users, color: "text-blue-400" },
-          { label: "Qualificati", value: leads.filter((l) => l.status === "qualified").length, icon: Target, color: "text-purple-400" },
-          { label: "Convertiti", value: `${conversionRate}%`, icon: TrendingUp, color: "text-green-400" },
-          { label: "Valore Totale", value: `€${totalValue.toLocaleString("it-IT")}`, icon: TrendingUp, color: "text-primary" },
-        ].map((kpi, i) => (
-          <Card key={i} className="glass border-border/50">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <kpi.icon className={`w-4 h-4 ${kpi.color}`} />
-                <span className="text-xs text-muted-foreground">{kpi.label}</span>
-              </div>
-              <p className="text-2xl font-bold">{kpi.value}</p>
-            </CardContent>
-          </Card>
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+            <Target className="w-5 h-5" style={{ color: "#10b981" }} /> LeadEngine Scout
+          </h1>
+          <p className="text-[11px] mt-0.5" style={{ color: "#6b7280" }}>Trova, analizza e converti lead in clienti</p>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2">
+        {([
+          { id: "search" as Tab, icon: Search, label: "Ricerca", count: results.length },
+          { id: "pipeline" as Tab, icon: Kanban, label: "Pipeline CRM", count: savedLeads.length },
+        ]).map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all"
+            style={{
+              background: tab === t.id ? "rgba(16,185,129,0.12)" : "rgba(255,255,255,0.03)",
+              border: `1px solid ${tab === t.id ? "rgba(16,185,129,0.25)" : "rgba(255,255,255,0.06)"}`,
+              color: tab === t.id ? "#10b981" : "#9ca3af",
+            }}>
+            <t.icon className="w-3.5 h-3.5" /> {t.label}
+            {t.count > 0 && <span className="px-1.5 py-0.5 rounded-full text-[9px]" style={{ background: "rgba(255,255,255,0.08)" }}>{t.count}</span>}
+          </button>
         ))}
       </div>
 
-      {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-        <div className="flex gap-2 flex-1 w-full sm:w-auto">
-          <div className="relative flex-1 sm:max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Cerca lead..."
-              className="pl-9 bg-secondary/50"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-[140px] bg-secondary/50">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tutti</SelectItem>
-              {PIPELINE_ORDER.map((s) => (
-                <SelectItem key={s} value={s}>{STATUS_CONFIG[s].label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      {tab === "search" && (
+        <>
+          <LeadSearchPanel onSearch={handleSearch} loading={loading} />
 
-        <Dialog open={showAdd} onOpenChange={setShowAdd}>
-          <DialogTrigger asChild>
-            <Button className="bg-vibrant-gradient text-white">
-              <Plus className="w-4 h-4 mr-2" /> Nuovo Lead
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="glass border-border/50">
-            <DialogHeader>
-              <DialogTitle>Aggiungi Lead</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 mt-4">
-              <div>
-                <Label>Nome *</Label>
-                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Mario Rossi" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label>Email</Label>
-                  <Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="mario@email.com" />
-                </div>
-                <div>
-                  <Label>Telefono</Label>
-                  <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+39 333..." />
+          {/* Results */}
+          {results.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-white">{results.length} risultati — {sectorLabel} a {lastSearch?.city}</p>
+                <div className="flex gap-1">
+                  {(["score", "rating", "name"] as const).map(s => (
+                    <button key={s} onClick={() => setSortBy(s)}
+                      className="px-2 py-1 rounded text-[9px] font-semibold"
+                      style={{
+                        background: sortBy === s ? "rgba(255,255,255,0.08)" : "transparent",
+                        color: sortBy === s ? "#fff" : "#6b7280",
+                      }}>
+                      {s === "score" ? "Score" : s === "rating" ? "Rating" : "Nome"}
+                    </button>
+                  ))}
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label>Fonte</Label>
-                  <Input value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} placeholder="Google, Referral..." />
-                </div>
-                <div>
-                  <Label>Valore (€)</Label>
-                  <Input type="number" value={form.value} onChange={(e) => setForm({ ...form, value: e.target.value })} />
-                </div>
+
+              <div className="space-y-2">
+                {sortedResults.map((lead, i) => (
+                  <LeadResultCard key={lead.id} lead={lead} index={i}
+                    onAnalyze={setAnalyzeLead} onMessage={setMessageLead} onSave={handleSaveLead} />
+                ))}
               </div>
-              <div>
-                <Label>Note</Label>
-                <Textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Dettagli..." rows={3} />
-              </div>
-              <Button className="w-full bg-vibrant-gradient text-white" onClick={addLead}>Salva Lead</Button>
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+          )}
 
-      {/* Lead List */}
-      <div className="space-y-3">
-        <AnimatePresence>
-          {filtered.map((lead) => (
-            <motion.div
-              key={lead.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-            >
-              <Card className="glass border-border/50 hover:border-primary/30 transition-colors">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <User className="w-5 h-5 text-primary" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-semibold truncate">{lead.name}</p>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                          {lead.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3" />{lead.email}</span>}
-                          {lead.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{lead.phone}</span>}
-                        </div>
-                      </div>
-                    </div>
+          {!loading && results.length === 0 && (
+            <div className="text-center py-16">
+              <Search className="w-12 h-12 mx-auto mb-4 opacity-20 text-white" />
+              <p className="text-sm font-medium text-white/60">Seleziona settore e città per iniziare la ricerca</p>
+              <p className="text-xs mt-1 text-white/30">I risultati includeranno score di opportunità e analisi AI</p>
+            </div>
+          )}
+        </>
+      )}
 
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      {lead.value > 0 && (
-                        <span className="text-sm font-medium text-primary">€{lead.value.toLocaleString("it-IT")}</span>
-                      )}
-                      <Select value={lead.status} onValueChange={(v) => updateStatus(lead.id, v as LeadStatus)}>
-                        <SelectTrigger className={`w-[130px] text-xs border ${STATUS_CONFIG[lead.status].bg}`}>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {PIPELINE_ORDER.map((s) => (
-                            <SelectItem key={s} value={s}>{STATUS_CONFIG[s].label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  {lead.notes && (
-                    <p className="mt-2 text-xs text-muted-foreground pl-[52px]">{lead.notes}</p>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+      {tab === "pipeline" && (
+        <LeadPipelineBoard savedLeads={savedLeads} />
+      )}
 
-        {!loading && filtered.length === 0 && (
-          <div className="text-center py-16 text-muted-foreground">
-            <Target className="w-12 h-12 mx-auto mb-4 opacity-40" />
-            <p className="text-lg font-medium">Nessun lead trovato</p>
-            <p className="text-sm">Aggiungi il tuo primo lead per iniziare a gestire la pipeline.</p>
-          </div>
+      {/* Panels */}
+      <AnimatePresence>
+        {analyzeLead && !messageLead && (
+          <LeadAnalysisPanel lead={analyzeLead} onClose={() => setAnalyzeLead(null)} onMessage={(l) => { setAnalyzeLead(null); setMessageLead(l); }} />
         )}
-      </div>
+      </AnimatePresence>
+      <AnimatePresence>
+        {messageLead && (
+          <LeadMessageGenerator lead={messageLead} onClose={() => setMessageLead(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
