@@ -202,6 +202,7 @@ const matchesSectorSearch = (card: typeof SECTOR_CARDS[0], query: string): boole
    ═══════════════════════════════════════════ */
 const PartnerDashboard = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { signOut, isTeamLeader, user } = useAuth();
   const [showROI, setShowROI] = useState(false);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
