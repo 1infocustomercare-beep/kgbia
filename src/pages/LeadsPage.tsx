@@ -67,23 +67,35 @@ export default function LeadsPage() {
   const [lastSearch, setLastSearch] = useState<SearchFilters | null>(null);
   const [dataSource, setDataSource] = useState<"mock" | "real">("mock");
 
+  const mockTimerRef = { current: null as ReturnType<typeof setTimeout> | null };
+
   const handleSearch = useCallback((filters: SearchFilters) => {
     setLoading(true);
     setLastSearch(filters);
     setDataSource("mock");
-    const delay = 600 + Math.random() * 500;
-    setTimeout(() => {
-      const count = 15 + Math.floor(Math.random() * 12);
-      let leads = generateMockLeads(filters.sector, filters.city, count, filters.freeText || undefined);
-      if (filters.minRating > 0) leads = leads.filter(l => l.googleRating >= filters.minRating);
-      if (filters.minReviews > 0) leads = leads.filter(l => l.reviewCount >= filters.minReviews);
-      setResults(leads);
-      setLoading(false);
-      toast.success(`${leads.length} lead trovati (dati simulati)`, { description: `${filters.city} — ${SECTOR_OPTIONS.find(s => s.value === filters.sector)?.label}` });
+
+    // If using real data, wait longer before falling back to mock
+    const delay = filters.useReal ? 12000 : (600 + Math.random() * 500);
+    if (mockTimerRef.current) clearTimeout(mockTimerRef.current);
+
+    mockTimerRef.current = setTimeout(() => {
+      // Only generate mock if we're still loading (real results haven't arrived)
+      setLoading(prev => {
+        if (!prev) return false; // real results already arrived
+        const count = 15 + Math.floor(Math.random() * 12);
+        let leads = generateMockLeads(filters.sector, filters.city, count, filters.freeText || undefined);
+        if (filters.minRating > 0) leads = leads.filter(l => l.googleRating >= filters.minRating);
+        if (filters.minReviews > 0) leads = leads.filter(l => l.reviewCount >= filters.minReviews);
+        setResults(leads);
+        setDataSource("mock");
+        toast.success(`${leads.length} lead trovati (dati simulati)`, { description: `${filters.city} — ${SECTOR_OPTIONS.find(s => s.value === filters.sector)?.label}` });
+        return false;
+      });
     }, delay);
   }, []);
 
   const handleRealResults = useCallback((apiResults: any[]) => {
+    if (mockTimerRef.current) clearTimeout(mockTimerRef.current);
     const sector = lastSearch?.sector || "food";
     const leads = apiResultsToLeads(apiResults, sector);
     setResults(leads);
