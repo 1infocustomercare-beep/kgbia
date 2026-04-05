@@ -807,7 +807,7 @@ const SuperAdminDashboard = () => {
             <div className="grid grid-cols-4 sm:grid-cols-5 gap-1">
               {group.tabs.map((tab) => (
                 <button key={tab.id}
-                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : setActiveTab(tab.id)}
+                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : setActiveTab(tab.id)}
                   className="flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[38px]"
                   style={activeTab === tab.id ? {
                     background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",

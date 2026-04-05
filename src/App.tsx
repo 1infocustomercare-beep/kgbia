@@ -583,6 +583,11 @@ function App() {
                         </ProtectedRoute>
                       } />
                       {/* leads is partner-only, not superadmin */}
+                      <Route path="/superadmin/leads" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <LeadsPage />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/superadmin/content-ai" element={
                         <ProtectedRoute requiredRole="super_admin">
                           <ContentAIPage />
