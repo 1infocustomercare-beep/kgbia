@@ -48,7 +48,12 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
   const [testingApi, setTestingApi] = useState(false);
 
   const handleSearch = async () => {
-    // Try real search first
+    const filters: SearchFilters = { sector, city, minRating, minReviews, freeText, mode, useReal };
+
+    // Always notify parent with filters first (sets lastSearch, loading state)
+    onSearch(filters);
+
+    // Try real search if enabled
     if (useReal && (mode === "zone" || mode === "keyword" || mode === "sector")) {
       try {
         const { data, error } = await supabase.functions.invoke("lead-search", {
@@ -62,13 +67,12 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
           setApiStatus(prev => ({ ...prev, nominatim: "ok", google: data.has_google_key ? "ok" : "no_key" }));
           return;
         }
+        // If real search returned 0 results, fall through to mock (already triggered by onSearch)
       } catch (e) {
-        console.warn("Real search failed, falling back to mock:", e);
+        console.warn("Real search failed, using mock data:", e);
       }
     }
-
-    // Fallback to mock
-    onSearch({ sector, city, minRating, minReviews, freeText, mode, useReal: false });
+    // Mock fallback already triggered by onSearch above
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
