@@ -70,7 +70,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "leads" | "content_ai";
 
 interface SubscriptionRecord {
   id: string;
@@ -634,6 +634,8 @@ const SuperAdminDashboard = () => {
     { id: "connections" as SuperTab, label: "Connessioni", icon: <Link2 className="w-5 h-5" /> },
     { id: "registrations" as SuperTab, label: "Registrazioni", icon: <Users className="w-5 h-5" /> },
     { id: "partner_network" as SuperTab, label: "Rete Partner", icon: <Handshake className="w-5 h-5" /> },
+    { id: "leads" as SuperTab, label: "Lead Scout", icon: <Search className="w-5 h-5" /> },
+    { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/auth"); };
@@ -790,7 +792,7 @@ const SuperAdminDashboard = () => {
         <div className="grid grid-cols-5 gap-1">
           {tabs.map((tab) => (
             <button key={tab.id}
-              onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : setActiveTab(tab.id)}
+              onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "leads" ? navigate("/superadmin/leads") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : setActiveTab(tab.id)}
               className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px]`}
               style={activeTab === tab.id ? {
                 background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",

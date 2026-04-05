@@ -569,6 +569,26 @@ function App() {
                       <Route path="/onboarding" element={
                         <ProtectedRoute><OnboardingPage /></ProtectedRoute>
                       } />
+                      <Route path="/partner/leads" element={
+                        <ProtectedRoute requiredRole="partner">
+                          <LeadsPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/partner/content-ai" element={
+                        <ProtectedRoute requiredRole="partner">
+                          <ContentAIPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/superadmin/leads" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <LeadsPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/superadmin/content-ai" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <ContentAIPage />
+                        </ProtectedRoute>
+                      } />
 
                       {/* Legacy protected routes (kept intact) */}
                       <Route path="/dashboard" element={
