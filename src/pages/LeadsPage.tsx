@@ -67,23 +67,35 @@ export default function LeadsPage() {
   const [lastSearch, setLastSearch] = useState<SearchFilters | null>(null);
   const [dataSource, setDataSource] = useState<"mock" | "real">("mock");
 
+  const mockTimerRef = { current: null as ReturnType<typeof setTimeout> | null };
+
   const handleSearch = useCallback((filters: SearchFilters) => {
     setLoading(true);
     setLastSearch(filters);
     setDataSource("mock");
-    const delay = 600 + Math.random() * 500;
-    setTimeout(() => {
-      const count = 15 + Math.floor(Math.random() * 12);
-      let leads = generateMockLeads(filters.sector, filters.city, count, filters.freeText || undefined);
-      if (filters.minRating > 0) leads = leads.filter(l => l.googleRating >= filters.minRating);
-      if (filters.minReviews > 0) leads = leads.filter(l => l.reviewCount >= filters.minReviews);
-      setResults(leads);
-      setLoading(false);
-      toast.success(`${leads.length} lead trovati (dati simulati)`, { description: `${filters.city} — ${SECTOR_OPTIONS.find(s => s.value === filters.sector)?.label}` });
+
+    // If using real data, wait longer before falling back to mock
+    const delay = filters.useReal ? 12000 : (600 + Math.random() * 500);
+    if (mockTimerRef.current) clearTimeout(mockTimerRef.current);
+
+    mockTimerRef.current = setTimeout(() => {
+      // Only generate mock if we're still loading (real results haven't arrived)
+      setLoading(prev => {
+        if (!prev) return false; // real results already arrived
+        const count = 15 + Math.floor(Math.random() * 12);
+        let leads = generateMockLeads(filters.sector, filters.city, count, filters.freeText || undefined);
+        if (filters.minRating > 0) leads = leads.filter(l => l.googleRating >= filters.minRating);
+        if (filters.minReviews > 0) leads = leads.filter(l => l.reviewCount >= filters.minReviews);
+        setResults(leads);
+        setDataSource("mock");
+        toast.success(`${leads.length} lead trovati (dati simulati)`, { description: `${filters.city} — ${SECTOR_OPTIONS.find(s => s.value === filters.sector)?.label}` });
+        return false;
+      });
     }, delay);
   }, []);
 
   const handleRealResults = useCallback((apiResults: any[]) => {
+    if (mockTimerRef.current) clearTimeout(mockTimerRef.current);
     const sector = lastSearch?.sector || "food";
     const leads = apiResultsToLeads(apiResults, sector);
     setResults(leads);
@@ -122,7 +134,7 @@ export default function LeadsPage() {
   const avgScore = results.length > 0 ? Math.round(results.reduce((s, l) => s + l.opportunityScore, 0) / results.length) : 0;
 
   return (
-    <div className="space-y-4 pb-20">
+    <div className="min-h-screen p-4 space-y-4 pb-20" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -209,9 +221,9 @@ export default function LeadsPage() {
 
           {!loading && results.length === 0 && (
             <div className="text-center py-16">
-              <Search className="w-10 h-10 mx-auto mb-3 text-white/15" />
-              <p className="text-sm font-medium text-white/50">Seleziona settore e città per iniziare</p>
-              <p className="text-[10px] mt-1 text-white/25">Analisi AI automatica con score di opportunità</p>
+              <Search className="w-10 h-10 mx-auto mb-3 text-gray-600" />
+              <p className="text-sm font-medium text-gray-400">Seleziona settore e città per iniziare</p>
+              <p className="text-[10px] mt-1 text-gray-500">Analisi AI automatica con score di opportunità</p>
             </div>
           )}
         </>
