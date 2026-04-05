@@ -70,7 +70,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "leads" | "content_ai";
 
 interface SubscriptionRecord {
   id: string;
