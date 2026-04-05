@@ -189,6 +189,7 @@ const AuthPage = lazy(() => importWithRetry(() => import("./pages/AuthPage")));
 const AppLayout = lazy(() => importWithRetry(() => import("./components/layout/AppLayout")));
 const AdaptiveDashboard = lazy(() => import("./pages/app/AdaptiveDashboard"));
 const LeadsPage = lazy(() => import("./pages/LeadsPage"));
+const ContentAIPage = lazy(() => import("./pages/ContentAIPage"));
 const StaffPage = lazy(() => import("./pages/app/StaffPage"));
 const HACCPPage = lazy(() => import("./pages/app/HACCPPage"));
 const SettingsPage = lazy(() => import("./pages/app/SettingsPage"));
@@ -669,6 +670,7 @@ function App() {
                         <Route path="payroll" element={<PayrollPage />} />
                         <Route path="finance" element={<FinancePage />} />
                         <Route path="social" element={<SocialPage />} />
+                        <Route path="content-ai" element={<ContentAIPage />} />
                         <Route path="settings" element={<SettingsPage />} />
                         <Route path="webhub" element={<WebHubPage />} />
                         <Route path="feature-requests" element={<FeatureRequestsPage />} />
