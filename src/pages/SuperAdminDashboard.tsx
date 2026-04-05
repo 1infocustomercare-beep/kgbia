@@ -70,7 +70,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout";
 
 interface SubscriptionRecord {
   id: string;
@@ -632,6 +632,7 @@ const SuperAdminDashboard = () => {
       { id: "mary", label: "AI-Mary", icon: <Bot className="w-4 h-4" /> },
       { id: "agents", label: "Agenti IA", icon: <Cpu className="w-4 h-4" /> },
       { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-4 h-4" /> },
+      { id: "lead_scout" as SuperTab, label: "Lead Scout", icon: <Search className="w-4 h-4" /> },
     ]},
     { label: "🎨 Contenuti", tabs: [
       { id: "media", label: "Media Vault", icon: <Film className="w-4 h-4" /> },
