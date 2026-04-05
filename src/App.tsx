@@ -565,6 +565,8 @@ function App() {
                       <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/login" element={<AuthPage />} />
+                      <Route path="/landing" element={<StaticIframePage src="/homepage.html" title="Empire.AI" />} />
+                      <Route path="/catalogo" element={<StaticIframePage src="/catalogo-completo.html" title="Catalogo Completo" />} />
 
                       {/* Onboarding */}
                       <Route path="/onboarding" element={
