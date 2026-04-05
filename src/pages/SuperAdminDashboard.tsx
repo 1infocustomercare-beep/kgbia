@@ -615,28 +615,39 @@ const SuperAdminDashboard = () => {
     { name: "Storage CDN", status: "online" as const, latency: "8ms" },
   ];
 
-  const tabs: { id: SuperTab; label: string; icon: React.ReactNode }[] = [
-    { id: "overview", label: "Overview", icon: <BarChart3 className="w-5 h-5" /> },
-    { id: "tenants", label: "Tenant", icon: <Store className="w-5 h-5" /> },
-    { id: "payments", label: "Pagamenti", icon: <CreditCard className="w-5 h-5" /> },
-    { id: "subscriptions" as SuperTab, label: "Abbonamenti", icon: <Calendar className="w-5 h-5" /> },
-    { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-5 h-5" /> },
-    { id: "billing", label: "Fatture", icon: <DollarSign className="w-5 h-5" /> },
-    { id: "mary", label: "AI-Mary", icon: <Bot className="w-5 h-5" /> },
-    { id: "agents", label: "Agenti IA", icon: <Cpu className="w-5 h-5" /> },
-    { id: "feature_requests", label: "Richieste", icon: <Lightbulb className="w-5 h-5" /> },
-    { id: "media", label: "Media", icon: <Film className="w-5 h-5" /> },
-    { id: "brand" as SuperTab, label: "Brand", icon: <Crown className="w-5 h-5" /> },
-    { id: "showcase", label: "Settori", icon: <Eye className="w-5 h-5" /> },
-    { id: "integrations" as SuperTab, label: "Integrazioni", icon: <Wifi className="w-5 h-5" /> },
-    { id: "whatsapp" as SuperTab, label: "WhatsApp", icon: <MessageCircle className="w-5 h-5" /> },
-    { id: "demo_accounts" as SuperTab, label: "Demo", icon: <Key className="w-5 h-5" /> },
-    { id: "connections" as SuperTab, label: "Connessioni", icon: <Link2 className="w-5 h-5" /> },
-    { id: "registrations" as SuperTab, label: "Registrazioni", icon: <Users className="w-5 h-5" /> },
-    { id: "partner_network" as SuperTab, label: "Rete Partner", icon: <Handshake className="w-5 h-5" /> },
-    { id: "leads" as SuperTab, label: "Lead Scout", icon: <Search className="w-5 h-5" /> },
-    { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-5 h-5" /> },
+  const tabGroups: { label: string; tabs: { id: SuperTab; label: string; icon: React.ReactNode }[] }[] = [
+    { label: "📊 Gestione", tabs: [
+      { id: "overview", label: "Overview", icon: <BarChart3 className="w-4 h-4" /> },
+      { id: "tenants", label: "Tenant", icon: <Store className="w-4 h-4" /> },
+      { id: "registrations" as SuperTab, label: "Registrazioni", icon: <Users className="w-4 h-4" /> },
+      { id: "partner_network" as SuperTab, label: "Rete Partner", icon: <Handshake className="w-4 h-4" /> },
+    ]},
+    { label: "💰 Finanza", tabs: [
+      { id: "payments", label: "Pagamenti", icon: <CreditCard className="w-4 h-4" /> },
+      { id: "subscriptions" as SuperTab, label: "Abbonamenti", icon: <Calendar className="w-4 h-4" /> },
+      { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-4 h-4" /> },
+      { id: "billing", label: "Fatture", icon: <DollarSign className="w-4 h-4" /> },
+    ]},
+    { label: "🤖 AI & Agenti", tabs: [
+      { id: "mary", label: "AI-Mary", icon: <Bot className="w-4 h-4" /> },
+      { id: "agents", label: "Agenti IA", icon: <Cpu className="w-4 h-4" /> },
+      { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-4 h-4" /> },
+    ]},
+    { label: "🎨 Contenuti", tabs: [
+      { id: "media", label: "Media Vault", icon: <Film className="w-4 h-4" /> },
+      { id: "brand" as SuperTab, label: "Brand Assets", icon: <Crown className="w-4 h-4" /> },
+      { id: "showcase", label: "Settori", icon: <Eye className="w-4 h-4" /> },
+    ]},
+    { label: "⚙️ Sistema", tabs: [
+      { id: "integrations" as SuperTab, label: "Integrazioni", icon: <Wifi className="w-4 h-4" /> },
+      { id: "whatsapp" as SuperTab, label: "WhatsApp", icon: <MessageCircle className="w-4 h-4" /> },
+      { id: "connections" as SuperTab, label: "Connessioni", icon: <Link2 className="w-4 h-4" /> },
+      { id: "demo_accounts" as SuperTab, label: "Demo", icon: <Key className="w-4 h-4" /> },
+      { id: "feature_requests", label: "Richieste", icon: <Lightbulb className="w-4 h-4" /> },
+    ]},
   ];
+
+  const allTabs = tabGroups.flatMap(g => g.tabs);
 
   const handleLogout = async () => { await signOut(); navigate("/auth"); };
 
