@@ -508,6 +508,10 @@ const PartnerDashboard = () => {
   useEffect(() => {
     if (!user?.id) return;
     fetchPartnerData();
+    // Load avatar
+    supabase.from("profiles").select("avatar_url").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+      if (data?.avatar_url) setPartnerAvatar(data.avatar_url);
+    });
     if (!isTeamLeader) return;
     const channel = supabase
       .channel('team-recruits')
@@ -634,7 +638,11 @@ const PartnerDashboard = () => {
                 <motion.div className="w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden"
                   style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}
                   initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-                  <img src={empireMonkeyMascot} alt="Empire" className="w-12 h-12 object-contain" />
+                  {partnerAvatar ? (
+                    <img src={partnerAvatar} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <img src={empireMonkeyMascot} alt="Empire" className="w-12 h-12 object-contain" />
+                  )}
                 </motion.div>
                 <div className="flex items-center gap-2">
                   <div>
@@ -658,25 +666,27 @@ const PartnerDashboard = () => {
               
               <div className="flex flex-wrap gap-2">
                 {!demoMode && (
-                  <button onClick={() => setShowEarnings(!showEarnings)}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
-                    style={{ background: showEarnings ? "rgba(16,185,129,0.15)" : "rgba(167,139,250,0.12)", border: `1px solid ${showEarnings ? "rgba(16,185,129,0.3)" : "rgba(167,139,250,0.25)"}` }}>
-                    <DollarSign className="w-4 h-4" style={{ color: showEarnings ? "#10b981" : "#a78bfa" }} />
-                    <span className="text-white">Guadagni</span>
-                  </button>
+                  <>
+                    <button onClick={() => setShowEarnings(!showEarnings)}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
+                      style={{ background: showEarnings ? "rgba(16,185,129,0.15)" : "rgba(167,139,250,0.12)", border: `1px solid ${showEarnings ? "rgba(16,185,129,0.3)" : "rgba(167,139,250,0.25)"}` }}>
+                      <DollarSign className="w-4 h-4" style={{ color: showEarnings ? "#10b981" : "#a78bfa" }} />
+                      <span className="text-white">Guadagni</span>
+                    </button>
+                    <button onClick={() => navigate("/partner/leads")}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
+                      style={{ background: "rgba(20,184,166,0.12)", border: "1px solid rgba(20,184,166,0.25)" }}>
+                      <Target className="w-4 h-4" style={{ color: "#14b8a6" }} />
+                      <span style={{ color: "#5eead4" }}>Lead Scout</span>
+                    </button>
+                    <button onClick={() => navigate("/partner/content-ai")}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
+                      style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.25)" }}>
+                      <Wand2 className="w-4 h-4" style={{ color: "#a855f7" }} />
+                      <span style={{ color: "#c084fc" }}>Content AI</span>
+                    </button>
+                  </>
                 )}
-                <button onClick={() => navigate("/partner/leads")}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
-                  style={{ background: "rgba(20,184,166,0.12)", border: "1px solid rgba(20,184,166,0.25)" }}>
-                  <Target className="w-4 h-4" style={{ color: "#14b8a6" }} />
-                  <span style={{ color: "#5eead4" }}>Lead Scout</span>
-                </button>
-                <button onClick={() => navigate("/partner/content-ai")}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
-                  style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.25)" }}>
-                  <Wand2 className="w-4 h-4" style={{ color: "#a855f7" }} />
-                  <span style={{ color: "#c084fc" }}>Content AI</span>
-                </button>
                 <button onClick={() => navigate("/home?from=partner")}
                   className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
                   style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
