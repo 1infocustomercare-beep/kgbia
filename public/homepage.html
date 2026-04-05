@@ -1,471 +1,899 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Empire.AI — Trasformiamo le Imprese Italiane con l'IA</title>
-<meta name="description" content="Empire.AI: piattaforma AI all-in-one per digitalizzare e automatizzare qualsiasi impresa italiana. App white-label, agenti AI, lead generation per 25+ settori.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#020204;--surface:#0a0b10;--card:#111219;--border:#1e2030;
-  --teal:#7eb7be;--violet:#6c3ce0;--gold:#d4a855;
-  --text:#f0f0f5;--text-muted:#8a8ea0;--text-dim:#555770;
-  --font-heading:'Space Grotesk',sans-serif;
-  --font-body:'Inter',sans-serif;
-}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.container{max-width:1200px;margin:0 auto;padding:0 24px}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empire.AI — Piattaforma AI #1 per le Imprese Italiane</title>
+  <meta name="description" content="La prima piattaforma AI all-in-one: app, siti, gestionali, 98+ agenti IA per 25+ settori. ROI garantito in 90 giorni.">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#020204;--bg2:#08080f;--bg3:#0d0d18;--bg4:#101024;
+      --teal:#7eb7be;--teal-d:rgba(126,183,190,.12);
+      --purple:#6c3ce0;--purple-l:#8b5cf6;--purple-d:rgba(108,60,224,.12);
+      --gold:#d4a855;--gold-d:rgba(212,168,85,.12);
+      --green:#22c55e;--red:#ef4444;
+      --text:#f0f0f5;--muted:rgba(240,240,245,.5);--muted2:rgba(240,240,245,.3);
+      --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+      --grad:linear-gradient(135deg,var(--teal),var(--purple));
+      --grad2:linear-gradient(135deg,var(--purple),var(--teal));
+      --grad-gold:linear-gradient(135deg,var(--gold),#e8c47a);
+      --r:16px;--r2:24px;--r3:40px
+    }
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.65;overflow-x:hidden}
+    /* Grain */
+    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.025;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif;font-weight:700;line-height:1.1}
+    .em{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    em{font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:1280px;margin:0 auto;padding:0 24px}
+    .tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:1.5rem}
+    .tag::before{content:'';width:20px;height:1.5px;background:var(--teal)}
+    .sec-title{font-size:clamp(2rem,4vw,3.2rem);margin-bottom:.5rem}
+    .sec-sub{color:var(--muted);max-width:600px;margin:0 auto .5rem;font-size:15px;line-height:1.7}
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 34px;border-radius:60px;font-weight:600;font-size:14px;font-family:'Space Grotesk',sans-serif;cursor:pointer;border:none;transition:all .4s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden}
+    .btn-p{background:var(--grad);color:#fff}
+    .btn-p:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(126,183,190,.25)}
+    .btn-g{background:transparent;color:#fff;border:1px solid var(--border2)}
+    .btn-g:hover{border-color:var(--teal);color:var(--teal);box-shadow:0 0 24px var(--teal-d)}
+    .btn-gold{background:var(--grad-gold);color:#000}
+    .btn-gold:hover{transform:translateY(-3px);box-shadow:0 16px 48px var(--gold-d)}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(2,2,4,.75);border-bottom:1px solid var(--border);transition:all .3s}
-nav .inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}
-nav .logo{font-family:var(--font-heading);font-weight:700;font-size:1.3rem;background:linear-gradient(135deg,var(--teal),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-nav .links{display:flex;gap:28px;align-items:center}
-nav .links a{font-size:.85rem;color:var(--text-muted);transition:color .25s}
-nav .links a:hover{color:var(--teal)}
-.nav-cta{padding:8px 20px;border-radius:10px;font-size:.82rem;font-weight:600;background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s}
-.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(126,183,190,.3)}
-@media(max-width:768px){nav .links{display:none}}
+    /* === SCROLL PROGRESS === */
+    #sp{position:fixed;top:0;left:0;height:3px;background:var(--grad);width:0%;z-index:10002;border-radius:0 2px 2px 0}
 
-/* HERO */
-.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;overflow:hidden}
-#hero-canvas{position:absolute;inset:0;z-index:0}
-.hero-content{position:relative;z-index:2;max-width:800px}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:99px;background:rgba(126,183,190,.08);border:1px solid rgba(126,183,190,.2);font-size:.75rem;color:var(--teal);margin-bottom:24px;font-weight:500}
-.hero h1{font-family:var(--font-heading);font-size:clamp(2.2rem,5.5vw,4.2rem);font-weight:700;line-height:1.1;margin-bottom:20px}
-.hero h1 .gradient{background:linear-gradient(135deg,var(--teal),var(--violet),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:gradShift 4s ease infinite}
-@keyframes gradShift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
-.hero p{font-size:1.1rem;color:var(--text-muted);max-width:600px;margin:0 auto 32px;line-height:1.65}
-.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.btn-primary{padding:14px 32px;border-radius:12px;font-size:.95rem;font-weight:600;background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff;border:none;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
-.btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .3s}
-.btn-primary:hover::after{opacity:1}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(108,60,224,.35)}
-.btn-outline{padding:14px 32px;border-radius:12px;font-size:.95rem;font-weight:600;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;transition:all .25s}
-.btn-outline:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
+    /* === NAVBAR === */
+    nav.nb{position:fixed;top:3px;width:100%;z-index:1000;padding:14px 40px;transition:all .5s cubic-bezier(.23,1,.32,1)}
+    nav.nb.scrolled{background:rgba(2,2,4,.92);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border);padding:10px 40px}
+    .nb-inner{display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto}
+    .logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;font-family:'Space Grotesk',sans-serif}
+    .logo-icon{width:32px;height:32px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:14px;font-weight:800}
+    .nb-links{display:flex;gap:32px;list-style:none}
+    .nb-links a{color:var(--muted);font-size:13px;font-weight:500;transition:color .3s;position:relative}
+    .nb-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1.5px;background:var(--teal);transition:width .3s}
+    .nb-links a:hover{color:var(--text)}
+    .nb-links a:hover::after{width:100%}
+    .nb-right{display:flex;gap:12px;align-items:center}
+    .burger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .burger span{display:block;width:22px;height:2px;background:var(--text);margin:5px 0;transition:all .3s}
+    @media(max-width:900px){.nb-links{display:none}.burger{display:block}.nb-links.open{display:flex;position:absolute;top:60px;left:0;right:0;background:rgba(2,2,4,.97);backdrop-filter:blur(20px);flex-direction:column;padding:24px;gap:16px;border-bottom:1px solid var(--border)}nav.nb{padding:14px 20px}.nb-right .btn{display:none}}
 
-/* MARQUEE */
-.marquee-section{padding:24px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;background:rgba(10,11,16,.6)}
-.marquee-track{display:flex;gap:48px;animation:marquee 30s linear infinite;white-space:nowrap}
-.marquee-track span{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);display:flex;align-items:center;gap:8px}
-.marquee-track span::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--teal);opacity:.5}
-@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    /* === HERO === */
+    .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:100px 40px 60px}
+    #hc{position:absolute;inset:0;z-index:0}
+    .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,black,transparent);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,black,transparent)}
+    .hero-left{position:relative;z-index:2;flex:1;max-width:580px}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:2rem;padding:8px 18px;border:1px solid rgba(126,183,190,.2);border-radius:40px;background:rgba(126,183,190,.04);backdrop-filter:blur(8px)}
+    .hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .hero h1{font-size:clamp(3rem,6.5vw,5.8rem);font-weight:800;line-height:.92;margin-bottom:1.5rem;letter-spacing:-.03em}
+    .hero h1 span{display:block;overflow:hidden}
+    .hero h1 .stroke{-webkit-text-stroke:1.5px rgba(255,255,255,.3);color:transparent}
+    .hero-sub{font-size:17px;color:var(--muted);margin-bottom:2.5rem;max-width:480px;line-height:1.8}
+    .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+    .hero-right{position:relative;z-index:2;flex:1;display:flex;justify-content:center;align-items:center;min-height:520px;perspective:1400px}
+    .hp{position:absolute;width:220px;border-radius:32px;border:5px solid rgba(255,255,255,.08);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);transition:all .6s cubic-bezier(.23,1,.32,1);will-change:transform}
+    .hp img{width:100%;display:block}
+    .hp:hover{z-index:10!important;box-shadow:0 40px 100px rgba(126,183,190,.25),0 0 0 2px rgba(126,183,190,.15)!important}
+    .glow{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;opacity:.12;z-index:1}
+    .glow.a{width:500px;height:500px;background:var(--purple);top:5%;right:0;animation:gf 9s ease-in-out infinite}
+    .glow.b{width:400px;height:400px;background:var(--teal);bottom:5%;right:20%;animation:gf 11s ease-in-out infinite 2s}
+    @keyframes gf{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,15px)}}
+    .scroll-cue{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted2);z-index:3}
+    .scroll-cue .bar{width:1px;height:32px;background:linear-gradient(var(--teal),transparent);animation:sb 2s ease-in-out infinite}
+    @keyframes sb{0%{opacity:1;transform:scaleY(1)}50%{opacity:.2;transform:scaleY(.4)}100%{opacity:1;transform:scaleY(1)}}
+    @media(max-width:1024px){.hero{flex-direction:column;text-align:center;padding:120px 20px 40px}.hero-left{max-width:100%}.hero-sub{margin-left:auto;margin-right:auto}.hero-btns{justify-content:center}.hero-right{min-height:320px;margin-top:1rem}.hp{width:150px;border-radius:22px;border-width:3px}}
 
-/* SECTION UTILS */
-section{padding:100px 0}
-.section-label{font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--teal);margin-bottom:12px;font-weight:600}
-.section-title{font-family:var(--font-heading);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;margin-bottom:16px;line-height:1.15}
-.section-desc{color:var(--text-muted);max-width:600px;line-height:1.65;font-size:.95rem}
-.section-header{text-align:center;margin-bottom:60px}
-.section-header .section-desc{margin:0 auto}
+    /* === MARQUEE === */
+    .mq{height:48px;display:flex;align-items:center;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
+    .mq-track{display:flex;white-space:nowrap;animation:mqScroll 35s linear infinite}
+    .mq-track span{font-size:11px;letter-spacing:3px;color:rgba(255,255,255,.12);text-transform:uppercase;font-weight:600;padding-right:48px}
+    @keyframes mqScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* SHOWCASE */
-.showcase{background:var(--surface)}
-.showcase-grid{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;perspective:1200px}
-.phone-mock{width:220px;flex-shrink:0;border-radius:24px;overflow:hidden;border:2px solid var(--border);background:var(--card);box-shadow:0 20px 60px rgba(0,0,0,.5);transition:transform .5s cubic-bezier(.22,1,.36,1);position:relative}
-.phone-mock:hover{transform:rotateY(-8deg) rotateX(4deg) translateY(-10px)}
-.phone-mock img{width:100%;display:block;aspect-ratio:9/19.5;object-fit:cover}
-.phone-mock .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:80px;height:24px;background:#000;border-radius:12px;z-index:2}
-@media(max-width:768px){.phone-mock{width:160px}}
+    /* === SECTION BACKGROUNDS (alternating) === */
+    .s-dark{background:var(--bg);padding:100px 0}
+    .s-darker{background:var(--bg2);padding:100px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .s-gradient{background:linear-gradient(180deg,var(--bg) 0%,var(--bg3) 50%,var(--bg) 100%);padding:100px 0}
+    .s-accent{background:linear-gradient(180deg,var(--bg2),var(--bg4),var(--bg2));padding:100px 0;position:relative;overflow:hidden}
 
-/* FEATURES */
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-@media(max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.features-grid{grid-template-columns:1fr}}
-.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;transition:all .35s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
-.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--violet));opacity:0;transition:opacity .3s}
-.feature-card:hover{transform:translateY(-4px);border-color:rgba(126,183,190,.25);box-shadow:0 12px 40px rgba(0,0,0,.3)}
-.feature-card:hover::before{opacity:1}
-.feature-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:1.3rem}
-.feature-card h3{font-family:var(--font-heading);font-size:1.05rem;font-weight:600;margin-bottom:8px;color:var(--text)}
-.feature-card p{font-size:.85rem;color:var(--text-muted);line-height:1.6}
+    /* === SECTORS === */
+    .sector-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:2rem 0}
+    .sp{padding:9px 20px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:30px;cursor:pointer;font-size:12px;font-weight:600;transition:all .3s;font-family:'Space Grotesk',sans-serif}
+    .sp.on{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 4px 16px var(--teal-d)}
+    .sp:hover:not(.on){border-color:var(--teal);color:var(--teal)}
 
-/* METRICS */
-.metrics{background:linear-gradient(135deg,rgba(108,60,224,.06),rgba(126,183,190,.06))}
-.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
-@media(max-width:768px){.metrics-grid{grid-template-columns:repeat(2,1fr)}}
-.metric-item h3{font-family:var(--font-heading);font-size:clamp(2rem,4vw,3.2rem);font-weight:700;margin-bottom:4px}
-.metric-item h3 .num{background:linear-gradient(135deg,var(--teal),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.metric-item p{font-size:.85rem;color:var(--text-muted)}
+    /* === SHOWCASE STICKY === */
+    .showcase{position:relative;height:400vh}
+    .showcase-pin{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:space-between;padding:0 60px;perspective:1200px;overflow:hidden}
+    .showcase-pin::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,var(--purple-d),transparent 70%);pointer-events:none}
+    .sc-text{flex:0 0 380px;z-index:10}
+    .sc-step{opacity:0;position:absolute;transition:all .5s}
+    .sc-step.on{opacity:1}
+    .sc-step .num{font-size:12px;color:var(--teal);font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:.5rem;display:block;font-family:'Space Grotesk',sans-serif}
+    .sc-step h3{font-size:2rem;margin-bottom:.75rem}
+    .sc-step p{font-size:14px;color:var(--muted);line-height:1.7}
+    .sc-phones{flex:1;position:relative;height:560px;display:flex;align-items:center;justify-content:center}
+    .pw{position:absolute;width:240px}
+    .pf{width:240px;height:500px;background:#111;border-radius:36px;border:5px solid rgba(255,255,255,.08);box-shadow:0 30px 70px rgba(0,0,0,.45);overflow:hidden;position:relative}
+    .pf::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:100px;height:24px;background:#111;border-radius:0 0 16px 16px;z-index:10}
+    .pf img{width:100%;height:100%;object-fit:cover}
+    .sc-dots{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:20}
+    .sc-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .3s}
+    .sc-dot.on{background:var(--teal);box-shadow:0 0 8px var(--teal)}
+    @media(max-width:900px){.showcase-pin{flex-direction:column;padding:80px 20px}.sc-text{flex:none;width:100%;text-align:center}.sc-step{position:relative}.sc-phones{height:320px}.pw{width:160px}.pf{width:160px;height:340px;border-radius:24px}}
 
-/* PRICING */
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
-@media(max-width:768px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}}
-.price-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 24px;position:relative;transition:all .35s;display:flex;flex-direction:column}
-.price-card.featured{border-color:var(--violet);box-shadow:0 0 40px rgba(108,60,224,.15)}
-.price-card .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:4px 16px;border-radius:99px;font-size:.7rem;font-weight:700;background:linear-gradient(135deg,var(--violet),var(--teal));color:#fff;letter-spacing:1px;text-transform:uppercase}
-.price-card h3{font-family:var(--font-heading);font-size:1.15rem;font-weight:600;margin-bottom:8px;color:var(--text)}
-.price-card .price{font-family:var(--font-heading);font-size:2rem;font-weight:700;color:var(--teal);margin-bottom:4px}
-.price-card .price-sub{font-size:.8rem;color:var(--text-muted);margin-bottom:20px}
-.price-card ul{list-style:none;flex:1;margin-bottom:24px}
-.price-card ul li{font-size:.85rem;color:var(--text-muted);padding:6px 0;display:flex;align-items:center;gap:8px}
-.price-card ul li::before{content:'✓';color:var(--teal);font-weight:700;font-size:.75rem}
-.price-card button{width:100%;padding:12px;border-radius:12px;font-weight:600;cursor:pointer;transition:all .25s;border:none;font-size:.9rem}
-.price-card.featured button{background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff}
-.price-card:not(.featured) button{background:transparent;border:1px solid var(--border);color:var(--text)}
-.price-card button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(108,60,224,.25)}
+    /* === FEATURES === */
+    .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;margin-top:3rem}
+    .fc{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:32px;transition:all .5s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden}
+    .fc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .5s}
+    .fc:hover{transform:translateY(-6px);border-color:var(--border2)}
+    .fc:hover::after{transform:scaleX(1)}
+    .fc-icon{font-size:2.4rem;margin-bottom:1.2rem}
+    .fc h3{font-size:1.15rem;margin-bottom:.6rem}
+    .fc p{font-size:13px;color:var(--muted);line-height:1.7}
+    .pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:1rem}
+    .pill{font-size:10px;background:var(--teal-d);color:var(--teal);padding:4px 10px;border-radius:10px;font-weight:600;border:1px solid rgba(126,183,190,.1)}
+    .extras{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:3rem}
+    .ext{font-size:12px;color:var(--muted);padding:7px 16px;border:1px solid var(--border);border-radius:20px;transition:all .3s}
+    .ext:hover{border-color:var(--teal);color:var(--teal)}
 
-/* FAQ */
-.faq-list{max-width:700px;margin:0 auto}
-.faq-item{border-bottom:1px solid var(--border)}
-.faq-q{width:100%;background:none;border:none;color:var(--text);font-family:var(--font-body);font-size:.95rem;font-weight:500;padding:20px 0;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.faq-q:hover{color:var(--teal)}
-.faq-q .arrow{transition:transform .3s;font-size:1.2rem;color:var(--text-dim)}
-.faq-item.open .arrow{transform:rotate(180deg)}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 0}
-.faq-item.open .faq-a{max-height:300px;padding:0 0 20px}
-.faq-a p{font-size:.88rem;color:var(--text-muted);line-height:1.7}
+    /* === WORD REVEAL === */
+    .wr-section{padding:140px 40px}
+    .wr-text{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.4rem,2.8vw,2rem);font-weight:600;line-height:1.65;max-width:880px;margin:0 auto;text-align:center}
+    .wr-text .w{display:inline-block;transition:opacity .2s}
+    .wr-pills{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:2.5rem}
+    .wr-pill{font-size:12px;color:var(--muted);padding:8px 20px;border:1px solid var(--border);border-radius:24px}
 
-/* CTA */
-.cta-section{text-align:center;padding:100px 24px;position:relative;overflow:hidden}
-.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(108,60,224,.12),transparent 70%)}
-.cta-section h2{font-family:var(--font-heading);font-size:clamp(2rem,4vw,3rem);font-weight:700;margin-bottom:16px;position:relative}
-.cta-section p{color:var(--text-muted);margin-bottom:32px;position:relative}
+    /* === METRICS === */
+    .met-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+    .met{text-align:center;padding:28px}
+    .met-val{font-family:'Space Grotesk',sans-serif;font-size:2.4rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .met-label{font-size:14px;font-weight:600;margin-top:.3rem}
+    .met-sub{font-size:11px;color:var(--muted2)}
+    @media(max-width:768px){.met-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
 
-/* FOOTER */
-footer{border-top:1px solid var(--border);padding:48px 24px;background:var(--surface)}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;max-width:1200px;margin:0 auto}
-@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
-.footer-brand .logo{font-family:var(--font-heading);font-weight:700;font-size:1.2rem;background:linear-gradient(135deg,var(--teal),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.footer-brand p{font-size:.82rem;color:var(--text-dim);line-height:1.6}
-.footer-col h4{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;font-weight:600}
-.footer-col a{display:block;font-size:.85rem;color:var(--text-dim);padding:4px 0;transition:color .2s}
-.footer-col a:hover{color:var(--teal)}
-.footer-bottom{text-align:center;padding-top:24px;margin-top:32px;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-dim);max-width:1200px;margin-left:auto;margin-right:auto}
+    /* === PORTFOLIO CAROUSEL === */
+    .port-scroll{overflow:hidden;position:relative;margin-top:2rem}
+    .port-track{display:flex;gap:16px;transition:transform .6s cubic-bezier(.23,1,.32,1);padding:10px 0}
+    .port-card{flex:0 0 200px;aspect-ratio:9/16;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);position:relative;cursor:pointer;transition:all .4s}
+    .port-card.land{aspect-ratio:16/10;flex:0 0 340px}
+    .port-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+    .port-card:hover{border-color:var(--border2);transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+    .port-card:hover img{transform:scale(1.04)}
+    .port-ov{position:absolute;bottom:0;left:0;right:0;padding:14px;background:linear-gradient(transparent,rgba(0,0,0,.8));opacity:0;transition:opacity .3s}
+    .port-card:hover .port-ov{opacity:1}
+    .port-ov .name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px}
+    .port-ov .cat{font-size:10px;color:var(--teal);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+    .port-nav{display:flex;gap:10px;justify-content:center;margin-top:1.5rem;align-items:center}
+    .port-arrow{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:18px;display:grid;place-items:center;transition:all .3s}
+    .port-arrow:hover{border-color:var(--teal);color:var(--teal)}
+    .port-toggle{padding:8px 20px;border:1px solid var(--border);background:transparent;color:var(--teal);border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;transition:all .3s;font-family:'Space Grotesk',sans-serif}
+    .port-toggle:hover{background:var(--teal-d)}
+    .port-expanded{display:none;margin-top:1.5rem}
+    .port-expanded.open{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+    .port-expanded .port-card{flex:none;width:100%}
+    .port-stats{display:flex;gap:40px;justify-content:center;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border)}
+    .ps strong{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+    .ps span{font-size:11px;color:var(--muted)}
+    @media(max-width:768px){.port-card{flex:0 0 160px}.port-card.land{flex:0 0 280px}.port-expanded.open{grid-template-columns:repeat(2,1fr)}}
 
-/* CHATBOT */
-.chatbot-btn{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--teal));border:none;cursor:pointer;z-index:200;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(108,60,224,.4);transition:all .3s;font-size:1.4rem;color:#fff}
-.chatbot-btn:hover{transform:scale(1.08);box-shadow:0 8px 32px rgba(108,60,224,.5)}
-.chatbot-panel{position:fixed;bottom:90px;right:24px;width:340px;max-height:480px;background:var(--card);border:1px solid var(--border);border-radius:20px;z-index:200;display:none;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.5);overflow:hidden}
-.chatbot-panel.open{display:flex}
-.chatbot-header{padding:16px;background:linear-gradient(135deg,var(--violet),var(--teal));display:flex;align-items:center;gap:10px}
-.chatbot-header .avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1rem}
-.chatbot-header .info h4{font-size:.9rem;font-weight:600;color:#fff}
-.chatbot-header .info p{font-size:.7rem;color:rgba(255,255,255,.7)}
-.chatbot-messages{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
-.chat-msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:.82rem;line-height:1.5}
-.chat-msg.bot{background:rgba(126,183,190,.1);border:1px solid rgba(126,183,190,.15);color:var(--text);align-self:flex-start}
-.chat-msg.user{background:var(--violet);color:#fff;align-self:flex-end}
-.chatbot-input{display:flex;padding:12px;gap:8px;border-top:1px solid var(--border)}
-.chatbot-input input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.82rem;outline:none}
-.chatbot-input input::placeholder{color:var(--text-dim)}
-.chatbot-input button{width:36px;height:36px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
-@media(max-width:480px){.chatbot-panel{right:12px;left:12px;width:auto;bottom:84px}}
+    /* === RESULTS === */
+    .res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:3rem 0}
+    .rs{text-align:center;padding:24px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r)}
+    .rs .big{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .rs p{font-size:12px;color:var(--muted);margin-top:.3rem}
+    .ba-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:2rem 0}
+    .ba{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px;transition:all .4s}
+    .ba:hover{border-color:var(--border2);transform:translateY(-3px)}
+    .ba h4{font-size:13px;margin-bottom:.75rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700}
+    .badge.g{background:rgba(34,197,94,.1);color:var(--green)}
+    .badge.t{background:var(--teal-d);color:var(--teal)}
+    .ba-r{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px}
+    .ba-r:last-child{border:none}
+    .ba-l{color:var(--muted);font-weight:600}
+    .old{color:rgba(239,68,68,.6);text-decoration:line-through;font-weight:600}
+    .new{color:var(--green);font-weight:600}
+    .guarantee{text-align:center;padding:36px;background:linear-gradient(135deg,var(--teal-d),var(--purple-d));border:1px solid var(--border);border-radius:var(--r2);margin-top:2rem}
+    .guarantee h3{font-size:1.2rem;margin-bottom:.4rem}
+    .guarantee p{color:var(--muted);font-size:13px;max-width:550px;margin:0 auto}
+    .trust-row{display:flex;gap:10px;justify-content:center;margin-top:.8rem;flex-wrap:wrap}
+    .tb{font-size:11px;color:var(--muted);padding:5px 12px;border:1px solid var(--border);border-radius:16px}
+    @media(max-width:768px){.res-grid{grid-template-columns:repeat(2,1fr)}}
 
-/* SCROLL REVEAL */
-.sr{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
-.sr.visible{opacity:1;transform:translateY(0)}
+    /* === PRICING === */
+    .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1100px;margin:0 auto}
+    .pc{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:36px 28px;position:relative;transition:all .5s cubic-bezier(.23,1,.32,1)}
+    .pc:hover{transform:translateY(-6px)}
+    .pc.pop{border-color:rgba(126,183,190,.25);background:linear-gradient(180deg,rgba(126,183,190,.04),var(--bg3));transform:scale(1.03)}
+    .pc.pop:hover{transform:scale(1.03) translateY(-6px)}
+    .pc.pop::before{content:'PIU POPOLARE';position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;background:var(--grad);color:#fff;padding:3px 14px;border-radius:16px;font-weight:700}
+    .pc.gld{border-color:rgba(212,168,85,.25)}
+    .pc.gld::before{content:'MASSIMO RISPARMIO';position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;background:var(--grad-gold);color:#000;padding:3px 14px;border-radius:16px;font-weight:700}
+    .pc-icon{font-size:2.4rem;margin-bottom:.8rem}
+    .pc-name{font-size:1.4rem;margin-bottom:.8rem}
+    .pc-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+    .pc-amt{font-size:2.6rem;font-weight:800;font-family:'Space Grotesk',sans-serif}
+    .pc-old{font-size:.9rem;color:var(--muted);text-decoration:line-through}
+    .pc-disc{font-size:11px;background:rgba(34,197,94,.12);color:var(--green);padding:2px 8px;border-radius:8px;font-weight:700}
+    .pc-rate{font-size:12px;color:var(--teal);margin-top:.4rem;font-weight:600}
+    .pc-after{font-size:11px;color:var(--muted);margin-top:.2rem}
+    .pc-feats{margin:1.5rem 0;display:flex;flex-direction:column;gap:8px}
+    .pf-item{font-size:12px;padding-left:20px;position:relative;color:rgba(255,255,255,.7)}
+    .pf-item::before{content:'✓';position:absolute;left:0;color:var(--teal);font-weight:700;font-size:11px}
+    .urg{text-align:center;font-size:11px;margin-top:.8rem;padding:6px;border-radius:8px;font-weight:600}
+    .urg.r{background:rgba(239,68,68,.08);color:var(--red)}
+    .urg.c{background:var(--teal-d);color:var(--teal)}
+    .price-trust{text-align:center;margin-top:2.5rem}
+    .price-trust p{font-size:12px;color:var(--muted)}
+    .badges-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:.8rem}
+    .badges-row span{font-size:11px;color:var(--muted)}
+    .cost-sim{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:28px;margin-top:2.5rem;max-width:780px;margin-left:auto;margin-right:auto}
+    .cost-sim h4{text-align:center;margin-bottom:1.2rem;font-size:15px}
+    .cs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .cs-item{text-align:center;padding:16px;border:1px solid var(--border);border-radius:var(--r)}
+    .cs-item.best{border-color:var(--teal);background:var(--teal-d)}
+    .cs-item h5{font-size:12px;margin-bottom:.4rem;font-weight:600}
+    .cs-item .amt{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800}
+    .cs-item .sub{font-size:10px;color:var(--muted);margin-top:.2rem}
+    @media(max-width:900px){.price-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}.pc.pop{transform:none}.cs-grid{grid-template-columns:1fr}}
 
-/* GRAIN OVERLAY */
-.grain{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-</style>
+    /* === AGENTS === */
+    .ag-section{position:relative;overflow:hidden}
+    #ac{position:absolute;inset:0;z-index:0;pointer-events:none}
+    .ag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;position:relative;z-index:1;margin-top:2.5rem}
+    .ag{background:rgba(13,13,24,.85);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:var(--r2);padding:28px;position:relative;overflow:hidden;transition:all .5s cubic-bezier(.23,1,.32,1)}
+    .ag::before{content:'';position:absolute;inset:-1px;border-radius:var(--r2);background:conic-gradient(from 0deg,transparent 60%,rgba(126,183,190,.08),transparent 80%,rgba(108,60,224,.08),transparent);z-index:-1;opacity:0;transition:opacity .5s}
+    .ag:hover{transform:translateY(-6px);border-color:var(--border2)}
+    .ag:hover::before{opacity:1}
+    .ag-emoji{font-size:2rem;margin-bottom:.8rem}
+    .ag h4{font-size:.95rem;margin-bottom:.4rem}
+    .ag p{font-size:12px;color:var(--muted);line-height:1.6}
+    .ag-tag{display:inline-block;font-size:10px;padding:3px 10px;border-radius:10px;margin-top:.8rem;font-weight:600}
+    .ag-tag.gr{background:var(--teal-d);color:var(--teal)}
+    .ag-tag.em{background:var(--gold-d);color:var(--gold)}
+    .ag-tag.ad{background:var(--purple-d);color:var(--purple-l)}
+
+    /* === FAQ === */
+    .faq-list{max-width:760px;margin:2.5rem auto 0;display:flex;flex-direction:column;gap:6px}
+    .fq{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .3s}
+    .fq.on{border-color:var(--border2)}
+    .fq-q{width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 20px;background:transparent;border:none;color:var(--text);font-size:14px;font-weight:600;cursor:pointer;font-family:'Space Grotesk',sans-serif;text-align:left;transition:color .3s;gap:12px}
+    .fq-q:hover{color:var(--teal)}
+    .fq-icon{font-size:18px;color:var(--teal);transition:transform .3s;flex-shrink:0}
+    .fq.on .fq-icon{transform:rotate(45deg)}
+    .fq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.23,1,.32,1)}
+    .fq.on .fq-a{max-height:300px}
+    .fq-a p{padding:0 20px 18px;font-size:13px;color:var(--muted);line-height:1.7}
+
+    /* === FINAL CTA === */
+    .cta{padding:140px 40px;text-align:center;position:relative;overflow:hidden}
+    .cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:500px;background:radial-gradient(ellipse,var(--teal-d),var(--purple-d) 40%,transparent 70%);pointer-events:none}
+    .cta-title{font-size:clamp(2.5rem,5vw,4rem);margin:.5rem 0 1.2rem;position:relative}
+    .cta-sub{font-size:15px;color:var(--muted);max-width:560px;margin:0 auto 2rem;line-height:1.7}
+
+    /* === FOOTER === */
+    footer{background:var(--bg2);border-top:1px solid var(--border);padding:50px 24px}
+    .ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;max-width:1280px;margin:0 auto}
+    .ft-grid h4{font-size:12px;margin-bottom:.8rem;color:var(--text);text-transform:uppercase;letter-spacing:1px}
+    .ft-grid ul{list-style:none}
+    .ft-grid li{margin-bottom:6px}
+    .ft-grid a{color:var(--muted);font-size:12px;transition:color .3s}
+    .ft-grid a:hover{color:var(--teal)}
+    .ft-bottom{display:flex;justify-content:space-between;max-width:1280px;margin:0 auto;padding-top:30px;margin-top:30px;border-top:1px solid var(--border);font-size:11px;color:var(--muted2)}
+    @media(max-width:768px){.ft-grid{grid-template-columns:1fr 1fr;gap:24px}.ft-bottom{flex-direction:column;gap:8px;text-align:center}}
+
+    /* === ARIANNA === */
+    .ar-btn{position:fixed;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--grad);border:none;font-size:22px;cursor:pointer;z-index:999;display:grid;place-items:center;box-shadow:0 6px 24px rgba(126,183,190,.3);transition:transform .3s}
+    .ar-btn:hover{transform:scale(1.1)}
+    .ar-pulse{position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--teal);animation:arp 2s infinite;pointer-events:none}
+    @keyframes arp{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
+    .ar-dot{position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:var(--red);border-radius:50%;font-size:9px;color:#fff;display:grid;place-items:center;font-weight:700}
+    .ar-chat{position:fixed;bottom:82px;right:20px;width:360px;max-height:480px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);z-index:998;display:none;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .ar-chat.open{display:flex}
+    .ar-hd{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--teal-d);border-bottom:1px solid var(--border)}
+    .ar-av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-size:16px}
+    .ar-info h4{font-size:13px;margin:0}
+    .ar-info span{font-size:10px;color:var(--teal)}
+    .ar-x{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;margin-left:auto}
+    .ar-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;max-height:260px}
+    .m{max-width:85%;padding:10px 14px;border-radius:14px;font-size:12px;line-height:1.6;white-space:pre-line}
+    .m.ai{background:var(--teal-d);border:1px solid rgba(126,183,190,.1);align-self:flex-start;border-bottom-left-radius:4px}
+    .m.u{background:var(--grad);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+    .ar-qk{display:flex;gap:5px;padding:8px 14px;flex-wrap:wrap}
+    .qb{padding:5px 12px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:14px;font-size:10px;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+    .qb:hover{border-color:var(--teal);color:var(--teal)}
+    .ar-in{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--border)}
+    .ar-in input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:12px;outline:none;font-family:'Inter',sans-serif}
+    .ar-in input:focus{border-color:var(--teal)}
+    .ar-in button{background:var(--grad);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:grid;place-items:center}
+    .td{display:flex;gap:4px;padding:6px 0}
+    .td span{width:5px;height:5px;background:var(--muted);border-radius:50%;animation:db .6s infinite}
+    .td span:nth-child(2){animation-delay:.15s}
+    .td span:nth-child(3){animation-delay:.3s}
+    @keyframes db{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  </style>
 </head>
 <body>
-<div class="grain"></div>
+  <div id="sp"></div>
 
-<!-- NAV -->
-<nav>
-  <div class="inner">
-    <div class="logo">Empire.AI</div>
-    <div class="links">
-      <a href="#features">Funzionalità</a>
-      <a href="#pricing">Prezzi</a>
-      <a href="/catalogo">Portfolio</a>
-      <a href="#faq">FAQ</a>
-      <button class="nav-cta" onclick="location.href='/auth'">Inizia Gratis →</button>
-    </div>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <canvas id="hero-canvas"></canvas>
-  <div class="hero-content sr">
-    <div class="hero-badge">✨ La piattaforma AI #1 per le imprese italiane</div>
-    <h1>Trasformiamo le<br><span class="gradient">Imprese Italiane</span><br>con l'IA</h1>
-    <p>Un unico ecosistema per digitalizzare, automatizzare e scalare qualsiasi attività. App white-label, agenti AI e strumenti enterprise per 25+ settori.</p>
-    <div class="hero-btns">
-      <button class="btn-primary" onclick="location.href='/auth'">Prenota una Demo Gratuita</button>
-      <button class="btn-outline" onclick="location.href='/catalogo'">Vedi il Portfolio</button>
-    </div>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-section">
-  <div class="marquee-track" id="marquee">
-    <span>Ristoranti</span><span>Hotel</span><span>Beauty & Spa</span><span>NCC & Transfer</span>
-    <span>Palestre & Fitness</span><span>Studi Medici</span><span>Retail & Shop</span><span>Artigiani</span>
-    <span>Stabilimenti Balneari</span><span>Panifici & Pasticcerie</span><span>Tattoo Studio</span>
-    <span>Agenzie Immobiliari</span><span>Pet Care</span><span>Centri Yoga</span><span>Fotografi</span>
-    <span>Wedding Planner</span><span>Scuole di Musica</span><span>Autolavaggi</span><span>Fioristi</span>
-    <span>Ristoranti</span><span>Hotel</span><span>Beauty & Spa</span><span>NCC & Transfer</span>
-    <span>Palestre & Fitness</span><span>Studi Medici</span><span>Retail & Shop</span><span>Artigiani</span>
-    <span>Stabilimenti Balneari</span><span>Panifici & Pasticcerie</span><span>Tattoo Studio</span>
-    <span>Agenzie Immobiliari</span><span>Pet Care</span><span>Centri Yoga</span><span>Fotografi</span>
-    <span>Wedding Planner</span><span>Scuole di Musica</span><span>Autolavaggi</span><span>Fioristi</span>
-  </div>
-</div>
-
-<!-- SHOWCASE -->
-<section class="showcase" id="showcase">
-  <div class="container">
-    <div class="section-header sr">
-      <div class="section-label">Portfolio Live</div>
-      <h2 class="section-title">App che parlano da sole</h2>
-      <p class="section-desc">Ogni progetto è un'app white-label unica, brandizzata al 100% per il cliente. Zero compromessi sul design.</p>
-    </div>
-    <div class="showcase-grid">
-      <div class="phone-mock sr"><div class="notch"></div><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/food/food-mobile-1.webp" alt="App Ristorante" loading="lazy"></div>
-      <div class="phone-mock sr" style="margin-top:40px"><div class="notch"></div><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/beauty/beauty-mobile-1.webp" alt="App Beauty" loading="lazy"></div>
-      <div class="phone-mock sr"><div class="notch"></div><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/hotel/hotel-mobile-1.webp" alt="App Hotel" loading="lazy"></div>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section id="features">
-  <div class="container">
-    <div class="section-header sr">
-      <div class="section-label">Funzionalità</div>
-      <h2 class="section-title">Tutto ciò che serve, in un'unica piattaforma</h2>
-      <p class="section-desc">Ogni strumento progettato per generare risultati misurabili, non solo impressionare.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card sr">
-        <div class="feature-icon" style="background:rgba(126,183,190,.1)">📱</div>
-        <h3>App White-Label</h3>
-        <p>Un'app completamente brandizzata con il logo, i colori e il nome del tuo cliente. Nessun nostro marchio visibile.</p>
-      </div>
-      <div class="feature-card sr">
-        <div class="feature-icon" style="background:rgba(108,60,224,.1)">🤖</div>
-        <h3>98+ Agenti AI</h3>
-        <p>Chatbot, voice agent, inventory manager, review shield — agenti specializzati per ogni esigenza di settore.</p>
-      </div>
-      <div class="feature-card sr">
-        <div class="feature-icon" style="background:rgba(212,168,85,.1)">🎯</div>
-        <h3>Lead Generation</h3>
-        <p>LeadEngine Scout trova prospect reali con scoring AI, analisi digital e messaggi personalizzati multi-canale.</p>
-      </div>
-      <div class="feature-card sr">
-        <div class="feature-icon" style="background:rgba(126,183,190,.1)">📊</div>
-        <h3>Analytics Avanzati</h3>
-        <p>Dashboard real-time con revenue tracking, customer insights, previsioni AI e KPI operativi personalizzati.</p>
-      </div>
-      <div class="feature-card sr">
-        <div class="feature-icon" style="background:rgba(108,60,224,.1)">🏢</div>
-        <h3>25+ Settori</h3>
-        <p>Food, Beauty, Hotel, NCC, Fitness, Healthcare, Retail, Trades e altri 17 verticali con template pre-configurati.</p>
-      </div>
-      <div class="feature-card sr">
-        <div class="feature-icon" style="background:rgba(212,168,85,.1)">⚡</div>
-        <h3>Scalabilità Infinita</h3>
-        <p>Architettura multi-tenant enterprise. Gestisci 1 o 1.000 aziende dalla stessa piattaforma senza limiti.</p>
+  <!-- NAV -->
+  <nav class="nb">
+    <div class="nb-inner">
+      <a href="#" class="logo"><div class="logo-icon">E</div>EMPIRE.AI</a>
+      <ul class="nb-links" id="nb-links">
+        <li><a href="#settori">Settori</a></li>
+        <li><a href="#servizi">Servizi</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#prezzi">Prezzi</a></li>
+        <li><a href="#agenti">AI Agents</a></li>
+        <li><a href="#contatti">Contatti</a></li>
+      </ul>
+      <div class="nb-right">
+        <a href="#prezzi" class="btn btn-p">Inizia Ora</a>
+        <button class="burger" id="burger"><span></span><span></span><span></span></button>
       </div>
     </div>
-  </div>
-</section>
+  </nav>
 
-<!-- METRICS -->
-<section class="metrics">
-  <div class="container">
-    <div class="metrics-grid">
-      <div class="metric-item sr"><h3><span class="num" data-target="98">0</span>+</h3><p>Agenti IA Attivi</p></div>
-      <div class="metric-item sr"><h3><span class="num" data-target="25">0</span>+</h3><p>Settori Coperti</p></div>
-      <div class="metric-item sr"><h3><span class="num" data-target="500">0</span>+</h3><p>Clienti Soddisfatti</p></div>
-      <div class="metric-item sr"><h3><span class="num" data-target="99">0</span>.9%</h3><p>Uptime Garantito</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section id="pricing">
-  <div class="container">
-    <div class="section-header sr">
-      <div class="section-label">Pricing</div>
-      <h2 class="section-title">Investimento che si ripaga dal primo mese</h2>
-      <p class="section-desc">Nessun costo nascosto. Trial 90 giorni. TAN 0% disponibile.</p>
-    </div>
-    <div class="pricing-grid">
-      <div class="price-card sr">
-        <h3>Digital Start</h3>
-        <div class="price">€1.997</div>
-        <div class="price-sub">Una tantum + €49/mese</div>
-        <ul>
-          <li>Setup completo</li>
-          <li>App white-label</li>
-          <li>Dashboard operativa</li>
-          <li>Menu / Catalogo digitale</li>
-          <li>QR Code & Prenotazioni</li>
-          <li>Supporto email</li>
-        </ul>
-        <button onclick="location.href='/auth?plan=essential'">Inizia con Digital Start</button>
-      </div>
-      <div class="price-card featured sr">
-        <div class="badge">Più Scelto</div>
-        <h3>Growth AI</h3>
-        <div class="price">€4.997</div>
-        <div class="price-sub">Una tantum + €29/mese</div>
-        <ul>
-          <li>Tutto di Digital Start</li>
-          <li>AI Agents completi</li>
-          <li>CRM avanzato</li>
-          <li>Marketing Automation</li>
-          <li>WhatsApp Bot</li>
-          <li>Supporto prioritario</li>
-        </ul>
-        <button onclick="location.href='/auth?plan=smart_ia'">Scegli Growth AI</button>
-      </div>
-      <div class="price-card sr">
-        <h3>Empire Domination</h3>
-        <div class="price">€7.997</div>
-        <div class="price-sub">Una tantum + €0/mese</div>
-        <ul>
-          <li>Tutto incluso per sempre</li>
-          <li>0% commissioni</li>
-          <li>AI avanzata illimitata</li>
-          <li>Account Manager dedicato</li>
-          <li>Formazione team</li>
-          <li>SLA garantito</li>
-        </ul>
-        <button onclick="location.href='/auth?plan=empire_pro'">Vai con Empire</button>
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="hc"></canvas>
+    <div class="hero-grid"></div>
+    <div class="glow a"></div>
+    <div class="glow b"></div>
+    <div class="hero-left">
+      <div class="hero-badge"><div class="dot"></div>PIATTAFORMA AI ITALIANA · 25+ SETTORI</div>
+      <h1>
+        <span class="l1">TRASFORMIAMO</span>
+        <span class="l2 stroke">IL DIGITALE</span>
+        <span class="l3">IN <em>REVENUE</em></span>
+      </h1>
+      <p class="hero-sub">La prima piattaforma AI all-in-one che gestisce, automatizza e fa crescere il tuo business. 98+ agenti IA, ROI garantito in 90 giorni.</p>
+      <div class="hero-btns">
+        <a href="#portfolio" class="btn btn-p">Scopri i Progetti →</a>
+        <a href="#prezzi" class="btn btn-g">Piani & Prezzi</a>
       </div>
     </div>
-  </div>
-</section>
+    <div class="hero-right">
+      <div class="hp" id="hp1"><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png" alt="Flame Kebab App"></div>
+      <div class="hp" id="hp2"><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/Aura%20Milano%20Spa/mobile-luce-pura-home.png" alt="Aura Milano Spa"></div>
+      <div class="hp" id="hp3"><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/COTE%20Miami/a-obsidian-mobile-home.png" alt="COTE Miami"></div>
+    </div>
+    <div class="scroll-cue"><span>scroll</span><div class="bar"></div></div>
+  </section>
 
-<!-- FAQ -->
-<section id="faq">
-  <div class="container">
-    <div class="section-header sr">
-      <div class="section-label">FAQ</div>
-      <h2 class="section-title">Domande Frequenti</h2>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item"><button class="faq-q">Quanto tempo ci vuole per essere operativi? <span class="arrow">▾</span></button><div class="faq-a"><p>In media 48-72 ore dal momento dell'ordine. Il nostro team si occupa di tutto: configurazione, branding, importazione dati e formazione.</p></div></div>
-      <div class="faq-item"><button class="faq-q">Serve esperienza tecnica? <span class="arrow">▾</span></button><div class="faq-a"><p>Assolutamente no. La piattaforma è progettata per imprenditori, non per programmatori. Tutto è drag & drop e guidato da AI.</p></div></div>
-      <div class="faq-item"><button class="faq-q">Posso personalizzare completamente l'app? <span class="arrow">▾</span></button><div class="faq-a"><p>Sì al 100%. Logo, colori, font, contenuti, moduli — ogni aspetto è personalizzabile. I tuoi clienti vedranno solo il TUO brand.</p></div></div>
-      <div class="faq-item"><button class="faq-q">Come funziona il trial di 90 giorni? <span class="arrow">▾</span></button><div class="faq-a"><p>Accedi a tutte le funzionalità senza limiti per 90 giorni. Se non sei soddisfatto, annulli senza costi. Nessuna carta di credito richiesta per iniziare.</p></div></div>
-      <div class="faq-item"><button class="faq-q">Offrite finanziamento? <span class="arrow">▾</span></button><div class="faq-a"><p>Sì, tutti i piani possono essere finanziati con TAN 0% fino a 12 mesi. Contattaci per i dettagli personalizzati.</p></div></div>
-      <div class="faq-item"><button class="faq-q">Quali settori coprite? <span class="arrow">▾</span></button><div class="faq-a"><p>Oltre 25 settori: ristorazione, hotel, beauty, fitness, NCC, healthcare, retail, artigiani, stabilimenti balneari, tattoo, fotografia, wedding e molti altri.</p></div></div>
-    </div>
-  </div>
-</section>
+  <!-- MARQUEE -->
+  <div class="mq"><div class="mq-track"><span>Stripe Connect · AES-256 · PWA Certified · GDPR Compliant · 99.9% Uptime · 98+ Agenti IA · Made in Italy 🇮🇹 · White Label · 25+ Settori · Attivo in 24h · </span><span>Stripe Connect · AES-256 · PWA Certified · GDPR Compliant · 99.9% Uptime · 98+ Agenti IA · Made in Italy 🇮🇹 · White Label · 25+ Settori · Attivo in 24h · </span></div></div>
 
-<!-- CTA -->
-<section class="cta-section">
-  <h2 class="sr">Pronto a Trasformare la Tua Impresa?</h2>
-  <p class="sr">Unisciti a centinaia di imprenditori italiani che hanno già scelto Empire.AI</p>
-  <div class="sr">
-    <button class="btn-primary" onclick="location.href='/auth'" style="font-size:1.05rem;padding:16px 40px">Inizia il Trial Gratuito di 90 Giorni →</button>
-  </div>
-</section>
+  <!-- SECTORS -->
+  <section class="s-dark" id="settori">
+    <div class="container" style="text-align:center">
+      <span class="tag">I NOSTRI SETTORI</span>
+      <h2 class="sec-title">Un sistema. <em>Infiniti settori.</em></h2>
+      <p class="sec-sub">App, siti web, gestionali e automazioni IA personalizzati per ogni tipo di business.</p>
+      <div class="sector-pills" id="sector-pills"></div>
+      <div id="sector-preview"></div>
+    </div>
+  </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <div class="logo">Empire.AI</div>
-      <p>La piattaforma AI all-in-one per digitalizzare qualsiasi impresa italiana. Made with ❤️ in Italy.</p>
+  <!-- SHOWCASE -->
+  <section class="showcase s-darker" id="showcase-wrap">
+    <div class="showcase-pin">
+      <div class="sc-text">
+        <div class="sc-step on" data-s="0"><span class="num">01 — APP MOBILE AI</span><h3>App Mobile AI</h3><p>Applicazioni native per ogni settore con intelligenza artificiale integrata. Ordini, prenotazioni, fidelizzazione — tutto nel tuo brand.</p></div>
+        <div class="sc-step" data-s="1"><span class="num">02 — WEB DESIGN PREMIUM</span><h3>Web Design Premium</h3><p>Siti web ad alta conversione, veloci, ottimizzati SEO. Ogni pixel studiato per convertire visitatori in clienti paganti.</p></div>
+        <div class="sc-step" data-s="2"><span class="num">03 — E-COMMERCE & VENDITE</span><h3>E-Commerce AI</h3><p>Piattaforme di vendita online con AI integrata. Prodotti, pagamenti, analytics — un sistema che vende per te 24/7.</p></div>
+      </div>
+      <div class="sc-phones">
+        <div class="pw" id="p1"><div class="pf"><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/Paperfish%20Sushi/a-sakura-home.png" alt="Paperfish"></div></div>
+        <div class="pw" id="p2"><div class="pf"><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/City%20Padel%20Milano/mobile-fresh-azzurro-home.png" alt="City Padel"></div></div>
+        <div class="pw" id="p3"><div class="pf"><img src="https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/Tatush%20Hair%20Fragrance/mobile-home.png" alt="Tatush"></div></div>
+      </div>
+      <div class="sc-dots"><div class="sc-dot on"></div><div class="sc-dot"></div><div class="sc-dot"></div></div>
     </div>
-    <div class="footer-col">
-      <h4>Prodotto</h4>
-      <a href="#features">Funzionalità</a>
-      <a href="#pricing">Prezzi</a>
-      <a href="/catalogo">Portfolio</a>
-      <a href="/demo">Demo Live</a>
-    </div>
-    <div class="footer-col">
-      <h4>Azienda</h4>
-      <a href="/partner/register">Diventa Partner</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/cookie">Cookie</a>
-    </div>
-    <div class="footer-col">
-      <h4>Contatti</h4>
-      <a href="mailto:info@empireaigroup.com">info@empireaigroup.com</a>
-      <a href="tel:+390612345678">+39 06 123 456 78</a>
-    </div>
-  </div>
-  <div class="footer-bottom">© 2026 Empire.AI Group — Tutti i diritti riservati. P.IVA IT12345678901</div>
-</footer>
+  </section>
 
-<!-- CHATBOT ARIANNA -->
-<button class="chatbot-btn" id="chatToggle" aria-label="Chat con Arianna">💬</button>
-<div class="chatbot-panel" id="chatPanel">
-  <div class="chatbot-header">
-    <div class="avatar">🤖</div>
-    <div class="info"><h4>Arianna</h4><p>AI Sales Assistant • Online</p></div>
+  <!-- FEATURES -->
+  <section class="s-gradient" id="servizi">
+    <div class="container">
+      <div style="text-align:center"><span class="tag">TUTTO IN UN'UNICA PIATTAFORMA</span></div>
+      <h2 style="text-align:center" class="sec-title">Creiamo App, Siti e Gestionali<br><em>Potenziati dall'IA</em></h2>
+      <p class="sec-sub" style="text-align:center">Progettiamo applicazioni dedicate, web app e gestionali completi — personalizzati al 100% per il tuo settore.</p>
+      <div class="feat-grid">
+        <div class="fc"><div class="fc-icon">📱</div><h3>App & Web App Dedicate</h3><p>Applicazioni installabili con il TUO brand, dominio e colori. Design premium white-label, nessun logo di terzi.</p><div class="pills"><span class="pill">White Label 100%</span><span class="pill">PWA</span><span class="pill">Su misura</span></div></div>
+        <div class="fc"><div class="fc-icon">🧠</div><h3>Intelligenza Artificiale</h3><p>98+ agenti IA che automatizzano marketing, gestione clienti, analisi dati, fatturazione e generazione contenuti.</p><div class="pills"><span class="pill">98+ Agenti</span><span class="pill">24/7</span><span class="pill">Predittivi</span></div></div>
+        <div class="fc"><div class="fc-icon">📊</div><h3>Gestionale Completo</h3><p>CRM, prenotazioni, ordini, inventario, staff, fatturazione elettronica, analytics, Stripe, fidelity card, push.</p><div class="pills"><span class="pill">CRM</span><span class="pill">Fatturazione</span><span class="pill">Stripe</span></div></div>
+        <div class="fc"><div class="fc-icon">🚀</div><h3>Marketing Automatico</h3><p>Email, social, WhatsApp auto, review management, SEO — tutto generato e ottimizzato dall'IA continuamente.</p><div class="pills"><span class="pill">Email</span><span class="pill">WhatsApp</span><span class="pill">Review Shield™</span></div></div>
+      </div>
+      <div class="extras">
+        <span class="ext">Menu QR</span><span class="ext">Loyalty</span><span class="ext">Voice Agent</span><span class="ext">Multi-Sede</span><span class="ext">GDPR</span><span class="ext">Fatturazione</span><span class="ext">GPS</span><span class="ext">Analytics AI</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORD REVEAL -->
+  <section class="wr-section s-dark">
+    <div class="container">
+      <p class="wr-text" id="wr">Mentre i tuoi competitor perdono clienti, noi costruiamo il tuo vantaggio competitivo. Un ecosistema di 98 agenti IA autonomi, dashboard predittive, CRM intelligente e automazioni multi-canale che lavora 24/7 — generando fatturato e fidelizzando clienti.</p>
+      <div class="wr-pills"><div class="wr-pill">🤖 98+ Agenti IA</div><div class="wr-pill">📊 Dashboard Predittive</div><div class="wr-pill">⚡ Automazioni 24/7</div><div class="wr-pill">🏷️ White-Label</div></div>
+    </div>
+  </section>
+
+  <!-- METRICS -->
+  <section class="s-darker">
+    <div class="container">
+      <div class="met-grid">
+        <div class="met"><div class="met-val"><span class="ctr" data-t="1240">0</span></div><div class="met-label">QR Scan</div><div class="met-sub">scansioni/mese</div></div>
+        <div class="met"><div class="met-val">+<span class="ctr" data-t="68">0</span>%</div><div class="met-label">Ordini AI</div><div class="met-sub">conversione</div></div>
+        <div class="met"><div class="met-val"><span class="ctr" data-t="24">0</span>/24</div><div class="met-label">Agenti Attivi</div><div class="met-sub">operativi</div></div>
+        <div class="met"><div class="met-val">€<span class="ctr" data-t="12">0</span>.4k</div><div class="met-label">Revenue</div><div class="met-sub">incremento medio</div></div>
+      </div>
+      <div style="text-align:center;margin-top:2rem"><a href="#prezzi" class="btn btn-p">Prenota Demo Gratuita</a></div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="s-gradient" id="portfolio">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:.5rem">
+        <div><span class="tag">PORTFOLIO</span><h2 class="sec-title">30+ Progetti <em>Premium</em></h2></div>
+        <a href="catalogo-completo.html" class="btn btn-g" style="font-size:12px;padding:10px 22px">Catalogo Completo →</a>
+      </div>
+      <div class="port-scroll"><div class="port-track" id="port-track"></div></div>
+      <div class="port-nav">
+        <button class="port-arrow" id="port-prev">‹</button>
+        <button class="port-toggle" id="port-toggle">Mostra Tutti (30+)</button>
+        <button class="port-arrow" id="port-next">›</button>
+      </div>
+      <div class="port-expanded" id="port-exp"></div>
+      <div class="port-stats"><div class="ps"><strong>30+</strong><span>Apps Launched</span></div><div class="ps"><strong>50+</strong><span>Clients Worldwide</span></div><div class="ps"><strong>25+</strong><span>Industry Sectors</span></div></div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="s-darker">
+    <div class="container">
+      <div style="text-align:center"><span class="tag">RISULTATI REALI</span><h2 class="sec-title">I Numeri <em>Parlano</em></h2></div>
+      <div class="res-grid">
+        <div class="rs"><div class="big"><span class="ctr" data-t="847">0</span>+</div><p>Business Trasformati</p></div>
+        <div class="rs"><div class="big">3.2M</div><p>Operazioni Automatizzate</p></div>
+        <div class="rs"><div class="big"><span class="ctr" data-t="94">0</span>h</div><p>Ore Risparmiate / Mese</p></div>
+        <div class="rs"><div class="big">+<span class="ctr" data-t="40">0</span>%</div><p>Revenue Medio</p></div>
+      </div>
+      <div class="ba-grid">
+        <div class="ba"><h4>Gestione Ordini <span class="badge g">-93%</span></h4><div class="ba-r"><span class="ba-l">Prima</span><span class="old">45 min manuali/giorno</span></div><div class="ba-r"><span class="ba-l">Dopo</span><span class="new">3 min — automatico</span></div></div>
+        <div class="ba"><h4>Reputazione Online <span class="badge g">-100%</span></h4><div class="ba-r"><span class="ba-l">Prima</span><span class="old">12 recensioni negative/mese</span></div><div class="ba-r"><span class="ba-l">Dopo</span><span class="new">0 — intercettate dall'IA</span></div></div>
+        <div class="ba"><h4>Clienti Persi <span class="badge g">-94%</span></h4><div class="ba-r"><span class="ba-l">Prima</span><span class="old">34% abbandono</span></div><div class="ba-r"><span class="ba-l">Dopo</span><span class="new">2% con retention AI</span></div></div>
+        <div class="ba"><h4>Revenue Digitali <span class="badge t">+∞</span></h4><div class="ba-r"><span class="ba-l">Prima</span><span class="old">€0 automazioni</span></div><div class="ba-r"><span class="ba-l">Dopo</span><span class="new">+€2.400/mese media</span></div></div>
+        <div class="ba"><h4>Fatturazione <span class="badge g">-100%</span></h4><div class="ba-r"><span class="ba-l">Prima</span><span class="old">2 ore/giorno</span></div><div class="ba-r"><span class="ba-l">Dopo</span><span class="new">Completamente automatica</span></div></div>
+        <div class="ba"><h4>Marketing <span class="badge t">∞</span></h4><div class="ba-r"><span class="ba-l">Prima</span><span class="old">Manuale, costoso</span></div><div class="ba-r"><span class="ba-l">Dopo</span><span class="new">AI Content Engine 24/7</span></div></div>
+      </div>
+      <div class="guarantee"><h3>🛡️ Garanzia Risultati 90 Giorni</h3><p>Se non vedi miglioramenti misurabili nei primi 90 giorni, rimborso integrale. Zero rischi.</p><div class="trust-row"><span class="tb">🔒 GDPR</span><span class="tb">✅ Sicuro</span><span class="tb">📜 Certificato</span></div></div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="s-dark" id="prezzi">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:3rem"><span class="tag">PIANI & PREZZI</span><h2 class="sec-title">Scegli Come Dominare<br><em>il Tuo Mercato</em></h2><p class="sec-sub">Pacchetto completo o abbonamento flessibile — il tuo business cambia per sempre.</p></div>
+      <div class="price-grid">
+        <div class="pc"><div class="pc-icon">⚡</div><h3 class="pc-name">Digital Start</h3><div class="pc-price"><span class="pc-amt">€1.997</span><span class="pc-old">€2.880</span><span class="pc-disc">-31%</span></div><div class="pc-rate">oppure €666/mese x3 (TAN 0%)</div><div class="pc-after">poi €49/mese · 2% transazioni</div><div class="pc-feats"><div class="pf-item">App White Label completa</div><div class="pf-item">Menu/Catalogo QR illimitato</div><div class="pf-item">Ordini & Prenotazioni</div><div class="pf-item">Dashboard Analytics base</div><div class="pf-item">Supporto Email dedicato</div><div class="pf-item">Setup & Onboarding guidato</div></div><a href="#" class="btn btn-p" style="width:100%;justify-content:center">Inizia con Digital Start</a><div class="urg r">🔥 Setup gratuito questa settimana</div></div>
+        <div class="pc pop"><div class="pc-icon">🚀</div><h3 class="pc-name">Growth AI</h3><div class="pc-price"><span class="pc-amt">€4.997</span><span class="pc-old">€7.200</span><span class="pc-disc">-31%</span></div><div class="pc-rate">oppure €1.666/mese x3 (TAN 0%)</div><div class="pc-after">poi €29/mese · 1% transazioni</div><div class="pc-feats"><div class="pf-item">Tutto di Digital Start +</div><div class="pf-item">AI Engine completo</div><div class="pf-item">CRM & Fidelizzazione avanzata</div><div class="pf-item">Review Shield™</div><div class="pf-item">Push Notification illimitate</div><div class="pf-item">2 Agenti IA inclusi</div><div class="pf-item">Commissioni ridotte 1%</div></div><a href="#" class="btn btn-p" style="width:100%;justify-content:center">🚀 Scelgo Growth AI</a><div class="urg c">⚡ Solo 7 posti rimasti</div></div>
+        <div class="pc gld"><div class="pc-icon">👑</div><h3 class="pc-name">Empire Domination</h3><div class="pc-price"><span class="pc-amt">€7.997</span><span class="pc-old">€14.400</span><span class="pc-disc">-44%</span></div><div class="pc-rate">oppure €2.666/mese x3 (TAN 0%)</div><div class="pc-after">€0/mese · 0% commissioni · €11/giorno x24 mesi</div><div class="pc-feats"><div class="pf-item">✅ TUTTO incluso</div><div class="pf-item">ZERO commissioni</div><div class="pf-item">ZERO canone 24 mesi</div><div class="pf-item">5 Agenti IA inclusi</div><div class="pf-item">Multi-lingua illimitato</div><div class="pf-item">GhostManager™</div><div class="pf-item">Analytics predittivi IA</div><div class="pf-item">Account Manager VIP 7/7</div></div><a href="#" class="btn btn-gold" style="width:100%;justify-content:center">👑 Scelgo Empire</a><div class="urg r">Risparmia fino a €6.403</div></div>
+      </div>
+      <div class="price-trust"><p>🔒 Pagamento sicuro Stripe · Garanzia 30 giorni</p><div class="badges-row"><span>✅ GDPR</span><span>✅ AES-256</span><span>✅ Updates settimanali</span><span>✅ Assistenza 7/7</span><span>✅ Rate 0%</span></div></div>
+      <div class="cost-sim"><h4>📊 Esempio: €8.000/mese di ordini</h4><div class="cs-grid"><div class="cs-item"><h5>Digital Start</h5><div class="amt">€209/mese</div><div class="sub">€160 comm + €49</div></div><div class="cs-item"><h5>Growth AI</h5><div class="amt">€109/mese</div><div class="sub">€80 comm + €29</div></div><div class="cs-item best"><h5>Empire</h5><div class="amt">€0/mese</div><div class="sub">Zero tutto</div></div></div></div>
+    </div>
+  </section>
+
+  <!-- AI AGENTS -->
+  <section class="s-accent ag-section" id="agenti">
+    <canvas id="ac"></canvas>
+    <div class="container" style="position:relative;z-index:1">
+      <div style="text-align:center"><span class="tag">AGENTI IA</span><h2 class="sec-title">I Tuoi <em>Agenti Intelligenti</em></h2><p class="sec-sub">5 inclusi in Empire · Altri a €29/mese ciascuno · Sconto 30% per clienti attivi</p></div>
+      <div class="ag-grid">
+        <div class="ag"><div class="ag-emoji">🧠</div><h4>Menu AI / Catalogo AI</h4><p>Genera menu e cataloghi da foto. Traduzione multilingua automatica.</p><span class="ag-tag gr">Incluso in Growth</span></div>
+        <div class="ag"><div class="ag-emoji">📝</div><h4>Content AI Engine</h4><p>Post social, email, copy pubblicitario generato automaticamente.</p><span class="ag-tag gr">Incluso in Growth</span></div>
+        <div class="ag"><div class="ag-emoji">🤖</div><h4>Concierge AI</h4><p>Chatbot 24/7 addestrato sul tuo business. Risposte, prenotazioni, FAQ.</p><span class="ag-tag em">Incluso in Empire</span></div>
+        <div class="ag"><div class="ag-emoji">🛡️</div><h4>Review Shield™</h4><p>Filtra negative in privato, amplifica 4-5★ su Google.</p><span class="ag-tag em">Incluso in Empire</span></div>
+        <div class="ag"><div class="ag-emoji">🔍</div><h4>LeadEngine Scout</h4><p>Trova clienti in target da Google Maps e social automaticamente.</p><span class="ag-tag em">Incluso in Empire</span></div>
+        <div class="ag"><div class="ag-emoji">👻</div><h4>GhostManager™</h4><p>Identifica clienti persi e lancia campagne di recupero automatiche.</p><span class="ag-tag em">Incluso in Empire</span></div>
+        <div class="ag"><div class="ag-emoji">📊</div><h4>Analytics AI</h4><p>Previsioni vendite, insights automatici, suggerimenti data-driven.</p><span class="ag-tag em">Incluso in Empire</span></div>
+        <div class="ag"><div class="ag-emoji">💬</div><h4>WhatsApp AI</h4><p>Risposte automatiche WhatsApp Business, conferme, reminder.</p><span class="ag-tag ad">€29/mese singolo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="s-dark" id="faq"><div class="container"><div style="text-align:center"><span class="tag">FAQ</span><h2 class="sec-title">Domande <em>Frequenti</em></h2></div><div class="faq-list" id="faq-list"></div></div></section>
+
+  <!-- FINAL CTA -->
+  <section class="cta" id="contatti">
+    <span class="tag">INIZIA ORA</span>
+    <h2 class="cta-title">Pronto a Costruire<br><em>il Tuo Impero?</em></h2>
+    <p class="cta-sub">25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
+      <a href="#prezzi" class="btn btn-p">Sono un Imprenditore →</a>
+      <a href="#" class="btn btn-g">Prenota Demo</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="ft-grid">
+      <div><div class="logo" style="margin-bottom:1rem"><div class="logo-icon">E</div>EMPIRE.AI</div><p style="color:var(--muted);font-size:12px;line-height:1.6;max-width:280px">La piattaforma AI autonoma piu completa d'Italia. Trasforma qualsiasi business in un impero digitale.</p></div>
+      <div><h4>Settori</h4><ul><li><a href="#">Food & Ristorazione</a></li><li><a href="#">NCC & Trasporto</a></li><li><a href="#">Beauty & Wellness</a></li><li><a href="#">Healthcare</a></li><li><a href="#">Retail & E-commerce</a></li><li><a href="#">+19 altri</a></li></ul></div>
+      <div><h4>Piattaforma</h4><ul><li><a href="#">Funzionalita</a></li><li><a href="#">Automazioni IA</a></li><li><a href="#">ROI Calculator</a></li><li><a href="#">Piani & Prezzi</a></li></ul></div>
+      <div><h4>Contatti</h4><ul><li><a href="mailto:info@empire-suite.it">info@empire-suite.it</a></li><li>Roma, Italia 🇮🇹</li><li><a href="#">Privacy Policy</a></li><li><a href="#">Cookie Policy</a></li></ul></div>
+    </div>
+    <div class="ft-bottom"><span>© 2026 Empire AI · Piattaforma Multi-Settore</span><span>P.IVA IT12345678901</span></div>
+  </footer>
+
+  <!-- ARIANNA -->
+  <button class="ar-btn" onclick="toggleAr()">🤖<div class="ar-pulse"></div><div class="ar-dot">1</div></button>
+  <div class="ar-chat" id="ar-chat">
+    <div class="ar-hd"><div class="ar-av">🤖</div><div class="ar-info"><h4>Arianna</h4><span>AI Assistant · Online</span></div><button class="ar-x" onclick="toggleAr()">✕</button></div>
+    <div class="ar-msgs" id="ar-msgs"><div class="m ai">Ciao! Sono Arianna 👋 Che tipo di business hai? Ti mostro come Empire puo aiutarti.</div></div>
+    <div class="ar-qk"><button class="qb" onclick="sA('Ristorante')">🍕 Ristorante</button><button class="qb" onclick="sA('Palestra')">💪 Palestra</button><button class="qb" onclick="sA('Beauty')">💅 Beauty</button><button class="qb" onclick="sA('Hotel')">🏨 Hotel</button><button class="qb" onclick="sA('Prezzi')">💰 Prezzi</button></div>
+    <div class="ar-in"><input type="text" id="ar-inp" placeholder="Es: ho un ristorante a Roma..." onkeydown="if(event.key==='Enter')sAI()"><button onclick="sAI()">→</button></div>
   </div>
-  <div class="chatbot-messages" id="chatMessages">
-    <div class="chat-msg bot">Ciao! 👋 Sono Arianna, l'assistente AI di Empire. Come posso aiutarti oggi?</div>
-  </div>
-  <div class="chatbot-input">
-    <input type="text" id="chatInput" placeholder="Scrivi un messaggio..." autocomplete="off">
-    <button id="chatSend">➤</button>
-  </div>
-</div>
 
 <script>
-// Particle canvas
+/* ============================== */
+/*  EMPIRE.AI — COMPLETE SCRIPT  */
+/* ============================== */
+gsap.registerPlugin(ScrollTrigger);
+
+const SB='https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/';
+
+/* === SCROLL PROGRESS === */
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('sp').style.width=(window.scrollY/h*100)+'%';
+});
+
+/* === CUSTOM CURSOR === */
 (function(){
-  const c=document.getElementById('hero-canvas'),ctx=c.getContext('2d');
-  let W,H,particles=[];
-  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight}
-  window.addEventListener('resize',resize);resize();
-  class P{
-    constructor(){this.reset()}
-    reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.5+.5;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.alpha=Math.random()*.4+.1;this.color=Math.random()>.5?'126,183,190':'108,60,224'}
-    update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1}
-    draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${this.alpha})`;ctx.fill()}
-  }
-  for(let i=0;i<80;i++)particles.push(new P());
-  function loop(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();p.draw()});
-    for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){
-      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
-      if(d<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(126,183,190,${.08*(1-d/120)})`;ctx.stroke()}
-    }
-    requestAnimationFrame(loop)}
-  loop();
+  if(window.innerWidth<768) return;
+  const c=document.createElement('div'),f=document.createElement('div');
+  c.id='cur';f.id='curf';
+  Object.assign(c.style,{position:'fixed',width:'10px',height:'10px',borderRadius:'50%',background:'var(--teal)',pointerEvents:'none',zIndex:'10001',transition:'transform .1s',mixBlendMode:'difference'});
+  Object.assign(f.style,{position:'fixed',width:'36px',height:'36px',border:'1px solid rgba(126,183,190,.5)',borderRadius:'50%',pointerEvents:'none',zIndex:'10000',transition:'all .15s ease-out'});
+  document.body.append(c,f);
+  let mx=0,my=0,fx=0,fy=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.left=(mx-5)+'px';c.style.top=(my-5)+'px'});
+  (function loop(){fx+=(mx-fx)*.12;fy+=(my-fy)*.12;f.style.left=(fx-18)+'px';f.style.top=(fy-18)+'px';requestAnimationFrame(loop)})();
+  document.addEventListener('mouseleave',()=>{c.style.opacity='0';f.style.opacity='0'});
+  document.addEventListener('mouseenter',()=>{c.style.opacity='1';f.style.opacity='1'});
+  document.querySelectorAll('a,button,.btn,.qb').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{f.style.transform='scale(1.6)';f.style.borderColor='var(--teal)';c.style.transform='scale(.5)'});
+    el.addEventListener('mouseleave',()=>{f.style.transform='scale(1)';f.style.borderColor='rgba(126,183,190,.5)';c.style.transform='scale(1)'});
+  });
+  document.body.style.cursor='none';
 })();
 
-// GSAP ScrollReveal
-gsap.registerPlugin(ScrollTrigger);
-document.querySelectorAll('.sr').forEach(el=>{
-  gsap.fromTo(el,{opacity:0,y:40},{opacity:1,y:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}});
-});
+/* === NAVBAR === */
+const nb=document.querySelector('nav.nb');
+const burger=document.getElementById('burger');
+const nbLinks=document.getElementById('nb-links');
+window.addEventListener('scroll',()=>{nb.classList.toggle('scrolled',window.scrollY>60)});
+burger.addEventListener('click',()=>{burger.classList.toggle('on');nbLinks.classList.toggle('open')});
+document.querySelectorAll('.nb-links a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('on');nbLinks.classList.remove('open')}));
 
-// Counter animation
-document.querySelectorAll('.num').forEach(el=>{
-  const target=parseInt(el.dataset.target);
-  ScrollTrigger.create({trigger:el,start:'top 85%',onEnter:()=>{
-    gsap.to({v:0},{v:target,duration:2,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(this.targets()[0].v)}})
+/* === HERO PARTICLE CANVAS === */
+(function(){
+  const cv=document.getElementById('hc');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W,H;
+  function resize(){W=cv.width=cv.parentElement.offsetWidth;H=cv.height=cv.parentElement.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  class P{constructor(){this.reset()}
+    reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4;this.r=Math.random()*1.8+.5;this.a=Math.random()*.4+.1}
+    update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1}
+    draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(126,183,190,${this.a})`;ctx.fill()}
+  }
+  const pts=Array.from({length:80},()=>new P());
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.update();p.draw()});
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<140){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(126,183,190,${.08*(1-d/140)})`;ctx.stroke()}
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* === AGENTS NEURAL NET CANVAS === */
+(function(){
+  const cv=document.getElementById('ac');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W,H;
+  function resize(){const p=cv.parentElement;W=cv.width=p.offsetWidth;H=cv.height=p.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  class N{constructor(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*3+1.5;this.pulse=Math.random()*Math.PI*2}
+    update(){this.x+=this.vx;this.y+=this.vy;this.pulse+=.02;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1}
+    draw(){const s=1+Math.sin(this.pulse)*.3;ctx.beginPath();ctx.arc(this.x,this.y,this.r*s,0,Math.PI*2);ctx.fillStyle='rgba(108,60,224,.35)';ctx.fill();ctx.beginPath();ctx.arc(this.x,this.y,this.r*s*.5,0,Math.PI*2);ctx.fillStyle='rgba(126,183,190,.5)';ctx.fill()}
+  }
+  const nodes=Array.from({length:40},()=>new N());
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach(n=>{n.update();n.draw()});
+    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<180){
+        const a=.06*(1-d/180);
+        ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.strokeStyle=`rgba(108,60,224,${a})`;ctx.lineWidth=.8;ctx.stroke();
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* === GSAP HERO CINEMATIC ENTRANCE === */
+const heroTL=gsap.timeline({defaults:{ease:'power3.out'}});
+heroTL
+  .fromTo('.hero-badge',{opacity:0,y:30},{opacity:1,y:0,duration:.8},.3)
+  .fromTo('.l1',{clipPath:'inset(0 0 100% 0)'},{clipPath:'inset(0 0 0% 0)',duration:1.1},.5)
+  .fromTo('.l2',{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)',duration:1.1},.7)
+  .fromTo('.l3',{clipPath:'inset(100% 0 0 0)'},{clipPath:'inset(0% 0 0 0)',duration:1.1},.9)
+  .fromTo('.hero-sub',{opacity:0,y:20},{opacity:1,y:0,duration:.8},1.2)
+  .fromTo('.hero-btns',{opacity:0,y:20},{opacity:1,y:0,duration:.8},1.4)
+  .fromTo('#hp1',{scale:0,rotation:-15,y:120},{scale:1,rotation:0,y:0,duration:1.4,ease:'elastic.out(1,.6)'},1.0)
+  .fromTo('#hp2',{scale:0,rotation:10,y:100},{scale:1,rotation:0,y:0,duration:1.4,ease:'elastic.out(1,.6)'},1.2)
+  .fromTo('#hp3',{scale:0,rotation:-8,y:140},{scale:1,rotation:0,y:0,duration:1.4,ease:'elastic.out(1,.6)'},1.4);
+
+/* Hero phones continuous float */
+gsap.to('#hp1',{y:-8,duration:3,repeat:-1,yoyo:true,ease:'sine.inOut'});
+gsap.to('#hp2',{y:10,duration:3.5,repeat:-1,yoyo:true,ease:'sine.inOut',delay:.5});
+gsap.to('#hp3',{y:-6,duration:2.8,repeat:-1,yoyo:true,ease:'sine.inOut',delay:1});
+
+/* === SHOWCASE SCROLL ANIMATION === */
+gsap.set('#p1',{rotateY:-12,x:0,opacity:1,scale:1});
+gsap.set('#p2',{rotateY:-20,x:100,y:30,opacity:.4,scale:.85});
+gsap.set('#p3',{rotateY:-28,x:180,y:60,opacity:.2,scale:.7});
+
+const scTL=gsap.timeline({scrollTrigger:{trigger:'#showcase-wrap',start:'top top',end:'bottom bottom',scrub:1}});
+scTL
+  .to('#p1',{x:-280,rotateY:15,opacity:0,duration:1},0)
+  .to('#p2',{x:0,y:0,rotateY:-12,opacity:1,scale:1,duration:1},0)
+  .to('#p3',{x:100,y:30,opacity:.4,scale:.85,duration:1},0)
+  .to('[data-s="0"]',{opacity:0,y:-25,duration:.5},0)
+  .to('[data-s="1"]',{opacity:1,y:0,duration:.5},.3)
+  .to('.sc-dot:nth-child(1)',{opacity:.3,duration:.3},0)
+  .to('.sc-dot:nth-child(2)',{opacity:1,className:'sc-dot on',duration:.3},.3)
+  .to('#p2',{x:-280,rotateY:15,opacity:0,duration:1},1)
+  .to('#p3',{x:0,y:0,rotateY:-12,opacity:1,scale:1,duration:1},1)
+  .to('[data-s="1"]',{opacity:0,y:-25,duration:.5},1)
+  .to('[data-s="2"]',{opacity:1,y:0,duration:.5},1.3)
+  .to('.sc-dot:nth-child(2)',{opacity:.3,duration:.3},1)
+  .to('.sc-dot:nth-child(3)',{opacity:1,className:'sc-dot on',duration:.3},1.3);
+
+/* === WORD REVEAL === */
+(function(){
+  const el=document.getElementById('wr');if(!el)return;
+  const text=el.textContent;
+  el.innerHTML=text.split(' ').map(w=>`<span style="opacity:.12;transition:opacity .5s">${w}</span>`).join(' ');
+  const words=el.querySelectorAll('span');
+  ScrollTrigger.create({trigger:el,start:'top 80%',end:'bottom 20%',onUpdate:self=>{
+    const pct=self.progress;
+    words.forEach((w,i)=>{const t=i/words.length;w.style.opacity=pct>t?'1':'.12'});
   }});
+})();
+
+/* === SECTION STAGGERS === */
+gsap.utils.toArray('.fc,.ag,.pc,.rs,.ba,.met').forEach((el,i)=>{
+  gsap.fromTo(el,{opacity:0,y:50},{opacity:1,y:0,duration:.7,ease:'power3.out',delay:(i%4)*.08,
+    scrollTrigger:{trigger:el,start:'top 88%',once:true}});
 });
 
-// FAQ
-document.querySelectorAll('.faq-q').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const item=btn.parentElement;
-    document.querySelectorAll('.faq-item').forEach(i=>{if(i!==item)i.classList.remove('open')});
-    item.classList.toggle('open');
+/* === COUNTER ANIMATION === */
+const ctrObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){
+    e.target.querySelectorAll('.ctr').forEach(c=>{
+      const t=parseInt(c.getAttribute('data-t'));let v=0;const inc=t/50;
+      const timer=setInterval(()=>{v+=inc;if(v>=t){c.textContent=t;clearInterval(timer)}else c.textContent=Math.floor(v)},30);
+    });
+    ctrObs.unobserve(e.target);
+  }});
+},{threshold:.3});
+document.querySelectorAll('.met-grid,.res-grid,.s-darker').forEach(s=>{if(s.querySelector('.ctr'))ctrObs.observe(s)});
+
+/* === SECTORS === */
+(function(){
+  const sectors=[
+    {name:'🍕 Ristorazione',img:'flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png',desc:'App ordini, menu QR, prenotazioni, delivery'},
+    {name:'💪 Fitness',img:'City%20Padel%20Milano/mobile-fresh-azzurro-home.png',desc:'Prenotazioni corsi, schede, abbonamenti'},
+    {name:'💅 Beauty & Spa',img:'Aura%20Milano%20Spa/mobile-luce-pura-home.png',desc:'Booking trattamenti, fidelity, prodotti'},
+    {name:'🏨 Hotel & B&B',img:'COTE%20Miami/a-obsidian-mobile-home.png',desc:'Check-in, room service, concierge AI'},
+    {name:'🐾 Pet Care',img:'Aloha%20Pet%20Resorts/mobile-a-home.png',desc:'Prenotazioni, profili animali, veterinario'},
+    {name:'🏌️ Sport & Club',img:'Top%20Golf%20Bay%20App/a-official-home.png',desc:'Campi, tornei, leaderboard, shop'},
+    {name:'🍣 Sushi & Asian',img:'Paperfish%20Sushi/a-sakura-home.png',desc:'Ordini, all-you-can-eat, delivery'},
+    {name:'🚗 NCC & Noleggio',img:'LuxDrive/style-a-home.png',desc:'Prenotazioni, tracking GPS, pagamenti'},
+    {name:'⛵ Charter & Nautica',img:'Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/home.png',desc:'Booking barche, itinerari, crew'},
+    {name:'💎 Luxury E-comm',img:'Tatush%20Hair%20Fragrance/mobile-home.png',desc:'Catalogo, checkout, brand premium'},
+    {name:'⚖️ Legal & Studi',img:'FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png',desc:'Appuntamenti, documenti, fatturazione'},
+    {name:'🏡 Immobiliare',img:'DIMORA%20Milano/eleganza-milanese-home-mobile.png',desc:'Annunci, virtual tour, CRM clienti'},
+    {name:'🏥 Dentisti & Medici',img:'FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png',desc:'Prenotazioni, cartelle, recall'},
+    {name:'🎨 Nail Art & Estetista',img:'Neo%20Nails%20Brickell/frosted-glass-home.png',desc:'Galleria lavori, booking, loyalty'},
+    {name:'🧒 Asilo & Nursery',img:'Little%20Diamond%20Nursery%20-%20Playful%20Colorful/home.png',desc:'Iscrizioni, diario, comunicazioni'},
+    {name:'🐎 Ranch & Equestre',img:'Texas%20Horse%20Ranch%20-%205%20Style%20Proposals/a1-velvet-saddle-home.png',desc:'Lezioni, eventi, cavalcate'},
+    {name:'🛥️ Watersport',img:'Miami%20Watersports/style-a-mobile-home.png',desc:'Noleggi, corsi, escursioni'},
+    {name:'🍔 Fast Food & Kebab',img:'STRAPIZZAMI/stile-a-home.png',desc:'Ordini rapidi, combo, fidelity'}
+  ];
+  const pillBox=document.getElementById('sector-pills');
+  const preview=document.getElementById('sector-preview');
+  sectors.forEach((s,i)=>{
+    const btn=document.createElement('button');
+    btn.className='pill'+(i===0?' on':'');
+    btn.textContent=s.name;
+    btn.onclick=()=>{
+      pillBox.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
+      btn.classList.add('on');
+      preview.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;gap:32px;margin-top:2rem;flex-wrap:wrap">
+        <div style="width:220px;border-radius:24px;overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,.4)">
+          <img src="${SB}${s.img}" alt="${s.name}" style="width:100%;display:block">
+        </div>
+        <div style="max-width:360px;text-align:left">
+          <h3 style="font-size:1.3rem;margin-bottom:.5rem">${s.name}</h3>
+          <p style="color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:1rem">${s.desc}. App dedicata con intelligenza artificiale, dashboard gestionale, automazioni marketing e agenti AI inclusi.</p>
+          <a href="#prezzi" class="btn btn-p" style="font-size:13px;padding:12px 28px">Scopri il Piano →</a>
+        </div>
+      </div>`;
+    };
+    pillBox.appendChild(btn);
+  });
+  sectors[0] && pillBox.querySelector('.pill').click();
+})();
+
+/* === PORTFOLIO === */
+(function(){
+  const data=[
+    {n:'Otomaki Sushi',c:'food',img:'migrated-1773167901906-otomaki-mobile-home.png',d:'App sushi premium con ordini AI'},
+    {n:'La Patrona',c:'food',img:'migrated-1773167903321-la-patrona-mobile-home.png',d:'Ristorante messicano luxury'},
+    {n:'Meridia Rental Car',c:'app',img:'migrated-1773167906872-meridia-mobile-home.png',d:'Noleggio auto con GPS'},
+    {n:'Neo Nails Brickell',c:'beauty',img:'Neo%20Nails%20Brickell/frosted-glass-home.png',d:'Nail salon Miami'},
+    {n:'Little Diamond Nursery',c:'lifestyle',img:'Little%20Diamond%20Nursery%20-%20Playful%20Colorful/home.png',d:'Asilo nido premium'},
+    {n:'Midtown Kosher',c:'food',img:'Midtown%20Kosher/style-a-home.png',d:'Ristorante kosher NYC',land:true},
+    {n:'Asinara Charter',c:'app',img:'Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/home.png',d:'Charter nautico Sardegna'},
+    {n:'Miami Boats Rental',c:'app',img:'Miami%20Boats%20Rental/A-mobile-home.png',d:'Noleggio barche Miami'},
+    {n:'MMI Resident Hub',c:'app',img:'MMI%20Resident%20Hub/01-ocean-azure-desktop-dashboard.png',d:'Gestionale residenziale',land:true},
+    {n:'FAR Medical',c:'web',img:'FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png',d:'Medical solutions'},
+    {n:'Miami Watersports',c:'app',img:'Miami%20Watersports/style-a-mobile-home.png',d:'Sport acquatici'},
+    {n:'STRAPIZZAMI',c:'food',img:'STRAPIZZAMI/stile-a-home.png',d:'Pizzeria artigianale'},
+    {n:"Nick's Plumbing",c:'app',img:"Nick's%20Plumbing%20&%20AC/stile-a-home.png",d:'Idraulica e AC'},
+    {n:'La Vang Vietnamese',c:'food',img:'La%20Vang%20Vietnamese%20Luxury/a-noir-saigon-home.png',d:'Cucina vietnamita luxury'},
+    {n:"Ashley's Playhouse",c:'lifestyle',img:"Ashley's%20Playhouse/stile-a-home.png",d:'Area giochi bambini'},
+    {n:'Batey Cevicheria',c:'food',img:'Batey%20Cevicheria%20Urbana/costa-pacifico-mobile-home.png',d:'Ceviche bar'},
+    {n:'Little Stars Daycare',c:'lifestyle',img:'Little%20Stars%20Daycare/style-a-home.png',d:'Daycare center'},
+    {n:'PawParadise',c:'lifestyle',img:'PawParadise/style-a-home.png',d:'Pet paradise app'},
+    {n:'Top Golf Bay',c:'app',img:'Top%20Golf%20Bay%20App/a-official-home.png',d:'Golf & entertainment'},
+    {n:'LuxDrive',c:'app',img:'LuxDrive/style-a-home.png',d:'NCC luxury drive'},
+    {n:'Texas Horse Ranch',c:'lifestyle',img:'Texas%20Horse%20Ranch%20-%205%20Style%20Proposals/a1-velvet-saddle-home.png',d:'Ranch equestre'},
+    {n:'Flame Kebab',c:'food',img:'flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png',d:'Kebab gourmet app'},
+    {n:'Aura Milano Spa',c:'beauty',img:'Aura%20Milano%20Spa/mobile-luce-pura-home.png',d:'Spa & wellness Milano'},
+    {n:'COTE Miami',c:'food',img:'COTE%20Miami/a-obsidian-mobile-home.png',d:'Korean steakhouse'},
+    {n:'Paperfish Sushi',c:'food',img:'Paperfish%20Sushi/a-sakura-home.png',d:'Sushi bar premium'},
+    {n:'City Padel Milano',c:'app',img:'City%20Padel%20Milano/mobile-fresh-azzurro-home.png',d:'Padel booking'},
+    {n:'Tatush Hair',c:'ecommerce',img:'Tatush%20Hair%20Fragrance/mobile-home.png',d:'Hair luxury e-commerce'},
+    {n:'Aloha Pet Resorts',c:'lifestyle',img:'Aloha%20Pet%20Resorts/mobile-a-home.png',d:'Pet resort Hawaii'},
+    {n:'DIMORA Milano',c:'app',img:'DIMORA%20Milano/eleganza-milanese-home-mobile.png',d:'Immobiliare luxury'},
+    {n:'Papagua',c:'food',img:'migrated-1773167904818-papagua-home.png',d:'Bar tropicale',land:true}
+  ];
+
+  const track=document.getElementById('port-track');
+  const exp=document.getElementById('port-exp');
+  const toggleBtn=document.getElementById('port-toggle');
+  let expanded=false;
+
+  function card(item){
+    return `<div class="pi${item.land?' land':''}">
+      <img src="${SB}${item.img}" alt="${item.n}" loading="lazy">
+      <div class="pi-ov"><div class="pi-name">${item.n}</div><div class="pi-cat">${item.c}</div></div>
+    </div>`;
+  }
+
+  /* Carousel — first 10 unique items (not in hero/showcase) */
+  data.slice(0,10).forEach(item=>{track.innerHTML+=card(item)});
+
+  /* Prev/Next scroll */
+  document.getElementById('port-prev').onclick=()=>{track.scrollBy({left:-280,behavior:'smooth'})};
+  document.getElementById('port-next').onclick=()=>{track.scrollBy({left:280,behavior:'smooth'})};
+
+  /* Auto-scroll carousel */
+  let autoDir=1;
+  setInterval(()=>{
+    if(expanded)return;
+    track.scrollBy({left:1,behavior:'auto'});
+    if(track.scrollLeft>=track.scrollWidth-track.clientWidth)track.scrollLeft=0;
+  },30);
+
+  /* Expand/Collapse */
+  toggleBtn.onclick=()=>{
+    expanded=!expanded;
+    if(expanded){
+      exp.innerHTML='<div class="pi-grid">'+data.map(item=>card(item)).join('')+'</div>';
+      exp.style.display='block';
+      toggleBtn.textContent='Chiudi ✕';
+      gsap.fromTo('.pi-grid .pi',{opacity:0,y:30},{opacity:1,y:0,duration:.4,stagger:.03,ease:'power3.out'});
+    }else{
+      exp.style.display='none';
+      toggleBtn.textContent='Mostra Tutti (30+)';
+    }
+  };
+})();
+
+/* === FAQ === */
+(function(){
+  const faqs=[
+    ['Quanto tempo serve per avere la mia app pronta?','In media 7-14 giorni lavorativi. I progetti piu complessi (multi-sede, e-commerce avanzato) richiedono fino a 21 giorni. Ricevi aggiornamenti quotidiani sullo stato.'],
+    ['Posso personalizzare tutto al 100%?','Assolutamente si. Colori, logo, font, layout, funzionalita — tutto e personalizzabile. La tua app avra il TUO brand, nessun logo Empire visibile ai clienti.'],
+    ['Come funzionano i pagamenti a rate?','Offriamo rate a TAN 0% — dividi in 3 rate mensili senza interessi. Esempio: Growth AI a €1.666/mese x3 invece di €4.997 in una volta.'],
+    ['Cosa succede dopo il pagamento iniziale?','Dopo il setup, paghi solo il canone mensile (da €0 a €49/mese) + commissioni sulle transazioni (da 0% a 2%). Empire Domination: €0 per 24 mesi.'],
+    ['Gli agenti IA sono davvero autonomi?','Si. Una volta configurati, lavorano 24/7 senza intervento. Review Shield filtra recensioni, Content AI genera post, GhostManager recupera clienti — tutto in automatico.'],
+    ['Posso aggiungere agenti extra in futuro?','Certo. Ogni agente aggiuntivo costa €29/mese (sconto 30% per clienti Empire). Puoi attivarli/disattivarli in qualsiasi momento dalla dashboard.'],
+    ['Che tipo di supporto offrite?','Digital Start: email. Growth AI: prioritario 7/7. Empire: Account Manager VIP dedicato con risposta in 2h max. Tutti i piani includono aggiornamenti settimanali.'],
+    ['Funziona per il mio settore specifico?','Supportiamo 25+ settori: ristorazione, fitness, beauty, hotel, legal, immobiliare, healthcare, pet care, automotive, wedding e molti altri. Contattaci per verificare.'],
+    ['Posso vedere una demo prima di acquistare?','Certamente! Prenota una demo gratuita di 15 minuti. Ti mostriamo dal vivo come funziona la piattaforma nel tuo settore specifico.'],
+    ['Garanzia di rimborso?','Si — garanzia 90 giorni. Se non vedi miglioramenti misurabili nel tuo business, rimborso integrale. Zero rischi, zero domande.']
+  ];
+  const list=document.getElementById('faq-list');
+  faqs.forEach(([q,a])=>{
+    const d=document.createElement('div');d.className='fq';
+    d.innerHTML=`<button class="fq-q"><span>${q}</span><span class="fq-icon">+</span></button><div class="fq-a"><p>${a}</p></div>`;
+    d.querySelector('.fq-q').onclick=()=>{
+      const wasOn=d.classList.contains('on');
+      list.querySelectorAll('.fq').forEach(f=>f.classList.remove('on'));
+      if(!wasOn)d.classList.add('on');
+    };
+    list.appendChild(d);
+  });
+})();
+
+/* === ARIANNA CHATBOT === */
+function toggleAr(){document.getElementById('ar-chat').classList.toggle('open')}
+function sA(topic){
+  const msgs=document.getElementById('ar-msgs');
+  msgs.innerHTML+=`<div class="m u">${topic}</div>`;
+  msgs.innerHTML+='<div class="m ai td"><span></span><span></span><span></span></div>';
+  msgs.scrollTop=msgs.scrollHeight;
+  const responses={
+    'Ristorante':'🍕 Per un ristorante, Empire offre:\n\n• App ordini + delivery con il TUO brand\n• Menu QR multilingua generato dall\'IA\n• Prenotazioni automatiche\n• Review Shield per proteggere la reputazione\n• Content AI per post social automatici\n\nPiano consigliato: Growth AI a €4.997\n→ Include 2 agenti IA + CRM avanzato',
+    'Palestra':'💪 Per una palestra, Empire crea:\n\n• App prenotazione corsi e personal trainer\n• Schede allenamento digitali\n• Sistema abbonamenti + rinnovi automatici\n• Push notification per corsi\n• Analytics presenze e retention\n\nPiano consigliato: Growth AI a €4.997',
+    'Beauty':'💅 Per un salone beauty, Empire offre:\n\n• App prenotazioni trattamenti\n• Galleria portfolio lavori\n• Fidelity card digitale\n• Reminder automatici appuntamenti\n• E-commerce prodotti integrato\n\nPiano consigliato: Digital Start a €1.997',
+    'Hotel':'🏨 Per hotel/B&B, Empire crea:\n\n• App check-in/out digitale\n• Room service ordering\n• Concierge AI chatbot 24/7\n• Gestione prenotazioni multi-canale\n• Dashboard analytics occupazione\n\nPiano consigliato: Empire Domination a €7.997',
+    'Prezzi':'💰 I nostri piani:\n\n⚡ Digital Start: €1.997 (o €666/mese x3)\n→ App completa + dashboard base\n\n🚀 Growth AI: €4.997 (o €1.666/mese x3)\n→ + AI Engine + CRM + 2 agenti\n\n👑 Empire: €7.997 (o €2.666/mese x3)\n→ TUTTO incluso + 0% commissioni\n\nTutti con garanzia 90 giorni!'
+  };
+  setTimeout(()=>{
+    msgs.querySelector('.td:last-of-type')?.remove();
+    msgs.innerHTML+=`<div class="m ai">${responses[topic]||'Grazie! Un nostro consulente ti contattera a breve per discutere la soluzione migliore per il tuo business. Nel frattempo, puoi esplorare i nostri progetti nel portfolio!'}</div>`;
+    msgs.scrollTop=msgs.scrollHeight;
+  },1200);
+}
+function sAI(){
+  const inp=document.getElementById('ar-inp');
+  const v=inp.value.trim();if(!v)return;
+  sA(v);inp.value='';
+}
+
+/* === SMOOTH SCROLL === */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    const t=document.querySelector(this.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
   });
 });
-
-// Chatbot
-const chatToggle=document.getElementById('chatToggle'),chatPanel=document.getElementById('chatPanel'),chatInput=document.getElementById('chatInput'),chatSend=document.getElementById('chatSend'),chatMessages=document.getElementById('chatMessages');
-chatToggle.addEventListener('click',()=>chatPanel.classList.toggle('open'));
-const RESPONSES={'pricing':['I nostri piani partono da €1.997 una tantum + €49/mese. Il piano Growth AI a €4.997 è il più scelto! Vuoi che ti mostri un confronto dettagliato?'],'demo':['Certo! Puoi provare una demo live di qualsiasi settore su /demo. Quale settore ti interessa di più?'],'settori':['Copriamo 25+ settori: ristorazione, hotel, beauty, fitness, NCC, healthcare, retail e molti altri. Ognuno con template e agenti AI specializzati!'],'default':['Ottima domanda! Per una risposta dettagliata ti consiglio di prenotare una demo gratuita. Il nostro team ti mostrerà tutto in 15 minuti.','Capisco! Empire.AI è la soluzione ideale per digitalizzare qualsiasi attività. Vuoi sapere di più su un settore specifico?']};
-function getReply(msg){const m=msg.toLowerCase();if(m.includes('prezz')||m.includes('cost')||m.includes('pian'))return RESPONSES.pricing[0];if(m.includes('demo')||m.includes('prova'))return RESPONSES.demo[0];if(m.includes('settor'))return RESPONSES.settori[0];return RESPONSES.default[Math.floor(Math.random()*RESPONSES.default.length)]}
-function sendMsg(){const v=chatInput.value.trim();if(!v)return;chatMessages.innerHTML+=`<div class="chat-msg user">${v}</div>`;chatInput.value='';chatMessages.scrollTop=chatMessages.scrollHeight;setTimeout(()=>{chatMessages.innerHTML+=`<div class="chat-msg bot">${getReply(v)}</div>`;chatMessages.scrollTop=chatMessages.scrollHeight},800)}
-chatSend.addEventListener('click',sendMsg);chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg()});
 </script>
 </body>
 </html>
