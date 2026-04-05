@@ -237,6 +237,7 @@ const PartnerDashboard = () => {
   const [useNames, setUseNames] = useState(false);
   const [scanningProspect, setScanningProspect] = useState(false);
   const [aiGeneratedMessage, setAiGeneratedMessage] = useState<string | null>(null);
+  const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
 
   // Sector search + AI advisor state
   const [sectorSearch, setSectorSearch] = useState("");
