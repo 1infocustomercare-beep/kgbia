@@ -579,11 +579,7 @@ function App() {
                           <ContentAIPage />
                         </ProtectedRoute>
                       } />
-                      <Route path="/superadmin/leads" element={
-                        <ProtectedRoute requiredRole="super_admin">
-                          <LeadsPage />
-                        </ProtectedRoute>
-                      } />
+                      {/* leads is partner-only, not superadmin */}
                       <Route path="/superadmin/content-ai" element={
                         <ProtectedRoute requiredRole="super_admin">
                           <ContentAIPage />
@@ -684,7 +680,7 @@ function App() {
                         <Route path="automations" element={<AutomationsPage />} />
                         <Route path="whatsapp" element={<WhatsAppPage />} />
                         {/* Common modules */}
-                        <Route path="leads" element={<LeadsPage />} />
+                        {/* leads removed from /app — only available via /partner/leads */}
                         <Route path="staff" element={<StaffPage />} />
                         <Route path="haccp" element={<HACCPPage />} />
                         <Route path="payroll" element={<PayrollPage />} />

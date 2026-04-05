@@ -70,7 +70,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "leads" | "content_ai";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai";
 
 interface SubscriptionRecord {
   id: string;
@@ -615,28 +615,39 @@ const SuperAdminDashboard = () => {
     { name: "Storage CDN", status: "online" as const, latency: "8ms" },
   ];
 
-  const tabs: { id: SuperTab; label: string; icon: React.ReactNode }[] = [
-    { id: "overview", label: "Overview", icon: <BarChart3 className="w-5 h-5" /> },
-    { id: "tenants", label: "Tenant", icon: <Store className="w-5 h-5" /> },
-    { id: "payments", label: "Pagamenti", icon: <CreditCard className="w-5 h-5" /> },
-    { id: "subscriptions" as SuperTab, label: "Abbonamenti", icon: <Calendar className="w-5 h-5" /> },
-    { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-5 h-5" /> },
-    { id: "billing", label: "Fatture", icon: <DollarSign className="w-5 h-5" /> },
-    { id: "mary", label: "AI-Mary", icon: <Bot className="w-5 h-5" /> },
-    { id: "agents", label: "Agenti IA", icon: <Cpu className="w-5 h-5" /> },
-    { id: "feature_requests", label: "Richieste", icon: <Lightbulb className="w-5 h-5" /> },
-    { id: "media", label: "Media", icon: <Film className="w-5 h-5" /> },
-    { id: "brand" as SuperTab, label: "Brand", icon: <Crown className="w-5 h-5" /> },
-    { id: "showcase", label: "Settori", icon: <Eye className="w-5 h-5" /> },
-    { id: "integrations" as SuperTab, label: "Integrazioni", icon: <Wifi className="w-5 h-5" /> },
-    { id: "whatsapp" as SuperTab, label: "WhatsApp", icon: <MessageCircle className="w-5 h-5" /> },
-    { id: "demo_accounts" as SuperTab, label: "Demo", icon: <Key className="w-5 h-5" /> },
-    { id: "connections" as SuperTab, label: "Connessioni", icon: <Link2 className="w-5 h-5" /> },
-    { id: "registrations" as SuperTab, label: "Registrazioni", icon: <Users className="w-5 h-5" /> },
-    { id: "partner_network" as SuperTab, label: "Rete Partner", icon: <Handshake className="w-5 h-5" /> },
-    { id: "leads" as SuperTab, label: "Lead Scout", icon: <Search className="w-5 h-5" /> },
-    { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-5 h-5" /> },
+  const tabGroups: { label: string; tabs: { id: SuperTab; label: string; icon: React.ReactNode }[] }[] = [
+    { label: "📊 Gestione", tabs: [
+      { id: "overview", label: "Overview", icon: <BarChart3 className="w-4 h-4" /> },
+      { id: "tenants", label: "Tenant", icon: <Store className="w-4 h-4" /> },
+      { id: "registrations" as SuperTab, label: "Registrazioni", icon: <Users className="w-4 h-4" /> },
+      { id: "partner_network" as SuperTab, label: "Rete Partner", icon: <Handshake className="w-4 h-4" /> },
+    ]},
+    { label: "💰 Finanza", tabs: [
+      { id: "payments", label: "Pagamenti", icon: <CreditCard className="w-4 h-4" /> },
+      { id: "subscriptions" as SuperTab, label: "Abbonamenti", icon: <Calendar className="w-4 h-4" /> },
+      { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-4 h-4" /> },
+      { id: "billing", label: "Fatture", icon: <DollarSign className="w-4 h-4" /> },
+    ]},
+    { label: "🤖 AI & Agenti", tabs: [
+      { id: "mary", label: "AI-Mary", icon: <Bot className="w-4 h-4" /> },
+      { id: "agents", label: "Agenti IA", icon: <Cpu className="w-4 h-4" /> },
+      { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-4 h-4" /> },
+    ]},
+    { label: "🎨 Contenuti", tabs: [
+      { id: "media", label: "Media Vault", icon: <Film className="w-4 h-4" /> },
+      { id: "brand" as SuperTab, label: "Brand Assets", icon: <Crown className="w-4 h-4" /> },
+      { id: "showcase", label: "Settori", icon: <Eye className="w-4 h-4" /> },
+    ]},
+    { label: "⚙️ Sistema", tabs: [
+      { id: "integrations" as SuperTab, label: "Integrazioni", icon: <Wifi className="w-4 h-4" /> },
+      { id: "whatsapp" as SuperTab, label: "WhatsApp", icon: <MessageCircle className="w-4 h-4" /> },
+      { id: "connections" as SuperTab, label: "Connessioni", icon: <Link2 className="w-4 h-4" /> },
+      { id: "demo_accounts" as SuperTab, label: "Demo", icon: <Key className="w-4 h-4" /> },
+      { id: "feature_requests", label: "Richieste", icon: <Lightbulb className="w-4 h-4" /> },
+    ]},
   ];
+
+  const allTabs = tabGroups.flatMap(g => g.tabs);
 
   const handleLogout = async () => { await signOut(); navigate("/auth"); };
 
@@ -787,27 +798,32 @@ const SuperAdminDashboard = () => {
         </div>
       </div>
 
-      {/* Tab bar — compact grid for mobile */}
-      <div className="px-3 py-2 relative z-10">
-        <div className="grid grid-cols-5 gap-1">
-          {tabs.map((tab) => (
-            <button key={tab.id}
-              onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "leads" ? navigate("/superadmin/leads") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px]`}
-              style={activeTab === tab.id ? {
-                background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",
-                color: "white",
-                boxShadow: "0 0 20px hsl(250 85% 65% / 0.35), inset 0 1px 0 hsl(250 50% 70% / 0.25)"
-              } : {
-                background: "linear-gradient(160deg, hsl(230 20% 16%), hsl(232 22% 13%))",
-                color: "hsl(220 15% 75%)",
-                border: "1px solid hsl(250 30% 30% / 0.3)"
-              }}>
-              <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
-              <span className="leading-tight truncate w-full text-center">{tab.label}</span>
-            </button>
-          ))}
-        </div>
+      {/* Tab bar — categorized groups */}
+      <div className="px-3 py-2 relative z-10 space-y-2 max-h-[40vh] overflow-y-auto scrollbar-thin">
+        {tabGroups.map((group) => (
+          <div key={group.label}>
+            <div className="text-[0.55rem] font-bold uppercase tracking-wider mb-1 px-1" style={{ color: "hsl(250 60% 70%)" }}>{group.label}</div>
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-1">
+              {group.tabs.map((tab) => (
+                <button key={tab.id}
+                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : setActiveTab(tab.id)}
+                  className="flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[38px]"
+                  style={activeTab === tab.id ? {
+                    background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",
+                    color: "white",
+                    boxShadow: "0 0 20px hsl(250 85% 65% / 0.35), inset 0 1px 0 hsl(250 50% 70% / 0.25)"
+                  } : {
+                    background: "linear-gradient(160deg, hsl(230 20% 16%), hsl(232 22% 13%))",
+                    color: "hsl(220 15% 75%)",
+                    border: "1px solid hsl(250 30% 30% / 0.3)"
+                  }}>
+                  <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
+                  <span className="leading-tight truncate w-full text-center">{tab.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Content */}
