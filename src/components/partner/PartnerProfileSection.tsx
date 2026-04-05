@@ -50,14 +50,14 @@ export default function PartnerProfileSection({ userId, userName, userEmail }: P
           setProfile({
             full_name: data.full_name || userName,
             avatar_url: data.avatar_url || "",
-            phone: (data as any).phone || "",
-            address: (data as any).address || "",
-            city: (data as any).city || "",
-            bio: (data as any).bio || "",
-            instagram_handle: (data as any).instagram_handle || "",
-            website: (data as any).website || "",
-            company_name: (data as any).company_name || "",
-            email: (data as any).email || userEmail,
+            phone: data.phone || "",
+            address: data.address || "",
+            city: data.city || "",
+            bio: data.bio || "",
+            instagram_handle: data.instagram_handle || "",
+            website: data.website || "",
+            company_name: data.company_name || "",
+            email: data.email || userEmail,
           });
         }
         setLoaded(true);
@@ -98,7 +98,7 @@ export default function PartnerProfileSection({ userId, userName, userEmail }: P
         website: profile.website || null,
         company_name: profile.company_name || null,
         email: profile.email || null,
-      } as any).eq("user_id", userId);
+      }).eq("user_id", userId);
       if (error) throw error;
       toast({ title: "✅ Profilo salvato!" });
     } catch (err: any) {
