@@ -634,6 +634,8 @@ const SuperAdminDashboard = () => {
     { id: "connections" as SuperTab, label: "Connessioni", icon: <Link2 className="w-5 h-5" /> },
     { id: "registrations" as SuperTab, label: "Registrazioni", icon: <Users className="w-5 h-5" /> },
     { id: "partner_network" as SuperTab, label: "Rete Partner", icon: <Handshake className="w-5 h-5" /> },
+    { id: "leads" as SuperTab, label: "Lead Scout", icon: <Search className="w-5 h-5" /> },
+    { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/auth"); };
