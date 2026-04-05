@@ -13,7 +13,7 @@ import {
   Globe, MessageCircle, Link2, Wand2, Phone,
   Search, Bot, Loader2, Zap, ArrowRight, Map
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
