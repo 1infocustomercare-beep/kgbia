@@ -798,27 +798,32 @@ const SuperAdminDashboard = () => {
         </div>
       </div>
 
-      {/* Tab bar — compact grid for mobile */}
-      <div className="px-3 py-2 relative z-10">
-        <div className="grid grid-cols-5 gap-1">
-          {tabs.map((tab) => (
-            <button key={tab.id}
-              onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "leads" ? navigate("/superadmin/leads") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px]`}
-              style={activeTab === tab.id ? {
-                background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",
-                color: "white",
-                boxShadow: "0 0 20px hsl(250 85% 65% / 0.35), inset 0 1px 0 hsl(250 50% 70% / 0.25)"
-              } : {
-                background: "linear-gradient(160deg, hsl(230 20% 16%), hsl(232 22% 13%))",
-                color: "hsl(220 15% 75%)",
-                border: "1px solid hsl(250 30% 30% / 0.3)"
-              }}>
-              <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
-              <span className="leading-tight truncate w-full text-center">{tab.label}</span>
-            </button>
-          ))}
-        </div>
+      {/* Tab bar — categorized groups */}
+      <div className="px-3 py-2 relative z-10 space-y-2 max-h-[40vh] overflow-y-auto scrollbar-thin">
+        {tabGroups.map((group) => (
+          <div key={group.label}>
+            <div className="text-[0.55rem] font-bold uppercase tracking-wider mb-1 px-1" style={{ color: "hsl(250 60% 70%)" }}>{group.label}</div>
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-1">
+              {group.tabs.map((tab) => (
+                <button key={tab.id}
+                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : setActiveTab(tab.id)}
+                  className="flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[38px]"
+                  style={activeTab === tab.id ? {
+                    background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",
+                    color: "white",
+                    boxShadow: "0 0 20px hsl(250 85% 65% / 0.35), inset 0 1px 0 hsl(250 50% 70% / 0.25)"
+                  } : {
+                    background: "linear-gradient(160deg, hsl(230 20% 16%), hsl(232 22% 13%))",
+                    color: "hsl(220 15% 75%)",
+                    border: "1px solid hsl(250 30% 30% / 0.3)"
+                  }}>
+                  <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
+                  <span className="leading-tight truncate w-full text-center">{tab.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Content */}
