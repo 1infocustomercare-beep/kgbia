@@ -122,7 +122,7 @@ export default function LeadsPage() {
   const avgScore = results.length > 0 ? Math.round(results.reduce((s, l) => s + l.opportunityScore, 0) / results.length) : 0;
 
   return (
-    <div className="space-y-4 pb-20">
+    <div className="min-h-screen p-4 space-y-4 pb-20" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -209,9 +209,9 @@ export default function LeadsPage() {
 
           {!loading && results.length === 0 && (
             <div className="text-center py-16">
-              <Search className="w-10 h-10 mx-auto mb-3 text-white/15" />
-              <p className="text-sm font-medium text-white/50">Seleziona settore e città per iniziare</p>
-              <p className="text-[10px] mt-1 text-white/25">Analisi AI automatica con score di opportunità</p>
+              <Search className="w-10 h-10 mx-auto mb-3 text-gray-600" />
+              <p className="text-sm font-medium text-gray-400">Seleziona settore e città per iniziare</p>
+              <p className="text-[10px] mt-1 text-gray-500">Analisi AI automatica con score di opportunità</p>
             </div>
           )}
         </>
