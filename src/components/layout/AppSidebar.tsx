@@ -254,7 +254,6 @@ const COMMON_NAV = [
   { title: "Automazioni", icon: "Sparkles", url: "/app/automations" },
   { title: "Payroll", icon: "Receipt", url: "/app/payroll" },
   { title: "Finanza", icon: "BarChart3", url: "/app/finance" },
-  { title: "Content AI", icon: "PenTool", url: "/app/content-ai" },
   { title: "Social", icon: "PenTool", url: "/app/social" },
   { title: "Abbonamento", icon: "CreditCard", url: "/app/subscription" },
   { title: "Richieste", icon: "Lightbulb", url: "/app/feature-requests" },
