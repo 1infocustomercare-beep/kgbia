@@ -754,6 +754,41 @@ const PartnerDashboard = () => {
           )}
         </AnimatePresence>
 
+        {/* ═══════ MASCOT HERO — above acquisition, centered & animated ═══════ */}
+        <section className="max-w-5xl mx-auto px-4 sm:px-8 py-6">
+          <div className="flex flex-col items-center text-center">
+            <motion.div
+              className="relative"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div className="absolute inset-0 rounded-full blur-3xl opacity-20" style={{ background: "radial-gradient(circle, #7c3aed, transparent 70%)" }} />
+              <motion.img
+                src={empireMonkeyMascot}
+                alt="Empire Mascot"
+                className="w-28 h-28 sm:w-36 sm:h-36 object-contain relative z-10 drop-shadow-2xl"
+                whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+                transition={{ duration: 0.5 }}
+                style={{ cursor: "pointer", filter: "drop-shadow(0 0 20px rgba(124,58,237,0.3))" }}
+              />
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-sm font-semibold mt-3"
+              style={{ color: "#a78bfa" }}
+            >
+              {demoMode ? "Empire AI — Portfolio Interattivo" : "Il tuo assistente di vendita"}
+            </motion.p>
+            {!demoMode && (
+              <p className="text-[11px] mt-1" style={{ color: "#6b7280" }}>
+                Seleziona un canale, scegli il settore e genera messaggi persuasivi in un click
+              </p>
+            )}
+          </div>
+        </section>
+
         {/* ═══════ EARNINGS SECTION ═══════ */}
         {!demoMode && (
           <AnimatePresence>

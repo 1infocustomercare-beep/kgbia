@@ -88,7 +88,8 @@ export default function PartnerProfileSection({ userId, userName, userEmail }: P
   const handleSave = async () => {
     setSaving(true);
     try {
-      const { error } = await supabase.from("profiles").update({
+      const payload = {
+        user_id: userId,
         full_name: profile.full_name || null,
         phone: profile.phone || null,
         address: profile.address || null,
@@ -98,8 +99,20 @@ export default function PartnerProfileSection({ userId, userName, userEmail }: P
         website: profile.website || null,
         company_name: profile.company_name || null,
         email: profile.email || null,
-      }).eq("user_id", userId);
-      if (error) throw error;
+      };
+      // Try update first
+      const { data: updated, error: updateErr } = await supabase
+        .from("profiles")
+        .update(payload)
+        .eq("user_id", userId)
+        .select("id")
+        .maybeSingle();
+      if (updateErr) throw updateErr;
+      // If no row was updated, insert
+      if (!updated) {
+        const { error: insertErr } = await supabase.from("profiles").insert(payload);
+        if (insertErr) throw insertErr;
+      }
       toast({ title: "✅ Profilo salvato!" });
     } catch (err: any) {
       toast({ title: "Errore", description: err.message, variant: "destructive" });
