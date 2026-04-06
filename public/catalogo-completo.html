@@ -1,236 +1,207 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Empire.AI — Portfolio & Catalogo Completo</title>
-<meta name="description" content="Scopri 29+ progetti realizzati da Empire.AI: app white-label per ristoranti, hotel, beauty, fitness, NCC e 20+ altri settori.">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Catalogo Portfolio — Empire.AI | 29 Progetti · 7 Categorie</title>
+<meta name="description" content="29 progetti portfolio Empire.AI: app white-label per ristorazione, beauty, NCC, hotel, fitness, healthcare, retail e altri settori."/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#020204;--surface:#0a0b10;--card:#111219;--border:#1e2030;--teal:#7eb7be;--violet:#6c3ce0;--gold:#d4a855;--text:#f0f0f5;--text-muted:#8a8ea0;--text-dim:#555770;--font-heading:'Space Grotesk',sans-serif;--font-body:'Inter',sans-serif}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+:root{--bg:#020204;--surface:#0a0b10;--card:#0f1018;--card-hover:#181924;--teal:#7eb7be;--violet:#6c3ce0;--gold:#d4a855;--white:#f0f0f5;--gray:#8a8a9a;--gray-dim:#555566;--border:rgba(255,255,255,.06);--radius:16px}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700}
 a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(2,2,4,.75);border-bottom:1px solid var(--border)}
-nav .inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}
-nav .logo{font-family:var(--font-heading);font-weight:700;font-size:1.3rem;background:linear-gradient(135deg,var(--teal),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-nav .links{display:flex;gap:24px;align-items:center}
-nav .links a{font-size:.85rem;color:var(--text-muted);transition:color .25s}
-nav .links a:hover{color:var(--teal)}
-.nav-cta{padding:8px 20px;border-radius:10px;font-size:.82rem;font-weight:600;background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff;border:none;cursor:pointer;transition:transform .2s}
-.nav-cta:hover{transform:translateY(-1px)}
-@media(max-width:768px){nav .links a:not(.nav-cta){display:none}}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 0;backdrop-filter:blur(20px);background:rgba(2,2,4,.7);border-bottom:1px solid var(--border)}
+.top-bar .inner{display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Space Grotesk';font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--teal),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--gray);padding:8px 16px;border-radius:10px;border:1px solid var(--border);transition:all .3s}
+.back-btn:hover{border-color:var(--teal);color:var(--teal)}
 
-/* HERO */
-.catalog-hero{padding:120px 24px 60px;text-align:center;position:relative;overflow:hidden}
-.catalog-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(108,60,224,.1),transparent 60%)}
-.catalog-hero h1{font-family:var(--font-heading);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;margin-bottom:12px;position:relative}
-.catalog-hero h1 span{background:linear-gradient(135deg,var(--teal),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.catalog-hero p{color:var(--text-muted);font-size:1rem;max-width:600px;margin:0 auto 32px;position:relative}
+.page-header{padding:120px 0 60px;text-align:center}
+.page-header h1{font-size:clamp(28px,5vw,48px);margin-bottom:12px;background:linear-gradient(135deg,var(--white),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.page-header p{font-size:15px;color:var(--gray);max-width:500px;margin:0 auto}
+.count-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:99px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--teal);margin-top:16px}
 
-/* FILTERS */
-.filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:0 24px 40px;max-width:900px;margin:0 auto}
-.filter-btn{padding:8px 18px;border-radius:99px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.8rem;font-weight:500;cursor:pointer;transition:all .25s;font-family:var(--font-body)}
-.filter-btn.active,.filter-btn:hover{background:rgba(126,183,190,.1);border-color:var(--teal);color:var(--teal)}
+.filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;padding:0 20px}
+.filter-btn{padding:8px 18px;border-radius:99px;border:1px solid var(--border);background:transparent;color:var(--gray);font-size:12px;font-family:'Space Grotesk';font-weight:600;cursor:pointer;transition:all .3s;letter-spacing:.5px;min-height:44px}
+.filter-btn:hover{border-color:var(--teal);color:var(--teal)}
+.filter-btn.active{background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff;border-color:transparent}
 
-/* GRID */
-.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1200px;margin:0 auto;padding:0 24px 80px}
-@media(max-width:900px){.portfolio-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.portfolio-grid{grid-template-columns:1fr}}
-.project-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:all .4s cubic-bezier(.22,1,.36,1);position:relative}
-.project-card:hover{transform:translateY(-6px);border-color:rgba(126,183,190,.3);box-shadow:0 16px 48px rgba(0,0,0,.4)}
-.project-card .thumb{aspect-ratio:16/10;overflow:hidden;position:relative;background:var(--surface)}
-.project-card .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
-.project-card:hover .thumb img{transform:scale(1.05)}
-.project-card .thumb .cat-badge{position:absolute;top:12px;left:12px;padding:4px 12px;border-radius:99px;font-size:.65rem;font-weight:600;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);color:var(--teal);letter-spacing:1px;text-transform:uppercase}
-.project-card .info{padding:16px}
-.project-card .info h3{font-family:var(--font-heading);font-size:.95rem;font-weight:600;margin-bottom:4px;color:var(--text)}
-.project-card .info p{font-size:.78rem;color:var(--text-muted);line-height:1.5;margin-bottom:10px}
-.project-card .info .tags{display:flex;gap:6px;flex-wrap:wrap}
-.project-card .info .tag{padding:3px 8px;border-radius:6px;font-size:.65rem;background:rgba(126,183,190,.08);color:var(--teal);border:1px solid rgba(126,183,190,.12)}
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;padding-bottom:80px}
+@media(max-width:768px){.portfolio-grid{grid-template-columns:1fr}}
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:300;display:none;align-items:center;justify-content:center;padding:24px}
-.modal-overlay.open{display:flex}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;max-width:800px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
-.modal-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;z-index:2;transition:all .2s}
-.modal-close:hover{background:var(--teal);color:#fff;border-color:var(--teal)}
-.modal-img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:20px 20px 0 0}
+.project-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .4s;position:relative}
+.project-card:hover{border-color:var(--teal);transform:translateY(-6px);box-shadow:0 16px 48px rgba(126,183,190,.1)}
+.card-img{height:200px;background:var(--surface);overflow:hidden;position:relative}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.project-card:hover .card-img img{transform:scale(1.06)}
+.card-img .overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(2,2,4,.8));pointer-events:none}
+.card-img .cat-badge{position:absolute;top:12px;left:12px;padding:4px 12px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;backdrop-filter:blur(8px)}
+.card-body{padding:20px}
+.card-body h3{font-size:16px;margin-bottom:4px;color:var(--white)}
+.card-body .sector{font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.card-body p{font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:12px}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap}
+.card-tags span{padding:3px 10px;border-radius:6px;font-size:10px;background:rgba(255,255,255,.04);color:var(--gray-dim);border:1px solid rgba(255,255,255,.04)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);width:90%;max-width:700px;max-height:85vh;overflow-y:auto;background:var(--card);border:1px solid var(--border);border-radius:20px;z-index:501;opacity:0;pointer-events:none;transition:all .3s}
+.modal-panel.open{opacity:1;pointer-events:all;transform:translate(-50%,-50%) scale(1)}
+.modal-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:18px;transition:all .3s;z-index:10;min-height:44px;min-width:44px}
+.modal-close:hover{background:rgba(255,255,255,.1);color:var(--white)}
+.modal-img{width:100%;height:280px;object-fit:cover;border-radius:20px 20px 0 0}
 .modal-body{padding:28px}
-.modal-body h2{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;margin-bottom:8px}
-.modal-body .modal-cat{font-size:.75rem;color:var(--teal);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;font-weight:600}
-.modal-body p{color:var(--text-muted);line-height:1.7;font-size:.9rem;margin-bottom:16px}
-.modal-features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.modal-features .feat{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-muted)}
-.modal-features .feat::before{content:'✓';color:var(--teal);font-weight:700}
-.modal-cta{display:inline-flex;padding:12px 28px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff;font-weight:600;border:none;cursor:pointer;transition:all .25s;font-size:.9rem}
-.modal-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(108,60,224,.3)}
+.modal-body h2{font-size:24px;margin-bottom:6px}
+.modal-body .sector{font-size:12px;color:var(--teal);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}
+.modal-body p{font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:16px}
+.modal-features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+@media(max-width:500px){.modal-features{grid-template-columns:1fr}}
+.modal-feat{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--white);padding:8px 12px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid var(--border)}
+.modal-feat .check{color:var(--teal);font-weight:700}
+.modal-cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn-sm{padding:10px 24px;border-radius:12px;font-size:13px;font-weight:600;font-family:'Space Grotesk';border:none;cursor:pointer;transition:all .3s;min-height:44px}
+.btn-sm.primary{background:linear-gradient(135deg,var(--teal),var(--violet));color:#fff}
+.btn-sm.outline{background:transparent;border:1px solid var(--border);color:var(--white)}
+.btn-sm:hover{transform:translateY(-2px)}
 
-/* CTA */
-.bottom-cta{text-align:center;padding:80px 24px;position:relative;overflow:hidden}
-.bottom-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(126,183,190,.08),transparent 60%)}
-.bottom-cta h2{font-family:var(--font-heading);font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;margin-bottom:12px;position:relative}
-.bottom-cta p{color:var(--text-muted);margin-bottom:28px;position:relative}
-
-/* Footer */
-footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;font-size:.75rem;color:var(--text-dim)}
-footer a{color:var(--teal)}
-
-.grain{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
 <div class="grain"></div>
 
-<nav><div class="inner">
+<div class="top-bar">
+<div class="container inner">
   <a href="/landing" class="logo">Empire.AI</a>
-  <div class="links">
-    <a href="/landing#features">Funzionalità</a>
-    <a href="/landing#pricing">Prezzi</a>
-    <a href="/demo">Demo Live</a>
-    <button class="nav-cta" onclick="location.href='/auth'">Inizia Gratis →</button>
-  </div>
-</div></nav>
+  <a href="/landing" class="back-btn">← Torna alla Home</a>
+</div>
+</div>
 
-<section class="catalog-hero">
-  <h1>Il Nostro <span>Portfolio</span></h1>
-  <p>29 progetti reali. 7 categorie. Un unico standard: eccellenza.</p>
-</section>
+<div class="page-header">
+  <h1>Portfolio Completo</h1>
+  <p>29 progetti reali, 7 categorie, un unico obiettivo: far crescere il tuo business con l'IA.</p>
+  <div class="count-badge">📁 29 Progetti · 7 Categorie · 25+ Settori</div>
+</div>
 
-<div class="filters" id="filters"></div>
-<div class="portfolio-grid" id="grid"></div>
+<div class="container">
+  <div class="filters" id="filters"></div>
+  <div class="portfolio-grid" id="grid"></div>
+</div>
 
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <button class="modal-close" id="modalClose">✕</button>
-    <img class="modal-img" id="modalImg" src="" alt="">
-    <div class="modal-body">
-      <div class="modal-cat" id="modalCat"></div>
-      <h2 id="modalTitle"></h2>
-      <p id="modalDesc"></p>
-      <div class="modal-features" id="modalFeats"></div>
-      <button class="modal-cta" onclick="location.href='/auth'">Richiedi una Demo →</button>
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+<div class="modal-panel" id="modalPanel">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <img class="modal-img" id="modalImg" src="" alt=""/>
+  <div class="modal-body">
+    <h2 id="modalTitle"></h2>
+    <div class="sector" id="modalSector"></div>
+    <p id="modalDesc"></p>
+    <div class="modal-features" id="modalFeatures"></div>
+    <div class="modal-cta">
+      <a id="modalDemoLink" href="#" class="btn-sm primary">Vedi Demo Live →</a>
+      <a href="/auth" class="btn-sm outline">Richiedi Preventivo</a>
     </div>
   </div>
 </div>
 
-<section class="bottom-cta">
-  <h2>Il prossimo progetto potrebbe essere il tuo</h2>
-  <p>Contattaci per una demo personalizzata del tuo settore</p>
-  <button class="nav-cta" style="padding:14px 36px;font-size:.95rem" onclick="location.href='/auth'">Prenota una Demo Gratuita →</button>
-</section>
-
-<footer>
-  <p>© 2026 Empire.AI Group — <a href="/landing">Homepage</a> · <a href="/privacy">Privacy</a> · <a href="/cookie">Cookie</a></p>
-</footer>
-
 <script>
-const MOCKUP_BASE='https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups/';
+gsap.registerPlugin(ScrollTrigger);
+
 const CATEGORIES=[
-  {id:'all',label:'Tutti'},
-  {id:'food',label:'Food & Ristorazione'},
-  {id:'hospitality',label:'Hospitality'},
-  {id:'beauty',label:'Beauty & Wellness'},
-  {id:'services',label:'Servizi'},
-  {id:'health',label:'Health & Fitness'},
-  {id:'retail',label:'Retail & Commerce'},
-  {id:'creative',label:'Creative & Events'}
+  {id:'all',label:'Tutti',emoji:'📁'},
+  {id:'food',label:'Food & Ristorazione',emoji:'🍕'},
+  {id:'beauty',label:'Beauty & Wellness',emoji:'💅'},
+  {id:'mobility',label:'Mobilità & NCC',emoji:'🚗'},
+  {id:'hospitality',label:'Hospitality',emoji:'🏨'},
+  {id:'health',label:'Health & Fitness',emoji:'🏥'},
+  {id:'services',label:'Servizi & Retail',emoji:'🛍️'},
+  {id:'professional',label:'Professional',emoji:'💼'}
 ];
 
 const PROJECTS=[
-  {id:1,name:'Impero Roma',cat:'food',desc:'Ristorante premium con menu digitale QR, ordini dal tavolo, kitchen display e sistema di prenotazione 24/7.',tags:['Menu QR','Ordini Live','Kitchen Display'],features:['Menu digitale con foto HD','Ordini dal tavolo real-time','Kitchen Display System','Prenotazioni online 24/7','Review Shield anti-recensioni','WhatsApp Bot automatico'],img:'food/food-desktop-1.webp'},
-  {id:2,name:'La Dolce Vita Bakery',cat:'food',desc:'Panificio artigianale con catalogo prodotti, preordini e programma fedeltà integrato.',tags:['Catalogo','Preordini','Loyalty'],features:['Catalogo prodotti fotografico','Sistema preordini','Programma fedeltà','Notifiche push','Analytics vendite','Gestione inventario'],img:'bakery/bakery-desktop-1.webp'},
-  {id:3,name:'Pizzeria Vesuvio',cat:'food',desc:'Pizzeria napoletana con delivery integrato, tracking ordini e sistema anti-no-show.',tags:['Delivery','Tracking','Anti No-Show'],features:['Delivery management','Tracking ordini real-time','Anti no-show automatico','Menu stagionale','Upselling AI','Statistiche giornaliere'],img:'food/food-mobile-1.webp'},
-  {id:4,name:'Sushi Zen',cat:'food',desc:'Ristorante giapponese con ordinazione contactless e gestione tavoli interattiva.',tags:['Contactless','Tavoli','QR'],features:['Ordine contactless','Mappa tavoli interattiva','Suggerimenti AI','Gestione allergeni','Pagamento integrato','Multi-lingua'],img:'food/food-mobile-2.webp'},
-  {id:5,name:'Amalfi Luxury Transfer',cat:'services',desc:'NCC premium con booking real-time, fleet management e pricing dinamico per la Costa.',tags:['Booking','Fleet','NCC'],features:['Booking real-time','Fleet management','Pricing dinamico','GPS tracking','Fatturazione automatica','CRM clienti VIP'],img:'ncc/ncc-desktop-1.webp'},
-  {id:6,name:'Roma Executive Cars',cat:'services',desc:'Servizio NCC executive con app clienti, dispatching automatico e pagamenti integrati.',tags:['Executive','App','Dispatch'],features:['App clienti branded','Dispatching automatico','Pagamenti in-app','Rating autisti','Route optimization','Report fiscali'],img:'ncc/ncc-mobile-1.webp'},
-  {id:7,name:'Grand Hotel Minerva',cat:'hospitality',desc:'Hotel 5 stelle con check-in digitale, room service app e concierge AI.',tags:['Check-in','Room Service','Concierge'],features:['Check-in digitale','Room service in-app','Concierge AI 24/7','Housekeeping management','SPA booking','Revenue management'],img:'hotel/hotel-desktop-1.webp'},
-  {id:8,name:'Boutique Hotel Trastevere',cat:'hospitality',desc:'Boutique hotel con experience booking, wine bar e tour personalizzati.',tags:['Experience','Wine Bar','Tours'],features:['Experience booking','Wine bar digitale','Tour personalizzati','Recensioni integrate','Multi-lingua','Loyalty program'],img:'hotel/hotel-mobile-1.webp'},
-  {id:9,name:'Bella Vita Spa',cat:'beauty',desc:'Centro estetico con prenotazione smart, gestione staff e programma fedeltà.',tags:['Booking','Staff','Fedeltà'],features:['Prenotazione smart','Gestione agenda staff','Programma fedeltà','Promemoria automatici','Portfolio trattamenti','Schede clienti'],img:'beauty/beauty-desktop-1.webp'},
-  {id:10,name:'Studio Capelli Milano',cat:'beauty',desc:'Salone premium con booking multi-operatore, catalogo look e social integration.',tags:['Multi-Operatore','Look Book','Social'],features:['Booking multi-operatore','Catalogo look','Instagram integration','Anti no-show SMS','Prodotti e-commerce','Analytics team'],img:'beauty/beauty-mobile-1.webp'},
-  {id:11,name:'Nails & Beauty Bar',cat:'beauty',desc:'Nail bar trendy con prenotazione express e sistema abbonamenti.',tags:['Express','Abbonamenti','Trendy'],features:['Booking express 60s','Sistema abbonamenti','Gallery portfolio','Notifiche push','Gift cards digitali','Referral program'],img:'beauty/beauty-mobile-2.webp'},
-  {id:12,name:'FitPro Gym',cat:'health',desc:'Palestra con booking corsi, tracking progressi e community integrata.',tags:['Corsi','Tracking','Community'],features:['Booking corsi real-time','Tracking progressi','Community social','Piani allenamento AI','Abbonamenti digitali','Check-in QR'],img:'fitness/fitness-desktop-1.webp'},
-  {id:13,name:'Yoga Flow Studio',cat:'health',desc:'Centro yoga con calendario lezioni, meditazione guidata e membership.',tags:['Lezioni','Meditazione','Membership'],features:['Calendario lezioni','Meditazioni guidate','Sistema membership','Streaming on-demand','Pacchetti personalizzati','Wellness tracking'],img:'fitness/fitness-mobile-1.webp'},
-  {id:14,name:'CrossFit Arena',cat:'health',desc:'Box CrossFit con WOD tracking, leaderboard e gestione abbonamenti.',tags:['WOD','Leaderboard','Box'],features:['WOD giornaliero','Leaderboard live','Gestione box','PR tracking','Nutrizione AI','Challenge mensili'],img:'fitness/fitness-mobile-2.webp'},
-  {id:15,name:'Studio Medico Salus',cat:'health',desc:'Poliambulatorio con prenotazione visite, telemedicina e cartella clinica digitale.',tags:['Visite','Telemedicina','Cartella'],features:['Prenotazione visite','Telemedicina HD','Cartella clinica digitale','Promemoria automatici','Prescrizioni digitali','GDPR compliant'],img:'healthcare/healthcare-desktop-1.webp'},
-  {id:16,name:'Dott. Bianchi Dentista',cat:'health',desc:'Studio dentistico con agenda smart, preventivi digitali e follow-up automatici.',tags:['Agenda','Preventivi','Follow-up'],features:['Agenda smart','Preventivi digitali','Follow-up automatici','Gallery before/after','Piani di cura','Fatturazione elettronica'],img:'healthcare/healthcare-mobile-1.webp'},
-  {id:17,name:'Boutique Eleganza',cat:'retail',desc:'Negozio fashion con e-commerce, lookbook digitale e programma VIP.',tags:['E-Commerce','Lookbook','VIP'],features:['E-commerce integrato','Lookbook stagionale','Programma VIP','Click & collect','Wishlist','Newsletter AI'],img:'retail/retail-desktop-1.webp'},
-  {id:18,name:'Tech Store Digital',cat:'retail',desc:'Negozio tecnologia con catalogo smart, comparatore e assistenza AI.',tags:['Catalogo','Comparatore','AI'],features:['Catalogo interattivo','Comparatore prodotti','Assistente AI','Prenotazione prodotti','Trade-in program','Recensioni verificate'],img:'retail/retail-mobile-1.webp'},
-  {id:19,name:'Lido Azzurro Beach Club',cat:'hospitality',desc:'Stabilimento balneare con mappa interattiva, booking ombrelloni e bar service.',tags:['Mappa','Ombrelloni','Bar'],features:['Mappa interattiva','Booking ombrelloni real-time','Bar service in-app','Abbonamenti stagionali','Meteo integrato','Eventi beach party'],img:'beach/beach-desktop-1.webp'},
-  {id:20,name:'Ink Master Tattoo',cat:'creative',desc:'Tattoo studio con portfolio artisti, booking e gallery before/after.',tags:['Portfolio','Artists','Gallery'],features:['Portfolio per artista','Booking con deposit','Gallery before/after','Aftercare guide','Consultazioni online','Social integration'],img:'trades/trades-desktop-1.webp'},
-  {id:21,name:'Foto Studio Luce',cat:'creative',desc:'Studio fotografico con gallery clienti, booking shooting e delivery digitale.',tags:['Gallery','Shooting','Delivery'],features:['Gallery clienti private','Booking shooting','Delivery digitale','Editing workflow','Print shop','Album designer'],img:'trades/trades-mobile-1.webp'},
-  {id:22,name:'Dream Wedding Planner',cat:'creative',desc:'Wedding planning con timeline interattiva, vendor management e budget tracker.',tags:['Timeline','Vendors','Budget'],features:['Timeline interattiva','Vendor management','Budget tracker','Moodboard digitale','Guest list','Checklist AI'],img:'luxury/luxury-desktop-1.webp'},
-  {id:23,name:'Pet Paradise',cat:'services',desc:'Pet care con booking toelettatura, tracking salute e shop prodotti.',tags:['Toelettatura','Salute','Shop'],features:['Booking toelettatura','Tracking salute pet','Shop prodotti','Pensione booking','Veterinario online','Community pet lovers'],img:'trades/trades-mobile-2.webp'},
-  {id:24,name:'Idraulico Express',cat:'services',desc:'Servizio idraulico con booking urgenze, preventivi istantanei e tracking tecnico.',tags:['Urgenze','Preventivi','Tracking'],features:['Booking emergenze','Preventivi istantanei','Tracking tecnico GPS','Fatturazione mobile','Storico interventi','Rating clienti'],img:'trades/trades-desktop-1.webp'},
-  {id:25,name:'Elettricista Pro',cat:'services',desc:'Elettricista con gestione interventi, certificazioni e CRM clienti.',tags:['Interventi','Certificazioni','CRM'],features:['Gestione interventi','Certificazioni digitali','CRM clienti','Foto documentazione','Magazzino ricambi','Report mensili'],img:'trades/trades-mobile-1.webp'},
-  {id:26,name:'Farmacia Centrale',cat:'health',desc:'Farmacia con prenotazione farmaci, consulenza e programma salute.',tags:['Farmaci','Consulenza','Salute'],features:['Prenotazione farmaci','Consulenza online','Programma salute','Promemoria terapie','Prodotti e-shop','Turni visibili'],img:'healthcare/healthcare-mobile-1.webp'},
-  {id:27,name:'Music Academy',cat:'creative',desc:'Scuola musica con booking lezioni, streaming e tracking progressi allievi.',tags:['Lezioni','Streaming','Progressi'],features:['Booking lezioni','Streaming live','Tracking progressi','Repertorio digitale','Pagamenti rate','Recite ed eventi'],img:'fitness/fitness-mobile-1.webp'},
-  {id:28,name:'Fiorista Verde Bosco',cat:'retail',desc:'Fiorista con catalogo stagionale, ordini online e consegne programmate.',tags:['Catalogo','Ordini','Consegne'],features:['Catalogo stagionale','Ordini online','Consegne programmate','Abbonamenti fiori','Gift & dediche','Workshop booking'],img:'retail/retail-mobile-1.webp'},
-  {id:29,name:'AutoWash Premium',cat:'services',desc:'Autolavaggio con booking slot, abbonamenti e loyalty card digitale.',tags:['Booking','Abbonamenti','Loyalty'],features:['Booking slot','Abbonamenti mensili','Loyalty card digitale','Detailing menu','SMS promemoria','Report automezzi'],img:'trades/trades-mobile-2.webp'}
+  {id:1,name:'Impero Roma',cat:'food',sector:'Ristorazione',img:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600',desc:'Ristorante premium con menu QR, ordini digitali, review shield e loyalty wallet. 65+ piatti, prenotazioni automatiche.',features:['Menu QR Dinamico','Ordini & Delivery','Review Shield™','Loyalty Wallet','Kitchen Display','Analytics'],demo:'/r/impero-roma'},
+  {id:2,name:'Bella Napoli',cat:'food',sector:'Pizzeria',img:'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600',desc:'Pizzeria artigianale con ordini asporto, prenotazione tavoli e programma fedeltà integrato.',features:['Menu Digitale','Asporto Online','Prenotazione Tavoli','Push Notifications','Fidelizzazione','WhatsApp Bot'],demo:'/demo/food'},
+  {id:3,name:'Dolce Vita Bakery',cat:'food',sector:'Pasticceria',img:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600',desc:'Pasticceria con catalogo torte, ordini personalizzati e consegna programmata.',features:['Catalogo Torte','Ordini Custom','Consegna Programmata','Gallery','Promozioni','CRM'],demo:'/demo/bakery'},
+  {id:4,name:'Sushi Master',cat:'food',sector:'Ristorante Giapponese',img:'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600',desc:'All-you-can-eat digitale con ordini tablet, gestione turni e analytics in tempo reale.',features:['Ordini Tablet','Gestione Turni','Menu Allergie','Timer Portate','Analytics RT','Multi-lingua'],demo:'/demo/food'},
+  {id:5,name:'Wine & Dine',cat:'food',sector:'Enoteca',img:'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600',desc:'Enoteca con sommelier AI, carta dei vini digitale e degustazioni su prenotazione.',features:['Sommelier AI','Carta Vini QR','Degustazioni','Abbinamenti AI','Stock Manager','Eventi'],demo:'/demo/food'},
+  {id:6,name:'Neo Nails Brickell',cat:'beauty',sector:'Nail Salon',img:'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600',desc:'Nail salon premium con prenotazioni online, portfolio design e programma membership.',features:['Booking Online','Portfolio Design','Membership','Gift Card','Staff Calendar','Notifiche'],demo:'/demo/beauty'},
+  {id:7,name:'Glow Studio',cat:'beauty',sector:'Centro Estetico',img:'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=600',desc:'Centro estetico con catalogo trattamenti, gestione appuntamenti multi-operatore.',features:['Booking Multi-Op','Catalogo Servizi','CRM Clienti','Promozioni','SMS Reminder','Analytics'],demo:'/demo/beauty'},
+  {id:8,name:'Zen Spa Retreat',cat:'beauty',sector:'Spa & Wellness',img:'https://images.unsplash.com/photo-1540555700478-4be289fbec6f?w=600',desc:'Spa di lusso con pacchetti benessere, prenotazione suite e gift voucher.',features:['Pacchetti Spa','Suite Booking','Gift Voucher','Loyalty','Staff Mgmt','Multi-lingua'],demo:'/demo/beauty'},
+  {id:9,name:'Barber Kings',cat:'beauty',sector:'Barber Shop',img:'https://images.unsplash.com/photo-1503951914875-452d3932f6e6?w=600',desc:'Barber shop con prenotazione slot, portfolio tagli e abbonamenti mensili.',features:['Slot Booking','Portfolio Tagli','Abbonamenti','Walk-in Queue','Push Promo','Reviews'],demo:'/demo/beauty'},
+  {id:10,name:'Amalfi Luxury Transfer',cat:'mobility',sector:'NCC & Transfer',img:'https://images.unsplash.com/photo-1549924231-f129b911e442?w=600',desc:'Servizio NCC premium con booking online, fleet management e tracking in tempo reale.',features:['Booking Online','Fleet Management','GPS Tracking','Pricing Dinamico','Driver App','Fatturazione'],demo:'/b/amalfi-luxury-transfer'},
+  {id:11,name:'City Cab Milano',cat:'mobility',sector:'Taxi & Ride',img:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=600',desc:'Servizio taxi con prenotazione immediata, tariffe trasparenti e pagamento in-app.',features:['Booking Instant','Tariffe Live','Pagamento App','Rating Driver','Storico','Corporate'],demo:'/demo/ncc'},
+  {id:12,name:'Boat Charter Capri',cat:'mobility',sector:'Noleggio Barche',img:'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600',desc:'Charter nautico con catalogo imbarcazioni, itinerari e booking stagionale.',features:['Catalogo Barche','Itinerari','Booking','Meteo Live','Equipaggio','Assicurazione'],demo:'/demo/ncc'},
+  {id:13,name:'Grand Hotel Venezia',cat:'hospitality',sector:'Hotel & Resort',img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600',desc:'Hotel 5 stelle con booking room, housekeeping management e concierge AI.',features:['Room Booking','Housekeeping','Concierge AI','Room Service','Check-in Digital','Revenue Mgr'],demo:'/demo/hotel'},
+  {id:14,name:'B&B Toscana',cat:'hospitality',sector:'B&B',img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600',desc:'B&B con gestione camere, colazioni personalizzate e guida turistica integrata.',features:['Camere','Colazioni','Guida Turistica','Reviews','Calendario','Multi-lingua'],demo:'/demo/hotel'},
+  {id:15,name:'Lido Azzurro',cat:'hospitality',sector:'Stabilimento Balneare',img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600',desc:'Lido con mappa spiaggia interattiva, booking ombrelloni e bar service digitale.',features:['Mappa Spiaggia','Booking','Bar Service','Abbonamenti','Meteo','Eventi'],demo:'/demo/beach'},
+  {id:16,name:'FAR Medical Center',cat:'health',sector:'Centro Medico',img:'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600',desc:'Centro medico con prenotazione visite, cartella clinica digitale e telemedicina.',features:['Booking Visite','Cartella Clinica','Telemedicina','Referti','Reminder','GDPR'],demo:'/demo/healthcare'},
+  {id:17,name:'FitLife Gym',cat:'health',sector:'Palestra & Fitness',img:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600',desc:'Palestra con gestione abbonamenti, classi live, trainer booking e body tracking.',features:['Abbonamenti','Classi Live','Trainer Booking','Body Tracking','Nutrizione AI','Community'],demo:'/demo/fitness'},
+  {id:18,name:'City Padel Milano',cat:'health',sector:'Centro Sportivo',img:'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=600',desc:'Centro padel con booking campi, tornei e classifica giocatori.',features:['Booking Campi','Tornei','Classifica','Lezioni','Pro Shop','Community'],demo:'/demo/fitness'},
+  {id:19,name:'Aloha Pet Resort',cat:'health',sector:'Veterinario',img:'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600',desc:'Clinica veterinaria con booking visite, cartella animali e pet shop integrato.',features:['Booking Visite','Cartella Animale','Pet Shop','Vaccini','Pensione','Emergency'],demo:'/demo/healthcare'},
+  {id:20,name:'Store Premium',cat:'services',sector:'Retail',img:'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600',desc:'Negozio retail con catalogo prodotti, ordini online e programma loyalty.',features:['Catalogo','E-commerce','Loyalty','Inventario','CRM','Analytics'],demo:'/demo/retail'},
+  {id:21,name:'Ink Masters Studio',cat:'services',sector:'Tattoo Studio',img:'https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=600',desc:'Studio tattoo con portfolio artisti, booking consultazioni e gallery design.',features:['Portfolio','Booking','Gallery Design','Consensi','Aftercare','Community'],demo:'/demo/trades'},
+  {id:22,name:'Vision Photography',cat:'services',sector:'Fotografia',img:'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=600',desc:'Studio fotografico con portfolio, booking sessioni e consegna digitale.',features:['Portfolio','Booking','Gallery Privata','Consegna Digitale','Pacchetti','Contratti'],demo:'/demo/trades'},
+  {id:23,name:'Elite Events',cat:'services',sector:'Eventi',img:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600',desc:'Agenzia eventi con planning, vendor management e ticketing.',features:['Event Planning','Vendor CRM','Ticketing','Timeline','Budget','Photo Gallery'],demo:'/demo/trades'},
+  {id:24,name:"Nick's Plumbing",cat:'professional',sector:'Idraulico',img:'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600',desc:'Servizio idraulico con booking interventi, preventivi online e tracking tecnico.',features:['Booking','Preventivi','GPS Tecnico','Fatturazione','Storico','Emergenze 24/7'],demo:'/demo/trades'},
+  {id:25,name:'Elite Electrical',cat:'professional',sector:'Elettricista',img:'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600',desc:'Servizio elettrico con gestione interventi, certificazioni e manutenzione programmata.',features:['Interventi','Certificazioni','Manutenzione','Team Dispatch','Preventivi','Safety'],demo:'/demo/trades'},
+  {id:26,name:'Premium Costruzioni',cat:'professional',sector:'Costruzioni',img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600',desc:'Impresa edile con gestione cantieri, timeline progetti e document management.',features:['Cantieri','Timeline','Documenti','Team','Budget','Safety'],demo:'/demo/trades'},
+  {id:27,name:'Verde & Giardini',cat:'professional',sector:'Giardinaggio',img:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600',desc:'Servizio giardinaggio con booking manutenzioni, catalogo piante e piani stagionali.',features:['Booking','Catalogo Piante','Piani Stagionali','Before/After','Preventivi','Team'],demo:'/demo/trades'},
+  {id:28,name:'Studio Legale Pro',cat:'professional',sector:'Studio Legale',img:'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600',desc:'Studio legale con gestione pratiche, appuntamenti e document sharing sicuro.',features:['Pratiche','Appuntamenti','Doc Sharing','Timesheet','Fatturazione','Portal Clienti'],demo:'/demo/trades'},
+  {id:29,name:'Academy Pro',cat:'professional',sector:'Education',img:'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600',desc:'Istituto formativo con gestione corsi, iscrizioni online e virtual classroom.',features:['Corsi','Iscrizioni','Virtual Class','Certificati','Calendario','Community'],demo:'/demo/trades'}
 ];
 
-// Render filters
+const CAT_COLORS={food:'#ef4444',beauty:'#ec4899',mobility:'#3b82f6',hospitality:'#f59e0b',health:'#10b981',services:'#8b5cf6',professional:'#6366f1'};
+
+// FILTERS
 const filtersEl=document.getElementById('filters');
-CATEGORIES.forEach(c=>{
-  const btn=document.createElement('button');
-  btn.className='filter-btn'+(c.id==='all'?' active':'');
-  btn.textContent=c.label;
-  btn.dataset.cat=c.id;
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    renderGrid(c.id);
-  });
+let activeCat='all';
+CATEGORIES.forEach(cat=>{
+  const btn=document.createElement('button');btn.className='filter-btn'+(cat.id==='all'?' active':'');btn.textContent=cat.emoji+' '+cat.label;
+  btn.onclick=()=>{activeCat=cat.id;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderGrid()};
   filtersEl.appendChild(btn);
 });
 
-// Render grid
-const grid=document.getElementById('grid');
-function renderGrid(cat){
-  const filtered=cat==='all'?PROJECTS:PROJECTS.filter(p=>p.cat===cat);
-  grid.innerHTML='';
+// GRID
+const gridEl=document.getElementById('grid');
+function renderGrid(){
+  const filtered=activeCat==='all'?PROJECTS:PROJECTS.filter(p=>p.cat===activeCat);
+  gridEl.innerHTML='';
   filtered.forEach((p,i)=>{
-    const card=document.createElement('div');
-    card.className='project-card';
-    card.style.opacity='0';card.style.transform='translateY(30px)';
-    const catLabel=CATEGORIES.find(c=>c.id===p.cat)?.label||p.cat;
-    card.innerHTML=`
-      <div class="thumb">
-        <img src="${MOCKUP_BASE}${p.img}" alt="${p.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 250%22><rect fill=%22%23111219%22 width=%22400%22 height=%22250%22/><text fill=%22%23555770%22 x=%22200%22 y=%22130%22 text-anchor=%22middle%22 font-size=%2214%22>${p.name}</text></svg>'">
-        <div class="cat-badge">${catLabel}</div>
-      </div>
-      <div class="info">
-        <h3>${p.name}</h3>
-        <p>${p.desc}</p>
-        <div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-      </div>`;
-    card.addEventListener('click',()=>openModal(p));
-    grid.appendChild(card);
-    gsap.to(card,{opacity:1,y:0,duration:.5,delay:i*.06,ease:'power3.out'});
+    const card=document.createElement('div');card.className='project-card';
+    const color=CAT_COLORS[p.cat]||'#7eb7be';
+    card.innerHTML=`<div class="card-img"><img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0a0a12)';this.style.height='200px'"/><div class="overlay"></div><div class="cat-badge" style="background:${color}20;color:${color};border:1px solid ${color}30">${p.sector}</div></div><div class="card-body"><h3>${p.name}</h3><div class="sector">${p.sector}</div><p>${p.desc.slice(0,100)}...</p><div class="card-tags">${p.features.slice(0,3).map(f=>'<span>'+f+'</span>').join('')}</div></div>`;
+    card.onclick=()=>openModal(p);
+    gridEl.appendChild(card);
+    gsap.from(card,{opacity:0,y:40,duration:.6,delay:i*.06,scrollTrigger:{trigger:card,start:'top 90%',once:true}});
   });
 }
+renderGrid();
 
-// Modal
-const modal=document.getElementById('modal');
+// MODAL
 function openModal(p){
-  document.getElementById('modalImg').src=MOCKUP_BASE+p.img;
+  document.getElementById('modalImg').src=p.img;
   document.getElementById('modalTitle').textContent=p.name;
-  document.getElementById('modalCat').textContent=CATEGORIES.find(c=>c.id===p.cat)?.label||p.cat;
+  document.getElementById('modalSector').textContent=p.sector;
   document.getElementById('modalDesc').textContent=p.desc;
-  document.getElementById('modalFeats').innerHTML=p.features.map(f=>`<div class="feat">${f}</div>`).join('');
-  modal.classList.add('open');
+  document.getElementById('modalFeatures').innerHTML=p.features.map(f=>'<div class="modal-feat"><span class="check">✓</span>'+f+'</div>').join('');
+  document.getElementById('modalDemoLink').href=p.demo;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('modalPanel').classList.add('open');
   document.body.style.overflow='hidden';
 }
-document.getElementById('modalClose').addEventListener('click',()=>{modal.classList.remove('open');document.body.style.overflow=''});
-modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');document.body.style.overflow=''}});
-
-renderGrid('all');
-gsap.registerPlugin(ScrollTrigger);
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('modalPanel').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 </script>
 </body>
 </html>
