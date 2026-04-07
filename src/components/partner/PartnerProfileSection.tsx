@@ -11,6 +11,7 @@ interface Props {
   userId: string;
   userName: string;
   userEmail: string;
+  onAvatarChange?: (url: string | null) => void;
 }
 
 interface ProfileData {
@@ -31,7 +32,7 @@ const EMPTY: ProfileData = {
   bio: "", instagram_handle: "", website: "", company_name: "", email: "",
 };
 
-export default function PartnerProfileSection({ userId, userName, userEmail }: Props) {
+export default function PartnerProfileSection({ userId, userName, userEmail, onAvatarChange }: Props) {
   const [profile, setProfile] = useState<ProfileData>({ ...EMPTY, full_name: userName, email: userEmail });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
