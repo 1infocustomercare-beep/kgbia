@@ -11,6 +11,7 @@ interface Props {
   userId: string;
   userName: string;
   userEmail: string;
+  onAvatarChange?: (url: string | null) => void;
 }
 
 interface ProfileData {
@@ -31,7 +32,7 @@ const EMPTY: ProfileData = {
   bio: "", instagram_handle: "", website: "", company_name: "", email: "",
 };
 
-export default function PartnerProfileSection({ userId, userName, userEmail }: Props) {
+export default function PartnerProfileSection({ userId, userName, userEmail, onAvatarChange }: Props) {
   const [profile, setProfile] = useState<ProfileData>({ ...EMPTY, full_name: userName, email: userEmail });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -77,6 +78,7 @@ export default function PartnerProfileSection({ userId, userName, userEmail }: P
       const url = urlData.publicUrl + "?t=" + Date.now();
       setProfile(p => ({ ...p, avatar_url: url }));
       await supabase.from("profiles").update({ avatar_url: url }).eq("user_id", userId);
+      onAvatarChange?.(url);
       toast({ title: "✅ Foto aggiornata!" });
     } catch (err: any) {
       toast({ title: "Errore", description: err.message, variant: "destructive" });
@@ -169,7 +171,7 @@ export default function PartnerProfileSection({ userId, userName, userEmail }: P
             <p className="text-xs font-bold text-white">Foto Profilo</p>
             <p className="text-[10px]" style={{ color: "#9ca3af" }}>JPG, PNG, max 2MB. Visibile ai clienti.</p>
             {profile.avatar_url && (
-              <button onClick={async () => { setProfile(p => ({ ...p, avatar_url: "" })); await supabase.from("profiles").update({ avatar_url: null }).eq("user_id", userId); }}
+              <button onClick={async () => { setProfile(p => ({ ...p, avatar_url: "" })); await supabase.from("profiles").update({ avatar_url: null }).eq("user_id", userId); onAvatarChange?.(null); }}
                 className="text-[9px] flex items-center gap-1" style={{ color: "#f87171" }}>
                 <X className="w-3 h-3" /> Rimuovi foto
               </button>
