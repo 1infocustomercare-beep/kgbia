@@ -755,6 +755,7 @@ const PartnerDashboard = () => {
         </AnimatePresence>
 
         {/* ═══════ MASCOT HERO — above acquisition, centered & animated ═══════ */}
+        {!demoMode && (
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-6">
           <div className="flex flex-col items-center text-center">
             <motion.div
@@ -779,15 +780,14 @@ const PartnerDashboard = () => {
               className="text-sm font-semibold mt-3"
               style={{ color: "#a78bfa" }}
             >
-              {demoMode ? "Empire AI — Portfolio Interattivo" : "Il tuo assistente di vendita"}
+              Il tuo assistente di vendita
             </motion.p>
-            {!demoMode && (
-              <p className="text-[11px] mt-1" style={{ color: "#6b7280" }}>
-                Seleziona un canale, scegli il settore e genera messaggi persuasivi in un click
-              </p>
-            )}
+            <p className="text-[11px] mt-1" style={{ color: "#6b7280" }}>
+              Seleziona un canale, scegli il settore e genera messaggi persuasivi in un click
+            </p>
           </div>
         </section>
+        )}
 
         {/* ═══════ EARNINGS SECTION ═══════ */}
         {!demoMode && (
