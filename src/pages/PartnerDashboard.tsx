@@ -816,7 +816,7 @@ const PartnerDashboard = () => {
                   <div className="grid grid-cols-3 gap-3">
                     {[
                       { icon: Trophy, value: salesCount, label: "Vendite", color: "#a78bfa" },
-                      { icon: DollarSign, value: "€997", label: "Per Vendita", color: "#34d399" },
+                      { icon: DollarSign, value: salesCount > 0 ? `€${Math.round(realTotalCommissions / salesCount)}` : "€0", label: "Per Vendita", color: "#34d399" },
                       { icon: isTeamLeader ? Users : Target, value: isTeamLeader ? teamMembers.length : `${salesCount}/4`, label: isTeamLeader ? "Team" : "a Team Leader", color: "#38bdf8" },
                     ].map((s, i) => (
                       <div key={i} className="p-3.5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
