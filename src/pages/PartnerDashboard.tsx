@@ -529,8 +529,16 @@ const PartnerDashboard = () => {
 
   const fetchPartnerData = async () => {
     if (!user?.id) return;
-    const { data: sales } = await supabase.from("partner_sales").select("id").eq("partner_id", user.id);
-    setSalesCount(sales?.length || 0);
+    const { data: sales } = await supabase.from("partner_sales").select("*").eq("partner_id", user.id);
+    const allSales = sales || [];
+    setSalesCount(allSales.length);
+    // Calculate real commissions from DB
+    const realCommissions = allSales.reduce((s: number, sale: any) => s + Number(sale.partner_commission || 0), 0);
+    setRealTotalCommissions(realCommissions);
+    // Count current month sales from partner_sales directly
+    const cm = new Date().toISOString().slice(0, 7);
+    const cmSales = allSales.filter((s: any) => s.sale_month === cm).length;
+    setCurrentMonthSalesCount(cmSales);
     if (isTeamLeader) {
       const { data: team } = await supabase.from("partner_teams").select("*").eq("team_leader_id", user.id);
       if (team && team.length > 0) {
