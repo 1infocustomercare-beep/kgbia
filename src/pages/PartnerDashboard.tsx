@@ -210,6 +210,8 @@ const PartnerDashboard = () => {
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [teamSales, setTeamSales] = useState<any[]>([]);
   const [salesCount, setSalesCount] = useState(0);
+  const [realTotalCommissions, setRealTotalCommissions] = useState(0);
+  const [currentMonthSalesCount, setCurrentMonthSalesCount] = useState(0);
   const [monthlyBonuses, setMonthlyBonuses] = useState<any[]>([]);
   const [inviteCopied, setInviteCopied] = useState(false);
   const { demoRestaurant, loading: demoLoading, refetch: refetchDemo } = usePartnerDemoRestaurant();
@@ -529,8 +531,16 @@ const PartnerDashboard = () => {
 
   const fetchPartnerData = async () => {
     if (!user?.id) return;
-    const { data: sales } = await supabase.from("partner_sales").select("id").eq("partner_id", user.id);
-    setSalesCount(sales?.length || 0);
+    const { data: sales } = await supabase.from("partner_sales").select("*").eq("partner_id", user.id);
+    const allSales = sales || [];
+    setSalesCount(allSales.length);
+    // Calculate real commissions from DB
+    const realCommissions = allSales.reduce((s: number, sale: any) => s + Number(sale.partner_commission || 0), 0);
+    setRealTotalCommissions(realCommissions);
+    // Count current month sales from partner_sales directly
+    const cm = new Date().toISOString().slice(0, 7);
+    const cmSales = allSales.filter((s: any) => s.sale_month === cm).length;
+    setCurrentMonthSalesCount(cmSales);
     if (isTeamLeader) {
       const { data: team } = await supabase.from("partner_teams").select("*").eq("team_leader_id", user.id);
       if (team && team.length > 0) {
@@ -577,7 +587,7 @@ const PartnerDashboard = () => {
   };
 
   const totalBonuses = monthlyBonuses.reduce((s, b) => s + Number(b.bonus_amount), 0);
-  const estimatedCommissions = salesCount * 997;
+  const estimatedCommissions = realTotalCommissions;
   const calculateOverrides = () => {
     if (!isTeamLeader || teamMembers.length === 0) return 0;
     let total = 0;
@@ -590,8 +600,7 @@ const PartnerDashboard = () => {
   const totalOverrides = calculateOverrides();
   const netEarnings = estimatedCommissions + totalBonuses + totalOverrides;
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const currentMonthBonus = monthlyBonuses.find(b => b.bonus_month === currentMonth);
-  const currentMonthSales = currentMonthBonus?.sales_count || 0;
+  const currentMonthSales = currentMonthSalesCount;
   const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
   const selectedProjectName = selectedProject
@@ -807,7 +816,7 @@ const PartnerDashboard = () => {
                   <div className="grid grid-cols-3 gap-3">
                     {[
                       { icon: Trophy, value: salesCount, label: "Vendite", color: "#a78bfa" },
-                      { icon: DollarSign, value: "€997", label: "Per Vendita", color: "#34d399" },
+                      { icon: DollarSign, value: salesCount > 0 ? `€${Math.round(realTotalCommissions / salesCount)}` : "€0", label: "Per Vendita", color: "#34d399" },
                       { icon: isTeamLeader ? Users : Target, value: isTeamLeader ? teamMembers.length : `${salesCount}/4`, label: isTeamLeader ? "Team" : "a Team Leader", color: "#38bdf8" },
                     ].map((s, i) => (
                       <div key={i} className="p-3.5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
