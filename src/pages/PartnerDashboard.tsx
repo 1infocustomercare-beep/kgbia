@@ -210,6 +210,8 @@ const PartnerDashboard = () => {
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [teamSales, setTeamSales] = useState<any[]>([]);
   const [salesCount, setSalesCount] = useState(0);
+  const [realTotalCommissions, setRealTotalCommissions] = useState(0);
+  const [currentMonthSalesCount, setCurrentMonthSalesCount] = useState(0);
   const [monthlyBonuses, setMonthlyBonuses] = useState<any[]>([]);
   const [inviteCopied, setInviteCopied] = useState(false);
   const { demoRestaurant, loading: demoLoading, refetch: refetchDemo } = usePartnerDemoRestaurant();
