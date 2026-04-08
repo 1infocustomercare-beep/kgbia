@@ -827,7 +827,7 @@ const PartnerDashboard = () => {
                       <BonusProgressRing salesCount={currentMonthSales} milestone={5} label="€1.500" reward={currentMonthSales >= 5 ? "✓ Sbloccato" : `${5 - currentMonthSales} mancanti`} unlocked={currentMonthSales >= 5} />
                     </div>
                   </div>
-                  <DemoCreditsWallet userId={user?.id} />
+                  
                   <button onClick={() => setShowEarnings(false)} className="w-full py-2.5 text-xs text-center transition-colors" style={{ color: "#6b7280" }}>
                     Chiudi sezione guadagni ↑
                   </button>
