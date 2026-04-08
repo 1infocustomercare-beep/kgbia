@@ -587,7 +587,7 @@ const PartnerDashboard = () => {
   };
 
   const totalBonuses = monthlyBonuses.reduce((s, b) => s + Number(b.bonus_amount), 0);
-  const estimatedCommissions = salesCount * 997;
+  const estimatedCommissions = realTotalCommissions;
   const calculateOverrides = () => {
     if (!isTeamLeader || teamMembers.length === 0) return 0;
     let total = 0;
@@ -600,8 +600,7 @@ const PartnerDashboard = () => {
   const totalOverrides = calculateOverrides();
   const netEarnings = estimatedCommissions + totalBonuses + totalOverrides;
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const currentMonthBonus = monthlyBonuses.find(b => b.bonus_month === currentMonth);
-  const currentMonthSales = currentMonthBonus?.sales_count || 0;
+  const currentMonthSales = currentMonthSalesCount;
   const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
   const selectedProjectName = selectedProject
