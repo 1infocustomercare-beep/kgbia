@@ -523,6 +523,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="empire-theme">
       <div className="min-h-screen relative">
         <TooltipProvider>
           <AuthProvider>
