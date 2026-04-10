@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import { ThemeProvider } from "next-themes";
 import type { ErrorInfo, ReactNode } from 'react';
 import UnifiedIntro from "@/components/UnifiedIntro";
 import { Toaster } from "@/components/ui/toaster";
@@ -744,7 +745,7 @@ function App() {
           </AuthProvider>
         </TooltipProvider>
       </div>
-
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
