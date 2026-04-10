@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Building, User, Palette } from "lucide-react";
+import { Building, User, Palette, Moon, Sun } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { useTheme } from "next-themes";
 import { useIndustry } from "@/hooks/useIndustry";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +15,7 @@ import { toast } from "sonner";
 export default function GenericSettingsPage() {
   const { company, companyId } = useIndustry();
   const { user } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   const [companyForm, setCompanyForm] = useState({ name: "", phone: "", address: "", city: "", email: "" });
   const [profileForm, setProfileForm] = useState({ full_name: "", avatar_url: "" });
@@ -67,6 +70,7 @@ export default function GenericSettingsPage() {
           <TabsTrigger value="company"><Building className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Azienda</TabsTrigger>
           <TabsTrigger value="profile"><User className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Profilo</TabsTrigger>
           <TabsTrigger value="branding"><Palette className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Brand</TabsTrigger>
+          <TabsTrigger value="appearance"><Moon className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Aspetto</TabsTrigger>
         </TabsList>
 
         <TabsContent value="company" className="mt-6">
@@ -117,6 +121,24 @@ export default function GenericSettingsPage() {
                 </div>
               </div>
               <Button onClick={saveBranding} className="h-11">Salva Branding</Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="appearance" className="mt-6">
+          <Card className="border-border/40">
+            <CardHeader><CardTitle className="text-sm">Tema</CardTitle></CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {theme === "dark" ? <Moon className="w-5 h-5 text-primary" /> : <Sun className="w-5 h-5 text-primary" />}
+                  <div>
+                    <p className="text-sm font-medium">Dark Mode</p>
+                    <p className="text-xs text-muted-foreground">Attiva il tema scuro per ridurre l'affaticamento visivo</p>
+                  </div>
+                </div>
+                <Switch checked={theme === "dark"} onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

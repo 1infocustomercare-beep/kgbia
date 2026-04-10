@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import { ThemeProvider } from "next-themes";
 import type { ErrorInfo, ReactNode } from 'react';
 import UnifiedIntro from "@/components/UnifiedIntro";
 import { Toaster } from "@/components/ui/toaster";
@@ -523,6 +524,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="empire-theme">
       <div className="min-h-screen relative">
         <TooltipProvider>
           <AuthProvider>
@@ -743,7 +745,7 @@ function App() {
           </AuthProvider>
         </TooltipProvider>
       </div>
-
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

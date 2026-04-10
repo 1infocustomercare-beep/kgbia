@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useIndustry } from "@/hooks/useIndustry";
 import { motion } from "framer-motion";
 import { SitePreviewOverlay } from "@/components/app/SitePreviewOverlay";
+import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
 
 export function TopBar() {
   const { user, signOut } = useAuth();
@@ -64,6 +65,7 @@ export function TopBar() {
         </div>
 
         <div className="ml-auto flex items-center gap-1.5">
+          <DarkModeToggle />
           {/* Notifications */}
           <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-xl hover:bg-secondary/50">
             <Bell className="w-4 h-4" />
