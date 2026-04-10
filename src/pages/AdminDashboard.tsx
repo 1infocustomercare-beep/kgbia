@@ -24,6 +24,7 @@ import MoreMenu from "@/components/admin/MoreMenu";
 import EmpireAssistant from "@/components/admin/EmpireAssistant";
 import { GuidesToggle } from "@/components/ui/info-guide";
 import PageGuide from "@/components/ui/page-guide";
+import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
 
 type MainTab = "dashboard" | "studio" | "orders" | "profit" | "more";
 
@@ -336,6 +337,7 @@ const AdminDashboard = () => {
           </div>
         </div>
         <div className="flex items-center gap-1.5">
+          <DarkModeToggle />
           <GuidesToggle />
           <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-primary/10 min-w-[40px] min-h-[40px] flex items-center justify-center" title="Home">
             <ArrowLeft className="w-4 h-4 text-muted-foreground" />
