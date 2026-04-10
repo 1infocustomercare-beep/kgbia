@@ -16,7 +16,6 @@ export default function GenericSettingsPage() {
   const { company, companyId } = useIndustry();
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
-  const { user } = useAuth();
 
   const [companyForm, setCompanyForm] = useState({ name: "", phone: "", address: "", city: "", email: "" });
   const [profileForm, setProfileForm] = useState({ full_name: "", avatar_url: "" });
