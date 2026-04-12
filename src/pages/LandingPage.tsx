@@ -1,12 +1,15 @@
-import React, { lazy, Suspense } from "react";
+import React from "react";
 import LandingNav from "@/components/landing/LandingNav";
 import LandingHero from "@/components/landing/LandingHero";
 import LandingTicker from "@/components/landing/LandingTicker";
 import LandingSectors from "@/components/landing/LandingSectors";
 import LandingServices from "@/components/landing/LandingServices";
+import LandingWordReveal from "@/components/landing/LandingWordReveal";
 import LandingMetrics from "@/components/landing/LandingMetrics";
-import LandingWhyUs from "@/components/landing/LandingWhyUs";
+import LandingPortfolio from "@/components/landing/LandingPortfolio";
+import LandingResults from "@/components/landing/LandingResults";
 import LandingPricing from "@/components/landing/LandingPricing";
+import LandingAgents from "@/components/landing/LandingAgents";
 import LandingFAQ from "@/components/landing/LandingFAQ";
 import LandingCTA from "@/components/landing/LandingCTA";
 import LandingFooter from "@/components/landing/LandingFooter";
@@ -16,52 +19,25 @@ const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
 export default function LandingPage() {
   return (
-    <div
-      className="min-h-screen overflow-x-hidden relative"
-      style={{
-        background: "radial-gradient(120% 80% at 50% 35%, hsl(228 22% 8%) 0%, hsl(230 24% 7%) 40%, hsl(232 20% 6%) 64%, hsl(234 26% 5%) 100%)",
-      }}
-    >
-      {/* Ambient background particles */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.02] bg-primary -top-[200px] left-1/4" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.015] bg-accent top-[50vh] -right-[100px]" />
-      </div>
+    <div className="min-h-screen overflow-x-hidden relative" style={{ background: "#020204" }}>
+      {/* Noise overlay */}
+      <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.02]"
+        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
 
-      {/* Navigation */}
       <LandingNav />
-
-      {/* Hero */}
       <LandingHero />
-
-      {/* Trust ticker */}
       <LandingTicker />
-
-      {/* Metrics */}
-      <LandingMetrics />
-
-      {/* Sectors */}
       <LandingSectors />
-
-      {/* Services / Platform */}
       <LandingServices />
-
-      {/* Why Empire */}
-      <LandingWhyUs />
-
-      {/* Pricing */}
+      <LandingWordReveal />
+      <LandingMetrics />
+      <LandingPortfolio />
+      <LandingResults />
       <LandingPricing />
-
-      {/* FAQ */}
+      <LandingAgents />
       <LandingFAQ />
-
-      {/* Final CTA */}
       <LandingCTA />
-
-      {/* Footer */}
       <LandingFooter />
-
-      {/* Voice Agent */}
       <SafeVoiceAgent />
     </div>
   );

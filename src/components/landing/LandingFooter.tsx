@@ -1,87 +1,19 @@
-import { useNavigate } from "react-router-dom";
-import { Instagram, Facebook, Globe, ArrowRight } from "lucide-react";
-import empireLogoNew from "@/assets/empire-logo-new.png";
-
-const COLUMNS = [
-  { title: "Prodotto", links: ["Dashboard", "CRM Clienti", "Prenotazioni", "Analytics", "Agenti AI", "Automazioni"] },
-  { title: "Risorse", links: ["Centro Assistenza", "Documentazione", "Video Tutorial", "Blog", "Webinar", "API"] },
-  { title: "Azienda", links: ["Chi Siamo", "Lavora con Noi", "Partner Program", "Press Kit", "Privacy Policy", "Termini"] },
-];
-
 export default function LandingFooter() {
-  const navigate = useNavigate();
-
   return (
-    <footer className="relative overflow-hidden" style={{ background: "linear-gradient(180deg, #050508, #08080c)", color: "white" }}>
-      <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.2), transparent)" }} />
-
-      {/* Newsletter strip */}
-      <div className="border-b border-white/[0.06]">
-        <div className="max-w-5xl mx-auto px-4 py-10 flex flex-col sm:flex-row items-center gap-6">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold text-white mb-1">Resta Aggiornato</h3>
-            <p className="text-xs text-white/35">Ricevi novità, guide e offerte esclusive per il tuo business</p>
+    <footer className="px-6 py-12" style={{ background: "#08080f", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-9 max-w-[1280px] mx-auto">
+        <div>
+          <div className="flex items-center gap-2.5 text-xl font-extrabold mb-4" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>
+            <div className="w-9 h-9 rounded-xl grid place-items-center text-white text-[15px] font-extrabold" style={{ background: "linear-gradient(135deg,#7eb7be,#6c3ce0)", boxShadow: "0 4px 16px rgba(126,183,190,0.3)" }}>E</div>
+            <span className="text-[#f0f0f5]">EMPIRE.AI</span>
           </div>
-          <div className="flex gap-2 w-full sm:w-auto">
-            <input type="email" placeholder="La tua email..." className="bg-white/[0.05] border border-white/10 text-white placeholder:text-white/20 h-11 px-4 rounded-xl w-full sm:w-64 text-sm focus:outline-none focus:border-primary/30" />
-            <button className="h-11 px-6 rounded-xl font-semibold text-sm text-white bg-primary shrink-0 flex items-center gap-1 hover:bg-primary/90 transition-colors">
-              Iscriviti <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+          <p className="text-xs text-[rgba(240,240,245,0.55)] leading-relaxed max-w-[280px]">La piattaforma AI autonoma più completa d'Italia.</p>
         </div>
+        <div><h4 className="text-xs uppercase tracking-[1px] text-[#f0f0f5] font-bold mb-3">Settori</h4><ul className="space-y-1.5">{["Food & Ristorazione","NCC & Trasporto","Beauty & Wellness","Healthcare","Retail & E-commerce","+19 altri"].map(s => (<li key={s}><a href="#settori" className="text-xs text-[rgba(240,240,245,0.55)] hover:text-[#7eb7be] transition-colors">{s}</a></li>))}</ul></div>
+        <div><h4 className="text-xs uppercase tracking-[1px] text-[#f0f0f5] font-bold mb-3">Piattaforma</h4><ul className="space-y-1.5">{["Funzionalità","Automazioni IA","ROI Calculator","Piani & Prezzi"].map(s => (<li key={s}><a href="#" className="text-xs text-[rgba(240,240,245,0.55)] hover:text-[#7eb7be] transition-colors">{s}</a></li>))}</ul></div>
+        <div><h4 className="text-xs uppercase tracking-[1px] text-[#f0f0f5] font-bold mb-3">Contatti</h4><ul className="space-y-1.5"><li><a href="mailto:info@empire-suite.it" className="text-xs text-[rgba(240,240,245,0.55)] hover:text-[#7eb7be] transition-colors">info@empire-suite.it</a></li><li className="text-xs text-[rgba(240,240,245,0.55)]">Roma, Italia</li><li><a href="/privacy" className="text-xs text-[rgba(240,240,245,0.55)] hover:text-[#7eb7be] transition-colors">Privacy Policy</a></li></ul></div>
       </div>
-
-      {/* Main footer */}
-      <div className="max-w-5xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="col-span-2 sm:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg overflow-hidden">
-                <img src={empireLogoNew} alt="Empire" className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-white">Empire.AI</p>
-                <p className="text-[0.55rem] text-white/25 uppercase tracking-wider">Autonomous AI Platform</p>
-              </div>
-            </div>
-            <p className="text-xs text-white/30 leading-relaxed mb-4">La piattaforma AI completa per digitalizzare e automatizzare qualsiasi business.</p>
-            <div className="flex gap-2">
-              {[Instagram, Facebook, Globe].map((Icon, i) => (
-                <button key={i} className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/[0.06] border border-white/[0.06]">
-                  <Icon className="w-3.5 h-3.5 text-white/30" />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Link columns */}
-          {COLUMNS.map((col, i) => (
-            <div key={i}>
-              <h4 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">{col.title}</h4>
-              <ul className="space-y-2.5">
-                {col.links.map((link, j) => (
-                  <li key={j}><button className="text-xs text-white/25 hover:text-white/60 transition-colors">{link}</button></li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="border-t border-white/[0.04]">
-        <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[0.6rem] text-white/15">
-            © 2026 Empire AI Group — Tutti i diritti riservati
-          </p>
-          <div className="flex gap-4">
-            {[{ l: "Privacy", p: "/privacy" }, { l: "Cookie", p: "/cookie-policy" }, { l: "Termini", p: "#" }].map((item) => (
-              <button key={item.l} onClick={() => navigate(item.p)} className="text-[0.6rem] text-white/15 hover:text-white/30 transition">{item.l}</button>
-            ))}
-          </div>
-        </div>
-      </div>
+      <div className="flex flex-col sm:flex-row justify-between max-w-[1280px] mx-auto pt-7 mt-7 text-[11px] text-[rgba(240,240,245,0.3)] gap-2 text-center sm:text-left" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}><span>© 2026 Empire AI · Piattaforma Multi-Settore</span><span>P.IVA IT12345678901</span></div>
     </footer>
   );
 }

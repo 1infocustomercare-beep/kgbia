@@ -1,62 +1,31 @@
-import { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
-
+import { useEffect, useRef, useState } from "react";
 const METRICS = [
-  { value: 847, suffix: "+", label: "Attività Attive" },
-  { value: 25, suffix: "+", label: "Settori Coperti" },
-  { value: 40, suffix: "%", prefix: "+", label: "Aumento Fatturato" },
-  { value: 99.8, suffix: "%", label: "Soddisfazione" },
+  { target: 1240, label: "QR Scan", sub: "scansioni/mese", prefix: "", suffix: "" },
+  { target: 68, label: "Ordini AI", sub: "conversione", prefix: "+", suffix: "%" },
+  { target: 24, label: "Agenti Attivi", sub: "operativi", prefix: "", suffix: "/24" },
+  { target: 12, label: "Revenue", sub: "incremento medio", prefix: "+", suffix: ".4k" },
 ];
-
-const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
-  const [display, setDisplay] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting && !started) setStarted(true); }, { threshold: 0.5 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [started]);
-
-  useEffect(() => {
-    if (!started) return;
-    const duration = 2000;
-    const start = Date.now();
-    const isFloat = value % 1 !== 0;
-    const frame = () => {
-      const elapsed = Date.now() - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(isFloat ? parseFloat((value * eased).toFixed(1)) : Math.floor(value * eased));
-      if (progress < 1) requestAnimationFrame(frame);
-      else setDisplay(value);
-    };
-    requestAnimationFrame(frame);
-  }, [started, value]);
-
-  const formatted = value % 1 !== 0
-    ? display.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })
-    : display.toLocaleString("it-IT");
-
-  return <div ref={ref}>{prefix}{formatted}{suffix}</div>;
-};
-
+function Counter({ target, prefix, suffix, run }: { target: number; prefix: string; suffix: string; run: boolean }) {
+  const [val, setVal] = useState(0);
+  useEffect(() => { if (!run) return; let v = 0; const inc = target / 50; const t = setInterval(() => { v += inc; if (v >= target) { setVal(target); clearInterval(t); } else setVal(Math.floor(v)); }, 30); return () => clearInterval(t); }, [target, run]);
+  return <>{prefix}{val}{suffix}</>;
+}
 export default function LandingMetrics() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [vis, setVis] = useState(false);
+  useEffect(() => { const el = ref.current; if (!el) return; const o = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); o.disconnect(); } }, { threshold: 0.3 }); o.observe(el); return () => o.disconnect(); }, []);
   return (
-    <section className="relative py-16 px-5 overflow-hidden" style={{ background: "hsla(230,20%,7%,1)" }}>
-      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,55%,0.15), transparent)" }} />
-      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.1), transparent)" }} />
-
-      <div className="max-w-[900px] mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
-        {METRICS.map((m, i) => (
-          <motion.div key={m.label} className="text-center" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-            <div className="text-[clamp(1.8rem,5vw,3rem)] font-heading font-black text-white leading-none mb-1">
-              <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
+    <section className="py-16 sm:py-[100px]" style={{ background: "#08080f", borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+      <div ref={ref} className="max-w-[1320px] mx-auto px-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+          {METRICS.map((m, i) => (
+            <div key={i} className="text-center p-7">
+              <div className="text-[2.4rem] font-extrabold" style={{ fontFamily: "'Space Grotesk',sans-serif", background: "linear-gradient(135deg,#7eb7be,#6c3ce0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}><Counter target={m.target} prefix={m.prefix} suffix={m.suffix} run={vis} /></div>
+              <div className="text-sm font-semibold text-[#f0f0f5] mt-1">{m.label}</div>
+              <div className="text-[11px] text-[rgba(240,240,245,0.3)]">{m.sub}</div>
             </div>
-            <p className="text-[0.6rem] sm:text-xs text-foreground/30 tracking-wider uppercase font-medium">{m.label}</p>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
