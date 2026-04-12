@@ -177,7 +177,7 @@ export default function LandingHero() {
                   zIndex: l.z,
                   willChange: "transform",
                 }}
-                initial={{ scale: 0, rotation: l.rot * 2, y: 200 + i * 30, opacity: 0 }}
+                initial={{ scale: 0, rotate: l.rot * 2, y: 200 + i * 30, opacity: 0 }}
                 animate={{ x: l.x, y: l.y, rotate: l.rot, scale: l.s, opacity: 1 }}
                 transition={{ delay: 0.8 + i * 0.12, duration: 1.4, type: "spring", damping: 12, stiffness: 80 }}
                 whileHover={{ scale: (l.s || 1) * 1.08, zIndex: 20, boxShadow: "0 40px 100px rgba(126,183,190,0.3), 0 0 0 2px rgba(126,183,190,0.2)" }}
