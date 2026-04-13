@@ -5,14 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
 
-const HERO_PHONES = [
-  { img: `${S}/flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png`, alt: "Flame Kebab" },
-  { img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, alt: "Aura Spa" },
-  { img: `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, alt: "Neo Nails" },
-  { img: `${S}/Top%20Golf%20Bay%20App/a-official-home.png`, alt: "Top Golf Bay" },
-  { img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, alt: "DIMORA Milano" },
-];
-
 const CAROUSEL_SETS = [
   [
     `${S}/flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png`,
@@ -135,7 +127,7 @@ export default function LandingHero() {
         {/* Right - 5 Phones */}
         <div className="flex-1 flex justify-center items-center min-h-[300px] lg:min-h-[500px] relative" style={{ perspective: "1600px" }}>
           <AnimatePresence mode="wait">
-            <motion.div key={setIdx} className="relative w-full h-full flex justify-center items-center" 
+            <motion.div key={setIdx} className="relative w-full h-full flex justify-center items-center"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8 }}>
               {currentSet.map((img, i) => {
                 const p = PHONE_LAYOUT[i];
@@ -151,17 +143,17 @@ export default function LandingHero() {
                       zIndex: p.z,
                       boxShadow: "0 30px 80px rgba(0,0,0,0.5)",
                     }}
-                    initial={{ scale: 0, y: 200, opacity: 0, rotation: p.rot * 2 }}
+                    initial={{ scale: 0, y: 200, opacity: 0, rotate: p.rot * 2 }}
                     animate={{
                       x: isMobile ? p.xm : p.x,
                       y: isMobile ? p.ym : p.y,
                       scale: isMobile ? p.sm : p.s,
                       opacity: 1,
-                      rotation: p.rot,
+                      rotate: p.rot,
                       rotateY: parallaxX,
                       rotateX: -parallaxY,
                     }}
-                    transition={{ 
+                    transition={{
                       scale: { delay: 0.8 + i * 0.12, duration: 1.4, type: "spring", stiffness: 60 },
                       opacity: { delay: 0.8 + i * 0.12, duration: 0.6 },
                       x: { delay: 0.8 + i * 0.12, duration: 1.4, type: "spring" },
@@ -169,7 +161,7 @@ export default function LandingHero() {
                       rotateY: { duration: 0.6 },
                       rotateX: { duration: 0.6 },
                     }}
-                    whileHover={{ scale: (isMobile ? p.sm : p.s) * 1.08, zIndex: 20, boxShadow: "0 40px 100px rgba(126,183,190,0.3), 0 0 0 2px rgba(126,183,190,0.2)" }}
+                    whileHover={{ scale: (isMobile ? p.sm : p.s) * 1.08, zIndex: 20 }}
                   >
                     <img src={img} alt={`Preview ${i}`} className="w-full block" loading="eager" />
                   </motion.div>
