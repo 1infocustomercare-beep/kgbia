@@ -1,79 +1,121 @@
 import { motion } from "framer-motion";
-import { Cpu, Workflow, Gauge, ServerCog, Database, Headphones, Shield, Check, CircleCheck, Minus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-const vpOnce = { once: true, margin: "-100px" as any } as const;
-
-const REASONS = [
-  { icon: <Cpu className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
-  { icon: <Workflow className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Automazione Totale", desc: "Ogni processo ripetitivo viene eliminato. Dal contatto alla fatturazione." },
-  { icon: <Gauge className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Performance Garantite", desc: "99.9% uptime, <200ms latenza, scaling automatico." },
-  { icon: <ServerCog className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Aggiornamenti Continui", desc: "Nuove funzionalità ogni settimana. Mai obsoleto." },
-  { icon: <Database className="w-4 h-4 sm:w-5 sm:h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto. Zero lock-in." },
-  { icon: <Headphones className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Supporto Dedicato", desc: "Team italiano 7/7. Persone vere che risolvono." },
+const RESULTS = [
+  { value: "847+", label: "Business Trasformati" },
+  { value: "3.2M", label: "Operazioni Automatizzate" },
+  { value: "94h", label: "Ore Risparmiate / Mese" },
+  { value: "+40%", label: "Revenue Medio" },
 ];
 
-const COMPARISONS = [
-  { label: "App White Label", empire: "✓ Inclusa", others: "€5.000+", icon: "📱" },
-  { label: "Agenti IA", empire: "98+ inclusi", others: "Non disponibili", icon: "🤖" },
-  { label: "Commissioni", empire: "0-2%", others: "15-30%", icon: "💸" },
-  { label: "Setup", empire: "24 ore", others: "2-6 mesi", icon: "⚡" },
-  { label: "Aggiornamenti", empire: "Settimanali", others: "Annuali", icon: "🔄" },
-  { label: "Proprietà dati", empire: "100% tua", others: "Lock-in", icon: "🔒" },
-  { label: "Multi-settore", empire: "25+ settori", others: "1 solo", icon: "🌐" },
-  { label: "Supporto", empire: "7/7 italiano", others: "Ticket email", icon: "🎧" },
+const BEFORE_AFTER = [
+  { title: "Gestione Ordini", badge: "-93%", before: "45 min manuali/giorno", after: "3 min — automatico" },
+  { title: "Reputazione Online", badge: "-100%", before: "12 negative/mese", after: "0 — intercettate dall'IA" },
+  { title: "Clienti Persi", badge: "-94%", before: "34% abbandono", after: "2% con retention AI" },
+  { title: "Revenue Digitali", badge: "+∞", before: "€0 automazioni", after: "+€2.400/mese", isTeal: true },
+  { title: "Fatturazione", badge: "-100%", before: "2 ore/giorno", after: "Completamente automatica" },
+  { title: "Marketing", badge: "∞", before: "Manuale, costoso", after: "AI Content Engine 24/7", isTeal: true },
 ];
+
+function WordReveal({ text }: { text: string }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onScroll = () => {
+      const rect = el.getBoundingClientRect();
+      const start = window.innerHeight * 0.8;
+      const end = window.innerHeight * 0.2;
+      const p = Math.max(0, Math.min(1, (start - rect.top) / (start - end)));
+      setProgress(p);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const words = text.split(" ");
+  return (
+    <p ref={ref} className="font-heading text-[clamp(1.3rem,2.6vw,1.9rem)] font-semibold leading-[1.65] max-w-[880px] mx-auto text-center">
+      {words.map((w, i) => (
+        <span key={i} className="transition-opacity duration-300" style={{ opacity: progress > i / words.length ? 1 : 0.12 }}>
+          {w}{" "}
+        </span>
+      ))}
+    </p>
+  );
+}
 
 export default function LandingWhyUs() {
   return (
-    <section className="relative py-20 sm:py-28 px-5 overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(228 22% 8%), hsl(232 20% 9%), hsl(228 22% 8%))" }}>
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[10%] right-[15%] w-[500px] h-[500px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsla(38,60%,50%,0.5), transparent 65%)", filter: "blur(140px)" }} />
-      </div>
-
-      <div className="max-w-[1100px] mx-auto relative z-10">
-        <div className="text-center mb-14">
-          <motion.div className="inline-flex items-center gap-2.5 mb-5 px-5 py-2.5 rounded-2xl" style={{ background: "hsla(var(--primary) / 0.1)", border: "1px solid hsla(var(--primary) / 0.15)" }} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)))" }}>
-              <Shield className="w-3 h-3 text-white" />
-            </div>
-            <span className="text-[0.65rem] font-heading font-bold tracking-[2.5px] uppercase text-white/90">Perché Empire</span>
-          </motion.div>
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-white leading-[1.08] mb-4" initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-            Non un Semplice Software. <span className="text-shimmer">Un Vantaggio Competitivo.</span>
-          </motion.h2>
-        </div>
-
-        {/* Reasons grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5 mb-14">
-          {REASONS.map((r, i) => (
-            <motion.div key={r.title} className="p-4 sm:p-5 rounded-2xl" style={{ background: "linear-gradient(160deg, hsl(228 20% 14% / 0.9), hsl(232 22% 12% / 0.86))", border: "1px solid hsla(0,0%,100%,0.06)" }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce} transition={{ delay: i * 0.08 }}>
-              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">{r.icon}</div>
-              <h4 className="text-xs sm:text-sm font-heading font-bold text-white mb-1">{r.title}</h4>
-              <p className="text-[0.6rem] sm:text-xs text-foreground/35 leading-relaxed">{r.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Comparison table */}
-        <motion.div className="max-w-3xl mx-auto rounded-2xl overflow-hidden border border-white/[0.06]" style={{ background: "linear-gradient(160deg, hsl(228 20% 14% / 0.92), hsl(232 22% 12% / 0.88))" }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-          <div className="grid grid-cols-3 text-center border-b border-white/[0.06]">
-            <div className="p-4 text-[0.6rem] font-heading font-bold text-foreground/30 tracking-[2px] uppercase">Funzione</div>
-            <div className="p-4 text-[0.6rem] font-heading font-bold text-primary tracking-[2px] uppercase">Empire.AI</div>
-            <div className="p-4 text-[0.6rem] font-heading font-bold text-foreground/20 tracking-[2px] uppercase">Altri</div>
+    <>
+      <section className="py-20 lg:py-28 px-5 lg:px-10" style={{ background: "#020204" }}>
+        <div className="max-w-[1320px] mx-auto">
+          <WordReveal text="Mentre i tuoi competitor perdono clienti, noi costruiamo il tuo vantaggio competitivo. Un ecosistema di 98 agenti IA autonomi, dashboard predittive, CRM intelligente e automazioni multi-canale che lavora 24/7 — generando fatturato e fidelizzando clienti." />
+          <div className="flex gap-3 justify-center flex-wrap mt-8">
+            {["98+ Agenti IA", "Dashboard Predittive", "Automazioni 24/7", "White-Label"].map((p) => (
+              <span key={p} className="text-xs text-white/55 px-4 py-2 rounded-full border border-white/[0.07]">{p}</span>
+            ))}
           </div>
-          {COMPARISONS.map((row, i) => (
-            <div key={i} className={`grid grid-cols-3 items-center py-2.5 sm:py-3 px-4 ${i > 0 ? "border-t border-white/[0.04]" : ""} ${i % 2 === 0 ? "bg-white/[0.01]" : ""}`}>
-              <span className="text-[0.6rem] sm:text-xs text-foreground/40 font-medium flex items-center gap-1.5">
-                <span className="text-xs">{row.icon}</span>{row.label}
-              </span>
-              <span className="text-center text-[0.6rem] sm:text-xs text-white font-bold flex items-center justify-center gap-1">
-                <CircleCheck className="w-3 h-3 text-primary flex-shrink-0" /> {row.empire}
-              </span>
-              <span className="text-center text-[0.55rem] sm:text-xs text-foreground/20 line-through decoration-destructive/40">{row.others}</span>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+        </div>
+      </section>
+
+      <section className="py-16 lg:py-24 border-y border-white/[0.07]" style={{ background: "#080810" }}>
+        <div className="max-w-[1320px] mx-auto px-5">
+          <div className="text-center mb-10">
+            <span className="inline-flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-semibold mb-5">
+              <span className="w-5 h-[1.5px] bg-[#7eb7be]" />RISULTATI REALI
+            </span>
+            <h2 className="text-[clamp(2rem,4vw,3.2rem)] font-heading font-bold text-white">
+              I Numeri <span className="bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">Parlano</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            {RESULTS.map((r, i) => (
+              <motion.div key={r.label} className="text-center py-6 px-4 rounded-2xl border border-white/[0.07] hover:-translate-y-1 transition-all"
+                style={{ background: "#0d0d1a" }}
+                initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}>
+                <div className="font-heading text-[2rem] font-extrabold bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">{r.value}</div>
+                <p className="text-xs text-white/55 mt-1">{r.label}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-8">
+            {BEFORE_AFTER.map((b, i) => (
+              <motion.div key={b.title} className="rounded-2xl border border-white/[0.07] p-5 hover:-translate-y-1 transition-all"
+                style={{ background: "#0d0d1a" }}
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                transition={{ delay: i * 0.06 }}>
+                <h4 className="text-[13px] font-heading font-bold mb-3 flex items-center gap-2 flex-wrap text-white">
+                  {b.title}
+                  <span className={`text-[10px] px-2 py-0.5 rounded-lg font-bold ${b.isTeal ? "bg-[rgba(126,183,190,0.12)] text-[#7eb7be]" : "bg-[rgba(34,197,94,0.1)] text-green-500"}`}>{b.badge}</span>
+                </h4>
+                <div className="flex justify-between py-1.5 border-b border-white/[0.07] text-xs">
+                  <span className="text-white/55 font-semibold">Prima</span>
+                  <span className="text-red-400/60 line-through font-semibold">{b.before}</span>
+                </div>
+                <div className="flex justify-between py-1.5 text-xs">
+                  <span className="text-white/55 font-semibold">Dopo</span>
+                  <span className="text-green-500 font-semibold">{b.after}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center py-8 px-6 rounded-3xl border border-white/[0.07]"
+            style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.12), rgba(108,60,224,0.12))" }}>
+            <h3 className="text-lg font-heading font-bold mb-1 text-white">Garanzia Risultati 90 Giorni</h3>
+            <p className="text-white/55 text-[13px] max-w-[550px] mx-auto">
+              Se non vedi miglioramenti misurabili nei primi 90 giorni, rimborso integrale. Zero rischi.
+            </p>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
