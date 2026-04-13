@@ -1,135 +1,193 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Play, ArrowDown } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
-import videoHeroDefault from "@/assets/video-hero-empire.mp4";
 
-const HERO_SECTORS = [
-  { id: "food", label: "Ristorazione" },
-  { id: "ncc", label: "NCC Premium" },
-  { id: "beauty", label: "Beauty" },
-  { id: "healthcare", label: "Salute" },
-  { id: "fitness", label: "Fitness" },
-  { id: "hospitality", label: "Hotel" },
-  { id: "retail", label: "Retail" },
+const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+
+const CAROUSEL_SETS = [
+  [
+    `${S}/flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png`,
+    `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`,
+    `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`,
+    `${S}/Top%20Golf%20Bay%20App/a-official-home.png`,
+    `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`,
+  ],
+  [
+    `${S}/COTE%20Miami/a-obsidian-mobile-home.png`,
+    `${S}/City%20Padel%20Milano/mobile-sage-luxe-home.png`,
+    `${S}/Paperfish%20Sushi/b-luxury-dark-home.png`,
+    `${S}/Aloha%20Pet%20Resorts/mobile-a-home.png`,
+    `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`,
+  ],
+  [
+    `${S}/La%20Vang%20Vietnamese%20Luxury/a-noir-saigon-home.png`,
+    `${S}/Little%20Diamond%20Nursery%20-%20Playful%20Colorful/home.png`,
+    `${S}/Miami%20Watersports/style-a-mobile-home.png`,
+    `${S}/Tatush%20Hair%20Fragrance/mobile-home.png`,
+    `${S}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/home.png`,
+  ],
 ];
 
-function getScreens(sectorId: string): [string, string, string] {
-  const imgs = SECTOR_MOCKUP_IMAGES[sectorId];
-  if (imgs && imgs.length >= 3) return [imgs[0], imgs[1], imgs[2]];
-  if (imgs && imgs.length >= 1) return [imgs[0], imgs[0], imgs[0]];
-  return ["", "", ""];
-}
-
-const PhoneFrame = ({ src, alt, sizeClass, zIndex, mb, mx }: { src: string; alt: string; sizeClass: string; zIndex: number; mb?: string; mx?: string }) => (
-  <div className={`relative ${sizeClass} aspect-[9/19.5] rounded-[26px] sm:rounded-[36px] overflow-hidden`}
-    style={{ border: "2.5px solid hsl(220 12% 82%)", background: "#0a0a12", zIndex, marginBottom: mb, marginLeft: mx, marginRight: mx, boxShadow: "0 30px 60px hsla(0,0%,0%,0.22), 0 8px 24px hsla(265,30%,30%,0.1)" }}>
-    <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[34%] max-w-[48px] h-[10px] sm:h-[14px] bg-black rounded-full z-30" />
-    <div className="absolute inset-[3px] rounded-[23px] sm:rounded-[33px] overflow-hidden">
-      <img src={src} alt={alt} className="w-full h-full object-cover object-top" loading="lazy" />
-    </div>
-    <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[30%] h-[3px] bg-white/20 rounded-full z-20" />
-    <div className="absolute inset-0 rounded-[26px] sm:rounded-[36px] pointer-events-none" style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.08) 0%, transparent 40%)" }} />
-  </div>
-);
+const PHONE_LAYOUT = [
+  { x: -150, y: 35, rot: -12, z: 4, s: 0.95, xm: -80, ym: 15, sm: 0.82 },
+  { x: -75, y: -18, rot: -6, z: 7, s: 1.02, xm: -40, ym: -8, sm: 0.88 },
+  { x: 0, y: -35, rot: 0, z: 10, s: 1.08, xm: 0, ym: -15, sm: 0.92 },
+  { x: 75, y: -18, rot: 6, z: 7, s: 1.02, xm: 40, ym: -8, sm: 0.88 },
+  { x: 150, y: 35, rot: 12, z: 4, s: 0.95, xm: 80, ym: 15, sm: 0.82 },
+];
 
 export default function LandingHero() {
   const navigate = useNavigate();
-  const [sectorIdx, setSectorIdx] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [setIdx, setSetIdx] = useState(0);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLDivElement>(null);
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 1024;
 
   useEffect(() => {
-    const t = setInterval(() => setSectorIdx((p) => (p + 1) % HERO_SECTORS.length), 4000);
+    const t = setInterval(() => setSetIdx((p) => (p + 1) % CAROUSEL_SETS.length), 5000);
     return () => clearInterval(t);
   }, []);
 
-  const current = HERO_SECTORS[sectorIdx];
-  const screens = getScreens(current.id);
-
-  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const currentSet = CAROUSEL_SETS[setIdx];
 
   return (
-    <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center pt-24 sm:pt-28 pb-16 px-5 overflow-hidden">
-      {/* Video background */}
-      <div className="absolute inset-0 z-0">
-        <video ref={videoRef} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.06]" src={videoHeroDefault} />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsla(230,24%,7%,0.7) 0%, hsla(230,24%,7%,0.4) 50%, hsla(230,24%,7%,0.95) 100%)" }} />
+    <section id="hero" ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden pt-[120px] pb-16 lg:pb-20 px-5 lg:px-10"
+      onMouseMove={(e) => {
+        if (isMobile) return;
+        const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+        setMousePos({ x: (e.clientX - cx) / cx, y: (e.clientY - cy) / cy });
+      }}>
+      
+      {/* Grid background */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0" style={{
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+          maskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent)",
+        }} />
       </div>
 
-      {/* Ambient glow */}
-      <div className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full blur-[200px] opacity-[0.08] pointer-events-none" style={{ background: "radial-gradient(ellipse, hsla(265,60%,55%,0.5), hsla(38,50%,50%,0.3), transparent)" }} />
+      {/* Glows */}
+      <motion.div className="absolute w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none z-[1]"
+        style={{ background: "#6c3ce0", top: "5%", right: "-5%", opacity: 0.08 }}
+        animate={{ x: [0, 20, 0], y: [0, 15, 0], scale: [1, 1.05, 1] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
+      <motion.div className="absolute w-[400px] h-[400px] rounded-full blur-[120px] pointer-events-none z-[1]"
+        style={{ background: "#7eb7be", bottom: "10%", right: "15%", opacity: 0.06 }}
+        animate={{ x: [0, -20, 0], y: [0, -15, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 3 }} />
+      <motion.div className="absolute w-[300px] h-[300px] rounded-full blur-[120px] pointer-events-none z-[1]"
+        style={{ background: "#d4a855", top: "50%", left: "-5%", opacity: 0.04 }}
+        animate={{ x: [0, 15, 0], y: [0, 10, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }} />
 
-      <div className="relative z-10 max-w-[1100px] mx-auto text-center">
-        {/* Badge */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ background: "hsla(38,50%,55%,0.08)", border: "1px solid hsla(38,50%,55%,0.15)" }}>
-          <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-          <span className="text-[0.6rem] font-heading font-bold tracking-[3px] uppercase text-white/60">Piattaforma AI Italiana · 25+ Settori</span>
-        </motion.div>
+      <div className="relative z-[2] flex flex-col lg:flex-row items-center gap-10 lg:gap-16 max-w-[1320px] mx-auto w-full">
+        {/* Left - Text */}
+        <div className="flex-1 max-w-[580px] text-center lg:text-left">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 border border-[rgba(126,183,190,0.2)] bg-[rgba(126,183,190,0.04)]">
+            <span className="w-[7px] h-[7px] rounded-full bg-green-500 shadow-[0_0_6px_#22c55e] animate-pulse" />
+            <span className="text-[11px] tracking-[3px] uppercase text-[#7eb7be] font-semibold font-heading">Piattaforma AI Italiana · 25+ Settori</span>
+          </motion.div>
 
-        {/* Main heading */}
-        <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="text-[clamp(2.2rem,7vw,5rem)] font-heading font-black leading-[1.02] tracking-tight mb-6">
-          <span className="text-white">Trasformiamo</span>
-          <br />
-          <span className="text-white">il Digitale in </span>
-          <span className="text-shimmer">Profitto</span>
-        </motion.h1>
+          <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 1 }}
+            className="text-[clamp(2.4rem,5.5vw,5.2rem)] font-heading font-extrabold leading-[0.94] tracking-tight mb-6">
+            <motion.span className="block text-white" initial={{ clipPath: "inset(0 0 100% 0)" }} animate={{ clipPath: "inset(0 0 0% 0)" }} transition={{ delay: 0.5, duration: 1.1, ease: "easeOut" }}>
+              TRASFORMIAMO
+            </motion.span>
+            <motion.span className="block" style={{ WebkitTextStroke: "1.5px rgba(255,255,255,0.3)", color: "transparent" }}
+              initial={{ clipPath: "inset(0 100% 0 0)" }} animate={{ clipPath: "inset(0 0% 0 0)" }} transition={{ delay: 0.7, duration: 1.1, ease: "easeOut" }}>
+              LE IMPRESE
+            </motion.span>
+            <motion.span className="block text-white" initial={{ clipPath: "inset(100% 0 0 0)" }} animate={{ clipPath: "inset(0% 0 0 0)" }} transition={{ delay: 0.9, duration: 1.1, ease: "easeOut" }}>
+              CON L'<span className="bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">IA</span>
+            </motion.span>
+          </motion.h1>
 
-        {/* Subtitle */}
-        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="text-foreground/50 max-w-[600px] mx-auto text-sm sm:text-base leading-[1.8] mb-10">
-          La prima piattaforma AI all-in-one che gestisce, automatizza e fa crescere il tuo business. 98+ agenti IA, ROI garantito in 90 giorni.
-        </motion.p>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }}
+            className="text-white/55 text-[17px] leading-[1.8] mb-10 max-w-[460px] mx-auto lg:mx-0">
+            La prima piattaforma AI all-in-one che gestisce, automatizza e fa crescere il tuo business. 98+ agenti IA, 25+ settori.
+          </motion.p>
 
-        {/* CTA Buttons */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <motion.button onClick={() => navigate("/demo")} className="group px-8 py-4 rounded-2xl text-primary-foreground font-bold text-sm tracking-wider uppercase flex items-center gap-2 relative overflow-hidden" style={{ background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(30,45%,38%,1))", boxShadow: "0 6px 30px hsla(38,55%,50%,0.3)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-            <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)" }} animate={{ x: ["-200%", "300%"] }} transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
-            <span className="relative z-10 flex items-center gap-2">Scopri i Progetti <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
-          </motion.button>
-          <motion.button onClick={() => scrollTo("pricing")} className="px-8 py-4 rounded-2xl text-white/60 font-semibold text-sm tracking-wide flex items-center gap-2 hover:text-white transition-colors" style={{ border: "1px solid hsla(0,0%,100%,0.1)", background: "hsla(0,0%,100%,0.04)" }} whileHover={{ scale: 1.02 }}>
-            <Play className="w-4 h-4" /> Piani & Prezzi
-          </motion.button>
-        </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4, duration: 0.8 }}
+            className="flex flex-col sm:flex-row gap-3.5 justify-center lg:justify-start">
+            <button onClick={() => navigate("/demo")}
+              className="group px-8 py-4 rounded-full text-white font-semibold text-sm font-heading inline-flex items-center gap-2 transition-all hover:-translate-y-[3px]"
+              style={{ background: "linear-gradient(135deg, #7eb7be, #6c3ce0)", boxShadow: "0 16px 48px rgba(126,183,190,0.25)" }}>
+              Scopri i Progetti →
+            </button>
+            <button onClick={() => document.getElementById("prezzi")?.scrollIntoView({ behavior: "smooth" })}
+              className="px-8 py-4 rounded-full text-white font-semibold text-sm border border-white/[0.14] bg-transparent hover:border-[#7eb7be] hover:text-[#7eb7be] transition-all">
+              Piani & Prezzi
+            </button>
+          </motion.div>
+        </div>
 
-        {/* Phone Carousel */}
-        <motion.div initial={{ opacity: 0, y: 40, scale: 0.92 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 1, duration: 1 }} className="relative flex flex-col items-center">
-          <div className="absolute inset-[-25%] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsla(265,50%,50%,0.12), hsla(168,45%,45%,0.08), transparent 70%)" }} />
+        {/* Right - 5 Phones */}
+        <div className="flex-1 flex justify-center items-center min-h-[300px] lg:min-h-[500px] relative" style={{ perspective: "1600px" }}>
           <AnimatePresence mode="wait">
-            <motion.div key={sectorIdx} className="flex items-end justify-center" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.6 }}>
-              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 5.5, repeat: Infinity, delay: 0.8 }} style={{ marginRight: "-16px", marginBottom: "28px" }}>
-                <PhoneFrame src={screens[1]} alt={`${current.label} 2`} sizeClass="w-[120px] sm:w-[145px] lg:w-[175px]" zIndex={5} />
-              </motion.div>
-              <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity }} style={{ zIndex: 20 }}>
-                <PhoneFrame src={screens[0]} alt={`${current.label} 1`} sizeClass="w-[155px] sm:w-[185px] lg:w-[225px]" zIndex={20} />
-              </motion.div>
-              <motion.div animate={{ y: [0, -7, 0] }} transition={{ duration: 5.8, repeat: Infinity, delay: 1.5 }} style={{ marginLeft: "-16px", marginBottom: "18px" }}>
-                <PhoneFrame src={screens[2]} alt={`${current.label} 3`} sizeClass="w-[125px] sm:w-[150px] lg:w-[180px]" zIndex={8} />
-              </motion.div>
+            <motion.div key={setIdx} className="relative w-full h-full flex justify-center items-center"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8 }}>
+              {currentSet.map((img, i) => {
+                const p = PHONE_LAYOUT[i];
+                const parallaxX = mousePos.x * (i === 2 ? 10 : i === 1 || i === 3 ? 7 : 4);
+                const parallaxY = mousePos.y * (i === 2 ? 10 : i === 1 || i === 3 ? 7 : 4) * 0.5;
+                return (
+                  <motion.div key={i}
+                    className="absolute overflow-hidden"
+                    style={{
+                      width: isMobile ? "130px" : "180px",
+                      borderRadius: isMobile ? "18px" : "26px",
+                      border: `${isMobile ? 3 : 4}px solid rgba(255,255,255,0.08)`,
+                      zIndex: p.z,
+                      boxShadow: "0 30px 80px rgba(0,0,0,0.5)",
+                    }}
+                    initial={{ scale: 0, y: 200, opacity: 0, rotate: p.rot * 2 }}
+                    animate={{
+                      x: isMobile ? p.xm : p.x,
+                      y: isMobile ? p.ym : p.y,
+                      scale: isMobile ? p.sm : p.s,
+                      opacity: 1,
+                      rotate: p.rot,
+                      rotateY: parallaxX,
+                      rotateX: -parallaxY,
+                    }}
+                    transition={{
+                      scale: { delay: 0.8 + i * 0.12, duration: 1.4, type: "spring", stiffness: 60 },
+                      opacity: { delay: 0.8 + i * 0.12, duration: 0.6 },
+                      x: { delay: 0.8 + i * 0.12, duration: 1.4, type: "spring" },
+                      y: { delay: 0.8 + i * 0.12, duration: 1.4, type: "spring" },
+                      rotateY: { duration: 0.6 },
+                      rotateX: { duration: 0.6 },
+                    }}
+                    whileHover={{ scale: (isMobile ? p.sm : p.s) * 1.08, zIndex: 20 }}
+                  >
+                    <img src={img} alt={`Preview ${i}`} className="w-full block" loading="eager" />
+                  </motion.div>
+                );
+              })}
             </motion.div>
           </AnimatePresence>
 
-          {/* Label */}
-          <AnimatePresence mode="wait">
-            <motion.div key={sectorIdx} className="mt-4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
-              <span className="text-[0.65rem] sm:text-[0.75rem] font-heading font-bold tracking-[2px] uppercase text-primary">{current.label}</span>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Dots */}
-          <div className="mt-3 flex items-center gap-1.5 flex-wrap justify-center max-w-[260px]">
-            {HERO_SECTORS.map((_, i) => (
-              <button key={i} onClick={() => setSectorIdx(i)} className={`rounded-full transition-all duration-300 ${i === sectorIdx ? "w-5 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-foreground/15 hover:bg-foreground/25"}`} />
+          {/* Carousel dots */}
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+            {CAROUSEL_SETS.map((_, i) => (
+              <button key={i} onClick={() => setSetIdx(i)}
+                className="w-2 h-2 rounded-full transition-all duration-300"
+                style={{ background: i === setIdx ? "#7eb7be" : "rgba(255,255,255,0.2)", transform: i === setIdx ? "scale(1.4)" : "scale(1)" }} />
             ))}
           </div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div className="mt-12 flex justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
-          <motion.button onClick={() => scrollTo("industries")} className="text-foreground/20 hover:text-foreground/40 transition-colors" animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-            <ArrowDown className="w-5 h-5" />
-          </motion.button>
-        </motion.div>
+        </div>
       </div>
+
+      {/* Scroll cue */}
+      <motion.div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-[3]"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
+        <span className="text-[10px] tracking-[3px] uppercase text-white/20">scroll</span>
+        <motion.div className="w-[1px] h-8" style={{ background: "linear-gradient(#7eb7be, transparent)" }}
+          animate={{ scaleY: [1, 0.4, 1], opacity: [1, 0.2, 1] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+      </motion.div>
     </section>
   );
 }
