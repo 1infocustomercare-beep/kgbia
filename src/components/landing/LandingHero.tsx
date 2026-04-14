@@ -17,7 +17,6 @@ const MOCKUPS = [
 
 const TRUST = ["847+ Imprese Attive", "25+ Settori", "98 Agenti IA", "Garanzia 90 Giorni"];
 
-/* ── Mockup phone ── */
 function MockupPhone({ m, i, total, progress, isMobile }: {
   m: typeof MOCKUPS[0]; i: number; total: number; progress: number; isMobile: boolean;
 }) {
@@ -33,7 +32,7 @@ function MockupPhone({ m, i, total, progress, isMobile }: {
   const eased = 1 - Math.pow(1 - localP, 3);
 
   const x = eased * offset * spreadX;
-  const y = 180 * (1 - eased) + (-Math.abs(offset) * spreadY * eased);
+  const y = 160 * (1 - eased) + (-Math.abs(offset) * spreadY * eased);
   const opacity = Math.min(1, localP * 3);
   const scale = 0.55 + eased * (0.45 - Math.abs(offset) * 0.03);
   const rotate = eased * rot;
@@ -65,7 +64,7 @@ function MockupPhone({ m, i, total, progress, isMobile }: {
         <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[26%] h-[1.5%] bg-white/15 rounded-full z-20" />
       </div>
       <div
-        className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap text-center transition-opacity duration-500"
+        className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap text-center transition-opacity duration-300"
         style={{ opacity: localP > 0.85 ? 1 : 0 }}
       >
         <p className="text-[10px] font-semibold text-white">{m.label}</p>
@@ -80,26 +79,22 @@ export default function LandingHero() {
   const outerRef = useRef<HTMLDivElement>(null);
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 1024;
 
-  /* ── Scroll tracking on the tall outer wrapper ── */
   const { scrollYProgress } = useScroll({
     target: outerRef,
     offset: ["start start", "end end"],
   });
 
-  /* ── Title: cinematic depth on scroll (0→0.2) ── */
-  const titleScale = useTransform(scrollYProgress, [0, 0.2, 0.75, 1], [0.88, 1, 1, 0.95]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.15, 0.8, 1], [0.4, 1, 1, 0.6]);
-  const titleY = useTransform(scrollYProgress, [0, 0.2, 0.75, 1], [40, 0, 0, -30]);
-  const titleBlurVal = useTransform(scrollYProgress, [0, 0.15], [4, 0]);
-  const titleBlurFilter = useTransform(titleBlurVal, v => `blur(${v}px)`);
+  // Title: subtle parallax scale (always visible, never fades out)
+  const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.02, 0.97]);
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, -40]);
 
-  /* ── Mockup fan progress (0.1 → 0.6 of scroll) ── */
+  // Mockup fan: 0→0.7 of scroll
   const [fanProgress, setFanProgress] = useState(0);
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    setFanProgress(Math.max(0, Math.min(1, (v - 0.1) / 0.5)));
+    setFanProgress(Math.max(0, Math.min(1, v / 0.7)));
   });
 
-  /* ── Typing effect ── */
+  // Typing effect
   const [typed, setTyped] = useState("");
   const fullText = "Automatizziamo il tuo business con l'Intelligenza Artificiale.";
   useEffect(() => {
@@ -113,13 +108,9 @@ export default function LandingHero() {
   }, []);
 
   return (
-    /* 
-      Outer wrapper = 280vh tall → creates the scroll runway.
-      Inner sticky div = pinned at top for 180vh of scrolling.
-    */
-    <section ref={outerRef} id="hero" style={{ height: "280vh" }} className="relative">
+    <section ref={outerRef} id="hero" style={{ height: "250vh" }} className="relative">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* ── BG ── */}
+        {/* BG */}
         <div className="absolute inset-0 z-0" style={{
           background: "radial-gradient(ellipse 80% 60% at 50% 20%, rgba(13,13,30,0.95) 0%, #020204 70%)",
         }} />
@@ -130,70 +121,52 @@ export default function LandingHero() {
             maskImage: "radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent)",
           }} />
         </div>
-        {/* Glow */}
         <div className="absolute w-[600px] h-[600px] rounded-full blur-[160px] pointer-events-none z-[1]"
           style={{ background: "radial-gradient(circle, rgba(126,183,190,0.13), transparent 70%)", top: "5%", right: "-10%" }} />
         <div className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none z-[1]"
           style={{ background: "radial-gradient(circle, rgba(108,60,224,0.10), transparent 70%)", bottom: "10%", left: "-8%" }} />
 
-        {/* ── CONTENT ── */}
+        {/* CONTENT — always visible */}
         <div className="relative z-[2] h-full flex flex-col justify-center items-center px-5 pt-16">
-
-          {/* Title block — cinematic depth driven by scroll */}
           <motion.div
             className="text-center max-w-[900px] mx-auto mb-4 lg:mb-8"
-            style={{
-              scale: titleScale,
-              opacity: titleOpacity,
-              y: titleY,
-              filter: titleBlurFilter,
-            }}
+            style={{ scale: titleScale, y: titleY }}
           >
-            {/* Badge */}
             <motion.div
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full mb-7 border border-[rgba(126,183,190,0.25)] bg-[rgba(126,183,190,0.06)] backdrop-blur-sm"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
+              transition={{ delay: 0.3 }}
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#22c55e] animate-pulse" />
-              <span className="text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-bold">
-                Piattaforma AI #1 in Italia
-              </span>
+              <span className="text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-bold">Piattaforma AI #1 in Italia</span>
             </motion.div>
 
-            {/* Headline */}
             <motion.h1
               className="text-[clamp(2.4rem,6vw,5.6rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.02em] mb-5"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
-              <span className="block text-white drop-shadow-[0_2px_20px_rgba(255,255,255,0.1)]">
-                Il Tuo Business.
-              </span>
-              <span className="block bg-gradient-to-r from-[#7eb7be] via-[#9b8ade] to-[#6c3ce0] bg-clip-text text-transparent">
-                Completamente Automatizzato.
-              </span>
+              <span className="block text-white drop-shadow-[0_2px_20px_rgba(255,255,255,0.1)]">Il Tuo Business.</span>
+              <span className="block bg-gradient-to-r from-[#7eb7be] via-[#9b8ade] to-[#6c3ce0] bg-clip-text text-transparent">Completamente Automatizzato.</span>
             </motion.h1>
 
-            {/* Subtitle */}
             <motion.p
               className="text-white/65 text-[clamp(0.95rem,1.8vw,1.2rem)] leading-[1.7] max-w-[580px] mx-auto mb-7 font-light"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.1, duration: 0.6 }}
+              transition={{ delay: 1.1 }}
             >
               {typed}
               <span className="inline-block w-[2px] h-[1em] bg-[#7eb7be] ml-0.5 animate-pulse align-text-bottom" />
             </motion.p>
 
-            {/* CTAs */}
             <motion.div
               className="flex flex-col sm:flex-row gap-3 justify-center"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.6 }}
+              transition={{ delay: 1.4 }}
             >
               <button
                 onClick={() => navigate("/demo")}
@@ -211,12 +184,11 @@ export default function LandingHero() {
               </button>
             </motion.div>
 
-            {/* Trust */}
             <motion.div
               className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.7, duration: 0.5 }}
+              transition={{ delay: 1.7 }}
             >
               {TRUST.map((t) => (
                 <span key={t} className="text-[11px] text-white/40 font-medium tracking-wide flex items-center gap-1.5">
@@ -227,12 +199,9 @@ export default function LandingHero() {
             </motion.div>
           </motion.div>
 
-          {/* ── MOCKUP FAN — scroll-driven, reversible ── */}
+          {/* MOCKUP FAN */}
           <div className="relative w-full max-w-[1100px] mx-auto flex-shrink-0">
-            <div
-              className="relative flex justify-center items-end"
-              style={{ height: isMobile ? "200px" : "340px", perspective: "1800px" }}
-            >
+            <div className="relative flex justify-center items-end" style={{ height: isMobile ? "200px" : "340px", perspective: "1800px" }}>
               {MOCKUPS.map((m, i) => (
                 <MockupPhone key={i} m={m} i={i} total={MOCKUPS.length} progress={fanProgress} isMobile={isMobile} />
               ))}
