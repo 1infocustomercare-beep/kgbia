@@ -52,7 +52,7 @@ function MockupPhone({ m, i, total, progress, isMobile }: {
       <div
         className="relative aspect-[9/19.5] rounded-[18%/8%] border-[2.5px] overflow-hidden"
         style={{
-          borderColor: "rgba(255,255,255,0.12)",
+          borderColor: "rgba(255,255,255,0.1)",
           background: "#0a0a14",
           boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)",
         }}
@@ -94,14 +94,14 @@ export default function LandingHero() {
   });
 
   const [typed, setTyped] = useState("");
-  const fullText = "Automatizziamo il tuo business con l'Intelligenza Artificiale.";
+  const fullText = "Automatizziamo il tuo business con l'Intelligenza Artificiale. App, gestionali e 98 agenti IA — tutto personalizzato per il tuo settore.";
   useEffect(() => {
     let i = 0;
     const timer = setInterval(() => {
       i++;
       setTyped(fullText.slice(0, i));
       if (i >= fullText.length) clearInterval(timer);
-    }, 28);
+    }, 22);
     return () => clearInterval(timer);
   }, []);
 
@@ -116,19 +116,19 @@ export default function LandingHero() {
     <section ref={outerRef} id="hero" style={{ height: sectionHeight }} className="relative">
       <div className="sticky w-full overflow-hidden" style={{ top: stickyTop, height: stickyHeight }}>
         <div className="absolute inset-0 z-0" style={{
-          background: "radial-gradient(ellipse 80% 60% at 50% 20%, rgba(13,13,30,0.95) 0%, #020204 70%)",
+          background: "radial-gradient(ellipse 80% 60% at 50% 20%, rgba(10,12,32,0.95) 0%, #020204 70%)",
         }} />
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0" style={{
-            backgroundImage: "linear-gradient(rgba(126,183,190,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(126,183,190,0.04) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(rgba(201,168,76,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.025) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
             maskImage: "radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent)",
           }} />
         </div>
         <div className="absolute w-[600px] h-[600px] rounded-full blur-[160px] pointer-events-none z-[1]"
-          style={{ background: "radial-gradient(circle, rgba(126,183,190,0.13), transparent 70%)", top: "5%", right: "-10%" }} />
+          style={{ background: "radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%)", top: "5%", right: "-10%" }} />
         <div className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none z-[1]"
-          style={{ background: "radial-gradient(circle, rgba(108,60,224,0.10), transparent 70%)", bottom: "10%", left: "-8%" }} />
+          style={{ background: "radial-gradient(circle, rgba(96,165,250,0.06), transparent 70%)", bottom: "10%", left: "-8%" }} />
 
         <div
           className="relative z-[2] h-full flex flex-col items-center px-5"
@@ -139,13 +139,13 @@ export default function LandingHero() {
             style={{ scale: titleScale, y: titleY }}
           >
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 border border-[rgba(126,183,190,0.25)] bg-[rgba(126,183,190,0.06)] backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 border border-[#c9a84c]/25 bg-[#c9a84c]/5 backdrop-blur-sm"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#22c55e] animate-pulse" />
-              <span className="text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-bold">Piattaforma AI #1 in Italia</span>
+              <span className="text-[11px] tracking-[2.5px] uppercase text-[#c9a84c] font-bold">Piattaforma AI #1 in Italia</span>
             </motion.div>
 
             <motion.h1
@@ -154,18 +154,18 @@ export default function LandingHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
-              <span className="block text-white drop-shadow-[0_2px_20px_rgba(255,255,255,0.1)]">Il Tuo Business.</span>
-              <span className="block bg-gradient-to-r from-[#a6d8df] via-[#b6a7ef] to-[#7d51eb] bg-clip-text text-transparent">Completamente Automatizzato.</span>
+              <span className="block text-white drop-shadow-[0_2px_20px_rgba(255,255,255,0.08)]">Il Tuo Business.</span>
+              <span className="block text-[#c9a84c]">Completamente Automatizzato.</span>
             </motion.h1>
 
             <motion.p
-              className="text-white/78 text-[clamp(1rem,3.9vw,1.2rem)] leading-[1.6] max-w-[580px] mx-auto mb-6 font-light"
+              className="text-white/70 text-[clamp(1rem,3.9vw,1.15rem)] leading-[1.7] max-w-[600px] mx-auto mb-6 font-light"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.1 }}
             >
               {typed}
-              <span className="inline-block w-[2px] h-[1em] bg-[#7eb7be] ml-0.5 animate-pulse align-text-bottom" />
+              <span className="inline-block w-[2px] h-[1em] bg-[#c9a84c] ml-0.5 animate-pulse align-text-bottom" />
             </motion.p>
 
             <motion.div
@@ -176,15 +176,15 @@ export default function LandingHero() {
             >
               <button
                 onClick={() => navigate("/demo")}
-                className="group px-8 py-4 rounded-full text-white font-semibold text-sm font-heading inline-flex items-center justify-center gap-2 transition-all hover:-translate-y-[2px] hover:shadow-[0_20px_60px_rgba(126,183,190,0.35)]"
-                style={{ background: "linear-gradient(135deg, #7eb7be, #6c3ce0)", boxShadow: "0 16px 48px rgba(126,183,190,0.3)" }}
+                className="group px-8 py-4 rounded-full text-black font-bold text-sm font-heading inline-flex items-center justify-center gap-2 transition-all hover:-translate-y-[2px]"
+                style={{ background: "linear-gradient(135deg, #c9a84c, #e8c47a)", boxShadow: "0 16px 48px rgba(201,168,76,0.3)" }}
               >
                 Vedi i Progetti
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </button>
               <button
                 onClick={() => document.getElementById("prezzi")?.scrollIntoView({ behavior: "smooth" })}
-                className="px-8 py-4 rounded-full text-white/90 font-semibold text-sm border border-white/[0.15] hover:border-[#7eb7be]/50 hover:text-white hover:bg-white/[0.03] transition-all"
+                className="px-8 py-4 rounded-full text-white/85 font-semibold text-sm border border-white/[0.12] hover:border-[#c9a84c]/40 hover:text-white transition-all"
               >
                 Scopri i Piani
               </button>
@@ -197,8 +197,8 @@ export default function LandingHero() {
               transition={{ delay: 1.7 }}
             >
               {TRUST.map((t) => (
-                <span key={t} className="text-[11px] text-white/48 font-medium tracking-wide flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#7eb7be]/50" />
+                <span key={t} className="text-[11px] text-white/45 font-medium tracking-wide flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#c9a84c]/50" />
                   {t}
                 </span>
               ))}
