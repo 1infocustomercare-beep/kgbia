@@ -182,8 +182,8 @@ function PortfolioCard({ project, onClick, index }: { project: Project; onClick:
       {/* Info — high contrast text */}
       <div className="px-4 pb-4 pt-3 bg-[#0c0c18]">
         <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-          <span className="px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-white" style={{ background: accent }}>{project.cat}</span>
-          <span className="text-[9px] sm:text-[10px] text-white/50 uppercase tracking-wider">{project.sub}</span>
+          <span className="px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-white" style={{ background: accent }}>{project.cat}</span>
+          <span className="text-[8px] sm:text-[10px] text-white/60 uppercase tracking-wider font-medium">{project.sub}</span>
         </div>
         <h3 className="text-[13px] sm:text-sm font-bold text-white mb-0.5 group-hover:text-[#7eb7be] transition-colors leading-snug">{project.name}</h3>
         <p className="text-[10px] sm:text-[11px] text-white/45 leading-relaxed line-clamp-2">{project.desc}</p>
