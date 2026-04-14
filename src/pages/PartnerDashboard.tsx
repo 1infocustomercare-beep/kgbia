@@ -439,6 +439,7 @@ const PartnerDashboard = () => {
 
   // AI Sector Advisor
   const handleAiAdvisor = async () => {
+    // (AI Advisor logic)
     if (!aiAdvisorQuery.trim()) {
       toast({ title: "Inserisci un input", description: "Scrivi un URL, un profilo Instagram o una descrizione.", variant: "destructive" });
       return;
@@ -471,6 +472,84 @@ const PartnerDashboard = () => {
     } finally {
       setAiAdvisorLoading(false);
     }
+  };
+
+  // ── Lead Scout: search real businesses ──
+  const handleLeadSearch = async () => {
+    if (!leadSearchCity) {
+      toast({ title: "Seleziona una città", variant: "destructive" });
+      return;
+    }
+    setLeadSearchLoading(true);
+    setLeadResults([]);
+    try {
+      const { data, error } = await supabase.functions.invoke("lead-search", {
+        body: { query: leadSearchQuery, city: leadSearchCity, sector: leadSearchSector, mode: "zone", use_google: true },
+      });
+      if (error) throw error;
+      if (data?.success && data.results?.length > 0) {
+        setLeadResults(data.results);
+        toast({ title: `🎯 ${data.results.length} attività trovate`, description: `${leadSearchCity} · ${LEAD_SECTORS.find(s => s.id === leadSearchSector)?.label || leadSearchSector}` });
+      } else {
+        toast({ title: "Nessun risultato", description: "Prova con un'altra città o settore.", variant: "destructive" });
+      }
+    } catch (err: any) {
+      console.error("Lead search error:", err);
+      toast({ title: "Errore ricerca", description: err.message || "Riprova.", variant: "destructive" });
+    } finally {
+      setLeadSearchLoading(false);
+    }
+  };
+
+  // ── Lead Scout: select a lead and sync everything ──
+  const handleSelectLead = (lead: any) => {
+    setSelectedLead(lead);
+    
+    // 1. Sync sector
+    if (leadSearchSector && SECTOR_CARDS.find(c => c.id === leadSearchSector)) {
+      setSelectedProject(leadSearchSector);
+    }
+    
+    // 2. Sync contact info (IG, website)
+    if (lead.instagram) {
+      setTargetIg(lead.instagram.replace("https://instagram.com/", "").replace("https://www.instagram.com/", ""));
+    }
+    if (lead.website) {
+      setTargetWebsite(lead.website);
+    }
+    
+    // 3. Auto-set best channel based on available contact data
+    if (lead.instagram) {
+      setActiveChannel("instagram");
+    } else if (lead.phone) {
+      setActiveChannel("whatsapp");
+    } else if (lead.email) {
+      setActiveChannel("email");
+    } else if (lead.website) {
+      setActiveChannel("site");
+    }
+    
+    // 4. Also populate the AI Advisor query for deeper analysis
+    if (lead.website) {
+      setAiAdvisorQuery(lead.website);
+      setAiAdvisorSource("website");
+    } else if (lead.google_maps_url) {
+      setAiAdvisorQuery(lead.google_maps_url);
+      setAiAdvisorSource("google_maps");
+    } else {
+      setAiAdvisorQuery(lead.name + " " + (lead.city || leadSearchCity));
+      setAiAdvisorSource("text");
+    }
+    
+    // 5. Reset AI generated message so templates refresh
+    setAiGeneratedMessage(null);
+    setMessageVariant(0);
+    
+    // 6. Show confirmation
+    toast({
+      title: `✅ ${lead.name} selezionato`,
+      description: "Settore, canale e contatti sincronizzati. Scorri giù per il messaggio personalizzato.",
+    });
   };
 
   const handleResetDemo = async () => {
