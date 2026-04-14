@@ -1,27 +1,28 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import LandingPremiumPanel from "@/components/landing/LandingPremiumPanel";
 
 const PLANS = [
   {
-    icon: "⚡", name: "Digital Start", price: "€1.997", old: "€2.880", disc: "-31%",
+    name: "Digital Start", price: "€1.997", old: "€2.880", disc: "-31%",
     rate: "oppure €666/mese x3 (TAN 0%)", after: "poi €49/mese · 2% transazioni",
     features: ["App White Label completa", "Menu/Catalogo QR illimitato", "Ordini & Prenotazioni", "Dashboard Analytics base", "Supporto Email dedicato", "Setup & Onboarding guidato"],
     cta: "Inizia con Digital Start", urgency: "Setup gratuito questa settimana", urgencyRed: true,
-    style: "default" as const,
+    style: "default" as const, panelEyebrow: "Launch Plan", panelCode: "01",
   },
   {
-    icon: "🚀", name: "Growth AI", price: "€4.997", old: "€7.200", disc: "-31%",
+    name: "Growth AI", price: "€4.997", old: "€7.200", disc: "-31%",
     rate: "oppure €1.666/mese x3 (TAN 0%)", after: "poi €29/mese · 1% transazioni",
     features: ["Tutto di Digital Start +", "AI Engine completo", "CRM & Fidelizzazione avanzata", "Review Shield", "Push Notification illimitate", "2 Agenti IA inclusi", "Commissioni ridotte 1%"],
     cta: "Scelgo Growth AI", urgency: "Solo 7 posti rimasti", urgencyRed: false,
-    style: "popular" as const,
+    style: "popular" as const, panelEyebrow: "Scale Plan", panelCode: "02",
   },
   {
-    icon: "👑", name: "Empire Domination", price: "€7.997", old: "€14.400", disc: "-44%",
+    name: "Empire Domination", price: "€7.997", old: "€14.400", disc: "-44%",
     rate: "oppure €2.666/mese x3 (TAN 0%)", after: "€0/mese · 0% commissioni · €11/giorno x24 mesi",
     features: ["TUTTO incluso", "ZERO commissioni", "ZERO canone 24 mesi", "5 Agenti IA inclusi", "Multi-lingua illimitato", "GhostManager", "Analytics predittivi IA", "Account Manager VIP 7/7"],
     cta: "Scelgo Empire", urgency: "Risparmia fino a €6.403", urgencyRed: true,
-    style: "gold" as const,
+    style: "gold" as const, panelEyebrow: "Elite Plan", panelCode: "03",
   },
 ];
 
@@ -48,24 +49,41 @@ export default function LandingPricing() {
             const isPop = plan.style === "popular";
             const isGold = plan.style === "gold";
             return (
-              <motion.div key={plan.name}
+              <motion.div
+                key={plan.name}
                 className={`relative rounded-3xl p-8 border transition-all duration-500 hover:-translate-y-1.5 ${
                   isPop ? "border-[rgba(126,183,190,0.25)] md:scale-[1.03]" : isGold ? "border-[rgba(212,168,85,0.25)]" : "border-white/[0.07]"
                 }`}
                 style={{ background: isPop ? "linear-gradient(180deg, rgba(126,183,190,0.04), #0d0d1a)" : "#0d0d1a" }}
-                initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}>
-                
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
                 {isPop && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] tracking-[2px] px-3.5 py-1 rounded-full font-bold text-white"
-                    style={{ background: "linear-gradient(135deg, #7eb7be, #6c3ce0)" }}>PIÙ POPOLARE</div>
+                  <div
+                    className="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] tracking-[2px] px-3.5 py-1 rounded-full font-bold text-white"
+                    style={{ background: "linear-gradient(135deg, #7eb7be, #6c3ce0)" }}
+                  >
+                    PIÙ POPOLARE
+                  </div>
                 )}
                 {isGold && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] tracking-[2px] px-3.5 py-1 rounded-full font-bold text-black"
-                    style={{ background: "linear-gradient(135deg, #d4a855, #e8c47a)" }}>MASSIMO RISPARMIO</div>
+                  <div
+                    className="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] tracking-[2px] px-3.5 py-1 rounded-full font-bold text-black"
+                    style={{ background: "linear-gradient(135deg, #d4a855, #e8c47a)" }}
+                  >
+                    MASSIMO RISPARMIO
+                  </div>
                 )}
 
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-[1.6rem] mb-3 border border-white/[0.08] shadow-lg" style={{ background: isPop ? "linear-gradient(135deg, rgba(126,183,190,0.15), rgba(108,60,224,0.1))" : isGold ? "linear-gradient(135deg, rgba(212,168,85,0.15), rgba(212,168,85,0.05))" : "linear-gradient(135deg, rgba(126,183,190,0.1), rgba(108,60,224,0.08))" }}>{plan.icon}</div>
+                <LandingPremiumPanel
+                  eyebrow={plan.panelEyebrow}
+                  code={plan.panelCode}
+                  title={plan.name}
+                  tone={isGold ? "gold" : isPop ? "violet" : "teal"}
+                />
+
                 <h3 className="text-xl font-heading font-bold mb-3 text-white">{plan.name}</h3>
                 <div className="flex items-baseline gap-2 flex-wrap">
                   <span className="text-[2.4rem] font-extrabold font-heading text-white">{plan.price}</span>
@@ -77,21 +95,29 @@ export default function LandingPricing() {
 
                 <div className="flex flex-col gap-2 my-5">
                   {plan.features.map((f) => (
-                    <div key={f} className="text-xs text-white/70 pl-5 relative before:content-['✓'] before:absolute before:left-0 before:text-[#7eb7be] before:font-bold before:text-[11px]">{f}</div>
+                    <div key={f} className="text-xs text-white/70 pl-5 relative before:content-['✓'] before:absolute before:left-0 before:text-[#7eb7be] before:font-bold before:text-[11px]">
+                      {f}
+                    </div>
                   ))}
                 </div>
 
-                <button onClick={() => navigate("/auth")}
+                <button
+                  onClick={() => navigate("/auth")}
                   className="w-full py-3.5 rounded-full font-semibold text-sm text-center transition-all hover:-translate-y-0.5"
                   style={{
                     background: isGold ? "linear-gradient(135deg, #d4a855, #e8c47a)" : "linear-gradient(135deg, #7eb7be, #6c3ce0)",
                     color: isGold ? "#000" : "#fff",
-                  }}>
+                  }}
+                >
                   {plan.cta}
                 </button>
-                <div className={`text-center text-[11px] mt-2.5 py-1.5 rounded-lg font-semibold ${
-                  plan.urgencyRed ? "bg-[rgba(239,68,68,0.08)] text-red-400" : "bg-[rgba(126,183,190,0.12)] text-[#7eb7be]"
-                }`}>{plan.urgency}</div>
+                <div
+                  className={`text-center text-[11px] mt-2.5 py-1.5 rounded-lg font-semibold ${
+                    plan.urgencyRed ? "bg-[rgba(239,68,68,0.08)] text-red-400" : "bg-[rgba(126,183,190,0.12)] text-[#7eb7be]"
+                  }`}
+                >
+                  {plan.urgency}
+                </div>
               </motion.div>
             );
           })}

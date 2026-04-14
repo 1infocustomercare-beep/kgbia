@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
+import LandingPremiumPanel from "@/components/landing/LandingPremiumPanel";
 
 const FEATURES = [
-  { icon: "📱", title: "App & Web App", desc: "Applicazioni installabili con il TUO brand, dominio e colori. Design premium white-label.", pills: ["White Label", "PWA", "Su misura"] },
-  { icon: "🧠", title: "Intelligenza Artificiale", desc: "98+ agenti IA che automatizzano marketing, gestione clienti, analisi dati e fatturazione.", pills: ["98+ Agenti", "24/7", "Predittivi"] },
-  { icon: "📊", title: "Gestionale Completo", desc: "CRM, prenotazioni, ordini, inventario, staff, fatturazione elettronica, analytics, Stripe.", pills: ["CRM", "Fatturazione", "Stripe"] },
-  { icon: "🚀", title: "Marketing Automatico", desc: "Email, social, WhatsApp auto, review management, SEO — generato dall'IA continuamente.", pills: ["Email", "WhatsApp", "SEO"] },
+  { panelEyebrow: "Platform Suite", panelCode: "01", panelTone: "teal" as const, title: "App & Web App", desc: "Applicazioni installabili con il TUO brand, dominio e colori. Design premium white-label.", pills: ["White Label", "PWA", "Su misura"] },
+  { panelEyebrow: "AI System", panelCode: "02", panelTone: "violet" as const, title: "Intelligenza Artificiale", desc: "98+ agenti IA che automatizzano marketing, gestione clienti, analisi dati e fatturazione.", pills: ["98+ Agenti", "24/7", "Predittivi"] },
+  { panelEyebrow: "Business Ops", panelCode: "03", panelTone: "slate" as const, title: "Gestionale Completo", desc: "CRM, prenotazioni, ordini, inventario, staff, fatturazione elettronica, analytics, Stripe.", pills: ["CRM", "Fatturazione", "Stripe"] },
+  { panelEyebrow: "Growth Engine", panelCode: "04", panelTone: "gold" as const, title: "Marketing Automatico", desc: "Email, social, WhatsApp auto, review management, SEO — generato dall'IA continuamente.", pills: ["Email", "WhatsApp", "SEO"] },
 ];
 
 export default function LandingServices() {
@@ -23,20 +24,33 @@ export default function LandingServices() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {FEATURES.map((f, i) => (
-            <motion.div key={f.title}
+            <motion.div
+              key={f.title}
               className="relative overflow-hidden rounded-3xl p-8 text-left border border-white/[0.07] transition-all duration-500 hover:-translate-y-1.5 hover:border-white/[0.14] group"
               style={{ background: "#0d0d1a" }}
-              initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.6 }}>
-              <div className="absolute top-0 left-0 right-0 h-[2px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"
-                style={{ background: "linear-gradient(90deg, #7eb7be, #6c3ce0)" }} />
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-[1.6rem] mb-4 border border-white/[0.08] shadow-lg" style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.1), rgba(108,60,224,0.08))" }}>{f.icon}</div>
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.6 }}
+            >
+              <div
+                className="absolute top-0 left-0 right-0 h-[2px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"
+                style={{ background: "linear-gradient(90deg, #7eb7be, #6c3ce0)" }}
+              />
+
+              <LandingPremiumPanel eyebrow={f.panelEyebrow} code={f.panelCode} title={f.title} tone={f.panelTone} />
+
               <h3 className="text-lg font-heading font-bold mb-2 text-white">{f.title}</h3>
               <p className="text-[13px] text-white/55 leading-[1.7] mb-3">{f.desc}</p>
               <div className="flex gap-1.5 flex-wrap">
                 {f.pills.map((p) => (
-                  <span key={p} className="text-[10px] px-2.5 py-1 rounded-lg font-semibold border border-[rgba(126,183,190,0.1)]"
-                    style={{ background: "rgba(126,183,190,0.12)", color: "#7eb7be" }}>{p}</span>
+                  <span
+                    key={p}
+                    className="text-[10px] px-2.5 py-1 rounded-lg font-semibold border border-[rgba(126,183,190,0.1)]"
+                    style={{ background: "rgba(126,183,190,0.12)", color: "#7eb7be" }}
+                  >
+                    {p}
+                  </span>
                 ))}
               </div>
             </motion.div>
