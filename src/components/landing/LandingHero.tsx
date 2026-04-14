@@ -162,7 +162,6 @@ export default function LandingHero() {
                 scale: titleScale,
                 opacity: titleOpacity,
                 perspective: "1200px",
-                willChange: "transform, opacity, filter",
               }}
             >
               <motion.div style={{ translateZ: titleZ, filter: useTransform(titleBlur, v => `blur(${v}px)`) }}>
