@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-mot
 import { useNavigate } from "react-router-dom";
 
 const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const DESKTOP_HEADER_OFFSET = 76;
 const MOBILE_HEADER_OFFSET = 84;
 
 const MOCKUPS = [
@@ -23,19 +24,20 @@ function MockupPhone({ m, i, total, progress, isMobile }: {
 }) {
   const center = (total - 1) / 2;
   const offset = i - center;
-  const spreadX = isMobile ? 32 : 76;
-  const spreadY = isMobile ? 2 : 8;
-  const rot = offset * (isMobile ? 3 : 5.5);
-  const phoneW = isMobile ? 72 : 150;
+  const spreadX = isMobile ? 34 : 92;
+  const spreadY = isMobile ? 4 : 14;
+  const rot = offset * (isMobile ? 4 : 7);
+  const phoneW = isMobile ? 84 : 164;
 
   const stagger = Math.abs(offset) * 0.1;
   const localP = Math.max(0, Math.min(1, (progress - stagger) / (1 - stagger)));
   const eased = 1 - Math.pow(1 - localP, 3);
 
   const x = eased * offset * spreadX;
-  const y = 150 * (1 - eased) + (-Math.abs(offset) * spreadY * eased);
-  const opacity = Math.min(1, localP * 3);
-  const scale = 0.58 + eased * (0.42 - Math.abs(offset) * 0.028);
+  const y = (isMobile ? 110 : 140) * (1 - eased) + (-Math.abs(offset) * spreadY * eased);
+  const depth = (isMobile ? 18 : 46) - Math.abs(offset) * (isMobile ? 5 : 10);
+  const opacity = Math.min(1, (isMobile ? 0.18 : 0.24) + localP * 0.74 + (i === Math.round(center) ? 0.12 : 0));
+  const scale = 0.62 + eased * (0.36 - Math.abs(offset) * 0.024);
   const rotate = eased * rot;
 
   return (
@@ -44,7 +46,7 @@ function MockupPhone({ m, i, total, progress, isMobile }: {
       style={{
         width: phoneW,
         zIndex: total - Math.abs(offset) + (i === Math.round(center) ? 10 : 0),
-        transform: `translateX(${x}px) translateY(${y}px) rotate(${rotate}deg) scale(${scale})`,
+        transform: `translateX(${x}px) translateY(${y}px) translateZ(${depth}px) rotate(${rotate}deg) scale(${scale})`,
         opacity,
         willChange: "transform, opacity",
       }}
@@ -59,14 +61,14 @@ function MockupPhone({ m, i, total, progress, isMobile }: {
       >
         <div className="absolute top-[3%] left-1/2 -translate-x-1/2 w-[28%] h-[3%] bg-black rounded-full z-20" />
         <div className="absolute inset-[2px] rounded-[16%/7%] overflow-hidden">
-          <img src={m.src} alt={m.label} loading="eager" className="w-full h-full object-cover object-top" />
+          <img src={m.src} alt={m.label} loading={i < 3 ? "eager" : "lazy"} decoding="async" className="w-full h-full object-cover object-top" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.05] to-transparent pointer-events-none" />
         <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[26%] h-[1.5%] bg-white/15 rounded-full z-20" />
       </div>
       <div
         className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap text-center transition-opacity duration-300"
-        style={{ opacity: localP > 0.85 ? 1 : 0 }}
+        style={{ opacity: localP > 0.56 ? 1 : 0 }}
       >
         <p className="text-[10px] font-semibold text-white">{m.label}</p>
         <p className="text-[8px] text-white/50">{m.cat}</p>
@@ -85,12 +87,19 @@ export default function LandingHero() {
     offset: ["start start", "end end"],
   });
 
-  const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.02, 0.97]);
-  const titleY = useTransform(scrollYProgress, [0, 1], [0, -24]);
+  const titleScale = useTransform(scrollYProgress, [0, 0.2, 0.58, 1], [1, 1.03, 0.93, 0.84]);
+  const titleY = useTransform(scrollYProgress, [0, 0.3, 0.65, 1], [0, -24, -110, -170]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.72, 1], [1, 0.96, 0.74]);
+  const titleFilter = useTransform(scrollYProgress, [0, 0.82, 1], ["blur(0px)", "blur(0px)", "blur(1.8px)"]);
+  const titleGlowScale = useTransform(scrollYProgress, [0, 0.45, 1], [1, 1.08, 1.16]);
+  const titleGlowOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [0.42, 0.32, 0.16]);
+  const stageY = useTransform(scrollYProgress, [0, 0.28, 0.85, 1], [46, 6, -30, -54]);
+  const stageScale = useTransform(scrollYProgress, [0, 0.3, 1], [0.92, 1, 1.06]);
+  const stageOpacity = useTransform(scrollYProgress, [0, 0.12, 1], [0.9, 1, 1]);
 
   const [fanProgress, setFanProgress] = useState(0);
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    setFanProgress(Math.max(0, Math.min(1, v / (isMobile ? 0.82 : 0.7))));
+    setFanProgress(Math.max(0, Math.min(1, v / (isMobile ? 0.74 : 0.58))));
   });
 
   const [typed, setTyped] = useState("");
@@ -105,12 +114,13 @@ export default function LandingHero() {
     return () => clearInterval(timer);
   }, []);
 
-  const sectionHeight = isMobile ? "190vh" : "250vh";
-  const stickyTop = isMobile ? `${MOBILE_HEADER_OFFSET}px` : "0px";
-  const stickyHeight = isMobile ? `calc(100svh - ${MOBILE_HEADER_OFFSET}px)` : "100vh";
-  const contentTopPadding = isMobile ? "0.75rem" : "4rem";
-  const contentBottomPadding = isMobile ? "2rem" : "0px";
-  const mockupHeight = isMobile ? "190px" : "340px";
+  const headerOffset = isMobile ? MOBILE_HEADER_OFFSET : DESKTOP_HEADER_OFFSET;
+  const sectionHeight = isMobile ? "220svh" : "320vh";
+  const stickyTop = `${headerOffset}px`;
+  const stickyHeight = `calc(100svh - ${headerOffset}px)`;
+  const headlineTop = isMobile ? "clamp(0.5rem, 2vh, 1rem)" : "clamp(1.5rem, 4vh, 3rem)";
+  const stageBottom = isMobile ? "clamp(0.5rem, 3vh, 1rem)" : "clamp(1.5rem, 5vh, 3rem)";
+  const mockupHeight = isMobile ? "240px" : "420px";
 
   return (
     <section ref={outerRef} id="hero" style={{ height: sectionHeight }} className="relative">
@@ -130,14 +140,20 @@ export default function LandingHero() {
         <div className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none z-[1]"
           style={{ background: "radial-gradient(circle, rgba(108,60,224,0.10), transparent 70%)", bottom: "10%", left: "-8%" }} />
 
-        <div
-          className="relative z-[2] h-full flex flex-col items-center px-5"
-          style={{ paddingTop: contentTopPadding, paddingBottom: contentBottomPadding, justifyContent: isMobile ? "space-between" : "center" }}
-        >
+        <div className="relative z-[2] h-full w-full max-w-[1280px] mx-auto px-5">
           <motion.div
-            className="text-center max-w-[900px] mx-auto mb-4 lg:mb-8"
-            style={{ scale: titleScale, y: titleY }}
+            className="absolute left-1/2 -translate-x-1/2 w-full max-w-[920px] text-center"
+            style={{ top: headlineTop, scale: titleScale, y: titleY, opacity: titleOpacity, filter: titleFilter }}
           >
+            <motion.div
+              aria-hidden
+              className="absolute inset-x-[8%] top-[8%] h-[62%] rounded-full blur-[42px] pointer-events-none -z-10"
+              style={{
+                opacity: titleGlowOpacity,
+                scale: titleGlowScale,
+                background: "linear-gradient(135deg, rgba(126,183,190,0.26), rgba(108,60,224,0.22), rgba(255,255,255,0.06))",
+              }}
+            />
             <motion.div
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 border border-[rgba(126,183,190,0.25)] bg-[rgba(126,183,190,0.06)] backdrop-blur-sm"
               initial={{ opacity: 0, y: 16 }}
@@ -149,7 +165,7 @@ export default function LandingHero() {
             </motion.div>
 
             <motion.h1
-              className="text-[clamp(2.2rem,8vw,5.6rem)] font-heading font-extrabold leading-[0.94] tracking-[-0.03em] mb-4"
+              className="text-[clamp(2.4rem,7vw,5rem)] font-heading font-extrabold leading-[0.88] tracking-[-0.04em] mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
@@ -159,7 +175,7 @@ export default function LandingHero() {
             </motion.h1>
 
             <motion.p
-              className="text-white/78 text-[clamp(1rem,3.9vw,1.2rem)] leading-[1.6] max-w-[580px] mx-auto mb-6 font-light"
+              className="text-white/88 text-[clamp(1rem,3.4vw,1.18rem)] leading-[1.6] max-w-[580px] mx-auto mb-6 font-light"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.1 }}
@@ -205,14 +221,25 @@ export default function LandingHero() {
             </motion.div>
           </motion.div>
 
-          <div className="relative w-full max-w-[1100px] mx-auto flex-shrink-0">
-            <div className="relative flex justify-center items-end" style={{ height: mockupHeight, perspective: "1800px" }}>
+          <motion.div
+            className="absolute left-1/2 -translate-x-1/2 w-full max-w-[1180px]"
+            style={{ bottom: stageBottom, y: stageY, scale: stageScale, opacity: stageOpacity }}
+          >
+            <div
+              className="absolute inset-x-[8%] bottom-[8%] h-[30%] rounded-full blur-[56px] pointer-events-none"
+              style={{ background: "radial-gradient(circle, rgba(126,183,190,0.2) 0%, rgba(108,60,224,0.18) 42%, transparent 74%)" }}
+            />
+            <div
+              className="absolute inset-x-[5%] bottom-[3%] h-[62%] rounded-[38px] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] backdrop-blur-[6px] pointer-events-none"
+              style={{ boxShadow: "0 40px 120px rgba(0,0,0,0.45)" }}
+            />
+            <div className="relative flex justify-center items-end overflow-visible" style={{ height: mockupHeight, perspective: "2200px", transformStyle: "preserve-3d" }}>
               {MOCKUPS.map((m, i) => (
                 <MockupPhone key={i} m={m} i={i} total={MOCKUPS.length} progress={fanProgress} isMobile={isMobile} />
               ))}
             </div>
-            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#020204] to-transparent z-[20] pointer-events-none" />
-          </div>
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#020204] via-[#020204]/80 to-transparent z-[20] pointer-events-none" />
+          </motion.div>
         </div>
       </div>
     </section>
