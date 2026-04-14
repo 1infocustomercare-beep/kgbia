@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { ThemeProvider } from "next-themes";
 import type { ErrorInfo, ReactNode } from 'react';
 import UnifiedIntro from "@/components/UnifiedIntro";
+import LandingPage from "@/pages/LandingPage";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -44,12 +45,11 @@ const isConstrainedNetwork = () => {
 // Keep cinematic intro, but never trap users on splash
 const INTRO_FAILSAFE_MS = IS_MOBILE ? 8000 : 9000;
 const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
-// Skip intro only on client/demo routes where branded business splash should appear immediately
+// Skip intro on landing and on client/demo routes where content must appear immediately
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
-  /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding)/.test(window.location.pathname);
-
-const loadIndex = () => import("./pages/Index");
-const loadLandingPage = () => import("./pages/LandingPage");
+  (window.location.pathname === "/" ||
+    window.location.pathname === "/home" ||
+    /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding)/.test(window.location.pathname));
 
 const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 25000 : 25000;
 
@@ -165,8 +165,6 @@ const preloadRoute = async (importer: () => Promise<unknown>) => {
 };
 
 // Lazy-loaded pages for code splitting
-const Index = lazy(() => importWithRetry(loadIndex));
-const LandingPage = lazy(() => importWithRetry(loadLandingPage));
 const RestaurantPage = lazy(() => importWithRetry(() => import("./pages/RestaurantPage")));
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
@@ -466,17 +464,7 @@ function App() {
       return;
     }
 
-    if (path === "/") {
-      void preloadRoute(loadIndex);
-      deferredPreload = window.setTimeout(() => {
-        void preloadRoute(loadLandingPage);
-      }, 900);
-    } else if (path === "/home") {
-      void preloadRoute(loadLandingPage);
-      deferredPreload = window.setTimeout(() => {
-        void preloadRoute(loadIndex);
-      }, 900);
-    } else if (path.startsWith("/r/")) {
+    if (path.startsWith("/r/")) {
       void preloadRoute(() => import("./pages/RestaurantPage"));
     } else if (path.startsWith("/admin")) {
       void preloadRoute(() => import("./pages/AdminLogin"));
@@ -545,8 +533,8 @@ function App() {
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
                       {/* Public routes */}
-                      <Route path="/" element={<Index />} />
-                      <Route path="/index" element={<Index />} />
+                      <Route path="/" element={<LandingPage />} />
+                      <Route path="/index" element={<LandingPage />} />
                       <Route path="/home" element={<LandingPage />} />
                       <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/home#pricing" replace />} />
