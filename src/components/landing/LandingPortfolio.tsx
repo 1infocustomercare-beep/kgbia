@@ -194,13 +194,8 @@ function PortfolioCard({ project, onClick, index }: { project: Project; onClick:
 function ProjectDetail({ project, onClose }: { project: Project; onClose: () => void }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [showDesktop, setShowDesktop] = useState(false);
-  const galleryRef = useRef<HTMLDivElement>(null);
   const accent = CAT_COLORS[project.cat] || "#7eb7be";
   const screens = showDesktop && project.desktopScreens?.length ? project.desktopScreens : project.screens;
-
-  const scrollGallery = useCallback((dir: number) => {
-    galleryRef.current?.scrollBy({ left: dir * 160, behavior: "smooth" });
-  }, []);
 
   return (
     <motion.div
