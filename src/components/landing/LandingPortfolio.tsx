@@ -259,38 +259,41 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
           </div>
         </div>
 
-        {/* ALL SCREENS gallery */}
+        {/* ALL SCREENS gallery — grid wrap, no overflow */}
         {screens.length > 1 && (
           <div className="max-w-5xl mx-auto px-4 sm:px-8 pb-8">
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-3 mb-4">
               <span className="text-[10px] font-bold text-white/30 uppercase tracking-[3px]">All Screens — {screens.length}</span>
               <div className="flex-1 h-px bg-white/[0.06]" />
-              <button onClick={() => scrollGallery(-1)} className="w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center text-white/40 hover:text-white transition"><ChevronLeft className="w-3.5 h-3.5" /></button>
-              <button onClick={() => scrollGallery(1)} className="w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center text-white/40 hover:text-white transition"><ChevronRight className="w-3.5 h-3.5" /></button>
             </div>
 
-            {/* Horizontal scrollable gallery — contained */}
-            <div
-              ref={galleryRef}
-              className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 snap-x snap-mandatory"
-              style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
-            >
+            {/* Grid that wraps — all screens visible */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
               {screens.map((screen, i) => (
                 <button
                   key={`${showDesktop}-${i}`}
                   onClick={() => setActiveIdx(i)}
-                  className={`flex-shrink-0 snap-start rounded-xl overflow-hidden transition-all duration-300 ${
-                    i === activeIdx
-                      ? "ring-2 ring-[#7eb7be] scale-[1.02]"
-                      : "opacity-40 hover:opacity-70"
+                  className={`group relative transition-all duration-300 ${
+                    i === activeIdx ? "scale-[1.03] z-10" : "opacity-50 hover:opacity-80"
                   }`}
                 >
-                  <img
-                    src={screen}
-                    alt={`Screen ${i + 1}`}
-                    loading="lazy"
-                    className="w-[70px] sm:w-[90px] aspect-[9/19.5] object-cover object-top rounded-xl"
-                  />
+                  {/* iPhone frame */}
+                  <div className={`relative aspect-[9/19.5] rounded-[18%/8%] border-[2px] overflow-hidden transition-all duration-300 ${
+                    i === activeIdx ? "border-[#7eb7be] shadow-lg shadow-[#7eb7be]/20" : "border-[#2a2a3a] hover:border-white/20"
+                  }`} style={{ background: "#0a0a14" }}>
+                    {/* Dynamic island */}
+                    <div className="absolute top-[3%] left-1/2 -translate-x-1/2 w-[28%] h-[3%] bg-black rounded-full z-20" />
+                    {/* Screen */}
+                    <div className="absolute inset-[2px] rounded-[16%/7%] overflow-hidden">
+                      <img src={screen} alt={`Screen ${i + 1}`} loading="lazy" className="w-full h-full object-cover object-top" />
+                    </div>
+                    {/* Glass reflection */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] to-transparent pointer-events-none" />
+                    {/* Home indicator */}
+                    <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[26%] h-[1.5%] bg-white/15 rounded-full z-20" />
+                  </div>
+                  {/* Label */}
+                  <p className="text-[8px] sm:text-[9px] text-white/30 text-center mt-1.5 font-medium">{i + 1}</p>
                 </button>
               ))}
             </div>
