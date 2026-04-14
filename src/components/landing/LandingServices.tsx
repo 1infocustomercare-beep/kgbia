@@ -30,7 +30,7 @@ export default function LandingServices() {
               viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.6 }}>
               <div className="absolute top-0 left-0 right-0 h-[2px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"
                 style={{ background: "linear-gradient(90deg, #7eb7be, #6c3ce0)" }} />
-              <div className="text-[2.2rem] mb-4">{f.icon}</div>
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-[1.6rem] mb-4 border border-white/[0.08] shadow-lg" style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.1), rgba(108,60,224,0.08))" }}>{f.icon}</div>
               <h3 className="text-lg font-heading font-bold mb-2 text-white">{f.title}</h3>
               <p className="text-[13px] text-white/55 leading-[1.7] mb-3">{f.desc}</p>
               <div className="flex gap-1.5 flex-wrap">

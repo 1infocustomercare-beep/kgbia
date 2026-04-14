@@ -35,7 +35,7 @@ export default function LandingTeamContact() {
                 style={{ background: "#0d0d1a" }}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}>
-                <div className="text-4xl mb-3">{t.emoji}</div>
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-[1.8rem] mb-3 mx-auto border border-white/[0.08] shadow-lg" style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.1), rgba(108,60,224,0.08))" }}>{t.emoji}</div>
                 <h3 className="font-heading font-bold text-sm text-white mb-1">{t.name}</h3>
                 <p className="text-[11px] text-white/55">{t.role}</p>
               </motion.div>
@@ -67,7 +67,7 @@ export default function LandingTeamContact() {
                 style={{ background: "#0d0d1a" }}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}>
-                <div className="text-3xl mb-3">{c.icon}</div>
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-[1.5rem] mb-3 mx-auto border border-white/[0.08] shadow-lg" style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.1), rgba(108,60,224,0.08))" }}>{c.icon}</div>
                 <h3 className="font-heading font-bold text-sm text-white mb-1">{c.label}</h3>
                 <p className="text-xs text-[#7eb7be]">{c.value}</p>
               </motion.a>

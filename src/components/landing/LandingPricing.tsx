@@ -65,7 +65,7 @@ export default function LandingPricing() {
                     style={{ background: "linear-gradient(135deg, #d4a855, #e8c47a)" }}>MASSIMO RISPARMIO</div>
                 )}
 
-                <div className="text-[2.2rem] mb-2">{plan.icon}</div>
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-[1.6rem] mb-3 border border-white/[0.08] shadow-lg" style={{ background: isPop ? "linear-gradient(135deg, rgba(126,183,190,0.15), rgba(108,60,224,0.1))" : isGold ? "linear-gradient(135deg, rgba(212,168,85,0.15), rgba(212,168,85,0.05))" : "linear-gradient(135deg, rgba(126,183,190,0.1), rgba(108,60,224,0.08))" }}>{plan.icon}</div>
                 <h3 className="text-xl font-heading font-bold mb-3 text-white">{plan.name}</h3>
                 <div className="flex items-baseline gap-2 flex-wrap">
                   <span className="text-[2.4rem] font-extrabold font-heading text-white">{plan.price}</span>
