@@ -1,28 +1,15 @@
-const ITEMS = [
-  "Crittografia AES-256",
-  "PWA Certified",
-  "GDPR Compliant",
-  "99.9% Uptime",
-  "98 Agenti IA",
-  "100% Made in Italy",
-  "White Label",
-  "25+ Settori",
-  "ROI Garantito 90gg",
-  "Zero Costi Nascosti",
-  "Stripe Connect",
-  "Fatturazione Elettronica",
-];
+const ITEMS = "Stripe Connect · Crittografia AES-256 · PWA Certified · GDPR Compliant · 99.9% Uptime · 98 Agenti IA Autonomi · 100% Made in Italy · White Label · 25+ Settori Verticali · Operativo in 24h · ROI Garantito 90 Giorni · Zero Costi Nascosti";
 
 export default function LandingTicker() {
-  const text = ITEMS.join("  ·  ");
   return (
-    <div className="relative h-14 flex items-center overflow-hidden" style={{ background: "linear-gradient(90deg, #0a0c1a, #0f1128, #0a0c1a)" }}>
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#c9a84c]/25 to-transparent" />
-      <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#c9a84c]/15 to-transparent" />
-      <div className="relative flex whitespace-nowrap animate-[mqScroll_50s_linear_infinite]">
+    <div className="relative h-12 flex items-center overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #050510, #080818, #050510)" }} />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#7eb7be]/10 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#6c3ce0]/10 to-transparent" />
+      <div className="relative flex whitespace-nowrap animate-[mqScroll_40s_linear_infinite]">
         {[0, 1, 2].map((k) => (
-          <span key={k} className="text-[11px] tracking-[4px] text-[#c9a84c]/40 uppercase font-bold pr-8">
-            {text}  ·  
+          <span key={k} className="text-[10px] tracking-[3px] text-white/[0.15] uppercase font-semibold pr-10">
+            {ITEMS} ·{" "}
           </span>
         ))}
       </div>
