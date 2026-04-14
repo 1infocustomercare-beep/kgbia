@@ -325,7 +325,11 @@ export default function LandingPortfolio() {
 
   return (
     <>
-      <section id="portfolio" className="py-14 sm:py-20 lg:py-28" style={{ background: "linear-gradient(180deg, #020204 0%, #0a0a16 50%, #020204 100%)" }}>
+      <section id="portfolio" className="relative py-14 sm:py-20 lg:py-28 overflow-hidden">
+        {/* Premium background */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #060614 0%, #0c0c28 30%, #0e0e2c 50%, #080818 100%)" }} />
+        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(ellipse 60% 40% at 50% 30%, rgba(126,183,190,0.04) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 50% 70%, rgba(108,60,224,0.03) 0%, transparent 60%)" }} />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#7eb7be]/15 to-transparent" />
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
           {/* Header */}
           <motion.div className="mb-6 sm:mb-10" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>

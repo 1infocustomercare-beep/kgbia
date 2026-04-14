@@ -34,15 +34,28 @@ export default function LandingSectors() {
   const current = SECTORS[active];
 
   return (
-    <section id="settori" className="py-16 lg:py-24" style={{ background: "#020204" }}>
-      <div className="max-w-[1320px] mx-auto px-5 text-center">
-        <span className="inline-flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-semibold mb-5">
-          <span className="w-5 h-[1.5px] bg-[#7eb7be]" />SETTORI VERTICALI
+    <section id="settori" className="relative py-20 lg:py-28 overflow-hidden">
+      {/* Premium background */}
+      <div className="absolute inset-0" style={{
+        background: "linear-gradient(180deg, #08081a 0%, #0e0e24 30%, #0a0a1c 70%, #060612 100%)",
+      }} />
+      <div className="absolute inset-0" style={{
+        backgroundImage: "radial-gradient(ellipse 50% 50% at 20% 80%, rgba(126,183,190,0.05) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 80% 20%, rgba(108,60,224,0.04) 0%, transparent 60%)",
+      }} />
+      <div className="absolute inset-0" style={{
+        backgroundImage: "linear-gradient(rgba(126,183,190,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(126,183,190,0.015) 1px, transparent 1px)",
+        backgroundSize: "80px 80px",
+      }} />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+
+      <div className="relative z-[1] max-w-[1320px] mx-auto px-5 text-center">
+        <span className="inline-flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-bold mb-5">
+          <span className="w-6 h-[2px] bg-gradient-to-r from-[#7eb7be] to-transparent" />SETTORI VERTICALI
         </span>
-        <h2 className="text-[clamp(2rem,4vw,3.2rem)] font-heading font-bold mb-2 text-white">
+        <h2 className="text-[clamp(2rem,4vw,3.2rem)] font-heading font-bold mb-3 text-white">
           Una Piattaforma. <span className="bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">Ogni Settore Coperto.</span>
         </h2>
-        <p className="text-white/45 max-w-[580px] mx-auto text-[15px] leading-[1.7] mb-10">
+        <p className="text-white/55 max-w-[580px] mx-auto text-[15px] leading-[1.7] mb-10">
           App, siti web, gestionali e automazioni IA — costruiti su misura per il tuo tipo di business.
         </p>
 
@@ -54,8 +67,8 @@ export default function LandingSectors() {
               onClick={() => setActive(i)}
               className={`px-4 py-2 rounded-full text-[11px] font-semibold font-heading transition-all border ${
                 i === active
-                  ? "bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] border-transparent text-white shadow-lg shadow-[#7eb7be]/15"
-                  : "bg-transparent border-white/[0.06] text-white/40 hover:border-[#7eb7be]/40 hover:text-white/70"
+                  ? "bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] border-transparent text-white shadow-lg shadow-[#7eb7be]/20"
+                  : "bg-white/[0.02] border-white/[0.08] text-white/50 hover:border-[#7eb7be]/40 hover:text-white/80"
               }`}
             >
               {s.name}
@@ -75,10 +88,10 @@ export default function LandingSectors() {
           >
             {/* Phone mockup */}
             <div className="relative">
-              <div className="absolute -inset-8 bg-gradient-to-br from-[#7eb7be]/10 to-[#6c3ce0]/10 rounded-full blur-3xl" />
+              <div className="absolute -inset-10 bg-gradient-to-br from-[#7eb7be]/12 to-[#6c3ce0]/10 rounded-full blur-3xl" />
               <div
                 className="relative w-[180px] sm:w-[200px] aspect-[9/19.5] rounded-[22%/10%] border-[2.5px] overflow-hidden"
-                style={{ borderColor: "rgba(255,255,255,0.1)", background: "#0a0a14", boxShadow: "0 24px 64px rgba(0,0,0,0.5)" }}
+                style={{ borderColor: "rgba(255,255,255,0.12)", background: "#0a0a14", boxShadow: "0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)" }}
               >
                 <div className="absolute top-[3%] left-1/2 -translate-x-1/2 w-[28%] h-[3%] bg-black rounded-full z-20" />
                 <div className="absolute inset-[2px] rounded-[20%/9%] overflow-hidden">
@@ -91,11 +104,11 @@ export default function LandingSectors() {
 
             {/* Info */}
             <div className="max-w-[380px] text-left">
-              <h3 className="text-xl sm:text-2xl font-heading font-bold mb-2 text-white">{current.name}</h3>
-              <p className="text-white/45 text-sm leading-[1.7] mb-5">{current.desc}</p>
+              <h3 className="text-xl sm:text-2xl font-heading font-bold mb-3 text-white">{current.name}</h3>
+              <p className="text-white/60 text-sm leading-[1.8] mb-5">{current.desc}</p>
               <button
                 onClick={() => navigate("/demo")}
-                className="px-6 py-2.5 rounded-full text-white font-semibold text-xs transition-all hover:-translate-y-[1px]"
+                className="px-6 py-2.5 rounded-full text-white font-semibold text-xs transition-all hover:-translate-y-[1px] hover:shadow-lg hover:shadow-[#7eb7be]/20"
                 style={{ background: "linear-gradient(135deg, #7eb7be, #6c3ce0)" }}
               >
                 Vedi Demo del Settore →
