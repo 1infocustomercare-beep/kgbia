@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { ThemeProvider } from "next-themes";
 import type { ErrorInfo, ReactNode } from 'react';
 import UnifiedIntro from "@/components/UnifiedIntro";
+import LandingPage from "@/pages/LandingPage";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -49,8 +50,6 @@ const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
   (window.location.pathname === "/" ||
     window.location.pathname === "/home" ||
     /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding)/.test(window.location.pathname));
-
-const loadLandingPage = () => import("./pages/LandingPage");
 
 const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 25000 : 25000;
 
@@ -166,7 +165,6 @@ const preloadRoute = async (importer: () => Promise<unknown>) => {
 };
 
 // Lazy-loaded pages for code splitting
-const LandingPage = lazy(() => importWithRetry(loadLandingPage));
 const RestaurantPage = lazy(() => importWithRetry(() => import("./pages/RestaurantPage")));
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
@@ -466,9 +464,7 @@ function App() {
       return;
     }
 
-    if (path === "/" || path === "/home") {
-      void preloadRoute(loadLandingPage);
-    } else if (path.startsWith("/r/")) {
+    if (path.startsWith("/r/")) {
       void preloadRoute(() => import("./pages/RestaurantPage"));
     } else if (path.startsWith("/admin")) {
       void preloadRoute(() => import("./pages/AdminLogin"));
