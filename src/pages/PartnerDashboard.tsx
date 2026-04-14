@@ -255,6 +255,27 @@ const PartnerDashboard = () => {
     demo_path?: string;
   } | null>(null);
 
+  // ── Inline Lead Scout state ──
+  const [showLeadScout, setShowLeadScout] = useState(false);
+  const [leadSearchQuery, setLeadSearchQuery] = useState("");
+  const [leadSearchCity, setLeadSearchCity] = useState("Roma");
+  const [leadSearchSector, setLeadSearchSector] = useState("food");
+  const [leadSearchLoading, setLeadSearchLoading] = useState(false);
+  const [leadResults, setLeadResults] = useState<any[]>([]);
+  const [selectedLead, setSelectedLead] = useState<any | null>(null);
+
+  const LEAD_CITIES = ["Roma", "Milano", "Napoli", "Torino", "Firenze", "Bologna", "Palermo", "Genova", "Bari", "Catania", "Verona", "Padova", "Brescia", "Parma", "Modena", "Reggio Emilia", "Perugia", "Trieste", "Cagliari", "Salerno", "Caserta", "Avellino", "Benevento", "Latina"];
+  const LEAD_SECTORS = [
+    { id: "food", label: "Ristorazione" }, { id: "beauty", label: "Beauty & Wellness" },
+    { id: "ncc", label: "NCC / Transfer" }, { id: "fitness", label: "Fitness & Palestre" },
+    { id: "healthcare", label: "Healthcare" }, { id: "retail", label: "Negozi & Retail" },
+    { id: "hospitality", label: "Hotel & B&B" }, { id: "beach", label: "Stabilimenti Balneari" },
+    { id: "plumber", label: "Idraulici" }, { id: "electrician", label: "Elettricisti" },
+    { id: "veterinary", label: "Veterinari" }, { id: "tattoo", label: "Tattoo & Piercing" },
+    { id: "photography", label: "Fotografi" }, { id: "events", label: "Eventi & Catering" },
+    { id: "construction", label: "Edilizia" }, { id: "gardening", label: "Giardinaggio" },
+  ];
+
   // Persist demoMode
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
@@ -684,9 +705,9 @@ const PartnerDashboard = () => {
                       <DollarSign className="w-4 h-4" style={{ color: showEarnings ? "#10b981" : "#a78bfa" }} />
                       <span className="text-white">Guadagni</span>
                     </button>
-                    <button onClick={() => navigate("/partner/leads")}
+                    <button onClick={() => { setShowLeadScout(prev => !prev); }}
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
-                      style={{ background: "rgba(20,184,166,0.12)", border: "1px solid rgba(20,184,166,0.25)" }}>
+                      style={{ background: showLeadScout ? "rgba(20,184,166,0.25)" : "rgba(20,184,166,0.12)", border: `1px solid ${showLeadScout ? "rgba(20,184,166,0.5)" : "rgba(20,184,166,0.25)"}` }}>
                       <Target className="w-4 h-4" style={{ color: "#14b8a6" }} />
                       <span style={{ color: "#5eead4" }}>Lead Scout</span>
                     </button>
@@ -850,6 +871,140 @@ const PartnerDashboard = () => {
 
         {/* ═══════ CANALE DI ACQUISIZIONE ═══════ */}
         {!demoMode && (
+        <>
+        {/* ═══════ INLINE LEAD SCOUT ═══════ */}
+        <AnimatePresence>
+          {showLeadScout && (
+            <motion.section
+              initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="max-w-5xl mx-auto px-4 sm:px-8 py-6">
+                <div className="p-5 rounded-2xl space-y-4" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.08), rgba(16,185,129,0.04))", border: "1px solid rgba(20,184,166,0.2)" }}>
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(20,184,166,0.15)" }}>
+                        <Target className="w-5 h-5" style={{ color: "#14b8a6" }} />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold text-white">🎯 Lead Scout — Ricerca Attività Reali</h3>
+                        <p className="text-[10px]" style={{ color: "#9ca3af" }}>Cerca attività vere su Nominatim + Google Places → seleziona → genera messaggio</p>
+                      </div>
+                    </div>
+                    {selectedLead && (
+                      <span className="px-2.5 py-1 rounded-full text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.15)", color: "#34d399" }}>
+                        ✓ Lead selezionato
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Search controls */}
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                    <select value={leadSearchSector} onChange={e => setLeadSearchSector(e.target.value)}
+                      className="px-3 py-2.5 rounded-xl text-xs text-white outline-none"
+                      style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
+                      {LEAD_SECTORS.map(s => <option key={s.id} value={s.id} style={{ background: "#1a1a2e" }}>{s.label}</option>)}
+                    </select>
+                    <select value={leadSearchCity} onChange={e => setLeadSearchCity(e.target.value)}
+                      className="px-3 py-2.5 rounded-xl text-xs text-white outline-none"
+                      style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
+                      {LEAD_CITIES.map(c => <option key={c} value={c} style={{ background: "#1a1a2e" }}>{c}</option>)}
+                    </select>
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
+                      <input value={leadSearchQuery} onChange={e => setLeadSearchQuery(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" && handleLeadSearch()}
+                        placeholder="Nome, tipo o zona specifica..."
+                        className="w-full pl-9 pr-3 py-2.5 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none"
+                        style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }} />
+                    </div>
+                    <motion.button whileTap={{ scale: 0.95 }} onClick={handleLeadSearch} disabled={leadSearchLoading}
+                      className="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
+                      style={{ background: leadSearchLoading ? "rgba(20,184,166,0.3)" : "linear-gradient(135deg, #14b8a6, #10b981)", color: "#fff" }}>
+                      {leadSearchLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Search className="w-3.5 h-3.5" />}
+                      {leadSearchLoading ? "Cerco..." : "Cerca"}
+                    </motion.button>
+                  </div>
+
+                  {/* Results */}
+                  {leadResults.length > 0 && (
+                    <div className="space-y-1.5 max-h-[350px] overflow-y-auto pr-1">
+                      <p className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>
+                        {leadResults.length} risultati reali trovati — clicca per selezionare e generare il messaggio
+                      </p>
+                      {leadResults.map((lead, i) => {
+                        const isSelected = selectedLead?.name === lead.name && selectedLead?.full_address === lead.full_address;
+                        return (
+                          <motion.button key={i} whileTap={{ scale: 0.98 }}
+                            onClick={() => handleSelectLead(lead)}
+                            className="w-full text-left p-3 rounded-xl transition-all flex items-start gap-3"
+                            style={{
+                              background: isSelected ? "rgba(20,184,166,0.12)" : "rgba(255,255,255,0.02)",
+                              border: `1px solid ${isSelected ? "rgba(20,184,166,0.4)" : "rgba(255,255,255,0.06)"}`,
+                            }}>
+                            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm font-bold"
+                              style={{ background: isSelected ? "rgba(20,184,166,0.2)" : "rgba(255,255,255,0.05)", color: isSelected ? "#14b8a6" : "#6b7280" }}>
+                              {i + 1}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <p className="text-xs font-bold text-white truncate">{lead.name}</p>
+                                <span className="text-[8px] px-1.5 py-0.5 rounded-full shrink-0" style={{
+                                  background: lead.source === "google_places" ? "rgba(66,133,244,0.15)" : "rgba(167,139,250,0.12)",
+                                  color: lead.source === "google_places" ? "#93bbfc" : "#c4b5fd",
+                                }}>{lead.source === "google_places" ? "Google" : "OpenStreetMap"}</span>
+                                {lead.google_rating > 0 && (
+                                  <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24" }}>
+                                    ⭐ {lead.google_rating} ({lead.google_reviews})
+                                  </span>
+                                )}
+                                {isSelected && (
+                                  <span className="text-[8px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: "rgba(16,185,129,0.2)", color: "#34d399" }}>✓ Selezionato</span>
+                                )}
+                              </div>
+                              <p className="text-[10px] truncate mt-0.5" style={{ color: "#9ca3af" }}>{lead.full_address || lead.city}</p>
+                              <div className="flex items-center gap-3 mt-1 flex-wrap">
+                                {lead.phone && <span className="text-[9px] flex items-center gap-1" style={{ color: "#34d399" }}><Phone className="w-2.5 h-2.5" />{lead.phone}</span>}
+                                {lead.website && <span className="text-[9px] flex items-center gap-1" style={{ color: "#60a5fa" }}><Globe className="w-2.5 h-2.5" />Sito web</span>}
+                                {lead.instagram && <span className="text-[9px] flex items-center gap-1" style={{ color: "#E4405F" }}><Instagram className="w-2.5 h-2.5" />{lead.instagram}</span>}
+                                {lead.email && <span className="text-[9px] flex items-center gap-1" style={{ color: "#818cf8" }}><Mail className="w-2.5 h-2.5" />{lead.email}</span>}
+                              </div>
+                            </div>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {leadResults.length === 0 && !leadSearchLoading && leadSearchQuery && (
+                    <p className="text-[10px] text-center py-4" style={{ color: "#6b7280" }}>Nessun risultato. Prova a cambiare città o settore.</p>
+                  )}
+
+                  {/* Selected lead summary */}
+                  {selectedLead && (
+                    <div className="p-3 rounded-xl flex items-center justify-between" style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)" }}>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <CheckCircle className="w-4 h-4 shrink-0" style={{ color: "#34d399" }} />
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-white truncate">{selectedLead.name}</p>
+                          <p className="text-[9px]" style={{ color: "#9ca3af" }}>
+                            Settore, canale e contatti sincronizzati con i messaggi sotto ↓
+                          </p>
+                        </div>
+                      </div>
+                      <button onClick={() => { setSelectedLead(null); setTargetIg(""); setTargetWebsite(""); setAiGeneratedMessage(null); }}
+                        className="text-[9px] px-2 py-1 rounded-lg shrink-0" style={{ background: "rgba(239,68,68,0.1)", color: "#f87171" }}>
+                        ✕ Rimuovi
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.section>
+          )}
+        </AnimatePresence>
+
         <section className="max-w-5xl mx-auto px-4 sm:px-8 py-8">
           <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>Canale di Acquisizione</h3>
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
@@ -870,6 +1025,7 @@ const PartnerDashboard = () => {
             })}
           </div>
         </section>
+        </>
         )}
 
         {/* ═══════ SELEZIONA PROGETTO + TEMPLATES ═══════ */}
