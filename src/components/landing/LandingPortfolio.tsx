@@ -315,11 +315,11 @@ export default function LandingPortfolio() {
             <span className="text-[10px] sm:text-[11px] tracking-[3px] uppercase text-[#7eb7be] font-semibold mb-2 block">OUR WORK</span>
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-3">Portfolio</h2>
 
-            {/* Filter Pills — horizontal scroll on mobile */}
-            <div className="flex gap-1.5 flex-wrap max-h-[72px] overflow-hidden sm:max-h-none sm:overflow-visible">
+            {/* Filter Pills — scrollable on mobile */}
+            <div className="flex gap-1.5 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible" style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
               {CATS.map((c) => (
                 <button key={c} onClick={() => setFilter(c)}
-                  className={`px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all border whitespace-nowrap ${
+                  className={`px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all border whitespace-nowrap flex-shrink-0 ${
                     c === filter
                       ? "bg-[#7eb7be]/10 border-[#7eb7be]/50 text-[#7eb7be]"
                       : "bg-transparent border-white/[0.08] text-white/40 hover:border-white/20 hover:text-white/60"
