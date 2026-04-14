@@ -40,7 +40,9 @@ function WordReveal({ text }: { text: string }) {
   return (
     <p ref={ref} className="font-heading text-[clamp(1.3rem,2.6vw,2rem)] font-semibold leading-[1.6] max-w-[880px] mx-auto text-center">
       {words.map((w, i) => (
-        <span key={i} className="transition-opacity duration-300" style={{ opacity: progress > i / words.length ? 1 : 0.08, color: progress > i / words.length ? "white" : "rgba(255,255,255,0.08)" }}>
+        <span key={i} className="transition-colors duration-300" style={{
+          color: progress > i / words.length ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.1)",
+        }}>
           {w}{" "}
         </span>
       ))}
@@ -52,74 +54,90 @@ export default function LandingWhyUs() {
   return (
     <>
       {/* Word reveal */}
-      <section className="py-20 lg:py-28 px-5 lg:px-10" style={{ background: "#020204" }}>
-        <div className="max-w-[1320px] mx-auto">
+      <section className="relative py-24 lg:py-32 px-5 lg:px-10 overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(180deg, #060612 0%, #0c0c22 50%, #080818 100%)",
+        }} />
+        <div className="absolute inset-0" style={{
+          backgroundImage: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(108,60,224,0.06) 0%, transparent 60%)",
+        }} />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
+
+        <div className="relative z-[1] max-w-[1320px] mx-auto">
           <WordReveal text="Mentre i tuoi competitor gestiscono tutto a mano, noi costruiamo il tuo vantaggio competitivo. 98 agenti IA lavorano 24 ore su 24 per generare fatturato, fidelizzare clienti e automatizzare ogni processo — dal primo contatto alla fatturazione." />
-          <div className="flex gap-3 justify-center flex-wrap mt-8">
+          <div className="flex gap-3 justify-center flex-wrap mt-10">
             {["Zero intervento manuale", "Dashboard predittive", "ROI misurabile in 30 giorni", "Setup in 7 giorni"].map((p) => (
-              <span key={p} className="text-[11px] text-white/40 px-4 py-2 rounded-full border border-white/[0.06]">{p}</span>
+              <span key={p} className="text-[11px] text-white/50 px-4 py-2 rounded-full border border-white/[0.08] bg-white/[0.02]">{p}</span>
             ))}
           </div>
         </div>
       </section>
 
       {/* Results */}
-      <section className="py-16 lg:py-24 border-y border-white/[0.05]" style={{ background: "#080810" }}>
-        <div className="max-w-[1320px] mx-auto px-5">
-          <div className="text-center mb-10">
-            <span className="inline-flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-semibold mb-5">
-              <span className="w-5 h-[1.5px] bg-[#7eb7be]" />RISULTATI MISURABILI
+      <section className="relative py-20 lg:py-28 overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(180deg, #070716 0%, #0b0b22 30%, #0e0e28 50%, #080818 100%)",
+        }} />
+        <div className="absolute inset-0" style={{
+          backgroundImage: "radial-gradient(ellipse 50% 50% at 70% 30%, rgba(126,183,190,0.04) 0%, transparent 50%), radial-gradient(ellipse 40% 40% at 30% 70%, rgba(108,60,224,0.04) 0%, transparent 50%)",
+        }} />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#7eb7be]/15 to-transparent" />
+
+        <div className="relative z-[1] max-w-[1320px] mx-auto px-5">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-bold mb-5">
+              <span className="w-6 h-[2px] bg-gradient-to-r from-[#7eb7be] to-transparent" />RISULTATI MISURABILI
             </span>
             <h2 className="text-[clamp(2rem,4vw,3.2rem)] font-heading font-bold text-white">
               Numeri Reali. <span className="bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">Risultati Concreti.</span>
             </h2>
-            <p className="text-white/40 max-w-[540px] mx-auto text-sm leading-relaxed mt-2">
+            <p className="text-white/50 max-w-[540px] mx-auto text-[15px] leading-relaxed mt-3">
               Dati aggregati dai nostri clienti attivi. Ogni numero è verificabile.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
             {RESULTS.map((r, i) => (
               <motion.div
                 key={r.label}
-                className="text-center py-7 px-4 rounded-2xl border border-white/[0.06] hover:-translate-y-1 transition-all"
-                style={{ background: "rgba(13,13,26,0.6)" }}
+                className="text-center py-8 px-4 rounded-2xl border border-white/[0.08] hover:-translate-y-1 transition-all hover:border-[#7eb7be]/20"
+                style={{ background: "linear-gradient(135deg, rgba(15,15,32,0.85), rgba(10,10,22,0.9))" }}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
               >
                 <div className="font-heading text-[2rem] font-extrabold bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">{r.value}</div>
-                <p className="text-xs text-white/50 mt-1">{r.label}</p>
+                <p className="text-xs text-white/60 mt-1 font-medium">{r.label}</p>
               </motion.div>
             ))}
           </div>
 
           {/* Before/After */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
             {BEFORE_AFTER.map((b, i) => (
               <motion.div
                 key={b.title}
-                className="rounded-2xl border border-white/[0.06] p-5 hover:-translate-y-1 transition-all"
-                style={{ background: "rgba(13,13,26,0.6)" }}
+                className="rounded-2xl border border-white/[0.08] p-5 hover:-translate-y-1 transition-all hover:border-white/[0.14]"
+                style={{ background: "linear-gradient(135deg, rgba(15,15,32,0.85), rgba(10,10,22,0.9))" }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.06 }}
               >
-                <h4 className="text-[13px] font-heading font-bold mb-3 flex items-center gap-2 flex-wrap text-white">
+                <h4 className="text-[14px] font-heading font-bold mb-3 flex items-center gap-2 flex-wrap text-white/90">
                   {b.title}
-                  <span className={`text-[10px] px-2 py-0.5 rounded-lg font-bold ${b.isTeal ? "bg-[rgba(126,183,190,0.1)] text-[#7eb7be]" : "bg-[rgba(34,197,94,0.08)] text-green-500"}`}>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-lg font-bold ${b.isTeal ? "bg-[rgba(126,183,190,0.12)] text-[#7eb7be]" : "bg-[rgba(34,197,94,0.1)] text-emerald-400"}`}>
                     {b.badge}
                   </span>
                 </h4>
-                <div className="flex justify-between py-1.5 border-b border-white/[0.06] text-xs">
-                  <span className="text-white/40 font-medium">Prima</span>
-                  <span className="text-red-400/50 line-through font-medium">{b.before}</span>
+                <div className="flex justify-between py-2 border-b border-white/[0.06] text-xs">
+                  <span className="text-white/50 font-medium">Prima</span>
+                  <span className="text-red-400/60 line-through font-medium">{b.before}</span>
                 </div>
-                <div className="flex justify-between py-1.5 text-xs">
-                  <span className="text-white/40 font-medium">Dopo Empire</span>
-                  <span className="text-emerald-500 font-semibold">{b.after}</span>
+                <div className="flex justify-between py-2 text-xs">
+                  <span className="text-white/50 font-medium">Dopo Empire</span>
+                  <span className="text-emerald-400 font-semibold">{b.after}</span>
                 </div>
               </motion.div>
             ))}
@@ -127,11 +145,11 @@ export default function LandingWhyUs() {
 
           {/* Guarantee */}
           <div
-            className="text-center py-8 px-6 rounded-3xl border border-white/[0.06]"
-            style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.06), rgba(108,60,224,0.06))" }}
+            className="text-center py-10 px-8 rounded-3xl border border-white/[0.08]"
+            style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.06), rgba(108,60,224,0.06), rgba(15,15,32,0.8))" }}
           >
-            <h3 className="text-lg font-heading font-bold mb-1 text-white">Garanzia Soddisfatti o Rimborsati — 90 Giorni</h3>
-            <p className="text-white/40 text-[13px] max-w-[550px] mx-auto">
+            <h3 className="text-xl font-heading font-bold mb-2 text-white">Garanzia Soddisfatti o Rimborsati — 90 Giorni</h3>
+            <p className="text-white/50 text-[14px] max-w-[550px] mx-auto leading-[1.7]">
               Se non vedi miglioramenti misurabili nei primi 90 giorni, ti restituiamo ogni centesimo. Zero rischi, zero vincoli.
             </p>
           </div>
