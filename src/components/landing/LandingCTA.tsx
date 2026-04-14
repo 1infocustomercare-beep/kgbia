@@ -6,18 +6,18 @@ export default function LandingCTA() {
 
   return (
     <section className="relative py-28 lg:py-36 px-5 text-center overflow-hidden">
-      {/* Premium background */}
+      {/* Bold gradient — stands out from everything */}
       <div className="absolute inset-0" style={{
-        background: "linear-gradient(180deg, #060612 0%, #0c0c24 40%, #0e0e2a 60%, #080816 100%)",
+        background: "linear-gradient(180deg, #020208 0%, #0c0820 30%, #1a1040 50%, #0c0820 70%, #020208 100%)",
       }} />
       <div className="absolute inset-0" style={{
-        backgroundImage: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(126,183,190,0.08) 0%, transparent 50%), radial-gradient(ellipse 40% 40% at 50% 60%, rgba(108,60,224,0.06) 0%, transparent 50%)",
+        backgroundImage: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(126,183,190,0.08) 0%, transparent 50%), radial-gradient(ellipse 40% 40% at 50% 60%, rgba(167,139,250,0.06) 0%, transparent 50%)",
       }} />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#7eb7be]/15 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-400/20 to-transparent" />
 
       <div className="relative z-[1] max-w-[680px] mx-auto">
-        <span className="inline-flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-bold mb-6">
-          <span className="w-6 h-[2px] bg-gradient-to-r from-[#7eb7be] to-transparent" />INIZIA ORA
+        <span className="inline-flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-violet-400 font-bold mb-6">
+          <span className="w-6 h-[2px] bg-gradient-to-r from-violet-400 to-transparent" />L'ULTIMO PASSO
         </span>
 
         <motion.h2
@@ -28,31 +28,31 @@ export default function LandingCTA() {
         >
           Il Tuo Business Merita
           <br />
-          <span className="bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">di Funzionare da Solo.</span>
+          <span className="bg-gradient-to-r from-[#7eb7be] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">di Funzionare da Solo.</span>
         </motion.h2>
 
-        <p className="text-white/55 max-w-[520px] mx-auto text-[15px] leading-[1.8] mb-9">
-          847+ imprese italiane hanno già scelto Empire.AI per automatizzare ogni processo, ridurre i costi e aumentare il fatturato. Inizia oggi — garanzia 90 giorni, zero rischi.
+        <p className="text-white/60 max-w-[520px] mx-auto text-[15px] leading-[1.8] mb-9">
+          847+ imprese italiane hanno già automatizzato ogni processo con Empire.AI. Inizia oggi — garanzia 90 giorni, zero rischi, zero carte di credito.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
           <button
             onClick={() => navigate("/demo")}
-            className="px-10 py-4 rounded-full text-white font-semibold text-sm transition-all hover:-translate-y-[2px] hover:shadow-[0_20px_60px_rgba(126,183,190,0.3)]"
-            style={{ background: "linear-gradient(135deg, #7eb7be, #6c3ce0)", boxShadow: "0 16px 48px rgba(126,183,190,0.25)" }}
+            className="px-10 py-4 rounded-full text-white font-semibold text-sm transition-all hover:-translate-y-[2px]"
+            style={{ background: "linear-gradient(135deg, #7eb7be, #a78bfa, #ec4899)", boxShadow: "0 16px 48px rgba(167,139,250,0.25)" }}
           >
             Prenota una Demo Gratuita →
           </button>
           <button
             onClick={() => navigate("/auth")}
-            className="px-10 py-4 rounded-full text-white/85 font-semibold text-sm border border-white/[0.12] hover:border-[#7eb7be]/50 hover:text-white hover:bg-white/[0.03] transition-all"
+            className="px-10 py-4 rounded-full text-white/85 font-semibold text-sm border border-white/[0.12] hover:border-violet-400/50 hover:text-white hover:bg-white/[0.03] transition-all"
           >
             Accedi alla Piattaforma
           </button>
         </div>
 
         <p className="text-[12px] text-white/30">
-          Nessuna carta di credito richiesta · Setup in 7 giorni · Supporto dedicato 7/7
+          Nessuna carta di credito · Setup in 7 giorni · Supporto dedicato 7/7
         </p>
       </div>
     </section>

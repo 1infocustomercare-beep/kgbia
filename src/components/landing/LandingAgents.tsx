@@ -1,16 +1,15 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
-import LandingPremiumPanel from "@/components/landing/LandingPremiumPanel";
 
 const AGENTS = [
-  { panelEyebrow: "AI Commerce", panelCode: "AI-01", name: "Menu AI / Catalogo AI", desc: "Genera menu e cataloghi da foto. Traduzione multilingua.", tag: "Incluso in Growth", tagColor: "teal" },
-  { panelEyebrow: "Content Ops", panelCode: "AI-02", name: "Content AI Engine", desc: "Post social, email, copy generato automaticamente.", tag: "Incluso in Growth", tagColor: "teal" },
-  { panelEyebrow: "Client Care", panelCode: "AI-03", name: "Concierge AI", desc: "Chatbot 24/7 addestrato sul tuo business.", tag: "Incluso in Empire", tagColor: "gold" },
-  { panelEyebrow: "Reputation", panelCode: "AI-04", name: "Review Shield", desc: "Filtra negative in privato, amplifica 4-5★ Google.", tag: "Incluso in Empire", tagColor: "gold" },
-  { panelEyebrow: "Lead Search", panelCode: "AI-05", name: "LeadEngine Scout", desc: "Trova clienti in target da Maps e social.", tag: "Incluso in Empire", tagColor: "gold" },
-  { panelEyebrow: "Retention", panelCode: "AI-06", name: "GhostManager", desc: "Recupera clienti persi con campagne automatiche.", tag: "Incluso in Empire", tagColor: "gold" },
-  { panelEyebrow: "Visual Lab", panelCode: "AI-07", name: "Visual AI Studio", desc: "Foto professionali del piatto generate dall'IA.", tag: "€29/mese", tagColor: "purple" },
-  { panelEyebrow: "Forecasting", panelCode: "AI-08", name: "Analytics Predittivi", desc: "Previsioni vendite, trend e suggerimenti automatici.", tag: "€29/mese", tagColor: "purple" },
+  { icon: "📋", accent: "#22d3ee", name: "Menu AI / Catalogo AI", desc: "Genera menu e cataloghi professionali da una foto. Traduzione in 12 lingue in un click.", tag: "Incluso in Growth" },
+  { icon: "✍️", accent: "#a78bfa", name: "Content AI Engine", desc: "Post social, email, blog e copy pubblicitari. Generati nel tuo tono di voce, pronti da pubblicare.", tag: "Incluso in Growth" },
+  { icon: "💬", accent: "#ec4899", name: "Concierge AI", desc: "Chatbot 24/7 addestrato sul tuo business. Risponde ai clienti, prende prenotazioni e vende per te.", tag: "Incluso in Empire" },
+  { icon: "⭐", accent: "#f59e0b", name: "Review Shield", desc: "Intercetta le recensioni negative in privato e amplifica le 4-5★ su Google. La tua reputazione è al sicuro.", tag: "Incluso in Empire" },
+  { icon: "🎯", accent: "#ef4444", name: "LeadEngine Scout", desc: "Trova nuovi clienti in target analizzando Google Maps, social e directory. Lead qualificati ogni giorno.", tag: "Incluso in Empire" },
+  { icon: "👻", accent: "#4ade80", name: "GhostManager", desc: "Recupera il 94% dei clienti persi con campagne WhatsApp e email automatiche e personalizzate.", tag: "Incluso in Empire" },
+  { icon: "📸", accent: "#f472b6", name: "Visual AI Studio", desc: "Foto professionali dei tuoi prodotti generate dall'IA. Qualità da shooting, costo zero.", tag: "€29/mese" },
+  { icon: "📈", accent: "#60a5fa", name: "Analytics Predittivi", desc: "Previsioni vendite, trend settimanali e suggerimenti automatici per massimizzare il fatturato.", tag: "€29/mese" },
 ];
 
 function NeuralCanvas() {
@@ -45,7 +44,7 @@ function NeuralCanvas() {
       draw() {
         const s = 1 + Math.sin(this.p) * 0.3;
         ctx!.beginPath(); ctx!.arc(this.x, this.y, this.r * s, 0, 6.28);
-        ctx!.fillStyle = "rgba(108,60,224,0.25)"; ctx!.fill();
+        ctx!.fillStyle = "rgba(167,139,250,0.2)"; ctx!.fill();
       }
     }
 
@@ -60,7 +59,7 @@ function NeuralCanvas() {
           const d = Math.sqrt(dx * dx + dy * dy);
           if (d < 180) {
             ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.strokeStyle = `rgba(108,60,224,${0.04 * (1 - d / 180)})`; ctx.lineWidth = 0.7; ctx.stroke();
+            ctx.strokeStyle = `rgba(167,139,250,${0.04 * (1 - d / 180)})`; ctx.lineWidth = 0.7; ctx.stroke();
           }
         }
       }
@@ -76,43 +75,52 @@ function NeuralCanvas() {
 export default function LandingAgents() {
   return (
     <section id="agenti" className="relative overflow-hidden py-20 lg:py-28">
-      {/* Premium background */}
+      {/* Deep violet atmosphere */}
       <div className="absolute inset-0" style={{
-        background: "linear-gradient(180deg, #080816 0%, #0e0e28 30%, #12123a 50%, #0a0a1e 100%)",
+        background: "linear-gradient(180deg, #020208 0%, #0e0820 30%, #140c30 50%, #020208 100%)",
       }} />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#6c3ce0]/20 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-400/20 to-transparent" />
       <NeuralCanvas />
 
       <div className="relative z-[1] max-w-[1320px] mx-auto px-5">
         <div className="text-center mb-12">
-          <span className="inline-flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-[#7eb7be] font-bold mb-5">
-            <span className="w-6 h-[2px] bg-gradient-to-r from-[#7eb7be] to-transparent" />AGENTI IA
+          <span className="inline-flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-violet-400 font-bold mb-5">
+            <span className="w-6 h-[2px] bg-gradient-to-r from-violet-400 to-transparent" />98 AGENTI INTELLIGENTI
           </span>
           <h2 className="text-[clamp(2rem,4vw,3.2rem)] font-heading font-bold text-white">
-            I Tuoi <span className="bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">Agenti Intelligenti</span>
+            Il Tuo Team AI. <span className="text-violet-400">Sempre Operativo.</span>
           </h2>
-          <p className="text-white/55 max-w-[620px] mx-auto text-[15px] mt-3 leading-[1.7]">5 inclusi in Empire · Altri a €29/mese · Sconto 30% clienti attivi</p>
+          <p className="text-white/55 max-w-[620px] mx-auto text-[15px] mt-3 leading-[1.7]">
+            Ogni agente è specializzato in un compito. Lavorano insieme, imparano dal tuo business e migliorano ogni giorno.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {AGENTS.map((a, i) => (
             <motion.div
               key={a.name}
-              className="rounded-3xl p-6 border border-white/[0.08] backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 hover:border-white/[0.16] relative overflow-hidden"
-              style={{ background: "linear-gradient(180deg, rgba(16,16,38,0.92), rgba(10,10,24,0.95))" }}
+              className="rounded-3xl p-6 border border-white/[0.06] backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 hover:border-white/[0.14] relative overflow-hidden group"
+              style={{ background: "linear-gradient(180deg, rgba(20,12,48,0.85), rgba(8,6,20,0.92))" }}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: (i % 4) * 0.06 }}
             >
-              <LandingPremiumPanel eyebrow={a.panelEyebrow} code={a.panelCode} title={a.name} tone={a.tagColor === "gold" ? "gold" : a.tagColor === "purple" ? "violet" : "teal"} />
+              <div className="absolute top-0 left-0 right-0 h-[2px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"
+                style={{ background: a.accent }} />
+
+              {/* Icon badge */}
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mb-4 border border-white/[0.06]"
+                style={{ background: `${a.accent}10`, boxShadow: `0 0 16px ${a.accent}08` }}>
+                {a.icon}
+              </div>
+
               <h4 className="text-sm font-heading font-bold mb-1.5 text-white/90">{a.name}</h4>
               <p className="text-[12px] text-white/55 leading-[1.7] mb-3">{a.desc}</p>
-              <span className={`inline-block text-[10px] px-2.5 py-1 rounded-lg font-semibold ${
-                a.tagColor === "teal" ? "bg-[rgba(126,183,190,0.12)] text-[#7eb7be]"
-                : a.tagColor === "gold" ? "bg-[rgba(212,168,85,0.12)] text-[#d4a855]"
-                : "bg-[rgba(108,60,224,0.12)] text-[#8b5cf6]"
-              }`}>{a.tag}</span>
+              <span className="inline-block text-[10px] px-2.5 py-1 rounded-lg font-semibold border"
+                style={{ borderColor: `${a.accent}20`, background: `${a.accent}08`, color: a.accent }}>
+                {a.tag}
+              </span>
             </motion.div>
           ))}
         </div>
