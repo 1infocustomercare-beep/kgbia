@@ -2,10 +2,38 @@ import { motion } from "framer-motion";
 import LandingPremiumPanel from "@/components/landing/LandingPremiumPanel";
 
 const FEATURES = [
-  { panelEyebrow: "Platform Suite", panelCode: "01", panelTone: "teal" as const, title: "App & Web App", desc: "Applicazioni installabili con il TUO brand, dominio e colori. Design premium white-label.", pills: ["White Label", "PWA", "Su misura"] },
-  { panelEyebrow: "AI System", panelCode: "02", panelTone: "violet" as const, title: "Intelligenza Artificiale", desc: "98+ agenti IA che automatizzano marketing, gestione clienti, analisi dati e fatturazione.", pills: ["98+ Agenti", "24/7", "Predittivi"] },
-  { panelEyebrow: "Business Ops", panelCode: "03", panelTone: "slate" as const, title: "Gestionale Completo", desc: "CRM, prenotazioni, ordini, inventario, staff, fatturazione elettronica, analytics, Stripe.", pills: ["CRM", "Fatturazione", "Stripe"] },
-  { panelEyebrow: "Growth Engine", panelCode: "04", panelTone: "gold" as const, title: "Marketing Automatico", desc: "Email, social, WhatsApp auto, review management, SEO — generato dall'IA continuamente.", pills: ["Email", "WhatsApp", "SEO"] },
+  {
+    panelEyebrow: "Platform Suite",
+    panelCode: "01",
+    panelTone: "teal" as const,
+    title: "App & Web App White-Label",
+    desc: "La tua app personalizzata — con il tuo brand, il tuo dominio e i tuoi colori. Installabile come un'app nativa, senza passare dagli store.",
+    pills: ["White Label 100%", "PWA Nativa", "Il Tuo Dominio"],
+  },
+  {
+    panelEyebrow: "AI System",
+    panelCode: "02",
+    panelTone: "violet" as const,
+    title: "98 Agenti IA Autonomi",
+    desc: "Un team di intelligenze artificiali che lavora per te 24/7: gestisce clienti, crea contenuti, analizza dati e ottimizza ogni processo.",
+    pills: ["98 Agenti Attivi", "Operativi 24/7", "Apprendimento Continuo"],
+  },
+  {
+    panelEyebrow: "Business Ops",
+    panelCode: "03",
+    panelTone: "slate" as const,
+    title: "Gestionale All-in-One",
+    desc: "CRM, prenotazioni, ordini, inventario, gestione staff, fatturazione elettronica e analytics avanzati — tutto in un'unica dashboard.",
+    pills: ["CRM Integrato", "Fatturazione e-Fatt", "Pagamenti Stripe"],
+  },
+  {
+    panelEyebrow: "Growth Engine",
+    panelCode: "04",
+    panelTone: "gold" as const,
+    title: "Marketing Automatizzato",
+    desc: "Email, post social, campagne WhatsApp, gestione recensioni e SEO — generati e ottimizzati dall'IA senza il tuo intervento.",
+    pills: ["Content AI 24/7", "WhatsApp Auto", "SEO Intelligente"],
+  },
 ];
 
 export default function LandingServices() {
@@ -16,18 +44,18 @@ export default function LandingServices() {
           <span className="w-5 h-[1.5px] bg-[#7eb7be]" />TUTTO IN UN'UNICA PIATTAFORMA
         </span>
         <h2 className="text-[clamp(2rem,4vw,3.2rem)] font-heading font-bold mb-2 text-white">
-          App, Siti e Gestionali <span className="bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">Potenziati dall'IA</span>
+          Ogni Strumento di cui Hai Bisogno. <span className="bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent">In un Solo Posto.</span>
         </h2>
-        <p className="text-white/55 max-w-[620px] mx-auto text-[15px] leading-[1.7] mb-12">
-          Applicazioni dedicate, web app e gestionali completi — personalizzati al 100% per il tuo settore.
+        <p className="text-white/45 max-w-[600px] mx-auto text-[15px] leading-[1.7] mb-12">
+          Non più 10 software diversi. Una piattaforma unica che gestisce l'intero ciclo del tuo business.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {FEATURES.map((f, i) => (
             <motion.div
               key={f.title}
-              className="relative overflow-hidden rounded-3xl p-8 text-left border border-white/[0.07] transition-all duration-500 hover:-translate-y-1.5 hover:border-white/[0.14] group"
-              style={{ background: "#0d0d1a" }}
+              className="relative overflow-hidden rounded-3xl p-8 text-left border border-white/[0.06] transition-all duration-500 hover:-translate-y-1.5 hover:border-white/[0.12] group"
+              style={{ background: "rgba(13,13,26,0.6)" }}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -41,14 +69,10 @@ export default function LandingServices() {
               <LandingPremiumPanel eyebrow={f.panelEyebrow} code={f.panelCode} title={f.title} tone={f.panelTone} />
 
               <h3 className="text-lg font-heading font-bold mb-2 text-white">{f.title}</h3>
-              <p className="text-[13px] text-white/55 leading-[1.7] mb-3">{f.desc}</p>
+              <p className="text-[13px] text-white/45 leading-[1.7] mb-3">{f.desc}</p>
               <div className="flex gap-1.5 flex-wrap">
                 {f.pills.map((p) => (
-                  <span
-                    key={p}
-                    className="text-[10px] px-2.5 py-1 rounded-lg font-semibold border border-[rgba(126,183,190,0.1)]"
-                    style={{ background: "rgba(126,183,190,0.12)", color: "#7eb7be" }}
-                  >
+                  <span key={p} className="text-[10px] px-2.5 py-1 rounded-lg font-semibold border border-[rgba(126,183,190,0.08)] bg-[rgba(126,183,190,0.08)] text-[#7eb7be]">
                     {p}
                   </span>
                 ))}
