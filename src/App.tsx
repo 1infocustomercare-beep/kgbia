@@ -44,9 +44,11 @@ const isConstrainedNetwork = () => {
 // Keep cinematic intro, but never trap users on splash
 const INTRO_FAILSAFE_MS = IS_MOBILE ? 8000 : 9000;
 const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
-// Skip intro only on client/demo routes where branded business splash should appear immediately
+// Skip intro on landing and on client/demo routes where content must appear immediately
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
-  /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding)/.test(window.location.pathname);
+  (window.location.pathname === "/" ||
+    window.location.pathname === "/home" ||
+    /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding)/.test(window.location.pathname));
 
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
