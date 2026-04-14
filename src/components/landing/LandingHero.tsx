@@ -100,6 +100,8 @@ export default function LandingHero() {
   const ctaOpacity = useTransform(scrollYProgress, [0.08, 0.18], [0, 1]);
   const ctaY = useTransform(scrollYProgress, [0.08, 0.18], [30, 0]);
   const sectionFadeOut = useTransform(scrollYProgress, [0.85, 1], [1, 0]);
+  const titleBlurFilter = useTransform(titleBlur, v => `blur(${v}px)`);
+  const scrollCueOpacity = useTransform(scrollYProgress, [0, 0.05, 0.15], [0, 1, 0]);
 
   // Mockup fan progress: mapped from scroll 0.12 → 0.55
   const [fanProgress, setFanProgress] = useState(0);
