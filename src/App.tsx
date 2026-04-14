@@ -50,7 +50,6 @@ const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
     window.location.pathname === "/home" ||
     /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding)/.test(window.location.pathname));
 
-const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
 
 const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 25000 : 25000;
@@ -167,7 +166,6 @@ const preloadRoute = async (importer: () => Promise<unknown>) => {
 };
 
 // Lazy-loaded pages for code splitting
-const Index = lazy(() => importWithRetry(loadIndex));
 const LandingPage = lazy(() => importWithRetry(loadLandingPage));
 const RestaurantPage = lazy(() => importWithRetry(() => import("./pages/RestaurantPage")));
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
@@ -468,16 +466,8 @@ function App() {
       return;
     }
 
-    if (path === "/") {
-      void preloadRoute(loadIndex);
-      deferredPreload = window.setTimeout(() => {
-        void preloadRoute(loadLandingPage);
-      }, 900);
-    } else if (path === "/home") {
+    if (path === "/" || path === "/home") {
       void preloadRoute(loadLandingPage);
-      deferredPreload = window.setTimeout(() => {
-        void preloadRoute(loadIndex);
-      }, 900);
     } else if (path.startsWith("/r/")) {
       void preloadRoute(() => import("./pages/RestaurantPage"));
     } else if (path.startsWith("/admin")) {
@@ -547,8 +537,8 @@ function App() {
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
                       {/* Public routes */}
-                      <Route path="/" element={<Index />} />
-                      <Route path="/index" element={<Index />} />
+                      <Route path="/" element={<LandingPage />} />
+                      <Route path="/index" element={<LandingPage />} />
                       <Route path="/home" element={<LandingPage />} />
                       <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/home#pricing" replace />} />
