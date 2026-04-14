@@ -164,7 +164,7 @@ export default function LandingHero() {
                 perspective: "1200px",
               }}
             >
-              <motion.div style={{ translateZ: titleZ, filter: useTransform(titleBlur, v => `blur(${v}px)`) }}>
+              <motion.div style={{ translateZ: titleZ, filter: titleBlurFilter }}>
                 {/* Badge */}
                 <motion.div
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full mb-8 border border-[rgba(126,183,190,0.25)] bg-[rgba(126,183,190,0.06)] backdrop-blur-sm"
@@ -251,7 +251,7 @@ export default function LandingHero() {
           {/* Scroll cue — fades as user scrolls */}
           <motion.div
             className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-[3]"
-            style={{ opacity: useTransform(scrollYProgress, [0, 0.05, 0.15], [0, 1, 0]) }}
+            style={{ opacity: scrollCueOpacity }}
           >
             <span className="text-[9px] tracking-[3px] uppercase text-white/25 font-semibold">Scorri per scoprire</span>
             <motion.div
