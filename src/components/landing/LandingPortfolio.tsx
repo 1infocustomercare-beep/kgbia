@@ -139,34 +139,34 @@ function PortfolioCard({ project, onClick, index }: { project: Project; onClick:
       transition={{ delay: (index % 3) * 0.08, duration: 0.45 }}
       onClick={onClick}
     >
-      {/* Phone Preview — fixed height, overflow hidden */}
-      <div className="relative h-[200px] sm:h-[260px] overflow-hidden flex items-end justify-center px-4 pt-6">
+      {/* Phone Preview — contained, never overflows */}
+      <div className="relative h-[160px] sm:h-[240px] lg:h-[260px] overflow-hidden flex items-end justify-center px-2 sm:px-4 pt-4 sm:pt-6">
         {/* Ambient glow */}
         <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(ellipse at 50% 100%, ${accent}40, transparent 70%)` }} />
 
         {preview.length >= 3 ? (
           <div className="relative flex items-end justify-center w-full h-full">
-            <div className="absolute left-1/2 -translate-x-[calc(50%+30px)] sm:-translate-x-[calc(50%+38px)] bottom-0 w-[70px] sm:w-[85px] -rotate-[6deg] origin-bottom opacity-70 group-hover:opacity-90 group-hover:-translate-x-[calc(50%+34px)] sm:group-hover:-translate-x-[calc(50%+42px)] transition-all duration-500">
+            <div className="absolute left-1/2 -translate-x-[calc(50%+22px)] sm:-translate-x-[calc(50%+36px)] bottom-0 w-[50px] sm:w-[78px] -rotate-[6deg] origin-bottom opacity-70 group-hover:opacity-90 transition-all duration-500">
               <PhoneFrame src={preview[0]} alt={project.name} />
             </div>
-            <div className="relative z-10 w-[80px] sm:w-[100px] group-hover:-translate-y-1 transition-all duration-500">
+            <div className="relative z-10 w-[58px] sm:w-[90px] group-hover:-translate-y-1 transition-all duration-500">
               <PhoneFrame src={preview[1]} alt={project.name} />
             </div>
-            <div className="absolute left-1/2 translate-x-[calc(-50%+30px)] sm:translate-x-[calc(-50%+38px)] bottom-0 w-[70px] sm:w-[85px] rotate-[6deg] origin-bottom opacity-70 group-hover:opacity-90 group-hover:translate-x-[calc(-50%+34px)] sm:group-hover:translate-x-[calc(-50%+42px)] transition-all duration-500">
+            <div className="absolute left-1/2 translate-x-[calc(-50%+22px)] sm:translate-x-[calc(-50%+36px)] bottom-0 w-[50px] sm:w-[78px] rotate-[6deg] origin-bottom opacity-70 group-hover:opacity-90 transition-all duration-500">
               <PhoneFrame src={preview[2]} alt={project.name} />
             </div>
           </div>
         ) : preview.length === 2 ? (
-          <div className="relative flex items-end justify-center w-full h-full">
-            <div className="w-[80px] sm:w-[95px] -rotate-3 mr-2 group-hover:-translate-x-1 transition-all duration-500">
+          <div className="relative flex items-end justify-center w-full h-full gap-1 sm:gap-2">
+            <div className="w-[56px] sm:w-[85px] -rotate-3 transition-all duration-500">
               <PhoneFrame src={preview[0]} alt={project.name} />
             </div>
-            <div className="w-[80px] sm:w-[95px] rotate-3 ml-2 group-hover:translate-x-1 transition-all duration-500">
+            <div className="w-[56px] sm:w-[85px] rotate-3 transition-all duration-500">
               <PhoneFrame src={preview[1]} alt={project.name} />
             </div>
           </div>
         ) : (
-          <div className="w-[90px] sm:w-[110px] group-hover:-translate-y-1 transition-all duration-500">
+          <div className="w-[64px] sm:w-[100px] group-hover:-translate-y-1 transition-all duration-500">
             <PhoneFrame src={preview[0]} alt={project.name} />
           </div>
         )}
