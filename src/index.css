@@ -171,6 +171,31 @@
   }
 }
 
+@layer utilities {
+  @keyframes portfolio-mockup-loop {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .portfolio-mockup-carousel {
+    animation-name: portfolio-mockup-loop;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portfolio-mockup-carousel {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+}
+
 /* ═══ LANDING PAGE DARK PREMIUM SCOPE ═══ */
 .landing-dark {
   --background: 228 18% 7%;
