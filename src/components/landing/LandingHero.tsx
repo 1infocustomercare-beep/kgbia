@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-mot
 import { useNavigate } from "react-router-dom";
 
 const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const MOBILE_HEADER_OFFSET = 84;
 
 const MOCKUPS = [
   { src: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`, label: "COTE Miami", cat: "Restaurant" },
@@ -22,19 +23,19 @@ function MockupPhone({ m, i, total, progress, isMobile }: {
 }) {
   const center = (total - 1) / 2;
   const offset = i - center;
-  const spreadX = isMobile ? 44 : 76;
-  const spreadY = isMobile ? 3 : 8;
-  const rot = offset * (isMobile ? 4 : 5.5);
-  const phoneW = isMobile ? 85 : 150;
+  const spreadX = isMobile ? 32 : 76;
+  const spreadY = isMobile ? 2 : 8;
+  const rot = offset * (isMobile ? 3 : 5.5);
+  const phoneW = isMobile ? 72 : 150;
 
   const stagger = Math.abs(offset) * 0.1;
   const localP = Math.max(0, Math.min(1, (progress - stagger) / (1 - stagger)));
   const eased = 1 - Math.pow(1 - localP, 3);
 
   const x = eased * offset * spreadX;
-  const y = 160 * (1 - eased) + (-Math.abs(offset) * spreadY * eased);
+  const y = 150 * (1 - eased) + (-Math.abs(offset) * spreadY * eased);
   const opacity = Math.min(1, localP * 3);
-  const scale = 0.55 + eased * (0.45 - Math.abs(offset) * 0.03);
+  const scale = 0.58 + eased * (0.42 - Math.abs(offset) * 0.028);
   const rotate = eased * rot;
 
   return (
@@ -84,17 +85,14 @@ export default function LandingHero() {
     offset: ["start start", "end end"],
   });
 
-  // Title: subtle parallax scale (always visible, never fades out)
   const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.02, 0.97]);
-  const titleY = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, -24]);
 
-  // Mockup fan: 0→0.7 of scroll
   const [fanProgress, setFanProgress] = useState(0);
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    setFanProgress(Math.max(0, Math.min(1, v / 0.7)));
+    setFanProgress(Math.max(0, Math.min(1, v / (isMobile ? 0.82 : 0.7))));
   });
 
-  // Typing effect
   const [typed, setTyped] = useState("");
   const fullText = "Automatizziamo il tuo business con l'Intelligenza Artificiale.";
   useEffect(() => {
@@ -107,10 +105,16 @@ export default function LandingHero() {
     return () => clearInterval(timer);
   }, []);
 
+  const sectionHeight = isMobile ? "190vh" : "250vh";
+  const stickyTop = isMobile ? `${MOBILE_HEADER_OFFSET}px` : "0px";
+  const stickyHeight = isMobile ? `calc(100svh - ${MOBILE_HEADER_OFFSET}px)` : "100vh";
+  const contentTopPadding = isMobile ? "0.75rem" : "4rem";
+  const contentBottomPadding = isMobile ? "2rem" : "0px";
+  const mockupHeight = isMobile ? "190px" : "340px";
+
   return (
-    <section ref={outerRef} id="hero" style={{ height: "250vh" }} className="relative">
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* BG */}
+    <section ref={outerRef} id="hero" style={{ height: sectionHeight }} className="relative">
+      <div className="sticky w-full overflow-hidden" style={{ top: stickyTop, height: stickyHeight }}>
         <div className="absolute inset-0 z-0" style={{
           background: "radial-gradient(ellipse 80% 60% at 50% 20%, rgba(13,13,30,0.95) 0%, #020204 70%)",
         }} />
@@ -126,14 +130,16 @@ export default function LandingHero() {
         <div className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none z-[1]"
           style={{ background: "radial-gradient(circle, rgba(108,60,224,0.10), transparent 70%)", bottom: "10%", left: "-8%" }} />
 
-        {/* CONTENT — always visible */}
-        <div className="relative z-[2] h-full flex flex-col justify-center items-center px-5 pt-16">
+        <div
+          className="relative z-[2] h-full flex flex-col items-center px-5"
+          style={{ paddingTop: contentTopPadding, paddingBottom: contentBottomPadding, justifyContent: isMobile ? "space-between" : "center" }}
+        >
           <motion.div
             className="text-center max-w-[900px] mx-auto mb-4 lg:mb-8"
             style={{ scale: titleScale, y: titleY }}
           >
             <motion.div
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full mb-7 border border-[rgba(126,183,190,0.25)] bg-[rgba(126,183,190,0.06)] backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 border border-[rgba(126,183,190,0.25)] bg-[rgba(126,183,190,0.06)] backdrop-blur-sm"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -143,17 +149,17 @@ export default function LandingHero() {
             </motion.div>
 
             <motion.h1
-              className="text-[clamp(2.4rem,6vw,5.6rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.02em] mb-5"
+              className="text-[clamp(2.2rem,8vw,5.6rem)] font-heading font-extrabold leading-[0.94] tracking-[-0.03em] mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
               <span className="block text-white drop-shadow-[0_2px_20px_rgba(255,255,255,0.1)]">Il Tuo Business.</span>
-              <span className="block bg-gradient-to-r from-[#7eb7be] via-[#9b8ade] to-[#6c3ce0] bg-clip-text text-transparent">Completamente Automatizzato.</span>
+              <span className="block bg-gradient-to-r from-[#a6d8df] via-[#b6a7ef] to-[#7d51eb] bg-clip-text text-transparent">Completamente Automatizzato.</span>
             </motion.h1>
 
             <motion.p
-              className="text-white/65 text-[clamp(0.95rem,1.8vw,1.2rem)] leading-[1.7] max-w-[580px] mx-auto mb-7 font-light"
+              className="text-white/78 text-[clamp(1rem,3.9vw,1.2rem)] leading-[1.6] max-w-[580px] mx-auto mb-6 font-light"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.1 }}
@@ -170,7 +176,7 @@ export default function LandingHero() {
             >
               <button
                 onClick={() => navigate("/demo")}
-                className="group px-10 py-4 rounded-full text-white font-semibold text-sm font-heading inline-flex items-center justify-center gap-2 transition-all hover:-translate-y-[2px] hover:shadow-[0_20px_60px_rgba(126,183,190,0.35)]"
+                className="group px-8 py-4 rounded-full text-white font-semibold text-sm font-heading inline-flex items-center justify-center gap-2 transition-all hover:-translate-y-[2px] hover:shadow-[0_20px_60px_rgba(126,183,190,0.35)]"
                 style={{ background: "linear-gradient(135deg, #7eb7be, #6c3ce0)", boxShadow: "0 16px 48px rgba(126,183,190,0.3)" }}
               >
                 Vedi i Progetti
@@ -178,20 +184,20 @@ export default function LandingHero() {
               </button>
               <button
                 onClick={() => document.getElementById("prezzi")?.scrollIntoView({ behavior: "smooth" })}
-                className="px-10 py-4 rounded-full text-white/90 font-semibold text-sm border border-white/[0.15] hover:border-[#7eb7be]/50 hover:text-white hover:bg-white/[0.03] transition-all"
+                className="px-8 py-4 rounded-full text-white/90 font-semibold text-sm border border-white/[0.15] hover:border-[#7eb7be]/50 hover:text-white hover:bg-white/[0.03] transition-all"
               >
                 Scopri i Piani
               </button>
             </motion.div>
 
             <motion.div
-              className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-6"
+              className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-5"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.7 }}
             >
               {TRUST.map((t) => (
-                <span key={t} className="text-[11px] text-white/40 font-medium tracking-wide flex items-center gap-1.5">
+                <span key={t} className="text-[11px] text-white/48 font-medium tracking-wide flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#7eb7be]/50" />
                   {t}
                 </span>
@@ -199,9 +205,8 @@ export default function LandingHero() {
             </motion.div>
           </motion.div>
 
-          {/* MOCKUP FAN */}
           <div className="relative w-full max-w-[1100px] mx-auto flex-shrink-0">
-            <div className="relative flex justify-center items-end" style={{ height: isMobile ? "200px" : "340px", perspective: "1800px" }}>
+            <div className="relative flex justify-center items-end" style={{ height: mockupHeight, perspective: "1800px" }}>
               {MOCKUPS.map((m, i) => (
                 <MockupPhone key={i} m={m} i={i} total={MOCKUPS.length} progress={fanProgress} isMobile={isMobile} />
               ))}
@@ -209,22 +214,6 @@ export default function LandingHero() {
             <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#020204] to-transparent z-[20] pointer-events-none" />
           </div>
         </div>
-
-        {/* Scroll cue */}
-        <motion.div
-          className="absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-[3]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.2 }}
-        >
-          <span className="text-[9px] tracking-[3px] uppercase text-white/25 font-semibold">Scorri per scoprire</span>
-          <motion.div
-            className="w-[1px] h-6"
-            style={{ background: "linear-gradient(#7eb7be, transparent)" }}
-            animate={{ scaleY: [1, 0.3, 1], opacity: [0.8, 0.15, 0.8] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
       </div>
     </section>
   );
