@@ -141,9 +141,10 @@ export default function LandingHero() {
           style={{ background: "radial-gradient(circle, rgba(108,60,224,0.10), transparent 70%)", bottom: "10%", left: "-8%" }} />
 
         <div className="relative z-[2] h-full w-full max-w-[1280px] mx-auto px-5">
+          <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-[920px]" style={{ top: headlineTop }}>
           <motion.div
-            className="absolute left-1/2 -translate-x-1/2 w-full max-w-[920px] text-center"
-            style={{ top: headlineTop, scale: titleScale, y: titleY, opacity: titleOpacity, filter: titleFilter }}
+            className="w-full text-center"
+            style={{ scale: titleScale, y: titleY, opacity: titleOpacity, filter: titleFilter }}
           >
             <motion.div
               aria-hidden
@@ -220,10 +221,12 @@ export default function LandingHero() {
               ))}
             </motion.div>
           </motion.div>
+          </div>
 
+          <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-[1180px]" style={{ bottom: stageBottom }}>
           <motion.div
-            className="absolute left-1/2 -translate-x-1/2 w-full max-w-[1180px]"
-            style={{ bottom: stageBottom, y: stageY, scale: stageScale, opacity: stageOpacity }}
+            className="w-full"
+            style={{ y: stageY, scale: stageScale, opacity: stageOpacity }}
           >
             <div
               className="absolute inset-x-[8%] bottom-[8%] h-[30%] rounded-full blur-[56px] pointer-events-none"
@@ -240,6 +243,7 @@ export default function LandingHero() {
             </div>
             <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#020204] via-[#020204]/80 to-transparent z-[20] pointer-events-none" />
           </motion.div>
+          </div>
         </div>
       </div>
     </section>
