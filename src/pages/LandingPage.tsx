@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LandingNav from "@/components/landing/LandingNav";
 import LandingHero from "@/components/landing/LandingHero";
 import LandingTicker from "@/components/landing/LandingTicker";
@@ -18,6 +18,17 @@ import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
 export default function LandingPage() {
+  // Animation safety: force visibility on all framer-motion elements after delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      document.querySelectorAll('[style*="opacity: 0"]').forEach((el) => {
+        (el as HTMLElement).style.opacity = "1";
+        (el as HTMLElement).style.transform = "none";
+      });
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "#020204", color: "#f0f0f5" }}>
       <LandingNav />
