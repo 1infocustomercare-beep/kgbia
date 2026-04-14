@@ -15,12 +15,6 @@ interface Project {
   desktopScreens?: string[];
 }
 
-interface PreviewItem {
-  src: string;
-  type: "mobile" | "desktop";
-  key: string;
-}
-
 const SECTOR_CAT_MAP: Record<string, string> = {
   food: "Food", beauty: "Beauty", ncc: "Travel", fitness: "Fitness",
   healthcare: "Healthcare", veterinary: "Pet Care", childcare: "Education",
@@ -91,144 +85,33 @@ function buildProjects(): Project[] {
 
 const ALL_PROJECTS = buildProjects();
 
-const CAT_ACCENTS: Record<string, string> = {
-  Food: "28 82% 56%",
-  Beauty: "330 82% 62%",
-  Travel: "172 74% 44%",
-  Fitness: "190 92% 58%",
-  Healthcare: "211 92% 60%",
-  "Pet Care": "142 70% 52%",
-  Education: "36 92% 54%",
-  Services: "215 16% 58%",
-  Watersports: "188 88% 48%",
-  Hospitality: "43 58% 58%",
-  "Real Estate": "271 82% 64%",
-  "E-Commerce": "280 62% 60%",
+const CAT_COLORS: Record<string, string> = {
+  Food: "#e67e22", Beauty: "#ec4899", Travel: "#1abc9c", Fitness: "#22d3ee",
+  Healthcare: "#3b82f6", "Pet Care": "#4ade80", Education: "#f39c12",
+  Services: "#64748b", Watersports: "#06b6d4", Hospitality: "#c9a84c",
+  "Real Estate": "#a855f7", "E-Commerce": "#9b59b6",
 };
 
-function getPreviewItems(project: Project): PreviewItem[] {
-  return [
-    ...project.screens.map((src, i) => ({ src, type: "mobile" as const, key: `mobile-${i}` })),
-    ...(project.desktopScreens ?? []).map((src, i) => ({ src, type: "desktop" as const, key: `desktop-${i}` })),
-  ].filter((item) => Boolean(item.src));
-}
-
 /* ═══════════════════════════════════════════
-   Device Frames — realistic mockups
+   iPhone Frame — realistic device mockup
    ═══════════════════════════════════════════ */
 function PhoneFrame({ src, className = "" }: { src: string; className?: string }) {
   const [ok, setOk] = useState(true);
   if (!ok) return null;
   return (
     <div className={`relative flex-shrink-0 ${className}`}>
-      <div className="relative w-full aspect-[9/19.5] overflow-hidden rounded-[1.85rem] border border-border/70 bg-card/95 p-[3px] shadow-[var(--shadow-dna-lg)] backdrop-blur-sm">
-        <div
-          className="absolute left-1/2 top-[3.5%] z-20 h-[3.4%] w-[30%] -translate-x-1/2 rounded-full"
-          style={{ backgroundColor: "hsl(var(--deep-black) / 0.96)" }}
-        />
-        <div className="absolute inset-[3px] overflow-hidden rounded-[1.55rem] bg-background">
+      {/* Device shell */}
+      <div className="relative w-full aspect-[9/19.5] rounded-[22%/10%] border-[2.5px] border-[#2a2a3a] bg-[#0a0a14] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(255,255,255,0.04)] overflow-hidden">
+        {/* Dynamic Island */}
+        <div className="absolute top-[3%] left-1/2 -translate-x-1/2 w-[28%] h-[3.2%] bg-black rounded-full z-20" />
+        {/* Screen */}
+        <div className="absolute inset-[2px] rounded-[20%/9%] overflow-hidden">
           <img src={src} alt="" loading="lazy"
             className="w-full h-full object-cover object-top"
             onError={() => setOk(false)} />
         </div>
-        <div
-          className="pointer-events-none absolute inset-0 rounded-[1.85rem]"
-          style={{ backgroundImage: "linear-gradient(140deg, hsl(var(--foreground) / 0.10), transparent 38%)" }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function DesktopFrame({ src, className = "" }: { src: string; className?: string }) {
-  const [ok, setOk] = useState(true);
-  if (!ok) return null;
-
-  return (
-    <div className={`relative flex-shrink-0 ${className}`}>
-      <div className="relative rounded-[1.4rem] border border-border/70 bg-card/95 p-[4px] shadow-[var(--shadow-dna-lg)] backdrop-blur-sm">
-        <div className="aspect-[16/10] overflow-hidden rounded-[1rem] bg-background">
-          <img
-            src={src}
-            alt=""
-            loading="lazy"
-            className="w-full h-full object-cover object-top"
-            onError={() => setOk(false)}
-          />
-        </div>
-        <div
-          className="pointer-events-none absolute inset-0 rounded-[1.4rem]"
-          style={{ backgroundImage: "linear-gradient(140deg, hsl(var(--foreground) / 0.08), transparent 34%)" }}
-        />
-      </div>
-      <div className="mx-auto mt-1.5 h-1.5 w-16 rounded-full bg-border/80" />
-    </div>
-  );
-}
-
-function PreviewCarousel({ project, accent }: { project: Project; accent: string }) {
-  const items = useMemo(() => getPreviewItems(project), [project]);
-  const isCarousel = items.length > 1;
-  const duration = Math.min(34, Math.max(16, items.length * 2.8));
-  const copies = isCarousel ? [0, 1] : [0];
-
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      <div
-        className="absolute inset-0 opacity-90"
-        style={{ backgroundImage: `radial-gradient(circle at 50% 100%, hsl(${accent} / 0.24), transparent 58%)` }}
-      />
-
-      <div className="absolute inset-x-4 top-4 z-20 flex items-center justify-between gap-3 text-[9px] font-semibold uppercase tracking-[0.26em] text-muted-foreground">
-        <span>{items.length} preview</span>
-        <span>{project.desktopScreens?.length ? "mobile + desktop" : "mobile only"}</span>
-      </div>
-
-      <div className="absolute inset-x-0 bottom-0 top-9 overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_10%,black_90%,transparent_100%)]">
-        <div
-          className={isCarousel ? "portfolio-mockup-carousel flex h-full items-end" : "flex h-full w-full items-end justify-center"}
-          style={isCarousel ? { animationDuration: `${duration}s` } : undefined}
-        >
-          {copies.map((copy) => (
-            <div
-              key={copy}
-              className="flex h-full shrink-0 items-end gap-3 px-5 pb-4 pt-6 group-hover:[animation-play-state:paused]"
-            >
-              {items.map((item, idx) => {
-                const widthClass = item.type === "desktop"
-                  ? "w-[8.9rem] sm:w-[10.5rem]"
-                  : "w-[4.25rem] sm:w-[4.9rem]";
-                const offsetClass = idx % 3 === 1 ? "-translate-y-2" : idx % 3 === 2 ? "translate-y-1" : "";
-
-                return (
-                  <div key={`${item.key}-${copy}`} className={`${widthClass} shrink-0 transform-gpu transition-transform duration-500 ${offsetClass}`}>
-                    {item.type === "desktop" ? <DesktopFrame src={item.src} /> : <PhoneFrame src={item.src} />}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-between gap-2">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/75 px-2.5 py-1 text-[10px] font-medium text-foreground/90 backdrop-blur-md">
-          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: `hsl(${accent})` }} />
-          Tutte le schermate visibili
-        </div>
-
-        {isCarousel && (
-          <div className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-card/60 px-2 py-1 backdrop-blur-md">
-            {items.slice(0, Math.min(items.length, 5)).map((item, idx) => (
-              <span
-                key={item.key}
-                className={`h-1.5 rounded-full ${idx === 0 ? "w-4" : "w-1.5"}`}
-                style={{ backgroundColor: idx === 0 ? `hsl(${accent})` : "hsl(var(--muted-foreground) / 0.55)" }}
-              />
-            ))}
-            {items.length > 5 && <span className="ml-1 text-[9px] font-medium text-muted-foreground">+{items.length - 5}</span>}
-          </div>
-        )}
+        {/* Screen glass reflection */}
+        <div className="absolute inset-0 rounded-[20%/9%] bg-gradient-to-br from-white/[0.06] via-transparent to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -238,48 +121,67 @@ function PreviewCarousel({ project, accent }: { project: Project; accent: string
    Portfolio Card — Lowengeld-style with iPhone frames
    ═══════════════════════════════════════════ */
 function PortfolioCard({ project, onClick, index }: { project: Project; onClick: () => void; index: number }) {
-  const accent = CAT_ACCENTS[project.cat] || "210 100% 62%";
-  const previewItems = getPreviewItems(project);
+  const accent = CAT_COLORS[project.cat] || "#7eb7be";
+  const preview = project.screens.slice(0, 3);
 
   return (
     <motion.div
-      className="group cursor-pointer overflow-hidden rounded-[1.75rem] border border-border/60 bg-card/75 backdrop-blur-md transition-all duration-500 hover:border-primary/45 hover:shadow-[var(--shadow-dna-lg)]"
+      className="group cursor-pointer rounded-2xl overflow-hidden border border-white/[0.06] hover:border-white/[0.15] transition-all duration-500 bg-[#0c0c18]/80 backdrop-blur-sm"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
       transition={{ delay: (index % 4) * 0.06, duration: 0.4 }}
       onClick={onClick}
     >
-      <div className="relative aspect-[4/3] overflow-hidden border-b border-border/50 bg-muted/20">
-        <PreviewCarousel project={project} accent={accent} />
+      {/* Preview area — contained with overflow hidden */}
+      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-[#12121e] to-[#0a0a14]">
+        {/* Ambient glow */}
+        <div className="absolute inset-0 opacity-25" style={{ background: `radial-gradient(ellipse at 50% 90%, ${accent}40, transparent 60%)` }} />
 
-        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-background/55 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-30">
-          <span className="mb-5 rounded-full border border-border/70 bg-card/80 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground backdrop-blur-md sm:text-xs">
+        {/* iPhone mockups — centered, contained */}
+        <div className="absolute inset-0 flex items-end justify-center px-[8%] pb-[4%] pt-[10%]">
+          {preview.length >= 3 ? (
+            <div className="relative flex items-end justify-center w-full h-full">
+              <div className="absolute left-[4%] bottom-0 w-[30%] -rotate-[7deg] origin-bottom opacity-65 group-hover:opacity-85 transition-all duration-500 z-0">
+                <PhoneFrame src={preview[0]} />
+              </div>
+              <div className="relative w-[34%] z-10 group-hover:-translate-y-1 transition-all duration-500">
+                <PhoneFrame src={preview[1]} />
+              </div>
+              <div className="absolute right-[4%] bottom-0 w-[30%] rotate-[7deg] origin-bottom opacity-65 group-hover:opacity-85 transition-all duration-500 z-0">
+                <PhoneFrame src={preview[2]} />
+              </div>
+            </div>
+          ) : preview.length === 2 ? (
+            <div className="flex items-end justify-center w-full h-full gap-[4%]">
+              <div className="w-[34%] -rotate-3"><PhoneFrame src={preview[0]} /></div>
+              <div className="w-[34%] rotate-3"><PhoneFrame src={preview[1]} /></div>
+            </div>
+          ) : (
+            <div className="w-[36%] group-hover:-translate-y-1 transition-all duration-500">
+              <PhoneFrame src={preview[0]} />
+            </div>
+          )}
+        </div>
+
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 z-20">
+          <span className="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] sm:text-xs font-semibold tracking-wider uppercase">
             View Project →
           </span>
         </div>
       </div>
 
+      {/* Info */}
       <div className="p-3 sm:p-4">
         <div className="flex items-center gap-2 mb-1.5">
-          <span
-            className="rounded-full border px-2.5 py-1 text-[8px] font-bold uppercase tracking-[0.2em] sm:text-[10px]"
-            style={{
-              backgroundColor: `hsl(${accent} / 0.14)`,
-              borderColor: `hsl(${accent} / 0.28)`,
-              color: `hsl(${accent})`,
-            }}
-          >
-            {project.cat}
-          </span>
-          <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[10px]">{project.sub}</span>
+          <span className="px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-white" style={{ background: accent }}>{project.cat}</span>
+          <span className="text-[8px] sm:text-[10px] text-white/50 uppercase tracking-wider">{project.sub}</span>
         </div>
-        <h3 className="mb-0.5 truncate text-xs font-bold leading-tight text-foreground transition-colors group-hover:text-primary sm:text-sm">{project.name}</h3>
-        <p className="line-clamp-2 text-[9px] leading-relaxed text-muted-foreground sm:text-[11px]">{project.desc}</p>
-        {previewItems.length > 1 && (
-          <span className="mt-1 block text-[9px] text-primary/75">
-            {project.screens.length} mobile{project.desktopScreens?.length ? ` + ${project.desktopScreens.length} desktop` : ""}
-          </span>
+        <h3 className="text-xs sm:text-sm font-bold text-white mb-0.5 group-hover:text-[#7eb7be] transition-colors leading-tight truncate">{project.name}</h3>
+        <p className="text-[9px] sm:text-[11px] text-white/40 leading-relaxed line-clamp-2">{project.desc}</p>
+        {project.screens.length > 1 && (
+          <span className="text-[9px] text-[#7eb7be]/60 mt-1 block">{project.screens.length} screens{project.desktopScreens ? ` + ${project.desktopScreens.length} desktop` : ""}</span>
         )}
       </div>
     </motion.div>
@@ -293,7 +195,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
   const [activeIdx, setActiveIdx] = useState(0);
   const [showDesktop, setShowDesktop] = useState(false);
   const galleryRef = useRef<HTMLDivElement>(null);
-  const accent = CAT_ACCENTS[project.cat] || "210 100% 62%";
+  const accent = CAT_COLORS[project.cat] || "#7eb7be";
   const screens = showDesktop && project.desktopScreens?.length ? project.desktopScreens : project.screens;
 
   const scrollGallery = useCallback((dir: number) => {
@@ -314,8 +216,8 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
         <span className="text-xs sm:text-sm font-bold text-white truncate max-w-[40%]">{project.name}</span>
         {project.desktopScreens && project.desktopScreens.length > 0 ? (
           <div className="flex gap-0.5 bg-white/[0.06] rounded-full p-0.5">
-            <button onClick={() => { setShowDesktop(false); setActiveIdx(0); }} className={`p-1.5 rounded-full transition ${!showDesktop ? "bg-primary text-primary-foreground" : "text-white/40"}`}><Smartphone className="w-3.5 h-3.5" /></button>
-            <button onClick={() => { setShowDesktop(true); setActiveIdx(0); }} className={`p-1.5 rounded-full transition ${showDesktop ? "bg-primary text-primary-foreground" : "text-white/40"}`}><Monitor className="w-3.5 h-3.5" /></button>
+            <button onClick={() => { setShowDesktop(false); setActiveIdx(0); }} className={`p-1.5 rounded-full transition ${!showDesktop ? "bg-[#7eb7be] text-black" : "text-white/40"}`}><Smartphone className="w-3.5 h-3.5" /></button>
+            <button onClick={() => { setShowDesktop(true); setActiveIdx(0); }} className={`p-1.5 rounded-full transition ${showDesktop ? "bg-[#7eb7be] text-black" : "text-white/40"}`}><Monitor className="w-3.5 h-3.5" /></button>
           </div>
         ) : (
           <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-white/50 hover:text-white transition">
@@ -332,16 +234,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
             {/* Info */}
             <div>
               <div className="flex gap-2 mb-2 flex-wrap">
-                <span
-                  className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
-                  style={{
-                    backgroundColor: `hsl(${accent} / 0.14)`,
-                    borderColor: `hsl(${accent} / 0.28)`,
-                    color: `hsl(${accent})`,
-                  }}
-                >
-                  {project.cat}
-                </span>
+                <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-white" style={{ background: accent }}>{project.cat}</span>
                 <span className="px-2.5 py-0.5 rounded text-[10px] text-white/50 bg-white/[0.06] uppercase tracking-wider">{project.sub}</span>
               </div>
               <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 leading-tight">{project.name}</h1>
@@ -354,18 +247,13 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
 
             {/* Active screen preview */}
             <div className="flex justify-center">
-              <div className={`relative ${showDesktop ? "w-full max-w-[420px]" : "max-w-[200px] sm:max-w-[240px]"}`}>
-                <div
-                  className="absolute -inset-12 opacity-30 blur-3xl"
-                  style={{ backgroundImage: `radial-gradient(ellipse, hsl(${accent} / 0.22), transparent 70%)` }}
+              <div className="relative max-w-[200px] sm:max-w-[240px]">
+                <div className="absolute -inset-12 opacity-20 blur-3xl" style={{ background: `radial-gradient(ellipse, ${accent}33, transparent 70%)` }} />
+                <img
+                  src={screens[activeIdx] || screens[0]}
+                  alt={`${project.name} screen ${activeIdx + 1}`}
+                  className="relative z-10 w-full rounded-2xl shadow-2xl ring-1 ring-white/10"
                 />
-                <div className="relative z-10">
-                  {showDesktop ? (
-                    <DesktopFrame src={screens[activeIdx] || screens[0]} />
-                  ) : (
-                    <PhoneFrame src={screens[activeIdx] || screens[0]} />
-                  )}
-                </div>
               </div>
             </div>
           </div>
@@ -391,19 +279,18 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                 <button
                   key={`${showDesktop}-${i}`}
                   onClick={() => setActiveIdx(i)}
-                  className={`flex-shrink-0 snap-start rounded-[1.2rem] border transition-all duration-300 ${
+                  className={`flex-shrink-0 snap-start rounded-xl overflow-hidden transition-all duration-300 ${
                     i === activeIdx
-                      ? "border-primary/60 bg-card/70 scale-[1.02]"
-                      : "border-border/40 opacity-55 hover:opacity-85"
+                      ? "ring-2 ring-[#7eb7be] scale-[1.02]"
+                      : "opacity-40 hover:opacity-70"
                   }`}
                 >
-                  <div className="p-1.5 sm:p-2">
-                    {showDesktop ? (
-                      <DesktopFrame src={screen} className="w-[112px] sm:w-[150px]" />
-                    ) : (
-                      <PhoneFrame src={screen} className="w-[70px] sm:w-[90px]" />
-                    )}
-                  </div>
+                  <img
+                    src={screen}
+                    alt={`Screen ${i + 1}`}
+                    loading="lazy"
+                    className="w-[70px] sm:w-[90px] aspect-[9/19.5] object-cover object-top rounded-xl"
+                  />
                 </button>
               ))}
             </div>
@@ -412,13 +299,12 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
 
         {/* CTA */}
         <div className="max-w-5xl mx-auto px-4 sm:px-8 pb-10">
-          <div className="rounded-xl p-5 sm:p-8 text-center border border-white/[0.06]" style={{ backgroundImage: "var(--gradient-dna-subtle)" }}>
+          <div className="rounded-xl p-5 sm:p-8 text-center border border-white/[0.06]" style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.06), rgba(108,60,224,0.06))" }}>
             <h3 className="text-base sm:text-lg font-bold text-white mb-1">Vuoi un progetto simile?</h3>
             <p className="text-[10px] sm:text-xs text-white/35 mb-3">Contattaci per una consulenza gratuita.</p>
             <a href="#contact"
               onClick={(e) => { e.preventDefault(); onClose(); setTimeout(() => document.getElementById("team")?.scrollIntoView({ behavior: "smooth" }), 300); }}
-              className="inline-flex px-5 py-2 rounded-full text-white font-semibold text-xs sm:text-sm hover:shadow-lg transition-all"
-              style={{ backgroundImage: "var(--gradient-dna)", boxShadow: "var(--shadow-dna)" }}>
+              className="inline-flex px-5 py-2 rounded-full bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] text-white font-semibold text-xs sm:text-sm hover:shadow-lg hover:shadow-[#7eb7be]/20 transition-all">
               Richiedi Preventivo →
             </a>
           </div>
