@@ -93,20 +93,32 @@ const CAT_COLORS: Record<string, string> = {
 };
 
 /* ═══════════════════════════════════════════
-   Thumbnail — small contained image, no phone frame needed for grid
+   iPhone Frame — realistic device mockup
    ═══════════════════════════════════════════ */
-function Thumb({ src, className = "", onClick }: { src: string; className?: string; onClick?: () => void }) {
+function PhoneFrame({ src, className = "" }: { src: string; className?: string }) {
   const [ok, setOk] = useState(true);
   if (!ok) return null;
   return (
-    <img src={src} alt="" loading="lazy" onClick={onClick}
-      className={`rounded-lg object-cover object-top ${className}`}
-      onError={() => setOk(false)} />
+    <div className={`relative flex-shrink-0 ${className}`}>
+      {/* Device shell */}
+      <div className="relative w-full aspect-[9/19.5] rounded-[22%/10%] border-[2.5px] border-[#2a2a3a] bg-[#0a0a14] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(255,255,255,0.04)] overflow-hidden">
+        {/* Dynamic Island */}
+        <div className="absolute top-[3%] left-1/2 -translate-x-1/2 w-[28%] h-[3.2%] bg-black rounded-full z-20" />
+        {/* Screen */}
+        <div className="absolute inset-[2px] rounded-[20%/9%] overflow-hidden">
+          <img src={src} alt="" loading="lazy"
+            className="w-full h-full object-cover object-top"
+            onError={() => setOk(false)} />
+        </div>
+        {/* Screen glass reflection */}
+        <div className="absolute inset-0 rounded-[20%/9%] bg-gradient-to-br from-white/[0.06] via-transparent to-transparent pointer-events-none" />
+      </div>
+    </div>
   );
 }
 
 /* ═══════════════════════════════════════════
-   Portfolio Card — Lowengeld-style, fully contained
+   Portfolio Card — Lowengeld-style with iPhone frames
    ═══════════════════════════════════════════ */
 function PortfolioCard({ project, onClick, index }: { project: Project; onClick: () => void; index: number }) {
   const accent = CAT_COLORS[project.cat] || "#7eb7be";
@@ -124,30 +136,30 @@ function PortfolioCard({ project, onClick, index }: { project: Project; onClick:
       {/* Preview area — contained with overflow hidden */}
       <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-[#12121e] to-[#0a0a14]">
         {/* Ambient glow */}
-        <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(ellipse at 50% 80%, ${accent}50, transparent 70%)` }} />
+        <div className="absolute inset-0 opacity-25" style={{ background: `radial-gradient(ellipse at 50% 90%, ${accent}40, transparent 60%)` }} />
 
-        {/* Mockup thumbnails — centered, never overflow */}
-        <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-4">
+        {/* iPhone mockups — centered, contained */}
+        <div className="absolute inset-0 flex items-end justify-center px-[8%] pb-[4%] pt-[10%]">
           {preview.length >= 3 ? (
-            <div className="relative flex items-end justify-center h-full w-full max-w-[85%]">
-              <div className="absolute left-0 bottom-[5%] w-[32%] transform -rotate-6 opacity-70 group-hover:opacity-90 transition-all duration-500 z-0">
-                <Thumb src={preview[0]} className="w-full aspect-[9/19.5] rounded-xl shadow-2xl" />
+            <div className="relative flex items-end justify-center w-full h-full">
+              <div className="absolute left-[4%] bottom-0 w-[30%] -rotate-[7deg] origin-bottom opacity-65 group-hover:opacity-85 transition-all duration-500 z-0">
+                <PhoneFrame src={preview[0]} />
               </div>
-              <div className="relative w-[36%] z-10 transform group-hover:-translate-y-1 transition-all duration-500">
-                <Thumb src={preview[1]} className="w-full aspect-[9/19.5] rounded-xl shadow-2xl ring-1 ring-white/10" />
+              <div className="relative w-[34%] z-10 group-hover:-translate-y-1 transition-all duration-500">
+                <PhoneFrame src={preview[1]} />
               </div>
-              <div className="absolute right-0 bottom-[5%] w-[32%] transform rotate-6 opacity-70 group-hover:opacity-90 transition-all duration-500 z-0">
-                <Thumb src={preview[2]} className="w-full aspect-[9/19.5] rounded-xl shadow-2xl" />
+              <div className="absolute right-[4%] bottom-0 w-[30%] rotate-[7deg] origin-bottom opacity-65 group-hover:opacity-85 transition-all duration-500 z-0">
+                <PhoneFrame src={preview[2]} />
               </div>
             </div>
           ) : preview.length === 2 ? (
-            <div className="flex items-end justify-center h-full w-full gap-2 max-w-[70%]">
-              <div className="w-1/2 transform -rotate-3"><Thumb src={preview[0]} className="w-full aspect-[9/19.5] rounded-xl shadow-2xl" /></div>
-              <div className="w-1/2 transform rotate-3"><Thumb src={preview[1]} className="w-full aspect-[9/19.5] rounded-xl shadow-2xl" /></div>
+            <div className="flex items-end justify-center w-full h-full gap-[4%]">
+              <div className="w-[34%] -rotate-3"><PhoneFrame src={preview[0]} /></div>
+              <div className="w-[34%] rotate-3"><PhoneFrame src={preview[1]} /></div>
             </div>
           ) : (
-            <div className="w-[38%] transform group-hover:-translate-y-1 transition-all duration-500">
-              <Thumb src={preview[0]} className="w-full aspect-[9/19.5] rounded-xl shadow-2xl" />
+            <div className="w-[36%] group-hover:-translate-y-1 transition-all duration-500">
+              <PhoneFrame src={preview[0]} />
             </div>
           )}
         </div>
