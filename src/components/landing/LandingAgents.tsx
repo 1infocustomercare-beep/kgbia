@@ -74,7 +74,7 @@ export default function LandingAgents() {
               style={{ background: "rgba(13,13,24,0.85)" }}
               initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ delay: (i % 4) * 0.06 }}>
-              <div className="text-3xl mb-3">{a.emoji}</div>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-[1.4rem] mb-3 border border-white/[0.08] shadow-lg" style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.1), rgba(108,60,224,0.08))" }}>{a.emoji}</div>
               <h4 className="text-sm font-heading font-bold mb-1.5 text-white">{a.name}</h4>
               <p className="text-[11px] text-white/55 leading-[1.6] mb-3">{a.desc}</p>
               <span className={`inline-block text-[10px] px-2.5 py-1 rounded-lg font-semibold ${
