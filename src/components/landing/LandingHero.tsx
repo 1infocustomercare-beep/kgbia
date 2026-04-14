@@ -24,20 +24,20 @@ function MockupPhone({ m, i, total, progress, isMobile }: {
 }) {
   const center = (total - 1) / 2;
   const offset = i - center;
-  const spreadX = isMobile ? 34 : 92;
-  const spreadY = isMobile ? 4 : 14;
+  const spreadX = isMobile ? 38 : 104;
+  const spreadY = isMobile ? 4 : 12;
   const rot = offset * (isMobile ? 4 : 7);
-  const phoneW = isMobile ? 84 : 164;
+  const phoneW = isMobile ? 80 : 148;
 
   const stagger = Math.abs(offset) * 0.1;
   const localP = Math.max(0, Math.min(1, (progress - stagger) / (1 - stagger)));
   const eased = 1 - Math.pow(1 - localP, 3);
 
   const x = eased * offset * spreadX;
-  const y = (isMobile ? 110 : 140) * (1 - eased) + (-Math.abs(offset) * spreadY * eased);
+  const y = (isMobile ? 74 : 92) * (1 - eased) + (-Math.abs(offset) * spreadY * eased);
   const depth = (isMobile ? 18 : 46) - Math.abs(offset) * (isMobile ? 5 : 10);
-  const opacity = Math.min(1, (isMobile ? 0.18 : 0.24) + localP * 0.74 + (i === Math.round(center) ? 0.12 : 0));
-  const scale = 0.62 + eased * (0.36 - Math.abs(offset) * 0.024);
+  const opacity = Math.min(1, (isMobile ? 0.34 : 0.42) + localP * 0.5 + (i === Math.round(center) ? 0.08 : 0));
+  const scale = 0.7 + eased * (0.24 - Math.abs(offset) * 0.018);
   const rotate = eased * rot;
 
   return (
@@ -68,7 +68,7 @@ function MockupPhone({ m, i, total, progress, isMobile }: {
       </div>
       <div
         className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap text-center transition-opacity duration-300"
-        style={{ opacity: localP > 0.56 ? 1 : 0 }}
+        style={{ opacity: localP > 0.34 ? 1 : 0 }}
       >
         <p className="text-[10px] font-semibold text-white">{m.label}</p>
         <p className="text-[8px] text-white/50">{m.cat}</p>
@@ -99,7 +99,9 @@ export default function LandingHero() {
 
   const [fanProgress, setFanProgress] = useState(0);
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    setFanProgress(Math.max(0, Math.min(1, v / (isMobile ? 0.74 : 0.58))));
+    const basePreviewProgress = isMobile ? 0.12 : 0.18;
+    const travelProgress = Math.max(0, Math.min(1, v / (isMobile ? 0.74 : 0.58)));
+    setFanProgress(Math.max(basePreviewProgress, basePreviewProgress + travelProgress * (1 - basePreviewProgress)));
   });
 
   const [typed, setTyped] = useState("");
@@ -118,9 +120,9 @@ export default function LandingHero() {
   const sectionHeight = isMobile ? "220svh" : "320vh";
   const stickyTop = `${headerOffset}px`;
   const stickyHeight = `calc(100svh - ${headerOffset}px)`;
-  const headlineTop = isMobile ? "clamp(0.5rem, 2vh, 1rem)" : "clamp(1.5rem, 4vh, 3rem)";
-  const stageBottom = isMobile ? "clamp(0.5rem, 3vh, 1rem)" : "clamp(1.5rem, 5vh, 3rem)";
-  const mockupHeight = isMobile ? "240px" : "420px";
+  const headlineTop = isMobile ? "clamp(0.35rem, 1.5vh, 0.75rem)" : "clamp(0.75rem, 2.2vh, 1.5rem)";
+  const stageBottom = isMobile ? "0.25rem" : "0.5rem";
+  const mockupHeight = isMobile ? "208px" : "340px";
 
   return (
     <section ref={outerRef} id="hero" style={{ height: sectionHeight }} className="relative">
@@ -166,7 +168,7 @@ export default function LandingHero() {
             </motion.div>
 
             <motion.h1
-              className="text-[clamp(2.4rem,7vw,5rem)] font-heading font-extrabold leading-[0.88] tracking-[-0.04em] mb-4"
+              className="text-[clamp(2.2rem,6.2vw,4.5rem)] font-heading font-extrabold leading-[0.9] tracking-[-0.04em] mb-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
@@ -176,7 +178,7 @@ export default function LandingHero() {
             </motion.h1>
 
             <motion.p
-              className="text-white/88 text-[clamp(1rem,3.4vw,1.18rem)] leading-[1.6] max-w-[580px] mx-auto mb-6 font-light"
+              className="text-white/88 text-[clamp(0.98rem,2.4vw,1.08rem)] leading-[1.55] max-w-[580px] mx-auto mb-5 font-light"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.1 }}
@@ -223,7 +225,7 @@ export default function LandingHero() {
           </motion.div>
           </div>
 
-          <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-[1180px]" style={{ bottom: stageBottom }}>
+          <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-[1080px]" style={{ bottom: stageBottom }}>
           <motion.div
             className="w-full"
             style={{ y: stageY, scale: stageScale, opacity: stageOpacity }}
