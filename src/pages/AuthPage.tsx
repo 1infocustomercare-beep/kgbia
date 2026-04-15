@@ -297,7 +297,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 landing-dark auth-contrast"
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 landing-dark force-dark auth-contrast"
       style={{ background: "linear-gradient(160deg, hsl(228 22% 8%), hsl(250 20% 10%), hsl(228 22% 7%))" }}>
 
       <button onClick={() => navigate("/home")}
