@@ -88,9 +88,9 @@ export default function PartnerIntegrationsSetup({ userId, userEmail }: Props) {
         body: { action: "status", userId },
       });
       if (error) throw error;
-      setStripeStatus(data as StripeStatus);
+      setStripeStatus((data as StripeStatus) || { configured: false, connected: false, onboarding_complete: false });
     } catch {
-      setStripeStatus({ connected: false, onboarding_complete: false });
+      setStripeStatus({ configured: false, connected: false, onboarding_complete: false, error: "Stripe not configured" });
     } finally {
       setLoading(false);
     }
@@ -133,6 +133,7 @@ export default function PartnerIntegrationsSetup({ userId, userEmail }: Props) {
     }
   };
 
+  const isStripeConfigured = stripeStatus?.configured !== false;
   const isStripeComplete = stripeStatus?.onboarding_complete === true;
   const isStripePartial = stripeStatus?.connected && !stripeStatus.onboarding_complete;
 

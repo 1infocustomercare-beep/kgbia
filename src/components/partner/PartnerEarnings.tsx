@@ -25,15 +25,14 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
       const { data, error } = await supabase.functions.invoke("partner-connect-onboarding", {
         body: { action: "status", userId: user?.id },
       });
-      if (!error && data && !data.error) {
+      if (!error && data) {
         setConnectStatus(data);
       } else {
-        // Stripe not configured yet — show as not connected
-        setConnectStatus({ connected: false, onboarding_complete: false });
+        setConnectStatus({ configured: false, connected: false, onboarding_complete: false, error: "Stripe not configured" });
       }
     } catch (e) {
       console.error("Connect status check failed:", e);
-      setConnectStatus({ connected: false, onboarding_complete: false });
+      setConnectStatus({ configured: false, connected: false, onboarding_complete: false, error: "Stripe not configured" });
     }
   };
 
