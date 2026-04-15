@@ -64,29 +64,20 @@ async function searchOverpass(city: string, sector: string, query: string): Prom
   const shopTypes = SECTOR_SHOP_TYPES[sector] || [];
   const results: any[] = [];
 
-  // Build Overpass query with geocodeArea for reliable city matching
-  const amenityFilter = amenities.map(a => `["amenity"="${a}"]`).join("");
-  const amenityNodes = amenities.map(a => 
-    `node["amenity"="${a}"](area.searchArea);way["amenity"="${a}"](area.searchArea);`
-  ).join("\n");
-  
-  const shopNodes = shopTypes.map(s =>
-    `node["shop"="${s}"](area.searchArea);way["shop"="${s}"](area.searchArea);`
-  ).join("\n");
+  // Use only top 3 amenities and top 2 shop types to keep query fast
+  const topAmenities = amenities.slice(0, 3);
+  const topShops = shopTypes.slice(0, 2);
 
-  // If there's a specific query text, add name filter
-  const nameFilter = query ? `["name"~"${query.replace(/[^a-zA-ZÀ-ÿ0-9 ]/g, "")}", i]` : "";
+  const amenityRegex = topAmenities.join("|");
+  const shopRegex = topShops.length > 0 ? topShops.join("|") : "";
 
-  const overpassQuery = `
-[out:json][timeout:25];
+  const overpassQuery = `[out:json][timeout:15];
 {{geocodeArea:${city}}}->.searchArea;
 (
-  ${amenityNodes}
-  ${shopNodes}
-  ${query ? `node["name"~"${query.replace(/[^a-zA-ZÀ-ÿ0-9 ]/g, "")}", i](area.searchArea);` : ""}
+  node["amenity"~"${amenityRegex}"](area.searchArea);
+  ${shopRegex ? `node["shop"~"${shopRegex}"](area.searchArea);` : ""}
 );
-out body 50;
-`;
+out body 40;`;
 
   try {
     const resp = await fetch("https://overpass-api.de/api/interpreter", {
