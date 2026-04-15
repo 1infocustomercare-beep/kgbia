@@ -69,16 +69,6 @@ export default function PartnerHomePage() {
                   <Crown className="w-3 h-3" /> Team Leader
                 </span>
               )}
-              <motion.button onClick={() => setDemoMode(p => !p)} whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold"
-                style={{
-                  background: demoMode ? "rgba(245,158,11,0.15)" : "rgba(167,139,250,0.12)",
-                  border: `1px solid ${demoMode ? "rgba(245,158,11,0.3)" : "rgba(167,139,250,0.2)"}`,
-                  color: demoMode ? "#f59e0b" : "#a78bfa",
-                }}>
-                {demoMode ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                {demoMode ? "Demo" : "Lavoro"}
-              </motion.button>
             </div>
           </div>
         </div>
