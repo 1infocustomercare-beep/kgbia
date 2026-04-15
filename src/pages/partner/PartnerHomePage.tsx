@@ -3,24 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Target, DollarSign, FolderOpen, User, ChevronRight, Crown, Trophy,
-  Sparkles, Eye, EyeOff, Zap, TrendingUp, Users,
+  Sparkles, Zap, TrendingUp, Users,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import empireMonkeyMascot from "@/assets/empire-monkey.png";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
+import { usePartnerDemoMode } from "@/components/layout/PartnerLayout";
 
 export default function PartnerHomePage() {
   const navigate = useNavigate();
   const { user, isTeamLeader } = useAuth();
+  const { demoMode } = usePartnerDemoMode();
   const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
   const [profileName, setProfileName] = useState<string | null>(null);
   const [salesCount, setSalesCount] = useState(0);
   const [totalCommissions, setTotalCommissions] = useState(0);
   const [teamCount, setTeamCount] = useState(0);
-  const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
-
-  useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
   useEffect(() => {
     if (!user?.id) return;
