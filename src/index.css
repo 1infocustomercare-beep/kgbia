@@ -171,8 +171,9 @@
   }
 }
 
-/* ═══ LANDING PAGE DARK PREMIUM SCOPE ═══ */
-.landing-dark {
+/* ═══ LANDING PAGE DARK PREMIUM SCOPE — only active in dark mode ═══ */
+.dark .landing-dark,
+.landing-dark.force-dark {
   --background: 228 18% 7%;
   --foreground: 210 20% 98%;
   --card: 225 14% 11%;
@@ -217,7 +218,8 @@
 }
 
 /* Seller accounts (/partner) — hard contrast lock */
-.landing-dark.partner-console {
+.dark .landing-dark.partner-console,
+.landing-dark.force-dark.partner-console {
   --foreground: 0 0% 100%;
   --muted-foreground: 215 20% 84%;
   --card: 232 18% 14%;
@@ -226,42 +228,42 @@
   --input: 220 14% 34%;
 }
 
-.landing-dark.partner-console h1,
-.landing-dark.partner-console h2,
-.landing-dark.partner-console h3 {
+.dark .landing-dark.partner-console h1,
+.dark .landing-dark.partner-console h2,
+.dark .landing-dark.partner-console h3 {
   color: hsl(var(--foreground));
 }
 
-.landing-dark.partner-console .text-muted-foreground {
+.dark .landing-dark.partner-console .text-muted-foreground {
   color: hsl(var(--muted-foreground)) !important;
 }
 
-.landing-dark.partner-console .bg-card {
+.dark .landing-dark.partner-console .bg-card {
   background-color: hsl(var(--card) / 0.96) !important;
 }
 
-.landing-dark.partner-console .bg-secondary {
+.dark .landing-dark.partner-console .bg-secondary {
   background-color: hsl(var(--secondary) / 0.9) !important;
 }
 
-.landing-dark.partner-console .border-border\/50 {
+.dark .landing-dark.partner-console .border-border\/50 {
   border-color: hsl(var(--border) / 0.62) !important;
 }
 
-.landing-dark.partner-console .glass {
+.dark .landing-dark.partner-console .glass {
   background: hsl(var(--card) / 0.95);
   border: 1px solid hsl(var(--border) / 0.65);
 }
 
-.landing-dark.partner-console input,
-.landing-dark.partner-console textarea,
-.landing-dark.partner-console select {
+.dark .landing-dark.partner-console input,
+.dark .landing-dark.partner-console textarea,
+.dark .landing-dark.partner-console select {
   color: hsl(var(--foreground));
   border-color: hsl(var(--input) / 0.62);
 }
 
-.landing-dark.partner-console input::placeholder,
-.landing-dark.partner-console textarea::placeholder {
+.dark .landing-dark.partner-console input::placeholder,
+.dark .landing-dark.partner-console textarea::placeholder {
   color: hsl(var(--muted-foreground));
 }
 
