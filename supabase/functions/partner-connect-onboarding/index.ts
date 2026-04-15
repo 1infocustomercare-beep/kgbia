@@ -28,7 +28,7 @@ serve(async (req) => {
         configured: false,
         connected: false,
         onboarding_complete: false,
-        error: "Stripe not configured",
+        error: "Stripe not yet configured by platform admin",
       }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

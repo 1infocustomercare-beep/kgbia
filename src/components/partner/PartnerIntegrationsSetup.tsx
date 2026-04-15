@@ -14,13 +14,11 @@ interface Props {
 }
 
 interface StripeStatus {
-  configured?: boolean;
   connected: boolean;
   onboarding_complete: boolean;
   charges_enabled?: boolean;
   payouts_enabled?: boolean;
   stripe_account_id?: string;
-  error?: string;
 }
 
 /* ── Step Card ── */
@@ -88,9 +86,13 @@ export default function PartnerIntegrationsSetup({ userId, userEmail }: Props) {
         body: { action: "status", userId },
       });
       if (error) throw error;
-      setStripeStatus((data as StripeStatus) || { configured: false, connected: false, onboarding_complete: false });
+      if (data?.configured === false) {
+        setStripeStatus({ connected: false, onboarding_complete: false });
+      } else {
+        setStripeStatus(data as StripeStatus);
+      }
     } catch {
-      setStripeStatus({ configured: false, connected: false, onboarding_complete: false, error: "Stripe not configured" });
+      setStripeStatus({ connected: false, onboarding_complete: false });
     } finally {
       setLoading(false);
     }
@@ -133,7 +135,6 @@ export default function PartnerIntegrationsSetup({ userId, userEmail }: Props) {
     }
   };
 
-  const isStripeConfigured = stripeStatus?.configured !== false;
   const isStripeComplete = stripeStatus?.onboarding_complete === true;
   const isStripePartial = stripeStatus?.connected && !stripeStatus.onboarding_complete;
 
@@ -241,25 +242,6 @@ export default function PartnerIntegrationsSetup({ userId, userEmail }: Props) {
               <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
               <span className="text-xs text-muted-foreground">Controllo stato...</span>
             </div>
-          ) : !isStripeConfigured ? (
-            <div className="space-y-3">
-              <div className="p-3 rounded-xl flex items-start gap-2 bg-destructive/10 border border-destructive/20">
-                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0 text-destructive" />
-                <div>
-                  <p className="text-xs font-medium text-foreground">Stripe non ancora configurato</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">
-                    Il collegamento del conto è momentaneamente in preparazione lato piattaforma. Appena viene inserita la chiave backend, qui potrai completare la procedura Stripe senza errori.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                disabled
-                className="w-full py-3 rounded-xl bg-muted text-muted-foreground font-bold text-sm opacity-70 cursor-not-allowed"
-              >
-                Stripe in configurazione
-              </button>
-            </div>
           ) : (
             <>
               {isStripeComplete && (
@@ -283,6 +265,7 @@ export default function PartnerIntegrationsSetup({ userId, userEmail }: Props) {
                 </div>
               )}
 
+              {/* Action buttons */}
               <div className="flex gap-2">
                 {!isStripeComplete && (
                   <motion.button whileTap={{ scale: 0.97 }} onClick={handleConnectStripe} disabled={connecting}

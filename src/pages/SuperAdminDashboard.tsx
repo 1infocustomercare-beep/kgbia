@@ -116,7 +116,7 @@ const PLAN_LABELS: Record<string, string> = {
 
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
-  const { signOut, user: currentUser } = useAuth();
+  const { signOut } = useAuth();
   const { theme: currentTheme } = useTheme();
   const isDark = currentTheme === "dark";
   const [activeTab, setActiveTab] = useState<SuperTab>("overview");
@@ -2499,41 +2499,21 @@ const SuperAdminDashboard = () => {
               </div>
             </div>
 
-            {/* Il tuo link di reclutamento personale */}
-            <div className="rounded-xl border border-primary/20 bg-primary/[0.04] p-4 space-y-3">
+            {/* Link condivisibile */}
+            <div className="rounded-xl border border-purple-500/20 bg-purple-500/[0.04] p-3 space-y-2">
               <p className="text-xs font-bold text-foreground flex items-center gap-2">
-                <Crown className="w-4 h-4 text-primary" /> Il Tuo Link di Reclutamento (Super Admin)
-              </p>
-              <p className="text-[0.55rem] text-muted-foreground">Invia questo link a chi vuoi far diventare Partner Empire. Chi si registra tramite questo link sarà automaticamente sotto di te nella gerarchia.</p>
-              <div className="flex items-center gap-2">
-                <code className="flex-1 text-[0.55rem] bg-background/50 px-2.5 py-2 rounded-lg text-foreground/80 overflow-x-auto whitespace-nowrap border border-border/30">
-                  {window.location.origin}/join?ref={currentUser?.id || ""}
-                </code>
-                <motion.button
-                  onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join?ref=${currentUser?.id || ""}`); toast({ title: "Link copiato! 🔗", description: "Incollalo in WhatsApp, email o dove vuoi." }); }}
-                  className="shrink-0 w-9 h-9 rounded-lg bg-primary/15 flex items-center justify-center text-primary"
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Copy className="w-4 h-4" />
-                </motion.button>
-              </div>
-            </div>
-
-            {/* Link generico senza referral */}
-            <div className="rounded-xl border border-border/20 bg-card/30 p-3 space-y-2">
-              <p className="text-[0.6rem] font-bold text-foreground/70 flex items-center gap-2">
-                <Link2 className="w-3 h-3 text-muted-foreground" /> Link Generico (senza referral)
+                <Handshake className="w-3.5 h-3.5 text-purple-400" /> Condividi questo link per reclutare partner
               </p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 text-[0.5rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/60 overflow-x-auto whitespace-nowrap">
+                <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
                   {window.location.origin}/join
                 </code>
                 <motion.button
-                  onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join`); toast({ title: "Link generico copiato" }); }}
-                  className="shrink-0 w-7 h-7 rounded-lg bg-secondary/50 flex items-center justify-center text-muted-foreground"
+                  onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join`); toast({ title: "Link copiato!" }); }}
+                  className="shrink-0 w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center text-purple-400"
                   whileTap={{ scale: 0.9 }}
                 >
-                  <Copy className="w-3 h-3" />
+                  <Copy className="w-3.5 h-3.5" />
                 </motion.button>
               </div>
             </div>
@@ -2594,23 +2574,10 @@ const SuperAdminDashboard = () => {
                     </motion.button>
                   </div>
 
-                  {/* Link di reclutamento del partner */}
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-lg bg-card/50 border border-border/20">
-                    <Link2 className="w-3 h-3 text-muted-foreground shrink-0" />
-                    <code className="flex-1 text-[0.45rem] text-foreground/60 overflow-x-auto whitespace-nowrap">{window.location.origin}/join?ref={p.id}</code>
-                    <motion.button
-                      onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join?ref=${p.id}`); toast({ title: "Link copiato", description: `Link di ${p.fullName}` }); }}
-                      className="shrink-0 w-6 h-6 rounded bg-secondary/50 flex items-center justify-center text-muted-foreground"
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <Copy className="w-2.5 h-2.5" />
-                    </motion.button>
-                  </div>
-
-                  {/* Reclutato da */}
+                  {/* Team Leader ID */}
                   {p.teamLeaderId && (
                     <p className="text-[0.55rem] text-muted-foreground">
-                      Reclutato da: <span className="text-foreground font-medium">{partnerNetwork.find(x => x.id === p.teamLeaderId)?.fullName || p.teamLeaderId.slice(0, 8)}</span>
+                      Sotto: <span className="text-foreground font-medium">{partnerNetwork.find(x => x.id === p.teamLeaderId)?.fullName || p.teamLeaderId.slice(0, 8)}</span>
                     </p>
                   )}
 

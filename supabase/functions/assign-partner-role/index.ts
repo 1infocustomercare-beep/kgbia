@@ -89,18 +89,16 @@ serve(async (req) => {
       console.error("Profile sync error (non-blocking):", profileErr);
     }
 
-    // If referred by someone, add to their team
+    // If referred by a team leader, add to their team
     if (team_leader_id) {
-      // Verify the referrer has partner or team_leader role
-      const { data: referrerRole } = await supabaseAdmin
+      // Verify the referrer has a valid role (super_admin, team_leader, or partner)
+      const { data: referrerRoles } = await supabaseAdmin
         .from("user_roles")
-        .select("id, role")
+        .select("role")
         .eq("user_id", team_leader_id)
-        .in("role", ["team_leader", "partner", "super_admin"])
-        .limit(1)
-        .maybeSingle();
+        .in("role", ["super_admin", "team_leader", "partner"]);
 
-      if (referrerRole) {
+      if (referrerRoles && referrerRoles.length > 0) {
         // Check not already in a team
         const { data: existing } = await supabaseAdmin
           .from("partner_teams")
