@@ -567,16 +567,7 @@ function App() {
                       <Route path="/onboarding" element={
                         <ProtectedRoute><OnboardingPage /></ProtectedRoute>
                       } />
-                      <Route path="/partner/leads" element={
-                        <ProtectedRoute requiredRole="partner">
-                          <LeadsPage />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/partner/content-ai" element={
-                        <ProtectedRoute requiredRole="partner">
-                          <ContentAIPage />
-                        </ProtectedRoute>
-                      } />
+                      {/* partner/leads and partner/content-ai are now nested under /partner layout */}
                       {/* leads is partner-only, not superadmin */}
                       <Route path="/superadmin/leads" element={
                         <ProtectedRoute requiredRole="super_admin">
