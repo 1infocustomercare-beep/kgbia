@@ -868,7 +868,8 @@ export default function LeadsPage() {
       {/* ═══ PIPELINE: Selected → Analysis + Customized Preview + Message ═══ */}
       <AnimatePresence>
         {selected && (
-          <motion.div ref={pipelineRef} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-3">
+          <div ref={pipelineRef}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-3">
 
             {/* Lead Summary + Quick Analysis */}
             <div className="p-4 rounded-2xl" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.06), rgba(59,130,246,0.04))", border: "1px solid rgba(124,58,237,0.15)" }}>
