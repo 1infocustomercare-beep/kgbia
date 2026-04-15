@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Target, MapPin, Filter, ChevronDown, Loader2, Phone, Globe, Mail,
@@ -161,7 +161,6 @@ export default function LeadsPage() {
   const [lastSearchCity, setLastSearchCity] = useState("");
   const [lastSearchSector, setLastSearchSector] = useState("");
   const [showTips, setShowTips] = useState(() => !sessionStorage.getItem("leads_tips_hidden"));
-  const cityInputRef = useRef<HTMLInputElement>(null);
   const pendingQuickSearch = useRef<{ city: string; sector: string } | null>(null);
 
   // Pipeline
@@ -431,12 +430,7 @@ export default function LeadsPage() {
   const sectorConfig = selected ? INDUSTRY_CONFIGS[selected._sector as keyof typeof INDUSTRY_CONFIGS] : null;
   const previewScreens = selected ? getPreviewScreens(selected._sector) : [];
 
-  // Auto-focus city input on mount
-  useEffect(() => {
-    setTimeout(() => cityInputRef.current?.focus(), 400);
-  }, []);
-
-  // Handle pending quick search after state updates
+  // Quick search trigger after state updates
   useEffect(() => {
     if (pendingQuickSearch.current && city === pendingQuickSearch.current.city && sector === pendingQuickSearch.current.sector) {
       pendingQuickSearch.current = null;
@@ -576,7 +570,7 @@ export default function LeadsPage() {
           </div>
           <div className="col-span-5 sm:col-span-3 relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#14b8a6" }} />
-            <input ref={cityInputRef} value={city} onChange={e => setCity(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
+            <input value={city} onChange={e => setCity(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
               placeholder="Città (Roma, NYC, Dubai...)" className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
           <div className="col-span-4 sm:col-span-3">
@@ -1216,76 +1210,92 @@ export default function LeadsPage() {
               Analizzando Google Maps · OSM · Overpass · Photon · Instagram...
             </motion.p>
           </div>
-          <div className="flex justify-center gap-1">
-            {[0, 0.2, 0.4, 0.6, 0.8].map((d, i) => (
-              <motion.div key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: "#14b8a6" }}
-                animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: d }} />
-            ))}
-          </div>
         </motion.div>
       )}
 
-      {/* Empty state */}
+      {/* Empty state — full sector picker */}
       {results.length === 0 && !loading && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          className="text-center py-10">
-          
-          {/* Animated scanning icon */}
-          <div className="relative w-16 h-16 mx-auto mb-4">
-            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
-              className="absolute inset-0 rounded-full" style={{ border: "2px dashed rgba(20,184,166,0.2)" }} />
-            <div className="absolute inset-1 rounded-full flex items-center justify-center" style={{ background: "rgba(20,184,166,0.06)" }}>
-              <Target className="w-7 h-7" style={{ color: "#14b8a6" }} />
+          className="py-8 space-y-5">
+
+          {/* Header */}
+          <div className="text-center">
+            <div className="relative w-14 h-14 mx-auto mb-3">
+              <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+                className="absolute inset-0 rounded-full" style={{ border: "2px dashed rgba(20,184,166,0.2)" }} />
+              <div className="absolute inset-1 rounded-full flex items-center justify-center" style={{ background: "rgba(20,184,166,0.06)" }}>
+                <Target className="w-6 h-6" style={{ color: "#14b8a6" }} />
+              </div>
             </div>
-            <motion.div className="absolute -right-1 -top-1 w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "#14b8a6" }}
-              animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
-              <Zap className="w-2.5 h-2.5 text-white" />
-            </motion.div>
+            <p className="text-base font-bold text-white">Seleziona il settore e cerca</p>
+            <p className="text-[11px] mt-1 max-w-xs mx-auto" style={{ color: "#6b7280" }}>
+              Scegli un settore, inserisci la città sopra e premi <span className="font-bold text-white">Cerca</span>. Oppure tap su una categoria per impostarla.
+            </p>
           </div>
 
-          <p className="text-base font-bold text-white mb-1">Ricerca Lead Automatica</p>
-          <p className="text-[11px] max-w-xs mx-auto mb-5" style={{ color: "#6b7280" }}>
-            Inserisci la città e premi <span className="font-semibold text-white">Invio</span> — lo scanner multi-fonte analizza automaticamente 5 database in parallelo.
-          </p>
-
           {/* Source engines */}
-          <div className="flex flex-wrap justify-center gap-1.5 mb-5">
+          <div className="flex flex-wrap justify-center gap-1.5">
             {[
               { icon: "🗺️", label: "Google Maps", color: "#4285F4" },
-              { icon: "🌍", label: "OpenStreetMap", color: "#7EBC6F" },
+              { icon: "🌍", label: "OSM", color: "#7EBC6F" },
               { icon: "📍", label: "Photon", color: "#F59E0B" },
               { icon: "🔎", label: "Overpass", color: "#06B6D4" },
-              { icon: "📸", label: "Instagram AI", color: "#E4405F" },
+              { icon: "📸", label: "IG AI", color: "#E4405F" },
             ].map(src => (
-              <span key={src.label} className="text-[9px] px-2.5 py-1.5 rounded-lg font-bold flex items-center gap-1"
+              <span key={src.label} className="text-[8px] px-2 py-1 rounded-lg font-bold"
                 style={{ background: `${src.color}10`, border: `1px solid ${src.color}20`, color: src.color }}>
                 {src.icon} {src.label}
               </span>
             ))}
           </div>
 
-          {/* Quick start — one-tap search */}
-          <p className="text-[9px] font-bold uppercase tracking-widest mb-2.5" style={{ color: "#4b5563" }}>⚡ Ricerca rapida — un tap per iniziare</p>
-          <div className="grid grid-cols-2 gap-2 max-w-sm mx-auto">
-            {[
-              { city: "Roma", sector: "food", label: "Ristoranti a Roma", emoji: "🍕", color: "#ef4444" },
-              { city: "Milano", sector: "beauty", label: "Beauty a Milano", emoji: "💇", color: "#ec4899" },
-              { city: "London", sector: "fitness", label: "Gym a Londra", emoji: "🏋️", color: "#3b82f6" },
-              { city: "Dubai", sector: "hospitality", label: "Hotel a Dubai", emoji: "🏨", color: "#f59e0b" },
-              { city: "Napoli", sector: "food", label: "Pizzerie a Napoli", emoji: "🍕", color: "#22c55e" },
-              { city: "Miami", sector: "beauty", label: "Beauty a Miami", emoji: "💅", color: "#a855f7" },
-            ].map((s, i) => (
-              <motion.button key={i} whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.02 }}
-                onClick={() => { pendingQuickSearch.current = { city: s.city, sector: s.sector }; setCity(s.city); setSector(s.sector); }}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all"
-                style={{ background: `${s.color}08`, border: `1px solid ${s.color}18` }}>
-                <span className="text-base">{s.emoji}</span>
-                <div>
-                  <p className="text-[10px] font-bold text-white">{s.label}</p>
-                  <p className="text-[8px]" style={{ color: "#6b7280" }}>Tap per avviare</p>
-                </div>
-              </motion.button>
-            ))}
+          {/* ALL sectors grid — clickable */}
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-center mb-2.5" style={{ color: "#4b5563" }}>
+              ⚡ Scegli settore — tap per impostare
+            </p>
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5 max-h-[320px] overflow-y-auto pr-1">
+              {SECTOR_OPTIONS.map((s) => {
+                const isActive = sector === s.value;
+                return (
+                  <motion.button key={s.value} whileTap={{ scale: 0.95 }}
+                    onClick={() => { setSector(s.value); toast.success(`Settore: ${s.label}`, { description: "Inserisci la città e premi Cerca" }); }}
+                    className="flex items-center gap-1.5 px-2 py-2 rounded-xl text-left transition-all"
+                    style={{
+                      background: isActive ? "rgba(20,184,166,0.12)" : "rgba(255,255,255,0.02)",
+                      border: `1px solid ${isActive ? "rgba(20,184,166,0.35)" : "rgba(255,255,255,0.06)"}`,
+                    }}>
+                    <span className="text-sm">{s.label.split(" ")[0]}</span>
+                    <span className="text-[8px] font-semibold truncate" style={{ color: isActive ? "#5eead4" : "#9ca3af" }}>
+                      {s.label.split(" ").slice(1).join(" ")}
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Quick start with city */}
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-center mb-2" style={{ color: "#4b5563" }}>
+              🚀 Ricerca rapida — un tap
+            </p>
+            <div className="grid grid-cols-2 gap-1.5 max-w-sm mx-auto">
+              {[
+                { city: "Roma", sector: "food", emoji: "🍕", label: "Ristoranti Roma" },
+                { city: "Milano", sector: "beauty", emoji: "💇", label: "Beauty Milano" },
+                { city: "London", sector: "fitness", emoji: "🏋️", label: "Gym Londra" },
+                { city: "Dubai", sector: "hospitality", emoji: "🏨", label: "Hotel Dubai" },
+              ].map((s, i) => (
+                <motion.button key={i} whileTap={{ scale: 0.95 }}
+                  onClick={() => { pendingQuickSearch.current = { city: s.city, sector: s.sector }; setCity(s.city); setSector(s.sector); }}
+                  className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-left"
+                  style={{ background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.12)" }}>
+                  <span className="text-sm">{s.emoji}</span>
+                  <span className="text-[9px] font-bold" style={{ color: "#c4b5fd" }}>{s.label}</span>
+                </motion.button>
+              ))}
+            </div>
           </div>
         </motion.div>
       )}
