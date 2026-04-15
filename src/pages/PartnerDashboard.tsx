@@ -707,7 +707,7 @@ const PartnerDashboard = () => {
   const netEarnings = estimatedCommissions + totalBonuses + totalOverrides;
   const currentMonth = new Date().toISOString().slice(0, 7);
   const currentMonthSales = currentMonthSalesCount;
-  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
+  const userName = profileName || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
   const selectedProjectName = selectedProject
     ? PORTFOLIO_PROJECTS[selectedProject as keyof typeof PORTFOLIO_PROJECTS]?.name || selectedProject
