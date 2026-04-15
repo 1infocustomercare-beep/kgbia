@@ -43,7 +43,7 @@ const JoinPartnerPage = () => {
             <span className="font-heading font-bold text-sm tracking-wider uppercase text-foreground">EMPIRE</span>
           </div>
           <motion.button
-            onClick={() => navigate("/auth?role=partner")}
+            onClick={() => navigate(authUrl)}
             className="px-5 py-2 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-xs font-heading tracking-wider uppercase"
             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
           >
@@ -141,7 +141,7 @@ const JoinPartnerPage = () => {
             Registrati gratis, ricevi il tuo kit vendita e inizia a guadagnare commissioni dal primo giorno.
           </p>
           <motion.button
-            onClick={() => navigate("/auth?role=partner")}
+            onClick={() => navigate(authUrl)}
             className="px-10 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
             whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(265,70%,60%,0.25)" }}
             whileTap={{ scale: 0.97 }}
