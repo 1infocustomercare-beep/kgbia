@@ -229,7 +229,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { instagram, website, sector, channel, demoLink, allDemosLink, contactInfo, leadName, leadCity, leadPhone, portfolioRef } = body;
+    const { instagram, website, sector, channel, demoLink, allDemosLink, contactInfo, leadName, leadCity, leadPhone, portfolioRef, country } = body;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
@@ -238,7 +238,10 @@ serve(async (req) => {
     const formatRules = channelRules[ch] || channelRules.whatsapp;
     const sectorKey = (sector || "generico").toLowerCase();
 
-    const systemPrompt = buildSystemPrompt(sectorKey, formatRules, demoLink || "", allDemosLink || "", contactInfo || "");
+    // Auto-detect language from country or city
+    const { lang, greeting } = detectLanguage(country, leadCity);
+
+    const systemPrompt = buildSystemPrompt(sectorKey, formatRules, demoLink || "", allDemosLink || "", contactInfo || "", lang);
 
     const prospectDetails: string[] = [];
     if (leadName) prospectDetails.push(`Nome attività: "${leadName}"`);
