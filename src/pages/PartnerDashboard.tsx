@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
+import { Switch } from "@/components/ui/switch";
 import empireMonkeyMascot from "@/assets/empire-monkey.png";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -10,7 +11,7 @@ import {
   Copy, CheckCircle, UserPlus, ChevronRight,
   ExternalLink, ArrowLeft, Send, RefreshCw,
   Pencil, Upload, Save, X as XIcon,
-  Globe, Search, Zap
+  Globe, Search, Zap, Presentation, Bot, Package
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
@@ -264,16 +265,27 @@ const PartnerDashboard = () => {
           <span className="text-sm font-bold text-white ml-2">Partner Portal</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-            <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold uppercase" style={{ background: "rgba(167,139,250,0.2)", color: "#a78bfa" }}>
-              {userName.charAt(0)}
-            </div>
-            <span className="text-xs text-white font-medium max-w-[120px] truncate">{userName}</span>
+          {/* Demo/Presentation Switch */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full transition-all" style={{
+            background: demoMode ? "rgba(245,158,11,0.12)" : "rgba(255,255,255,0.04)",
+            border: `1px solid ${demoMode ? "rgba(245,158,11,0.3)" : "rgba(255,255,255,0.08)"}`,
+          }}>
+            {demoMode ? <Presentation className="w-3.5 h-3.5" style={{ color: "#f59e0b" }} /> : <Eye className="w-3.5 h-3.5" style={{ color: "#6b7280" }} />}
+            <span className="text-[10px] font-semibold hidden sm:inline" style={{ color: demoMode ? "#f59e0b" : "#9ca3af" }}>
+              {demoMode ? "LIVE" : "Demo"}
+            </span>
+            <Switch
+              checked={demoMode}
+              onCheckedChange={(checked) => {
+                setDemoMode(checked);
+                toast({ title: checked ? "🎯 Modalità Presentazione" : "🔓 Modalità Normale", description: checked ? "Solo contenuti per la vendita — dati sensibili nascosti" : "Tutti i dati e strumenti visibili" });
+              }}
+              className="data-[state=checked]:bg-amber-500 h-4 w-8 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-4"
+            />
           </div>
           <DarkModeToggle />
-          <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }}>
+          <button onClick={handleLogout} className="flex items-center gap-1.5 px-2 py-1.5 rounded-full text-xs font-medium" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }}>
             <LogOut className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Esci</span>
           </button>
         </div>
       </div>
