@@ -108,6 +108,7 @@ const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
   nominatim: { label: "OSM", color: "#7EBC6F" },
   photon: { label: "Photon", color: "#F59E0B" },
   overpass: { label: "Overpass", color: "#06B6D4" },
+  instagram: { label: "Instagram", color: "#E4405F" },
   manual: { label: "Manuale", color: "#A78BFA" },
 };
 
