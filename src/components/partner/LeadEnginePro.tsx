@@ -4,7 +4,8 @@ import {
   Search, MapPin, Target, Globe, Phone, Mail, Instagram, Loader2,
   Star, ExternalLink, MessageCircle, ChevronDown, ChevronRight,
   Sparkles, Eye, Copy, CheckCircle, Zap, Filter, ArrowRight,
-  Building2, Send, RefreshCw, Wand2, Map, Link2, X as XIcon
+  Building2, Send, RefreshCw, Wand2, Map, Link2, X as XIcon,
+  Key, Info, Crown, Settings
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -108,6 +109,8 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
   const [generatedMessage, setGeneratedMessage] = useState<string | null>(null);
   const [activeChannel, setActiveChannel] = useState<"instagram" | "whatsapp" | "email">("whatsapp");
   const [showPreview, setShowPreview] = useState(false);
+  const [hasGoogleKey, setHasGoogleKey] = useState<boolean | null>(null);
+  const [showGoogleGuide, setShowGoogleGuide] = useState(false);
 
   // Sector preview screens
   const getPreviewScreens = (sectorId: string) => {
@@ -139,10 +142,12 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
           filtered = filtered.filter((r: any) => (r.google_rating || 0) >= minRating);
         }
         setResults(filtered);
+        setHasGoogleKey(data.has_google_key ?? false);
         toast({ title: `✅ ${filtered.length} lead trovati`, description: `${data.sources?.nominatim || 0} OpenStreetMap · ${data.sources?.google || 0} Google Places` });
       } else {
+        setHasGoogleKey(data?.has_google_key ?? false);
         if (data?.tip) {
-          toast({ title: "⚠️ Configura Google Places API", description: data.tip, duration: 8000 });
+          toast({ title: "⚠️ Pochi risultati", description: data.tip, duration: 8000 });
         } else {
           toast({ title: "Nessun risultato", description: "Prova con una città o settore diverso", variant: "destructive" });
         }
@@ -324,6 +329,78 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Google Places API status banner */}
+        {hasGoogleKey === false && (
+          <div className="rounded-xl p-3 space-y-2" style={{ background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.2)" }}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Key className="w-3.5 h-3.5" style={{ color: "#fbbf24" }} />
+                <span className="text-[10px] font-bold" style={{ color: "#fbbf24" }}>🔓 Opzione Premium: Google Places API</span>
+              </div>
+              <button onClick={() => setShowGoogleGuide(!showGoogleGuide)} className="text-[9px] font-semibold flex items-center gap-1" style={{ color: "#fbbf24" }}>
+                {showGoogleGuide ? "Chiudi" : "Come fare"} <ChevronDown className={`w-3 h-3 transition-transform ${showGoogleGuide ? "rotate-180" : ""}`} />
+              </button>
+            </div>
+            <p className="text-[10px]" style={{ color: "#9ca3af" }}>
+              La ricerca base (OpenStreetMap) è gratuita e illimitata. Per risultati più precisi con <b style={{ color: "#fbbf24" }}>telefono, rating, sito web e recensioni reali</b>, puoi collegare la Google Places API (a pagamento, pay-per-use ~$17/1000 ricerche).
+            </p>
+            <AnimatePresence>
+              {showGoogleGuide && (
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                  <div className="rounded-xl p-4 space-y-3 mt-1" style={{ background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <p className="text-xs font-bold text-white">📋 Come configurare Google Places API</p>
+                    <ol className="space-y-2.5 text-[10px] leading-relaxed" style={{ color: "#d1d5db" }}>
+                      <li className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold" style={{ background: "rgba(59,130,246,0.2)", color: "#60a5fa" }}>1</span>
+                        <span>Vai su <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="underline font-semibold" style={{ color: "#60a5fa" }}>Google Cloud Console</a> e crea un nuovo progetto (o usa uno esistente).</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold" style={{ background: "rgba(59,130,246,0.2)", color: "#60a5fa" }}>2</span>
+                        <span>Abilita la <b>"Places API (New)"</b> dalla sezione <i>API & Services → Library</i>.</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold" style={{ background: "rgba(59,130,246,0.2)", color: "#60a5fa" }}>3</span>
+                        <span>Vai su <i>API & Services → Credentials</i> → <b>Create Credentials → API Key</b>.</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold" style={{ background: "rgba(59,130,246,0.2)", color: "#60a5fa" }}>4</span>
+                        <span><b>Limita la chiave</b> (consigliato): clicca sulla chiave creata → "Restrict key" → seleziona solo "Places API (New)".</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold" style={{ background: "rgba(59,130,246,0.2)", color: "#60a5fa" }}>5</span>
+                        <span>Abilita la fatturazione (Billing) sul progetto Google Cloud — è necessario per attivare l'API. Google offre <b style={{ color: "#34d399" }}>$200 di credito gratuito/mese</b> ai nuovi utenti.</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.2)", color: "#34d399" }}>6</span>
+                        <span>Comunica la chiave API al <b>Super Admin Empire</b> che la configurerà nel backend come <code className="px-1.5 py-0.5 rounded text-[9px]" style={{ background: "rgba(124,58,237,0.15)", color: "#c4b5fd" }}>GOOGLE_PLACES_API_KEY</code>.</span>
+                      </li>
+                    </ol>
+                    <div className="rounded-lg p-2.5 mt-2" style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)" }}>
+                      <p className="text-[9px] font-semibold" style={{ color: "#34d399" }}>
+                        💡 Costi: ~$17 per 1.000 ricerche (Text Search). Con $200/mese di credito gratuito Google = ~11.700 ricerche gratis/mese.
+                      </p>
+                    </div>
+                    <div className="rounded-lg p-2.5" style={{ background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.2)" }}>
+                      <div className="flex items-center gap-2">
+                        <Info className="w-3 h-3 shrink-0" style={{ color: "#a78bfa" }} />
+                        <p className="text-[9px]" style={{ color: "#c4b5fd" }}>
+                          Senza questa chiave il sistema funziona comunque con dati OpenStreetMap (gratuiti). Google Places aggiunge: numero di telefono, rating, recensioni, sito web e stato dell'attività.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
+        {hasGoogleKey === true && (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
+            <CheckCircle className="w-3.5 h-3.5" style={{ color: "#34d399" }} />
+            <span className="text-[10px] font-semibold" style={{ color: "#34d399" }}>Google Places API attiva — risultati premium con dati di contatto reali</span>
+          </div>
+        )}
       </div>
 
       {/* ═══════ RESULTS ═══════ */}
