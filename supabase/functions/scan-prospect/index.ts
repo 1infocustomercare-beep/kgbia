@@ -246,6 +246,7 @@ serve(async (req) => {
     const prospectDetails: string[] = [];
     if (leadName) prospectDetails.push(`Nome attività: "${leadName}"`);
     if (leadCity) prospectDetails.push(`Città: ${leadCity}`);
+    if (country) prospectDetails.push(`Paese: ${country}`);
     if (leadPhone) prospectDetails.push(`Telefono: ${leadPhone}`);
     if (instagram) prospectDetails.push(`Instagram: @${instagram.replace("@", "")}`);
     if (website) prospectDetails.push(`Sito web: ${website}`);
@@ -255,8 +256,9 @@ serve(async (req) => {
 ${prospectDetails.join("\n")}
 Settore: "${sector || "generico"}"
 Canale: "${ch}"
+LINGUA: ${lang} (OBBLIGATORIA — scrivi TUTTO in ${lang})
 
-GENERA il messaggio nel formato ESATTO di "${ch}":
+GENERA il messaggio nel formato ESATTO di "${ch}" e INTERAMENTE in ${lang}:
 1. Analizza "${leadName || "N/A"}" — dedici tipo di attività, posizionamento, target clientela
 2. Usa "${leadCity || "N/A"}" per contestualizzare naturalmente
 3. Seleziona il caso studio portfolio più pertinente ${portfolioRef ? `(suggerito: "${portfolioRef}")` : ""}
@@ -269,6 +271,7 @@ GENERA il messaggio nel formato ESATTO di "${ch}":
    - Chiuda con una domanda/proposta di BASSO IMPEGNO
 6. Il messaggio deve far pensare al destinatario: "Interessante, questi hanno già fatto qualcosa nel mio settore"
 7. NON deve far pensare: "Ecco un altro che mi vuole vendere qualcosa"
+8. RICORDA: Ogni singola parola DEVE essere in ${lang}. Usa saluti, espressioni e tono culturalmente appropriati per il mercato ${country || "locale"}.
 
 MESSAGGIO FINALE (pronto da copiare):`;
 
