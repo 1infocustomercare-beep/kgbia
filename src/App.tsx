@@ -174,6 +174,11 @@ const StaticIframePage = lazy(() => import("./pages/StaticIframePage"));
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
+const PartnerLayout = lazy(() => import("./components/layout/PartnerLayout"));
+const PartnerHomePage = lazy(() => import("./pages/partner/PartnerHomePage"));
+const PartnerEarningsPage = lazy(() => import("./pages/partner/PartnerEarningsPage"));
+const PartnerPortfolioPage = lazy(() => import("./pages/partner/PartnerPortfolioPage"));
+const PartnerProfilePage = lazy(() => import("./pages/partner/PartnerProfilePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const JoinPartnerPage = lazy(() => import("./pages/JoinPartnerPage"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
@@ -562,16 +567,7 @@ function App() {
                       <Route path="/onboarding" element={
                         <ProtectedRoute><OnboardingPage /></ProtectedRoute>
                       } />
-                      <Route path="/partner/leads" element={
-                        <ProtectedRoute requiredRole="partner">
-                          <LeadsPage />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/partner/content-ai" element={
-                        <ProtectedRoute requiredRole="partner">
-                          <ContentAIPage />
-                        </ProtectedRoute>
-                      } />
+                      {/* partner/leads and partner/content-ai are now nested under /partner layout */}
                       {/* leads is partner-only, not superadmin */}
                       <Route path="/superadmin/leads" element={
                         <ProtectedRoute requiredRole="super_admin">
@@ -637,9 +633,16 @@ function App() {
                       } />
                       <Route path="/partner" element={
                         <ProtectedRoute requiredRole="partner">
-                          <PartnerDashboard />
+                          <PartnerLayout />
                         </ProtectedRoute>
-                      } />
+                      }>
+                        <Route index element={<PartnerHomePage />} />
+                        <Route path="leads" element={<LeadsPage />} />
+                        <Route path="earnings" element={<PartnerEarningsPage />} />
+                        <Route path="portfolio" element={<PartnerPortfolioPage />} />
+                        <Route path="profile" element={<PartnerProfilePage />} />
+                        <Route path="content-ai" element={<ContentAIPage />} />
+                      </Route>
                       <Route path="/admin/dashboard" element={
                         <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
                           <AdminDashboard />
