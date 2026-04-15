@@ -60,35 +60,46 @@ export default function PartnerLayout() {
           <span className="text-sm font-bold text-foreground">Partner</span>
         </div>
 
-        {/* ═══ SWITCH LIVE / PRESENTAZIONE — toggle slide ═══ */}
-        <button onClick={() => handleToggle(!demoMode)}
-          className="relative flex items-center w-[120px] h-8 rounded-full cursor-pointer transition-colors duration-300"
+        {/* ═══ SWITCH LIVE / PRESENTAZIONE — drag to toggle ═══ */}
+        <div className="relative flex items-center w-[120px] h-8 rounded-full select-none"
           style={{
             background: demoMode
               ? "linear-gradient(135deg, rgba(245,158,11,0.25), rgba(245,158,11,0.1))"
               : "linear-gradient(135deg, rgba(167,139,250,0.2), rgba(167,139,250,0.08))",
             border: `1px solid ${demoMode ? "rgba(245,158,11,0.35)" : "rgba(167,139,250,0.25)"}`,
           }}>
-          {/* Sliding thumb */}
-          <div className="absolute top-0.5 h-[26px] w-[58px] rounded-full transition-all duration-300 flex items-center justify-center gap-1"
+          {/* Background labels */}
+          <span className="absolute left-2.5 text-[8px] font-semibold pointer-events-none transition-opacity duration-300"
+            style={{ color: "rgba(167,139,250,0.4)", opacity: demoMode ? 1 : 0 }}>LIVE</span>
+          <span className="absolute right-2.5 text-[8px] font-semibold pointer-events-none transition-opacity duration-300"
+            style={{ color: "rgba(245,158,11,0.4)", opacity: demoMode ? 0 : 1 }}>DEMO</span>
+          {/* Draggable thumb */}
+          <motion.div
+            drag="x"
+            dragConstraints={{ left: 0, right: 56 }}
+            dragElastic={0.05}
+            dragMomentum={false}
+            animate={{ x: demoMode ? 56 : 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 35 }}
+            onDragEnd={(_e, info) => {
+              const threshold = 20;
+              if (!demoMode && info.offset.x > threshold) handleToggle(true);
+              else if (demoMode && info.offset.x < -threshold) handleToggle(false);
+            }}
+            onTap={() => handleToggle(!demoMode)}
+            className="absolute top-0.5 left-0.5 h-[26px] w-[58px] rounded-full flex items-center justify-center gap-1 cursor-grab active:cursor-grabbing z-10"
             style={{
-              left: demoMode ? "calc(100% - 60px)" : "2px",
               background: demoMode ? "rgba(245,158,11,0.9)" : "rgba(167,139,250,0.85)",
               boxShadow: demoMode ? "0 0 12px rgba(245,158,11,0.4)" : "0 0 12px rgba(167,139,250,0.3)",
             }}>
             {demoMode
               ? <Presentation className="w-3 h-3 text-black/80" />
               : <Eye className="w-3 h-3 text-white" />}
-            <span className="text-[9px] font-bold" style={{ color: demoMode ? "#1a1a1a" : "#fff" }}>
+            <span className="text-[9px] font-bold pointer-events-none" style={{ color: demoMode ? "#1a1a1a" : "#fff" }}>
               {demoMode ? "DEMO" : "LIVE"}
             </span>
-          </div>
-          {/* Background labels */}
-          <span className="absolute left-2.5 text-[8px] font-semibold transition-opacity duration-300"
-            style={{ color: "rgba(167,139,250,0.4)", opacity: demoMode ? 1 : 0 }}>LIVE</span>
-          <span className="absolute right-2.5 text-[8px] font-semibold transition-opacity duration-300"
-            style={{ color: "rgba(245,158,11,0.4)", opacity: demoMode ? 0 : 1 }}>DEMO</span>
-        </button>
+          </motion.div>
+        </div>
 
         <div className="flex items-center gap-1.5">
           <DarkModeToggle />
