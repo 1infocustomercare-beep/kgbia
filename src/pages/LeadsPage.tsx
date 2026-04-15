@@ -1234,31 +1234,116 @@ export default function LeadsPage() {
         )}
       </AnimatePresence>
 
-      {/* Loading state */}
-      {loading && results.length === 0 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 space-y-4">
-          <div className="relative w-16 h-16 mx-auto">
-            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-              className="absolute inset-0 rounded-full" style={{ border: "3px solid rgba(20,184,166,0.1)", borderTop: "3px solid #14b8a6" }} />
-            <div className="absolute inset-2 rounded-full flex items-center justify-center" style={{ background: "rgba(20,184,166,0.06)" }}>
-              <Search className="w-5 h-5" style={{ color: "#14b8a6" }} />
+      {/* Loading state — Ultra Agent Network */}
+      <AnimatePresence>
+        {loading && results.length === 0 && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }} transition={{ duration: 0.5 }}
+            className="relative py-12 overflow-hidden">
+            
+            {/* Neural grid background */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* Animated connection lines between agents */}
+              {[
+                { x1: 200, y1: 60, x2: 80, y2: 160 },
+                { x1: 200, y1: 60, x2: 320, y2: 160 },
+                { x1: 80, y1: 160, x2: 140, y2: 250 },
+                { x1: 320, y1: 160, x2: 260, y2: 250 },
+                { x1: 140, y1: 250, x2: 260, y2: 250 },
+                { x1: 80, y1: 160, x2: 320, y2: 160 },
+                { x1: 200, y1: 60, x2: 140, y2: 250 },
+                { x1: 200, y1: 60, x2: 260, y2: 250 },
+              ].map((line, i) => (
+                <motion.line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
+                  stroke="url(#agentGrad)" strokeWidth="1.5"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: [0, 0.6, 0.3, 0.7, 0.4] }}
+                  transition={{ duration: 1.5, delay: i * 0.15, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }} />
+              ))}
+              {/* Data pulse particles along lines */}
+              {[
+                { cx: 140, cy: 110, delay: 0 }, { cx: 260, cy: 110, delay: 0.3 },
+                { cx: 110, cy: 205, delay: 0.6 }, { cx: 290, cy: 205, delay: 0.9 },
+                { cx: 200, cy: 250, delay: 1.2 },
+              ].map((p, i) => (
+                <motion.circle key={`pulse-${i}`} cx={p.cx} cy={p.cy} r="3" fill="#14b8a6"
+                  animate={{ r: [2, 5, 2], opacity: [0.3, 1, 0.3] }}
+                  transition={{ duration: 1.2, delay: p.delay, repeat: Infinity }} />
+              ))}
+              <defs>
+                <linearGradient id="agentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.8" />
+                  <stop offset="50%" stopColor="#a78bfa" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.8" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            {/* Agent nodes */}
+            <div className="relative z-10 flex flex-col items-center gap-6">
+              {/* Central orchestrator */}
+              <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", delay: 0.1 }}
+                className="flex flex-col items-center">
+                <motion.div className="w-14 h-14 rounded-2xl flex items-center justify-center relative"
+                  style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.2), rgba(167,139,250,0.15))", border: "1px solid rgba(20,184,166,0.4)", boxShadow: "0 0 30px rgba(20,184,166,0.2)" }}
+                  animate={{ boxShadow: ["0 0 20px rgba(20,184,166,0.15)", "0 0 40px rgba(20,184,166,0.35)", "0 0 20px rgba(20,184,166,0.15)"] }}
+                  transition={{ duration: 2, repeat: Infinity }}>
+                  <span className="text-2xl">🧠</span>
+                  <motion.div className="absolute -top-1 -right-1 w-3 h-3 rounded-full" style={{ background: "#14b8a6" }}
+                    animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
+                </motion.div>
+                <p className="text-[9px] font-bold mt-1.5" style={{ color: "#14b8a6" }}>Orchestratore AI</p>
+              </motion.div>
+
+              {/* Agent row */}
+              <div className="flex items-start justify-center gap-6 flex-wrap">
+                {[
+                  { emoji: "🗺️", name: "Maps Scout", color: "#4285F4", delay: 0.3 },
+                  { emoji: "🌐", name: "Web Crawler", color: "#7EBC6F", delay: 0.5 },
+                  { emoji: "📊", name: "Data Analyst", color: "#F59E0B", delay: 0.7 },
+                  { emoji: "📸", name: "Social Intel", color: "#E4405F", delay: 0.9 },
+                ].map((agent) => (
+                  <motion.div key={agent.name} className="flex flex-col items-center"
+                    initial={{ scale: 0, y: 20, opacity: 0 }}
+                    animate={{ scale: 1, y: 0, opacity: 1 }}
+                    transition={{ type: "spring", delay: agent.delay }}>
+                    <motion.div className="w-11 h-11 rounded-xl flex items-center justify-center"
+                      style={{ background: `${agent.color}15`, border: `1px solid ${agent.color}35`, boxShadow: `0 0 15px ${agent.color}15` }}
+                      animate={{ y: [0, -4, 0], boxShadow: [`0 0 10px ${agent.color}10`, `0 0 25px ${agent.color}30`, `0 0 10px ${agent.color}10`] }}
+                      transition={{ duration: 2, delay: agent.delay * 0.5, repeat: Infinity, ease: "easeInOut" }}>
+                      <span className="text-lg">{agent.emoji}</span>
+                    </motion.div>
+                    <p className="text-[8px] font-bold mt-1" style={{ color: agent.color }}>{agent.name}</p>
+                    <motion.p className="text-[7px]" style={{ color: "#6b7280" }}
+                      animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, delay: agent.delay, repeat: Infinity }}>
+                      Analizzando...
+                    </motion.p>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Bottom status */}
+              <motion.div className="flex flex-col items-center gap-2 mt-2"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
+                <div className="flex items-center gap-1.5">
+                  {[0, 0.15, 0.3, 0.45, 0.6].map((d, i) => (
+                    <motion.div key={i} className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: "linear-gradient(135deg, #14b8a6, #a78bfa)" }}
+                      animate={{ scale: [1, 1.8, 1], opacity: [0.3, 1, 0.3] }}
+                      transition={{ repeat: Infinity, duration: 0.8, delay: d }} />
+                  ))}
+                </div>
+                <motion.p className="text-[10px] font-semibold" style={{ color: "#e5e7eb" }}
+                  animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 2, repeat: Infinity }}>
+                  Agenti in simbiosi — scansione multi-fonte
+                </motion.p>
+                <p className="text-[8px]" style={{ color: "#4b5563" }}>
+                  {city && `Analizzando ${city}`} {sector && `· ${SECTOR_OPTIONS.find(s => s.value === sector)?.label || sector}`}
+                </p>
+              </motion.div>
             </div>
-          </div>
-          <div>
-            <p className="text-sm font-bold text-white">Scansione in corso</p>
-            <motion.p className="text-[10px] mt-1" style={{ color: "#6b7280" }}
-              animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>
-              Analizzando Google Maps · OSM · Overpass · Photon · Instagram...
-            </motion.p>
-          </div>
-          <div className="flex justify-center gap-1">
-            {[0, 0.2, 0.4, 0.6, 0.8].map((d, i) => (
-              <motion.div key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: "#14b8a6" }}
-                animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: d }} />
-            ))}
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Empty state */}
       {results.length === 0 && !loading && (
