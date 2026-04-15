@@ -116,7 +116,7 @@ const PLAN_LABELS: Record<string, string> = {
 
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const { theme: currentTheme } = useTheme();
   const isDark = currentTheme === "dark";
   const [activeTab, setActiveTab] = useState<SuperTab>("overview");
@@ -2499,10 +2499,58 @@ const SuperAdminDashboard = () => {
               </div>
             </div>
 
-            {/* Link condivisibile */}
+            {/* Stripe Platform Config */}
+            <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4 space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #635bff, #7a73ff)" }}>
+                  <CreditCard className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-foreground">Stripe Platform — Il Tuo Account</p>
+                  <p className="text-[0.55rem] text-muted-foreground">La tua chiave Stripe gestisce tutti i pagamenti e split automatici</p>
+                </div>
+              </div>
+              <div className="space-y-2 text-[11px] text-muted-foreground">
+                <p><strong className="text-foreground">Come funziona:</strong></p>
+                <div className="space-y-1.5 pl-3">
+                  <p>1️⃣ Vai su <strong className="text-foreground">dashboard.stripe.com</strong></p>
+                  <p>2️⃣ <strong className="text-foreground">Developers → API Keys</strong></p>
+                  <p>3️⃣ Copia la <strong className="text-foreground">Secret Key</strong> (sk_live_... o sk_test_...)</p>
+                  <p>4️⃣ Configurala nel backend come <code className="px-1 py-0.5 rounded bg-background/50 text-foreground/80 text-[10px]">STRIPE_SECRET_KEY</code></p>
+                </div>
+                <div className="p-2.5 rounded-lg mt-2" style={{ background: "rgba(99,91,255,0.06)", border: "1px solid rgba(99,91,255,0.12)" }}>
+                  <p className="text-[10px]">
+                    <strong className="text-foreground">💡 Questa chiave è il cuore del sistema.</strong> Quando un venditore vende, Stripe usa la tua chiave per:
+                    dividere €997 al venditore, €200 al team leader, e il resto a te — Empire.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Il TUO link di reclutamento con ref */}
             <div className="rounded-xl border border-purple-500/20 bg-purple-500/[0.04] p-3 space-y-2">
               <p className="text-xs font-bold text-foreground flex items-center gap-2">
-                <Handshake className="w-3.5 h-3.5 text-purple-400" /> Condividi questo link per reclutare partner
+                <Crown className="w-3.5 h-3.5 text-amber-400" /> Il Tuo Link Personale (i partner si registrano sotto di te)
+              </p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
+                  {window.location.origin}/join?ref={user?.id || ""}
+                </code>
+                <motion.button
+                  onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join?ref=${user?.id || ""}`); toast({ title: "Link personale copiato!" }); }}
+                  className="shrink-0 w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center text-amber-400"
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </motion.button>
+              </div>
+              <p className="text-[0.5rem] text-muted-foreground">Chi si registra con questo link sarà direttamente sotto di te nella gerarchia.</p>
+            </div>
+
+            {/* Link generico senza ref */}
+            <div className="rounded-xl border border-border/30 bg-background/50 p-3 space-y-2">
+              <p className="text-xs font-bold text-foreground flex items-center gap-2">
+                <Handshake className="w-3.5 h-3.5 text-purple-400" /> Link Generico (senza referente)
               </p>
               <div className="flex items-center gap-2">
                 <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
