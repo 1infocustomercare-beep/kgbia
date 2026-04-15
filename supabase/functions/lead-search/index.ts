@@ -63,7 +63,7 @@ async function searchPhoton(city: string, sector: string, geo: { lat: number; lo
 
   const fetchPhoton = async (q: string) => {
     try {
-      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lat=${geo.lat}&lon=${geo.lon}&limit=30&lang=it`;
+      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lat=${geo.lat}&lon=${geo.lon}&limit=30`;
       const resp = await fetch(url, { signal: AbortSignal.timeout(5000) });
       if (!resp.ok) return [];
       const data = await resp.json();
