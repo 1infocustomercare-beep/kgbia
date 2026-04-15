@@ -631,9 +631,8 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
                   <button key={ch.id} onClick={() => {
                     if (activeChannel !== ch.id) {
                       setActiveChannel(ch.id);
-                      // Auto-regenerate message for new channel
                       if (selected && !generatingMsg) {
-                        setTimeout(() => handleSelect(selected), 50);
+                        handleSelect(selected, ch.id);
                       }
                     }
                   }}
