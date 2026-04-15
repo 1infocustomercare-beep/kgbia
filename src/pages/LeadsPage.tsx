@@ -918,14 +918,19 @@ export default function LeadsPage() {
                         <Send className="w-4 h-4" /> Invia su WA
                       </motion.a>
                     )}
-                    {activeChannel === "instagram" && selected.instagram && (
-                      <motion.a whileTap={{ scale: 0.97 }}
-                        href={`https://instagram.com/${selected.instagram.replace("@", "")}`}
-                        target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F)", color: "#fff" }}>
-                        <Instagram className="w-4 h-4" /> Apri IG
-                      </motion.a>
-                    )}
+                    {activeChannel === "instagram" && (() => {
+                      const igHandle = selected.instagram || enrichedData?.instagram;
+                      if (!igHandle) return null;
+                      const cleanHandle = igHandle.replace("@", "");
+                      return (
+                        <motion.a whileTap={{ scale: 0.97 }}
+                          href={`https://instagram.com/direct/t/${cleanHandle}`}
+                          target="_blank" rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F)", color: "#fff" }}>
+                          <Send className="w-4 h-4" /> Invia DM @{cleanHandle}
+                        </motion.a>
+                      );
+                    })()}
                     {activeChannel === "email" && (
                       <motion.a whileTap={{ scale: 0.97 }}
                         href={`mailto:${selected.email || ""}?subject=${encodeURIComponent(generatedMessage.split("\n").find(l => l.toLowerCase().startsWith("oggetto:"))?.replace(/^oggetto:\s*/i, "") || "Proposta Empire AI")}&body=${encodeURIComponent(generatedMessage)}`}
