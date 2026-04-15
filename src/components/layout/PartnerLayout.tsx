@@ -66,44 +66,55 @@ export default function PartnerLayout() {
           <span className="text-sm font-bold text-foreground tracking-tight">Partner</span>
         </div>
 
-        {/* ═══ SWITCH — drag to toggle ═══ */}
-        <div className="relative flex items-center w-[120px] h-[34px] rounded-full select-none"
+        {/* ═══ PREMIUM TOGGLE ═══ */}
+        <div
+          className="relative flex items-center w-[52px] h-[28px] rounded-full select-none cursor-pointer"
           style={{
             background: demoMode
-              ? "linear-gradient(135deg, rgba(212,160,82,0.12), rgba(212,160,82,0.05))"
-              : "linear-gradient(135deg, rgba(167,139,250,0.1), rgba(124,58,237,0.04))",
-            border: `1px solid ${demoMode ? "rgba(212,160,82,0.2)" : "rgba(167,139,250,0.15)"}`,
-            boxShadow: `inset 0 1px 2px ${demoMode ? "rgba(212,160,82,0.05)" : "rgba(167,139,250,0.05)"}`,
-          }}>
-          <span className="absolute left-3 text-[8px] font-bold pointer-events-none transition-opacity duration-300 uppercase tracking-wider"
-            style={{ color: `${accentColor}50`, opacity: demoMode ? 1 : 0 }}>LIVE</span>
-          <span className="absolute right-3 text-[8px] font-bold pointer-events-none transition-opacity duration-300 uppercase tracking-wider"
-            style={{ color: `${accentColor}50`, opacity: demoMode ? 0 : 1 }}>DEMO</span>
+              ? "linear-gradient(135deg, #1a1510, #2a1f14)"
+              : "linear-gradient(135deg, #13111f, #1a1530)",
+            border: `1px solid ${demoMode ? "rgba(212,160,82,0.25)" : "rgba(167,139,250,0.2)"}`,
+            boxShadow: `0 0 20px ${demoMode ? "rgba(212,160,82,0.08)" : "rgba(167,139,250,0.06)"}, inset 0 1px 1px rgba(255,255,255,0.03)`,
+          }}
+          onClick={() => handleToggle(!demoMode)}
+        >
+          {/* Track glow */}
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              background: `radial-gradient(circle at ${demoMode ? "75%" : "25%"} 50%, ${demoMode ? "rgba(212,160,82,0.15)" : "rgba(167,139,250,0.12)"}, transparent 70%)`,
+            }}
+          />
+          {/* Thumb */}
           <motion.div
             drag="x"
-            dragConstraints={{ left: 0, right: 54 }}
+            dragConstraints={{ left: 0, right: 24 }}
             dragElastic={0.05}
             dragMomentum={false}
-            animate={{ x: demoMode ? 54 : 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 35 }}
+            animate={{ x: demoMode ? 24 : 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
             onDragEnd={(_e, info) => {
-              if (!demoMode && info.offset.x > 20) handleToggle(true);
-              else if (demoMode && info.offset.x < -20) handleToggle(false);
+              if (!demoMode && info.offset.x > 10) handleToggle(true);
+              else if (demoMode && info.offset.x < -10) handleToggle(false);
             }}
-            onTap={() => handleToggle(!demoMode)}
-            className="absolute top-[3px] left-[3px] h-[26px] w-[60px] rounded-full flex items-center justify-center gap-1.5 cursor-grab active:cursor-grabbing z-10"
+            className="relative top-0 left-[2px] h-[24px] w-[24px] rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing z-10"
             style={{
               background: demoMode
-                ? "linear-gradient(135deg, #d4a052, #b8862e)"
-                : "linear-gradient(135deg, #a78bfa, #7c3aed)",
-              boxShadow: `0 2px 12px ${demoMode ? "rgba(212,160,82,0.35)" : "rgba(167,139,250,0.3)"}`,
-            }}>
-            {demoMode
-              ? <Presentation className="w-3 h-3 text-white/90" />
-              : <Eye className="w-3 h-3 text-white/90" />}
-            <span className="text-[9px] font-bold text-white pointer-events-none">
-              {demoMode ? "DEMO" : "LIVE"}
-            </span>
+                ? "linear-gradient(145deg, #d4a052, #c08b35)"
+                : "linear-gradient(145deg, #a78bfa, #8b5cf6)",
+              boxShadow: `0 2px 10px ${demoMode ? "rgba(212,160,82,0.5)" : "rgba(167,139,250,0.45)"}, 0 0 16px ${demoMode ? "rgba(212,160,82,0.2)" : "rgba(167,139,250,0.15)"}`,
+            }}
+          >
+            <motion.div
+              animate={{ rotate: demoMode ? 180 : 0, scale: [1, 1.1, 1] }}
+              transition={{ rotate: { type: "spring", stiffness: 300 }, scale: { duration: 2, repeat: Infinity } }}
+            >
+              {demoMode
+                ? <Presentation className="w-3 h-3 text-white/90" />
+                : <Eye className="w-3 h-3 text-white/90" />}
+            </motion.div>
           </motion.div>
         </div>
 
