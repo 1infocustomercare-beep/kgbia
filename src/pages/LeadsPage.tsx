@@ -197,6 +197,7 @@ export default function LeadsPage() {
   const [showTips, setShowTips] = useState(() => !sessionStorage.getItem("leads_tips_hidden"));
   const cityInputRef = useRef<HTMLInputElement>(null);
   const pendingQuickSearch = useRef<{ city: string; sector: string } | null>(null);
+  const pipelineRef = useRef<HTMLDivElement>(null);
 
   // Pipeline
   const [selected, setSelected] = useState<(Lead & { _score: number; _sector: string }) | null>(null);
@@ -405,6 +406,7 @@ export default function LeadsPage() {
   const handleSelect = useCallback(async (lead: Lead & { _score: number; _sector: string }, channelOverride?: string) => {
     setSelected(lead);
     setShowPreview(true);
+    setTimeout(() => pipelineRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
     const channel = channelOverride || activeChannel;
     setGeneratingMsg(true);
     setGeneratedMessage(null);
@@ -866,7 +868,7 @@ export default function LeadsPage() {
       {/* ═══ PIPELINE: Selected → Analysis + Customized Preview + Message ═══ */}
       <AnimatePresence>
         {selected && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-3">
+          <motion.div ref={pipelineRef} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-3">
 
             {/* Lead Summary + Quick Analysis */}
             <div className="p-4 rounded-2xl" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.06), rgba(59,130,246,0.04))", border: "1px solid rgba(124,58,237,0.15)" }}>
