@@ -57,6 +57,15 @@ export default function PartnerLayout() {
 
   return (
     <DemoModeContext.Provider value={{ demoMode, setDemoMode }}>
+    {showSplash && (
+      <PartnerSplashScreen
+        userName={userName}
+        onComplete={() => {
+          setShowSplash(false);
+          sessionStorage.setItem("partner_splash_ts", String(Date.now()));
+        }}
+      />
+    )}
     <div className={`min-h-screen flex flex-col relative admin-panel ${isDark ? 'landing-dark partner-console' : ''}`}
       style={isDark ? { background: "#0a0a14" } : undefined}>
 
