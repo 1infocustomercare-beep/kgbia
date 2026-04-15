@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Crown, Handshake, Trophy, Rocket, ArrowRight, Check,
   DollarSign, Users, Star, Zap, Shield, TrendingUp
@@ -9,6 +9,9 @@ import empireLogoNew from "@/assets/empire-logo-new.png";
 
 const JoinPartnerPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const refId = searchParams.get("ref") || "";
+  const authUrl = refId ? `/auth?role=partner&ref=${refId}` : "/auth?role=partner";
 
   const kpis = [
     { icon: <DollarSign className="w-5 h-5" />, value: "€997", label: "per vendita", color: "hsl(var(--primary))" },

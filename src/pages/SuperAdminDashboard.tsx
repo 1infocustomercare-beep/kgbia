@@ -2594,10 +2594,23 @@ const SuperAdminDashboard = () => {
                     </motion.button>
                   </div>
 
-                  {/* Team Leader ID */}
+                  {/* Link di reclutamento del partner */}
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-lg bg-card/50 border border-border/20">
+                    <Link2 className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <code className="flex-1 text-[0.45rem] text-foreground/60 overflow-x-auto whitespace-nowrap">{window.location.origin}/join?ref={p.id}</code>
+                    <motion.button
+                      onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join?ref=${p.id}`); toast({ title: "Link copiato", description: `Link di ${p.fullName}` }); }}
+                      className="shrink-0 w-6 h-6 rounded bg-secondary/50 flex items-center justify-center text-muted-foreground"
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <Copy className="w-2.5 h-2.5" />
+                    </motion.button>
+                  </div>
+
+                  {/* Reclutato da */}
                   {p.teamLeaderId && (
                     <p className="text-[0.55rem] text-muted-foreground">
-                      Sotto: <span className="text-foreground font-medium">{partnerNetwork.find(x => x.id === p.teamLeaderId)?.fullName || p.teamLeaderId.slice(0, 8)}</span>
+                      Reclutato da: <span className="text-foreground font-medium">{partnerNetwork.find(x => x.id === p.teamLeaderId)?.fullName || p.teamLeaderId.slice(0, 8)}</span>
                     </p>
                   )}
 
