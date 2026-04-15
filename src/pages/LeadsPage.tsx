@@ -1245,113 +1245,182 @@ export default function LeadsPage() {
 
       {/* Loading state — Ultra Agent Network */}
       <AnimatePresence>
-        {loading && results.length === 0 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }} transition={{ duration: 0.5 }}
-            className="relative py-12 overflow-hidden">
+        {loading && results.length === 0 && (() => {
+          const SCAN_AGENTS = [
+            { emoji: "🗺️", name: "Maps Scout", color: "#4285F4", delay: 0.2, task: "Scansione POI geolocalizzati", dataLabel: "Google Maps API v3" },
+            { emoji: "🌐", name: "OSM Crawler", color: "#7EBC6F", delay: 0.5, task: "Estrazione nodi OpenStreetMap", dataLabel: "Overpass QL" },
+            { emoji: "📊", name: "Data Enricher", color: "#F59E0B", delay: 0.8, task: "Arricchimento contatti & score", dataLabel: "Photon Geocoder" },
+            { emoji: "📸", name: "Social Intel", color: "#E4405F", delay: 1.1, task: "Analisi profili social & engagement", dataLabel: "Instagram Graph" },
+            { emoji: "🔗", name: "Web Scraper", color: "#8B5CF6", delay: 1.4, task: "Verifica siti web & tecnologie", dataLabel: "DOM Parser" },
+          ];
+          const DATA_STREAMS = [
+            "Geocoding coordinate GPS...", "Matching POI nel raggio...", "Parsing risposta API...",
+            "Calcolo opportunity score...", "Verifica numeri telefono...", "Estrazione email da siti...",
+            "Analisi rating Google...", "Cross-referencing social...", "Dedup & merge risultati...",
+            "Classificazione settoriale AI...", "Normalizzazione indirizzi...", "Enrichment contatti...",
+          ];
+          return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.95, filter: "blur(12px)" }} transition={{ duration: 0.6 }}
+            className="relative py-8 overflow-hidden rounded-2xl" style={{ background: "linear-gradient(180deg, rgba(10,10,26,0.95), rgba(15,23,42,0.9))", border: "1px solid rgba(20,184,166,0.12)" }}>
             
-            {/* Neural grid background */}
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* Animated connection lines between agents */}
+            {/* Animated grid overlay */}
+            <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "linear-gradient(rgba(20,184,166,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.3) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+
+            {/* Neural SVG connections */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 400" fill="none">
               {[
-                { x1: 200, y1: 60, x2: 80, y2: 160 },
-                { x1: 200, y1: 60, x2: 320, y2: 160 },
-                { x1: 80, y1: 160, x2: 140, y2: 250 },
-                { x1: 320, y1: 160, x2: 260, y2: 250 },
-                { x1: 140, y1: 250, x2: 260, y2: 250 },
-                { x1: 80, y1: 160, x2: 320, y2: 160 },
-                { x1: 200, y1: 60, x2: 140, y2: 250 },
-                { x1: 200, y1: 60, x2: 260, y2: 250 },
-              ].map((line, i) => (
-                <motion.line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
-                  stroke="url(#agentGrad)" strokeWidth="1.5"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: [0, 0.6, 0.3, 0.7, 0.4] }}
-                  transition={{ duration: 1.5, delay: i * 0.15, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }} />
-              ))}
-              {/* Data pulse particles along lines */}
-              {[
-                { cx: 140, cy: 110, delay: 0 }, { cx: 260, cy: 110, delay: 0.3 },
-                { cx: 110, cy: 205, delay: 0.6 }, { cx: 290, cy: 205, delay: 0.9 },
-                { cx: 200, cy: 250, delay: 1.2 },
-              ].map((p, i) => (
-                <motion.circle key={`pulse-${i}`} cx={p.cx} cy={p.cy} r="3" fill="#14b8a6"
-                  animate={{ r: [2, 5, 2], opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 1.2, delay: p.delay, repeat: Infinity }} />
+                { x1: 200, y1: 45, x2: 70, y2: 140 }, { x1: 200, y1: 45, x2: 330, y2: 140 },
+                { x1: 200, y1: 45, x2: 200, y2: 160 },
+                { x1: 70, y1: 140, x2: 140, y2: 240 }, { x1: 330, y1: 140, x2: 260, y2: 240 },
+                { x1: 200, y1: 160, x2: 140, y2: 240 }, { x1: 200, y1: 160, x2: 260, y2: 240 },
+                { x1: 70, y1: 140, x2: 200, y2: 160 }, { x1: 330, y1: 140, x2: 200, y2: 160 },
+                { x1: 140, y1: 240, x2: 260, y2: 240 },
+                { x1: 70, y1: 140, x2: 330, y2: 140 },
+              ].map((l, i) => (
+                <g key={i}>
+                  <motion.line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="url(#nGrad)" strokeWidth="1"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: [0, 1], opacity: [0, 0.5, 0.2, 0.6] }}
+                    transition={{ duration: 2, delay: i * 0.12, repeat: Infinity, repeatType: "reverse" }} />
+                  {/* Data particle traveling along line */}
+                  <motion.circle r="2" fill="#14b8a6" filter="url(#glow)"
+                    animate={{ cx: [l.x1, l.x2], cy: [l.y1, l.y2], opacity: [0, 1, 0] }}
+                    transition={{ duration: 1.8, delay: i * 0.2 + 0.5, repeat: Infinity, ease: "easeInOut" }} />
+                </g>
               ))}
               <defs>
-                <linearGradient id="agentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.8" />
-                  <stop offset="50%" stopColor="#a78bfa" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.8" />
+                <linearGradient id="nGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.7" />
+                  <stop offset="50%" stopColor="#a78bfa" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.7" />
                 </linearGradient>
+                <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
               </defs>
             </svg>
 
-            {/* Agent nodes */}
-            <div className="relative z-10 flex flex-col items-center gap-6">
-              {/* Central orchestrator */}
-              <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", delay: 0.1 }}
-                className="flex flex-col items-center">
-                <motion.div className="w-14 h-14 rounded-2xl flex items-center justify-center relative"
-                  style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.2), rgba(167,139,250,0.15))", border: "1px solid rgba(20,184,166,0.4)", boxShadow: "0 0 30px rgba(20,184,166,0.2)" }}
-                  animate={{ boxShadow: ["0 0 20px rgba(20,184,166,0.15)", "0 0 40px rgba(20,184,166,0.35)", "0 0 20px rgba(20,184,166,0.15)"] }}
-                  transition={{ duration: 2, repeat: Infinity }}>
-                  <span className="text-2xl">🧠</span>
-                  <motion.div className="absolute -top-1 -right-1 w-3 h-3 rounded-full" style={{ background: "#14b8a6" }}
-                    animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
-                </motion.div>
-                <p className="text-[9px] font-bold mt-1.5" style={{ color: "#14b8a6" }}>Orchestratore AI</p>
+            <div className="relative z-10 px-4">
+              {/* Header */}
+              <motion.div className="text-center mb-5" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-2" style={{ background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.2)" }}>
+                  <motion.div className="w-2 h-2 rounded-full" style={{ background: "#14b8a6" }}
+                    animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 1, repeat: Infinity }} />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.15em]" style={{ color: "#14b8a6" }}>Multi-Agent System Active</span>
+                </div>
+                <p className="text-sm font-black text-white">Scansione Neurale in Corso</p>
+                <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>
+                  5 agenti AI lavorano in parallelo su {city || "target"} · {SECTOR_OPTIONS.find(s => s.value === sector)?.label || "tutti i settori"}
+                </p>
               </motion.div>
 
-              {/* Agent row */}
-              <div className="flex items-start justify-center gap-6 flex-wrap">
-                {[
-                  { emoji: "🗺️", name: "Maps Scout", color: "#4285F4", delay: 0.3 },
-                  { emoji: "🌐", name: "Web Crawler", color: "#7EBC6F", delay: 0.5 },
-                  { emoji: "📊", name: "Data Analyst", color: "#F59E0B", delay: 0.7 },
-                  { emoji: "📸", name: "Social Intel", color: "#E4405F", delay: 0.9 },
-                ].map((agent) => (
-                  <motion.div key={agent.name} className="flex flex-col items-center"
-                    initial={{ scale: 0, y: 20, opacity: 0 }}
-                    animate={{ scale: 1, y: 0, opacity: 1 }}
-                    transition={{ type: "spring", delay: agent.delay }}>
-                    <motion.div className="w-11 h-11 rounded-xl flex items-center justify-center"
-                      style={{ background: `${agent.color}15`, border: `1px solid ${agent.color}35`, boxShadow: `0 0 15px ${agent.color}15` }}
-                      animate={{ y: [0, -4, 0], boxShadow: [`0 0 10px ${agent.color}10`, `0 0 25px ${agent.color}30`, `0 0 10px ${agent.color}10`] }}
-                      transition={{ duration: 2, delay: agent.delay * 0.5, repeat: Infinity, ease: "easeInOut" }}>
-                      <span className="text-lg">{agent.emoji}</span>
+              {/* Central Orchestrator */}
+              <motion.div className="flex justify-center mb-4" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.1 }}>
+                <div className="flex flex-col items-center">
+                  <motion.div className="w-16 h-16 rounded-2xl flex items-center justify-center relative"
+                    style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.15), rgba(167,139,250,0.1))", border: "1.5px solid rgba(20,184,166,0.35)" }}
+                    animate={{ boxShadow: ["0 0 15px rgba(20,184,166,0.1)", "0 0 45px rgba(20,184,166,0.3)", "0 0 15px rgba(20,184,166,0.1)"] }}
+                    transition={{ duration: 2.5, repeat: Infinity }}>
+                    <span className="text-2xl">🧠</span>
+                    <motion.div className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full flex items-center justify-center" style={{ background: "#14b8a6" }}
+                      animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 0.6, repeat: Infinity }}>
+                      <Zap className="w-2 h-2 text-white" />
                     </motion.div>
-                    <p className="text-[8px] font-bold mt-1" style={{ color: agent.color }}>{agent.name}</p>
-                    <motion.p className="text-[7px]" style={{ color: "#6b7280" }}
-                      animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, delay: agent.delay, repeat: Infinity }}>
-                      Analizzando...
+                  </motion.div>
+                  <p className="text-[9px] font-bold mt-1" style={{ color: "#14b8a6" }}>Orchestratore Centrale</p>
+                  <motion.p className="text-[7px] font-mono" style={{ color: "#4b5563" }}
+                    animate={{ opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }}>
+                    Distributing tasks...
+                  </motion.p>
+                </div>
+              </motion.div>
+
+              {/* Agent cards grid */}
+              <div className="grid grid-cols-5 gap-1.5 mb-4">
+                {SCAN_AGENTS.map((agent) => (
+                  <motion.div key={agent.name}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", delay: agent.delay }}
+                    className="flex flex-col items-center p-2 rounded-xl relative"
+                    style={{ background: `${agent.color}08`, border: `1px solid ${agent.color}20` }}>
+                    <motion.div className="w-9 h-9 rounded-lg flex items-center justify-center mb-1"
+                      style={{ background: `${agent.color}12`, border: `1px solid ${agent.color}30` }}
+                      animate={{ y: [0, -3, 0], boxShadow: [`0 0 0px ${agent.color}00`, `0 0 20px ${agent.color}25`, `0 0 0px ${agent.color}00`] }}
+                      transition={{ duration: 2.5, delay: agent.delay * 0.5, repeat: Infinity }}>
+                      <span className="text-sm">{agent.emoji}</span>
+                    </motion.div>
+                    <p className="text-[7px] font-bold text-center leading-tight" style={{ color: agent.color }}>{agent.name}</p>
+                    <motion.p className="text-[6px] text-center mt-0.5 font-mono leading-tight" style={{ color: "#4b5563" }}
+                      animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, delay: agent.delay, repeat: Infinity }}>
+                      {agent.dataLabel}
                     </motion.p>
+                    {/* Status indicator */}
+                    <motion.div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full" style={{ background: agent.color }}
+                      animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.2, 0.8] }}
+                      transition={{ duration: 1, delay: agent.delay * 0.3, repeat: Infinity }} />
                   </motion.div>
                 ))}
               </div>
 
-              {/* Bottom status */}
-              <motion.div className="flex flex-col items-center gap-2 mt-2"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-                <div className="flex items-center gap-1.5">
-                  {[0, 0.15, 0.3, 0.45, 0.6].map((d, i) => (
-                    <motion.div key={i} className="w-1.5 h-1.5 rounded-full"
-                      style={{ background: "linear-gradient(135deg, #14b8a6, #a78bfa)" }}
-                      animate={{ scale: [1, 1.8, 1], opacity: [0.3, 1, 0.3] }}
-                      transition={{ repeat: Infinity, duration: 0.8, delay: d }} />
+              {/* Live data stream terminal */}
+              <motion.div className="rounded-xl p-3 mb-3" style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(20,184,166,0.1)" }}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5 }}>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex gap-1">
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#ef4444" }} />
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#f59e0b" }} />
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#22c55e" }} />
+                  </div>
+                  <span className="text-[7px] font-mono font-bold" style={{ color: "#14b8a6" }}>LIVE DATA STREAM</span>
+                  <motion.span className="text-[7px] font-mono ml-auto" style={{ color: "#4b5563" }}
+                    animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 0.8, repeat: Infinity }}>
+                    ●  ACTIVE
+                  </motion.span>
+                </div>
+                <div className="space-y-0.5 h-14 overflow-hidden relative">
+                  <div className="absolute bottom-0 left-0 right-0 h-6 z-10" style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.8))" }} />
+                  {DATA_STREAMS.map((line, i) => (
+                    <motion.div key={i} className="flex items-center gap-1.5"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: [0, 1, 0.7], x: 0 }}
+                      transition={{ delay: 1.8 + i * 0.6, duration: 0.4 }}>
+                      <motion.span className="text-[6px]" style={{ color: "#14b8a6" }}
+                        animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 0.5, repeat: Infinity }}>▸</motion.span>
+                      <span className="text-[7px] font-mono" style={{ color: "#6ee7b7" }}>{line}</span>
+                    </motion.div>
                   ))}
                 </div>
-                <motion.p className="text-[10px] font-semibold" style={{ color: "#e5e7eb" }}
-                  animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 2, repeat: Infinity }}>
-                  Agenti in simbiosi — scansione multi-fonte
-                </motion.p>
-                <p className="text-[8px]" style={{ color: "#4b5563" }}>
-                  {city && `Analizzando ${city}`} {sector && `· ${SECTOR_OPTIONS.find(s => s.value === sector)?.label || sector}`}
-                </p>
+              </motion.div>
+
+              {/* Bottom metrics bar */}
+              <motion.div className="flex items-center justify-between px-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
+                <div className="flex items-center gap-3">
+                  {[
+                    { label: "Agenti", value: "5/5", color: "#14b8a6" },
+                    { label: "API Calls", value: "12+", color: "#a78bfa" },
+                    { label: "DB Scanned", value: "4", color: "#3b82f6" },
+                  ].map((m, i) => (
+                    <div key={i} className="text-center">
+                      <motion.p className="text-[10px] font-black font-mono" style={{ color: m.color }}
+                        animate={{ opacity: [0.7, 1, 0.7] }} transition={{ duration: 1.5, delay: i * 0.3, repeat: Infinity }}>
+                        {m.value}
+                      </motion.p>
+                      <p className="text-[6px] font-bold uppercase tracking-wider" style={{ color: "#4b5563" }}>{m.label}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center gap-1">
+                  {[0, 0.12, 0.24, 0.36, 0.48].map((d, i) => (
+                    <motion.div key={i} className="w-1 h-3 rounded-full"
+                      style={{ background: "#14b8a6" }}
+                      animate={{ scaleY: [0.3, 1, 0.3], opacity: [0.3, 1, 0.3] }}
+                      transition={{ repeat: Infinity, duration: 0.6, delay: d }} />
+                  ))}
+                </div>
               </motion.div>
             </div>
           </motion.div>
-        )}
+          );
+        })()}
       </AnimatePresence>
 
       {/* Empty state */}
