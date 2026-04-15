@@ -67,12 +67,9 @@ async function searchOverpass(lat: number, lon: number, sector: string, query?: 
   const results: any[] = [];
   const seen = new Set<string>();
 
-  // Two passes: first with name filter if query provided, then broader
-  const queries: string[] = [];
-  if (query && query.length > 2) {
-    queries.push(buildOverpassQuery(lat, lon, sector, 15000, query));
-  }
-  queries.push(buildOverpassQuery(lat, lon, sector, 10000));
+  // Single optimized pass — 5km radius to avoid Overpass timeouts on large cities
+  const radius = query && query.length > 2 ? 8000 : 5000;
+  const queries = [buildOverpassQuery(lat, lon, sector, radius, query && query.length > 2 ? query : undefined)];
 
   for (const overpassQL of queries) {
     try {
