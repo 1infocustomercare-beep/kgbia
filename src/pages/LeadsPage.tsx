@@ -62,25 +62,59 @@ const PORTFOLIO_REFS: Record<string, string> = {
 const detectSector = (lead: Lead, fallback: string): string => {
   const text = [lead.name, lead.osm_type, lead.full_address, ...(lead.types || [])].join(" ").toLowerCase();
   const sectorMap: [string, RegExp][] = [
-    ["food", /ristoran|pizz|bar[\s,]|caffè|café|trattori|osteria|pub|bistrot|sushi|bakery|pasticc|gelat|fast.?food|tavola|gastr|enoteca|hamburger/],
-    ["beauty", /parrucch|salon[ei]|barbi|estet|spa|nail|manicur|trucco|makeup|bellezz|hair|beauty|capelli|acconc/],
+    ["food", /ristoran|pizz|bar[\s,]|caffè|café|trattori|osteria|pub|bistrot|sushi|hamburger|tavola|gastr|enoteca|kebab|poke|ramen/],
+    ["bakery", /panett|panificio|pasticc|forno|bakery|croissant|dolci|torte/],
+    ["gelateria", /gelat|yogurt|frozen|ice.?cream/],
+    ["wine_bar", /enoteca|wine.?bar|vineria|cantina.?urbana/],
+    ["catering", /catering|banquet|banchett/],
+    ["beauty", /parrucch|salon[ei]|estet|nail|manicur|trucco|makeup|bellezz|beauty|capelli|acconc|centro.?estetico/],
+    ["barber", /barbi|barber|grooming|rasatura/],
+    ["spa", /spa[\s,]|terme|benessere|wellness|massagg|sauna|hammam/],
     ["ncc", /ncc|taxi|transfer|limo|chauffeur|noleggio|car.?rental|auto.?con.?autista/],
-    ["healthcare", /dent|medic|clinic|doctor|hospital|farmac|fisio|osteopat|psicol|ambulat|poliamb|oculist/],
-    ["retail", /negoz|shop|boutique|abbigliamento|scarpe|gioiell|profum|supermarket|minimarket|ottica/],
-    ["fitness", /palestr|gym|crossfit|yoga|pilates|fitness|sport|palestra|piscina|tennis|padel/],
+    ["dentist", /dent|ortodon|implantolog|odontoiatr/],
+    ["physiotherapy", /fisio|osteopat|chiropratic|riabilit/],
+    ["psychology", /psicol|psicoterap|neuropsic/],
+    ["healthcare", /medic|clinic|doctor|hospital|farmac|ambulat|poliamb|oculist|cardiol|dermatolog/],
+    ["pharmacy", /farmac|parafarmac/],
+    ["optics", /ottic|occhial|lenti|optometr/],
+    ["retail", /negoz|shop|boutique|abbigliamento|scarpe|gioiell|profum|supermarket|minimarket/],
+    ["jewelry", /gioiell|orefic|orologeri|argenter/],
+    ["fitness", /palestr|gym|crossfit|yoga|pilates|fitness|sport|piscina|tennis|padel/],
+    ["martial_arts", /arti.?marzial|karate|judo|mma|boxe|pugilato|kick/],
+    ["dance", /danza|ballo|salsa|tango|hip.?hop|balletto/],
     ["hospitality", /hotel|albergo|b.?&.?b|hostel|motel|resort|pensione|guest.?house|bed.?and/],
     ["beach", /lido|stabiliment|balne|beach|spiaggia/],
     ["plumber", /idraul|plumb|tubaz|termoidr/],
     ["electrician", /elettric|electric|impiant|fotovolt/],
-    ["veterinary", /veterinar|animali|pet|toelet/],
+    ["veterinary", /veterinar|animali|toelet/],
+    ["pet_shop", /pet.?shop|animali|acquari|toelettatura/],
     ["tattoo", /tattoo|tatuag|piercing|ink/],
     ["photography", /fotograf|photo|video|wedding.?photo/],
-    ["events", /event|catering|wedding|cerimoni|feste|location/],
+    ["events", /event|wedding|cerimoni|feste|location.?eventi/],
     ["construction", /edil|costruzi|ristruttur|murator/],
     ["gardening", /giardini|vivaio|garden|paesagg|verde/],
     ["legal", /avvocat|legal|notai|tribunale/],
     ["accounting", /commercial|contabil|fiscale|caf|tributar/],
     ["agriturismo", /agriturism|fattoria|cantina|masseria/],
+    ["real_estate", /immobiliar|agenzia.?immob|casa.?vendita|real.?estate/],
+    ["architect", /architett|interior|design.?interni|progettaz/],
+    ["insurance", /assicuraz|broker|polizz|agenzia.?assicur/],
+    ["coworking", /coworking|co.?working|uffici.?condivisi/],
+    ["laundry", /lavander|tintor|stireria|dry.?clean/],
+    ["florist", /fiorist|fioraio|vivaio|floral/],
+    ["travel", /agenzia.?viagg|tour.?operator|viaggio/],
+    ["music", /scuola.?music|conservator|studio.?registr/],
+    ["driving_school", /autoscuol|patente|guida/],
+    ["car_wash", /autolavag|car.?wash|lavaggio.?auto/],
+    ["tech_repair", /riparaz|phone.?repair|computer|assistenza.?tecn/],
+    ["printing", /tipograf|stampa|copisteria|litograf/],
+    ["locksmith", /fabbr|serrat|chiav|serrament/],
+    ["tailor", /sartor|atelier|alta.?moda|cucito/],
+    ["funeral", /onoranz|funer|pompe.?funebr/],
+    ["moving", /trasloc|sgomber|facchinag/],
+    ["pest_control", /disinfestaz|derattizz|sanificaz/],
+    ["cleaning", /pulizi|impresa.?pulizie|clean/],
+    ["garage", /officin|carrozzer|meccanico|gommi|autoricamb/],
   ];
   for (const [s, regex] of sectorMap) if (regex.test(text)) return s;
   return fallback;
@@ -586,9 +620,10 @@ export default function LeadsPage() {
             </select>
           </div>
           <div className="col-span-8 sm:col-span-2 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
+            <Search className="absolute left-3 top-3.5 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
             <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Nome, zona..." className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+              placeholder="Zona, quartiere o nome attività" className="w-full pl-9 pr-3 py-3 rounded-xl text-[10px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+            <p className="text-[7px] mt-0.5 pl-1" style={{ color: "#4b5563" }}>Opzionale — filtra per zona o nome specifico</p>
           </div>
           <div className="col-span-4 sm:col-span-2">
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleSearch()} disabled={loading}
