@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getAdminLayout } from "@/config/admin-layout-config";
 import { SECTOR_THEMES } from "@/config/sector-themes";
 import PageGuide from "@/components/ui/page-guide";
+import { useTheme } from "next-themes";
 
 /** Pattern overlay matching each sector's visual archetype */
 const PatternOverlay = ({ pattern, accent }: { pattern: string; accent: string }) => {
