@@ -142,10 +142,12 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
           filtered = filtered.filter((r: any) => (r.google_rating || 0) >= minRating);
         }
         setResults(filtered);
+        setHasGoogleKey(data.has_google_key ?? false);
         toast({ title: `✅ ${filtered.length} lead trovati`, description: `${data.sources?.nominatim || 0} OpenStreetMap · ${data.sources?.google || 0} Google Places` });
       } else {
+        setHasGoogleKey(data?.has_google_key ?? false);
         if (data?.tip) {
-          toast({ title: "⚠️ Configura Google Places API", description: data.tip, duration: 8000 });
+          toast({ title: "⚠️ Pochi risultati", description: data.tip, duration: 8000 });
         } else {
           toast({ title: "Nessun risultato", description: "Prova con una città o settore diverso", variant: "destructive" });
         }
