@@ -667,7 +667,7 @@ const SuperAdminDashboard = () => {
   }, [payments, fiscoMissing, blockedTenants]);
 
   return (
-    <div className={`min-h-screen relative overflow-x-hidden ${isDark ? 'landing-dark' : ''}`} style={{ isolation: "isolate", background: isDark ? "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" : undefined }}>
+    <div className={`min-h-screen relative overflow-x-hidden admin-panel ${isDark ? 'landing-dark' : ''}`} style={{ isolation: "isolate", background: isDark ? "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" : undefined }}>
       {/* Fully opaque base — blocks underlying animations */}
       {isDark && <div className="fixed inset-0 z-0" style={{ background: "hsl(228 22% 7%)" }} />}
       {/* Premium violet/gold luxury ambient — dark only */}

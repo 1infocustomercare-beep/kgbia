@@ -319,7 +319,7 @@ const AdminDashboard = () => {
   const sectorAccent = settingsPrimaryColor || "#C8963E";
 
   return (
-    <div className={`min-h-screen flex flex-col relative overflow-hidden ${isDark ? 'cote-luxury' : ''} bg-background`}>
+    <div className={`min-h-screen flex flex-col relative overflow-hidden admin-panel ${isDark ? 'cote-luxury' : ''} bg-background`}>
       {/* COTE-style warm ambient glow — dark only */}
       {isDark && (
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
