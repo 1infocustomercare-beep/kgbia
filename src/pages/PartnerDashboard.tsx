@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
 import empireMonkeyMascot from "@/assets/empire-monkey.png";
 import { motion, AnimatePresence } from "framer-motion";
@@ -709,11 +710,11 @@ const PartnerDashboard = () => {
     : null;
 
   return (
-    <div className="min-h-screen flex flex-col relative" style={{ background: "#0a0a14" }}>
+    <div className={`min-h-screen flex flex-col relative ${isDark ? 'landing-dark partner-console' : ''}`}
+      style={{ background: isDark ? "#0a0a14" : undefined }}>
       
       {/* ═══════ TOP NAV BAR ═══════ */}
-      <div className="sticky top-0 z-50 flex items-center justify-between px-4 h-14 border-b safe-top"
-        style={{ background: "rgba(10,10,20,0.97)", borderColor: "rgba(255,255,255,0.08)", backdropFilter: "blur(20px)" }}>
+      <div className="sticky top-0 z-50 flex items-center justify-between px-4 h-14 border-b border-border/50 safe-top bg-background/95 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/home")} className="flex items-center gap-1.5 text-sm font-medium" style={{ color: "#a78bfa" }}>
             <ArrowLeft className="w-4 h-4" />
