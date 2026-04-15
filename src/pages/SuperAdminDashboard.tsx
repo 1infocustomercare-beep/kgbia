@@ -2478,10 +2478,25 @@ const SuperAdminDashboard = () => {
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold text-foreground">Rete Venditori</h2>
-              <span className="text-[0.55rem] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 font-bold">{partnerNetwork.length} partner</span>
-            </div>
-
-            {/* Link condivisibile */}
+              <div className="flex items-center gap-2">
+                <span className="text-[0.55rem] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 font-bold">{partnerNetwork.length} partner</span>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={async () => {
+                    const allEnabled = partnerNetwork.every(p => p.demoEnabled);
+                    const newVal = !allEnabled;
+                    const ids = partnerNetwork.map(p => p.id);
+                    for (const id of ids) {
+                      await supabase.from("profiles").update({ demo_section_enabled: newVal } as any).eq("user_id", id);
+                    }
+                    setPartnerNetwork(prev => prev.map(x => ({ ...x, demoEnabled: newVal })));
+                    toast({ title: newVal ? "Demo attivata per tutti" : "Demo disattivata per tutti" });
+                  }}
+                  className="px-2.5 py-1 rounded-lg text-[0.5rem] font-bold bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-colors"
+                >
+                  {partnerNetwork.every(p => p.demoEnabled) ? "Disattiva Demo tutti" : "Attiva Demo tutti"}
+                </motion.button>
+              </div>
             <div className="rounded-xl border border-purple-500/20 bg-purple-500/[0.04] p-3 space-y-2">
               <p className="text-xs font-bold text-foreground flex items-center gap-2">
                 <Handshake className="w-3.5 h-3.5 text-purple-400" /> Condividi questo link per reclutare partner
