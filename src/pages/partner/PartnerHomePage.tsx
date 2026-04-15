@@ -3,24 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Target, DollarSign, FolderOpen, User, ChevronRight, Crown, Trophy,
-  Sparkles, Eye, EyeOff, Zap, TrendingUp, Users,
+  Sparkles, Zap, TrendingUp, Users,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import empireMonkeyMascot from "@/assets/empire-monkey.png";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
+import { usePartnerDemoMode } from "@/components/layout/PartnerLayout";
 
 export default function PartnerHomePage() {
   const navigate = useNavigate();
   const { user, isTeamLeader } = useAuth();
+  const { demoMode } = usePartnerDemoMode();
   const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
   const [profileName, setProfileName] = useState<string | null>(null);
   const [salesCount, setSalesCount] = useState(0);
   const [totalCommissions, setTotalCommissions] = useState(0);
   const [teamCount, setTeamCount] = useState(0);
-  const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
-
-  useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -70,16 +69,6 @@ export default function PartnerHomePage() {
                   <Crown className="w-3 h-3" /> Team Leader
                 </span>
               )}
-              <motion.button onClick={() => setDemoMode(p => !p)} whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold"
-                style={{
-                  background: demoMode ? "rgba(245,158,11,0.15)" : "rgba(167,139,250,0.12)",
-                  border: `1px solid ${demoMode ? "rgba(245,158,11,0.3)" : "rgba(167,139,250,0.2)"}`,
-                  color: demoMode ? "#f59e0b" : "#a78bfa",
-                }}>
-                {demoMode ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                {demoMode ? "Demo" : "Lavoro"}
-              </motion.button>
             </div>
           </div>
         </div>
