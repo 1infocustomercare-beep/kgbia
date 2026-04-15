@@ -196,7 +196,12 @@ export default function LeadsPage() {
       return { ...lead, _score: computeScore(lead), _sector: detSector };
     });
 
-    const filtered = minRating > 0 ? mapped.filter(r => (r.google_rating || 0) >= minRating) : mapped;
+    let filtered = mapped;
+    if (minRating > 0) filtered = filtered.filter(r => (r.google_rating || 0) >= minRating);
+    if (maxRating < 5) filtered = filtered.filter(r => (r.google_rating || 0) <= maxRating);
+    if (filterNoWebsite) filtered = filtered.filter(r => !r.website);
+    if (filterNoSocial) filtered = filtered.filter(r => !r.instagram && !r.facebook);
+    if (filterHasPhone) filtered = filtered.filter(r => !!r.phone);
 
     if (append) {
       setResults(prev => {
@@ -208,7 +213,7 @@ export default function LeadsPage() {
       setResults(filtered);
     }
     return filtered;
-  }, [city, sector, minRating]);
+  }, [city, sector, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone]);
 
   /* ─── Batch enrich Instagram for leads without IG ─── */
   const batchEnrichInstagram = useCallback(async (leads: (Lead & { _score: number; _sector: string })[]) => {
