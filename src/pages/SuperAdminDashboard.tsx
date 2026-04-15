@@ -2497,6 +2497,9 @@ const SuperAdminDashboard = () => {
                   {partnerNetwork.every(p => p.demoEnabled) ? "Disattiva Demo tutti" : "Attiva Demo tutti"}
                 </motion.button>
               </div>
+            </div>
+
+            {/* Link condivisibile */}
             <div className="rounded-xl border border-purple-500/20 bg-purple-500/[0.04] p-3 space-y-2">
               <p className="text-xs font-bold text-foreground flex items-center gap-2">
                 <Handshake className="w-3.5 h-3.5 text-purple-400" /> Condividi questo link per reclutare partner
