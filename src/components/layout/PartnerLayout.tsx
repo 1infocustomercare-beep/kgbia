@@ -9,6 +9,7 @@ import {
   Eye, Presentation, Sparkles,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
 
 
 /* ═══ Context for demo mode across all partner pages ═══ */
