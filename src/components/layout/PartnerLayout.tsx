@@ -3,12 +3,13 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/context/AuthContext";
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import {
   LayoutDashboard, Target, DollarSign, FolderOpen, User, LogOut, ArrowLeft,
-  Eye, Presentation,
+  Eye, Presentation, Sparkles,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useRef, useCallback } from "react";
 
 /* ═══ Context for demo mode across all partner pages ═══ */
 const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
