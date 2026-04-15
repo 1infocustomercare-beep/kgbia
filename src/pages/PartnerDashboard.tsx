@@ -164,7 +164,7 @@ const PartnerDashboard = () => {
   const handleLogout = async () => { await signOut(); navigate("/auth"); };
 
   const handleCopyInviteLink = () => {
-    const link = `${window.location.origin}/auth?role=partner&ref=${user?.id}`;
+    const link = `${window.location.origin}/partner/register?ref=${user?.id}`;
     navigator.clipboard.writeText(link);
     setInviteCopied(true);
     toast({ title: "Link copiato!", description: "Chi si registra con questo link sarà nel tuo team." });
@@ -698,7 +698,7 @@ const PartnerDashboard = () => {
               <p className="text-xs" style={{ color: "#9ca3af" }}>Condividi il tuo link personale. Chi si registra verrà assegnato al tuo team.</p>
               <div className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <p className="text-[10px] mb-1 font-medium" style={{ color: "#6b7280" }}>Il tuo link:</p>
-                <p className="text-xs font-mono break-all select-all" style={{ color: "#d1d5db" }}>{window.location.origin}/auth?role=partner&ref={user?.id}</p>
+                <p className="text-xs font-mono break-all select-all" style={{ color: "#d1d5db" }}>{window.location.origin}/partner/register?ref={user?.id}</p>
               </div>
               <motion.button onClick={handleCopyInviteLink} whileTap={{ scale: 0.97 }}
                 className="w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
