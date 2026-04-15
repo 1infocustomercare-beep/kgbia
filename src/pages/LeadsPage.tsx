@@ -1201,37 +1201,67 @@ export default function LeadsPage() {
 
       {/* Empty state */}
       {results.length === 0 && !loading && (
-        <div className="text-center py-12">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3" style={{ background: "rgba(20,184,166,0.08)" }}>
-            <Target className="w-6 h-6" style={{ color: "#14b8a6" }} />
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+          className="text-center py-10">
+          
+          {/* Animated scanning icon */}
+          <div className="relative w-16 h-16 mx-auto mb-4">
+            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+              className="absolute inset-0 rounded-full" style={{ border: "2px dashed rgba(20,184,166,0.2)" }} />
+            <div className="absolute inset-1 rounded-full flex items-center justify-center" style={{ background: "rgba(20,184,166,0.06)" }}>
+              <Target className="w-7 h-7" style={{ color: "#14b8a6" }} />
+            </div>
+            <motion.div className="absolute -right-1 -top-1 w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "#14b8a6" }}
+              animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
+              <Zap className="w-2.5 h-2.5 text-white" />
+            </motion.div>
           </div>
-          <p className="text-sm font-bold text-white mb-1">Trova lead ovunque nel mondo</p>
-          <p className="text-[11px] max-w-sm mx-auto mb-4" style={{ color: "#6b7280" }}>
-            Scegli un Paese, inserisci la città e il settore. La ricerca multi-fonte parte automaticamente su Google Maps, OSM, Overpass e altre fonti.
+
+          <p className="text-base font-bold text-white mb-1">Ricerca Lead Automatica</p>
+          <p className="text-[11px] max-w-xs mx-auto mb-5" style={{ color: "#6b7280" }}>
+            Inserisci la città e premi <span className="font-semibold text-white">Invio</span> — lo scanner multi-fonte analizza automaticamente 5 database in parallelo.
           </p>
-          <div className="flex flex-wrap justify-center gap-2 mb-4">
-            {["🗺️ Google Maps", "🌍 OpenStreetMap", "📍 Photon", "🔎 Overpass", "📸 Instagram AI"].map(src => (
-              <span key={src} className="text-[9px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "rgba(20,184,166,0.08)", color: "#14b8a6" }}>
-                {src}
+
+          {/* Source engines */}
+          <div className="flex flex-wrap justify-center gap-1.5 mb-5">
+            {[
+              { icon: "🗺️", label: "Google Maps", color: "#4285F4" },
+              { icon: "🌍", label: "OpenStreetMap", color: "#7EBC6F" },
+              { icon: "📍", label: "Photon", color: "#F59E0B" },
+              { icon: "🔎", label: "Overpass", color: "#06B6D4" },
+              { icon: "📸", label: "Instagram AI", color: "#E4405F" },
+            ].map(src => (
+              <span key={src.label} className="text-[9px] px-2.5 py-1.5 rounded-lg font-bold flex items-center gap-1"
+                style={{ background: `${src.color}10`, border: `1px solid ${src.color}20`, color: src.color }}>
+                {src.icon} {src.label}
               </span>
             ))}
           </div>
-          {/* Quick start suggestions */}
-          <div className="flex flex-wrap justify-center gap-2">
+
+          {/* Quick start — one-tap search */}
+          <p className="text-[9px] font-bold uppercase tracking-widest mb-2.5" style={{ color: "#4b5563" }}>⚡ Ricerca rapida — un tap per iniziare</p>
+          <div className="grid grid-cols-2 gap-2 max-w-sm mx-auto">
             {[
-              { city: "Roma", sector: "food", label: "🍕 Ristoranti a Roma" },
-              { city: "Milano", sector: "beauty", label: "💇 Beauty a Milano" },
-              { city: "London", sector: "fitness", label: "🏋️ Gym a Londra" },
-              { city: "Dubai", sector: "hospitality", label: "🏨 Hotel a Dubai" },
-            ].map((suggestion, i) => (
-              <button key={i} onClick={() => { setCity(suggestion.city); setSector(suggestion.sector); setTimeout(() => handleSearch(), 100); }}
-                className="px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all hover:scale-105"
-                style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.15)", color: "#c4b5fd" }}>
-                {suggestion.label}
-              </button>
+              { city: "Roma", sector: "food", label: "Ristoranti a Roma", emoji: "🍕", color: "#ef4444" },
+              { city: "Milano", sector: "beauty", label: "Beauty a Milano", emoji: "💇", color: "#ec4899" },
+              { city: "London", sector: "fitness", label: "Gym a Londra", emoji: "🏋️", color: "#3b82f6" },
+              { city: "Dubai", sector: "hospitality", label: "Hotel a Dubai", emoji: "🏨", color: "#f59e0b" },
+              { city: "Napoli", sector: "food", label: "Pizzerie a Napoli", emoji: "🍕", color: "#22c55e" },
+              { city: "Miami", sector: "beauty", label: "Beauty a Miami", emoji: "💅", color: "#a855f7" },
+            ].map((s, i) => (
+              <motion.button key={i} whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.02 }}
+                onClick={() => { pendingQuickSearch.current = { city: s.city, sector: s.sector }; setCity(s.city); setSector(s.sector); }}
+                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all"
+                style={{ background: `${s.color}08`, border: `1px solid ${s.color}18` }}>
+                <span className="text-base">{s.emoji}</span>
+                <div>
+                  <p className="text-[10px] font-bold text-white">{s.label}</p>
+                  <p className="text-[8px]" style={{ color: "#6b7280" }}>Tap per avviare</p>
+                </div>
+              </motion.button>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );
