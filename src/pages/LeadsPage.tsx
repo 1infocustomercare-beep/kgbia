@@ -445,7 +445,7 @@ export default function LeadsPage() {
             <Target className="w-5 h-5" style={{ color: "#14b8a6" }} /> LeadEngine Scout
           </h1>
           <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>
-            Cerca → Analizza → Preview personalizzata → Messaggio AI — tutto in uno
+            Ricerca automatica multi-fonte in tutto il mondo
           </p>
         </div>
         <div className="flex items-center gap-1.5">
@@ -462,39 +462,77 @@ export default function LeadsPage() {
         </div>
       </div>
 
+      {/* ═══ TIPS — dismissable ═══ */}
+      <AnimatePresence>
+        {showTips && results.length === 0 && (
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+            className="rounded-xl p-3 flex items-start gap-2.5" style={{ background: "rgba(20,184,166,0.04)", border: "1px solid rgba(20,184,166,0.12)" }}>
+            <Sparkles className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#14b8a6" }} />
+            <div className="flex-1">
+              <p className="text-[10px] font-bold mb-1" style={{ color: "#5eead4" }}>Come funziona in 3 step:</p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { step: "1", title: "Cerca", desc: "Inserisci città e settore — la ricerca parte in automatico su 4+ fonti" },
+                  { step: "2", title: "Analizza", desc: "Ogni lead ha uno score di opportunità, dati social e contatti reali" },
+                  { step: "3", title: "Contatta", desc: "Messaggio AI personalizzato per WhatsApp, Instagram o Email" },
+                ].map((s, i) => (
+                  <div key={i} className="text-center">
+                    <span className="inline-flex w-5 h-5 rounded-full items-center justify-center text-[9px] font-bold mb-1" style={{ background: "rgba(20,184,166,0.15)", color: "#14b8a6" }}>{s.step}</span>
+                    <p className="text-[9px] font-bold text-white">{s.title}</p>
+                    <p className="text-[8px]" style={{ color: "#6b7280" }}>{s.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button onClick={() => { setShowTips(false); sessionStorage.setItem("leads_tips_hidden", "1"); }}
+              className="p-1 rounded shrink-0" style={{ color: "#6b7280" }}>
+              <XIcon className="w-3 h-3" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ═══ SEARCH BAR ═══ */}
       <div className="rounded-2xl p-4 space-y-3" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
-          <div className="sm:col-span-3 relative">
+        
+        {/* Row 1: Country + City + Sector */}
+        <div className="grid grid-cols-12 gap-2">
+          <div className="col-span-3 sm:col-span-2">
+            <select value={country} onChange={e => setCountry(e.target.value)}
+              className="w-full px-2 py-3 rounded-xl text-xs text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
+              {COUNTRIES.map(c => <option key={c.code} value={c.code} style={{ background: "#1a1a2e" }}>{c.label}</option>)}
+            </select>
+          </div>
+          <div className="col-span-5 sm:col-span-3 relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#14b8a6" }} />
             <input value={city} onChange={e => setCity(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Città (Roma, London, NYC...)" className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+              placeholder="Città (Roma, NYC, Dubai...)" className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
-          <div className="sm:col-span-3">
+          <div className="col-span-4 sm:col-span-3">
             <select value={sector} onChange={e => setSector(e.target.value)}
               className="w-full px-3 py-3 rounded-xl text-xs text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
               {SECTOR_OPTIONS.map(s => <option key={s.value} value={s.value} style={{ background: "#1a1a2e" }}>{s.label}</option>)}
             </select>
           </div>
-          <div className="sm:col-span-4 relative">
+          <div className="col-span-8 sm:col-span-2 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
             <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Nome, zona, tipo..." className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+              placeholder="Nome, zona..." className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
-          <div className="sm:col-span-2">
+          <div className="col-span-4 sm:col-span-2">
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleSearch()} disabled={loading}
               className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
               style={{ background: loading ? "rgba(20,184,166,0.3)" : "linear-gradient(135deg, #14b8a6, #10b981)", color: "#fff" }}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-              {loading ? "Cerco..." : "Cerca Lead"}
+              {loading ? "..." : "Cerca"}
             </motion.button>
           </div>
         </div>
 
         {/* Quick actions */}
         <div className="flex items-center gap-2 flex-wrap">
-          <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: "#9ca3af" }}>
-            <Filter className="w-3 h-3" /> Filtri <ChevronDown className={`w-3 h-3 transition-transform ${showFilters ? "rotate-180" : ""}`} />
+          <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: showFilters ? "#14b8a6" : "#9ca3af" }}>
+            <Filter className="w-3 h-3" /> Filtri avanzati <ChevronDown className={`w-3 h-3 transition-transform ${showFilters ? "rotate-180" : ""}`} />
           </button>
           <button onClick={() => setShowManual(!showManual)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: "#a78bfa" }}>
             <UserPlus className="w-3 h-3" /> Lead esterno
@@ -510,27 +548,80 @@ export default function LeadsPage() {
           })}
         </div>
 
-        {/* Filters */}
+        {/* ═══ ADVANCED FILTERS ═══ */}
         <AnimatePresence>
           {showFilters && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Rating minimo</label>
-                  <select value={minRating} onChange={e => setMinRating(Number(e.target.value))} className="w-full px-3 py-2 rounded-xl text-xs text-white outline-none" style={inputStyle}>
-                    <option value={0} style={{ background: "#1a1a2e" }}>Tutti</option>
-                    <option value={3} style={{ background: "#1a1a2e" }}>3+ ⭐</option>
-                    <option value={4} style={{ background: "#1a1a2e" }}>4+ ⭐</option>
-                  </select>
+              <div className="rounded-xl p-3 space-y-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <p className="text-[9px] font-bold uppercase tracking-widest flex items-center gap-1.5" style={{ color: "#14b8a6" }}>
+                  <Filter className="w-3 h-3" /> Filtri per Conversione Mirata
+                </p>
+                <p className="text-[8px]" style={{ color: "#6b7280" }}>
+                  Usa questi filtri per trovare lead con il massimo potenziale di conversione
+                </p>
+                
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {/* Rating range */}
+                  <div>
+                    <label className="text-[8px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Rating min</label>
+                    <select value={minRating} onChange={e => setMinRating(Number(e.target.value))} className="w-full px-2 py-2 rounded-lg text-[10px] text-white outline-none" style={inputStyle}>
+                      <option value={0} style={{ background: "#1a1a2e" }}>Tutti</option>
+                      <option value={1} style={{ background: "#1a1a2e" }}>1+ ⭐</option>
+                      <option value={2} style={{ background: "#1a1a2e" }}>2+ ⭐</option>
+                      <option value={3} style={{ background: "#1a1a2e" }}>3+ ⭐</option>
+                      <option value={4} style={{ background: "#1a1a2e" }}>4+ ⭐</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[8px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Rating max</label>
+                    <select value={maxRating} onChange={e => setMaxRating(Number(e.target.value))} className="w-full px-2 py-2 rounded-lg text-[10px] text-white outline-none" style={inputStyle}>
+                      <option value={5} style={{ background: "#1a1a2e" }}>Tutti</option>
+                      <option value={4} style={{ background: "#1a1a2e" }}>≤4 ⭐</option>
+                      <option value={3.5} style={{ background: "#1a1a2e" }}>≤3.5 ⭐</option>
+                      <option value={3} style={{ background: "#1a1a2e" }}>≤3 ⭐ (problematici)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[8px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Raggio ricerca</label>
+                    <select value={radius} onChange={e => setRadius(Number(e.target.value))} className="w-full px-2 py-2 rounded-lg text-[10px] text-white outline-none" style={inputStyle}>
+                      {RADIUS_OPTIONS.map(r => <option key={r.value} value={r.value} style={{ background: "#1a1a2e" }}>{r.label}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[8px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Canale default</label>
+                    <select value={activeChannel} onChange={e => setActiveChannel(e.target.value as any)} className="w-full px-2 py-2 rounded-lg text-[10px] text-white outline-none" style={inputStyle}>
+                      <option value="whatsapp" style={{ background: "#1a1a2e" }}>💬 WhatsApp</option>
+                      <option value="instagram" style={{ background: "#1a1a2e" }}>📷 Instagram DM</option>
+                      <option value="email" style={{ background: "#1a1a2e" }}>📧 Email Pro</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Canale default</label>
-                  <select value={activeChannel} onChange={e => setActiveChannel(e.target.value as any)} className="w-full px-3 py-2 rounded-xl text-xs text-white outline-none" style={inputStyle}>
-                    <option value="whatsapp" style={{ background: "#1a1a2e" }}>💬 WhatsApp</option>
-                    <option value="instagram" style={{ background: "#1a1a2e" }}>📷 Instagram DM</option>
-                    <option value="email" style={{ background: "#1a1a2e" }}>📧 Email Pro</option>
-                  </select>
+
+                {/* Toggle filters — high conversion targeting */}
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { active: filterNoWebsite, toggle: () => setFilterNoWebsite(!filterNoWebsite), label: "❌ Senza sito web", desc: "Lead senza presenza online — massimo potenziale", color: "#ef4444" },
+                    { active: filterNoSocial, toggle: () => setFilterNoSocial(!filterNoSocial), label: "📵 Senza social", desc: "Nessun Instagram/Facebook — bisogno evidente", color: "#f59e0b" },
+                    { active: filterHasPhone, toggle: () => setFilterHasPhone(!filterHasPhone), label: "📞 Con telefono", desc: "Contattabili subito via WA/call", color: "#10b981" },
+                  ].map((f, i) => (
+                    <button key={i} onClick={f.toggle}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all"
+                      style={{
+                        background: f.active ? `${f.color}15` : "rgba(255,255,255,0.02)",
+                        border: `1px solid ${f.active ? `${f.color}40` : "rgba(255,255,255,0.06)"}`,
+                        color: f.active ? f.color : "#6b7280",
+                      }}>
+                      {f.active ? <CheckCircle className="w-3 h-3" /> : <Plus className="w-3 h-3" />} {f.label}
+                    </button>
+                  ))}
                 </div>
+
+                {(filterNoWebsite || filterNoSocial || filterHasPhone || minRating > 0 || maxRating < 5) && (
+                  <button onClick={() => { setFilterNoWebsite(false); setFilterNoSocial(false); setFilterHasPhone(false); setMinRating(0); setMaxRating(5); }}
+                    className="text-[9px] font-semibold flex items-center gap-1" style={{ color: "#ef4444" }}>
+                    <XIcon className="w-3 h-3" /> Reset filtri
+                  </button>
+                )}
               </div>
             </motion.div>
           )}
@@ -542,6 +633,7 @@ export default function LeadsPage() {
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
               <div className="rounded-xl p-3 space-y-2" style={{ background: "rgba(167,139,250,0.05)", border: "1px solid rgba(167,139,250,0.15)" }}>
                 <p className="text-[10px] font-bold" style={{ color: "#c4b5fd" }}>📥 Aggiungi un lead trovato esternamente</p>
+                <p className="text-[8px]" style={{ color: "#6b7280" }}>Hai trovato un lead su Google, social o di persona? Aggiungilo qui per generare il messaggio AI</p>
                 <div className="grid grid-cols-2 gap-2">
                   <input value={manualName} onChange={e => setManualName(e.target.value)} placeholder="Nome attività *" className="px-3 py-2 rounded-lg text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
                   <input value={manualCity} onChange={e => setManualCity(e.target.value)} placeholder="Città" className="px-3 py-2 rounded-lg text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
