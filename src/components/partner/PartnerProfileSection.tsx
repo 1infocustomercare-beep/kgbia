@@ -12,6 +12,7 @@ interface Props {
   userName: string;
   userEmail: string;
   onAvatarChange?: (url: string | null) => void;
+  onNameChange?: (name: string) => void;
 }
 
 interface ProfileData {
@@ -32,7 +33,7 @@ const EMPTY: ProfileData = {
   bio: "", instagram_handle: "", website: "", company_name: "", email: "",
 };
 
-export default function PartnerProfileSection({ userId, userName, userEmail, onAvatarChange }: Props) {
+export default function PartnerProfileSection({ userId, userName, userEmail, onAvatarChange, onNameChange }: Props) {
   const [profile, setProfile] = useState<ProfileData>({ ...EMPTY, full_name: userName, email: userEmail });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -114,6 +115,11 @@ export default function PartnerProfileSection({ userId, userName, userEmail, onA
       if (!updated) {
         const { error: insertErr } = await supabase.from("profiles").insert(payload);
         if (insertErr) throw insertErr;
+      }
+      // Also update auth metadata so it's available immediately
+      if (profile.full_name) {
+        await supabase.auth.updateUser({ data: { full_name: profile.full_name } });
+        onNameChange?.(profile.full_name);
       }
       toast({ title: "✅ Profilo salvato!" });
     } catch (err: any) {
