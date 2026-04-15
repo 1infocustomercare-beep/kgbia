@@ -43,6 +43,8 @@ export default function AppLayout() {
   const { roles } = useAuth();
   const { industry, loading, resolved, company } = useIndustry();
   const location = useLocation();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   if (roles.includes("super_admin")) {
     return <Navigate to="/superadmin" replace />;
@@ -85,41 +87,43 @@ export default function AppLayout() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-[100dvh] flex w-full relative overflow-hidden landing-dark">
-        {/* Opaque base — exact sector bgGradient from admin-layout-config */}
-        <div className="fixed inset-0 z-0" style={{ background: layout.bgGradient }} />
+      <div className={`min-h-[100dvh] flex w-full relative overflow-hidden ${isDark ? 'landing-dark' : ''}`}>
+        {/* Opaque base — exact sector bgGradient in dark, light bg in light */}
+        <div className="fixed inset-0 z-0" style={{ background: isDark ? layout.bgGradient : 'hsl(var(--background))' }} />
 
-        {/* Premium sector aurora glows */}
-        <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
-          <div
-            className="absolute rounded-full"
-            style={{
-              top: "-8%", right: "5%", width: 650, height: 650,
-              background: `radial-gradient(circle, ${accentHex}, transparent 60%)`,
-              opacity: layout.accentGlow ? 0.09 : 0.04,
-              filter: "blur(130px)",
-            }}
-          />
-          <div
-            className="absolute rounded-full"
-            style={{
-              bottom: "5%", left: "-8%", width: 550, height: 550,
-              background: `radial-gradient(circle, ${accentHex}, transparent 65%)`,
-              opacity: layout.accentGlow ? 0.06 : 0.03,
-              filter: "blur(150px)",
-            }}
-          />
-          <div
-            className="absolute rounded-full"
-            style={{
-              top: "35%", left: "45%", width: 400, height: 400,
-              background: `radial-gradient(circle, ${accentHex}, transparent 55%)`,
-              opacity: 0.025,
-              filter: "blur(120px)",
-            }}
-          />
-          <PatternOverlay pattern={layout.bgPattern} accent={accentHex} />
-        </div>
+        {/* Premium sector aurora glows — dark only */}
+        {isDark && (
+          <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
+            <div
+              className="absolute rounded-full"
+              style={{
+                top: "-8%", right: "5%", width: 650, height: 650,
+                background: `radial-gradient(circle, ${accentHex}, transparent 60%)`,
+                opacity: layout.accentGlow ? 0.09 : 0.04,
+                filter: "blur(130px)",
+              }}
+            />
+            <div
+              className="absolute rounded-full"
+              style={{
+                bottom: "5%", left: "-8%", width: 550, height: 550,
+                background: `radial-gradient(circle, ${accentHex}, transparent 65%)`,
+                opacity: layout.accentGlow ? 0.06 : 0.03,
+                filter: "blur(150px)",
+              }}
+            />
+            <div
+              className="absolute rounded-full"
+              style={{
+                top: "35%", left: "45%", width: 400, height: 400,
+                background: `radial-gradient(circle, ${accentHex}, transparent 55%)`,
+                opacity: 0.025,
+                filter: "blur(120px)",
+              }}
+            />
+            <PatternOverlay pattern={layout.bgPattern} accent={accentHex} />
+          </div>
+        )}
 
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 relative z-10">
