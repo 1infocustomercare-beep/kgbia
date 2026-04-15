@@ -429,6 +429,7 @@ export default function LeadsPage() {
           channel, demoLink, allDemosLink: `${window.location.origin}/demo`,
           contactInfo: "📩 info@empireaigroup.com", leadName: lead.name,
           leadCity: lead.city, leadPhone: lead.phone, portfolioRef,
+          country: country || "",
         },
       });
       if (!error && data?.message) {

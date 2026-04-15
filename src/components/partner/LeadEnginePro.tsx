@@ -195,6 +195,7 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
           leadCity: lead.city,
           leadPhone: lead.phone,
           portfolioRef,
+          country: "",
         },
       });
       if (!error && data?.message) {
