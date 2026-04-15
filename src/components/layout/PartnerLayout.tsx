@@ -1,11 +1,19 @@
+import { useState, useEffect, createContext, useContext } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/context/AuthContext";
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
+import { Switch } from "@/components/ui/switch";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Target, DollarSign, FolderOpen, User, LogOut, ArrowLeft,
+  Eye, EyeOff, Presentation,
 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+
+/* ═══ Context for demo mode across all partner pages ═══ */
+const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
+export const usePartnerDemoMode = () => useContext(DemoModeContext);
 
 const NAV_ITEMS = [
   { path: "/partner", icon: LayoutDashboard, label: "Home", exact: true },
@@ -21,34 +29,56 @@ export default function PartnerLayout() {
   const { signOut, user } = useAuth();
   const { theme: currentTheme } = useTheme();
   const isDark = currentTheme === "dark";
+  const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
+
+  useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
   const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
   const isActive = (path: string, exact?: boolean) =>
     exact ? location.pathname === path : location.pathname.startsWith(path);
 
+  const handleToggle = (checked: boolean) => {
+    setDemoMode(checked);
+    toast({
+      title: checked ? "🎯 Modalità Presentazione" : "🔧 Modalità Lavoro",
+      description: checked ? "Dati sensibili nascosti — pronto per la vendita" : "Tutti i dati visibili — modalità operativa",
+    });
+  };
+
   return (
+    <DemoModeContext.Provider value={{ demoMode, setDemoMode }}>
     <div className={`min-h-screen flex flex-col relative admin-panel ${isDark ? 'landing-dark partner-console' : ''}`}
       style={isDark ? { background: "#0a0a14" } : undefined}>
 
       {/* ═══ TOP BAR ═══ */}
-      <div className="sticky top-0 z-50 flex items-center justify-between px-4 h-14 border-b border-border/50 safe-top bg-background/95 backdrop-blur-xl">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/home")} className="flex items-center gap-1.5 text-sm font-medium" style={{ color: "#a78bfa" }}>
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Home</span>
-          </button>
-          <span className="text-sm font-bold text-foreground ml-2">Partner Portal</span>
-        </div>
+      <div className="sticky top-0 z-50 flex items-center justify-between px-3 h-14 border-b border-border/50 safe-top bg-background/95 backdrop-blur-xl">
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-            <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold uppercase" style={{ background: "rgba(167,139,250,0.2)", color: "#a78bfa" }}>
-              {userName.charAt(0)}
-            </div>
-            <span className="text-xs font-medium max-w-[100px] truncate text-foreground">{userName}</span>
-          </div>
+          <button onClick={() => navigate("/home")} className="flex items-center gap-1 text-sm font-medium" style={{ color: "#a78bfa" }}>
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+          <span className="text-sm font-bold text-foreground">Partner</span>
+        </div>
+
+        {/* ═══ SWITCH LIVE / PRESENTAZIONE ═══ */}
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full"
+          style={{
+            background: demoMode ? "rgba(245,158,11,0.1)" : "rgba(167,139,250,0.08)",
+            border: `1px solid ${demoMode ? "rgba(245,158,11,0.25)" : "rgba(167,139,250,0.15)"}`,
+          }}>
+          {demoMode ? <Presentation className="w-3.5 h-3.5" style={{ color: "#f59e0b" }} /> : <Eye className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />}
+          <span className="text-[10px] font-semibold" style={{ color: demoMode ? "#f59e0b" : "#a78bfa" }}>
+            {demoMode ? "DEMO" : "LIVE"}
+          </span>
+          <Switch checked={demoMode} onCheckedChange={handleToggle}
+            className="scale-75 origin-center data-[state=checked]:bg-amber-500" />
+        </div>
+
+        <div className="flex items-center gap-1.5">
           <DarkModeToggle />
-          <button onClick={async () => { await signOut(); navigate("/auth"); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }}>
+          <button onClick={async () => { await signOut(); navigate("/auth"); }}
+            className="flex items-center justify-center w-8 h-8 rounded-full"
+            style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }}>
             <LogOut className="w-3.5 h-3.5" />
           </button>
         </div>
