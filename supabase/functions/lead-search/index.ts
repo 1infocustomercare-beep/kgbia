@@ -122,7 +122,7 @@ async function searchOverpass(sector: string, geo: { lat: number; lon: number; b
     return `node["${t}"]["name"]${around};\nway["${t}"]["name"]${around};`;
   }).join("\n");
 
-  const query = `[out:json][timeout:15];\n(\n${tagQueries}\n);\nout center tags 200;`;
+  const query = `[out:json][timeout:10];\n(\n${tagQueries}\n);\nout center tags 100;`;
 
   try {
     const resp = await fetch("https://overpass-api.de/api/interpreter", {
