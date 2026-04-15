@@ -276,18 +276,7 @@ export default function AuthPage() {
       companyName: role === "partner" ? companyName : undefined,
     });
 
-    if (!error && userId && role === "partner") {
-      try {
-        const { error: assignRoleError } = await supabase.functions.invoke("assign-partner-role", {
-          body: { user_id: userId, team_leader_id: referralId || null },
-        });
-        if (assignRoleError) {
-          console.error("Partner role assignment failed (will retry on login)", assignRoleError);
-        }
-      } catch (invokeErr) {
-        console.error("Partner role assignment invoke failed (will retry on login)", invokeErr);
-      }
-    }
+    // Partner role assignment is handled by AuthContext.signUp
 
     setLoading(false);
     if (error) { toast.error(error.message); return; }

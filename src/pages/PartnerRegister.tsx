@@ -42,7 +42,7 @@ const PartnerRegister = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const referralId = searchParams.get("ref");
-  const { user } = useAuth();
+  const { user, signUp } = useAuth();
 
   // If already logged in as partner, redirect to dashboard
   useEffect(() => {
@@ -87,42 +87,15 @@ const PartnerRegister = () => {
 
     setLoading(true);
     try {
-      // 1. Sign up
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: form.email,
-        password: form.password,
-        options: {
-          data: {
-            full_name: form.fullName,
-            phone: form.phone,
-            city: form.city,
-            signup_role: "partner",
-            partner_referral: referralId || null,
-          },
-          emailRedirectTo: window.location.origin + "/partner",
-        },
+      // Use AuthContext.signUp for consistent registration flow
+      const { error: signUpError, userId } = await signUp(form.email, form.password, {
+        fullName: form.fullName,
+        role: "partner",
+        referralId: referralId || undefined,
       });
 
       if (signUpError) throw signUpError;
-      if (!signUpData.user) throw new Error("Errore durante la registrazione");
-
-      // 2. Assign partner role via edge function
-      const { error: roleError } = await supabase.functions.invoke("assign-partner-role", {
-        body: {
-          user_id: signUpData.user.id,
-          team_leader_id: referralId || null,
-        },
-      });
-
-      if (roleError) {
-        console.error("Role assignment error:", roleError);
-        // Non-blocking: role will be assigned, user can still continue
-      }
-
-      // 3. Update profile with phone and city
-      await supabase.from("profiles").update({
-        full_name: form.fullName,
-      }).eq("user_id", signUpData.user.id);
+      if (!userId) throw new Error("Errore durante la registrazione");
 
       setSuccess(true);
       toast({

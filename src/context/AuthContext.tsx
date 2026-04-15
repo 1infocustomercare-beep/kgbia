@@ -293,44 +293,17 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
 
       const userId = data.user?.id ?? null;
 
-      // For non-partner signups, auto-create a Company + Membership so the dashboard works immediately
-      if (userId && options?.role !== "partner") {
-        const industry = options?.sector || "food";
-        const baseName = options?.companyName || options?.fullName || email.split("@")[0];
-        const slug =
-          baseName
-            .toLowerCase()
-            .replace(/[^a-z0-9]/g, "-")
-            .replace(/-+/g, "-")
-            .slice(0, 50) +
-          "-" +
-          Date.now().toString(36);
+      // Company creation is deferred to first login via AuthPage's resolveDestination
+      // This avoids RLS issues with unconfirmed users and prevents double-creation
 
-        const { data: newCompany, error: companyError } = await supabase
-          .from("companies")
-          .insert({
-            name: options?.companyName || options?.fullName || "La Mia Attività",
-            slug,
-            industry,
-            owner_id: userId,
-            subscription_plan: options?.plan || "starter",
-          })
-          .select("id")
-          .single();
-
-        if (companyError) {
-          console.error("[Auth] Company creation error:", companyError);
-        } else if (newCompany) {
-          const { error: membershipError } = await supabase
-            .from("company_memberships")
-            .insert({
-              company_id: newCompany.id,
-              user_id: userId,
-              role: "admin",
-            });
-          if (membershipError) {
-            console.error("[Auth] Membership creation error:", membershipError);
-          }
+      // For partner signups, assign the partner role immediately
+      if (userId && options?.role === "partner") {
+        try {
+          await supabase.functions.invoke("assign-partner-role", {
+            body: { user_id: userId, team_leader_id: options.referralId || null },
+          });
+        } catch (e) {
+          console.warn("[Auth] Partner role assignment during signup (will retry on login):", e);
         }
       }
 
