@@ -8,7 +8,7 @@ import { toast } from "@/hooks/use-toast";
 
 const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
   const { user } = useAuth();
-  const [connectStatus, setConnectStatus] = useState<{ connected: boolean; onboarding_complete: boolean } | null>(null);
+  const [connectStatus, setConnectStatus] = useState<{ configured?: boolean; connected: boolean; onboarding_complete: boolean; error?: string } | null>(null);
   const [connectLoading, setConnectLoading] = useState(false);
   const [sales, setSales] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,15 +25,14 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
       const { data, error } = await supabase.functions.invoke("partner-connect-onboarding", {
         body: { action: "status", userId: user?.id },
       });
-      if (!error && data && !data.error) {
+      if (!error && data) {
         setConnectStatus(data);
       } else {
-        // Stripe not configured yet — show as not connected
-        setConnectStatus({ connected: false, onboarding_complete: false });
+        setConnectStatus({ configured: false, connected: false, onboarding_complete: false, error: "Stripe not configured" });
       }
     } catch (e) {
       console.error("Connect status check failed:", e);
-      setConnectStatus({ connected: false, onboarding_complete: false });
+      setConnectStatus({ configured: false, connected: false, onboarding_complete: false, error: "Stripe not configured" });
     }
   };
 
@@ -111,7 +110,19 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
           <Link2 className="w-5 h-5 text-primary" />
           <h3 className="text-sm font-bold text-foreground">Conto Stripe Connect</h3>
         </div>
-        {connectStatus?.connected && connectStatus?.onboarding_complete ? (
+        {!connectStatus?.configured ? (
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">
+              Il collegamento Stripe è in preparazione lato piattaforma. Appena viene configurato il backend, qui potrai collegare il tuo conto senza errori.
+            </p>
+            <button
+              disabled
+              className="w-full py-3 rounded-xl bg-muted text-muted-foreground font-semibold text-sm opacity-70 cursor-not-allowed"
+            >
+              Stripe in configurazione
+            </button>
+          </div>
+        ) : connectStatus?.connected && connectStatus?.onboarding_complete ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
