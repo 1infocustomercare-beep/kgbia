@@ -634,6 +634,24 @@ export default function LeadsPage() {
 
               {/* Contact & research links */}
               <div className="flex gap-1.5 mt-3 flex-wrap">
+                {/* Instagram direct link — enriched */}
+                {(() => {
+                  const igHandle = selected.instagram || enrichedData?.instagram;
+                  if (igHandle) return (
+                    <a href={`https://instagram.com/direct/t/${igHandle.replace("@", "")}`} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
+                      style={{ background: "rgba(228,64,95,0.15)", border: "1px solid rgba(228,64,95,0.3)", color: "#E4405F" }}>
+                      <Instagram className="w-3 h-3" /> @{igHandle.replace("@", "")}
+                    </a>
+                  );
+                  if (enrichingIg) return (
+                    <span className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
+                      style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", color: "#f59e0b" }}>
+                      <Loader2 className="w-3 h-3 animate-spin" /> Cerco IG...
+                    </span>
+                  );
+                  return null;
+                })()}
                 {selected.phone && (
                   <a href={`https://wa.me/${selected.phone.replace(/\s+/g, "").replace("+", "")}`} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
