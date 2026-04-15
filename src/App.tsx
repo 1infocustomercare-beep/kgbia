@@ -181,6 +181,7 @@ const PartnerPortfolioPage = lazy(() => import("./pages/partner/PartnerPortfolio
 const PartnerProfilePage = lazy(() => import("./pages/partner/PartnerProfilePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const JoinPartnerPage = lazy(() => import("./pages/JoinPartnerPage"));
+const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
@@ -553,7 +554,7 @@ function App() {
                       <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
                       <Route path="/admin" element={<AuthPage />} />
                       <Route path="/kitchen" element={<KitchenView />} />
-                      <Route path="/partner/register" element={<AuthPage />} />
+                      <Route path="/partner/register" element={<PartnerRegister />} />
                       <Route path="/join" element={<JoinPartnerPage />} />
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/cookie-policy" element={<CookiePolicy />} />
