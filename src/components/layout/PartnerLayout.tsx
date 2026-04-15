@@ -111,5 +111,6 @@ export default function PartnerLayout() {
         </div>
       </nav>
     </div>
+    </DemoModeContext.Provider>
   );
 }
