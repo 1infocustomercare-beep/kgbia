@@ -4,7 +4,7 @@ import {
   Search, Target, MapPin, Filter, ChevronDown, Loader2, Phone, Globe, Mail,
   Instagram, Star, ExternalLink, MessageCircle, Copy, Sparkles, Send, RefreshCw,
   Wand2, Building2, Eye, Map, Zap, ArrowUpDown, X as XIcon, UserPlus, Link2,
-  CheckCircle, TrendingUp, AlertTriangle, Crown
+  CheckCircle, TrendingUp, AlertTriangle, Crown, Plus, Layers, Facebook
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -23,15 +23,21 @@ interface Lead {
   website: string | null;
   email: string | null;
   instagram: string | null;
+  facebook?: string | null;
   google_rating: number;
   google_reviews: number;
   google_maps_url: string | null;
+  search_google?: string | null;
+  search_instagram?: string | null;
+  search_facebook?: string | null;
   source: string;
   osm_type?: string;
   types?: string[];
   lat?: number;
   lon?: number;
   isManual?: boolean;
+  opening_hours?: string | null;
+  cuisine?: string | null;
 }
 
 /* ─── Helpers ─── */
@@ -86,6 +92,7 @@ const computeScore = (lead: Lead): number => {
   if (lead.google_rating > 0 && lead.google_rating < 3.5) score += 15;
   else if (lead.google_rating >= 4.5) score -= 10;
   if (!lead.phone) score += 5;
+  if (lead.opening_hours) score -= 3; // well-organized = harder to sell
   return Math.max(15, Math.min(98, score + Math.floor(Math.random() * 6 - 3)));
 };
 
@@ -96,6 +103,14 @@ const getPreviewScreens = (sectorId: string) => {
   return style?.screens?.slice(0, 4) || [];
 };
 
+const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
+  google_places: { label: "Google", color: "#4285F4" },
+  nominatim: { label: "OSM", color: "#7EBC6F" },
+  photon: { label: "Photon", color: "#F59E0B" },
+  overpass: { label: "Overpass", color: "#06B6D4" },
+  manual: { label: "Manuale", color: "#A78BFA" },
+};
+
 /* ─── COMPONENT ─── */
 export default function LeadsPage() {
   // Search
@@ -103,10 +118,15 @@ export default function LeadsPage() {
   const [sector, setSector] = useState("food");
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [deepLoading, setDeepLoading] = useState(false);
   const [results, setResults] = useState<(Lead & { _score: number; _sector: string })[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState<"score" | "rating" | "name">("score");
+  const [searchPage, setSearchPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [lastSearchCity, setLastSearchCity] = useState("");
+  const [lastSearchSector, setLastSearchSector] = useState("");
 
   // Pipeline
   const [selected, setSelected] = useState<(Lead & { _score: number; _sector: string }) | null>(null);
@@ -124,49 +144,84 @@ export default function LeadsPage() {
   const [manualPhone, setManualPhone] = useState("");
   const [manualSector, setManualSector] = useState("food");
 
+  /* ─── Process results from API ─── */
+  const processResults = useCallback((apiResults: any[], append: boolean) => {
+    const mapped = apiResults.map((r: any) => {
+      const lead: Lead = {
+        name: r.name, full_address: r.full_address || "", city: r.city || city,
+        zone: r.zone || "", phone: r.phone || null, website: r.website || null,
+        email: r.email || null, instagram: r.instagram || null, facebook: r.facebook || null,
+        google_rating: r.google_rating || 0, google_reviews: r.google_reviews || 0,
+        google_maps_url: r.google_maps_url || null, source: r.source || "openstreetmap",
+        osm_type: r.osm_type, types: r.types, lat: r.lat, lon: r.lon,
+        opening_hours: r.opening_hours || null, cuisine: r.cuisine || null,
+        search_google: r.search_google, search_instagram: r.search_instagram, search_facebook: r.search_facebook,
+      };
+      const detSector = detectSector(lead, sector);
+      return { ...lead, _score: computeScore(lead), _sector: detSector };
+    });
+
+    const filtered = minRating > 0 ? mapped.filter(r => (r.google_rating || 0) >= minRating) : mapped;
+
+    if (append) {
+      setResults(prev => {
+        const existingNames = new Set(prev.map(p => p.name.toLowerCase()));
+        const newOnly = filtered.filter(r => !existingNames.has(r.name.toLowerCase()));
+        return [...prev, ...newOnly];
+      });
+    } else {
+      setResults(filtered);
+    }
+    return filtered;
+  }, [city, sector, minRating]);
+
   /* ─── Search ─── */
-  const handleSearch = useCallback(async () => {
+  const handleSearch = useCallback(async (page = 0, append = false) => {
     if (!city.trim() && !query.trim()) {
       toast.error("Inserisci una città o parola chiave");
       return;
     }
-    setLoading(true);
-    setResults([]);
-    setSelected(null);
-    setGeneratedMessage(null);
+    if (append) setDeepLoading(true);
+    else { setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null); }
 
     try {
+      const existingNames = append ? results.map(r => r.name) : [];
       const { data, error } = await supabase.functions.invoke("lead-search", {
-        body: { query: query.trim(), city: city.trim(), sector, mode: "zone", use_google: true },
+        body: {
+          query: query.trim(), city: city.trim(), sector,
+          mode: "zone", use_google: true, page,
+          existing_names: existingNames,
+        },
       });
       if (error) throw error;
       if (data?.success && data.results?.length > 0) {
-        let mapped = data.results.map((r: any) => {
-          const lead: Lead = {
-            name: r.name, full_address: r.full_address || "", city: r.city || city,
-            zone: r.zone || "", phone: r.phone || null, website: r.website || null,
-            email: r.email || null, instagram: r.instagram || null,
-            google_rating: r.google_rating || 0, google_reviews: r.google_reviews || 0,
-            google_maps_url: r.google_maps_url || null, source: r.source || "openstreetmap",
-            osm_type: r.osm_type, types: r.types, lat: r.lat, lon: r.lon,
-          };
-          const detSector = detectSector(lead, sector);
-          return { ...lead, _score: computeScore(lead), _sector: detSector };
+        const processed = processResults(data.results, append);
+        setSearchPage(page);
+        setHasMore(data.has_more ?? false);
+        setLastSearchCity(city.trim());
+        setLastSearchSector(sector);
+        const sources = data.sources || {};
+        toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati`, {
+          description: `OSM: ${sources.nominatim || 0} · Overpass: ${sources.overpass || 0} · Photon: ${sources.photon || 0} · Google: ${sources.google || 0}`,
         });
-        if (minRating > 0) mapped = mapped.filter((r: any) => (r.google_rating || 0) >= minRating);
-        setResults(mapped);
-        toast.success(`${mapped.length} lead reali trovati`, {
-          description: `${data.sources?.nominatim || 0} OSM · ${data.sources?.google || 0} Google`
-        });
-      } else {
+      } else if (!append) {
         toast.error("Nessun risultato — prova un'altra città o settore");
+      } else {
+        setHasMore(false);
+        toast.info("Nessun nuovo lead trovato in questa zona — prova ad espandere la ricerca");
       }
     } catch (e: any) {
       toast.error(e.message || "Errore ricerca");
     } finally {
       setLoading(false);
+      setDeepLoading(false);
     }
-  }, [city, query, sector, minRating]);
+  }, [city, query, sector, minRating, results, processResults]);
+
+  /* ─── Deep search ─── */
+  const handleDeepSearch = useCallback(() => {
+    handleSearch(searchPage + 1, true);
+  }, [handleSearch, searchPage]);
 
   /* ─── Add manual lead ─── */
   const addManualLead = () => {
@@ -245,6 +300,12 @@ export default function LeadsPage() {
 
   const inputStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" };
 
+  // Source stats
+  const sourceStats = results.reduce((acc, r) => {
+    acc[r.source] = (acc[r.source] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
   return (
     <div className="min-h-screen p-4 space-y-4 pb-24" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
       {/* ═══ HEADER ═══ */}
@@ -254,7 +315,7 @@ export default function LeadsPage() {
             <Target className="w-5 h-5" style={{ color: "#14b8a6" }} /> LeadEngine Scout
           </h1>
           <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>
-            Cerca → Analizza → Preview mirata → Messaggio personalizzato — tutto in uno
+            Cerca → Analizza → Preview personalizzata → Messaggio AI — tutto in uno
           </p>
         </div>
         <div className="flex items-center gap-1.5">
@@ -291,7 +352,7 @@ export default function LeadsPage() {
               placeholder="Nome, zona, tipo..." className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
           <div className="sm:col-span-2">
-            <motion.button whileTap={{ scale: 0.95 }} onClick={handleSearch} disabled={loading}
+            <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleSearch()} disabled={loading}
               className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
               style={{ background: loading ? "rgba(20,184,166,0.3)" : "linear-gradient(135deg, #14b8a6, #10b981)", color: "#fff" }}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
@@ -308,6 +369,15 @@ export default function LeadsPage() {
           <button onClick={() => setShowManual(!showManual)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: "#a78bfa" }}>
             <UserPlus className="w-3 h-3" /> Lead esterno
           </button>
+          {/* Source badges */}
+          {results.length > 0 && Object.entries(sourceStats).map(([src, count]) => {
+            const info = SOURCE_LABELS[src] || { label: src, color: "#9ca3af" };
+            return (
+              <span key={src} className="text-[8px] font-bold px-2 py-1 rounded-lg" style={{ background: `${info.color}12`, color: info.color }}>
+                {info.label}: {count}
+              </span>
+            );
+          })}
         </div>
 
         {/* Filters */}
@@ -369,7 +439,7 @@ export default function LeadsPage() {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
             <div className="flex items-center justify-between px-1">
               <p className="text-[10px] font-semibold" style={{ color: "#9ca3af" }}>
-                {results.length} lead {city && `a ${city}`}
+                {results.length} lead {city && `a ${city}`} {searchPage > 0 && `(${searchPage + 1} ricerche)`}
               </p>
               <div className="flex items-center gap-0.5">
                 <ArrowUpDown className="w-3 h-3 mr-1" style={{ color: "#6b7280" }} />
@@ -386,9 +456,10 @@ export default function LeadsPage() {
               {sorted.map((lead, i) => {
                 const isSelected = selected?.name === lead.name && selected?.full_address === lead.full_address;
                 const scoreColor = lead._score >= 70 ? "#ef4444" : lead._score >= 45 ? "#f59e0b" : "#10b981";
+                const srcInfo = SOURCE_LABELS[lead.source] || { label: lead.source, color: "#9ca3af" };
                 return (
                   <motion.button key={`${lead.name}-${i}`}
-                    initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.015 }}
+                    initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(i * 0.01, 0.5) }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleSelect(lead)}
                     className="w-full text-left p-3 rounded-xl transition-all flex items-start gap-3"
@@ -409,10 +480,9 @@ export default function LeadsPage() {
                           <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.12)", color: "#c4b5fd" }}>Esterno</span>
                         )}
                         <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{
-                          background: lead.source === "google_places" ? "rgba(66,133,244,0.12)" : lead.source === "manual" ? "rgba(167,139,250,0.12)" : "rgba(255,255,255,0.05)",
-                          color: lead.source === "google_places" ? "#93bbfc" : lead.source === "manual" ? "#c4b5fd" : "#9ca3af",
+                          background: `${srcInfo.color}12`, color: srcInfo.color,
                         }}>
-                          {lead.source === "google_places" ? "Google" : lead.source === "manual" ? "Manual" : "OSM"}
+                          {srcInfo.label}
                         </span>
                         {lead.google_rating > 0 && (
                           <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.12)", color: "#fbbf24" }}>
@@ -424,7 +494,8 @@ export default function LeadsPage() {
                       <div className="flex items-center gap-2.5 mt-1 flex-wrap">
                         {lead.phone && <span className="text-[9px] flex items-center gap-1" style={{ color: "#34d399" }}><Phone className="w-2.5 h-2.5" /> {lead.phone}</span>}
                         {lead.website && <span className="text-[9px] flex items-center gap-1" style={{ color: "#60a5fa" }}><Globe className="w-2.5 h-2.5" /> Sito</span>}
-                        {lead.instagram && <span className="text-[9px] flex items-center gap-1" style={{ color: "#E4405F" }}><Instagram className="w-2.5 h-2.5" /> {lead.instagram}</span>}
+                        {lead.instagram && <span className="text-[9px] flex items-center gap-1" style={{ color: "#E4405F" }}><Instagram className="w-2.5 h-2.5" /> IG</span>}
+                        {lead.opening_hours && <span className="text-[9px] flex items-center gap-1" style={{ color: "#a78bfa" }}>🕐 Orari</span>}
                         {!lead.website && <span className="text-[9px] flex items-center gap-1" style={{ color: "#ef4444" }}><AlertTriangle className="w-2.5 h-2.5" /> No sito</span>}
                       </div>
                     </div>
@@ -432,11 +503,30 @@ export default function LeadsPage() {
                 );
               })}
             </div>
+
+            {/* ═══ DEEP SEARCH BUTTON ═══ */}
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={handleDeepSearch}
+              disabled={deepLoading}
+              className="w-full py-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 mt-2"
+              style={{
+                background: deepLoading ? "rgba(124,58,237,0.2)" : "linear-gradient(135deg, rgba(124,58,237,0.12), rgba(20,184,166,0.08))",
+                border: "1px solid rgba(124,58,237,0.25)",
+                color: deepLoading ? "#a78bfa" : "#c4b5fd",
+              }}
+            >
+              {deepLoading ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Ricerca approfondita in corso...</>
+              ) : (
+                <><Layers className="w-4 h-4" /> 🔍 Cerca ancora — trova più lead a {lastSearchCity || city}</>
+              )}
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ═══ PIPELINE: Selected → Analysis + Preview + Message ═══ */}
+      {/* ═══ PIPELINE: Selected → Analysis + Customized Preview + Message ═══ */}
       <AnimatePresence>
         {selected && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-3">
@@ -473,53 +563,68 @@ export default function LeadsPage() {
               </div>
 
               {/* Analysis indicators */}
-              <div className="grid grid-cols-3 gap-2 mt-3">
+              <div className="grid grid-cols-4 gap-2 mt-3">
                 {[
-                  { label: "Presenza Web", value: selected.website ? "Attiva" : "Assente", color: selected.website ? "#34d399" : "#ef4444", icon: Globe },
-                  { label: "Social", value: selected.instagram ? "Presente" : "Assente", color: selected.instagram ? "#E4405F" : "#6b7280", icon: Instagram },
-                  { label: "Contatto", value: selected.phone ? "Disponibile" : "Da trovare", color: selected.phone ? "#34d399" : "#f59e0b", icon: Phone },
+                  { label: "Sito Web", value: selected.website ? "✅ Attivo" : "❌ Assente", color: selected.website ? "#34d399" : "#ef4444", icon: Globe },
+                  { label: "Social", value: selected.instagram ? "✅ IG" : "❌ No", color: selected.instagram ? "#E4405F" : "#6b7280", icon: Instagram },
+                  { label: "Telefono", value: selected.phone ? "✅ OK" : "⚠️ N/D", color: selected.phone ? "#34d399" : "#f59e0b", icon: Phone },
+                  { label: "Rating", value: selected.google_rating > 0 ? `⭐ ${selected.google_rating}` : "N/D", color: selected.google_rating >= 4 ? "#fbbf24" : "#6b7280", icon: Star },
                 ].map((ind, idx) => (
                   <div key={idx} className="p-2 rounded-xl text-center" style={{ background: `${ind.color}08`, border: `1px solid ${ind.color}20` }}>
-                    <ind.icon className="w-3.5 h-3.5 mx-auto mb-1" style={{ color: ind.color }} />
-                    <p className="text-[8px] font-bold uppercase" style={{ color: "#6b7280" }}>{ind.label}</p>
-                    <p className="text-[10px] font-bold" style={{ color: ind.color }}>{ind.value}</p>
+                    <ind.icon className="w-3 h-3 mx-auto mb-0.5" style={{ color: ind.color }} />
+                    <p className="text-[7px] font-bold uppercase" style={{ color: "#6b7280" }}>{ind.label}</p>
+                    <p className="text-[9px] font-bold" style={{ color: ind.color }}>{ind.value}</p>
                   </div>
                 ))}
               </div>
 
-              {/* Contact links */}
-              <div className="flex gap-2 mt-3 flex-wrap">
+              {/* Contact & research links */}
+              <div className="flex gap-1.5 mt-3 flex-wrap">
                 {selected.phone && (
                   <a href={`https://wa.me/${selected.phone.replace(/\s+/g, "").replace("+", "")}`} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold"
-                    style={{ background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.25)", color: "#25D366" }}>
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
+                    style={{ background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.2)", color: "#25D366" }}>
                     <MessageCircle className="w-3 h-3" /> WhatsApp
                   </a>
                 )}
                 {selected.website && (
                   <a href={selected.website.startsWith("http") ? selected.website : `https://${selected.website}`} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold"
-                    style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)", color: "#60a5fa" }}>
-                    <Globe className="w-3 h-3" /> Sito Web
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
+                    style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)", color: "#60a5fa" }}>
+                    <Globe className="w-3 h-3" /> Sito
                   </a>
                 )}
                 {selected.google_maps_url && (
                   <a href={selected.google_maps_url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold"
-                    style={{ background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.25)", color: "#fbbf24" }}>
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
+                    style={{ background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.2)", color: "#fbbf24" }}>
                     <Map className="w-3 h-3" /> Maps
+                  </a>
+                )}
+                {selected.search_google && (
+                  <a href={selected.search_google} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
+                    style={{ background: "rgba(66,133,244,0.1)", border: "1px solid rgba(66,133,244,0.2)", color: "#93bbfc" }}>
+                    <Search className="w-3 h-3" /> Google
+                  </a>
+                )}
+                {selected.search_facebook && (
+                  <a href={selected.search_facebook} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
+                    style={{ background: "rgba(24,119,242,0.1)", border: "1px solid rgba(24,119,242,0.2)", color: "#5B9BF5" }}>
+                    <Facebook className="w-3 h-3" /> Facebook
                   </a>
                 )}
               </div>
             </div>
 
-            {/* Preview settore */}
+            {/* ═══ CUSTOMIZED DEMO PREVIEW ═══ */}
             {previewScreens.length > 0 && (
               <div className="p-4 rounded-2xl space-y-2" style={{ background: "rgba(167,139,250,0.03)", border: "1px solid rgba(167,139,250,0.1)" }}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Eye className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />
-                    <span className="text-xs font-bold text-white">📱 Preview da mostrare a {selected.name}</span>
+                    <span className="text-xs font-bold text-white">📱 Preview personalizzata per {selected.name}</span>
                   </div>
                   <button onClick={() => setShowPreview(!showPreview)} className="text-[9px] font-semibold" style={{ color: "#a78bfa" }}>
                     {showPreview ? "Nascondi" : "Mostra"}
@@ -528,11 +633,34 @@ export default function LeadsPage() {
                 <AnimatePresence>
                   {showPreview && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                      {/* Customized overlay header */}
+                      <div className="rounded-xl p-3 mb-2" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(20,184,166,0.06))", border: "1px solid rgba(124,58,237,0.15)" }}>
+                        <p className="text-[10px] font-bold" style={{ color: "#e5e7eb" }}>
+                          🎯 Ecco come potrebbe apparire <span style={{ color: "#a78bfa" }}>{selected.name}</span> con Empire AI:
+                        </p>
+                        <div className="flex flex-wrap gap-1.5 mt-1.5">
+                          <span className="text-[8px] px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(20,184,166,0.12)", color: "#14b8a6" }}>
+                            ✅ App & Sito personalizzato
+                          </span>
+                          <span className="text-[8px] px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(124,58,237,0.12)", color: "#c4b5fd" }}>
+                            ✅ Admin Dashboard
+                          </span>
+                          <span className="text-[8px] px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(245,158,11,0.12)", color: "#fbbf24" }}>
+                            ✅ AI Integrata
+                          </span>
+                        </div>
+                      </div>
+
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         {previewScreens.map((screen, i) => (
                           <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.08 }}
                             className="rounded-xl overflow-hidden aspect-[9/16] relative group" style={{ border: "1px solid rgba(167,139,250,0.15)" }}>
                             <img src={screen} alt={`Preview ${i + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
+                            {/* Lead name overlay */}
+                            <div className="absolute bottom-0 left-0 right-0 p-2" style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.85))" }}>
+                              <p className="text-[8px] font-bold text-white truncate">{selected.name}</p>
+                              <p className="text-[6px]" style={{ color: "#a78bfa" }}>{sectorConfig?.label || "Business"}</p>
+                            </div>
                           </motion.div>
                         ))}
                       </div>
@@ -540,7 +668,7 @@ export default function LeadsPage() {
                         <a href={getDemoSiteUrl(selected._sector)} target="_blank" rel="noopener noreferrer"
                           className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-[10px] font-bold"
                           style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(16,185,129,0.1))", border: "1px solid rgba(124,58,237,0.2)", color: "#c4b5fd" }}>
-                          <ExternalLink className="w-3 h-3" /> Demo Live
+                          <ExternalLink className="w-3 h-3" /> Demo Live {sectorConfig?.label || ""}
                         </a>
                         <button onClick={() => {
                           navigator.clipboard.writeText(`${window.location.origin}${getDemoSiteUrl(selected._sector)}`);
@@ -589,10 +717,9 @@ export default function LeadsPage() {
 
               {generatedMessage ? (
                 <>
-                  {/* ── WhatsApp Bubble Style ── */}
+                  {/* ── WhatsApp Bubble ── */}
                   {activeChannel === "whatsapp" && (
                     <div className="rounded-2xl overflow-hidden" style={{ background: "#0b141a" }}>
-                      {/* WA header */}
                       <div className="flex items-center gap-2 px-3 py-2" style={{ background: "#1f2c34" }}>
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "#25D366", color: "#fff" }}>EA</div>
                         <div>
@@ -600,7 +727,6 @@ export default function LeadsPage() {
                           <p className="text-[8px]" style={{ color: "#8696a0" }}>online</p>
                         </div>
                       </div>
-                      {/* WA bubble */}
                       <div className="p-3">
                         <div className="max-w-[85%] rounded-xl rounded-tl-sm px-3 py-2" style={{ background: "#005c4b" }}>
                           <p className="text-[11px] leading-relaxed whitespace-pre-line" style={{ color: "#e9edef" }}>
@@ -614,10 +740,9 @@ export default function LeadsPage() {
                     </div>
                   )}
 
-                  {/* ── Instagram DM Style ── */}
+                  {/* ── Instagram DM ── */}
                   {activeChannel === "instagram" && (
                     <div className="rounded-2xl overflow-hidden" style={{ background: "#000" }}>
-                      {/* IG header */}
                       <div className="flex items-center gap-2 px-3 py-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
                         <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>E</div>
                         <div>
@@ -625,7 +750,6 @@ export default function LeadsPage() {
                           <p className="text-[8px]" style={{ color: "#a8a8a8" }}>Attivo/a ora</p>
                         </div>
                       </div>
-                      {/* IG bubble */}
                       <div className="p-3 flex justify-end">
                         <div className="max-w-[80%] rounded-2xl rounded-br-sm px-3.5 py-2.5" style={{ background: "#3797f0" }}>
                           <p className="text-[11px] leading-relaxed whitespace-pre-line" style={{ color: "#fff" }}>
@@ -639,7 +763,7 @@ export default function LeadsPage() {
                     </div>
                   )}
 
-                  {/* ── Email Professional Preview ── */}
+                  {/* ── Email Professional ── */}
                   {activeChannel === "email" && (() => {
                     const lines = generatedMessage.split("\n");
                     const subjectLine = lines.find(l => l.toLowerCase().startsWith("oggetto:"));
@@ -650,7 +774,6 @@ export default function LeadsPage() {
 
                     return (
                       <div className="rounded-2xl overflow-hidden" style={{ background: "#fff" }}>
-                        {/* Email header */}
                         <div className="px-4 py-3" style={{ borderBottom: "1px solid #e5e7eb" }}>
                           <div className="flex items-center gap-2 mb-2">
                             <div className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "linear-gradient(135deg, #7c3aed, #3b82f6)", color: "#fff" }}>EA</div>
@@ -664,18 +787,16 @@ export default function LeadsPage() {
                             A: {selected.email || selected.name.toLowerCase().replace(/\s+/g, "") + "@email.com"}
                           </p>
                         </div>
-                        {/* Email body */}
                         <div className="px-4 py-3">
                           <div className="text-[11px] leading-relaxed whitespace-pre-line" style={{ color: "#374151" }}>
                             {bodyLines}
                           </div>
-                          {/* Preview card */}
                           {previewImg && (
                             <div className="mt-3 rounded-xl overflow-hidden" style={{ border: "1px solid #e5e7eb" }}>
                               <img src={previewImg} alt="Preview progetto" className="w-full h-32 object-cover object-top" />
                               <div className="p-2.5" style={{ background: "#f9fafb" }}>
                                 <p className="text-[10px] font-bold" style={{ color: "#111827" }}>
-                                  📱 Demo Live — {sectorConfig?.label || "Settore"}
+                                  📱 Demo personalizzata — {selected.name}
                                 </p>
                                 <p className="text-[8px]" style={{ color: "#6b7280" }}>
                                   {window.location.origin}{demoUrl}
@@ -684,7 +805,6 @@ export default function LeadsPage() {
                             </div>
                           )}
                         </div>
-                        {/* Email footer */}
                         <div className="px-4 py-2.5" style={{ background: "#f9fafb", borderTop: "1px solid #e5e7eb" }}>
                           <div className="flex items-center gap-3">
                             <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #7c3aed, #3b82f6)" }}>
@@ -755,8 +875,15 @@ export default function LeadsPage() {
           </div>
           <p className="text-sm font-bold text-white mb-1">Trova i tuoi prossimi clienti</p>
           <p className="text-[11px] max-w-sm mx-auto" style={{ color: "#6b7280" }}>
-            Inserisci città e settore, oppure aggiungi un lead esterno. Il sistema cercherà, analizzerà e genererà messaggi personalizzati automaticamente.
+            Inserisci città e settore per cercare lead reali da Google Maps, OSM, Overpass e altre fonti. Puoi fare ricerche ripetute per trovare sempre più lead.
           </p>
+          <div className="flex flex-wrap justify-center gap-2 mt-4">
+            {["🗺️ Google Maps", "🌍 OpenStreetMap", "📍 Photon", "🔎 Overpass API"].map(src => (
+              <span key={src} className="text-[9px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "rgba(20,184,166,0.08)", color: "#14b8a6" }}>
+                {src}
+              </span>
+            ))}
+          </div>
         </div>
       )}
     </div>
