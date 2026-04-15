@@ -7,91 +7,40 @@ const corsHeaders = {
 };
 
 /* ═══════════════════════════════════════════════════════
-   SECTOR → OSM TAG MAPPING (Overpass-precise)
+   SECTOR SEARCH TERMS (multi-language for global coverage)
    ═══════════════════════════════════════════════════════ */
-const SECTOR_OVERPASS: Record<string, string[]> = {
-  food: [
-    'amenity~"restaurant|fast_food|cafe|bar|pub|ice_cream|food_court|biergarten"',
-    'shop~"bakery|pastry|confectionery|deli|butcher|greengrocer|seafood|cheese"',
-    'cuisine',
-  ],
-  beauty: [
-    'shop~"hairdresser|beauty|cosmetics|perfumery|tattoo"',
-    'amenity~"beauty|hairdresser"',
-    'leisure~"spa"',
-  ],
-  ncc: [
-    'amenity~"taxi|car_rental"',
-    'shop~"car_rental"',
-  ],
-  healthcare: [
-    'amenity~"dentist|doctors|clinic|pharmacy|hospital|veterinary"',
-    'healthcare',
-  ],
-  retail: [
-    'shop~"clothes|shoes|jewelry|boutique|fashion|optician|gift|department_store|supermarket|convenience|electronics|mobile_phone|florist|furniture|sports|toys|books|stationery"',
-  ],
-  fitness: [
-    'leisure~"fitness_centre|sports_centre|swimming_pool|stadium"',
-    'sport',
-    'amenity~"gym"',
-  ],
-  hospitality: [
-    'tourism~"hotel|motel|hostel|guest_house|apartment|camp_site|chalet"',
-  ],
-  beach: [
-    'leisure~"beach_resort|bathing_place"',
-    'amenity~"beach_resort"',
-    'natural~"beach"',
-  ],
-  plumber: ['craft~"plumber|hvac"'],
-  electrician: ['craft~"electrician|electronics_repair"'],
-  veterinary: ['amenity~"veterinary"', 'shop~"pet|pet_grooming"'],
-  tattoo: ['shop~"tattoo"'],
-  photography: ['craft~"photographer"', 'shop~"photo"'],
-  events: ['amenity~"events_venue|conference_centre"', 'cuisine~"catering"'],
-  construction: ['craft~"builder|roofer|carpenter|plasterer|painter"', 'office~"architect|construction_company"'],
-  gardening: ['shop~"garden_centre|florist"', 'craft~"gardener"'],
-  legal: ['office~"lawyer|notary"'],
-  accounting: ['office~"accountant|tax_advisor|financial_advisor"'],
-  agriturismo: ['tourism~"guest_house"', 'leisure~"garden"'],
-  cleaning: ['shop~"laundry|dry_cleaning"', 'craft~"cleaning"'],
-  garage: ['shop~"car_repair|car_parts|tyres"', 'amenity~"car_wash|fuel"', 'craft~"car_body_repair"'],
-};
-
-/* Nominatim fallback keywords */
 const SECTOR_TERMS: Record<string, string[]> = {
-  food: ["ristorante", "pizzeria", "trattoria", "bar", "osteria", "pub", "pasticceria", "bistrot", "sushi", "gelateria", "restaurant", "cafe"],
-  beauty: ["parrucchiere", "centro estetico", "salone bellezza", "nail salon", "barbiere", "spa", "beauty salon", "hairdresser"],
-  ncc: ["NCC noleggio conducente", "taxi", "transfer aeroporto", "limousine service", "autonoleggio"],
-  healthcare: ["dentista", "studio medico", "clinica", "farmacia", "fisioterapia", "ambulatorio", "dentist", "pharmacy"],
-  retail: ["negozio abbigliamento", "boutique", "gioielleria", "ottica", "profumeria", "clothing store"],
-  fitness: ["palestra", "gym", "crossfit", "yoga studio", "piscina", "padel", "fitness center"],
-  hospitality: ["hotel", "bed and breakfast", "albergo", "hostel", "resort", "agriturismo"],
-  beach: ["stabilimento balneare", "lido", "beach club"],
+  food: ["ristorante", "pizzeria", "trattoria", "osteria", "bar", "pub", "bistrot", "sushi", "gelateria", "pasticceria", "enoteca", "restaurant", "cafe", "bakery", "fast food"],
+  beauty: ["parrucchiere", "centro estetico", "salone bellezza", "nail salon", "barbiere", "spa", "beauty salon", "hairdresser", "barber shop"],
+  ncc: ["NCC noleggio conducente", "taxi", "transfer aeroporto", "limousine service", "autonoleggio", "car rental"],
+  healthcare: ["dentista", "studio medico", "clinica", "farmacia", "fisioterapia", "ambulatorio", "dentist", "pharmacy", "doctor clinic"],
+  retail: ["negozio abbigliamento", "boutique", "gioielleria", "ottica", "profumeria", "clothing store", "jewelry shop", "shoe store"],
+  fitness: ["palestra", "gym", "crossfit", "yoga studio", "piscina", "padel", "fitness center", "swimming pool", "sport center"],
+  hospitality: ["hotel", "bed and breakfast", "albergo", "hostel", "resort", "agriturismo", "guest house"],
+  beach: ["stabilimento balneare", "lido", "beach club", "beach resort"],
   plumber: ["idraulico", "plumber", "termoidraulica"],
   electrician: ["elettricista", "electrician", "impianti elettrici"],
-  veterinary: ["veterinario", "clinica veterinaria", "pet clinic"],
-  tattoo: ["tattoo studio", "tatuaggi", "piercing"],
-  photography: ["fotografo", "studio fotografico", "photographer"],
-  events: ["location eventi", "catering", "wedding planner"],
-  construction: ["impresa edile", "ristrutturazioni", "construction"],
-  gardening: ["vivaio", "garden center", "fiorista", "florist"],
-  legal: ["avvocato", "studio legale", "notaio", "lawyer"],
-  accounting: ["commercialista", "consulente fiscale", "accountant"],
-  agriturismo: ["agriturismo", "fattoria didattica", "cantina vini"],
-  cleaning: ["impresa pulizie", "lavanderia", "cleaning service"],
-  garage: ["officina meccanica", "autofficina", "gommista", "car repair"],
+  veterinary: ["veterinario", "clinica veterinaria", "pet clinic", "toelettatura"],
+  tattoo: ["tattoo studio", "tatuaggi", "piercing studio"],
+  photography: ["fotografo", "studio fotografico", "photographer", "photo studio"],
+  events: ["location eventi", "catering", "wedding planner", "event venue", "banqueting"],
+  construction: ["impresa edile", "ristrutturazioni", "construction company", "builder"],
+  gardening: ["vivaio", "garden center", "fiorista", "florist", "giardiniere"],
+  legal: ["avvocato", "studio legale", "notaio", "lawyer", "law firm"],
+  accounting: ["commercialista", "consulente fiscale", "accountant", "tax advisor"],
+  agriturismo: ["agriturismo", "fattoria didattica", "cantina vini", "wine cellar"],
+  cleaning: ["impresa pulizie", "lavanderia", "laundry", "cleaning service", "tintoria"],
+  garage: ["officina meccanica", "autofficina", "gommista", "car repair", "autolavaggio", "car wash"],
 };
 
 /* ═══════════════════════════════════════════════════════
-   GEOCODE city → lat/lon/bbox
+   GEOCODE: city → lat/lon/bbox
    ═══════════════════════════════════════════════════════ */
 async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bbox: number[] } | null> {
   try {
     const resp = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,
-      { headers: { "User-Agent": "EmpireAI-LeadScout/4.0 (info@empireaigroup.com)" } }
+      { headers: { "User-Agent": "EmpireAI-LeadScout/5.0 (info@empireaigroup.com)" } }
     );
     if (!resp.ok) return null;
     const data = await resp.json();
@@ -101,97 +50,72 @@ async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bb
 }
 
 /* ═══════════════════════════════════════════════════════
-   SOURCE 1: OVERPASS API — precise POI from OSM database
-   Returns real businesses with full metadata
+   SOURCE 1: PHOTON (Komoot) — fast geocoding search
+   No rate limits, extremely fast, returns real businesses
    ═══════════════════════════════════════════════════════ */
-async function searchOverpass(sector: string, geo: { lat: number; lon: number; bbox: number[] }): Promise<any[]> {
-  const tags = SECTOR_OVERPASS[sector];
-  if (!tags || !tags.length) return [];
+async function searchPhoton(city: string, sector: string, geo: { lat: number; lon: number }): Promise<any[]> {
+  const terms = SECTOR_TERMS[sector] || [sector];
+  const results: any[] = [];
+  const seen = new Set<string>();
 
-  // Use a smaller radius for big cities to keep Overpass fast
-  const radius = 3000;
-  const around = `(around:${radius},${geo.lat},${geo.lon})`;
+  // Run searches for top 4 terms in parallel
+  const searches = terms.slice(0, 4).map(term => `${term} ${city}`);
 
-  // Only query nodes (faster) with first tag only
-  const t = tags[0];
-  let tagQuery: string;
-  if (t.includes("~")) {
-    const [key, val] = t.split("~");
-    tagQuery = `node[${key}~${val}]["name"]${around};`;
-  } else {
-    tagQuery = `node["${t}"]["name"]${around};`;
-  }
-
-  const query = `[out:json][timeout:8];(${tagQuery});out tags 80;`;
-
-  try {
-    // Try main Overpass, fallback to mirror
-    let resp: Response;
+  const fetchPhoton = async (q: string) => {
     try {
-      resp = await fetch("https://overpass-api.de/api/interpreter", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `data=${encodeURIComponent(query)}`,
-        signal: AbortSignal.timeout(7000),
-      });
-    } catch {
-      // Fallback mirror
-      resp = await fetch("https://overpass.kumi.systems/api/interpreter", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `data=${encodeURIComponent(query)}`,
-        signal: AbortSignal.timeout(7000),
-      });
-    }
-    if (!resp.ok) {
-      console.error(`Overpass error: ${resp.status}`);
-      return [];
-    }
-    const data = await resp.json();
-    const results: any[] = [];
+      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lat=${geo.lat}&lon=${geo.lon}&limit=30&lang=it`;
+      const resp = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      if (!resp.ok) return [];
+      const data = await resp.json();
+      return data.features || [];
+    } catch { return []; }
+  };
 
-    for (const el of data.elements || []) {
-      const tags = el.tags || {};
-      const name = tags.name;
-      if (!name || name.length < 2) continue;
+  // Run all in parallel (Photon has no rate limits)
+  const allData = await Promise.all(searches.map(s => fetchPhoton(s)));
 
-      const lat = el.lat || el.center?.lat;
-      const lon = el.lon || el.center?.lon;
+  for (const features of allData) {
+    for (const f of features) {
+      const props = f.properties || {};
+      const name = props.name;
+      if (!name || name.length < 3) continue;
+      // Skip non-business results
+      if (["city", "district", "state", "country", "street", "locality", "county"].includes(props.osm_value)) continue;
+      if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse"].includes(props.osm_key)) continue;
+
+      const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 25);
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const coords = f.geometry?.coordinates || [];
+      const lon = coords[0];
+      const lat = coords[1];
 
       results.push({
-        source: "overpass",
+        source: "photon",
         name,
-        full_address: [tags["addr:street"], tags["addr:housenumber"], tags["addr:postcode"], tags["addr:city"]].filter(Boolean).join(", ") || "",
-        city: tags["addr:city"] || tags["addr:municipality"] || "",
-        zone: tags["addr:suburb"] || tags["addr:neighbourhood"] || tags["addr:quarter"] || "",
+        full_address: [props.street, props.housenumber, props.postcode, props.city || props.county].filter(Boolean).join(", "),
+        city: props.city || props.county || city,
+        zone: props.district || props.locality || "",
         lat, lon,
-        phone: tags.phone || tags["contact:phone"] || tags["phone:mobile"] || null,
-        website: tags.website || tags["contact:website"] || tags.url || null,
-        email: tags.email || tags["contact:email"] || null,
-        opening_hours: tags.opening_hours || null,
-        instagram: tags["contact:instagram"] || null,
-        facebook: tags["contact:facebook"] || null,
-        cuisine: tags.cuisine || null,
-        brand: tags.brand || null,
-        operator: tags.operator || null,
-        osm_type: tags.amenity || tags.shop || tags.craft || tags.office || tags.tourism || tags.leisure || "",
+        phone: null, website: null, email: null,
+        opening_hours: null,
+        instagram: null, facebook: null,
+        cuisine: null,
+        osm_type: props.osm_value || props.osm_key || "",
         google_maps_url: lat && lon ? `https://www.google.com/maps/search/?api=1&query=${lat},${lon}` : null,
-        // Enrich with social media search links
-        search_google: `https://www.google.com/search?q=${encodeURIComponent(name + " " + (tags["addr:city"] || ""))}`,
+        search_google: `https://www.google.com/search?q=${encodeURIComponent(name + " " + (props.city || city))}`,
         search_instagram: `https://www.instagram.com/explore/tags/${encodeURIComponent(name.replace(/\s+/g, "").toLowerCase())}/`,
         search_facebook: `https://www.facebook.com/search/pages/?q=${encodeURIComponent(name)}`,
       });
     }
-
-    return results;
-  } catch (e) {
-    console.error("Overpass error:", e);
-    return [];
   }
+
+  return results;
 }
 
 /* ═══════════════════════════════════════════════════════
-   SOURCE 2: NOMINATIM — backup search for wider coverage
+   SOURCE 2: NOMINATIM — precise viewbox-bounded POI search
    ═══════════════════════════════════════════════════════ */
 async function searchNominatim(city: string, sector: string, userQuery: string, geo: { lat: number; lon: number; bbox: number[] }): Promise<any[]> {
   const terms = SECTOR_TERMS[sector] || [sector];
@@ -205,22 +129,22 @@ async function searchNominatim(city: string, sector: string, userQuery: string, 
 
   const searches: string[] = [];
   if (userQuery) searches.push(`${userQuery} ${city}`);
-  searches.push(...terms.slice(0, 4).map(t => `${t} ${city}`));
+  searches.push(...terms.slice(0, 6).map(t => `${t} ${city}`));
 
   const fetchOne = async (term: string) => {
     try {
       const resp = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(term)}&format=json&addressdetails=1&extratags=1&limit=40&viewbox=${viewbox}&bounded=1`,
-        { headers: { "User-Agent": "EmpireAI-LeadScout/4.0 (info@empireaigroup.com)" } }
+        { headers: { "User-Agent": "EmpireAI-LeadScout/5.0 (info@empireaigroup.com)" }, signal: AbortSignal.timeout(8000) }
       );
       if (!resp.ok) return [];
       return await resp.json();
     } catch { return []; }
   };
 
-  // Parallel batches of 3
-  for (let i = 0; i < searches.length; i += 3) {
-    const batch = searches.slice(i, i + 3);
+  // Batches of 2 (Nominatim rate limit: 1 req/sec, but we push 2)
+  for (let i = 0; i < searches.length; i += 2) {
+    const batch = searches.slice(i, i + 2);
     const allData = await Promise.all(batch.map(s => fetchOne(s)));
     for (const data of allData) {
       for (const item of data) {
@@ -240,8 +164,8 @@ async function searchNominatim(city: string, sector: string, userQuery: string, 
           city: addr.city || addr.town || addr.village || addr.municipality || city,
           zone: addr.suburb || addr.neighbourhood || addr.quarter || "",
           lat: parseFloat(item.lat), lon: parseFloat(item.lon),
-          phone: tags.phone || tags["contact:phone"] || null,
-          website: tags.website || tags["contact:website"] || null,
+          phone: tags.phone || tags["contact:phone"] || tags["phone:mobile"] || null,
+          website: tags.website || tags["contact:website"] || tags.url || null,
           email: tags.email || tags["contact:email"] || null,
           opening_hours: tags.opening_hours || null,
           instagram: tags["contact:instagram"] || null,
@@ -255,8 +179,8 @@ async function searchNominatim(city: string, sector: string, userQuery: string, 
         });
       }
     }
-    if (results.length >= 40) break;
-    if (i + 3 < searches.length) await new Promise(r => setTimeout(r, 400));
+    if (results.length >= 60) break;
+    if (i + 2 < searches.length) await new Promise(r => setTimeout(r, 500));
   }
   return results;
 }
@@ -327,11 +251,11 @@ async function searchGooglePlaces(query: string, city: string, sector: string): 
 }
 
 /* ═══════════════════════════════════════════════════════
-   DEDUPLICATION & MERGE (Google > Overpass > Nominatim)
+   MERGE + DEDUPLICATE (priority: Google > Nominatim > Photon)
+   Cross-source data enrichment
    ═══════════════════════════════════════════════════════ */
-function mergeAndDeduplicate(google: any[], overpass: any[], nominatim: any[]): any[] {
-  // Priority: Google (richest) → Overpass (precise) → Nominatim (widest)
-  const all = [...google, ...overpass, ...nominatim];
+function mergeAndDeduplicate(google: any[], nominatim: any[], photon: any[]): any[] {
+  const all = [...google, ...nominatim, ...photon];
   const seen = new Map<string, any>();
 
   for (const r of all) {
@@ -342,17 +266,12 @@ function mergeAndDeduplicate(google: any[], overpass: any[], nominatim: any[]): 
     if (!existing) {
       seen.set(key, r);
     } else {
-      // Merge: fill missing fields from new source
-      if (!existing.phone && r.phone) existing.phone = r.phone;
-      if (!existing.website && r.website) existing.website = r.website;
-      if (!existing.email && r.email) existing.email = r.email;
-      if (!existing.instagram && r.instagram) existing.instagram = r.instagram;
-      if (!existing.facebook && r.facebook) existing.facebook = r.facebook;
-      if (!existing.opening_hours && r.opening_hours) existing.opening_hours = r.opening_hours;
+      // Cross-source enrichment: fill missing fields
+      for (const field of ["phone", "website", "email", "instagram", "facebook", "opening_hours", "cuisine", "full_address", "zone"]) {
+        if (!existing[field] && r[field]) existing[field] = r[field];
+      }
       if (!existing.google_rating && r.google_rating) existing.google_rating = r.google_rating;
       if (!existing.google_reviews && r.google_reviews) existing.google_reviews = r.google_reviews;
-      if (!existing.full_address && r.full_address) existing.full_address = r.full_address;
-      if (!existing.zone && r.zone) existing.zone = r.zone;
     }
   }
 
@@ -383,31 +302,26 @@ serve(async (req) => {
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // 2. Run ALL sources in parallel — Overpass with timeout fallback
-    const overpassWithTimeout = Promise.race([
-      searchOverpass(searchSector, geo),
-      new Promise<any[]>(r => setTimeout(() => r([]), 8000)), // 8s timeout
-    ]);
-
-    const [overpassResults, nominatimResults, googleResults] = await Promise.all([
-      overpassWithTimeout,
+    // 2. Run ALL sources in parallel for maximum coverage + speed
+    const [photonResults, nominatimResults, googleResults] = await Promise.all([
+      searchPhoton(searchCity, searchSector, geo),
       searchNominatim(searchCity, searchSector, searchQuery, geo),
       use_google ? searchGooglePlaces(searchQuery, searchCity, searchSector) : Promise.resolve([]),
     ]);
 
-    console.log(`Sources: Overpass=${overpassResults.length} Nominatim=${nominatimResults.length} Google=${googleResults.length}`);
+    console.log(`Sources: Photon=${photonResults.length} Nominatim=${nominatimResults.length} Google=${googleResults.length}`);
 
-    // 3. Merge + deduplicate with data enrichment
-    const merged = mergeAndDeduplicate(googleResults, overpassResults, nominatimResults);
+    // 3. Merge + deduplicate with cross-source enrichment
+    const merged = mergeAndDeduplicate(googleResults, nominatimResults, photonResults);
 
     const hasGoogleKey = !!Deno.env.get("GOOGLE_PLACES_API_KEY");
-    console.log(`Lead search: "${searchCity}" "${searchSector}" → ${merged.length} results`);
+    console.log(`Lead search: "${searchCity}" "${searchSector}" → ${merged.length} unique results`);
 
     return new Response(JSON.stringify({
       success: true,
       results: merged,
       sources: {
-        overpass: overpassResults.length,
+        photon: photonResults.length,
         nominatim: nominatimResults.length,
         google: googleResults.length,
         total_merged: merged.length,
