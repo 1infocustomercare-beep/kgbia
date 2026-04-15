@@ -6,32 +6,36 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const SECTOR_KEYWORDS: Record<string, string[]> = {
-  food: ["restaurant", "pizzeria", "trattoria", "bar", "cafe", "osteria", "pub", "bakery", "gelateria"],
-  beauty: ["hairdresser", "beauty salon", "barber", "nail salon", "spa"],
-  ncc: ["taxi", "car rental", "limousine", "transfer"],
-  healthcare: ["dentist", "doctor", "clinic", "pharmacy", "physiotherapy", "hospital"],
-  retail: ["shop", "boutique", "clothing store", "jewelry", "store"],
-  fitness: ["gym", "fitness", "crossfit", "yoga", "swimming pool", "padel"],
-  hospitality: ["hotel", "bed and breakfast", "hostel", "resort", "guest house"],
-  beach: ["beach club", "lido", "stabilimento balneare"],
-  plumber: ["plumber", "idraulico"],
-  electrician: ["electrician", "elettricista"],
-  veterinary: ["veterinary", "pet clinic", "veterinario"],
-  tattoo: ["tattoo studio", "tattoo", "piercing"],
-  photography: ["photographer", "photo studio", "fotografo"],
-  events: ["event venue", "catering", "wedding planner"],
-  construction: ["construction company", "builder", "impresa edile"],
-  gardening: ["garden center", "florist", "nursery"],
-  legal: ["lawyer", "law firm", "avvocato", "notary"],
-  accounting: ["accountant", "tax advisor", "commercialista"],
+/* ─── Sector-specific search terms (localized for precision) ─── */
+const SECTOR_TERMS: Record<string, string[]> = {
+  food: ["ristorante", "pizzeria", "trattoria", "bar caffetteria", "osteria", "pub", "sushi", "gelateria", "pasticceria", "bistrot", "hamburger", "fast food", "enoteca", "restaurant", "cafe"],
+  beauty: ["parrucchiere", "salone bellezza", "centro estetico", "nail salon", "barbiere", "spa", "beauty salon", "hairdresser"],
+  ncc: ["NCC noleggio conducente", "taxi", "transfer aeroporto", "limousine service", "car rental", "autonoleggio"],
+  healthcare: ["dentista", "studio medico", "clinica", "farmacia", "fisioterapia", "osteopata", "ambulatorio", "dentist", "doctor clinic", "pharmacy"],
+  retail: ["negozio abbigliamento", "boutique", "gioielleria", "ottica", "profumeria", "clothing store", "jewelry shop"],
+  fitness: ["palestra", "gym", "crossfit", "yoga studio", "piscina", "padel", "fitness center", "swimming pool"],
+  hospitality: ["hotel", "bed and breakfast", "albergo", "hostel", "resort", "guest house", "agriturismo"],
+  beach: ["stabilimento balneare", "lido", "beach club"],
+  plumber: ["idraulico", "plumber", "termoidraulica"],
+  electrician: ["elettricista", "electrician", "impianti elettrici"],
+  veterinary: ["veterinario", "clinica veterinaria", "pet clinic", "toelettatura"],
+  tattoo: ["tattoo studio", "tatuaggi", "piercing studio"],
+  photography: ["fotografo", "studio fotografico", "photo studio", "photographer"],
+  events: ["location eventi", "catering", "wedding planner", "event venue"],
+  construction: ["impresa edile", "ristrutturazioni", "construction company", "builder"],
+  gardening: ["vivaio", "garden center", "fiorista", "florist", "giardiniere"],
+  legal: ["avvocato", "studio legale", "notaio", "lawyer", "law firm"],
+  accounting: ["commercialista", "studio commerciale", "consulente fiscale", "accountant", "tax advisor"],
+  agriturismo: ["agriturismo", "fattoria didattica", "cantina vini"],
+  cleaning: ["impresa pulizie", "lavanderia", "laundry", "cleaning service"],
+  garage: ["officina meccanica", "autofficina", "gommista", "car repair", "autolavaggio"],
 };
 
-/* ─── Geocode city to get coordinates ─── */
+/* ─── Geocode city → get lat/lon + bbox ─── */
 async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bbox: number[] } | null> {
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`;
-    const resp = await fetch(url, { headers: { "User-Agent": "EmpireAI-LeadScout/2.0 (info@empireaigroup.com)" } });
+    const resp = await fetch(url, { headers: { "User-Agent": "EmpireAI-LeadScout/3.0 (info@empireaigroup.com)" } });
     if (!resp.ok) return null;
     const data = await resp.json();
     if (!data.length) return null;
@@ -43,75 +47,111 @@ async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bb
   } catch { return null; }
 }
 
-/* ─── Nominatim POI search with viewbox ─── */
-async function searchNominatimPOI(city: string, sector: string, userQuery: string, geo: { lat: number; lon: number; bbox: number[] }): Promise<any[]> {
-  const keywords = SECTOR_KEYWORDS[sector] || [sector];
+/* ─── Nominatim POI search with viewbox constraint ─── */
+async function searchNominatim(city: string, sector: string, userQuery: string, geo: { lat: number; lon: number; bbox: number[] }): Promise<any[]> {
+  const terms = SECTOR_TERMS[sector] || [sector];
   const results: any[] = [];
   const seen = new Set<string>();
 
-  // Build viewbox from city bbox (south,north,west,east → west,north,east,south for Nominatim)
-  const [south, north, west, east] = geo.bbox.length >= 4 ? geo.bbox : [geo.lat - 0.1, geo.lat + 0.1, geo.lon - 0.1, geo.lon + 0.1];
+  // Viewbox from city bbox
+  const [south, north, west, east] = geo.bbox.length >= 4
+    ? geo.bbox
+    : [geo.lat - 0.05, geo.lat + 0.05, geo.lon - 0.05, geo.lon + 0.05];
   const viewbox = `${west},${north},${east},${south}`;
 
-  // Run 2-3 parallel searches with different keywords
+  // Build search terms: user query first, then sector-specific terms
   const searches: string[] = [];
-  if (userQuery) searches.push(userQuery);
-  searches.push(...keywords.slice(0, 3));
+  if (userQuery) searches.push(`${userQuery} ${city}`);
+  // Add city-qualified sector terms for precision
+  searches.push(...terms.slice(0, 5).map(t => `${t} ${city}`));
 
   const fetchOne = async (term: string) => {
     try {
-      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(term)}&format=json&addressdetails=1&extratags=1&limit=20&viewbox=${viewbox}&bounded=1`;
-      const resp = await fetch(url, { headers: { "User-Agent": "EmpireAI-LeadScout/2.0 (info@empireaigroup.com)" } });
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(term)}&format=json&addressdetails=1&extratags=1&limit=40&viewbox=${viewbox}&bounded=1`;
+      const resp = await fetch(url, { headers: { "User-Agent": "EmpireAI-LeadScout/3.0 (info@empireaigroup.com)" } });
       if (!resp.ok) return [];
       return await resp.json();
     } catch { return []; }
   };
 
-  const allData = await Promise.all(searches.map(s => fetchOne(s)));
+  // Run max 4 parallel searches to respect Nominatim rate limits
+  const batches = [];
+  for (let i = 0; i < searches.length; i += 4) {
+    batches.push(searches.slice(i, i + 4));
+  }
 
-  for (const data of allData) {
-    for (const item of data) {
-      if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse", "residential"].includes(item.class)) continue;
-      const name = item.display_name?.split(",")[0]?.trim() || "";
-      if (!name || name.length < 2) continue;
-      const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20);
-      if (seen.has(key)) continue;
-      seen.add(key);
+  for (const batch of batches) {
+    const allData = await Promise.all(batch.map(s => fetchOne(s)));
 
-      const tags = item.extratags || {};
-      const addr = item.address || {};
-      results.push({
-        source: "openstreetmap",
-        name,
-        full_address: item.display_name || "",
-        city: addr.city || addr.town || addr.village || addr.municipality || city,
-        zone: addr.suburb || addr.neighbourhood || addr.quarter || "",
-        lat: parseFloat(item.lat), lon: parseFloat(item.lon),
-        phone: tags.phone || tags["contact:phone"] || null,
-        website: tags.website || tags["contact:website"] || null,
-        email: tags.email || tags["contact:email"] || null,
-        opening_hours: tags.opening_hours || null,
-        osm_type: item.type || item.class,
-        instagram: tags["contact:instagram"] || null,
-        google_maps_url: `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lon}`,
-      });
+    for (const data of allData) {
+      for (const item of data) {
+        // Filter out non-POI results
+        if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse", "residential", "administrative"].includes(item.class)) continue;
+        const name = item.display_name?.split(",")[0]?.trim() || "";
+        if (!name || name.length < 3) continue;
+
+        const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 25);
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        const tags = item.extratags || {};
+        const addr = item.address || {};
+        results.push({
+          source: "openstreetmap",
+          name,
+          full_address: item.display_name || "",
+          city: addr.city || addr.town || addr.village || addr.municipality || city,
+          zone: addr.suburb || addr.neighbourhood || addr.quarter || "",
+          lat: parseFloat(item.lat),
+          lon: parseFloat(item.lon),
+          phone: tags.phone || tags["contact:phone"] || null,
+          website: tags.website || tags["contact:website"] || null,
+          email: tags.email || tags["contact:email"] || null,
+          opening_hours: tags.opening_hours || null,
+          osm_type: item.type || item.class,
+          instagram: tags["contact:instagram"] || null,
+          facebook: tags["contact:facebook"] || null,
+          cuisine: tags.cuisine || null,
+          google_maps_url: `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lon}`,
+        });
+      }
+    }
+
+    // If we already have plenty of results, stop early
+    if (results.length >= 50) break;
+
+    // Small delay between batches to respect rate limits
+    if (batches.indexOf(batch) < batches.length - 1) {
+      await new Promise(r => setTimeout(r, 300));
     }
   }
+
   return results;
 }
 
-/* ─── Google Places API (premium — best data) ─── */
+/* ─── Google Places API (premium) ─── */
 async function searchGooglePlaces(query: string, city: string, sector: string): Promise<any[]> {
   const apiKey = Deno.env.get("GOOGLE_PLACES_API_KEY");
   if (!apiKey) return [];
   const sectorKw: Record<string, string> = {
-    food: "ristorante OR pizzeria OR trattoria OR bar",
-    beauty: "parrucchiere OR centro estetico",
-    ncc: "noleggio con conducente OR NCC OR taxi",
-    healthcare: "dentista OR medico OR clinica",
-    retail: "negozio OR boutique", fitness: "palestra OR gym",
+    food: "ristorante OR pizzeria OR trattoria OR bar OR cafe",
+    beauty: "parrucchiere OR centro estetico OR nail salon",
+    ncc: "NCC OR taxi OR transfer",
+    healthcare: "dentista OR medico OR clinica OR farmacia",
+    retail: "negozio OR boutique OR abbigliamento",
+    fitness: "palestra OR gym OR crossfit",
     hospitality: "hotel OR B&B OR albergo",
     beach: "stabilimento balneare OR lido",
+    plumber: "idraulico OR plumber",
+    electrician: "elettricista OR electrician",
+    veterinary: "veterinario OR pet clinic",
+    tattoo: "tattoo studio",
+    photography: "fotografo OR photo studio",
+    events: "event venue OR catering",
+    construction: "impresa edile OR construction",
+    gardening: "vivaio OR garden center OR florist",
+    legal: "avvocato OR studio legale",
+    accounting: "commercialista OR accountant",
   };
   const searchText = query || (sectorKw[sector] || sector);
   const results: any[] = [];
@@ -129,13 +169,19 @@ async function searchGooglePlaces(query: string, city: string, sector: string): 
     const data = await resp.json();
     for (const p of data.places || []) {
       results.push({
-        source: "google_places", name: p.displayName?.text || "N/A",
-        full_address: p.formattedAddress || "", city, zone: "",
+        source: "google_places",
+        name: p.displayName?.text || "N/A",
+        full_address: p.formattedAddress || "",
+        city, zone: "",
         lat: p.location?.latitude, lon: p.location?.longitude,
-        phone: p.nationalPhoneNumber || null, website: p.websiteUri || null, email: null,
-        google_rating: p.rating || 0, google_reviews: p.userRatingCount || 0,
+        phone: p.nationalPhoneNumber || null,
+        website: p.websiteUri || null,
+        email: null,
+        google_rating: p.rating || 0,
+        google_reviews: p.userRatingCount || 0,
         google_maps_url: p.googleMapsUri || null,
-        business_status: p.businessStatus || "OPERATIONAL", types: p.types || [],
+        business_status: p.businessStatus || "OPERATIONAL",
+        types: p.types || [],
       });
     }
   } catch (e) { console.error("Google Places error:", e); }
@@ -157,24 +203,25 @@ serve(async (req) => {
     const searchSector = sector || "food";
 
     // 1. Geocode city
-    const geo = await geocodeCity(searchCity);
-
-    // 2. Nominatim POI search (with viewbox)
-    let osmResults: any[] = [];
-    if (geo) {
-      osmResults = await searchNominatimPOI(searchCity, searchSector, searchQuery, geo);
+    const geo = await geocodeCity(searchCity || searchQuery);
+    if (!geo) {
+      return new Response(JSON.stringify({ success: false, error: `Città "${searchCity || searchQuery}" non trovata. Controlla l'ortografia.`, results: [] }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
-    console.log(`OSM: ${osmResults.length} for "${searchCity}" / "${searchSector}"`);
 
-    // 3. Google Places (premium)
+    // 2. Nominatim POI search (free, unlimited, viewbox-constrained)
+    const osmResults = await searchNominatim(searchCity, searchSector, searchQuery, geo);
+    console.log(`Nominatim: ${osmResults.length} for "${searchCity}" / "${searchSector}"`);
+
+    // 3. Google Places (premium, if key present)
     let googleResults: any[] = [];
     if (use_google) {
       googleResults = await searchGooglePlaces(searchQuery, searchCity, searchSector);
       console.log(`Google: ${googleResults.length}`);
     }
 
-    // Merge + deduplicate
-    const all = [...googleResults, ...osmResults]; // Google first (better data)
+    // Merge + deduplicate (Google first for richer data)
+    const all = [...googleResults, ...osmResults];
     const seen = new Set<string>();
     const deduped = all.filter(r => {
       const key = r.name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 25);
