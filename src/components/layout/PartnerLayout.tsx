@@ -67,55 +67,115 @@ export default function PartnerLayout() {
         </div>
 
         {/* ═══ PREMIUM TOGGLE ═══ */}
-        <div
-          className="relative flex items-center w-[52px] h-[28px] rounded-full select-none cursor-pointer"
-          style={{
-            background: demoMode
-              ? "linear-gradient(135deg, #1a1510, #2a1f14)"
-              : "linear-gradient(135deg, #13111f, #1a1530)",
-            border: `1px solid ${demoMode ? "rgba(212,160,82,0.25)" : "rgba(167,139,250,0.2)"}`,
-            boxShadow: `0 0 20px ${demoMode ? "rgba(212,160,82,0.08)" : "rgba(167,139,250,0.06)"}, inset 0 1px 1px rgba(255,255,255,0.03)`,
-          }}
-          onClick={() => handleToggle(!demoMode)}
-        >
-          {/* Track glow */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{ opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              background: `radial-gradient(circle at ${demoMode ? "75%" : "25%"} 50%, ${demoMode ? "rgba(212,160,82,0.15)" : "rgba(167,139,250,0.12)"}, transparent 70%)`,
-            }}
-          />
-          {/* Thumb */}
-          <motion.div
-            drag="x"
-            dragConstraints={{ left: 0, right: 24 }}
-            dragElastic={0.05}
-            dragMomentum={false}
-            animate={{ x: demoMode ? 24 : 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            onDragEnd={(_e, info) => {
-              if (!demoMode && info.offset.x > 10) handleToggle(true);
-              else if (demoMode && info.offset.x < -10) handleToggle(false);
-            }}
-            className="relative top-0 left-[2px] h-[24px] w-[24px] rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing z-10"
+        <div className="flex items-center gap-2">
+          <motion.span
+            animate={{ opacity: demoMode ? 0.4 : 1 }}
+            className="text-[9px] font-bold uppercase tracking-[0.15em]"
+            style={{ color: "#a78bfa" }}
+          >
+            Live
+          </motion.span>
+
+          <div
+            className="relative flex items-center w-[56px] h-[30px] rounded-full select-none cursor-pointer overflow-hidden"
             style={{
               background: demoMode
-                ? "linear-gradient(145deg, #d4a052, #c08b35)"
-                : "linear-gradient(145deg, #a78bfa, #8b5cf6)",
-              boxShadow: `0 2px 10px ${demoMode ? "rgba(212,160,82,0.5)" : "rgba(167,139,250,0.45)"}, 0 0 16px ${demoMode ? "rgba(212,160,82,0.2)" : "rgba(167,139,250,0.15)"}`,
+                ? "linear-gradient(135deg, #1a1510, #2a1f14)"
+                : "linear-gradient(135deg, #13111f, #1a1530)",
+              border: `1.5px solid ${demoMode ? "rgba(212,160,82,0.3)" : "rgba(167,139,250,0.25)"}`,
+              boxShadow: `0 0 24px ${demoMode ? "rgba(212,160,82,0.1)" : "rgba(167,139,250,0.08)"}, inset 0 1px 2px rgba(255,255,255,0.04)`,
             }}
+            onClick={() => handleToggle(!demoMode)}
           >
+            {/* Animated track particles */}
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full"
+                style={{
+                  width: 3 + i,
+                  height: 3 + i,
+                  background: demoMode ? "rgba(212,160,82,0.3)" : "rgba(167,139,250,0.25)",
+                  top: `${30 + i * 15}%`,
+                }}
+                animate={{
+                  x: demoMode ? [10, 42, 10] : [42, 10, 42],
+                  opacity: [0, 0.8, 0],
+                  scale: [0.5, 1.2, 0.5],
+                }}
+                transition={{
+                  duration: 2.5 + i * 0.5,
+                  repeat: Infinity,
+                  delay: i * 0.4,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+
+            {/* Track glow that follows thumb */}
             <motion.div
-              animate={{ rotate: demoMode ? 180 : 0, scale: [1, 1.1, 1] }}
-              transition={{ rotate: { type: "spring", stiffness: 300 }, scale: { duration: 2, repeat: Infinity } }}
+              className="absolute inset-0 rounded-full"
+              animate={{
+                background: `radial-gradient(circle at ${demoMode ? "78%" : "22%"} 50%, ${demoMode ? "rgba(212,160,82,0.2)" : "rgba(167,139,250,0.18)"}, transparent 65%)`,
+                opacity: [0.4, 0.8, 0.4],
+              }}
+              transition={{ opacity: { duration: 2, repeat: Infinity, ease: "easeInOut" }, background: { duration: 0.4 } }}
+            />
+
+            {/* Thumb */}
+            <motion.div
+              drag="x"
+              dragConstraints={{ left: 0, right: 26 }}
+              dragElastic={0.05}
+              dragMomentum={false}
+              animate={{ x: demoMode ? 26 : 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 28 }}
+              onDragEnd={(_e, info) => {
+                if (!demoMode && info.offset.x > 10) handleToggle(true);
+                else if (demoMode && info.offset.x < -10) handleToggle(false);
+              }}
+              className="relative top-0 left-[2px] h-[26px] w-[26px] rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing z-10"
+              style={{
+                background: demoMode
+                  ? "linear-gradient(145deg, #d4a052, #b8892e)"
+                  : "linear-gradient(145deg, #a78bfa, #7c3aed)",
+                boxShadow: `0 2px 12px ${demoMode ? "rgba(212,160,82,0.55)" : "rgba(124,58,237,0.5)"}, 0 0 20px ${demoMode ? "rgba(212,160,82,0.2)" : "rgba(124,58,237,0.15)"}`,
+              }}
+              whileHover={{ scale: 1.12 }}
+              whileTap={{ scale: 0.92 }}
             >
-              {demoMode
-                ? <Presentation className="w-3 h-3 text-white/90" />
-                : <Eye className="w-3 h-3 text-white/90" />}
+              {/* Outer ring pulse */}
+              <motion.div
+                className="absolute inset-[-3px] rounded-full"
+                animate={{ opacity: [0, 0.5, 0], scale: [1, 1.3, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                style={{
+                  border: `1px solid ${demoMode ? "rgba(212,160,82,0.4)" : "rgba(167,139,250,0.35)"}`,
+                }}
+              />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={demoMode ? "demo" : "live"}
+                  initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                >
+                  {demoMode
+                    ? <Presentation className="w-3 h-3 text-white/95" />
+                    : <Eye className="w-3 h-3 text-white/95" />}
+                </motion.div>
+              </AnimatePresence>
             </motion.div>
-          </motion.div>
+          </div>
+
+          <motion.span
+            animate={{ opacity: demoMode ? 1 : 0.4 }}
+            className="text-[9px] font-bold uppercase tracking-[0.15em]"
+            style={{ color: "#d4a052" }}
+          >
+            Demo
+          </motion.span>
         </div>
 
         <div className="flex items-center gap-1.5">
