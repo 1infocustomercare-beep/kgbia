@@ -161,6 +161,7 @@ export default function LeadsPage() {
   const [lastSearchCity, setLastSearchCity] = useState("");
   const [lastSearchSector, setLastSearchSector] = useState("");
   const [showTips, setShowTips] = useState(() => !sessionStorage.getItem("leads_tips_hidden"));
+  const pendingQuickSearch = useRef<{ city: string; sector: string } | null>(null);
 
   // Pipeline
   const [selected, setSelected] = useState<(Lead & { _score: number; _sector: string }) | null>(null);
