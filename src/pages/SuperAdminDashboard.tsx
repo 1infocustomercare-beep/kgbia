@@ -2536,6 +2536,26 @@ const SuperAdminDashboard = () => {
                     </div>
                   </div>
 
+                  {/* Demo Section Toggle */}
+                  <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-purple-500/[0.04] border border-purple-500/10">
+                    <div className="flex items-center gap-2">
+                      <Eye className="w-3.5 h-3.5 text-purple-400" />
+                      <span className="text-[0.6rem] font-medium text-foreground">Demo Personalizzata</span>
+                    </div>
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={async () => {
+                        const newVal = !p.demoEnabled;
+                        await supabase.from("profiles").update({ demo_section_enabled: newVal } as any).eq("user_id", p.id);
+                        setPartnerNetwork(prev => prev.map(x => x.id === p.id ? { ...x, demoEnabled: newVal } : x));
+                        toast({ title: newVal ? "Demo attivata" : "Demo disattivata", description: `Per ${p.fullName}` });
+                      }}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.5rem] font-bold transition-colors ${p.demoEnabled ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/10 text-red-400"}`}
+                    >
+                      {p.demoEnabled ? <><ToggleRight className="w-3.5 h-3.5" /> Attiva</> : <><ToggleLeft className="w-3.5 h-3.5" /> Disattivata</>}
+                    </motion.button>
+                  </div>
+
                   {/* Team Leader ID */}
                   {p.teamLeaderId && (
                     <p className="text-[0.55rem] text-muted-foreground">
