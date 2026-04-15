@@ -386,42 +386,7 @@ const PartnerDashboard = () => {
         </AnimatePresence>
 
         {/* ═══════ LEAD ENGINE SCOUT — MAIN CTA ═══════ */}
-        {!demoMode && (
-          <section className="max-w-5xl mx-auto px-4 sm:px-8 py-6">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
-              className="relative p-6 rounded-2xl overflow-hidden cursor-pointer group"
-              style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.08), rgba(16,185,129,0.04))", border: "1px solid rgba(20,184,166,0.2)" }}
-              onClick={() => navigate("/partner/leads")}
-            >
-              <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full opacity-[0.06] pointer-events-none" style={{ background: "radial-gradient(circle, #14b8a6, transparent 65%)", filter: "blur(80px)" }} />
-              <div className="relative z-10 flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #14b8a6, #10b981)" }}>
-                  <Target className="w-7 h-7 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-base font-bold text-white">LeadEngine Scout</h3>
-                    <span className="px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wider animate-pulse" style={{ background: "rgba(16,185,129,0.2)", color: "#34d399" }}>
-                      AI Pipeline
-                    </span>
-                  </div>
-                  <p className="text-xs" style={{ color: "#9ca3af" }}>
-                    Cerca lead reali → Analisi automatica → Messaggio personalizzato per canale — tutto in un unico flusso professionale.
-                  </p>
-                  <div className="flex items-center gap-3 mt-2 flex-wrap">
-                    {["🔍 Ricerca Multi-Fonte", "📊 Score & Analisi", "💬 Copy AI per WA/IG/Email", "📥 Lead Esterni"].map(tag => (
-                      <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full" style={{ background: "rgba(20,184,166,0.08)", color: "#5eead4", border: "1px solid rgba(20,184,166,0.15)" }}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 shrink-0 transition-transform group-hover:translate-x-1" style={{ color: "#14b8a6" }} />
-              </div>
-            </motion.div>
-          </section>
-        )}
+        {!demoMode && <LeadEngineSection />}
 
         {/* ═══════ EARNINGS SECTION ═══════ */}
         {!demoMode && (
