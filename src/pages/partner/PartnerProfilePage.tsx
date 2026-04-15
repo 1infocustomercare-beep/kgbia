@@ -1,5 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
 import PartnerProfileSection from "@/components/partner/PartnerProfileSection";
+import PartnerIntegrationsSetup from "@/components/partner/PartnerIntegrationsSetup";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Mail, Shield, Calendar } from "lucide-react";
@@ -60,6 +61,11 @@ export default function PartnerProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* ═══ INTEGRAZIONI & PAGAMENTI ═══ */}
+      {user?.id && (
+        <PartnerIntegrationsSetup userId={user.id} userEmail={user.email || ""} />
+      )}
 
       {/* ═══ PROFILE EDIT ═══ */}
       {user?.id && (
