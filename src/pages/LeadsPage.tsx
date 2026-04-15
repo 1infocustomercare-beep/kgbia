@@ -614,16 +614,20 @@ export default function LeadsPage() {
 
               {/* Analysis indicators */}
               <div className="grid grid-cols-4 gap-2 mt-3">
-                {[
-                  { label: "Sito Web", value: selected.website ? "✅ Attivo" : "❌ Assente", color: selected.website ? "#34d399" : "#ef4444", icon: Globe },
-                  { label: "Social", value: selected.instagram ? "✅ IG" : "❌ No", color: selected.instagram ? "#E4405F" : "#6b7280", icon: Instagram },
-                  { label: "Telefono", value: selected.phone ? "✅ OK" : "⚠️ N/D", color: selected.phone ? "#34d399" : "#f59e0b", icon: Phone },
-                  { label: "Rating", value: selected.google_rating > 0 ? `⭐ ${selected.google_rating}` : "N/D", color: selected.google_rating >= 4 ? "#fbbf24" : "#6b7280", icon: Star },
-                ].map((ind, idx) => (
+                {(() => {
+                  const igHandle = selected.instagram || enrichedData?.instagram;
+                  const igLoading = enrichingIg && !igHandle;
+                  return [
+                    { label: "Sito Web", value: selected.website ? "✅ Attivo" : "❌ Assente", color: selected.website ? "#34d399" : "#ef4444", icon: Globe },
+                    { label: "Instagram", value: igLoading ? "🔍 Cerca..." : igHandle ? `@${igHandle}` : "❌ No", color: igHandle ? "#E4405F" : igLoading ? "#f59e0b" : "#6b7280", icon: Instagram },
+                    { label: "Telefono", value: selected.phone ? "✅ OK" : "⚠️ N/D", color: selected.phone ? "#34d399" : "#f59e0b", icon: Phone },
+                    { label: "Rating", value: selected.google_rating > 0 ? `⭐ ${selected.google_rating}` : "N/D", color: selected.google_rating >= 4 ? "#fbbf24" : "#6b7280", icon: Star },
+                  ];
+                })().map((ind, idx) => (
                   <div key={idx} className="p-2 rounded-xl text-center" style={{ background: `${ind.color}08`, border: `1px solid ${ind.color}20` }}>
                     <ind.icon className="w-3 h-3 mx-auto mb-0.5" style={{ color: ind.color }} />
                     <p className="text-[7px] font-bold uppercase" style={{ color: "#6b7280" }}>{ind.label}</p>
-                    <p className="text-[9px] font-bold" style={{ color: ind.color }}>{ind.value}</p>
+                    <p className="text-[8px] font-bold truncate" style={{ color: ind.color }}>{ind.value}</p>
                   </div>
                 ))}
               </div>
