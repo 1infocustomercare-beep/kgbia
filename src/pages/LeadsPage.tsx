@@ -406,6 +406,7 @@ export default function LeadsPage() {
   const handleSelect = useCallback(async (lead: Lead & { _score: number; _sector: string }, channelOverride?: string) => {
     setSelected(lead);
     setShowPreview(true);
+    setTimeout(() => pipelineRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
     const channel = channelOverride || activeChannel;
     setGeneratingMsg(true);
     setGeneratedMessage(null);
