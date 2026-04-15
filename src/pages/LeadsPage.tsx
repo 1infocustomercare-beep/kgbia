@@ -589,20 +589,129 @@ export default function LeadsPage() {
 
               {generatedMessage ? (
                 <>
-                  <div className="text-xs leading-relaxed whitespace-pre-line p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", color: "#d1d5db" }}>
-                    {generatedMessage}
-                  </div>
-                  <div className="flex gap-2 flex-wrap">
+                  {/* ── WhatsApp Bubble Style ── */}
+                  {activeChannel === "whatsapp" && (
+                    <div className="rounded-2xl overflow-hidden" style={{ background: "#0b141a" }}>
+                      {/* WA header */}
+                      <div className="flex items-center gap-2 px-3 py-2" style={{ background: "#1f2c34" }}>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "#25D366", color: "#fff" }}>EA</div>
+                        <div>
+                          <p className="text-[11px] font-semibold" style={{ color: "#e9edef" }}>Empire AI Group</p>
+                          <p className="text-[8px]" style={{ color: "#8696a0" }}>online</p>
+                        </div>
+                      </div>
+                      {/* WA bubble */}
+                      <div className="p-3">
+                        <div className="max-w-[85%] rounded-xl rounded-tl-sm px-3 py-2" style={{ background: "#005c4b" }}>
+                          <p className="text-[11px] leading-relaxed whitespace-pre-line" style={{ color: "#e9edef" }}>
+                            {generatedMessage.replace(/\*([^*]+)\*/g, '𝗯$1𝗯').replace(/𝗯/g, '')}
+                          </p>
+                          <p className="text-[8px] text-right mt-1" style={{ color: "#8696a0" }}>
+                            {new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })} ✓✓
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── Instagram DM Style ── */}
+                  {activeChannel === "instagram" && (
+                    <div className="rounded-2xl overflow-hidden" style={{ background: "#000" }}>
+                      {/* IG header */}
+                      <div className="flex items-center gap-2 px-3 py-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>E</div>
+                        <div>
+                          <p className="text-[11px] font-semibold" style={{ color: "#f5f5f5" }}>empire.ai.group</p>
+                          <p className="text-[8px]" style={{ color: "#a8a8a8" }}>Attivo/a ora</p>
+                        </div>
+                      </div>
+                      {/* IG bubble */}
+                      <div className="p-3 flex justify-end">
+                        <div className="max-w-[80%] rounded-2xl rounded-br-sm px-3.5 py-2.5" style={{ background: "#3797f0" }}>
+                          <p className="text-[11px] leading-relaxed whitespace-pre-line" style={{ color: "#fff" }}>
+                            {generatedMessage}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="px-3 pb-2">
+                        <p className="text-[8px] text-right" style={{ color: "#666" }}>Visto</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── Email Professional Preview ── */}
+                  {activeChannel === "email" && (() => {
+                    const lines = generatedMessage.split("\n");
+                    const subjectLine = lines.find(l => l.toLowerCase().startsWith("oggetto:"));
+                    const subject = subjectLine?.replace(/^oggetto:\s*/i, "").trim() || "Proposta Empire AI";
+                    const bodyLines = lines.filter(l => !l.toLowerCase().startsWith("oggetto:")).join("\n").trim();
+                    const demoUrl = getDemoSiteUrl(selected._sector);
+                    const previewImg = previewScreens[0];
+
+                    return (
+                      <div className="rounded-2xl overflow-hidden" style={{ background: "#fff" }}>
+                        {/* Email header */}
+                        <div className="px-4 py-3" style={{ borderBottom: "1px solid #e5e7eb" }}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "linear-gradient(135deg, #7c3aed, #3b82f6)", color: "#fff" }}>EA</div>
+                            <div>
+                              <p className="text-[11px] font-semibold" style={{ color: "#111827" }}>Empire AI Group</p>
+                              <p className="text-[8px]" style={{ color: "#6b7280" }}>info@empireaigroup.com</p>
+                            </div>
+                          </div>
+                          <p className="text-xs font-bold" style={{ color: "#111827" }}>{subject}</p>
+                          <p className="text-[9px]" style={{ color: "#9ca3af" }}>
+                            A: {selected.email || selected.name.toLowerCase().replace(/\s+/g, "") + "@email.com"}
+                          </p>
+                        </div>
+                        {/* Email body */}
+                        <div className="px-4 py-3">
+                          <div className="text-[11px] leading-relaxed whitespace-pre-line" style={{ color: "#374151" }}>
+                            {bodyLines}
+                          </div>
+                          {/* Preview card */}
+                          {previewImg && (
+                            <div className="mt-3 rounded-xl overflow-hidden" style={{ border: "1px solid #e5e7eb" }}>
+                              <img src={previewImg} alt="Preview progetto" className="w-full h-32 object-cover object-top" />
+                              <div className="p-2.5" style={{ background: "#f9fafb" }}>
+                                <p className="text-[10px] font-bold" style={{ color: "#111827" }}>
+                                  📱 Demo Live — {sectorConfig?.label || "Settore"}
+                                </p>
+                                <p className="text-[8px]" style={{ color: "#6b7280" }}>
+                                  {window.location.origin}{demoUrl}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        {/* Email footer */}
+                        <div className="px-4 py-2.5" style={{ background: "#f9fafb", borderTop: "1px solid #e5e7eb" }}>
+                          <div className="flex items-center gap-3">
+                            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #7c3aed, #3b82f6)" }}>
+                              <Zap className="w-3 h-3 text-white" />
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-bold" style={{ color: "#374151" }}>Empire AI Group</p>
+                              <p className="text-[7px]" style={{ color: "#9ca3af" }}>Digital Transformation Partner</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Action buttons */}
+                  <div className="flex gap-2 flex-wrap mt-2">
                     <motion.button whileTap={{ scale: 0.97 }} onClick={copyMessage}
                       className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold" style={{ background: "#7c3aed", color: "#fff" }}>
-                      <Copy className="w-4 h-4" /> Copia
+                      <Copy className="w-4 h-4" /> Copia Messaggio
                     </motion.button>
                     {activeChannel === "whatsapp" && selected.phone && (
                       <motion.a whileTap={{ scale: 0.97 }}
                         href={`https://wa.me/${selected.phone.replace(/\s+/g, "").replace("+", "")}?text=${encodeURIComponent(generatedMessage)}`}
                         target="_blank" rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold" style={{ background: "#25D366", color: "#fff" }}>
-                        <Send className="w-4 h-4" /> Invia
+                        <Send className="w-4 h-4" /> Invia su WA
                       </motion.a>
                     )}
                     {activeChannel === "instagram" && selected.instagram && (
@@ -613,11 +722,11 @@ export default function LeadsPage() {
                         <Instagram className="w-4 h-4" /> Apri IG
                       </motion.a>
                     )}
-                    {activeChannel === "email" && selected.email && (
+                    {activeChannel === "email" && (
                       <motion.a whileTap={{ scale: 0.97 }}
-                        href={`mailto:${selected.email}?body=${encodeURIComponent(generatedMessage)}`}
+                        href={`mailto:${selected.email || ""}?subject=${encodeURIComponent(generatedMessage.split("\n").find(l => l.toLowerCase().startsWith("oggetto:"))?.replace(/^oggetto:\s*/i, "") || "Proposta Empire AI")}&body=${encodeURIComponent(generatedMessage)}`}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold" style={{ background: "#3B82F6", color: "#fff" }}>
-                        <Mail className="w-4 h-4" /> Email
+                        <Mail className="w-4 h-4" /> Invia Email
                       </motion.a>
                     )}
                     <motion.button whileTap={{ scale: 0.97 }} onClick={() => handleSelect(selected)}
