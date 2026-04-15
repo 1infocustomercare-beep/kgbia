@@ -680,7 +680,7 @@ const SuperAdminDashboard = () => {
       )}
       
       {/* Header */}
-      <div className="relative overflow-hidden border-b border-empire-violet/30" style={{ background: "linear-gradient(160deg, hsla(250, 30%, 14%, 0.98), hsla(228, 20%, 10%, 0.98), hsla(250, 20%, 12%, 0.95))" }}>
+      <div className="relative overflow-hidden border-b border-border/30 bg-background/95 backdrop-blur-xl">
         {/* HUD grid — DNA violet */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `linear-gradient(hsl(var(--empire-violet)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--empire-violet)) 1px, transparent 1px)`,
