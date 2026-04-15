@@ -813,14 +813,25 @@ export default function LeadsPage() {
                   )}
 
                   {/* ── Instagram DM ── */}
-                  {activeChannel === "instagram" && (
+                  {activeChannel === "instagram" && (() => {
+                    const igHandle = selected.instagram || enrichedData?.instagram;
+                    return (
                     <div className="rounded-2xl overflow-hidden" style={{ background: "#000" }}>
-                      <div className="flex items-center gap-2 px-3 py-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>E</div>
-                        <div>
-                          <p className="text-[11px] font-semibold" style={{ color: "#f5f5f5" }}>empire.ai.group</p>
-                          <p className="text-[8px]" style={{ color: "#a8a8a8" }}>Attivo/a ora</p>
+                      <div className="flex items-center justify-between px-3 py-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>E</div>
+                          <div>
+                            <p className="text-[11px] font-semibold" style={{ color: "#f5f5f5" }}>empire.ai.group</p>
+                            <p className="text-[8px]" style={{ color: "#a8a8a8" }}>Attivo/a ora</p>
+                          </div>
                         </div>
+                        {igHandle && (
+                          <div className="flex items-center gap-1 px-2 py-1 rounded-full" style={{ background: "rgba(228,64,95,0.15)", border: "1px solid rgba(228,64,95,0.25)" }}>
+                            <Instagram className="w-2.5 h-2.5" style={{ color: "#E4405F" }} />
+                            <span className="text-[8px] font-bold" style={{ color: "#E4405F" }}>@{igHandle.replace("@", "")}</span>
+                            <CheckCircle className="w-2.5 h-2.5" style={{ color: "#34d399" }} />
+                          </div>
+                        )}
                       </div>
                       <div className="p-3 flex justify-end">
                         <div className="max-w-[80%] rounded-2xl rounded-br-sm px-3.5 py-2.5" style={{ background: "#3797f0" }}>
