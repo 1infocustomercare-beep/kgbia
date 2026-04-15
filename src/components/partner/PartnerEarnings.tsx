@@ -8,7 +8,7 @@ import { toast } from "@/hooks/use-toast";
 
 const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
   const { user } = useAuth();
-  const [connectStatus, setConnectStatus] = useState<{ connected: boolean; onboarding_complete: boolean } | null>(null);
+  const [connectStatus, setConnectStatus] = useState<{ configured?: boolean; connected: boolean; onboarding_complete: boolean; error?: string } | null>(null);
   const [connectLoading, setConnectLoading] = useState(false);
   const [sales, setSales] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

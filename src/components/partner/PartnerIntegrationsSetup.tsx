@@ -14,11 +14,13 @@ interface Props {
 }
 
 interface StripeStatus {
+  configured?: boolean;
   connected: boolean;
   onboarding_complete: boolean;
   charges_enabled?: boolean;
   payouts_enabled?: boolean;
   stripe_account_id?: string;
+  error?: string;
 }
 
 /* ── Step Card ── */
