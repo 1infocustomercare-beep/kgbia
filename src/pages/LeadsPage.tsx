@@ -112,22 +112,54 @@ const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
   manual: { label: "Manuale", color: "#A78BFA" },
 };
 
+/* ─── POPULAR COUNTRIES ─── */
+const COUNTRIES = [
+  { code: "", label: "🌍 Ovunque", emoji: "🌍" },
+  { code: "IT", label: "🇮🇹 Italia", emoji: "🇮🇹" },
+  { code: "US", label: "🇺🇸 USA", emoji: "🇺🇸" },
+  { code: "GB", label: "🇬🇧 UK", emoji: "🇬🇧" },
+  { code: "FR", label: "🇫🇷 Francia", emoji: "🇫🇷" },
+  { code: "DE", label: "🇩🇪 Germania", emoji: "🇩🇪" },
+  { code: "ES", label: "🇪🇸 Spagna", emoji: "🇪🇸" },
+  { code: "PT", label: "🇵🇹 Portogallo", emoji: "🇵🇹" },
+  { code: "CH", label: "🇨🇭 Svizzera", emoji: "🇨🇭" },
+  { code: "AE", label: "🇦🇪 Dubai/UAE", emoji: "🇦🇪" },
+  { code: "AU", label: "🇦🇺 Australia", emoji: "🇦🇺" },
+  { code: "BR", label: "🇧🇷 Brasile", emoji: "🇧🇷" },
+  { code: "JP", label: "🇯🇵 Giappone", emoji: "🇯🇵" },
+];
+
+const RADIUS_OPTIONS = [
+  { value: 5, label: "5 km — Quartiere" },
+  { value: 15, label: "15 km — Città" },
+  { value: 30, label: "30 km — Area metropolitana" },
+  { value: 50, label: "50 km — Provincia" },
+  { value: 100, label: "100 km — Regione" },
+];
+
 /* ─── COMPONENT ─── */
 export default function LeadsPage() {
   // Search
   const [city, setCity] = useState("");
   const [sector, setSector] = useState("food");
   const [query, setQuery] = useState("");
+  const [country, setCountry] = useState("");
+  const [radius, setRadius] = useState(15);
   const [loading, setLoading] = useState(false);
   const [deepLoading, setDeepLoading] = useState(false);
   const [results, setResults] = useState<(Lead & { _score: number; _sector: string })[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [minRating, setMinRating] = useState(0);
+  const [maxRating, setMaxRating] = useState(5);
+  const [filterNoWebsite, setFilterNoWebsite] = useState(false);
+  const [filterNoSocial, setFilterNoSocial] = useState(false);
+  const [filterHasPhone, setFilterHasPhone] = useState(false);
   const [sortBy, setSortBy] = useState<"score" | "rating" | "name">("score");
   const [searchPage, setSearchPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [lastSearchCity, setLastSearchCity] = useState("");
   const [lastSearchSector, setLastSearchSector] = useState("");
+  const [showTips, setShowTips] = useState(() => !sessionStorage.getItem("leads_tips_hidden"));
 
   // Pipeline
   const [selected, setSelected] = useState<(Lead & { _score: number; _sector: string }) | null>(null);
@@ -164,7 +196,12 @@ export default function LeadsPage() {
       return { ...lead, _score: computeScore(lead), _sector: detSector };
     });
 
-    const filtered = minRating > 0 ? mapped.filter(r => (r.google_rating || 0) >= minRating) : mapped;
+    let filtered = mapped;
+    if (minRating > 0) filtered = filtered.filter(r => (r.google_rating || 0) >= minRating);
+    if (maxRating < 5) filtered = filtered.filter(r => (r.google_rating || 0) <= maxRating);
+    if (filterNoWebsite) filtered = filtered.filter(r => !r.website);
+    if (filterNoSocial) filtered = filtered.filter(r => !r.instagram && !r.facebook);
+    if (filterHasPhone) filtered = filtered.filter(r => !!r.phone);
 
     if (append) {
       setResults(prev => {
@@ -176,7 +213,7 @@ export default function LeadsPage() {
       setResults(filtered);
     }
     return filtered;
-  }, [city, sector, minRating]);
+  }, [city, sector, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone]);
 
   /* ─── Batch enrich Instagram for leads without IG ─── */
   const batchEnrichInstagram = useCallback(async (leads: (Lead & { _score: number; _sector: string })[]) => {
@@ -227,11 +264,13 @@ export default function LeadsPage() {
 
     try {
       const existingNames = append ? results.map(r => r.name) : [];
+      const searchCity = country ? `${city.trim()}, ${COUNTRIES.find(c => c.code === country)?.label.replace(/^..\s/, '') || country}` : city.trim();
       const { data, error } = await supabase.functions.invoke("lead-search", {
         body: {
-          query: query.trim(), city: city.trim(), sector,
+          query: query.trim(), city: searchCity, sector,
           mode: "zone", use_google: true, page,
           existing_names: existingNames,
+          radius,
         },
       });
       if (error) throw error;
@@ -259,7 +298,7 @@ export default function LeadsPage() {
       setLoading(false);
       setDeepLoading(false);
     }
-  }, [city, query, sector, minRating, results, processResults, batchEnrichInstagram]);
+  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram]);
 
   /* ─── Deep search ─── */
   const handleDeepSearch = useCallback(() => {
@@ -406,7 +445,7 @@ export default function LeadsPage() {
             <Target className="w-5 h-5" style={{ color: "#14b8a6" }} /> LeadEngine Scout
           </h1>
           <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>
-            Cerca → Analizza → Preview personalizzata → Messaggio AI — tutto in uno
+            Ricerca automatica multi-fonte in tutto il mondo
           </p>
         </div>
         <div className="flex items-center gap-1.5">
@@ -423,39 +462,77 @@ export default function LeadsPage() {
         </div>
       </div>
 
+      {/* ═══ TIPS — dismissable ═══ */}
+      <AnimatePresence>
+        {showTips && results.length === 0 && (
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+            className="rounded-xl p-3 flex items-start gap-2.5" style={{ background: "rgba(20,184,166,0.04)", border: "1px solid rgba(20,184,166,0.12)" }}>
+            <Sparkles className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#14b8a6" }} />
+            <div className="flex-1">
+              <p className="text-[10px] font-bold mb-1" style={{ color: "#5eead4" }}>Come funziona in 3 step:</p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { step: "1", title: "Cerca", desc: "Inserisci città e settore — la ricerca parte in automatico su 4+ fonti" },
+                  { step: "2", title: "Analizza", desc: "Ogni lead ha uno score di opportunità, dati social e contatti reali" },
+                  { step: "3", title: "Contatta", desc: "Messaggio AI personalizzato per WhatsApp, Instagram o Email" },
+                ].map((s, i) => (
+                  <div key={i} className="text-center">
+                    <span className="inline-flex w-5 h-5 rounded-full items-center justify-center text-[9px] font-bold mb-1" style={{ background: "rgba(20,184,166,0.15)", color: "#14b8a6" }}>{s.step}</span>
+                    <p className="text-[9px] font-bold text-white">{s.title}</p>
+                    <p className="text-[8px]" style={{ color: "#6b7280" }}>{s.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button onClick={() => { setShowTips(false); sessionStorage.setItem("leads_tips_hidden", "1"); }}
+              className="p-1 rounded shrink-0" style={{ color: "#6b7280" }}>
+              <XIcon className="w-3 h-3" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ═══ SEARCH BAR ═══ */}
       <div className="rounded-2xl p-4 space-y-3" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
-          <div className="sm:col-span-3 relative">
+        
+        {/* Row 1: Country + City + Sector */}
+        <div className="grid grid-cols-12 gap-2">
+          <div className="col-span-3 sm:col-span-2">
+            <select value={country} onChange={e => setCountry(e.target.value)}
+              className="w-full px-2 py-3 rounded-xl text-xs text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
+              {COUNTRIES.map(c => <option key={c.code} value={c.code} style={{ background: "#1a1a2e" }}>{c.label}</option>)}
+            </select>
+          </div>
+          <div className="col-span-5 sm:col-span-3 relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#14b8a6" }} />
             <input value={city} onChange={e => setCity(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Città (Roma, London, NYC...)" className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+              placeholder="Città (Roma, NYC, Dubai...)" className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
-          <div className="sm:col-span-3">
+          <div className="col-span-4 sm:col-span-3">
             <select value={sector} onChange={e => setSector(e.target.value)}
               className="w-full px-3 py-3 rounded-xl text-xs text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
               {SECTOR_OPTIONS.map(s => <option key={s.value} value={s.value} style={{ background: "#1a1a2e" }}>{s.label}</option>)}
             </select>
           </div>
-          <div className="sm:col-span-4 relative">
+          <div className="col-span-8 sm:col-span-2 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
             <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Nome, zona, tipo..." className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+              placeholder="Nome, zona..." className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
-          <div className="sm:col-span-2">
+          <div className="col-span-4 sm:col-span-2">
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleSearch()} disabled={loading}
               className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
               style={{ background: loading ? "rgba(20,184,166,0.3)" : "linear-gradient(135deg, #14b8a6, #10b981)", color: "#fff" }}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-              {loading ? "Cerco..." : "Cerca Lead"}
+              {loading ? "..." : "Cerca"}
             </motion.button>
           </div>
         </div>
 
         {/* Quick actions */}
         <div className="flex items-center gap-2 flex-wrap">
-          <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: "#9ca3af" }}>
-            <Filter className="w-3 h-3" /> Filtri <ChevronDown className={`w-3 h-3 transition-transform ${showFilters ? "rotate-180" : ""}`} />
+          <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: showFilters ? "#14b8a6" : "#9ca3af" }}>
+            <Filter className="w-3 h-3" /> Filtri avanzati <ChevronDown className={`w-3 h-3 transition-transform ${showFilters ? "rotate-180" : ""}`} />
           </button>
           <button onClick={() => setShowManual(!showManual)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: "#a78bfa" }}>
             <UserPlus className="w-3 h-3" /> Lead esterno
@@ -471,27 +548,80 @@ export default function LeadsPage() {
           })}
         </div>
 
-        {/* Filters */}
+        {/* ═══ ADVANCED FILTERS ═══ */}
         <AnimatePresence>
           {showFilters && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Rating minimo</label>
-                  <select value={minRating} onChange={e => setMinRating(Number(e.target.value))} className="w-full px-3 py-2 rounded-xl text-xs text-white outline-none" style={inputStyle}>
-                    <option value={0} style={{ background: "#1a1a2e" }}>Tutti</option>
-                    <option value={3} style={{ background: "#1a1a2e" }}>3+ ⭐</option>
-                    <option value={4} style={{ background: "#1a1a2e" }}>4+ ⭐</option>
-                  </select>
+              <div className="rounded-xl p-3 space-y-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <p className="text-[9px] font-bold uppercase tracking-widest flex items-center gap-1.5" style={{ color: "#14b8a6" }}>
+                  <Filter className="w-3 h-3" /> Filtri per Conversione Mirata
+                </p>
+                <p className="text-[8px]" style={{ color: "#6b7280" }}>
+                  Usa questi filtri per trovare lead con il massimo potenziale di conversione
+                </p>
+                
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {/* Rating range */}
+                  <div>
+                    <label className="text-[8px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Rating min</label>
+                    <select value={minRating} onChange={e => setMinRating(Number(e.target.value))} className="w-full px-2 py-2 rounded-lg text-[10px] text-white outline-none" style={inputStyle}>
+                      <option value={0} style={{ background: "#1a1a2e" }}>Tutti</option>
+                      <option value={1} style={{ background: "#1a1a2e" }}>1+ ⭐</option>
+                      <option value={2} style={{ background: "#1a1a2e" }}>2+ ⭐</option>
+                      <option value={3} style={{ background: "#1a1a2e" }}>3+ ⭐</option>
+                      <option value={4} style={{ background: "#1a1a2e" }}>4+ ⭐</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[8px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Rating max</label>
+                    <select value={maxRating} onChange={e => setMaxRating(Number(e.target.value))} className="w-full px-2 py-2 rounded-lg text-[10px] text-white outline-none" style={inputStyle}>
+                      <option value={5} style={{ background: "#1a1a2e" }}>Tutti</option>
+                      <option value={4} style={{ background: "#1a1a2e" }}>≤4 ⭐</option>
+                      <option value={3.5} style={{ background: "#1a1a2e" }}>≤3.5 ⭐</option>
+                      <option value={3} style={{ background: "#1a1a2e" }}>≤3 ⭐ (problematici)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[8px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Raggio ricerca</label>
+                    <select value={radius} onChange={e => setRadius(Number(e.target.value))} className="w-full px-2 py-2 rounded-lg text-[10px] text-white outline-none" style={inputStyle}>
+                      {RADIUS_OPTIONS.map(r => <option key={r.value} value={r.value} style={{ background: "#1a1a2e" }}>{r.label}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[8px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Canale default</label>
+                    <select value={activeChannel} onChange={e => setActiveChannel(e.target.value as any)} className="w-full px-2 py-2 rounded-lg text-[10px] text-white outline-none" style={inputStyle}>
+                      <option value="whatsapp" style={{ background: "#1a1a2e" }}>💬 WhatsApp</option>
+                      <option value="instagram" style={{ background: "#1a1a2e" }}>📷 Instagram DM</option>
+                      <option value="email" style={{ background: "#1a1a2e" }}>📧 Email Pro</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-wider block mb-1" style={{ color: "#6b7280" }}>Canale default</label>
-                  <select value={activeChannel} onChange={e => setActiveChannel(e.target.value as any)} className="w-full px-3 py-2 rounded-xl text-xs text-white outline-none" style={inputStyle}>
-                    <option value="whatsapp" style={{ background: "#1a1a2e" }}>💬 WhatsApp</option>
-                    <option value="instagram" style={{ background: "#1a1a2e" }}>📷 Instagram DM</option>
-                    <option value="email" style={{ background: "#1a1a2e" }}>📧 Email Pro</option>
-                  </select>
+
+                {/* Toggle filters — high conversion targeting */}
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { active: filterNoWebsite, toggle: () => setFilterNoWebsite(!filterNoWebsite), label: "❌ Senza sito web", desc: "Lead senza presenza online — massimo potenziale", color: "#ef4444" },
+                    { active: filterNoSocial, toggle: () => setFilterNoSocial(!filterNoSocial), label: "📵 Senza social", desc: "Nessun Instagram/Facebook — bisogno evidente", color: "#f59e0b" },
+                    { active: filterHasPhone, toggle: () => setFilterHasPhone(!filterHasPhone), label: "📞 Con telefono", desc: "Contattabili subito via WA/call", color: "#10b981" },
+                  ].map((f, i) => (
+                    <button key={i} onClick={f.toggle}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all"
+                      style={{
+                        background: f.active ? `${f.color}15` : "rgba(255,255,255,0.02)",
+                        border: `1px solid ${f.active ? `${f.color}40` : "rgba(255,255,255,0.06)"}`,
+                        color: f.active ? f.color : "#6b7280",
+                      }}>
+                      {f.active ? <CheckCircle className="w-3 h-3" /> : <Plus className="w-3 h-3" />} {f.label}
+                    </button>
+                  ))}
                 </div>
+
+                {(filterNoWebsite || filterNoSocial || filterHasPhone || minRating > 0 || maxRating < 5) && (
+                  <button onClick={() => { setFilterNoWebsite(false); setFilterNoSocial(false); setFilterHasPhone(false); setMinRating(0); setMaxRating(5); }}
+                    className="text-[9px] font-semibold flex items-center gap-1" style={{ color: "#ef4444" }}>
+                    <XIcon className="w-3 h-3" /> Reset filtri
+                  </button>
+                )}
               </div>
             </motion.div>
           )}
@@ -503,6 +633,7 @@ export default function LeadsPage() {
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
               <div className="rounded-xl p-3 space-y-2" style={{ background: "rgba(167,139,250,0.05)", border: "1px solid rgba(167,139,250,0.15)" }}>
                 <p className="text-[10px] font-bold" style={{ color: "#c4b5fd" }}>📥 Aggiungi un lead trovato esternamente</p>
+                <p className="text-[8px]" style={{ color: "#6b7280" }}>Hai trovato un lead su Google, social o di persona? Aggiungilo qui per generare il messaggio AI</p>
                 <div className="grid grid-cols-2 gap-2">
                   <input value={manualName} onChange={e => setManualName(e.target.value)} placeholder="Nome attività *" className="px-3 py-2 rounded-lg text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
                   <input value={manualCity} onChange={e => setManualCity(e.target.value)} placeholder="Città" className="px-3 py-2 rounded-lg text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
@@ -999,19 +1130,34 @@ export default function LeadsPage() {
 
       {/* Empty state */}
       {results.length === 0 && !loading && (
-        <div className="text-center py-16">
+        <div className="text-center py-12">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3" style={{ background: "rgba(20,184,166,0.08)" }}>
             <Target className="w-6 h-6" style={{ color: "#14b8a6" }} />
           </div>
-          <p className="text-sm font-bold text-white mb-1">Trova i tuoi prossimi clienti</p>
-          <p className="text-[11px] max-w-sm mx-auto" style={{ color: "#6b7280" }}>
-            Inserisci città e settore per cercare lead reali da Google Maps, OSM, Overpass e altre fonti. Puoi fare ricerche ripetute per trovare sempre più lead.
+          <p className="text-sm font-bold text-white mb-1">Trova lead ovunque nel mondo</p>
+          <p className="text-[11px] max-w-sm mx-auto mb-4" style={{ color: "#6b7280" }}>
+            Scegli un Paese, inserisci la città e il settore. La ricerca multi-fonte parte automaticamente su Google Maps, OSM, Overpass e altre fonti.
           </p>
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            {["🗺️ Google Maps", "🌍 OpenStreetMap", "📍 Photon", "🔎 Overpass API"].map(src => (
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
+            {["🗺️ Google Maps", "🌍 OpenStreetMap", "📍 Photon", "🔎 Overpass", "📸 Instagram AI"].map(src => (
               <span key={src} className="text-[9px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "rgba(20,184,166,0.08)", color: "#14b8a6" }}>
                 {src}
               </span>
+            ))}
+          </div>
+          {/* Quick start suggestions */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {[
+              { city: "Roma", sector: "food", label: "🍕 Ristoranti a Roma" },
+              { city: "Milano", sector: "beauty", label: "💇 Beauty a Milano" },
+              { city: "London", sector: "fitness", label: "🏋️ Gym a Londra" },
+              { city: "Dubai", sector: "hospitality", label: "🏨 Hotel a Dubai" },
+            ].map((suggestion, i) => (
+              <button key={i} onClick={() => { setCity(suggestion.city); setSector(suggestion.sector); setTimeout(() => handleSearch(), 100); }}
+                className="px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all hover:scale-105"
+                style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.15)", color: "#c4b5fd" }}>
+                {suggestion.label}
+              </button>
             ))}
           </div>
         </div>
