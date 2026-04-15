@@ -109,80 +109,127 @@ export default function PartnerHomePage() {
       <AnimatePresence mode="wait">
         {demoMode ? (
           /* ═══════════════════════════════════════════
-             DEMO MODE — LUXURY PREMIUM SALES
+             DEMO MODE — ULTRA PREMIUM LUXURY
              ═══════════════════════════════════════════ */
-          <motion.div key="demo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4 pb-8">
+          <motion.div key="demo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5 pb-8">
 
-            {/* Luxury banner */}
-            <div className="mx-4 py-3 text-center rounded-2xl"
-              style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.06), rgba(217,119,6,0.03))", border: "1px solid rgba(245,158,11,0.12)" }}>
-              <p className="text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: "#d4a052" }}>
-                ✦ Scopri il Sistema Completo ✦
+            {/* Luxury header banner */}
+            <motion.div className="mx-4 py-4 text-center rounded-3xl relative overflow-hidden group cursor-default"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.01 }}
+              style={{ background: "linear-gradient(135deg, rgba(212,160,82,0.08), rgba(245,158,11,0.03))", border: "1px solid rgba(212,160,82,0.15)" }}>
+              <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                style={{ background: "radial-gradient(circle at 50% 50%, rgba(212,160,82,0.06), transparent 70%)" }} />
+              <motion.div animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 3, repeat: Infinity }}
+                className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(212,160,82,0.4), transparent)" }} />
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] relative z-10" style={{ color: "#d4a052" }}>
+                ✦ Il Sistema Operativo del Business ✦
               </p>
-            </div>
+              <motion.div animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+                className="absolute bottom-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(212,160,82,0.4), transparent)" }} />
+            </motion.div>
 
-            <section className="px-4 space-y-4">
+            <section className="px-4 space-y-5">
 
-              {/* ─── 1. VALUE PROPOSITION ─── */}
-              <motion.div {...fadeUp(0)} className={`${demoGlass} p-6 text-center`}
-                style={{ background: "linear-gradient(180deg, rgba(245,158,11,0.04) 0%, rgba(0,0,0,0) 100%)" }}>
-                <div className="w-12 h-12 mx-auto mb-3 rounded-2xl flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.15), rgba(217,119,6,0.08))", border: "1px solid rgba(245,158,11,0.2)" }}>
-                  <Rocket className="w-6 h-6" style={{ color: "#d4a052" }} />
+              {/* ─── 1. VALUE PROP — Hero card ─── */}
+              <motion.div {...fadeUp(0)} className="rounded-3xl p-7 text-center relative overflow-hidden group cursor-default"
+                whileHover={{ scale: 1.01, y: -2 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                style={{
+                  background: "linear-gradient(180deg, rgba(212,160,82,0.06) 0%, rgba(0,0,0,0.02) 100%)",
+                  border: "1px solid rgba(212,160,82,0.12)",
+                  boxShadow: "0 12px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.03)",
+                }}>
+                <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{ background: "radial-gradient(circle at 50% 30%, rgba(212,160,82,0.08), transparent 60%)" }} />
+                <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-[0.03] pointer-events-none"
+                  style={{ border: "1px solid rgba(212,160,82,0.3)" }} />
+                <div className="relative z-10">
+                  <motion.div className="w-14 h-14 mx-auto mb-4 rounded-3xl flex items-center justify-center"
+                    whileHover={{ rotate: [0, -5, 5, 0], scale: 1.1 }}
+                    transition={{ duration: 0.5 }}
+                    style={{ background: "linear-gradient(135deg, rgba(212,160,82,0.18), rgba(245,158,11,0.08))", border: "1px solid rgba(212,160,82,0.25)", boxShadow: "0 8px 24px rgba(212,160,82,0.1)" }}>
+                    <Rocket className="w-7 h-7" style={{ color: "#d4a052" }} />
+                  </motion.div>
+                  <h2 className="text-lg font-bold text-foreground mb-2 tracking-tight">Un Unico Sistema.<br/>Tutto Automatizzato.</h2>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[300px] mx-auto">
+                    App personalizzata, sito web, agenti IA, CRM, marketing e analytics — tutto integrato e chiavi in mano per la tua attività.
+                  </p>
                 </div>
-                <h2 className="text-base font-bold text-foreground mb-2">Un Unico Sistema. Tutto Automatizzato.</h2>
-                <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[280px] mx-auto">
-                  App, sito web, agenti IA, gestione clienti, marketing e analytics — integrato, personalizzato, chiavi in mano.
-                </p>
               </motion.div>
 
-              {/* ─── 2. COSA INCLUDE ─── */}
+              {/* ─── 2. FEATURES GRID — Interactive hover ─── */}
               <motion.div {...fadeUp(0.05)}>
-                <h3 className="text-[9px] font-bold uppercase tracking-[0.25em] mb-3" style={{ color: "#d4a052" }}>
-                  Cosa Include
+                <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] mb-3.5 flex items-center gap-2" style={{ color: "#d4a052" }}>
+                  <span className="w-6 h-[1px] inline-block" style={{ background: "linear-gradient(90deg, rgba(212,160,82,0.4), transparent)" }} />
+                  Tutto Incluso
                 </h3>
-                <div className="grid grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-3 gap-3">
                   {[
-                    { icon: Smartphone, title: "App Brand", desc: "Logo e colori tuoi" },
-                    { icon: Globe, title: "Sito Web", desc: "SEO & velocissimo" },
-                    { icon: Bot, title: "Agenti IA", desc: "Attivi 24/7" },
-                    { icon: MessageCircle, title: "WhatsApp", desc: "Chat & CRM" },
-                    { icon: BarChart3, title: "Analytics", desc: "Dati & insight" },
-                    { icon: ShieldCheck, title: "Recensioni", desc: "Shield™ incluso" },
+                    { icon: Smartphone, title: "App Brand", desc: "Il tuo logo, i tuoi colori" },
+                    { icon: Globe, title: "Sito Web", desc: "SEO ottimizzato" },
+                    { icon: Bot, title: "Agenti IA", desc: "Lavorano 24/7" },
+                    { icon: MessageCircle, title: "WhatsApp", desc: "Chat e CRM" },
+                    { icon: BarChart3, title: "Analytics", desc: "Insight predittivi" },
+                    { icon: ShieldCheck, title: "Review Shield™", desc: "Protezione totale" },
                   ].map((item, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 + i * 0.04 }}
-                      className={`${demoGlass} p-3.5 text-center`}>
-                      <div className="w-9 h-9 mx-auto mb-2 rounded-xl flex items-center justify-center"
-                        style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.12)" }}>
-                        <item.icon className="w-4 h-4" style={{ color: "#d4a052" }} />
+                    <motion.div key={i}
+                      initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 + i * 0.05 }}
+                      whileHover={{ scale: 1.06, y: -3 }}
+                      className="rounded-3xl p-4 text-center cursor-default group relative overflow-hidden"
+                      style={{
+                        background: "rgba(255,255,255,0.02)",
+                        border: "1px solid rgba(212,160,82,0.08)",
+                        boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+                      }}>
+                      <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{ background: "radial-gradient(circle at 50% 40%, rgba(212,160,82,0.08), transparent 70%)" }} />
+                      <div className="relative z-10">
+                        <motion.div className="w-10 h-10 mx-auto mb-2.5 rounded-2xl flex items-center justify-center"
+                          whileHover={{ rotate: 8 }}
+                          style={{ background: "linear-gradient(135deg, rgba(212,160,82,0.12), rgba(245,158,11,0.05))", border: "1px solid rgba(212,160,82,0.15)", boxShadow: "0 4px 12px rgba(212,160,82,0.06)" }}>
+                          <item.icon className="w-4.5 h-4.5" style={{ color: "#d4a052" }} />
+                        </motion.div>
+                        <p className="text-[10px] font-bold text-foreground leading-tight">{item.title}</p>
+                        <p className="text-[8px] mt-0.5 text-muted-foreground">{item.desc}</p>
                       </div>
-                      <p className="text-[10px] font-bold text-foreground leading-tight">{item.title}</p>
-                      <p className="text-[8px] mt-0.5 text-muted-foreground">{item.desc}</p>
                     </motion.div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* ─── 3. SETTORI ─── */}
-              <motion.div {...fadeUp(0.1)} className={`${demoGlass} p-4`}>
-                <h3 className="text-[9px] font-bold uppercase tracking-[0.25em] mb-2.5" style={{ color: "#d4a052" }}>
-                  Per Ogni Settore
+              {/* ─── 3. SECTORS — Animated pills ─── */}
+              <motion.div {...fadeUp(0.1)} className="rounded-3xl p-5 relative overflow-hidden"
+                style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(212,160,82,0.08)" }}>
+                <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] mb-3 flex items-center gap-2" style={{ color: "#d4a052" }}>
+                  <span className="w-6 h-[1px] inline-block" style={{ background: "linear-gradient(90deg, rgba(212,160,82,0.4), transparent)" }} />
+                  Adatto a Ogni Settore
                 </h3>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {["🍽️ Ristorazione", "💅 Beauty", "🏨 Hotel", "🚗 NCC", "💪 Fitness", "🏥 Sanità",
                     "🛍️ Retail", "🏖️ Stabilimenti", "🔧 Artigiani", "📷 Fotografi", "🎉 Eventi", "⚖️ Studi",
                     "🐾 Veterinari", "🎨 Tattoo", "👶 Asili", "📚 Formazione", "🌾 Agriturismo", "📦 Logistica"
                   ].map((s, i) => (
-                    <span key={i} className="px-2 py-1 rounded-full text-[9px] font-medium"
-                      style={{ background: "rgba(245,158,11,0.05)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(245,158,11,0.1)" }}>{s}</span>
+                    <motion.span key={i}
+                      initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 + i * 0.025 }}
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      className="px-3 py-1.5 rounded-full text-[9px] font-medium cursor-default transition-all"
+                      style={{
+                        background: "rgba(212,160,82,0.05)",
+                        color: "rgba(255,255,255,0.65)",
+                        border: "1px solid rgba(212,160,82,0.1)",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                      }}>{s}</motion.span>
                   ))}
                 </div>
-                <p className="text-[8px] text-muted-foreground mt-2.5 text-center italic tracking-wide">…e qualsiasi altro con personalizzazione completa</p>
+                <p className="text-[9px] text-muted-foreground/60 mt-3 text-center italic tracking-wider">…e qualsiasi altro con personalizzazione completa su misura</p>
               </motion.div>
 
-              {/* ─── 4. PACKAGES ─── */}
-              <motion.div {...fadeUp(0.15)} className="space-y-3">
-                <h3 className="text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: "#d4a052" }}>
+              {/* ─── 4. PACKAGES — Premium cards ─── */}
+              <motion.div {...fadeUp(0.15)} className="space-y-3.5">
+                <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] flex items-center gap-2" style={{ color: "#d4a052" }}>
+                  <span className="w-6 h-[1px] inline-block" style={{ background: "linear-gradient(90deg, rgba(212,160,82,0.4), transparent)" }} />
                   Pacchetti & Investimento
                 </h3>
                 {[
@@ -190,25 +237,40 @@ export default function PartnerHomePage() {
                   { name: "Growth AI", price: "4.997", monthly: "29", accent: "#d4a052", badge: "⭐ Più Scelto", features: ["Tutto di Start +", "AI Engine completo", "2 Agenti IA", "Review Shield™", "WhatsApp API"], popular: true },
                   { name: "Empire Domination", price: "7.997", monthly: "0", accent: "#f59e0b", badge: "👑 Tutto Incluso", features: ["TUTTO illimitato", "0% commissioni", "5 Agenti IA", "Manager VIP", "Priorità sviluppi"], popular: false },
                 ].map((pkg, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 + i * 0.1 }}
-                    className={`${demoGlass} p-4 relative overflow-hidden`}
-                    style={pkg.popular ? { borderColor: "rgba(212,160,82,0.3)", boxShadow: "0 4px 24px rgba(212,160,82,0.06)" } : undefined}>
-                    {pkg.popular && <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, rgba(212,160,82,0.5), transparent)" }} />}
-                    <div className="flex items-center gap-4">
-                      <div className="shrink-0 text-center min-w-[70px]">
-                        <p className="text-xl font-bold text-foreground">€{pkg.price}</p>
-                        <p className="text-[9px] text-muted-foreground">{pkg.monthly === "0" ? "poi €0/mese" : `poi €${pkg.monthly}/mese`}</p>
-                        <p className="text-[8px] text-muted-foreground/60 mt-0.5">rate 3x / 6x</p>
+                  <motion.div key={i}
+                    initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 + i * 0.1 }}
+                    whileHover={{ scale: 1.02, x: 4 }}
+                    className="rounded-3xl p-5 relative overflow-hidden cursor-default group"
+                    style={{
+                      background: pkg.popular
+                        ? "linear-gradient(135deg, rgba(212,160,82,0.06), rgba(245,158,11,0.02))"
+                        : "rgba(255,255,255,0.02)",
+                      border: `1px solid ${pkg.popular ? "rgba(212,160,82,0.2)" : "rgba(255,255,255,0.06)"}`,
+                      boxShadow: pkg.popular ? "0 8px 32px rgba(212,160,82,0.06), inset 0 1px 0 rgba(255,255,255,0.03)" : "0 4px 16px rgba(0,0,0,0.08)",
+                    }}>
+                    {pkg.popular && (
+                      <>
+                        <motion.div animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ duration: 3, repeat: Infinity }}
+                          className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, rgba(212,160,82,0.5), transparent)" }} />
+                        <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                          style={{ background: "radial-gradient(circle at 50% 50%, rgba(212,160,82,0.05), transparent 60%)" }} />
+                      </>
+                    )}
+                    <div className="flex items-center gap-4 relative z-10">
+                      <div className="shrink-0 text-center min-w-[72px]">
+                        <p className="text-xl font-bold text-foreground tracking-tight">€{pkg.price}</p>
+                        <p className="text-[9px] text-muted-foreground mt-0.5">{pkg.monthly === "0" ? "poi €0/mese" : `poi €${pkg.monthly}/mese`}</p>
+                        <p className="text-[8px] text-muted-foreground/50 mt-0.5">rate 3× / 6×</p>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1.5">
+                        <div className="flex items-center gap-2 mb-2">
                           <p className="text-xs font-bold text-foreground">{pkg.name}</p>
                           {pkg.badge && (
-                            <span className="px-1.5 py-0.5 rounded-md text-[8px] font-bold"
-                              style={{ background: `${pkg.accent}15`, color: pkg.accent, border: `1px solid ${pkg.accent}20` }}>{pkg.badge}</span>
+                            <span className="px-2 py-0.5 rounded-full text-[8px] font-bold"
+                              style={{ background: `${pkg.accent}12`, color: pkg.accent, border: `1px solid ${pkg.accent}18` }}>{pkg.badge}</span>
                           )}
                         </div>
-                        <div className="flex flex-wrap gap-x-3 gap-y-1">
+                        <div className="flex flex-wrap gap-x-3 gap-y-1.5">
                           {pkg.features.map((f, j) => (
                             <span key={j} className="text-[9px] flex items-center gap-1 text-muted-foreground">
                               <CheckCircle className="w-2.5 h-2.5 shrink-0" style={{ color: pkg.accent }} /> {f}
@@ -221,43 +283,61 @@ export default function PartnerHomePage() {
                 ))}
               </motion.div>
 
-              {/* ─── 5. AI AGENTS ─── */}
-              <motion.div {...fadeUp(0.2)} className={`${demoGlass} p-5`}
-                style={{ background: "linear-gradient(180deg, rgba(245,158,11,0.03) 0%, transparent 100%)" }}>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center"
-                    style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.15)" }}>
-                    <Bot className="w-4 h-4" style={{ color: "#d4a052" }} />
+              {/* ─── 5. AI AGENTS — Floating cards ─── */}
+              <motion.div {...fadeUp(0.2)} className="rounded-3xl p-6 relative overflow-hidden"
+                style={{
+                  background: "linear-gradient(180deg, rgba(212,160,82,0.04) 0%, transparent 100%)",
+                  border: "1px solid rgba(212,160,82,0.08)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+                }}>
+                <motion.div animate={{ rotate: [0, -360] }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                  className="absolute -bottom-20 -left-20 w-44 h-44 rounded-full opacity-[0.02] pointer-events-none"
+                  style={{ border: "1px solid rgba(212,160,82,0.3)" }} />
+                <div className="flex items-center gap-2.5 mb-4 relative z-10">
+                  <motion.div className="w-10 h-10 rounded-2xl flex items-center justify-center"
+                    whileHover={{ rotate: 12, scale: 1.1 }}
+                    style={{ background: "linear-gradient(135deg, rgba(212,160,82,0.15), rgba(245,158,11,0.06))", border: "1px solid rgba(212,160,82,0.2)", boxShadow: "0 4px 16px rgba(212,160,82,0.08)" }}>
+                    <Bot className="w-5 h-5" style={{ color: "#d4a052" }} />
+                  </motion.div>
+                  <div>
+                    <h3 className="text-sm font-bold text-foreground">Il Tuo Team Digitale</h3>
+                    <p className="text-[9px] text-muted-foreground">Agenti IA che lavorano per te 24/7</p>
                   </div>
-                  <h3 className="text-sm font-bold text-foreground">Il Tuo Team Digitale</h3>
                 </div>
-                <p className="text-[11px] text-muted-foreground mb-3.5 leading-relaxed">
-                  Ogni agente lavora 24/7 — risponde ai clienti, gestisce ordini, protegge le recensioni e invia promozioni automaticamente.
-                </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2.5 relative z-10">
                   {[
-                    { emoji: "💬", name: "Assistente Clienti", desc: "Risponde a ogni richiesta" },
+                    { emoji: "💬", name: "Assistente Clienti", desc: "Risponde a tutto" },
                     { emoji: "⭐", name: "Review Shield™", desc: "Protegge le recensioni" },
                     { emoji: "📣", name: "Marketing AI", desc: "Social & promozioni" },
                     { emoji: "📋", name: "Gestione Ordini", desc: "Ordini e prenotazioni" },
                     { emoji: "🧠", name: "Business Advisor", desc: "Analisi e strategie" },
-                    { emoji: "📞", name: "Voice Agent", desc: "Risponde con voce reale" },
+                    { emoji: "📞", name: "Voice Agent", desc: "Voce IA realistica" },
                   ].map((agent, i) => (
-                    <div key={i} className={`${demoGlass} p-2.5 flex items-center gap-2.5`}>
-                      <span className="text-lg shrink-0">{agent.emoji}</span>
+                    <motion.div key={i}
+                      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.04 }}
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      className="rounded-2xl p-3 flex items-center gap-2.5 cursor-default group"
+                      style={{
+                        background: "rgba(255,255,255,0.02)",
+                        border: "1px solid rgba(212,160,82,0.06)",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                      }}>
+                      <motion.span className="text-lg shrink-0" whileHover={{ scale: 1.3, rotate: 10 }}>{agent.emoji}</motion.span>
                       <div className="min-w-0">
                         <p className="text-[10px] font-bold text-foreground truncate">{agent.name}</p>
                         <p className="text-[8px] text-muted-foreground truncate">{agent.desc}</p>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* ─── 6. COMPARISON ─── */}
-              <motion.div {...fadeUp(0.25)} className={`${demoGlass} p-4`}>
-                <h3 className="text-[9px] font-bold uppercase tracking-[0.25em] mb-3" style={{ color: "#d4a052" }}>
-                  Noi vs Competitors
+              {/* ─── 6. COMPARISON — Animated table ─── */}
+              <motion.div {...fadeUp(0.25)} className="rounded-3xl p-5 relative overflow-hidden"
+                style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(212,160,82,0.08)" }}>
+                <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] mb-3.5 flex items-center gap-2" style={{ color: "#d4a052" }}>
+                  <span className="w-6 h-[1px] inline-block" style={{ background: "linear-gradient(90deg, rgba(212,160,82,0.4), transparent)" }} />
+                  Noi vs Il Resto del Mondo
                 </h3>
                 <div className="space-y-0">
                   {[
@@ -267,75 +347,110 @@ export default function PartnerHomePage() {
                     { label: "Personalizzazione", them: "Limitata", us: "100% su misura" },
                     { label: "Proprietà dati", them: "Della piattaforma", us: "Tuoi per sempre" },
                   ].map((row, i) => (
-                    <div key={i} className="flex items-center gap-2 py-2 border-b border-white/[0.04] last:border-0">
-                      <p className="flex-1 text-[9px] text-muted-foreground truncate">{row.label}</p>
-                      <span className="text-[8px] px-2 py-0.5 rounded-md font-medium"
-                        style={{ background: "rgba(239,68,68,0.08)", color: "#f87171", border: "1px solid rgba(239,68,68,0.1)" }}>{row.them}</span>
-                      <span className="text-[8px] px-2 py-0.5 rounded-md font-bold"
-                        style={{ background: "rgba(52,211,153,0.08)", color: "#34d399", border: "1px solid rgba(52,211,153,0.1)" }}>{row.us}</span>
-                    </div>
+                    <motion.div key={i}
+                      initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.05 }}
+                      whileHover={{ x: 4, background: "rgba(212,160,82,0.02)" }}
+                      className="flex items-center gap-2.5 py-2.5 border-b border-white/[0.03] last:border-0 rounded-xl px-2 cursor-default transition-all">
+                      <p className="flex-1 text-[10px] text-muted-foreground font-medium truncate">{row.label}</p>
+                      <span className="text-[8px] px-2.5 py-1 rounded-full font-medium"
+                        style={{ background: "rgba(239,68,68,0.06)", color: "#f87171", border: "1px solid rgba(239,68,68,0.08)" }}>{row.them}</span>
+                      <span className="text-[8px] px-2.5 py-1 rounded-full font-bold"
+                        style={{ background: "rgba(52,211,153,0.06)", color: "#34d399", border: "1px solid rgba(52,211,153,0.08)" }}>{row.us}</span>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* ─── 7. FAQ ─── */}
-              <motion.div {...fadeUp(0.3)} className="space-y-2">
-                <h3 className="text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: "#d4a052" }}>
+              {/* ─── 7. FAQ — Elegant accordion ─── */}
+              <motion.div {...fadeUp(0.3)} className="space-y-2.5">
+                <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] flex items-center gap-2" style={{ color: "#d4a052" }}>
+                  <span className="w-6 h-[1px] inline-block" style={{ background: "linear-gradient(90deg, rgba(212,160,82,0.4), transparent)" }} />
                   Domande Frequenti
                 </h3>
                 {[
-                  { q: "È complicato da usare?", a: "No. Intuitivo come Instagram. Il nostro team ti segue passo passo." },
-                  { q: "Funziona per il mio settore?", a: "Sì, si adatta a qualsiasi attività con personalizzazione completa." },
-                  { q: "E se non funziona?", a: "90 giorni di prova. Se non sei soddisfatto, non paghi nulla." },
-                  { q: "Quanto tempo per partire?", a: "48 ore — app e sito online, completamente personalizzati." },
-                  { q: "Posso rateizzare?", a: "Sì, rate comode in 3 o 6 mesi senza interessi." },
+                  { q: "È complicato da usare?", a: "No. Intuitivo come Instagram. Il nostro team ti segue passo passo nell'avvio e nella gestione." },
+                  { q: "Funziona per il mio settore?", a: "Assolutamente sì. Si adatta a 25+ settori con moduli e funzionalità specifiche per ogni business." },
+                  { q: "E se non funziona?", a: "90 giorni di prova gratuita. Se non sei soddisfatto, non paghi nulla. Zero rischi." },
+                  { q: "Quanto tempo per partire?", a: "48 ore — il nostro team costruisce tutto su misura: app, sito web e configurazione completa." },
+                  { q: "Posso rateizzare?", a: "Sì, rate comode in 3 o 6 mesi. Tasso zero sulle 3 rate." },
                 ].map((faq, i) => (
-                  <details key={i} className={`group ${demoGlass} overflow-hidden`}>
-                    <summary className="flex items-center justify-between p-3 cursor-pointer text-[11px] font-semibold text-foreground list-none">
+                  <details key={i} className="group rounded-2xl overflow-hidden cursor-pointer"
+                    style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(212,160,82,0.06)" }}>
+                    <summary className="flex items-center justify-between p-4 text-[11px] font-semibold text-foreground list-none select-none">
                       {faq.q}
-                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground transition-transform group-open:rotate-90 shrink-0" />
+                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/60 transition-transform duration-300 group-open:rotate-90 shrink-0" />
                     </summary>
-                    <p className="px-3 pb-3 text-[10px] text-muted-foreground leading-relaxed">{faq.a}</p>
+                    <p className="px-4 pb-4 text-[10px] text-muted-foreground leading-relaxed">{faq.a}</p>
                   </details>
                 ))}
               </motion.div>
 
-              {/* ─── 8. SOCIAL PROOF ─── */}
-              <motion.div {...fadeUp(0.35)} className={`${demoGlass} p-5 text-center`}
-                style={{ background: "linear-gradient(180deg, rgba(245,158,11,0.03) 0%, transparent 100%)" }}>
-                <div className="flex items-center justify-center gap-0.5 mb-2.5">
-                  {[1,2,3,4,5].map(s => <Star key={s} className="w-4 h-4 fill-amber-400/80" style={{ color: "#d4a052" }} />)}
+              {/* ─── 8. SOCIAL PROOF — Glowing card ─── */}
+              <motion.div {...fadeUp(0.35)} className="rounded-3xl p-6 text-center relative overflow-hidden group cursor-default"
+                whileHover={{ scale: 1.01 }}
+                style={{
+                  background: "linear-gradient(180deg, rgba(212,160,82,0.04) 0%, transparent 100%)",
+                  border: "1px solid rgba(212,160,82,0.1)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+                }}>
+                <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                  style={{ background: "radial-gradient(circle at 50% 50%, rgba(212,160,82,0.06), transparent 60%)" }} />
+                <div className="relative z-10">
+                  <div className="flex items-center justify-center gap-1 mb-3">
+                    {[1,2,3,4,5].map(s => (
+                      <motion.div key={s} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 + s * 0.08 }}>
+                        <Star className="w-4 h-4 fill-amber-400/90" style={{ color: "#d4a052" }} />
+                      </motion.div>
+                    ))}
+                  </div>
+                  <p className="text-sm font-bold text-foreground mb-2">Oltre 500 attività già attive</p>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed max-w-[280px] mx-auto italic">
+                    "Gli ordini online sono aumentati del 40% e risparmiamo 15 ore a settimana. Non torneremmo mai indietro."
+                  </p>
+                  <p className="text-[9px] font-semibold mt-2.5" style={{ color: "#d4a052" }}>— Marco R., Ristoratore, Roma</p>
                 </div>
-                <p className="text-xs font-bold text-foreground mb-1.5">Oltre 500 attività già attive</p>
-                <p className="text-[10px] text-muted-foreground leading-relaxed max-w-[260px] mx-auto italic">
-                  "Gli ordini online sono aumentati del 40% e risparmiamo 15 ore a settimana."
-                </p>
-                <p className="text-[9px] font-semibold mt-2" style={{ color: "#d4a052" }}>— Marco R., Ristoratore, Roma</p>
               </motion.div>
 
-              {/* ─── 9. GUARANTEE ─── */}
-              <motion.div {...fadeUp(0.38)} className={`${demoGlass} p-4 flex items-center gap-3.5`}
-                style={{ borderColor: "rgba(52,211,153,0.12)" }}>
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-                  style={{ background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.12)" }}>
-                  <ShieldCheck className="w-6 h-6 text-emerald-400" />
-                </div>
+              {/* ─── 9. GUARANTEE — Trust badge ─── */}
+              <motion.div {...fadeUp(0.38)}
+                whileHover={{ scale: 1.02, y: -2 }}
+                className="rounded-3xl p-5 flex items-center gap-4 cursor-default"
+                style={{
+                  background: "rgba(52,211,153,0.02)",
+                  border: "1px solid rgba(52,211,153,0.1)",
+                  boxShadow: "0 4px 20px rgba(52,211,153,0.04)",
+                }}>
+                <motion.div className="w-14 h-14 rounded-3xl flex items-center justify-center shrink-0"
+                  whileHover={{ rotate: 10 }}
+                  style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.1)", boxShadow: "0 4px 16px rgba(52,211,153,0.06)" }}>
+                  <ShieldCheck className="w-7 h-7 text-emerald-400" />
+                </motion.div>
                 <div>
-                  <p className="text-xs font-bold text-foreground">90 Giorni di Prova Gratuita</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Nessun rischio. Provi tutto. Non paghi nulla se non sei soddisfatto.</p>
+                  <p className="text-sm font-bold text-foreground">90 Giorni di Prova Gratuita</p>
+                  <p className="text-[10px] text-muted-foreground mt-1 leading-relaxed">Nessun rischio. Provi tutto il sistema. Non paghi nulla se non sei soddisfatto.</p>
                 </div>
               </motion.div>
 
-              {/* ─── 10. CTA ─── */}
-              <div className="text-center py-3 space-y-3">
-                <motion.button onClick={() => navigate("/partner/portfolio")} whileTap={{ scale: 0.97 }}
-                  className="w-full py-3.5 rounded-2xl font-semibold text-sm inline-flex items-center justify-center gap-2 text-white"
-                  style={{ background: "linear-gradient(135deg, #d4a052, #b8862e)", boxShadow: "0 8px 32px rgba(212,160,82,0.2)" }}>
-                  <FolderOpen className="w-4 h-4" /> Vedi le Demo per il Tuo Settore
-                  <ArrowRight className="w-4 h-4" />
+              {/* ─── 10. CTA — Premium button ─── */}
+              <div className="text-center py-4 space-y-3">
+                <motion.button onClick={() => navigate("/partner/portfolio")}
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full py-4 rounded-3xl font-semibold text-sm inline-flex items-center justify-center gap-2.5 text-white relative overflow-hidden group"
+                  style={{
+                    background: "linear-gradient(135deg, #d4a052, #b8862e)",
+                    boxShadow: "0 8px 32px rgba(212,160,82,0.25), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  }}>
+                  <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.08), transparent)" }} />
+                  <FolderOpen className="w-4.5 h-4.5 relative z-10" />
+                  <span className="relative z-10">Vedi le Demo per il Tuo Settore</span>
+                  <motion.div animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }} className="relative z-10">
+                    <ArrowRight className="w-4.5 h-4.5" />
+                  </motion.div>
                 </motion.button>
-                <p className="text-[10px] text-muted-foreground">
-                  Mostra al cliente le preview interattive per il suo settore
+                <p className="text-[10px] text-muted-foreground/60 tracking-wide">
+                  Mostra al cliente le preview interattive personalizzate
                 </p>
               </div>
 
