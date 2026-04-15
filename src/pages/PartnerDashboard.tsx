@@ -616,8 +616,9 @@ const PartnerDashboard = () => {
     if (!user?.id) return;
     fetchPartnerData();
     // Load avatar
-    supabase.from("profiles").select("avatar_url").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+    supabase.from("profiles").select("avatar_url, full_name").eq("user_id", user.id).maybeSingle().then(({ data }) => {
       if (data?.avatar_url) setPartnerAvatar(data.avatar_url);
+      if (data?.full_name) setProfileName(data.full_name);
     });
     if (!isTeamLeader) return;
     const channel = supabase
