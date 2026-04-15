@@ -134,6 +134,8 @@ export default function LeadsPage() {
   const [generatingMsg, setGeneratingMsg] = useState(false);
   const [generatedMessage, setGeneratedMessage] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(true);
+  const [enrichingIg, setEnrichingIg] = useState(false);
+  const [enrichedData, setEnrichedData] = useState<{ instagram?: string; email?: string; phone?: string; facebook?: string; source?: string } | null>(null);
 
   // Manual lead input
   const [showManual, setShowManual] = useState(false);
