@@ -3412,6 +3412,7 @@ export type Database = {
           city: string | null
           company_name: string | null
           created_at: string
+          demo_section_enabled: boolean
           email: string | null
           full_name: string | null
           id: string
@@ -3428,6 +3429,7 @@ export type Database = {
           city?: string | null
           company_name?: string | null
           created_at?: string
+          demo_section_enabled?: boolean
           email?: string | null
           full_name?: string | null
           id?: string
@@ -3444,6 +3446,7 @@ export type Database = {
           city?: string | null
           company_name?: string | null
           created_at?: string
+          demo_section_enabled?: boolean
           email?: string | null
           full_name?: string | null
           id?: string

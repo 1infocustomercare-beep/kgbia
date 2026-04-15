@@ -98,6 +98,7 @@ const PartnerDashboard = () => {
   const [detailProject, setDetailProject] = useState<string | null>(null);
   const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
   const [profileName, setProfileName] = useState<string | null>(null);
+  const [demoSectionEnabled, setDemoSectionEnabled] = useState(false);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [sectorSearch, setSectorSearch] = useState("");
 
@@ -115,9 +116,10 @@ const PartnerDashboard = () => {
   useEffect(() => {
     if (!user?.id) return;
     fetchPartnerData();
-    supabase.from("profiles").select("avatar_url, full_name").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+    supabase.from("profiles").select("avatar_url, full_name, demo_section_enabled").eq("user_id", user.id).maybeSingle().then(({ data }) => {
       if (data?.avatar_url) setPartnerAvatar(data.avatar_url);
       if (data?.full_name) setProfileName(data.full_name);
+      if ((data as any)?.demo_section_enabled) setDemoSectionEnabled(true);
     });
     if (!isTeamLeader) return;
     const channel = supabase
@@ -470,7 +472,7 @@ const PartnerDashboard = () => {
         )}
 
         {/* ═══════ DEMO PERSONALIZZATA ═══════ */}
-        {!demoMode && (
+        {!demoMode && demoSectionEnabled && (
           <section className="max-w-5xl mx-auto px-4 sm:px-8 py-4">
             <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(167,139,250,0.04)", border: "1px solid rgba(167,139,250,0.12)" }}>
               <div className="flex items-center justify-between">

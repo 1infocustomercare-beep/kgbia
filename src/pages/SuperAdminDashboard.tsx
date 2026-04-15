@@ -140,7 +140,7 @@ const SuperAdminDashboard = () => {
   const [intFilter, setIntFilter] = useState<{ status: "all" | "connected" | "missing" | "disabled"; category: "all" | "admin" | "client"; sector: string; account: "all" | "subscribed" | "extra" | "requested" | "none"; search: string }>({ status: "all", category: "all", sector: "all", account: "all", search: "" });
   // Registrations & Partner Network
   const [allRegistrations, setAllRegistrations] = useState<{ id: string; email: string; fullName: string; sector: string; role: string; createdAt: string }[]>([]);
-  const [partnerNetwork, setPartnerNetwork] = useState<{ id: string; email: string; fullName: string; role: string; teamLeaderId: string | null; createdAt: string; salesCount: number; salesRevenue: number; salesCommission: number; subPartners: { id: string; email: string; fullName: string; salesCount: number; salesRevenue: number }[] }[]>([]);
+  const [partnerNetwork, setPartnerNetwork] = useState<{ id: string; email: string; fullName: string; role: string; teamLeaderId: string | null; createdAt: string; salesCount: number; salesRevenue: number; salesCommission: number; demoEnabled: boolean; subPartners: { id: string; email: string; fullName: string; salesCount: number; salesRevenue: number }[] }[]>([]);
   // AI-Mary
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
     { role: "assistant", content: "Ciao! Sono **Mary**, il tuo agente IA per il controllo centralizzato di Empire.\n\n📊 Chiedi: revenue, tenant attivi, vault non configurati, churn rate\n🔔 Azioni: invia reminder, genera report, analisi settore" }
@@ -188,7 +188,7 @@ const SuperAdminDashboard = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("profiles")
-          .select("user_id, full_name, email, created_at")
+          .select("user_id, full_name, email, created_at, demo_section_enabled")
           .order("created_at", { ascending: false }),
         supabase
           .from("user_roles")
@@ -397,9 +397,11 @@ const SuperAdminDashboard = () => {
 
       const profileNameMap: Record<string, string> = {};
       const profileEmailMap: Record<string, string> = {};
+      const profileDemoMap: Record<string, boolean> = {};
       profilesData.forEach((p: any) => {
         profileNameMap[p.user_id] = p.full_name || "—";
         profileEmailMap[p.user_id] = p.email || "—";
+        profileDemoMap[p.user_id] = !!p.demo_section_enabled;
       });
 
       // Build registrations list
@@ -441,6 +443,7 @@ const SuperAdminDashboard = () => {
           salesCount: ps.count,
           salesRevenue: ps.revenue,
           salesCommission: ps.commission,
+          demoEnabled: profileDemoMap[pr.user_id] || false,
           subPartners: (teamMap[pr.user_id] || []).map((spId) => {
             const sps = salesByPartner[spId] || { count: 0, revenue: 0, commission: 0 };
             return {
@@ -2475,7 +2478,25 @@ const SuperAdminDashboard = () => {
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold text-foreground">Rete Venditori</h2>
-              <span className="text-[0.55rem] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 font-bold">{partnerNetwork.length} partner</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[0.55rem] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 font-bold">{partnerNetwork.length} partner</span>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={async () => {
+                    const allEnabled = partnerNetwork.every(p => p.demoEnabled);
+                    const newVal = !allEnabled;
+                    const ids = partnerNetwork.map(p => p.id);
+                    for (const id of ids) {
+                      await supabase.from("profiles").update({ demo_section_enabled: newVal } as any).eq("user_id", id);
+                    }
+                    setPartnerNetwork(prev => prev.map(x => ({ ...x, demoEnabled: newVal })));
+                    toast({ title: newVal ? "Demo attivata per tutti" : "Demo disattivata per tutti" });
+                  }}
+                  className="px-2.5 py-1 rounded-lg text-[0.5rem] font-bold bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-colors"
+                >
+                  {partnerNetwork.every(p => p.demoEnabled) ? "Disattiva Demo tutti" : "Attiva Demo tutti"}
+                </motion.button>
+              </div>
             </div>
 
             {/* Link condivisibile */}
@@ -2531,6 +2552,26 @@ const SuperAdminDashboard = () => {
                       <p className="text-sm font-bold text-amber-400">€{p.salesCommission.toLocaleString("it-IT")}</p>
                       <p className="text-[0.5rem] text-muted-foreground">Commissioni</p>
                     </div>
+                  </div>
+
+                  {/* Demo Section Toggle */}
+                  <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-purple-500/[0.04] border border-purple-500/10">
+                    <div className="flex items-center gap-2">
+                      <Eye className="w-3.5 h-3.5 text-purple-400" />
+                      <span className="text-[0.6rem] font-medium text-foreground">Demo Personalizzata</span>
+                    </div>
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={async () => {
+                        const newVal = !p.demoEnabled;
+                        await supabase.from("profiles").update({ demo_section_enabled: newVal } as any).eq("user_id", p.id);
+                        setPartnerNetwork(prev => prev.map(x => x.id === p.id ? { ...x, demoEnabled: newVal } : x));
+                        toast({ title: newVal ? "Demo attivata" : "Demo disattivata", description: `Per ${p.fullName}` });
+                      }}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.5rem] font-bold transition-colors ${p.demoEnabled ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/10 text-red-400"}`}
+                    >
+                      {p.demoEnabled ? <><ToggleRight className="w-3.5 h-3.5" /> Attiva</> : <><ToggleLeft className="w-3.5 h-3.5" /> Disattivata</>}
+                    </motion.button>
                   </div>
 
                   {/* Team Leader ID */}
