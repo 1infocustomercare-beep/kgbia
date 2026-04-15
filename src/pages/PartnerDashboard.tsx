@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
+import { Switch } from "@/components/ui/switch";
 import empireMonkeyMascot from "@/assets/empire-monkey.png";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -10,7 +11,7 @@ import {
   Copy, CheckCircle, UserPlus, ChevronRight,
   ExternalLink, ArrowLeft, Send, RefreshCw,
   Pencil, Upload, Save, X as XIcon,
-  Globe, Search, Zap
+  Globe, Search, Zap, Presentation, Bot, Package
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
@@ -264,16 +265,27 @@ const PartnerDashboard = () => {
           <span className="text-sm font-bold text-white ml-2">Partner Portal</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-            <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold uppercase" style={{ background: "rgba(167,139,250,0.2)", color: "#a78bfa" }}>
-              {userName.charAt(0)}
-            </div>
-            <span className="text-xs text-white font-medium max-w-[120px] truncate">{userName}</span>
+          {/* Demo/Presentation Switch */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full transition-all" style={{
+            background: demoMode ? "rgba(245,158,11,0.12)" : "rgba(255,255,255,0.04)",
+            border: `1px solid ${demoMode ? "rgba(245,158,11,0.3)" : "rgba(255,255,255,0.08)"}`,
+          }}>
+            {demoMode ? <Presentation className="w-3.5 h-3.5" style={{ color: "#f59e0b" }} /> : <Eye className="w-3.5 h-3.5" style={{ color: "#6b7280" }} />}
+            <span className="text-[10px] font-semibold hidden sm:inline" style={{ color: demoMode ? "#f59e0b" : "#9ca3af" }}>
+              {demoMode ? "LIVE" : "Demo"}
+            </span>
+            <Switch
+              checked={demoMode}
+              onCheckedChange={(checked) => {
+                setDemoMode(checked);
+                toast({ title: checked ? "🎯 Modalità Presentazione" : "🔓 Modalità Normale", description: checked ? "Solo contenuti per la vendita — dati sensibili nascosti" : "Tutti i dati e strumenti visibili" });
+              }}
+              className="data-[state=checked]:bg-amber-500 h-4 w-8 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-4"
+            />
           </div>
           <DarkModeToggle />
-          <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }}>
+          <button onClick={handleLogout} className="flex items-center gap-1.5 px-2 py-1.5 rounded-full text-xs font-medium" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }}>
             <LogOut className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Esci</span>
           </button>
         </div>
       </div>
@@ -331,33 +343,17 @@ const PartnerDashboard = () => {
             </div>
 
             <div className="text-left sm:text-right max-w-md">
-              <motion.span
-                drag="y" dragConstraints={{ top: 0, bottom: 0 }} dragElastic={0.3}
-                onDragEnd={(_e, info) => {
-                  if (Math.abs(info.offset.y) > 30) {
-                    setDemoMode(prev => !prev);
-                    toast({ title: demoMode ? "🔓 Modalità Normale" : "🔒 Modalità Presentazione", description: demoMode ? "Dati completi visibili" : "Dati sensibili nascosti" });
-                  }
-                }}
-                whileDrag={{ scale: 1.08, boxShadow: "0 0 20px rgba(167,139,250,0.4)" }}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider mb-3 cursor-grab active:cursor-grabbing select-none touch-none"
-                style={{
-                  background: demoMode ? "rgba(245,158,11,0.15)" : "rgba(167,139,250,0.12)",
-                  border: `1px solid ${demoMode ? "rgba(245,158,11,0.35)" : "rgba(167,139,250,0.25)"}`,
-                  color: demoMode ? "#f59e0b" : "#a78bfa",
-                }}>
-                {demoMode ? <EyeOff className="w-3 h-3" /> : <LayoutDashboard className="w-3 h-3" />}
-                {demoMode ? "Presentazione" : "Area Partner"}
-                <ChevronRight className="w-3 h-3 rotate-[-90deg] opacity-50" />
-              </motion.span>
               <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
-                Il tuo catalogo app,<br />
-                <span style={{ color: "#a78bfa" }}>pronto da mostrare.</span>
+                {demoMode ? (
+                  <>Scopri cosa possiamo<br /><span style={{ color: "#f59e0b" }}>creare per te.</span></>
+                ) : (
+                  <>Il tuo catalogo app,<br /><span style={{ color: "#a78bfa" }}>pronto da mostrare.</span></>
+                )}
               </h2>
               <p className="text-sm mt-2" style={{ color: "#9ca3af" }}>
                 {demoMode
-                  ? "Modalità presentazione attiva — trascina il badge ↕ per tornare alla modalità normale."
-                  : "Sfoglia i progetti, seleziona uno stile e mostra le preview. Trascina il badge ↕ per la modalità presentazione."
+                  ? "App, siti web e agenti IA personalizzati per ogni settore — tutto incluso, chiavi in mano."
+                  : "Sfoglia i progetti, seleziona uno stile e mostra le preview ai clienti."
                 }
               </p>
             </div>
@@ -373,15 +369,101 @@ const PartnerDashboard = () => {
           )}
         </AnimatePresence>
 
-        {/* ═══════ DEMO MODE BANNER ═══════ */}
+        {/* ═══════ DEMO MODE — SALES PRESENTATION CONTENT ═══════ */}
         <AnimatePresence>
           {demoMode && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden" style={{ background: "rgba(245,158,11,0.08)", borderTop: "1px solid rgba(245,158,11,0.2)", borderBottom: "1px solid rgba(245,158,11,0.2)" }}>
-              <div className="px-4 py-2.5 flex items-center gap-2 max-w-5xl mx-auto">
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#f59e0b" }} />
-                <p className="text-[11px] font-semibold tracking-wider uppercase" style={{ color: "#f59e0b" }}>Modalità Presentazione — Dati sensibili nascosti</p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              {/* Value banner */}
+              <div className="py-2 text-center" style={{ background: "rgba(245,158,11,0.06)", borderTop: "1px solid rgba(245,158,11,0.15)", borderBottom: "1px solid rgba(245,158,11,0.15)" }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#f59e0b" }}>
+                  <Presentation className="w-3 h-3 inline mr-1.5 -mt-0.5" />
+                  Presentazione per il Cliente
+                </p>
               </div>
+
+              {/* Key selling points */}
+              <section className="max-w-5xl mx-auto px-4 sm:px-8 py-6 space-y-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { emoji: "📱", title: "App White Label", desc: "Personalizzata con il tuo brand" },
+                    { emoji: "🤖", title: "Agenti IA", desc: "Automatizzano il lavoro" },
+                    { emoji: "📊", title: "Analytics", desc: "Dati e previsioni intelligenti" },
+                    { emoji: "💬", title: "WhatsApp & CRM", desc: "Contatti e fidelizzazione" },
+                  ].map((item, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
+                      className="p-3.5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                      <span className="text-2xl block mb-1.5">{item.emoji}</span>
+                      <p className="text-xs font-bold text-white">{item.title}</p>
+                      <p className="text-[9px] mt-0.5" style={{ color: "#9ca3af" }}>{item.desc}</p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Packages preview for client */}
+                <div className="space-y-3">
+                  <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#f59e0b" }}>
+                    <Package className="w-3 h-3 inline mr-1 -mt-0.5" /> Pacchetti Disponibili
+                  </h3>
+                  {[
+                    { name: "Digital Start", price: "1.997", monthly: "49", color: "#a78bfa", features: ["App completa", "Menu/Catalogo QR", "Dashboard Analytics"] },
+                    { name: "Growth AI", price: "4.997", monthly: "29", color: "#14b8a6", badge: "Consigliato", features: ["Tutto di Start +", "AI Engine completo", "2 Agenti IA inclusi", "Review Shield™"] },
+                    { name: "Empire Domination", price: "7.997", monthly: "0", color: "#f59e0b", badge: "Tutto Incluso", features: ["TUTTO incluso", "0% commissioni", "5 Agenti IA", "Account Manager VIP"] },
+                  ].map((pkg, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 + i * 0.1 }}
+                      className="p-4 rounded-xl flex items-center gap-4" style={{ background: `${pkg.color}08`, border: `1px solid ${pkg.color}25` }}>
+                      <div className="shrink-0 text-center">
+                        <p className="text-xl font-bold text-white">€{pkg.price}</p>
+                        <p className="text-[9px]" style={{ color: "#6b7280" }}>
+                          {pkg.monthly === "0" ? "€0/mese" : `poi €${pkg.monthly}/mese`}
+                        </p>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-xs font-bold text-white">{pkg.name}</p>
+                          {pkg.badge && (
+                            <span className="px-1.5 py-0.5 rounded text-[8px] font-bold" style={{ background: `${pkg.color}20`, color: pkg.color }}>{pkg.badge}</span>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+                          {pkg.features.map((f, j) => (
+                            <span key={j} className="text-[9px] flex items-center gap-1" style={{ color: "#d1d5db" }}>
+                              <CheckCircle className="w-2.5 h-2.5" style={{ color: pkg.color }} /> {f}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* AI Agents highlight */}
+                <div className="p-5 rounded-2xl" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.06), rgba(245,158,11,0.04))", border: "1px solid rgba(167,139,250,0.15)" }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Bot className="w-5 h-5" style={{ color: "#a78bfa" }} />
+                    <h3 className="text-sm font-bold text-white">Agenti IA Personalizzati</h3>
+                  </div>
+                  <p className="text-xs mb-3" style={{ color: "#9ca3af" }}>
+                    Ogni agente lavora 24/7 per automatizzare la tua attività: risposte ai clienti, gestione ordini, marketing, recensioni e molto altro.
+                  </p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { name: "Assistente Clienti", emoji: "💬" },
+                      { name: "Review Shield", emoji: "⭐" },
+                      { name: "Marketing AI", emoji: "📣" },
+                    ].map((agent, i) => (
+                      <div key={i} className="p-2.5 rounded-lg text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                        <span className="text-lg block">{agent.emoji}</span>
+                        <p className="text-[9px] font-semibold text-white mt-1">{agent.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTA for demo */}
+                <div className="text-center py-2">
+                  <p className="text-xs" style={{ color: "#9ca3af" }}>👇 Scorri per vedere le preview di ogni settore</p>
+                </div>
+              </section>
             </motion.div>
           )}
         </AnimatePresence>
@@ -745,33 +827,65 @@ const PartnerDashboard = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(ellipse, #7c3aed, transparent 70%)", filter: "blur(80px)" }} />
           </div>
           <div className="relative z-10 max-w-xl mx-auto px-4 space-y-5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider"
-              style={{ background: "rgba(167,139,250,0.12)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
-              <Send className="w-3 h-3" /> Pronto?
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
-              Trova i tuoi prossimi clienti<br />
-              <span style={{ color: "#14b8a6" }}>con un click.</span>
-            </h2>
-            <p className="text-sm" style={{ color: "#9ca3af" }}>Usa LeadEngine Scout per trovare, analizzare e contattare lead reali con messaggi AI personalizzati.</p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <motion.button onClick={() => navigate("/partner/leads")} whileTap={{ scale: 0.97 }}
-                className="px-6 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
-                style={{ background: "linear-gradient(135deg, #14b8a6, #10b981)", color: "#ffffff" }}>
-                <Target className="w-4 h-4" /> Apri LeadEngine Scout
-              </motion.button>
-              <motion.button onClick={() => navigate("/home?from=partner")} whileTap={{ scale: 0.97 }}
-                className="px-6 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
-                style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
-                <ExternalLink className="w-4 h-4" /> Mostra al Cliente
-              </motion.button>
-            </div>
+            {demoMode ? (
+              <>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider"
+                  style={{ background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.25)", color: "#f59e0b" }}>
+                  <Sparkles className="w-3 h-3" /> Inizia Ora
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+                  Risultati Garantiti<br />
+                  <span style={{ color: "#f59e0b" }}>dal primo mese.</span>
+                </h2>
+                <p className="text-sm" style={{ color: "#9ca3af" }}>
+                  Setup completo in 24h. Assistenza dedicata. Nessun vincolo. Rateizzazione fino a 6 mesi disponibile.
+                </p>
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { value: "24h", label: "Setup Completo" },
+                    { value: "7/7", label: "Supporto Incluso" },
+                    { value: "0%", label: "TAN Rateizzazione" },
+                  ].map((s, i) => (
+                    <div key={i} className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                      <p className="text-lg font-bold text-white">{s.value}</p>
+                      <p className="text-[9px]" style={{ color: "#9ca3af" }}>{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider"
+                  style={{ background: "rgba(167,139,250,0.12)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
+                  <Send className="w-3 h-3" /> Pronto?
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+                  Trova i tuoi prossimi clienti<br />
+                  <span style={{ color: "#14b8a6" }}>con un click.</span>
+                </h2>
+                <p className="text-sm" style={{ color: "#9ca3af" }}>Usa LeadEngine Scout per trovare, analizzare e contattare lead reali con messaggi AI personalizzati.</p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <motion.button onClick={() => navigate("/partner/leads")} whileTap={{ scale: 0.97 }}
+                    className="px-6 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
+                    style={{ background: "linear-gradient(135deg, #14b8a6, #10b981)", color: "#ffffff" }}>
+                    <Target className="w-4 h-4" /> Apri LeadEngine Scout
+                  </motion.button>
+                  <motion.button onClick={() => navigate("/home?from=partner")} whileTap={{ scale: 0.97 }}
+                    className="px-6 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
+                    style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
+                    <ExternalLink className="w-4 h-4" /> Mostra al Cliente
+                  </motion.button>
+                </div>
+              </>
+            )}
           </div>
         </section>
 
         <footer className="py-8 text-center" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="w-12 h-0.5 rounded-full mx-auto mb-4" style={{ background: "rgba(255,255,255,0.1)" }} />
-          <p className="text-[11px]" style={{ color: "#6b7280" }}>Riservato ai partner commerciali — Empire © {new Date().getFullYear()}</p>
+          <p className="text-[11px]" style={{ color: "#6b7280" }}>
+            {demoMode ? "Empire AI Group — Soluzioni digitali per ogni settore" : `Riservato ai partner commerciali — Empire © ${new Date().getFullYear()}`}
+          </p>
         </footer>
       </div>
 
