@@ -719,10 +719,10 @@ const PartnerDashboard = () => {
             </h2>
             <p className="text-sm" style={{ color: "#9ca3af" }}>Usa LeadEngine Scout per trovare, analizzare e contattare lead reali con messaggi AI personalizzati.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <motion.button onClick={() => navigate("/partner/leads")} whileTap={{ scale: 0.97 }}
+              <motion.button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} whileTap={{ scale: 0.97 }}
                 className="px-6 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
                 style={{ background: "linear-gradient(135deg, #14b8a6, #10b981)", color: "#ffffff" }}>
-                <Target className="w-4 h-4" /> Apri LeadEngine Scout
+                <Target className="w-4 h-4" /> Usa LeadEngine Scout ↑
               </motion.button>
               <motion.button onClick={() => navigate("/home?from=partner")} whileTap={{ scale: 0.97 }}
                 className="px-6 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
