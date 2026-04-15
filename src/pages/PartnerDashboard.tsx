@@ -852,7 +852,7 @@ const PartnerDashboard = () => {
         <AnimatePresence>
           {showProfileEdit && !demoMode && user?.id && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
-              <PartnerProfileSection userId={user.id} userName={userName} userEmail={user.email || ""} onAvatarChange={(url) => setPartnerAvatar(url)} />
+              <PartnerProfileSection userId={user.id} userName={userName} userEmail={user.email || ""} onAvatarChange={(url) => setPartnerAvatar(url)} onNameChange={(name) => setProfileName(name)} />
             </motion.div>
           )}
         </AnimatePresence>
