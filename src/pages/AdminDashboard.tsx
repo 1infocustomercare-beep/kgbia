@@ -333,7 +333,7 @@ const AdminDashboard = () => {
       
       {/* Back button integrated in header */}
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b safe-top relative z-10" style={{ background: "linear-gradient(180deg, hsl(20 10% 5% / 0.98), hsl(20 8% 4% / 0.95))", borderColor: "hsla(30, 20%, 25%, 0.25)" }}>
+      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/50 safe-top relative z-10 bg-background/95 backdrop-blur-xl">
         <div className="flex items-center gap-2.5 min-w-0">
           <img src={restaurant?.logo_url || restaurantLogo} alt="" className="w-9 h-9 rounded-xl object-contain border border-primary/20" />
           <div className="min-w-0">
