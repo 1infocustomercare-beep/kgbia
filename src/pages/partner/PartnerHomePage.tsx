@@ -199,30 +199,14 @@ export default function PartnerHomePage() {
                 </div>
               </motion.div>
 
-              {/* ─── 3. SECTORS — Animated pills ─── */}
+              {/* ─── 3. SECTORS — Auto-carousel with phone mockups ─── */}
               <motion.div {...fadeUp(0.1)} className="rounded-3xl p-5 relative overflow-hidden"
                 style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(212,160,82,0.08)" }}>
                 <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] mb-3 flex items-center gap-2" style={{ color: "#d4a052" }}>
                   <span className="w-6 h-[1px] inline-block" style={{ background: "linear-gradient(90deg, rgba(212,160,82,0.4), transparent)" }} />
-                  Adatto a Ogni Settore
+                  25+ Settori Pronti
                 </h3>
-                <div className="flex flex-wrap gap-2">
-                  {["🍽️ Ristorazione", "💅 Beauty", "🏨 Hotel", "🚗 NCC", "💪 Fitness", "🏥 Sanità",
-                    "🛍️ Retail", "🏖️ Stabilimenti", "🔧 Artigiani", "📷 Fotografi", "🎉 Eventi", "⚖️ Studi",
-                    "🐾 Veterinari", "🎨 Tattoo", "👶 Asili", "📚 Formazione", "🌾 Agriturismo", "📦 Logistica"
-                  ].map((s, i) => (
-                    <motion.span key={i}
-                      initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 + i * 0.025 }}
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      className="px-3 py-1.5 rounded-full text-[9px] font-medium cursor-default transition-all"
-                      style={{
-                        background: "rgba(212,160,82,0.05)",
-                        color: "rgba(255,255,255,0.65)",
-                        border: "1px solid rgba(212,160,82,0.1)",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                      }}>{s}</motion.span>
-                  ))}
-                </div>
+                <SectorPhoneCarousel />
                 <p className="text-[9px] text-muted-foreground/60 mt-3 text-center italic tracking-wider">…e qualsiasi altro con personalizzazione completa su misura</p>
               </motion.div>
 
