@@ -467,7 +467,7 @@ const AdminDashboard = () => {
       <EmpireAssistant restaurantId={restaurant?.id} />
 
       {/* Bottom Navigation — 5 tabs */}
-      <div className="fixed bottom-0 inset-x-0 z-40 cote-bottom-nav safe-bottom" style={{ background: "linear-gradient(180deg, hsl(20 8% 6% / 0.98), hsl(20 10% 4%))", borderTop: "1px solid hsla(30, 20%, 25%, 0.25)" }}>
+      <div className="fixed bottom-0 inset-x-0 z-40 cote-bottom-nav safe-bottom bg-background/95 backdrop-blur-xl border-t border-border/50">
         <div className="flex items-center justify-around px-2 py-1">
           {bottomTabs.map(tab => (
             <motion.button
