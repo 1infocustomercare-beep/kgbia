@@ -1,28 +1,30 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Crown, Rocket, Flame, Zap, Star, Trophy, Sparkles } from "lucide-react";
+import { Crown, Rocket, Flame, Zap, Star, Trophy, Sparkles, TrendingUp, Target, Shield } from "lucide-react";
+import SplashScreen from "@/components/SplashScreen";
 
-const MINDSET_QUOTES = [
-  { text: "I vincitori non aspettano il momento perfetto — lo creano.", icon: Rocket, accent: "#a78bfa" },
-  { text: "Ogni 'no' ti avvicina al prossimo 'sì'. La persistenza batte il talento.", icon: Flame, accent: "#f59e0b" },
-  { text: "Non vendere un prodotto — vendi una trasformazione. Il cliente compra il futuro.", icon: Star, accent: "#34d399" },
-  { text: "Il tuo network è il tuo patrimonio netto. Ogni connessione è un investimento.", icon: Crown, accent: "#d4a052" },
-  { text: "Chi si ferma a 3 vendite non scoprirà mai cosa succede alla 5ª. Spingi oltre.", icon: Trophy, accent: "#38bdf8" },
-  { text: "I leader non nascono — si costruiscono. Una vendita alla volta.", icon: Zap, accent: "#a78bfa" },
-  { text: "Il successo non è un colpo di fortuna. È preparazione che incontra l'opportunità.", icon: Sparkles, accent: "#f59e0b" },
-  { text: "Mentre gli altri dormono, tu costruisci il tuo impero. Ogni giorno conta.", icon: Rocket, accent: "#34d399" },
-  { text: "La differenza tra ordinario e straordinario è quel piccolo 'extra'. Dallo oggi.", icon: Flame, accent: "#d4a052" },
-  { text: "Non sei un venditore — sei un consulente che cambia business. Sii fiero.", icon: Crown, accent: "#a78bfa" },
-  { text: "I top performer non hanno più tempo — hanno più disciplina. Inizia ora.", icon: Trophy, accent: "#38bdf8" },
-  { text: "Ogni mattina hai una scelta: essere nella media o essere inarrestabile.", icon: Zap, accent: "#f59e0b" },
-  { text: "Il cliente non compra il software — compra la tranquillità. Offrigli quella.", icon: Star, accent: "#34d399" },
-  { text: "Un Team Leader guadagna anche dormendo. Costruisci il team, costruisci la libertà.", icon: Crown, accent: "#d4a052" },
-  { text: "La vendita più importante? La prossima. Sempre la prossima.", icon: Rocket, accent: "#a78bfa" },
-  { text: "Non aspettare di essere pronto. Inizia, impara, domina.", icon: Flame, accent: "#f59e0b" },
-  { text: "Ogni obiezione è un'opportunità mascherata. Ascolta, risolvi, chiudi.", icon: Sparkles, accent: "#38bdf8" },
-  { text: "Il mindset giusto trasforma un mese lento in un mese di svolta.", icon: Zap, accent: "#34d399" },
-  { text: "Non stai vendendo — stai aprendo porte. Dietro ogni porta c'è una commissione.", icon: Trophy, accent: "#d4a052" },
-  { text: "I Diamond Leader non si sono fermati quando era difficile. E tu?", icon: Crown, accent: "#a78bfa" },
+/* ═══ PROFESSIONAL MINDSET QUOTES — rotano ogni accesso ═══ */
+const MINDSET_LIBRARY = [
+  { text: "Chi controlla la narrativa, controlla la vendita. Non presentare — trasforma la percezione del cliente.", icon: Crown, accent: "#d4a052", category: "Strategia" },
+  { text: "Il 90% dei tuoi competitor si ferma al primo rifiuto. Il tuo vantaggio competitivo è la resilienza sistematica.", icon: Shield, accent: "#a78bfa", category: "Resilienza" },
+  { text: "Non stai vendendo software — stai vendendo ore di vita restituite al titolare. Questo vale più di qualsiasi prezzo.", icon: Sparkles, accent: "#34d399", category: "Value Selling" },
+  { text: "Un Team Leader con 5 membri attivi genera €3.000/mese di override senza vendere direttamente. Costruisci il sistema, non il lavoro.", icon: TrendingUp, accent: "#38bdf8", category: "Leadership" },
+  { text: "Il cliente non compra quando capisce il prodotto — compra quando si sente capito. Ascolta il doppio di quanto parli.", icon: Star, accent: "#f59e0b", category: "Empatia" },
+  { text: "Ogni obiezione è una richiesta di informazioni mascherata. Decodificala, risolvila, chiudi. Metodo, non fortuna.", icon: Target, accent: "#a78bfa", category: "Tecnica" },
+  { text: "La differenza tra €997 e €6.485 al mese è esattamente 2 vendite in più. Due conversazioni. Due decisioni.", icon: Flame, accent: "#ef4444", category: "Obiettivi" },
+  { text: "I top performer non hanno clienti migliori — hanno un processo migliore. Standardizza la tua eccellenza.", icon: Zap, accent: "#34d399", category: "Processo" },
+  { text: "Il prezzo è un problema solo quando il valore non è chiaro. Se il cliente discute il prezzo, hai saltato un passaggio.", icon: Trophy, accent: "#d4a052", category: "Pricing" },
+  { text: "Un Diamond Leader non si è mai chiesto 'se' ce l'avrebbe fatta. Si è chiesto 'quanto velocemente'. Decidi il ritmo.", icon: Rocket, accent: "#a78bfa", category: "Ambizione" },
+  { text: "Ogni mattina hai 2 opzioni: reagire alla giornata o progettarla. I leader progettano. I follower reagiscono.", icon: Crown, accent: "#f59e0b", category: "Mindset" },
+  { text: "Il follow-up non è insistenza — è professionalità. L'80% delle vendite avviene dopo il 5° contatto. I dilettanti si fermano al 2°.", icon: Target, accent: "#38bdf8", category: "Follow-up" },
+  { text: "Non vendere il risparmio — vendi il costo dell'inazione. Quanto perde il cliente ogni mese senza il tuo sistema?", icon: TrendingUp, accent: "#34d399", category: "Urgenza" },
+  { text: "Il reclutamento non è chiedere un favore — è offrire un'opportunità da €997 a vendita. Chi non vorrebbe?", icon: Shield, accent: "#d4a052", category: "Recruiting" },
+  { text: "La competenza si costruisce con le prime 10 vendite. La ricchezza si costruisce con le successive 100. Non fermarti alla competenza.", icon: Flame, accent: "#a78bfa", category: "Scalabilità" },
+  { text: "Il momento perfetto per vendere non esiste. Il momento migliore per vendere è adesso, con quello che sai adesso.", icon: Zap, accent: "#f59e0b", category: "Azione" },
+  { text: "Non stai cercando clienti — stai selezionando partner di business. Chi non è pronto oggi, lo sarà domani. Il tuo pipeline è il tuo futuro.", icon: Star, accent: "#38bdf8", category: "Pipeline" },
+  { text: "Un venditore medio chiude 1 su 10. Un professionista Empire chiude 1 su 3. La differenza? Qualificazione prima della presentazione.", icon: Trophy, accent: "#34d399", category: "Qualificazione" },
+  { text: "Il tuo personal brand è il tuo asset più potente. Ogni interazione è un'opportunità per posizionarti come l'esperto di riferimento.", icon: Crown, accent: "#d4a052", category: "Personal Brand" },
+  { text: "I bonus non sono regali — sono il riconoscimento matematico della tua eccellenza. €500 a 3 vendite, €1.500 a 5. I numeri non mentono.", icon: Sparkles, accent: "#a78bfa", category: "Performance" },
 ];
 
 interface Props {
@@ -31,211 +33,144 @@ interface Props {
 }
 
 export default function PartnerSplashScreen({ userName, onComplete }: Props) {
-  const [phase, setPhase] = useState<"logo" | "welcome" | "mindset" | "done">("logo");
+  const [phase, setPhase] = useState<"empire" | "mindset" | "done">("empire");
 
   const todayQuote = useMemo(() => {
-    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-    const hourSeed = new Date().getHours();
-    const index = (dayOfYear * 7 + hourSeed) % MINDSET_QUOTES.length;
-    return MINDSET_QUOTES[index];
+    const seed = new Date().getFullYear() * 10000 + (new Date().getMonth() + 1) * 100 + new Date().getDate();
+    const hourBlock = Math.floor(new Date().getHours() / 4); // changes every 4 hours
+    return MINDSET_LIBRARY[(seed + hourBlock) % MINDSET_LIBRARY.length];
+  }, []);
+
+  const handleSplashDone = useCallback(() => {
+    setPhase("mindset");
   }, []);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("welcome"), 1200);
-    const t2 = setTimeout(() => setPhase("mindset"), 3200);
-    const t3 = setTimeout(() => setPhase("done"), 7500);
-    const t4 = setTimeout(onComplete, 8000);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
-  }, [onComplete]);
+    if (phase === "mindset") {
+      const t = setTimeout(() => { setPhase("done"); onComplete(); }, 6500);
+      return () => clearTimeout(t);
+    }
+  }, [phase, onComplete]);
+
+  if (phase === "empire") {
+    return <SplashScreen onComplete={handleSplashDone} />;
+  }
 
   return (
     <AnimatePresence>
-      {phase !== "done" && (
+      {phase === "mindset" && (
         <motion.div
           className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.08 }}
           transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          style={{ background: "radial-gradient(ellipse at 50% 30%, #1a1040 0%, #0a0a14 50%, #050510 100%)" }}
+          style={{ background: "radial-gradient(ellipse at 50% 40%, #12102a 0%, #0a0a14 60%, #050510 100%)" }}
         >
-          {/* Ambient particles */}
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full"
+          {/* Subtle ambient particles */}
+          {[...Array(12)].map((_, i) => (
+            <motion.div key={i} className="absolute rounded-full"
               style={{
-                width: 2 + Math.random() * 3,
-                height: 2 + Math.random() * 3,
-                background: i % 3 === 0 ? "#a78bfa" : i % 3 === 1 ? "#d4a052" : "#34d399",
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                width: 1.5 + Math.random() * 2, height: 1.5 + Math.random() * 2,
+                background: todayQuote.accent, left: `${10 + Math.random() * 80}%`, top: `${10 + Math.random() * 80}%`,
               }}
-              animate={{
-                y: [0, -30 - Math.random() * 40, 0],
-                opacity: [0, 0.6, 0],
-                scale: [0.5, 1.2, 0.5],
-              }}
-              transition={{ duration: 3 + Math.random() * 3, repeat: Infinity, delay: Math.random() * 2 }}
+              animate={{ y: [0, -20, 0], opacity: [0, 0.4, 0] }}
+              transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2 }}
             />
           ))}
 
-          {/* Radial glow pulse */}
-          <motion.div
-            className="absolute w-[400px] h-[400px] rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(167,139,250,0.08), transparent 70%)" }}
-            animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 4, repeat: Infinity }}
-          />
-
+          {/* Center content */}
           <div className="relative z-10 flex flex-col items-center px-8 text-center max-w-sm">
-            {/* Phase 1: Logo reveal */}
-            <AnimatePresence mode="wait">
-              {phase === "logo" && (
-                <motion.div
-                  key="logo"
-                  initial={{ scale: 0.3, opacity: 0, rotateY: -90 }}
-                  animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                  exit={{ scale: 1.5, opacity: 0 }}
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col items-center gap-3"
-                >
-                  <div className="w-20 h-20 rounded-2xl flex items-center justify-center"
-                    style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.2), rgba(212,160,82,0.1))", border: "1px solid rgba(167,139,250,0.3)" }}>
-                    <Crown className="w-10 h-10" style={{ color: "#d4a052" }} />
-                  </div>
-                  <motion.p
-                    className="text-xs font-bold uppercase tracking-[0.3em]"
-                    style={{ color: "#a78bfa" }}
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
-                    Empire Partner
-                  </motion.p>
-                </motion.div>
-              )}
+            {/* Welcome line */}
+            <motion.p
+              className="text-sm text-white/30 font-light tracking-wide mb-2"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              Bentornato,
+            </motion.p>
 
-              {/* Phase 2: Welcome */}
-              {phase === "welcome" && (
-                <motion.div
-                  key="welcome"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="flex flex-col items-center gap-4"
-                >
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                  >
-                    <Sparkles className="w-8 h-8" style={{ color: "#d4a052" }} />
-                  </motion.div>
-                  <div>
-                    <motion.p
-                      className="text-lg text-white/50 font-light"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      Bentornato,
-                    </motion.p>
-                    <motion.h1
-                      className="text-3xl font-bold text-white mt-1 tracking-tight"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5, duration: 0.5 }}
-                    >
-                      {userName}
-                    </motion.h1>
-                  </div>
-                  <motion.p
-                    className="text-sm text-white/40 font-light"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.8 }}
-                  >
-                    Il tuo impero ti aspetta
-                  </motion.p>
-                  {/* Animated line */}
-                  <motion.div
-                    className="h-px rounded-full mt-2"
-                    style={{ background: "linear-gradient(90deg, transparent, #a78bfa, #d4a052, transparent)" }}
-                    initial={{ width: 0 }}
-                    animate={{ width: 200 }}
-                    transition={{ delay: 1, duration: 1, ease: "easeOut" }}
-                  />
-                </motion.div>
-              )}
+            <motion.h1
+              className="text-2xl font-bold text-white tracking-tight mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              {userName}
+            </motion.h1>
 
-              {/* Phase 3: Mindset quote */}
-              {phase === "mindset" && (
-                <motion.div
-                  key="mindset"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.05 }}
-                  transition={{ duration: 0.7 }}
-                  className="flex flex-col items-center gap-5"
-                >
-                  <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                    style={{ background: `${todayQuote.accent}15`, border: `1px solid ${todayQuote.accent}30` }}
-                  >
-                    <todayQuote.icon className="w-7 h-7" style={{ color: todayQuote.accent }} />
-                  </motion.div>
+            {/* Separator line */}
+            <motion.div
+              className="h-px rounded-full mb-8"
+              style={{ background: `linear-gradient(90deg, transparent, ${todayQuote.accent}80, transparent)` }}
+              initial={{ width: 0 }}
+              animate={{ width: 160 }}
+              transition={{ delay: 0.7, duration: 0.8, ease: "easeOut" }}
+            />
 
-                  <motion.p
-                    className="text-[10px] font-bold uppercase tracking-[0.25em]"
-                    style={{ color: todayQuote.accent }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    Mindset del Giorno
-                  </motion.p>
+            {/* Category tag */}
+            <motion.span
+              className="text-[9px] font-bold uppercase tracking-[0.3em] mb-4"
+              style={{ color: `${todayQuote.accent}99` }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              {todayQuote.category}
+            </motion.span>
 
-                  <motion.blockquote
-                    className="text-lg font-semibold text-white/90 leading-relaxed max-w-xs italic"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, duration: 0.6 }}
-                  >
-                    "{todayQuote.text}"
-                  </motion.blockquote>
+            {/* Icon */}
+            <motion.div
+              className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+              style={{ background: `${todayQuote.accent}12`, border: `1px solid ${todayQuote.accent}25` }}
+              initial={{ scale: 0, rotate: -90 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 1.2, type: "spring", stiffness: 200, damping: 15 }}
+            >
+              <todayQuote.icon className="w-6 h-6" style={{ color: todayQuote.accent }} />
+            </motion.div>
 
-                  {/* Progress bar to indicate auto-dismiss */}
-                  <motion.div
-                    className="w-32 h-1 rounded-full mt-4 overflow-hidden"
-                    style={{ background: "rgba(255,255,255,0.06)" }}
-                  >
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ background: `linear-gradient(90deg, ${todayQuote.accent}, ${todayQuote.accent}80)` }}
-                      initial={{ width: "0%" }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 4, ease: "linear" }}
-                    />
-                  </motion.div>
+            {/* Quote — word by word reveal */}
+            <motion.blockquote
+              className="text-[15px] font-medium text-white/85 leading-relaxed max-w-xs"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.6, duration: 0.8 }}
+            >
+              "{todayQuote.text}"
+            </motion.blockquote>
 
-                  <motion.button
-                    onClick={onComplete}
-                    className="mt-2 px-6 py-2 rounded-full text-xs font-semibold tracking-wider uppercase"
-                    style={{ background: `${todayQuote.accent}15`, color: todayQuote.accent, border: `1px solid ${todayQuote.accent}25` }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.2 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Inizia a Vendere →
-                  </motion.button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Auto-dismiss progress */}
+            <motion.div
+              className="w-24 h-[3px] rounded-full mt-8 overflow-hidden"
+              style={{ background: "rgba(255,255,255,0.04)" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2 }}
+            >
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: `linear-gradient(90deg, ${todayQuote.accent}, ${todayQuote.accent}60)` }}
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ delay: 2, duration: 4.5, ease: "linear" }}
+              />
+            </motion.div>
+
+            {/* Skip button */}
+            <motion.button
+              onClick={() => { setPhase("done"); onComplete(); }}
+              className="mt-4 px-5 py-2 rounded-full text-[10px] font-semibold tracking-[0.15em] uppercase transition-all"
+              style={{ color: `${todayQuote.accent}90`, background: `${todayQuote.accent}08`, border: `1px solid ${todayQuote.accent}18` }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.5 }}
+              whileHover={{ scale: 1.05, background: `${todayQuote.accent}15` }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Inizia la Giornata →
+            </motion.button>
           </div>
         </motion.div>
       )}
