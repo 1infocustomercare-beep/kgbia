@@ -43,8 +43,8 @@ export default function AppLayout() {
   const { roles } = useAuth();
   const { industry, loading, resolved, company } = useIndustry();
   const location = useLocation();
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const { theme: currentTheme } = useTheme();
+  const isDark = currentTheme === "dark";
 
   if (roles.includes("super_admin")) {
     return <Navigate to="/superadmin" replace />;
@@ -82,8 +82,8 @@ export default function AppLayout() {
 
   // Sector-specific layout config & theme from the preview system
   const layout = getAdminLayout(industry);
-  const theme = SECTOR_THEMES[industry];
-  const accentHex = theme?.palette?.accentHex || "#C8963E";
+  const sectorTheme = SECTOR_THEMES[industry];
+  const accentHex = (sectorTheme as any)?.palette?.accentHex || "#C8963E";
 
   return (
     <SidebarProvider>
