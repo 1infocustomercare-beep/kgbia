@@ -1,14 +1,15 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext, useRef, useCallback } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/context/AuthContext";
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import {
   LayoutDashboard, Target, DollarSign, FolderOpen, User, LogOut, ArrowLeft,
-  Eye, Presentation,
+  Eye, Presentation, Sparkles,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+
 
 /* ═══ Context for demo mode across all partner pages ═══ */
 const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
@@ -66,117 +67,8 @@ export default function PartnerLayout() {
           <span className="text-sm font-bold text-foreground tracking-tight">Partner</span>
         </div>
 
-        {/* ═══ PREMIUM TOGGLE ═══ */}
-        <div className="flex items-center gap-2">
-          <motion.span
-            animate={{ opacity: demoMode ? 0.4 : 1 }}
-            className="text-[9px] font-bold uppercase tracking-[0.15em]"
-            style={{ color: "#a78bfa" }}
-          >
-            Live
-          </motion.span>
-
-          <div
-            className="relative flex items-center w-[56px] h-[30px] rounded-full select-none cursor-pointer overflow-hidden"
-            style={{
-              background: demoMode
-                ? "linear-gradient(135deg, #1a1510, #2a1f14)"
-                : "linear-gradient(135deg, #13111f, #1a1530)",
-              border: `1.5px solid ${demoMode ? "rgba(212,160,82,0.3)" : "rgba(167,139,250,0.25)"}`,
-              boxShadow: `0 0 24px ${demoMode ? "rgba(212,160,82,0.1)" : "rgba(167,139,250,0.08)"}, inset 0 1px 2px rgba(255,255,255,0.04)`,
-            }}
-            onClick={() => handleToggle(!demoMode)}
-          >
-            {/* Animated track particles */}
-            {[...Array(3)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute rounded-full"
-                style={{
-                  width: 3 + i,
-                  height: 3 + i,
-                  background: demoMode ? "rgba(212,160,82,0.3)" : "rgba(167,139,250,0.25)",
-                  top: `${30 + i * 15}%`,
-                }}
-                animate={{
-                  x: demoMode ? [10, 42, 10] : [42, 10, 42],
-                  opacity: [0, 0.8, 0],
-                  scale: [0.5, 1.2, 0.5],
-                }}
-                transition={{
-                  duration: 2.5 + i * 0.5,
-                  repeat: Infinity,
-                  delay: i * 0.4,
-                  ease: "easeInOut",
-                }}
-              />
-            ))}
-
-            {/* Track glow that follows thumb */}
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              animate={{
-                background: `radial-gradient(circle at ${demoMode ? "78%" : "22%"} 50%, ${demoMode ? "rgba(212,160,82,0.2)" : "rgba(167,139,250,0.18)"}, transparent 65%)`,
-                opacity: [0.4, 0.8, 0.4],
-              }}
-              transition={{ opacity: { duration: 2, repeat: Infinity, ease: "easeInOut" }, background: { duration: 0.4 } }}
-            />
-
-            {/* Thumb */}
-            <motion.div
-              drag="x"
-              dragConstraints={{ left: 0, right: 26 }}
-              dragElastic={0.05}
-              dragMomentum={false}
-              animate={{ x: demoMode ? 26 : 0 }}
-              transition={{ type: "spring", stiffness: 500, damping: 28 }}
-              onDragEnd={(_e, info) => {
-                if (!demoMode && info.offset.x > 10) handleToggle(true);
-                else if (demoMode && info.offset.x < -10) handleToggle(false);
-              }}
-              className="relative top-0 left-[2px] h-[26px] w-[26px] rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing z-10"
-              style={{
-                background: demoMode
-                  ? "linear-gradient(145deg, #d4a052, #b8892e)"
-                  : "linear-gradient(145deg, #a78bfa, #7c3aed)",
-                boxShadow: `0 2px 12px ${demoMode ? "rgba(212,160,82,0.55)" : "rgba(124,58,237,0.5)"}, 0 0 20px ${demoMode ? "rgba(212,160,82,0.2)" : "rgba(124,58,237,0.15)"}`,
-              }}
-              whileHover={{ scale: 1.12 }}
-              whileTap={{ scale: 0.92 }}
-            >
-              {/* Outer ring pulse */}
-              <motion.div
-                className="absolute inset-[-3px] rounded-full"
-                animate={{ opacity: [0, 0.5, 0], scale: [1, 1.3, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                style={{
-                  border: `1px solid ${demoMode ? "rgba(212,160,82,0.4)" : "rgba(167,139,250,0.35)"}`,
-                }}
-              />
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={demoMode ? "demo" : "live"}
-                  initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
-                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                  exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                >
-                  {demoMode
-                    ? <Presentation className="w-3 h-3 text-white/95" />
-                    : <Eye className="w-3 h-3 text-white/95" />}
-                </motion.div>
-              </AnimatePresence>
-            </motion.div>
-          </div>
-
-          <motion.span
-            animate={{ opacity: demoMode ? 1 : 0.4 }}
-            className="text-[9px] font-bold uppercase tracking-[0.15em]"
-            style={{ color: "#d4a052" }}
-          >
-            Demo
-          </motion.span>
-        </div>
+        {/* ═══ PREMIUM SLIDER TOGGLE ═══ */}
+        <PremiumModeSlider demoMode={demoMode} onToggle={handleToggle} />
 
         <div className="flex items-center gap-1.5">
           <DarkModeToggle />
@@ -223,5 +115,175 @@ export default function PartnerLayout() {
       </nav>
     </div>
     </DemoModeContext.Provider>
+  );
+}
+
+/* ═══ PREMIUM MODE SLIDER ═══ */
+function PremiumModeSlider({ demoMode, onToggle }: { demoMode: boolean; onToggle: (v: boolean) => void }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(demoMode ? 1 : 0);
+  const progress = useTransform(x, [0, 1], [0, 100]);
+  const bgOpacity = useTransform(x, [0, 0.5, 1], [0, 0.15, 0.3]);
+
+  const TRACK_W = 120;
+  const THUMB_W = 36;
+  const TRAVEL = TRACK_W - THUMB_W - 4;
+
+  const thumbX = useTransform(x, [0, 1], [0, TRAVEL]);
+
+  const handleDragEnd = useCallback(() => {
+    const current = x.get();
+    if (current > 0.5 && !demoMode) {
+      animate(x, 1, { type: "spring", stiffness: 400, damping: 25 });
+      onToggle(true);
+    } else if (current <= 0.5 && demoMode) {
+      animate(x, 0, { type: "spring", stiffness: 400, damping: 25 });
+      onToggle(false);
+    } else {
+      animate(x, demoMode ? 1 : 0, { type: "spring", stiffness: 400, damping: 25 });
+    }
+  }, [demoMode, onToggle, x]);
+
+  const handleTap = useCallback(() => {
+    const next = !demoMode;
+    animate(x, next ? 1 : 0, { type: "spring", stiffness: 400, damping: 25 });
+    onToggle(next);
+  }, [demoMode, onToggle, x]);
+
+  useEffect(() => {
+    animate(x, demoMode ? 1 : 0, { type: "spring", stiffness: 400, damping: 25 });
+  }, [demoMode]);
+
+  return (
+    <div className="flex items-center gap-2">
+      {/* Label left */}
+      <motion.span
+        className="text-[9px] font-bold uppercase tracking-widest"
+        animate={{ opacity: demoMode ? 0.35 : 1, color: demoMode ? "#6b7280" : "#a78bfa" }}
+      >
+        Live
+      </motion.span>
+
+      {/* Track */}
+      <div
+        ref={trackRef}
+        className="relative select-none cursor-pointer overflow-hidden"
+        style={{
+          width: TRACK_W,
+          height: 32,
+          borderRadius: 16,
+          background: "linear-gradient(135deg, #0d0d1a, #151520)",
+          border: `1px solid ${demoMode ? "rgba(212,160,82,0.2)" : "rgba(167,139,250,0.15)"}`,
+          boxShadow: `inset 0 2px 8px rgba(0,0,0,0.4), 0 0 20px ${demoMode ? "rgba(212,160,82,0.06)" : "rgba(167,139,250,0.04)"}`,
+        }}
+        onClick={handleTap}
+      >
+        {/* Animated fill */}
+        <motion.div
+          className="absolute inset-0 rounded-full"
+          style={{
+            opacity: bgOpacity,
+            background: demoMode
+              ? "linear-gradient(90deg, transparent, #d4a052)"
+              : "linear-gradient(90deg, #a78bfa, transparent)",
+          }}
+        />
+
+        {/* Sparkle particles */}
+        {[...Array(4)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: 2 + i,
+              height: 2 + i,
+              top: 8 + (i % 2) * 14,
+              background: demoMode ? "#d4a052" : "#a78bfa",
+            }}
+            animate={{
+              x: demoMode ? [TRACK_W * 0.2, TRACK_W * 0.8] : [TRACK_W * 0.8, TRACK_W * 0.2],
+              opacity: [0, 0.7, 0],
+              scale: [0.5, 1.2, 0.5],
+            }}
+            transition={{ duration: 2 + i * 0.5, repeat: Infinity, delay: i * 0.4 }}
+          />
+        ))}
+
+        {/* Progress line */}
+        <motion.div
+          className="absolute bottom-[2px] left-[10%] h-[2px] rounded-full"
+          style={{
+            width: progress.get() ? `${Math.min(progress.get(), 80)}%` : "0%",
+            background: demoMode
+              ? "linear-gradient(90deg, rgba(212,160,82,0.6), rgba(212,160,82,0.1))"
+              : "linear-gradient(90deg, rgba(167,139,250,0.1), rgba(167,139,250,0.6))",
+          }}
+          animate={{
+            width: demoMode ? "80%" : "0%",
+          }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        />
+
+        {/* Draggable Thumb */}
+        <motion.div
+          drag="x"
+          dragConstraints={{ left: 0, right: TRAVEL }}
+          dragElastic={0.08}
+          dragMomentum={false}
+          onDragEnd={handleDragEnd}
+          onClick={(e) => e.stopPropagation()}
+          onDrag={(_, info) => {
+            const pct = Math.max(0, Math.min(1, (info.point.x - (trackRef.current?.getBoundingClientRect().left || 0) - THUMB_W / 2) / TRAVEL));
+            x.set(pct);
+          }}
+          className="absolute top-[2px] left-[2px] rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing z-10"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.95 }}
+          initial={false}
+          animate={{
+            boxShadow: demoMode
+              ? "0 2px 14px rgba(212,160,82,0.5), 0 0 20px rgba(212,160,82,0.15)"
+              : "0 2px 14px rgba(167,139,250,0.45), 0 0 20px rgba(167,139,250,0.12)",
+          }}
+          style={{
+            x: thumbX,
+            width: THUMB_W,
+            height: THUMB_W - 8,
+            background: demoMode
+              ? "linear-gradient(145deg, #d4a052, #b8863a)"
+              : "linear-gradient(145deg, #a78bfa, #7c3aed)",
+          }}
+        >
+          {/* Icon with rotation */}
+          <motion.div
+            animate={{ rotateY: demoMode ? 180 : 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            {demoMode
+              ? <Presentation className="w-3.5 h-3.5 text-white/90" />
+              : <Eye className="w-3.5 h-3.5 text-white/90" />}
+          </motion.div>
+
+          {/* Pulse ring */}
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            style={{
+              border: `1px solid ${demoMode ? "rgba(212,160,82,0.4)" : "rgba(167,139,250,0.3)"}`,
+            }}
+          />
+        </motion.div>
+      </div>
+
+      {/* Label right */}
+      <motion.span
+        className="text-[9px] font-bold uppercase tracking-widest"
+        animate={{ opacity: demoMode ? 1 : 0.35, color: demoMode ? "#d4a052" : "#6b7280" }}
+      >
+        Demo
+      </motion.span>
+    </div>
   );
 }
