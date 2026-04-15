@@ -347,13 +347,13 @@ const PartnerDashboard = () => {
                 {demoMode ? (
                   <>Scopri cosa possiamo<br /><span style={{ color: "#f59e0b" }}>creare per te.</span></>
                 ) : (
-                  <>Ogni settore, un'arma<br /><span style={{ color: "#a78bfa" }}>di conversione.</span></>
+                  <>Il tuo catalogo app,<br /><span style={{ color: "#a78bfa" }}>pronto da mostrare.</span></>
                 )}
               </h2>
               <p className="text-sm mt-2" style={{ color: "#9ca3af" }}>
                 {demoMode
                   ? "App, siti web e agenti IA personalizzati per ogni settore — tutto incluso, chiavi in mano."
-                  : "Hai in mano il sistema più potente sul mercato: trova il lead, mostra la demo, chiudi il contratto."
+                  : "Sfoglia i progetti, seleziona uno stile e mostra le preview ai clienti."
                 }
               </p>
             </div>
