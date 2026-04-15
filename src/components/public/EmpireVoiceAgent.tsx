@@ -68,6 +68,8 @@ function getBestItalianFemaleVoice(): SpeechSynthesisVoice | null {
     (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /femal|donna|woman/i.test(v.name),
     // Any Italian voice
     (v: SpeechSynthesisVoice) => v.lang.startsWith("it"),
+    // Fallback: any voice at all (better than silence)
+    (v: SpeechSynthesisVoice) => true,
   ];
   
   for (const test of priorities) {
