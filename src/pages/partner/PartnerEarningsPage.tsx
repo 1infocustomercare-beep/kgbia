@@ -134,7 +134,7 @@ export default function PartnerEarningsPage() {
   } : null;
 
   const handleCopyInviteLink = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/auth?role=partner&ref=${user?.id}`);
+    navigator.clipboard.writeText(`${window.location.origin}/partner/register?ref=${user?.id}`);
     setInviteCopied(true);
     toast({ title: "Link copiato!", description: "Chi si registra sarà nel tuo team." });
     setTimeout(() => setInviteCopied(false), 2000);
@@ -481,7 +481,7 @@ export default function PartnerEarningsPage() {
 
         <div className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
           <p className="text-[10px] mb-1 font-medium text-muted-foreground">Il tuo link di reclutamento:</p>
-          <p className="text-[10px] font-mono break-all select-all text-foreground/70">{window.location.origin}/auth?role=partner&ref={user?.id}</p>
+          <p className="text-[10px] font-mono break-all select-all text-foreground/70">{window.location.origin}/partner/register?ref={user?.id}</p>
         </div>
         <motion.button onClick={handleCopyInviteLink} whileTap={{ scale: 0.97 }}
           className="w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
