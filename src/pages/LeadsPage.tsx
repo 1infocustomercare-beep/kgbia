@@ -438,29 +438,93 @@ export default function LeadsPage() {
 
   return (
     <div className="min-h-screen p-4 space-y-4 pb-24" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
-      {/* ═══ HEADER ═══ */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-lg font-bold flex items-center gap-2 text-white">
-            <Target className="w-5 h-5" style={{ color: "#14b8a6" }} /> LeadEngine Scout
-          </h1>
-          <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>
-            Ricerca automatica multi-fonte in tutto il mondo
-          </p>
-        </div>
-        <div className="flex items-center gap-1.5">
-          {results.length > 0 && (
-            <>
-              <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.1)", color: "#34d399" }}>
-                🟢 {results.length} lead
-              </span>
-              <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(239,68,68,0.1)", color: "#f87171" }}>
-                🔥 {hotLeads} caldi
-              </span>
-            </>
+
+      {/* ═══ HERO TECH AVATAR ═══ */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col items-center text-center pt-2 pb-1"
+      >
+        {/* Animated tech character */}
+        <div className="relative w-20 h-20 mb-2">
+          {/* Glow ring */}
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+            className="absolute inset-0 rounded-full"
+            style={{ border: "1.5px dashed rgba(20,184,166,0.25)" }}
+          />
+          {/* Pulse ring on search */}
+          {loading && (
+            <motion.div
+              animate={{ scale: [1, 1.5, 1], opacity: [0.4, 0, 0.4] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+              className="absolute inset-0 rounded-full"
+              style={{ border: "2px solid rgba(20,184,166,0.3)" }}
+            />
           )}
+          {/* Character body */}
+          <svg viewBox="0 0 80 80" className="w-full h-full drop-shadow-lg">
+            {/* Head */}
+            <motion.circle cx="40" cy="20" r="10" fill="#14b8a6" opacity="0.9"
+              animate={{ cy: [20, 18, 20] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} />
+            {/* Eyes */}
+            <motion.circle cx="37" cy="18" r="1.2" fill="#0a0a12"
+              animate={{ cy: [18, 16, 18] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} />
+            <motion.circle cx="43" cy="18" r="1.2" fill="#0a0a12"
+              animate={{ cy: [18, 16, 18] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} />
+            {/* Smile */}
+            <motion.path d="M36 22 Q40 25 44 22" stroke="#0a0a12" strokeWidth="1" fill="none"
+              animate={{ d: ["M36 22 Q40 25 44 22", "M36 21 Q40 24 44 21", "M36 22 Q40 25 44 22"] }}
+              transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} />
+            {/* Body */}
+            <motion.rect x="30" y="32" width="20" height="18" rx="4" fill="#14b8a6" opacity="0.7"
+              animate={{ y: [32, 30, 32] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} />
+            {/* Laptop */}
+            <motion.g animate={{ y: [0, -2, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}>
+              <rect x="22" y="46" width="36" height="3" rx="1" fill="#5eead4" opacity="0.6" />
+              <rect x="26" y="38" width="28" height="10" rx="2" fill="#0d1117" stroke="#5eead4" strokeWidth="0.8" opacity="0.8" />
+              {/* Screen content — animated bars */}
+              <motion.rect x="29" y="41" width="8" rx="0.5" fill="#14b8a6" opacity="0.9"
+                animate={{ width: [8, 14, 8], height: [2, 2, 2] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                height="2" />
+              <motion.rect x="29" y="44" width="12" rx="0.5" fill="#34d399" opacity="0.6"
+                animate={{ width: [12, 6, 12] }} transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                height="1.5" />
+            </motion.g>
+            {/* Arms to laptop */}
+            <motion.line x1="30" y1="38" x2="26" y2="42" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" opacity="0.6"
+              animate={{ x2: [26, 25, 26], y1: [38, 36, 38] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} />
+            <motion.line x1="50" y1="38" x2="54" y2="42" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" opacity="0.6"
+              animate={{ x2: [54, 55, 54], y1: [38, 36, 38] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} />
+            {/* Data particles floating */}
+            <motion.circle cx="18" cy="30" r="1.5" fill="#5eead4" opacity="0.5"
+              animate={{ cy: [30, 20, 30], opacity: [0.5, 0, 0.5] }} transition={{ repeat: Infinity, duration: 2.5 }} />
+            <motion.circle cx="62" cy="25" r="1" fill="#34d399" opacity="0.5"
+              animate={{ cy: [25, 15, 25], opacity: [0.5, 0, 0.5] }} transition={{ repeat: Infinity, duration: 3, delay: 0.5 }} />
+            <motion.circle cx="15" cy="45" r="1" fill="#14b8a6" opacity="0.4"
+              animate={{ cy: [45, 35, 45], opacity: [0.4, 0, 0.4] }} transition={{ repeat: Infinity, duration: 2, delay: 1 }} />
+            <motion.circle cx="65" cy="40" r="1.2" fill="#5eead4" opacity="0.4"
+              animate={{ cy: [40, 30, 40], opacity: [0.4, 0, 0.4] }} transition={{ repeat: Infinity, duration: 2.8, delay: 0.3 }} />
+          </svg>
         </div>
-      </div>
+        <h1 className="text-lg font-bold flex items-center justify-center gap-2 text-white">
+          <Target className="w-5 h-5" style={{ color: "#14b8a6" }} /> LeadEngine Scout
+        </h1>
+        <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>
+          Ricerca automatica multi-fonte in tutto il mondo
+        </p>
+        {results.length > 0 && (
+          <div className="flex items-center gap-1.5 mt-1.5">
+            <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.1)", color: "#34d399" }}>
+              🟢 {results.length} lead
+            </span>
+            <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(239,68,68,0.1)", color: "#f87171" }}>
+              🔥 {hotLeads} caldi
+            </span>
+          </div>
+        )}
+      </motion.div>
 
       {/* ═══ TIPS — dismissable ═══ */}
       <AnimatePresence>
