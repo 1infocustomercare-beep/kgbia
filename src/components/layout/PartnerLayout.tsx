@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/context/AuthContext";
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
-import { Switch } from "@/components/ui/switch";
+
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Target, DollarSign, FolderOpen, User, LogOut, ArrowLeft,
@@ -60,19 +60,35 @@ export default function PartnerLayout() {
           <span className="text-sm font-bold text-foreground">Partner</span>
         </div>
 
-        {/* ═══ SWITCH LIVE / PRESENTAZIONE ═══ */}
-        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full"
+        {/* ═══ SWITCH LIVE / PRESENTAZIONE — toggle slide ═══ */}
+        <button onClick={() => handleToggle(!demoMode)}
+          className="relative flex items-center w-[120px] h-8 rounded-full cursor-pointer transition-colors duration-300"
           style={{
-            background: demoMode ? "rgba(245,158,11,0.1)" : "rgba(167,139,250,0.08)",
-            border: `1px solid ${demoMode ? "rgba(245,158,11,0.25)" : "rgba(167,139,250,0.15)"}`,
+            background: demoMode
+              ? "linear-gradient(135deg, rgba(245,158,11,0.25), rgba(245,158,11,0.1))"
+              : "linear-gradient(135deg, rgba(167,139,250,0.2), rgba(167,139,250,0.08))",
+            border: `1px solid ${demoMode ? "rgba(245,158,11,0.35)" : "rgba(167,139,250,0.25)"}`,
           }}>
-          {demoMode ? <Presentation className="w-3.5 h-3.5" style={{ color: "#f59e0b" }} /> : <Eye className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />}
-          <span className="text-[10px] font-semibold" style={{ color: demoMode ? "#f59e0b" : "#a78bfa" }}>
-            {demoMode ? "DEMO" : "LIVE"}
-          </span>
-          <Switch checked={demoMode} onCheckedChange={handleToggle}
-            className="scale-75 origin-center data-[state=checked]:bg-amber-500" />
-        </div>
+          {/* Sliding thumb */}
+          <div className="absolute top-0.5 h-[26px] w-[58px] rounded-full transition-all duration-300 flex items-center justify-center gap-1"
+            style={{
+              left: demoMode ? "calc(100% - 60px)" : "2px",
+              background: demoMode ? "rgba(245,158,11,0.9)" : "rgba(167,139,250,0.85)",
+              boxShadow: demoMode ? "0 0 12px rgba(245,158,11,0.4)" : "0 0 12px rgba(167,139,250,0.3)",
+            }}>
+            {demoMode
+              ? <Presentation className="w-3 h-3 text-black/80" />
+              : <Eye className="w-3 h-3 text-white" />}
+            <span className="text-[9px] font-bold" style={{ color: demoMode ? "#1a1a1a" : "#fff" }}>
+              {demoMode ? "DEMO" : "LIVE"}
+            </span>
+          </div>
+          {/* Background labels */}
+          <span className="absolute left-2.5 text-[8px] font-semibold transition-opacity duration-300"
+            style={{ color: "rgba(167,139,250,0.4)", opacity: demoMode ? 1 : 0 }}>LIVE</span>
+          <span className="absolute right-2.5 text-[8px] font-semibold transition-opacity duration-300"
+            style={{ color: "rgba(245,158,11,0.4)", opacity: demoMode ? 0 : 1 }}>DEMO</span>
+        </button>
 
         <div className="flex items-center gap-1.5">
           <DarkModeToggle />
