@@ -3,11 +3,10 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/context/AuthContext";
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
-
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Target, DollarSign, FolderOpen, User, LogOut, ArrowLeft,
-  Eye, EyeOff, Presentation,
+  Eye, Presentation,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
@@ -33,8 +32,6 @@ export default function PartnerLayout() {
 
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
-  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
-
   const isActive = (path: string, exact?: boolean) =>
     exact ? location.pathname === path : location.pathname.startsWith(path);
 
@@ -46,56 +43,65 @@ export default function PartnerLayout() {
     });
   };
 
+  const accentColor = demoMode ? "#d4a052" : "#a78bfa";
+
   return (
     <DemoModeContext.Provider value={{ demoMode, setDemoMode }}>
     <div className={`min-h-screen flex flex-col relative admin-panel ${isDark ? 'landing-dark partner-console' : ''}`}
       style={isDark ? { background: "#0a0a14" } : undefined}>
 
-      {/* ═══ TOP BAR ═══ */}
-      <div className="sticky top-0 z-50 flex items-center justify-between px-3 h-14 border-b border-border/50 safe-top bg-background/95 backdrop-blur-xl">
-        <div className="flex items-center gap-2">
-          <button onClick={() => navigate("/home")} className="flex items-center gap-1 text-sm font-medium" style={{ color: "#a78bfa" }}>
+      {/* ═══ TOP BAR — glassmorphism ═══ */}
+      <div className="sticky top-0 z-50 flex items-center justify-between px-4 h-14 safe-top"
+        style={{
+          background: isDark ? "rgba(10,10,20,0.85)" : "rgba(255,255,255,0.85)",
+          backdropFilter: "blur(24px) saturate(1.8)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+          borderBottom: `1px solid ${isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}`,
+        }}>
+        <div className="flex items-center gap-2.5">
+          <button onClick={() => navigate("/home")} className="flex items-center justify-center w-8 h-8 rounded-xl transition-colors"
+            style={{ background: `${accentColor}10`, color: accentColor }}>
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <span className="text-sm font-bold text-foreground">Partner</span>
+          <span className="text-sm font-bold text-foreground tracking-tight">Partner</span>
         </div>
 
-        {/* ═══ SWITCH LIVE / PRESENTAZIONE — drag to toggle ═══ */}
-        <div className="relative flex items-center w-[120px] h-8 rounded-full select-none"
+        {/* ═══ SWITCH — drag to toggle ═══ */}
+        <div className="relative flex items-center w-[120px] h-[34px] rounded-full select-none"
           style={{
             background: demoMode
-              ? "linear-gradient(135deg, rgba(245,158,11,0.25), rgba(245,158,11,0.1))"
-              : "linear-gradient(135deg, rgba(167,139,250,0.2), rgba(167,139,250,0.08))",
-            border: `1px solid ${demoMode ? "rgba(245,158,11,0.35)" : "rgba(167,139,250,0.25)"}`,
+              ? "linear-gradient(135deg, rgba(212,160,82,0.12), rgba(212,160,82,0.05))"
+              : "linear-gradient(135deg, rgba(167,139,250,0.1), rgba(124,58,237,0.04))",
+            border: `1px solid ${demoMode ? "rgba(212,160,82,0.2)" : "rgba(167,139,250,0.15)"}`,
+            boxShadow: `inset 0 1px 2px ${demoMode ? "rgba(212,160,82,0.05)" : "rgba(167,139,250,0.05)"}`,
           }}>
-          {/* Background labels */}
-          <span className="absolute left-2.5 text-[8px] font-semibold pointer-events-none transition-opacity duration-300"
-            style={{ color: "rgba(167,139,250,0.4)", opacity: demoMode ? 1 : 0 }}>LIVE</span>
-          <span className="absolute right-2.5 text-[8px] font-semibold pointer-events-none transition-opacity duration-300"
-            style={{ color: "rgba(245,158,11,0.4)", opacity: demoMode ? 0 : 1 }}>DEMO</span>
-          {/* Draggable thumb */}
+          <span className="absolute left-3 text-[8px] font-bold pointer-events-none transition-opacity duration-300 uppercase tracking-wider"
+            style={{ color: `${accentColor}50`, opacity: demoMode ? 1 : 0 }}>LIVE</span>
+          <span className="absolute right-3 text-[8px] font-bold pointer-events-none transition-opacity duration-300 uppercase tracking-wider"
+            style={{ color: `${accentColor}50`, opacity: demoMode ? 0 : 1 }}>DEMO</span>
           <motion.div
             drag="x"
-            dragConstraints={{ left: 0, right: 56 }}
+            dragConstraints={{ left: 0, right: 54 }}
             dragElastic={0.05}
             dragMomentum={false}
-            animate={{ x: demoMode ? 56 : 0 }}
+            animate={{ x: demoMode ? 54 : 0 }}
             transition={{ type: "spring", stiffness: 500, damping: 35 }}
             onDragEnd={(_e, info) => {
-              const threshold = 20;
-              if (!demoMode && info.offset.x > threshold) handleToggle(true);
-              else if (demoMode && info.offset.x < -threshold) handleToggle(false);
+              if (!demoMode && info.offset.x > 20) handleToggle(true);
+              else if (demoMode && info.offset.x < -20) handleToggle(false);
             }}
             onTap={() => handleToggle(!demoMode)}
-            className="absolute top-0.5 left-0.5 h-[26px] w-[58px] rounded-full flex items-center justify-center gap-1 cursor-grab active:cursor-grabbing z-10"
+            className="absolute top-[3px] left-[3px] h-[26px] w-[60px] rounded-full flex items-center justify-center gap-1.5 cursor-grab active:cursor-grabbing z-10"
             style={{
-              background: demoMode ? "rgba(245,158,11,0.9)" : "rgba(167,139,250,0.85)",
-              boxShadow: demoMode ? "0 0 12px rgba(245,158,11,0.4)" : "0 0 12px rgba(167,139,250,0.3)",
+              background: demoMode
+                ? "linear-gradient(135deg, #d4a052, #b8862e)"
+                : "linear-gradient(135deg, #a78bfa, #7c3aed)",
+              boxShadow: `0 2px 12px ${demoMode ? "rgba(212,160,82,0.35)" : "rgba(167,139,250,0.3)"}`,
             }}>
             {demoMode
-              ? <Presentation className="w-3 h-3 text-black/80" />
-              : <Eye className="w-3 h-3 text-white" />}
-            <span className="text-[9px] font-bold pointer-events-none" style={{ color: demoMode ? "#1a1a1a" : "#fff" }}>
+              ? <Presentation className="w-3 h-3 text-white/90" />
+              : <Eye className="w-3 h-3 text-white/90" />}
+            <span className="text-[9px] font-bold text-white pointer-events-none">
               {demoMode ? "DEMO" : "LIVE"}
             </span>
           </motion.div>
@@ -104,8 +110,8 @@ export default function PartnerLayout() {
         <div className="flex items-center gap-1.5">
           <DarkModeToggle />
           <button onClick={async () => { await signOut(); navigate("/auth"); }}
-            className="flex items-center justify-center w-8 h-8 rounded-full"
-            style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }}>
+            className="flex items-center justify-center w-8 h-8 rounded-xl transition-colors"
+            style={{ background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)", color: "#9ca3af", border: `1px solid ${isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}` }}>
             <LogOut className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -116,22 +122,29 @@ export default function PartnerLayout() {
         <Outlet />
       </div>
 
-      {/* ═══ BOTTOM NAV ═══ */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 safe-bottom bg-background/95 backdrop-blur-xl border-t border-border/50">
+      {/* ═══ BOTTOM NAV — glassmorphism ═══ */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 safe-bottom"
+        style={{
+          background: isDark ? "rgba(10,10,20,0.88)" : "rgba(255,255,255,0.88)",
+          backdropFilter: "blur(24px) saturate(1.8)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+          borderTop: `1px solid ${isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}`,
+        }}>
         <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
           {NAV_ITEMS_FULL.filter(item => demoMode ? item.showInDemo : true).map(item => {
             const active = isActive(item.path, item.exact);
             return (
               <button key={item.path} onClick={() => navigate(item.path)}
-                className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all relative min-w-[52px]">
+                className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all relative min-w-[52px]"
+                style={active ? { background: `${accentColor}10` } : undefined}>
                 {active && (
                   <motion.div layoutId="partner-nav-indicator"
-                    className="absolute -top-1 w-8 h-1 rounded-full"
-                    style={{ background: "#a78bfa" }}
+                    className="absolute -top-1 w-8 h-[3px] rounded-full"
+                    style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}80)` }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }} />
                 )}
-                <item.icon className="w-5 h-5" style={{ color: active ? "#a78bfa" : "#6b7280" }} />
-                <span className="text-[9px] font-semibold" style={{ color: active ? "#a78bfa" : "#6b7280" }}>{item.label}</span>
+                <item.icon className="w-5 h-5" style={{ color: active ? accentColor : "#6b7280" }} />
+                <span className="text-[9px] font-semibold" style={{ color: active ? accentColor : "#6b7280" }}>{item.label}</span>
               </button>
             );
           })}
