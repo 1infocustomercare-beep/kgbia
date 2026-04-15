@@ -439,7 +439,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
         demoMode,
         onDone: async () => {
           setIsLoading(false);
-          if (voiceEnabledRef.current && full.length > 0 && full.length < 2000 && !abortRef.current) {
+          if (voiceEnabledRef.current && full.length > 0 && !abortRef.current) {
             setIsSpeaking(true);
             const normalized = normalizeTextForSpeech(full);
             await speakWithBrowserTTS(normalized, abortRef);
