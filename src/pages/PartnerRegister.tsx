@@ -42,7 +42,7 @@ const PartnerRegister = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const referralId = searchParams.get("ref");
-  const { user } = useAuth();
+  const { user, signUp } = useAuth();
 
   // If already logged in as partner, redirect to dashboard
   useEffect(() => {
