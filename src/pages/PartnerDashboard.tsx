@@ -244,6 +244,7 @@ const PartnerDashboard = () => {
   const [scanningProspect, setScanningProspect] = useState(false);
   const [aiGeneratedMessage, setAiGeneratedMessage] = useState<string | null>(null);
   const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
+  const [profileName, setProfileName] = useState<string | null>(null);
 
   // Sector search + AI advisor state
   const [sectorSearch, setSectorSearch] = useState("");
@@ -615,8 +616,9 @@ const PartnerDashboard = () => {
     if (!user?.id) return;
     fetchPartnerData();
     // Load avatar
-    supabase.from("profiles").select("avatar_url").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+    supabase.from("profiles").select("avatar_url, full_name").eq("user_id", user.id).maybeSingle().then(({ data }) => {
       if (data?.avatar_url) setPartnerAvatar(data.avatar_url);
+      if (data?.full_name) setProfileName(data.full_name);
     });
     if (!isTeamLeader) return;
     const channel = supabase
@@ -705,7 +707,7 @@ const PartnerDashboard = () => {
   const netEarnings = estimatedCommissions + totalBonuses + totalOverrides;
   const currentMonth = new Date().toISOString().slice(0, 7);
   const currentMonthSales = currentMonthSalesCount;
-  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
+  const userName = profileName || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
   const selectedProjectName = selectedProject
     ? PORTFOLIO_PROJECTS[selectedProject as keyof typeof PORTFOLIO_PROJECTS]?.name || selectedProject
@@ -850,7 +852,7 @@ const PartnerDashboard = () => {
         <AnimatePresence>
           {showProfileEdit && !demoMode && user?.id && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
-              <PartnerProfileSection userId={user.id} userName={userName} userEmail={user.email || ""} onAvatarChange={(url) => setPartnerAvatar(url)} />
+              <PartnerProfileSection userId={user.id} userName={userName} userEmail={user.email || ""} onAvatarChange={(url) => setPartnerAvatar(url)} onNameChange={(name) => setProfileName(name)} />
             </motion.div>
           )}
         </AnimatePresence>
