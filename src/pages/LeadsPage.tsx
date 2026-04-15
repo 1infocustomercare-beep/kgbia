@@ -1130,19 +1130,34 @@ export default function LeadsPage() {
 
       {/* Empty state */}
       {results.length === 0 && !loading && (
-        <div className="text-center py-16">
+        <div className="text-center py-12">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3" style={{ background: "rgba(20,184,166,0.08)" }}>
             <Target className="w-6 h-6" style={{ color: "#14b8a6" }} />
           </div>
-          <p className="text-sm font-bold text-white mb-1">Trova i tuoi prossimi clienti</p>
-          <p className="text-[11px] max-w-sm mx-auto" style={{ color: "#6b7280" }}>
-            Inserisci città e settore per cercare lead reali da Google Maps, OSM, Overpass e altre fonti. Puoi fare ricerche ripetute per trovare sempre più lead.
+          <p className="text-sm font-bold text-white mb-1">Trova lead ovunque nel mondo</p>
+          <p className="text-[11px] max-w-sm mx-auto mb-4" style={{ color: "#6b7280" }}>
+            Scegli un Paese, inserisci la città e il settore. La ricerca multi-fonte parte automaticamente su Google Maps, OSM, Overpass e altre fonti.
           </p>
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            {["🗺️ Google Maps", "🌍 OpenStreetMap", "📍 Photon", "🔎 Overpass API"].map(src => (
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
+            {["🗺️ Google Maps", "🌍 OpenStreetMap", "📍 Photon", "🔎 Overpass", "📸 Instagram AI"].map(src => (
               <span key={src} className="text-[9px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "rgba(20,184,166,0.08)", color: "#14b8a6" }}>
                 {src}
               </span>
+            ))}
+          </div>
+          {/* Quick start suggestions */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {[
+              { city: "Roma", sector: "food", label: "🍕 Ristoranti a Roma" },
+              { city: "Milano", sector: "beauty", label: "💇 Beauty a Milano" },
+              { city: "London", sector: "fitness", label: "🏋️ Gym a Londra" },
+              { city: "Dubai", sector: "hospitality", label: "🏨 Hotel a Dubai" },
+            ].map((suggestion, i) => (
+              <button key={i} onClick={() => { setCity(suggestion.city); setSector(suggestion.sector); setTimeout(() => handleSearch(), 100); }}
+                className="px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all hover:scale-105"
+                style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.15)", color: "#c4b5fd" }}>
+                {suggestion.label}
+              </button>
             ))}
           </div>
         </div>
