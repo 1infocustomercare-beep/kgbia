@@ -108,17 +108,15 @@ async function searchOverpass(sector: string, geo: { lat: number; lon: number; b
   const tags = SECTOR_OVERPASS[sector];
   if (!tags || !tags.length) return [];
 
-  const [south, north, west, east] = geo.bbox.length >= 4
-    ? geo.bbox
-    : [geo.lat - 0.08, geo.lat + 0.08, geo.lon - 0.08, geo.lon + 0.08];
-  const bb = `${south},${west},${north},${east}`;
+  // Use a smaller search radius (~5km around center) to avoid Overpass timeouts on big cities
+  const radius = 5000;
+  const around = `(around:${radius},${geo.lat},${geo.lon})`;
 
   // Build Overpass QL: query nodes & ways with name + sector tags
-  const tagQueries = tags.map(t => {
-    // Handle tags with ~ (regex match)
+  const tagQueries = tags.slice(0, 2).map(t => {
     if (t.includes("~")) {
       const [key, val] = t.split("~");
-      return `node[${key}~${val}]["name"](${bb});\nway[${key}~${val}]["name"](${bb});`;
+      return `node[${key}~${val}]["name"]${around};\nway[${key}~${val}]["name"]${around};`;
     }
     // Simple tag existence (e.g. "cuisine", "sport")
     return `node["${t}"]["name"](${bb});\nway["${t}"]["name"](${bb});`;
