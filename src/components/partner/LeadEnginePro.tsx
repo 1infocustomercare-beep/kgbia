@@ -4,7 +4,8 @@ import {
   Search, MapPin, Target, Globe, Phone, Mail, Instagram, Loader2,
   Star, ExternalLink, MessageCircle, ChevronDown, ChevronRight,
   Sparkles, Eye, Copy, CheckCircle, Zap, Filter, ArrowRight,
-  Building2, Send, RefreshCw, Wand2, Map, Link2, X as XIcon
+  Building2, Send, RefreshCw, Wand2, Map, Link2, X as XIcon,
+  Key, Info, Crown, Settings
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -108,6 +109,8 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
   const [generatedMessage, setGeneratedMessage] = useState<string | null>(null);
   const [activeChannel, setActiveChannel] = useState<"instagram" | "whatsapp" | "email">("whatsapp");
   const [showPreview, setShowPreview] = useState(false);
+  const [hasGoogleKey, setHasGoogleKey] = useState<boolean | null>(null);
+  const [showGoogleGuide, setShowGoogleGuide] = useState(false);
 
   // Sector preview screens
   const getPreviewScreens = (sectorId: string) => {
