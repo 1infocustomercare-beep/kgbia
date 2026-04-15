@@ -47,7 +47,7 @@ export default function PartnerHomePage() {
     { icon: User, label: "Il Mio Profilo", desc: "Dati personali, avatar e impostazioni", gradient: "from-amber-600/20 to-orange-600/10", iconColor: "#fbbf24", path: "/partner/profile" },
   ];
 
-  const fadeUp = (delay = 0) => ({ initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { delay, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } });
+  const fadeUp = (delay = 0) => ({ initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { delay, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] } });
 
   /* ─── Shared glass card style ─── */
   const glassCard = "rounded-2xl backdrop-blur-md";
