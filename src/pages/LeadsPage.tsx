@@ -108,6 +108,7 @@ const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
   nominatim: { label: "OSM", color: "#7EBC6F" },
   photon: { label: "Photon", color: "#F59E0B" },
   overpass: { label: "Overpass", color: "#06B6D4" },
+  instagram: { label: "Instagram", color: "#E4405F" },
   manual: { label: "Manuale", color: "#A78BFA" },
 };
 
@@ -177,6 +178,44 @@ export default function LeadsPage() {
     return filtered;
   }, [city, sector, minRating]);
 
+  /* ─── Batch enrich Instagram for leads without IG ─── */
+  const batchEnrichInstagram = useCallback(async (leads: (Lead & { _score: number; _sector: string })[]) => {
+    const needsIg = leads.filter(l => !l.instagram && l.name).slice(0, 15);
+    if (needsIg.length === 0) return;
+
+    try {
+      const { data, error } = await supabase.functions.invoke("enrich-lead-social", {
+        body: {
+          batch: true,
+          businesses: needsIg.map(l => ({ name: l.name, city: l.city || city, sector: l._sector })),
+        },
+      });
+      if (!error && data?.success && data.results) {
+        const igResults = data.results as Record<string, { instagram: string; profile?: any; source: string }>;
+        setResults(prev => prev.map(r => {
+          const match = igResults[r.name];
+          if (match?.instagram) {
+            return {
+              ...r,
+              instagram: match.instagram,
+              email: match.profile?.email_from_bio || r.email,
+              phone: match.profile?.phone_from_bio || r.phone,
+            };
+          }
+          return r;
+        }));
+        const found = Object.keys(igResults).length;
+        if (found > 0) {
+          toast.success(`📸 ${found} profili Instagram trovati automaticamente`, {
+            description: "Dati social arricchiti via AI + scraping",
+          });
+        }
+      }
+    } catch (e) {
+      console.log("Batch IG enrich failed:", e);
+    }
+  }, [city]);
+
   /* ─── Search ─── */
   const handleSearch = useCallback(async (page = 0, append = false) => {
     if (!city.trim() && !query.trim()) {
@@ -206,6 +245,8 @@ export default function LeadsPage() {
         toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati`, {
           description: `OSM: ${sources.nominatim || 0} · Overpass: ${sources.overpass || 0} · Photon: ${sources.photon || 0} · Google: ${sources.google || 0}`,
         });
+        // Auto-batch enrich Instagram in background
+        setTimeout(() => batchEnrichInstagram(processed), 1500);
       } else if (!append) {
         toast.error("Nessun risultato — prova un'altra città o settore");
       } else {
@@ -218,7 +259,7 @@ export default function LeadsPage() {
       setLoading(false);
       setDeepLoading(false);
     }
-  }, [city, query, sector, minRating, results, processResults]);
+  }, [city, query, sector, minRating, results, processResults, batchEnrichInstagram]);
 
   /* ─── Deep search ─── */
   const handleDeepSearch = useCallback(() => {
