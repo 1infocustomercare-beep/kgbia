@@ -844,7 +844,8 @@ export default function LeadsPage() {
                         <p className="text-[8px] text-right" style={{ color: "#666" }}>Visto</p>
                       </div>
                     </div>
-                  )}
+                    );
+                  })()}
 
                   {/* ── Email Professional ── */}
                   {activeChannel === "email" && (() => {
