@@ -134,6 +134,8 @@ export default function LeadsPage() {
   const [generatingMsg, setGeneratingMsg] = useState(false);
   const [generatedMessage, setGeneratedMessage] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(true);
+  const [enrichingIg, setEnrichingIg] = useState(false);
+  const [enrichedData, setEnrichedData] = useState<{ instagram?: string; email?: string; phone?: string; facebook?: string; source?: string } | null>(null);
 
   // Manual lead input
   const [showManual, setShowManual] = useState(false);
@@ -240,6 +242,48 @@ export default function LeadsPage() {
     toast.success(`${lead.name} aggiunto manualmente`);
   };
 
+  /* ─── Enrich lead social data ─── */
+  const enrichLeadSocial = useCallback(async (lead: Lead & { _score: number; _sector: string }) => {
+    if (lead.instagram) {
+      setEnrichedData({ instagram: lead.instagram, source: "existing" });
+      return lead.instagram;
+    }
+    setEnrichingIg(true);
+    setEnrichedData(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("enrich-lead-social", {
+        body: { website: lead.website || "", name: lead.name, city: lead.city },
+      });
+      if (!error && data?.success) {
+        const enriched: any = {};
+        if (data.instagram) enriched.instagram = data.instagram;
+        if (data.email && !lead.email) enriched.email = data.email;
+        if (data.phone && !lead.phone) enriched.phone = data.phone;
+        if (data.facebook && !lead.facebook) enriched.facebook = data.facebook;
+        enriched.source = data.source || "enriched";
+        setEnrichedData(enriched);
+        // Update the lead in results
+        if (data.instagram || data.email || data.phone) {
+          setResults(prev => prev.map(r => 
+            r.name === lead.name && r.full_address === lead.full_address
+              ? { ...r, instagram: data.instagram || r.instagram, email: data.email || r.email, phone: data.phone || r.phone, facebook: data.facebook || r.facebook }
+              : r
+          ));
+          if (data.instagram) {
+            lead.instagram = data.instagram;
+            toast.success(`📸 Instagram trovato: @${data.instagram}`, { description: `Fonte: ${data.source === "website_scrape" ? "Sito web" : "AI"}` });
+          }
+        }
+        return data.instagram || null;
+      }
+    } catch (e) {
+      console.log("Enrich failed:", e);
+    } finally {
+      setEnrichingIg(false);
+    }
+    return null;
+  }, []);
+
   /* ─── Select + auto-generate ─── */
   const handleSelect = useCallback(async (lead: Lead & { _score: number; _sector: string }, channelOverride?: string) => {
     setSelected(lead);
@@ -248,11 +292,17 @@ export default function LeadsPage() {
     setGeneratingMsg(true);
     setGeneratedMessage(null);
 
+    // Enrich social data in parallel with message generation
+    const enrichPromise = enrichLeadSocial(lead);
+
     try {
       const sectorLabel = INDUSTRY_CONFIGS[lead._sector as keyof typeof INDUSTRY_CONFIGS]?.label || lead._sector;
       const demoLink = `${window.location.origin}${getDemoSiteUrl(lead._sector)}`;
       const portfolioRef = PORTFOLIO_REFS[lead._sector] || "il nostro portfolio";
-      const ig = lead.instagram?.replace("@", "") || "";
+      
+      // Wait for enrichment to get IG handle
+      const igHandle = await enrichPromise;
+      const ig = igHandle || lead.instagram?.replace("@", "") || "";
 
       const { data, error } = await supabase.functions.invoke("scan-prospect", {
         body: {
@@ -279,7 +329,7 @@ export default function LeadsPage() {
     } finally {
       setGeneratingMsg(false);
     }
-  }, [activeChannel]);
+  }, [activeChannel, enrichLeadSocial]);
 
   const copyMessage = () => {
     if (generatedMessage) {
@@ -564,22 +614,44 @@ export default function LeadsPage() {
 
               {/* Analysis indicators */}
               <div className="grid grid-cols-4 gap-2 mt-3">
-                {[
-                  { label: "Sito Web", value: selected.website ? "✅ Attivo" : "❌ Assente", color: selected.website ? "#34d399" : "#ef4444", icon: Globe },
-                  { label: "Social", value: selected.instagram ? "✅ IG" : "❌ No", color: selected.instagram ? "#E4405F" : "#6b7280", icon: Instagram },
-                  { label: "Telefono", value: selected.phone ? "✅ OK" : "⚠️ N/D", color: selected.phone ? "#34d399" : "#f59e0b", icon: Phone },
-                  { label: "Rating", value: selected.google_rating > 0 ? `⭐ ${selected.google_rating}` : "N/D", color: selected.google_rating >= 4 ? "#fbbf24" : "#6b7280", icon: Star },
-                ].map((ind, idx) => (
+                {(() => {
+                  const igHandle = selected.instagram || enrichedData?.instagram;
+                  const igLoading = enrichingIg && !igHandle;
+                  return [
+                    { label: "Sito Web", value: selected.website ? "✅ Attivo" : "❌ Assente", color: selected.website ? "#34d399" : "#ef4444", icon: Globe },
+                    { label: "Instagram", value: igLoading ? "🔍 Cerca..." : igHandle ? `@${igHandle}` : "❌ No", color: igHandle ? "#E4405F" : igLoading ? "#f59e0b" : "#6b7280", icon: Instagram },
+                    { label: "Telefono", value: selected.phone ? "✅ OK" : "⚠️ N/D", color: selected.phone ? "#34d399" : "#f59e0b", icon: Phone },
+                    { label: "Rating", value: selected.google_rating > 0 ? `⭐ ${selected.google_rating}` : "N/D", color: selected.google_rating >= 4 ? "#fbbf24" : "#6b7280", icon: Star },
+                  ];
+                })().map((ind, idx) => (
                   <div key={idx} className="p-2 rounded-xl text-center" style={{ background: `${ind.color}08`, border: `1px solid ${ind.color}20` }}>
                     <ind.icon className="w-3 h-3 mx-auto mb-0.5" style={{ color: ind.color }} />
                     <p className="text-[7px] font-bold uppercase" style={{ color: "#6b7280" }}>{ind.label}</p>
-                    <p className="text-[9px] font-bold" style={{ color: ind.color }}>{ind.value}</p>
+                    <p className="text-[8px] font-bold truncate" style={{ color: ind.color }}>{ind.value}</p>
                   </div>
                 ))}
               </div>
 
               {/* Contact & research links */}
               <div className="flex gap-1.5 mt-3 flex-wrap">
+                {/* Instagram direct link — enriched */}
+                {(() => {
+                  const igHandle = selected.instagram || enrichedData?.instagram;
+                  if (igHandle) return (
+                    <a href={`https://instagram.com/direct/t/${igHandle.replace("@", "")}`} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
+                      style={{ background: "rgba(228,64,95,0.15)", border: "1px solid rgba(228,64,95,0.3)", color: "#E4405F" }}>
+                      <Instagram className="w-3 h-3" /> @{igHandle.replace("@", "")}
+                    </a>
+                  );
+                  if (enrichingIg) return (
+                    <span className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
+                      style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", color: "#f59e0b" }}>
+                      <Loader2 className="w-3 h-3 animate-spin" /> Cerco IG...
+                    </span>
+                  );
+                  return null;
+                })()}
                 {selected.phone && (
                   <a href={`https://wa.me/${selected.phone.replace(/\s+/g, "").replace("+", "")}`} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-semibold"
@@ -741,14 +813,25 @@ export default function LeadsPage() {
                   )}
 
                   {/* ── Instagram DM ── */}
-                  {activeChannel === "instagram" && (
+                  {activeChannel === "instagram" && (() => {
+                    const igHandle = selected.instagram || enrichedData?.instagram;
+                    return (
                     <div className="rounded-2xl overflow-hidden" style={{ background: "#000" }}>
-                      <div className="flex items-center gap-2 px-3 py-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>E</div>
-                        <div>
-                          <p className="text-[11px] font-semibold" style={{ color: "#f5f5f5" }}>empire.ai.group</p>
-                          <p className="text-[8px]" style={{ color: "#a8a8a8" }}>Attivo/a ora</p>
+                      <div className="flex items-center justify-between px-3 py-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F, #FCAF45)", color: "#fff" }}>E</div>
+                          <div>
+                            <p className="text-[11px] font-semibold" style={{ color: "#f5f5f5" }}>empire.ai.group</p>
+                            <p className="text-[8px]" style={{ color: "#a8a8a8" }}>Attivo/a ora</p>
+                          </div>
                         </div>
+                        {igHandle && (
+                          <div className="flex items-center gap-1 px-2 py-1 rounded-full" style={{ background: "rgba(228,64,95,0.15)", border: "1px solid rgba(228,64,95,0.25)" }}>
+                            <Instagram className="w-2.5 h-2.5" style={{ color: "#E4405F" }} />
+                            <span className="text-[8px] font-bold" style={{ color: "#E4405F" }}>@{igHandle.replace("@", "")}</span>
+                            <CheckCircle className="w-2.5 h-2.5" style={{ color: "#34d399" }} />
+                          </div>
+                        )}
                       </div>
                       <div className="p-3 flex justify-end">
                         <div className="max-w-[80%] rounded-2xl rounded-br-sm px-3.5 py-2.5" style={{ background: "#3797f0" }}>
@@ -761,7 +844,8 @@ export default function LeadsPage() {
                         <p className="text-[8px] text-right" style={{ color: "#666" }}>Visto</p>
                       </div>
                     </div>
-                  )}
+                    );
+                  })()}
 
                   {/* ── Email Professional ── */}
                   {activeChannel === "email" && (() => {
@@ -834,14 +918,19 @@ export default function LeadsPage() {
                         <Send className="w-4 h-4" /> Invia su WA
                       </motion.a>
                     )}
-                    {activeChannel === "instagram" && selected.instagram && (
-                      <motion.a whileTap={{ scale: 0.97 }}
-                        href={`https://instagram.com/${selected.instagram.replace("@", "")}`}
-                        target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F)", color: "#fff" }}>
-                        <Instagram className="w-4 h-4" /> Apri IG
-                      </motion.a>
-                    )}
+                    {activeChannel === "instagram" && (() => {
+                      const igHandle = selected.instagram || enrichedData?.instagram;
+                      if (!igHandle) return null;
+                      const cleanHandle = igHandle.replace("@", "");
+                      return (
+                        <motion.a whileTap={{ scale: 0.97 }}
+                          href={`https://instagram.com/direct/t/${cleanHandle}`}
+                          target="_blank" rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold" style={{ background: "linear-gradient(135deg, #833AB4, #E4405F)", color: "#fff" }}>
+                          <Send className="w-4 h-4" /> Invia DM @{cleanHandle}
+                        </motion.a>
+                      );
+                    })()}
                     {activeChannel === "email" && (
                       <motion.a whileTap={{ scale: 0.97 }}
                         href={`mailto:${selected.email || ""}?subject=${encodeURIComponent(generatedMessage.split("\n").find(l => l.toLowerCase().startsWith("oggetto:"))?.replace(/^oggetto:\s*/i, "") || "Proposta Empire AI")}&body=${encodeURIComponent(generatedMessage)}`}
