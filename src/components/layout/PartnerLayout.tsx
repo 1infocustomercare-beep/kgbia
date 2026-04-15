@@ -9,7 +9,7 @@ import {
   Eye, Presentation, Sparkles,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useRef, useCallback } from "react";
+
 
 /* ═══ Context for demo mode across all partner pages ═══ */
 const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
