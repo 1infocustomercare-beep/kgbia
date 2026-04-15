@@ -108,28 +108,41 @@ async function searchOverpass(sector: string, geo: { lat: number; lon: number; b
   const tags = SECTOR_OVERPASS[sector];
   if (!tags || !tags.length) return [];
 
-  // Use a smaller search radius (~5km around center) to avoid Overpass timeouts on big cities
-  const radius = 5000;
+  // Use a smaller radius for big cities to keep Overpass fast
+  const radius = 3000;
   const around = `(around:${radius},${geo.lat},${geo.lon})`;
 
-  // Build Overpass QL: query nodes & ways with name + sector tags
-  const tagQueries = tags.slice(0, 2).map(t => {
-    if (t.includes("~")) {
-      const [key, val] = t.split("~");
-      return `node[${key}~${val}]["name"]${around};\nway[${key}~${val}]["name"]${around};`;
-    }
-    // Simple tag existence (e.g. "cuisine", "sport")
-    return `node["${t}"]["name"]${around};\nway["${t}"]["name"]${around};`;
-  }).join("\n");
+  // Only query nodes (faster) with first tag only
+  const t = tags[0];
+  let tagQuery: string;
+  if (t.includes("~")) {
+    const [key, val] = t.split("~");
+    tagQuery = `node[${key}~${val}]["name"]${around};`;
+  } else {
+    tagQuery = `node["${t}"]["name"]${around};`;
+  }
 
-  const query = `[out:json][timeout:10];\n(\n${tagQueries}\n);\nout center tags 100;`;
+  const query = `[out:json][timeout:8];(${tagQuery});out tags 80;`;
 
   try {
-    const resp = await fetch("https://overpass-api.de/api/interpreter", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `data=${encodeURIComponent(query)}`,
-    });
+    // Try main Overpass, fallback to mirror
+    let resp: Response;
+    try {
+      resp = await fetch("https://overpass-api.de/api/interpreter", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `data=${encodeURIComponent(query)}`,
+        signal: AbortSignal.timeout(7000),
+      });
+    } catch {
+      // Fallback mirror
+      resp = await fetch("https://overpass.kumi.systems/api/interpreter", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `data=${encodeURIComponent(query)}`,
+        signal: AbortSignal.timeout(7000),
+      });
+    }
     if (!resp.ok) {
       console.error(`Overpass error: ${resp.status}`);
       return [];
