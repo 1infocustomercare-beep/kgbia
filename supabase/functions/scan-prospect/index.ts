@@ -127,11 +127,76 @@ REGOLE CRITICHE:
 - TONO: Diretto, professionale, NO spam`,
 };
 
+/* ═══ COUNTRY → LANGUAGE MAPPING ═══ */
+const COUNTRY_LANGUAGES: Record<string, { lang: string; greeting: string }> = {
+  IT: { lang: "Italiano", greeting: "Buongiorno" },
+  US: { lang: "English", greeting: "Hi" },
+  GB: { lang: "English", greeting: "Hi" },
+  UK: { lang: "English", greeting: "Hi" },
+  FR: { lang: "Français", greeting: "Bonjour" },
+  DE: { lang: "Deutsch", greeting: "Hallo" },
+  ES: { lang: "Español", greeting: "Hola" },
+  PT: { lang: "Português", greeting: "Olá" },
+  CH: { lang: "Deutsch", greeting: "Hallo" },
+  AE: { lang: "English", greeting: "Hello" },
+  AU: { lang: "English", greeting: "G'day" },
+  BR: { lang: "Português Brasileiro", greeting: "Olá" },
+  JP: { lang: "日本語", greeting: "こんにちは" },
+  NL: { lang: "Nederlands", greeting: "Hallo" },
+  BE: { lang: "Français", greeting: "Bonjour" },
+  AT: { lang: "Deutsch", greeting: "Hallo" },
+  MX: { lang: "Español", greeting: "Hola" },
+  AR: { lang: "Español", greeting: "Hola" },
+  CO: { lang: "Español", greeting: "Hola" },
+  CL: { lang: "Español", greeting: "Hola" },
+  CA: { lang: "English", greeting: "Hi" },
+  IN: { lang: "English", greeting: "Hello" },
+  CN: { lang: "中文", greeting: "您好" },
+  KR: { lang: "한국어", greeting: "안녕하세요" },
+  RU: { lang: "Русский", greeting: "Здравствуйте" },
+  PL: { lang: "Polski", greeting: "Dzień dobry" },
+  SE: { lang: "Svenska", greeting: "Hej" },
+  NO: { lang: "Norsk", greeting: "Hei" },
+  DK: { lang: "Dansk", greeting: "Hej" },
+  FI: { lang: "Suomi", greeting: "Hei" },
+  GR: { lang: "Ελληνικά", greeting: "Γεια σας" },
+  TR: { lang: "Türkçe", greeting: "Merhaba" },
+  SA: { lang: "العربية", greeting: "مرحبا" },
+  IL: { lang: "עברית", greeting: "שלום" },
+  TH: { lang: "ภาษาไทย", greeting: "สวัสดี" },
+};
+
+function detectLanguage(country?: string, leadCity?: string): { lang: string; greeting: string } {
+  if (country && COUNTRY_LANGUAGES[country.toUpperCase()]) {
+    return COUNTRY_LANGUAGES[country.toUpperCase()];
+  }
+  // Try to detect from city name patterns
+  if (leadCity) {
+    const cityLower = leadCity.toLowerCase();
+    if (/paris|lyon|marseille|toulouse|nice|bordeaux|lille|strasbourg/i.test(cityLower)) return COUNTRY_LANGUAGES.FR;
+    if (/london|manchester|birmingham|liverpool|edinburgh|leeds|bristol/i.test(cityLower)) return COUNTRY_LANGUAGES.GB;
+    if (/new york|los angeles|chicago|houston|miami|dallas|san francisco|boston/i.test(cityLower)) return COUNTRY_LANGUAGES.US;
+    if (/berlin|münchen|hamburg|frankfurt|köln|düsseldorf|stuttgart/i.test(cityLower)) return COUNTRY_LANGUAGES.DE;
+    if (/madrid|barcelona|valencia|sevilla|málaga|bilbao|granada/i.test(cityLower)) return COUNTRY_LANGUAGES.ES;
+    if (/lisboa|porto|faro|coimbra|braga/i.test(cityLower)) return COUNTRY_LANGUAGES.PT;
+    if (/tokyo|osaka|kyoto|yokohama|nagoya|sapporo/i.test(cityLower)) return COUNTRY_LANGUAGES.JP;
+    if (/são paulo|rio|brasília|salvador|fortaleza|curitiba/i.test(cityLower)) return COUNTRY_LANGUAGES.BR;
+    if (/dubai|abu dhabi|sharjah/i.test(cityLower)) return COUNTRY_LANGUAGES.AE;
+    if (/sydney|melbourne|brisbane|perth|adelaide/i.test(cityLower)) return COUNTRY_LANGUAGES.AU;
+    if (/zürich|bern|genève|basel|lausanne/i.test(cityLower)) return COUNTRY_LANGUAGES.CH;
+    if (/amsterdam|rotterdam|den haag|utrecht/i.test(cityLower)) return COUNTRY_LANGUAGES.NL;
+  }
+  // Default to Italian
+  return COUNTRY_LANGUAGES.IT;
+}
+
 /* ═══ SYSTEM PROMPT BUILDER ═══ */
-function buildSystemPrompt(sector: string, formatRules: string, demoLink: string, allDemosLink: string, contactInfo: string): string {
+function buildSystemPrompt(sector: string, formatRules: string, demoLink: string, allDemosLink: string, contactInfo: string, language: string): string {
   const painPoints = SECTOR_PAIN_POINTS[sector] || SECTOR_PAIN_POINTS[sector.toLowerCase()] || `Settore: ${sector}. Analizza i pain points specifici del settore.`;
 
   return `Sei un Senior Business Development Consultant di Empire AI Group — partner di trasformazione digitale per attività locali e PMI. Il tuo approccio è CONSULENZIALE: porti valore prima di chiedere qualcosa.
+
+LINGUA OBBLIGATORIA: Scrivi il messaggio INTERAMENTE in ${language}. Ogni parola del messaggio finale DEVE essere in ${language} — saluti, corpo, firma, tutto. NON mescolare lingue. Se la lingua è diversa dall'italiano, adatta anche il tono, le espressioni idiomatiche e le convenzioni culturali del mercato locale.
 
 ${PORTFOLIO_CATALOG}
 
@@ -156,7 +221,7 @@ LINK DISPONIBILI:
 - Catalogo completo: ${allDemosLink || "{{ALL_DEMOS_LINK}}"}
 - Contatto: ${contactInfo || "info@empireaigroup.com"}
 
-IMPORTANTE: Il messaggio generato deve essere PRONTO DA COPIARE E INCOLLARE. Nessuna nota, nessuna spiegazione, nessun placeholder — solo il messaggio finale.`;
+IMPORTANTE: Il messaggio generato deve essere PRONTO DA COPIARE E INCOLLARE. Nessuna nota, nessuna spiegazione, nessun placeholder — solo il messaggio finale. TUTTO in ${language}.`;
 }
 
 serve(async (req) => {
