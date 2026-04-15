@@ -49,18 +49,17 @@ function buildOverpassQuery(lat: number, lon: number, sector: string, radiusMete
   const around = `(around:${radiusMeters},${lat},${lon})`;
   const lines: string[] = [];
 
-  // Build union of nwr queries for each tag type
+  // Build compact regex filter per tag type to reduce query complexity
   for (const [tagKey, values] of Object.entries(tags)) {
-    for (const val of values as string[]) {
-      if (nameFilter) {
-        lines.push(`nwr["${tagKey}"="${val}"]["name"~"${nameFilter}",i]${around};`);
-      } else {
-        lines.push(`nwr["${tagKey}"="${val}"]["name"]${around};`);
-      }
+    const regex = (values as string[]).join("|");
+    if (nameFilter) {
+      lines.push(`nwr["${tagKey}"~"^(${regex})$"]["name"~"${nameFilter}",i]${around};`);
+    } else {
+      lines.push(`nwr["${tagKey}"~"^(${regex})$"]["name"]${around};`);
     }
   }
 
-  return `[out:json][timeout:25];(\n${lines.join("\n")}\n);out center tags 80;`;
+  return `[out:json][timeout:20];(\n${lines.join("\n")}\n);out center tags 60;`;
 }
 
 /* ─── Query Overpass API ─── */
