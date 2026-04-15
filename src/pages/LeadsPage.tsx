@@ -242,6 +242,48 @@ export default function LeadsPage() {
     toast.success(`${lead.name} aggiunto manualmente`);
   };
 
+  /* ─── Enrich lead social data ─── */
+  const enrichLeadSocial = useCallback(async (lead: Lead & { _score: number; _sector: string }) => {
+    if (lead.instagram) {
+      setEnrichedData({ instagram: lead.instagram, source: "existing" });
+      return lead.instagram;
+    }
+    setEnrichingIg(true);
+    setEnrichedData(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("enrich-lead-social", {
+        body: { website: lead.website || "", name: lead.name, city: lead.city },
+      });
+      if (!error && data?.success) {
+        const enriched: any = {};
+        if (data.instagram) enriched.instagram = data.instagram;
+        if (data.email && !lead.email) enriched.email = data.email;
+        if (data.phone && !lead.phone) enriched.phone = data.phone;
+        if (data.facebook && !lead.facebook) enriched.facebook = data.facebook;
+        enriched.source = data.source || "enriched";
+        setEnrichedData(enriched);
+        // Update the lead in results
+        if (data.instagram || data.email || data.phone) {
+          setResults(prev => prev.map(r => 
+            r.name === lead.name && r.full_address === lead.full_address
+              ? { ...r, instagram: data.instagram || r.instagram, email: data.email || r.email, phone: data.phone || r.phone, facebook: data.facebook || r.facebook }
+              : r
+          ));
+          if (data.instagram) {
+            lead.instagram = data.instagram;
+            toast.success(`📸 Instagram trovato: @${data.instagram}`, { description: `Fonte: ${data.source === "website_scrape" ? "Sito web" : "AI"}` });
+          }
+        }
+        return data.instagram || null;
+      }
+    } catch (e) {
+      console.log("Enrich failed:", e);
+    } finally {
+      setEnrichingIg(false);
+    }
+    return null;
+  }, []);
+
   /* ─── Select + auto-generate ─── */
   const handleSelect = useCallback(async (lead: Lead & { _score: number; _sector: string }, channelOverride?: string) => {
     setSelected(lead);
@@ -250,11 +292,17 @@ export default function LeadsPage() {
     setGeneratingMsg(true);
     setGeneratedMessage(null);
 
+    // Enrich social data in parallel with message generation
+    const enrichPromise = enrichLeadSocial(lead);
+
     try {
       const sectorLabel = INDUSTRY_CONFIGS[lead._sector as keyof typeof INDUSTRY_CONFIGS]?.label || lead._sector;
       const demoLink = `${window.location.origin}${getDemoSiteUrl(lead._sector)}`;
       const portfolioRef = PORTFOLIO_REFS[lead._sector] || "il nostro portfolio";
-      const ig = lead.instagram?.replace("@", "") || "";
+      
+      // Wait for enrichment to get IG handle
+      const igHandle = await enrichPromise;
+      const ig = igHandle || lead.instagram?.replace("@", "") || "";
 
       const { data, error } = await supabase.functions.invoke("scan-prospect", {
         body: {
@@ -281,7 +329,7 @@ export default function LeadsPage() {
     } finally {
       setGeneratingMsg(false);
     }
-  }, [activeChannel]);
+  }, [activeChannel, enrichLeadSocial]);
 
   const copyMessage = () => {
     if (generatedMessage) {
