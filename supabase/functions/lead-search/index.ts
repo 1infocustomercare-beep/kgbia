@@ -119,7 +119,7 @@ async function searchOverpass(sector: string, geo: { lat: number; lon: number; b
       return `node[${key}~${val}]["name"]${around};\nway[${key}~${val}]["name"]${around};`;
     }
     // Simple tag existence (e.g. "cuisine", "sport")
-    return `node["${t}"]["name"](${bb});\nway["${t}"]["name"](${bb});`;
+    return `node["${t}"]["name"]${around};\nway["${t}"]["name"]${around};`;
   }).join("\n");
 
   const query = `[out:json][timeout:15];\n(\n${tagQueries}\n);\nout center tags 200;`;
