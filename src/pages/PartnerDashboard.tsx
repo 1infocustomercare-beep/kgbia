@@ -827,33 +827,65 @@ const PartnerDashboard = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(ellipse, #7c3aed, transparent 70%)", filter: "blur(80px)" }} />
           </div>
           <div className="relative z-10 max-w-xl mx-auto px-4 space-y-5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider"
-              style={{ background: "rgba(167,139,250,0.12)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
-              <Send className="w-3 h-3" /> Pronto?
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
-              Trova i tuoi prossimi clienti<br />
-              <span style={{ color: "#14b8a6" }}>con un click.</span>
-            </h2>
-            <p className="text-sm" style={{ color: "#9ca3af" }}>Usa LeadEngine Scout per trovare, analizzare e contattare lead reali con messaggi AI personalizzati.</p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <motion.button onClick={() => navigate("/partner/leads")} whileTap={{ scale: 0.97 }}
-                className="px-6 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
-                style={{ background: "linear-gradient(135deg, #14b8a6, #10b981)", color: "#ffffff" }}>
-                <Target className="w-4 h-4" /> Apri LeadEngine Scout
-              </motion.button>
-              <motion.button onClick={() => navigate("/home?from=partner")} whileTap={{ scale: 0.97 }}
-                className="px-6 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
-                style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
-                <ExternalLink className="w-4 h-4" /> Mostra al Cliente
-              </motion.button>
-            </div>
+            {demoMode ? (
+              <>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider"
+                  style={{ background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.25)", color: "#f59e0b" }}>
+                  <Sparkles className="w-3 h-3" /> Inizia Ora
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+                  Risultati Garantiti<br />
+                  <span style={{ color: "#f59e0b" }}>dal primo mese.</span>
+                </h2>
+                <p className="text-sm" style={{ color: "#9ca3af" }}>
+                  Setup completo in 24h. Assistenza dedicata. Nessun vincolo. Rateizzazione fino a 6 mesi disponibile.
+                </p>
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { value: "24h", label: "Setup Completo" },
+                    { value: "7/7", label: "Supporto Incluso" },
+                    { value: "0%", label: "TAN Rateizzazione" },
+                  ].map((s, i) => (
+                    <div key={i} className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                      <p className="text-lg font-bold text-white">{s.value}</p>
+                      <p className="text-[9px]" style={{ color: "#9ca3af" }}>{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider"
+                  style={{ background: "rgba(167,139,250,0.12)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
+                  <Send className="w-3 h-3" /> Pronto?
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+                  Trova i tuoi prossimi clienti<br />
+                  <span style={{ color: "#14b8a6" }}>con un click.</span>
+                </h2>
+                <p className="text-sm" style={{ color: "#9ca3af" }}>Usa LeadEngine Scout per trovare, analizzare e contattare lead reali con messaggi AI personalizzati.</p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <motion.button onClick={() => navigate("/partner/leads")} whileTap={{ scale: 0.97 }}
+                    className="px-6 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
+                    style={{ background: "linear-gradient(135deg, #14b8a6, #10b981)", color: "#ffffff" }}>
+                    <Target className="w-4 h-4" /> Apri LeadEngine Scout
+                  </motion.button>
+                  <motion.button onClick={() => navigate("/home?from=partner")} whileTap={{ scale: 0.97 }}
+                    className="px-6 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
+                    style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
+                    <ExternalLink className="w-4 h-4" /> Mostra al Cliente
+                  </motion.button>
+                </div>
+              </>
+            )}
           </div>
         </section>
 
         <footer className="py-8 text-center" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="w-12 h-0.5 rounded-full mx-auto mb-4" style={{ background: "rgba(255,255,255,0.1)" }} />
-          <p className="text-[11px]" style={{ color: "#6b7280" }}>Riservato ai partner commerciali — Empire © {new Date().getFullYear()}</p>
+          <p className="text-[11px]" style={{ color: "#6b7280" }}>
+            {demoMode ? "Empire AI Group — Soluzioni digitali per ogni settore" : `Riservato ai partner commerciali — Empire © ${new Date().getFullYear()}`}
+          </p>
         </footer>
       </div>
 
