@@ -61,7 +61,7 @@ export default function PartnerLayout() {
         </div>
 
         {/* ═══ SWITCH LIVE / PRESENTAZIONE — toggle slide ═══ */}
-        <button onClick={handleToggle}
+        <button onClick={() => handleToggle(!demoMode)}
           className="relative flex items-center w-[120px] h-8 rounded-full cursor-pointer transition-colors duration-300"
           style={{
             background: demoMode
