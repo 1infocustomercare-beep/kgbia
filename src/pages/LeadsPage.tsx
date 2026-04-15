@@ -430,6 +430,14 @@ export default function LeadsPage() {
   const sectorConfig = selected ? INDUSTRY_CONFIGS[selected._sector as keyof typeof INDUSTRY_CONFIGS] : null;
   const previewScreens = selected ? getPreviewScreens(selected._sector) : [];
 
+  // Quick search trigger after state updates
+  useEffect(() => {
+    if (pendingQuickSearch.current && city === pendingQuickSearch.current.city && sector === pendingQuickSearch.current.sector) {
+      pendingQuickSearch.current = null;
+      handleSearch();
+    }
+  }, [city, sector]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const inputStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" };
 
   // Source stats
