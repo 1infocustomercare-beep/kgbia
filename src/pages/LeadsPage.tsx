@@ -1243,6 +1243,7 @@ export default function LeadsPage() {
               ) : null}
             </div>
           </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
