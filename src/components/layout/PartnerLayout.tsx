@@ -54,20 +54,22 @@ export default function PartnerLayout() {
       {/* ═══ TOP BAR ═══ */}
       <div className="sticky top-0 z-50 flex items-center justify-between px-3 h-14 border-b border-border/50 safe-top bg-background/95 backdrop-blur-xl">
         <div className="flex items-center gap-2">
-          <button onClick={() => navigate("/home")} className="flex items-center gap-1 text-sm font-medium" style={{ color: "#a78bfa" }}>
+          <button onClick={() => navigate("/home")} className="flex items-center gap-1 text-sm font-medium text-primary">
             <ArrowLeft className="w-4 h-4" />
           </button>
           <span className="text-sm font-bold text-foreground">Partner</span>
         </div>
 
         {/* ═══ SWITCH LIVE / PRESENTAZIONE ═══ */}
-        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full"
-          style={{
-            background: demoMode ? "rgba(245,158,11,0.1)" : "rgba(167,139,250,0.08)",
-            border: `1px solid ${demoMode ? "rgba(245,158,11,0.25)" : "rgba(167,139,250,0.15)"}`,
-          }}>
-          {demoMode ? <Presentation className="w-3.5 h-3.5" style={{ color: "#f59e0b" }} /> : <Eye className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />}
-          <span className="text-[10px] font-semibold" style={{ color: demoMode ? "#f59e0b" : "#a78bfa" }}>
+        <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border ${
+          demoMode
+            ? "bg-amber-500/10 border-amber-500/25"
+            : "bg-primary/10 border-primary/20"
+        }`}>
+          {demoMode
+            ? <Presentation className="w-3.5 h-3.5 text-amber-500" />
+            : <Eye className="w-3.5 h-3.5 text-primary" />}
+          <span className={`text-[10px] font-semibold ${demoMode ? "text-amber-500" : "text-primary"}`}>
             {demoMode ? "DEMO" : "LIVE"}
           </span>
           <Switch checked={demoMode} onCheckedChange={handleToggle}
@@ -77,8 +79,7 @@ export default function PartnerLayout() {
         <div className="flex items-center gap-1.5">
           <DarkModeToggle />
           <button onClick={async () => { await signOut(); navigate("/auth"); }}
-            className="flex items-center justify-center w-8 h-8 rounded-full"
-            style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }}>
+            className="flex items-center justify-center w-8 h-8 rounded-full border border-border text-muted-foreground hover:text-foreground transition-colors">
             <LogOut className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -99,12 +100,11 @@ export default function PartnerLayout() {
                 className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all relative min-w-[52px]">
                 {active && (
                   <motion.div layoutId="partner-nav-indicator"
-                    className="absolute -top-1 w-8 h-1 rounded-full"
-                    style={{ background: "#a78bfa" }}
+                    className="absolute -top-1 w-8 h-1 rounded-full bg-primary"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }} />
                 )}
-                <item.icon className="w-5 h-5" style={{ color: active ? "#a78bfa" : "#6b7280" }} />
-                <span className="text-[9px] font-semibold" style={{ color: active ? "#a78bfa" : "#6b7280" }}>{item.label}</span>
+                <item.icon className={`w-5 h-5 ${active ? "text-primary" : "text-muted-foreground"}`} />
+                <span className={`text-[9px] font-semibold ${active ? "text-primary" : "text-muted-foreground"}`}>{item.label}</span>
               </button>
             );
           })}
