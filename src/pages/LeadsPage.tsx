@@ -1184,39 +1184,111 @@ export default function LeadsPage() {
         )}
       </AnimatePresence>
 
-      {/* Empty state */}
-      {results.length === 0 && !loading && (
-        <div className="text-center py-12">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3" style={{ background: "rgba(20,184,166,0.08)" }}>
-            <Target className="w-6 h-6" style={{ color: "#14b8a6" }} />
+      {/* Loading state */}
+      {loading && results.length === 0 && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 space-y-4">
+          <div className="relative w-16 h-16 mx-auto">
+            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+              className="absolute inset-0 rounded-full" style={{ border: "3px solid rgba(20,184,166,0.1)", borderTop: "3px solid #14b8a6" }} />
+            <div className="absolute inset-2 rounded-full flex items-center justify-center" style={{ background: "rgba(20,184,166,0.06)" }}>
+              <Search className="w-5 h-5" style={{ color: "#14b8a6" }} />
+            </div>
           </div>
-          <p className="text-sm font-bold text-white mb-1">Trova lead ovunque nel mondo</p>
-          <p className="text-[11px] max-w-sm mx-auto mb-4" style={{ color: "#6b7280" }}>
-            Scegli un Paese, inserisci la città e il settore. La ricerca multi-fonte parte automaticamente su Google Maps, OSM, Overpass e altre fonti.
-          </p>
-          <div className="flex flex-wrap justify-center gap-2 mb-4">
-            {["🗺️ Google Maps", "🌍 OpenStreetMap", "📍 Photon", "🔎 Overpass", "📸 Instagram AI"].map(src => (
-              <span key={src} className="text-[9px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "rgba(20,184,166,0.08)", color: "#14b8a6" }}>
-                {src}
+          <div>
+            <p className="text-sm font-bold text-white">Scansione in corso</p>
+            <motion.p className="text-[10px] mt-1" style={{ color: "#6b7280" }}
+              animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>
+              Analizzando Google Maps · OSM · Overpass · Photon · Instagram...
+            </motion.p>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Empty state — full sector picker */}
+      {results.length === 0 && !loading && (
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+          className="py-8 space-y-5">
+
+          {/* Header */}
+          <div className="text-center">
+            <div className="relative w-14 h-14 mx-auto mb-3">
+              <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+                className="absolute inset-0 rounded-full" style={{ border: "2px dashed rgba(20,184,166,0.2)" }} />
+              <div className="absolute inset-1 rounded-full flex items-center justify-center" style={{ background: "rgba(20,184,166,0.06)" }}>
+                <Target className="w-6 h-6" style={{ color: "#14b8a6" }} />
+              </div>
+            </div>
+            <p className="text-base font-bold text-white">Seleziona il settore e cerca</p>
+            <p className="text-[11px] mt-1 max-w-xs mx-auto" style={{ color: "#6b7280" }}>
+              Scegli un settore, inserisci la città sopra e premi <span className="font-bold text-white">Cerca</span>. Oppure tap su una categoria per impostarla.
+            </p>
+          </div>
+
+          {/* Source engines */}
+          <div className="flex flex-wrap justify-center gap-1.5">
+            {[
+              { icon: "🗺️", label: "Google Maps", color: "#4285F4" },
+              { icon: "🌍", label: "OSM", color: "#7EBC6F" },
+              { icon: "📍", label: "Photon", color: "#F59E0B" },
+              { icon: "🔎", label: "Overpass", color: "#06B6D4" },
+              { icon: "📸", label: "IG AI", color: "#E4405F" },
+            ].map(src => (
+              <span key={src.label} className="text-[8px] px-2 py-1 rounded-lg font-bold"
+                style={{ background: `${src.color}10`, border: `1px solid ${src.color}20`, color: src.color }}>
+                {src.icon} {src.label}
               </span>
             ))}
           </div>
-          {/* Quick start suggestions */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {[
-              { city: "Roma", sector: "food", label: "🍕 Ristoranti a Roma" },
-              { city: "Milano", sector: "beauty", label: "💇 Beauty a Milano" },
-              { city: "London", sector: "fitness", label: "🏋️ Gym a Londra" },
-              { city: "Dubai", sector: "hospitality", label: "🏨 Hotel a Dubai" },
-            ].map((suggestion, i) => (
-              <button key={i} onClick={() => { setCity(suggestion.city); setSector(suggestion.sector); setTimeout(() => handleSearch(), 100); }}
-                className="px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all hover:scale-105"
-                style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.15)", color: "#c4b5fd" }}>
-                {suggestion.label}
-              </button>
-            ))}
+
+          {/* ALL sectors grid — clickable */}
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-center mb-2.5" style={{ color: "#4b5563" }}>
+              ⚡ Scegli settore — tap per impostare
+            </p>
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5 max-h-[320px] overflow-y-auto pr-1">
+              {SECTOR_OPTIONS.map((s) => {
+                const isActive = sector === s.value;
+                return (
+                  <motion.button key={s.value} whileTap={{ scale: 0.95 }}
+                    onClick={() => { setSector(s.value); toast.success(`Settore: ${s.label}`, { description: "Inserisci la città e premi Cerca" }); }}
+                    className="flex items-center gap-1.5 px-2 py-2 rounded-xl text-left transition-all"
+                    style={{
+                      background: isActive ? "rgba(20,184,166,0.12)" : "rgba(255,255,255,0.02)",
+                      border: `1px solid ${isActive ? "rgba(20,184,166,0.35)" : "rgba(255,255,255,0.06)"}`,
+                    }}>
+                    <span className="text-sm">{s.label.split(" ")[0]}</span>
+                    <span className="text-[8px] font-semibold truncate" style={{ color: isActive ? "#5eead4" : "#9ca3af" }}>
+                      {s.label.split(" ").slice(1).join(" ")}
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+
+          {/* Quick start with city */}
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-center mb-2" style={{ color: "#4b5563" }}>
+              🚀 Ricerca rapida — un tap
+            </p>
+            <div className="grid grid-cols-2 gap-1.5 max-w-sm mx-auto">
+              {[
+                { city: "Roma", sector: "food", emoji: "🍕", label: "Ristoranti Roma" },
+                { city: "Milano", sector: "beauty", emoji: "💇", label: "Beauty Milano" },
+                { city: "London", sector: "fitness", emoji: "🏋️", label: "Gym Londra" },
+                { city: "Dubai", sector: "hospitality", emoji: "🏨", label: "Hotel Dubai" },
+              ].map((s, i) => (
+                <motion.button key={i} whileTap={{ scale: 0.95 }}
+                  onClick={() => { pendingQuickSearch.current = { city: s.city, sector: s.sector }; setCity(s.city); setSector(s.sector); }}
+                  className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-left"
+                  style={{ background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.12)" }}>
+                  <span className="text-sm">{s.emoji}</span>
+                  <span className="text-[9px] font-bold" style={{ color: "#c4b5fd" }}>{s.label}</span>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       )}
     </div>
   );
