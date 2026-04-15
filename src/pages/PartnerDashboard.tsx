@@ -795,12 +795,6 @@ const PartnerDashboard = () => {
                       <Target className="w-4 h-4" style={{ color: "#14b8a6" }} />
                       <span style={{ color: "#5eead4" }}>Lead Scout</span>
                     </button>
-                    <button onClick={() => navigate("/partner/content-ai")}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
-                      style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.25)" }}>
-                      <Wand2 className="w-4 h-4" style={{ color: "#a855f7" }} />
-                      <span style={{ color: "#c084fc" }}>Content AI</span>
-                    </button>
                   </>
                 )}
                 <button onClick={() => navigate("/home?from=partner")}
