@@ -588,7 +588,7 @@ export default function LeadsPage() {
           <div className="col-span-8 sm:col-span-2 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
             <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Nome, zona..." className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+              placeholder="es. Trastevere, Brera, nome..." className="w-full pl-9 pr-3 py-3 rounded-xl text-[10px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
           <div className="col-span-4 sm:col-span-2">
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleSearch()} disabled={loading}
