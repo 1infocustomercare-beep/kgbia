@@ -206,6 +206,8 @@ const PartnerDashboard = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { signOut, isTeamLeader, user } = useAuth();
+  const { theme: currentTheme } = useTheme();
+  const isDark = currentTheme === "dark";
   const [showROI, setShowROI] = useState(false);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
