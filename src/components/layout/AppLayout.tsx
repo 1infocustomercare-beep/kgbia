@@ -87,7 +87,7 @@ export default function AppLayout() {
 
   return (
     <SidebarProvider>
-      <div className={`min-h-[100dvh] flex w-full relative overflow-hidden ${isDark ? 'landing-dark' : ''}`}>
+      <div className={`min-h-[100dvh] flex w-full relative overflow-hidden admin-panel ${isDark ? 'landing-dark' : ''}`}>
         {/* Opaque base — exact sector bgGradient in dark, light bg in light */}
         <div className="fixed inset-0 z-0" style={{ background: isDark ? layout.bgGradient : 'hsl(var(--background))' }} />
 
