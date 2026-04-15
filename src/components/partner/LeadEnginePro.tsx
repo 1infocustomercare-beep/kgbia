@@ -616,14 +616,22 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
                 {generatingMsg && <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: "#34d399" }} />}
               </div>
 
-              {/* Channel selector */}
+              {/* Channel selector — auto-regenerates message */}
               <div className="flex gap-1.5">
                 {([
                   { id: "whatsapp" as const, icon: MessageCircle, label: "WhatsApp", color: "#25D366" },
-                  { id: "instagram" as const, icon: Instagram, label: "Instagram", color: "#E4405F" },
-                  { id: "email" as const, icon: Mail, label: "Email", color: "#3B82F6" },
+                  { id: "instagram" as const, icon: Instagram, label: "Instagram DM", color: "#E4405F" },
+                  { id: "email" as const, icon: Mail, label: "Email Pro", color: "#3B82F6" },
                 ] as const).map(ch => (
-                  <button key={ch.id} onClick={() => setActiveChannel(ch.id)}
+                  <button key={ch.id} onClick={() => {
+                    if (activeChannel !== ch.id) {
+                      setActiveChannel(ch.id);
+                      // Auto-regenerate message for new channel
+                      if (selected && !generatingMsg) {
+                        setTimeout(() => handleSelect(selected), 50);
+                      }
+                    }
+                  }}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
                     style={{
                       background: activeChannel === ch.id ? `${ch.color}20` : "rgba(255,255,255,0.03)",
@@ -635,6 +643,11 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
                   </button>
                 ))}
               </div>
+              <p className="text-[9px]" style={{ color: "#6b7280" }}>
+                {activeChannel === "whatsapp" && "💬 Formato WhatsApp: breve, con *grassetto* e emoji strategici"}
+                {activeChannel === "instagram" && "📷 Formato DM: ultra-breve, conversazionale, riferimento a contenuti"}
+                {activeChannel === "email" && "📧 Formato Email: strutturato con oggetto, AIDA, firma professionale"}
+              </p>
 
               {generatedMessage ? (
                 <>
