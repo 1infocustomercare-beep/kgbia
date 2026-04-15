@@ -889,7 +889,7 @@ export default function AgentsPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen landing-dark flex items-center justify-center" style={{ background: "hsl(228 22% 7%)" }}>
+      <div className="min-h-screen landing-dark force-dark flex items-center justify-center" style={{ background: "hsl(228 22% 7%)" }}>
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -1000,7 +1000,7 @@ export default function AgentsPage() {
   };
 
   return (
-    <div className="min-h-screen text-foreground landing-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
+    <div className="min-h-screen text-foreground landing-dark force-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
       {/* Header — Mobile Optimized */}
       <div className="sticky top-0 z-30 backdrop-blur-xl border-b border-border/30 px-3 md:px-6 py-2.5 md:py-4" style={{ background: "hsl(228 18% 8% / 0.85)" }}>
         <div className="flex items-center justify-between max-w-[1600px] mx-auto gap-2">

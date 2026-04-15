@@ -254,7 +254,7 @@ const ConnectionsPage = () => {
   const verify = allFields.filter(f => f.status === "verify").length;
 
   return (
-    <div className="min-h-screen landing-dark relative overflow-x-hidden" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
+    <div className="min-h-screen landing-dark force-dark relative overflow-x-hidden" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
       {/* Opaque base */}
       <div className="fixed inset-0 z-0" style={{ background: "hsl(228 22% 7%)" }} />
       {/* Ambient glows */}
