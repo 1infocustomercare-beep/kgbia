@@ -267,6 +267,90 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* ═══ LIGHT MODE ADMIN PANEL FIX ═══
+   Override hardcoded text-white / inline color:#fff in admin panels
+   so content is readable on light backgrounds */
+.admin-panel:not(.dark *) .text-white,
+:root:not(.dark) .admin-panel .text-white {
+  color: hsl(var(--foreground)) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="color: #fff"],
+:root:not(.dark) .admin-panel [style*="color: #ffffff"],
+:root:not(.dark) .admin-panel [style*="color: rgb(255, 255, 255)"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="color: #9ca3af"] {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="color: #6b7280"] {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="color: #d1d5db"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="color: #c084fc"],
+:root:not(.dark) .admin-panel [style*="color: #a78bfa"],
+:root:not(.dark) .admin-panel [style*="color: #c4b5fd"] {
+  color: hsl(248 60% 46%) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="color: #5eead4"],
+:root:not(.dark) .admin-panel [style*="color: #14b8a6"],
+:root:not(.dark) .admin-panel [style*="color: #34d399"],
+:root:not(.dark) .admin-panel [style*="color: #10b981"] {
+  color: hsl(168 65% 30%) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="color: #f59e0b"],
+:root:not(.dark) .admin-panel [style*="color: #fbbf24"] {
+  color: hsl(38 92% 40%) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="background: #0a0a14"],
+:root:not(.dark) .admin-panel [style*="background: rgba(10,10,20"] {
+  background: hsl(var(--background)) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="background: rgba(167,139,250,0.1"] {
+  background: hsl(248 60% 56% / 0.08) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="background: rgba(255,255,255,0.0"] {
+  background: hsl(var(--muted) / 0.5) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="border: 1px solid rgba(255,255,255,0.1"] {
+  border-color: hsl(var(--border)) !important;
+}
+
+:root:not(.dark) .admin-panel [style*="border: 1px solid rgba(167,139,250"] {
+  border-color: hsl(248 60% 56% / 0.3) !important;
+}
+
+:root:not(.dark) .admin-panel h1,
+:root:not(.dark) .admin-panel h2,
+:root:not(.dark) .admin-panel h3 {
+  color: hsl(var(--foreground));
+}
+
+:root:not(.dark) .admin-panel .text-white\/50,
+:root:not(.dark) .admin-panel .text-white\/55,
+:root:not(.dark) .admin-panel .text-white\/60,
+:root:not(.dark) .admin-panel .text-white\/70,
+:root:not(.dark) .admin-panel .text-white\/80,
+:root:not(.dark) .admin-panel .text-white\/90 {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+:root:not(.dark) .admin-panel .bg-background\/95 {
+  background: hsl(var(--background) / 0.95) !important;
+}
+
 /* Auth readability lock (login/register forms on dark themes) */
 .auth-contrast label {
   color: hsl(var(--foreground) / 0.92);
