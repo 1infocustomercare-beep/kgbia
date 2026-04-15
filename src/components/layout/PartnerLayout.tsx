@@ -9,6 +9,7 @@ import {
   Eye, Presentation, Sparkles,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
 
 
 /* ═══ Context for demo mode across all partner pages ═══ */
@@ -30,6 +31,14 @@ export default function PartnerLayout() {
   const { theme: currentTheme } = useTheme();
   const isDark = currentTheme === "dark";
   const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
+  const [showSplash, setShowSplash] = useState(() => {
+    const lastShown = sessionStorage.getItem("partner_splash_ts");
+    // Show splash once per session (or if > 30min since last)
+    if (!lastShown) return true;
+    return Date.now() - Number(lastShown) > 30 * 60 * 1000;
+  });
+
+  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
@@ -48,6 +57,15 @@ export default function PartnerLayout() {
 
   return (
     <DemoModeContext.Provider value={{ demoMode, setDemoMode }}>
+    {showSplash && (
+      <PartnerSplashScreen
+        userName={userName}
+        onComplete={() => {
+          setShowSplash(false);
+          sessionStorage.setItem("partner_splash_ts", String(Date.now()));
+        }}
+      />
+    )}
     <div className={`min-h-screen flex flex-col relative admin-panel ${isDark ? 'landing-dark partner-console' : ''}`}
       style={isDark ? { background: "#0a0a14" } : undefined}>
 
