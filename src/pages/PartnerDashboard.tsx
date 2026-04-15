@@ -714,8 +714,8 @@ const PartnerDashboard = () => {
     : null;
 
   return (
-    <div className={`min-h-screen flex flex-col relative ${isDark ? 'landing-dark partner-console' : ''}`}
-      style={{ background: isDark ? "#0a0a14" : undefined }}>
+    <div className={`min-h-screen flex flex-col relative admin-panel ${isDark ? 'landing-dark partner-console' : ''}`}
+      style={isDark ? { background: "#0a0a14" } : undefined}>
       
       {/* ═══════ TOP NAV BAR ═══════ */}
       <div className="sticky top-0 z-50 flex items-center justify-between px-4 h-14 border-b border-border/50 safe-top bg-background/95 backdrop-blur-xl">
