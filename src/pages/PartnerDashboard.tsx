@@ -369,15 +369,101 @@ const PartnerDashboard = () => {
           )}
         </AnimatePresence>
 
-        {/* ═══════ DEMO MODE BANNER ═══════ */}
+        {/* ═══════ DEMO MODE — SALES PRESENTATION CONTENT ═══════ */}
         <AnimatePresence>
           {demoMode && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden" style={{ background: "rgba(245,158,11,0.08)", borderTop: "1px solid rgba(245,158,11,0.2)", borderBottom: "1px solid rgba(245,158,11,0.2)" }}>
-              <div className="px-4 py-2.5 flex items-center gap-2 max-w-5xl mx-auto">
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#f59e0b" }} />
-                <p className="text-[11px] font-semibold tracking-wider uppercase" style={{ color: "#f59e0b" }}>Modalità Presentazione — Dati sensibili nascosti</p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              {/* Value banner */}
+              <div className="py-2 text-center" style={{ background: "rgba(245,158,11,0.06)", borderTop: "1px solid rgba(245,158,11,0.15)", borderBottom: "1px solid rgba(245,158,11,0.15)" }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#f59e0b" }}>
+                  <Presentation className="w-3 h-3 inline mr-1.5 -mt-0.5" />
+                  Presentazione per il Cliente
+                </p>
               </div>
+
+              {/* Key selling points */}
+              <section className="max-w-5xl mx-auto px-4 sm:px-8 py-6 space-y-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { emoji: "📱", title: "App White Label", desc: "Personalizzata con il tuo brand" },
+                    { emoji: "🤖", title: "Agenti IA", desc: "Automatizzano il lavoro" },
+                    { emoji: "📊", title: "Analytics", desc: "Dati e previsioni intelligenti" },
+                    { emoji: "💬", title: "WhatsApp & CRM", desc: "Contatti e fidelizzazione" },
+                  ].map((item, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
+                      className="p-3.5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                      <span className="text-2xl block mb-1.5">{item.emoji}</span>
+                      <p className="text-xs font-bold text-white">{item.title}</p>
+                      <p className="text-[9px] mt-0.5" style={{ color: "#9ca3af" }}>{item.desc}</p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Packages preview for client */}
+                <div className="space-y-3">
+                  <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#f59e0b" }}>
+                    <Package className="w-3 h-3 inline mr-1 -mt-0.5" /> Pacchetti Disponibili
+                  </h3>
+                  {[
+                    { name: "Digital Start", price: "1.997", monthly: "49", color: "#a78bfa", features: ["App completa", "Menu/Catalogo QR", "Dashboard Analytics"] },
+                    { name: "Growth AI", price: "4.997", monthly: "29", color: "#14b8a6", badge: "Consigliato", features: ["Tutto di Start +", "AI Engine completo", "2 Agenti IA inclusi", "Review Shield™"] },
+                    { name: "Empire Domination", price: "7.997", monthly: "0", color: "#f59e0b", badge: "Tutto Incluso", features: ["TUTTO incluso", "0% commissioni", "5 Agenti IA", "Account Manager VIP"] },
+                  ].map((pkg, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 + i * 0.1 }}
+                      className="p-4 rounded-xl flex items-center gap-4" style={{ background: `${pkg.color}08`, border: `1px solid ${pkg.color}25` }}>
+                      <div className="shrink-0 text-center">
+                        <p className="text-xl font-bold text-white">€{pkg.price}</p>
+                        <p className="text-[9px]" style={{ color: "#6b7280" }}>
+                          {pkg.monthly === "0" ? "€0/mese" : `poi €${pkg.monthly}/mese`}
+                        </p>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-xs font-bold text-white">{pkg.name}</p>
+                          {pkg.badge && (
+                            <span className="px-1.5 py-0.5 rounded text-[8px] font-bold" style={{ background: `${pkg.color}20`, color: pkg.color }}>{pkg.badge}</span>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+                          {pkg.features.map((f, j) => (
+                            <span key={j} className="text-[9px] flex items-center gap-1" style={{ color: "#d1d5db" }}>
+                              <CheckCircle className="w-2.5 h-2.5" style={{ color: pkg.color }} /> {f}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* AI Agents highlight */}
+                <div className="p-5 rounded-2xl" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.06), rgba(245,158,11,0.04))", border: "1px solid rgba(167,139,250,0.15)" }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Bot className="w-5 h-5" style={{ color: "#a78bfa" }} />
+                    <h3 className="text-sm font-bold text-white">Agenti IA Personalizzati</h3>
+                  </div>
+                  <p className="text-xs mb-3" style={{ color: "#9ca3af" }}>
+                    Ogni agente lavora 24/7 per automatizzare la tua attività: risposte ai clienti, gestione ordini, marketing, recensioni e molto altro.
+                  </p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { name: "Assistente Clienti", emoji: "💬" },
+                      { name: "Review Shield", emoji: "⭐" },
+                      { name: "Marketing AI", emoji: "📣" },
+                    ].map((agent, i) => (
+                      <div key={i} className="p-2.5 rounded-lg text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                        <span className="text-lg block">{agent.emoji}</span>
+                        <p className="text-[9px] font-semibold text-white mt-1">{agent.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTA for demo */}
+                <div className="text-center py-2">
+                  <p className="text-xs" style={{ color: "#9ca3af" }}>👇 Scorri per vedere le preview di ogni settore</p>
+                </div>
+              </section>
             </motion.div>
           )}
         </AnimatePresence>
