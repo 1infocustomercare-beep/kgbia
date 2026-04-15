@@ -86,7 +86,11 @@ export default function PartnerIntegrationsSetup({ userId, userEmail }: Props) {
         body: { action: "status", userId },
       });
       if (error) throw error;
-      setStripeStatus(data as StripeStatus);
+      if (data?.configured === false) {
+        setStripeStatus({ connected: false, onboarding_complete: false });
+      } else {
+        setStripeStatus(data as StripeStatus);
+      }
     } catch {
       setStripeStatus({ connected: false, onboarding_complete: false });
     } finally {

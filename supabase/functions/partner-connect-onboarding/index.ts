@@ -23,7 +23,17 @@ serve(async (req) => {
 
   try {
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    if (!stripeKey) throw new Error("Stripe not configured");
+    if (!stripeKey) {
+      return new Response(JSON.stringify({
+        configured: false,
+        connected: false,
+        onboarding_complete: false,
+        error: "Stripe not yet configured by platform admin",
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
     const supabase = createClient(

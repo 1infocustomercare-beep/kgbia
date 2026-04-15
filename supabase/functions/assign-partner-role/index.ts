@@ -91,15 +91,14 @@ serve(async (req) => {
 
     // If referred by a team leader, add to their team
     if (team_leader_id) {
-      // Verify the team_leader_id is actually a team leader
-      const { data: leaderRole } = await supabaseAdmin
+      // Verify the referrer has a valid role (super_admin, team_leader, or partner)
+      const { data: referrerRoles } = await supabaseAdmin
         .from("user_roles")
-        .select("id")
+        .select("role")
         .eq("user_id", team_leader_id)
-        .eq("role", "team_leader")
-        .maybeSingle();
+        .in("role", ["super_admin", "team_leader", "partner"]);
 
-      if (leaderRole) {
+      if (referrerRoles && referrerRoles.length > 0) {
         // Check not already in a team
         const { data: existing } = await supabaseAdmin
           .from("partner_teams")
