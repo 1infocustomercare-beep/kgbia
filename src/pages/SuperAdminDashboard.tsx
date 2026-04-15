@@ -140,7 +140,7 @@ const SuperAdminDashboard = () => {
   const [intFilter, setIntFilter] = useState<{ status: "all" | "connected" | "missing" | "disabled"; category: "all" | "admin" | "client"; sector: string; account: "all" | "subscribed" | "extra" | "requested" | "none"; search: string }>({ status: "all", category: "all", sector: "all", account: "all", search: "" });
   // Registrations & Partner Network
   const [allRegistrations, setAllRegistrations] = useState<{ id: string; email: string; fullName: string; sector: string; role: string; createdAt: string }[]>([]);
-  const [partnerNetwork, setPartnerNetwork] = useState<{ id: string; email: string; fullName: string; role: string; teamLeaderId: string | null; createdAt: string; salesCount: number; salesRevenue: number; salesCommission: number; subPartners: { id: string; email: string; fullName: string; salesCount: number; salesRevenue: number }[] }[]>([]);
+  const [partnerNetwork, setPartnerNetwork] = useState<{ id: string; email: string; fullName: string; role: string; teamLeaderId: string | null; createdAt: string; salesCount: number; salesRevenue: number; salesCommission: number; demoEnabled: boolean; subPartners: { id: string; email: string; fullName: string; salesCount: number; salesRevenue: number }[] }[]>([]);
   // AI-Mary
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
     { role: "assistant", content: "Ciao! Sono **Mary**, il tuo agente IA per il controllo centralizzato di Empire.\n\n📊 Chiedi: revenue, tenant attivi, vault non configurati, churn rate\n🔔 Azioni: invia reminder, genera report, analisi settore" }
@@ -188,7 +188,7 @@ const SuperAdminDashboard = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("profiles")
-          .select("user_id, full_name, email, created_at")
+          .select("user_id, full_name, email, created_at, demo_section_enabled")
           .order("created_at", { ascending: false }),
         supabase
           .from("user_roles")
