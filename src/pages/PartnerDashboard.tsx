@@ -22,6 +22,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import PartnerOutreachCRM from "@/components/partner/PartnerOutreachCRM";
+import LeadEnginePro from "@/components/partner/LeadEnginePro";
 import PartnerProfileSection from "@/components/partner/PartnerProfileSection";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import ROICalculator from "@/components/partner/ROICalculator";
