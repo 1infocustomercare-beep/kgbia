@@ -112,22 +112,54 @@ const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
   manual: { label: "Manuale", color: "#A78BFA" },
 };
 
+/* ─── POPULAR COUNTRIES ─── */
+const COUNTRIES = [
+  { code: "", label: "🌍 Ovunque", emoji: "🌍" },
+  { code: "IT", label: "🇮🇹 Italia", emoji: "🇮🇹" },
+  { code: "US", label: "🇺🇸 USA", emoji: "🇺🇸" },
+  { code: "GB", label: "🇬🇧 UK", emoji: "🇬🇧" },
+  { code: "FR", label: "🇫🇷 Francia", emoji: "🇫🇷" },
+  { code: "DE", label: "🇩🇪 Germania", emoji: "🇩🇪" },
+  { code: "ES", label: "🇪🇸 Spagna", emoji: "🇪🇸" },
+  { code: "PT", label: "🇵🇹 Portogallo", emoji: "🇵🇹" },
+  { code: "CH", label: "🇨🇭 Svizzera", emoji: "🇨🇭" },
+  { code: "AE", label: "🇦🇪 Dubai/UAE", emoji: "🇦🇪" },
+  { code: "AU", label: "🇦🇺 Australia", emoji: "🇦🇺" },
+  { code: "BR", label: "🇧🇷 Brasile", emoji: "🇧🇷" },
+  { code: "JP", label: "🇯🇵 Giappone", emoji: "🇯🇵" },
+];
+
+const RADIUS_OPTIONS = [
+  { value: 5, label: "5 km — Quartiere" },
+  { value: 15, label: "15 km — Città" },
+  { value: 30, label: "30 km — Area metropolitana" },
+  { value: 50, label: "50 km — Provincia" },
+  { value: 100, label: "100 km — Regione" },
+];
+
 /* ─── COMPONENT ─── */
 export default function LeadsPage() {
   // Search
   const [city, setCity] = useState("");
   const [sector, setSector] = useState("food");
   const [query, setQuery] = useState("");
+  const [country, setCountry] = useState("");
+  const [radius, setRadius] = useState(15);
   const [loading, setLoading] = useState(false);
   const [deepLoading, setDeepLoading] = useState(false);
   const [results, setResults] = useState<(Lead & { _score: number; _sector: string })[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [minRating, setMinRating] = useState(0);
+  const [maxRating, setMaxRating] = useState(5);
+  const [filterNoWebsite, setFilterNoWebsite] = useState(false);
+  const [filterNoSocial, setFilterNoSocial] = useState(false);
+  const [filterHasPhone, setFilterHasPhone] = useState(false);
   const [sortBy, setSortBy] = useState<"score" | "rating" | "name">("score");
   const [searchPage, setSearchPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [lastSearchCity, setLastSearchCity] = useState("");
   const [lastSearchSector, setLastSearchSector] = useState("");
+  const [showTips, setShowTips] = useState(() => !sessionStorage.getItem("leads_tips_hidden"));
 
   // Pipeline
   const [selected, setSelected] = useState<(Lead & { _score: number; _sector: string }) | null>(null);
