@@ -576,7 +576,7 @@ export default function LeadsPage() {
           </div>
           <div className="col-span-5 sm:col-span-3 relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#14b8a6" }} />
-            <input value={city} onChange={e => setCity(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
+            <input ref={cityInputRef} value={city} onChange={e => setCity(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
               placeholder="Città (Roma, NYC, Dubai...)" className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
           <div className="col-span-4 sm:col-span-3">
