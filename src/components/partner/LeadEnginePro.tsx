@@ -141,7 +141,11 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
         setResults(filtered);
         toast({ title: `✅ ${filtered.length} lead trovati`, description: `${data.sources?.nominatim || 0} OpenStreetMap · ${data.sources?.google || 0} Google Places` });
       } else {
-        toast({ title: "Nessun risultato", description: "Prova con una città o settore diverso", variant: "destructive" });
+        if (data?.tip) {
+          toast({ title: "⚠️ Configura Google Places API", description: data.tip, duration: 8000 });
+        } else {
+          toast({ title: "Nessun risultato", description: "Prova con una città o settore diverso", variant: "destructive" });
+        }
       }
     } catch (e: any) {
       console.error("Lead search error:", e);
