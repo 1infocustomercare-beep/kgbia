@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import empireMonkeyMascot from "@/assets/empire-monkey.png";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import { usePartnerDemoMode } from "@/components/layout/PartnerLayout";
+import { SectorPhoneCarousel } from "@/components/partner/SectorPhoneCarousel";
 
 export default function PartnerHomePage() {
   const navigate = useNavigate();
