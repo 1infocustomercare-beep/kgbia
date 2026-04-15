@@ -161,7 +161,7 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
   }, [city, query, sector, minRating]);
 
   /* ─── Select Lead → Auto-pipeline ─── */
-  const handleSelect = useCallback(async (lead: Lead) => {
+  const handleSelect = useCallback(async (lead: Lead, channelOverride?: string) => {
     setSelected(lead);
     const detSector = detectSector(lead);
     setDetectedSector(detSector);
@@ -171,6 +171,8 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
     const web = lead.website || "";
     onLeadSelected?.(lead, detSector, ig, web);
     setShowPreview(true);
+
+    const channel = channelOverride || activeChannel;
 
     // Auto-generate message
     setGeneratingMsg(true);
@@ -185,7 +187,7 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
           instagram: ig,
           website: web,
           sector: sectorLabel,
-          channel: activeChannel,
+          channel,
           demoLink,
           allDemosLink: `${window.location.origin}/demo`,
           contactInfo: "📩 info@empireaigroup.com",
@@ -199,14 +201,17 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
         let msg = data.message.replace(/\{\{DEMO_LINK\}\}/g, demoLink);
         setGeneratedMessage(msg);
         onMessageGenerated?.(msg);
-        toast({ title: "🤖 Messaggio AI generato!" });
+        toast({ title: "🤖 Messaggio AI generato!", description: `Formato: ${channel === "instagram" ? "Instagram DM" : channel === "email" ? "Email Pro" : "WhatsApp"}` });
       }
     } catch (err) {
       console.warn("AI message generation failed:", err);
-      // Generate local fallback
       const sectorLabel = INDUSTRY_CONFIGS[detSector as keyof typeof INDUSTRY_CONFIGS]?.label || "la vostra attività";
       const demoLink = `${window.location.origin}${getDemoSiteUrl(detSector)}`;
-      const fallback = `Buongiorno! 👋 Ho notato ${lead.name} a ${lead.city} — complimenti!\n\nAbbiamo creato una piattaforma digitale per ${sectorLabel} che automatizza prenotazioni, gestione clienti e marketing.\n\n✅ App personalizzata con il vostro brand\n✅ Prenotazioni 24/7\n✅ CRM + fidelizzazione integrata\n\n👉 Demo: ${demoLink}\n\nPosso mostrarvi in 2 minuti?`;
+      const fallback = channel === "instagram"
+        ? `${lead.name} a ${lead.city} — che spettacolo! 🔥\n\nAbbiamo creato qualcosa di simile per il vostro settore, guardate:\n👉 ${demoLink}\n\nVi interessa?`
+        : channel === "email"
+        ? `Oggetto: Proposta digitale per ${lead.name}\n\nBuongiorno,\n\nHo avuto modo di conoscere ${lead.name} a ${lead.city}.\n\nAbbiamo sviluppato una piattaforma completa per ${sectorLabel} che include prenotazioni, CRM e marketing automatico.\n\nDemo: ${demoLink}\n\nSarebbe disponibile per una breve call di 10 minuti?\n\n---\nEmpire AI Group\n📩 info@empireaigroup.com`
+        : `Buongiorno! 👋\n\nHo notato *${lead.name}* a ${lead.city} — complimenti!\n\nAbbiamo creato una piattaforma per ${sectorLabel} che automatizza prenotazioni e marketing.\n\n✅ App con il vostro brand\n✅ Prenotazioni 24/7\n✅ CRM integrato\n\n👉 Demo: ${demoLink}\n\nPosso mostrarvi in 2 minuti?`;
       setGeneratedMessage(fallback);
       onMessageGenerated?.(fallback);
     } finally {
@@ -616,14 +621,21 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
                 {generatingMsg && <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: "#34d399" }} />}
               </div>
 
-              {/* Channel selector */}
+              {/* Channel selector — auto-regenerates message */}
               <div className="flex gap-1.5">
                 {([
                   { id: "whatsapp" as const, icon: MessageCircle, label: "WhatsApp", color: "#25D366" },
-                  { id: "instagram" as const, icon: Instagram, label: "Instagram", color: "#E4405F" },
-                  { id: "email" as const, icon: Mail, label: "Email", color: "#3B82F6" },
+                  { id: "instagram" as const, icon: Instagram, label: "Instagram DM", color: "#E4405F" },
+                  { id: "email" as const, icon: Mail, label: "Email Pro", color: "#3B82F6" },
                 ] as const).map(ch => (
-                  <button key={ch.id} onClick={() => setActiveChannel(ch.id)}
+                  <button key={ch.id} onClick={() => {
+                    if (activeChannel !== ch.id) {
+                      setActiveChannel(ch.id);
+                      if (selected && !generatingMsg) {
+                        handleSelect(selected, ch.id);
+                      }
+                    }
+                  }}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
                     style={{
                       background: activeChannel === ch.id ? `${ch.color}20` : "rgba(255,255,255,0.03)",
@@ -635,6 +647,11 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
                   </button>
                 ))}
               </div>
+              <p className="text-[9px]" style={{ color: "#6b7280" }}>
+                {activeChannel === "whatsapp" && "💬 Formato WhatsApp: breve, con *grassetto* e emoji strategici"}
+                {activeChannel === "instagram" && "📷 Formato DM: ultra-breve, conversazionale, riferimento a contenuti"}
+                {activeChannel === "email" && "📧 Formato Email: strutturato con oggetto, AIDA, firma professionale"}
+              </p>
 
               {generatedMessage ? (
                 <>
