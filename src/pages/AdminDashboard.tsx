@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { LayoutDashboard, UtensilsCrossed, ShoppingCart, TrendingUp, LogOut, Settings, ArrowLeft } from "lucide-react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "next-themes";
 import { useMyRestaurant } from "@/hooks/useMyRestaurant";
 import { supabase } from "@/integrations/supabase/client";
 import { demoMenu } from "@/data/demo-restaurant";
@@ -31,6 +32,8 @@ type MainTab = "dashboard" | "studio" | "orders" | "profit" | "more";
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { signOut, user } = useAuth();
+  const { theme: currentTheme } = useTheme();
+  const isDark = currentTheme === "dark";
   const { restaurant, loading: restLoading } = useMyRestaurant();
   useOrderNotifications(restaurant?.id);
   const [activeTab, setActiveTab] = useState<MainTab>("dashboard");
