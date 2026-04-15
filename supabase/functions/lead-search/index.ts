@@ -370,9 +370,14 @@ serve(async (req) => {
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // 2. Run ALL sources in parallel for maximum coverage
-    const [overpassResults, nominatimResults, googleResults] = await Promise.all([
+    // 2. Run ALL sources in parallel — Overpass with timeout fallback
+    const overpassWithTimeout = Promise.race([
       searchOverpass(searchSector, geo),
+      new Promise<any[]>(r => setTimeout(() => r([]), 8000)), // 8s timeout
+    ]);
+
+    const [overpassResults, nominatimResults, googleResults] = await Promise.all([
+      overpassWithTimeout,
       searchNominatim(searchCity, searchSector, searchQuery, geo),
       use_google ? searchGooglePlaces(searchQuery, searchCity, searchSector) : Promise.resolve([]),
     ]);
