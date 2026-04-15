@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { useTheme } from "next-themes";
+import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
 
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -115,6 +117,8 @@ const PLAN_LABELS: Record<string, string> = {
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
   const { signOut } = useAuth();
+  const { theme: currentTheme } = useTheme();
+  const isDark = currentTheme === "dark";
   const [activeTab, setActiveTab] = useState<SuperTab>("overview");
   const [tenants, setTenants] = useState<CompanyTenant[]>([]);
   const [searchTenant, setSearchTenant] = useState("");
