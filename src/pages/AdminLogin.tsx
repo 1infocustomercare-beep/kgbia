@@ -280,7 +280,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Mode Chooser ───
   if (mode === "choose") {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark auth-contrast">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark force-dark auth-contrast">
         <DarkPremiumBg />
         <BackButton to="/" theme="glass" />
 
@@ -338,7 +338,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Forgot Password ───
   if (mode === "forgot") {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark auth-contrast">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark force-dark auth-contrast">
         <DarkPremiumBg />
         <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
         <button onClick={() => { setMode("owner"); setError(""); setForgotSent(false); }}
@@ -386,7 +386,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Kitchen PIN (touch-friendly numpad) ───
   if (mode === "kitchen") {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark auth-contrast">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark force-dark auth-contrast">
         <DarkPremiumBg />
         <motion.div className="w-full max-w-xs space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
         <button onClick={() => { setMode("choose"); setError(""); setKitchenPin(""); }}
@@ -450,7 +450,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Owner / Partner login/signup ───
   const isPartnerMode = mode === "partner";
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark auth-contrast">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden landing-dark force-dark auth-contrast">
       <DarkPremiumBg />
       <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
         <button onClick={() => { setMode("choose"); setError(""); setIsSignUp(false); }}

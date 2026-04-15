@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { useTheme } from "next-themes";
+import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
 
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -115,6 +117,8 @@ const PLAN_LABELS: Record<string, string> = {
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
   const { signOut } = useAuth();
+  const { theme: currentTheme } = useTheme();
+  const isDark = currentTheme === "dark";
   const [activeTab, setActiveTab] = useState<SuperTab>("overview");
   const [tenants, setTenants] = useState<CompanyTenant[]>([]);
   const [searchTenant, setSearchTenant] = useState("");
@@ -663,18 +667,20 @@ const SuperAdminDashboard = () => {
   }, [payments, fiscoMissing, blockedTenants]);
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden landing-dark" style={{ isolation: "isolate", background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
+    <div className={`min-h-screen relative overflow-x-hidden ${isDark ? 'landing-dark' : ''}`} style={{ isolation: "isolate", background: isDark ? "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" : undefined }}>
       {/* Fully opaque base — blocks underlying animations */}
-      <div className="fixed inset-0 z-0" style={{ background: "hsl(228 22% 7%)" }} />
-      {/* Premium violet/gold luxury ambient */}
-      <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
-        <div className="absolute top-[-8%] left-[20%] w-[500px] h-[500px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsl(265 70% 55%), transparent 65%)", filter: "blur(140px)" }} />
-        <div className="absolute bottom-[10%] right-[-5%] w-[400px] h-[400px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsl(38 50% 55%), transparent 70%)", filter: "blur(160px)" }} />
-        <div className="absolute inset-0" style={{ opacity: 0.012, backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
-      </div>
+      {isDark && <div className="fixed inset-0 z-0" style={{ background: "hsl(228 22% 7%)" }} />}
+      {/* Premium violet/gold luxury ambient — dark only */}
+      {isDark && (
+        <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
+          <div className="absolute top-[-8%] left-[20%] w-[500px] h-[500px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsl(265 70% 55%), transparent 65%)", filter: "blur(140px)" }} />
+          <div className="absolute bottom-[10%] right-[-5%] w-[400px] h-[400px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsl(38 50% 55%), transparent 70%)", filter: "blur(160px)" }} />
+          <div className="absolute inset-0" style={{ opacity: 0.012, backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+        </div>
+      )}
       
       {/* Header */}
-      <div className="relative overflow-hidden border-b border-empire-violet/30" style={{ background: "linear-gradient(160deg, hsla(250, 30%, 14%, 0.98), hsla(228, 20%, 10%, 0.98), hsla(250, 20%, 12%, 0.95))" }}>
+      <div className="relative overflow-hidden border-b border-border/30 bg-background/95 backdrop-blur-xl">
         {/* HUD grid — DNA violet */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `linear-gradient(hsl(var(--empire-violet)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--empire-violet)) 1px, transparent 1px)`,
@@ -792,6 +798,7 @@ const SuperAdminDashboard = () => {
             <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Home">
               <ArrowLeft className="w-4 h-4 text-muted-foreground" />
             </button>
+            <DarkModeToggle />
             <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Esci">
               <LogOut className="w-4 h-4 text-muted-foreground" />
             </button>

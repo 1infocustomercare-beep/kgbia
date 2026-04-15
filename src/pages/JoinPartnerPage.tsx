@@ -31,7 +31,7 @@ const JoinPartnerPage = () => {
   ];
 
   return (
-    <div className="min-h-screen landing-dark" style={{ background: "linear-gradient(180deg, hsl(228 22% 6%) 0%, hsl(230 20% 8%) 100%)" }}>
+    <div className="min-h-screen landing-dark force-dark" style={{ background: "linear-gradient(180deg, hsl(228 22% 6%) 0%, hsl(230 20% 8%) 100%)" }}>
       {/* Header */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b border-border/10" style={{ background: "hsla(228,22%,6%,0.85)" }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between px-5 py-3">
