@@ -92,7 +92,7 @@ export default function PartnerLayout() {
       {/* ═══ BOTTOM NAV ═══ */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 safe-bottom bg-background/95 backdrop-blur-xl border-t border-border/50">
         <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
-          {NAV_ITEMS.map(item => {
+          {NAV_ITEMS_FULL.filter(item => demoMode ? item.showInDemo : true).map(item => {
             const active = isActive(item.path, item.exact);
             return (
               <button key={item.path} onClick={() => navigate(item.path)}
