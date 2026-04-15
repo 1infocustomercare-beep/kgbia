@@ -52,6 +52,18 @@ export default function PartnerLayout() {
 
   const accentColor = demoMode ? "#d4a052" : "#a78bfa";
 
+  if (showSplash) {
+    return (
+      <PartnerSplashScreen
+        userName={userName}
+        onComplete={() => {
+          setShowSplash(false);
+          sessionStorage.setItem("partner_splash_ts", String(Date.now()));
+        }}
+      />
+    );
+  }
+
   return (
     <DemoModeContext.Provider value={{ demoMode, setDemoMode }}>
     <div className={`min-h-screen flex flex-col relative admin-panel ${isDark ? 'landing-dark partner-console' : ''}`}
