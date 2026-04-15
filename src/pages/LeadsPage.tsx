@@ -600,34 +600,43 @@ export default function LeadsPage() {
       {/* ═══ SEARCH BAR ═══ */}
       <div className="rounded-2xl p-4 space-y-3" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
         
-        {/* Row 1: Country + City + Sector */}
-        <div className="grid grid-cols-12 gap-2">
-          <div className="col-span-3 sm:col-span-2">
+        {/* Row 1: Country + City */}
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🌍 Paese</label>
             <select value={country} onChange={e => setCountry(e.target.value)}
-              className="w-full px-2 py-3 rounded-xl text-xs text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
+              className="w-full px-3 py-3 rounded-xl text-[11px] text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
               {COUNTRIES.map(c => <option key={c.code} value={c.code} style={{ background: "#1a1a2e" }}>{c.label}</option>)}
             </select>
           </div>
-          <div className="col-span-5 sm:col-span-3 relative">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#14b8a6" }} />
+          <div className="relative">
+            <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>📍 Città</label>
+            <MapPin className="absolute left-3 bottom-3 w-3.5 h-3.5" style={{ color: "#14b8a6" }} />
             <input ref={cityInputRef} value={city} onChange={e => setCity(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Città (Roma, NYC, Dubai...)" className="w-full pl-9 pr-3 py-3 rounded-xl text-xs text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+              placeholder="Roma, Milano, Dubai..." className="w-full pl-9 pr-3 py-3 rounded-xl text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
-          <div className="col-span-4 sm:col-span-3">
-            <select value={sector} onChange={e => setSector(e.target.value)}
-              className="w-full px-3 py-3 rounded-xl text-xs text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
-              {SECTOR_OPTIONS.map(s => <option key={s.value} value={s.value} style={{ background: "#1a1a2e" }}>{s.label}</option>)}
-            </select>
-          </div>
-          <div className="col-span-8 sm:col-span-2 relative">
-            <Search className="absolute left-3 top-3.5 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
+        </div>
+
+        {/* Row 2: Sector */}
+        <div>
+          <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🏢 Settore / Categoria</label>
+          <select value={sector} onChange={e => setSector(e.target.value)}
+            className="w-full px-3 py-3 rounded-xl text-[11px] text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
+            {SECTOR_OPTIONS.map(s => <option key={s.value} value={s.value} style={{ background: "#1a1a2e" }}>{s.label}</option>)}
+          </select>
+        </div>
+
+        {/* Row 3: Query + Search button */}
+        <div className="grid grid-cols-3 gap-2">
+          <div className="col-span-2 relative">
+            <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🔎 Zona / Nome (opzionale)</label>
+            <Search className="absolute left-3 bottom-3 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
             <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Zona, quartiere o nome attività" className="w-full pl-9 pr-3 py-3 rounded-xl text-[10px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
-            <p className="text-[7px] mt-0.5 pl-1" style={{ color: "#4b5563" }}>Opzionale — filtra per zona o nome specifico</p>
+              placeholder="Es: Trastevere, Brera..." className="w-full pl-9 pr-3 py-3 rounded-xl text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
           </div>
-          <div className="col-span-4 sm:col-span-2">
+          <div className="flex items-end">
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleSearch()} disabled={loading}
-              className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5"
               style={{ background: loading ? "rgba(20,184,166,0.3)" : "linear-gradient(135deg, #14b8a6, #10b981)", color: "#fff" }}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               {loading ? "..." : "Cerca"}
