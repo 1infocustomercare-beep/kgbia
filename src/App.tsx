@@ -642,9 +642,16 @@ function App() {
                       } />
                       <Route path="/partner" element={
                         <ProtectedRoute requiredRole="partner">
-                          <PartnerDashboard />
+                          <PartnerLayout />
                         </ProtectedRoute>
-                      } />
+                      }>
+                        <Route index element={<PartnerHomePage />} />
+                        <Route path="leads" element={<LeadsPage />} />
+                        <Route path="earnings" element={<PartnerEarningsPage />} />
+                        <Route path="portfolio" element={<PartnerPortfolioPage />} />
+                        <Route path="profile" element={<PartnerProfilePage />} />
+                        <Route path="content-ai" element={<ContentAIPage />} />
+                      </Route>
                       <Route path="/admin/dashboard" element={
                         <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
                           <AdminDashboard />
