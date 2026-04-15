@@ -397,9 +397,11 @@ const SuperAdminDashboard = () => {
 
       const profileNameMap: Record<string, string> = {};
       const profileEmailMap: Record<string, string> = {};
+      const profileDemoMap: Record<string, boolean> = {};
       profilesData.forEach((p: any) => {
         profileNameMap[p.user_id] = p.full_name || "—";
         profileEmailMap[p.user_id] = p.email || "—";
+        profileDemoMap[p.user_id] = !!p.demo_section_enabled;
       });
 
       // Build registrations list
@@ -441,6 +443,7 @@ const SuperAdminDashboard = () => {
           salesCount: ps.count,
           salesRevenue: ps.revenue,
           salesCommission: ps.commission,
+          demoEnabled: profileDemoMap[pr.user_id] || false,
           subPartners: (teamMap[pr.user_id] || []).map((spId) => {
             const sps = salesByPartner[spId] || { count: 0, revenue: 0, commission: 0 };
             return {
