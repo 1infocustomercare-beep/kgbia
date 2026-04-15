@@ -798,6 +798,7 @@ const SuperAdminDashboard = () => {
             <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Home">
               <ArrowLeft className="w-4 h-4 text-muted-foreground" />
             </button>
+            <DarkModeToggle />
             <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Esci">
               <LogOut className="w-4 h-4 text-muted-foreground" />
             </button>
