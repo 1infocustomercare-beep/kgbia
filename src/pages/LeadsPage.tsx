@@ -449,7 +449,7 @@ export default function LeadsPage() {
     } finally {
       setGeneratingMsg(false);
     }
-  }, [activeChannel, enrichLeadSocial]);
+  }, [activeChannel, enrichLeadSocial, country]);
 
   const copyMessage = () => {
     if (generatedMessage) {
