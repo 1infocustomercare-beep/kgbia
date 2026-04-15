@@ -28,72 +28,68 @@ const SECTOR_KEYWORDS: Record<string, string[]> = {
 };
 
 /* ─── Multi-query Nominatim search ─── */
+async function fetchNominatimQuery(searchTerm: string): Promise<any[]> {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchTerm)}&format=json&addressdetails=1&limit=20&extratags=1`;
+    const resp = await fetch(url, {
+      headers: { "User-Agent": "EmpireAI-LeadScout/2.0 (info@empireaigroup.com)" },
+    });
+    if (!resp.ok) return [];
+    return await resp.json();
+  } catch { return []; }
+}
+
 async function searchNominatim(city: string, sector: string, userQuery: string): Promise<any[]> {
-  const results: any[] = [];
   const keywords = SECTOR_KEYWORDS[sector] || [sector];
   
-  // Build multiple searches: user query first, then sector keywords
+  // Build 2 search queries max (run in parallel to avoid timeout)
   const searches: string[] = [];
   if (userQuery) {
     searches.push(`${userQuery} ${city}`);
   }
-  // Add top 4 sector keywords as separate searches
-  for (const kw of keywords.slice(0, 4)) {
-    searches.push(`${kw} ${city}`);
+  // Use top 2 keywords combined
+  searches.push(`${keywords.slice(0, 2).join(" ")} ${city}`);
+  if (keywords.length > 2) {
+    searches.push(`${keywords.slice(2, 4).join(" ")} ${city}`);
   }
 
+  // Run all searches in parallel
+  const allData = await Promise.all(searches.map(s => fetchNominatimQuery(s)));
+
+  const results: any[] = [];
   const seen = new Set<string>();
 
-  for (const searchTerm of searches) {
-    if (results.length >= 40) break; // Enough results
-    try {
-      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchTerm)}&format=json&addressdetails=1&limit=15&extratags=1`;
-      const resp = await fetch(url, {
-        headers: { "User-Agent": "EmpireAI-LeadScout/2.0 (info@empireaigroup.com)" },
-      });
-      if (!resp.ok) continue;
-      const data = await resp.json();
-
-      for (const item of data) {
-        // Skip non-business results
-        if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse"].includes(item.class)) continue;
-        
-        const name = item.display_name?.split(",")[0]?.trim() || "";
-        if (!name || name.length < 2) continue;
-        
-        // Deduplicate
-        const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20);
-        if (seen.has(key)) continue;
-        seen.add(key);
-
-        const tags = item.extratags || {};
-        const addr = item.address || {};
-        
-        results.push({
-          source: "nominatim",
-          name,
-          full_address: item.display_name || "",
-          city: addr.city || addr.town || addr.village || addr.municipality || city,
-          zone: addr.suburb || addr.neighbourhood || addr.quarter || addr.hamlet || "",
-          lat: parseFloat(item.lat),
-          lon: parseFloat(item.lon),
-          phone: tags.phone || tags["contact:phone"] || null,
-          website: tags.website || tags["contact:website"] || null,
-          email: tags.email || tags["contact:email"] || null,
-          opening_hours: tags.opening_hours || null,
-          osm_type: item.type || item.class,
-          instagram: tags["contact:instagram"] || null,
-          cuisine: tags.cuisine || null,
-          google_maps_url: `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lon}`,
-        });
-      }
+  for (const data of allData) {
+    for (const item of data) {
+      if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse"].includes(item.class)) continue;
       
-      // Rate limit: Nominatim allows 1 req/sec
-      if (searches.indexOf(searchTerm) < searches.length - 1) {
-        await new Promise(r => setTimeout(r, 1100));
-      }
-    } catch (e) {
-      console.error(`Nominatim error for "${searchTerm}":`, e);
+      const name = item.display_name?.split(",")[0]?.trim() || "";
+      if (!name || name.length < 2) continue;
+      
+      const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20);
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const tags = item.extratags || {};
+      const addr = item.address || {};
+      
+      results.push({
+        source: "nominatim",
+        name,
+        full_address: item.display_name || "",
+        city: addr.city || addr.town || addr.village || addr.municipality || city,
+        zone: addr.suburb || addr.neighbourhood || addr.quarter || addr.hamlet || "",
+        lat: parseFloat(item.lat),
+        lon: parseFloat(item.lon),
+        phone: tags.phone || tags["contact:phone"] || null,
+        website: tags.website || tags["contact:website"] || null,
+        email: tags.email || tags["contact:email"] || null,
+        opening_hours: tags.opening_hours || null,
+        osm_type: item.type || item.class,
+        instagram: tags["contact:instagram"] || null,
+        cuisine: tags.cuisine || null,
+        google_maps_url: `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lon}`,
+      });
     }
   }
 
