@@ -31,6 +31,14 @@ export default function PartnerLayout() {
   const { theme: currentTheme } = useTheme();
   const isDark = currentTheme === "dark";
   const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
+  const [showSplash, setShowSplash] = useState(() => {
+    const lastShown = sessionStorage.getItem("partner_splash_ts");
+    // Show splash once per session (or if > 30min since last)
+    if (!lastShown) return true;
+    return Date.now() - Number(lastShown) > 30 * 60 * 1000;
+  });
+
+  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
   useEffect(() => { sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false"); }, [demoMode]);
 
