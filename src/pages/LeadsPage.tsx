@@ -264,11 +264,13 @@ export default function LeadsPage() {
 
     try {
       const existingNames = append ? results.map(r => r.name) : [];
+      const searchCity = country ? `${city.trim()}, ${COUNTRIES.find(c => c.code === country)?.label.replace(/^..\s/, '') || country}` : city.trim();
       const { data, error } = await supabase.functions.invoke("lead-search", {
         body: {
-          query: query.trim(), city: city.trim(), sector,
+          query: query.trim(), city: searchCity, sector,
           mode: "zone", use_google: true, page,
           existing_names: existingNames,
+          radius,
         },
       });
       if (error) throw error;
@@ -296,7 +298,7 @@ export default function LeadsPage() {
       setLoading(false);
       setDeepLoading(false);
     }
-  }, [city, query, sector, minRating, results, processResults, batchEnrichInstagram]);
+  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram]);
 
   /* ─── Deep search ─── */
   const handleDeepSearch = useCallback(() => {
