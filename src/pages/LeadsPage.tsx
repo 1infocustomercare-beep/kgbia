@@ -1199,6 +1199,32 @@ export default function LeadsPage() {
         )}
       </AnimatePresence>
 
+      {/* Loading state */}
+      {loading && results.length === 0 && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 space-y-4">
+          <div className="relative w-16 h-16 mx-auto">
+            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+              className="absolute inset-0 rounded-full" style={{ border: "3px solid rgba(20,184,166,0.1)", borderTop: "3px solid #14b8a6" }} />
+            <div className="absolute inset-2 rounded-full flex items-center justify-center" style={{ background: "rgba(20,184,166,0.06)" }}>
+              <Search className="w-5 h-5" style={{ color: "#14b8a6" }} />
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-white">Scansione in corso</p>
+            <motion.p className="text-[10px] mt-1" style={{ color: "#6b7280" }}
+              animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>
+              Analizzando Google Maps · OSM · Overpass · Photon · Instagram...
+            </motion.p>
+          </div>
+          <div className="flex justify-center gap-1">
+            {[0, 0.2, 0.4, 0.6, 0.8].map((d, i) => (
+              <motion.div key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: "#14b8a6" }}
+                animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: d }} />
+            ))}
+          </div>
+        </motion.div>
+      )}
+
       {/* Empty state */}
       {results.length === 0 && !loading && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
