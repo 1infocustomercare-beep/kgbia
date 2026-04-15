@@ -10,23 +10,20 @@ import {
   Eye, EyeOff, Users,
   Copy, CheckCircle, UserPlus, ChevronRight,
   ExternalLink, ChefHat, Smartphone, ArrowLeft,
-  Mail, MapPin, Instagram, Send, RefreshCw,
+  Send, RefreshCw,
   Pencil, Upload, Save, X as XIcon,
-  Globe, MessageCircle, Link2, Wand2, Phone,
-  Search, Bot, Loader2, Zap, ArrowRight, Map
+  Globe, Search, Loader2, Zap, ArrowRight
 } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PageGuide from "@/components/ui/page-guide";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import PartnerOutreachCRM from "@/components/partner/PartnerOutreachCRM";
-import LeadEnginePro from "@/components/partner/LeadEnginePro";
 import PartnerProfileSection from "@/components/partner/PartnerProfileSection";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import ROICalculator from "@/components/partner/ROICalculator";
-import DemoCreditsWallet from "@/components/partner/DemoCreditsWallet";
 import ProjectDetailOverlay from "@/components/partner/ProjectDetailOverlay";
 import { toast } from "@/hooks/use-toast";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
@@ -34,7 +31,7 @@ import { PORTFOLIO_PROJECTS } from "@/data/portfolio-showcase-data";
 import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 
-/* Helper: resolve demo URLs — all use /demo/:slug pattern for consistency */
+/* Helper: resolve demo URLs */
 const getDemoSiteUrl = (sectorId: string) => {
   if (sectorId === "food") return "/r/impero-roma";
   if (sectorId === "ncc") return "/b/amalfi-luxury-transfer";
@@ -47,17 +44,6 @@ const getDemoAdminUrl = (sectorId: string) => {
   const slug = DEMO_SLUGS[sectorId as keyof typeof DEMO_SLUGS] || sectorId;
   return `/demo/${slug}/admin`;
 };
-
-/* ═══════════════════════════════════════════
-   ACQUISITION CHANNELS
-   ═══════════════════════════════════════════ */
-const ACQUISITION_CHANNELS = [
-  { id: "instagram", icon: Instagram, label: "DM Instagram", desc: "Messaggi brevi e diretti per i social", color: "#E4405F" },
-  { id: "whatsapp", icon: MessageCircle, label: "WhatsApp", desc: "Messaggio diretto al titolare", color: "#25D366" },
-  { id: "email", icon: Mail, label: "Email", desc: "Template professionali pronti da inviare", color: "#3B82F6" },
-  { id: "field", icon: MapPin, label: "Porta a Porta", desc: "Pitch dal vivo con script e obiezioni", color: "#F59E0B" },
-  { id: "site", icon: Link2, label: "Link Sito", desc: "Condividi il link della demo direttamente", color: "#10B981" },
-] as const;
 
 /* ═══════════════════════════════════════════
    SECTOR-SPECIFIC SALES TEMPLATES (conversion-optimized)
