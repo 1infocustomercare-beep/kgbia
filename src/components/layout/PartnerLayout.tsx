@@ -230,7 +230,6 @@ function PremiumModeSlider({ demoMode, onToggle }: { demoMode: boolean; onToggle
           dragConstraints={{ left: 0, right: TRAVEL }}
           dragElastic={0.08}
           dragMomentum={false}
-          style={{ x: thumbX }}
           onDragEnd={handleDragEnd}
           onClick={(e) => e.stopPropagation()}
           onDrag={(_, info) => {
