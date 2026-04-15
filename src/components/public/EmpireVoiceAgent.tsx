@@ -68,6 +68,8 @@ function getBestItalianFemaleVoice(): SpeechSynthesisVoice | null {
     (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /femal|donna|woman/i.test(v.name),
     // Any Italian voice
     (v: SpeechSynthesisVoice) => v.lang.startsWith("it"),
+    // Fallback: any voice at all (better than silence)
+    (v: SpeechSynthesisVoice) => true,
   ];
   
   for (const test of priorities) {
@@ -90,9 +92,9 @@ if (typeof window !== "undefined" && window.speechSynthesis) {
 }
 
 // ── Web Speech API fallback TTS ──
-const SPEECH_START_GUARD_MS = 5000;
-const SPEECH_HARD_TIMEOUT_MS = 60000;
-const SPEECH_VOICE_WARMUP_RETRIES = 12;
+const SPEECH_START_GUARD_MS = 8000;
+const SPEECH_HARD_TIMEOUT_MS = 90000;
+const SPEECH_VOICE_WARMUP_RETRIES = 20;
 const VOICE_INPUT_SETTLE_MS = 1800;
 const BROWSER_ONLY_TTS_KEY = "empire_voice_browser_only";
 const BROWSER_ONLY_TTS_TTL_MS = 15 * 60 * 1000;
@@ -135,14 +137,20 @@ function speakWithBrowserTTS(
   text: string,
   abortRef: React.MutableRefObject<boolean>,
   options?: { preferImmediate?: boolean },
+  _retryCount = 0,
 ): Promise<boolean> {
   return new Promise((resolve) => {
     if (!window.speechSynthesis || abortRef.current) {
+      console.warn("[Arianna TTS] speechSynthesis not available or aborted");
       resolve(false);
       return;
     }
 
     const synth = window.speechSynthesis;
+    
+    // Force cancel any pending speech first
+    try { synth.cancel(); } catch {}
+
     const utterance = new SpeechSynthesisUtterance(text);
     let settled = false;
     let started = false;
@@ -152,10 +160,25 @@ function speakWithBrowserTTS(
       settled = true;
       window.clearTimeout(startGuardTimer);
       window.clearTimeout(hardTimer);
+      window.clearTimeout(keepAliveTimer);
       utterance.onstart = null;
       utterance.onend = null;
       utterance.onerror = null;
       resolve(ok);
+    };
+
+    // Chrome bug workaround: speechSynthesis pauses after ~15s, need to resume periodically
+    let keepAliveTimer: ReturnType<typeof setInterval> | null = null;
+    const startKeepAlive = () => {
+      if (keepAliveTimer) return;
+      keepAliveTimer = setInterval(() => {
+        if (!synth.speaking || settled || abortRef.current) {
+          if (keepAliveTimer) { clearInterval(keepAliveTimer); keepAliveTimer = null; }
+          return;
+        }
+        synth.pause();
+        synth.resume();
+      }, 10000) as unknown as ReturnType<typeof setTimeout>;
     };
 
     const speakNow = () => {
@@ -167,18 +190,37 @@ function speakWithBrowserTTS(
       const voice = getBestItalianFemaleVoice();
       if (voice) {
         utterance.voice = voice;
+        utterance.lang = voice.lang.startsWith("it") ? "it-IT" : voice.lang;
+      } else {
+        utterance.lang = "it-IT";
       }
-      utterance.lang = "it-IT";
       utterance.rate = 0.95;
       utterance.pitch = 1.05;
       utterance.volume = 1;
 
       utterance.onstart = () => {
         started = true;
-        console.log("[Arianna TTS] ▶ Speech started");
+        startKeepAlive();
+        console.log("[Arianna TTS] ▶ Speech started", voice?.name || "default voice");
       };
       utterance.onend = () => { console.log("[Arianna TTS] ✅ Speech ended"); finish(true); };
-      utterance.onerror = (e) => { console.warn("[Arianna TTS] ❌ Speech error", e); finish(false); };
+      utterance.onerror = (e) => {
+        console.warn("[Arianna TTS] ❌ Speech error", e.error || e);
+        // On error, try retry up to 2 times
+        if (_retryCount < 2 && !abortRef.current) {
+          console.log(`[Arianna TTS] 🔄 Retry attempt ${_retryCount + 1}`);
+          settled = true; // prevent double resolve
+          window.clearTimeout(startGuardTimer);
+          window.clearTimeout(hardTimer);
+          if (keepAliveTimer) clearInterval(keepAliveTimer);
+          try { synth.cancel(); } catch {}
+          setTimeout(() => {
+            speakWithBrowserTTS(text, abortRef, options, _retryCount + 1).then(resolve);
+          }, 500);
+          return;
+        }
+        finish(false);
+      };
 
       const runSpeak = () => {
         if (abortRef.current || settled) {
@@ -187,6 +229,14 @@ function speakWithBrowserTTS(
         }
         try {
           synth.speak(utterance);
+          // Chrome sometimes needs a nudge
+          if (!started) {
+            setTimeout(() => {
+              if (!started && !settled && synth.paused) {
+                synth.resume();
+              }
+            }, 300);
+          }
         } catch {
           finish(false);
         }
@@ -205,7 +255,7 @@ function speakWithBrowserTTS(
           runSpeak();
         } else {
           // Let engine reset after cancel (important on iOS/Safari when not in gesture context)
-          window.setTimeout(runSpeak, 80);
+          window.setTimeout(runSpeak, 150);
         }
       } catch {
         finish(false);
@@ -222,18 +272,31 @@ function speakWithBrowserTTS(
 
       const voices = synth.getVoices();
       if (voices.length > 0 || attempt >= SPEECH_VOICE_WARMUP_RETRIES) {
+        if (voices.length === 0) {
+          console.warn("[Arianna TTS] ⚠️ No voices available after warmup, trying anyway");
+        }
         speakNow();
         return;
       }
-      window.setTimeout(() => warmupVoices(attempt + 1), 250);
+      window.setTimeout(() => warmupVoices(attempt + 1), 200);
     };
 
     const startGuardTimer = window.setTimeout(() => {
       if (started) return;
+      console.warn("[Arianna TTS] ⏰ Start guard timeout — speech never started");
       try {
         synth.cancel();
       } catch {
         // noop
+      }
+      // Retry on timeout
+      if (_retryCount < 2 && !abortRef.current) {
+        settled = true;
+        console.log(`[Arianna TTS] 🔄 Retry after timeout, attempt ${_retryCount + 1}`);
+        setTimeout(() => {
+          speakWithBrowserTTS(text, abortRef, options, _retryCount + 1).then(resolve);
+        }, 500);
+        return;
       }
       finish(false);
     }, SPEECH_START_GUARD_MS);
