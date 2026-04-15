@@ -213,75 +213,150 @@ export default function PartnerEarningsPage() {
         ))}
       </div>
 
-      {/* ═══ 🔥 COME FUNZIONA IL SISTEMA — SPIEGAZIONE COMPLETA ═══ */}
+      {/* ═══ 🔥 COME FUNZIONA IL SISTEMA — GUIDA COMPLETA PROFESSIONALE ═══ */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
         className={`${cardBase} p-5`}
         style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.06), rgba(124,58,237,0.03))", border: "1px solid rgba(167,139,250,0.15)" }}>
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-2">
           <Info className="w-5 h-5" style={{ color: "#a78bfa" }} />
-          <h3 className="text-sm font-bold text-foreground">Come Funziona il Sistema Empire</h3>
+          <h3 className="text-sm font-bold text-foreground">Il Tuo Piano Guadagni Empire</h3>
         </div>
+        <p className="text-[10px] text-muted-foreground mb-4 leading-relaxed">
+          Empire AI Group ti offre <strong className="text-foreground">3 flussi di reddito indipendenti</strong> che si cumulano tra loro. Nessun tetto massimo, nessun limite geografico. Più vendi, più guadagni — e quando costruisci un team, guadagni anche dalle loro vendite.
+        </p>
 
-        {/* 3 Revenue Streams */}
         <div className="space-y-4">
-          <div className="p-3 rounded-xl" style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.12)" }}>
-            <div className="flex items-center gap-2 mb-1.5">
-              <DollarSign className="w-4 h-4" style={{ color: "#34d399" }} />
-              <span className="text-xs font-bold text-foreground">1. Commissione Vendita Diretta</span>
+          {/* ── STREAM 1: Commissione Diretta ── */}
+          <div className="p-3.5 rounded-xl" style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.12)" }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black" style={{ background: "rgba(52,211,153,0.15)", color: "#34d399" }}>1</div>
+              <span className="text-xs font-bold text-foreground">Commissione Vendita Diretta — €997 per ogni cliente</span>
             </div>
-            <p className="text-[11px] text-foreground/70 leading-relaxed">
-              Ogni volta che chiudi una vendita (qualsiasi pacchetto: Digital Start €1.997, Growth AI €4.997, Empire €7.997), guadagni sempre <strong className="text-foreground">€997 fissi</strong>. 
-              Non importa il pacchetto — la tua commissione è sempre la stessa.
+            <p className="text-[11px] text-foreground/70 leading-[1.7] mb-2.5">
+              Per ogni cliente che acquista un pacchetto Empire (non importa quale), ricevi una commissione fissa di <strong className="text-foreground">€997</strong>. Questo vale per tutti e tre i pacchetti:
             </p>
-          </div>
-
-          <div className="p-3 rounded-xl" style={{ background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.12)" }}>
-            <div className="flex items-center gap-2 mb-1.5">
-              <Gift className="w-4 h-4" style={{ color: "#fbbf24" }} />
-              <span className="text-xs font-bold text-foreground">2. Bonus Performance Mensile</span>
-            </div>
-            <p className="text-[11px] text-foreground/70 leading-relaxed mb-2">
-              Ogni mese, se raggiungi le soglie di vendita, ricevi un bonus extra <strong className="text-foreground">automatico</strong>:
-            </p>
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between p-2 rounded-lg" style={{ background: "rgba(167,139,250,0.08)" }}>
-                <div className="flex items-center gap-2">
-                  <Zap className="w-3 h-3" style={{ color: "#a78bfa" }} />
-                  <span className="text-[11px] text-foreground/80">3 vendite nello stesso mese</span>
+            <div className="grid grid-cols-3 gap-2 mb-2.5">
+              {[
+                { name: "Digital Start", price: "€1.997", pct: "49.9%" },
+                { name: "Growth AI", price: "€4.997", pct: "20%" },
+                { name: "Empire", price: "€7.997", pct: "12.5%" },
+              ].map((pkg) => (
+                <div key={pkg.name} className="text-center p-2 rounded-lg" style={{ background: "rgba(52,211,153,0.05)" }}>
+                  <p className="text-[9px] font-bold text-foreground/80">{pkg.name}</p>
+                  <p className="text-[10px] font-semibold" style={{ color: "#34d399" }}>{pkg.price}</p>
+                  <p className="text-[8px] text-muted-foreground">Comm: {pkg.pct}</p>
                 </div>
-                <span className="text-[11px] font-bold" style={{ color: "#a78bfa" }}>+€500</span>
-              </div>
-              <div className="flex items-center justify-between p-2 rounded-lg" style={{ background: "rgba(245,158,11,0.08)" }}>
-                <div className="flex items-center gap-2">
-                  <Flame className="w-3 h-3" style={{ color: "#f59e0b" }} />
-                  <span className="text-[11px] text-foreground/80">5 vendite nello stesso mese</span>
-                </div>
-                <span className="text-[11px] font-bold" style={{ color: "#f59e0b" }}>+€1.500</span>
-              </div>
+              ))}
             </div>
-            <p className="text-[10px] text-muted-foreground mt-2 italic">
-              ⚡ I bonus si sommano alle commissioni. Esempio: 5 vendite = €4.985 (commissioni) + €1.500 (bonus) = <strong>€6.485 in un mese</strong>.
-            </p>
-          </div>
-
-          <div className="p-3 rounded-xl" style={{ background: "rgba(56,189,248,0.06)", border: "1px solid rgba(56,189,248,0.12)" }}>
-            <div className="flex items-center gap-2 mb-1.5">
-              <Users className="w-4 h-4" style={{ color: "#38bdf8" }} />
-              <span className="text-xs font-bold text-foreground">3. Override da Team (solo Team Leader)</span>
-            </div>
-            <p className="text-[11px] text-foreground/70 leading-relaxed mb-2">
-              Quando diventi Team Leader, guadagni <strong className="text-foreground">€50 per ogni vendita</strong> fatta dai membri del tuo team, a partire dalla <strong className="text-foreground">5ª vendita</strong> di ciascun membro.
-            </p>
-            <div className="p-2.5 rounded-lg" style={{ background: "rgba(56,189,248,0.06)" }}>
-              <p className="text-[10px] font-semibold mb-1" style={{ color: "#7dd3fc" }}>📊 Esempio concreto:</p>
-              <p className="text-[10px] text-foreground/60 leading-relaxed">
-                Hai 3 membri nel team. Membro A ha 8 vendite, Membro B ha 6 vendite, Membro C ha 3 vendite.<br />
-                • A: 8 − 4 = <strong>4 vendite idonee</strong> → 4 × €50 = €200<br />
-                • B: 6 − 4 = <strong>2 vendite idonee</strong> → 2 × €50 = €100<br />
-                • C: 3 vendite → <strong>non ancora idoneo</strong> (servono 5+)<br />
-                <strong className="text-foreground">Totale Override: €300/mese passivi</strong>
+            <div className="p-2 rounded-lg" style={{ background: "rgba(52,211,153,0.08)" }}>
+              <p className="text-[10px] text-foreground/70 leading-relaxed">
+                💡 <strong className="text-foreground">Perché commissione fissa?</strong> Così non sei incentivato a spingere solo il pacchetto più costoso — vendi ciò che serve davvero al cliente. La fiducia genera più vendite a lungo termine.
               </p>
             </div>
+          </div>
+
+          {/* ── STREAM 2: Bonus Performance ── */}
+          <div className="p-3.5 rounded-xl" style={{ background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.12)" }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black" style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24" }}>2</div>
+              <span className="text-xs font-bold text-foreground">Bonus Performance Mensile — fino a €1.500 extra</span>
+            </div>
+            <p className="text-[11px] text-foreground/70 leading-[1.7] mb-2.5">
+              Oltre alla commissione, Empire premia la costanza. Ogni mese, al raggiungimento di soglie specifiche, ricevi un <strong className="text-foreground">bonus automatico</strong> accreditato direttamente:
+            </p>
+            <div className="space-y-2 mb-2.5">
+              <div className="flex items-center justify-between p-2.5 rounded-lg" style={{ background: "rgba(167,139,250,0.08)" }}>
+                <div className="flex items-center gap-2">
+                  <Zap className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />
+                  <div>
+                    <span className="text-[11px] font-semibold text-foreground/90">3 vendite / mese</span>
+                    <p className="text-[9px] text-muted-foreground">Soglia "Accelerator"</p>
+                  </div>
+                </div>
+                <span className="text-xs font-bold" style={{ color: "#a78bfa" }}>+€500</span>
+              </div>
+              <div className="flex items-center justify-between p-2.5 rounded-lg" style={{ background: "rgba(245,158,11,0.08)" }}>
+                <div className="flex items-center gap-2">
+                  <Flame className="w-3.5 h-3.5" style={{ color: "#f59e0b" }} />
+                  <div>
+                    <span className="text-[11px] font-semibold text-foreground/90">5 vendite / mese</span>
+                    <p className="text-[9px] text-muted-foreground">Soglia "Elite Performer"</p>
+                  </div>
+                </div>
+                <span className="text-xs font-bold" style={{ color: "#f59e0b" }}>+€1.500</span>
+              </div>
+            </div>
+            <div className="p-2.5 rounded-lg" style={{ background: "rgba(251,191,36,0.08)" }}>
+              <p className="text-[10px] font-semibold mb-1" style={{ color: "#fcd34d" }}>📊 Simulazione reale — 5 vendite in un mese:</p>
+              <div className="space-y-0.5 text-[10px] text-foreground/70">
+                <p>• 5 × €997 = <strong className="text-foreground">€4.985</strong> (commissioni)</p>
+                <p>• Bonus Accelerator (3+): <strong className="text-foreground">+€500</strong></p>
+                <p>• Bonus Elite (5+): <strong className="text-foreground">+€1.500</strong></p>
+                <div className="h-px my-1" style={{ background: "rgba(251,191,36,0.2)" }} />
+                <p className="font-bold text-foreground text-[11px]">= €6.985 in un singolo mese 🔥</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── STREAM 3: Override Team ── */}
+          <div className="p-3.5 rounded-xl" style={{ background: "rgba(56,189,248,0.06)", border: "1px solid rgba(56,189,248,0.12)" }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black" style={{ background: "rgba(56,189,248,0.15)", color: "#38bdf8" }}>3</div>
+              <span className="text-xs font-bold text-foreground">Override da Team — Reddito Passivo Ricorrente</span>
+            </div>
+            <p className="text-[11px] text-foreground/70 leading-[1.7] mb-2">
+              Quando raggiungi il grado di <strong className="text-foreground">Team Leader</strong>, inizi a guadagnare <strong className="text-foreground">€50 per ogni vendita</strong> effettuata dai venditori che hai reclutato nel tuo team. L'override si attiva dalla <strong className="text-foreground">5ª vendita</strong> di ciascun membro (le prime 4 servono a loro per imparare e stabilizzarsi).
+            </p>
+
+            <div className="p-2.5 rounded-lg mb-2.5" style={{ background: "rgba(56,189,248,0.06)" }}>
+              <p className="text-[10px] font-semibold mb-1.5" style={{ color: "#7dd3fc" }}>📊 Esempio pratico — Team con 3 membri:</p>
+              <div className="space-y-1.5 text-[10px]">
+                <div className="flex items-center justify-between p-1.5 rounded" style={{ background: "rgba(56,189,248,0.05)" }}>
+                  <span className="text-foreground/70">👤 Marco — 8 vendite totali</span>
+                  <span className="font-semibold text-foreground">(8−4) × €50 = <strong style={{ color: "#38bdf8" }}>€200</strong></span>
+                </div>
+                <div className="flex items-center justify-between p-1.5 rounded" style={{ background: "rgba(56,189,248,0.05)" }}>
+                  <span className="text-foreground/70">👤 Sara — 6 vendite totali</span>
+                  <span className="font-semibold text-foreground">(6−4) × €50 = <strong style={{ color: "#38bdf8" }}>€100</strong></span>
+                </div>
+                <div className="flex items-center justify-between p-1.5 rounded" style={{ background: "rgba(255,255,255,0.02)" }}>
+                  <span className="text-muted-foreground">👤 Luca — 3 vendite totali</span>
+                  <span className="text-[9px] text-muted-foreground italic">non ancora idoneo (min. 5)</span>
+                </div>
+                <div className="h-px my-1" style={{ background: "rgba(56,189,248,0.15)" }} />
+                <p className="font-bold text-foreground text-[11px]">Override mensile: €300 passivi — e cresce ad ogni vendita del team 📈</p>
+              </div>
+            </div>
+
+            <div className="p-2 rounded-lg" style={{ background: "rgba(56,189,248,0.08)" }}>
+              <p className="text-[10px] text-foreground/70 leading-relaxed">
+                🎯 <strong className="text-foreground">Come diventare Team Leader?</strong> Raggiungi 10 vendite personali e recluta almeno 3 venditori attivi. Il sistema ti promuove automaticamente e inizi subito a ricevere gli override.
+              </p>
+            </div>
+          </div>
+
+          {/* ── RIEPILOGO POTENZIALE ── */}
+          <div className="p-3.5 rounded-xl" style={{ background: "linear-gradient(135deg, rgba(212,160,82,0.08), rgba(167,139,250,0.05))", border: "1px solid rgba(212,160,82,0.2)" }}>
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="w-4 h-4" style={{ color: "#d4a052" }} />
+              <span className="text-xs font-bold text-foreground">Potenziale di Guadagno Annuale</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mb-2.5">
+              {[
+                { label: "Part-Time", sales: "2/mese", total: "~€24K", sub: "24 vendite/anno" },
+                { label: "Full-Time", sales: "5/mese", total: "~€84K", sub: "60 vendite + bonus" },
+                { label: "Team Leader", sales: "5/mese + team", total: "€120K+", sub: "vendite + bonus + override" },
+              ].map((s) => (
+                <div key={s.label} className="text-center p-2.5 rounded-lg" style={{ background: "rgba(212,160,82,0.06)" }}>
+                  <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#d4a052" }}>{s.label}</p>
+                  <p className="text-sm font-black text-foreground mt-0.5">{s.total}</p>
+                  <p className="text-[8px] text-muted-foreground mt-0.5">{s.sub}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-[9px] text-center text-muted-foreground italic">
+              Tutti i pagamenti sono automatici via Stripe. Nessun ritardo, nessuna fattura da rincorrere.
+            </p>
           </div>
         </div>
       </motion.div>
