@@ -87,11 +87,6 @@ const PartnerRegister = () => {
 
     setLoading(true);
     try {
-      const { signUp } = useAuth();
-    } catch {} // signUp is accessed via the hook below
-
-    setLoading(true);
-    try {
       // Use AuthContext.signUp for consistent registration flow
       const { error: signUpError, userId } = await signUp(form.email, form.password, {
         fullName: form.fullName,
