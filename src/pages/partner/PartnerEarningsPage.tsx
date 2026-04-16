@@ -153,8 +153,10 @@ export default function PartnerEarningsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}>
+        <motion.div className="relative" animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
           <Sparkles className="w-8 h-8" style={{ color: "#a78bfa" }} />
+          <motion.div className="absolute inset-[-8px] rounded-full" animate={{ opacity: [0, 0.5, 0], scale: [0.8, 1.3, 0.8] }}
+            transition={{ duration: 2, repeat: Infinity }} style={{ border: "1px solid rgba(167,139,250,0.3)" }} />
         </motion.div>
       </div>
     );
@@ -162,52 +164,87 @@ export default function PartnerEarningsPage() {
 
   return (
     <div className="space-y-5 px-4 pt-5 pb-24">
-      {/* ═══ RANK BANNER ═══ */}
+      {/* ═══ RANK BANNER — Animated Glow ═══ */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-        className={`${cardBase} p-5 relative`}
-        style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.12), rgba(167,139,250,0.06))", border: "1px solid rgba(167,139,250,0.2)" }}>
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${rank.color}22` }}>
-            <rank.icon className="w-5 h-5" style={{ color: rank.color }} />
-          </div>
+        className={`${cardBase} p-5 relative overflow-hidden`}
+        style={{ background: `linear-gradient(135deg, ${rank.color}18, ${rank.color}08)`, border: `1px solid ${rank.color}30` }}>
+        {/* Animated scan line */}
+        <motion.div className="absolute top-0 left-0 right-0 h-[2px]" animate={{ opacity: [0.2, 0.8, 0.2] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          style={{ background: `linear-gradient(90deg, transparent, ${rank.color}, transparent)` }} />
+        {/* Orbital ring */}
+        <motion.div className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-[0.06] pointer-events-none"
+          animate={{ rotate: 360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          style={{ border: `1.5px solid ${rank.color}` }} />
+        <div className="flex items-center gap-3 mb-3 relative z-10">
+          <motion.div className="w-12 h-12 rounded-xl flex items-center justify-center"
+            animate={{ boxShadow: [`0 0 0px ${rank.color}20`, `0 0 24px ${rank.color}35`, `0 0 0px ${rank.color}20`] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            style={{ background: `${rank.color}22`, border: `1px solid ${rank.color}30` }}>
+            <rank.icon className="w-6 h-6" style={{ color: rank.color, filter: `drop-shadow(0 0 8px ${rank.color}60)` }} />
+          </motion.div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: rank.color }}>{rank.title}</p>
+            <motion.p className="text-sm font-black uppercase tracking-widest"
+              animate={{ textShadow: [`0 0 0px ${rank.color}`, `0 0 12px ${rank.color}60`, `0 0 0px ${rank.color}`] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              style={{ color: rank.color }}>{rank.title}</motion.p>
             <p className="text-[10px] text-muted-foreground">{salesCount} vendite totali · Membro da {allSales.length > 0 ? formatMonth(allSales[allSales.length - 1]?.sale_month || currentMonth) : formatMonth(currentMonth)}</p>
           </div>
         </div>
-        <p className="text-xs text-foreground/80 leading-relaxed">{motivation}</p>
+        <p className="text-xs text-foreground/80 leading-relaxed relative z-10">{motivation}</p>
       </motion.div>
 
-      {/* ═══ NET EARNINGS ═══ */}
+      {/* ═══ NET EARNINGS — Premium Animated ═══ */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-        className={`${cardBase} p-5 relative`}
+        className={`${cardBase} p-5 relative overflow-hidden`}
         style={{ background: "linear-gradient(145deg, rgba(16,185,129,0.08), rgba(52,211,153,0.03))", border: "1px solid rgba(16,185,129,0.18)" }}>
-        <div className="absolute top-4 right-4">
-          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: monthGrowth >= 0 ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)" }}>
+        {/* Animated gradient sweep */}
+        <motion.div className="absolute inset-0" animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+          style={{ background: "linear-gradient(90deg, transparent 0%, rgba(52,211,153,0.04) 30%, transparent 60%)", backgroundSize: "200% 100%" }} />
+        <div className="absolute top-4 right-4 relative z-10">
+          <motion.div className="flex items-center gap-1 px-2.5 py-1 rounded-full"
+            whileHover={{ scale: 1.1 }}
+            style={{ background: monthGrowth >= 0 ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)", border: `1px solid ${monthGrowth >= 0 ? "rgba(52,211,153,0.2)" : "rgba(239,68,68,0.2)"}` }}>
             <TrendingUp className="w-3 h-3" style={{ color: monthGrowth >= 0 ? "#34d399" : "#ef4444", transform: monthGrowth < 0 ? "rotate(180deg)" : "none" }} />
             <span className="text-[10px] font-bold" style={{ color: monthGrowth >= 0 ? "#34d399" : "#ef4444" }}>{monthGrowth >= 0 ? "+" : ""}{monthGrowth}%</span>
-          </div>
+          </motion.div>
         </div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] mb-1" style={{ color: "#6ee7b7" }}>Guadagni Netti Totali</p>
-        <p className="text-4xl font-bold text-foreground tracking-tight">€{netEarnings.toLocaleString("it-IT")}</p>
-        <div className="flex items-center gap-4 mt-3 flex-wrap">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] mb-1 relative z-10" style={{ color: "#6ee7b7" }}>Guadagni Netti Totali</p>
+        <motion.p className="text-4xl font-black text-foreground tracking-tight relative z-10"
+          style={{ textShadow: "0 0 30px rgba(52,211,153,0.2)" }}>
+          €{netEarnings.toLocaleString("it-IT")}
+        </motion.p>
+        <div className="flex items-center gap-4 mt-3 flex-wrap relative z-10">
           <EarningsPill color="#34d399" label="Commissioni" value={totalCommissions} />
           {totalOverrides > 0 && <EarningsPill color="#38bdf8" label="Override" value={totalOverrides} />}
           {totalBonuses > 0 && <EarningsPill color="#fbbf24" label="Bonus" value={totalBonuses} />}
         </div>
       </motion.div>
 
-      {/* ═══ KPI ═══ */}
+      {/* ═══ KPI — Animated Cards ═══ */}
       <div className="grid grid-cols-3 gap-2.5">
         {[
-          { icon: Trophy, value: salesCount, label: "Vendite", sub: `€${COMMISSION_PER_SALE}/cad`, color: "#a78bfa" },
-          { icon: DollarSign, value: salesCount > 0 ? `€${Math.round(totalCommissions / salesCount)}` : "—", label: "Media", sub: "per vendita", color: "#34d399" },
-          { icon: Calendar, value: currentMonthSales, label: formatMonth(currentMonth), sub: "questo mese", color: "#38bdf8" },
+          { icon: Trophy, value: salesCount, label: "Vendite", sub: `€${COMMISSION_PER_SALE}/cad`, color: "#a78bfa", glow: "rgba(167,139,250,0.1)" },
+          { icon: DollarSign, value: salesCount > 0 ? `€${Math.round(totalCommissions / salesCount)}` : "—", label: "Media", sub: "per vendita", color: "#34d399", glow: "rgba(52,211,153,0.1)" },
+          { icon: Calendar, value: currentMonthSales, label: formatMonth(currentMonth), sub: "questo mese", color: "#38bdf8", glow: "rgba(56,189,248,0.1)" },
         ].map((s, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05 }}
-            className={`${cardBase} p-3.5 text-center`} style={glassStyle}>
-            <s.icon className="w-4 h-4 mb-1.5 mx-auto" style={{ color: s.color }} />
-            <p className="text-xl font-bold text-foreground">{s.value}</p>
+          <motion.div key={i}
+            initial={{ opacity: 0, y: 14, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: 0.1 + i * 0.08, type: "spring", stiffness: 200 }}
+            whileHover={{ scale: 1.06, y: -4 }}
+            className={`${cardBase} p-3.5 text-center relative overflow-hidden group cursor-default`} style={glassStyle}>
+            {/* Glow on hover */}
+            <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ background: `radial-gradient(circle at 50% 40%, ${s.glow}, transparent 70%)` }} />
+            {/* Top accent */}
+            <motion.div className="absolute top-0 left-0 right-0 h-[2px]" animate={{ opacity: [0.2, 0.7, 0.2] }}
+              transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}
+              style={{ background: `linear-gradient(90deg, transparent, ${s.color}, transparent)` }} />
+            <motion.div animate={{ y: [0, -2, 0] }} transition={{ duration: 3, repeat: Infinity, delay: i * 0.2 }}>
+              <s.icon className="w-4 h-4 mb-1.5 mx-auto" style={{ color: s.color, filter: `drop-shadow(0 0 6px ${s.color}40)` }} />
+            </motion.div>
+            <p className="text-xl font-bold text-foreground" style={{ textShadow: `0 0 16px ${s.color}20` }}>{s.value}</p>
             <p className="text-[10px] font-semibold text-foreground/70">{s.label}</p>
             <p className="text-[9px] text-muted-foreground">{s.sub}</p>
           </motion.div>
