@@ -73,6 +73,7 @@ export default function PartnerEarningsPage() {
   const [inviteCopied, setInviteCopied] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showRoadmap, setShowRoadmap] = useState(false);
+  const [showEarningsGuide, setShowEarningsGuide] = useState(false);
   const [showSimulator, setShowSimulator] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -215,12 +216,19 @@ export default function PartnerEarningsPage() {
 
       {/* ═══ 🔥 COME FUNZIONA IL SISTEMA — GUIDA COMPLETA PROFESSIONALE ═══ */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-        className={`${cardBase} p-5`}
+        className={cardBase}
         style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.06), rgba(124,58,237,0.03))", border: "1px solid rgba(167,139,250,0.15)" }}>
-        <div className="flex items-center gap-2 mb-2">
-          <Info className="w-5 h-5" style={{ color: "#a78bfa" }} />
-          <h3 className="text-sm font-bold text-foreground">Il Tuo Piano Guadagni Empire</h3>
-        </div>
+        <button onClick={() => setShowEarningsGuide(!showEarningsGuide)} className="w-full p-5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Info className="w-5 h-5" style={{ color: "#a78bfa" }} />
+            <h3 className="text-sm font-bold text-foreground">Il Tuo Piano Guadagni Empire</h3>
+          </div>
+          {showEarningsGuide ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+        </button>
+        <AnimatePresence>
+          {showEarningsGuide && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+              <div className="px-5 pb-5">
         <p className="text-[10px] text-muted-foreground mb-4 leading-relaxed">
           Empire AI Group ti offre <strong className="text-foreground">3 flussi di reddito indipendenti</strong> che si cumulano tra loro. Nessun tetto massimo, nessun limite geografico. Più vendi, più guadagni — e quando costruisci un team, guadagni anche dalle loro vendite.
         </p>
@@ -359,6 +367,10 @@ export default function PartnerEarningsPage() {
             </p>
           </div>
         </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* ═══ RANK ROADMAP ═══ */}
