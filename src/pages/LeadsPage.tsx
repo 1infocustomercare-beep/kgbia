@@ -1281,29 +1281,38 @@ export default function LeadsPage() {
               </div>
             </div>
 
-            {/* ═══ AI ANALYSIS — Sector-Specific Pain Points ═══ */}
-            <div className="p-4 rounded-2xl space-y-3" style={{ background: "rgba(239,68,68,0.03)", border: "1px solid rgba(239,68,68,0.1)" }}>
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4" style={{ color: "#ef4444" }} />
-                <span className="text-xs font-bold text-white">Analisi Problematiche — {sectorConfig?.label || selected._sector}</span>
+            {/* ═══ DEEP AI INTEL — Real Scraping + Sales Playbook ═══ */}
+            {(analysisLoading || deepReport) ? (
+              <DeepLeadIntel
+                loading={analysisLoading}
+                report={deepReport}
+                audit={deepAudit}
+                leadName={selected.name}
+                onUseHook={(hook) => setGeneratedMessage(hook)}
+              />
+            ) : (
+              <div className="p-4 rounded-2xl space-y-3" style={{ background: "rgba(239,68,68,0.03)", border: "1px solid rgba(239,68,68,0.1)" }}>
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4" style={{ color: "#ef4444" }} />
+                  <span className="text-xs font-bold text-white">Analisi Settore — {sectorConfig?.label || selected._sector}</span>
+                </div>
+                <div className="space-y-1.5">
+                  {(SECTOR_PAIN_ANALYSIS[selected._sector] || SECTOR_PAIN_ANALYSIS.default).map((pain, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
+                      className="flex items-start gap-2 p-2 rounded-lg" style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.08)" }}>
+                      <span className="text-[9px] mt-0.5" style={{ color: "#ef4444" }}>⚠️</span>
+                      <span className="text-[10px]" style={{ color: "#e5e7eb" }}>{pain}</span>
+                    </motion.div>
+                  ))}
+                </div>
+                <div className="p-2.5 rounded-lg" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.12)" }}>
+                  <p className="text-[10px] font-bold" style={{ color: "#34d399" }}>
+                    💡 {selected.name} ha {selected._score >= 70 ? "urgente bisogno" : selected._score >= 45 ? "bisogno evidente" : "potenziale"} di digitalizzazione.
+                    {!selected.website && " Non ha nemmeno un sito web — opportunità enorme."}
+                  </p>
+                </div>
               </div>
-              <div className="space-y-1.5">
-                {(SECTOR_PAIN_ANALYSIS[selected._sector] || SECTOR_PAIN_ANALYSIS.default).map((pain, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
-                    className="flex items-start gap-2 p-2 rounded-lg" style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.08)" }}>
-                    <span className="text-[9px] mt-0.5" style={{ color: "#ef4444" }}>⚠️</span>
-                    <span className="text-[10px]" style={{ color: "#e5e7eb" }}>{pain}</span>
-                  </motion.div>
-                ))}
-              </div>
-              {/* Opportunity summary */}
-              <div className="p-2.5 rounded-lg" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.12)" }}>
-                <p className="text-[10px] font-bold" style={{ color: "#34d399" }}>
-                  💡 {selected.name} ha {selected._score >= 70 ? "urgente bisogno" : selected._score >= 45 ? "bisogno evidente" : "potenziale"} di digitalizzazione nel settore {sectorConfig?.label || selected._sector}.
-                  {!selected.website && " Non ha nemmeno un sito web — opportunità enorme."}
-                </p>
-              </div>
-            </div>
+            )}
 
             {/* ═══ CUSTOMIZED DEMO PREVIEW — Sector-Specific ═══ */}
             {(() => {
