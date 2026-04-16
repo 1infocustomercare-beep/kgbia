@@ -30,11 +30,23 @@ serve(async (req) => {
   }
 
   try {
-    const { tenant_id, message_text, conversation_id } = await req.json();
+    // ── Auth guard ──
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const _authClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: authHeader } } });
+    const { data: { user: _authUser }, error: _authErr } = await _authClient.auth.getUser();
+    if (_authErr || !_authUser) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
 
-    if (!tenant_id || !message_text) {
+    const { message_text, conversation_id } = await req.json();
+    const tenant_id = _authUser.id; // Use JWT-verified user ID
+
+    if (!message_text) {
       return new Response(
-        JSON.stringify({ error: "tenant_id and message_text required" }),
+        JSON.stringify({ error: "message_text required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
