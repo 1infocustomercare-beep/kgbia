@@ -457,7 +457,7 @@ export default function LeadsPage() {
       google_rating: selected.google_rating || null,
       google_reviews: selected.google_reviews || null,
       ai_score: selected._score ?? null,
-      ai_summary: deepReport?.summary || null,
+      ai_summary: deepReport?.executive_summary || null,
       source: selected.source || "leadengine",
       lead_source_data: {
         google_maps_url: selected.google_maps_url,
@@ -1171,18 +1171,47 @@ export default function LeadsPage() {
         </div>
       </motion.div>
 
-      {/* Lead count badges */}
-      <div className="flex justify-center">
+      {/* Lead count badges + CRM access */}
+      <div className="flex justify-center items-center gap-2 flex-wrap">
         {results.length > 0 && (
-          <div className="flex items-center gap-1.5 mt-1.5">
+          <>
             <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.1)", color: "#34d399" }}>
               🟢 {results.length} lead
             </span>
             <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(239,68,68,0.1)", color: "#f87171" }}>
               🔥 {hotLeads} caldi
             </span>
-          </div>
+          </>
         )}
+        {/* CRM button — always visible, with badges */}
+        <button
+          onClick={() => setCrmOpen(true)}
+          className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all hover:scale-[1.03]"
+          style={{
+            background: "linear-gradient(135deg, rgba(167,139,250,0.18), rgba(20,184,166,0.12))",
+            border: "1px solid rgba(167,139,250,0.35)",
+            color: "#c4b5fd",
+            boxShadow: pipeline.leads.length > 0 ? "0 0 18px rgba(167,139,250,0.25)" : "none",
+          }}
+        >
+          <Briefcase className="w-3 h-3" />
+          CRM
+          {pipeline.leads.length > 0 && (
+            <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.3)", color: "#fff", minWidth: 14, textAlign: "center" }}>
+              {pipeline.leads.length}
+            </span>
+          )}
+          {overdueFollowups.length > 0 && (
+            <motion.span
+              animate={{ scale: [1, 1.25, 1], opacity: [1, 0.7, 1] }}
+              transition={{ repeat: Infinity, duration: 1.4 }}
+              className="absolute -top-1 -right-1 text-[8px] font-black px-1 py-0.5 rounded-full"
+              style={{ background: "#ef4444", color: "#fff", minWidth: 16, textAlign: "center", boxShadow: "0 0 8px rgba(239,68,68,0.6)" }}
+            >
+              {overdueFollowups.length}
+            </motion.span>
+          )}
+        </button>
       </div>
 
       {/* ═══ TIPS — dismissable ═══ */}
@@ -1512,10 +1541,26 @@ export default function LeadsPage() {
                     </div>
                   </div>
                 </div>
-                <button onClick={() => { setSelected(null); setGeneratedMessage(null); }}
-                  className="p-1.5 rounded-lg shrink-0" style={{ background: "rgba(239,68,68,0.1)" }}>
-                  <XIcon className="w-3.5 h-3.5" style={{ color: "#f87171" }} />
-                </button>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {/* Save to CRM */}
+                  <button
+                    onClick={handleSaveToCRM}
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-bold transition-all hover:scale-[1.03]"
+                    style={{
+                      background: isLeadSaved(selected) ? "rgba(34,197,94,0.15)" : "linear-gradient(135deg, rgba(167,139,250,0.2), rgba(20,184,166,0.12))",
+                      border: `1px solid ${isLeadSaved(selected) ? "rgba(34,197,94,0.4)" : "rgba(167,139,250,0.4)"}`,
+                      color: isLeadSaved(selected) ? "#34d399" : "#c4b5fd",
+                    }}
+                    title={isLeadSaved(selected) ? "Già nel CRM" : "Salva nel CRM"}
+                  >
+                    {isLeadSaved(selected) ? <CheckCircle className="w-3 h-3" /> : <Bookmark className="w-3 h-3" />}
+                    {isLeadSaved(selected) ? "Salvato" : "Salva"}
+                  </button>
+                  <button onClick={() => { setSelected(null); setGeneratedMessage(null); }}
+                    className="p-1.5 rounded-lg" style={{ background: "rgba(239,68,68,0.1)" }}>
+                    <XIcon className="w-3.5 h-3.5" style={{ color: "#f87171" }} />
+                  </button>
+                </div>
               </div>
 
               {/* Analysis indicators */}
@@ -2470,6 +2515,20 @@ export default function LeadsPage() {
         </motion.div>
       )}
     </div>{/* close z-10 */}
+
+    {/* ═══ CRM Venditore — persistent pipeline overlay ═══ */}
+    <SellerCRM
+      open={crmOpen}
+      onClose={() => setCrmOpen(false)}
+      leads={pipeline.leads}
+      loading={pipeline.loading}
+      onUpdateStage={pipeline.updateStage}
+      onAddInteraction={pipeline.addInteraction}
+      onScheduleFollowup={pipeline.scheduleFollowup}
+      onUpdateNotes={pipeline.updateNotes}
+      onUpdateValue={pipeline.updateValue}
+      onDeleteLead={pipeline.deleteLead}
+    />
     </div>
   );
 }
