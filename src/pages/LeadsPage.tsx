@@ -612,6 +612,12 @@ export default function LeadsPage() {
   return (
     <div className="min-h-screen p-4 space-y-4 pb-24 max-w-2xl mx-auto relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
       <SalesPlaybook autoOpen />
+      <ManualPreviewPicker
+        open={showPicker}
+        onClose={() => setShowPicker(false)}
+        onSelect={(sel) => setCustomPreview(sel)}
+        initialSector={selected?._sector}
+      />
 
       {/* ═══ AMBIENT VIOLET BACKGROUND ═══ */}
       <div className="fixed inset-0 pointer-events-none z-0">
