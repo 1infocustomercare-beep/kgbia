@@ -528,11 +528,138 @@ export default function LeadsPage() {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-center gap-4 pt-2 pb-1"
+        className="flex items-center justify-center gap-3 pt-2 pb-1"
       >
-        {/* Animated mascot */}
+        {/* ═══ INTERACTIVE TECH SPHERE — LEFT ═══ */}
+        <motion.div
+          className="relative w-20 h-20 shrink-0 cursor-pointer"
+          onHoverStart={() => setSphereHover(true)}
+          onHoverEnd={() => setSphereHover(false)}
+          onTapStart={() => setSphereHover(true)}
+          onTap={() => setSphereHover(false)}
+        >
+          {/* Outer scan ring */}
+          <motion.div
+            className="absolute inset-[-2px] rounded-full"
+            style={{ border: "1px solid rgba(139,92,246,0.12)" }}
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
+          />
+          {/* Core glow */}
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            animate={{ scale: sphereHover ? 1.2 : 1 }}
+            transition={{ duration: 0.4 }}
+            style={{
+              background: sphereHover
+                ? "radial-gradient(circle, rgba(139,92,246,0.25), rgba(20,184,166,0.1), transparent 70%)"
+                : "radial-gradient(circle, rgba(139,92,246,0.1), transparent 65%)",
+              filter: "blur(6px)",
+            }}
+          />
+          {/* SVG tech sphere */}
+          <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
+            <defs>
+              <radialGradient id="sphereGrad" cx="50%" cy="50%">
+                <stop offset="0%" stopColor="rgba(139,92,246,0.08)" />
+                <stop offset="100%" stopColor="transparent" />
+              </radialGradient>
+            </defs>
+            {/* Background fill */}
+            <circle cx={50} cy={50} r={42} fill="url(#sphereGrad)" />
+            {/* Hex grid lines */}
+            {[0, 60, 120].map(angle => (
+              <motion.line
+                key={`hex-${angle}`}
+                x1={50 + Math.cos((angle * Math.PI) / 180) * 38}
+                y1={50 + Math.sin((angle * Math.PI) / 180) * 38}
+                x2={50 - Math.cos((angle * Math.PI) / 180) * 38}
+                y2={50 - Math.sin((angle * Math.PI) / 180) * 38}
+                stroke="rgba(139,92,246,0.12)"
+                strokeWidth={0.4}
+                animate={{ opacity: sphereHover ? 0.5 : 0.15 }}
+                transition={{ duration: 0.3 }}
+              />
+            ))}
+            {/* Concentric tech rings */}
+            {[14, 24, 34].map((r, i) => (
+              <motion.circle
+                key={`ring-${i}`}
+                cx={50} cy={50} r={r}
+                fill="none"
+                stroke={i % 2 === 0 ? "rgba(139,92,246,0.15)" : "rgba(20,184,166,0.12)"}
+                strokeWidth={0.4}
+                strokeDasharray={i === 1 ? "3 4" : "none"}
+                animate={{ opacity: sphereHover ? [0.5, 0.2, 0.5] : [0.15, 0.25, 0.15] }}
+                transition={{ repeat: Infinity, duration: 2 + i, delay: i * 0.3 }}
+              />
+            ))}
+            {/* Data nodes on orbits */}
+            {sphereNodes.map((n, i) => (
+              <motion.circle
+                key={`node-${i}`}
+                cx={n.x} cy={n.y}
+                r={n.size / 2}
+                fill={i % 3 === 0 ? "#8b5cf6" : i % 3 === 1 ? "#14b8a6" : "#a78bfa"}
+                animate={{
+                  cx: sphereHover ? 50 + (n.x - 50) * 1.3 : n.x,
+                  cy: sphereHover ? 50 + (n.y - 50) * 1.3 : n.y,
+                  opacity: sphereHover ? [1, 0.5, 1] : [0.3, 0.6, 0.3],
+                  r: sphereHover ? n.size / 2 + 0.8 : n.size / 2,
+                }}
+                transition={{ duration: 0.4, delay: n.delay * 0.03, opacity: { repeat: Infinity, duration: 2.5 } }}
+              />
+            ))}
+            {/* Connection arcs */}
+            {sphereNodes.slice(0, 8).map((n, i) => {
+              const next = sphereNodes[(i + 4) % sphereNodes.length];
+              const nx = sphereHover ? 50 + (n.x - 50) * 1.3 : n.x;
+              const ny = sphereHover ? 50 + (n.y - 50) * 1.3 : n.y;
+              const ex = sphereHover ? 50 + (next.x - 50) * 1.3 : next.x;
+              const ey = sphereHover ? 50 + (next.y - 50) * 1.3 : next.y;
+              return (
+                <motion.line
+                  key={`conn-${i}`}
+                  x1={nx} y1={ny} x2={ex} y2={ey}
+                  stroke={i % 2 === 0 ? "rgba(139,92,246,0.18)" : "rgba(20,184,166,0.14)"}
+                  strokeWidth={0.4}
+                  animate={{ opacity: sphereHover ? [0.6, 0.15, 0.6] : [0.1, 0.2, 0.1] }}
+                  transition={{ repeat: Infinity, duration: 3, delay: i * 0.15 }}
+                />
+              );
+            })}
+            {/* Center core */}
+            <motion.circle
+              cx={50} cy={50}
+              fill={sphereHover ? "rgba(139,92,246,0.5)" : "rgba(139,92,246,0.2)"}
+              animate={{
+                r: sphereHover ? [3, 6, 3] : [2, 4, 2],
+                opacity: sphereHover ? [1, 0.4, 1] : [0.5, 0.7, 0.5],
+              }}
+              transition={{ repeat: Infinity, duration: sphereHover ? 0.8 : 2 }}
+            />
+            {/* Scan sweep */}
+            <motion.line
+              x1={50} y1={50}
+              x2={50 + 38} y2={50}
+              stroke="rgba(139,92,246,0.2)"
+              strokeWidth={0.6}
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+              style={{ transformOrigin: "50px 50px" }}
+            />
+          </svg>
+          <motion.span
+            className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 text-[6px] font-bold uppercase tracking-widest whitespace-nowrap"
+            style={{ color: "#8b5cf6" }}
+            animate={{ opacity: sphereHover ? 1 : 0.4 }}
+          >
+            {sphereHover ? "⚡ SCAN" : "◉ DATA"}
+          </motion.span>
+        </motion.div>
+
+        {/* ═══ MASCOT — CENTER ═══ */}
         <div className="relative w-20 h-20 shrink-0">
-          {/* Rotating glow ring */}
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
@@ -564,122 +691,17 @@ export default function LeadsPage() {
             }}
             transition={{ repeat: Infinity, duration: loading ? 1.5 : 3, ease: "easeInOut" }}
           />
-          {[
-            { x: -14, y: 10, size: 4, delay: 0, color: "#a78bfa" },
-            { x: 90, y: 15, size: 3, delay: 0.5, color: "#14b8a6" },
-            { x: -10, y: 70, size: 3, delay: 1, color: "#5eead4" },
-            { x: 92, y: 65, size: 4, delay: 0.3, color: "#a78bfa" },
-            { x: 40, y: -8, size: 3, delay: 0.8, color: "#34d399" },
-          ].map((p, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full z-0"
-              style={{ left: p.x, top: p.y, width: p.size, height: p.size, background: p.color }}
-              animate={{ y: [0, -12, 0], opacity: [0.6, 0, 0.6], scale: loading ? [1, 1.5, 1] : [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: loading ? 1.5 : 2.5, delay: p.delay }}
-            />
-          ))}
         </div>
 
-        {/* Title + subtitle */}
-        <div className="text-left">
-          <h1 className="text-lg font-bold flex items-center gap-2 text-white">
-            <Target className="w-5 h-5" style={{ color: "#14b8a6" }} /> LeadEngine Scout
+        {/* ═══ TITLE — RIGHT ═══ */}
+        <div className="text-left min-w-0">
+          <h1 className="text-base font-bold flex items-center gap-1.5 text-white">
+            <Target className="w-4 h-4 shrink-0" style={{ color: "#14b8a6" }} />
+            <span className="truncate">LeadEngine</span>
           </h1>
-          <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>
-            Ricerca automatica multi-fonte
-          </p>
+          <p className="text-[9px] mt-0.5 font-medium" style={{ color: "#8b5cf6" }}>Scout AI</p>
+          <p className="text-[8px]" style={{ color: "#6b7280" }}>Multi-fonte · Real-time</p>
         </div>
-
-        {/* ═══ INTERACTIVE DATA SPHERE ═══ */}
-        <motion.div
-          className="relative w-24 h-24 shrink-0 cursor-pointer"
-          onHoverStart={() => setSphereHover(true)}
-          onHoverEnd={() => setSphereHover(false)}
-          onTapStart={() => setSphereHover(true)}
-          onTap={() => setSphereHover(false)}
-        >
-          {/* Core glow */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{
-              background: sphereHover
-                ? "radial-gradient(circle, rgba(139,92,246,0.35), rgba(20,184,166,0.15), transparent 70%)"
-                : "radial-gradient(circle, rgba(139,92,246,0.15), transparent 60%)",
-              scale: sphereHover ? 1.15 : 1,
-            }}
-            transition={{ duration: 0.4 }}
-            style={{ filter: "blur(8px)" }}
-          />
-          {/* Rotating wireframe ring */}
-          <motion.div
-            className="absolute inset-2 rounded-full"
-            style={{ border: "1px solid rgba(167,139,250,0.2)" }}
-            animate={{ rotate: sphereHover ? 720 : 360, scale: sphereHover ? 1.1 : 1 }}
-            transition={{ rotate: { repeat: Infinity, duration: sphereHover ? 3 : 6, ease: "linear" }, scale: { duration: 0.3 } }}
-          />
-          <motion.div
-            className="absolute inset-4 rounded-full"
-            style={{ border: "1px dashed rgba(20,184,166,0.2)" }}
-            animate={{ rotate: sphereHover ? -720 : -360, scale: sphereHover ? 1.15 : 1 }}
-            transition={{ rotate: { repeat: Infinity, duration: sphereHover ? 4 : 8, ease: "linear" }, scale: { duration: 0.3 } }}
-          />
-          {/* Data nodes */}
-          <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
-            {sphereNodes.map((n, i) => (
-              <motion.circle
-                key={i}
-                cx={n.x} cy={n.y} r={n.size / 2}
-                fill={i % 2 === 0 ? "#a78bfa" : "#14b8a6"}
-                animate={{
-                  cx: sphereHover ? 50 + (n.x - 50) * 1.4 : n.x,
-                  cy: sphereHover ? 50 + (n.y - 50) * 1.4 : n.y,
-                  opacity: sphereHover ? [0.9, 0.5, 0.9] : [0.4, 0.7, 0.4],
-                  r: sphereHover ? n.size / 2 + 1 : n.size / 2,
-                }}
-                transition={{ duration: 0.5, delay: n.delay * 0.05, opacity: { repeat: Infinity, duration: 2 } }}
-              />
-            ))}
-            {/* Connection lines */}
-            {sphereNodes.slice(0, 10).map((n, i) => {
-              const next = sphereNodes[(i + 3) % sphereNodes.length];
-              return (
-                <motion.line
-                  key={`l-${i}`}
-                  x1={n.x} y1={n.y} x2={next.x} y2={next.y}
-                  stroke={i % 2 === 0 ? "rgba(167,139,250,0.15)" : "rgba(20,184,166,0.12)"}
-                  strokeWidth={0.5}
-                  animate={{
-                    opacity: sphereHover ? [0.5, 0.2, 0.5] : [0.15, 0.3, 0.15],
-                    x1: sphereHover ? 50 + (n.x - 50) * 1.4 : n.x,
-                    y1: sphereHover ? 50 + (n.y - 50) * 1.4 : n.y,
-                    x2: sphereHover ? 50 + (next.x - 50) * 1.4 : next.x,
-                    y2: sphereHover ? 50 + (next.y - 50) * 1.4 : next.y,
-                  }}
-                  transition={{ duration: 0.5, opacity: { repeat: Infinity, duration: 2.5 } }}
-                />
-              );
-            })}
-            {/* Center pulse */}
-            <motion.circle
-              cx={50} cy={50}
-              fill="rgba(139,92,246,0.3)"
-              animate={{
-                r: sphereHover ? [4, 8, 4] : [3, 5, 3],
-                opacity: sphereHover ? [0.8, 0.3, 0.8] : [0.4, 0.6, 0.4],
-              }}
-              transition={{ repeat: Infinity, duration: sphereHover ? 1 : 2 }}
-            />
-          </svg>
-          {/* Label */}
-          <motion.span
-            className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[7px] font-bold whitespace-nowrap"
-            style={{ color: "#a78bfa" }}
-            animate={{ opacity: sphereHover ? 1 : 0.5 }}
-          >
-            {sphereHover ? "🔮 Data Matrix" : "🌐 Live Data"}
-          </motion.span>
-        </motion.div>
       </motion.div>
 
       {/* Lead count badges */}
