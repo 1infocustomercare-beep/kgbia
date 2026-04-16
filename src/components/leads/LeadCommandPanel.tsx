@@ -190,19 +190,34 @@ export default function LeadCommandPanel({ lead, onClose, onSave }: Props) {
           </p>
         </div>
 
-        {/* Recommended Preview */}
+        {/* Recommended Preview — sector-specific */}
         <div className="p-3 rounded-xl" style={{ background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.12)" }}>
           <div className="flex items-center gap-2 mb-1.5">
             <ExternalLink className="w-3.5 h-3.5" style={{ color: "#c4b5fd" }} />
             <span className="text-[10px] font-bold" style={{ color: "#e5e7eb" }}>Preview da Allegare</span>
           </div>
           <p className="text-[10px]" style={{ color: "#d1d5db" }}>
-            {lead.sector === "food" ? `🍽️ Demo "Ristorante Bella Napoli" — menu, prenotazioni, CRM`
-              : lead.sector === "beauty" ? `💅 Demo "Beauty Studio" — booking, loyalty, automazioni`
-              : lead.sector === "fitness" ? `💪 Demo "PowerGym" — abbonamenti, corsi, app membri`
-              : lead.sector === "ncc" ? `🚗 Demo "NCC Executive" — fleet, booking, tracking`
-              : lead.sector === "hospitality" ? `🏨 Demo "Hotel Bellavista" — camere, check-in, upselling`
-              : `📱 Preview settore "${sectorLabel}" — tutte le funzionalità`}
+            {lead.sector === "food" ? `🍽️ Demo Ristorante — menu QR, prenotazioni, ordini, CRM clienti`
+              : lead.sector === "beauty" ? `💅 Demo Beauty — booking online, promemoria, loyalty, galleria servizi`
+              : lead.sector === "fitness" ? `💪 Demo Palestra — iscrizioni, prenotazione corsi, app membri`
+              : lead.sector === "ncc" ? `🚗 Demo NCC — prenotazioni, fleet tracking, tariffe, fatturazione`
+              : lead.sector === "hospitality" ? `🏨 Demo Hotel — booking diretto, check-in, upselling, guest CRM`
+              : lead.sector === "plumber" ? `🔧 Demo Idraulico — richieste intervento, preventivi, portfolio lavori`
+              : lead.sector === "electrician" ? `⚡ Demo Elettricista — preventivi online, calendario, portfolio`
+              : lead.sector === "healthcare" ? `🏥 Demo Clinica — prenotazione visite, telemedicina, schede pazienti`
+              : lead.sector === "retail" ? `🛍️ Demo Negozio — catalogo online, e-commerce, inventario, loyalty`
+              : lead.sector === "construction" ? `🏗️ Demo Edilizia — portfolio progetti, timeline, preventivi`
+              : lead.sector === "veterinary" ? `🐾 Demo Veterinario — visite, cartelle cliniche, vaccini, shop`
+              : lead.sector === "beach" ? `🏖️ Demo Stabilimento — mappa ombrelloni, prenotazioni, abbonamenti`
+              : lead.sector === "tattoo" ? `🎨 Demo Tattoo — portfolio artisti, booking, galleria, consensi`
+              : lead.sector === "photography" ? `📷 Demo Fotografo — portfolio, booking sessioni, galleria clienti`
+              : lead.sector === "gardening" ? `🌿 Demo Giardinaggio — catalogo servizi, preventivi, portfolio`
+              : lead.sector === "legal" ? `⚖️ Demo Studio Legale — consulenze online, gestione pratiche`
+              : lead.sector === "accounting" ? `📊 Demo Commercialista — portale clienti, scadenzario fiscale`
+              : lead.sector === "garage" ? `🔩 Demo Officina — prenotazione tagliandi, storico interventi`
+              : lead.sector === "cleaning" ? `🧹 Demo Pulizie — preventivi istantanei, booking, abbonamenti`
+              : lead.sector === "events" ? `🎉 Demo Eventi — catalogo, booking location, preventivi wedding`
+              : `📱 Preview "${sectorLabel}" — sito + app + admin + AI integrata`}
           </p>
           <p className="text-[9px] mt-1 font-mono" style={{ color: "#9ca3af" }}>
             empireia.lovable.app/demo/{lead.sector}
