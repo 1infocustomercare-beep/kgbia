@@ -1,19 +1,11 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
-
-/**
- * AI Gold Credits Purchase — Multi-tier pricing
- * 50 credits  → €15   (€0.30/credit)
- * 150 credits → €39   (€0.26/credit — save 13%)
- * 500 credits → €99   (€0.20/credit — save 34%)
- * Revenue goes 100% to the Platform Account (no splits).
- * On successful payment, the webhook adds tokens to the restaurant's balance.
- */
 
 const VALID_PACKS: Record<number, { price: number; label: string }> = {
   50:  { price: 1500,  label: "Starter — 50 Gettoni IA" },
@@ -25,20 +17,29 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // ── Auth guard ──
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const _authClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: authHeader } } });
+    const { data: { user: _authUser }, error: _authErr } = await _authClient.auth.getUser();
+    if (_authErr || !_authUser) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("Stripe not configured");
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
-    const { restaurantId, customerEmail, credits, priceEurCents, successUrl, cancelUrl } = await req.json();
+    const { restaurantId, customerEmail, credits, successUrl, cancelUrl } = await req.json();
 
     if (!restaurantId) throw new Error("Missing restaurantId");
 
-    // Determine pack — support legacy (no credits param = 50)
     const requestedCredits = credits || 50;
     const pack = VALID_PACKS[requestedCredits];
     if (!pack) throw new Error(`Invalid credits amount: ${requestedCredits}`);
 
-    // Use server-side price, ignore client priceEurCents for security
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -68,7 +69,7 @@ serve(async (req) => {
     });
   } catch (err: any) {
     console.error("AI token checkout error:", err.message);
-    return new Response(JSON.stringify({ error: err.message }), {
+    return new Response(JSON.stringify({ error: "An error occurred" }), {
       status: 400,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

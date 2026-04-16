@@ -14,8 +14,15 @@ serve(async (req) => {
   }
 
   try {
+    // ── Cron secret guard ──
+    const cronSecret = req.headers.get("x-cron-secret");
+    const expectedSecret = Deno.env.get("CRON_SECRET");
+    if (expectedSecret && cronSecret !== expectedSecret) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     const resendKey = Deno.env.get("RESEND_API_KEY");
-    if (!resendKey) throw new Error("RESEND_API_KEY not configured");
+    if (!resendKey) throw new Error("Email service not configured");
 
     const resend = new Resend(resendKey);
 

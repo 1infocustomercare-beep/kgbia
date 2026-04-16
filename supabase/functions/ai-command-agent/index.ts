@@ -1014,11 +1014,23 @@ serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceKey);
 
   try {
-    const body = await req.json();
-    const { tenant_id, command, source = "chat", sender_phone } = body;
+    // ── Auth guard ──
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const _authClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: authHeader } } });
+    const { data: { user: _authUser }, error: _authErr } = await _authClient.auth.getUser();
+    if (_authErr || !_authUser) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
 
-    if (!tenant_id || !command) {
-      return new Response(JSON.stringify({ error: "tenant_id e command richiesti" }), {
+    const body = await req.json();
+    const { command, source = "chat", sender_phone } = body;
+    const tenant_id = _authUser.id; // Use JWT-verified user ID, ignore body
+
+    if (!command) {
+      return new Response(JSON.stringify({ error: "command richiesto" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
