@@ -5,7 +5,7 @@ import {
   Target, DollarSign, FolderOpen, User, ChevronRight, Crown, Trophy,
   Sparkles, Zap, TrendingUp, Users, Bot, Package, CheckCircle, Presentation,
   ShieldCheck, Globe, Clock, Headphones, BarChart3, Smartphone, Star,
-  MessageCircle, Heart, Lock, Rocket, Award, ArrowRight,
+  MessageCircle, Heart, Lock, Rocket, Award, ArrowRight, Eye,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
