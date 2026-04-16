@@ -183,6 +183,20 @@ export function useSellerPipeline() {
       .single();
 
     if (error) {
+      // Unique-constraint violation → fetch existing instead of erroring loudly
+      if ((error as any).code === "23505") {
+        const { data: existingRow } = await supabase
+          .from("leads")
+          .select("*")
+          .eq("owner_id", userId)
+          .ilike("name", input.name.trim())
+          .limit(1)
+          .maybeSingle();
+        if (existingRow) {
+          toast.info("Lead già nel tuo CRM", { description: `${input.name} è stato aggiornato` });
+          return normalizeLead(existingRow);
+        }
+      }
       console.error("Save lead error:", error);
       toast.error("Errore salvataggio: " + error.message);
       return null;
