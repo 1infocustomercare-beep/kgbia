@@ -70,10 +70,14 @@ export default function PartnerLayout() {
     <div className={`min-h-screen flex flex-col relative admin-panel ${isDark ? 'landing-dark partner-console' : ''}`}
       style={isDark ? { background: "#0a0a14" } : undefined}>
 
-      {/* ═══ INTERACTIVE BACKGROUND — same as Empire home ═══ */}
+      {/* ═══ INTERACTIVE BACKGROUND — boosted visibility ═══ */}
       {isDark && (
-        <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="fixed inset-0 z-0 pointer-events-none" style={{ opacity: 1.0 }}>
           <EmpireDNABackground />
+          {/* Extra ambient glow layers for more impact */}
+          <div className="absolute inset-0" style={{
+            background: "radial-gradient(ellipse 60% 40% at 20% 30%, rgba(167,139,250,0.06), transparent 70%), radial-gradient(ellipse 50% 50% at 80% 70%, rgba(99,102,241,0.05), transparent 60%)",
+          }} />
         </div>
       )}
 
@@ -215,8 +219,8 @@ export default function PartnerLayout() {
         </div>
       </div>
 
-      {/* ═══ PAGE CONTENT ═══ */}
-      <div className="flex-1 overflow-y-auto pb-20">
+      {/* ═══ PAGE CONTENT — above DNA background ═══ */}
+      <div className="flex-1 overflow-y-auto pb-20 relative z-10">
         <Outlet />
       </div>
 
