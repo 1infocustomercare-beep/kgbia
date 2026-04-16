@@ -33,6 +33,7 @@ const AnimatedCounter = ({ value, prefix = "", color }: { value: number; prefix?
   return <p className="text-xl font-bold text-foreground" style={{ textShadow: `0 0 20px ${color}30` }}>{prefix}{display.toLocaleString("it-IT")}</p>;
 };
 
+export default function PartnerHomePage() {
   const navigate = useNavigate();
   const { user, isTeamLeader } = useAuth();
   const { demoMode } = usePartnerDemoMode();
