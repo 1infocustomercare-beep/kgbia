@@ -14,6 +14,7 @@ import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
+import SalesPlaybook from "@/components/leads/SalesPlaybook";
 
 /* ─── Types ─── */
 interface Lead {
@@ -605,6 +606,7 @@ export default function LeadsPage() {
 
   return (
     <div className="min-h-screen p-4 space-y-4 pb-24 max-w-2xl mx-auto relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
+      <SalesPlaybook autoOpen />
 
       {/* ═══ AMBIENT VIOLET BACKGROUND ═══ */}
       <div className="fixed inset-0 pointer-events-none z-0">
