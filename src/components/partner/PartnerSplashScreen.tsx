@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Crown, Rocket, Flame, Zap, Star, Trophy, Sparkles, TrendingUp, Target, Shield } from "lucide-react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
+import { Crown, Rocket, Flame, Zap, Star, Trophy, Sparkles, TrendingUp, Target, Shield, Pause, Play } from "lucide-react";
 import SplashScreen from "@/components/SplashScreen";
 
 /* ═══ PROFESSIONAL MINDSET QUOTES — rotano ogni accesso ═══ */
@@ -32,12 +32,21 @@ interface Props {
   onComplete: () => void;
 }
 
+const AUTO_DISMISS_MS = 6500;
+const PROGRESS_START_DELAY = 2000;
+const PROGRESS_DURATION = AUTO_DISMISS_MS - PROGRESS_START_DELAY;
+
 export default function PartnerSplashScreen({ userName, onComplete }: Props) {
   const [phase, setPhase] = useState<"empire" | "mindset" | "done">("empire");
+  const [paused, setPaused] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const elapsedRef = useRef(0);
+  const startTimeRef = useRef(0);
+  const progressControls = useAnimationControls();
 
   const todayQuote = useMemo(() => {
     const seed = new Date().getFullYear() * 10000 + (new Date().getMonth() + 1) * 100 + new Date().getDate();
-    const hourBlock = Math.floor(new Date().getHours() / 4); // changes every 4 hours
+    const hourBlock = Math.floor(new Date().getHours() / 4);
     return MINDSET_LIBRARY[(seed + hourBlock) % MINDSET_LIBRARY.length];
   }, []);
 
@@ -45,12 +54,72 @@ export default function PartnerSplashScreen({ userName, onComplete }: Props) {
     setPhase("mindset");
   }, []);
 
+  const finish = useCallback(() => {
+    setPhase("done");
+    onComplete();
+  }, [onComplete]);
+
+  // Auto-dismiss timer with pause/resume
   useEffect(() => {
-    if (phase === "mindset") {
-      const t = setTimeout(() => { setPhase("done"); onComplete(); }, 6500);
+    if (phase !== "mindset") return;
+
+    if (paused) {
+      // Save elapsed time and clear timer
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      elapsedRef.current += Date.now() - startTimeRef.current;
+      return;
+    }
+
+    // Start/resume timer
+    const remaining = AUTO_DISMISS_MS - elapsedRef.current;
+    startTimeRef.current = Date.now();
+    timerRef.current = setTimeout(finish, remaining);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [phase, paused, finish]);
+
+  // Progress bar animation with pause/resume
+  useEffect(() => {
+    if (phase !== "mindset") return;
+
+    const elapsed = elapsedRef.current;
+    const progressElapsed = Math.max(0, elapsed - PROGRESS_START_DELAY);
+    const progressRemaining = PROGRESS_DURATION - progressElapsed;
+    const startPercent = (progressElapsed / PROGRESS_DURATION) * 100;
+
+    if (paused) {
+      // Freeze progress at current position
+      progressControls.stop();
+      return;
+    }
+
+    if (elapsed < PROGRESS_START_DELAY) {
+      // Haven't reached progress start yet
+      const delayRemaining = PROGRESS_START_DELAY - elapsed;
+      const t = setTimeout(() => {
+        progressControls.start({
+          width: "100%",
+          transition: { duration: PROGRESS_DURATION / 1000, ease: "linear" },
+        });
+      }, delayRemaining);
       return () => clearTimeout(t);
     }
-  }, [phase, onComplete]);
+
+    // Resume from current position
+    progressControls.start({
+      width: "100%",
+      transition: { duration: progressRemaining / 1000, ease: "linear" },
+    });
+  }, [phase, paused, progressControls]);
+
+  const togglePause = useCallback(() => {
+    setPaused((p) => !p);
+  }, []);
 
   if (phase === "empire") {
     return <SplashScreen onComplete={handleSplashDone} />;
@@ -74,7 +143,7 @@ export default function PartnerSplashScreen({ userName, onComplete }: Props) {
                 width: 1.5 + Math.random() * 2, height: 1.5 + Math.random() * 2,
                 background: todayQuote.accent, left: `${10 + Math.random() * 80}%`, top: `${10 + Math.random() * 80}%`,
               }}
-              animate={{ y: [0, -20, 0], opacity: [0, 0.4, 0] }}
+              animate={paused ? {} : { y: [0, -20, 0], opacity: [0, 0.4, 0] }}
               transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2 }}
             />
           ))}
@@ -131,7 +200,7 @@ export default function PartnerSplashScreen({ userName, onComplete }: Props) {
               <todayQuote.icon className="w-6 h-6" style={{ color: todayQuote.accent }} />
             </motion.div>
 
-            {/* Quote — word by word reveal */}
+            {/* Quote */}
             <motion.blockquote
               className="text-[15px] font-medium text-white/85 leading-relaxed max-w-xs"
               initial={{ opacity: 0 }}
@@ -141,26 +210,64 @@ export default function PartnerSplashScreen({ userName, onComplete }: Props) {
               "{todayQuote.text}"
             </motion.blockquote>
 
-            {/* Auto-dismiss progress */}
+            {/* Progress bar + pause button */}
             <motion.div
-              className="w-24 h-[3px] rounded-full mt-8 overflow-hidden"
-              style={{ background: "rgba(255,255,255,0.04)" }}
+              className="flex items-center gap-3 mt-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
+              transition={{ delay: 1.8 }}
             >
-              <motion.div
-                className="h-full rounded-full"
-                style={{ background: `linear-gradient(90deg, ${todayQuote.accent}, ${todayQuote.accent}60)` }}
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ delay: 2, duration: 4.5, ease: "linear" }}
-              />
+              {/* Pause/Play button */}
+              <motion.button
+                onClick={togglePause}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
+                style={{
+                  background: `${todayQuote.accent}15`,
+                  border: `1px solid ${todayQuote.accent}30`,
+                }}
+                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.1, background: `${todayQuote.accent}25` }}
+                aria-label={paused ? "Riprendi" : "Pausa"}
+              >
+                {paused ? (
+                  <Play className="w-3.5 h-3.5" style={{ color: todayQuote.accent }} />
+                ) : (
+                  <Pause className="w-3.5 h-3.5" style={{ color: todayQuote.accent }} />
+                )}
+              </motion.button>
+
+              {/* Progress bar */}
+              <div
+                className="w-24 h-[3px] rounded-full overflow-hidden"
+                style={{ background: "rgba(255,255,255,0.04)" }}
+              >
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{ background: `linear-gradient(90deg, ${todayQuote.accent}, ${todayQuote.accent}60)` }}
+                  initial={{ width: "0%" }}
+                  animate={progressControls}
+                />
+              </div>
+
+              {/* Paused indicator */}
+              <AnimatePresence>
+                {paused && (
+                  <motion.span
+                    className="text-[9px] font-semibold uppercase tracking-wider"
+                    style={{ color: `${todayQuote.accent}90` }}
+                    initial={{ opacity: 0, x: -5 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -5 }}
+                  >
+                    In pausa
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </motion.div>
 
             {/* Skip button */}
             <motion.button
-              onClick={() => { setPhase("done"); onComplete(); }}
+              onClick={finish}
               className="mt-4 px-5 py-2 rounded-full text-[10px] font-semibold tracking-[0.15em] uppercase transition-all"
               style={{ color: `${todayQuote.accent}90`, background: `${todayQuote.accent}08`, border: `1px solid ${todayQuote.accent}18` }}
               initial={{ opacity: 0 }}
