@@ -771,19 +771,19 @@ export default function LeadsPage() {
 
       <div className="relative z-10 space-y-4">
 
-      {/* HERO — UNIFIED LIVING LEGEND (title + orb morph as one) */}
+      {/* HERO — UNIFIED LIVING LEGEND (mascot ⇄ orb as one organism) */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center pt-3 pb-2 gap-3"
+        className="flex flex-col items-center pt-3 pb-2 gap-2"
+        onHoverStart={() => setSphereHover(true)}
+        onHoverEnd={() => setSphereHover(false)}
+        onTapStart={() => setSphereHover(true)}
+        onTap={() => setTimeout(() => setSphereHover(false), 1600)}
       >
         {/* Unified legend — title morphs and orb is its data-core */}
         <motion.div
           className="relative flex items-center justify-center gap-3 px-4 py-2 rounded-2xl cursor-pointer select-none"
-          onHoverStart={() => setSphereHover(true)}
-          onHoverEnd={() => setSphereHover(false)}
-          onTapStart={() => setSphereHover(true)}
-          onTap={() => setTimeout(() => setSphereHover(false), 1400)}
           animate={{
             background: (sphereHover || loading)
               ? "linear-gradient(90deg, rgba(139,92,246,0.14), rgba(20,184,166,0.10), rgba(139,92,246,0.14))"
