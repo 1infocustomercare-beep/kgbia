@@ -36,7 +36,7 @@ const AnimatedCounter = ({ value, prefix = "", color }: { value: number; prefix?
 export default function PartnerHomePage() {
   const navigate = useNavigate();
   const { user, isTeamLeader } = useAuth();
-  const { demoMode } = usePartnerDemoMode();
+  const { demoMode, setDemoMode } = usePartnerDemoMode();
   const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
   const [profileName, setProfileName] = useState<string | null>(null);
   const [salesCount, setSalesCount] = useState(0);
