@@ -306,6 +306,114 @@ export default function LeadsPage() {
   const [manualIg, setManualIg] = useState("");
   const [manualPhone, setManualPhone] = useState("");
   const [manualSector, setManualSector] = useState("food");
+  const [manualSectorTouched, setManualSectorTouched] = useState(false);
+  const [manualEmail, setManualEmail] = useState("");
+  const [manualEnriching, setManualEnriching] = useState(false);
+  const [manualEnrichedHint, setManualEnrichedHint] = useState<string | null>(null);
+
+  /* ─── Auto-detect sector from manual name ─── */
+  useEffect(() => {
+    if (manualSectorTouched || !manualName.trim()) return;
+    const fakeLead: Lead = {
+      name: manualName, full_address: "", city: manualCity, zone: "",
+      phone: null, website: null, email: null, instagram: null,
+      google_rating: 0, google_reviews: 0, google_maps_url: null, source: "manual",
+    };
+    const detected = detectSector(fakeLead, manualSector);
+    if (detected && detected !== manualSector) setManualSector(detected);
+  }, [manualName, manualCity, manualSectorTouched]);
+
+  /* ─── Live score preview for manual lead ─── */
+  const manualLiveScore = (() => {
+    if (!manualName.trim()) return 0;
+    return computeScore({
+      name: manualName, full_address: "", city: manualCity, zone: "",
+      phone: manualPhone || null, website: manualWebsite || null, email: manualEmail || null,
+      instagram: manualIg || null, google_rating: 0, google_reviews: 0,
+      google_maps_url: null, source: "manual",
+    });
+  })();
+
+  /* ─── Auto-enrichment: lookup real data via OpenStreetMap when name+city present ─── */
+  const enrichManualLead = useCallback(async () => {
+    if (!manualName.trim() || !manualCity.trim()) {
+      toast.error("Inserisci nome e città per l'arricchimento dati");
+      return;
+    }
+    setManualEnriching(true);
+    setManualEnrichedHint(null);
+    try {
+      // Use Photon (OSM-based) - no API key needed, GDPR friendly
+      const q = encodeURIComponent(`${manualName} ${manualCity}`);
+      const res = await fetch(`https://photon.komoot.io/api/?q=${q}&limit=3&lang=it`);
+      const data = await res.json();
+      const hit = data?.features?.[0];
+      if (hit?.properties) {
+        const p = hit.properties;
+        const addr = [p.street, p.housenumber, p.city || p.town || manualCity].filter(Boolean).join(" ");
+        if (addr && !manualWebsite) {
+          // Try Google search shortcut for website
+          const searchQ = encodeURIComponent(`${manualName} ${manualCity} sito ufficiale`);
+          setManualEnrichedHint(`📍 ${addr} · 🔍 Verifica su google.com/search?q=${searchQ}`);
+        } else {
+          setManualEnrichedHint(`📍 Indirizzo trovato: ${addr}`);
+        }
+        toast.success("✓ Dati arricchiti da OpenStreetMap", { description: addr });
+      } else {
+        setManualEnrichedHint("⚠️ Nessun match su mappe pubbliche — procedi manualmente");
+        toast.info("Nessun match automatico, inserisci i dati manualmente");
+      }
+    } catch (err) {
+      console.error("Enrichment error:", err);
+      toast.error("Errore arricchimento dati");
+    } finally {
+      setManualEnriching(false);
+    }
+  }, [manualName, manualCity, manualWebsite]);
+
+  /* ─── Validate & launch manual analysis ─── */
+  const launchManualAnalysis = useCallback(() => {
+    const errors: string[] = [];
+    if (!manualName.trim() || manualName.trim().length < 2) errors.push("Nome attività (min 2 caratteri)");
+    if (manualWebsite.trim() && !/^https?:\/\/|^www\./i.test(manualWebsite.trim()) && !manualWebsite.includes(".")) {
+      errors.push("Sito web non valido (es. www.esempio.it)");
+    }
+    if (manualEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(manualEmail.trim())) {
+      errors.push("Email non valida");
+    }
+    if (errors.length) {
+      toast.error("Correggi i seguenti campi", { description: errors.join(" · ") });
+      return;
+    }
+    let websiteNorm = manualWebsite.trim();
+    if (websiteNorm && !/^https?:\/\//i.test(websiteNorm)) websiteNorm = `https://${websiteNorm.replace(/^\/+/, "")}`;
+    let igNorm = manualIg.trim().replace(/^@/, "");
+    if (igNorm && !igNorm.startsWith("http")) igNorm = `https://instagram.com/${igNorm}`;
+
+    const lead: Lead & { _score: number; _sector: string } = {
+      name: manualName.trim(),
+      full_address: manualCity.trim() || "",
+      city: manualCity.trim() || "N/A",
+      zone: "",
+      phone: manualPhone.trim() || null,
+      website: websiteNorm || null,
+      email: manualEmail.trim() || null,
+      instagram: igNorm || null,
+      facebook: null,
+      google_rating: 0,
+      google_reviews: 0,
+      google_maps_url: manualCity.trim() ? `https://www.google.com/maps/search/${encodeURIComponent(`${manualName} ${manualCity}`)}` : null,
+      source: "manual",
+      isManual: true,
+      _score: manualLiveScore,
+      _sector: manualSector,
+    };
+    setResults(prev => [lead, ...prev.filter(r => r.name !== lead.name)]);
+    handleSelect(lead);
+    toast.success(`🎯 Analisi profonda avviata per ${lead.name}`, {
+      description: `Score ${manualLiveScore}/100 · Settore ${INDUSTRY_CONFIGS[manualSector as keyof typeof INDUSTRY_CONFIGS]?.label || manualSector}`,
+    });
+  }, [manualName, manualCity, manualPhone, manualWebsite, manualEmail, manualIg, manualSector, manualLiveScore]);
 
   /* ─── Process results from API ─── */
   const processResults = useCallback((apiResults: any[], append: boolean) => {
