@@ -490,7 +490,7 @@ export default function LeadsPage() {
   }, {} as Record<string, number>);
 
   return (
-    <div className="min-h-screen p-4 space-y-4 pb-24" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
+    <div className="min-h-screen p-4 space-y-4 pb-24 max-w-2xl mx-auto" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
 
       {/* ═══ HERO TECH AVATAR ═══ */}
       <motion.div
