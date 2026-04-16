@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import InfoGuide from "@/components/ui/info-guide";
+import ROICalculator from "@/components/partner/ROICalculator";
 import {
   QrCode, ShoppingCart, ChefHat, AlertTriangle, Wallet, Shield,
   Sparkles, Palette, Globe, Users, Star, Bell, MessageSquare,
   CalendarDays, MapPin, BarChart3, Lock, UserX, Key, Zap,
   Crown, Check, ChevronDown, ChevronUp, Smartphone, Monitor,
   TrendingUp, DollarSign, Clock, Eye, Gift, Heart, Camera,
-  Layers, Bot, Languages, Printer
+  Layers, Bot, Languages, Printer, Calculator
 } from "lucide-react";
 
 type Category = "revenue" | "operations" | "marketing" | "protection" | "tech";
@@ -405,6 +406,7 @@ const categoryConfig: Record<Category, { label: string; icon: React.ReactNode; c
 const PartnerSalesToolkit = () => {
   const [activeCategory, setActiveCategory] = useState<Category | "all">("all");
   const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
+  const [showROI, setShowROI] = useState(false);
 
   const filteredFeatures = activeCategory === "all" ? features : features.filter(f => f.category === activeCategory);
 

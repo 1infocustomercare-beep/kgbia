@@ -5,13 +5,11 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Mail, Shield, Calendar, Sparkles } from "lucide-react";
-import ROICalculator from "@/components/partner/ROICalculator";
 
 export default function PartnerProfilePage() {
   const { user, isTeamLeader } = useAuth();
   const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
   const [profileName, setProfileName] = useState<string | null>(null);
-  const [showROI, setShowROI] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -108,19 +106,6 @@ export default function PartnerProfilePage() {
         </motion.div>
       )}
 
-      {/* ═══ ROI CALCULATOR ═══ */}
-      <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-        onClick={() => setShowROI(true)}
-        whileHover={{ scale: 1.02, y: -2 }}
-        whileTap={{ scale: 0.98 }}
-        className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 relative overflow-hidden group"
-        style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.1), rgba(124,58,237,0.05))", border: "1px solid rgba(167,139,250,0.2)", color: "#a78bfa" }}>
-        <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.05), transparent)" }} />
-        📊 Calcolatore ROI
-      </motion.button>
-
-      <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
     </div>
   );
 }
