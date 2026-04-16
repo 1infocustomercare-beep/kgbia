@@ -13,6 +13,7 @@ import { SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
+import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 
 /* ─── Types ─── */
 interface Lead {
@@ -286,6 +287,11 @@ export default function LeadsPage() {
   const [enrichingIg, setEnrichingIg] = useState(false);
   const [enrichedData, setEnrichedData] = useState<{ instagram?: string; email?: string; phone?: string; facebook?: string; source?: string } | null>(null);
 
+  // Deep analysis
+  const [analysisLoading, setAnalysisLoading] = useState(false);
+  const [deepReport, setDeepReport] = useState<DeepReport | null>(null);
+  const [deepAudit, setDeepAudit] = useState<DeepAudit | null>(null);
+
   // Manual lead input
   const [showManual, setShowManual] = useState(false);
   const [manualName, setManualName] = useState("");
@@ -488,6 +494,28 @@ export default function LeadsPage() {
     const channel = channelOverride || activeChannel;
     setGeneratingMsg(true);
     setGeneratedMessage(null);
+
+    // Kick off deep analysis in parallel
+    setDeepReport(null);
+    setDeepAudit(null);
+    setAnalysisLoading(true);
+    supabase.functions.invoke("deep-lead-analysis", {
+      body: {
+        name: lead.name, city: lead.city, sector: lead._sector,
+        website: lead.website, instagram: lead.instagram, phone: lead.phone, email: lead.email,
+        google_rating: lead.google_rating, google_reviews: lead.google_reviews,
+        full_address: lead.full_address, country: country || "",
+        opening_hours: lead.opening_hours, types: lead.types,
+      },
+    }).then(({ data, error }) => {
+      if (!error && data?.success) {
+        setDeepReport(data.report);
+        setDeepAudit(data.audit);
+      } else if (error) {
+        console.warn("Deep analysis failed:", error);
+      }
+    }).catch((e) => console.warn("Deep analysis exception:", e))
+      .finally(() => setAnalysisLoading(false));
 
     // Enrich social data in parallel with message generation
     const enrichPromise = enrichLeadSocial(lead);
