@@ -489,17 +489,49 @@ export default function LeadsPage() {
     return acc;
   }, {} as Record<string, number>);
 
-  return (
-    <div className="min-h-screen p-4 space-y-4 pb-24 max-w-2xl mx-auto" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
+  /* ─── Interactive Data Sphere ─── */
+  const [sphereHover, setSphereHover] = useState(false);
+  const sphereNodes = Array.from({ length: 18 }, (_, i) => {
+    const angle = (i / 18) * Math.PI * 2;
+    const r = 28 + (i % 3) * 8;
+    return { x: 50 + Math.cos(angle) * r, y: 50 + Math.sin(angle) * r, delay: i * 0.12, size: 2.5 + (i % 3) };
+  });
 
-      {/* ═══ HERO TECH AVATAR ═══ */}
+  return (
+    <div className="min-h-screen p-4 space-y-4 pb-24 max-w-2xl mx-auto relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
+
+      {/* ═══ AMBIENT VIOLET BACKGROUND ═══ */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 50% at 30% 20%, rgba(139,92,246,0.08), transparent 60%)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 60% at 80% 70%, rgba(109,40,217,0.06), transparent 50%)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, rgba(167,139,250,0.04), transparent 70%)" }} />
+        {/* Animated grid dots */}
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={`bg-dot-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: 2, height: 2,
+              left: `${10 + (i % 4) * 25}%`,
+              top: `${15 + Math.floor(i / 4) * 30}%`,
+              background: "rgba(167,139,250,0.2)",
+            }}
+            animate={{ opacity: [0.1, 0.4, 0.1], scale: [1, 1.5, 1] }}
+            transition={{ repeat: Infinity, duration: 3 + (i % 3), delay: i * 0.3 }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 space-y-4">
+
+      {/* ═══ HERO TECH AVATAR + DATA SPHERE ═══ */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center text-center pt-2 pb-1"
+        className="flex items-center justify-center gap-4 pt-2 pb-1"
       >
         {/* Animated mascot */}
-        <div className="relative w-24 h-24 mb-2">
+        <div className="relative w-20 h-20 shrink-0">
           {/* Rotating glow ring */}
           <motion.div
             animate={{ rotate: 360 }}
@@ -507,7 +539,6 @@ export default function LeadsPage() {
             className="absolute inset-[-6px] rounded-full"
             style={{ border: "1.5px dashed rgba(167,139,250,0.3)" }}
           />
-          {/* Pulse ring on search */}
           {loading && (
             <motion.div
               animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
@@ -516,14 +547,12 @@ export default function LeadsPage() {
               style={{ border: "2px solid rgba(167,139,250,0.4)" }}
             />
           )}
-          {/* Glow behind mascot */}
           <motion.div
             animate={{ opacity: loading ? [0.3, 0.6, 0.3] : [0.15, 0.25, 0.15] }}
             transition={{ repeat: Infinity, duration: 2 }}
             className="absolute inset-[-10px] rounded-full"
             style={{ background: "radial-gradient(circle, rgba(167,139,250,0.3), transparent 70%)", filter: "blur(12px)" }}
           />
-          {/* Mascot image */}
           <motion.img
             src={empireMonkeyLaptop}
             alt="Empire Scout"
@@ -535,7 +564,6 @@ export default function LeadsPage() {
             }}
             transition={{ repeat: Infinity, duration: loading ? 1.5 : 3, ease: "easeInOut" }}
           />
-          {/* Floating data particles around mascot */}
           {[
             { x: -14, y: 10, size: 4, delay: 0, color: "#a78bfa" },
             { x: 90, y: 15, size: 3, delay: 0.5, color: "#14b8a6" },
@@ -552,12 +580,110 @@ export default function LeadsPage() {
             />
           ))}
         </div>
-        <h1 className="text-lg font-bold flex items-center justify-center gap-2 text-white">
-          <Target className="w-5 h-5" style={{ color: "#14b8a6" }} /> LeadEngine Scout
-        </h1>
-        <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>
-          Ricerca automatica multi-fonte in tutto il mondo
-        </p>
+
+        {/* Title + subtitle */}
+        <div className="text-left">
+          <h1 className="text-lg font-bold flex items-center gap-2 text-white">
+            <Target className="w-5 h-5" style={{ color: "#14b8a6" }} /> LeadEngine Scout
+          </h1>
+          <p className="text-[10px] mt-0.5" style={{ color: "#6b7280" }}>
+            Ricerca automatica multi-fonte
+          </p>
+        </div>
+
+        {/* ═══ INTERACTIVE DATA SPHERE ═══ */}
+        <motion.div
+          className="relative w-24 h-24 shrink-0 cursor-pointer"
+          onHoverStart={() => setSphereHover(true)}
+          onHoverEnd={() => setSphereHover(false)}
+          onTapStart={() => setSphereHover(true)}
+          onTap={() => setSphereHover(false)}
+        >
+          {/* Core glow */}
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            animate={{
+              background: sphereHover
+                ? "radial-gradient(circle, rgba(139,92,246,0.35), rgba(20,184,166,0.15), transparent 70%)"
+                : "radial-gradient(circle, rgba(139,92,246,0.15), transparent 60%)",
+              scale: sphereHover ? 1.15 : 1,
+            }}
+            transition={{ duration: 0.4 }}
+            style={{ filter: "blur(8px)" }}
+          />
+          {/* Rotating wireframe ring */}
+          <motion.div
+            className="absolute inset-2 rounded-full"
+            style={{ border: "1px solid rgba(167,139,250,0.2)" }}
+            animate={{ rotate: sphereHover ? 720 : 360, scale: sphereHover ? 1.1 : 1 }}
+            transition={{ rotate: { repeat: Infinity, duration: sphereHover ? 3 : 6, ease: "linear" }, scale: { duration: 0.3 } }}
+          />
+          <motion.div
+            className="absolute inset-4 rounded-full"
+            style={{ border: "1px dashed rgba(20,184,166,0.2)" }}
+            animate={{ rotate: sphereHover ? -720 : -360, scale: sphereHover ? 1.15 : 1 }}
+            transition={{ rotate: { repeat: Infinity, duration: sphereHover ? 4 : 8, ease: "linear" }, scale: { duration: 0.3 } }}
+          />
+          {/* Data nodes */}
+          <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
+            {sphereNodes.map((n, i) => (
+              <motion.circle
+                key={i}
+                cx={n.x} cy={n.y} r={n.size / 2}
+                fill={i % 2 === 0 ? "#a78bfa" : "#14b8a6"}
+                animate={{
+                  cx: sphereHover ? 50 + (n.x - 50) * 1.4 : n.x,
+                  cy: sphereHover ? 50 + (n.y - 50) * 1.4 : n.y,
+                  opacity: sphereHover ? [0.9, 0.5, 0.9] : [0.4, 0.7, 0.4],
+                  r: sphereHover ? n.size / 2 + 1 : n.size / 2,
+                }}
+                transition={{ duration: 0.5, delay: n.delay * 0.05, opacity: { repeat: Infinity, duration: 2 } }}
+              />
+            ))}
+            {/* Connection lines */}
+            {sphereNodes.slice(0, 10).map((n, i) => {
+              const next = sphereNodes[(i + 3) % sphereNodes.length];
+              return (
+                <motion.line
+                  key={`l-${i}`}
+                  x1={n.x} y1={n.y} x2={next.x} y2={next.y}
+                  stroke={i % 2 === 0 ? "rgba(167,139,250,0.15)" : "rgba(20,184,166,0.12)"}
+                  strokeWidth={0.5}
+                  animate={{
+                    opacity: sphereHover ? [0.5, 0.2, 0.5] : [0.15, 0.3, 0.15],
+                    x1: sphereHover ? 50 + (n.x - 50) * 1.4 : n.x,
+                    y1: sphereHover ? 50 + (n.y - 50) * 1.4 : n.y,
+                    x2: sphereHover ? 50 + (next.x - 50) * 1.4 : next.x,
+                    y2: sphereHover ? 50 + (next.y - 50) * 1.4 : next.y,
+                  }}
+                  transition={{ duration: 0.5, opacity: { repeat: Infinity, duration: 2.5 } }}
+                />
+              );
+            })}
+            {/* Center pulse */}
+            <motion.circle
+              cx={50} cy={50}
+              fill="rgba(139,92,246,0.3)"
+              animate={{
+                r: sphereHover ? [4, 8, 4] : [3, 5, 3],
+                opacity: sphereHover ? [0.8, 0.3, 0.8] : [0.4, 0.6, 0.4],
+              }}
+              transition={{ repeat: Infinity, duration: sphereHover ? 1 : 2 }}
+            />
+          </svg>
+          {/* Label */}
+          <motion.span
+            className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[7px] font-bold whitespace-nowrap"
+            style={{ color: "#a78bfa" }}
+            animate={{ opacity: sphereHover ? 1 : 0.5 }}
+          >
+            {sphereHover ? "🔮 Data Matrix" : "🌐 Live Data"}
+          </motion.span>
+        </motion.div>
+      </motion.div>
+
+      {/* Lead count badges */}
+      <div className="flex justify-center">
         {results.length > 0 && (
           <div className="flex items-center gap-1.5 mt-1.5">
             <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.1)", color: "#34d399" }}>
@@ -568,7 +694,7 @@ export default function LeadsPage() {
             </span>
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* ═══ TIPS — dismissable ═══ */}
       <AnimatePresence>
@@ -1492,6 +1618,7 @@ export default function LeadsPage() {
           </div>
         </motion.div>
       )}
+    </div>{/* close z-10 */}
     </div>
   );
 }
