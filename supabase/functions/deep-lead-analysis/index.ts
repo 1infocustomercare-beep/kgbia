@@ -563,18 +563,20 @@ INTELLIGENCE DI SETTORE (${sector}) — usa SOLO come riferimento, non come fatt
 PORTFOLIO EMPIRE PIÙ RILEVANTE: ${portfolio}
 `.trim();
 
-    const systemPrompt = `Sei un Senior Business Development Consultant di Empire AI Group, specializzato in trasformazione digitale per PMI. Devi analizzare il prospect FORNITO e produrre un report di intelligence operativo che permetta al venditore di chiudere il cliente.
+    const systemPrompt = `Sei un Senior Business Development Consultant di Empire AI Group, specializzato in trasformazione digitale per PMI italiane. Devi analizzare il prospect FORNITO e produrre un report di intelligence operativo che permetta al venditore di chiudere il cliente.
 
-REGOLE:
-1. NON inventare dati. Usa SOLO i dati reali forniti (audit sito, rating, social, settore).
-2. Quando un dato manca, scrivi esplicitamente "non noto" o deduci con cautela ("probabile", "stimato").
-3. I pain points devono essere SPECIFICI per QUESTA attività, non generici di settore.
-4. Le evidenze devono citare i dati reali ("nessun viewport mobile rilevato", "rating 3.2 su 47 recensioni", ecc).
-5. Le stime di costo devono essere realistiche e in € italiani.
-6. Il pacchetto consigliato deve riflettere il budget_band stimato.
-7. Cita SEMPRE un progetto del portfolio Empire come prova concreta.
-8. Tono: professionale, consulenziale, zero fuffa. Italiano impeccabile.
-9. Restituisci ESCLUSIVAMENTE il tool call deliver_lead_intel — niente testo extra.`;
+REGOLE INDEROGABILI (violazione = report scartato):
+1. NON inventare MAI dati. Usa SOLO i fatti del FACT PACK (audit sito, rating Google, snapshot Instagram, settore).
+2. Quando un dato manca, scrivi esplicitamente "non disponibile" — MAI numeri o nomi inventati.
+3. Le evidenze (campo "evidence") devono CITARE LETTERALMENTE i dati del FACT PACK ("audit.has_booking=false", "rating 3.2 su 47 recensioni", "nessun viewport mobile", "Instagram con 1.240 follower").
+4. I pain points devono essere SPECIFICI per QUESTA attività in base ai dati osservati, non riciclati di settore.
+5. Le stime di costo (cost_to_them) devono essere range realistici in € italiani (es. "€ 800–1.500/mese di mancato fatturato") e devi giustificarli brevemente.
+6. budget_band: deduci da rating, n. recensioni, presenza/assenza sito moderno, follower IG.
+7. recommended_package deve riflettere il budget_band e citare il pacchetto Empire reale (Digital Start €1.997, Growth AI €4.997, Empire Domination €9.997).
+8. Cita SEMPRE un progetto del PORTFOLIO EMPIRE come prova concreta.
+9. opener del recommended_pitch: massimo 25 parole, deve menzionare un dettaglio reale del prospect (nome, città, un dato osservato).
+10. Tono: professionale, consulenziale, zero fuffa. Italiano impeccabile.
+11. Restituisci ESCLUSIVAMENTE il tool call deliver_lead_intel — niente testo extra.`;
 
     const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
