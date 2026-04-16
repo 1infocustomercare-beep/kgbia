@@ -1332,14 +1332,23 @@ export default function LeadsPage() {
               const sectorFeats = getSectorFeatures(selected._sector);
               return (
               <div className="p-4 rounded-2xl space-y-2" style={{ background: "rgba(167,139,250,0.03)", border: "1px solid rgba(167,139,250,0.1)" }}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Eye className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />
-                    <span className="text-xs font-bold text-white">📱 Preview {sectorConfig?.label || "Business"} per {selected.name}</span>
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Eye className="w-3.5 h-3.5 shrink-0" style={{ color: "#a78bfa" }} />
+                    <span className="text-xs font-bold text-white truncate">📱 Preview {sectorConfig?.label || "Business"} per {selected.name}</span>
                   </div>
-                  <button onClick={() => setShowPreview(!showPreview)} className="text-[9px] font-semibold" style={{ color: "#a78bfa" }}>
-                    {showPreview ? "Nascondi" : "Mostra"}
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setShowPicker(true)}
+                      className="text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"
+                      style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.18), rgba(20,184,166,0.12))", border: "1px solid rgba(167,139,250,0.3)", color: "#c4b5fd" }}
+                    >
+                      <Layers className="w-3 h-3" /> Galleria
+                    </button>
+                    <button onClick={() => setShowPreview(!showPreview)} className="text-[9px] font-semibold px-2 py-1" style={{ color: "#a78bfa" }}>
+                      {showPreview ? "Nascondi" : "Mostra"}
+                    </button>
+                  </div>
                 </div>
                 <AnimatePresence>
                   {showPreview && (
