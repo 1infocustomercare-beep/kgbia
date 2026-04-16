@@ -48,7 +48,7 @@ export default function PartnerProfilePage() {
         <div className="flex items-center gap-4 relative z-10">
           <motion.div className="w-[68px] h-[68px] rounded-2xl flex items-center justify-center overflow-hidden shrink-0"
             whileHover={{ scale: 1.08, rotate: [0, -3, 3, 0] }}
-            style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.12), rgba(124,58,237,0.06))", border: "1.5px solid rgba(167,139,250,0.2)", boxShadow: "0 8px 24px rgba(167,139,250,0.1)" }}>
+            style={{ background: "linear-gradient(135deg, rgba(20,22,44,0.96), rgba(16,18,36,0.96))", border: "1.5px solid rgba(167,139,250,0.2)", boxShadow: "0 8px 24px rgba(0,0,0,0.26)" }}>
             {partnerAvatar ? (
               <img src={partnerAvatar} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
@@ -62,7 +62,7 @@ export default function PartnerProfilePage() {
               <motion.span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-bold"
                 animate={{ boxShadow: ["0 0 0px rgba(167,139,250,0.1)", "0 0 12px rgba(167,139,250,0.2)", "0 0 0px rgba(167,139,250,0.1)"] }}
                 transition={{ duration: 3, repeat: Infinity }}
-                style={{ background: "rgba(167,139,250,0.15)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.2)" }}>
+                style={{ background: "rgba(20,22,44,0.96)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.2)" }}>
                 <Shield className="w-3 h-3" /> {isTeamLeader ? "Team Leader" : "Partner"}
               </motion.span>
             </div>
@@ -77,7 +77,7 @@ export default function PartnerProfilePage() {
             <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.08 }}
               whileHover={{ scale: 1.03, y: -2 }}
               className="p-3 rounded-xl relative overflow-hidden group cursor-default"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              style={{ background: "rgba(18,20,40,0.96)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 6px 16px rgba(0,0,0,0.2)" }}>
               <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                 style={{ background: `radial-gradient(circle at 50% 50%, ${item.color}08, transparent 70%)` }} />
               <item.icon className="w-3.5 h-3.5 mb-1" style={{ color: item.color }} />

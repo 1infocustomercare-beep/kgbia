@@ -167,7 +167,7 @@ export default function PartnerEarningsPage() {
       {/* ═══ RANK BANNER — Animated Glow ═══ */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
         className={`${cardBase} p-5 relative overflow-hidden`}
-        style={{ background: `linear-gradient(135deg, ${rank.color}18, ${rank.color}08)`, border: `1px solid ${rank.color}30` }}>
+        style={{ background: "linear-gradient(135deg, rgba(14,16,34,0.96), rgba(19,22,42,0.96))", border: `1px solid ${rank.color}30`, boxShadow: "0 10px 28px rgba(0,0,0,0.28)" }}>
         {/* Animated scan line */}
         <motion.div className="absolute top-0 left-0 right-0 h-[2px]" animate={{ opacity: [0.2, 0.8, 0.2] }}
           transition={{ duration: 3, repeat: Infinity }}
@@ -180,7 +180,7 @@ export default function PartnerEarningsPage() {
           <motion.div className="w-12 h-12 rounded-xl flex items-center justify-center"
             animate={{ boxShadow: [`0 0 0px ${rank.color}20`, `0 0 24px ${rank.color}35`, `0 0 0px ${rank.color}20`] }}
             transition={{ duration: 3, repeat: Infinity }}
-            style={{ background: `${rank.color}22`, border: `1px solid ${rank.color}30` }}>
+            style={{ background: "rgba(18,20,40,0.96)", border: `1px solid ${rank.color}30` }}>
             <rank.icon className="w-6 h-6" style={{ color: rank.color, filter: `drop-shadow(0 0 8px ${rank.color}60)` }} />
           </motion.div>
           <div>
@@ -197,7 +197,7 @@ export default function PartnerEarningsPage() {
       {/* ═══ NET EARNINGS — Premium Animated ═══ */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
         className={`${cardBase} p-5 relative overflow-hidden`}
-        style={{ background: "linear-gradient(145deg, rgba(16,185,129,0.08), rgba(52,211,153,0.03))", border: "1px solid rgba(16,185,129,0.18)" }}>
+        style={{ background: "linear-gradient(145deg, rgba(12,36,34,0.96), rgba(11,25,24,0.96))", border: "1px solid rgba(16,185,129,0.18)", boxShadow: "0 10px 28px rgba(0,0,0,0.28)" }}>
         {/* Animated gradient sweep */}
         <motion.div className="absolute inset-0" animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
           transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
@@ -205,7 +205,7 @@ export default function PartnerEarningsPage() {
         <div className="absolute top-4 right-4 relative z-10">
           <motion.div className="flex items-center gap-1 px-2.5 py-1 rounded-full"
             whileHover={{ scale: 1.1 }}
-            style={{ background: monthGrowth >= 0 ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)", border: `1px solid ${monthGrowth >= 0 ? "rgba(52,211,153,0.2)" : "rgba(239,68,68,0.2)"}` }}>
+            style={{ background: monthGrowth >= 0 ? "rgba(12,48,40,0.92)" : "rgba(58,20,26,0.92)", border: `1px solid ${monthGrowth >= 0 ? "rgba(52,211,153,0.24)" : "rgba(239,68,68,0.24)"}` }}>
             <TrendingUp className="w-3 h-3" style={{ color: monthGrowth >= 0 ? "#34d399" : "#ef4444", transform: monthGrowth < 0 ? "rotate(180deg)" : "none" }} />
             <span className="text-[10px] font-bold" style={{ color: monthGrowth >= 0 ? "#34d399" : "#ef4444" }}>{monthGrowth >= 0 ? "+" : ""}{monthGrowth}%</span>
           </motion.div>
