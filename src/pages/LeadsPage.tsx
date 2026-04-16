@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import empireMonkeyLaptop from "@/assets/empire-monkey-laptop.png";
 import { SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
-import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
+import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 
 /* ─── Types ─── */
