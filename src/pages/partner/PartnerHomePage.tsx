@@ -69,10 +69,10 @@ export default function PartnerHomePage() {
 
   const fadeUp = (delay = 0) => ({ initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { delay, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] } });
 
-  /* ─── Shared glass card style — opaque so DNA bg doesn't bleed through ─── */
+  /* ─── Shared glass card style — fully shielded from DNA bg ─── */
   const glassCard = "rounded-2xl backdrop-blur-xl";
-  const liveGlass = `${glassCard} bg-[#12122a]/90 border border-white/[0.08] shadow-lg shadow-black/20`;
-  const demoGlass = `${glassCard} bg-[#1a1510]/90 border border-amber-500/10 shadow-lg shadow-black/20`;
+  const liveGlass = `${glassCard} bg-[#12122a]/95 border border-white/[0.08] shadow-lg shadow-black/30`;
+  const demoGlass = `${glassCard} bg-[#1a1510]/95 border border-amber-500/10 shadow-lg shadow-black/30`;
 
   return (
     <div className="space-y-5 pb-6">
