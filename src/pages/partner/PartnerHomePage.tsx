@@ -5,7 +5,7 @@ import {
   Target, DollarSign, FolderOpen, User, ChevronRight, Crown, Trophy,
   Sparkles, Zap, TrendingUp, Users, Bot, Package, CheckCircle, Presentation,
   ShieldCheck, Globe, Clock, Headphones, BarChart3, Smartphone, Star,
-  MessageCircle, Heart, Lock, Rocket, Award, ArrowRight, Eye,
+  MessageCircle, Heart, Lock, Rocket, Award, ArrowRight,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +36,7 @@ const AnimatedCounter = ({ value, prefix = "", color }: { value: number; prefix?
 export default function PartnerHomePage() {
   const navigate = useNavigate();
   const { user, isTeamLeader } = useAuth();
-  const { demoMode, setDemoMode } = usePartnerDemoMode();
+  const { demoMode } = usePartnerDemoMode();
   const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
   const [profileName, setProfileName] = useState<string | null>(null);
   const [salesCount, setSalesCount] = useState(0);
@@ -133,62 +133,20 @@ export default function PartnerHomePage() {
              ═══════════════════════════════════════════ */
           <motion.div key="demo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5 pb-8">
 
-            {/* ═══ INTERACTIVE MODE SWITCH BAR (DEMO → LIVE) ═══ */}
-            <motion.div
-              className="mx-4 rounded-2xl relative overflow-hidden cursor-pointer select-none"
-              initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-              style={{
-                background: "linear-gradient(135deg, rgba(28,20,10,0.98), rgba(42,31,20,0.98))",
-                border: "1px solid rgba(212,160,82,0.2)",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
-              }}
-              onClick={() => setDemoMode(false)}
-              whileTap={{ scale: 0.985 }}
-            >
-              <motion.div className="absolute inset-0 pointer-events-none"
-                animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-                style={{ background: "linear-gradient(90deg, transparent 0%, rgba(212,160,82,0.06) 25%, transparent 50%)", backgroundSize: "200% 100%" }} />
-
-              <div className="relative flex items-center justify-between px-4 py-3">
-                <div className="flex items-center gap-2 opacity-40">
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.2)" }}>
-                    <Eye className="w-4 h-4 text-violet-400/60" />
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-violet-300/70">Lavoro</div>
-                    <div className="text-[9px] text-white/30 mt-0.5">Dati reali</div>
-                  </div>
-                </div>
-
-                <motion.div className="flex items-center gap-1.5"
-                  animate={{ x: [0, -6, 0], opacity: [0.3, 0.7, 0.3] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}>
-                  <ArrowRight className="w-3 h-3 text-violet-400/50 rotate-180" />
-                  <span className="text-[8px] uppercase tracking-[0.15em] text-white/30 font-semibold">Scorri</span>
-                </motion.div>
-
-                <div className="flex items-center gap-3">
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300/90 text-right">Presentazione</div>
-                    <div className="text-[9px] text-white/40 mt-0.5 text-right">Demo • Vendita</div>
-                  </div>
-                  <motion.div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ background: "linear-gradient(145deg, #d4a052, #b8892e)", boxShadow: "0 2px 12px rgba(212,160,82,0.5)" }}
-                    animate={{ boxShadow: ["0 2px 12px rgba(212,160,82,0.3)", "0 2px 20px rgba(212,160,82,0.6)", "0 2px 12px rgba(212,160,82,0.3)"] }}
-                    transition={{ duration: 2, repeat: Infinity }}>
-                    <Presentation className="w-4 h-4 text-white" />
-                  </motion.div>
-                </div>
-              </div>
-
-              <div className="h-[2px] w-full" style={{ background: "rgba(212,160,82,0.1)" }}>
-                <motion.div className="h-full rounded-full ml-auto"
-                  style={{ background: "linear-gradient(90deg, #b8892e, #d4a052)", width: "30%" }}
-                  animate={{ width: ["30%", "35%", "30%"] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} />
-              </div>
+            {/* Luxury header banner */}
+            <motion.div className="mx-4 py-4 text-center rounded-3xl relative overflow-hidden group cursor-default"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.01 }}
+              style={{ background: "linear-gradient(135deg, rgba(212,160,82,0.08), rgba(245,158,11,0.03))", border: "1px solid rgba(212,160,82,0.15)" }}>
+              <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                style={{ background: "radial-gradient(circle at 50% 50%, rgba(212,160,82,0.06), transparent 70%)" }} />
+              <motion.div animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 3, repeat: Infinity }}
+                className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(212,160,82,0.4), transparent)" }} />
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] relative z-10" style={{ color: "#d4a052" }}>
+                ✦ Il Sistema Operativo del Business ✦
+              </p>
+              <motion.div animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+                className="absolute bottom-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(212,160,82,0.4), transparent)" }} />
             </motion.div>
 
             <section className="px-4 space-y-5">
@@ -508,67 +466,21 @@ export default function PartnerHomePage() {
              ═══════════════════════════════════════════ */
           <motion.div key="live" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
 
-            {/* ═══ INTERACTIVE MODE SWITCH BAR ═══ */}
-            <motion.div
-              className="mx-4 rounded-2xl relative overflow-hidden cursor-pointer select-none"
+            {/* ═══ LIVE NEURAL STATUS BAR ═══ */}
+            <motion.div className="mx-4 py-2.5 px-4 rounded-2xl flex items-center gap-3 relative overflow-hidden"
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-              style={{
-                background: "linear-gradient(135deg, rgba(15,14,31,0.98), rgba(26,21,48,0.98))",
-                border: "1px solid rgba(167,139,250,0.15)",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
-              }}
-              onClick={() => setDemoMode(true)}
-              whileTap={{ scale: 0.985 }}
-            >
-              {/* Animated scanning line */}
-              <motion.div className="absolute inset-0 pointer-events-none"
-                animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-                style={{ background: "linear-gradient(90deg, transparent 0%, rgba(167,139,250,0.06) 25%, transparent 50%)", backgroundSize: "200% 100%" }} />
-
-              <div className="relative flex items-center justify-between px-4 py-3">
-                {/* Left — active indicator */}
-                <div className="flex items-center gap-3">
-                  <motion.div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ background: "linear-gradient(145deg, #a78bfa, #7c3aed)", boxShadow: "0 2px 12px rgba(124,58,237,0.5)" }}
-                    animate={{ boxShadow: ["0 2px 12px rgba(124,58,237,0.3)", "0 2px 20px rgba(124,58,237,0.6)", "0 2px 12px rgba(124,58,237,0.3)"] }}
-                    transition={{ duration: 2, repeat: Infinity }}>
-                    <Eye className="w-4 h-4 text-white" />
-                  </motion.div>
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/90">Modalità Lavoro</div>
-                    <div className="text-[9px] text-white/40 mt-0.5">Dati reali • Operativo</div>
-                  </div>
-                </div>
-
-                {/* Center — swipe hint */}
-                <motion.div className="flex items-center gap-1.5"
-                  animate={{ x: [0, 6, 0], opacity: [0.3, 0.7, 0.3] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}>
-                  <span className="text-[8px] uppercase tracking-[0.15em] text-white/30 font-semibold">Scorri</span>
-                  <ArrowRight className="w-3 h-3 text-amber-400/50" />
-                </motion.div>
-
-                {/* Right — target mode */}
-                <div className="flex items-center gap-2 opacity-40">
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300/70 text-right">Presentazione</div>
-                    <div className="text-[9px] text-white/30 mt-0.5 text-right">Demo • Vendita</div>
-                  </div>
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ background: "rgba(212,160,82,0.15)", border: "1px solid rgba(212,160,82,0.2)" }}>
-                    <Presentation className="w-4 h-4 text-amber-400/60" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom progress rail */}
-              <div className="h-[2px] w-full" style={{ background: "rgba(167,139,250,0.1)" }}>
-                <motion.div className="h-full rounded-full"
-                  style={{ background: "linear-gradient(90deg, #a78bfa, #7c3aed)", width: "30%" }}
-                  animate={{ width: ["30%", "35%", "30%"] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} />
-              </div>
+              style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.04), rgba(124,58,237,0.02))", border: "1px solid rgba(167,139,250,0.1)" }}>
+              <motion.div className="absolute inset-0" animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                style={{ background: "linear-gradient(90deg, transparent 0%, rgba(167,139,250,0.03) 25%, transparent 50%)", backgroundSize: "200% 100%" }} />
+              <motion.div className="w-2 h-2 rounded-full shrink-0" animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }} style={{ background: "#34d399", boxShadow: "0 0 8px rgba(52,211,153,0.5)" }} />
+              <span className="text-[9px] font-mono tracking-[0.2em] uppercase text-foreground/30">
+                EMPIRE PARTNER — SISTEMA ATTIVO
+              </span>
+              <motion.div className="ml-auto flex items-center gap-1.5" animate={{ opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 3, repeat: Infinity }}>
+                {[0,1,2].map(i => <div key={i} className="w-1 h-1 rounded-full" style={{ background: "#a78bfa", opacity: 0.6 + i * 0.15 }} />)}
+              </motion.div>
             </motion.div>
             
             {/* ═══ ANIMATED STATS HUB ═══ */}
