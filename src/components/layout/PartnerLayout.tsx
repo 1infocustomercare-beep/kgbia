@@ -283,7 +283,7 @@ export default function PartnerLayout() {
         </div>
 
         <nav
-          className="fixed bottom-0 left-0 right-0 z-50 safe-bottom"
+          className="fixed bottom-0 left-0 right-0 z-50 safe-bottom lg:hidden"
           style={{
             background: isDark ? "rgba(9,10,24,0.98)" : "rgba(255,255,255,0.96)",
             backdropFilter: "blur(28px) saturate(2)",
