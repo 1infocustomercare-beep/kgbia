@@ -161,11 +161,11 @@ export default function SellerCRM({
             {/* ═══ Tabs ═══ */}
             <div className="flex gap-1 overflow-x-auto -mx-1 px-1 pb-1 scrollbar-none">
               {([
-                { id: "pipeline" as Tab, icon: Briefcase, label: "Pipeline", badge: leads.length },
+                { id: "pipeline" as Tab, icon: Briefcase, label: "Pipeline", badge: leads.length, alert: false },
                 { id: "today" as Tab, icon: Bell, label: "Oggi", badge: overdue.length + todayFollowups.length, alert: overdue.length > 0 },
-                { id: "analytics" as Tab, icon: BarChart3, label: "Stats" },
-                { id: "tutorial" as Tab, icon: AlertCircle, label: "Guida" },
-              ] as const).map(t => (
+                { id: "analytics" as Tab, icon: BarChart3, label: "Stats", badge: 0, alert: false },
+                { id: "tutorial" as Tab, icon: AlertCircle, label: "Guida", badge: 0, alert: false },
+              ]).map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all"
                   style={{
