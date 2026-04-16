@@ -771,19 +771,19 @@ export default function LeadsPage() {
 
       <div className="relative z-10 space-y-4">
 
-      {/* HERO — UNIFIED LIVING LEGEND (title + orb morph as one) */}
+      {/* HERO — UNIFIED LIVING LEGEND (mascot ⇄ orb as one organism) */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center pt-3 pb-2 gap-3"
+        className="flex flex-col items-center pt-3 pb-2 gap-2"
+        onHoverStart={() => setSphereHover(true)}
+        onHoverEnd={() => setSphereHover(false)}
+        onTapStart={() => setSphereHover(true)}
+        onTap={() => setTimeout(() => setSphereHover(false), 1600)}
       >
         {/* Unified legend — title morphs and orb is its data-core */}
         <motion.div
           className="relative flex items-center justify-center gap-3 px-4 py-2 rounded-2xl cursor-pointer select-none"
-          onHoverStart={() => setSphereHover(true)}
-          onHoverEnd={() => setSphereHover(false)}
-          onTapStart={() => setSphereHover(true)}
-          onTap={() => setTimeout(() => setSphereHover(false), 1400)}
           animate={{
             background: (sphereHover || loading)
               ? "linear-gradient(90deg, rgba(139,92,246,0.14), rgba(20,184,166,0.10), rgba(139,92,246,0.14))"
@@ -961,39 +961,176 @@ export default function LeadsPage() {
           </motion.div>
         </motion.div>
 
-        {/* Mascot row — below the unified legend */}
-        <div className="relative w-20 h-20 shrink-0">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-            className="absolute inset-[-6px] rounded-full"
-            style={{ border: "1.5px dashed rgba(167,139,250,0.3)" }}
-          />
-          {loading && (
-            <motion.div
-              animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ repeat: Infinity, duration: 1.2 }}
-              className="absolute inset-[-8px] rounded-full"
-              style={{ border: "2px solid rgba(167,139,250,0.4)" }}
+        {/* ═══ MASCOT ⇄ ORB DATA STREAM — unified organism ═══ */}
+        <div className="relative flex items-center justify-center" style={{ width: 220, height: 90 }}>
+          {/* Energy bridge: data conduit between mascot and orb */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 220 90">
+            <defs>
+              <linearGradient id="dataBridge" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" stopColor="rgba(167,139,250,0)" />
+                <stop offset="20%" stopColor="rgba(167,139,250,0.7)" />
+                <stop offset="50%" stopColor="rgba(20,184,166,0.9)" />
+                <stop offset="80%" stopColor="rgba(167,139,250,0.7)" />
+                <stop offset="100%" stopColor="rgba(167,139,250,0)" />
+              </linearGradient>
+              <filter id="bridgeGlow"><feGaussianBlur stdDeviation="2" /></filter>
+            </defs>
+            {/* Main pulsing conduit — visible always, intensifies on hover */}
+            <motion.path
+              d="M 60 45 Q 110 30, 160 45"
+              fill="none"
+              stroke="url(#dataBridge)"
+              strokeWidth={(sphereHover || loading) ? 2 : 1}
+              strokeDasharray="3 4"
+              filter="url(#bridgeGlow)"
+              animate={{
+                strokeDashoffset: [0, -28],
+                opacity: (sphereHover || loading) ? [0.9, 1, 0.9] : [0.4, 0.6, 0.4],
+              }}
+              transition={{
+                strokeDashoffset: { repeat: Infinity, duration: (sphereHover || loading) ? 0.6 : 2, ease: "linear" },
+                opacity: { repeat: Infinity, duration: 1.6 },
+              }}
             />
-          )}
+            <motion.path
+              d="M 60 50 Q 110 65, 160 50"
+              fill="none"
+              stroke="url(#dataBridge)"
+              strokeWidth={(sphereHover || loading) ? 1.5 : 0.7}
+              strokeDasharray="2 5"
+              filter="url(#bridgeGlow)"
+              animate={{
+                strokeDashoffset: [0, 28],
+                opacity: (sphereHover || loading) ? [0.7, 1, 0.7] : [0.25, 0.45, 0.25],
+              }}
+              transition={{
+                strokeDashoffset: { repeat: Infinity, duration: (sphereHover || loading) ? 0.8 : 2.4, ease: "linear" },
+                opacity: { repeat: Infinity, duration: 2 },
+              }}
+            />
+            {/* Data packets traveling between mascot and orb */}
+            {(sphereHover || loading) && [0, 1, 2, 3, 4].map(i => (
+              <motion.circle
+                key={`packet-${i}`}
+                r={2}
+                fill={i % 2 === 0 ? "#a78bfa" : "#14b8a6"}
+                filter="url(#bridgeGlow)"
+                animate={{
+                  cx: i % 2 === 0 ? [60, 110, 160] : [160, 110, 60],
+                  cy: [45, i % 2 === 0 ? 30 : 65, 45],
+                  opacity: [0, 1, 0],
+                  r: [1.5, 3, 1.5],
+                }}
+                transition={{ repeat: Infinity, duration: 1.2, delay: i * 0.24, ease: "easeInOut" }}
+              />
+            ))}
+          </svg>
+
+          {/* MASCOT — left side, morphing & breathing in sync with orb */}
           <motion.div
-            animate={{ opacity: loading ? [0.3, 0.6, 0.3] : [0.15, 0.25, 0.15] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="absolute inset-[-10px] rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(167,139,250,0.3), transparent 70%)", filter: "blur(12px)" }}
-          />
-          <motion.img
-            src={empireMonkeyLaptop}
-            alt="Empire Scout"
-            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_15px_rgba(167,139,250,0.4)]"
+            className="absolute left-0 top-1/2 -translate-y-1/2"
+            style={{ width: 76, height: 76 }}
             animate={{
-              y: loading ? [0, -6, 0] : [0, -3, 0],
-              rotate: loading ? [0, -2, 2, 0] : [0, -1, 1, 0],
-              scale: loading ? [1, 1.05, 1] : [1, 1.02, 1],
+              scale: (sphereHover || loading) ? [1, 1.06, 0.98, 1.04, 1] : 1,
+              filter: (sphereHover || loading)
+                ? "drop-shadow(0 0 22px rgba(167,139,250,0.85)) hue-rotate(0deg)"
+                : "drop-shadow(0 0 12px rgba(167,139,250,0.45))",
             }}
-            transition={{ repeat: Infinity, duration: loading ? 1.5 : 3, ease: "easeInOut" }}
-          />
+            transition={{
+              scale: { repeat: (sphereHover || loading) ? Infinity : 0, duration: 1.4, ease: "easeInOut" },
+              filter: { duration: 0.5 },
+            }}
+          >
+            {/* Orbital ring around mascot — mirrors orb */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 4 : 8, ease: "linear" }}
+              className="absolute inset-[-6px] rounded-full"
+              style={{
+                border: `1.5px dashed rgba(167,139,250,${(sphereHover || loading) ? 0.7 : 0.3})`,
+              }}
+            />
+            {/* Pulse ring during loading */}
+            {(loading || sphereHover) && (
+              <motion.div
+                animate={{ scale: [1, 1.6, 1], opacity: [0.6, 0, 0.6] }}
+                transition={{ repeat: Infinity, duration: 1.2 }}
+                className="absolute inset-[-8px] rounded-full"
+                style={{ border: "2px solid rgba(167,139,250,0.5)" }}
+              />
+            )}
+            {/* Violet aura — intensifies in sync */}
+            <motion.div
+              animate={{
+                opacity: (sphereHover || loading) ? [0.5, 0.85, 0.5] : [0.18, 0.28, 0.18],
+                scale: (sphereHover || loading) ? [1, 1.15, 1] : 1,
+              }}
+              transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 1 : 2.4 }}
+              className="absolute inset-[-12px] rounded-full"
+              style={{ background: "radial-gradient(circle, rgba(167,139,250,0.55), transparent 70%)", filter: "blur(14px)" }}
+            />
+            {/* Holographic scan-line overlay during data exchange */}
+            {(sphereHover || loading) && (
+              <motion.div
+                className="absolute inset-0 rounded-full overflow-hidden pointer-events-none z-20"
+                style={{
+                  background: "linear-gradient(180deg, transparent 0%, rgba(20,184,166,0.35) 50%, transparent 100%)",
+                  mixBlendMode: "screen",
+                }}
+                animate={{ y: ["-100%", "100%"] }}
+                transition={{ repeat: Infinity, duration: 1.4, ease: "linear" }}
+              />
+            )}
+            {/* The violet mascot — always visible, transformed but never replaced */}
+            <motion.img
+              src={empireMonkeyLaptop}
+              alt="Empire Scout"
+              className="w-full h-full object-contain relative z-10"
+              animate={{
+                y: (sphereHover || loading) ? [0, -5, 2, -3, 0] : [0, -3, 0],
+                rotate: (sphereHover || loading) ? [0, -3, 3, -2, 0] : [0, -1, 1, 0],
+              }}
+              transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 1.4 : 3, ease: "easeInOut" }}
+            />
+            {/* Particle burst emanating FROM mascot toward orb */}
+            {(sphereHover || loading) && [0, 1, 2, 3].map(i => (
+              <motion.span
+                key={`emit-${i}`}
+                className="absolute top-1/2 right-0 rounded-full pointer-events-none"
+                style={{
+                  width: 3, height: 3,
+                  background: i % 2 === 0 ? "#a78bfa" : "#14b8a6",
+                  boxShadow: `0 0 6px ${i % 2 === 0 ? "#a78bfa" : "#14b8a6"}`,
+                }}
+                animate={{
+                  x: [0, 30, 60],
+                  y: [0, i % 2 === 0 ? -8 : 8, 0],
+                  opacity: [0, 1, 0],
+                  scale: [0.5, 1.4, 0.5],
+                }}
+                transition={{ repeat: Infinity, duration: 1, delay: i * 0.25, ease: "easeOut" }}
+              />
+            ))}
+          </motion.div>
+
+          {/* Status label centered under bridge (visible only during interaction) */}
+          <AnimatePresence>
+            {(sphereHover || loading) && (
+              <motion.div
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                className="absolute left-1/2 -translate-x-1/2 bottom-0 text-[8px] font-bold tracking-[0.2em] uppercase whitespace-nowrap"
+                style={{
+                  background: "linear-gradient(90deg, #a78bfa, #14b8a6)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                {loading ? "◉ SYNC NEURALE" : "◉ DATA LINK ATTIVO"}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
 
