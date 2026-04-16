@@ -789,49 +789,42 @@ export default function LeadsPage() {
                 transition={{ repeat: Infinity, duration: 1 }}
               />
             </svg>
-            <motion.span
-              className="absolute -bottom-3 left-1/2 -translate-x-1/2 text-[6px] font-bold uppercase tracking-[0.2em] whitespace-nowrap"
-              style={{ color: "#a78bfa" }}
-              animate={{ opacity: sphereHover ? 1 : 0.35 }}
-            >
-              {sphereHover ? "⚡ SCAN" : "◉ AI"}
-            </motion.span>
           </motion.div>
+        </motion.div>
 
-          {/* ═══ MASCOT ═══ */}
-          <div className="relative w-20 h-20 shrink-0">
+        {/* Mascot row — below the unified legend */}
+        <div className="relative w-20 h-20 shrink-0">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+            className="absolute inset-[-6px] rounded-full"
+            style={{ border: "1.5px dashed rgba(167,139,250,0.3)" }}
+          />
+          {loading && (
             <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-              className="absolute inset-[-6px] rounded-full"
-              style={{ border: "1.5px dashed rgba(167,139,250,0.3)" }}
+              animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
+              transition={{ repeat: Infinity, duration: 1.2 }}
+              className="absolute inset-[-8px] rounded-full"
+              style={{ border: "2px solid rgba(167,139,250,0.4)" }}
             />
-            {loading && (
-              <motion.div
-                animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
-                transition={{ repeat: Infinity, duration: 1.2 }}
-                className="absolute inset-[-8px] rounded-full"
-                style={{ border: "2px solid rgba(167,139,250,0.4)" }}
-              />
-            )}
-            <motion.div
-              animate={{ opacity: loading ? [0.3, 0.6, 0.3] : [0.15, 0.25, 0.15] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              className="absolute inset-[-10px] rounded-full"
-              style={{ background: "radial-gradient(circle, rgba(167,139,250,0.3), transparent 70%)", filter: "blur(12px)" }}
-            />
-            <motion.img
-              src={empireMonkeyLaptop}
-              alt="Empire Scout"
-              className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_15px_rgba(167,139,250,0.4)]"
-              animate={{
-                y: loading ? [0, -6, 0] : [0, -3, 0],
-                rotate: loading ? [0, -2, 2, 0] : [0, -1, 1, 0],
-                scale: loading ? [1, 1.05, 1] : [1, 1.02, 1],
-              }}
-              transition={{ repeat: Infinity, duration: loading ? 1.5 : 3, ease: "easeInOut" }}
-            />
-          </div>
+          )}
+          <motion.div
+            animate={{ opacity: loading ? [0.3, 0.6, 0.3] : [0.15, 0.25, 0.15] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="absolute inset-[-10px] rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(167,139,250,0.3), transparent 70%)", filter: "blur(12px)" }}
+          />
+          <motion.img
+            src={empireMonkeyLaptop}
+            alt="Empire Scout"
+            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_15px_rgba(167,139,250,0.4)]"
+            animate={{
+              y: loading ? [0, -6, 0] : [0, -3, 0],
+              rotate: loading ? [0, -2, 2, 0] : [0, -1, 1, 0],
+              scale: loading ? [1, 1.05, 1] : [1, 1.02, 1],
+            }}
+            transition={{ repeat: Infinity, duration: loading ? 1.5 : 3, ease: "easeInOut" }}
+          />
         </div>
       </motion.div>
 
