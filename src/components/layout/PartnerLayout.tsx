@@ -35,7 +35,19 @@ export default function PartnerLayout() {
     if (!lastTs) return true;
     return Date.now() - Number(lastTs) > 30 * 60 * 1000;
   });
-  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
+  const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
+  const [profileFullName, setProfileFullName] = useState<string | null>(null);
+  const userName = profileFullName || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
+
+  useEffect(() => {
+    if (!user?.id) return;
+    import("@/integrations/supabase/client").then(({ supabase }) => {
+      supabase.from("profiles").select("avatar_url, full_name").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+        if (data?.avatar_url) setPartnerAvatar(data.avatar_url);
+        if (data?.full_name) setProfileFullName(data.full_name);
+      });
+    });
+  }, [user?.id]);
 
   useEffect(() => {
     sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false");
@@ -58,6 +70,7 @@ export default function PartnerLayout() {
     return (
       <PartnerSplashScreen
         userName={userName}
+        avatarUrl={partnerAvatar}
         onComplete={() => {
           setShowSplash(false);
           sessionStorage.setItem("partner_splash_ts", String(Date.now()));
