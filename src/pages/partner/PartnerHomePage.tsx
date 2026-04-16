@@ -133,20 +133,62 @@ export default function PartnerHomePage() {
              ═══════════════════════════════════════════ */
           <motion.div key="demo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5 pb-8">
 
-            {/* Luxury header banner */}
-            <motion.div className="mx-4 py-4 text-center rounded-3xl relative overflow-hidden group cursor-default"
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.01 }}
-              style={{ background: "linear-gradient(135deg, rgba(212,160,82,0.08), rgba(245,158,11,0.03))", border: "1px solid rgba(212,160,82,0.15)" }}>
-              <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                style={{ background: "radial-gradient(circle at 50% 50%, rgba(212,160,82,0.06), transparent 70%)" }} />
-              <motion.div animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 3, repeat: Infinity }}
-                className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(212,160,82,0.4), transparent)" }} />
-              <p className="text-[10px] font-bold uppercase tracking-[0.3em] relative z-10" style={{ color: "#d4a052" }}>
-                ✦ Il Sistema Operativo del Business ✦
-              </p>
-              <motion.div animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
-                className="absolute bottom-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(212,160,82,0.4), transparent)" }} />
+            {/* ═══ INTERACTIVE MODE SWITCH BAR (DEMO → LIVE) ═══ */}
+            <motion.div
+              className="mx-4 rounded-2xl relative overflow-hidden cursor-pointer select-none"
+              initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+              style={{
+                background: "linear-gradient(135deg, rgba(28,20,10,0.98), rgba(42,31,20,0.98))",
+                border: "1px solid rgba(212,160,82,0.2)",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
+              }}
+              onClick={() => setDemoMode(false)}
+              whileTap={{ scale: 0.985 }}
+            >
+              <motion.div className="absolute inset-0 pointer-events-none"
+                animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                style={{ background: "linear-gradient(90deg, transparent 0%, rgba(212,160,82,0.06) 25%, transparent 50%)", backgroundSize: "200% 100%" }} />
+
+              <div className="relative flex items-center justify-between px-4 py-3">
+                <div className="flex items-center gap-2 opacity-40">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+                    style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.2)" }}>
+                    <Eye className="w-4 h-4 text-violet-400/60" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-violet-300/70">Lavoro</div>
+                    <div className="text-[9px] text-white/30 mt-0.5">Dati reali</div>
+                  </div>
+                </div>
+
+                <motion.div className="flex items-center gap-1.5"
+                  animate={{ x: [0, -6, 0], opacity: [0.3, 0.7, 0.3] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}>
+                  <ArrowRight className="w-3 h-3 text-violet-400/50 rotate-180" />
+                  <span className="text-[8px] uppercase tracking-[0.15em] text-white/30 font-semibold">Scorri</span>
+                </motion.div>
+
+                <div className="flex items-center gap-3">
+                  <div>
+                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300/90 text-right">Presentazione</div>
+                    <div className="text-[9px] text-white/40 mt-0.5 text-right">Demo • Vendita</div>
+                  </div>
+                  <motion.div className="w-9 h-9 rounded-xl flex items-center justify-center"
+                    style={{ background: "linear-gradient(145deg, #d4a052, #b8892e)", boxShadow: "0 2px 12px rgba(212,160,82,0.5)" }}
+                    animate={{ boxShadow: ["0 2px 12px rgba(212,160,82,0.3)", "0 2px 20px rgba(212,160,82,0.6)", "0 2px 12px rgba(212,160,82,0.3)"] }}
+                    transition={{ duration: 2, repeat: Infinity }}>
+                    <Presentation className="w-4 h-4 text-white" />
+                  </motion.div>
+                </div>
+              </div>
+
+              <div className="h-[2px] w-full" style={{ background: "rgba(212,160,82,0.1)" }}>
+                <motion.div className="h-full rounded-full ml-auto"
+                  style={{ background: "linear-gradient(90deg, #b8892e, #d4a052)", width: "30%" }}
+                  animate={{ width: ["30%", "35%", "30%"] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} />
+              </div>
             </motion.div>
 
             <section className="px-4 space-y-5">
