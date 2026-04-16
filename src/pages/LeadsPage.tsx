@@ -288,7 +288,7 @@ export default function LeadsPage() {
   const [enrichedData, setEnrichedData] = useState<{ instagram?: string; email?: string; phone?: string; facebook?: string; source?: string } | null>(null);
 
   // Deep analysis
-  const [deepLoading, setDeepLoadingState] = useState(false);
+  const [analysisLoading, setAnalysisLoading] = useState(false);
   const [deepReport, setDeepReport] = useState<DeepReport | null>(null);
   const [deepAudit, setDeepAudit] = useState<DeepAudit | null>(null);
 
