@@ -2566,6 +2566,33 @@ const SuperAdminDashboard = () => {
               </div>
             </div>
 
+            {/* Link diretto Homepage Venditori */}
+            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-3 space-y-2">
+              <p className="text-xs font-bold text-foreground flex items-center gap-2">
+                <ExternalLink className="w-3.5 h-3.5 text-emerald-400" /> Homepage Registrazione Venditori
+              </p>
+              <p className="text-[0.55rem] text-muted-foreground">Apri direttamente la pagina pubblica dove i nuovi venditori possono registrarsi.</p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
+                  {window.location.origin}/join
+                </code>
+                <motion.button
+                  onClick={() => window.open(`${window.location.origin}/join`, "_blank")}
+                  className="shrink-0 px-3 py-1.5 rounded-lg bg-emerald-500/15 flex items-center gap-1.5 text-emerald-400 text-[0.6rem] font-bold hover:bg-emerald-500/25 transition-colors"
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <ExternalLink className="w-3 h-3" /> Apri
+                </motion.button>
+                <motion.button
+                  onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join`); toast({ title: "Link copiato!" }); }}
+                  className="shrink-0 w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-400"
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </motion.button>
+              </div>
+            </div>
+
             {/* Partner Cards */}
             <div className="space-y-3">
               {partnerNetwork.map(p => (
