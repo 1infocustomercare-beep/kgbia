@@ -122,15 +122,29 @@ const detectSector = (lead: Lead, fallback: string): string => {
   return fallback;
 };
 
+/**
+ * DETERMINISTIC opportunity score (0-100). No randomness.
+ * Higher = bigger digital gap = bigger opportunity to sell Empire.
+ */
 const computeScore = (lead: Lead): number => {
   let score = 50;
+  // Digital presence gaps (the bigger the gap, the bigger the sale)
   if (!lead.website) score += 25;
   if (!lead.instagram) score += 10;
-  if (lead.google_rating > 0 && lead.google_rating < 3.5) score += 15;
-  else if (lead.google_rating >= 4.5) score -= 10;
-  if (!lead.phone) score += 5;
-  if (lead.opening_hours) score -= 3; // well-organized = harder to sell
-  return Math.max(15, Math.min(98, score + Math.floor(Math.random() * 6 - 3)));
+  if (!lead.facebook) score += 4;
+  if (!lead.email) score += 3;
+  // Reputation signals
+  if (lead.google_rating > 0 && lead.google_rating < 3.5) score += 15; // unhappy customers = motivated
+  else if (lead.google_rating >= 4.7 && lead.google_reviews >= 50) score -= 12; // already nailing it
+  else if (lead.google_rating >= 4.5) score -= 6;
+  // Volume of reviews = active business worth contacting
+  if (lead.google_reviews >= 100) score += 4;
+  else if (lead.google_reviews >= 30) score += 2;
+  // Reachability
+  if (!lead.phone) score += 5; // hard to reach = also hard for customers
+  // Operations maturity
+  if (lead.opening_hours) score -= 3; // well-organized = slightly harder pitch
+  return Math.max(15, Math.min(98, score));
 };
 
 const getPreviewScreens = (sectorId: string): string[] => {
