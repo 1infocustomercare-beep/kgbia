@@ -406,6 +406,7 @@ const categoryConfig: Record<Category, { label: string; icon: React.ReactNode; c
 const PartnerSalesToolkit = () => {
   const [activeCategory, setActiveCategory] = useState<Category | "all">("all");
   const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
+  const [showROI, setShowROI] = useState(false);
 
   const filteredFeatures = activeCategory === "all" ? features : features.filter(f => f.category === activeCategory);
 
