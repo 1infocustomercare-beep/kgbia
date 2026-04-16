@@ -808,91 +808,115 @@ export default function LeadsPage() {
 
       <div className="relative z-10 space-y-4">
 
-      {/* HERO — UNIFIED LIVING LEGEND (mascot ⇄ orb as one organism) */}
+      {/* HERO — UNIFIED LIVING MASCOT (single central organism with embedded data-core) */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center pt-3 pb-2 gap-2"
+        className="flex flex-col items-center justify-center pt-4 pb-3 gap-3"
         onHoverStart={() => setSphereHover(true)}
         onHoverEnd={() => setSphereHover(false)}
         onTapStart={() => setSphereHover(true)}
         onTap={() => setTimeout(() => setSphereHover(false), 1600)}
       >
-        {/* Unified legend — title morphs and orb is its data-core */}
+        {/* ═══ CENTRAL UNIFIED MASCOT — orb is its data heart ═══ */}
         <motion.div
-          className="relative flex items-center justify-center gap-3 px-4 py-2 rounded-2xl cursor-pointer select-none"
+          className="relative cursor-pointer select-none"
+          style={{ width: 140, height: 140 }}
           animate={{
-            background: (sphereHover || loading)
-              ? "linear-gradient(90deg, rgba(139,92,246,0.14), rgba(20,184,166,0.10), rgba(139,92,246,0.14))"
-              : "linear-gradient(90deg, rgba(139,92,246,0), rgba(20,184,166,0), rgba(139,92,246,0))",
-            borderColor: (sphereHover || loading) ? "rgba(139,92,246,0.3)" : "rgba(139,92,246,0)",
-            boxShadow: (sphereHover || loading) ? "0 0 28px rgba(139,92,246,0.22), inset 0 0 14px rgba(20,184,166,0.08)" : "0 0 0 rgba(0,0,0,0)",
+            scale: (sphereHover || loading) ? [1, 1.05, 0.99, 1.03, 1] : [1, 1.02, 1],
+            filter: (sphereHover || loading)
+              ? "drop-shadow(0 0 28px rgba(167,139,250,0.95))"
+              : "drop-shadow(0 0 14px rgba(167,139,250,0.5))",
           }}
-          transition={{ duration: 0.5 }}
-          style={{ border: "1px solid transparent" }}
+          transition={{
+            scale: { repeat: Infinity, duration: (sphereHover || loading) ? 1.4 : 3.2, ease: "easeInOut" },
+            filter: { duration: 0.5 },
+          }}
         >
-          {/* Morphing title */}
-          <div className="flex flex-col items-end leading-none">
-            <motion.h1
-              className="text-lg font-extrabold tracking-tight text-white flex items-center gap-1.5"
-              animate={{
-                letterSpacing: (sphereHover || loading) ? "0.06em" : "0em",
-                textShadow: (sphereHover || loading) ? "0 0 12px rgba(167,139,250,0.6)" : "0 0 0 transparent",
-              }}
-              transition={{ duration: 0.6 }}
-            >
-              <Target className="w-4 h-4 shrink-0" style={{ color: (sphereHover || loading) ? "#a78bfa" : "#14b8a6", transition: "color 0.4s" }} />
-              <AnimatePresence mode="wait" initial={false}>
-                {loading ? (
-                  <motion.span key="t-scan" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
-                    style={{ background: "linear-gradient(90deg, #a78bfa, #14b8a6, #a78bfa)", backgroundSize: "200% 100%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
-                  >
-                    SCANSIONE...
-                  </motion.span>
-                ) : sphereHover ? (
-                  <motion.span key="t-live" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
-                    style={{ background: "linear-gradient(90deg, #a78bfa, #14b8a6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
-                  >
-                    LeadEngine LIVE
-                  </motion.span>
-                ) : (
-                  <motion.span key="t-idle" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}>
-                    LeadEngine Scout
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.h1>
-            <motion.p
-              className="text-[9px] font-bold tracking-[0.22em] uppercase mt-1"
-              style={{ background: "linear-gradient(90deg, #8b5cf6, #14b8a6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
-              animate={{ opacity: [0.7, 1, 0.7] }}
-              transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 1 : 2.5 }}
-            >
-              {loading ? "Analisi neurale in corso" : sphereHover ? "Data stream attivo" : "AI · Real-time"}
-            </motion.p>
-          </div>
-
-          {/* The orb is now embedded INSIDE the legend — they breathe together */}
+          {/* Outer rotating orbital ring */}
           <motion.div
-            className="relative w-14 h-14 shrink-0"
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 5 : 12, ease: "linear" }}
+            className="absolute inset-[-10px] rounded-full"
+            style={{
+              border: `1.5px dashed rgba(167,139,250,${(sphereHover || loading) ? 0.7 : 0.28})`,
+            }}
+          />
+          {/* Counter-rotating inner ring */}
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 7 : 18, ease: "linear" }}
+            className="absolute inset-[-2px] rounded-full"
+            style={{
+              border: `1px dotted rgba(20,184,166,${(sphereHover || loading) ? 0.55 : 0.18})`,
+            }}
+          />
+          {/* Pulse ring during loading/hover */}
+          {(loading || sphereHover) && (
+            <motion.div
+              animate={{ scale: [1, 1.7, 1], opacity: [0.6, 0, 0.6] }}
+              transition={{ repeat: Infinity, duration: 1.4 }}
+              className="absolute inset-[-14px] rounded-full"
+              style={{ border: "2px solid rgba(167,139,250,0.5)" }}
+            />
+          )}
+          {/* Violet aura — soft glow */}
+          <motion.div
             animate={{
-              y: [0, -4, 0, -2, 0],
+              opacity: (sphereHover || loading) ? [0.55, 0.9, 0.55] : [0.22, 0.34, 0.22],
+              scale: (sphereHover || loading) ? [1, 1.18, 1] : [1, 1.05, 1],
+            }}
+            transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 1 : 2.6 }}
+            className="absolute inset-[-22px] rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(167,139,250,0.6), transparent 70%)", filter: "blur(20px)" }}
+          />
+
+          {/* Holographic scan-line during data exchange */}
+          {(sphereHover || loading) && (
+            <motion.div
+              className="absolute inset-0 rounded-full overflow-hidden pointer-events-none z-20"
+              style={{
+                background: "linear-gradient(180deg, transparent 0%, rgba(20,184,166,0.32) 50%, transparent 100%)",
+                mixBlendMode: "screen",
+              }}
+              animate={{ y: ["-100%", "100%"] }}
+              transition={{ repeat: Infinity, duration: 1.4, ease: "linear" }}
+            />
+          )}
+
+          {/* The violet mascot — centerpiece, always visible */}
+          <motion.img
+            src={empireMonkeyLaptop}
+            alt="Empire Scout"
+            className="w-full h-full object-contain relative z-10"
+            animate={{
+              y: (sphereHover || loading) ? [0, -6, 2, -4, 0] : [0, -4, 0],
+              rotate: (sphereHover || loading) ? [0, -3, 3, -2, 0] : [0, -1, 1, 0],
+            }}
+            transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 1.6 : 3.4, ease: "easeInOut" }}
+          />
+
+          {/* ═══ DATA-CORE ORB embedded as floating heart on top-right of mascot ═══ */}
+          <motion.div
+            className="absolute z-30"
+            style={{ width: 52, height: 52, top: -6, right: -6, perspective: 400 }}
+            animate={{
+              y: [0, -3, 0, -2, 0],
               rotateY: (sphereHover || loading) ? [0, 22, -22, 0] : 0,
               rotateX: (sphereHover || loading) ? [0, -10, 10, 0] : 0,
             }}
             transition={{
-              y: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+              y: { repeat: Infinity, duration: 3.5, ease: "easeInOut" },
               rotateY: { duration: 1.4, repeat: (sphereHover || loading) ? Infinity : 0 },
               rotateX: { duration: 1.4, repeat: (sphereHover || loading) ? Infinity : 0 },
             }}
-            style={{ perspective: 400 }}
           >
             {[0, 1, 2].map(i => (
               <motion.div
                 key={`orbit-${i}`}
                 className="absolute inset-0 rounded-full"
                 style={{
-                  border: `1px solid rgba(139,92,246,${sphereHover ? 0.35 : 0.1})`,
+                  border: `1px solid rgba(139,92,246,${sphereHover ? 0.4 : 0.12})`,
                   transform: `rotateX(${60 + i * 20}deg) rotateZ(${i * 60}deg)`,
                 }}
                 animate={{ rotate: i % 2 === 0 ? 360 : -360 }}
@@ -900,19 +924,19 @@ export default function LeadsPage() {
               />
             ))}
             <motion.div
-              className="absolute inset-[-8px] rounded-full"
+              className="absolute inset-[-6px] rounded-full"
               animate={{
                 scale: sphereHover ? [1, 1.25, 1] : [1, 1.08, 1],
-                opacity: sphereHover ? [0.4, 0.1, 0.4] : [0.15, 0.05, 0.15],
+                opacity: sphereHover ? [0.45, 0.12, 0.45] : [0.18, 0.06, 0.18],
               }}
               transition={{ repeat: Infinity, duration: sphereHover ? 0.9 : 2.5 }}
-              style={{ background: "radial-gradient(circle, rgba(139,92,246,0.3), transparent 70%)" }}
+              style={{ background: "radial-gradient(circle, rgba(139,92,246,0.4), transparent 70%)" }}
             />
-            <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full drop-shadow-[0_0_12px_rgba(139,92,246,0.3)]">
+            <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">
               <defs>
                 <radialGradient id="holoCore" cx="45%" cy="40%">
-                  <stop offset="0%" stopColor="rgba(167,139,250,0.25)" />
-                  <stop offset="50%" stopColor="rgba(139,92,246,0.08)" />
+                  <stop offset="0%" stopColor="rgba(167,139,250,0.35)" />
+                  <stop offset="50%" stopColor="rgba(139,92,246,0.12)" />
                   <stop offset="100%" stopColor="transparent" />
                 </radialGradient>
                 <filter id="glow">
@@ -926,22 +950,20 @@ export default function LeadsPage() {
                   key={`wire-${i}`}
                   cx={50} cy={50} r={r}
                   fill="none"
-                  stroke={i === 1 ? "rgba(20,184,166,0.2)" : "rgba(139,92,246,0.18)"}
-                  strokeWidth={0.5}
+                  stroke={i === 1 ? "rgba(20,184,166,0.3)" : "rgba(139,92,246,0.25)"}
+                  strokeWidth={0.6}
                   strokeDasharray={`${3 + i * 2} ${4 + i}`}
                   animate={{
-                    r: sphereHover ? [r, r + 4, r - 2, r] : r,
                     strokeDashoffset: [0, 100],
-                    opacity: sphereHover ? [0.7, 0.3, 0.7] : [0.2, 0.35, 0.2],
+                    opacity: sphereHover ? [0.7, 0.3, 0.7] : [0.25, 0.45, 0.25],
                   }}
                   transition={{
-                    r: { duration: 1, repeat: sphereHover ? Infinity : 0 },
                     strokeDashoffset: { repeat: Infinity, duration: 8 + i * 3, ease: "linear" },
                     opacity: { repeat: Infinity, duration: 2 },
                   }}
                 />
               ))}
-              {sphereNodes.map((n, i) => {
+              {sphereNodes.slice(0, 10).map((n, i) => {
                 const angle = (i * 137.5 * Math.PI) / 180;
                 const baseR = 12 + (i % 4) * 8;
                 const orbitR = sphereHover ? baseR + 6 : baseR;
@@ -964,210 +986,97 @@ export default function LeadsPage() {
                         50 + Math.sin(angle) * orbitR,
                       ],
                       r: sphereHover ? [n.size / 2, n.size, n.size / 2] : [n.size / 2.5, n.size / 1.8, n.size / 2.5],
-                      opacity: sphereHover ? [1, 0.4, 1] : [0.25, 0.5, 0.25],
+                      opacity: sphereHover ? [1, 0.5, 1] : [0.3, 0.55, 0.3],
                     }}
                     transition={{ repeat: Infinity, duration: 3 + (i % 4), ease: "easeInOut", delay: i * 0.15 }}
                   />
                 );
               })}
-              <motion.line
-                x1={50} y1={50} x2={90} y2={50}
-                stroke="rgba(139,92,246,0.25)"
-                strokeWidth={sphereHover ? 1 : 0.5}
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: sphereHover ? 1.5 : 4, ease: "linear" }}
-                style={{ transformOrigin: "50px 50px" }}
-              />
               <motion.circle
                 cx={50} cy={50}
-                fill="rgba(167,139,250,0.6)"
+                fill="rgba(167,139,250,0.7)"
                 filter="url(#glow)"
                 animate={{
-                  r: sphereHover ? [3, 7, 3] : [2, 4, 2],
-                  opacity: sphereHover ? [1, 0.3, 1] : [0.4, 0.7, 0.4],
+                  r: sphereHover ? [3, 7, 3] : [2.5, 4.5, 2.5],
+                  opacity: sphereHover ? [1, 0.4, 1] : [0.5, 0.8, 0.5],
                 }}
                 transition={{ repeat: Infinity, duration: sphereHover ? 0.6 : 2 }}
               />
               <motion.circle
                 cx={50} cy={50} r={1.5}
                 fill="#fff"
-                animate={{ opacity: sphereHover ? [1, 0.2, 1] : [0.5, 0.8, 0.5] }}
+                animate={{ opacity: sphereHover ? [1, 0.2, 1] : [0.6, 0.9, 0.6] }}
                 transition={{ repeat: Infinity, duration: 1 }}
               />
             </svg>
           </motion.div>
-        </motion.div>
 
-        {/* ═══ MASCOT ⇄ ORB DATA STREAM — unified organism ═══ */}
-        <div className="relative flex items-center justify-center" style={{ width: 220, height: 90 }}>
-          {/* Energy bridge: data conduit between mascot and orb */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 220 90">
+          {/* Internal data link — short pulse line connecting mascot ⇄ orb-core */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[15]" viewBox="0 0 140 140">
             <defs>
-              <linearGradient id="dataBridge" x1="0%" y1="50%" x2="100%" y2="50%">
+              <linearGradient id="internalLink" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="rgba(167,139,250,0)" />
-                <stop offset="20%" stopColor="rgba(167,139,250,0.7)" />
-                <stop offset="50%" stopColor="rgba(20,184,166,0.9)" />
-                <stop offset="80%" stopColor="rgba(167,139,250,0.7)" />
+                <stop offset="50%" stopColor="rgba(20,184,166,0.85)" />
                 <stop offset="100%" stopColor="rgba(167,139,250,0)" />
               </linearGradient>
-              <filter id="bridgeGlow"><feGaussianBlur stdDeviation="2" /></filter>
             </defs>
-            {/* Main pulsing conduit — visible always, intensifies on hover */}
             <motion.path
-              d="M 60 45 Q 110 30, 160 45"
+              d="M 70 60 Q 95 35, 115 18"
               fill="none"
-              stroke="url(#dataBridge)"
-              strokeWidth={(sphereHover || loading) ? 2 : 1}
-              strokeDasharray="3 4"
-              filter="url(#bridgeGlow)"
+              stroke="url(#internalLink)"
+              strokeWidth={(sphereHover || loading) ? 1.6 : 0.8}
+              strokeDasharray="2 3"
               animate={{
-                strokeDashoffset: [0, -28],
-                opacity: (sphereHover || loading) ? [0.9, 1, 0.9] : [0.4, 0.6, 0.4],
+                strokeDashoffset: [0, -20],
+                opacity: (sphereHover || loading) ? [0.85, 1, 0.85] : [0.35, 0.5, 0.35],
               }}
               transition={{
                 strokeDashoffset: { repeat: Infinity, duration: (sphereHover || loading) ? 0.6 : 2, ease: "linear" },
                 opacity: { repeat: Infinity, duration: 1.6 },
               }}
             />
-            <motion.path
-              d="M 60 50 Q 110 65, 160 50"
-              fill="none"
-              stroke="url(#dataBridge)"
-              strokeWidth={(sphereHover || loading) ? 1.5 : 0.7}
-              strokeDasharray="2 5"
-              filter="url(#bridgeGlow)"
-              animate={{
-                strokeDashoffset: [0, 28],
-                opacity: (sphereHover || loading) ? [0.7, 1, 0.7] : [0.25, 0.45, 0.25],
-              }}
-              transition={{
-                strokeDashoffset: { repeat: Infinity, duration: (sphereHover || loading) ? 0.8 : 2.4, ease: "linear" },
-                opacity: { repeat: Infinity, duration: 2 },
-              }}
-            />
-            {/* Data packets traveling between mascot and orb */}
-            {(sphereHover || loading) && [0, 1, 2, 3, 4].map(i => (
-              <motion.circle
-                key={`packet-${i}`}
-                r={2}
-                fill={i % 2 === 0 ? "#a78bfa" : "#14b8a6"}
-                filter="url(#bridgeGlow)"
-                animate={{
-                  cx: i % 2 === 0 ? [60, 110, 160] : [160, 110, 60],
-                  cy: [45, i % 2 === 0 ? 30 : 65, 45],
-                  opacity: [0, 1, 0],
-                  r: [1.5, 3, 1.5],
-                }}
-                transition={{ repeat: Infinity, duration: 1.2, delay: i * 0.24, ease: "easeInOut" }}
-              />
-            ))}
           </svg>
+        </motion.div>
 
-          {/* MASCOT — left side, morphing & breathing in sync with orb */}
-          <motion.div
-            className="absolute left-0 top-1/2 -translate-y-1/2"
-            style={{ width: 76, height: 76 }}
+        {/* Title under the unified mascot */}
+        <div className="flex flex-col items-center leading-none gap-1">
+          <motion.h1
+            className="text-lg font-extrabold tracking-tight text-white flex items-center gap-1.5"
             animate={{
-              scale: (sphereHover || loading) ? [1, 1.06, 0.98, 1.04, 1] : 1,
-              filter: (sphereHover || loading)
-                ? "drop-shadow(0 0 22px rgba(167,139,250,0.85)) hue-rotate(0deg)"
-                : "drop-shadow(0 0 12px rgba(167,139,250,0.45))",
+              letterSpacing: (sphereHover || loading) ? "0.06em" : "0em",
+              textShadow: (sphereHover || loading) ? "0 0 12px rgba(167,139,250,0.6)" : "0 0 0 transparent",
             }}
-            transition={{
-              scale: { repeat: (sphereHover || loading) ? Infinity : 0, duration: 1.4, ease: "easeInOut" },
-              filter: { duration: 0.5 },
-            }}
+            transition={{ duration: 0.6 }}
           >
-            {/* Orbital ring around mascot — mirrors orb */}
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 4 : 8, ease: "linear" }}
-              className="absolute inset-[-6px] rounded-full"
-              style={{
-                border: `1.5px dashed rgba(167,139,250,${(sphereHover || loading) ? 0.7 : 0.3})`,
-              }}
-            />
-            {/* Pulse ring during loading */}
-            {(loading || sphereHover) && (
-              <motion.div
-                animate={{ scale: [1, 1.6, 1], opacity: [0.6, 0, 0.6] }}
-                transition={{ repeat: Infinity, duration: 1.2 }}
-                className="absolute inset-[-8px] rounded-full"
-                style={{ border: "2px solid rgba(167,139,250,0.5)" }}
-              />
-            )}
-            {/* Violet aura — intensifies in sync */}
-            <motion.div
-              animate={{
-                opacity: (sphereHover || loading) ? [0.5, 0.85, 0.5] : [0.18, 0.28, 0.18],
-                scale: (sphereHover || loading) ? [1, 1.15, 1] : 1,
-              }}
-              transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 1 : 2.4 }}
-              className="absolute inset-[-12px] rounded-full"
-              style={{ background: "radial-gradient(circle, rgba(167,139,250,0.55), transparent 70%)", filter: "blur(14px)" }}
-            />
-            {/* Holographic scan-line overlay during data exchange */}
-            {(sphereHover || loading) && (
-              <motion.div
-                className="absolute inset-0 rounded-full overflow-hidden pointer-events-none z-20"
-                style={{
-                  background: "linear-gradient(180deg, transparent 0%, rgba(20,184,166,0.35) 50%, transparent 100%)",
-                  mixBlendMode: "screen",
-                }}
-                animate={{ y: ["-100%", "100%"] }}
-                transition={{ repeat: Infinity, duration: 1.4, ease: "linear" }}
-              />
-            )}
-            {/* The violet mascot — always visible, transformed but never replaced */}
-            <motion.img
-              src={empireMonkeyLaptop}
-              alt="Empire Scout"
-              className="w-full h-full object-contain relative z-10"
-              animate={{
-                y: (sphereHover || loading) ? [0, -5, 2, -3, 0] : [0, -3, 0],
-                rotate: (sphereHover || loading) ? [0, -3, 3, -2, 0] : [0, -1, 1, 0],
-              }}
-              transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 1.4 : 3, ease: "easeInOut" }}
-            />
-            {/* Particle burst emanating FROM mascot toward orb */}
-            {(sphereHover || loading) && [0, 1, 2, 3].map(i => (
-              <motion.span
-                key={`emit-${i}`}
-                className="absolute top-1/2 right-0 rounded-full pointer-events-none"
-                style={{
-                  width: 3, height: 3,
-                  background: i % 2 === 0 ? "#a78bfa" : "#14b8a6",
-                  boxShadow: `0 0 6px ${i % 2 === 0 ? "#a78bfa" : "#14b8a6"}`,
-                }}
-                animate={{
-                  x: [0, 30, 60],
-                  y: [0, i % 2 === 0 ? -8 : 8, 0],
-                  opacity: [0, 1, 0],
-                  scale: [0.5, 1.4, 0.5],
-                }}
-                transition={{ repeat: Infinity, duration: 1, delay: i * 0.25, ease: "easeOut" }}
-              />
-            ))}
-          </motion.div>
-
-          {/* Status label centered under bridge (visible only during interaction) */}
-          <AnimatePresence>
-            {(sphereHover || loading) && (
-              <motion.div
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                className="absolute left-1/2 -translate-x-1/2 bottom-0 text-[8px] font-bold tracking-[0.2em] uppercase whitespace-nowrap"
-                style={{
-                  background: "linear-gradient(90deg, #a78bfa, #14b8a6)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                {loading ? "◉ SYNC NEURALE" : "◉ DATA LINK ATTIVO"}
-              </motion.div>
-            )}
-          </AnimatePresence>
+            <Target className="w-4 h-4 shrink-0" style={{ color: (sphereHover || loading) ? "#a78bfa" : "#14b8a6", transition: "color 0.4s" }} />
+            <AnimatePresence mode="wait" initial={false}>
+              {loading ? (
+                <motion.span key="t-scan" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
+                  style={{ background: "linear-gradient(90deg, #a78bfa, #14b8a6, #a78bfa)", backgroundSize: "200% 100%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+                >
+                  SCANSIONE...
+                </motion.span>
+              ) : sphereHover ? (
+                <motion.span key="t-live" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
+                  style={{ background: "linear-gradient(90deg, #a78bfa, #14b8a6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+                >
+                  LeadEngine LIVE
+                </motion.span>
+              ) : (
+                <motion.span key="t-idle" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}>
+                  LeadEngine Scout
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.h1>
+          <motion.p
+            className="text-[9px] font-bold tracking-[0.22em] uppercase"
+            style={{ background: "linear-gradient(90deg, #8b5cf6, #14b8a6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 1 : 2.5 }}
+          >
+            {loading ? "◉ Sync neurale in corso" : sphereHover ? "◉ Data link attivo" : "AI · Real-time"}
+          </motion.p>
         </div>
       </motion.div>
 
