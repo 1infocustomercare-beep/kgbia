@@ -2024,24 +2024,49 @@ export default function LeadsPage() {
             </div>
 
             <div className="rounded-2xl p-4 space-y-3 text-left" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.08), rgba(20,184,166,0.04))", border: "1px solid rgba(124,58,237,0.2)" }}>
+              {/* Header con score live */}
               <div className="flex items-start gap-2.5">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.3)" }}>
                   <Wand2 className="w-4 h-4" style={{ color: "#a78bfa" }} />
                 </div>
-                <div className="flex-1">
-                  <p className="text-xs font-bold text-white">🎯 Modalità Manuale Mirata</p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs font-bold text-white">🎯 Modalità Manuale PRO</p>
+                    {manualName.trim() && (
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-full"
+                        style={{
+                          background: manualLiveScore >= 75 ? "rgba(34,197,94,0.15)" : manualLiveScore >= 50 ? "rgba(245,158,11,0.15)" : "rgba(107,114,128,0.15)",
+                          border: `1px solid ${manualLiveScore >= 75 ? "rgba(34,197,94,0.4)" : manualLiveScore >= 50 ? "rgba(245,158,11,0.4)" : "rgba(107,114,128,0.3)"}`,
+                        }}
+                      >
+                        <Target className="w-2.5 h-2.5" style={{ color: manualLiveScore >= 75 ? "#22c55e" : manualLiveScore >= 50 ? "#f59e0b" : "#9ca3af" }} />
+                        <span className="text-[9px] font-black" style={{ color: manualLiveScore >= 75 ? "#22c55e" : manualLiveScore >= 50 ? "#f59e0b" : "#9ca3af" }}>
+                          Score {manualLiveScore}/100
+                        </span>
+                      </motion.div>
+                    )}
+                  </div>
                   <p className="text-[10px] mt-0.5" style={{ color: "#9ca3af" }}>
-                    Hai già un'attività in mente? Inserisci nome + settore — generiamo <span className="text-white font-semibold">preview adatta al settore</span>, analisi reale e messaggio AI personalizzato.
+                    Inserisci i dati di un'attività reale → <span className="text-white font-semibold">arricchimento automatico</span>, audit tecnico profondo, preview personalizzata e messaggio AI ad alta conversione.
                   </p>
                 </div>
               </div>
 
               {/* Sector picker — visual chips */}
               <div>
-                <p className="text-[8px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "#6b7280" }}>1️⃣ Scegli il settore (preview adatta automaticamente)</p>
+                <div className="flex items-center justify-between mb-1.5">
+                  <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#6b7280" }}>1️⃣ Settore (auto-rilevato dal nome)</p>
+                  {!manualSectorTouched && manualName.trim() && (
+                    <span className="text-[8px] font-bold flex items-center gap-1" style={{ color: "#14b8a6" }}>
+                      <Zap className="w-2.5 h-2.5" /> Auto-detect attivo
+                    </span>
+                  )}
+                </div>
                 <select
                   value={manualSector}
-                  onChange={e => setManualSector(e.target.value)}
+                  onChange={e => { setManualSector(e.target.value); setManualSectorTouched(true); }}
                   className="w-full px-3 py-2.5 rounded-xl text-[11px] text-white outline-none cursor-pointer mb-2"
                   style={inputStyle}
                 >
@@ -2067,7 +2092,13 @@ export default function LeadsPage() {
                         <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#a78bfa" }}>
                           ✨ Preview per {INDUSTRY_CONFIGS[manualSector as keyof typeof INDUSTRY_CONFIGS]?.label || manualSector}
                         </p>
-                        <span className="text-[8px] font-semibold" style={{ color: "#6b7280" }}>Ref: {portfolioName}</span>
+                        <button
+                          onClick={() => setShowPicker(true)}
+                          className="text-[8px] font-bold flex items-center gap-1 px-1.5 py-0.5 rounded"
+                          style={{ background: "rgba(20,184,166,0.1)", color: "#14b8a6", border: "1px solid rgba(20,184,166,0.3)" }}
+                        >
+                          <Layers className="w-2.5 h-2.5" /> Cambia mockup
+                        </button>
                       </div>
                       <div className="grid grid-cols-4 gap-1.5">
                         {screens.slice(0, 4).map((src, i) => (
@@ -2085,6 +2116,7 @@ export default function LeadsPage() {
                           </motion.div>
                         ))}
                       </div>
+                      <p className="text-[8px] mt-1" style={{ color: "#6b7280" }}>Ref portfolio reale: <span className="font-bold" style={{ color: "#a78bfa" }}>{portfolioName}</span></p>
                       {/* Sector value props */}
                       {(() => {
                         const sf = getSectorFeatures(manualSector);
@@ -2106,14 +2138,90 @@ export default function LeadsPage() {
 
               {/* Inputs */}
               <div className="space-y-2">
-                <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#6b7280" }}>2️⃣ Dati attività (Nome obbligatorio)</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <input value={manualName} onChange={e => setManualName(e.target.value)} placeholder="Nome attività *" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none col-span-2" style={inputStyle} />
-                  <input value={manualCity} onChange={e => setManualCity(e.target.value)} placeholder="Città" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
-                  <input value={manualPhone} onChange={e => setManualPhone(e.target.value)} placeholder="Telefono" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
-                  <input value={manualWebsite} onChange={e => setManualWebsite(e.target.value)} placeholder="Sito web (opz.)" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
-                  <input value={manualIg} onChange={e => setManualIg(e.target.value)} placeholder="@instagram (opz.)" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+                <div className="flex items-center justify-between">
+                  <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#6b7280" }}>2️⃣ Dati attività</p>
+                  <button
+                    onClick={enrichManualLead}
+                    disabled={manualEnriching || !manualName.trim() || !manualCity.trim()}
+                    className="text-[9px] font-bold flex items-center gap-1 px-2 py-0.5 rounded transition-all disabled:opacity-40"
+                    style={{ background: "rgba(20,184,166,0.12)", color: "#14b8a6", border: "1px solid rgba(20,184,166,0.3)" }}
+                  >
+                    {manualEnriching ? <><Loader2 className="w-2.5 h-2.5 animate-spin" /> Cerco...</> : <><Zap className="w-2.5 h-2.5" /> Arricchisci dati</>}
+                  </button>
                 </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="col-span-2 relative">
+                    <input
+                      value={manualName}
+                      onChange={e => setManualName(e.target.value)}
+                      placeholder="Nome attività * (es. Ristorante Da Mario)"
+                      className="w-full px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none"
+                      style={inputStyle}
+                    />
+                    {manualName.trim().length > 0 && manualName.trim().length < 2 && (
+                      <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[8px]" style={{ color: "#ef4444" }}>min 2</span>
+                    )}
+                  </div>
+                  <input value={manualCity} onChange={e => setManualCity(e.target.value)} placeholder="Città" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+                  <input value={manualPhone} onChange={e => setManualPhone(e.target.value)} placeholder="Telefono +39..." className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+                  <div className="relative">
+                    <input value={manualWebsite} onChange={e => setManualWebsite(e.target.value)} placeholder="Sito web (opz.)" className="w-full px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+                    {manualWebsite.trim() && /\./.test(manualWebsite) && (
+                      <CheckCircle className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3" style={{ color: "#22c55e" }} />
+                    )}
+                  </div>
+                  <div className="relative">
+                    <input value={manualIg} onChange={e => setManualIg(e.target.value)} placeholder="@instagram (opz.)" className="w-full px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+                    {manualIg.trim() && (
+                      <CheckCircle className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3" style={{ color: "#22c55e" }} />
+                    )}
+                  </div>
+                  <input
+                    value={manualEmail}
+                    onChange={e => setManualEmail(e.target.value)}
+                    placeholder="Email (opz.)"
+                    className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none col-span-2"
+                    style={inputStyle}
+                  />
+                </div>
+                {manualEnrichedHint && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
+                    className="text-[9px] p-2 rounded-lg"
+                    style={{ background: "rgba(20,184,166,0.08)", color: "#5eead4", border: "1px solid rgba(20,184,166,0.2)" }}
+                  >
+                    {manualEnrichedHint}
+                  </motion.div>
+                )}
+                {/* Quick links — accelera ricerca */}
+                {manualName.trim() && manualCity.trim() && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    <a
+                      href={`https://www.google.com/maps/search/${encodeURIComponent(`${manualName} ${manualCity}`)}`}
+                      target="_blank" rel="noreferrer"
+                      className="text-[8px] flex items-center gap-1 px-2 py-1 rounded font-bold"
+                      style={{ background: "rgba(66,133,244,0.1)", color: "#4285F4", border: "1px solid rgba(66,133,244,0.3)" }}
+                    >
+                      <MapPin className="w-2.5 h-2.5" /> Google Maps
+                    </a>
+                    <a
+                      href={`https://www.google.com/search?q=${encodeURIComponent(`${manualName} ${manualCity} sito ufficiale`)}`}
+                      target="_blank" rel="noreferrer"
+                      className="text-[8px] flex items-center gap-1 px-2 py-1 rounded font-bold"
+                      style={{ background: "rgba(167,139,250,0.1)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.3)" }}
+                    >
+                      <Search className="w-2.5 h-2.5" /> Trova sito
+                    </a>
+                    <a
+                      href={`https://www.instagram.com/explore/tags/${encodeURIComponent(manualName.replace(/\s+/g, "").toLowerCase())}/`}
+                      target="_blank" rel="noreferrer"
+                      className="text-[8px] flex items-center gap-1 px-2 py-1 rounded font-bold"
+                      style={{ background: "rgba(228,64,95,0.1)", color: "#E4405F", border: "1px solid rgba(228,64,95,0.3)" }}
+                    >
+                      <Instagram className="w-2.5 h-2.5" /> Cerca IG
+                    </a>
+                  </div>
+                )}
               </div>
 
               {/* Channel + Generate button */}
@@ -2121,66 +2229,47 @@ export default function LeadsPage() {
                 <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#6b7280" }}>3️⃣ Canale messaggio AI</p>
                 <div className="grid grid-cols-3 gap-1.5">
                   {([
-                    { v: "whatsapp", label: "💬 WhatsApp", color: "#25D366" },
-                    { v: "instagram", label: "📷 Instagram", color: "#E4405F" },
-                    { v: "email", label: "📧 Email", color: "#3b82f6" },
+                    { v: "whatsapp", label: "💬 WhatsApp", color: "#25D366", note: "Tasso risposta 45%" },
+                    { v: "instagram", label: "📷 Instagram", color: "#E4405F", note: "Best per Beauty/Food" },
+                    { v: "email", label: "📧 Email", color: "#3b82f6", note: "Best per B2B" },
                   ] as const).map(c => (
                     <button
                       key={c.v}
                       onClick={() => setActiveChannel(c.v)}
-                      className="px-2 py-1.5 rounded-lg text-[10px] font-bold transition-all"
+                      className="px-2 py-2 rounded-lg text-[10px] font-bold transition-all flex flex-col items-center gap-0.5"
                       style={{
                         background: activeChannel === c.v ? `${c.color}20` : "rgba(255,255,255,0.03)",
                         border: `1px solid ${activeChannel === c.v ? `${c.color}50` : "rgba(255,255,255,0.06)"}`,
                         color: activeChannel === c.v ? c.color : "#9ca3af",
                       }}
                     >
-                      {c.label}
+                      <span>{c.label}</span>
+                      <span className="text-[7px] font-normal opacity-80">{c.note}</span>
                     </button>
                   ))}
                 </div>
 
                 <motion.button
                   whileTap={{ scale: 0.97 }}
-                  onClick={() => {
-                    if (!manualName.trim()) { toast.error("Inserisci il nome dell'attività"); return; }
-                    const lead: Lead & { _score: number; _sector: string } = {
-                      name: manualName.trim(),
-                      full_address: manualCity.trim() || "",
-                      city: manualCity.trim() || "N/A",
-                      zone: "",
-                      phone: manualPhone.trim() || null,
-                      website: manualWebsite.trim() || null,
-                      email: null,
-                      instagram: manualIg.trim() || null,
-                      facebook: null,
-                      google_rating: 0,
-                      google_reviews: 0,
-                      google_maps_url: null,
-                      source: "manual",
-                      isManual: true,
-                      _score: computeScore({
-                        name: manualName, full_address: "", city: manualCity, zone: "",
-                        phone: manualPhone || null, website: manualWebsite || null, email: null,
-                        instagram: manualIg || null, google_rating: 0, google_reviews: 0,
-                        google_maps_url: null, source: "manual",
-                      }),
-                      _sector: manualSector,
-                    };
-                    setResults(prev => [lead, ...prev]);
-                    handleSelect(lead);
-                    toast.success(`✨ Analisi avviata per ${lead.name}`, { description: `Preview ${INDUSTRY_CONFIGS[manualSector as keyof typeof INDUSTRY_CONFIGS]?.label || manualSector} + messaggio AI` });
-                  }}
-                  className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
+                  whileHover={{ scale: 1.01 }}
+                  onClick={launchManualAnalysis}
+                  disabled={!manualName.trim()}
+                  className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 disabled:opacity-50"
                   style={{ background: "linear-gradient(135deg, #7c3aed, #a78bfa)", color: "#fff", boxShadow: "0 4px 20px rgba(124,58,237,0.3)" }}
                 >
                   <Sparkles className="w-4 h-4" />
-                  Genera Demo + Analisi + Messaggio AI
+                  Avvia Analisi Profonda + Demo + Messaggio AI
                 </motion.button>
 
-                <p className="text-[8px] text-center" style={{ color: "#6b7280" }}>
-                  ⚡ Preview generata col mockup reale del settore · Messaggio AI calibrato sui pain points reali
-                </p>
+                {/* Pro tips */}
+                <div className="rounded-lg p-2 mt-1" style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
+                  <p className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: "#f59e0b" }}>💡 Tips PRO per chiudere</p>
+                  <ul className="space-y-0.5 text-[8px]" style={{ color: "#d1d5db" }}>
+                    <li>• Score &gt; 75 = lead caldo, contatta subito (entro 1h)</li>
+                    <li>• Manda preview + audit tecnico SEMPRE col messaggio</li>
+                    <li>• Follow-up dopo 48h se non rispondono — tasso chiusura 3x</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
