@@ -143,7 +143,7 @@ export default function PartnerEarningsPage() {
 
   const formatMonth = (m: string) => { const [y, mo] = m.split("-"); const months = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"]; return `${months[parseInt(mo) - 1]} ${y}`; };
   const cardBase = "rounded-2xl overflow-hidden";
-  const glassStyle = { background: "rgba(18,18,42,0.92)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 24px rgba(0,0,0,0.3)" };
+  const glassStyle = { background: "rgba(18,18,42,0.96)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 24px rgba(0,0,0,0.3)" };
 
   // Simulator values
   const simSales = 5;

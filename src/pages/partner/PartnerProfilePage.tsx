@@ -37,7 +37,7 @@ export default function PartnerProfilePage() {
       {/* ═══ INFO CARD — Premium Animated ═══ */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
         className="p-5 rounded-2xl space-y-4 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, rgba(18,18,42,0.94), rgba(14,14,35,0.96))", border: "1px solid rgba(167,139,250,0.12)", boxShadow: "0 4px 24px rgba(0,0,0,0.3)" }}>
+        style={{ background: "linear-gradient(135deg, rgba(18,18,42,0.97), rgba(14,14,35,0.98))", border: "1px solid rgba(167,139,250,0.12)", boxShadow: "0 4px 24px rgba(0,0,0,0.3)" }}>
         {/* Animated accent */}
         <motion.div className="absolute top-0 left-0 right-0 h-[2px]" animate={{ opacity: [0.2, 0.6, 0.2] }}
           transition={{ duration: 3, repeat: Infinity }}
