@@ -22,6 +22,17 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // ── Auth guard ──
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const _authClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: authHeader } } });
+    const { data: { user: _authUser }, error: _authErr } = await _authClient.auth.getUser();
+    if (_authErr || !_authUser) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
       return new Response(JSON.stringify({
@@ -41,9 +52,8 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const { action, userId, email, returnUrl, refreshUrl } = await req.json();
-
-    if (!userId) throw new Error("Missing userId");
+    const { action, email, returnUrl, refreshUrl } = await req.json();
+    const userId = _authUser.id; // Use JWT-verified user ID
 
     // ── GET EXISTING CONNECT ACCOUNT ──
     const { data: existingProfile } = await supabase
