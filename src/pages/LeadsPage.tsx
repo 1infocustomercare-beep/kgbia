@@ -1797,6 +1797,176 @@ export default function LeadsPage() {
               </motion.button>
             ))}
           </div>
+
+          {/* ═══ MANUAL MODE — Sector-targeted preview & message generation ═══ */}
+          <div className="mt-8 max-w-md mx-auto">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.3), transparent)" }} />
+              <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "#a78bfa" }}>oppure</p>
+              <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.3), transparent)" }} />
+            </div>
+
+            <div className="rounded-2xl p-4 space-y-3 text-left" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.08), rgba(20,184,166,0.04))", border: "1px solid rgba(124,58,237,0.2)" }}>
+              <div className="flex items-start gap-2.5">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.3)" }}>
+                  <Wand2 className="w-4 h-4" style={{ color: "#a78bfa" }} />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-bold text-white">🎯 Modalità Manuale Mirata</p>
+                  <p className="text-[10px] mt-0.5" style={{ color: "#9ca3af" }}>
+                    Hai già un'attività in mente? Inserisci nome + settore — generiamo <span className="text-white font-semibold">preview adatta al settore</span>, analisi reale e messaggio AI personalizzato.
+                  </p>
+                </div>
+              </div>
+
+              {/* Sector picker — visual chips */}
+              <div>
+                <p className="text-[8px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "#6b7280" }}>1️⃣ Scegli il settore (preview adatta automaticamente)</p>
+                <select
+                  value={manualSector}
+                  onChange={e => setManualSector(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl text-[11px] text-white outline-none cursor-pointer mb-2"
+                  style={inputStyle}
+                >
+                  {SECTOR_OPTIONS.map(s => (
+                    <option key={s.value} value={s.value} style={{ background: "#1a1a2e" }}>{s.label}</option>
+                  ))}
+                </select>
+
+                {/* Live preview thumbs of sector mockups */}
+                {(() => {
+                  const screens = getPreviewScreens(manualSector);
+                  if (screens.length === 0) {
+                    return (
+                      <div className="rounded-lg p-2 text-center" style={{ background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.08)" }}>
+                        <p className="text-[9px]" style={{ color: "#6b7280" }}>Preview generata al momento dell'analisi</p>
+                      </div>
+                    );
+                  }
+                  const portfolioName = PORTFOLIO_REFS[manualSector] || "Demo professionale";
+                  return (
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#a78bfa" }}>
+                          ✨ Preview per {INDUSTRY_CONFIGS[manualSector as keyof typeof INDUSTRY_CONFIGS]?.label || manualSector}
+                        </p>
+                        <span className="text-[8px] font-semibold" style={{ color: "#6b7280" }}>Ref: {portfolioName}</span>
+                      </div>
+                      <div className="grid grid-cols-4 gap-1.5">
+                        {screens.slice(0, 4).map((src, i) => (
+                          <motion.div
+                            key={`${manualSector}-prev-${i}`}
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.05 }}
+                            className="relative aspect-[9/16] rounded-md overflow-hidden"
+                            style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(167,139,250,0.2)" }}
+                          >
+                            <img src={src} alt={`Preview ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.5))" }} />
+                            <span className="absolute bottom-0.5 left-0.5 text-[7px] font-bold text-white/90">{i + 1}</span>
+                          </motion.div>
+                        ))}
+                      </div>
+                      {/* Sector value props */}
+                      {(() => {
+                        const sf = getSectorFeatures(manualSector);
+                        return (
+                          <div className="mt-2 grid grid-cols-2 gap-1">
+                            {sf.features.slice(0, 4).map((f, i) => (
+                              <div key={i} className="flex items-center gap-1 text-[8px]" style={{ color: "#9ca3af" }}>
+                                <CheckCircle className="w-2.5 h-2.5 shrink-0" style={{ color: "#14b8a6" }} />
+                                <span className="truncate">{f}</span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Inputs */}
+              <div className="space-y-2">
+                <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#6b7280" }}>2️⃣ Dati attività (Nome obbligatorio)</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <input value={manualName} onChange={e => setManualName(e.target.value)} placeholder="Nome attività *" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none col-span-2" style={inputStyle} />
+                  <input value={manualCity} onChange={e => setManualCity(e.target.value)} placeholder="Città" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+                  <input value={manualPhone} onChange={e => setManualPhone(e.target.value)} placeholder="Telefono" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+                  <input value={manualWebsite} onChange={e => setManualWebsite(e.target.value)} placeholder="Sito web (opz.)" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+                  <input value={manualIg} onChange={e => setManualIg(e.target.value)} placeholder="@instagram (opz.)" className="px-3 py-2 rounded-lg text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+                </div>
+              </div>
+
+              {/* Channel + Generate button */}
+              <div className="space-y-2">
+                <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#6b7280" }}>3️⃣ Canale messaggio AI</p>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {([
+                    { v: "whatsapp", label: "💬 WhatsApp", color: "#25D366" },
+                    { v: "instagram", label: "📷 Instagram", color: "#E4405F" },
+                    { v: "email", label: "📧 Email", color: "#3b82f6" },
+                  ] as const).map(c => (
+                    <button
+                      key={c.v}
+                      onClick={() => setActiveChannel(c.v)}
+                      className="px-2 py-1.5 rounded-lg text-[10px] font-bold transition-all"
+                      style={{
+                        background: activeChannel === c.v ? `${c.color}20` : "rgba(255,255,255,0.03)",
+                        border: `1px solid ${activeChannel === c.v ? `${c.color}50` : "rgba(255,255,255,0.06)"}`,
+                        color: activeChannel === c.v ? c.color : "#9ca3af",
+                      }}
+                    >
+                      {c.label}
+                    </button>
+                  ))}
+                </div>
+
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => {
+                    if (!manualName.trim()) { toast.error("Inserisci il nome dell'attività"); return; }
+                    const lead: Lead & { _score: number; _sector: string } = {
+                      name: manualName.trim(),
+                      full_address: manualCity.trim() || "",
+                      city: manualCity.trim() || "N/A",
+                      zone: "",
+                      phone: manualPhone.trim() || null,
+                      website: manualWebsite.trim() || null,
+                      email: null,
+                      instagram: manualIg.trim() || null,
+                      facebook: null,
+                      google_rating: 0,
+                      google_reviews: 0,
+                      google_maps_url: null,
+                      source: "manual",
+                      isManual: true,
+                      _score: computeScore({
+                        name: manualName, full_address: "", city: manualCity, zone: "",
+                        phone: manualPhone || null, website: manualWebsite || null, email: null,
+                        instagram: manualIg || null, google_rating: 0, google_reviews: 0,
+                        google_maps_url: null, source: "manual",
+                      }),
+                      _sector: manualSector,
+                    };
+                    setResults(prev => [lead, ...prev]);
+                    handleSelect(lead);
+                    toast.success(`✨ Analisi avviata per ${lead.name}`, { description: `Preview ${INDUSTRY_CONFIGS[manualSector as keyof typeof INDUSTRY_CONFIGS]?.label || manualSector} + messaggio AI` });
+                  }}
+                  className="w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
+                  style={{ background: "linear-gradient(135deg, #7c3aed, #a78bfa)", color: "#fff", boxShadow: "0 4px 20px rgba(124,58,237,0.3)" }}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Genera Demo + Analisi + Messaggio AI
+                </motion.button>
+
+                <p className="text-[8px] text-center" style={{ color: "#6b7280" }}>
+                  ⚡ Preview generata col mockup reale del settore · Messaggio AI calibrato sui pain points reali
+                </p>
+              </div>
+            </div>
+          </div>
         </motion.div>
       )}
     </div>{/* close z-10 */}
