@@ -13,6 +13,7 @@ import { SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
+import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 
 /* ─── Types ─── */
 interface Lead {
@@ -285,6 +286,11 @@ export default function LeadsPage() {
   const [showPreview, setShowPreview] = useState(true);
   const [enrichingIg, setEnrichingIg] = useState(false);
   const [enrichedData, setEnrichedData] = useState<{ instagram?: string; email?: string; phone?: string; facebook?: string; source?: string } | null>(null);
+
+  // Deep analysis
+  const [deepLoading, setDeepLoadingState] = useState(false);
+  const [deepReport, setDeepReport] = useState<DeepReport | null>(null);
+  const [deepAudit, setDeepAudit] = useState<DeepAudit | null>(null);
 
   // Manual lead input
   const [showManual, setShowManual] = useState(false);
