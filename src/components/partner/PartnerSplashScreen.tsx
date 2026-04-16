@@ -1,30 +1,30 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
-import { Crown, Rocket, Flame, Zap, Star, Trophy, Sparkles, TrendingUp, Target, Shield, Pause, Play } from "lucide-react";
-import SplashScreen from "@/components/SplashScreen";
+import { Crown, Rocket, Flame, Zap, Star, Trophy, Sparkles, TrendingUp, Target, Shield, Pause, Play, Swords, Diamond } from "lucide-react";
+import UnifiedIntro from "@/components/UnifiedIntro";
 
-/* ═══ PROFESSIONAL MINDSET QUOTES — rotano ogni accesso ═══ */
+/* ═══ HIGH-IMPACT MINDSET QUOTES — gas the closer, no comfort zone ═══ */
 const MINDSET_LIBRARY = [
-  { text: "Chi controlla la narrativa, controlla la vendita. Non presentare — trasforma la percezione del cliente.", icon: Crown, accent: "#d4a052", category: "Strategia" },
-  { text: "Il 90% dei tuoi competitor si ferma al primo rifiuto. Il tuo vantaggio competitivo è la resilienza sistematica.", icon: Shield, accent: "#a78bfa", category: "Resilienza" },
-  { text: "Non stai vendendo software — stai vendendo ore di vita restituite al titolare. Questo vale più di qualsiasi prezzo.", icon: Sparkles, accent: "#34d399", category: "Value Selling" },
-  { text: "Un Team Leader con 5 membri attivi genera €3.000/mese di override senza vendere direttamente. Costruisci il sistema, non il lavoro.", icon: TrendingUp, accent: "#38bdf8", category: "Leadership" },
-  { text: "Il cliente non compra quando capisce il prodotto — compra quando si sente capito. Ascolta il doppio di quanto parli.", icon: Star, accent: "#f59e0b", category: "Empatia" },
-  { text: "Ogni obiezione è una richiesta di informazioni mascherata. Decodificala, risolvila, chiudi. Metodo, non fortuna.", icon: Target, accent: "#a78bfa", category: "Tecnica" },
-  { text: "La differenza tra €997 e €6.485 al mese è esattamente 2 vendite in più. Due conversazioni. Due decisioni.", icon: Flame, accent: "#ef4444", category: "Obiettivi" },
-  { text: "I top performer non hanno clienti migliori — hanno un processo migliore. Standardizza la tua eccellenza.", icon: Zap, accent: "#34d399", category: "Processo" },
-  { text: "Il prezzo è un problema solo quando il valore non è chiaro. Se il cliente discute il prezzo, hai saltato un passaggio.", icon: Trophy, accent: "#d4a052", category: "Pricing" },
-  { text: "Un Diamond Leader non si è mai chiesto 'se' ce l'avrebbe fatta. Si è chiesto 'quanto velocemente'. Decidi il ritmo.", icon: Rocket, accent: "#a78bfa", category: "Ambizione" },
-  { text: "Ogni mattina hai 2 opzioni: reagire alla giornata o progettarla. I leader progettano. I follower reagiscono.", icon: Crown, accent: "#f59e0b", category: "Mindset" },
-  { text: "Il follow-up non è insistenza — è professionalità. L'80% delle vendite avviene dopo il 5° contatto. I dilettanti si fermano al 2°.", icon: Target, accent: "#38bdf8", category: "Follow-up" },
-  { text: "Non vendere il risparmio — vendi il costo dell'inazione. Quanto perde il cliente ogni mese senza il tuo sistema?", icon: TrendingUp, accent: "#34d399", category: "Urgenza" },
-  { text: "Il reclutamento non è chiedere un favore — è offrire un'opportunità da €997 a vendita. Chi non vorrebbe?", icon: Shield, accent: "#d4a052", category: "Recruiting" },
-  { text: "La competenza si costruisce con le prime 10 vendite. La ricchezza si costruisce con le successive 100. Non fermarti alla competenza.", icon: Flame, accent: "#a78bfa", category: "Scalabilità" },
-  { text: "Il momento perfetto per vendere non esiste. Il momento migliore per vendere è adesso, con quello che sai adesso.", icon: Zap, accent: "#f59e0b", category: "Azione" },
-  { text: "Non stai cercando clienti — stai selezionando partner di business. Chi non è pronto oggi, lo sarà domani. Il tuo pipeline è il tuo futuro.", icon: Star, accent: "#38bdf8", category: "Pipeline" },
-  { text: "Un venditore medio chiude 1 su 10. Un professionista Empire chiude 1 su 3. La differenza? Qualificazione prima della presentazione.", icon: Trophy, accent: "#34d399", category: "Qualificazione" },
-  { text: "Il tuo personal brand è il tuo asset più potente. Ogni interazione è un'opportunità per posizionarti come l'esperto di riferimento.", icon: Crown, accent: "#d4a052", category: "Personal Brand" },
-  { text: "I bonus non sono regali — sono il riconoscimento matematico della tua eccellenza. €500 a 3 vendite, €1.500 a 5. I numeri non mentono.", icon: Sparkles, accent: "#a78bfa", category: "Performance" },
+  { text: "Mentre dormi, qualcuno sta firmando il contratto che doveva essere tuo. Svegliati prima. Chiama prima. Chiudi prima.", icon: Flame, accent: "#ef4444", category: "Urgenza Brutale" },
+  { text: "Il 97% si arrende dopo 4 NO. Il 3% che diventa ricco continua fino al 12°. Quanti ne hai presi oggi? Non bastano.", icon: Swords, accent: "#a78bfa", category: "Resilienza Estrema" },
+  { text: "Non stai vendendo software. Stai vendendo libertà. 8 ore al giorno restituite al titolare. Questo non ha prezzo — ha solo un costo: l'inazione.", icon: Sparkles, accent: "#34d399", category: "Mission" },
+  { text: "Un Diamond a €18.000/mese non lavora di più. Lavora SOLO sulle conversazioni che contano. Smetti di disperdere energia. Concentra il fuoco.", icon: Diamond, accent: "#38bdf8", category: "Focus Chirurgico" },
+  { text: "Ogni minuto che passi a lamentarti è un minuto rubato a chi sta costruendo il suo impero. Lamentarsi è povertà. Vendere è libertà.", icon: Crown, accent: "#d4a052", category: "Mentalità" },
+  { text: "Il cliente che oggi ti dice NO sta cercando il TUO competitor. Hai 24 ore per richiamarlo prima che firmi con qualcun altro.", icon: Target, accent: "#ef4444", category: "Velocità" },
+  { text: "€997 a vendita. 3 vendite a settimana = €11.964/mese. Non è un sogno — è matematica. L'unica variabile sei TU.", icon: Trophy, accent: "#d4a052", category: "Numeri Veri" },
+  { text: "I dilettanti aspettano l'ispirazione. I professionisti aprono il CRM alle 8:00 e iniziano a chiamare. La disciplina batte il talento — sempre.", icon: Zap, accent: "#a78bfa", category: "Disciplina" },
+  { text: "Non sei pagato per provare. Sei pagato per CHIUDERE. Ogni 'ci penso' non gestito è denaro che hai regalato alla concorrenza.", icon: Swords, accent: "#f59e0b", category: "Closer Mentality" },
+  { text: "Mentre il tuo amico si lamenta dello stipendio, tu stai costruendo un asset che ti pagherà override per i prossimi 10 anni. Resisti ancora 90 giorni.", icon: Rocket, accent: "#34d399", category: "Visione" },
+  { text: "Il tuo conto in banca è uno specchio del tuo livello di azione. Vuoi cambiare il numero? Cambia le abitudini di OGGI, non di lunedì.", icon: TrendingUp, accent: "#d4a052", category: "Verità Cruda" },
+  { text: "5 contatti al giorno = mediocrità. 30 contatti al giorno = libertà finanziaria entro 18 mesi. La differenza è una scelta, non una capacità.", icon: Flame, accent: "#ef4444", category: "Volume di Attacco" },
+  { text: "Non aspettare di essere pronto. I top performer hanno chiuso la prima vendita TREMANDO. L'azione genera la sicurezza, non viceversa.", icon: Star, accent: "#38bdf8", category: "Coraggio" },
+  { text: "Il NO di un cliente non parla di te — parla di lui. Non è personale, è statistica. Ogni 10 NO ti avvicinano matematicamente al SÌ da €997.", icon: Shield, accent: "#a78bfa", category: "Mental Game" },
+  { text: "I tuoi competitor stanno cenando con la famiglia mentre tu mandi l'ultimo messaggio della giornata. Quel messaggio è il tuo €18.000/mese di domani.", icon: Crown, accent: "#f59e0b", category: "Sacrificio" },
+  { text: "Smetti di dire 'devo trovare clienti'. Trova invece i PROBLEMI. I clienti sono solo persone con problemi che TU puoi risolvere oggi stesso.", icon: Target, accent: "#34d399", category: "Reframe" },
+  { text: "Un Team Leader con 7 venditori attivi guadagna mentre dorme, viaggia, cena fuori. Tu stai ancora scambiando ore per soldi? Costruisci il sistema.", icon: Diamond, accent: "#a78bfa", category: "Leverage" },
+  { text: "Non esiste 'mercato saturo'. Esistono solo venditori saturi di scuse. In Italia ci sono 4.5 milioni di PMI senza il tuo sistema. Vai a prenderli.", icon: Rocket, accent: "#ef4444", category: "Opportunità" },
+  { text: "Ogni email non inviata, ogni chiamata non fatta, è denaro che hai donato volontariamente alla povertà. Sei tu il tuo unico ostacolo.", icon: Swords, accent: "#d4a052", category: "Brutalità" },
+  { text: "Tra 12 mesi sarai grato per il dolore di oggi o sarai ancora a lamentarti delle stesse cose. Decidi ADESSO chi vuoi essere il prossimo dicembre.", icon: Trophy, accent: "#38bdf8", category: "Decision Day" },
 ];
 
 interface Props {
