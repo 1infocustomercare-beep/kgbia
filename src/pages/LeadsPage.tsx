@@ -1288,7 +1288,7 @@ export default function LeadsPage() {
                 report={deepReport}
                 audit={deepAudit}
                 leadName={selected.name}
-                onUseHook={(hook) => setCustomMsg(hook)}
+                onUseHook={(hook) => setGeneratedMessage(hook)}
               />
             ) : (
               <div className="p-4 rounded-2xl space-y-3" style={{ background: "rgba(239,68,68,0.03)", border: "1px solid rgba(239,68,68,0.1)" }}>
