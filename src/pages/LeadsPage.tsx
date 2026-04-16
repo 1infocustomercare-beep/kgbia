@@ -694,7 +694,7 @@ export default function LeadsPage() {
             </span>
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* ═══ TIPS — dismissable ═══ */}
       <AnimatePresence>
@@ -1618,6 +1618,7 @@ export default function LeadsPage() {
           </div>
         </motion.div>
       )}
+    </div>{/* close z-10 */}
     </div>
   );
 }
