@@ -301,6 +301,74 @@ async function auditWebsite(url: string | null): Promise<WebsiteAudit | null> {
 }
 
 /* ═══════════════════════════════════════════════
+   Web search fallback — discover website when missing
+   ═══════════════════════════════════════════════ */
+async function discoverWebsite(name: string, city: string): Promise<string | null> {
+  try {
+    const q = encodeURIComponent(`${name} ${city}`);
+    const resp = await fetch(`https://duckduckgo.com/html/?q=${q}`, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; EmpireAI-LeadAudit/1.0)" },
+      signal: AbortSignal.timeout(7000),
+    });
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    const matches = [...html.matchAll(/<a[^>]+class="result__a"[^>]+href="([^"]+)"/gi)];
+    for (const m of matches) {
+      let raw = m[1];
+      const uddg = raw.match(/uddg=([^&]+)/);
+      if (uddg) raw = decodeURIComponent(uddg[1]);
+      try {
+        const u = new URL(raw);
+        const host = u.hostname.replace(/^www\./, "");
+        const skip = ["facebook.com", "instagram.com", "tripadvisor.", "yelp.", "thefork.", "google.", "duckduckgo.", "youtube.com", "linkedin.com", "tiktok.com", "twitter.com", "x.com", "wikipedia.", "pagine", "virgilio", "misterimprese", "europages"];
+        if (skip.some(s => host.includes(s))) continue;
+        return `https://${host}`;
+      } catch { /* skip */ }
+    }
+    return null;
+  } catch (e) {
+    console.log("discoverWebsite failed:", e);
+    return null;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   Instagram public snapshot (followers + bio + verified)
+   ═══════════════════════════════════════════════ */
+async function fetchInstagramSnapshot(handle: string): Promise<{ followers: number | null; bio: string | null; verified: boolean } | null> {
+  try {
+    const clean = handle.replace(/^@/, "").trim();
+    if (!clean) return null;
+    const resp = await fetch(`https://www.instagram.com/${clean}/`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+        "Accept-Language": "it-IT,it;q=0.9,en;q=0.8",
+      },
+      redirect: "follow",
+      signal: AbortSignal.timeout(7000),
+    });
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    const desc = html.match(/<meta\s+(?:property="og:description"|name="description")\s+content="([^"]+)"/i);
+    let followers: number | null = null;
+    let bio: string | null = null;
+    if (desc) {
+      bio = desc[1];
+      const f = desc[1].match(/([\d,.]+)\s*([KkMm])?\s*Follower/i);
+      if (f) {
+        const num = parseFloat(f[1].replace(/,/g, ""));
+        const mult = f[2]?.toLowerCase() === "m" ? 1_000_000 : f[2]?.toLowerCase() === "k" ? 1_000 : 1;
+        followers = Math.round(num * mult);
+      }
+    }
+    const verified = /is_verified["'\s:]+true/i.test(html);
+    return { followers, bio, verified };
+  } catch {
+    return null;
+  }
+}
+
+/* ═══════════════════════════════════════════════
    AI structured analysis via tool calling
    ═══════════════════════════════════════════════ */
 const ANALYSIS_TOOL = {
@@ -452,27 +520,42 @@ serve(async (req) => {
     const intel = SECTOR_INTEL[sectorKey] || SECTOR_INTEL.default;
     const portfolio = PORTFOLIO_REFS[sectorKey] || "il portfolio Empire AI Group";
 
-    // 1) Audit website (real signal)
-    const audit = await auditWebsite(website);
+    // 1) If website is missing, try to discover it via web search (real)
+    let effectiveWebsite: string | null = website || null;
+    let discovered_website: string | null = null;
+    if (!effectiveWebsite && name) {
+      discovered_website = await discoverWebsite(name, city || "");
+      if (discovered_website) effectiveWebsite = discovered_website;
+    }
 
-    // 2) Build prompt
+    // 2) Audit website (real signal) + Instagram snapshot in parallel
+    const [audit, igSnapshot] = await Promise.all([
+      auditWebsite(effectiveWebsite),
+      instagram ? fetchInstagramSnapshot(instagram) : Promise.resolve(null),
+    ]);
+
+    // 3) Build prompt — only verified, real signals
     const factPack = `
 ATTIVITÀ: ${name}
 SETTORE: ${sector || "non specificato"}
 CITTÀ: ${city || "n/d"}${country ? `, ${country}` : ""}
 INDIRIZZO: ${full_address || "n/d"}
-RATING GOOGLE: ${google_rating || "n/d"} (${google_reviews || 0} recensioni)
-SITO: ${website || "ASSENTE"}
+RATING GOOGLE: ${google_rating ? `${google_rating} su 5` : "non disponibile"} (${google_reviews || 0} recensioni)
+SITO FORNITO: ${website || "ASSENTE"}
+SITO SCOPERTO (DuckDuckGo): ${discovered_website || "nessuno trovato"}
 INSTAGRAM: ${instagram ? `@${instagram}` : "non noto"}
 TELEFONO: ${phone || "non noto"}
 EMAIL: ${email || "non nota"}
 ORARI: ${opening_hours || "non noti"}
 TIPO OSM/Google: ${types?.join?.(", ") || "n/d"}
 
-AUDIT SITO WEB (dati reali estratti):
-${audit ? JSON.stringify(audit, null, 2) : "Sito non disponibile o non analizzato"}
+AUDIT SITO WEB (dati REALI estratti dall'HTML):
+${audit ? JSON.stringify(audit, null, 2) : "Nessun sito disponibile per l'audit — questa è già un'evidenza forte di gap digitale."}
 
-INTELLIGENCE DI SETTORE (${sector}):
+SNAPSHOT INSTAGRAM (dati REALI da profilo pubblico):
+${igSnapshot ? JSON.stringify(igSnapshot, null, 2) : (instagram ? "Profilo non raggiungibile o privato." : "Nessun handle Instagram noto.")}
+
+INTELLIGENCE DI SETTORE (${sector}) — usa SOLO come riferimento, non come fatto:
 - Pain points tipici:\n  • ${intel.pains.join("\n  • ")}
 - KPI ottenibili:\n  • ${intel.kpis.join("\n  • ")}
 - Obiezioni comuni:\n  • ${intel.obj.join("\n  • ")}
@@ -480,18 +563,20 @@ INTELLIGENCE DI SETTORE (${sector}):
 PORTFOLIO EMPIRE PIÙ RILEVANTE: ${portfolio}
 `.trim();
 
-    const systemPrompt = `Sei un Senior Business Development Consultant di Empire AI Group, specializzato in trasformazione digitale per PMI. Devi analizzare il prospect FORNITO e produrre un report di intelligence operativo che permetta al venditore di chiudere il cliente.
+    const systemPrompt = `Sei un Senior Business Development Consultant di Empire AI Group, specializzato in trasformazione digitale per PMI italiane. Devi analizzare il prospect FORNITO e produrre un report di intelligence operativo che permetta al venditore di chiudere il cliente.
 
-REGOLE:
-1. NON inventare dati. Usa SOLO i dati reali forniti (audit sito, rating, social, settore).
-2. Quando un dato manca, scrivi esplicitamente "non noto" o deduci con cautela ("probabile", "stimato").
-3. I pain points devono essere SPECIFICI per QUESTA attività, non generici di settore.
-4. Le evidenze devono citare i dati reali ("nessun viewport mobile rilevato", "rating 3.2 su 47 recensioni", ecc).
-5. Le stime di costo devono essere realistiche e in € italiani.
-6. Il pacchetto consigliato deve riflettere il budget_band stimato.
-7. Cita SEMPRE un progetto del portfolio Empire come prova concreta.
-8. Tono: professionale, consulenziale, zero fuffa. Italiano impeccabile.
-9. Restituisci ESCLUSIVAMENTE il tool call deliver_lead_intel — niente testo extra.`;
+REGOLE INDEROGABILI (violazione = report scartato):
+1. NON inventare MAI dati. Usa SOLO i fatti del FACT PACK (audit sito, rating Google, snapshot Instagram, settore).
+2. Quando un dato manca, scrivi esplicitamente "non disponibile" — MAI numeri o nomi inventati.
+3. Le evidenze (campo "evidence") devono CITARE LETTERALMENTE i dati del FACT PACK ("audit.has_booking=false", "rating 3.2 su 47 recensioni", "nessun viewport mobile", "Instagram con 1.240 follower").
+4. I pain points devono essere SPECIFICI per QUESTA attività in base ai dati osservati, non riciclati di settore.
+5. Le stime di costo (cost_to_them) devono essere range realistici in € italiani (es. "€ 800–1.500/mese di mancato fatturato") e devi giustificarli brevemente.
+6. budget_band: deduci da rating, n. recensioni, presenza/assenza sito moderno, follower IG.
+7. recommended_package deve riflettere il budget_band e citare il pacchetto Empire reale (Digital Start €1.997, Growth AI €4.997, Empire Domination €9.997).
+8. Cita SEMPRE un progetto del PORTFOLIO EMPIRE come prova concreta.
+9. opener del recommended_pitch: massimo 25 parole, deve menzionare un dettaglio reale del prospect (nome, città, un dato osservato).
+10. Tono: professionale, consulenziale, zero fuffa. Italiano impeccabile.
+11. Restituisci ESCLUSIVAMENTE il tool call deliver_lead_intel — niente testo extra.`;
 
     const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -546,6 +631,8 @@ REGOLE:
       success: true,
       report,
       audit,
+      discovered_website,
+      ig_snapshot: igSnapshot,
       portfolio_ref: portfolio,
       analyzed_at: new Date().toISOString(),
     }), {
