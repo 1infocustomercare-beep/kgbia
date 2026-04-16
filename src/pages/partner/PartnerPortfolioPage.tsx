@@ -126,7 +126,7 @@ export default function PartnerPortfolioPage() {
   };
 
   return (
-    <div className="space-y-6 px-4 pt-6 pb-8">
+    <div className="space-y-6 px-4 pt-6 pb-8 max-w-2xl mx-auto">
       <h2 className="text-lg font-bold text-foreground">Portfolio & Demo</h2>
 
       {/* ═══ DEMO CUSTOMIZATION ═══ */}

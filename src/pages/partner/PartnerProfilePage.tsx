@@ -25,7 +25,7 @@ export default function PartnerProfilePage() {
   const createdAt = user?.created_at ? new Date(user.created_at).toLocaleDateString("it-IT", { year: "numeric", month: "long", day: "numeric" }) : "—";
 
   return (
-    <div className="space-y-6 px-4 pt-6 pb-8">
+    <div className="space-y-6 px-4 pt-6 pb-8 max-w-2xl mx-auto">
       <motion.h2 initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
         className="text-lg font-bold text-foreground flex items-center gap-2">
         Il Mio Profilo

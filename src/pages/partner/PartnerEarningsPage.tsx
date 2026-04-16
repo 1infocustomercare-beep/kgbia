@@ -163,7 +163,7 @@ export default function PartnerEarningsPage() {
   }
 
   return (
-    <div className="space-y-5 px-4 pt-5 pb-24">
+    <div className="space-y-5 px-4 pt-5 pb-24 max-w-2xl mx-auto">
       {/* ═══ RANK BANNER — Animated Glow ═══ */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
         className={`${cardBase} p-5 relative overflow-hidden`}
@@ -202,15 +202,15 @@ export default function PartnerEarningsPage() {
         <motion.div className="absolute inset-0" animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
           transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
           style={{ background: "linear-gradient(90deg, transparent 0%, rgba(52,211,153,0.04) 30%, transparent 60%)", backgroundSize: "200% 100%" }} />
-        <div className="absolute top-4 right-4 relative z-10">
-          <motion.div className="flex items-center gap-1 px-2.5 py-1 rounded-full"
+        <div className="flex justify-between items-start relative z-10 mb-1">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.15em]" style={{ color: "#6ee7b7" }}>Guadagni Netti Totali</p>
+          <motion.div className="flex items-center gap-1 px-2.5 py-1 rounded-full shrink-0"
             whileHover={{ scale: 1.1 }}
             style={{ background: monthGrowth >= 0 ? "rgba(12,48,40,0.92)" : "rgba(58,20,26,0.92)", border: `1px solid ${monthGrowth >= 0 ? "rgba(52,211,153,0.24)" : "rgba(239,68,68,0.24)"}` }}>
             <TrendingUp className="w-3 h-3" style={{ color: monthGrowth >= 0 ? "#34d399" : "#ef4444", transform: monthGrowth < 0 ? "rotate(180deg)" : "none" }} />
             <span className="text-[10px] font-bold" style={{ color: monthGrowth >= 0 ? "#34d399" : "#ef4444" }}>{monthGrowth >= 0 ? "+" : ""}{monthGrowth}%</span>
           </motion.div>
         </div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] mb-1 relative z-10" style={{ color: "#6ee7b7" }}>Guadagni Netti Totali</p>
         <motion.p className="text-4xl font-black text-foreground tracking-tight relative z-10"
           style={{ textShadow: "0 0 30px rgba(52,211,153,0.2)" }}>
           €{netEarnings.toLocaleString("it-IT")}
