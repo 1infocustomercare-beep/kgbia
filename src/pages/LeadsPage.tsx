@@ -14,6 +14,7 @@ import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
+import SalesPlaybook from "@/components/leads/SalesPlaybook";
 
 /* ─── Types ─── */
 interface Lead {
