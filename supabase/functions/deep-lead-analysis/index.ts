@@ -520,27 +520,42 @@ serve(async (req) => {
     const intel = SECTOR_INTEL[sectorKey] || SECTOR_INTEL.default;
     const portfolio = PORTFOLIO_REFS[sectorKey] || "il portfolio Empire AI Group";
 
-    // 1) Audit website (real signal)
-    const audit = await auditWebsite(website);
+    // 1) If website is missing, try to discover it via web search (real)
+    let effectiveWebsite: string | null = website || null;
+    let discovered_website: string | null = null;
+    if (!effectiveWebsite && name) {
+      discovered_website = await discoverWebsite(name, city || "");
+      if (discovered_website) effectiveWebsite = discovered_website;
+    }
 
-    // 2) Build prompt
+    // 2) Audit website (real signal) + Instagram snapshot in parallel
+    const [audit, igSnapshot] = await Promise.all([
+      auditWebsite(effectiveWebsite),
+      instagram ? fetchInstagramSnapshot(instagram) : Promise.resolve(null),
+    ]);
+
+    // 3) Build prompt — only verified, real signals
     const factPack = `
 ATTIVITÀ: ${name}
 SETTORE: ${sector || "non specificato"}
 CITTÀ: ${city || "n/d"}${country ? `, ${country}` : ""}
 INDIRIZZO: ${full_address || "n/d"}
-RATING GOOGLE: ${google_rating || "n/d"} (${google_reviews || 0} recensioni)
-SITO: ${website || "ASSENTE"}
+RATING GOOGLE: ${google_rating ? `${google_rating} su 5` : "non disponibile"} (${google_reviews || 0} recensioni)
+SITO FORNITO: ${website || "ASSENTE"}
+SITO SCOPERTO (DuckDuckGo): ${discovered_website || "nessuno trovato"}
 INSTAGRAM: ${instagram ? `@${instagram}` : "non noto"}
 TELEFONO: ${phone || "non noto"}
 EMAIL: ${email || "non nota"}
 ORARI: ${opening_hours || "non noti"}
 TIPO OSM/Google: ${types?.join?.(", ") || "n/d"}
 
-AUDIT SITO WEB (dati reali estratti):
-${audit ? JSON.stringify(audit, null, 2) : "Sito non disponibile o non analizzato"}
+AUDIT SITO WEB (dati REALI estratti dall'HTML):
+${audit ? JSON.stringify(audit, null, 2) : "Nessun sito disponibile per l'audit — questa è già un'evidenza forte di gap digitale."}
 
-INTELLIGENCE DI SETTORE (${sector}):
+SNAPSHOT INSTAGRAM (dati REALI da profilo pubblico):
+${igSnapshot ? JSON.stringify(igSnapshot, null, 2) : (instagram ? "Profilo non raggiungibile o privato." : "Nessun handle Instagram noto.")}
+
+INTELLIGENCE DI SETTORE (${sector}) — usa SOLO come riferimento, non come fatto:
 - Pain points tipici:\n  • ${intel.pains.join("\n  • ")}
 - KPI ottenibili:\n  • ${intel.kpis.join("\n  • ")}
 - Obiezioni comuni:\n  • ${intel.obj.join("\n  • ")}
