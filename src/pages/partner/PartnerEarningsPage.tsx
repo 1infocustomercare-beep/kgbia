@@ -73,6 +73,7 @@ export default function PartnerEarningsPage() {
   const [inviteCopied, setInviteCopied] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showRoadmap, setShowRoadmap] = useState(false);
+  const [showEarningsGuide, setShowEarningsGuide] = useState(false);
   const [showSimulator, setShowSimulator] = useState(false);
   const [loading, setLoading] = useState(true);
 
