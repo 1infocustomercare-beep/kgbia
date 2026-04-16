@@ -446,59 +446,202 @@ export default function PartnerHomePage() {
              LIVE MODE — TECH VIOLA DASHBOARD
              ═══════════════════════════════════════════ */
           <motion.div key="live" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
+
+            {/* ═══ LIVE NEURAL STATUS BAR ═══ */}
+            <motion.div className="mx-4 py-2.5 px-4 rounded-2xl flex items-center gap-3 relative overflow-hidden"
+              initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+              style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.04), rgba(124,58,237,0.02))", border: "1px solid rgba(167,139,250,0.1)" }}>
+              <motion.div className="absolute inset-0" animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                style={{ background: "linear-gradient(90deg, transparent 0%, rgba(167,139,250,0.03) 25%, transparent 50%)", backgroundSize: "200% 100%" }} />
+              <motion.div className="w-2 h-2 rounded-full shrink-0" animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }} style={{ background: "#34d399", boxShadow: "0 0 8px rgba(52,211,153,0.5)" }} />
+              <span className="text-[9px] font-mono tracking-[0.2em] uppercase text-foreground/30">
+                EMPIRE PARTNER — SISTEMA ATTIVO
+              </span>
+              <motion.div className="ml-auto flex items-center gap-1.5" animate={{ opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 3, repeat: Infinity }}>
+                {[0,1,2].map(i => <div key={i} className="w-1 h-1 rounded-full" style={{ background: "#a78bfa", opacity: 0.6 + i * 0.15 }} />)}
+              </motion.div>
+            </motion.div>
             
-            {/* Quick Stats */}
+            {/* ═══ ANIMATED STATS HUB ═══ */}
             <section className="px-4">
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { icon: Trophy, value: salesCount, label: "Vendite", gradient: "from-violet-600/20 to-purple-600/5", color: "#a78bfa" },
-                  { icon: TrendingUp, value: `€${totalCommissions.toLocaleString()}`, label: "Commissioni", gradient: "from-emerald-600/20 to-teal-600/5", color: "#34d399" },
-                  { icon: isTeamLeader ? Users : Target, value: isTeamLeader ? teamCount : `${salesCount}/4`, label: isTeamLeader ? "Team" : "a Leader", gradient: "from-blue-600/20 to-indigo-600/5", color: "#818cf8" },
+                  { icon: Trophy, value: salesCount, label: "Vendite", sub: "totali", gradient: "from-violet-600/20 to-purple-600/5", color: "#a78bfa", glow: "rgba(167,139,250,0.12)" },
+                  { icon: TrendingUp, value: totalCommissions, label: "Commissioni", sub: "€ netti", gradient: "from-emerald-600/20 to-teal-600/5", color: "#34d399", glow: "rgba(52,211,153,0.12)", isCurrency: true },
+                  { icon: isTeamLeader ? Users : Target, value: isTeamLeader ? teamCount : salesCount, label: isTeamLeader ? "Team" : "Obiettivo", sub: isTeamLeader ? "membri" : `${salesCount}/4 → Leader`, gradient: "from-blue-600/20 to-indigo-600/5", color: "#818cf8", glow: "rgba(129,140,248,0.12)" },
                 ].map((s, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                    className={`${liveGlass} p-4 text-center bg-gradient-to-br ${s.gradient} relative overflow-hidden`}>
-                    <div className="absolute top-0 left-0 right-0 h-[2px] opacity-50" style={{ background: `linear-gradient(90deg, transparent, ${s.color}, transparent)` }} />
-                    <s.icon className="w-4 h-4 mb-1.5 mx-auto" style={{ color: s.color }} />
-                    <p className="text-xl font-bold text-foreground">{s.value}</p>
-                    <p className="text-[10px] text-muted-foreground">{s.label}</p>
+                  <motion.div key={i}
+                    initial={{ opacity: 0, y: 16, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: i * 0.12, type: "spring", stiffness: 200 }}
+                    whileHover={{ scale: 1.04, y: -4 }}
+                    whileTap={{ scale: 0.97 }}
+                    className={`${liveGlass} p-4 text-center bg-gradient-to-br ${s.gradient} relative overflow-hidden cursor-default group`}>
+                    {/* Animated top accent */}
+                    <motion.div className="absolute top-0 left-0 right-0 h-[2px]" animate={{ opacity: [0.3, 0.8, 0.3] }}
+                      transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4 }}
+                      style={{ background: `linear-gradient(90deg, transparent, ${s.color}, transparent)` }} />
+                    {/* Hover glow */}
+                    <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{ background: `radial-gradient(circle at 50% 40%, ${s.glow}, transparent 70%)` }} />
+                    {/* Orbital ring */}
+                    <motion.div className="absolute -top-6 -right-6 w-16 h-16 rounded-full opacity-[0.04] pointer-events-none"
+                      animate={{ rotate: 360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                      style={{ border: `1px solid ${s.color}` }} />
+                    <motion.div animate={{ y: [0, -2, 0] }} transition={{ duration: 3, repeat: Infinity, delay: i * 0.3 }} className="relative z-10">
+                      <s.icon className="w-5 h-5 mb-2 mx-auto" style={{ color: s.color, filter: `drop-shadow(0 0 6px ${s.color}40)` }} />
+                    </motion.div>
+                    <AnimatedCounter value={s.isCurrency ? s.value : s.value} prefix={s.isCurrency ? "€" : ""} color={s.color} />
+                    <p className="text-[10px] font-semibold text-foreground/70 mt-0.5">{s.label}</p>
+                    <p className="text-[8px] text-muted-foreground">{s.sub}</p>
                   </motion.div>
                 ))}
               </div>
             </section>
 
-            {/* Quick Nav */}
-            <section className="px-4 space-y-3">
-              <h3 className="text-[9px] font-bold uppercase tracking-[0.25em] text-muted-foreground px-1">Strumenti</h3>
-              {QUICK_NAV.map((item, i) => (
-                <motion.div key={item.path} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
-                  onClick={() => navigate(item.path)}
-                  className={`${liveGlass} flex items-center gap-4 p-4 cursor-pointer group transition-all active:scale-[0.98] hover:border-violet-500/20 bg-gradient-to-r ${item.gradient}`}>
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-                    style={{ background: `${item.iconColor}12`, border: `1px solid ${item.iconColor}18` }}>
-                    <item.icon className="w-5 h-5" style={{ color: item.iconColor }} />
-                  </div>
+            {/* ═══ PERFORMANCE PULSE — Motivation Card ═══ */}
+            <section className="px-4">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                className={`${liveGlass} p-4 relative overflow-hidden`}
+                style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.06), rgba(167,139,250,0.02))" }}>
+                <motion.div className="absolute top-0 left-0 right-0 h-[1px]" animate={{ opacity: [0.2, 0.6, 0.2] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.5), transparent)" }} />
+                <div className="flex items-center gap-3">
+                  <motion.div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    animate={{ boxShadow: ["0 0 0px rgba(167,139,250,0.2)", "0 0 20px rgba(167,139,250,0.3)", "0 0 0px rgba(167,139,250,0.2)"] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.15)" }}>
+                    <Sparkles className="w-5 h-5" style={{ color: "#a78bfa" }} />
+                  </motion.div>
                   <div className="flex-1 min-w-0">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.15em]" style={{ color: "#a78bfa" }}>Performance Insight</p>
+                    <p className="text-[11px] text-foreground/80 leading-relaxed mt-0.5">
+                      {salesCount === 0 ? "La tua prima vendita è a un passo. Usa LeadEngine Scout per trovare il tuo primo cliente oggi!" :
+                       salesCount < 3 ? `Ottimo inizio! ${3 - salesCount} vendite al bonus €500/mese. Continua così! 🚀` :
+                       salesCount < 5 ? `Performance solida! ${5 - salesCount} vendite al livello Elite con bonus €1.500 🔥` :
+                       isTeamLeader ? `Leader attivo con ${teamCount} membri. Ogni vendita del team = €50 per te 👑` :
+                       "Stai dominando! Recluta venditori per sbloccare i guadagni passivi 💎"}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </section>
+
+            {/* ═══ QUICK NAV — Interactive Cards ═══ */}
+            <section className="px-4 space-y-3">
+              <h3 className="text-[9px] font-bold uppercase tracking-[0.25em] text-muted-foreground/60 px-1 flex items-center gap-2">
+                <span className="w-5 h-[1px] inline-block" style={{ background: "linear-gradient(90deg, rgba(167,139,250,0.4), transparent)" }} />
+                Strumenti Operativi
+              </h3>
+              {QUICK_NAV.map((item, i) => (
+                <motion.div key={item.path}
+                  initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.35 + i * 0.1, type: "spring", stiffness: 150 }}
+                  whileHover={{ scale: 1.02, x: 6 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate(item.path)}
+                  className={`${liveGlass} flex items-center gap-4 p-4 cursor-pointer group transition-all bg-gradient-to-r ${item.gradient} relative overflow-hidden`}>
+                  {/* Hover shimmer */}
+                  <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ background: `linear-gradient(135deg, ${item.iconColor}08, transparent 60%)` }} />
+                  {/* Left accent line */}
+                  <motion.div className="absolute left-0 top-2 bottom-2 w-[2px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ background: item.iconColor }} />
+                  <motion.div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 relative"
+                    whileHover={{ rotate: [0, -5, 5, 0] }} transition={{ duration: 0.5 }}
+                    style={{ background: `${item.iconColor}12`, border: `1px solid ${item.iconColor}18`, boxShadow: `0 4px 16px ${item.iconColor}10` }}>
+                    <item.icon className="w-5 h-5" style={{ color: item.iconColor }} />
+                  </motion.div>
+                  <div className="flex-1 min-w-0 relative z-10">
                     <h4 className="text-sm font-bold text-foreground">{item.label}</h4>
                     <p className="text-[11px] text-muted-foreground mt-0.5">{item.desc}</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 shrink-0 transition-transform group-hover:translate-x-1 text-muted-foreground/50" />
+                  <motion.div animate={{ x: [0, 3, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+                    <ChevronRight className="w-5 h-5 shrink-0 text-muted-foreground/40 group-hover:text-foreground/60 transition-colors" />
+                  </motion.div>
                 </motion.div>
               ))}
             </section>
 
-            {/* CTA */}
-            <section className="px-4 pb-8">
-              <div className={`${liveGlass} relative p-6 overflow-hidden text-center`}
-                style={{ background: "linear-gradient(180deg, rgba(167,139,250,0.06) 0%, rgba(124,58,237,0.02) 100%)" }}>
-                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.4), transparent)" }} />
-                <Sparkles className="w-6 h-6 mx-auto mb-2" style={{ color: "#a78bfa" }} />
-                <h3 className="text-lg font-bold text-foreground">Trova i tuoi prossimi clienti</h3>
-                <p className="text-xs text-muted-foreground mt-1 mb-4">LeadEngine Scout trova, analizza e crea messaggi personalizzati per ogni canale.</p>
-                <motion.button onClick={() => navigate("/partner/leads")} whileTap={{ scale: 0.97 }}
-                  className="px-6 py-3 rounded-2xl font-semibold text-sm inline-flex items-center gap-2 text-white"
-                  style={{ background: "linear-gradient(135deg, #a78bfa, #7c3aed)", boxShadow: "0 8px 32px rgba(167,139,250,0.25)" }}>
-                  <Zap className="w-4 h-4" /> Inizia Ora
-                </motion.button>
+            {/* ═══ DAILY TARGET TRACKER ═══ */}
+            <section className="px-4">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                className={`${liveGlass} p-5 relative overflow-hidden`}
+                style={{ background: "linear-gradient(180deg, rgba(167,139,250,0.05) 0%, rgba(124,58,237,0.01) 100%)" }}>
+                <motion.div className="absolute inset-0"
+                  animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear", repeatType: "mirror" }}
+                  style={{ background: "radial-gradient(circle at 20% 30%, rgba(167,139,250,0.04), transparent 50%)", backgroundSize: "200% 200%" }} />
+                {/* Decorative orbital */}
+                <motion.div className="absolute -bottom-10 -right-10 w-28 h-28 rounded-full opacity-[0.03] pointer-events-none"
+                  animate={{ rotate: -360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                  style={{ border: "1px dashed rgba(167,139,250,0.5)" }} />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-4">
+                    <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }}>
+                      <Target className="w-4 h-4" style={{ color: "#a78bfa" }} />
+                    </motion.div>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: "#a78bfa" }}>Obiettivo Mensile</span>
+                  </div>
+                  <div className="flex items-end gap-4 mb-3">
+                    <div>
+                      <p className="text-3xl font-black text-foreground">{salesCount < 5 ? 5 - salesCount : salesCount < 10 ? 10 - salesCount : "∞"}</p>
+                      <p className="text-[10px] text-muted-foreground">vendite al prossimo livello</p>
+                    </div>
+                    <div className="flex-1">
+                      <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(167,139,250,0.08)" }}>
+                        <motion.div className="h-full rounded-full"
+                          initial={{ width: "0%" }}
+                          animate={{ width: `${Math.min((salesCount / (salesCount < 5 ? 5 : 10)) * 100, 100)}%` }}
+                          transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+                          style={{ background: "linear-gradient(90deg, #a78bfa, #7c3aed)", boxShadow: "0 0 12px rgba(167,139,250,0.4)" }} />
+                      </div>
+                      <p className="text-[8px] text-right text-muted-foreground mt-1">{salesCount}/{salesCount < 5 ? 5 : 10}</p>
+                    </div>
+                  </div>
+                  <motion.button onClick={() => navigate("/partner/leads")}
+                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    className="w-full py-3 rounded-2xl font-semibold text-xs inline-flex items-center justify-center gap-2 text-white relative overflow-hidden group"
+                    style={{ background: "linear-gradient(135deg, #a78bfa, #7c3aed)", boxShadow: "0 6px 24px rgba(167,139,250,0.3)" }}>
+                    <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)" }} />
+                    <Zap className="w-4 h-4 relative z-10" />
+                    <span className="relative z-10">Trova Nuovi Clienti con AI</span>
+                    <motion.div animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }} className="relative z-10">
+                      <ArrowRight className="w-4 h-4" />
+                    </motion.div>
+                  </motion.button>
+                </div>
+              </motion.div>
+            </section>
+
+            {/* ═══ QUICK ACTIONS — Team CTA ═══ */}
+            <section className="px-4 pb-8 space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <motion.div onClick={() => navigate("/partner/earnings")}
+                  initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.7 }}
+                  whileHover={{ scale: 1.04, y: -3 }} whileTap={{ scale: 0.97 }}
+                  className={`${liveGlass} p-4 cursor-pointer relative overflow-hidden group`}
+                  style={{ background: "linear-gradient(135deg, rgba(52,211,153,0.06), rgba(16,185,129,0.02))" }}>
+                  <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ background: "radial-gradient(circle at 50% 40%, rgba(52,211,153,0.08), transparent 70%)" }} />
+                  <DollarSign className="w-5 h-5 mb-2" style={{ color: "#34d399" }} />
+                  <p className="text-xs font-bold text-foreground">Guadagni</p>
+                  <p className="text-[9px] text-muted-foreground mt-0.5">Dettaglio commissioni</p>
+                </motion.div>
+                <motion.div onClick={() => navigate("/partner/portfolio")}
+                  initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.75 }}
+                  whileHover={{ scale: 1.04, y: -3 }} whileTap={{ scale: 0.97 }}
+                  className={`${liveGlass} p-4 cursor-pointer relative overflow-hidden group`}
+                  style={{ background: "linear-gradient(135deg, rgba(129,140,248,0.06), rgba(99,102,241,0.02))" }}>
+                  <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ background: "radial-gradient(circle at 50% 40%, rgba(129,140,248,0.08), transparent 70%)" }} />
+                  <FolderOpen className="w-5 h-5 mb-2" style={{ color: "#818cf8" }} />
+                  <p className="text-xs font-bold text-foreground">Portfolio</p>
+                  <p className="text-[9px] text-muted-foreground mt-0.5">25+ settori demo</p>
+                </motion.div>
               </div>
             </section>
           </motion.div>
