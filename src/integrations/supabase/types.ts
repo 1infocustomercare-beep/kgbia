@@ -2322,16 +2322,28 @@ export type Database = {
           ai_search_query: string | null
           ai_summary: string | null
           assigned_to: string | null
+          channel_used: string | null
           channels_available: string[] | null
           city: string | null
-          company_id: string
+          company_id: string | null
           contact_stage: string | null
           created_at: string
           email: string | null
+          estimated_value: number | null
+          full_address: string | null
+          google_rating: number | null
+          google_reviews: number | null
           id: string
+          instagram: string | null
+          interactions: Json
+          last_contacted_at: string | null
           lead_platform: string | null
+          lead_source_data: Json | null
           name: string
+          next_followup_at: string | null
           notes: string | null
+          outcome: string | null
+          owner_id: string | null
           pain_points: string[] | null
           phone: string | null
           sector: string | null
@@ -2339,22 +2351,35 @@ export type Database = {
           status: string
           updated_at: string
           value: number
+          website: string | null
         }
         Insert: {
           ai_score?: number | null
           ai_search_query?: string | null
           ai_summary?: string | null
           assigned_to?: string | null
+          channel_used?: string | null
           channels_available?: string[] | null
           city?: string | null
-          company_id: string
+          company_id?: string | null
           contact_stage?: string | null
           created_at?: string
           email?: string | null
+          estimated_value?: number | null
+          full_address?: string | null
+          google_rating?: number | null
+          google_reviews?: number | null
           id?: string
+          instagram?: string | null
+          interactions?: Json
+          last_contacted_at?: string | null
           lead_platform?: string | null
+          lead_source_data?: Json | null
           name: string
+          next_followup_at?: string | null
           notes?: string | null
+          outcome?: string | null
+          owner_id?: string | null
           pain_points?: string[] | null
           phone?: string | null
           sector?: string | null
@@ -2362,22 +2387,35 @@ export type Database = {
           status?: string
           updated_at?: string
           value?: number
+          website?: string | null
         }
         Update: {
           ai_score?: number | null
           ai_search_query?: string | null
           ai_summary?: string | null
           assigned_to?: string | null
+          channel_used?: string | null
           channels_available?: string[] | null
           city?: string | null
-          company_id?: string
+          company_id?: string | null
           contact_stage?: string | null
           created_at?: string
           email?: string | null
+          estimated_value?: number | null
+          full_address?: string | null
+          google_rating?: number | null
+          google_reviews?: number | null
           id?: string
+          instagram?: string | null
+          interactions?: Json
+          last_contacted_at?: string | null
           lead_platform?: string | null
+          lead_source_data?: Json | null
           name?: string
+          next_followup_at?: string | null
           notes?: string | null
+          outcome?: string | null
+          owner_id?: string | null
           pain_points?: string[] | null
           phone?: string | null
           sector?: string | null
@@ -2385,6 +2423,7 @@ export type Database = {
           status?: string
           updated_at?: string
           value?: number
+          website?: string | null
         }
         Relationships: [
           {
