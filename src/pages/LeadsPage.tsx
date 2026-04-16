@@ -1420,6 +1420,56 @@ export default function LeadsPage() {
                 {generatingMsg && <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: "#34d399" }} />}
               </div>
 
+              {/* ═══ CUSTOM PREVIEW ATTACHED (manuale dalla galleria) ═══ */}
+              {customPreview && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
+                  className="p-2.5 rounded-xl flex items-center gap-3"
+                  style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.08), rgba(20,184,166,0.05))", border: "1px solid rgba(167,139,250,0.25)" }}
+                >
+                  <img src={customPreview.imageUrl} alt={customPreview.brandName} className="w-12 h-16 object-cover object-top rounded-lg shrink-0" style={{ border: "1px solid rgba(255,255,255,0.1)" }} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-bold text-white truncate flex items-center gap-1">
+                      <Layers className="w-3 h-3" style={{ color: "#a78bfa" }} />
+                      Preview allegata: <span style={{ color: "#c4b5fd" }}>{customPreview.brandName}</span>
+                    </p>
+                    <p className="text-[9px] text-white/50 truncate">
+                      {customPreview.sectorLabel} · stile {customPreview.styleName}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-1.5">
+                      <button
+                        onClick={() => {
+                          const append = `\n\n📱 Guarda la preview ${customPreview.brandName} — ${customPreview.styleName}:\n${customPreview.demoLink}\n🖼️ Mockup: ${customPreview.imageUrl}`;
+                          setGeneratedMessage((prev) => (prev ? prev + append : `Ciao, ho preparato una preview per te:${append}`));
+                          toast.success("Preview aggiunta al messaggio");
+                        }}
+                        className="text-[8px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1"
+                        style={{ background: "rgba(16,185,129,0.18)", border: "1px solid rgba(16,185,129,0.3)", color: "#34d399" }}
+                      >
+                        <Send className="w-2.5 h-2.5" /> Allega al messaggio
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(`${customPreview.demoLink}\n${customPreview.imageUrl}`);
+                          toast.success("Link + immagine copiati");
+                        }}
+                        className="text-[8px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1"
+                        style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.25)", color: "#c4b5fd" }}
+                      >
+                        <Copy className="w-2.5 h-2.5" /> Copia
+                      </button>
+                      <button
+                        onClick={() => setCustomPreview(null)}
+                        className="text-[8px] font-bold px-2 py-0.5 rounded-md"
+                        style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}
+                      >
+                        Rimuovi
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
               {/* Channel selector */}
               <div className="flex gap-1.5">
                 {([
