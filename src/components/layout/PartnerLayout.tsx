@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
+import EmpireDNABackground from "@/components/EmpireDNABackground";
 
 /* ═══ Context for demo mode across all partner pages ═══ */
 const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
@@ -68,6 +69,13 @@ export default function PartnerLayout() {
     <DemoModeContext.Provider value={{ demoMode, setDemoMode }}>
     <div className={`min-h-screen flex flex-col relative admin-panel ${isDark ? 'landing-dark partner-console' : ''}`}
       style={isDark ? { background: "#0a0a14" } : undefined}>
+
+      {/* ═══ INTERACTIVE BACKGROUND — same as Empire home ═══ */}
+      {isDark && (
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <EmpireDNABackground />
+        </div>
+      )}
 
       {/* ═══ TOP BAR — glassmorphism ═══ */}
       <div className="sticky top-0 z-50 flex items-center justify-between px-4 h-14 safe-top"
