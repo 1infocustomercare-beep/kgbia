@@ -495,6 +495,28 @@ export default function LeadsPage() {
     setGeneratingMsg(true);
     setGeneratedMessage(null);
 
+    // Kick off deep analysis in parallel
+    setDeepReport(null);
+    setDeepAudit(null);
+    setAnalysisLoading(true);
+    supabase.functions.invoke("deep-lead-analysis", {
+      body: {
+        name: lead.name, city: lead.city, sector: lead._sector,
+        website: lead.website, instagram: lead.instagram, phone: lead.phone, email: lead.email,
+        google_rating: lead.google_rating, google_reviews: lead.google_reviews,
+        full_address: lead.full_address, country: country || "",
+        opening_hours: lead.opening_hours, types: lead.types,
+      },
+    }).then(({ data, error }) => {
+      if (!error && data?.success) {
+        setDeepReport(data.report);
+        setDeepAudit(data.audit);
+      } else if (error) {
+        console.warn("Deep analysis failed:", error);
+      }
+    }).catch((e) => console.warn("Deep analysis exception:", e))
+      .finally(() => setAnalysisLoading(false));
+
     // Enrich social data in parallel with message generation
     const enrichPromise = enrichLeadSocial(lead);
 
