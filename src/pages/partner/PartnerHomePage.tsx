@@ -14,7 +14,25 @@ import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import { usePartnerDemoMode } from "@/components/layout/PartnerLayout";
 import { SectorPhoneCarousel } from "@/components/partner/SectorPhoneCarousel";
 
-export default function PartnerHomePage() {
+/* Animated counter component */
+const AnimatedCounter = ({ value, prefix = "", color }: { value: number; prefix?: string; color: string }) => {
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    if (value === 0) { setDisplay(0); return; }
+    const dur = 1200;
+    const start = Date.now();
+    const tick = () => {
+      const elapsed = Date.now() - start;
+      const progress = Math.min(elapsed / dur, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(eased * value));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [value]);
+  return <p className="text-xl font-bold text-foreground" style={{ textShadow: `0 0 20px ${color}30` }}>{prefix}{display.toLocaleString("it-IT")}</p>;
+};
+
   const navigate = useNavigate();
   const { user, isTeamLeader } = useAuth();
   const { demoMode } = usePartnerDemoMode();
