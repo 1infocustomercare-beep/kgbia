@@ -134,14 +134,20 @@ export function useSellerPipeline() {
     if (!userId) { toast.error("Devi essere loggato per salvare lead"); return null; }
     if (!input.name?.trim()) { toast.error("Nome lead obbligatorio"); return null; }
 
-    // Check duplicate by (owner_id, name, city)
-    const { data: existing } = await supabase
+    // Check duplicate by (owner_id, name, city) — handle null/empty city correctly
+    const cityNorm = (input.city || "").trim();
+    let dupQuery = supabase
       .from("leads")
       .select("id")
       .eq("owner_id", userId)
-      .ilike("name", input.name.trim())
-      .eq("city", input.city || "")
-      .maybeSingle();
+      .ilike("name", input.name.trim());
+    if (cityNorm) {
+      dupQuery = dupQuery.ilike("city", cityNorm);
+    } else {
+      dupQuery = dupQuery.or("city.is.null,city.eq.");
+    }
+    const { data: existingRows } = await dupQuery.limit(1);
+    const existing = existingRows && existingRows.length > 0 ? existingRows[0] : null;
 
     if (existing?.id) {
       toast.info("Lead già nel tuo CRM", { description: `${input.name} è già stato salvato` });
