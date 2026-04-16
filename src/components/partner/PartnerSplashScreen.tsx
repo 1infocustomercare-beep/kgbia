@@ -122,7 +122,7 @@ export default function PartnerSplashScreen({ userName, onComplete }: Props) {
   }, []);
 
   if (phase === "empire") {
-    return <SplashScreen onComplete={handleSplashDone} />;
+    return <UnifiedIntro onComplete={handleSplashDone} />;
   }
 
   return (
