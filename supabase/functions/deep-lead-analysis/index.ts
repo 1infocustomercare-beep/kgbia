@@ -301,6 +301,74 @@ async function auditWebsite(url: string | null): Promise<WebsiteAudit | null> {
 }
 
 /* ═══════════════════════════════════════════════
+   Web search fallback — discover website when missing
+   ═══════════════════════════════════════════════ */
+async function discoverWebsite(name: string, city: string): Promise<string | null> {
+  try {
+    const q = encodeURIComponent(`${name} ${city}`);
+    const resp = await fetch(`https://duckduckgo.com/html/?q=${q}`, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; EmpireAI-LeadAudit/1.0)" },
+      signal: AbortSignal.timeout(7000),
+    });
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    const matches = [...html.matchAll(/<a[^>]+class="result__a"[^>]+href="([^"]+)"/gi)];
+    for (const m of matches) {
+      let raw = m[1];
+      const uddg = raw.match(/uddg=([^&]+)/);
+      if (uddg) raw = decodeURIComponent(uddg[1]);
+      try {
+        const u = new URL(raw);
+        const host = u.hostname.replace(/^www\./, "");
+        const skip = ["facebook.com", "instagram.com", "tripadvisor.", "yelp.", "thefork.", "google.", "duckduckgo.", "youtube.com", "linkedin.com", "tiktok.com", "twitter.com", "x.com", "wikipedia.", "pagine", "virgilio", "misterimprese", "europages"];
+        if (skip.some(s => host.includes(s))) continue;
+        return `https://${host}`;
+      } catch { /* skip */ }
+    }
+    return null;
+  } catch (e) {
+    console.log("discoverWebsite failed:", e);
+    return null;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   Instagram public snapshot (followers + bio + verified)
+   ═══════════════════════════════════════════════ */
+async function fetchInstagramSnapshot(handle: string): Promise<{ followers: number | null; bio: string | null; verified: boolean } | null> {
+  try {
+    const clean = handle.replace(/^@/, "").trim();
+    if (!clean) return null;
+    const resp = await fetch(`https://www.instagram.com/${clean}/`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+        "Accept-Language": "it-IT,it;q=0.9,en;q=0.8",
+      },
+      redirect: "follow",
+      signal: AbortSignal.timeout(7000),
+    });
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    const desc = html.match(/<meta\s+(?:property="og:description"|name="description")\s+content="([^"]+)"/i);
+    let followers: number | null = null;
+    let bio: string | null = null;
+    if (desc) {
+      bio = desc[1];
+      const f = desc[1].match(/([\d,.]+)\s*([KkMm])?\s*Follower/i);
+      if (f) {
+        const num = parseFloat(f[1].replace(/,/g, ""));
+        const mult = f[2]?.toLowerCase() === "m" ? 1_000_000 : f[2]?.toLowerCase() === "k" ? 1_000 : 1;
+        followers = Math.round(num * mult);
+      }
+    }
+    const verified = /is_verified["'\s:]+true/i.test(html);
+    return { followers, bio, verified };
+  } catch {
+    return null;
+  }
+}
+
+/* ═══════════════════════════════════════════════
    AI structured analysis via tool calling
    ═══════════════════════════════════════════════ */
 const ANALYSIS_TOOL = {
