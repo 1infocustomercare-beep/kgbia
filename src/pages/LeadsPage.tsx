@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import empireMonkeyLaptop from "@/assets/empire-monkey-laptop.png";
 import { SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
-import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
+import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 
 /* ─── Types ─── */
@@ -131,11 +131,89 @@ const computeScore = (lead: Lead): number => {
   return Math.max(15, Math.min(98, score + Math.floor(Math.random() * 6 - 3)));
 };
 
-const getPreviewScreens = (sectorId: string) => {
+const getPreviewScreens = (sectorId: string): string[] => {
+  // 1. Try SECTOR_PORTFOLIO (high-quality multi-brand)
   const portfolio = SECTOR_PORTFOLIO.find(sp => sp.sectorId === sectorId);
   const brand = portfolio?.brands?.[0];
   const style = brand?.styles?.[0];
-  return style?.screens?.slice(0, 4) || [];
+  if (style?.screens?.length) return style.screens.slice(0, 4);
+  // 2. Fallback to SECTOR_MOCKUP_IMAGES (flat array)
+  const mockups = SECTOR_MOCKUP_IMAGES[sectorId as keyof typeof SECTOR_MOCKUP_IMAGES];
+  if (mockups?.length) return mockups.slice(0, 4);
+  // 3. Last resort: try parent sector mapping
+  const SECTOR_PARENT: Record<string, string> = {
+    bakery: "food", gelateria: "food", wine_bar: "food", catering: "food",
+    barber: "beauty", spa: "beauty",
+    dentist: "healthcare", physiotherapy: "healthcare", psychology: "healthcare", pharmacy: "healthcare", optics: "healthcare",
+    martial_arts: "fitness", dance: "fitness",
+    pet_shop: "veterinary", jewelry: "retail",
+    car_wash: "garage", tech_repair: "retail", printing: "retail",
+    driving_school: "education", music: "education",
+    florist: "gardening", laundry: "cleaning",
+    locksmith: "plumber", tailor: "retail",
+    travel: "hospitality", coworking: "hospitality",
+    real_estate: "construction", architect: "construction",
+    insurance: "accounting", funeral: "events", moving: "logistics", pest_control: "cleaning",
+  };
+  const parent = SECTOR_PARENT[sectorId];
+  if (parent) {
+    const pPortfolio = SECTOR_PORTFOLIO.find(sp => sp.sectorId === parent);
+    const pScreens = pPortfolio?.brands?.[0]?.styles?.[0]?.screens;
+    if (pScreens?.length) return pScreens.slice(0, 4);
+    const pMockups = SECTOR_MOCKUP_IMAGES[parent as keyof typeof SECTOR_MOCKUP_IMAGES];
+    if (pMockups?.length) return pMockups.slice(0, 4);
+  }
+  return [];
+};
+
+/* ─── Sector-specific features to show in preview ─── */
+const SECTOR_FEATURES: Record<string, { features: string[]; value: string; cta: string }> = {
+  food: { features: ["Menu digitale QR", "Prenotazioni online", "Ordini delivery/asporto", "CRM clienti + loyalty"], value: "Aumenta ordini del 40%", cta: "Vedi demo ristorante" },
+  beauty: { features: ["Booking online 24/7", "Promemoria automatici", "Galleria servizi", "Programma fedeltà"], value: "Riduci no-show del 60%", cta: "Vedi demo beauty" },
+  ncc: { features: ["Booking con preventivo", "Tracking GPS flotta", "Fatturazione automatica", "Tariffe dinamiche"], value: "Più prenotazioni dirette", cta: "Vedi demo NCC" },
+  healthcare: { features: ["Prenotazione visite", "Telemedicina", "Promemoria SMS", "Schede paziente digitali"], value: "Meno telefonate, più visite", cta: "Vedi demo clinica" },
+  fitness: { features: ["Iscrizioni online", "Prenotazione corsi", "App membri", "Pagamenti ricorrenti"], value: "+35% retention membri", cta: "Vedi demo palestra" },
+  hospitality: { features: ["Booking diretto (no OTA)", "Check-in digitale", "Upselling automatico", "Guest CRM"], value: "Zero commissioni OTA", cta: "Vedi demo hotel" },
+  retail: { features: ["Catalogo online", "E-commerce integrato", "Inventario smart", "Programma fedeltà"], value: "Vendite online 24/7", cta: "Vedi demo negozio" },
+  plumber: { features: ["Richiesta intervento online", "Preventivi automatici", "Tracking interventi", "Fatturazione digitale"], value: "Più clienti, meno chiamate", cta: "Vedi demo idraulico" },
+  electrician: { features: ["Preventivi online", "Calendario interventi", "Portfolio lavori", "Recensioni verificate"], value: "Professionalità digitale", cta: "Vedi demo elettricista" },
+  construction: { features: ["Portfolio progetti", "Timeline lavori", "Preventivi interattivi", "Gestione cantieri"], value: "Progetti gestiti al meglio", cta: "Vedi demo edilizia" },
+  veterinary: { features: ["Prenotazione visite", "Cartella clinica pet", "Promemoria vaccini", "Shop prodotti"], value: "Fidelizza proprietari", cta: "Vedi demo veterinario" },
+  beach: { features: ["Mappa ombrelloni", "Prenotazione online", "Abbonamenti stagionali", "Bar/Ristoro integrato"], value: "Gestione spiaggia smart", cta: "Vedi demo stabilimento" },
+  tattoo: { features: ["Portfolio artisti", "Booking appuntamenti", "Galleria lavori", "Consensi digitali"], value: "Più prenotazioni online", cta: "Vedi demo tattoo" },
+  photography: { features: ["Portfolio professionale", "Booking sessioni", "Galleria clienti", "Preventivi automatici"], value: "Showcase professionale", cta: "Vedi demo fotografo" },
+  events: { features: ["Catalogo eventi", "Booking location", "Preventivi wedding", "Gestione fornitori"], value: "Più eventi prenotati", cta: "Vedi demo eventi" },
+  gardening: { features: ["Catalogo servizi", "Preventivi online", "Portfolio giardini", "Manutenzione programmata"], value: "Clienti tutto l'anno", cta: "Vedi demo giardinaggio" },
+  legal: { features: ["Consulenze online", "Gestione pratiche", "Appuntamenti digitali", "Area clienti riservata"], value: "Studio più efficiente", cta: "Vedi demo studio legale" },
+  accounting: { features: ["Portale clienti", "Scadenzario fiscale", "Documenti digitali", "Consulenze online"], value: "Gestione clienti smart", cta: "Vedi demo commercialista" },
+  cleaning: { features: ["Preventivi istantanei", "Booking pulizie", "Abbonamenti", "Tracking interventi"], value: "Più contratti regolari", cta: "Vedi demo pulizie" },
+  garage: { features: ["Prenotazione tagliandi", "Storico interventi", "Preventivi digitali", "Promemoria revisioni"], value: "Fidelizza automobilisti", cta: "Vedi demo officina" },
+  agriturismo: { features: ["Booking camere", "Menu degustazione", "Esperienze/attività", "Vendita prodotti"], value: "Prenotazioni dirette", cta: "Vedi demo agriturismo" },
+  logistics: { features: ["Tracking spedizioni", "Preventivi online", "Dashboard corrieri", "Notifiche consegna"], value: "Logistica ottimizzata", cta: "Vedi demo logistica" },
+  education: { features: ["Iscrizioni corsi", "Calendario lezioni", "Area studenti", "Pagamenti online"], value: "Più iscrizioni online", cta: "Vedi demo formazione" },
+  childcare: { features: ["Iscrizioni online", "Comunicazioni genitori", "Diario digitale", "Pagamenti ricorrenti"], value: "Genitori sempre informati", cta: "Vedi demo asilo" },
+};
+const getSectorFeatures = (sectorId: string) => SECTOR_FEATURES[sectorId] || SECTOR_FEATURES.retail || { features: ["Sito professionale", "Booking online", "CRM clienti", "Marketing AI"], value: "Presenza digitale completa", cta: "Vedi demo" };
+
+/* ─── Sector-specific pain points for real analysis ─── */
+const SECTOR_PAIN_ANALYSIS: Record<string, string[]> = {
+  food: ["Clienti cercano su Google e non trovano il ristorante", "Prenotazioni perse al telefono durante il servizio", "Zero fidelizzazione: i clienti non tornano", "Nessun sistema ordini online per delivery"],
+  beauty: ["Appuntamenti persi senza promemoria automatici", "No-show frequenti senza caparra", "Clienti prenotano solo per telefono", "Nessuna visibilità online dei servizi"],
+  ncc: ["Prenotazioni solo via WhatsApp/telefono", "Nessun preventivo automatico", "Zero visibilità su Google per transfer", "Fatturazione e gestione flotta manuale"],
+  healthcare: ["Pazienti chiamano per prenotare e la linea è occupata", "Nessun promemoria visite automatico", "Referti solo cartacei", "Zero telemedicina post-COVID"],
+  fitness: ["Iscrizioni gestite con carta e penna", "Nessuna app per prenotare corsi", "Membri non rinnovano senza engagement", "Zero analisi dei dati membri"],
+  hospitality: ["Commissioni OTA fino al 25% per prenotazione", "Check-in lento e cartaceo", "Nessun upselling automatico", "Zero fidelizzazione ospiti"],
+  plumber: ["Clienti non trovano il servizio su Google", "Preventivi fatti a voce senza traccia", "Nessun portfolio lavori online", "Zero recensioni gestite"],
+  electrician: ["Nessun sito professionale per farsi trovare", "Preventivi non tracciati", "Zero visibilità rispetto ai competitor", "Nessun sistema appuntamenti"],
+  retail: ["Nessun e-commerce per vendite online", "Inventario gestito su foglio Excel", "Zero programma fedeltà", "Promozioni solo in vetrina"],
+  construction: ["Portfolio lavori non visibile online", "Preventivi cartacei senza follow-up", "Nessuna timeline progetti per clienti", "Zero referenze digitali"],
+  veterinary: ["Proprietari dimenticano vaccini e controlli", "Nessuna cartella clinica digitale", "Prenotazioni solo telefoniche", "Zero vendita prodotti online"],
+  beach: ["Prenotazione ombrelloni solo di persona", "Nessun sistema abbonamenti stagionali", "Gestione caotica nei weekend", "Zero servizio bar digitale"],
+  tattoo: ["Portfolio solo su Instagram senza sito", "Prenotazioni via DM non gestite", "Nessun sistema consensi digitale", "Zero visibilità su Google"],
+  gardening: ["Nessun catalogo servizi professionale", "Preventivi fatti a voce", "Zero visibilità online", "Nessun sistema manutenzione programmata"],
+  legal: ["Clienti non trovano lo studio online", "Gestione pratiche su carta", "Nessun portale clienti", "Appuntamenti solo telefonici"],
+  accounting: ["Clienti portano documenti a mano", "Nessun portale scadenze fiscali", "Zero automazione comunicazioni", "Gestione manuale inefficiente"],
+  default: ["Nessuna presenza online strutturata", "Clienti potenziali non trovano l'attività", "Gestione manuale di appuntamenti e ordini", "Zero automazione marketing e CRM"],
 };
 
 const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
@@ -1148,13 +1226,39 @@ export default function LeadsPage() {
               </div>
             </div>
 
-            {/* ═══ CUSTOMIZED DEMO PREVIEW ═══ */}
-            {previewScreens.length > 0 && (
+            {/* ═══ AI ANALYSIS — Sector-Specific Pain Points ═══ */}
+            <div className="p-4 rounded-2xl space-y-3" style={{ background: "rgba(239,68,68,0.03)", border: "1px solid rgba(239,68,68,0.1)" }}>
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4" style={{ color: "#ef4444" }} />
+                <span className="text-xs font-bold text-white">Analisi Problematiche — {sectorConfig?.label || selected._sector}</span>
+              </div>
+              <div className="space-y-1.5">
+                {(SECTOR_PAIN_ANALYSIS[selected._sector] || SECTOR_PAIN_ANALYSIS.default).map((pain, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
+                    className="flex items-start gap-2 p-2 rounded-lg" style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.08)" }}>
+                    <span className="text-[9px] mt-0.5" style={{ color: "#ef4444" }}>⚠️</span>
+                    <span className="text-[10px]" style={{ color: "#e5e7eb" }}>{pain}</span>
+                  </motion.div>
+                ))}
+              </div>
+              {/* Opportunity summary */}
+              <div className="p-2.5 rounded-lg" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.12)" }}>
+                <p className="text-[10px] font-bold" style={{ color: "#34d399" }}>
+                  💡 {selected.name} ha {selected._score >= 70 ? "urgente bisogno" : selected._score >= 45 ? "bisogno evidente" : "potenziale"} di digitalizzazione nel settore {sectorConfig?.label || selected._sector}.
+                  {!selected.website && " Non ha nemmeno un sito web — opportunità enorme."}
+                </p>
+              </div>
+            </div>
+
+            {/* ═══ CUSTOMIZED DEMO PREVIEW — Sector-Specific ═══ */}
+            {(() => {
+              const sectorFeats = getSectorFeatures(selected._sector);
+              return (
               <div className="p-4 rounded-2xl space-y-2" style={{ background: "rgba(167,139,250,0.03)", border: "1px solid rgba(167,139,250,0.1)" }}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Eye className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />
-                    <span className="text-xs font-bold text-white">📱 Preview personalizzata per {selected.name}</span>
+                    <span className="text-xs font-bold text-white">📱 Preview {sectorConfig?.label || "Business"} per {selected.name}</span>
                   </div>
                   <button onClick={() => setShowPreview(!showPreview)} className="text-[9px] font-semibold" style={{ color: "#a78bfa" }}>
                     {showPreview ? "Nascondi" : "Mostra"}
@@ -1163,42 +1267,50 @@ export default function LeadsPage() {
                 <AnimatePresence>
                   {showPreview && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                      {/* Customized overlay header */}
+                      {/* Sector-specific features header */}
                       <div className="rounded-xl p-3 mb-2" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(20,184,166,0.06))", border: "1px solid rgba(124,58,237,0.15)" }}>
-                        <p className="text-[10px] font-bold" style={{ color: "#e5e7eb" }}>
-                          🎯 Ecco come potrebbe apparire <span style={{ color: "#a78bfa" }}>{selected.name}</span> con Empire AI:
+                        <p className="text-[10px] font-bold mb-2" style={{ color: "#e5e7eb" }}>
+                          🎯 Ecco cosa includerebbe il progetto per <span style={{ color: "#a78bfa" }}>{selected.name}</span>:
                         </p>
-                        <div className="flex flex-wrap gap-1.5 mt-1.5">
-                          <span className="text-[8px] px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(20,184,166,0.12)", color: "#14b8a6" }}>
-                            ✅ App & Sito personalizzato
-                          </span>
-                          <span className="text-[8px] px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(124,58,237,0.12)", color: "#c4b5fd" }}>
-                            ✅ Admin Dashboard
-                          </span>
-                          <span className="text-[8px] px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(245,158,11,0.12)", color: "#fbbf24" }}>
-                            ✅ AI Integrata
-                          </span>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {sectorFeats.features.map((feat, i) => (
+                            <span key={i} className="text-[8px] px-2 py-1 rounded-lg font-semibold flex items-center gap-1" style={{ background: "rgba(20,184,166,0.08)", color: "#14b8a6", border: "1px solid rgba(20,184,166,0.12)" }}>
+                              ✅ {feat}
+                            </span>
+                          ))}
                         </div>
+                        <p className="text-[9px] font-bold mt-2" style={{ color: "#fbbf24" }}>
+                          📈 {sectorFeats.value}
+                        </p>
                       </div>
 
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        {previewScreens.map((screen, i) => (
-                          <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.08 }}
-                            className="rounded-xl overflow-hidden aspect-[9/16] relative group" style={{ border: "1px solid rgba(167,139,250,0.15)" }}>
-                            <img src={screen} alt={`Preview ${i + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
-                            {/* Lead name overlay */}
-                            <div className="absolute bottom-0 left-0 right-0 p-2" style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.85))" }}>
-                              <p className="text-[8px] font-bold text-white truncate">{selected.name}</p>
-                              <p className="text-[6px]" style={{ color: "#a78bfa" }}>{sectorConfig?.label || "Business"}</p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
+                      {previewScreens.length > 0 ? (
+                        <>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            {previewScreens.map((screen, i) => (
+                              <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.08 }}
+                                className="rounded-xl overflow-hidden aspect-[9/16] relative group" style={{ border: "1px solid rgba(167,139,250,0.15)" }}>
+                                <img src={screen} alt={`Preview ${sectorConfig?.label || ""} ${i + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
+                                <div className="absolute bottom-0 left-0 right-0 p-2" style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.85))" }}>
+                                  <p className="text-[8px] font-bold text-white truncate">{selected.name}</p>
+                                  <p className="text-[6px]" style={{ color: "#a78bfa" }}>{sectorConfig?.label || "Business"}</p>
+                                </div>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="rounded-xl p-4 text-center" style={{ background: "rgba(124,58,237,0.06)", border: "1px dashed rgba(124,58,237,0.2)" }}>
+                          <Eye className="w-6 h-6 mx-auto mb-2" style={{ color: "#a78bfa" }} />
+                          <p className="text-[10px] font-bold" style={{ color: "#c4b5fd" }}>Preview settore "{sectorConfig?.label || selected._sector}"</p>
+                          <p className="text-[9px] mt-1" style={{ color: "#6b7280" }}>Apri la demo live per vedere il progetto completo</p>
+                        </div>
+                      )}
                       <div className="flex items-center gap-2 mt-2">
                         <a href={getDemoSiteUrl(selected._sector)} target="_blank" rel="noopener noreferrer"
                           className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-[10px] font-bold"
                           style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(16,185,129,0.1))", border: "1px solid rgba(124,58,237,0.2)", color: "#c4b5fd" }}>
-                          <ExternalLink className="w-3 h-3" /> Demo Live {sectorConfig?.label || ""}
+                          <ExternalLink className="w-3 h-3" /> {sectorFeats.cta}
                         </a>
                         <button onClick={() => {
                           navigator.clipboard.writeText(`${window.location.origin}${getDemoSiteUrl(selected._sector)}`);
@@ -1211,7 +1323,8 @@ export default function LeadsPage() {
                   )}
                 </AnimatePresence>
               </div>
-            )}
+              );
+            })()}
 
             {/* Messaggio AI */}
             <div className="p-4 rounded-2xl space-y-3" style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.05), rgba(59,130,246,0.03))", border: "1px solid rgba(16,185,129,0.12)" }}>
