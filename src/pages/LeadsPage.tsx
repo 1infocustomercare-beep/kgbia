@@ -328,6 +328,13 @@ export default function LeadsPage() {
   const [manualEnriching, setManualEnriching] = useState(false);
   const [manualEnrichedHint, setManualEnrichedHint] = useState<string | null>(null);
 
+  // ═══ CRM Venditore (persistent pipeline) ═══
+  const [crmOpen, setCrmOpen] = useState(false);
+  const pipeline = useSellerPipeline();
+  const overdueFollowups = getOverdueFollowups(pipeline.leads);
+  const savedLeadKeys = new Set(pipeline.leads.map(l => `${l.name.toLowerCase()}|${(l.city || "").toLowerCase()}`));
+  const isLeadSaved = (lead: Lead) => savedLeadKeys.has(`${lead.name.toLowerCase()}|${(lead.city || "").toLowerCase()}`);
+
   /* ─── Auto-detect sector from manual name ─── */
   useEffect(() => {
     if (manualSectorTouched || !manualName.trim()) return;
