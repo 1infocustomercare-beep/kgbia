@@ -631,6 +631,8 @@ REGOLE INDEROGABILI (violazione = report scartato):
       success: true,
       report,
       audit,
+      discovered_website,
+      ig_snapshot: igSnapshot,
       portfolio_ref: portfolio,
       analyzed_at: new Date().toISOString(),
     }), {
