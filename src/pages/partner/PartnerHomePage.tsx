@@ -75,7 +75,7 @@ export default function PartnerHomePage() {
   const demoGlass = `${glassCard} bg-[#1a1510]/95 border border-amber-500/10 shadow-lg shadow-black/30`;
 
   return (
-    <div className="space-y-5 pb-6 max-w-2xl mx-auto">
+    <div className="space-y-5 pb-6 max-w-2xl lg:max-w-6xl mx-auto">
       {/* ═══ HERO ═══ */}
       <section className="relative px-4 pt-7 pb-3 overflow-hidden">
         {/* Ambient glow */}

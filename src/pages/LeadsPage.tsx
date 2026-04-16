@@ -775,7 +775,7 @@ export default function LeadsPage() {
   });
 
   return (
-    <div className="min-h-screen p-4 space-y-4 pb-24 max-w-2xl mx-auto relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
+    <div className="min-h-screen p-4 lg:p-6 space-y-4 pb-24 lg:pb-8 max-w-2xl lg:max-w-7xl mx-auto relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
       <SalesPlaybook autoOpen />
       <ManualPreviewPicker
         open={showPicker}

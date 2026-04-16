@@ -163,7 +163,7 @@ export default function PartnerEarningsPage() {
   }
 
   return (
-    <div className="space-y-5 px-4 pt-5 pb-24 max-w-2xl mx-auto">
+    <div className="space-y-5 px-4 pt-5 pb-24 max-w-2xl lg:max-w-6xl mx-auto">
       {/* ═══ RANK BANNER — Animated Glow ═══ */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
         className={`${cardBase} p-5 relative overflow-hidden`}
