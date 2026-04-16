@@ -219,8 +219,8 @@ export default function PartnerLayout() {
         </div>
       </div>
 
-      {/* ═══ PAGE CONTENT ═══ */}
-      <div className="flex-1 overflow-y-auto pb-20">
+      {/* ═══ PAGE CONTENT — above DNA background ═══ */}
+      <div className="flex-1 overflow-y-auto pb-20 relative z-10">
         <Outlet />
       </div>
 
