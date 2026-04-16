@@ -131,11 +131,89 @@ const computeScore = (lead: Lead): number => {
   return Math.max(15, Math.min(98, score + Math.floor(Math.random() * 6 - 3)));
 };
 
-const getPreviewScreens = (sectorId: string) => {
+const getPreviewScreens = (sectorId: string): string[] => {
+  // 1. Try SECTOR_PORTFOLIO (high-quality multi-brand)
   const portfolio = SECTOR_PORTFOLIO.find(sp => sp.sectorId === sectorId);
   const brand = portfolio?.brands?.[0];
   const style = brand?.styles?.[0];
-  return style?.screens?.slice(0, 4) || [];
+  if (style?.screens?.length) return style.screens.slice(0, 4);
+  // 2. Fallback to SECTOR_MOCKUP_IMAGES (flat array)
+  const mockups = SECTOR_MOCKUP_IMAGES[sectorId as keyof typeof SECTOR_MOCKUP_IMAGES];
+  if (mockups?.length) return mockups.slice(0, 4);
+  // 3. Last resort: try parent sector mapping
+  const SECTOR_PARENT: Record<string, string> = {
+    bakery: "food", gelateria: "food", wine_bar: "food", catering: "food",
+    barber: "beauty", spa: "beauty",
+    dentist: "healthcare", physiotherapy: "healthcare", psychology: "healthcare", pharmacy: "healthcare", optics: "healthcare",
+    martial_arts: "fitness", dance: "fitness",
+    pet_shop: "veterinary", jewelry: "retail",
+    car_wash: "garage", tech_repair: "retail", printing: "retail",
+    driving_school: "education", music: "education",
+    florist: "gardening", laundry: "cleaning",
+    locksmith: "plumber", tailor: "retail",
+    travel: "hospitality", coworking: "hospitality",
+    real_estate: "construction", architect: "construction",
+    insurance: "accounting", funeral: "events", moving: "logistics", pest_control: "cleaning",
+  };
+  const parent = SECTOR_PARENT[sectorId];
+  if (parent) {
+    const pPortfolio = SECTOR_PORTFOLIO.find(sp => sp.sectorId === parent);
+    const pScreens = pPortfolio?.brands?.[0]?.styles?.[0]?.screens;
+    if (pScreens?.length) return pScreens.slice(0, 4);
+    const pMockups = SECTOR_MOCKUP_IMAGES[parent as keyof typeof SECTOR_MOCKUP_IMAGES];
+    if (pMockups?.length) return pMockups.slice(0, 4);
+  }
+  return [];
+};
+
+/* ─── Sector-specific features to show in preview ─── */
+const SECTOR_FEATURES: Record<string, { features: string[]; value: string; cta: string }> = {
+  food: { features: ["Menu digitale QR", "Prenotazioni online", "Ordini delivery/asporto", "CRM clienti + loyalty"], value: "Aumenta ordini del 40%", cta: "Vedi demo ristorante" },
+  beauty: { features: ["Booking online 24/7", "Promemoria automatici", "Galleria servizi", "Programma fedeltà"], value: "Riduci no-show del 60%", cta: "Vedi demo beauty" },
+  ncc: { features: ["Booking con preventivo", "Tracking GPS flotta", "Fatturazione automatica", "Tariffe dinamiche"], value: "Più prenotazioni dirette", cta: "Vedi demo NCC" },
+  healthcare: { features: ["Prenotazione visite", "Telemedicina", "Promemoria SMS", "Schede paziente digitali"], value: "Meno telefonate, più visite", cta: "Vedi demo clinica" },
+  fitness: { features: ["Iscrizioni online", "Prenotazione corsi", "App membri", "Pagamenti ricorrenti"], value: "+35% retention membri", cta: "Vedi demo palestra" },
+  hospitality: { features: ["Booking diretto (no OTA)", "Check-in digitale", "Upselling automatico", "Guest CRM"], value: "Zero commissioni OTA", cta: "Vedi demo hotel" },
+  retail: { features: ["Catalogo online", "E-commerce integrato", "Inventario smart", "Programma fedeltà"], value: "Vendite online 24/7", cta: "Vedi demo negozio" },
+  plumber: { features: ["Richiesta intervento online", "Preventivi automatici", "Tracking interventi", "Fatturazione digitale"], value: "Più clienti, meno chiamate", cta: "Vedi demo idraulico" },
+  electrician: { features: ["Preventivi online", "Calendario interventi", "Portfolio lavori", "Recensioni verificate"], value: "Professionalità digitale", cta: "Vedi demo elettricista" },
+  construction: { features: ["Portfolio progetti", "Timeline lavori", "Preventivi interattivi", "Gestione cantieri"], value: "Progetti gestiti al meglio", cta: "Vedi demo edilizia" },
+  veterinary: { features: ["Prenotazione visite", "Cartella clinica pet", "Promemoria vaccini", "Shop prodotti"], value: "Fidelizza proprietari", cta: "Vedi demo veterinario" },
+  beach: { features: ["Mappa ombrelloni", "Prenotazione online", "Abbonamenti stagionali", "Bar/Ristoro integrato"], value: "Gestione spiaggia smart", cta: "Vedi demo stabilimento" },
+  tattoo: { features: ["Portfolio artisti", "Booking appuntamenti", "Galleria lavori", "Consensi digitali"], value: "Più prenotazioni online", cta: "Vedi demo tattoo" },
+  photography: { features: ["Portfolio professionale", "Booking sessioni", "Galleria clienti", "Preventivi automatici"], value: "Showcase professionale", cta: "Vedi demo fotografo" },
+  events: { features: ["Catalogo eventi", "Booking location", "Preventivi wedding", "Gestione fornitori"], value: "Più eventi prenotati", cta: "Vedi demo eventi" },
+  gardening: { features: ["Catalogo servizi", "Preventivi online", "Portfolio giardini", "Manutenzione programmata"], value: "Clienti tutto l'anno", cta: "Vedi demo giardinaggio" },
+  legal: { features: ["Consulenze online", "Gestione pratiche", "Appuntamenti digitali", "Area clienti riservata"], value: "Studio più efficiente", cta: "Vedi demo studio legale" },
+  accounting: { features: ["Portale clienti", "Scadenzario fiscale", "Documenti digitali", "Consulenze online"], value: "Gestione clienti smart", cta: "Vedi demo commercialista" },
+  cleaning: { features: ["Preventivi istantanei", "Booking pulizie", "Abbonamenti", "Tracking interventi"], value: "Più contratti regolari", cta: "Vedi demo pulizie" },
+  garage: { features: ["Prenotazione tagliandi", "Storico interventi", "Preventivi digitali", "Promemoria revisioni"], value: "Fidelizza automobilisti", cta: "Vedi demo officina" },
+  agriturismo: { features: ["Booking camere", "Menu degustazione", "Esperienze/attività", "Vendita prodotti"], value: "Prenotazioni dirette", cta: "Vedi demo agriturismo" },
+  logistics: { features: ["Tracking spedizioni", "Preventivi online", "Dashboard corrieri", "Notifiche consegna"], value: "Logistica ottimizzata", cta: "Vedi demo logistica" },
+  education: { features: ["Iscrizioni corsi", "Calendario lezioni", "Area studenti", "Pagamenti online"], value: "Più iscrizioni online", cta: "Vedi demo formazione" },
+  childcare: { features: ["Iscrizioni online", "Comunicazioni genitori", "Diario digitale", "Pagamenti ricorrenti"], value: "Genitori sempre informati", cta: "Vedi demo asilo" },
+};
+const getSectorFeatures = (sectorId: string) => SECTOR_FEATURES[sectorId] || SECTOR_FEATURES.retail || { features: ["Sito professionale", "Booking online", "CRM clienti", "Marketing AI"], value: "Presenza digitale completa", cta: "Vedi demo" };
+
+/* ─── Sector-specific pain points for real analysis ─── */
+const SECTOR_PAIN_ANALYSIS: Record<string, string[]> = {
+  food: ["Clienti cercano su Google e non trovano il ristorante", "Prenotazioni perse al telefono durante il servizio", "Zero fidelizzazione: i clienti non tornano", "Nessun sistema ordini online per delivery"],
+  beauty: ["Appuntamenti persi senza promemoria automatici", "No-show frequenti senza caparra", "Clienti prenotano solo per telefono", "Nessuna visibilità online dei servizi"],
+  ncc: ["Prenotazioni solo via WhatsApp/telefono", "Nessun preventivo automatico", "Zero visibilità su Google per transfer", "Fatturazione e gestione flotta manuale"],
+  healthcare: ["Pazienti chiamano per prenotare e la linea è occupata", "Nessun promemoria visite automatico", "Referti solo cartacei", "Zero telemedicina post-COVID"],
+  fitness: ["Iscrizioni gestite con carta e penna", "Nessuna app per prenotare corsi", "Membri non rinnovano senza engagement", "Zero analisi dei dati membri"],
+  hospitality: ["Commissioni OTA fino al 25% per prenotazione", "Check-in lento e cartaceo", "Nessun upselling automatico", "Zero fidelizzazione ospiti"],
+  plumber: ["Clienti non trovano il servizio su Google", "Preventivi fatti a voce senza traccia", "Nessun portfolio lavori online", "Zero recensioni gestite"],
+  electrician: ["Nessun sito professionale per farsi trovare", "Preventivi non tracciati", "Zero visibilità rispetto ai competitor", "Nessun sistema appuntamenti"],
+  retail: ["Nessun e-commerce per vendite online", "Inventario gestito su foglio Excel", "Zero programma fedeltà", "Promozioni solo in vetrina"],
+  construction: ["Portfolio lavori non visibile online", "Preventivi cartacei senza follow-up", "Nessuna timeline progetti per clienti", "Zero referenze digitali"],
+  veterinary: ["Proprietari dimenticano vaccini e controlli", "Nessuna cartella clinica digitale", "Prenotazioni solo telefoniche", "Zero vendita prodotti online"],
+  beach: ["Prenotazione ombrelloni solo di persona", "Nessun sistema abbonamenti stagionali", "Gestione caotica nei weekend", "Zero servizio bar digitale"],
+  tattoo: ["Portfolio solo su Instagram senza sito", "Prenotazioni via DM non gestite", "Nessun sistema consensi digitale", "Zero visibilità su Google"],
+  gardening: ["Nessun catalogo servizi professionale", "Preventivi fatti a voce", "Zero visibilità online", "Nessun sistema manutenzione programmata"],
+  legal: ["Clienti non trovano lo studio online", "Gestione pratiche su carta", "Nessun portale clienti", "Appuntamenti solo telefonici"],
+  accounting: ["Clienti portano documenti a mano", "Nessun portale scadenze fiscali", "Zero automazione comunicazioni", "Gestione manuale inefficiente"],
+  default: ["Nessuna presenza online strutturata", "Clienti potenziali non trovano l'attività", "Gestione manuale di appuntamenti e ordini", "Zero automazione marketing e CRM"],
 };
 
 const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
