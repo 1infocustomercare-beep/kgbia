@@ -150,24 +150,35 @@ export default function PartnerSplashScreen({ userName, onComplete }: Props) {
 
           {/* Center content */}
           <div className="relative z-10 flex flex-col items-center px-8 text-center max-w-sm">
-            {/* Welcome line */}
+            {/* War-cry header — no comfort zone */}
             <motion.p
-              className="text-sm text-white/30 font-light tracking-wide mb-2"
+              className="text-[10px] font-bold uppercase tracking-[0.35em] mb-2"
+              style={{ color: `${todayQuote.accent}aa` }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
             >
-              Bentornato,
+              ⚔ Pronto al combattimento,
             </motion.p>
 
             <motion.h1
-              className="text-2xl font-bold text-white tracking-tight mb-6"
+              className="text-3xl font-extrabold text-white tracking-tight mb-1"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
+              style={{ textShadow: `0 0 30px ${todayQuote.accent}40` }}
             >
               {userName}
             </motion.h1>
+
+            <motion.p
+              className="text-[10px] text-white/40 font-medium tracking-wider uppercase mb-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.55 }}
+            >
+              Empire Closer · Livello Operativo
+            </motion.p>
 
             {/* Separator line */}
             <motion.div
