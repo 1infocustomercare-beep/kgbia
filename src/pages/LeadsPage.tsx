@@ -1226,13 +1226,39 @@ export default function LeadsPage() {
               </div>
             </div>
 
-            {/* ═══ CUSTOMIZED DEMO PREVIEW ═══ */}
-            {previewScreens.length > 0 && (
+            {/* ═══ AI ANALYSIS — Sector-Specific Pain Points ═══ */}
+            <div className="p-4 rounded-2xl space-y-3" style={{ background: "rgba(239,68,68,0.03)", border: "1px solid rgba(239,68,68,0.1)" }}>
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4" style={{ color: "#ef4444" }} />
+                <span className="text-xs font-bold text-white">Analisi Problematiche — {sectorConfig?.label || selected._sector}</span>
+              </div>
+              <div className="space-y-1.5">
+                {(SECTOR_PAIN_ANALYSIS[selected._sector] || SECTOR_PAIN_ANALYSIS.default).map((pain, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
+                    className="flex items-start gap-2 p-2 rounded-lg" style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.08)" }}>
+                    <span className="text-[9px] mt-0.5" style={{ color: "#ef4444" }}>⚠️</span>
+                    <span className="text-[10px]" style={{ color: "#e5e7eb" }}>{pain}</span>
+                  </motion.div>
+                ))}
+              </div>
+              {/* Opportunity summary */}
+              <div className="p-2.5 rounded-lg" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.12)" }}>
+                <p className="text-[10px] font-bold" style={{ color: "#34d399" }}>
+                  💡 {selected.name} ha {selected._score >= 70 ? "urgente bisogno" : selected._score >= 45 ? "bisogno evidente" : "potenziale"} di digitalizzazione nel settore {sectorConfig?.label || selected._sector}.
+                  {!selected.website && " Non ha nemmeno un sito web — opportunità enorme."}
+                </p>
+              </div>
+            </div>
+
+            {/* ═══ CUSTOMIZED DEMO PREVIEW — Sector-Specific ═══ */}
+            {(() => {
+              const sectorFeats = getSectorFeatures(selected._sector);
+              return (
               <div className="p-4 rounded-2xl space-y-2" style={{ background: "rgba(167,139,250,0.03)", border: "1px solid rgba(167,139,250,0.1)" }}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Eye className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />
-                    <span className="text-xs font-bold text-white">📱 Preview personalizzata per {selected.name}</span>
+                    <span className="text-xs font-bold text-white">📱 Preview {sectorConfig?.label || "Business"} per {selected.name}</span>
                   </div>
                   <button onClick={() => setShowPreview(!showPreview)} className="text-[9px] font-semibold" style={{ color: "#a78bfa" }}>
                     {showPreview ? "Nascondi" : "Mostra"}
@@ -1241,42 +1267,50 @@ export default function LeadsPage() {
                 <AnimatePresence>
                   {showPreview && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                      {/* Customized overlay header */}
+                      {/* Sector-specific features header */}
                       <div className="rounded-xl p-3 mb-2" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(20,184,166,0.06))", border: "1px solid rgba(124,58,237,0.15)" }}>
-                        <p className="text-[10px] font-bold" style={{ color: "#e5e7eb" }}>
-                          🎯 Ecco come potrebbe apparire <span style={{ color: "#a78bfa" }}>{selected.name}</span> con Empire AI:
+                        <p className="text-[10px] font-bold mb-2" style={{ color: "#e5e7eb" }}>
+                          🎯 Ecco cosa includerebbe il progetto per <span style={{ color: "#a78bfa" }}>{selected.name}</span>:
                         </p>
-                        <div className="flex flex-wrap gap-1.5 mt-1.5">
-                          <span className="text-[8px] px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(20,184,166,0.12)", color: "#14b8a6" }}>
-                            ✅ App & Sito personalizzato
-                          </span>
-                          <span className="text-[8px] px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(124,58,237,0.12)", color: "#c4b5fd" }}>
-                            ✅ Admin Dashboard
-                          </span>
-                          <span className="text-[8px] px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(245,158,11,0.12)", color: "#fbbf24" }}>
-                            ✅ AI Integrata
-                          </span>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {sectorFeats.features.map((feat, i) => (
+                            <span key={i} className="text-[8px] px-2 py-1 rounded-lg font-semibold flex items-center gap-1" style={{ background: "rgba(20,184,166,0.08)", color: "#14b8a6", border: "1px solid rgba(20,184,166,0.12)" }}>
+                              ✅ {feat}
+                            </span>
+                          ))}
                         </div>
+                        <p className="text-[9px] font-bold mt-2" style={{ color: "#fbbf24" }}>
+                          📈 {sectorFeats.value}
+                        </p>
                       </div>
 
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        {previewScreens.map((screen, i) => (
-                          <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.08 }}
-                            className="rounded-xl overflow-hidden aspect-[9/16] relative group" style={{ border: "1px solid rgba(167,139,250,0.15)" }}>
-                            <img src={screen} alt={`Preview ${i + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
-                            {/* Lead name overlay */}
-                            <div className="absolute bottom-0 left-0 right-0 p-2" style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.85))" }}>
-                              <p className="text-[8px] font-bold text-white truncate">{selected.name}</p>
-                              <p className="text-[6px]" style={{ color: "#a78bfa" }}>{sectorConfig?.label || "Business"}</p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
+                      {previewScreens.length > 0 ? (
+                        <>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            {previewScreens.map((screen, i) => (
+                              <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.08 }}
+                                className="rounded-xl overflow-hidden aspect-[9/16] relative group" style={{ border: "1px solid rgba(167,139,250,0.15)" }}>
+                                <img src={screen} alt={`Preview ${sectorConfig?.label || ""} ${i + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
+                                <div className="absolute bottom-0 left-0 right-0 p-2" style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.85))" }}>
+                                  <p className="text-[8px] font-bold text-white truncate">{selected.name}</p>
+                                  <p className="text-[6px]" style={{ color: "#a78bfa" }}>{sectorConfig?.label || "Business"}</p>
+                                </div>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="rounded-xl p-4 text-center" style={{ background: "rgba(124,58,237,0.06)", border: "1px dashed rgba(124,58,237,0.2)" }}>
+                          <Eye className="w-6 h-6 mx-auto mb-2" style={{ color: "#a78bfa" }} />
+                          <p className="text-[10px] font-bold" style={{ color: "#c4b5fd" }}>Preview settore "{sectorConfig?.label || selected._sector}"</p>
+                          <p className="text-[9px] mt-1" style={{ color: "#6b7280" }}>Apri la demo live per vedere il progetto completo</p>
+                        </div>
+                      )}
                       <div className="flex items-center gap-2 mt-2">
                         <a href={getDemoSiteUrl(selected._sector)} target="_blank" rel="noopener noreferrer"
                           className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-[10px] font-bold"
                           style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(16,185,129,0.1))", border: "1px solid rgba(124,58,237,0.2)", color: "#c4b5fd" }}>
-                          <ExternalLink className="w-3 h-3" /> Demo Live {sectorConfig?.label || ""}
+                          <ExternalLink className="w-3 h-3" /> {sectorFeats.cta}
                         </a>
                         <button onClick={() => {
                           navigator.clipboard.writeText(`${window.location.origin}${getDemoSiteUrl(selected._sector)}`);
@@ -1289,7 +1323,8 @@ export default function LeadsPage() {
                   )}
                 </AnimatePresence>
               </div>
-            )}
+              );
+            })()}
 
             {/* Messaggio AI */}
             <div className="p-4 rounded-2xl space-y-3" style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.05), rgba(59,130,246,0.03))", border: "1px solid rgba(16,185,129,0.12)" }}>
