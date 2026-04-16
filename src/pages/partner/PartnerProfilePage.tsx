@@ -2,8 +2,9 @@ import { useAuth } from "@/context/AuthContext";
 import PartnerProfileSection from "@/components/partner/PartnerProfileSection";
 import PartnerIntegrationsSetup from "@/components/partner/PartnerIntegrationsSetup";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Mail, Shield, Calendar } from "lucide-react";
+import { User, Mail, Shield, Calendar, Sparkles } from "lucide-react";
 import ROICalculator from "@/components/partner/ROICalculator";
 
 export default function PartnerProfilePage() {
@@ -25,65 +26,99 @@ export default function PartnerProfilePage() {
 
   return (
     <div className="space-y-6 px-4 pt-6 pb-8">
-      <h2 className="text-lg font-bold text-foreground">Il Mio Profilo</h2>
+      <motion.h2 initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+        className="text-lg font-bold text-foreground flex items-center gap-2">
+        Il Mio Profilo
+        <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }}>
+          <Sparkles className="w-4 h-4" style={{ color: "#a78bfa", opacity: 0.5 }} />
+        </motion.div>
+      </motion.h2>
 
-      {/* ═══ INFO CARD ═══ */}
-      <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden shrink-0" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
+      {/* ═══ INFO CARD — Premium Animated ═══ */}
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+        className="p-5 rounded-2xl space-y-4 relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.05), rgba(124,58,237,0.02))", border: "1px solid rgba(167,139,250,0.12)" }}>
+        {/* Animated accent */}
+        <motion.div className="absolute top-0 left-0 right-0 h-[2px]" animate={{ opacity: [0.2, 0.6, 0.2] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.5), transparent)" }} />
+        <motion.div className="absolute -top-10 -right-10 w-28 h-28 rounded-full opacity-[0.04] pointer-events-none"
+          animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          style={{ border: "1.5px solid rgba(167,139,250,0.5)" }} />
+        <div className="flex items-center gap-4 relative z-10">
+          <motion.div className="w-[68px] h-[68px] rounded-2xl flex items-center justify-center overflow-hidden shrink-0"
+            whileHover={{ scale: 1.08, rotate: [0, -3, 3, 0] }}
+            style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.12), rgba(124,58,237,0.06))", border: "1.5px solid rgba(167,139,250,0.2)", boxShadow: "0 8px 24px rgba(167,139,250,0.1)" }}>
             {partnerAvatar ? (
               <img src={partnerAvatar} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
               <User className="w-8 h-8" style={{ color: "#a78bfa" }} />
             )}
-          </div>
+          </motion.div>
           <div className="flex-1 min-w-0">
             <p className="text-base font-bold text-foreground truncate">{userName}</p>
             <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold" style={{ background: "rgba(167,139,250,0.15)", color: "#a78bfa" }}>
+            <div className="flex items-center gap-2 mt-1.5">
+              <motion.span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-bold"
+                animate={{ boxShadow: ["0 0 0px rgba(167,139,250,0.1)", "0 0 12px rgba(167,139,250,0.2)", "0 0 0px rgba(167,139,250,0.1)"] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                style={{ background: "rgba(167,139,250,0.15)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.2)" }}>
                 <Shield className="w-3 h-3" /> {isTeamLeader ? "Team Leader" : "Partner"}
-              </span>
+              </motion.span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
-            <Mail className="w-3.5 h-3.5 mb-1 text-muted-foreground" />
-            <p className="text-[10px] text-muted-foreground">Email</p>
-            <p className="text-xs font-medium text-foreground truncate">{user?.email}</p>
-          </div>
-          <div className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
-            <Calendar className="w-3.5 h-3.5 mb-1 text-muted-foreground" />
-            <p className="text-[10px] text-muted-foreground">Iscritto dal</p>
-            <p className="text-xs font-medium text-foreground">{createdAt}</p>
-          </div>
+        <div className="grid grid-cols-2 gap-3 relative z-10">
+          {[
+            { icon: Mail, label: "Email", value: user?.email || "—", color: "#818cf8" },
+            { icon: Calendar, label: "Iscritto dal", value: createdAt, color: "#34d399" },
+          ].map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.08 }}
+              whileHover={{ scale: 1.03, y: -2 }}
+              className="p-3 rounded-xl relative overflow-hidden group cursor-default"
+              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ background: `radial-gradient(circle at 50% 50%, ${item.color}08, transparent 70%)` }} />
+              <item.icon className="w-3.5 h-3.5 mb-1" style={{ color: item.color }} />
+              <p className="text-[10px] text-muted-foreground">{item.label}</p>
+              <p className="text-xs font-medium text-foreground truncate">{item.value}</p>
+            </motion.div>
+          ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* ═══ INTEGRAZIONI & PAGAMENTI ═══ */}
       {user?.id && (
-        <PartnerIntegrationsSetup userId={user.id} userEmail={user.email || ""} />
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <PartnerIntegrationsSetup userId={user.id} userEmail={user.email || ""} />
+        </motion.div>
       )}
 
       {/* ═══ PROFILE EDIT ═══ */}
       {user?.id && (
-        <PartnerProfileSection
-          userId={user.id}
-          userName={userName}
-          userEmail={user.email || ""}
-          onAvatarChange={(url) => setPartnerAvatar(url)}
-          onNameChange={(name) => setProfileName(name)}
-        />
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <PartnerProfileSection
+            userId={user.id}
+            userName={userName}
+            userEmail={user.email || ""}
+            onAvatarChange={(url) => setPartnerAvatar(url)}
+            onNameChange={(name) => setProfileName(name)}
+          />
+        </motion.div>
       )}
 
       {/* ═══ ROI CALCULATOR ═══ */}
-      <button onClick={() => setShowROI(true)}
-        className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
-        style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)", color: "#a78bfa" }}>
+      <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+        onClick={() => setShowROI(true)}
+        whileHover={{ scale: 1.02, y: -2 }}
+        whileTap={{ scale: 0.98 }}
+        className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 relative overflow-hidden group"
+        style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.1), rgba(124,58,237,0.05))", border: "1px solid rgba(167,139,250,0.2)", color: "#a78bfa" }}>
+        <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.05), transparent)" }} />
         📊 Calcolatore ROI
-      </button>
+      </motion.button>
 
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
     </div>

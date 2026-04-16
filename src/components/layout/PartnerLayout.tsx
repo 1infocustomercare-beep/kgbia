@@ -215,27 +215,42 @@ export default function PartnerLayout() {
       {/* ═══ BOTTOM NAV — glassmorphism ═══ */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 safe-bottom"
         style={{
-          background: isDark ? "rgba(10,10,20,0.88)" : "rgba(255,255,255,0.88)",
-          backdropFilter: "blur(24px) saturate(1.8)",
-          WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+          background: isDark ? "rgba(10,10,20,0.92)" : "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(28px) saturate(2)",
+          WebkitBackdropFilter: "blur(28px) saturate(2)",
           borderTop: `1px solid ${isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}`,
+          boxShadow: isDark ? "0 -8px 32px rgba(0,0,0,0.3)" : "0 -4px 16px rgba(0,0,0,0.05)",
         }}>
+        {/* Animated top accent line */}
+        <motion.div className="absolute top-0 left-0 right-0 h-[1px]"
+          animate={{ opacity: [0.2, 0.5, 0.2] }}
+          transition={{ duration: 4, repeat: Infinity }}
+          style={{ background: `linear-gradient(90deg, transparent 10%, ${accentColor}60 50%, transparent 90%)` }} />
         <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
           {NAV_ITEMS_FULL.filter(item => demoMode ? item.showInDemo : true).map(item => {
             const active = isActive(item.path, item.exact);
             return (
-              <button key={item.path} onClick={() => navigate(item.path)}
+              <motion.button key={item.path} onClick={() => navigate(item.path)}
+                whileTap={{ scale: 0.9 }}
                 className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all relative min-w-[52px]"
                 style={active ? { background: `${accentColor}10` } : undefined}>
                 {active && (
-                  <motion.div layoutId="partner-nav-indicator"
-                    className="absolute -top-1 w-8 h-[3px] rounded-full"
-                    style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}80)` }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                  <>
+                    <motion.div layoutId="partner-nav-indicator"
+                      className="absolute -top-1 w-8 h-[3px] rounded-full"
+                      style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}80)`, boxShadow: `0 0 10px ${accentColor}50` }}
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                    {/* Active glow */}
+                    <motion.div className="absolute inset-0 rounded-2xl" animate={{ opacity: [0.03, 0.08, 0.03] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                      style={{ background: `radial-gradient(circle at 50% 30%, ${accentColor}20, transparent 70%)` }} />
+                  </>
                 )}
-                <item.icon className="w-5 h-5" style={{ color: active ? accentColor : "#6b7280" }} />
+                <motion.div animate={active ? { y: [0, -1, 0] } : {}} transition={{ duration: 2, repeat: Infinity }}>
+                  <item.icon className="w-5 h-5" style={{ color: active ? accentColor : "#6b7280", filter: active ? `drop-shadow(0 0 6px ${accentColor}50)` : "none" }} />
+                </motion.div>
                 <span className="text-[9px] font-semibold" style={{ color: active ? accentColor : "#6b7280" }}>{item.label}</span>
-              </button>
+              </motion.button>
             );
           })}
         </div>
