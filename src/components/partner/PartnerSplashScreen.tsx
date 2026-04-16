@@ -279,15 +279,15 @@ export default function PartnerSplashScreen({ userName, onComplete }: Props) {
             {/* Skip button */}
             <motion.button
               onClick={finish}
-              className="mt-4 px-5 py-2 rounded-full text-[10px] font-semibold tracking-[0.15em] uppercase transition-all"
-              style={{ color: `${todayQuote.accent}90`, background: `${todayQuote.accent}08`, border: `1px solid ${todayQuote.accent}18` }}
+              className="mt-4 px-6 py-2.5 rounded-full text-[11px] font-extrabold tracking-[0.18em] uppercase transition-all"
+              style={{ color: "#fff", background: `linear-gradient(90deg, ${todayQuote.accent}40, ${todayQuote.accent}20)`, border: `1px solid ${todayQuote.accent}60`, boxShadow: `0 0 20px ${todayQuote.accent}30` }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 2.5 }}
-              whileHover={{ scale: 1.05, background: `${todayQuote.accent}15` }}
+              whileHover={{ scale: 1.06, boxShadow: `0 0 32px ${todayQuote.accent}60` }}
               whileTap={{ scale: 0.95 }}
             >
-              Inizia la Giornata →
+              🔥 Vai a Conquistare →
             </motion.button>
           </div>
         </motion.div>
