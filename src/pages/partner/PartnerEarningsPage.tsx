@@ -163,7 +163,7 @@ export default function PartnerEarningsPage() {
   }
 
   return (
-    <div className="space-y-5 px-4 pt-5 pb-24">
+    <div className="space-y-5 px-4 pt-5 pb-24 max-w-2xl mx-auto">
       {/* ═══ RANK BANNER — Animated Glow ═══ */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
         className={`${cardBase} p-5 relative overflow-hidden`}
@@ -202,7 +202,7 @@ export default function PartnerEarningsPage() {
         <motion.div className="absolute inset-0" animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
           transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
           style={{ background: "linear-gradient(90deg, transparent 0%, rgba(52,211,153,0.04) 30%, transparent 60%)", backgroundSize: "200% 100%" }} />
-        <div className="absolute top-4 right-4 relative z-10">
+        <div className="flex justify-between items-start relative z-10">
           <motion.div className="flex items-center gap-1 px-2.5 py-1 rounded-full"
             whileHover={{ scale: 1.1 }}
             style={{ background: monthGrowth >= 0 ? "rgba(12,48,40,0.92)" : "rgba(58,20,26,0.92)", border: `1px solid ${monthGrowth >= 0 ? "rgba(52,211,153,0.24)" : "rgba(239,68,68,0.24)"}` }}>
