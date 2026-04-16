@@ -439,6 +439,36 @@ export default function LeadsPage() {
     });
   }, [manualName, manualCity, manualPhone, manualWebsite, manualEmail, manualIg, manualSector, manualLiveScore]);
 
+  /* ─── Save selected lead into persistent CRM pipeline ─── */
+  const handleSaveToCRM = useCallback(async () => {
+    if (!selected) {
+      toast.error("Seleziona un lead per salvarlo");
+      return;
+    }
+    await pipeline.saveLead({
+      name: selected.name,
+      city: selected.city,
+      sector: selected._sector,
+      phone: selected.phone,
+      email: selected.email,
+      website: selected.website,
+      instagram: selected.instagram || enrichedData?.instagram || null,
+      full_address: selected.full_address,
+      google_rating: selected.google_rating || null,
+      google_reviews: selected.google_reviews || null,
+      ai_score: selected._score ?? null,
+      ai_summary: deepReport?.summary || null,
+      source: selected.source || "leadengine",
+      lead_source_data: {
+        google_maps_url: selected.google_maps_url,
+        facebook: selected.facebook,
+        zone: selected.zone,
+        opening_hours: selected.opening_hours,
+      },
+    });
+  }, [selected, enrichedData, deepReport, pipeline]);
+
+
   /* ─── Process results from API ─── */
   const processResults = useCallback((apiResults: any[], append: boolean) => {
     const mapped = apiResults.map((r: any) => {
