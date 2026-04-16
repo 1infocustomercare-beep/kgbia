@@ -557,16 +557,19 @@ export default function LeadsPage() {
         const msg = data.message.replace(/\{\{DEMO_LINK\}\}/g, demoLink);
         setGeneratedMessage(msg);
         toast.success(`Messaggio ${channel} generato per ${lead.name}`);
-      } else throw new Error("No message");
-    } catch {
-      const sectorLabel = INDUSTRY_CONFIGS[lead._sector as keyof typeof INDUSTRY_CONFIGS]?.label || "la vostra attività";
-      const demoLink = `${window.location.origin}${getDemoSiteUrl(lead._sector)}`;
-      const fb = channel === "instagram"
-        ? `${lead.name} — che spettacolo! 🔥\n\nAbbiamo creato qualcosa di simile per il vostro settore:\n👉 ${demoLink}\n\nVi interessa?`
-        : channel === "email"
-        ? `Oggetto: Proposta digitale per ${lead.name}\n\nBuongiorno,\n\nAbbiamo sviluppato una piattaforma completa per ${sectorLabel}.\n\nDemo: ${demoLink}\n\nSarebbe disponibile per una call?\n\n---\nEmpire AI Group\n📩 info@empireaigroup.com`
-        : `Buongiorno! 👋\n\nHo notato *${lead.name}* a ${lead.city} — complimenti!\n\nAbbiamo una piattaforma per ${sectorLabel} che automatizza prenotazioni e marketing.\n\n👉 Demo: ${demoLink}\n\nPosso mostrarvi in 2 minuti?`;
-      setGeneratedMessage(fb);
+      } else {
+        // Surface the real error — never fabricate a message with invented data
+        const errMsg = error?.message || (data as any)?.error || "AI generation failed";
+        throw new Error(errMsg);
+      }
+    } catch (err: any) {
+      setGeneratedMessage(null);
+      const reason = err?.message?.includes("402")
+        ? "Crediti AI esauriti. Ricarica il workspace."
+        : err?.message?.includes("429")
+        ? "Troppe richieste, attendi qualche secondo e ritenta."
+        : `Generazione fallita: ${err?.message || "errore sconosciuto"}. Premi Rigenera per riprovare.`;
+      toast.error(reason, { duration: 5000 });
     } finally {
       setGeneratingMsg(false);
     }
