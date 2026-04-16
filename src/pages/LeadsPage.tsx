@@ -602,49 +602,83 @@ export default function LeadsPage() {
 
       <div className="relative z-10 space-y-4">
 
-      {/* ═══ HERO SECTION ═══ */}
+      {/* HERO — UNIFIED LIVING LEGEND (title + orb morph as one) */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col items-center pt-3 pb-2 gap-3"
       >
-        {/* Title — centered and prominent */}
-        <div className="text-center">
-          <motion.h1
-            className="text-xl font-extrabold tracking-tight text-white flex items-center justify-center gap-2"
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <Target className="w-5 h-5 shrink-0" style={{ color: "#14b8a6" }} />
-            LeadEngine Scout
-          </motion.h1>
-          <motion.p
-            className="text-[11px] font-semibold tracking-widest uppercase mt-1"
-            style={{ background: "linear-gradient(90deg, #8b5cf6, #14b8a6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            Intelligenza Artificiale · Real-time
-          </motion.p>
-        </div>
+        {/* Unified legend — title morphs and orb is its data-core */}
+        <motion.div
+          className="relative flex items-center justify-center gap-3 px-4 py-2 rounded-2xl cursor-pointer select-none"
+          onHoverStart={() => setSphereHover(true)}
+          onHoverEnd={() => setSphereHover(false)}
+          onTapStart={() => setSphereHover(true)}
+          onTap={() => setTimeout(() => setSphereHover(false), 1400)}
+          animate={{
+            background: (sphereHover || loading)
+              ? "linear-gradient(90deg, rgba(139,92,246,0.14), rgba(20,184,166,0.10), rgba(139,92,246,0.14))"
+              : "linear-gradient(90deg, rgba(139,92,246,0), rgba(20,184,166,0), rgba(139,92,246,0))",
+            borderColor: (sphereHover || loading) ? "rgba(139,92,246,0.3)" : "rgba(139,92,246,0)",
+            boxShadow: (sphereHover || loading) ? "0 0 28px rgba(139,92,246,0.22), inset 0 0 14px rgba(20,184,166,0.08)" : "0 0 0 rgba(0,0,0,0)",
+          }}
+          transition={{ duration: 0.5 }}
+          style={{ border: "1px solid transparent" }}
+        >
+          {/* Morphing title */}
+          <div className="flex flex-col items-end leading-none">
+            <motion.h1
+              className="text-lg font-extrabold tracking-tight text-white flex items-center gap-1.5"
+              animate={{
+                letterSpacing: (sphereHover || loading) ? "0.06em" : "0em",
+                textShadow: (sphereHover || loading) ? "0 0 12px rgba(167,139,250,0.6)" : "0 0 0 transparent",
+              }}
+              transition={{ duration: 0.6 }}
+            >
+              <Target className="w-4 h-4 shrink-0" style={{ color: (sphereHover || loading) ? "#a78bfa" : "#14b8a6", transition: "color 0.4s" }} />
+              <AnimatePresence mode="wait" initial={false}>
+                {loading ? (
+                  <motion.span key="t-scan" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
+                    style={{ background: "linear-gradient(90deg, #a78bfa, #14b8a6, #a78bfa)", backgroundSize: "200% 100%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+                  >
+                    SCANSIONE...
+                  </motion.span>
+                ) : sphereHover ? (
+                  <motion.span key="t-live" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
+                    style={{ background: "linear-gradient(90deg, #a78bfa, #14b8a6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+                  >
+                    LeadEngine LIVE
+                  </motion.span>
+                ) : (
+                  <motion.span key="t-idle" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}>
+                    LeadEngine Scout
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.h1>
+            <motion.p
+              className="text-[9px] font-bold tracking-[0.22em] uppercase mt-1"
+              style={{ background: "linear-gradient(90deg, #8b5cf6, #14b8a6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+              animate={{ opacity: [0.7, 1, 0.7] }}
+              transition={{ repeat: Infinity, duration: (sphereHover || loading) ? 1 : 2.5 }}
+            >
+              {loading ? "Analisi neurale in corso" : sphereHover ? "Data stream attivo" : "AI · Real-time"}
+            </motion.p>
+          </div>
 
-        {/* Orb + Mascot row */}
-        <div className="flex items-center justify-center gap-4">
-          {/* ═══ INTERACTIVE HOLOGRAPHIC ORB ═══ */}
+          {/* The orb is now embedded INSIDE the legend — they breathe together */}
           <motion.div
-            className="relative w-20 h-20 shrink-0 cursor-pointer"
-            onHoverStart={() => setSphereHover(true)}
-            onHoverEnd={() => setSphereHover(false)}
-            onTapStart={() => setSphereHover(true)}
-            onTap={() => setTimeout(() => setSphereHover(false), 1200)}
+            className="relative w-14 h-14 shrink-0"
             animate={{
-              y: [0, -6, 0, -3, 0],
-              rotateY: sphereHover ? [0, 20, -20, 0] : 0,
-              rotateX: sphereHover ? [0, -10, 10, 0] : 0,
+              y: [0, -4, 0, -2, 0],
+              rotateY: (sphereHover || loading) ? [0, 22, -22, 0] : 0,
+              rotateX: (sphereHover || loading) ? [0, -10, 10, 0] : 0,
             }}
-            transition={{ y: { repeat: Infinity, duration: 4, ease: "easeInOut" }, rotateY: { duration: 1.2 }, rotateX: { duration: 1.2 } }}
+            transition={{
+              y: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+              rotateY: { duration: 1.4, repeat: (sphereHover || loading) ? Infinity : 0 },
+              rotateX: { duration: 1.4, repeat: (sphereHover || loading) ? Infinity : 0 },
+            }}
             style={{ perspective: 400 }}
           >
             {[0, 1, 2].map(i => (
