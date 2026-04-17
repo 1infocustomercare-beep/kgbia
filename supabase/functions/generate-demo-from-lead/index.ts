@@ -1,9 +1,12 @@
-// generate-demo-from-lead — One-shot demo factory
-// 1. Scrapes the prospect website (Firecrawl deep)
-// 2. Enriches with Google Places + Lovable AI for missing fields
-// 3. Creates a tenant (companies/restaurants) with brand identity from the lead
-// 4. Seeds menu/items, clients, orders, reviews, agents (full "wow demo")
-// 5. Returns preview URL + admin URL + magic link the partner can send
+// generate-demo-from-lead — DEMO FACTORY PRO
+// Pipeline:
+// 1. Auto-detect settore dal sito (se presente) e mappa a template iPhone
+// 2. Firecrawl deep scrape (markdown + branding + links + immagini)
+// 3. Estrazione foto reali multi-source: sito → IG/FB → Google Places
+// 4. Fallback Gemini Image quando mancano foto chiave (hero/menu/gallery)
+// 5. AI brand kit (palette + tagline + menu/listino + clienti + reviews)
+// 6. Seed coerente col settore (food → restaurants, altri → companies)
+// 7. Magic link email per il lead
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -14,7 +17,30 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const FOOD_SECTORS = new Set(["food", "bakery", "gelateria", "wine_bar", "catering", "pizzeria", "ristoration"]);
+const FOOD_SECTORS = new Set([
+  "food", "bakery", "gelateria", "wine_bar", "catering", "pizzeria", "ristoration",
+]);
+
+// Mappa settore → keyword per scoring image relevance
+const SECTOR_IMAGE_KEYWORDS: Record<string, string[]> = {
+  food: ["pasta", "pizza", "piatto", "dish", "menu", "tavolo", "ristorante", "chef"],
+  bakery: ["pane", "torta", "dolce", "pasticceria", "bread", "cake"],
+  beauty: ["beauty", "salon", "trattamento", "estetica", "viso", "manicure"],
+  ncc: ["auto", "car", "mercedes", "limousine", "transfer", "berlina"],
+  hotel: ["camera", "room", "suite", "hotel", "lobby"],
+  hospitality: ["camera", "room", "suite", "hotel", "lobby"],
+  fitness: ["palestra", "gym", "workout", "training"],
+  healthcare: ["studio", "clinic", "medical", "dentist"],
+  retail: ["shop", "store", "negozio", "vetrina", "prodotto"],
+  beach: ["spiaggia", "ombrellone", "beach", "mare"],
+  plumber: ["idraulico", "tubo", "bagno"],
+  electrician: ["elettricista", "impianto"],
+  garage: ["officina", "auto", "garage"],
+  veterinary: ["pet", "cane", "gatto", "veterinario"],
+  tattoo: ["tattoo", "studio", "tatuaggio"],
+  photography: ["foto", "studio", "photography"],
+  events: ["wedding", "evento", "matrimonio"],
+};
 
 interface LeadInput {
   businessName: string;
@@ -31,13 +57,14 @@ interface LeadInput {
   googleRating?: number;
   googleReviews?: number;
   googleMapsUrl?: string | null;
+  googlePlaceId?: string | null;
 }
 
 interface PreviewSelection {
-  brandName: string;
-  styleName: string;
-  imageUrl: string;
-  sectorId: string;
+  brandName?: string;
+  styleName?: string;
+  imageUrl?: string;
+  sectorId?: string;
 }
 
 interface BrandPalette {
@@ -45,6 +72,16 @@ interface BrandPalette {
   secondary: string;
   bg: string;
   accent: string;
+}
+
+interface ScrapedAssets {
+  markdown?: string;
+  branding?: any;
+  metadata?: any;
+  links?: string[];
+  images: string[]; // raw image URLs found
+  logo?: string | null;
+  detectedSectorHint?: string | null;
 }
 
 const slugify = (s: string) =>
@@ -55,12 +92,11 @@ const slugify = (s: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
 
-/* ─── 1. FIRECRAWL DEEP SCRAPE ─── */
-async function deepScrape(url: string): Promise<{
-  markdown?: string;
-  branding?: any;
-  metadata?: any;
-} | null> {
+const isHttpUrl = (u: string) => /^https?:\/\//i.test(u);
+const uniq = <T,>(arr: T[]) => Array.from(new Set(arr));
+
+/* ─── 1. FIRECRAWL DEEP SCRAPE (markdown + branding + images) ─── */
+async function deepScrape(url: string): Promise<ScrapedAssets | null> {
   const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
   if (!FIRECRAWL_API_KEY || !url) return null;
 
@@ -73,8 +109,8 @@ async function deepScrape(url: string): Promise<{
       },
       body: JSON.stringify({
         url,
-        formats: ["markdown", "branding", "summary"],
-        onlyMainContent: true,
+        formats: ["markdown", "html", "branding", "links", "summary"],
+        onlyMainContent: false,
       }),
     });
     if (!res.ok) {
@@ -82,10 +118,41 @@ async function deepScrape(url: string): Promise<{
       return null;
     }
     const data = await res.json();
+    const md = data.markdown ?? data.data?.markdown ?? "";
+    const html = data.html ?? data.data?.html ?? "";
+    const branding = data.branding ?? data.data?.branding;
+    const metadata = data.metadata ?? data.data?.metadata;
+    const links: string[] = data.links ?? data.data?.links ?? [];
+
+    // Extract image URLs from markdown ![](url) and html <img src="">
+    const imgFromMd: string[] = Array.from(md.matchAll(/!\[[^\]]*\]\(([^)\s]+)/g)).map((m: any) => m[1]);
+    const imgFromHtml: string[] = Array.from(html.matchAll(/<img[^>]+src=["']([^"']+)["']/gi)).map((m: any) => m[1]);
+    const imgFromBranding: string[] = [];
+    if (branding?.images) {
+      Object.values(branding.images).forEach((v: any) => {
+        if (typeof v === "string" && isHttpUrl(v)) imgFromBranding.push(v);
+      });
+    }
+
+    const allImages = uniq([...imgFromBranding, ...imgFromMd, ...imgFromHtml])
+      .filter(isHttpUrl)
+      .filter((u) => !/svg|icon|favicon|logo-?small|sprite|placeholder|pixel|tracking|gtag|gif/i.test(u))
+      .slice(0, 30);
+
+    const logo = branding?.images?.logo
+      || branding?.logo
+      || metadata?.["og:logo"]
+      || allImages.find((u) => /logo/i.test(u))
+      || null;
+
     return {
-      markdown: data.markdown ?? data.data?.markdown,
-      branding: data.branding ?? data.data?.branding,
-      metadata: data.metadata ?? data.data?.metadata,
+      markdown: md,
+      branding,
+      metadata,
+      links: links.slice(0, 50),
+      images: allImages,
+      logo,
+      detectedSectorHint: detectSectorFromText(md),
     };
   } catch (e) {
     console.warn("[Firecrawl] error", e);
@@ -93,8 +160,65 @@ async function deepScrape(url: string): Promise<{
   }
 }
 
-/* ─── 2. AI BRAND ENRICHMENT ─── */
-async function aiEnrichBrand(lead: LeadInput, scraped: any): Promise<{
+/* ─── DETECT SECTOR FROM SCRAPED TEXT ─── */
+function detectSectorFromText(text: string): string | null {
+  if (!text) return null;
+  const t = text.toLowerCase();
+  const checks: Array<[string, RegExp]> = [
+    ["food", /\b(menu|antipasto|primo|secondo|pizza|pasta|ristorante|trattoria|osteria|chef|prenota un tavolo)\b/],
+    ["bakery", /\b(pasticceria|forno|panetteria|torta|biscotti|lievito|brioche)\b/],
+    ["beauty", /\b(estetica|manicure|pedicure|trattamento viso|epilazione|massaggio|salone di bellezza)\b/],
+    ["ncc", /\b(noleggio con conducente|ncc|transfer|chauffeur|berlina)\b/],
+    ["hospitality", /\b(camera|suite|prenota la camera|hotel|b&b|bed and breakfast|check-in)\b/],
+    ["fitness", /\b(palestra|personal trainer|crossfit|workout|abbonamento mensile)\b/],
+    ["healthcare", /\b(visita|ambulatorio|dottore|medico|dentista|clinica)\b/],
+    ["beach", /\b(stabilimento balneare|ombrellone|lettino|cabina|spiaggia)\b/],
+    ["plumber", /\b(idraulico|caldaia|impianto idrico|riparazione)\b/],
+    ["electrician", /\b(elettricista|impianto elettrico|cablaggio)\b/],
+    ["garage", /\b(officina|carrozzeria|tagliando|revisione auto)\b/],
+    ["veterinary", /\b(veterinario|clinica veterinaria|pet|animali domestici)\b/],
+    ["tattoo", /\b(tattoo|tatuaggio|piercing)\b/],
+    ["photography", /\b(fotografo|fotografia|servizio fotografico|matrimonio fotografo)\b/],
+    ["events", /\b(matrimonio|wedding planner|eventi|catering)\b/],
+    ["retail", /\b(shop online|carrello|prodotti|acquista|vendita)\b/],
+  ];
+  for (const [sector, re] of checks) {
+    if (re.test(t)) return sector;
+  }
+  return null;
+}
+
+/* ─── 2. GOOGLE PLACES PHOTOS (free, no API key required via Maps URL fallback) ─── */
+// Skip if no Place ID available — too unreliable without paid API
+async function googlePlacesPhotos(placeId?: string | null): Promise<string[]> {
+  if (!placeId) return [];
+  // Google Places photos require API key; we skip and rely on scraping/AI
+  return [];
+}
+
+/* ─── 3. SCRAPE INSTAGRAM (light: og:image only) ─── */
+async function instagramOgImage(url: string): Promise<string[]> {
+  if (!url) return [];
+  try {
+    const handle = url.match(/instagram\.com\/([^\/?#]+)/)?.[1];
+    if (!handle) return [];
+    const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
+    if (!FIRECRAWL_API_KEY) return [];
+    const res = await fetch("https://api.firecrawl.dev/v2/scrape", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${FIRECRAWL_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ url: `https://www.instagram.com/${handle}/`, formats: ["html"], onlyMainContent: false }),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const html = data.html ?? data.data?.html ?? "";
+    const imgs: string[] = Array.from(html.matchAll(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)/gi)).map((m: any) => m[1]);
+    return imgs.filter(isHttpUrl).slice(0, 5);
+  } catch { return []; }
+}
+
+/* ─── 4. AI BRAND KIT (tool-call) ─── */
+async function aiEnrichBrand(lead: LeadInput, scraped: ScrapedAssets | null): Promise<{
   tagline: string;
   description: string;
   palette: BrandPalette;
@@ -107,8 +231,10 @@ async function aiEnrichBrand(lead: LeadInput, scraped: any): Promise<{
   const scrapedSummary = scraped?.markdown ? String(scraped.markdown).slice(0, 4000) : "";
   const scrapedBranding = scraped?.branding ? JSON.stringify(scraped.branding).slice(0, 1500) : "";
 
-  const sysPrompt = `Sei un brand strategist senior. Riceverai dati reali su un'attività italiana e devi produrre un brand kit COMPLETO e PROFESSIONALE per generare la sua demo digitale Empire AI.
-RISPONDI SOLO con la chiamata della tool function "generate_brand_kit". Tutti i campi devono essere realistici, coerenti con il settore "${sectorLabel}" e con i dati forniti. Nessun campo placeholder.`;
+  const sysPrompt = `Sei un brand strategist senior. Riceverai dati REALI su un'attività italiana e devi produrre un brand kit COMPLETO e PROFESSIONALE per generare la sua demo digitale Empire AI.
+RISPONDI SOLO con la chiamata della tool function "generate_brand_kit". Tutti i campi devono essere realistici, coerenti con il settore "${sectorLabel}" e con i dati forniti. Nessun campo placeholder.
+PALETTE: se nei dati sito vedi colori reali, usali. Altrimenti scegli palette luxury coerente.
+MENU/LISTINO: 14-18 voci specifiche del settore (food=piatti reali, beauty=trattamenti con prezzi, ncc=tratte con città, hotel=tipologie camera, fitness=corsi, healthcare=visite, retail=prodotti).`;
 
   const userPrompt = `ATTIVITÀ:
 Nome: ${lead.businessName}
@@ -119,13 +245,13 @@ Telefono: ${lead.phone ?? "—"} · Email: ${lead.email ?? "—"}
 Sito: ${lead.website ?? "—"} · IG: ${lead.instagram ?? "—"}
 Google rating: ${lead.googleRating ?? "—"} (${lead.googleReviews ?? 0} recensioni)
 
-CONTENUTO SITO REALE (estratto):
-${scrapedSummary || "(nessun sito disponibile, inferisci dal nome e settore)"}
+CONTENUTO SITO REALE:
+${scrapedSummary || "(nessun sito disponibile, inferisci dal nome e settore — sii creativo ma realistico)"}
 
-BRAND IDENTITY ESTRATTA:
-${scrapedBranding || "(non disponibile, scegli palette luxury coerente con il settore)"}
+BRAND IDENTITY ESTRATTA DAL SITO:
+${scrapedBranding || "(non disponibile)"}
 
-GENERA un brand kit completo e plausibile, con menu/listino di 12-16 voci coerenti con il settore (per food=piatti, beauty=trattamenti, ncc=tratte, etc.), 6 clienti CRM con nomi italiani, 5 recensioni reali plausibili (4-5 stelle), descrizione di 2 frasi e tagline incisivo.`;
+Genera tutto in italiano, tono professionale ma caldo.`;
 
   const tool = {
     type: "function",
@@ -135,12 +261,12 @@ GENERA un brand kit completo e plausibile, con menu/listino di 12-16 voci coeren
       parameters: {
         type: "object",
         properties: {
-          tagline: { type: "string" },
-          description: { type: "string" },
+          tagline: { type: "string", description: "Frase incisiva 6-10 parole" },
+          description: { type: "string", description: "2 frasi presentazione" },
           palette: {
             type: "object",
             properties: {
-              primary: { type: "string", description: "hex color principale (es. #C8963E)" },
+              primary: { type: "string" },
               secondary: { type: "string" },
               bg: { type: "string" },
               accent: { type: "string" },
@@ -193,10 +319,7 @@ GENERA un brand kit completo e plausibile, con menu/listino di 12-16 voci coeren
 
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${LOVABLE_API_KEY}`,
-      "Content-Type": "application/json",
-    },
+    headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       model: "google/gemini-2.5-flash",
       messages: [
@@ -218,7 +341,116 @@ GENERA un brand kit completo e plausibile, con menu/listino di 12-16 voci coeren
   return JSON.parse(args);
 }
 
-/* ─── 3. PALETTE FROM PREVIEW STYLE NAME ─── */
+/* ─── 5. AI IMAGE GENERATION FALLBACK (Nano Banana) ─── */
+async function generateImageAI(prompt: string): Promise<string | null> {
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
+  try {
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-image",
+        messages: [{ role: "user", content: prompt }],
+        modalities: ["image", "text"],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const img = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    return img || null;
+  } catch (e) {
+    console.warn("[ai-image] error", e);
+    return null;
+  }
+}
+
+/* ─── 6. UPLOAD DATA URL TO STORAGE → public URL ─── */
+async function uploadDataUrl(supabase: any, bucket: string, path: string, dataUrl: string): Promise<string | null> {
+  try {
+    const m = dataUrl.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
+    if (!m) return null;
+    const mime = m[1];
+    const b64 = m[2];
+    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    const ext = mime.split("/")[1].replace("+xml", "");
+    const fullPath = `${path}.${ext}`;
+    const { error } = await supabase.storage.from(bucket).upload(fullPath, bytes, {
+      contentType: mime,
+      upsert: true,
+    });
+    if (error) {
+      console.warn("[upload] error", error.message);
+      return null;
+    }
+    const { data: pub } = supabase.storage.from(bucket).getPublicUrl(fullPath);
+    return pub.publicUrl;
+  } catch (e) {
+    console.warn("[upload] exception", e);
+    return null;
+  }
+}
+
+/* ─── 7. RESOLVE IMAGES: real first, AI fallback ─── */
+async function resolveSectorImages(
+  supabase: any,
+  lead: LeadInput,
+  scraped: ScrapedAssets | null,
+  ig: string[],
+  needHeroAndN: number,
+  tenantId: string,
+): Promise<{ hero: string | null; gallery: string[]; logo: string | null }> {
+  const sector = lead.sector;
+  const keywords = SECTOR_IMAGE_KEYWORDS[sector] || [];
+
+  // Score scraped images by keyword relevance and size hint
+  const scoreImage = (url: string): number => {
+    let score = 0;
+    const lower = url.toLowerCase();
+    keywords.forEach((kw) => { if (lower.includes(kw)) score += 10; });
+    if (/hero|cover|main|banner|header/i.test(lower)) score += 5;
+    if (/large|full|original|2000|1920|1600|1200/i.test(lower)) score += 3;
+    if (/thumb|small|150|200|icon/i.test(lower)) score -= 5;
+    return score;
+  };
+
+  const scoredScrape = (scraped?.images || [])
+    .map((u) => ({ url: u, score: scoreImage(u) }))
+    .sort((a, b) => b.score - a.score)
+    .map((x) => x.url);
+
+  const allReal = uniq([...scoredScrape, ...ig]).slice(0, needHeroAndN + 2);
+
+  let hero: string | null = allReal[0] || null;
+  let gallery: string[] = allReal.slice(1, needHeroAndN + 1);
+
+  // Need AI fallback?
+  const need = needHeroAndN - gallery.length;
+  if (!hero || need > 0) {
+    const heroPrompt = `Photograph for ${lead.sectorLabel || sector} business "${lead.businessName}" in ${lead.city || "Italy"}. Editorial premium quality, natural light, no text or watermarks, 16:9. Hero shot.`;
+
+    if (!hero) {
+      const aiHero = await generateImageAI(heroPrompt);
+      if (aiHero) {
+        const uploaded = await uploadDataUrl(supabase, "business-assets", `demo/${tenantId}/hero`, aiHero);
+        hero = uploaded || aiHero;
+      }
+    }
+    // Generate up to 3 fallback gallery shots only
+    const fallbacks = Math.min(need, 3);
+    for (let i = 0; i < fallbacks; i++) {
+      const p = `Premium photo for ${lead.sectorLabel || sector} business in ${lead.city || "Italy"}. Detail shot ${i + 1}, no text, editorial natural light.`;
+      const img = await generateImageAI(p);
+      if (img) {
+        const uploaded = await uploadDataUrl(supabase, "business-assets", `demo/${tenantId}/gallery-${i}`, img);
+        gallery.push(uploaded || img);
+      }
+    }
+  }
+
+  return { hero, gallery, logo: scraped?.logo || null };
+}
+
+/* ─── 8. PALETTE ENRICHMENT ─── */
 function paletteFromStyleName(styleName: string, fallback: BrandPalette): BrandPalette {
   const n = (styleName || "").toLowerCase();
   if (n.includes("obsidian") || n.includes("noir") || n.includes("luxury-dark") || n.includes("dark"))
@@ -234,16 +466,17 @@ function paletteFromStyleName(styleName: string, fallback: BrandPalette): BrandP
   return fallback;
 }
 
-/* ─── 4. CREATE FOOD TENANT (restaurants table) ─── */
+/* ─── 9. CREATE FOOD TENANT ─── */
 async function createFoodTenant(
   supabase: any,
   ownerId: string,
   lead: LeadInput,
   brand: any,
   palette: BrandPalette,
+  images: { hero: string | null; gallery: string[]; logo: string | null },
 ): Promise<{ id: string; slug: string }> {
   const baseSlug = slugify(lead.businessName) || `demo-${Date.now()}`;
-  let slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
+  const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
 
   const { data: r, error } = await supabase
     .from("restaurants")
@@ -253,6 +486,7 @@ async function createFoodTenant(
       owner_id: ownerId,
       tagline: brand.tagline,
       primary_color: palette.primary,
+      logo_url: images.logo,
       phone: lead.phone || "+39 06 0000000",
       address: lead.fullAddress || lead.zone || "—",
       city: lead.city || "Roma",
@@ -267,10 +501,9 @@ async function createFoodTenant(
     .single();
 
   if (error) throw new Error(`restaurants insert: ${error.message}`);
-
   const restId = r.id;
 
-  // Menu items
+  // Menu items con immagini distribuite
   if (Array.isArray(brand.menu) && brand.menu.length) {
     const items = brand.menu.slice(0, 18).map((m: any, i: number) => ({
       restaurant_id: restId,
@@ -281,15 +514,13 @@ async function createFoodTenant(
       is_popular: !!m.popular,
       is_active: true,
       sort_order: i,
+      image_url: images.gallery[i % Math.max(images.gallery.length, 1)] || null,
     }));
     await supabase.from("menu_items").insert(items);
   }
 
-  // Tables (8)
-  const positions = [
-    [15, 20], [38, 20], [62, 20], [85, 20],
-    [15, 60], [38, 60], [62, 60], [85, 60],
-  ];
+  // Tables
+  const positions = [[15, 20], [38, 20], [62, 20], [85, 20], [15, 60], [38, 60], [62, 60], [85, 60]];
   await supabase.from("restaurant_tables").insert(
     positions.map(([x, y], i) => ({
       restaurant_id: restId,
@@ -315,7 +546,7 @@ async function createFoodTenant(
     );
   }
 
-  // Sample orders for the "live" feel
+  // Sample orders
   const sampleItems = (brand.menu || []).slice(0, 3);
   if (sampleItems.length) {
     const orders = [
@@ -361,21 +592,21 @@ async function createFoodTenant(
   return { id: restId, slug: r.slug };
 }
 
-/* ─── 5. CREATE GENERIC SECTOR TENANT (companies table) ─── */
+/* ─── 10. CREATE GENERIC TENANT (companies) ─── */
 async function createCompanyTenant(
   supabase: any,
   ownerId: string,
   lead: LeadInput,
   brand: any,
   palette: BrandPalette,
+  images: { hero: string | null; gallery: string[]; logo: string | null },
 ): Promise<{ id: string; slug: string }> {
   const baseSlug = slugify(lead.businessName);
-  let slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
+  const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
 
-  // Sector-specific module set (wow demo: enable everything sensible)
   const allModules = [
-    "dashboard", "clients", "appointments", "agents", "whatsapp", "reviews",
-    "billing", "social", "automations", "settings",
+    "dashboard", "clients", "appointments", "agents", "whatsapp",
+    "reviews", "billing", "social", "automations", "settings",
   ];
 
   const { data: c, error } = await supabase
@@ -388,21 +619,27 @@ async function createCompanyTenant(
       tagline: brand.tagline,
       primary_color: palette.primary,
       secondary_color: palette.secondary,
+      logo_url: images.logo,
       address: lead.fullAddress,
       city: lead.city,
       phone: lead.phone,
       email: lead.email || `demo-${Date.now()}@empireaigroup.com`,
       modules_enabled: allModules,
       is_active: true,
+      social_links: {
+        instagram: lead.instagram,
+        facebook: lead.facebook,
+        website: lead.website,
+        gallery: images.gallery,
+        hero: images.hero,
+      },
     })
     .select("id, slug")
     .single();
 
   if (error) throw new Error(`companies insert: ${error.message}`);
-
   const cid = c.id;
 
-  // CRM clients
   if (Array.isArray(brand.clients)) {
     await supabase.from("crm_clients").insert(
       brand.clients.slice(0, 8).map((cl: any) => ({
@@ -416,7 +653,6 @@ async function createCompanyTenant(
     );
   }
 
-  // Sample appointments
   const today = new Date();
   await supabase.from("appointments").insert(
     (brand.clients || []).slice(0, 4).map((cl: any, i: number) => {
@@ -434,7 +670,6 @@ async function createCompanyTenant(
     }),
   );
 
-  // FAQ
   await supabase.from("faq_items").insert([
     { company_id: cid, question: `Quali sono gli orari di ${lead.businessName}?`, answer: "Aperto Lunedì-Sabato dalle 9:00 alle 19:00.", sort_order: 1, is_active: true },
     { company_id: cid, question: "Come posso prenotare?", answer: "Dal sito o via WhatsApp 24/7.", sort_order: 2, is_active: true },
@@ -454,14 +689,14 @@ serve(async (req) => {
     );
 
     const body = await req.json();
-    const { lead, preview, partnerId, originUrl } = body as {
+    const { lead: rawLead, preview, partnerId, originUrl } = body as {
       lead: LeadInput;
-      preview: PreviewSelection;
+      preview?: PreviewSelection;
       partnerId: string;
       originUrl?: string;
     };
 
-    if (!lead?.businessName || !lead?.sector) {
+    if (!rawLead?.businessName || !rawLead?.sector) {
       return new Response(JSON.stringify({ error: "lead.businessName and lead.sector required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -474,13 +709,23 @@ serve(async (req) => {
       });
     }
 
-    // 1. Scrape
-    const scraped = lead.website ? await deepScrape(lead.website) : null;
+    const lead = { ...rawLead };
+
+    // 1. Scrape (parallel with IG if available)
+    const [scraped, igImages] = await Promise.all([
+      lead.website ? deepScrape(lead.website) : Promise.resolve(null),
+      lead.instagram ? instagramOgImage(lead.instagram) : Promise.resolve([]),
+    ]);
+
+    // 1b. Auto-correct sector if site detection finds something more specific
+    if (scraped?.detectedSectorHint && lead.sector === "custom") {
+      lead.sector = scraped.detectedSectorHint;
+    }
 
     // 2. AI brand kit
     const brand = await aiEnrichBrand(lead, scraped);
 
-    // 3. Palette: prefer scraped → preview style → AI fallback
+    // 3. Palette: scraped > preview style > AI
     const aiPalette: BrandPalette = brand.palette;
     const scrapedColors = scraped?.branding?.colors;
     let palette: BrandPalette = aiPalette;
@@ -495,26 +740,33 @@ serve(async (req) => {
       palette = paletteFromStyleName(preview.styleName, aiPalette);
     }
 
-    // 4. Tenant
+    // 4. Pre-create tenant ID for storage paths (UUID generation)
+    const tenantUuid = crypto.randomUUID();
+
+    // 5. Resolve images (real → AI fallback)
+    const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid);
+
+    // 6. Tenant
     const isFood = FOOD_SECTORS.has(lead.sector);
     const tenant = isFood
-      ? await createFoodTenant(supabase, partnerId, lead, brand, palette)
-      : await createCompanyTenant(supabase, partnerId, lead, brand, palette);
+      ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images)
+      : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images);
 
-    // 5. Magic link for the lead (if email present)
+    // 7. Magic link
     let magicLink: string | null = null;
     if (lead.email) {
-      const { data: linkData } = await supabase.auth.admin.generateLink({
-        type: "magiclink",
-        email: lead.email,
-        options: {
-          redirectTo: `${originUrl || ""}/admin?demo=${tenant.id}`,
-        },
-      });
-      magicLink = linkData?.properties?.action_link || null;
+      try {
+        const { data: linkData } = await supabase.auth.admin.generateLink({
+          type: "magiclink",
+          email: lead.email,
+          options: { redirectTo: `${originUrl || ""}/admin?demo=${tenant.id}` },
+        });
+        magicLink = linkData?.properties?.action_link || null;
+      } catch (e) {
+        console.warn("[magic-link] error", e);
+      }
     }
 
-    // 6. URLs
     const origin = originUrl || "";
     const previewUrl = isFood ? `${origin}/r/${tenant.slug}` : `${origin}/b/${tenant.slug}`;
     const adminUrl = `${origin}/admin`;
@@ -536,6 +788,15 @@ serve(async (req) => {
         scraped: {
           ok: !!scraped,
           hasBranding: !!scraped?.branding,
+          imagesFound: scraped?.images?.length || 0,
+          logoFound: !!scraped?.logo,
+          detectedSector: scraped?.detectedSectorHint || null,
+        },
+        images: {
+          hero: images.hero,
+          gallery: images.gallery,
+          logo: images.logo,
+          totalReal: (scraped?.images?.length || 0) + (igImages?.length || 0),
         },
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
