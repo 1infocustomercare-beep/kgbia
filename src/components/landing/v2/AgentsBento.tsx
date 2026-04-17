@@ -57,9 +57,8 @@ export default function AgentsBento() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ delay: index * 0.05, duration: 0.65 }}
-              whileHover={{ y: -6, rotateX: 2, rotateY: index % 2 === 0 ? 4 : -4, scale: 1.008 }}
-              style={{ transformStyle: "preserve-3d", perspective: "1200px" }}
-              className={`landing-surface rounded-[26px] p-4 sm:p-5 lg:p-6 ${agent.big ? "md:col-span-2" : ""}`}
+              whileHover={{ y: -4 }}
+              className={`landing-surface rounded-[26px] p-5 sm:p-6 lg:p-7 ${agent.big ? "md:col-span-2" : ""}`}
               data-tone={agent.tone}
             >
               <div className="mb-5 flex items-start justify-between gap-4">
