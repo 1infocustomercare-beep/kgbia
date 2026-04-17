@@ -16,9 +16,10 @@ import { DEMO_SLUGS } from "@/data/demo-industries";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
+import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFactoryOverlay";
 import SellerCRM from "@/components/leads/SellerCRM";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
-import { Briefcase, Bookmark } from "lucide-react";
+import { Briefcase, Bookmark, Wand2 as WandIcon, Crown } from "lucide-react";
 
 /* ─── Types ─── */
 interface Lead {
@@ -314,6 +315,12 @@ export default function LeadsPage() {
   // Manual preview picker (galleria mockup)
   const [showPicker, setShowPicker] = useState(false);
   const [customPreview, setCustomPreview] = useState<ManualPreviewSelection | null>(null);
+
+  // Demo Factory — auto-generate complete tenant + admin from selected preview
+  const [demoFactoryOpen, setDemoFactoryOpen] = useState(false);
+  const [demoFactoryLoading, setDemoFactoryLoading] = useState(false);
+  const [demoFactoryProgress, setDemoFactoryProgress] = useState("Inizializzo…");
+  const [demoFactoryResult, setDemoFactoryResult] = useState<DemoFactoryResult | null>(null);
 
   // Manual lead input
   const [showManual, setShowManual] = useState(false);
