@@ -1,17 +1,22 @@
 import React, { useEffect } from "react";
 import LandingNav from "@/components/landing/LandingNav";
-import HeroScrollStack from "@/components/landing/v2/HeroScrollStack";
+import CinematicHero from "@/components/landing/v2/CinematicHero";
+import ManifestoSection from "@/components/landing/v2/ManifestoSection";
+import SectorsCarousel from "@/components/landing/v2/SectorsCarousel";
+import HorizontalPortfolio from "@/components/landing/v2/HorizontalPortfolio";
+import AgentsBento from "@/components/landing/v2/AgentsBento";
+import ProcessSection from "@/components/landing/v2/ProcessSection";
+import CustomizationSection from "@/components/landing/v2/CustomizationSection";
 import AboutSection from "@/components/landing/v2/AboutSection";
 import TeamSection from "@/components/landing/v2/TeamSection";
-import SectorsCarousel from "@/components/landing/v2/SectorsCarousel";
-import AgentsBento from "@/components/landing/v2/AgentsBento";
-import PortfolioCarousel from "@/components/landing/v2/PortfolioCarousel";
-import CustomizationSection from "@/components/landing/v2/CustomizationSection";
 import PricingSection from "@/components/landing/v2/PricingSection";
+import GuaranteeSection from "@/components/landing/v2/GuaranteeSection";
+import TestimonialsSection from "@/components/landing/v2/TestimonialsSection";
 import FaqSection from "@/components/landing/v2/FaqSection";
 import ContactCTA from "@/components/landing/v2/ContactCTA";
 import LandingFooter from "@/components/landing/LandingFooter";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
+import CinematicCursor from "@/components/landing/v2/CinematicCursor";
 
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
@@ -28,15 +33,20 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "#020204", color: "#f0f0f5" }}>
+      <CinematicCursor />
       <LandingNav />
-      <HeroScrollStack />
-      <AboutSection />
+      <CinematicHero />
+      <ManifestoSection />
       <SectorsCarousel />
-      <PortfolioCarousel />
+      <HorizontalPortfolio />
       <AgentsBento />
+      <ProcessSection />
       <CustomizationSection />
+      <AboutSection />
       <TeamSection />
       <PricingSection />
+      <GuaranteeSection />
+      <TestimonialsSection />
       <FaqSection />
       <ContactCTA />
       <LandingFooter />
