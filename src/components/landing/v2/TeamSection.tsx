@@ -4,90 +4,60 @@ const TEAM = [
   {
     name: "Kevin Berardini",
     role: "Founder & CEO",
-    bio: "Visionario tech, ingegnere AI. Ha costruito Empire AI Group da zero. Specialista in automation enterprise.",
+    bio: "Visione, posizionamento e direzione strategica dell’intero ecosistema Empire.",
     initials: "KB",
-    accent: "#D4AF37",
+    tone: "gold",
   },
   {
     name: "Marco Telese",
-    role: "CTO & Lead Architect",
-    bio: "Architettura AI proprietaria, sviluppo agenti, infrastruttura cloud-native europea. 15+ anni in tech.",
+    role: "CTO & AI Architect",
+    bio: "Architettura, integrazioni e progettazione dei sistemi AI che rendono l’ecosistema realmente operativo.",
     initials: "MT",
-    accent: "#7C3AED",
+    tone: "violet",
   },
   {
     name: "Arianna AI",
     role: "Senior Sales Strategist",
-    bio: "Voice agent proprietaria. Conduce demo, qualifica clienti, chiude trattative. Mai stanca, sempre on-brand.",
+    bio: "Voice intelligence proprietaria per demo, qualificazione e conversione commerciale continua.",
     initials: "AI",
-    accent: "#ec4899",
+    tone: "blue",
   },
 ];
 
 export default function TeamSection() {
   return (
-    <section id="team" className="relative py-28 px-5 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(212,175,55,0.08), transparent)" }} />
+    <section id="team" className="relative overflow-hidden px-4 py-28 sm:px-6 lg:px-10">
+      <div className="landing-section-glow" data-tone="gold" />
 
-      <div className="relative max-w-[1200px] mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-[3px] mb-5 border border-[#D4AF37]/30 text-[#D4AF37] bg-[#D4AF37]/5 backdrop-blur-md">
-            Il Team
-          </span>
-          <h2 className="text-[clamp(2rem,5vw,3.6rem)] font-heading font-extrabold leading-[0.95] tracking-[-0.03em] mb-5 text-white">
-            Umani e AI.
-            <span className="block bg-gradient-to-r from-[#D4AF37] to-[#7C3AED] bg-clip-text text-transparent">
-              Una squadra ibrida.
-            </span>
+      <div className="relative mx-auto max-w-[1240px]">
+        <div className="mx-auto mb-16 max-w-[740px] text-center" data-tone="gold">
+          <span className="landing-pill mb-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">Team ibrido</span>
+          <h2 className="text-[clamp(2rem,5vw,4rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
+            Strategia umana. <span className="landing-heading-gradient">Potenza AI.</span>
           </h2>
-          <p className="text-white/65 text-[clamp(0.95rem,1.6vw,1.05rem)] max-w-[640px] mx-auto leading-[1.65]">
-            Imprenditori, ingegneri e agenti AI proprietari. Ogni cliente segue da un team che combina visione strategica e potenza computazionale.
+          <p className="mt-5 text-[clamp(0.98rem,1.7vw,1.08rem)] leading-[1.74] text-foreground/68">
+            Un team compatto, credibile e ad alto livello: leadership, engineering e sales intelligence integrati nello stesso sistema.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-3 gap-5">
-          {TEAM.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 40 }}
+        <div className="grid gap-5 md:grid-cols-3">
+          {TEAM.map((member, index) => (
+            <motion.article
+              key={member.name}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.12, duration: 0.7 }}
-              whileHover={{ y: -8 }}
-              className="relative p-7 rounded-3xl border backdrop-blur-xl group overflow-hidden text-center"
-              style={{
-                background: `linear-gradient(135deg, ${t.accent}0d, rgba(255,255,255,0.01))`,
-                borderColor: `${t.accent}25`,
-              }}
+              transition={{ delay: index * 0.08, duration: 0.65 }}
+              className="landing-surface rounded-[30px] p-7 text-center"
+              data-tone={member.tone}
             >
-              <div
-                className="absolute -top-1/2 -right-1/2 w-[120%] h-[120%] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                style={{ background: `radial-gradient(circle, ${t.accent}20, transparent 60%)` }}
-              />
-
-              <div
-                className="relative w-24 h-24 rounded-full mx-auto mb-5 grid place-items-center font-heading font-extrabold text-2xl transition-transform duration-500 group-hover:scale-110"
-                style={{
-                  background: `linear-gradient(135deg, ${t.accent}, ${t.accent}99)`,
-                  color: "#000",
-                  boxShadow: `0 16px 48px ${t.accent}55`,
-                  border: "2px solid rgba(255,255,255,0.1)",
-                }}
-              >
-                {t.initials}
+              <div className="mx-auto mb-5 grid h-24 w-24 place-items-center rounded-full border border-border/80 bg-[linear-gradient(135deg,hsl(var(--primary)/0.24),hsl(var(--empire-violet)/0.14),hsl(var(--gold)/0.18))] font-heading text-2xl font-extrabold text-foreground shadow-[0_24px_60px_-30px_hsl(var(--primary)/0.8)]">
+                {member.initials}
               </div>
-
-              <h3 className="text-lg font-heading font-bold text-white mb-1 relative">{t.name}</h3>
-              <div className="text-[11px] uppercase tracking-[2px] font-bold mb-4 relative" style={{ color: t.accent }}>
-                {t.role}
-              </div>
-              <p className="text-[13px] text-white/65 leading-[1.65] relative">{t.bio}</p>
-            </motion.div>
+              <h3 className="font-heading text-xl font-extrabold tracking-[-0.04em] text-foreground">{member.name}</h3>
+              <div className="mt-2 text-[11px] uppercase tracking-[0.24em] text-foreground/50">{member.role}</div>
+              <p className="mt-4 text-sm leading-[1.72] text-foreground/64">{member.bio}</p>
+            </motion.article>
           ))}
         </div>
       </div>

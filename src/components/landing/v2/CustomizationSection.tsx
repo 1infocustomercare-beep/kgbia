@@ -1,91 +1,66 @@
 import { motion } from "framer-motion";
-import { Palette, Code2, Workflow, Plug } from "lucide-react";
+import { Code2, Palette, Plug, Workflow } from "lucide-react";
 
 const CUSTOM = [
   {
     Icon: Palette,
-    title: "Brand Identity Tailored",
-    desc: "Sito e dashboard personalizzati al 100% sul tuo brand: colori, tipografia, asset visivi, tone of voice.",
-    accent: "#D4AF37",
+    title: "Brand identity su misura",
+    desc: "Colori, tono visivo, tipografia, immagini e gerarchia costruiti per sembrare immediatamente premium nel tuo settore.",
+    tone: "gold",
   },
   {
     Icon: Workflow,
-    title: "Flussi Settoriali Custom",
-    desc: "Processi modellati sul tuo settore specifico: prenotazioni, ordini, fatturazione, automazioni dedicate.",
-    accent: "#a78bfa",
+    title: "Funnel settoriale dedicato",
+    desc: "Ogni sezione racconta valore, elimina attrito e porta il cliente al passo successivo con naturalezza.",
+    tone: "violet",
   },
   {
     Icon: Code2,
-    title: "Agenti AI On-Demand",
-    desc: "Hai un'esigenza unica? Sviluppiamo un agente AI dedicato per il tuo caso d'uso, integrato nel tuo ecosistema.",
-    accent: "#7C3AED",
+    title: "Agenti AI custom",
+    desc: "Funzioni specifiche per il tuo business, integrate direttamente nei processi operativi e commerciali.",
+    tone: "blue",
   },
   {
     Icon: Plug,
-    title: "Integrazioni Senza Limiti",
-    desc: "POS, gestionali, CRM, marketplace: collegniamo qualsiasi sistema. La tua infrastruttura non si ferma più.",
-    accent: "#22d3ee",
+    title: "Integrazioni reali",
+    desc: "CRM, POS, gestionali, WhatsApp, prenotazioni e sistemi esterni connessi senza compromettere l’esperienza.",
+    tone: "emerald",
   },
 ];
 
 export default function CustomizationSection() {
   return (
-    <section id="personalizzazione" className="relative py-28 px-5 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 50% 40% at 50% 50%, rgba(124,58,237,0.1), transparent)" }} />
+    <section id="personalizzazione" className="relative overflow-hidden px-4 py-28 sm:px-6 lg:px-10">
+      <div className="landing-section-glow" data-tone="blue" />
 
-      <div className="relative max-w-[1300px] mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-[3px] mb-5 border border-[#D4AF37]/30 text-[#D4AF37] bg-[#D4AF37]/5 backdrop-blur-md">
-            Personalizzazione Totale
-          </span>
-          <h2 className="text-[clamp(2rem,5vw,3.6rem)] font-heading font-extrabold leading-[0.95] tracking-[-0.03em] mb-5 text-white">
-            Una piattaforma.
-            <span className="block bg-gradient-to-r from-[#D4AF37] to-[#7C3AED] bg-clip-text text-transparent">
-              Mille configurazioni.
-            </span>
+      <div className="relative mx-auto max-w-[1280px]">
+        <div className="mx-auto mb-16 max-w-[760px] text-center" data-tone="blue">
+          <span className="landing-pill mb-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">Personalizzazione totale</span>
+          <h2 className="text-[clamp(2rem,5vw,4rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
+            Nessun template. <span className="landing-heading-gradient">Solo strutture ad alto valore percepito.</span>
           </h2>
-          <p className="text-white/65 text-[clamp(0.95rem,1.6vw,1.08rem)] max-w-[700px] mx-auto leading-[1.7]">
-            Empire non è un template. È un'infrastruttura modellata su misura per il tuo business, il tuo settore, la tua visione.
+          <p className="mt-5 text-[clamp(0.98rem,1.7vw,1.08rem)] leading-[1.74] text-foreground/68">
+            Design, funnel, copy, preview, automazioni e agenti vengono adattati al tuo mercato per rendere la home una leva di conversione, non una semplice pagina.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-5">
-          {CUSTOM.map((c, i) => (
-            <motion.div
-              key={c.title}
-              initial={{ opacity: 0, y: 30 }}
+        <div className="grid gap-5 md:grid-cols-2">
+          {CUSTOM.map((item, index) => (
+            <motion.article
+              key={item.title}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.7 }}
-              whileHover={{ y: -6 }}
-              className="relative p-7 lg:p-8 rounded-3xl border backdrop-blur-xl group overflow-hidden"
-              style={{
-                background: `linear-gradient(135deg, ${c.accent}10, rgba(255,255,255,0.02))`,
-                borderColor: `${c.accent}25`,
-              }}
+              transition={{ delay: index * 0.08, duration: 0.65 }}
+              className="landing-surface rounded-[30px] p-7 lg:p-8"
+              data-tone={item.tone}
             >
-              <div
-                className="absolute -top-1/2 -right-1/2 w-[120%] h-[120%] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                style={{ background: `radial-gradient(circle, ${c.accent}20, transparent 60%)` }}
-              />
-              <div
-                className="relative w-14 h-14 rounded-2xl grid place-items-center mb-5 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
-                style={{
-                  background: `linear-gradient(135deg, ${c.accent}33, ${c.accent}0a)`,
-                  border: `1px solid ${c.accent}55`,
-                  boxShadow: `0 12px 32px ${c.accent}30`,
-                }}
-              >
-                <c.Icon className="w-6 h-6" style={{ color: c.accent }} strokeWidth={2} />
+              <div className="landing-icon-frame mb-5 h-14 w-14">
+                <item.Icon className="h-6 w-6" strokeWidth={2} />
               </div>
-              <h3 className="text-lg lg:text-xl font-heading font-bold text-white mb-2.5 relative">{c.title}</h3>
-              <p className="text-[13.5px] text-white/65 leading-[1.7] relative">{c.desc}</p>
-            </motion.div>
+              <h3 className="font-heading text-xl font-extrabold tracking-[-0.04em] text-foreground">{item.title}</h3>
+              <p className="mt-3 max-w-[34ch] text-sm leading-[1.72] text-foreground/64">{item.desc}</p>
+            </motion.article>
           ))}
         </div>
       </div>
