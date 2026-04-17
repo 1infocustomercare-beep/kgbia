@@ -298,8 +298,23 @@
   color: hsl(228 28% 10%);
   --foreground: 228 28% 10%;
   --card: 0 0% 100%;
+  --card-foreground: 228 28% 10%;
   --border: 220 16% 86%;
   --muted-foreground: 220 12% 38%;
+  --background: 220 30% 99%;
+}
+
+/* Force readable text inside light sections */
+.landing-section[data-theme="light"] h1,
+.landing-section[data-theme="light"] h2,
+.landing-section[data-theme="light"] h3,
+.landing-section[data-theme="light"] h4 {
+  color: hsl(228 28% 10%);
+}
+.landing-section[data-theme="light"] p,
+.landing-section[data-theme="light"] li,
+.landing-section[data-theme="light"] span:not([style*="color"]):not(.landing-heading-gradient):not([class*="text-"]) {
+  color: hsl(228 24% 22%);
 }
 
 .landing-section[data-theme="light"] .landing-surface {
