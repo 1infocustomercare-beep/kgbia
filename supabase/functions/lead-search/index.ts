@@ -59,11 +59,11 @@ const SECTOR_OSM_TAGS: Record<string, string[]> = {
   garage: ['shop=car_repair', 'shop=car', 'amenity=car_wash', 'shop=tyres'],
 };
 
-/* ═══ GEOCODE ═══ */
+/* ═══ GEOCODE (city or full address) ═══ */
 async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bbox: number[] } | null> {
   try {
     const resp = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&addressdetails=1`,
       { headers: { "User-Agent": "EmpireAI-LeadScout/6.0 (info@empireaigroup.com)" } }
     );
     if (!resp.ok) return null;
@@ -71,6 +71,28 @@ async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bb
     if (!data.length) return null;
     return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), bbox: data[0].boundingbox?.map(Number) || [] };
   } catch { return null; }
+}
+
+/* ═══ REVERSE GEOCODE (coords → city name) ═══ */
+async function reverseGeocode(lat: number, lon: number): Promise<{ city: string; address: string } | null> {
+  try {
+    const resp = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1&zoom=14`,
+      { headers: { "User-Agent": "EmpireAI-LeadScout/6.0 (info@empireaigroup.com)" } }
+    );
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    const addr = data.address || {};
+    const cityName = addr.city || addr.town || addr.village || addr.municipality || addr.county || "";
+    return { city: cityName, address: data.display_name || "" };
+  } catch { return null; }
+}
+
+/* ═══ BBOX from center + radius km (1° lat ≈ 111km) ═══ */
+function bboxFromRadius(lat: number, lon: number, radiusKm: number): number[] {
+  const dLat = radiusKm / 111;
+  const dLon = radiusKm / (111 * Math.cos((lat * Math.PI) / 180));
+  return [lat - dLat, lat + dLat, lon - dLon, lon + dLon]; // [south, north, west, east]
 }
 
 /* ═══ SOURCE 1: PHOTON ═══ */
