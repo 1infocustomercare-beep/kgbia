@@ -21,11 +21,54 @@ const FOOD_SECTORS = new Set([
   "food", "bakery", "gelateria", "wine_bar", "catering", "pizzeria", "ristoration",
 ]);
 
-/* ─── FOOD SUB-SECTOR DETECTION → template variant ─── */
-type FoodSubSector = "pizzeria" | "sushi" | "braceria" | "ristorante";
-type TemplateVariant = "strapizzami" | "cote-obsidian" | "paperfish" | "default";
+/* ─── UNIVERSAL SUB-SECTOR DETECTION → preview/template auto-match ───
+ * Per ogni macro-settore identifichiamo il sotto-settore esatto
+ * (es. food → pizzeria/sushi/braceria/pesce/bakery, beauty → nails/hair,
+ *  ncc → yacht/limo/transfer, fitness → padel/gym/watersports)
+ * e mappiamo direttamente alla preview iPhone più adatta del catalog mockup.
+ */
+type SubSectorKey =
+  // Food
+  | "pizzeria" | "sushi" | "braceria" | "pesce" | "bakery"
+  | "vietnamese" | "kosher" | "ceviche" | "gelateria" | "ristorante"
+  // Beauty
+  | "nails" | "hair" | "spa"
+  // NCC / Mobility
+  | "yacht" | "boat" | "limo" | "transfer"
+  // Fitness
+  | "padel" | "gym" | "watersports"
+  // Hospitality
+  | "luxury_hotel" | "agriturismo" | "bnb"
+  // Generic fallback
+  | "generic";
 
-function detectFoodSubSector(lead: LeadInput, scrapedText?: string): FoodSubSector {
+type TemplateVariant =
+  | "strapizzami"      // pizzeria napoletana cream/terracotta
+  | "cote-obsidian"    // dark+gold premium (braceria, gourmet)
+  | "cote-marble"      // marble warm (ristorante upscale)
+  | "cote-ivory"       // ivory beige editorial (ristorante classic)
+  | "paperfish-sakura" // cream/red giapponese tradizionale
+  | "paperfish-dark"   // luxury-dark sushi gourmet
+  | "lavang-noir"      // noir saigon vietnamese
+  | "midtown-kosher"   // kosher minimal
+  | "batey-pacifico"   // ceviche/pesce caraibico
+  | "neo-nails-lavender" // nails lavender luxe
+  | "neo-nails-blush"    // nails blush rosegold
+  | "tatush-hair"        // hair fragrance
+  | "asinara-azure"      // yacht charter sardinia
+  | "miami-boats"        // boat rental miami
+  | "city-padel-sage"    // padel sage luxe
+  | "miami-watersports"  // watersports
+  | "default";
+
+interface SubSectorMatch {
+  sub: SubSectorKey;
+  variant: TemplateVariant;
+  heroTagline?: string;
+  themeHint: "light-cream" | "dark-gold" | "marble" | "sakura" | "noir" | "azure" | "sage" | "lavender" | "blush" | "default";
+}
+
+function detectSubSector(lead: LeadInput, scrapedText?: string): SubSectorMatch {
   const haystack = [
     lead.businessName,
     lead.sectorLabel,
@@ -33,19 +76,130 @@ function detectFoodSubSector(lead: LeadInput, scrapedText?: string): FoodSubSect
     scrapedText?.slice(0, 4000) || "",
   ].join(" ").toLowerCase();
 
-  if (/\b(pizz(a|eria|aiolo)|napolet|forno a legna|margherita|marinara|trapizz)\b/.test(haystack)) return "pizzeria";
-  if (/\b(sushi|sashimi|ramen|nigiri|maki|temaki|giappones|japanese|izakaya|wagyu)\b/.test(haystack)) return "sushi";
-  if (/\b(braceri|steak|grill|fiorentin|bistecc|carne alla brace|smokehouse|barbecue|bbq|churrasc)\b/.test(haystack)) return "braceria";
-  return "ristorante";
+  const name = (lead.businessName || "").toLowerCase();
+  const isLuxury = /\b(gourmet|luxury|prive|exclusive|noir|black|gold|royal|prestige|premium|fine dining)\b/.test(name + " " + haystack);
+  const sector = (lead.sector || "").toLowerCase();
+
+  /* ── FOOD ── */
+  if (FOOD_SECTORS.has(sector) || /\b(menu|piatto|chef|ristorante|trattoria|osteria)\b/.test(haystack)) {
+    if (/\b(pizz(a|eria|aiolo)|napolet|forno a legna|margherita|marinara|trapizz)\b/.test(haystack)) {
+      return {
+        sub: "pizzeria",
+        variant: isLuxury ? "cote-obsidian" : "strapizzami",
+        heroTagline: "LA VERA PIZZA NAPOLETANA",
+        themeHint: isLuxury ? "dark-gold" : "light-cream",
+      };
+    }
+    if (/\b(sushi|sashimi|ramen|nigiri|maki|temaki|giappones|japanese|izakaya|wagyu|omakase)\b/.test(haystack)) {
+      return {
+        sub: "sushi",
+        variant: isLuxury ? "paperfish-dark" : "paperfish-sakura",
+        heroTagline: "L'ARTE GIAPPONESE DEL GUSTO",
+        themeHint: isLuxury ? "noir" : "sakura",
+      };
+    }
+    if (/\b(braceri|steak|grill|fiorentin|bistecc|carne alla brace|smokehouse|barbecue|bbq|churrasc|asado)\b/.test(haystack)) {
+      return {
+        sub: "braceria",
+        variant: "cote-obsidian",
+        heroTagline: "FUOCO, CARNE, TRADIZIONE",
+        themeHint: "dark-gold",
+      };
+    }
+    if (/\b(pesce|fish|frutti di mare|crostacei|seafood|raw bar|ostriche|cevich|tartare di pesce)\b/.test(haystack)) {
+      return {
+        sub: "pesce",
+        variant: "batey-pacifico",
+        heroTagline: "DAL MARE ALLA TAVOLA",
+        themeHint: "azure",
+      };
+    }
+    if (/\b(panett|fornai|panificio|bakery|pasticceria|cornett|brioche|lievit|forno|bread|croissant)\b/.test(haystack) || sector === "bakery") {
+      return {
+        sub: "bakery",
+        variant: "cote-ivory",
+        heroTagline: "L'ARTE DEL FORNO",
+        themeHint: "marble",
+      };
+    }
+    if (/\b(vietnam|pho|banh|saigon|hanoi)\b/.test(haystack)) {
+      return { sub: "vietnamese", variant: "lavang-noir", heroTagline: "ESSENCE OF VIETNAM", themeHint: "noir" };
+    }
+    if (/\b(kosher|jewish|kasher)\b/.test(haystack)) {
+      return { sub: "kosher", variant: "midtown-kosher", heroTagline: "TRADITION & TASTE", themeHint: "marble" };
+    }
+    if (/\b(gelater|gelato|ice cream|sorbet)\b/.test(haystack) || sector === "gelateria") {
+      return { sub: "gelateria", variant: "cote-ivory", heroTagline: "GELATO ARTIGIANALE", themeHint: "marble" };
+    }
+    // Ristorante generico — scegli stile in base a luxury vs classic
+    return {
+      sub: "ristorante",
+      variant: isLuxury ? "cote-marble" : "cote-ivory",
+      heroTagline: "BENVENUTI A TAVOLA",
+      themeHint: isLuxury ? "marble" : "marble",
+    };
+  }
+
+  /* ── BEAUTY ── */
+  if (/beauty|estetica|salon|nail|hair|barber|spa/.test(sector + haystack)) {
+    if (/\b(nail|unghie|manicure|pedicure)\b/.test(haystack)) {
+      return {
+        sub: "nails",
+        variant: isLuxury ? "neo-nails-blush" : "neo-nails-lavender",
+        heroTagline: "BELLEZZA SU MISURA",
+        themeHint: isLuxury ? "blush" : "lavender",
+      };
+    }
+    if (/\b(hair|capelli|parrucchier|barber|salon)\b/.test(haystack)) {
+      return { sub: "hair", variant: "tatush-hair", heroTagline: "LO STILE È UN'ARTE", themeHint: "marble" };
+    }
+    if (/\b(spa|massagg|wellness|terme)\b/.test(haystack)) {
+      return { sub: "spa", variant: "neo-nails-lavender", heroTagline: "RILASSO PROFONDO", themeHint: "lavender" };
+    }
+    return { sub: "nails", variant: "neo-nails-lavender", heroTagline: "BELLEZZA SU MISURA", themeHint: "lavender" };
+  }
+
+  /* ── NCC / MOBILITY ── */
+  if (/ncc|noleggio|chauffeur|transfer|limo|yacht|boat|charter/.test(sector + haystack)) {
+    if (/\b(yacht|charter|barca a vela|sailing)\b/.test(haystack)) {
+      return { sub: "yacht", variant: "asinara-azure", heroTagline: "LUSSO IN MARE APERTO", themeHint: "azure" };
+    }
+    if (/\b(boat|gommone|tender|motoscaf)\b/.test(haystack)) {
+      return { sub: "boat", variant: "miami-boats", heroTagline: "EXCLUSIVE BOAT EXPERIENCE", themeHint: "azure" };
+    }
+    if (/\b(limo|berlina|mercedes|chauffeur|executive)\b/.test(haystack) || isLuxury) {
+      return { sub: "limo", variant: "cote-obsidian", heroTagline: "TRANSFER DI ALTA GAMMA", themeHint: "dark-gold" };
+    }
+    return { sub: "transfer", variant: "asinara-azure", heroTagline: "VIAGGIA CON STILE", themeHint: "azure" };
+  }
+
+  /* ── FITNESS ── */
+  if (/fitness|gym|palestra|crossfit|padel|tennis|sport/.test(sector + haystack)) {
+    if (/\b(padel|tennis)\b/.test(haystack)) {
+      return { sub: "padel", variant: "city-padel-sage", heroTagline: "GIOCA AL TUO MEGLIO", themeHint: "sage" };
+    }
+    if (/\b(watersport|surf|kite|windsurf|sup|paddle)\b/.test(haystack)) {
+      return { sub: "watersports", variant: "miami-watersports", heroTagline: "ADRENALINA SUL MARE", themeHint: "azure" };
+    }
+    return { sub: "gym", variant: "city-padel-sage", heroTagline: "ALLENATI AL TUO MEGLIO", themeHint: "sage" };
+  }
+
+  /* ── HOSPITALITY ── */
+  if (/hotel|hospitality|bnb|b&b|resort|agriturismo/.test(sector + haystack)) {
+    if (/\b(agriturismo|farm|country)\b/.test(haystack)) {
+      return { sub: "agriturismo", variant: "cote-ivory", heroTagline: "L'OSPITALITÀ DI CAMPAGNA", themeHint: "marble" };
+    }
+    if (isLuxury || /\b(luxury|5 stars|cinque stelle|resort)\b/.test(haystack)) {
+      return { sub: "luxury_hotel", variant: "cote-marble", heroTagline: "OSPITALITÀ ESCLUSIVA", themeHint: "marble" };
+    }
+    return { sub: "bnb", variant: "cote-ivory", heroTagline: "CASA LONTANO DA CASA", themeHint: "marble" };
+  }
+
+  return { sub: "generic", variant: "default", themeHint: "default" };
 }
 
-function pickTemplateVariant(sub: FoodSubSector, businessName: string): TemplateVariant {
-  const name = businessName.toLowerCase();
-  // Se il nome suggerisce gourmet/luxury, vai dark
-  const isLuxury = /\b(gourmet|luxury|prive|exclusive|noir|black|gold|royal|prestige)\b/.test(name);
-  if (sub === "pizzeria") return isLuxury ? "cote-obsidian" : "strapizzami";
-  if (sub === "sushi") return "paperfish";
-  if (sub === "braceria") return "cote-obsidian";
+/** Backward-compat helper (in caso qualcosa lo usi ancora) */
+function pickTemplateVariant(_sub: any, _name: string): TemplateVariant {
   return "default";
 }
 
