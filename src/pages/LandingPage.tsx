@@ -4,6 +4,7 @@ import CinematicHero from "@/components/landing/v2/CinematicHero";
 import ManifestoSection from "@/components/landing/v2/ManifestoSection";
 import SectorsCarousel from "@/components/landing/v2/SectorsCarousel";
 import HorizontalPortfolio from "@/components/landing/v2/HorizontalPortfolio";
+import Orbital3DShowcase from "@/components/landing/v2/Orbital3DShowcase";
 import AgentsBento from "@/components/landing/v2/AgentsBento";
 import ProcessSection from "@/components/landing/v2/ProcessSection";
 import CustomizationSection from "@/components/landing/v2/CustomizationSection";
@@ -39,6 +40,7 @@ export default function LandingPage() {
       <ManifestoSection />
       <SectorsCarousel />
       <HorizontalPortfolio />
+      <Orbital3DShowcase />
       <AgentsBento />
       <ProcessSection />
       <CustomizationSection />
