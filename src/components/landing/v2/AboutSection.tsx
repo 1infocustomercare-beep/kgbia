@@ -16,15 +16,15 @@ const PILLARS = [
   },
   {
     Icon: ShieldCheck,
-    title: "Rischio azzerato",
-    desc: "Garanzia 90 giorni, go-live rapido e struttura enterprise: il business cresce senza perdere controllo o credibilità.",
+    title: "Operatività garantita",
+    desc: "Infrastruttura enterprise, go-live in 14 giorni, supporto dedicato. Crescita reale senza interruzioni e senza imprevisti tecnici.",
     tone: "emerald",
   },
 ];
 
 export default function AboutSection() {
   return (
-    <section id="chi-siamo" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
+    <section id="chi-siamo" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="light">
       <div className="landing-section-glow" data-tone="violet" />
 
       <div className="relative mx-auto max-w-[1240px]">

@@ -17,7 +17,7 @@ const TEAM = [
 
 export default function TeamSection() {
   return (
-    <section id="team" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
+    <section id="team" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="dark">
       <div className="landing-section-glow" data-tone="gold" />
 
       <div className="relative mx-auto max-w-[1320px]">

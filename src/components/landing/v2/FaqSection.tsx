@@ -4,32 +4,36 @@ import { Plus } from "lucide-react";
 
 const FAQ = [
   {
-    q: "In quanto tempo posso essere operativo con Empire AI?",
-    a: "Dal primo contatto al sito attivo con agenti operativi: 14 giorni lavorativi. Discovery e strategia (3 giorni), design e sviluppo (9 giorni), onboarding e lancio (2 giorni). Affiancamento dedicato dal giorno 1.",
+    q: "In quanto tempo sono operativo con Empire AI?",
+    a: "Dal primo contatto al sito attivo con agenti AI operativi: 14 giorni lavorativi. Discovery e strategia (3 giorni), design e sviluppo (9 giorni), onboarding e lancio (2 giorni). Affiancamento dedicato dal giorno 1.",
   },
   {
-    q: "Cosa succede se non sono soddisfatto entro i 90 giorni?",
-    a: "Garanzia totale. Ti restituiamo l'intero investimento, senza domande, senza penali, senza vincoli. Vogliamo solo clienti convinti del valore generato.",
+    q: "Quanto risparmio davvero sul personale?",
+    a: "Mediamente i nostri clienti riducono di 1-2 figure operative (centralino, gestione prenotazioni, recall, social, fatturazione). Significa €1.800-€3.500 al mese di costi in meno, con un servizio più rapido e senza errori umani.",
   },
   {
-    q: "Devo avere competenze tecniche per usare la piattaforma?",
-    a: "Zero. Tutto è gestito tramite WhatsApp con comandi vocali o testuali. La dashboard è visiva e intuitiva. Il tuo Account Manager ti segue passo-passo nella formazione.",
+    q: "Funziona anche per il mio settore specifico?",
+    a: "Empire copre 25+ settori verticali: ristorazione, beauty, fitness, healthcare, NCC, hotel, retail, studi professionali, real estate, e-commerce, palestre, cliniche e altro. Ogni configurazione è costruita sulle reali esigenze operative del tuo mercato.",
+  },
+  {
+    q: "Devo avere competenze tecniche per usarlo?",
+    a: "Zero. Tutto si gestisce da WhatsApp con comandi vocali o testuali, oppure dalla dashboard visuale. Il tuo Account Manager ti segue passo-passo nella formazione e nei primi 30 giorni di utilizzo.",
   },
   {
     q: "I dati dei miei clienti sono al sicuro?",
-    a: "Infrastruttura enterprise europea, conformità GDPR totale, crittografia end-to-end, backup automatici. Empire è certificata per i settori sanitario, finanziario e legale.",
+    a: "Infrastruttura enterprise europea, conformità GDPR totale, crittografia end-to-end, backup automatici giornalieri. Empire è già operativa nei settori sanitario, finanziario e legale.",
   },
   {
     q: "Posso integrare Empire con il mio gestionale o POS?",
-    a: "Sì. Integriamo qualsiasi sistema esistente (POS, gestionali, CRM, marketplace, fatturazione elettronica). I tuoi dati restano tuoi, i sistemi parlano tra loro.",
+    a: "Sì. Integriamo qualsiasi sistema esistente (POS, gestionali, CRM, marketplace, fatturazione elettronica, calendari, WhatsApp Business). I tuoi dati restano tuoi e tutti i sistemi parlano tra loro.",
   },
   {
     q: "Cosa include il canone mensile di mantenimento?",
-    a: "Hosting premium, aggiornamenti continui agli agenti AI, nuove integrazioni, supporto tecnico, monitoraggio KPI, evoluzione della piattaforma. Tutto incluso, niente sorprese.",
+    a: "Hosting premium, aggiornamenti continui agli agenti AI, nuove funzionalità rilasciate, supporto tecnico, monitoraggio KPI, nuove integrazioni. Tutto incluso, niente sorprese, niente costi extra.",
   },
   {
     q: "Posso cambiare pacchetto in corsa?",
-    a: "Assolutamente sì. Puoi fare upgrade in qualsiasi momento. Paghi solo la differenza pro-rata. Il downgrade avviene al rinnovo successivo.",
+    a: "Sì. Upgrade in qualsiasi momento, paghi solo la differenza pro-rata. Il downgrade avviene al rinnovo successivo. Massima flessibilità per scalare al ritmo del tuo business.",
   },
 ];
 
@@ -37,7 +41,7 @@ export default function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
+    <section id="faq" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="dark">
       <div className="relative max-w-[900px] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

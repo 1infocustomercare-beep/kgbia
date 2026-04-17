@@ -1,12 +1,12 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-const WORDS = ["Non", "vendiamo", "software.", "Costruiamo", "imprese", "che", "crescono", "mentre", "tu", "guidi."];
+const WORDS = ["Non", "vendiamo", "software.", "Liberiamo", "il", "tuo", "tempo", "mentre", "fatturi", "di", "più."];
 const STATS = [
-  { value: "847+", label: "business attivi" },
+  { value: "847+", label: "business attivati" },
   { value: "98", label: "agenti proprietari" },
-  { value: "25+", label: "settori verticali" },
-  { value: "90g", label: "garanzia totale" },
+  { value: "25+", label: "settori coperti" },
+  { value: "−12h", label: "lavoro a settimana" },
 ];
 
 export default function ManifestoSection() {
@@ -14,7 +14,7 @@ export default function ManifestoSection() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
 
   return (
-    <section ref={ref} id="manifesto" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
+    <section ref={ref} id="manifesto" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="light">
       <div className="landing-section-glow" data-tone="violet" />
 
       <div className="relative mx-auto max-w-[1320px]">

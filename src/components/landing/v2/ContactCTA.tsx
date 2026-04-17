@@ -6,7 +6,7 @@ export default function ContactCTA() {
   const navigate = useNavigate();
 
   return (
-    <section id="contatti" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
+    <section id="contatti" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="dark">
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="absolute inset-0"
@@ -64,7 +64,7 @@ export default function ContactCTA() {
                 boxShadow: "0 24px 80px rgba(124,58,237,0.55), inset 0 1px 0 rgba(255,255,255,0.2)",
               }}
             >
-              <span className="relative z-10">Inizia ora — 90 giorni garantiti</span>
+              <span className="relative z-10">Prenota la demo strategica</span>
               <ArrowRight className="relative z-10 w-5 h-5 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
             </button>
             <button
