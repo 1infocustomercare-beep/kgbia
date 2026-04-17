@@ -64,7 +64,7 @@ const AGENTS = [
 
 export default function AgentsBento() {
   return (
-    <section id="agenti" className="landing-section relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="light">
+    <section id="agenti" className="landing-section relative overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16" data-theme="light">
       <div className="landing-section-glow" data-tone="violet" />
 
       <div className="relative mx-auto max-w-[1320px]">
@@ -72,15 +72,15 @@ export default function AgentsBento() {
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mx-auto mb-14 max-w-[760px] text-center"
+          className="mx-auto mb-10 max-w-[760px] text-center"
           data-tone="violet"
         >
-          <span className="landing-pill mb-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">98 agenti AI proprietari</span>
-          <h2 className="text-[clamp(2rem,5.2vw,4.2rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
+          <span className="landing-pill mb-4 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">98 agenti AI proprietari</span>
+          <h2 className="text-[clamp(1.9rem,5vw,4rem)] font-heading font-extrabold leading-[0.94] tracking-[-0.05em] text-foreground">
             Un’infrastruttura operativa che <span className="landing-heading-gradient">sembra un team senior.</span>
           </h2>
-          <p className="mt-5 text-[clamp(0.98rem,1.7vw,1.08rem)] leading-[1.72] text-foreground/68">
-            Ogni card mostra una funzione reale del sistema: niente effetti gratuiti, solo valore percepito alto, profondità visiva e architettura premium.
+          <p className="mt-4 text-[clamp(0.96rem,1.7vw,1.04rem)] leading-[1.7] text-foreground/80">
+            Ogni card mostra una funzione reale del sistema: valore percepito alto, profondità visiva e architettura premium.
           </p>
         </motion.div>
 
@@ -92,12 +92,12 @@ export default function AgentsBento() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ delay: index * 0.05, duration: 0.65 }}
-              whileHover={{ y: -10, rotateX: 3, rotateY: index % 2 === 0 ? 5 : -5, scale: 1.01 }}
+              whileHover={{ y: -8, rotateX: 3, rotateY: index % 2 === 0 ? 5 : -5, scale: 1.01 }}
               style={{ transformStyle: "preserve-3d", perspective: "1200px" }}
-              className={`landing-surface rounded-[30px] p-6 lg:p-7 ${agent.big ? "md:col-span-2" : ""}`}
+              className={`landing-surface rounded-[28px] p-5 sm:p-6 lg:p-7 ${agent.big ? "md:col-span-2" : ""}`}
               data-tone={agent.tone}
             >
-              <div className="mb-6 flex items-start justify-between gap-4">
+              <div className="mb-5 flex items-start justify-between gap-4">
                 <div className="landing-icon-frame h-14 w-14">
                   <agent.Icon className="h-6 w-6" strokeWidth={2} />
                 </div>
@@ -106,16 +106,16 @@ export default function AgentsBento() {
                 ) : null}
               </div>
 
-              <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_150px] lg:items-end">
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_150px] lg:items-end">
                 <div>
                   <h3 className={`font-heading font-extrabold leading-[1] tracking-[-0.04em] text-foreground ${agent.big ? "text-2xl lg:text-[2rem]" : "text-lg lg:text-xl"}`}>
                     {agent.name}
                   </h3>
-                  <p className="mt-3 max-w-[36ch] text-[14px] leading-[1.7] text-foreground/64">{agent.desc}</p>
+                  <p className="mt-3 max-w-[36ch] text-[14px] leading-[1.7] text-foreground/80">{agent.desc}</p>
                 </div>
 
-                <div className="rounded-[24px] border border-border/80 bg-background/42 p-4 backdrop-blur-xl">
-                  <div className="text-[10px] uppercase tracking-[0.18em] text-foreground/44">Effetto</div>
+                <div className="rounded-[24px] border border-border/80 bg-background/60 p-4 backdrop-blur-xl">
+                  <div className="text-[10px] uppercase tracking-[0.18em] text-foreground/62">Effetto</div>
                   <div className="mt-2 text-sm font-semibold text-foreground">Operatività continua</div>
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-foreground/10">
                     <div className="h-full rounded-full bg-[linear-gradient(90deg,hsl(var(--primary)),hsl(var(--empire-violet)),hsl(var(--gold)))]" style={{ width: `${agent.big ? 92 : 78}%` }} />

@@ -39,27 +39,27 @@ export default function HorizontalPortfolio() {
   const x = useTransform(smooth, [0, 1], [0, -maxX]);
 
   return (
-    <section ref={ref} id="portfolio" className="relative" style={{ height: `${PROJECTS.length * 38 + 80}vh` }}>
+    <section ref={ref} id="portfolio" className="landing-section relative overflow-hidden" data-theme="dark" style={{ height: `${PROJECTS.length * 24 + 90}vh` }}>
       <div className="sticky top-0 flex h-[100svh] overflow-hidden">
         <div className="absolute inset-0 landing-section-glow" data-tone="gold" />
 
-        <div className="relative mx-auto flex w-full max-w-[1500px] flex-col justify-center px-4 py-14 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
+        <div className="relative mx-auto flex w-full max-w-[1500px] flex-col justify-center px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="mb-6 flex flex-col gap-4 sm:mb-8 lg:mb-10 lg:flex-row lg:items-end lg:justify-between"
+            className="mb-5 flex flex-col gap-4 sm:mb-6 lg:mb-8 lg:flex-row lg:items-end lg:justify-between"
           >
             <div className="max-w-[760px]" data-tone="gold">
               <span className="landing-pill mb-3 px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:mb-4 sm:px-4 sm:py-2 sm:text-[10px]">Portfolio live</span>
-              <h2 className="max-w-[15ch] font-heading text-[clamp(1.8rem,5.4vw,4.4rem)] font-extrabold leading-[0.9] tracking-[-0.05em] text-foreground">
+              <h2 className="max-w-[15ch] font-heading text-[clamp(1.6rem,5vw,4rem)] font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
                 Preview reali che <span className="landing-heading-gradient">comunicano valore</span> in 3 secondi.
               </h2>
             </div>
 
-            <div className="hidden items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-foreground/46 lg:flex">
-              <span>Scroll orizzontale</span>
+            <div className="hidden items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-foreground/58 lg:flex">
+              <span>Scroll orizzontale fisso</span>
               <div className="h-px w-12 bg-border/80" />
             </div>
           </motion.div>
@@ -70,8 +70,8 @@ export default function HorizontalPortfolio() {
             ))}
           </motion.div>
 
-          <div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-[12px] leading-[1.65] text-foreground/56 sm:text-[13px]">
+          <div className="mt-4 flex flex-col gap-3 sm:mt-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-[12px] leading-[1.65] text-foreground/68 sm:text-[13px]">
               Ogni progetto include design premium, funnel persuasivo e proof of value.
             </div>
             <button onClick={() => navigate("/demo")} className="landing-button-secondary self-start px-5 py-2.5 text-sm font-semibold sm:self-auto sm:px-6 sm:py-3">
