@@ -25,7 +25,7 @@ export default function ManifestoSection() {
           </span>
         </div>
 
-        <h2 className="mx-auto mb-8 flex max-w-[16ch] flex-wrap justify-center text-center font-heading text-[clamp(1.75rem,6vw,4.4rem)] font-extrabold leading-[0.97] tracking-[-0.05em] text-foreground sm:mb-10 lg:mb-12">
+        <h2 className="mx-auto mb-8 max-w-[22ch] text-center font-heading text-[clamp(1.6rem,5.4vw,4rem)] font-extrabold leading-[1.05] tracking-[-0.04em] text-foreground sm:mb-10 sm:leading-[1] lg:mb-12">
           {WORDS.map((word, index) => (
             <Word key={word + index} word={word} index={index} total={WORDS.length} progress={smooth} />
           ))}
@@ -64,25 +64,17 @@ function Word({
   progress: ReturnType<typeof useSpring>;
 }) {
   const start = 0.08 + (index / total) * 0.44;
-  const end = start + 0.16;
-  const opacity = useTransform(progress, [start, end], [0.38, 1]);
-  const y = useTransform(progress, [start, end], [18, 0]);
-  const letterSpacing = useTransform(progress, [start, end], ["0.02em", "-0.03em"]);
-  const clipPath = useTransform(progress, [start, end], ["inset(0 0 100% 0)", "inset(0 0 0% 0)"]);
-  const textShadow = useTransform(opacity, (value) => `0 1px 0 hsl(0 0% 100% / ${0.65 * value}), 0 10px 24px hsl(228 28% 10% / ${0.08 * value})`);
+  const end = start + 0.18;
+  const opacity = useTransform(progress, [start, end], [0.32, 1]);
+  const y = useTransform(progress, [start, end], [14, 0]);
   const accent = word === "Liberiamo" || word === "fatturi" || word === "più.";
 
   return (
-    <span className="relative mx-[0.12em] inline-flex overflow-hidden pb-[0.08em]">
-      <span className={`absolute inset-0 ${accent ? "landing-heading-gradient opacity-35" : "text-foreground/25"}`} aria-hidden="true">
-        {word}
-      </span>
-      <motion.span
-        style={{ opacity, y, letterSpacing, clipPath, textShadow }}
-        className={`relative inline-block ${accent ? "landing-heading-gradient" : "text-foreground"}`}
-      >
-        {word}
-      </motion.span>
-    </span>
+    <motion.span
+      style={{ opacity, y }}
+      className={`mx-[0.14em] inline-block ${accent ? "landing-heading-gradient" : "text-foreground"}`}
+    >
+      {word}
+    </motion.span>
   );
 }

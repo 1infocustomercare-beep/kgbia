@@ -51,20 +51,14 @@ const TRUST = ["847+ business attivi", "98 agenti AI", "25+ verticali", "Go-live
 
 function SplitText({ text, delay = 0, className = "" }: { text: string; delay?: number; className?: string }) {
   return (
-    <span className={className}>
-      {Array.from(text).map((char, i) => (
-        <span key={i} className="inline-block overflow-hidden align-bottom">
-          <motion.span
-            className="inline-block"
-            initial={{ y: "115%", opacity: 0, filter: "blur(8px)" }}
-            animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-            transition={{ delay: delay + i * 0.025, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {char === " " ? "\u00A0" : char}
-          </motion.span>
-        </span>
-      ))}
-    </span>
+    <motion.span
+      className={`inline-block ${className}`}
+      initial={{ y: 24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {text}
+    </motion.span>
   );
 }
 
@@ -177,10 +171,10 @@ export default function CinematicHero() {
               Empire AI · Agency premium
             </motion.div>
 
-            <h1 className="mx-auto mb-4 max-w-[14ch] font-heading text-[clamp(2rem,8.5vw,5.6rem)] font-extrabold leading-[0.86] tracking-[-0.05em] text-foreground sm:mb-5 lg:mx-0 lg:max-w-[10ch]">
+            <h1 className="mx-auto mb-4 max-w-[16ch] font-heading text-[clamp(2rem,7.6vw,5.4rem)] font-extrabold leading-[0.92] tracking-[-0.04em] text-foreground sm:mb-5 lg:mx-0 lg:max-w-[12ch]">
               <span className="block"><SplitText text="L’evoluzione" delay={0.15} /></span>
-              <span className="block landing-heading-gradient"><SplitText text="cinematica" delay={0.4} /></span>
-              <span className="block"><SplitText text="del tuo business." delay={0.7} /></span>
+              <span className="block landing-heading-gradient"><SplitText text="cinematica" delay={0.3} /></span>
+              <span className="block"><SplitText text="del tuo business." delay={0.45} /></span>
             </h1>
 
             <motion.p

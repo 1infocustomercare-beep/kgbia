@@ -39,7 +39,7 @@ export default function HorizontalPortfolio() {
   const x = useTransform(smooth, [0, 1], [0, -maxX]);
 
   return (
-    <section ref={ref} id="portfolio" className="landing-section relative overflow-hidden" data-theme="dark" style={{ height: `${PROJECTS.length * 22 + 80}vh` }}>
+    <section ref={ref} id="portfolio" className="landing-section relative" data-theme="dark" style={{ height: `${PROJECTS.length * 28 + 100}vh` }}>
       <div className="sticky top-0 flex h-[100svh] overflow-hidden">
         <div className="absolute inset-0 landing-section-glow" data-tone="gold" />
 
@@ -49,11 +49,11 @@ export default function HorizontalPortfolio() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="mb-2 flex flex-col gap-2 sm:mb-3 lg:mb-4 lg:flex-row lg:items-end lg:justify-between"
+            className="mb-3 flex flex-col items-center gap-2 text-center sm:mb-4 lg:flex-row lg:items-end lg:justify-between lg:text-left"
           >
-            <div className="max-w-[760px]" data-tone="gold">
+            <div className="max-w-[760px] lg:mx-0" data-tone="gold">
               <span className="landing-pill mb-2 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.26em] sm:mb-2 sm:px-3.5 sm:py-1.5 sm:text-[10px]">Portfolio live</span>
-              <h2 className="max-w-[18ch] font-heading text-[clamp(1.3rem,3.6vw,2.6rem)] font-extrabold leading-[0.95] tracking-[-0.04em] text-foreground">
+              <h2 className="mx-auto max-w-[20ch] font-heading text-[clamp(1.3rem,3.6vw,2.6rem)] font-extrabold leading-[1] tracking-[-0.03em] text-foreground lg:mx-0">
                 Preview reali che <span className="landing-heading-gradient">comunicano valore</span> in 3 secondi.
               </h2>
             </div>
@@ -70,11 +70,11 @@ export default function HorizontalPortfolio() {
             ))}
           </motion.div>
 
-          <div className="mt-2 flex flex-col gap-2 sm:mt-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-3 flex flex-col items-center gap-2 text-center sm:mt-4 sm:flex-row sm:items-center sm:justify-between sm:text-left">
             <div className="text-[11px] leading-[1.5] text-foreground/68 sm:text-[12px]">
               Ogni progetto include design premium, funnel persuasivo e proof of value.
             </div>
-            <button onClick={() => navigate("/demo")} className="landing-button-secondary self-start px-4 py-2 text-[13px] font-semibold sm:self-auto sm:px-5 sm:py-2.5">
+            <button onClick={() => navigate("/demo")} className="landing-button-secondary px-4 py-2 text-[13px] font-semibold sm:px-5 sm:py-2.5">
               Esplora tutti i progetti →
             </button>
           </div>
