@@ -25,7 +25,7 @@ export default function ManifestoSection() {
           </span>
         </div>
 
-        <h2 className="mx-auto mb-8 flex max-w-[16ch] flex-wrap justify-center text-center font-heading text-[clamp(1.75rem,6vw,4.4rem)] font-extrabold leading-[0.97] tracking-[-0.05em] text-foreground sm:mb-10 lg:mb-12">
+        <h2 className="mx-auto mb-8 max-w-[22ch] text-center font-heading text-[clamp(1.6rem,5.4vw,4rem)] font-extrabold leading-[1.05] tracking-[-0.04em] text-foreground sm:mb-10 sm:leading-[1] lg:mb-12">
           {WORDS.map((word, index) => (
             <Word key={word + index} word={word} index={index} total={WORDS.length} progress={smooth} />
           ))}
