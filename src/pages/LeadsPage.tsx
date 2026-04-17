@@ -18,8 +18,10 @@ import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
 import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFactoryOverlay";
 import SellerCRM from "@/components/leads/SellerCRM";
+import GpsRadarPanel, { GpsLocation } from "@/components/leads/GpsRadarPanel";
+import SpeedDialList from "@/components/leads/SpeedDialList";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
-import { Briefcase, Bookmark, Wand2 as WandIcon } from "lucide-react";
+import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
 
 /* ─── Types ─── */
 interface Lead {
@@ -341,6 +343,10 @@ export default function LeadsPage() {
   const overdueFollowups = getOverdueFollowups(pipeline.leads);
   const savedLeadKeys = new Set(pipeline.leads.map(l => `${l.name.toLowerCase()}|${(l.city || "").toLowerCase()}`));
   const isLeadSaved = (lead: Lead) => savedLeadKeys.has(`${lead.name.toLowerCase()}|${(lead.city || "").toLowerCase()}`);
+
+  // ═══ GPS Radar + Speed Dial ═══
+  const [gpsOpen, setGpsOpen] = useState(false);
+  const [speedDialOpen, setSpeedDialOpen] = useState(false);
 
   /* ─── Auto-detect sector from manual name ─── */
   useEffect(() => {
@@ -674,6 +680,48 @@ export default function LeadsPage() {
   const handleDeepSearch = useCallback(() => {
     handleSearch(searchPage + 1, true);
   }, [handleSearch, searchPage]);
+
+  /* ─── GPS Radar Search (coords + radius km, real OSM data) ─── */
+  const handleGpsSearch = useCallback(async (loc: GpsLocation, radiusKm: number) => {
+    setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("lead-search", {
+        body: {
+          sector,
+          mode: "gps",
+          use_google: true,
+          page: 0,
+          lat: loc.lat,
+          lon: loc.lon,
+          radius_km: radiusKm,
+          city: loc.label,
+        },
+      });
+      if (error) throw error;
+      if (data?.success && data.results?.length > 0) {
+        const processed = processResults(data.results, false);
+        setSearchPage(0);
+        setHasMore(data.has_more ?? false);
+        setLastSearchCity(loc.label);
+        setLastSearchSector(sector);
+        setCity(loc.label);
+        const sources = data.sources || {};
+        toast.success(`📡 ${processed.length} lead reali nel raggio di ${radiusKm < 1 ? `${radiusKm * 1000}m` : `${radiusKm}km`}`, {
+          description: `OSM: ${sources.nominatim || 0} · Overpass: ${sources.overpass || 0} · Google: ${sources.google || 0}`,
+        });
+        setGpsOpen(false);
+        setTimeout(() => batchEnrichInstagram(processed), 1500);
+        // Auto-open speed dial if many results
+        if (processed.length >= 5) setTimeout(() => setSpeedDialOpen(true), 800);
+      } else {
+        toast.error(`Nessun lead trovato nel raggio di ${radiusKm}km — prova ad ampliare`);
+      }
+    } catch (e: any) {
+      toast.error(e.message || "Errore GPS scan");
+    } finally {
+      setLoading(false);
+    }
+  }, [sector, processResults, batchEnrichInstagram]);
 
   /* ─── Add manual lead ─── */
   const addManualLead = () => {
@@ -1305,6 +1353,42 @@ export default function LeadsPage() {
 
         {/* Quick actions */}
         <div className="flex items-center gap-2 flex-wrap">
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setGpsOpen(!gpsOpen)}
+            className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-lg relative overflow-hidden"
+            style={{
+              background: gpsOpen
+                ? "linear-gradient(135deg, rgba(6,182,212,0.25), rgba(20,184,166,0.15))"
+                : "linear-gradient(135deg, rgba(6,182,212,0.12), rgba(20,184,166,0.06))",
+              border: `1px solid ${gpsOpen ? "rgba(6,182,212,0.5)" : "rgba(6,182,212,0.3)"}`,
+              color: "#22d3ee",
+            }}
+          >
+            <motion.span animate={{ rotate: gpsOpen ? 360 : 0 }} transition={{ duration: 1.5, repeat: gpsOpen ? Infinity : 0, ease: "linear" }}>
+              <Radar className="w-3 h-3" />
+            </motion.span>
+            GPS Radar
+            <span className="text-[7px] px-1 rounded font-black" style={{ background: "rgba(34,197,94,0.2)", color: "#86efac" }}>FREE</span>
+          </motion.button>
+          {results.length > 0 && (
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSpeedDialOpen(true)}
+              className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-lg"
+              style={{
+                background: "linear-gradient(135deg, rgba(20,184,166,0.18), rgba(16,185,129,0.10))",
+                border: "1px solid rgba(20,184,166,0.4)",
+                color: "#5eead4",
+              }}
+            >
+              <ListChecks className="w-3 h-3" />
+              Lista nomi
+              <span className="text-[8px] font-black px-1 rounded" style={{ background: "rgba(20,184,166,0.3)", color: "#fff" }}>
+                {results.length}
+              </span>
+            </motion.button>
+          )}
           <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: showFilters ? "#14b8a6" : "#9ca3af" }}>
             <Filter className="w-3 h-3" /> Filtri avanzati <ChevronDown className={`w-3 h-3 transition-transform ${showFilters ? "rotate-180" : ""}`} />
           </button>
@@ -1321,6 +1405,9 @@ export default function LeadsPage() {
             );
           })}
         </div>
+
+        {/* ═══ GPS RADAR PANEL ═══ */}
+        <GpsRadarPanel open={gpsOpen} onClose={() => setGpsOpen(false)} onSearch={handleGpsSearch} loading={loading} />
 
         {/* ═══ ADVANCED FILTERS ═══ */}
         <AnimatePresence>
@@ -2548,6 +2635,14 @@ export default function LeadsPage() {
       onUpdateNotes={pipeline.updateNotes}
       onUpdateValue={pipeline.updateValue}
       onDeleteLead={pipeline.deleteLead}
+    />
+
+    {/* ═══ Speed Dial List — tutti i nomi con call/wa/email diretti ═══ */}
+    <SpeedDialList
+      open={speedDialOpen}
+      onClose={() => setSpeedDialOpen(false)}
+      leads={results}
+      onSelectLead={(l) => { setSpeedDialOpen(false); handleSelect(l as any); }}
     />
     </div>
   );
