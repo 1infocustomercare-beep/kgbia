@@ -57,6 +57,11 @@ type AccountUser = {
 
 type SortKey = "created_at" | "last_sign_in_at" | "email" | "primary_role" | "sector";
 
+const adminLinkFor = (t: Tenant) =>
+  t.kind === "restaurant" ? `/admin?demo=${t.id}` : `/app?company=${t.id}`;
+const publicLinkFor = (t: Tenant) =>
+  t.kind === "restaurant" ? `/r/${t.slug}` : `/b/${t.slug}`;
+
 export default function AccountManagerPanel() {
   const [users, setUsers] = useState<AccountUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -124,11 +129,6 @@ export default function AccountManagerPanel() {
     });
     return list;
   }, [users, search, filterRole, filterSector, filterStatus, filterOrigin, sortKey, sortDir]);
-
-  const adminLinkFor = (t: Tenant) =>
-    t.kind === "restaurant" ? `/admin?demo=${t.id}` : `/app?company=${t.id}`;
-  const publicLinkFor = (t: Tenant) =>
-    t.kind === "restaurant" ? `/r/${t.slug}` : `/b/${t.slug}`;
 
   const onMagicLink = async (u: AccountUser, tenant?: Tenant) => {
     setWorking(true);
