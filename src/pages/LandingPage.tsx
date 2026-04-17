@@ -32,7 +32,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: "#020204", color: "#f0f0f5" }}>
+    <div className="landing-dark force-dark landing-shell min-h-screen overflow-x-hidden bg-background text-foreground">
       <CinematicCursor />
       <LandingNav />
       <CinematicHero />
