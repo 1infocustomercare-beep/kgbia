@@ -35,7 +35,7 @@ export default function PricingSection() {
   const navigate = useNavigate();
 
   return (
-    <section id="prezzi" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
+    <section id="prezzi" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="light">
       <div className="landing-section-glow" data-tone="gold" />
 
       <div className="relative mx-auto max-w-[1320px]">
@@ -45,7 +45,7 @@ export default function PricingSection() {
             Investimenti chiari. <span className="landing-heading-gradient">Impatto misurabile.</span>
           </h2>
           <p className="mt-5 text-[clamp(0.98rem,1.7vw,1.08rem)] leading-[1.72] text-foreground/68">
-            Una tantum + mantenimento mensile, rateizzabile. Funnel completo, struttura premium e garanzia 90 giorni inclusa.
+            Setup una tantum (rateizzabile fino a 6 mesi) + canone di mantenimento. Tutto compreso: agenti AI, hosting premium, aggiornamenti continui, supporto dedicato.
           </p>
         </div>
 
@@ -94,8 +94,12 @@ export default function PricingSection() {
           ))}
         </div>
 
-        <div className="mt-10 flex items-center justify-center gap-2 text-center text-sm text-foreground/58">
-          <ShieldCheck className="h-4 w-4 text-accent" strokeWidth={2} /> Garanzia 90 giorni, zero penali, zero vincoli.
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-center text-sm text-foreground/58">
+          <span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-accent" strokeWidth={2} /> Onboarding garantito in 14 giorni</span>
+          <span className="hidden sm:inline text-foreground/30">·</span>
+          <span>Setup rateizzabile 3× o 6×</span>
+          <span className="hidden sm:inline text-foreground/30">·</span>
+          <span>Cambio piano in qualsiasi momento</span>
         </div>
       </div>
     </section>
