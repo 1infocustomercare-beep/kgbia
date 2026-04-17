@@ -5,6 +5,7 @@ import teamGiulia from "@/assets/team-giulia-sales.jpg";
 import teamMarco from "@/assets/team-marco-design.jpg";
 import teamLuca from "@/assets/team-luca-ai.jpg";
 import teamSofia from "@/assets/team-sofia-success.jpg";
+import MobileCarousel from "./MobileCarousel";
 
 const TEAM = [
   { name: "Kevin Berardini", role: "Founder & CEO", bio: "Visione, posizionamento e direzione strategica dell’ecosistema Empire.", photo: teamKevin, tone: "gold" },
@@ -38,16 +39,16 @@ export default function TeamSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:gap-4">
-          {TEAM.map((member, index) => (
+        {(() => {
+          const renderMember = (member: typeof TEAM[number], index: number, inCarousel = false) => (
             <motion.article
               key={member.name}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ delay: index * 0.06, duration: 0.65 }}
+              transition={{ delay: inCarousel ? 0 : index * 0.06, duration: 0.65 }}
               whileHover={{ y: -6 }}
-              className="landing-surface group rounded-[24px] p-3 sm:rounded-[26px] sm:p-4 lg:p-4"
+              className="landing-surface group h-full rounded-[24px] p-3 sm:rounded-[26px] sm:p-4 lg:p-4"
               data-tone={member.tone}
             >
               <div className="relative overflow-hidden rounded-[18px] border border-border/80 sm:rounded-[22px]">
@@ -65,8 +66,21 @@ export default function TeamSection() {
               </div>
               <p className="mt-3 px-1 text-[11px] leading-[1.58] text-foreground/72 sm:text-[12px] lg:text-[13px]">{member.bio}</p>
             </motion.article>
-          ))}
-        </div>
+          );
+
+          return (
+            <>
+              <div className="md:hidden">
+                <MobileCarousel autoplayMs={4000} slideWidth="w-[72%]" ariaLabel="Team Empire">
+                  {TEAM.map((m, i) => renderMember(m, i, true))}
+                </MobileCarousel>
+              </div>
+              <div className="hidden grid-cols-2 gap-3 sm:gap-4 md:grid md:grid-cols-3 lg:gap-4">
+                {TEAM.map((m, i) => renderMember(m, i, false))}
+              </div>
+            </>
+          );
+        })()}
       </div>
     </section>
   );

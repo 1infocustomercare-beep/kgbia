@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Code2, Palette, Plug, Workflow } from "lucide-react";
+import MobileCarousel from "./MobileCarousel";
 
 const CUSTOM = [
   { Icon: Palette, title: "Brand identity su misura", desc: "Colori, tono visivo, tipografia, immagini e gerarchia costruiti per sembrare immediatamente premium nel tuo settore.", tone: "gold" },
@@ -24,15 +25,15 @@ export default function CustomizationSection() {
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {CUSTOM.map((item, index) => (
+        {(() => {
+          const renderItem = (item: typeof CUSTOM[number], index: number, inCarousel = false) => (
             <motion.article
               key={item.title}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.08, duration: 0.65 }}
-              className="landing-surface rounded-[28px] p-5 lg:p-6"
+              transition={{ delay: inCarousel ? 0 : index * 0.08, duration: 0.65 }}
+              className="landing-surface h-full rounded-[28px] p-5 lg:p-6"
               data-tone={item.tone}
             >
               <div className="landing-icon-frame mb-5 h-14 w-14">
@@ -41,8 +42,21 @@ export default function CustomizationSection() {
               <h3 className="font-heading text-xl font-extrabold tracking-[-0.04em] text-foreground">{item.title}</h3>
               <p className="mt-3 max-w-[34ch] text-sm leading-[1.68] text-foreground/72">{item.desc}</p>
             </motion.article>
-          ))}
-        </div>
+          );
+
+          return (
+            <>
+              <div className="md:hidden">
+                <MobileCarousel autoplayMs={5000} ariaLabel="Aree di personalizzazione">
+                  {CUSTOM.map((item, i) => renderItem(item, i, true))}
+                </MobileCarousel>
+              </div>
+              <div className="hidden gap-4 md:grid md:grid-cols-2">
+                {CUSTOM.map((item, i) => renderItem(item, i, false))}
+              </div>
+            </>
+          );
+        })()}
       </div>
     </section>
   );

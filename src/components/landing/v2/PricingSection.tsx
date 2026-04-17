@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Check, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import MobileCarousel from "./MobileCarousel";
 
 const PLANS = [
   {
@@ -49,16 +50,16 @@ export default function PricingSection() {
           </p>
         </div>
 
-        <div className="grid items-stretch gap-3 lg:grid-cols-3 lg:gap-4">
-          {PLANS.map((plan, index) => (
+        {(() => {
+          const renderPlan = (plan: typeof PLANS[number], index: number, inCarousel = false) => (
             <motion.article
               key={plan.name}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.08, duration: 0.65 }}
+              transition={{ delay: inCarousel ? 0 : index * 0.08, duration: 0.65 }}
               whileHover={{ y: -6 }}
-              className={`landing-surface flex rounded-[26px] p-5 sm:p-6 lg:p-7 ${plan.featured ? "ring-1 ring-primary/30" : ""}`}
+              className={`landing-surface flex h-full rounded-[26px] p-5 sm:p-6 lg:p-7 ${plan.featured ? "ring-1 ring-primary/30" : ""}`}
               data-tone={plan.tone}
             >
               <div className="flex w-full flex-col">
@@ -92,8 +93,24 @@ export default function PricingSection() {
                 </button>
               </div>
             </motion.article>
-          ))}
-        </div>
+          );
+
+          return (
+            <>
+              {/* Mobile: carousel (no autoplay — pricing decision needs user control) */}
+              <div className="lg:hidden">
+                <MobileCarousel autoplayMs={0} ariaLabel="Pacchetti Empire">
+                  {PLANS.map((plan, i) => renderPlan(plan, i, true))}
+                </MobileCarousel>
+              </div>
+
+              {/* Desktop: 3-col grid */}
+              <div className="hidden items-stretch gap-3 lg:grid lg:grid-cols-3 lg:gap-4">
+                {PLANS.map((plan, i) => renderPlan(plan, i, false))}
+              </div>
+            </>
+          );
+        })()}
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-center text-sm text-foreground/72">
           <span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-accent" strokeWidth={2} /> Onboarding in 14 giorni</span>
