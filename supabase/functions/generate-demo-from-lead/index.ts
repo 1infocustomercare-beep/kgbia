@@ -804,6 +804,7 @@ async function createCompanyTenant(
   brand: any,
   palette: BrandPalette,
   images: { hero: string | null; gallery: string[]; logo: string | null },
+  themeConfig: Record<string, any> = {},
 ): Promise<{ id: string; slug: string }> {
   const baseSlug = slugify(lead.businessName);
   const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
@@ -830,6 +831,7 @@ async function createCompanyTenant(
       email: lead.email || `demo-${Date.now()}@empireaigroup.com`,
       modules_enabled: allModules,
       is_active: true,
+      theme_config: themeConfig,
       social_links: {
         instagram: lead.instagram,
         facebook: lead.facebook,
