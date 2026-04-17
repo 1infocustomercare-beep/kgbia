@@ -1,62 +1,69 @@
 import { motion } from "framer-motion";
+import teamKevin from "@/assets/team-kevin-ceo.jpg";
+import teamAlessandra from "@/assets/team-alessandra-cto.jpg";
+import teamGiulia from "@/assets/team-giulia-sales.jpg";
+import teamMarco from "@/assets/team-marco-design.jpg";
+import teamLuca from "@/assets/team-luca-ai.jpg";
+import teamSofia from "@/assets/team-sofia-success.jpg";
 
 const TEAM = [
-  {
-    name: "Kevin Berardini",
-    role: "Founder & CEO",
-    bio: "Visione, posizionamento e direzione strategica dell’intero ecosistema Empire.",
-    initials: "KB",
-    tone: "gold",
-  },
-  {
-    name: "Marco Telese",
-    role: "CTO & AI Architect",
-    bio: "Architettura, integrazioni e progettazione dei sistemi AI che rendono l’ecosistema realmente operativo.",
-    initials: "MT",
-    tone: "violet",
-  },
-  {
-    name: "Arianna AI",
-    role: "Senior Sales Strategist",
-    bio: "Voice intelligence proprietaria per demo, qualificazione e conversione commerciale continua.",
-    initials: "AI",
-    tone: "blue",
-  },
+  { name: "Kevin Berardini", role: "Founder & CEO", bio: "Visione, posizionamento e direzione strategica dell’ecosistema Empire.", photo: teamKevin, tone: "gold" },
+  { name: "Alessandra Conti", role: "CTO & AI Architect", bio: "Architettura e progettazione dei sistemi AI proprietari.", photo: teamAlessandra, tone: "violet" },
+  { name: "Marco Lombardi", role: "Head of Design", bio: "Direzione creativa, brand identity e UX premium per ogni verticale.", photo: teamMarco, tone: "blue" },
+  { name: "Giulia Romano", role: "Sales Strategist", bio: "Funnel commerciali, pricing e percorsi di conversione ad alto valore.", photo: teamGiulia, tone: "gold" },
+  { name: "Luca Ferrari", role: "AI Engineer", bio: "Sviluppo agenti, integrazioni e ottimizzazione continua dei modelli.", photo: teamLuca, tone: "violet" },
+  { name: "Sofia Marini", role: "Customer Success", bio: "Onboarding, formazione e crescita continua dei clienti Empire.", photo: teamSofia, tone: "emerald" },
 ];
 
 export default function TeamSection() {
   return (
-    <section id="team" className="relative overflow-hidden px-4 py-28 sm:px-6 lg:px-10">
+    <section id="team" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
       <div className="landing-section-glow" data-tone="gold" />
 
-      <div className="relative mx-auto max-w-[1240px]">
-        <div className="mx-auto mb-16 max-w-[740px] text-center" data-tone="gold">
-          <span className="landing-pill mb-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">Team ibrido</span>
-          <h2 className="text-[clamp(2rem,5vw,4rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
+      <div className="relative mx-auto max-w-[1320px]">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7 }}
+          className="mx-auto mb-12 max-w-[760px] text-center sm:mb-14"
+          data-tone="gold"
+        >
+          <span className="landing-pill mb-4 px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:mb-5 sm:px-4 sm:py-2 sm:text-[10px]">Team ibrido</span>
+          <h2 className="text-[clamp(1.85rem,5vw,3.6rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
             Strategia umana. <span className="landing-heading-gradient">Potenza AI.</span>
           </h2>
-          <p className="mt-5 text-[clamp(0.98rem,1.7vw,1.08rem)] leading-[1.74] text-foreground/68">
-            Un team compatto, credibile e ad alto livello: leadership, engineering e sales intelligence integrati nello stesso sistema.
+          <p className="mt-4 text-[clamp(0.92rem,1.6vw,1.05rem)] leading-[1.7] text-foreground/68 sm:mt-5">
+            Un team compatto e ad alto livello: leadership, engineering, design e success integrati nello stesso sistema.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:gap-5">
           {TEAM.map((member, index) => (
             <motion.article
               key={member.name}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.08, duration: 0.65 }}
-              className="landing-surface rounded-[30px] p-7 text-center"
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ delay: index * 0.06, duration: 0.65 }}
+              whileHover={{ y: -6 }}
+              className="landing-surface group rounded-[24px] p-3 sm:rounded-[28px] sm:p-4 lg:p-5"
               data-tone={member.tone}
             >
-              <div className="mx-auto mb-5 grid h-24 w-24 place-items-center rounded-full border border-border/80 bg-[linear-gradient(135deg,hsl(var(--primary)/0.24),hsl(var(--empire-violet)/0.14),hsl(var(--gold)/0.18))] font-heading text-2xl font-extrabold text-foreground shadow-[0_24px_60px_-30px_hsl(var(--primary)/0.8)]">
-                {member.initials}
+              <div className="relative overflow-hidden rounded-[18px] border border-border/80 sm:rounded-[22px]">
+                <img
+                  src={member.photo}
+                  alt={`${member.name} — ${member.role}`}
+                  loading="lazy"
+                  className="aspect-[4/5] w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.06]"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,hsl(var(--deep-black)/0.85))]" />
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-3 sm:left-3 sm:right-3">
+                  <div className="text-[8px] font-bold uppercase tracking-[0.2em] text-foreground/70 sm:text-[9px]">{member.role}</div>
+                  <div className="mt-0.5 font-heading text-sm font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-base lg:text-lg">{member.name}</div>
+                </div>
               </div>
-              <h3 className="font-heading text-xl font-extrabold tracking-[-0.04em] text-foreground">{member.name}</h3>
-              <div className="mt-2 text-[11px] uppercase tracking-[0.24em] text-foreground/50">{member.role}</div>
-              <p className="mt-4 text-sm leading-[1.72] text-foreground/64">{member.bio}</p>
+              <p className="mt-3 px-1 text-[11px] leading-[1.6] text-foreground/65 sm:text-[12px] lg:text-[13px]">{member.bio}</p>
             </motion.article>
           ))}
         </div>
