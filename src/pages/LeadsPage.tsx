@@ -18,8 +18,10 @@ import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
 import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFactoryOverlay";
 import SellerCRM from "@/components/leads/SellerCRM";
+import GpsRadarPanel, { GpsLocation } from "@/components/leads/GpsRadarPanel";
+import SpeedDialList from "@/components/leads/SpeedDialList";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
-import { Briefcase, Bookmark, Wand2 as WandIcon } from "lucide-react";
+import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
 
 /* ─── Types ─── */
 interface Lead {
