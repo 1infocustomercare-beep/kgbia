@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
 const WORDS = ["Non", "vendiamo", "software.", "Liberiamo", "il", "tuo", "tempo", "mentre", "fatturi", "di", "più."];
+const ACCENT_WORDS = new Set(["Liberiamo", "fatturi", "più."]);
 const STATS = [
   { value: "847+", label: "business attivati" },
   { value: "98", label: "agenti proprietari" },
@@ -9,8 +10,21 @@ const STATS = [
   { value: "−12h", label: "lavoro a settimana" },
 ];
 
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return mobile;
+}
+
 export default function ManifestoSection() {
   const ref = useRef<HTMLElement>(null);
+  const isMobile = useIsMobile();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.55 });
 
@@ -25,11 +39,27 @@ export default function ManifestoSection() {
           </span>
         </div>
 
-        <h2 className="mx-auto mb-8 max-w-[22ch] text-center font-heading text-[clamp(1.6rem,5.4vw,4rem)] font-extrabold leading-[1.05] tracking-[-0.04em] text-foreground sm:mb-10 sm:leading-[1] lg:mb-12">
-          {WORDS.map((word, index) => (
-            <Word key={word + index} word={word} index={index} total={WORDS.length} progress={smooth} />
-          ))}
-        </h2>
+        {isMobile ? (
+          // MOBILE: simple, immediate, fully readable — single fade-in on enter
+          <motion.h2
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-15%" }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mb-8 max-w-[20ch] text-center font-heading text-[clamp(1.7rem,7.4vw,2.8rem)] font-extrabold leading-[1.12] tracking-[-0.03em] text-foreground"
+          >
+            Non vendiamo software.{" "}
+            <span className="landing-heading-gradient">Liberiamo il tuo tempo</span>{" "}
+            mentre <span className="landing-heading-gradient">fatturi di più.</span>
+          </motion.h2>
+        ) : (
+          // DESKTOP / tablet: cinematic word-by-word reveal driven by scroll
+          <h2 className="mx-auto mb-8 flex max-w-[22ch] flex-wrap justify-center gap-x-[0.28em] gap-y-1 text-center font-heading text-[clamp(2rem,5.4vw,4rem)] font-extrabold leading-[1] tracking-[-0.04em] text-foreground sm:mb-10 lg:mb-12">
+            {WORDS.map((word, index) => (
+              <Word key={word + index} word={word} index={index} total={WORDS.length} progress={smooth} />
+            ))}
+          </h2>
+        )}
 
         <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           {STATS.map((stat, index) => (
@@ -67,12 +97,12 @@ function Word({
   const end = start + 0.18;
   const opacity = useTransform(progress, [start, end], [0.32, 1]);
   const y = useTransform(progress, [start, end], [14, 0]);
-  const accent = word === "Liberiamo" || word === "fatturi" || word === "più.";
+  const accent = ACCENT_WORDS.has(word);
 
   return (
     <motion.span
       style={{ opacity, y }}
-      className={`mx-[0.14em] inline-block ${accent ? "landing-heading-gradient" : "text-foreground"}`}
+      className={`inline-block ${accent ? "landing-heading-gradient" : "text-foreground"}`}
     >
       {word}
     </motion.span>
