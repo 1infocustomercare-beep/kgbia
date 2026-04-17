@@ -1012,6 +1012,12 @@ serve(async (req) => {
           menuCount: brand.menu?.length || 0,
           clientsCount: brand.clients?.length || 0,
         },
+        autoMatch: {
+          subSector: match.sub,
+          templateVariant: match.variant,
+          themeHint: match.themeHint,
+          heroTagline: match.heroTagline,
+        },
         scraped: {
           ok: !!scraped,
           hasBranding: !!scraped?.branding,
