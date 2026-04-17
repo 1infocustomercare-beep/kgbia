@@ -1353,6 +1353,42 @@ export default function LeadsPage() {
 
         {/* Quick actions */}
         <div className="flex items-center gap-2 flex-wrap">
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setGpsOpen(!gpsOpen)}
+            className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-lg relative overflow-hidden"
+            style={{
+              background: gpsOpen
+                ? "linear-gradient(135deg, rgba(6,182,212,0.25), rgba(20,184,166,0.15))"
+                : "linear-gradient(135deg, rgba(6,182,212,0.12), rgba(20,184,166,0.06))",
+              border: `1px solid ${gpsOpen ? "rgba(6,182,212,0.5)" : "rgba(6,182,212,0.3)"}`,
+              color: "#22d3ee",
+            }}
+          >
+            <motion.span animate={{ rotate: gpsOpen ? 360 : 0 }} transition={{ duration: 1.5, repeat: gpsOpen ? Infinity : 0, ease: "linear" }}>
+              <Radar className="w-3 h-3" />
+            </motion.span>
+            GPS Radar
+            <span className="text-[7px] px-1 rounded font-black" style={{ background: "rgba(34,197,94,0.2)", color: "#86efac" }}>FREE</span>
+          </motion.button>
+          {results.length > 0 && (
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSpeedDialOpen(true)}
+              className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-lg"
+              style={{
+                background: "linear-gradient(135deg, rgba(20,184,166,0.18), rgba(16,185,129,0.10))",
+                border: "1px solid rgba(20,184,166,0.4)",
+                color: "#5eead4",
+              }}
+            >
+              <ListChecks className="w-3 h-3" />
+              Lista nomi
+              <span className="text-[8px] font-black px-1 rounded" style={{ background: "rgba(20,184,166,0.3)", color: "#fff" }}>
+                {results.length}
+              </span>
+            </motion.button>
+          )}
           <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: showFilters ? "#14b8a6" : "#9ca3af" }}>
             <Filter className="w-3 h-3" /> Filtri avanzati <ChevronDown className={`w-3 h-3 transition-transform ${showFilters ? "rotate-180" : ""}`} />
           </button>
@@ -1369,6 +1405,9 @@ export default function LeadsPage() {
             );
           })}
         </div>
+
+        {/* ═══ GPS RADAR PANEL ═══ */}
+        <GpsRadarPanel open={gpsOpen} onClose={() => setGpsOpen(false)} onSearch={handleGpsSearch} loading={loading} />
 
         {/* ═══ ADVANCED FILTERS ═══ */}
         <AnimatePresence>
