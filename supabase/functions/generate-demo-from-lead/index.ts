@@ -993,6 +993,16 @@ serve(async (req) => {
       }
     }
 
+    // Se sushi/giapponese → arricchisci col preset Paperfish quando l'AI è generica
+    if (isFood && match.sub === "sushi" && (match.variant === "paperfish-sakura" || match.variant === "paperfish-dark")) {
+      const aiMenu: any[] = Array.isArray(brand.menu) ? brand.menu : [];
+      const sushiCount = aiMenu.filter(m => /sushi|sashimi|nigiri|maki|roll|ramen|gyoza|temaki|uramaki/i.test(`${m.name} ${m.category}`)).length;
+      if (sushiCount < 6) {
+        brand.menu = [...DEFAULT_SUSHI_MENU];
+        console.log("[demo-factory] sushi menu enriched with default Paperfish preset");
+      }
+    }
+
     const tenant = isFood
       ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images, themeConfig)
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
