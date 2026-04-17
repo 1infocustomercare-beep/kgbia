@@ -70,11 +70,11 @@ export default function HorizontalPortfolio() {
             ))}
           </motion.div>
 
-          <div className="mt-2 flex flex-col gap-2 sm:mt-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-3 flex flex-col items-center gap-2 text-center sm:mt-4 sm:flex-row sm:items-center sm:justify-between sm:text-left">
             <div className="text-[11px] leading-[1.5] text-foreground/68 sm:text-[12px]">
               Ogni progetto include design premium, funnel persuasivo e proof of value.
             </div>
-            <button onClick={() => navigate("/demo")} className="landing-button-secondary self-start px-4 py-2 text-[13px] font-semibold sm:self-auto sm:px-5 sm:py-2.5">
+            <button onClick={() => navigate("/demo")} className="landing-button-secondary px-4 py-2 text-[13px] font-semibold sm:px-5 sm:py-2.5">
               Esplora tutti i progetti →
             </button>
           </div>
