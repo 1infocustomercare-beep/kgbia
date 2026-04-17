@@ -15,15 +15,17 @@ export default function ManifestoSection() {
   const smooth = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.55 });
 
   return (
-    <section ref={ref} id="manifesto" className="landing-section relative overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16" data-theme="light">
+    <section ref={ref} id="manifesto" className="landing-section relative overflow-hidden px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12" data-theme="light">
       <div className="landing-section-glow" data-tone="violet" />
 
-      <div className="relative mx-auto max-w-[1320px]">
-        <div className="mb-6 text-center sm:mb-8" data-tone="gold">
-          <span className="landing-pill px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:px-4 sm:py-2 sm:text-[10px]">Manifesto Empire</span>
+      <div className="relative mx-auto max-w-[1280px]">
+        <div className="mb-5 text-center sm:mb-6" data-tone="gold">
+          <span className="landing-pill px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:px-4 sm:py-2 sm:text-[10px]">
+            Manifesto Empire
+          </span>
         </div>
 
-        <h2 className="mx-auto mb-10 flex max-w-[16ch] flex-wrap justify-center text-center font-heading text-[clamp(1.95rem,7vw,5rem)] font-extrabold leading-[0.96] tracking-[-0.055em] text-foreground sm:mb-12 lg:mb-14">
+        <h2 className="mx-auto mb-8 flex max-w-[16ch] flex-wrap justify-center text-center font-heading text-[clamp(1.75rem,6vw,4.4rem)] font-extrabold leading-[0.97] tracking-[-0.05em] text-foreground sm:mb-10 lg:mb-12">
           {WORDS.map((word, index) => (
             <Word key={word + index} word={word} index={index} total={WORDS.length} progress={smooth} />
           ))}
@@ -37,11 +39,11 @@ export default function ManifestoSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.08, duration: 0.65 }}
-              className="landing-surface rounded-[22px] p-4 sm:rounded-[28px] sm:p-6"
+              className="landing-surface rounded-[22px] p-4 sm:rounded-[26px] sm:p-5"
               data-tone={index % 2 === 0 ? "gold" : "violet"}
             >
-              <div className="text-[clamp(1.6rem,4vw,2.9rem)] font-heading font-extrabold leading-none text-foreground">{stat.value}</div>
-              <div className="mt-2 text-[10px] uppercase tracking-[0.22em] text-foreground/60 sm:mt-3 sm:text-[11px]">{stat.label}</div>
+              <div className="text-[clamp(1.55rem,4vw,2.6rem)] font-heading font-extrabold leading-none text-foreground">{stat.value}</div>
+              <div className="mt-2 text-[10px] uppercase tracking-[0.22em] text-foreground/66 sm:mt-3 sm:text-[11px]">{stat.label}</div>
             </motion.article>
           ))}
         </div>
@@ -84,4 +86,3 @@ function Word({
     </span>
   );
 }
-

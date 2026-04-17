@@ -6,11 +6,7 @@ export default function ContactCTA() {
   const navigate = useNavigate();
 
   return (
-    <section
-      id="contatti"
-      className="landing-section relative overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16"
-      data-theme="dark"
-    >
+    <section id="contatti" className="landing-section relative overflow-hidden px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12" data-theme="dark">
       <div className="landing-section-glow" data-tone="gold" />
 
       <div className="relative mx-auto max-w-[1100px]">
@@ -19,7 +15,7 @@ export default function ContactCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.75 }}
-          className="landing-surface relative overflow-hidden rounded-[32px] p-8 text-center sm:p-10 lg:rounded-[40px] lg:p-14"
+          className="landing-surface relative overflow-hidden rounded-[30px] p-6 text-center sm:p-8 lg:rounded-[36px] lg:p-10"
           data-tone="gold"
         >
           <div className="pointer-events-none absolute inset-0">
@@ -35,17 +31,15 @@ export default function ContactCTA() {
           </div>
 
           <div className="relative">
-            <span className="landing-pill mb-6 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">
-              Pronto a iniziare?
-            </span>
+            <span className="landing-pill mb-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">Pronto a iniziare?</span>
 
-            <h2 className="mb-5 font-heading text-[clamp(2rem,6vw,4.2rem)] font-extrabold leading-[0.95] tracking-[-0.04em] text-foreground">
+            <h2 className="mb-4 font-heading text-[clamp(1.8rem,5.3vw,3.6rem)] font-extrabold leading-[0.97] tracking-[-0.04em] text-foreground">
               Il tuo business merita
               <span className="block landing-heading-gradient">di essere autonomo.</span>
             </h2>
 
-            <p className="mx-auto mb-8 max-w-[640px] text-[clamp(1rem,1.7vw,1.15rem)] font-light leading-[1.7] text-foreground/76">
-              Prenota una demo personalizzata di 30 minuti. Ti mostreremo come Empire AI può trasformare il tuo settore specifico, con dati reali sui ritorni d'investimento attesi.
+            <p className="mx-auto mb-7 max-w-[640px] text-[clamp(0.96rem,1.55vw,1.08rem)] leading-[1.68] text-foreground/78">
+              Prenota una demo personalizzata di 30 minuti e scopri come trasformare il tuo settore con una struttura più premium e più redditizia.
             </p>
 
             <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
@@ -56,16 +50,13 @@ export default function ContactCTA() {
                 <span>Prenota la demo strategica</span>
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
               </button>
-              <button
-                onClick={() => navigate("/demo")}
-                className="landing-button-secondary rounded-full px-9 py-4 text-base font-semibold"
-              >
+              <button onClick={() => navigate("/demo")} className="landing-button-secondary rounded-full px-9 py-4 text-base font-semibold">
                 Vedi una demo live
               </button>
             </div>
 
-            <div className="mt-10 border-t border-border/50 pt-6 text-[12px] text-foreground/55">
-              <span className="font-semibold text-foreground/80">Empire AI Group</span> · info@empireaigroup.com · Risposta entro 24h
+            <div className="mt-8 border-t border-border/50 pt-5 text-[12px] text-foreground/60">
+              <span className="font-semibold text-foreground/82">Empire AI Group</span> · info@empireaigroup.com · Risposta entro 24h
             </div>
           </div>
         </motion.div>
