@@ -150,8 +150,8 @@ export default function Orbital3DShowcase() {
   }, [hovering]);
 
   const active = MOCKUPS[activeIndex];
-  // Section is tall enough to give one full viewport per mockup of "feel" but compressed
-  const sectionHeight = useMemo(() => `${MOCKUPS.length * 32 + 60}svh`, []);
+  // Compact pinned section — enough scroll to feel the rotation, no dead black space after
+  const sectionHeight = useMemo(() => `220svh`, []);
 
   return (
     <section
