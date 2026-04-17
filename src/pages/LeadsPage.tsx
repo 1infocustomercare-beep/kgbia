@@ -681,6 +681,48 @@ export default function LeadsPage() {
     handleSearch(searchPage + 1, true);
   }, [handleSearch, searchPage]);
 
+  /* ─── GPS Radar Search (coords + radius km, real OSM data) ─── */
+  const handleGpsSearch = useCallback(async (loc: GpsLocation, radiusKm: number) => {
+    setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("lead-search", {
+        body: {
+          sector,
+          mode: "gps",
+          use_google: true,
+          page: 0,
+          lat: loc.lat,
+          lon: loc.lon,
+          radius_km: radiusKm,
+          city: loc.label,
+        },
+      });
+      if (error) throw error;
+      if (data?.success && data.results?.length > 0) {
+        const processed = processResults(data.results, false);
+        setSearchPage(0);
+        setHasMore(data.has_more ?? false);
+        setLastSearchCity(loc.label);
+        setLastSearchSector(sector);
+        setCity(loc.label);
+        const sources = data.sources || {};
+        toast.success(`📡 ${processed.length} lead reali nel raggio di ${radiusKm < 1 ? `${radiusKm * 1000}m` : `${radiusKm}km`}`, {
+          description: `OSM: ${sources.nominatim || 0} · Overpass: ${sources.overpass || 0} · Google: ${sources.google || 0}`,
+        });
+        setGpsOpen(false);
+        setTimeout(() => batchEnrichInstagram(processed), 1500);
+        // Auto-open speed dial if many results
+        if (processed.length >= 5) setTimeout(() => setSpeedDialOpen(true), 800);
+      } else {
+        toast.error(`Nessun lead trovato nel raggio di ${radiusKm}km — prova ad ampliare`);
+      }
+    } catch (e: any) {
+      toast.error(e.message || "Errore GPS scan");
+    } finally {
+      setLoading(false);
+    }
+  }, [sector, processResults, batchEnrichInstagram]);
+
   /* ─── Add manual lead ─── */
   const addManualLead = () => {
     if (!manualName.trim()) { toast.error("Nome attività obbligatorio"); return; }
