@@ -339,27 +339,6 @@
   color: hsl(var(--landing-accent, var(--primary)));
 }
 
-/* Smooth section transition on dark→light boundaries */
-.landing-section[data-theme="light"]::before,
-.landing-section[data-theme="dark"]::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 0;
-  right: 0;
-  height: 80px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.landing-section[data-theme="light"]::before {
-  background: linear-gradient(180deg, hsl(228 24% 4% / 0.4) 0%, transparent 100%);
-}
-
-.landing-section[data-theme="dark"]::before {
-  background: linear-gradient(180deg, hsl(220 24% 96% / 0.3) 0%, transparent 100%);
-}
-
 .landing-pill {
   display: inline-flex;
   align-items: center;

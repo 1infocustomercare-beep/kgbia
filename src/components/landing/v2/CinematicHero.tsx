@@ -102,7 +102,7 @@ export default function CinematicHero() {
     <section
       ref={ref}
       id="hero"
-      className="relative min-h-[160svh] sm:min-h-[180svh]"
+      className="relative min-h-[100svh]"
       style={{ perspective: "1600px" }}
     >
       {/* Cinematic depth background — macOS-like flowing mesh */}
@@ -162,8 +162,8 @@ export default function CinematicHero() {
         />
       </div>
 
-      {/* Sticky cinematic stage */}
-      <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pt-20 sm:pt-24 lg:pt-28">
+      {/* Hero stage — single viewport */}
+      <div className="relative flex min-h-[100svh] flex-col overflow-hidden pt-20 sm:pt-24 lg:pt-28">
         <div className="mx-auto grid w-full max-w-[1400px] flex-1 grid-cols-1 items-center gap-6 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-10">
           {/* Text column */}
           <motion.div style={{ y: titleY, opacity: titleOpacity }} className="relative z-20 text-center lg:text-left">
