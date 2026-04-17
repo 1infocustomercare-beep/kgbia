@@ -16,7 +16,19 @@ export interface DemoFactoryResult {
     menuCount: number;
     clientsCount: number;
   };
-  scraped: { ok: boolean; hasBranding: boolean };
+  scraped: {
+    ok: boolean;
+    hasBranding: boolean;
+    imagesFound?: number;
+    logoFound?: boolean;
+    detectedSector?: string | null;
+  };
+  images?: {
+    hero: string | null;
+    gallery: string[];
+    logo: string | null;
+    totalReal: number;
+  };
 }
 
 interface Props {
