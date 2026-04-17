@@ -223,7 +223,25 @@ const DEFAULT_PIZZERIA_MENU = [
   { name: "Acqua Naturale 75cl", description: "Bottiglia in vetro", price: 2.5, category: "Bevande" },
 ];
 
-// Mappa settore → keyword per scoring image relevance
+/* Default sushi/japanese menu (used as seed when AI brand kit is generic) */
+const DEFAULT_SUSHI_MENU = [
+  { name: "Salmon Nigiri", description: "Riso shari, salmone fresco norvegese, pennellata di nikiri", price: 8, category: "Nigiri", popular: true, jp_label: "鮭にぎり" },
+  { name: "Tuna Nigiri", description: "Riso shari, tonno rosso del Mediterraneo", price: 9, category: "Nigiri", jp_label: "鮪にぎり" },
+  { name: "Ebi Nigiri", description: "Gambero cotto, riso shari, salsa unagi", price: 7, category: "Nigiri", jp_label: "海老にぎり" },
+  { name: "Salmon Sashimi (5pz)", description: "Salmone tagliato a fette spesse, daikon, wasabi", price: 14, category: "Sashimi", popular: true, jp_label: "鮭刺身" },
+  { name: "Tuna Sashimi (5pz)", description: "Tonno rosso premium, taglio spesso", price: 18, category: "Sashimi", jp_label: "鮪刺身" },
+  { name: "Hosomaki Salmone", description: "Mini roll: riso, alga nori, salmone fresco (6pz)", price: 7, category: "Hosomaki", jp_label: "細巻" },
+  { name: "Hosomaki Tonno", description: "Mini roll: riso, alga nori, tonno (6pz)", price: 7.5, category: "Hosomaki", jp_label: "細巻" },
+  { name: "California Roll", description: "Granchio, avocado, cetriolo, sesamo, maionese giapponese (8pz)", price: 12, category: "Uramaki", popular: true, jp_label: "カリフォルニアロール" },
+  { name: "Spicy Tuna Roll", description: "Tonno piccante, cipollotto, peperoncino, salsa sriracha (8pz)", price: 13, category: "Uramaki", jp_label: "スパイシーマグロ" },
+  { name: "Dragon Roll", description: "Gambero tempura, avocado, anguilla, salsa unagi (8pz)", price: 18, category: "Special Roll", popular: true, jp_label: "ドラゴンロール" },
+  { name: "Rainbow Roll", description: "California roll ricoperto da 5 tipi di pesce e avocado (8pz)", price: 19, category: "Special Roll", jp_label: "レインボーロール" },
+  { name: "Tonkotsu Ramen", description: "Brodo di maiale 12h, chashu, ajitama, scalogno, nori", price: 16, category: "Ramen", popular: true, jp_label: "豚骨ラーメン" },
+  { name: "Shoyu Ramen", description: "Brodo di pollo, salsa di soia, naruto, bambù, uovo", price: 14, category: "Ramen", jp_label: "醤油ラーメン" },
+  { name: "Edamame", description: "Fagioli di soia al sale marino dell'Himalaya", price: 6, category: "Antipasti", jp_label: "枝豆" },
+  { name: "Gyoza (5pz)", description: "Ravioli giapponesi al maiale e cavolo, salsa ponzu", price: 8, category: "Antipasti", popular: true, jp_label: "餃子" },
+  { name: "Mochi Trio", description: "Tre dolcetti di riso glutinoso: matcha, fragola, cocco", price: 8, category: "Dolci", jp_label: "餅" },
+];
 const SECTOR_IMAGE_KEYWORDS: Record<string, string[]> = {
   food: ["pasta", "pizza", "piatto", "dish", "menu", "tavolo", "ristorante", "chef"],
   bakery: ["pane", "torta", "dolce", "pasticceria", "bread", "cake"],
