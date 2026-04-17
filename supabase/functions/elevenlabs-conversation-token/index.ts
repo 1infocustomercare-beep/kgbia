@@ -12,16 +12,8 @@ serve(async (req) => {
   }
 
   try {
-    // ── Auth guard ──
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
-    const _authClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: authHeader } } });
-    const { data: { user: _authUser }, error: _authErr } = await _authClient.auth.getUser();
-    if (_authErr || !_authUser) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
+    // Public endpoint: voice agent is available on the landing page (anonymous users).
+    // The ElevenLabs API key stays server-side; rate limiting is handled by ElevenLabs itself.
 
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
     if (!ELEVENLABS_API_KEY) {
