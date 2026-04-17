@@ -1696,7 +1696,15 @@ export default function LeadsPage() {
                     <Eye className="w-3.5 h-3.5 shrink-0" style={{ color: "#a78bfa" }} />
                     <span className="text-xs font-bold text-white truncate">📱 Preview {sectorConfig?.label || "Business"} per {selected.name}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <button
+                      onClick={() => runDemoFactory(selected, customPreview)}
+                      disabled={demoFactoryLoading}
+                      className="text-[9px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1 disabled:opacity-50"
+                      style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", color: "#fff", boxShadow: "0 4px 14px rgba(167,139,250,0.35)" }}
+                    >
+                      <WandIcon className="w-3 h-3" /> {demoFactoryLoading ? "Genero…" : "🪄 Genera Demo Live"}
+                    </button>
                     <button
                       onClick={() => setShowPicker(true)}
                       className="text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"
