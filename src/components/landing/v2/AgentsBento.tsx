@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Bell, Brain, MessageSquare, Mic, Shield, Star, Target, User, Zap } from "lucide-react";
+import MobileCarousel from "./MobileCarousel";
 
 const AGENTS = [
   {
