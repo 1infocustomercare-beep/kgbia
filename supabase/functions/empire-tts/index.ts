@@ -13,15 +13,22 @@ serve(async (req) => {
   }
 
   try {
-    // ── Auth guard ──
+    // ── Optional auth (TTS is allowed for anon visitors on public pages) ──
+    // If a real user token is provided, we still validate it; anon/publishable key is OK.
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
-    const _authClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: authHeader } } });
-    const { data: { user: _authUser }, error: _authErr } = await _authClient.auth.getUser();
-    if (_authErr || !_authUser) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+
+    if (token && token !== anonKey) {
+      const _authClient = createClient(Deno.env.get("SUPABASE_URL")!, anonKey, {
+        global: { headers: { Authorization: `Bearer ${token}` } },
+      });
+      const { data: { user: _authUser }, error: _authErr } = await _authClient.auth.getUser();
+      if (_authErr || !_authUser) {
+        // Token provided but invalid/expired — fall through as anon instead of failing,
+        // so the splash narration on public pages keeps working.
+        console.warn("[empire-tts] Invalid user token, proceeding as anonymous");
+      }
     }
 
     const { text, voiceProfile } = await req.json();
