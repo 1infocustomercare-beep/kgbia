@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import empireLogo from "@/assets/empire-logo-icon.png";
 
 const NAV_LINKS = [
   { label: "Settori", href: "#settori" },
@@ -48,9 +49,22 @@ export default function LandingNav() {
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-4 sm:px-5 lg:px-10">
           <div className={`w-full rounded-full border px-4 sm:px-5 transition-all duration-500 ${scrolled ? "border-border/80 bg-background/70 shadow-[0_24px_72px_-42px_hsl(0_0%_0%_/_0.85)] backdrop-blur-2xl" : "border-transparent bg-transparent"}`}>
             <div className="flex items-center justify-between py-2.5">
-          <a href="#hero" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center gap-3 font-heading text-lg font-extrabold tracking-[-0.03em] text-foreground sm:text-xl">
-            <div className="grid h-10 w-10 place-items-center rounded-2xl border border-primary/30 bg-[linear-gradient(135deg,hsl(var(--primary)/0.92),hsl(var(--empire-violet)/0.86),hsl(var(--gold)/0.76))] text-sm font-extrabold text-primary-foreground shadow-[0_18px_38px_-20px_hsl(var(--primary)/0.8)]">E</div>
-            EMPIRE.AI
+          <a
+            href="#hero"
+            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+            className="flex items-center gap-2.5 font-heading text-base font-extrabold tracking-[-0.03em] text-foreground sm:gap-3 sm:text-xl"
+            aria-label="Empire AI — Home"
+          >
+            <span className="grid h-9 w-9 place-items-center overflow-hidden rounded-2xl border border-primary/30 bg-[linear-gradient(135deg,hsl(var(--primary)/0.18),hsl(var(--empire-violet)/0.18),hsl(var(--gold)/0.16))] shadow-[0_18px_38px_-20px_hsl(var(--primary)/0.8)] sm:h-10 sm:w-10">
+              <img
+                src={empireLogo}
+                alt="Empire AI"
+                className="h-7 w-7 object-contain sm:h-8 sm:w-8"
+                loading="eager"
+                decoding="async"
+              />
+            </span>
+            <span className="leading-none">EMPIRE.AI</span>
           </a>
 
           <ul className="hidden lg:flex gap-7">
