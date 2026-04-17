@@ -1148,6 +1148,7 @@ export type Database = {
           social_links: Json | null
           subscription_plan: string
           tagline: string | null
+          theme_config: Json | null
           updated_at: string
         }
         Insert: {
@@ -1174,6 +1175,7 @@ export type Database = {
           social_links?: Json | null
           subscription_plan?: string
           tagline?: string | null
+          theme_config?: Json | null
           updated_at?: string
         }
         Update: {
@@ -1200,6 +1202,7 @@ export type Database = {
           social_links?: Json | null
           subscription_plan?: string
           tagline?: string | null
+          theme_config?: Json | null
           updated_at?: string
         }
         Relationships: []
@@ -3952,6 +3955,7 @@ export type Database = {
           table_orders_enabled: boolean
           tagline: string | null
           takeaway_enabled: boolean
+          theme_config: Json | null
           updated_at: string
         }
         Insert: {
@@ -3984,6 +3988,7 @@ export type Database = {
           table_orders_enabled?: boolean
           tagline?: string | null
           takeaway_enabled?: boolean
+          theme_config?: Json | null
           updated_at?: string
         }
         Update: {
@@ -4016,6 +4021,7 @@ export type Database = {
           table_orders_enabled?: boolean
           tagline?: string | null
           takeaway_enabled?: boolean
+          theme_config?: Json | null
           updated_at?: string
         }
         Relationships: []
