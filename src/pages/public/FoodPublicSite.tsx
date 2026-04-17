@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, forwardRef } from "react";
+import { useState, useRef, useEffect, forwardRef, useMemo } from "react";
 
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
@@ -8,6 +8,7 @@ import { motion, useInView, useScroll, useTransform, AnimatePresence } from "fra
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { StrapizzamiSite, type StrapizzamiSiteData } from "@/components/templates/strapizzami/StrapizzamiSite";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -128,6 +129,42 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
   const [galleryIdx, setGalleryIdx] = useState(0);
 
   useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
+
+  // ── Strapizzami template branch (pizzeria tradizionale) ──
+  const themeConfig = (restaurant as any)?.theme_config || (company as any)?.theme_config;
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+
+  const strapizzamiData = useMemo<StrapizzamiSiteData | null>(() => {
+    if (templateVariant !== "strapizzami") return null;
+    const items = (menuItems.length > 0 ? menuItems : []).map((i: any) => ({
+      id: String(i.id),
+      name: i.name,
+      description: i.description || "",
+      price: Number(i.price) || 0,
+      image: i.image_url || "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=600",
+      category: i.category || "Pizze",
+      is_popular: !!i.is_popular,
+      ingredients: i.description,
+    }));
+    return {
+      brandName: company.name || "Pizzeria",
+      subtitle: company.tagline || "Pizzeria Napoletana",
+      heroImage: themeConfig?.hero_image || "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      heroTagline: themeConfig?.hero_tagline || "LA VERA PIZZA NAPOLETANA",
+      address: [company.address, company.city].filter(Boolean).join(", ") || "Via Roma 1, Napoli",
+      items: items.length > 0 ? items : [
+        { id: "1", name: "Margherita DOC", description: "San Marzano, bufala, basilico, olio EVO", price: 9.5, image: "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Classiche", is_popular: true },
+        { id: "2", name: "Diavola", description: "Salame piccante, mozzarella, peperoncino", price: 11, image: "https://images.pexels.com/photos/845811/pexels-photo-845811.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Classiche" },
+        { id: "3", name: "Capricciosa", description: "Cotto, funghi, carciofi, olive", price: 12.5, image: "https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Speciali" },
+        { id: "4", name: "Salsiccia e Friarielli", description: "Salsiccia, friarielli, provola", price: 13, image: "https://images.pexels.com/photos/1146760/pexels-photo-1146760.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Speciali" },
+      ],
+    };
+  }, [templateVariant, menuItems, company, themeConfig]);
+
+  if (strapizzamiData) {
+    return <StrapizzamiSite data={strapizzamiData} />;
+  }
+
 
   const handleReservation = async () => {
     if (!form.name || !form.phone || !form.date || !form.time) { toast.error("Compila tutti i campi obbligatori"); return; }
