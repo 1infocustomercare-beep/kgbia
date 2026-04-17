@@ -59,3 +59,6 @@ verify_jwt = false
 
 [functions.whatsapp-ai-chat]
 verify_jwt = false
+
+[functions.generate-demo-from-lead]
+verify_jwt = false
