@@ -19,6 +19,7 @@ export default function HorizontalPortfolio() {
   const ref = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [maxX, setMaxX] = useState(0);
+  const [edgeInset, setEdgeInset] = useState(24);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 90, damping: 28, mass: 0.7 });
 
@@ -27,7 +28,11 @@ export default function HorizontalPortfolio() {
       const track = trackRef.current;
       if (!track) return;
       const viewport = window.innerWidth;
-      setMaxX(Math.max(track.scrollWidth - viewport + 24, 0));
+      const firstCard = track.querySelector("article");
+      const cardWidth = firstCard instanceof HTMLElement ? firstCard.offsetWidth : 304;
+      const inset = Math.max((viewport - cardWidth) / 2, 16);
+      setEdgeInset(inset);
+      setMaxX(Math.max(track.scrollWidth - viewport, 0));
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -39,11 +44,11 @@ export default function HorizontalPortfolio() {
   const x = useTransform(smooth, [0, 1], [0, -maxX]);
 
   return (
-    <section ref={ref} id="portfolio" className="landing-section relative overflow-hidden" data-theme="dark" style={{ height: `${PROJECTS.length * 24 + 82}vh` }}>
+    <section ref={ref} id="portfolio" className="landing-section relative overflow-hidden" data-theme="dark" style={{ height: `${PROJECTS.length * 24 + 84}vh` }}>
       <div className="sticky top-0 flex h-[100svh] overflow-hidden">
         <div className="absolute inset-0 landing-section-glow" data-tone="gold" />
 
-        <div className="relative mx-auto flex h-full w-full max-w-[1600px] flex-col px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-5 sm:px-5 sm:pb-5 sm:pt-6 lg:px-6 lg:pb-6 lg:pt-6">
+        <div className="relative mx-auto flex h-full w-full max-w-[1600px] flex-col justify-between gap-3 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-5 sm:gap-4 sm:px-5 sm:pb-5 sm:pt-6 lg:px-6 lg:pb-6 lg:pt-6">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -65,8 +70,12 @@ export default function HorizontalPortfolio() {
           </motion.div>
 
           {/* Track wrapper takes remaining height; cards size by parent (h-full) */}
-          <div className="relative flex min-h-0 flex-1 items-center overflow-hidden py-2 sm:py-3">
-            <motion.div ref={trackRef} style={{ x }} className="flex h-full max-h-[68svh] w-max items-stretch gap-3 pr-6 will-change-transform sm:max-h-[72svh] sm:gap-4 lg:gap-5 lg:pr-12">
+          <div className="relative flex min-h-0 flex-1 items-center overflow-hidden py-1 sm:py-2">
+            <motion.div
+              ref={trackRef}
+              style={{ x, paddingLeft: edgeInset, paddingRight: edgeInset }}
+              className="flex h-full max-h-[66svh] w-max items-stretch gap-3 will-change-transform sm:max-h-[70svh] sm:gap-4 lg:gap-5"
+            >
               {PROJECTS.map((project, idx) => (
                 <ProjectCard key={project.brand} project={project} index={idx} />
               ))}
@@ -96,7 +105,7 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
       transition={{ delay: index * 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -10, rotateY: 4, rotateX: -2 }}
       style={{ transformStyle: "preserve-3d", perspective: "1400px" }}
-      className="landing-surface group relative my-1 flex h-full w-[78vw] min-w-[252px] max-w-[304px] flex-col overflow-hidden rounded-[22px] p-2.5 sm:w-[48vw] sm:max-w-[360px] sm:rounded-[26px] sm:p-3.5 lg:w-[30vw] lg:max-w-[400px] lg:p-4"
+      className="landing-surface group relative my-1 flex h-full w-[calc(100vw-5.5rem)] min-w-[268px] max-w-[304px] flex-col overflow-hidden rounded-[22px] p-2.5 sm:w-[48vw] sm:max-w-[360px] sm:rounded-[26px] sm:p-3.5 lg:w-[30vw] lg:max-w-[400px] lg:p-4"
       data-tone={project.tone}
     >
       {/* Header compatto */}
