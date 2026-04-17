@@ -21,6 +21,54 @@ const FOOD_SECTORS = new Set([
   "food", "bakery", "gelateria", "wine_bar", "catering", "pizzeria", "ristoration",
 ]);
 
+/* ─── FOOD SUB-SECTOR DETECTION → template variant ─── */
+type FoodSubSector = "pizzeria" | "sushi" | "braceria" | "ristorante";
+type TemplateVariant = "strapizzami" | "cote-obsidian" | "paperfish" | "default";
+
+function detectFoodSubSector(lead: LeadInput, scrapedText?: string): FoodSubSector {
+  const haystack = [
+    lead.businessName,
+    lead.sectorLabel,
+    lead.sector,
+    scrapedText?.slice(0, 4000) || "",
+  ].join(" ").toLowerCase();
+
+  if (/\b(pizz(a|eria|aiolo)|napolet|forno a legna|margherita|marinara|trapizz)\b/.test(haystack)) return "pizzeria";
+  if (/\b(sushi|sashimi|ramen|nigiri|maki|temaki|giappones|japanese|izakaya|wagyu)\b/.test(haystack)) return "sushi";
+  if (/\b(braceri|steak|grill|fiorentin|bistecc|carne alla brace|smokehouse|barbecue|bbq|churrasc)\b/.test(haystack)) return "braceria";
+  return "ristorante";
+}
+
+function pickTemplateVariant(sub: FoodSubSector, businessName: string): TemplateVariant {
+  const name = businessName.toLowerCase();
+  // Se il nome suggerisce gourmet/luxury, vai dark
+  const isLuxury = /\b(gourmet|luxury|prive|exclusive|noir|black|gold|royal|prestige)\b/.test(name);
+  if (sub === "pizzeria") return isLuxury ? "cote-obsidian" : "strapizzami";
+  if (sub === "sushi") return "paperfish";
+  if (sub === "braceria") return "cote-obsidian";
+  return "default";
+}
+
+/* Default pizzeria menu (used as seed when AI brand kit is generic) */
+const DEFAULT_PIZZERIA_MENU = [
+  { name: "Margherita DOC", description: "Pomodoro San Marzano DOP, mozzarella di bufala campana, basilico fresco, olio EVO", price: 9.5, category: "Classiche", popular: true },
+  { name: "Marinara", description: "Pomodoro San Marzano, aglio, origano, olio EVO", price: 7.5, category: "Classiche" },
+  { name: "Diavola", description: "Pomodoro, mozzarella fior di latte, salame piccante calabrese", price: 11, category: "Classiche", popular: true },
+  { name: "Capricciosa", description: "Pomodoro, mozzarella, prosciutto cotto, funghi, carciofi, olive nere", price: 12.5, category: "Classiche" },
+  { name: "Quattro Formaggi", description: "Mozzarella, gorgonzola DOP, fontina, parmigiano reggiano 24 mesi", price: 13, category: "Speciali" },
+  { name: "Salsiccia e Friarielli", description: "Salsiccia napoletana, friarielli saltati, provola affumicata", price: 13.5, category: "Speciali", popular: true },
+  { name: "Bufala e Crudo", description: "Mozzarella di bufala, prosciutto crudo di Parma 24 mesi, rucola, scaglie di grana", price: 14, category: "Speciali" },
+  { name: "Tartufata", description: "Crema di tartufo nero, mozzarella, funghi porcini, scaglie di tartufo", price: 16, category: "Speciali" },
+  { name: "Calzone Classico", description: "Ricotta, prosciutto cotto, mozzarella, pepe nero", price: 11, category: "Calzoni" },
+  { name: "Calzone Vegetariano", description: "Ricotta, spinaci, mozzarella, pomodorini confit", price: 11, category: "Calzoni" },
+  { name: "Bruschetta Pomodoro", description: "Pane casereccio, pomodorini freschi, basilico, aglio, olio EVO", price: 6, category: "Antipasti" },
+  { name: "Tagliere Misto", description: "Selezione di salumi e formaggi del territorio con mostarde", price: 14, category: "Antipasti" },
+  { name: "Tiramisù della Casa", description: "Ricetta classica con mascarpone, savoiardi e caffè espresso", price: 6, category: "Dolci", popular: true },
+  { name: "Coca Cola 33cl", description: "Lattina ghiacciata", price: 3, category: "Bevande" },
+  { name: "Birra Peroni Nastro Azzurro 33cl", description: "Bottiglia", price: 4, category: "Bevande" },
+  { name: "Acqua Naturale 75cl", description: "Bottiglia in vetro", price: 2.5, category: "Bevande" },
+];
+
 // Mappa settore → keyword per scoring image relevance
 const SECTOR_IMAGE_KEYWORDS: Record<string, string[]> = {
   food: ["pasta", "pizza", "piatto", "dish", "menu", "tavolo", "ristorante", "chef"],
@@ -474,6 +522,7 @@ async function createFoodTenant(
   brand: any,
   palette: BrandPalette,
   images: { hero: string | null; gallery: string[]; logo: string | null },
+  themeConfig: Record<string, any> = {},
 ): Promise<{ id: string; slug: string }> {
   const baseSlug = slugify(lead.businessName) || `demo-${Date.now()}`;
   const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
@@ -496,6 +545,7 @@ async function createFoodTenant(
       policy_accepted_at: new Date().toISOString(),
       setup_paid: true,
       business_type: "restaurant",
+      theme_config: themeConfig,
     })
     .select("id, slug")
     .single();
@@ -746,10 +796,35 @@ serve(async (req) => {
     // 5. Resolve images (real → AI fallback)
     const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid);
 
-    // 6. Tenant
+    // 6. Tenant — auto-detect sub-sector food + template variant
     const isFood = FOOD_SECTORS.has(lead.sector);
+    let themeConfig: Record<string, any> = {};
+    if (isFood) {
+      const sub = detectFoodSubSector(lead, scraped?.markdown);
+      const variant = pickTemplateVariant(sub, lead.businessName);
+      themeConfig = {
+        template_variant: variant,
+        sub_sector: sub,
+        hero_image: images.hero,
+        hero_tagline: sub === "pizzeria" ? "LA VERA PIZZA NAPOLETANA"
+          : sub === "sushi" ? "L'ARTE GIAPPONESE DEL GUSTO"
+          : sub === "braceria" ? "FUOCO, CARNE, TRADIZIONE"
+          : brand.tagline,
+      };
+      console.log(`[demo-factory] sub-sector=${sub} variant=${variant} brand=${lead.businessName}`);
+
+      // Se è pizzeria e l'AI ha generato un menu generico (poche pizze), arricchisci col preset
+      if (sub === "pizzeria" && variant === "strapizzami") {
+        const aiMenu: any[] = Array.isArray(brand.menu) ? brand.menu : [];
+        const pizzaCount = aiMenu.filter(m => /pizz|margh|marinar|diavol|capric|calzon/i.test(`${m.name} ${m.category}`)).length;
+        if (pizzaCount < 6) {
+          brand.menu = [...DEFAULT_PIZZERIA_MENU];
+          console.log("[demo-factory] pizzeria menu enriched with default preset");
+        }
+      }
+    }
     const tenant = isFood
-      ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images)
+      ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images, themeConfig)
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images);
 
     // 7. Magic link

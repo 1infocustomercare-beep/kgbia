@@ -127,6 +127,10 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
   const [galleryIdx, setGalleryIdx] = useState(0);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
 
@@ -161,11 +165,6 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
     };
   }, [templateVariant, menuItems, company, themeConfig]);
 
-  if (strapizzamiData) {
-    return <StrapizzamiSite data={strapizzamiData} />;
-  }
-
-
   const handleReservation = async () => {
     if (!form.name || !form.phone || !form.date || !form.time) { toast.error("Compila tutti i campi obbligatori"); return; }
     setSubmitting(true);
@@ -190,11 +189,6 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
   const city = company.city || restaurant?.city;
   const whatsapp = phone ? `https://wa.me/${phone.replace(/\D/g, "")}` : "#";
 
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-
   const navItems = ["Menu", "Chi Siamo", "Gallery", "Prenota", "Contatti"];
 
   const demoMenu = [
@@ -208,6 +202,11 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
 
   const displayMenuItems = filteredItems.length > 0 ? filteredItems : demoMenu;
   const displayCategories = categories.length > 0 ? categories : [...new Set(demoMenu.map(i => i.category))];
+
+  // Branch render: Strapizzami (pizzeria tradizionale) — DOPO tutti gli hooks
+  if (strapizzamiData) {
+    return <StrapizzamiSite data={strapizzamiData} />;
+  }
 
   return (
     <div style={{ fontFamily: "'Lora', serif", background: F.bg, color: F.cream }}>
