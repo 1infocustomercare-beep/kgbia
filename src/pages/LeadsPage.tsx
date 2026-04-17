@@ -2636,6 +2636,14 @@ export default function LeadsPage() {
       onUpdateValue={pipeline.updateValue}
       onDeleteLead={pipeline.deleteLead}
     />
+
+    {/* ═══ Speed Dial List — tutti i nomi con call/wa/email diretti ═══ */}
+    <SpeedDialList
+      open={speedDialOpen}
+      onClose={() => setSpeedDialOpen(false)}
+      leads={results}
+      onSelectLead={(l) => { setSpeedDialOpen(false); handleSelect(l as any); }}
+    />
     </div>
   );
 }
