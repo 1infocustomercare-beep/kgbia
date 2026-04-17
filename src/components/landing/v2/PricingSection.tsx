@@ -1,60 +1,33 @@
 import { motion } from "framer-motion";
+import { Check, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Check, ShieldCheck, Sparkles } from "lucide-react";
 
 const PLANS = [
   {
     name: "Digital Start",
-    price: "1.997",
-    monthly: "49",
-    desc: "Per chi vuole testare il potere dell'AI senza compromessi.",
-    features: [
-      "Sito premium responsive",
-      "Dashboard admin verticale",
-      "5 agenti AI essenziali",
-      "WhatsApp integrato base",
-      "Onboarding guidato",
-      "Supporto email",
-    ],
-    accent: "#22d3ee",
-    badge: null,
+    setup: "€1.997",
+    monthly: "€49/mese",
+    desc: "Ingresso premium per business che vogliono automatizzare i flussi essenziali con un posizionamento superiore.",
+    features: ["Sito premium responsive", "Dashboard verticale", "5 agenti AI essenziali", "WhatsApp operativo", "Onboarding guidato"],
+    tone: "blue",
   },
   {
     name: "Empire Pro",
-    price: "3.997",
-    monthly: "149",
-    desc: "La soluzione completa per imprese che vogliono crescere senza limiti.",
-    features: [
-      "Tutto del Digital Start",
-      "25+ agenti AI specializzati",
-      "Empire WhatsApp Orchestrator",
-      "Apex Acquisition Engine",
-      "Voice Agent Arianna 24/7",
-      "Fiscal Vault 2026 (compliance)",
-      "Personalizzazione settoriale",
-      "Account manager dedicato",
-    ],
-    accent: "#D4AF37",
-    badge: "Più scelto",
+    setup: "€3.997",
+    monthly: "€149/mese",
+    desc: "La configurazione completa per scalare acquisizione, vendite e operations con massima percezione di valore.",
+    features: ["25+ agenti specializzati", "Voice Agent 24/7", "Lead engine", "Personalizzazione verticale", "Account manager dedicato"],
+    tone: "gold",
     featured: true,
+    badge: "Più scelto",
   },
   {
     name: "Empire Elite",
-    price: "9.997",
-    monthly: "299",
-    desc: "Per chi vuole un'infrastruttura AI proprietaria e dominare il mercato.",
-    features: [
-      "Tutto dell'Empire Pro",
-      "98 agenti AI completi",
-      "Agenti custom su misura",
-      "API & integrazioni illimitate",
-      "Multi-sede & multi-brand",
-      "SLA 99.9% garantito",
-      "Consulenza strategica mensile",
-      "Priority support 24/7",
-    ],
-    accent: "#7C3AED",
-    badge: null,
+    setup: "€9.997",
+    monthly: "€299/mese",
+    desc: "Infrastruttura proprietaria, custom AI e strategia enterprise per chi vuole dominare la categoria.",
+    features: ["98 agenti completi", "Agenti custom", "Integrazioni illimitate", "Multi-brand", "Priority support"],
+    tone: "violet",
   },
 ];
 
@@ -62,120 +35,67 @@ export default function PricingSection() {
   const navigate = useNavigate();
 
   return (
-    <section id="prezzi" className="relative py-28 px-5 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 40% at 50% 30%, rgba(212,175,55,0.12), transparent)" }} />
+    <section id="prezzi" className="relative overflow-hidden px-4 py-28 sm:px-6 lg:px-10">
+      <div className="landing-section-glow" data-tone="gold" />
 
-      <div className="relative max-w-[1300px] mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-[3px] mb-5 border border-[#D4AF37]/30 text-[#D4AF37] bg-[#D4AF37]/5 backdrop-blur-md">
-            Investimento
-          </span>
-          <h2 className="text-[clamp(2rem,5vw,3.6rem)] font-heading font-extrabold leading-[0.95] tracking-[-0.03em] mb-5 text-white">
-            Investimenti chiari.
-            <span className="block bg-gradient-to-r from-[#D4AF37] to-[#7C3AED] bg-clip-text text-transparent">
-              ROI verificabile.
-            </span>
+      <div className="relative mx-auto max-w-[1320px]">
+        <div className="mx-auto mb-16 max-w-[760px] text-center" data-tone="gold">
+          <span className="landing-pill mb-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">Pacchetti & ROI</span>
+          <h2 className="text-[clamp(2rem,5.2vw,4.1rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
+            Investimenti chiari. <span className="landing-heading-gradient">Impatto misurabile.</span>
           </h2>
-          <p className="text-white/65 text-[clamp(0.95rem,1.6vw,1.08rem)] max-w-[640px] mx-auto leading-[1.7]">
-            Una tantum + canone di mantenimento mensile. Rateizzabile in 3 o 6 rate.
-            Garanzia 90 giorni soddisfatti o rimborsati.
+          <p className="mt-5 text-[clamp(0.98rem,1.7vw,1.08rem)] leading-[1.72] text-foreground/68">
+            Una tantum + mantenimento mensile, rateizzabile. Funnel completo, struttura premium e garanzia 90 giorni inclusa.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
-          {PLANS.map((p, i) => (
-            <motion.div
-              key={p.name}
-              initial={{ opacity: 0, y: 40 }}
+        <div className="grid items-stretch gap-5 lg:grid-cols-3">
+          {PLANS.map((plan, index) => (
+            <motion.article
+              key={plan.name}
+              initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.7 }}
-              whileHover={{ y: -8 }}
-              className={`relative p-7 lg:p-8 rounded-[28px] border backdrop-blur-xl flex flex-col group overflow-hidden ${
-                p.featured ? "lg:scale-[1.04] lg:-my-2 z-10" : ""
-              }`}
-              style={{
-                borderColor: p.featured ? `${p.accent}66` : "rgba(255,255,255,0.08)",
-                background: p.featured
-                  ? `linear-gradient(160deg, ${p.accent}1a, rgba(124,58,237,0.06) 60%, rgba(255,255,255,0.02))`
-                  : "linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
-                boxShadow: p.featured ? `0 30px 80px ${p.accent}30` : "none",
-              }}
+              transition={{ delay: index * 0.08, duration: 0.65 }}
+              className={`landing-surface flex rounded-[32px] p-7 lg:p-8 ${plan.featured ? "lg:scale-[1.03]" : ""}`}
+              data-tone={plan.tone}
             >
-              {/* Hover glow */}
-              <div
-                className="absolute -top-1/2 -right-1/2 w-[120%] h-[120%] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                style={{ background: `radial-gradient(circle, ${p.accent}1a, transparent 60%)` }}
-              />
-
-              {p.badge && (
-                <span
-                  className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap inline-flex items-center gap-1.5"
-                  style={{
-                    background: `linear-gradient(135deg, ${p.accent}, ${p.accent}cc)`,
-                    color: "#000",
-                    boxShadow: `0 8px 24px ${p.accent}66`,
-                  }}
-                >
-                  <Sparkles className="w-3 h-3" strokeWidth={2.5} />
-                  {p.badge}
-                </span>
-              )}
-
-              <div className="relative">
-                <h3 className="text-xl font-heading font-bold text-white mb-1.5">{p.name}</h3>
-                <p className="text-[12px] text-white/55 mb-6 leading-[1.55] min-h-[36px]">{p.desc}</p>
-
-                <div className="mb-6 pb-6 border-b border-white/[0.06]">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-[14px] text-white/50">€</span>
-                    <span className="text-[44px] font-heading font-extrabold text-white leading-none">{p.price}</span>
+              <div className="flex w-full flex-col">
+                <div className="mb-6 flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="font-heading text-2xl font-extrabold tracking-[-0.04em] text-foreground">{plan.name}</h3>
+                    <p className="mt-3 max-w-[32ch] text-sm leading-[1.7] text-foreground/64">{plan.desc}</p>
                   </div>
-                  <div className="text-[12px] text-white/50 mt-2">+ €{p.monthly}/mese mantenimento</div>
-                  <div className="text-[11px] text-white/35 mt-1">Rateizzabile 3x o 6x</div>
+                  {plan.badge ? <span className="landing-pill px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em]">{plan.badge}</span> : null}
                 </div>
 
-                <ul className="space-y-3 mb-7 flex-1">
-                  {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2.5 text-[13px] text-white/80">
-                      <span
-                        className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full grid place-items-center"
-                        style={{ background: `${p.accent}22`, border: `1px solid ${p.accent}55` }}
-                      >
-                        <Check className="w-2.5 h-2.5" style={{ color: p.accent }} strokeWidth={3} />
+                <div className="mb-6 rounded-[26px] border border-border/75 bg-background/36 p-5 backdrop-blur-xl">
+                  <div className="text-[11px] uppercase tracking-[0.2em] text-foreground/46">Setup</div>
+                  <div className="mt-2 font-heading text-5xl font-extrabold leading-none tracking-[-0.06em] text-foreground">{plan.setup}</div>
+                  <div className="mt-3 text-sm text-foreground/60">{plan.monthly} mantenimento continuo</div>
+                </div>
+
+                <ul className="mb-8 flex-1 space-y-3">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3 text-sm leading-[1.65] text-foreground/72">
+                      <span className="landing-icon-frame mt-0.5 h-5 w-5 rounded-full">
+                        <Check className="h-3 w-3" strokeWidth={3} />
                       </span>
-                      <span className="leading-[1.5]">{f}</span>
+                      <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
 
-                <button
-                  onClick={() => navigate("/onboarding")}
-                  className="w-full py-3.5 rounded-full font-semibold text-sm transition-all hover:-translate-y-[2px]"
-                  style={{
-                    background: p.featured
-                      ? `linear-gradient(135deg, ${p.accent}, #7C3AED)`
-                      : `${p.accent}1a`,
-                    border: p.featured ? "none" : `1px solid ${p.accent}55`,
-                    color: p.featured ? "#000" : p.accent,
-                    boxShadow: p.featured ? `0 16px 40px ${p.accent}55` : "none",
-                  }}
-                >
-                  Scegli {p.name}
+                <button onClick={() => navigate("/onboarding")} className={`${plan.featured ? "landing-button-primary" : "landing-button-secondary"} w-full px-6 py-3.5 text-sm font-semibold`}>
+                  Scegli {plan.name}
                 </button>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
 
-        <div className="flex justify-center items-center gap-2 mt-10 text-[12px] text-white/50">
-          <ShieldCheck className="w-4 h-4 text-[#22c55e]" strokeWidth={2} />
-          Garanzia 90 giorni — Soddisfatti o rimborsati. Nessun vincolo, zero penali.
+        <div className="mt-10 flex items-center justify-center gap-2 text-center text-sm text-foreground/58">
+          <ShieldCheck className="h-4 w-4 text-accent" strokeWidth={2} /> Garanzia 90 giorni, zero penali, zero vincoli.
         </div>
       </div>
     </section>
