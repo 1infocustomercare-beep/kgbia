@@ -51,20 +51,14 @@ const TRUST = ["847+ business attivi", "98 agenti AI", "25+ verticali", "Go-live
 
 function SplitText({ text, delay = 0, className = "" }: { text: string; delay?: number; className?: string }) {
   return (
-    <span className={className}>
-      {Array.from(text).map((char, i) => (
-        <span key={i} className="inline-block overflow-hidden align-bottom">
-          <motion.span
-            className="inline-block"
-            initial={{ y: "115%", opacity: 0, filter: "blur(8px)" }}
-            animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-            transition={{ delay: delay + i * 0.025, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {char === " " ? "\u00A0" : char}
-          </motion.span>
-        </span>
-      ))}
-    </span>
+    <motion.span
+      className={`inline-block ${className}`}
+      initial={{ y: 24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {text}
+    </motion.span>
   );
 }
 
