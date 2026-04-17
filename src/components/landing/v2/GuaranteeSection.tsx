@@ -54,13 +54,14 @@ const PAINS = [
 
 export default function GuaranteeSection() {
   return (
-    <section className="landing-section relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="dark">
+    <section className="landing-section relative overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16" data-theme="dark">
+      <div className="landing-section-glow" data-tone="violet" />
       <div className="relative max-w-[1320px] mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14 max-w-[820px] mx-auto"
+          className="text-center mb-10 max-w-[820px] mx-auto"
           data-tone="violet"
         >
           <span className="landing-pill mb-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">

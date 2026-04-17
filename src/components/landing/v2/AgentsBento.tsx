@@ -114,11 +114,16 @@ export default function AgentsBento() {
                   <p className="mt-3 max-w-[36ch] text-[14px] leading-[1.7] text-foreground/80">{agent.desc}</p>
                 </div>
 
-                <div className="rounded-[24px] border border-border/80 bg-background/60 p-4 backdrop-blur-xl">
-                  <div className="text-[10px] uppercase tracking-[0.18em] text-foreground/62">Effetto</div>
+                <div
+                  className="rounded-[20px] border border-border bg-card p-4 shadow-[0_8px_24px_-12px_hsl(228_28%_14%/0.18),inset_0_1px_0_hsl(0_0%_100%)]"
+                >
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/60">Effetto</div>
                   <div className="mt-2 text-sm font-semibold text-foreground">Operatività continua</div>
-                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-foreground/10">
-                    <div className="h-full rounded-full bg-[linear-gradient(90deg,hsl(var(--primary)),hsl(var(--empire-violet)),hsl(var(--gold)))]" style={{ width: `${agent.big ? 92 : 78}%` }} />
+                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-foreground/12">
+                    <div
+                      className="h-full rounded-full bg-[linear-gradient(90deg,hsl(var(--primary)),hsl(var(--empire-violet)),hsl(var(--gold)))]"
+                      style={{ width: `${agent.big ? 92 : 78}%` }}
+                    />
                   </div>
                 </div>
               </div>

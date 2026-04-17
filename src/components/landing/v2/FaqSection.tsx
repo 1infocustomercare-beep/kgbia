@@ -29,7 +29,7 @@ const FAQ = [
   },
   {
     q: "Cosa include il canone mensile di mantenimento?",
-    a: "Hosting premium, aggiornamenti continui agli agenti AI, nuove funzionalità rilasciate, supporto tecnico, monitoraggio KPI, nuove integrazioni. Tutto incluso, niente sorprese, niente costi extra.",
+    a: "Hosting premium, aggiornamenti continui agli agenti AI, nuove funzionalità rilasciate, supporto tecnico, monitoraggio KPI, nuove integrazioni. Tutto incluso, niente sorprese.",
   },
   {
     q: "Posso cambiare pacchetto in corsa?",
@@ -41,22 +41,28 @@ export default function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="landing-section relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="dark">
-      <div className="relative max-w-[900px] mx-auto">
+    <section
+      id="faq"
+      className="landing-section relative overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16"
+      data-theme="dark"
+    >
+      <div className="landing-section-glow" data-tone="violet" />
+
+      <div className="relative mx-auto max-w-[900px]">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-9"
+          transition={{ duration: 0.7 }}
+          className="mb-9 text-center"
+          data-tone="gold"
         >
-          <span className="inline-block px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-[3px] mb-5 border border-[#D4AF37]/30 text-[#D4AF37] bg-[#D4AF37]/5 backdrop-blur-md">
+          <span className="landing-pill mb-4 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">
             Domande Frequenti
           </span>
-          <h2 className="text-[clamp(2rem,5vw,3.4rem)] font-heading font-extrabold leading-[0.95] tracking-[-0.03em] mb-4 text-white">
+          <h2 className="font-heading text-[clamp(1.9rem,5vw,3.4rem)] font-extrabold leading-[0.94] tracking-[-0.04em] text-foreground">
             Tutto chiaro,
-            <span className="block bg-gradient-to-r from-[#D4AF37] to-[#7C3AED] bg-clip-text text-transparent">
-              prima di partire.
-            </span>
+            <span className="block landing-heading-gradient">prima di partire.</span>
           </h2>
         </motion.div>
 
@@ -64,26 +70,26 @@ export default function FaqSection() {
           {FAQ.map((f, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.04 }}
-              className="rounded-2xl border border-white/[0.08] backdrop-blur-xl overflow-hidden"
-              style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))" }}
+              className="landing-surface overflow-hidden rounded-[20px]"
+              data-tone={i % 3 === 0 ? "gold" : i % 3 === 1 ? "violet" : "blue"}
             >
               <button
                 onClick={() => setOpen(open === i ? null : i)}
-                className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left group"
+                className="group flex w-full items-center justify-between gap-4 px-5 py-4 text-left sm:px-6 sm:py-5"
               >
-                <span className="text-white font-semibold text-[15px] lg:text-[16px] group-hover:text-[#D4AF37] transition-colors">
+                <span className="text-[15px] font-semibold text-foreground transition-colors group-hover:text-[hsl(var(--landing-accent,var(--primary)))] lg:text-[16px]">
                   {f.q}
                 </span>
                 <motion.span
                   animate={{ rotate: open === i ? 45 : 0 }}
                   transition={{ duration: 0.3 }}
-                  className="flex-shrink-0 w-8 h-8 rounded-full grid place-items-center border border-white/10 group-hover:border-[#D4AF37]/40 group-hover:bg-[#D4AF37]/10 transition-all"
+                  className="landing-icon-frame h-8 w-8 flex-shrink-0 rounded-full"
                 >
-                  <Plus className="w-4 h-4 text-white/70" strokeWidth={2.5} />
+                  <Plus className="h-4 w-4" strokeWidth={2.5} />
                 </motion.span>
               </button>
 
@@ -93,10 +99,12 @@ export default function FaqSection() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-5 text-white/65 text-[14px] leading-[1.7]">{f.a}</div>
+                    <div className="px-5 pb-5 text-[14px] leading-[1.7] text-foreground/74 sm:px-6">
+                      {f.a}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
