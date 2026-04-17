@@ -16,7 +16,19 @@ export interface DemoFactoryResult {
     menuCount: number;
     clientsCount: number;
   };
-  scraped: { ok: boolean; hasBranding: boolean };
+  scraped: {
+    ok: boolean;
+    hasBranding: boolean;
+    imagesFound?: number;
+    logoFound?: boolean;
+    detectedSector?: string | null;
+  };
+  images?: {
+    hero: string | null;
+    gallery: string[];
+    logo: string | null;
+    totalReal: number;
+  };
 }
 
 interface Props {
@@ -125,7 +137,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                     {[
                       { icon: ShoppingBag, label: "Menu/Listino", value: result.brand.menuCount, color: "#a78bfa" },
                       { icon: Users, label: "Clienti CRM", value: result.brand.clientsCount, color: "#14b8a6" },
-                      { icon: Zap, label: "Stile", value: result.scraped.hasBranding ? "Reale" : "AI", color: "#f59e0b" },
+                      { icon: Zap, label: "Foto reali", value: result.images?.totalReal ?? 0, color: "#f59e0b" },
                     ].map((k, i) => (
                       <div key={i} className="rounded-xl p-3 border border-white/10 bg-white/[0.03]">
                         <k.icon className="w-3.5 h-3.5 mb-1" style={{ color: k.color }} />
@@ -134,6 +146,34 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                       </div>
                     ))}
                   </div>
+
+                  {/* Logo + Hero preview */}
+                  {(result.images?.logo || result.images?.hero) && (
+                    <div className="rounded-xl p-3 border border-white/10 bg-white/[0.02]">
+                      <p className="text-[0.6rem] uppercase tracking-wider text-white/50 font-bold mb-2">Brand identity estratta</p>
+                      <div className="flex gap-2 items-center">
+                        {result.images?.logo && (
+                          <div className="w-14 h-14 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
+                            <img src={result.images.logo} alt="Logo" className="max-w-full max-h-full object-contain" />
+                          </div>
+                        )}
+                        {result.images?.hero && (
+                          <div className="flex-1 h-14 rounded-lg overflow-hidden border border-white/10">
+                            <img src={result.images.hero} alt="Hero" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </div>
+                      {result.images?.gallery && result.images.gallery.length > 0 && (
+                        <div className="grid grid-cols-6 gap-1 mt-2">
+                          {result.images.gallery.slice(0, 6).map((url, i) => (
+                            <div key={i} className="aspect-square rounded-md overflow-hidden border border-white/10">
+                              <img src={url} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Palette */}
                   <div className="rounded-xl p-3 border border-white/10 bg-white/[0.02]">
