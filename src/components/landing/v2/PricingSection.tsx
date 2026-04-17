@@ -57,8 +57,8 @@ export default function PricingSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.08, duration: 0.65 }}
-              whileHover={{ y: -8, scale: plan.featured ? 1.02 : 1.01 }}
-              className={`landing-surface flex rounded-[26px] p-4 sm:p-5 lg:p-6 ${plan.featured ? "ring-1 ring-primary/30 lg:scale-[1.01]" : ""}`}
+              whileHover={{ y: -6 }}
+              className={`landing-surface flex rounded-[26px] p-5 sm:p-6 lg:p-7 ${plan.featured ? "ring-1 ring-primary/30" : ""}`}
               data-tone={plan.tone}
             >
               <div className="flex w-full flex-col">
