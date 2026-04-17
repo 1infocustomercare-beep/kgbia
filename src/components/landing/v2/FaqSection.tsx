@@ -41,7 +41,7 @@ export default function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="dark">
+    <section id="faq" className="landing-section relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="dark">
       <div className="relative max-w-[900px] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

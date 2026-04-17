@@ -30,7 +30,7 @@ const CUSTOM = [
 
 export default function CustomizationSection() {
   return (
-    <section id="personalizzazione" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="light">
+    <section id="personalizzazione" className="landing-section relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="light">
       <div className="landing-section-glow" data-tone="blue" />
 
       <div className="relative mx-auto max-w-[1280px]">

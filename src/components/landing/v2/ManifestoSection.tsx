@@ -14,7 +14,7 @@ export default function ManifestoSection() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
 
   return (
-    <section ref={ref} id="manifesto" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="light">
+    <section ref={ref} id="manifesto" className="landing-section relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="light">
       <div className="landing-section-glow" data-tone="violet" />
 
       <div className="relative mx-auto max-w-[1320px]">

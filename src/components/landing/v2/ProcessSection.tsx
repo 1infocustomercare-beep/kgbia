@@ -40,7 +40,7 @@ const STEPS = [
 
 export default function ProcessSection() {
   return (
-    <section id="processo" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="dark">
+    <section id="processo" className="landing-section relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="dark">
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 50% 40% at 50% 30%, rgba(124,58,237,0.1), transparent)" }} />
 
       <div className="relative max-w-[1200px] mx-auto">

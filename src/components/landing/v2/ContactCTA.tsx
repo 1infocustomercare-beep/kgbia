@@ -6,7 +6,7 @@ export default function ContactCTA() {
   const navigate = useNavigate();
 
   return (
-    <section id="contatti" className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="dark">
+    <section id="contatti" className="landing-section relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="dark">
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="absolute inset-0"
