@@ -16,9 +16,10 @@ import { DEMO_SLUGS } from "@/data/demo-industries";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
+import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFactoryOverlay";
 import SellerCRM from "@/components/leads/SellerCRM";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
-import { Briefcase, Bookmark } from "lucide-react";
+import { Briefcase, Bookmark, Wand2 as WandIcon } from "lucide-react";
 
 /* ─── Types ─── */
 interface Lead {
@@ -315,6 +316,12 @@ export default function LeadsPage() {
   const [showPicker, setShowPicker] = useState(false);
   const [customPreview, setCustomPreview] = useState<ManualPreviewSelection | null>(null);
 
+  // Demo Factory — auto-generate complete tenant + admin from selected preview
+  const [demoFactoryOpen, setDemoFactoryOpen] = useState(false);
+  const [demoFactoryLoading, setDemoFactoryLoading] = useState(false);
+  const [demoFactoryProgress, setDemoFactoryProgress] = useState("Inizializzo…");
+  const [demoFactoryResult, setDemoFactoryResult] = useState<DemoFactoryResult | null>(null);
+
   // Manual lead input
   const [showManual, setShowManual] = useState(false);
   const [manualName, setManualName] = useState("");
@@ -394,6 +401,79 @@ export default function LeadsPage() {
       setManualEnriching(false);
     }
   }, [manualName, manualCity, manualWebsite]);
+
+  /* ─── 🪄 DEMO FACTORY — generate complete tenant + admin from a lead + preview ─── */
+  const runDemoFactory = useCallback(async (lead: Lead & { _sector: string }, preview?: ManualPreviewSelection | null) => {
+    if (!lead?.name) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user?.id) {
+      toast.error("Devi essere autenticato come partner per generare la demo");
+      return;
+    }
+    setDemoFactoryOpen(true);
+    setDemoFactoryLoading(true);
+    setDemoFactoryResult(null);
+    setDemoFactoryProgress("Avvio scraping del sito web…");
+
+    try {
+      // progress hints
+      const hints = [
+        "Estraggo brand identity reale dal sito…",
+        "Genero menu/listino e palette con AI…",
+        "Creo tenant, account admin e moduli…",
+        "Seed clienti, ordini e recensioni…",
+      ];
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < hints.length) { setDemoFactoryProgress(hints[i]); i++; }
+      }, 4000);
+
+      const { data, error } = await supabase.functions.invoke("generate-demo-from-lead", {
+        body: {
+          lead: {
+            businessName: lead.name,
+            sector: lead._sector,
+            sectorLabel: SECTOR_OPTIONS.find(s => s.value === lead._sector)?.label || lead._sector,
+            city: lead.city,
+            zone: lead.zone,
+            fullAddress: lead.full_address,
+            phone: lead.phone,
+            email: lead.email,
+            website: lead.website,
+            instagram: lead.instagram,
+            facebook: lead.facebook,
+            googleRating: lead.google_rating,
+            googleReviews: lead.google_reviews,
+            googleMapsUrl: lead.google_maps_url,
+          },
+          preview: preview ? {
+            brandName: preview.brandName,
+            styleName: preview.styleName,
+            imageUrl: preview.imageUrl,
+            sectorId: preview.sectorId,
+          } : null,
+          partnerId: user.id,
+          originUrl: window.location.origin,
+        },
+      });
+
+      clearInterval(interval);
+
+      if (error || !data?.success) {
+        throw new Error(error?.message || data?.error || "Generazione fallita");
+      }
+
+      setDemoFactoryResult(data as DemoFactoryResult);
+      setDemoFactoryProgress("Completato!");
+      toast.success(`Demo creata per ${lead.name}`, { description: data.previewUrl });
+    } catch (err: any) {
+      console.error("[runDemoFactory] error", err);
+      toast.error("Errore creazione demo", { description: err?.message || "Riprova" });
+      setDemoFactoryOpen(false);
+    } finally {
+      setDemoFactoryLoading(false);
+    }
+  }, []);
 
   /* ─── Validate & launch manual analysis ─── */
   const launchManualAnalysis = useCallback(() => {
@@ -780,8 +860,31 @@ export default function LeadsPage() {
       <ManualPreviewPicker
         open={showPicker}
         onClose={() => setShowPicker(false)}
-        onSelect={(sel) => setCustomPreview(sel)}
+        onSelect={(sel) => {
+          setCustomPreview(sel);
+          // Auto-trigger demo factory with the selected preview if a lead is currently open
+          if (selected) {
+            runDemoFactory(selected, sel);
+          }
+        }}
         initialSector={selected?._sector}
+      />
+
+      <DemoFactoryOverlay
+        open={demoFactoryOpen}
+        loading={demoFactoryLoading}
+        progress={demoFactoryProgress}
+        result={demoFactoryResult}
+        leadName={selected?.name || ""}
+        onClose={() => { setDemoFactoryOpen(false); setDemoFactoryResult(null); }}
+        onSendWhatsApp={() => {
+          if (!demoFactoryResult || !selected) return;
+          const text = encodeURIComponent(
+            `Ciao! Ho preparato una demo personalizzata per ${selected.name}: ${demoFactoryResult.previewUrl}\n\nPuoi accedere all'admin con questo link sicuro (valido 7gg): ${demoFactoryResult.magicLink || demoFactoryResult.adminUrl}`
+          );
+          const phone = (selected.phone || "").replace(/[^0-9]/g, "");
+          window.open(phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`, "_blank");
+        }}
       />
 
       {/* ═══ AMBIENT VIOLET BACKGROUND ═══ */}
@@ -1593,7 +1696,15 @@ export default function LeadsPage() {
                     <Eye className="w-3.5 h-3.5 shrink-0" style={{ color: "#a78bfa" }} />
                     <span className="text-xs font-bold text-white truncate">📱 Preview {sectorConfig?.label || "Business"} per {selected.name}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <button
+                      onClick={() => runDemoFactory(selected, customPreview)}
+                      disabled={demoFactoryLoading}
+                      className="text-[9px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1 disabled:opacity-50"
+                      style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", color: "#fff", boxShadow: "0 4px 14px rgba(167,139,250,0.35)" }}
+                    >
+                      <WandIcon className="w-3 h-3" /> {demoFactoryLoading ? "Genero…" : "🪄 Genera Demo Live"}
+                    </button>
                     <button
                       onClick={() => setShowPicker(true)}
                       className="text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"
