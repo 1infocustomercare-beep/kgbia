@@ -171,10 +171,10 @@ export default function CinematicHero() {
               Empire AI · Agency premium
             </motion.div>
 
-            <h1 className="mx-auto mb-4 max-w-[14ch] font-heading text-[clamp(2rem,8.5vw,5.6rem)] font-extrabold leading-[0.86] tracking-[-0.05em] text-foreground sm:mb-5 lg:mx-0 lg:max-w-[10ch]">
+            <h1 className="mx-auto mb-4 max-w-[16ch] font-heading text-[clamp(2rem,7.6vw,5.4rem)] font-extrabold leading-[0.92] tracking-[-0.04em] text-foreground sm:mb-5 lg:mx-0 lg:max-w-[12ch]">
               <span className="block"><SplitText text="L’evoluzione" delay={0.15} /></span>
-              <span className="block landing-heading-gradient"><SplitText text="cinematica" delay={0.4} /></span>
-              <span className="block"><SplitText text="del tuo business." delay={0.7} /></span>
+              <span className="block landing-heading-gradient"><SplitText text="cinematica" delay={0.3} /></span>
+              <span className="block"><SplitText text="del tuo business." delay={0.45} /></span>
             </h1>
 
             <motion.p
