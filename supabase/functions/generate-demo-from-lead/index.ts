@@ -950,36 +950,32 @@ serve(async (req) => {
     // 5. Resolve images (real → AI fallback)
     const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid);
 
-    // 6. Tenant — auto-detect sub-sector food + template variant
+    // 6. Tenant — auto-detect sub-sector universale (food + tutti gli altri settori)
     const isFood = FOOD_SECTORS.has(lead.sector);
-    let themeConfig: Record<string, any> = {};
-    if (isFood) {
-      const sub = detectFoodSubSector(lead, scraped?.markdown);
-      const variant = pickTemplateVariant(sub, lead.businessName);
-      themeConfig = {
-        template_variant: variant,
-        sub_sector: sub,
-        hero_image: images.hero,
-        hero_tagline: sub === "pizzeria" ? "LA VERA PIZZA NAPOLETANA"
-          : sub === "sushi" ? "L'ARTE GIAPPONESE DEL GUSTO"
-          : sub === "braceria" ? "FUOCO, CARNE, TRADIZIONE"
-          : brand.tagline,
-      };
-      console.log(`[demo-factory] sub-sector=${sub} variant=${variant} brand=${lead.businessName}`);
+    const match = detectSubSector(lead, scraped?.markdown);
+    const themeConfig: Record<string, any> = {
+      template_variant: match.variant,
+      sub_sector: match.sub,
+      theme_hint: match.themeHint,
+      hero_image: images.hero,
+      hero_tagline: match.heroTagline || brand.tagline,
+      auto_matched: true,
+    };
+    console.log(`[demo-factory] sector=${lead.sector} sub=${match.sub} variant=${match.variant} theme=${match.themeHint} brand=${lead.businessName}`);
 
-      // Se è pizzeria e l'AI ha generato un menu generico (poche pizze), arricchisci col preset
-      if (sub === "pizzeria" && variant === "strapizzami") {
-        const aiMenu: any[] = Array.isArray(brand.menu) ? brand.menu : [];
-        const pizzaCount = aiMenu.filter(m => /pizz|margh|marinar|diavol|capric|calzon/i.test(`${m.name} ${m.category}`)).length;
-        if (pizzaCount < 6) {
-          brand.menu = [...DEFAULT_PIZZERIA_MENU];
-          console.log("[demo-factory] pizzeria menu enriched with default preset");
-        }
+    // Se pizzeria con template strapizzami e l'AI ha generato menu generico → arricchisci col preset
+    if (isFood && match.sub === "pizzeria" && match.variant === "strapizzami") {
+      const aiMenu: any[] = Array.isArray(brand.menu) ? brand.menu : [];
+      const pizzaCount = aiMenu.filter(m => /pizz|margh|marinar|diavol|capric|calzon/i.test(`${m.name} ${m.category}`)).length;
+      if (pizzaCount < 6) {
+        brand.menu = [...DEFAULT_PIZZERIA_MENU];
+        console.log("[demo-factory] pizzeria menu enriched with default preset");
       }
     }
+
     const tenant = isFood
       ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images, themeConfig)
-      : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images);
+      : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
 
     // 7. Magic link
     let magicLink: string | null = null;
