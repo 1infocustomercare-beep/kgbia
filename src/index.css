@@ -308,30 +308,30 @@
 .landing-section[data-theme="light"] h1,
 .landing-section[data-theme="light"] h2,
 .landing-section[data-theme="light"] h3,
-.landing-section[data-theme="light"] h4 {
+.landing-section[data-theme="light"] h4,
+.landing-section[data-theme="light"] strong {
   color: hsl(228 28% 10%);
 }
 .landing-section[data-theme="light"] p,
-.landing-section[data-theme="light"] li,
-.landing-section[data-theme="light"] span:not([style*="color"]):not(.landing-heading-gradient):not([class*="text-"]) {
+.landing-section[data-theme="light"] li {
   color: hsl(228 24% 22%);
 }
 
 .landing-section[data-theme="light"] .landing-surface {
-  background: linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(220 22% 98% / 0.78));
-  border-color: hsl(220 16% 86% / 0.9);
-  box-shadow: 0 30px 80px -40px hsl(228 28% 14% / 0.18), 0 1px 0 hsl(228 28% 14% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.9);
+  background: linear-gradient(160deg, hsl(0 0% 100% / 0.98), hsl(220 22% 97% / 0.92));
+  border-color: hsl(220 16% 82% / 0.95);
+  box-shadow: 0 26px 70px -38px hsl(228 28% 14% / 0.18), 0 1px 0 hsl(228 28% 14% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.98);
   color: hsl(228 28% 10%);
 }
 
 .landing-section[data-theme="light"] .landing-surface:hover {
-  border-color: hsl(var(--landing-accent, var(--primary)) / 0.5);
-  box-shadow: 0 36px 110px -38px hsl(var(--landing-accent, var(--primary)) / 0.28), 0 18px 60px -36px hsl(228 28% 14% / 0.18);
+  border-color: hsl(var(--landing-accent, var(--primary)) / 0.46);
+  box-shadow: 0 34px 100px -42px hsl(var(--landing-accent, var(--primary)) / 0.24), 0 18px 48px -36px hsl(228 28% 14% / 0.16);
 }
 
 .landing-section[data-theme="light"] .landing-pill {
-  background: linear-gradient(135deg, hsl(var(--landing-accent, var(--primary)) / 0.1), hsl(0 0% 100% / 0.8));
-  border-color: hsl(var(--landing-accent, var(--primary)) / 0.3);
+  background: linear-gradient(135deg, hsl(var(--landing-accent, var(--primary)) / 0.12), hsl(0 0% 100% / 0.9));
+  border-color: hsl(var(--landing-accent, var(--primary)) / 0.32);
   color: hsl(var(--landing-accent, var(--primary)));
 }
 
@@ -343,14 +343,14 @@
 }
 
 .landing-section[data-theme="light"] .landing-button-secondary {
-  background: hsl(0 0% 100% / 0.7);
-  border-color: hsl(220 16% 78%);
+  background: hsl(0 0% 100% / 0.88);
+  border-color: hsl(220 16% 76%);
   color: hsl(228 28% 14%);
 }
 
 .landing-section[data-theme="light"] .landing-icon-frame {
-  background: linear-gradient(135deg, hsl(var(--landing-accent, var(--primary)) / 0.14), hsl(var(--landing-accent, var(--primary)) / 0.04));
-  border-color: hsl(var(--landing-accent, var(--primary)) / 0.3);
+  background: linear-gradient(135deg, hsl(var(--landing-accent, var(--primary)) / 0.16), hsl(var(--landing-accent, var(--primary)) / 0.05));
+  border-color: hsl(var(--landing-accent, var(--primary)) / 0.34);
   color: hsl(var(--landing-accent, var(--primary)));
 }
 
@@ -372,7 +372,7 @@
   border: 1px solid hsl(var(--border) / 0.75);
   background: linear-gradient(160deg, hsl(var(--card) / 0.88), hsl(var(--card) / 0.54));
   box-shadow: 0 30px 80px -40px hsl(0 0% 0% / 0.72), inset 0 1px 0 hsl(var(--foreground) / 0.05);
-  backdrop-filter: blur(26px);
+  backdrop-filter: blur(22px);
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
