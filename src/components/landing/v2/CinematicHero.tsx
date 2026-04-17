@@ -1,34 +1,50 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
 
-const SCREENS = [
-  `${S}/COTE%20Miami/a-obsidian-mobile-home.png`,
-  `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`,
-  `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`,
+const PREVIEWS = [
+  {
+    src: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`,
+    sector: "Hospitality premium",
+    title: "COTE Miami",
+    metric: "+34% revenue medio",
+  },
+  {
+    src: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`,
+    sector: "Wellness & beauty",
+    title: "Aura Milano Spa",
+    metric: "+218% prenotazioni online",
+  },
+  {
+    src: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`,
+    sector: "Real estate luxury",
+    title: "DIMORA Milano",
+    metric: "+187% lead qualificati",
+  },
 ];
 
-const TRUST = ["847+ Imprese", "98 Agenti AI", "25+ Settori", "Garanzia 90 Giorni"];
+const TRUST = ["847+ business attivi", "98 agenti proprietari", "25+ verticali", "Go-live in 14 giorni"];
 
 function SplitTextReveal({ text, delay = 0, className = "" }: { text: string; delay?: number; className?: string }) {
-  const words = text.split(" ");
+  const letters = Array.from(text);
+
   return (
     <span className={className}>
-      {words.map((word, wi) => (
-        <span key={wi} className="inline-block overflow-hidden align-bottom mr-[0.25em] last:mr-0">
+      {letters.map((letter, index) => (
+        <span key={`${letter}-${index}`} className="inline-block overflow-hidden align-bottom">
           <motion.span
             className="inline-block"
-            initial={{ y: "110%", opacity: 0, filter: "blur(8px)" }}
+            initial={{ y: "115%", opacity: 0, filter: "blur(10px)" }}
             animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
             transition={{
-              delay: delay + wi * 0.06,
-              duration: 0.9,
+              delay: delay + index * 0.018,
+              duration: 0.82,
               ease: [0.22, 1, 0.36, 1],
             }}
           >
-            {word}
+            {letter === " " ? "\u00A0" : letter}
           </motion.span>
         </span>
       ))}
@@ -38,180 +54,154 @@ function SplitTextReveal({ text, delay = 0, className = "" }: { text: string; de
 
 export default function CinematicHero() {
   const navigate = useNavigate();
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const smooth = useSpring(scrollYProgress, { stiffness: 85, damping: 24, mass: 0.7 });
 
-  // Smooth spring for buttery 3D
-  const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 28, mass: 0.6 });
+  const titleY = useTransform(smooth, [0, 0.72, 1], [0, -120, -260]);
+  const titleOpacity = useTransform(smooth, [0, 0.68, 0.96], [1, 1, 0]);
+  const phoneRotateY = useTransform(smooth, [0, 1], [-18, 28]);
+  const phoneRotateX = useTransform(smooth, [0, 0.5, 1], [10, 2, -10]);
+  const phoneScale = useTransform(smooth, [0, 0.38, 0.8, 1], [0.9, 1.02, 0.96, 0.76]);
+  const phoneY = useTransform(smooth, [0, 1], [18, -120]);
+  const haloScale = useTransform(smooth, [0, 1], [0.8, 1.5]);
+  const haloOpacity = useTransform(smooth, [0, 0.4, 1], [0.5, 0.9, 0.24]);
 
-  const phoneRotateY = useTransform(smooth, [0, 1], [0, 540]);
-  const phoneRotateX = useTransform(smooth, [0, 0.5, 1], [8, 0, -6]);
-  const phoneScale = useTransform(smooth, [0, 0.4, 1], [0.85, 1.05, 0.7]);
-  const phoneY = useTransform(smooth, [0, 1], [0, -180]);
-  const phoneZ = useTransform(smooth, [0, 0.5, 1], [0, 60, -100]);
+  const screen1Opacity = useTransform(smooth, [0, 0.28, 0.4], [1, 1, 0]);
+  const screen2Opacity = useTransform(smooth, [0.22, 0.45, 0.62], [0, 1, 0]);
+  const screen3Opacity = useTransform(smooth, [0.48, 0.72, 1], [0, 1, 1]);
 
-  const titleY = useTransform(smooth, [0, 1], [0, -260]);
-  const titleOpacity = useTransform(smooth, [0, 0.5, 0.85], [1, 0.6, 0]);
-  const subOpacity = useTransform(smooth, [0, 0.4, 0.7], [1, 0.4, 0]);
-
-  const bgGlowScale = useTransform(smooth, [0, 1], [1, 2.4]);
-  const bgGlowOpacity = useTransform(smooth, [0, 0.5, 1], [0.5, 1, 0.2]);
-
-  // Screen index based on rotation
-  const screenIdx = useTransform(phoneRotateY, (v) => Math.floor(((v % 360) + 360) / 120) % 3);
+  const cardLeftY = useTransform(smooth, [0, 1], [40, -70]);
+  const cardRightY = useTransform(smooth, [0, 1], [-20, -120]);
+  const cardBottomY = useTransform(smooth, [0, 1], [50, -25]);
 
   return (
     <section
       ref={ref}
       id="hero"
-      className="relative min-h-[220svh]"
+      className="relative min-h-[215svh] sm:min-h-[230svh] lg:min-h-[255svh]"
       style={{ perspective: "1800px" }}
     >
-      {/* Atmospheric depth layers */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Animated gradient mesh */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(124,58,237,0.22), transparent 60%), radial-gradient(ellipse 60% 50% at 30% 70%, rgba(212,175,55,0.12), transparent 60%), radial-gradient(ellipse 60% 50% at 70% 60%, rgba(168,85,247,0.14), transparent 60%)",
-            scale: bgGlowScale,
-            opacity: bgGlowOpacity,
-          }}
-        />
-        {/* Grid */}
-        <div
-          className="absolute inset-0 opacity-[0.18]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(212,175,55,0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,0.16) 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
-            maskImage: "radial-gradient(ellipse 70% 60% at 50% 30%, black, transparent)",
-          }}
-        />
-        {/* Noise grain */}
-        <div
-          className="absolute inset-0 opacity-[0.04] mix-blend-overlay"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>\")",
-          }}
-        />
-      </div>
+      <div className="landing-section-glow" data-tone="violet" />
 
-      {/* Sticky stage */}
-      <div className="sticky top-0 h-[100svh] flex items-center justify-center overflow-hidden">
-        <div className="relative w-full max-w-[1400px] mx-auto px-5 grid lg:grid-cols-[1.1fr_0.9fr] gap-8 items-center z-10">
-          {/* TEXT SIDE */}
-          <motion.div
-            style={{ y: titleY, opacity: titleOpacity }}
-            className="relative text-center lg:text-left"
-          >
+      <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden pt-24 sm:pt-28">
+        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.02fr)_minmax(440px,0.98fr)] lg:gap-8 lg:px-10">
+          <motion.div style={{ y: titleY, opacity: titleOpacity }} className="relative z-20 text-center lg:text-left">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.8 }}
-              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full mb-7 border backdrop-blur-md"
-              style={{
-                borderColor: "rgba(212,175,55,0.32)",
-                background: "linear-gradient(135deg, rgba(212,175,55,0.1), rgba(124,58,237,0.06))",
-              }}
+              transition={{ delay: 0.08, duration: 0.75 }}
+              className="landing-pill mx-auto mb-6 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em] lg:mx-0"
+              data-tone="gold"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              <span className="text-[10px] tracking-[3px] uppercase font-bold" style={{ color: "#D4AF37" }}>
-                Empire AI · Piattaforma #1 in Italia
-              </span>
+              <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_16px_hsl(var(--accent)/0.8)]" />
+              Agency AI premium per business reali
             </motion.div>
 
-            <h1 className="font-heading font-extrabold leading-[0.88] tracking-[-0.045em] mb-7 text-[clamp(2.6rem,7.5vw,6rem)]">
-              <span className="block text-white">
-                <SplitTextReveal text="Il tuo business." delay={0.2} />
-              </span>
-              <span className="block">
-                <SplitTextReveal
-                  text="Completamente"
-                  delay={0.45}
-                  className="bg-gradient-to-r from-[#D4AF37] via-[#a78bfa] to-[#7C3AED] bg-clip-text text-transparent"
-                />
-              </span>
-              <span className="block">
-                <SplitTextReveal
-                  text="autonomo."
-                  delay={0.7}
-                  className="bg-gradient-to-r from-[#D4AF37] via-[#a78bfa] to-[#7C3AED] bg-clip-text text-transparent"
-                />
-              </span>
+            <h1 className="mx-auto mb-6 max-w-[12ch] font-heading text-[clamp(2.65rem,9vw,6.6rem)] font-extrabold leading-[0.84] tracking-[-0.06em] text-foreground lg:mx-0 lg:max-w-[9.5ch]">
+              <span className="block"><SplitTextReveal text="L’evoluzione" delay={0.15} /></span>
+              <span className="block landing-heading-gradient"><SplitTextReveal text="operativa" delay={0.44} /></span>
+              <span className="block text-foreground/96"><SplitTextReveal text="del tuo business." delay={0.76} /></span>
             </h1>
 
             <motion.p
-              style={{ opacity: subOpacity }}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1, duration: 0.8 }}
-              className="text-white/75 text-[clamp(1rem,1.6vw,1.18rem)] leading-[1.65] max-w-[560px] mx-auto lg:mx-0 mb-8 font-light"
+              transition={{ delay: 1.02, duration: 0.82 }}
+              className="mx-auto mb-8 max-w-[650px] text-[clamp(1rem,2vw,1.18rem)] leading-[1.68] text-foreground/72 lg:mx-0"
             >
-              98 agenti AI specializzati prendono in carico ordini, prenotazioni, marketing, fiscalità e acquisizione clienti.
-              <span className="text-white font-medium"> Tu decidi la strategia. Tutto il resto, lo facciamo noi.</span>
+              Costruiamo ecosistemi AI cinematografici e performanti: sito premium, acquisizione clienti, automazioni,
+              voice agent, WhatsApp, dashboard e integrazioni. <span className="font-semibold text-foreground">Ogni scroll deve far percepire valore, autorevolezza e conversione.</span>
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 0.8 }}
-              className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-10"
+              transition={{ delay: 1.18, duration: 0.82 }}
+              className="mb-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start"
             >
-              <button
-                onClick={() => navigate("/demo")}
-                className="group relative px-8 py-4 rounded-full text-white font-semibold text-sm font-heading inline-flex items-center justify-center gap-2 transition-all hover:-translate-y-[3px] overflow-hidden"
-                style={{
-                  background: "linear-gradient(135deg, #D4AF37 0%, #7C3AED 100%)",
-                  boxShadow: "0 20px 60px rgba(124,58,237,0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
-                }}
-              >
-                <span className="relative z-10">Vedi una Demo Live</span>
-                <span className="relative z-10 inline-block transition-transform group-hover:translate-x-1.5">→</span>
-                <span
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  style={{ background: "linear-gradient(135deg, #7C3AED 0%, #D4AF37 100%)" }}
-                />
+              <button onClick={() => navigate("/demo")} className="landing-button-primary px-8 py-4 text-sm font-semibold sm:text-[15px]">
+                Guarda una demo premium
               </button>
               <button
-                onClick={() => document.getElementById("manifesto")?.scrollIntoView({ behavior: "smooth" })}
-                className="px-8 py-4 rounded-full text-white/90 font-semibold text-sm border border-white/15 hover:border-[#D4AF37]/60 hover:bg-white/[0.04] transition-all backdrop-blur-md"
+                onClick={() => document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" })}
+                className="landing-button-secondary px-8 py-4 text-sm font-semibold sm:text-[15px]"
               >
-                Scopri come funziona
+                Scorri il portfolio live
               </button>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              className="flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-2.5"
+              transition={{ delay: 1.32, duration: 0.8 }}
+              className="flex flex-wrap justify-center gap-2.5 lg:justify-start"
             >
-              {TRUST.map((t) => (
-                <span key={t} className="text-[11px] text-white/50 font-medium tracking-wide flex items-center gap-2">
-                  <span className="w-1 h-1 rounded-full bg-[#D4AF37]" style={{ boxShadow: "0 0 8px #D4AF37" }} />
-                  {t}
+              {TRUST.map((item, index) => (
+                <span
+                  key={item}
+                  className="landing-pill px-3.5 py-2 text-[11px] font-medium tracking-[0.03em] text-foreground/75"
+                  data-tone={index % 2 === 0 ? "gold" : "violet"}
+                >
+                  {item}
                 </span>
               ))}
             </motion.div>
           </motion.div>
 
-          {/* PHONE SIDE - 3D rotating */}
-          <div className="relative h-[80svh] flex items-center justify-center" style={{ transformStyle: "preserve-3d" }}>
-            {/* Ambient glow */}
+          <div className="relative mx-auto flex min-h-[48svh] w-full max-w-[580px] items-center justify-center sm:min-h-[58svh] lg:min-h-[82svh]">
             <motion.div
-              className="absolute w-[420px] h-[420px] rounded-full blur-[100px]"
+              className="absolute h-[18rem] w-[18rem] rounded-full blur-[72px] sm:h-[26rem] sm:w-[26rem]"
               style={{
-                background: "radial-gradient(circle, rgba(212,175,55,0.4), rgba(124,58,237,0.3) 50%, transparent 70%)",
-                scale: bgGlowScale,
-                opacity: bgGlowOpacity,
+                scale: haloScale,
+                opacity: haloOpacity,
+                background:
+                  "radial-gradient(circle, hsl(var(--primary) / 0.38), hsl(var(--empire-violet) / 0.22) 45%, transparent 72%)",
               }}
             />
+
+            <motion.div
+              style={{ y: cardLeftY, rotate: -8 }}
+              className="landing-surface absolute left-0 top-[10%] hidden w-[210px] rounded-[30px] p-3 lg:block"
+              data-tone="gold"
+            >
+              <img src={PREVIEWS[0].src} alt="Preview sito hospitality premium" loading="lazy" className="aspect-[4/5] w-full rounded-[24px] object-cover object-top" />
+              <div className="px-1 pb-1 pt-3">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-gold-light">{PREVIEWS[0].sector}</div>
+                <div className="mt-1 text-sm font-semibold text-foreground">{PREVIEWS[0].title}</div>
+                <div className="mt-2 text-xs text-foreground/60">{PREVIEWS[0].metric}</div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              style={{ y: cardRightY, rotate: 10 }}
+              className="landing-surface absolute right-0 top-[8%] hidden w-[220px] rounded-[30px] p-3 lg:block"
+              data-tone="violet"
+            >
+              <img src={PREVIEWS[1].src} alt="Preview sito wellness premium" loading="lazy" className="aspect-[4/5] w-full rounded-[24px] object-cover object-top" />
+              <div className="px-1 pb-1 pt-3">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-empire-violet-glow">{PREVIEWS[1].sector}</div>
+                <div className="mt-1 text-sm font-semibold text-foreground">{PREVIEWS[1].title}</div>
+                <div className="mt-2 text-xs text-foreground/60">{PREVIEWS[1].metric}</div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              style={{ y: cardBottomY, rotate: -4 }}
+              className="landing-surface absolute bottom-[6%] left-1/2 hidden w-[300px] -translate-x-1/2 rounded-[30px] p-3 lg:block"
+              data-tone="blue"
+            >
+              <div className="grid grid-cols-[104px_1fr] items-center gap-3">
+                <img src={PREVIEWS[2].src} alt="Preview sito real estate premium" loading="lazy" className="aspect-[4/5] w-full rounded-[22px] object-cover object-top" />
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.2em] text-primary">{PREVIEWS[2].sector}</div>
+                  <div className="mt-1 text-base font-semibold leading-tight text-foreground">{PREVIEWS[2].title}</div>
+                  <div className="mt-3 text-xs leading-[1.6] text-foreground/62">
+                    Funnel visivo, storytelling e conversione ad alto valore percepito.
+                  </div>
+                </div>
+              </div>
+            </motion.div>
 
             <motion.div
               style={{
@@ -219,113 +209,48 @@ export default function CinematicHero() {
                 rotateX: phoneRotateX,
                 scale: phoneScale,
                 y: phoneY,
-                z: phoneZ,
                 transformStyle: "preserve-3d",
               }}
-              className="relative"
+              className="relative z-10"
             >
-              {/* The phone - all 3 faces */}
-              {SCREENS.map((src, i) => (
-                <PhoneFace key={i} src={src} faceIndex={i} currentIdx={screenIdx} />
+              <div className="relative aspect-[9/19.5] w-[250px] rounded-[2.7rem] border border-border/80 bg-card/70 shadow-[0_50px_130px_-40px_hsl(var(--primary)/0.75)] sm:w-[290px] lg:w-[330px]">
+                <div className="absolute left-1/2 top-[1.8%] z-20 h-[2.3%] w-[30%] -translate-x-1/2 rounded-full bg-black/90" />
+                <div className="absolute inset-[4px] overflow-hidden rounded-[2.4rem] bg-background">
+                  <motion.img src={PREVIEWS[0].src} alt="Preview mobile hospitality" style={{ opacity: screen1Opacity }} className="absolute inset-0 h-full w-full object-cover object-top" />
+                  <motion.img src={PREVIEWS[1].src} alt="Preview mobile wellness" style={{ opacity: screen2Opacity }} className="absolute inset-0 h-full w-full object-cover object-top" />
+                  <motion.img src={PREVIEWS[2].src} alt="Preview mobile real estate" style={{ opacity: screen3Opacity }} className="absolute inset-0 h-full w-full object-cover object-top" />
+                  <div className="absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--foreground)/0.16),transparent_28%,transparent_72%,hsl(var(--primary)/0.12))]" />
+                </div>
+                <div className="absolute inset-0 rounded-[2.7rem] bg-[linear-gradient(145deg,hsl(var(--foreground)/0.12),transparent_24%,transparent_64%,hsl(var(--gold)/0.09))] pointer-events-none" />
+                <div className="absolute bottom-[1.4%] left-1/2 h-[1.2%] w-[30%] -translate-x-1/2 rounded-full bg-foreground/20" />
+              </div>
+            </motion.div>
+
+            <div className="absolute bottom-0 left-0 right-0 grid gap-3 lg:hidden">
+              {PREVIEWS.slice(0, 2).map((preview, index) => (
+                <div key={preview.title} className="landing-surface mx-auto flex w-full max-w-[340px] items-center gap-3 rounded-[24px] p-3" data-tone={index === 0 ? "gold" : "violet"}>
+                  <img src={preview.src} alt={`Preview ${preview.title}`} loading="lazy" className="h-20 w-16 rounded-[16px] object-cover object-top" />
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.18em] text-foreground/54">{preview.sector}</div>
+                    <div className="mt-1 text-sm font-semibold text-foreground">{preview.title}</div>
+                    <div className="mt-2 text-xs text-foreground/62">{preview.metric}</div>
+                  </div>
+                </div>
               ))}
-            </motion.div>
-
-            {/* Floating metric chips orbiting */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.6, type: "spring" }}
-              className="absolute top-[15%] -left-2 sm:left-4 px-3.5 py-2.5 rounded-2xl backdrop-blur-xl border z-30 hidden sm:block"
-              style={{
-                background: "linear-gradient(135deg, rgba(212,175,55,0.25), rgba(0,0,0,0.7))",
-                borderColor: "rgba(212,175,55,0.4)",
-                boxShadow: "0 16px 48px rgba(212,175,55,0.3)",
-              }}
-            >
-              <div className="text-[9px] font-bold uppercase tracking-wider text-[#D4AF37]">Live Now</div>
-              <div className="text-sm font-heading font-extrabold text-white mt-0.5">+34% Revenue</div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.8, type: "spring" }}
-              className="absolute bottom-[20%] -right-2 sm:right-4 px-3.5 py-2.5 rounded-2xl backdrop-blur-xl border z-30 hidden sm:block"
-              style={{
-                background: "linear-gradient(135deg, rgba(124,58,237,0.25), rgba(0,0,0,0.7))",
-                borderColor: "rgba(124,58,237,0.4)",
-                boxShadow: "0 16px 48px rgba(124,58,237,0.3)",
-              }}
-            >
-              <div className="text-[9px] font-bold uppercase tracking-wider text-[#a78bfa]">AI Agent</div>
-              <div className="text-sm font-heading font-extrabold text-white mt-0.5">Always-On</div>
-            </motion.div>
+            </div>
           </div>
         </div>
 
-        {/* Scroll hint */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1, y: [0, 10, 0] }}
-          transition={{ delay: 2, y: { repeat: Infinity, duration: 2 } }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/45"
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.8, duration: 0.8 }}
+          className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-foreground/46"
         >
-          <span className="text-[10px] uppercase tracking-[4px] font-medium">Scroll · Esplora</span>
-          <div className="w-[1px] h-10 bg-gradient-to-b from-[#D4AF37]/60 to-transparent" />
+          <span className="text-[10px] uppercase tracking-[0.38em]">Scroll cinematico</span>
+          <div className="h-10 w-px bg-[linear-gradient(180deg,hsl(var(--gold)/0.75),transparent)]" />
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function PhoneFace({
-  src,
-  faceIndex,
-  currentIdx,
-}: {
-  src: string;
-  faceIndex: number;
-  currentIdx: ReturnType<typeof useTransform<number, number>>;
-}) {
-  const opacity = useTransform(currentIdx, (v) => (v === faceIndex ? 1 : 0.85));
-  const angle = faceIndex * 120;
-
-  return (
-    <motion.div
-      style={{
-        opacity,
-        transform: `rotateY(${angle}deg) translateZ(160px)`,
-        transformStyle: "preserve-3d",
-        backfaceVisibility: "hidden",
-      }}
-      className="absolute inset-0 flex items-center justify-center"
-    >
-      <div
-        className="relative w-[260px] sm:w-[300px] aspect-[9/19.5] rounded-[44px] overflow-hidden"
-        style={{
-          border: "2px solid rgba(212,175,55,0.4)",
-          background: "#0a0a14",
-          boxShadow:
-            "0 50px 120px rgba(124,58,237,0.45), 0 0 0 1px rgba(212,175,55,0.25), inset 0 0 0 1px rgba(255,255,255,0.08)",
-        }}
-      >
-        {/* Notch */}
-        <div className="absolute top-[1.8%] left-1/2 -translate-x-1/2 w-[30%] h-[2.4%] bg-black rounded-full z-20" />
-        {/* Screen */}
-        <div className="absolute inset-[3px] rounded-[42px] overflow-hidden">
-          <img src={src} alt="" loading="eager" decoding="async" className="w-full h-full object-cover object-top" />
-        </div>
-        {/* Glass highlights */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.12] via-transparent to-transparent pointer-events-none rounded-[44px]" />
-        <div className="absolute inset-0 bg-gradient-to-tl from-[#D4AF37]/10 via-transparent to-transparent pointer-events-none rounded-[44px] mix-blend-overlay" />
-        {/* Home indicator */}
-        <div className="absolute bottom-[1.2%] left-1/2 -translate-x-1/2 w-[28%] h-[1.2%] bg-white/20 rounded-full z-20" />
-      </div>
-      {/* Phone reflection */}
-      <div
-        className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-[260px] sm:w-[300px] h-[80px] rounded-full blur-2xl"
-        style={{ background: "radial-gradient(ellipse, rgba(212,175,55,0.4), transparent 70%)" }}
-      />
-    </motion.div>
   );
 }
