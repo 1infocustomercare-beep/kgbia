@@ -97,21 +97,21 @@ export default function Orbital3DShowcase() {
 
         <motion.div
           style={{ scale: stageScale }}
-          className="relative mx-auto flex h-full max-w-[1240px] flex-col px-4 pb-6 pt-8 sm:px-6 sm:pb-8 sm:pt-10 lg:px-8 lg:pt-14"
+          className="relative mx-auto flex h-full max-w-[1240px] flex-col px-3 pb-3 pt-3 sm:px-6 sm:pb-6 sm:pt-8 lg:px-8 lg:pt-12"
         >
           {/* Header */}
           <motion.div
             style={{ y: headerY, opacity: headerOpacity }}
-            className="mx-auto mb-4 max-w-[720px] flex-shrink-0 text-center sm:mb-6 lg:mb-8"
+            className="mx-auto mb-2 max-w-[720px] flex-shrink-0 text-center sm:mb-5 lg:mb-7"
           >
             <div
-              className="landing-pill mx-auto mb-2.5 inline-flex items-center gap-2 px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:mb-3 sm:px-4 sm:py-2 sm:text-[10px]"
+              className="landing-pill mx-auto mb-1.5 inline-flex items-center gap-2 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.24em] sm:mb-3 sm:px-4 sm:py-2 sm:text-[10px]"
               data-tone="violet"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-accent" />
               Portfolio · Selezione 2024
             </div>
-            <h2 className="mb-2 font-heading text-[clamp(1.45rem,4.6vw,2.6rem)] font-extrabold leading-[0.98] tracking-[-0.03em] text-foreground sm:mb-3">
+            <h2 className="mb-1.5 font-heading text-[clamp(1.2rem,4.2vw,2.6rem)] font-extrabold leading-[1] tracking-[-0.03em] text-foreground sm:mb-3">
               <span className="block">Mockup reali. Brand premium.</span>
               <span className="block landing-heading-gradient">Lo scroll guida la galleria.</span>
             </h2>
