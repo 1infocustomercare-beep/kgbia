@@ -122,6 +122,14 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
   const [activeCategory, setActiveCategory] = useState<string>("");
   const filteredItems = activeCategory ? menuItems.filter((i: any) => i.category === activeCategory) : menuItems;
 
+  const [form, setForm] = useState({ name: "", phone: "", date: "", time: "", guests: "2", notes: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [galleryIdx, setGalleryIdx] = useState(0);
+
+  useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
+
   // ── Strapizzami template branch (pizzeria tradizionale) ──
   const themeConfig = (restaurant as any)?.theme_config || (company as any)?.theme_config;
   const templateVariant = themeConfig?.template_variant as string | undefined;
@@ -157,13 +165,6 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
     return <StrapizzamiSite data={strapizzamiData} />;
   }
 
-  const [form, setForm] = useState({ name: "", phone: "", date: "", time: "", guests: "2", notes: "" });
-  const [submitting, setSubmitting] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [navScrolled, setNavScrolled] = useState(false);
-  const [galleryIdx, setGalleryIdx] = useState(0);
-
-  useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
 
   const handleReservation = async () => {
     if (!form.name || !form.phone || !form.date || !form.time) { toast.error("Compila tutti i campi obbligatori"); return; }
