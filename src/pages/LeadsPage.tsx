@@ -19,7 +19,7 @@ import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/
 import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFactoryOverlay";
 import SellerCRM from "@/components/leads/SellerCRM";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
-import { Briefcase, Bookmark, Wand2 as WandIcon, Crown } from "lucide-react";
+import { Briefcase, Bookmark, Wand2 as WandIcon } from "lucide-react";
 
 /* ─── Types ─── */
 interface Lead {
