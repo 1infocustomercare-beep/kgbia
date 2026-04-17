@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { StrapizzamiSite, type StrapizzamiSiteData } from "@/components/templates/strapizzami/StrapizzamiSite";
+import { PaperfishSite, type PaperfishSiteData } from "@/components/templates/paperfish/PaperfishSite";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -165,6 +166,37 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
     };
   }, [templateVariant, menuItems, company, themeConfig]);
 
+  // ── Paperfish Sakura template branch (sushi/giapponese) ──
+  const paperfishData = useMemo<PaperfishSiteData | null>(() => {
+    if (templateVariant !== "paperfish-sakura" && templateVariant !== "paperfish-dark") return null;
+    const items = (menuItems.length > 0 ? menuItems : []).map((i: any) => ({
+      id: String(i.id),
+      name: i.name,
+      description: i.description || "",
+      price: Number(i.price) || 0,
+      image: i.image_url || "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=600",
+      category: i.category || "Sushi",
+      is_popular: !!i.is_popular,
+      ingredients: i.description,
+      jp_label: (i as any).jp_label,
+    }));
+    return {
+      brandName: company.name || "Sushi Bar",
+      subtitle: themeConfig?.subtitle || "寿司 · 刺身",
+      heroImage: themeConfig?.hero_image || "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      heroTagline: themeConfig?.hero_tagline || "OMAKASE EXPERIENCE",
+      address: [company.address, company.city].filter(Boolean).join(", ") || "Via Tokyo 1, Milano",
+      items: items.length > 0 ? items : [
+        { id: "1", name: "Salmon Nigiri", description: "Riso shari, salmone fresco norvegese, wasabi", price: 8, image: "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Nigiri", is_popular: true, jp_label: "鮭にぎり" },
+        { id: "2", name: "Tuna Sashimi", description: "Tonno rosso del Mediterraneo, taglio premium", price: 16, image: "https://images.pexels.com/photos/884600/pexels-photo-884600.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Sashimi", is_popular: true, jp_label: "鮪刺身" },
+        { id: "3", name: "Dragon Roll", description: "Gambero tempura, avocado, anguilla, salsa unagi", price: 18, image: "https://images.pexels.com/photos/1148086/pexels-photo-1148086.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Special Roll", is_popular: true, jp_label: "ドラゴンロール" },
+        { id: "4", name: "Tonkotsu Ramen", description: "Brodo di maiale 12h, chashu, ajitama, scalogno", price: 16, image: "https://images.pexels.com/photos/1907244/pexels-photo-1907244.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Ramen", jp_label: "豚骨ラーメン" },
+        { id: "5", name: "Edamame", description: "Fagioli di soia al sale marino", price: 6, image: "https://images.pexels.com/photos/8951403/pexels-photo-8951403.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Antipasti", jp_label: "枝豆" },
+        { id: "6", name: "Mochi Trio", description: "Tre dolcetti di riso glutinoso: matcha, fragola, cocco", price: 8, image: "https://images.pexels.com/photos/4253318/pexels-photo-4253318.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Dolci", jp_label: "餅" },
+      ],
+    };
+  }, [templateVariant, menuItems, company, themeConfig]);
+
   const handleReservation = async () => {
     if (!form.name || !form.phone || !form.date || !form.time) { toast.error("Compila tutti i campi obbligatori"); return; }
     setSubmitting(true);
@@ -203,9 +235,12 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
   const displayMenuItems = filteredItems.length > 0 ? filteredItems : demoMenu;
   const displayCategories = categories.length > 0 ? categories : [...new Set(demoMenu.map(i => i.category))];
 
-  // Branch render: Strapizzami (pizzeria tradizionale) — DOPO tutti gli hooks
+  // Branch render: template specifici — DOPO tutti gli hooks
   if (strapizzamiData) {
     return <StrapizzamiSite data={strapizzamiData} />;
+  }
+  if (paperfishData) {
+    return <PaperfishSite data={paperfishData} />;
   }
 
   return (
