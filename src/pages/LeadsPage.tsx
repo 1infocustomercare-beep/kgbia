@@ -344,6 +344,10 @@ export default function LeadsPage() {
   const savedLeadKeys = new Set(pipeline.leads.map(l => `${l.name.toLowerCase()}|${(l.city || "").toLowerCase()}`));
   const isLeadSaved = (lead: Lead) => savedLeadKeys.has(`${lead.name.toLowerCase()}|${(lead.city || "").toLowerCase()}`);
 
+  // ═══ GPS Radar + Speed Dial ═══
+  const [gpsOpen, setGpsOpen] = useState(false);
+  const [speedDialOpen, setSpeedDialOpen] = useState(false);
+
   /* ─── Auto-detect sector from manual name ─── */
   useEffect(() => {
     if (manualSectorTouched || !manualName.trim()) return;
