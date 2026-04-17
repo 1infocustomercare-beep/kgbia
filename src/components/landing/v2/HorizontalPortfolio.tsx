@@ -39,21 +39,21 @@ export default function HorizontalPortfolio() {
   const x = useTransform(smooth, [0, 1], [0, -maxX]);
 
   return (
-    <section ref={ref} id="portfolio" className="landing-section relative" data-theme="dark" style={{ height: `${PROJECTS.length * 28 + 100}vh` }}>
+    <section ref={ref} id="portfolio" className="landing-section relative" data-theme="dark" style={{ height: `${PROJECTS.length * 26 + 80}vh` }}>
       <div className="sticky top-0 flex h-[100svh] overflow-hidden">
         <div className="absolute inset-0 landing-section-glow" data-tone="gold" />
 
-        <div className="relative mx-auto flex w-full max-w-[1600px] flex-col justify-center px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-5">
+        <div className="relative mx-auto flex h-full w-full max-w-[1600px] flex-col px-3 pb-3 pt-4 sm:px-4 sm:pb-4 sm:pt-5 lg:px-6 lg:pt-6">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="mb-3 flex flex-col items-center gap-2 text-center sm:mb-4 lg:flex-row lg:items-end lg:justify-between lg:text-left"
+            className="mb-2 flex flex-shrink-0 flex-col items-center gap-1.5 text-center sm:mb-3 lg:flex-row lg:items-end lg:justify-between lg:text-left"
           >
             <div className="max-w-[760px] lg:mx-0" data-tone="gold">
-              <span className="landing-pill mb-2 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.26em] sm:mb-2 sm:px-3.5 sm:py-1.5 sm:text-[10px]">Portfolio live</span>
-              <h2 className="mx-auto max-w-[20ch] font-heading text-[clamp(1.3rem,3.6vw,2.6rem)] font-extrabold leading-[1] tracking-[-0.03em] text-foreground lg:mx-0">
+              <span className="landing-pill mb-1.5 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.26em] sm:mb-2 sm:px-3.5 sm:py-1.5 sm:text-[10px]">Portfolio live</span>
+              <h2 className="mx-auto max-w-[20ch] font-heading text-[clamp(1.15rem,3.2vw,2.4rem)] font-extrabold leading-[1] tracking-[-0.03em] text-foreground lg:mx-0">
                 Preview reali che <span className="landing-heading-gradient">comunicano valore</span> in 3 secondi.
               </h2>
             </div>
@@ -64,17 +64,20 @@ export default function HorizontalPortfolio() {
             </div>
           </motion.div>
 
-          <motion.div ref={trackRef} style={{ x }} className="flex w-max items-stretch gap-4 pr-6 will-change-transform sm:gap-5 lg:gap-6 lg:pr-12">
-            {PROJECTS.map((project, idx) => (
-              <ProjectCard key={project.brand} project={project} index={idx} />
-            ))}
-          </motion.div>
+          {/* Track wrapper takes remaining height; cards size by parent (h-full) */}
+          <div className="relative flex min-h-0 flex-1 items-center overflow-hidden">
+            <motion.div ref={trackRef} style={{ x }} className="flex h-full w-max items-stretch gap-3 pr-6 will-change-transform sm:gap-4 lg:gap-5 lg:pr-12">
+              {PROJECTS.map((project, idx) => (
+                <ProjectCard key={project.brand} project={project} index={idx} />
+              ))}
+            </motion.div>
+          </div>
 
-          <div className="mt-3 flex flex-col items-center gap-2 text-center sm:mt-4 sm:flex-row sm:items-center sm:justify-between sm:text-left">
-            <div className="text-[11px] leading-[1.5] text-foreground/68 sm:text-[12px]">
+          <div className="mt-2 flex flex-shrink-0 flex-col items-center gap-1.5 text-center sm:mt-3 sm:flex-row sm:items-center sm:justify-between sm:text-left">
+            <div className="text-[10.5px] leading-[1.4] text-foreground/68 sm:text-[12px]">
               Ogni progetto include design premium, funnel persuasivo e proof of value.
             </div>
-            <button onClick={() => navigate("/demo")} className="landing-button-secondary px-4 py-2 text-[13px] font-semibold sm:px-5 sm:py-2.5">
+            <button onClick={() => navigate("/demo")} className="landing-button-secondary px-4 py-2 text-[12px] font-semibold sm:px-5 sm:py-2.5 sm:text-[13px]">
               Esplora tutti i progetti →
             </button>
           </div>
@@ -93,7 +96,7 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
       transition={{ delay: index * 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -10, rotateY: 4, rotateX: -2 }}
       style={{ transformStyle: "preserve-3d", perspective: "1400px" }}
-      className="landing-surface group relative flex h-[82svh] w-[78vw] min-w-[280px] max-w-[340px] flex-col overflow-hidden rounded-[24px] p-3 sm:h-[84svh] sm:w-[52vw] sm:max-w-[380px] sm:rounded-[28px] sm:p-4 lg:h-[86svh] lg:w-[32vw] lg:max-w-[420px] lg:p-5"
+      className="landing-surface group relative flex h-full w-[74vw] min-w-[260px] max-w-[320px] flex-col overflow-hidden rounded-[22px] p-2.5 sm:w-[48vw] sm:max-w-[360px] sm:rounded-[26px] sm:p-3.5 lg:w-[30vw] lg:max-w-[400px] lg:p-4"
       data-tone={project.tone}
     >
       {/* Header compatto */}
