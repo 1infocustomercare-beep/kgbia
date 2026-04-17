@@ -796,10 +796,35 @@ serve(async (req) => {
     // 5. Resolve images (real → AI fallback)
     const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid);
 
-    // 6. Tenant
+    // 6. Tenant — auto-detect sub-sector food + template variant
     const isFood = FOOD_SECTORS.has(lead.sector);
+    let themeConfig: Record<string, any> = {};
+    if (isFood) {
+      const sub = detectFoodSubSector(lead, scraped?.markdown);
+      const variant = pickTemplateVariant(sub, lead.businessName);
+      themeConfig = {
+        template_variant: variant,
+        sub_sector: sub,
+        hero_image: images.hero,
+        hero_tagline: sub === "pizzeria" ? "LA VERA PIZZA NAPOLETANA"
+          : sub === "sushi" ? "L'ARTE GIAPPONESE DEL GUSTO"
+          : sub === "braceria" ? "FUOCO, CARNE, TRADIZIONE"
+          : brand.tagline,
+      };
+      console.log(`[demo-factory] sub-sector=${sub} variant=${variant} brand=${lead.businessName}`);
+
+      // Se è pizzeria e l'AI ha generato un menu generico (poche pizze), arricchisci col preset
+      if (sub === "pizzeria" && variant === "strapizzami") {
+        const aiMenu: any[] = Array.isArray(brand.menu) ? brand.menu : [];
+        const pizzaCount = aiMenu.filter(m => /pizz|margh|marinar|diavol|capric|calzon/i.test(`${m.name} ${m.category}`)).length;
+        if (pizzaCount < 6) {
+          brand.menu = [...DEFAULT_PIZZERIA_MENU];
+          console.log("[demo-factory] pizzeria menu enriched with default preset");
+        }
+      }
+    }
     const tenant = isFood
-      ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images)
+      ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images, themeConfig)
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images);
 
     // 7. Magic link
