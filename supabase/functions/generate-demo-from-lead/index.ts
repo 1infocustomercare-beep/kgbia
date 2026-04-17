@@ -522,12 +522,31 @@ async function createFoodTenant(
   brand: any,
   palette: BrandPalette,
   images: { hero: string | null; gallery: string[]; logo: string | null },
+  themeConfig: Record<string, any> = {},
 ): Promise<{ id: string; slug: string }> {
   const baseSlug = slugify(lead.businessName) || `demo-${Date.now()}`;
   const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
 
   const { data: r, error } = await supabase
     .from("restaurants")
+    .insert({
+      name: lead.businessName,
+      slug,
+      owner_id: ownerId,
+      tagline: brand.tagline,
+      primary_color: palette.primary,
+      logo_url: images.logo,
+      phone: lead.phone || "+39 06 0000000",
+      address: lead.fullAddress || lead.zone || "—",
+      city: lead.city || "Roma",
+      email: lead.email || `demo-${Date.now()}@empireaigroup.com`,
+      is_active: true,
+      policy_accepted: true,
+      policy_accepted_at: new Date().toISOString(),
+      setup_paid: true,
+      business_type: "restaurant",
+      theme_config: themeConfig,
+    })
     .insert({
       name: lead.businessName,
       slug,
