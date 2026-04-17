@@ -82,19 +82,18 @@ export default function CinematicHero() {
     return () => clearInterval(id);
   }, []);
 
-  const titleY = useTransform(smooth, [0, 1], [0, -160]);
-  const titleOpacity = useTransform(smooth, [0, 0.55, 0.95], [1, 0.85, 0]);
+  const titleY = useTransform(smooth, [0, 1], [0, -80]);
+  const titleOpacity = useTransform(smooth, [0, 0.7, 1], [1, 0.7, 0.4]);
 
   // Parallax layers (depth like macOS wallpaper)
-  const layer1Y = useTransform(smooth, [0, 1], [0, -60]);
-  const layer2Y = useTransform(smooth, [0, 1], [0, -160]);
-  const layer3Y = useTransform(smooth, [0, 1], [0, -260]);
-  const meshScale = useTransform(smooth, [0, 1], [1, 1.4]);
-  const meshRotate = useTransform(smooth, [0, 1], [0, 18]);
+  const layer1Y = useTransform(smooth, [0, 1], [0, -40]);
+  const layer2Y = useTransform(smooth, [0, 1], [0, -90]);
+  const layer3Y = useTransform(smooth, [0, 1], [0, -150]);
+  const meshScale = useTransform(smooth, [0, 1], [1, 1.2]);
+  const meshRotate = useTransform(smooth, [0, 1], [0, 8]);
 
-  const phoneScale = useTransform(smooth, [0, 0.45, 1], [0.96, 1.04, 0.86]);
-  const phoneRotateX = useTransform(smooth, [0, 1], [6, -8]);
-  const phoneY = useTransform(smooth, [0, 1], [0, -90]);
+  const phoneScale = useTransform(smooth, [0, 1], [1, 0.9]);
+  const phoneY = useTransform(smooth, [0, 1], [0, -40]);
 
   const active = SCENES[activeScene];
 
@@ -267,7 +266,6 @@ export default function CinematicHero() {
             <motion.div
               style={{
                 scale: phoneScale,
-                rotateX: phoneRotateX,
                 y: phoneY,
                 transformStyle: "preserve-3d",
               }}
