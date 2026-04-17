@@ -39,17 +39,17 @@ export default function HorizontalPortfolio() {
   const x = useTransform(smooth, [0, 1], [0, -maxX]);
 
   return (
-    <section ref={ref} id="portfolio" className="landing-section relative" data-theme="dark" style={{ height: `${PROJECTS.length * 26 + 80}vh` }}>
+    <section ref={ref} id="portfolio" className="landing-section relative overflow-hidden" data-theme="dark" style={{ height: `${PROJECTS.length * 24 + 82}vh` }}>
       <div className="sticky top-0 flex h-[100svh] overflow-hidden">
         <div className="absolute inset-0 landing-section-glow" data-tone="gold" />
 
-        <div className="relative mx-auto flex h-full w-full max-w-[1600px] flex-col px-3 pb-3 pt-4 sm:px-4 sm:pb-4 sm:pt-5 lg:px-6 lg:pt-6">
+        <div className="relative mx-auto flex h-full w-full max-w-[1600px] flex-col px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-5 sm:px-5 sm:pb-5 sm:pt-6 lg:px-6 lg:pb-6 lg:pt-6">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="mb-2 flex flex-shrink-0 flex-col items-center gap-1.5 text-center sm:mb-3 lg:flex-row lg:items-end lg:justify-between lg:text-left"
+            className="mb-3 flex flex-shrink-0 flex-col items-center gap-2 text-center sm:mb-4 lg:flex-row lg:items-end lg:justify-between lg:text-left"
           >
             <div className="max-w-[760px] lg:mx-0" data-tone="gold">
               <span className="landing-pill mb-1.5 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.26em] sm:mb-2 sm:px-3.5 sm:py-1.5 sm:text-[10px]">Portfolio live</span>
@@ -65,15 +65,15 @@ export default function HorizontalPortfolio() {
           </motion.div>
 
           {/* Track wrapper takes remaining height; cards size by parent (h-full) */}
-          <div className="relative flex min-h-0 flex-1 items-center overflow-hidden">
-            <motion.div ref={trackRef} style={{ x }} className="flex h-full w-max items-stretch gap-3 pr-6 will-change-transform sm:gap-4 lg:gap-5 lg:pr-12">
+          <div className="relative flex min-h-0 flex-1 items-center overflow-hidden py-2 sm:py-3">
+            <motion.div ref={trackRef} style={{ x }} className="flex h-full max-h-[68svh] w-max items-stretch gap-3 pr-6 will-change-transform sm:max-h-[72svh] sm:gap-4 lg:gap-5 lg:pr-12">
               {PROJECTS.map((project, idx) => (
                 <ProjectCard key={project.brand} project={project} index={idx} />
               ))}
             </motion.div>
           </div>
 
-          <div className="mt-2 flex flex-shrink-0 flex-col items-center gap-1.5 text-center sm:mt-3 sm:flex-row sm:items-center sm:justify-between sm:text-left">
+          <div className="mt-3 flex flex-shrink-0 flex-col items-center gap-2 text-center sm:mt-4 sm:flex-row sm:items-center sm:justify-between sm:text-left">
             <div className="text-[10.5px] leading-[1.4] text-foreground/68 sm:text-[12px]">
               Ogni progetto include design premium, funnel persuasivo e proof of value.
             </div>
@@ -96,7 +96,7 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
       transition={{ delay: index * 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -10, rotateY: 4, rotateX: -2 }}
       style={{ transformStyle: "preserve-3d", perspective: "1400px" }}
-      className="landing-surface group relative flex h-full w-[74vw] min-w-[260px] max-w-[320px] flex-col overflow-hidden rounded-[22px] p-2.5 sm:w-[48vw] sm:max-w-[360px] sm:rounded-[26px] sm:p-3.5 lg:w-[30vw] lg:max-w-[400px] lg:p-4"
+      className="landing-surface group relative my-1 flex h-full w-[78vw] min-w-[252px] max-w-[304px] flex-col overflow-hidden rounded-[22px] p-2.5 sm:w-[48vw] sm:max-w-[360px] sm:rounded-[26px] sm:p-3.5 lg:w-[30vw] lg:max-w-[400px] lg:p-4"
       data-tone={project.tone}
     >
       {/* Header compatto */}
@@ -112,7 +112,7 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
 
       {/* Mockup stage — iPhone INTERO visibile */}
       <div
-        className="relative mx-auto flex flex-1 w-full items-center justify-center overflow-hidden rounded-[20px] sm:rounded-[24px]"
+        className="relative mx-auto flex min-h-0 flex-1 w-full items-center justify-center overflow-hidden rounded-[20px] px-1 py-2 sm:rounded-[24px] sm:px-0 sm:py-0"
         style={{
           background: `radial-gradient(ellipse 70% 60% at 50% 30%, hsl(var(--landing-accent, var(--primary)) / 0.22), transparent 70%), linear-gradient(160deg, hsl(228 22% 8% / 0.4), hsl(228 22% 5% / 0.7))`,
         }}
@@ -127,11 +127,11 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
         <motion.div
           whileHover={{ scale: 1.03, y: -2 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 flex h-full items-center justify-center py-3"
+          className="relative z-10 flex h-full max-h-full items-center justify-center py-2 sm:py-3"
           style={{ transformStyle: "preserve-3d" }}
         >
           <div
-            className="relative aspect-[9/19.5] h-full max-h-full rounded-[1.8rem] border border-border/70 bg-card/80 sm:rounded-[2rem] lg:rounded-[2.2rem]"
+            className="relative aspect-[9/19.5] h-full max-h-full rounded-[1.7rem] border border-border/70 bg-card/80 sm:rounded-[2rem] lg:rounded-[2.2rem]"
             style={{
               boxShadow:
                 "0 40px 100px -28px hsl(var(--landing-accent, var(--primary)) / 0.55), 0 0 0 1px hsl(var(--foreground) / 0.06)",
@@ -161,7 +161,7 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 + index * 0.05, duration: 0.55 }}
-            className="absolute right-1 top-[10%] z-20 rounded-2xl border border-border/70 bg-card/90 px-2.5 py-1.5 backdrop-blur-xl sm:right-2 sm:px-3 sm:py-2"
+            className="absolute right-1 top-[8%] z-20 max-w-[34%] rounded-2xl border border-border/70 bg-card/90 px-2 py-1.5 backdrop-blur-xl sm:right-2 sm:max-w-none sm:px-3 sm:py-2"
             style={{ boxShadow: "0 16px 40px -10px hsl(var(--landing-accent, var(--primary)) / 0.55)" }}
           >
             <div className="text-[7px] font-bold uppercase tracking-[0.18em] text-foreground/65 sm:text-[8px]">Risultato</div>
@@ -174,7 +174,7 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.45 + index * 0.05, duration: 0.55 }}
-            className="absolute left-1 bottom-[10%] z-20 rounded-2xl border border-border/70 bg-card/90 px-2.5 py-1.5 backdrop-blur-xl sm:left-2 sm:px-3 sm:py-2"
+            className="absolute bottom-[8%] left-1 z-20 max-w-[42%] rounded-2xl border border-border/70 bg-card/90 px-2 py-1.5 backdrop-blur-xl sm:left-2 sm:max-w-none sm:px-3 sm:py-2"
             style={{ boxShadow: "0 16px 40px -10px hsl(var(--empire-violet) / 0.45)" }}
           >
             <div className="text-[7px] font-bold uppercase tracking-[0.18em] text-foreground/65 sm:text-[8px]">Live</div>
