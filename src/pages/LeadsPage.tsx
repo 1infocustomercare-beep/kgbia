@@ -860,8 +860,31 @@ export default function LeadsPage() {
       <ManualPreviewPicker
         open={showPicker}
         onClose={() => setShowPicker(false)}
-        onSelect={(sel) => setCustomPreview(sel)}
+        onSelect={(sel) => {
+          setCustomPreview(sel);
+          // Auto-trigger demo factory with the selected preview if a lead is currently open
+          if (selected) {
+            runDemoFactory(selected, sel);
+          }
+        }}
         initialSector={selected?._sector}
+      />
+
+      <DemoFactoryOverlay
+        open={demoFactoryOpen}
+        loading={demoFactoryLoading}
+        progress={demoFactoryProgress}
+        result={demoFactoryResult}
+        leadName={selected?.name || ""}
+        onClose={() => { setDemoFactoryOpen(false); setDemoFactoryResult(null); }}
+        onSendWhatsApp={() => {
+          if (!demoFactoryResult || !selected) return;
+          const text = encodeURIComponent(
+            `Ciao! Ho preparato una demo personalizzata per ${selected.name}: ${demoFactoryResult.previewUrl}\n\nPuoi accedere all'admin con questo link sicuro (valido 7gg): ${demoFactoryResult.magicLink || demoFactoryResult.adminUrl}`
+          );
+          const phone = (selected.phone || "").replace(/[^0-9]/g, "");
+          window.open(phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`, "_blank");
+        }}
       />
 
       {/* ═══ AMBIENT VIOLET BACKGROUND ═══ */}
