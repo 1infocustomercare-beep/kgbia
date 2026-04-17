@@ -39,7 +39,7 @@ export default function HorizontalPortfolio() {
   const x = useTransform(smooth, [0, 1], [0, -maxX]);
 
   return (
-    <section ref={ref} id="portfolio" className="relative" style={{ height: `${Math.max(PROJECTS.length * 70, 420)}vh` }}>
+    <section ref={ref} id="portfolio" className="relative" style={{ height: `${PROJECTS.length * 38 + 80}vh` }}>
       <div className="sticky top-0 flex h-[100svh] overflow-hidden">
         <div className="absolute inset-0 landing-section-glow" data-tone="gold" />
 

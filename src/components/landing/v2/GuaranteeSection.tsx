@@ -54,7 +54,7 @@ const PAINS = [
 
 export default function GuaranteeSection() {
   return (
-    <section className="landing-section relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28" data-theme="dark">
+    <section className="landing-section relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="dark">
       <div className="relative max-w-[1320px] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
