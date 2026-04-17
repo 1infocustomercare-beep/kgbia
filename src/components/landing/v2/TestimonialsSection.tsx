@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
+import MobileCarousel from "./MobileCarousel";
 
 const TESTIMONIALS = [
   { quote: "In 60 giorni abbiamo automatizzato l'80% delle richieste clienti. Il fatturato è cresciuto del 34% senza assumere nessuno.", name: "Marco Bianchi", role: "CEO, COTE Miami Steakhouse", initials: "MB", tone: "gold" },
@@ -29,22 +30,20 @@ export default function TestimonialsSection() {
           </h2>
         </motion.div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {TESTIMONIALS.map((t, i) => (
+        {(() => {
+          const renderQuote = (t: typeof TESTIMONIALS[number], i: number, inCarousel = false) => (
             <motion.article
               key={t.name}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ delay: i * 0.08, duration: 0.65 }}
+              transition={{ delay: inCarousel ? 0 : i * 0.08, duration: 0.65 }}
               whileHover={{ y: -6 }}
-              className="landing-surface flex flex-col rounded-[26px] p-5 lg:p-6"
+              className="landing-surface flex h-full flex-col rounded-[26px] p-5 lg:p-6"
               data-tone={t.tone}
             >
               <Quote className="mb-4 h-8 w-8 text-foreground/56" strokeWidth={1.5} />
-
               <p className="mb-6 flex-1 text-[15px] italic leading-[1.68] text-foreground/86 lg:text-[16px]">“{t.quote}”</p>
-
               <div className="flex items-center gap-3 border-t border-border/50 pt-5">
                 <div className="landing-icon-frame h-12 w-12 flex-shrink-0 rounded-full font-heading text-sm font-bold">
                   {t.initials}
@@ -55,8 +54,21 @@ export default function TestimonialsSection() {
                 </div>
               </div>
             </motion.article>
-          ))}
-        </div>
+          );
+
+          return (
+            <>
+              <div className="md:hidden">
+                <MobileCarousel autoplayMs={6000} ariaLabel="Testimonianze clienti">
+                  {TESTIMONIALS.map((t, i) => renderQuote(t, i, true))}
+                </MobileCarousel>
+              </div>
+              <div className="hidden gap-4 md:grid md:grid-cols-2">
+                {TESTIMONIALS.map((t, i) => renderQuote(t, i, false))}
+              </div>
+            </>
+          );
+        })()}
       </div>
     </section>
   );

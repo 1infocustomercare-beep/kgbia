@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import MobileCarousel from "./MobileCarousel";
 
 const STEPS = [
   {
@@ -68,7 +69,30 @@ export default function ProcessSection() {
           </p>
         </motion.div>
 
-        <div className="relative mx-auto max-w-[920px] pb-1 pl-16 sm:pl-20">
+        {/* Mobile: carousel of step cards */}
+        <div className="md:hidden">
+          <MobileCarousel autoplayMs={5500} ariaLabel="Processo in 14 giorni">
+            {STEPS.map((step) => (
+              <div key={step.n} className="landing-surface h-full rounded-[24px] p-5" data-tone={step.tone}>
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="landing-icon-frame grid h-12 w-12 place-items-center rounded-2xl font-heading text-base font-extrabold">
+                    {step.n}
+                  </div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/60">
+                    {step.days}
+                  </div>
+                </div>
+                <h3 className="mb-2 font-heading text-lg font-extrabold tracking-[-0.03em] text-foreground">
+                  {step.title}
+                </h3>
+                <p className="text-[13px] leading-[1.72] text-foreground/76">{step.desc}</p>
+              </div>
+            ))}
+          </MobileCarousel>
+        </div>
+
+        {/* Desktop: timeline */}
+        <div className="relative mx-auto hidden max-w-[920px] pb-1 pl-16 sm:pl-20 md:block">
           <div className="absolute bottom-4 left-[22px] top-4 w-px bg-[linear-gradient(180deg,hsl(var(--gold)/0.42),hsl(var(--empire-violet)/0.42),hsl(var(--accent)/0.42))] sm:left-[31px]" />
 
           <div className="space-y-4 sm:space-y-5 lg:space-y-6">
