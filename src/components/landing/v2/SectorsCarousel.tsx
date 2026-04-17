@@ -1,80 +1,57 @@
 import { motion } from "framer-motion";
 
 const SECTORS = [
-  "Ristoranti & Hospitality",
-  "Spa & Wellness",
-  "Beauty & Estetica",
-  "Sport & Fitness",
-  "Real Estate Luxury",
-  "Healthcare & Cliniche",
-  "NCC & Trasporti",
+  "Ristoranti & hospitality",
+  "Spa & wellness",
+  "Beauty & estetica",
+  "Sport & fitness",
+  "Real estate luxury",
+  "Healthcare & cliniche",
+  "NCC & trasporti",
   "Hotel & B&B",
-  "Bakery & Pasticcerie",
-  "Stabilimenti Balneari",
-  "Servizi alla Persona",
-  "Studi Professionali",
-  "Retail & E-commerce",
-  "Centri Estetici",
-  "Palestre & Yoga",
-  "Officine & Carrozzerie",
-  "Studi Medici",
-  "Agenzie Immobiliari",
-  "Saloni di Bellezza",
-  "Pizzerie & Pub",
-  "Catering & Banqueting",
-  "Studi Veterinari",
-  "Scuole di Lingua",
-  "Studi Notarili",
-  "Studi Architettura",
+  "Bakery & pastry",
+  "Stabilimenti balneari",
+  "Retail & e-commerce",
+  "Studi professionali",
+  "Saloni premium",
+  "Palestre & yoga",
+  "Cliniche dentali",
+  "Agenzie immobiliari",
 ];
 
 export default function SectorsCarousel() {
   return (
-    <section id="settori" className="relative py-20 overflow-hidden">
-      <div className="text-center mb-10 px-5">
-        <span className="inline-block px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-[3px] mb-4 border border-[#7C3AED]/30 text-[#a78bfa] bg-[#7C3AED]/5 backdrop-blur-md">
-          25+ Settori Verticali
-        </span>
-        <h3 className="text-white/80 text-[14px] font-medium tracking-wide max-w-[600px] mx-auto">
-          Verticalizzati per ogni settore. Personalizzati per ogni cliente.
-        </h3>
-      </div>
+    <section id="settori" className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-10">
+      <div className="landing-section-glow" data-tone="blue" />
 
-      <div className="relative">
-        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none bg-gradient-to-r from-[#020204] to-transparent" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none bg-gradient-to-l from-[#020204] to-transparent" />
+      <div className="relative mx-auto max-w-[1400px]">
+        <div className="mb-10 text-center" data-tone="blue">
+          <span className="landing-pill mb-4 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">25+ settori verticali</span>
+          <h3 className="mx-auto max-w-[760px] text-[clamp(1.35rem,2.2vw,2rem)] font-heading font-bold tracking-[-0.04em] text-foreground">
+            Strutture persuasive, contenuti di conversione e preview professionali per qualsiasi business ad alto potenziale.
+          </h3>
+        </div>
 
-        <motion.div
-          className="flex gap-3 mb-3"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-        >
-          {[...SECTORS, ...SECTORS].map((s, i) => (
-            <span
-              key={`r1-${i}`}
-              className="flex-shrink-0 px-5 py-3 rounded-full border border-white/[0.07] backdrop-blur-md text-white/75 text-[13px] font-medium whitespace-nowrap hover:border-[#D4AF37]/40 hover:bg-white/[0.04] hover:text-white transition-all"
-              style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))" }}
-            >
-              {s}
-            </span>
-          ))}
-        </motion.div>
+        <div className="relative overflow-hidden rounded-[32px] border border-border/80 bg-card/30 py-5 backdrop-blur-xl">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-[linear-gradient(90deg,hsl(var(--deep-black)),transparent)]" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-[linear-gradient(270deg,hsl(var(--deep-black)),transparent)]" />
 
-        <motion.div
-          className="flex gap-3"
-          animate={{ x: ["-50%", "0%"] }}
-          transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
-        >
-          {[...SECTORS.slice().reverse(), ...SECTORS.slice().reverse()].map((s, i) => (
-            <span
-              key={`r2-${i}`}
-              className="flex-shrink-0 px-5 py-3 rounded-full border border-white/[0.07] backdrop-blur-md text-white/75 text-[13px] font-medium whitespace-nowrap hover:border-[#7C3AED]/40 hover:bg-white/[0.04] hover:text-white transition-all"
-              style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))" }}
-            >
-              {s}
-            </span>
-          ))}
-        </motion.div>
+          <motion.div className="mb-3 flex gap-3" animate={{ x: ["0%", "-50%"] }} transition={{ duration: 34, repeat: Infinity, ease: "linear" }}>
+            {[...SECTORS, ...SECTORS].map((sector, index) => (
+              <span key={`a-${sector}-${index}`} className="landing-pill whitespace-nowrap px-4 py-2.5 text-sm font-medium text-foreground/74" data-tone={index % 3 === 0 ? "gold" : index % 3 === 1 ? "violet" : "blue"}>
+                {sector}
+              </span>
+            ))}
+          </motion.div>
+
+          <motion.div className="flex gap-3" animate={{ x: ["-50%", "0%"] }} transition={{ duration: 42, repeat: Infinity, ease: "linear" }}>
+            {[...SECTORS.slice().reverse(), ...SECTORS.slice().reverse()].map((sector, index) => (
+              <span key={`b-${sector}-${index}`} className="landing-pill whitespace-nowrap px-4 py-2.5 text-sm font-medium text-foreground/74" data-tone={index % 3 === 0 ? "emerald" : index % 3 === 1 ? "violet" : "gold"}>
+                {sector}
+              </span>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   );
