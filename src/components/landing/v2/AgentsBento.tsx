@@ -29,7 +29,7 @@ const AGENTS = [
 
 export default function AgentsBento() {
   return (
-    <section id="agenti" className="landing-section relative overflow-hidden px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12" data-theme="light">
+    <section id="agenti" className="landing-section relative overflow-visible px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16" data-theme="light">
       <div className="landing-section-glow" data-tone="violet" />
 
       <div className="relative mx-auto max-w-[1320px]">
@@ -57,9 +57,8 @@ export default function AgentsBento() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ delay: index * 0.05, duration: 0.65 }}
-              whileHover={{ y: -6, rotateX: 2, rotateY: index % 2 === 0 ? 4 : -4, scale: 1.008 }}
-              style={{ transformStyle: "preserve-3d", perspective: "1200px" }}
-              className={`landing-surface rounded-[26px] p-4 sm:p-5 lg:p-6 ${agent.big ? "md:col-span-2" : ""}`}
+              whileHover={{ y: -4 }}
+              className={`landing-surface rounded-[26px] p-5 sm:p-6 lg:p-7 ${agent.big ? "md:col-span-2" : ""}`}
               data-tone={agent.tone}
             >
               <div className="mb-5 flex items-start justify-between gap-4">
