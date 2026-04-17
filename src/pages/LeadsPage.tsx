@@ -402,6 +402,79 @@ export default function LeadsPage() {
     }
   }, [manualName, manualCity, manualWebsite]);
 
+  /* ─── 🪄 DEMO FACTORY — generate complete tenant + admin from a lead + preview ─── */
+  const runDemoFactory = useCallback(async (lead: Lead & { _sector: string }, preview?: ManualPreviewSelection | null) => {
+    if (!lead?.name) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user?.id) {
+      toast.error("Devi essere autenticato come partner per generare la demo");
+      return;
+    }
+    setDemoFactoryOpen(true);
+    setDemoFactoryLoading(true);
+    setDemoFactoryResult(null);
+    setDemoFactoryProgress("Avvio scraping del sito web…");
+
+    try {
+      // progress hints
+      const hints = [
+        "Estraggo brand identity reale dal sito…",
+        "Genero menu/listino e palette con AI…",
+        "Creo tenant, account admin e moduli…",
+        "Seed clienti, ordini e recensioni…",
+      ];
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < hints.length) { setDemoFactoryProgress(hints[i]); i++; }
+      }, 4000);
+
+      const { data, error } = await supabase.functions.invoke("generate-demo-from-lead", {
+        body: {
+          lead: {
+            businessName: lead.name,
+            sector: lead._sector,
+            sectorLabel: SECTOR_OPTIONS.find(s => s.value === lead._sector)?.label || lead._sector,
+            city: lead.city,
+            zone: lead.zone,
+            fullAddress: lead.full_address,
+            phone: lead.phone,
+            email: lead.email,
+            website: lead.website,
+            instagram: lead.instagram,
+            facebook: lead.facebook,
+            googleRating: lead.google_rating,
+            googleReviews: lead.google_reviews,
+            googleMapsUrl: lead.google_maps_url,
+          },
+          preview: preview ? {
+            brandName: preview.brandName,
+            styleName: preview.styleName,
+            imageUrl: preview.imageUrl,
+            sectorId: preview.sectorId,
+          } : null,
+          partnerId: user.id,
+          originUrl: window.location.origin,
+        },
+      });
+
+      clearInterval(interval);
+
+      if (error || !data?.success) {
+        throw new Error(error?.message || data?.error || "Generazione fallita");
+      }
+
+      setDemoFactoryResult(data as DemoFactoryResult);
+      setDemoFactoryProgress("Completato!");
+      toast.success(`Demo creata per ${lead.name}`, { description: data.previewUrl });
+    } catch (err: any) {
+      console.error("[runDemoFactory] error", err);
+      toast.error("Errore creazione demo", { description: err?.message || "Riprova" });
+      setDemoFactoryOpen(false);
+    } finally {
+      setDemoFactoryLoading(false);
+    }
+  }, []);
+
   /* ─── Validate & launch manual analysis ─── */
   const launchManualAnalysis = useCallback(() => {
     const errors: string[] = [];
