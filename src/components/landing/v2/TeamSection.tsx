@@ -17,7 +17,7 @@ const TEAM = [
 
 export default function TeamSection() {
   return (
-    <section id="team" className="landing-section relative overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16" data-theme="dark">
+    <section id="team" className="landing-section relative overflow-hidden px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12" data-theme="dark">
       <div className="landing-section-glow" data-tone="gold" />
 
       <div className="relative mx-auto max-w-[1320px]">
@@ -26,19 +26,19 @@ export default function TeamSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
-          className="mx-auto mb-12 max-w-[760px] text-center sm:mb-14"
+          className="mx-auto mb-8 max-w-[760px] text-center sm:mb-10"
           data-tone="gold"
         >
           <span className="landing-pill mb-4 px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:mb-5 sm:px-4 sm:py-2 sm:text-[10px]">Team ibrido</span>
-          <h2 className="text-[clamp(1.85rem,5vw,3.6rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
+          <h2 className="text-[clamp(1.8rem,4.8vw,3.4rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
             Strategia umana. <span className="landing-heading-gradient">Potenza AI.</span>
           </h2>
-          <p className="mt-4 text-[clamp(0.92rem,1.6vw,1.05rem)] leading-[1.7] text-foreground/68 sm:mt-5">
-            Un team compatto e ad alto livello: leadership, engineering, design e success integrati nello stesso sistema.
+          <p className="mt-4 text-[clamp(0.92rem,1.55vw,1rem)] leading-[1.68] text-foreground/72 sm:mt-5">
+            Leadership, engineering, design e success integrati nello stesso sistema con una presenza più pulita e leggibile.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:gap-5">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:gap-4">
           {TEAM.map((member, index) => (
             <motion.article
               key={member.name}
@@ -47,7 +47,7 @@ export default function TeamSection() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ delay: index * 0.06, duration: 0.65 }}
               whileHover={{ y: -6 }}
-              className="landing-surface group rounded-[24px] p-3 sm:rounded-[28px] sm:p-4 lg:p-5"
+              className="landing-surface group rounded-[24px] p-3 sm:rounded-[26px] sm:p-4 lg:p-4"
               data-tone={member.tone}
             >
               <div className="relative overflow-hidden rounded-[18px] border border-border/80 sm:rounded-[22px]">
@@ -59,11 +59,11 @@ export default function TeamSection() {
                 />
                 <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,hsl(var(--deep-black)/0.85))]" />
                 <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-3 sm:left-3 sm:right-3">
-                  <div className="text-[8px] font-bold uppercase tracking-[0.2em] text-foreground/70 sm:text-[9px]">{member.role}</div>
+                  <div className="text-[8px] font-bold uppercase tracking-[0.2em] text-foreground/74 sm:text-[9px]">{member.role}</div>
                   <div className="mt-0.5 font-heading text-sm font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-base lg:text-lg">{member.name}</div>
                 </div>
               </div>
-              <p className="mt-3 px-1 text-[11px] leading-[1.6] text-foreground/65 sm:text-[12px] lg:text-[13px]">{member.bio}</p>
+              <p className="mt-3 px-1 text-[11px] leading-[1.58] text-foreground/72 sm:text-[12px] lg:text-[13px]">{member.bio}</p>
             </motion.article>
           ))}
         </div>

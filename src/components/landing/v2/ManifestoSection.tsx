@@ -20,11 +20,29 @@ export default function ManifestoSection() {
 
       <div className="relative mx-auto max-w-[1280px]">
         <div className="mb-5 text-center sm:mb-6" data-tone="gold">
-          <span className="landing-pill px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:px-4 sm:py-2 sm:text-[10px]">Manifesto Empire</span>
+          <span className="landing-pill px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:px-4 sm:py-2 sm:text-[10px]">
+            Manifesto Empire
+          </span>
         </div>
 
         <h2 className="mx-auto mb-8 flex max-w-[16ch] flex-wrap justify-center text-center font-heading text-[clamp(1.75rem,6vw,4.4rem)] font-extrabold leading-[0.97] tracking-[-0.05em] text-foreground sm:mb-10 lg:mb-12">
-...
+          {WORDS.map((word, index) => (
+            <Word key={word + index} word={word} index={index} total={WORDS.length} progress={smooth} />
+          ))}
+        </h2>
+
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+          {STATS.map((stat, index) => (
+            <motion.article
+              key={stat.label}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.08, duration: 0.65 }}
+              className="landing-surface rounded-[22px] p-4 sm:rounded-[26px] sm:p-5"
+              data-tone={index % 2 === 0 ? "gold" : "violet"}
+            >
+              <div className="text-[clamp(1.55rem,4vw,2.6rem)] font-heading font-extrabold leading-none text-foreground">{stat.value}</div>
               <div className="mt-2 text-[10px] uppercase tracking-[0.22em] text-foreground/66 sm:mt-3 sm:text-[11px]">{stat.label}</div>
             </motion.article>
           ))}
@@ -68,4 +86,3 @@ function Word({
     </span>
   );
 }
-

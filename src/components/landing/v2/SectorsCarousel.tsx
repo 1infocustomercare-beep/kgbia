@@ -33,7 +33,16 @@ export default function SectorsCarousel() {
         </div>
 
         <div className="relative overflow-hidden rounded-[28px] border border-border/80 bg-card/45 py-4 backdrop-blur-xl">
-...
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-[linear-gradient(90deg,hsl(var(--deep-black)),transparent)]" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-[linear-gradient(270deg,hsl(var(--deep-black)),transparent)]" />
+
+          <motion.div className="mb-3 flex gap-3" animate={{ x: ["0%", "-50%"] }} transition={{ duration: 34, repeat: Infinity, ease: "linear" }}>
+            {[...SECTORS, ...SECTORS].map((sector, index) => (
+              <span
+                key={`a-${sector}-${index}`}
+                className="landing-pill whitespace-nowrap px-4 py-2.5 text-sm font-medium text-foreground/78"
+                data-tone={index % 3 === 0 ? "gold" : index % 3 === 1 ? "violet" : "blue"}
+              >
                 {sector}
               </span>
             ))}
@@ -41,7 +50,11 @@ export default function SectorsCarousel() {
 
           <motion.div className="flex gap-3" animate={{ x: ["-50%", "0%"] }} transition={{ duration: 42, repeat: Infinity, ease: "linear" }}>
             {[...SECTORS.slice().reverse(), ...SECTORS.slice().reverse()].map((sector, index) => (
-              <span key={`b-${sector}-${index}`} className="landing-pill whitespace-nowrap px-4 py-2.5 text-sm font-medium text-foreground/74" data-tone={index % 3 === 0 ? "emerald" : index % 3 === 1 ? "violet" : "gold"}>
+              <span
+                key={`b-${sector}-${index}`}
+                className="landing-pill whitespace-nowrap px-4 py-2.5 text-sm font-medium text-foreground/78"
+                data-tone={index % 3 === 0 ? "emerald" : index % 3 === 1 ? "violet" : "gold"}
+              >
                 {sector}
               </span>
             ))}
