@@ -151,7 +151,7 @@ export default function Orbital3DShowcase() {
 
   const active = MOCKUPS[activeIndex];
   // Section is tall enough to give one full viewport per mockup of "feel" but compressed
-  const sectionHeight = useMemo(() => `${MOCKUPS.length * 55 + 80}svh`, []);
+  const sectionHeight = useMemo(() => `${MOCKUPS.length * 32 + 60}svh`, []);
 
   return (
     <section
