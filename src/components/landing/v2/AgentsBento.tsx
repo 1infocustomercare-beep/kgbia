@@ -50,16 +50,16 @@ export default function AgentsBento() {
           </p>
         </motion.div>
 
-        <div className="grid auto-rows-fr gap-3 md:grid-cols-3 lg:gap-4">
-          {AGENTS.map((agent, index) => (
+        {(() => {
+          const renderCard = (agent: typeof AGENTS[number], index: number, inCarousel = false) => (
             <motion.article
               key={agent.name}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ delay: index * 0.05, duration: 0.65 }}
+              transition={{ delay: inCarousel ? 0 : index * 0.05, duration: 0.65 }}
               whileHover={{ y: -4 }}
-              className={`landing-surface rounded-[26px] p-5 sm:p-6 lg:p-7 ${agent.big ? "md:col-span-2" : ""}`}
+              className={`landing-surface h-full rounded-[26px] p-5 sm:p-6 lg:p-7 ${agent.big && !inCarousel ? "md:col-span-2" : ""}`}
               data-tone={agent.tone}
             >
               <div className="mb-5 flex items-start justify-between gap-4">
@@ -71,7 +71,7 @@ export default function AgentsBento() {
 
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_150px] lg:items-end">
                 <div>
-                  <h3 className={`font-heading font-extrabold leading-[1] tracking-[-0.04em] text-foreground ${agent.big ? "text-2xl lg:text-[2rem]" : "text-lg lg:text-xl"}`}>
+                  <h3 className={`font-heading font-extrabold leading-[1] tracking-[-0.04em] text-foreground ${agent.big && !inCarousel ? "text-2xl lg:text-[2rem]" : "text-lg lg:text-xl"}`}>
                     {agent.name}
                   </h3>
                   <p className="mt-3 max-w-[36ch] text-[14px] leading-[1.68] text-foreground/82">{agent.desc}</p>
@@ -89,8 +89,24 @@ export default function AgentsBento() {
                 </div>
               </div>
             </motion.article>
-          ))}
-        </div>
+          );
+
+          return (
+            <>
+              {/* Mobile: carousel */}
+              <div className="md:hidden">
+                <MobileCarousel autoplayMs={4500} ariaLabel="Agenti AI">
+                  {AGENTS.map((agent, i) => renderCard(agent, i, true))}
+                </MobileCarousel>
+              </div>
+
+              {/* Desktop / tablet: bento grid */}
+              <div className="hidden auto-rows-fr gap-3 md:grid md:grid-cols-3 lg:gap-4">
+                {AGENTS.map((agent, i) => renderCard(agent, i, false))}
+              </div>
+            </>
+          );
+        })()}
       </div>
     </section>
   );
