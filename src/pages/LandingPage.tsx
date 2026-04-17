@@ -33,26 +33,30 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="landing-dark force-dark landing-shell min-h-screen overflow-x-hidden bg-background text-foreground">
-      <CinematicCursor />
-      <LandingNav />
-      <CinematicHero />
-      <ManifestoSection />
-      <SectorsCarousel />
-      <HorizontalPortfolio />
-      <Orbital3DShowcase />
-      <AgentsBento />
-      <ProcessSection />
-      <CustomizationSection />
-      <AboutSection />
-      <TeamSection />
-      <PricingSection />
-      <GuaranteeSection />
-      <TestimonialsSection />
-      <FaqSection />
-      <ContactCTA />
-      <LandingFooter />
+    <>
+      <div className="landing-dark force-dark landing-shell min-h-screen overflow-x-hidden bg-background text-foreground">
+        <CinematicCursor />
+        <LandingNav />
+        <CinematicHero />
+        <ManifestoSection />
+        <SectorsCarousel />
+        <HorizontalPortfolio />
+        <Orbital3DShowcase />
+        <AgentsBento />
+        <ProcessSection />
+        <CustomizationSection />
+        <AboutSection />
+        <TeamSection />
+        <PricingSection />
+        <GuaranteeSection />
+        <TestimonialsSection />
+        <FaqSection />
+        <ContactCTA />
+        <LandingFooter />
+      </div>
+      {/* Voice Agent rendered OUTSIDE landing-shell so position:fixed is not broken
+          by ancestor transforms/filters used in cinematic sections */}
       <SafeVoiceAgent />
-    </div>
+    </>
   );
 }
