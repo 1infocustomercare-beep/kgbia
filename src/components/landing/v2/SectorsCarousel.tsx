@@ -21,7 +21,7 @@ const SECTORS = [
 
 export default function SectorsCarousel() {
   return (
-    <section id="settori" className="landing-section relative overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-10" data-theme="dark">
+    <section id="settori" className="landing-section relative overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-10" data-theme="dark">
       <div className="landing-section-glow" data-tone="blue" />
 
       <div className="relative mx-auto max-w-[1400px]">

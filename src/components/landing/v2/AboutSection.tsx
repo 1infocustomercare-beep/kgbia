@@ -28,7 +28,7 @@ export default function AboutSection() {
       <div className="landing-section-glow" data-tone="violet" />
 
       <div className="relative mx-auto max-w-[1240px]">
-        <div className="mx-auto mb-16 max-w-[820px] text-center" data-tone="gold">
+        <div className="mx-auto mb-10 max-w-[820px] text-center" data-tone="gold">
           <span className="landing-pill mb-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">Chi siamo</span>
           <h2 className="text-[clamp(2rem,5vw,4rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
             Non facciamo siti vetrina. <span className="landing-heading-gradient">Costruiamo sistemi che convertono.</span>

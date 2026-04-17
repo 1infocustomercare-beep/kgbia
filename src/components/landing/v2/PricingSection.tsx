@@ -39,7 +39,7 @@ export default function PricingSection() {
       <div className="landing-section-glow" data-tone="gold" />
 
       <div className="relative mx-auto max-w-[1320px]">
-        <div className="mx-auto mb-16 max-w-[760px] text-center" data-tone="gold">
+        <div className="mx-auto mb-10 max-w-[760px] text-center" data-tone="gold">
           <span className="landing-pill mb-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">Pacchetti & ROI</span>
           <h2 className="text-[clamp(2rem,5.2vw,4.1rem)] font-heading font-extrabold leading-[0.92] tracking-[-0.05em] text-foreground">
             Investimenti chiari. <span className="landing-heading-gradient">Impatto misurabile.</span>
