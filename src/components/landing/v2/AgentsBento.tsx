@@ -64,7 +64,7 @@ const AGENTS = [
 
 export default function AgentsBento() {
   return (
-    <section id="agenti" className="relative overflow-hidden px-4 py-28 sm:px-6 lg:px-10">
+    <section id="agenti" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
       <div className="landing-section-glow" data-tone="violet" />
 
       <div className="relative mx-auto max-w-[1320px]">

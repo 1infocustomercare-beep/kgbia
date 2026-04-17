@@ -34,7 +34,7 @@ const TESTIMONIALS = [
 
 export default function TestimonialsSection() {
   return (
-    <section id="testimonial" className="relative py-28 px-5 overflow-hidden">
+    <section id="testimonial" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 50% 40% at 50% 50%, rgba(212,175,55,0.08), transparent)" }} />
 
       <div className="relative max-w-[1300px] mx-auto">

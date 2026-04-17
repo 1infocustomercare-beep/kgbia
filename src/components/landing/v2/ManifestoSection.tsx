@@ -14,21 +14,21 @@ export default function ManifestoSection() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
 
   return (
-    <section ref={ref} id="manifesto" className="relative overflow-hidden px-4 py-28 sm:px-6 lg:px-10">
+    <section ref={ref} id="manifesto" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 lg:px-10 lg:py-28">
       <div className="landing-section-glow" data-tone="violet" />
 
       <div className="relative mx-auto max-w-[1320px]">
-        <div className="mb-10 text-center" data-tone="gold">
-          <span className="landing-pill px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">Manifesto Empire</span>
+        <div className="mb-8 text-center sm:mb-10" data-tone="gold">
+          <span className="landing-pill px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:px-4 sm:py-2 sm:text-[10px]">Manifesto Empire</span>
         </div>
 
-        <h2 className="mx-auto mb-16 max-w-[15ch] text-center font-heading text-[clamp(2.35rem,7vw,6rem)] font-extrabold leading-[0.92] tracking-[-0.06em] text-foreground">
+        <h2 className="mx-auto mb-12 max-w-[15ch] text-center font-heading text-[clamp(1.9rem,7vw,5.4rem)] font-extrabold leading-[0.92] tracking-[-0.06em] text-foreground sm:mb-14 lg:mb-16">
           {WORDS.map((word, index) => (
             <Word key={word + index} word={word} index={index} total={WORDS.length} progress={scrollYProgress} />
           ))}
         </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           {STATS.map((stat, index) => (
             <motion.article
               key={stat.label}
@@ -36,11 +36,11 @@ export default function ManifestoSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.08, duration: 0.65 }}
-              className="landing-surface rounded-[28px] p-6"
+              className="landing-surface rounded-[22px] p-4 sm:rounded-[28px] sm:p-6"
               data-tone={index % 2 === 0 ? "gold" : "violet"}
             >
-              <div className="text-[clamp(1.9rem,4vw,2.9rem)] font-heading font-extrabold leading-none text-foreground">{stat.value}</div>
-              <div className="mt-3 text-[11px] uppercase tracking-[0.22em] text-foreground/48">{stat.label}</div>
+              <div className="text-[clamp(1.6rem,4vw,2.9rem)] font-heading font-extrabold leading-none text-foreground">{stat.value}</div>
+              <div className="mt-2 text-[10px] uppercase tracking-[0.22em] text-foreground/48 sm:mt-3 sm:text-[11px]">{stat.label}</div>
             </motion.article>
           ))}
         </div>
