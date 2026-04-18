@@ -283,7 +283,7 @@ const queryClient = new QueryClient();
 
 const PAGE_LOADER_STALL_MS = 8000;
 
-const PageLoader = () => {
+const PageLoader = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [stalled, setStalled] = useState(false);
 
   useEffect(() => {
@@ -292,7 +292,7 @@ const PageLoader = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center"
+    <div ref={ref} className="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center"
       style={{ background: "linear-gradient(180deg, hsl(230,16%,4%) 0%, hsl(230,14%,6%) 100%)" }}>
       <div className="relative">
         <div className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
@@ -313,7 +313,8 @@ const PageLoader = () => {
       )}
     </div>
   );
-};
+});
+PageLoader.displayName = "PageLoader";
 
 type RouteErrorBoundaryState = {
   hasError: boolean;
