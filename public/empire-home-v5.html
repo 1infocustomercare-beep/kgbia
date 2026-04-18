@@ -917,6 +917,73 @@ footer{padding:70px 0 32px; border-top:1px solid rgba(255,255,255,.08)}
   .phone, .floating, .marquee-track, .hero-floating-chip, .eyebrow .dot{animation:none!important}
 }
 
+/* ============ MOBILE HARD FIX (no overflow, no broken pin) ============ */
+@media (max-width:900px){
+  html, body{ width:100%; max-width:100vw; overflow-x:hidden; }
+  *{ max-width:100vw; }
+  section, .wrap, .hero, .hero-inner, .bento, .packs, .team, .testi-grid, .how-grid, .stats, .compare, .head-block, .orbit-wrap, .phone-stack, .sector-mobile, .marquee, .live-ticker, .custom-pills{
+    max-width:100vw;
+  }
+  /* Disabilita scroll-pin su mobile: il pin lungo causava scrolling infinito */
+  .hero-pin{ height:auto !important; }
+  .hero-sticky{ position:relative !important; height:auto !important; min-height:auto !important; }
+  .hero-pin .hero{ padding:96px 0 24px !important; min-height:auto !important; }
+  /* Bottone primario sticky non deve coprire contenuto */
+  body{ padding-bottom:88px; }
+  .sticky-cta{ left:8px; right:8px; bottom:8px; padding:10px 12px; gap:10px; border-radius:14px; }
+  .sticky-cta .text{ font-size:12px; }
+  .sticky-cta .btn{ padding:10px 14px; font-size:12px; }
+  /* Hero typography */
+  h1.display{ font-size:clamp(34px, 9vw, 52px) !important; line-height:1.05 !important; }
+  .hero-sub{ font-size:15px !important; }
+  .hero-ctas{ flex-direction:column; align-items:stretch; }
+  .hero-ctas .btn{ width:100%; justify-content:center; }
+  .hero-meta{ grid-template-columns:repeat(2,1fr) !important; gap:14px !important; margin-top:32px !important; }
+  /* Phone stack mobile = nascondi 3D, mostra carosello orizzontale singolo */
+  .phone-stack{ height:380px !important; transform:none !important; perspective:none !important; }
+  .phone-stack .phone{ transform:translate(-50%, 0) !important; left:50% !important; top:0 !important; right:auto !important; bottom:auto !important; width:240px !important; height:100%; }
+  .phone-stack .phone:not(.is-active){ opacity:0 !important; pointer-events:none; transition:opacity .5s ease; }
+  .phone-stack .phone.is-active{ opacity:1 !important; }
+  .phone-stack .p4{ display:block !important; }
+  /* Live ticker compatto */
+  .live-ticker{ padding:14px 0; }
+  .live-ticker .lt-wrap{ gap:14px; padding:0 12px; }
+  /* Orbit -> nascondi (troppo pesante mobile), mostra solo griglia mobile */
+  .orbit-wrap{ display:none !important; }
+  /* Sector mobile carousel */
+  .sector-mobile{ display:block !important; margin-top:24px; }
+  .sector-mobile .scroller{ padding:0 14px 14px; }
+  .sector-mobile .card{ flex:0 0 78%; max-width:78%; }
+  /* Bento mobile a singola colonna */
+  .bento{ grid-template-columns:1fr !important; gap:14px !important; }
+  .bento .card{ aspect-ratio:4/5 !important; }
+  /* Marquee fluido */
+  .marquee-track{ animation-duration:30s !important; gap:28px !important; }
+  .marquee-track span{ font-size:11.5px !important; }
+  /* Sezioni padding ridotto */
+  .sec-pad{ padding:56px 0 !important; }
+  .sec-pad-s{ padding:40px 0 !important; }
+  /* Pricing pack featured non scalato */
+  .pack{ width:100%; }
+  /* Headings non escono */
+  h2, h1{ word-wrap:break-word; overflow-wrap:break-word; hyphens:auto; }
+  /* Compare freccia rotata */
+  .compare{ gap:12px !important; }
+  /* Team avatar */
+  .tm{ padding:18px !important; }
+}
+@media (max-width:540px){
+  .wrap{ padding:0 14px !important; }
+  .phone-stack{ height:340px !important; }
+  .phone-stack .phone{ width:210px !important; }
+  h1.display{ font-size:clamp(30px, 10vw, 44px) !important; }
+  .hero-meta .num{ font-size:22px !important; }
+  .live-ticker .lt-item{ font-size:11px !important; }
+  .live-ticker .lt-item b{ font-size:14px !important; }
+  .sticky-cta .text b{ font-size:10px; }
+  .sticky-cta .text span{ font-size:11.5px; }
+}
+
 /* ============ CUSTOM BANNER ============ */
 .custom-banner{
   position:relative; padding:64px 0 56px; background:linear-gradient(180deg, var(--ink) 0%, #0D0E13 100%);
