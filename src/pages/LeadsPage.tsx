@@ -20,7 +20,10 @@ import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFa
 import SellerCRM from "@/components/leads/SellerCRM";
 import GpsRadarPanel, { GpsLocation } from "@/components/leads/GpsRadarPanel";
 import SpeedDialList from "@/components/leads/SpeedDialList";
+import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
+import CreditConfirmDialog from "@/components/leads/CreditConfirmDialog";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
+import { useSellerCredits } from "@/hooks/useSellerCredits";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
 
 /* ─── Types ─── */
@@ -412,10 +415,28 @@ export default function LeadsPage() {
   const runDemoFactory = useCallback(async (lead: Lead & { _sector: string }, preview?: ManualPreviewSelection | null) => {
     if (!lead?.name) return;
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user?.id) {
-      toast.error("Devi essere autenticato come partner per generare la demo");
+    if (!user) {
+      toast.error("Devi essere loggato per generare una demo");
       return;
     }
+
+    // ─── 💰 GATING CREDITI: consuma 5 crediti server-side ───
+    const consumeRes = await consumeSellerCredits("generate_demo_from_lead", {
+      lead_name: lead.name, sector: lead._sector, city: lead.city,
+    });
+    if (!consumeRes.success) {
+      if (consumeRes.error === "insufficient_credits") {
+        toast.error(`Crediti insufficienti. Servono ${consumeRes.required}, hai ${consumeRes.balance}.`, {
+          description: "Ricarica dal tuo profilo per continuare.",
+          action: { label: "Ricarica", onClick: () => window.location.assign("/partner/profile?tab=credits") },
+          duration: 7000,
+        });
+      } else {
+        toast.error("Impossibile avviare la Demo Factory", { description: consumeRes.error });
+      }
+      return;
+    }
+
     setDemoFactoryOpen(true);
     setDemoFactoryLoading(true);
     setDemoFactoryResult(null);
@@ -469,9 +490,10 @@ export default function LeadsPage() {
         throw new Error(error?.message || data?.error || "Generazione fallita");
       }
 
-      setDemoFactoryResult(data as DemoFactoryResult);
-      setDemoFactoryProgress("Completato!");
-      toast.success(`Demo creata per ${lead.name}`, { description: data.previewUrl });
+      setDemoFactoryResult(data);
+      toast.success(`✓ Demo creata · -${consumeRes.credits_used} crediti · Saldo: ${consumeRes.remaining_balance}`, {
+        description: data.previewUrl,
+      });
     } catch (err: any) {
       console.error("[runDemoFactory] error", err);
       toast.error("Errore creazione demo", { description: err?.message || "Riprova" });
