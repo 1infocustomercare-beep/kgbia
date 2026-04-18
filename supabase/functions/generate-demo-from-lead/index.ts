@@ -1271,7 +1271,7 @@ serve(async (req) => {
       palette = paletteFromStyleName(preview.styleName, aiPalette);
     }
     const tenantUuid = crypto.randomUUID();
-    const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid);
+    const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid, match);
     const themeConfig: Record<string, any> = {
       template_variant: match.variant,
       sub_sector: match.sub,
@@ -1279,11 +1279,38 @@ serve(async (req) => {
       hero_image: images.hero,
       hero_tagline: match.heroTagline || brand.tagline,
       auto_matched: true,
+      ai_generated_images: images.aiGenerated || [],
+      quality_validated: true,
     };
-    console.log(`[demo-factory] sector=${lead.sector} sub=${match.sub} variant=${match.variant} theme=${match.themeHint} brand=${lead.businessName}`);
+    console.log(`[demo-factory] sector=${lead.sector} sub=${match.sub} variant=${match.variant} theme=${match.themeHint} brand=${lead.businessName} ai_imgs=${(images.aiGenerated||[]).length}`);
+
+    // ─── AGENT 7: GUARDIAN — validate brand kit + site coherence ───
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const [brandGuard, siteGuard] = await Promise.all([
+      callGuardian(supabaseUrl, serviceKey, "brand", {
+        brand: { tagline: brand.tagline, description: brand.description, menu: (brand.menu||[]).slice(0,8) },
+        lead: { sector: lead.sector, businessName: lead.businessName, city: lead.city },
+      }),
+      callGuardian(supabaseUrl, serviceKey, "site", {
+        template_variant: match.variant,
+        sub_sector: match.sub,
+        theme_hint: match.themeHint,
+        palette,
+        hero_image: images.hero,
+        has_logo: !!images.logo,
+      }),
+    ]);
+    console.log(`[guardian] brand_score=${brandGuard.score} site_score=${siteGuard.score}`);
+    themeConfig.guardian = {
+      brand_score: brandGuard.score,
+      site_score: siteGuard.score,
+      warnings: [...brandGuard.warnings, ...siteGuard.warnings],
+    };
+
     await updateRun({
       agents_status: { scout: "done", analyst: "done", curator: "done", copywriter: "pending", builder: "running", closer: "pending" },
-      brand_kit: { tagline: brand.tagline, palette, hero: images.hero, logo: images.logo },
+      brand_kit: { tagline: brand.tagline, palette, hero: images.hero, logo: images.logo, ai_generated: images.aiGenerated, guardian: themeConfig.guardian },
     });
 
     // Menu enrichment per template specifici
