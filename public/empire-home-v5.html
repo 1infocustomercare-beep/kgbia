@@ -1862,17 +1862,17 @@ let orbAngle = 0, orbTarget = 0, orbPaused = false;
   words.forEach((w,i)=>{ setTimeout(()=>w.classList.add('shown'), 180 + i*90); });
 })();
 
-/* ============ HERO: SHINE + PHONE TILT ============ */
+/* ============ HERO: SHINE + PHONE TILT (CSS vars, no transform clobber) ============ */
 (function heroShine(){
   const shine = document.getElementById('heroShine'); if(!shine) return;
   const stack = document.getElementById('phoneStack');
-  if(reduceMotion || !window.matchMedia || mm('(pointer:coarse)').matches) return;
+  if(reduceMotion || mm('(pointer:coarse)').matches) return;
   window.addEventListener('mousemove', e=>{
     const x = (e.clientX / window.innerWidth)*100;
     const y = (e.clientY / window.innerHeight)*100;
     shine.style.setProperty('--mx', x+'%');
     shine.style.setProperty('--my', y+'%');
-    if(stack && stack.getBoundingClientRect){
+    if(stack){
       const rect = stack.getBoundingClientRect();
       if(rect.top < window.innerHeight && rect.bottom > 0){
         const cx = rect.left + rect.width/2;
@@ -1880,40 +1880,137 @@ let orbAngle = 0, orbTarget = 0, orbPaused = false;
         const dx = (e.clientX - cx) / rect.width;
         const dy = (e.clientY - cy) / rect.height;
         $$('.phone-stack .phone').forEach(p=>{
-          const ry = parseFloat(getComputedStyle(p).getPropertyValue('--ry')) || 0;
-          const rx = parseFloat(getComputedStyle(p).getPropertyValue('--rx')) || 0;
-          p.style.transform = `rotateY(${ry + dx*6}deg) rotateX(${rx - dy*4}deg)`;
+          p.style.setProperty('--mx', (dx*6)+'deg');
+          p.style.setProperty('--my', (-dy*4)+'deg');
         });
       }
     }
   }, {passive:true});
 })();
 
-/* ============ HERO: SCROLL OUT / PARALLAX ============ */
+/* ============ HERO: SCROLL-PIN PARALLAX (uses .hero-pin sticky) ============ */
 (function heroScroll(){
-  const hero = document.querySelector('.hero');
+  const pin = document.querySelector('.hero-pin');
   const inner = document.getElementById('heroInner');
   const stack = document.getElementById('phoneStack');
-  if(!hero || !inner) return;
+  if(!pin || !inner) return;
   function onScroll(){
-    const rect = hero.getBoundingClientRect();
-    const h = rect.height || window.innerHeight;
+    const rect = pin.getBoundingClientRect();
+    const h = (rect.height - window.innerHeight) || 1;
     const p = Math.max(0, Math.min(1, -rect.top / h));
-    inner.style.setProperty('--fadeOut', 1 - p*0.9);
-    inner.style.setProperty('--slideOut', `-${p*30}px`);
+    inner.style.setProperty('--fadeOut', 1 - p*0.85);
+    inner.style.setProperty('--slideOut', `-${p*40}px`);
+    inner.style.setProperty('opacity', 1 - p*0.5);
     if(stack){
       $$('.phone-stack .phone').forEach((ph,i)=>{
         const dir = [1,-1,1.5,-1.2][i] || 1;
-        const dx = p * 30 * dir;
-        const dy = p * -40;
-        ph.style.transform = `translate(${dx}px, ${dy}px)`;
+        ph.style.setProperty('--tx', (p*40*dir)+'px');
+        ph.style.setProperty('--ty', (-p*60)+'px');
       });
-      $$('.hero-floating-chip').forEach(c=> c.style.opacity = 1 - p*1.5);
+      $$('.hero-floating-chip').forEach(c=> c.style.opacity = Math.max(0, 1 - p*1.8));
     }
   }
-  if(typeof window!=='undefined' && typeof window.addEventListener==='function'){
-    window.addEventListener('scroll', onScroll, {passive:true});
-    onScroll();
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll, {passive:true});
+  onScroll();
+})();
+
+/* ============ HERO: AUTO-CYCLE ACTIVE PHONE ============ */
+(function heroAutoCycle(){
+  const phones = $$('.phone-stack .phone'); if(!phones.length) return;
+  let idx = 0;
+  function tick(){
+    phones.forEach((p,i)=> p.classList.toggle('is-active', i===idx));
+    idx = (idx+1) % phones.length;
+  }
+  tick();
+  if(!reduceMotion) setInterval(tick, 2600);
+})();
+
+/* ============ LIGHTBOX ENGINE ============ */
+const PROJ_BY_SLUG = Object.fromEntries(PROJECTS.map(p=>[p.slug, p]));
+const SECTOR_BY_SLUG = Object.fromEntries(SECTORS.map(s=>[s.slug, s]));
+let lbList = PROJECTS.slice(0); let lbIdx = 0; let lbAutoT = null;
+function lbOpen(slug){
+  const ov = document.getElementById('lbOverlay'); if(!ov) return;
+  const i = lbList.findIndex(p=>p.slug===slug);
+  lbIdx = i>=0 ? i : 0;
+  lbRender();
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function lbClose(){
+  const ov = document.getElementById('lbOverlay'); if(!ov) return;
+  ov.classList.remove('open');
+  document.body.style.overflow = '';
+  if(lbAutoT){ clearInterval(lbAutoT); lbAutoT=null; const b=document.getElementById('lbAuto'); if(b) b.textContent='▶ Auto-play'; }
+}
+function lbRender(){
+  const p = lbList[lbIdx]; if(!p) return;
+  const s = SECTOR_BY_SLUG[p.slug];
+  const img = document.getElementById('lbImg');
+  const tag = document.getElementById('lbTag');
+  const nm  = document.getElementById('lbName');
+  const desc= document.getElementById('lbDesc');
+  const meta= document.getElementById('lbMeta');
+  const cnt = document.getElementById('lbCounter');
+  if(img){ img.src = p.img; img.alt = p.name; }
+  if(tag) tag.textContent = p.brand;
+  if(nm) nm.textContent = p.name;
+  if(desc) desc.textContent = s ? s.desc : 'Webapp custom + agenti AI dedicati. Costruita su misura, già live e operativa 24/7.';
+  if(meta){
+    const tags = s ? [s.tag, ...s.agents.split(' + ')] : [p.brand.split(' · ')[1]||'Custom', 'Webapp', 'AI Agents'];
+    meta.innerHTML = tags.map(t=>`<span>${t}</span>`).join('');
+  }
+  if(cnt) cnt.textContent = `${lbIdx+1} / ${lbList.length}`;
+}
+function lbNext(){ lbIdx = (lbIdx+1)%lbList.length; lbRender(); }
+function lbPrev(){ lbIdx = (lbIdx-1+lbList.length)%lbList.length; lbRender(); }
+
+(function wireLightbox(){
+  const ov = document.getElementById('lbOverlay');
+  if(!ov) return;
+  document.getElementById('lbClose').addEventListener('click', lbClose);
+  document.getElementById('lbNext').addEventListener('click', lbNext);
+  document.getElementById('lbPrev').addEventListener('click', lbPrev);
+  ov.addEventListener('click', e=>{ if(e.target===ov) lbClose(); });
+  document.addEventListener('keydown', e=>{
+    if(!ov.classList.contains('open')) return;
+    if(e.key==='Escape') lbClose();
+    else if(e.key==='ArrowRight') lbNext();
+    else if(e.key==='ArrowLeft') lbPrev();
+  });
+  const autoBtn = document.getElementById('lbAuto');
+  if(autoBtn) autoBtn.addEventListener('click', ()=>{
+    if(lbAutoT){ clearInterval(lbAutoT); lbAutoT=null; autoBtn.textContent='▶ Auto-play'; }
+    else { lbAutoT = setInterval(lbNext, 2400); autoBtn.textContent='⏸ Stop'; }
+  });
+
+  // Delegated click on every "openable" surface
+  document.body.addEventListener('click', e=>{
+    const el = e.target.closest('[data-slug]');
+    if(!el) return;
+    // Skip nav links etc.
+    if(el.tagName==='A' && el.getAttribute('href') && el.getAttribute('href').startsWith('#')) return;
+    const slug = el.getAttribute('data-slug'); if(!slug) return;
+    e.preventDefault();
+    lbOpen(slug);
+  });
+  document.body.addEventListener('keydown', e=>{
+    if(e.key!=='Enter' && e.key!==' ') return;
+    const el = e.target.closest('[data-slug][role="button"]');
+    if(!el) return;
+    e.preventDefault();
+    lbOpen(el.getAttribute('data-slug'));
+  });
+
+  // Make sector stage (desktop) clickable to open active sector
+  const stage = document.getElementById('sectorStage');
+  if(stage){
+    stage.style.cursor = 'zoom-in';
+    stage.addEventListener('click', ()=>{
+      const s = SECTORS[activeSector]; if(s) lbOpen(s.slug);
+    });
   }
 })();
 
