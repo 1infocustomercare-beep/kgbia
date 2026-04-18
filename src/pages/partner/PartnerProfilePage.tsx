@@ -1,10 +1,11 @@
 import { useAuth } from "@/context/AuthContext";
 import PartnerProfileSection from "@/components/partner/PartnerProfileSection";
 import PartnerIntegrationsSetup from "@/components/partner/PartnerIntegrationsSetup";
+import SellerCreditsHistory from "@/components/partner/SellerCreditsHistory";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Mail, Shield, Calendar, Sparkles } from "lucide-react";
+import { User, Mail, Shield, Calendar, Sparkles, Coins } from "lucide-react";
 
 export default function PartnerProfilePage() {
   const { user, isTeamLeader } = useAuth();
