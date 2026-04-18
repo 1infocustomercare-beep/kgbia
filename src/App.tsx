@@ -236,6 +236,7 @@ const SubscriptionPage = lazy(() => import("./pages/app/SubscriptionPage"));
 const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
 const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
 const DemoAdminPage = lazy(() => import("./pages/demo/DemoAdminPage"));
+const DemoPreviewPage = lazy(() => import("./pages/demo/DemoPreviewPage"));
 const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
 const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
@@ -550,6 +551,7 @@ function App() {
                       <Route path="/demo" element={<DemoDirectoryPage />} />
                       <Route path="/demo/:slug" element={<IndustryDemoPage />} />
                       <Route path="/demo/:slug/admin" element={<DemoAdminPage />} />
+                      <Route path="/preview/:slug" element={<DemoPreviewPage />} />
                       {/* Demo admin generato dalla Demo Factory: stesso DemoAdminPage che applica theme tramite ?variant= */}
                       <Route path="/demo-admin/:slug" element={<DemoAdminPage />} />
                       <Route path="/r/:slug" element={<RestaurantPage />} />
