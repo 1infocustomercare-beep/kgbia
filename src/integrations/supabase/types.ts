@@ -2409,6 +2409,16 @@ export type Database = {
           company_id: string | null
           contact_stage: string | null
           created_at: string
+          demo_admin_email: string | null
+          demo_admin_password: string | null
+          demo_admin_url: string | null
+          demo_auto_status: string | null
+          demo_generated_at: string | null
+          demo_preview_url: string | null
+          demo_run_id: string | null
+          demo_sub_sector: string | null
+          demo_template_variant: string | null
+          demo_whatsapp_message: string | null
           email: string | null
           estimated_value: number | null
           full_address: string | null
@@ -2445,6 +2455,16 @@ export type Database = {
           company_id?: string | null
           contact_stage?: string | null
           created_at?: string
+          demo_admin_email?: string | null
+          demo_admin_password?: string | null
+          demo_admin_url?: string | null
+          demo_auto_status?: string | null
+          demo_generated_at?: string | null
+          demo_preview_url?: string | null
+          demo_run_id?: string | null
+          demo_sub_sector?: string | null
+          demo_template_variant?: string | null
+          demo_whatsapp_message?: string | null
           email?: string | null
           estimated_value?: number | null
           full_address?: string | null
@@ -2481,6 +2501,16 @@ export type Database = {
           company_id?: string | null
           contact_stage?: string | null
           created_at?: string
+          demo_admin_email?: string | null
+          demo_admin_password?: string | null
+          demo_admin_url?: string | null
+          demo_auto_status?: string | null
+          demo_generated_at?: string | null
+          demo_preview_url?: string | null
+          demo_run_id?: string | null
+          demo_sub_sector?: string | null
+          demo_template_variant?: string | null
+          demo_whatsapp_message?: string | null
           email?: string | null
           estimated_value?: number | null
           full_address?: string | null
@@ -2512,6 +2542,13 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_demo_run_id_fkey"
+            columns: ["demo_run_id"]
+            isOneToOne: false
+            referencedRelation: "demo_factory_runs"
             referencedColumns: ["id"]
           },
         ]
