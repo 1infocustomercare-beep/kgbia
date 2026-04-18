@@ -663,11 +663,6 @@ export default function LeadsPage() {
     // No-op intenzionale — Demo Factory ora è on-demand con gating crediti.
     return;
   }, []);
-      } catch (e) {
-        console.warn("[auto-prewarm] error per", lead.name, e);
-      }
-    }
-  }, []);
 
   /* ─── Search ─── */
   const handleSearch = useCallback(async (page = 0, append = false) => {
