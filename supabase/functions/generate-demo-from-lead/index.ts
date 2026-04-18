@@ -1278,6 +1278,26 @@ serve(async (req) => {
       duration_ms: durationMs,
     });
 
+    // Persist demo on the lead row so seller always sees it ready
+    if (leadId) {
+      try {
+        await supabase.from("leads").update({
+          demo_run_id: runId,
+          demo_preview_url: previewUrl,
+          demo_admin_url: adminUrl,
+          demo_template_variant: match.variant,
+          demo_sub_sector: match.sub,
+          demo_generated_at: new Date().toISOString(),
+          demo_whatsapp_message: outreachKit.whatsappMessage,
+          demo_admin_email: credentials.email,
+          demo_admin_password: credentials.password,
+          demo_auto_status: "ready",
+        }).eq("id", leadId);
+      } catch (e) {
+        console.warn("[lead-persist] error", e);
+      }
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
