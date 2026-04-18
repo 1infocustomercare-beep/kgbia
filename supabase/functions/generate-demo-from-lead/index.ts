@@ -1081,22 +1081,56 @@ serve(async (req) => {
     }
 
     const lead = { ...rawLead };
+    const startedAt = Date.now();
 
-    // 1. Scrape (parallel with IG if available)
+    // Track this pipeline run
+    const { leadId } = body as { leadId?: string };
+    let runId: string | null = null;
+    const updateRun = async (patch: Record<string, any>) => {
+      if (!runId) return;
+      try {
+        await supabase.from("demo_factory_runs").update(patch).eq("id", runId);
+      } catch (e) {
+        console.warn("[run-update] error", e);
+      }
+    };
+    try {
+      const { data: runRow } = await supabase
+        .from("demo_factory_runs")
+        .insert({
+          lead_id: leadId || null,
+          owner_id: partnerId,
+          status: "running",
+          agents_status: { scout: "running", analyst: "pending", curator: "pending", copywriter: "pending", builder: "pending", closer: "pending" },
+        })
+        .select("id")
+        .single();
+      runId = runRow?.id || null;
+    } catch (e) {
+      console.warn("[run-create] error", e);
+    }
+
+    // ─── AGENT 1: SCOUT — scrape sito + Instagram ───
     const [scraped, igImages] = await Promise.all([
       lead.website ? deepScrape(lead.website) : Promise.resolve(null),
       lead.instagram ? instagramOgImage(lead.instagram) : Promise.resolve([]),
     ]);
-
-    // 1b. Auto-correct sector if site detection finds something more specific
     if (scraped?.detectedSectorHint && lead.sector === "custom") {
       lead.sector = scraped.detectedSectorHint;
     }
+    await updateRun({ agents_status: { scout: "done", analyst: "running", curator: "pending", copywriter: "pending", builder: "pending", closer: "pending" } });
 
-    // 2. AI brand kit
+    // ─── AGENT 2: ANALYST — AI brand kit + sub-settore detection ───
     const brand = await aiEnrichBrand(lead, scraped);
+    const isFood = FOOD_SECTORS.has(lead.sector);
+    const match = detectSubSector(lead, scraped?.markdown);
+    await updateRun({
+      agents_status: { scout: "done", analyst: "done", curator: "running", copywriter: "pending", builder: "pending", closer: "pending" },
+      sub_sector: match.sub,
+      template_variant: match.variant,
+    });
 
-    // 3. Palette: scraped > preview style > AI
+    // ─── AGENT 3: CURATOR — palette + immagini + theme ───
     const aiPalette: BrandPalette = brand.palette;
     const scrapedColors = scraped?.branding?.colors;
     let palette: BrandPalette = aiPalette;
@@ -1110,16 +1144,8 @@ serve(async (req) => {
     } else if (preview?.styleName) {
       palette = paletteFromStyleName(preview.styleName, aiPalette);
     }
-
-    // 4. Pre-create tenant ID for storage paths (UUID generation)
     const tenantUuid = crypto.randomUUID();
-
-    // 5. Resolve images (real → AI fallback)
     const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid);
-
-    // 6. Tenant — auto-detect sub-sector universale (food + tutti gli altri settori)
-    const isFood = FOOD_SECTORS.has(lead.sector);
-    const match = detectSubSector(lead, scraped?.markdown);
     const themeConfig: Record<string, any> = {
       template_variant: match.variant,
       sub_sector: match.sub,
@@ -1129,8 +1155,12 @@ serve(async (req) => {
       auto_matched: true,
     };
     console.log(`[demo-factory] sector=${lead.sector} sub=${match.sub} variant=${match.variant} theme=${match.themeHint} brand=${lead.businessName}`);
+    await updateRun({
+      agents_status: { scout: "done", analyst: "done", curator: "done", copywriter: "pending", builder: "running", closer: "pending" },
+      brand_kit: { tagline: brand.tagline, palette, hero: images.hero, logo: images.logo },
+    });
 
-    // Se pizzeria con template strapizzami e l'AI ha generato menu generico → arricchisci col preset
+    // Menu enrichment per template specifici
     if (isFood && match.sub === "pizzeria" && match.variant === "strapizzami") {
       const aiMenu: any[] = Array.isArray(brand.menu) ? brand.menu : [];
       const pizzaCount = aiMenu.filter(m => /pizz|margh|marinar|diavol|capric|calzon/i.test(`${m.name} ${m.category}`)).length;
@@ -1139,8 +1169,6 @@ serve(async (req) => {
         console.log("[demo-factory] pizzeria menu enriched with default preset");
       }
     }
-
-    // Se sushi/giapponese → arricchisci col preset Paperfish quando l'AI è generica
     if (isFood && match.sub === "sushi" && (match.variant === "paperfish-sakura" || match.variant === "paperfish-dark")) {
       const aiMenu: any[] = Array.isArray(brand.menu) ? brand.menu : [];
       const sushiCount = aiMenu.filter(m => /sushi|sashimi|nigiri|maki|roll|ramen|gyoza|temaki|uramaki/i.test(`${m.name} ${m.category}`)).length;
@@ -1150,36 +1178,72 @@ serve(async (req) => {
       }
     }
 
+    // ─── AGENT 4: BUILDER — crea tenant Supabase ───
     const tenant = isFood
       ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images, themeConfig)
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
-
-    // 7. Magic link
-    let magicLink: string | null = null;
-    if (lead.email) {
-      try {
-        const { data: linkData } = await supabase.auth.admin.generateLink({
-          type: "magiclink",
-          email: lead.email,
-          options: { redirectTo: `${originUrl || ""}/admin?demo=${tenant.id}` },
-        });
-        magicLink = linkData?.properties?.action_link || null;
-      } catch (e) {
-        console.warn("[magic-link] error", e);
-      }
-    }
 
     const origin = originUrl || "";
     const previewUrl = isFood ? `${origin}/r/${tenant.slug}` : `${origin}/b/${tenant.slug}`;
     const adminUrl = `${origin}/admin`;
 
+    await updateRun({
+      agents_status: { scout: "done", analyst: "done", curator: "done", copywriter: "running", builder: "done", closer: "running" },
+      preview_url: previewUrl,
+      admin_url: adminUrl,
+    });
+
+    // ─── AGENT 5: COPYWRITER — messaggio WhatsApp + script + obiezioni (parallel) ───
+    // ─── AGENT 6: CLOSER — magic link + credenziali admin ───
+    const [outreachKit, magicLinkResult] = await Promise.all([
+      generateOutreachKit(lead, brand, match, previewUrl),
+      (async () => {
+        if (!lead.email) return null;
+        try {
+          const { data: linkData } = await supabase.auth.admin.generateLink({
+            type: "magiclink",
+            email: lead.email,
+            options: { redirectTo: `${origin}/admin?demo=${tenant.id}` },
+          });
+          return linkData?.properties?.action_link || null;
+        } catch (e) {
+          console.warn("[magic-link] error", e);
+          return null;
+        }
+      })(),
+    ]);
+
+    const credentials = generateAdminCredentials(lead);
+    const durationMs = Date.now() - startedAt;
+
+    await updateRun({
+      status: "completed",
+      agents_status: { scout: "done", analyst: "done", curator: "done", copywriter: "done", builder: "done", closer: "done" },
+      whatsapp_message: outreachKit.whatsappMessage,
+      whatsapp_link: outreachKit.whatsappLink,
+      call_script: outreachKit.callScript,
+      objections: outreachKit.objections,
+      admin_email: credentials.email,
+      admin_password: credentials.password,
+      completed_at: new Date().toISOString(),
+      duration_ms: durationMs,
+    });
+
     return new Response(
       JSON.stringify({
         success: true,
+        runId,
         tenant,
         previewUrl,
         adminUrl,
-        magicLink,
+        magicLink: magicLinkResult,
+        credentials,
+        outreach: {
+          whatsappMessage: outreachKit.whatsappMessage,
+          whatsappLink: outreachKit.whatsappLink,
+          callScript: outreachKit.callScript,
+          objections: outreachKit.objections,
+        },
         brand: {
           tagline: brand.tagline,
           description: brand.description,
@@ -1206,6 +1270,7 @@ serve(async (req) => {
           logo: images.logo,
           totalReal: (scraped?.images?.length || 0) + (igImages?.length || 0),
         },
+        durationMs,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
