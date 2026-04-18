@@ -490,13 +490,35 @@ export default function LeadsPage() {
 
       clearInterval(interval);
 
+      // 422 = lead data insufficient → rimborso crediti
+      const errBody: any = (error as any)?.context?.body || data;
+      if (errBody?.error === "lead_data_insufficient") {
+        toast.error("⚠️ Lead con dati insufficienti", {
+          description: (errBody.issues || []).join(" · ") || "Arricchisci il lead prima di generare la demo",
+        });
+        // Non addebitiamo: log refund in cronologia
+        try {
+          await supabase.from("demo_credit_usage").insert({
+            user_id: user.id,
+            action: "refund_demo_factory",
+            credits_used: -(consumeRes?.credits_used || 5),
+            cost_eur_estimate: 0,
+            action_label: "Rimborso: lead insufficiente",
+            metadata: { reason: "lead_data_insufficient", issues: errBody.issues },
+          });
+        } catch {}
+        setDemoFactoryOpen(false);
+        return;
+      }
+
       if (error || !data?.success) {
         throw new Error(error?.message || data?.error || "Generazione fallita");
       }
 
       setDemoFactoryResult(data);
+      const guardWarn = data?.brand?.guardian_warnings?.length;
       toast.success(`✓ Demo creata · -${consumeRes.credits_used} crediti · Saldo: ${consumeRes.remaining_balance}`, {
-        description: data.previewUrl,
+        description: guardWarn ? `${data.previewUrl} · ${guardWarn} note di qualità` : data.previewUrl,
       });
     } catch (err: any) {
       console.error("[runDemoFactory] error", err);
