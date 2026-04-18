@@ -954,12 +954,23 @@ export default function LeadsPage() {
         onClose={() => setShowPicker(false)}
         onSelect={(sel) => {
           setCustomPreview(sel);
-          // Auto-trigger demo factory with the selected preview if a lead is currently open
-          if (selected) {
-            runDemoFactory(selected, sel);
-          }
+          if (selected) requestDemoFactory(selected, sel);
         }}
         initialSector={selected?._sector}
+      />
+
+      {/* 💰 Dialog conferma consumo crediti prima della Demo Factory */}
+      <CreditConfirmDialog
+        open={!!pendingDemoFactory}
+        cost={getCost("generate_demo_from_lead")}
+        balance={creditBalance}
+        contextLabel={pendingDemoFactory ? `Demo per ${pendingDemoFactory.lead.name}` : undefined}
+        onCancel={() => setPendingDemoFactory(null)}
+        onConfirm={() => {
+          const p = pendingDemoFactory;
+          setPendingDemoFactory(null);
+          if (p) runDemoFactory(p.lead, p.preview);
+        }}
       />
 
       <DemoFactoryOverlay
@@ -1829,7 +1840,7 @@ export default function LeadsPage() {
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <button
-                      onClick={() => runDemoFactory(selected, customPreview)}
+                      onClick={() => requestDemoFactory(selected, customPreview)}
                       disabled={demoFactoryLoading}
                       className="text-[9px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1 disabled:opacity-50"
                       style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", color: "#fff", boxShadow: "0 4px 14px rgba(167,139,250,0.35)" }}
