@@ -6,7 +6,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { getAdminLayout, type AdminLayoutConfig } from "@/config/admin-layout-config";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSectorConfig, SECTOR_CONFIGS } from "@/config/sectorConfig";
 import { getAllAgentsForSector } from "@/config/sectorFeatures";
@@ -1024,8 +1024,29 @@ const generateCalendarDays = () => {
   return { days, firstDay: firstDay === 0 ? 6 : firstDay - 1, monthName: today.toLocaleDateString("it-IT", { month: "long", year: "numeric" }) };
 };
 
+/* ─── Variant theme overlay — applica look del template iPhone scelto dalla Demo Factory ─── */
+const VARIANT_THEME: Record<string, { accent: string; bg: string; surface: string; label: string }> = {
+  "strapizzami":         { accent: "#C2653A", bg: "#1a120d", surface: "#2a1f17", label: "Pizzeria Napoletana" },
+  "paperfish-sakura":    { accent: "#E88AAB", bg: "#1a0d10", surface: "#2a161c", label: "Sushi Sakura" },
+  "paperfish-dark":      { accent: "#C9A84C", bg: "#0a0a0a", surface: "#1a1a1a", label: "Sushi Luxury" },
+  "cote-obsidian":       { accent: "#C9A84C", bg: "#0a0a0a", surface: "#1a1a1a", label: "Braceria Premium" },
+  "cote-marble":         { accent: "#8b6f47", bg: "#1a1612", surface: "#2a221b", label: "Ristorante Marble" },
+  "cote-ivory":          { accent: "#c9a876", bg: "#1a1612", surface: "#2a221b", label: "Bakery Ivory" },
+  "batey-pacifico":      { accent: "#5cbdb9", bg: "#0c2340", surface: "#143654", label: "Pesce Caraibico" },
+  "lavang-noir":         { accent: "#d4af37", bg: "#0d0d0d", surface: "#1a1a1a", label: "Vietnamese Noir" },
+  "midtown-kosher":      { accent: "#8b6f47", bg: "#1a1612", surface: "#2a221b", label: "Kosher Marble" },
+  "neo-nails-lavender":  { accent: "#9b72cf", bg: "#1a0d24", surface: "#2a1840", label: "Nails Lavender" },
+  "neo-nails-blush":     { accent: "#c45c7c", bg: "#1a0d12", surface: "#2a1620", label: "Nails Blush" },
+  "tatush-hair":         { accent: "#C9A84C", bg: "#0a0a0a", surface: "#1a1a1a", label: "Hair Salon" },
+  "asinara-azure":       { accent: "#2d8a9e", bg: "#0c2340", surface: "#143654", label: "Yacht Charter" },
+  "miami-boats":         { accent: "#5cbdb9", bg: "#0c2340", surface: "#143654", label: "Boat Rental" },
+  "city-padel-sage":     { accent: "#7d9b76", bg: "#1a2018", surface: "#2a3024", label: "Padel Club" },
+  "miami-watersports":   { accent: "#5cbdb9", bg: "#0c2340", surface: "#143654", label: "Watersports" },
+};
+
 export default function DemoAdminPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [activeModule, setActiveModule] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -1033,6 +1054,11 @@ export default function DemoAdminPage() {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [tutorialsOn, setTutorialsOn] = useState(true);
   const [ordersPage, setOrdersPage] = useState(1);
+
+  // Variant override dalla Demo Factory (es. ?variant=cote-obsidian&sub=braceria)
+  const variantParam = searchParams.get("variant");
+  const subParam = searchParams.get("sub");
+  const variantTheme = variantParam ? VARIANT_THEME[variantParam] : null;
 
   const resolvedSector = useMemo(() => resolveIndustryFromSlug(slug || "food"), [slug]);
   const config = getSectorConfig(resolvedSector || "food");
@@ -1056,7 +1082,10 @@ export default function DemoAdminPage() {
     );
   }
 
-  const accentColor = config.colors.accent;
+  // Override accentColor con il tema del template iPhone (se presente)
+  const accentColor = variantTheme?.accent || config.colors.accent;
+  const themeBg = variantTheme?.bg;
+  const themeSurface = variantTheme?.surface;
   const kpis = SECTOR_KPIS[sectorKey] || SECTOR_KPIS.food!;
   const barData = SECTOR_BAR_DATA[sectorKey] || SECTOR_BAR_DATA.food!;
   const tableData = SECTOR_TABLE_DATA[sectorKey] || SECTOR_TABLE_DATA.food!;
@@ -2307,8 +2336,13 @@ export default function DemoAdminPage() {
   };
 
   return (
-    <div className="min-h-screen flex relative" style={{ background: layoutConfig.bgGradient }}>
-      {/* Premium sector-themed ambient background */}
+    <div className="min-h-screen flex relative" style={{ background: themeBg || layoutConfig.bgGradient }}>
+      {variantTheme && (
+        <div className="fixed top-0 left-0 right-0 z-[60] py-1.5 px-4 text-center text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md"
+          style={{ background: `${variantTheme.accent}18`, color: variantTheme.accent, borderBottom: `1px solid ${variantTheme.accent}30` }}>
+          ✨ Demo Empire AI · Stile {variantTheme.label}{subParam ? ` · ${subParam}` : ""}
+        </div>
+      )}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {/* Primary sector glow */}
         <div className="absolute rounded-full" style={{ top: "-8%", left: "-5%", width: "600px", height: "600px", opacity: layoutConfig.accentGlow ? 0.08 : 0.04, background: `radial-gradient(circle, ${accentColor}, transparent 65%)`, filter: "blur(100px)" }} />

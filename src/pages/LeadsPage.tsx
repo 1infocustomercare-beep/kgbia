@@ -629,6 +629,55 @@ export default function LeadsPage() {
     }
   }, [city]);
 
+  /* ─── 🚀 AUTO DEMO PRE-WARM — genera demo in background per i top lead della ricerca ─── */
+  /* Limite: solo 3 top lead per non sprecare crediti AI/Firecrawl. Risultato salvato sul lead. */
+  const autoPrewarmDemos = useCallback(async (leads: (Lead & { _score: number; _sector: string })[]) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user?.id) return;
+
+    // Top 3 con sito web (massima qualità di scraping) o telefono (per outreach)
+    const candidates = leads
+      .filter(l => l.website || l.phone)
+      .sort((a, b) => (b._score || 0) - (a._score || 0))
+      .slice(0, 3);
+
+    if (candidates.length === 0) return;
+
+    console.log(`[auto-prewarm] avvio pipeline silenziosa per ${candidates.length} lead`);
+
+    // Sequenziale per non saturare Firecrawl/AI Gateway
+    for (const lead of candidates) {
+      try {
+        await supabase.functions.invoke("generate-demo-from-lead", {
+          body: {
+            lead: {
+              businessName: lead.name,
+              sector: lead._sector,
+              sectorLabel: SECTOR_OPTIONS.find(s => s.value === lead._sector)?.label || lead._sector,
+              city: lead.city,
+              zone: lead.zone,
+              fullAddress: lead.full_address,
+              phone: lead.phone,
+              email: lead.email,
+              website: lead.website,
+              instagram: lead.instagram,
+              facebook: lead.facebook,
+              googleRating: lead.google_rating,
+              googleReviews: lead.google_reviews,
+              googleMapsUrl: lead.google_maps_url,
+            },
+            partnerId: user.id,
+            originUrl: window.location.origin,
+          },
+        });
+        // marca subito sul UI
+        setResults(prev => prev.map(r => r.name === lead.name ? { ...r, _demoReady: true } as any : r));
+      } catch (e) {
+        console.warn("[auto-prewarm] error per", lead.name, e);
+      }
+    }
+  }, []);
+
   /* ─── Search ─── */
   const handleSearch = useCallback(async (page = 0, append = false) => {
     if (!city.trim() && !query.trim()) {
@@ -662,6 +711,8 @@ export default function LeadsPage() {
         });
         // Auto-batch enrich Instagram in background
         setTimeout(() => batchEnrichInstagram(processed), 1500);
+        // 🚀 Auto pre-warm demo factory per i top 3 lead (in background, silenzioso)
+        if (!append) setTimeout(() => autoPrewarmDemos(processed), 3500);
       } else if (!append) {
         toast.error("Nessun risultato — prova un'altra città o settore");
       } else {
@@ -674,7 +725,7 @@ export default function LeadsPage() {
       setLoading(false);
       setDeepLoading(false);
     }
-  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram]);
+  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos]);
 
   /* ─── Deep search ─── */
   const handleDeepSearch = useCallback(() => {
@@ -711,6 +762,8 @@ export default function LeadsPage() {
         });
         setGpsOpen(false);
         setTimeout(() => batchEnrichInstagram(processed), 1500);
+        // 🚀 Auto pre-warm demo factory anche per GPS search
+        setTimeout(() => autoPrewarmDemos(processed), 3500);
         // Auto-open speed dial if many results
         if (processed.length >= 5) setTimeout(() => setSpeedDialOpen(true), 800);
       } else {
@@ -721,7 +774,7 @@ export default function LeadsPage() {
     } finally {
       setLoading(false);
     }
-  }, [sector, processResults, batchEnrichInstagram]);
+  }, [sector, processResults, batchEnrichInstagram, autoPrewarmDemos]);
 
   /* ─── Add manual lead ─── */
   const addManualLead = () => {
