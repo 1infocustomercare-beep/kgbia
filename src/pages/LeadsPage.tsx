@@ -711,6 +711,8 @@ export default function LeadsPage() {
         });
         // Auto-batch enrich Instagram in background
         setTimeout(() => batchEnrichInstagram(processed), 1500);
+        // 🚀 Auto pre-warm demo factory per i top 3 lead (in background, silenzioso)
+        if (!append) setTimeout(() => autoPrewarmDemos(processed), 3500);
       } else if (!append) {
         toast.error("Nessun risultato — prova un'altra città o settore");
       } else {
