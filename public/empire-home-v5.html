@@ -191,11 +191,13 @@ body.menu-open .nav-sheet a:nth-child(7){transition-delay:.35s}
 /* ============ HERO ============ */
 .hero{
   position:relative; min-height:100vh; padding:130px 0 70px;
+  overflow:hidden;
   background:
     radial-gradient(1200px 600px at 80% -10%, rgba(201,162,75,.22), transparent 60%),
     radial-gradient(900px 500px at 0% 20%, rgba(138,124,255,.14), transparent 60%),
     linear-gradient(180deg, #09090c 0%, #0A0B0D 40%, #0A0B0D 100%);
 }
+.hero .wrap{max-width:1240px}
 @media (max-width:900px){ .hero{padding:120px 0 30px; min-height:auto} }
 @media (max-width:540px){ .hero{padding:110px 0 24px} }
 .hero-grain{
