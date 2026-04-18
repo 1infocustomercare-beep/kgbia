@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { StrapizzamiSite, type StrapizzamiSiteData } from "@/components/templates/strapizzami/StrapizzamiSite";
 import { PaperfishSite, type PaperfishSiteData } from "@/components/templates/paperfish/PaperfishSite";
+import { BateySite, type BateySiteData } from "@/components/templates/batey/BateySite";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -197,6 +198,40 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
     };
   }, [templateVariant, menuItems, company, themeConfig]);
 
+  // ── Batey Pacifico template branch (pesce/seafood/yacht — azure caraibico) ──
+  const bateyData = useMemo<BateySiteData | null>(() => {
+    const isBatey = templateVariant === "batey-pacifico" || templateVariant === "asinara-azure" || templateVariant === "batey-azure";
+    if (!isBatey) return null;
+    const items = (menuItems.length > 0 ? menuItems : []).map((i: any) => ({
+      id: String(i.id),
+      name: i.name,
+      description: i.description || "",
+      price: Number(i.price) || 0,
+      image: i.image_url || "https://images.pexels.com/photos/3296434/pexels-photo-3296434.jpeg?auto=compress&cs=tinysrgb&w=600",
+      category: i.category || "Pesce Fresco",
+      is_popular: !!i.is_popular,
+      ingredients: i.description,
+      es_label: (i as any).es_label,
+    }));
+    return {
+      brandName: company.name || "Pescheria",
+      subtitle: themeConfig?.subtitle || "PESCA DEL DÍA · MARE",
+      heroImage: themeConfig?.hero_image || "https://images.pexels.com/photos/3296434/pexels-photo-3296434.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      heroTagline: themeConfig?.hero_tagline || "PESCA FRESCA OGNI GIORNO",
+      address: [company.address, company.city].filter(Boolean).join(", ") || "Lungomare 1, Napoli",
+      items: items.length > 0 ? items : [
+        { id: "1", name: "Crudo di Branzino", description: "Branzino selvaggio, olio EVO Liguria, fior di sale, lime", price: 22, image: "https://images.pexels.com/photos/3296434/pexels-photo-3296434.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Crudi", is_popular: true, es_label: "del mar" },
+        { id: "2", name: "Tartare di Tonno Rosso", description: "Tonno Mediterraneo, avocado, sesamo nero, salsa ponzu", price: 24, image: "https://images.pexels.com/photos/8697540/pexels-photo-8697540.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Crudi", is_popular: true, es_label: "atún rojo" },
+        { id: "3", name: "Ostriche Bretagna n°2", description: "6 pezzi, limone, mignonette al pepe rosa", price: 28, image: "https://images.pexels.com/photos/616835/pexels-photo-616835.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Crudi", es_label: "ostras" },
+        { id: "4", name: "Spaghetto allo Scoglio", description: "Cozze, vongole, gamberi, pomodorini gialli", price: 22, image: "https://images.pexels.com/photos/8951403/pexels-photo-8951403.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Primi", is_popular: true, es_label: "del puerto" },
+        { id: "5", name: "Linguine ai Ricci", description: "Pasta fresca, ricci di mare di Sardegna, bottarga", price: 28, image: "https://images.pexels.com/photos/1438672/pexels-photo-1438672.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Primi", es_label: "erizos de mar" },
+        { id: "6", name: "Branzino al Sale", description: "Branzino intero in crosta di sale marino, patate ratte", price: 38, image: "https://images.pexels.com/photos/3763847/pexels-photo-3763847.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Secondi", is_popular: true, es_label: "lubina entera" },
+        { id: "7", name: "Frittura di Paranza", description: "Selezione del giorno: gamberi, calamari, alici, totanetti", price: 26, image: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Secondi", es_label: "fritura" },
+        { id: "8", name: "Ceviche Caraibico", description: "Pesce bianco, lime, peperoncino habanero, mais croccante", price: 18, image: "https://images.pexels.com/photos/2087748/pexels-photo-2087748.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Crudi", is_popular: true, es_label: "ceviche del chef" },
+      ],
+    };
+  }, [templateVariant, menuItems, company, themeConfig]);
+
   const handleReservation = async () => {
     if (!form.name || !form.phone || !form.date || !form.time) { toast.error("Compila tutti i campi obbligatori"); return; }
     setSubmitting(true);
@@ -241,6 +276,9 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
   }
   if (paperfishData) {
     return <PaperfishSite data={paperfishData} />;
+  }
+  if (bateyData) {
+    return <BateySite data={bateyData} />;
   }
 
   return (
