@@ -1038,10 +1038,11 @@ const VARIANT_THEME: Record<string, { accent: string; bg: string; surface: strin
   "neo-nails-lavender":  { accent: "#9b72cf", bg: "#1a0d24", surface: "#2a1840", label: "Nails Lavender" },
   "neo-nails-blush":     { accent: "#c45c7c", bg: "#1a0d12", surface: "#2a1620", label: "Nails Blush" },
   "tatush-hair":         { accent: "#C9A84C", bg: "#0a0a0a", surface: "#1a1a1a", label: "Hair Salon" },
-  "asinara-azure":       { accent: "#2d8a9e", bg: "#0c2340", surface: "#143654", label: "Yacht Charter" },
-  "miami-boats":         { accent: "#5cbdb9", bg: "#0c2340", surface: "#143654", label: "Boat Rental" },
+  "asinara-azure":       { accent: "#5CC8D9", bg: "#08131F", surface: "#0F2034", label: "Yacht Charter Caraibico" },
+  "miami-boats":         { accent: "#5CC8D9", bg: "#08131F", surface: "#0F2034", label: "Boat Rental Tropicale" },
+  "batey-pacifico":      { accent: "#5CC8D9", bg: "#08131F", surface: "#0F2034", label: "Pesce & Seafood Caraibico" },
   "city-padel-sage":     { accent: "#7d9b76", bg: "#1a2018", surface: "#2a3024", label: "Padel Club" },
-  "miami-watersports":   { accent: "#5cbdb9", bg: "#0c2340", surface: "#143654", label: "Watersports" },
+  "miami-watersports":   { accent: "#5CC8D9", bg: "#08131F", surface: "#0F2034", label: "Watersports" },
 };
 
 export default function DemoAdminPage() {
