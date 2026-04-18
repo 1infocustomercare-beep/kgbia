@@ -2336,8 +2336,13 @@ export default function DemoAdminPage() {
   };
 
   return (
-    <div className="min-h-screen flex relative" style={{ background: layoutConfig.bgGradient }}>
-      {/* Premium sector-themed ambient background */}
+    <div className="min-h-screen flex relative" style={{ background: themeBg || layoutConfig.bgGradient }}>
+      {variantTheme && (
+        <div className="fixed top-0 left-0 right-0 z-[60] py-1.5 px-4 text-center text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md"
+          style={{ background: `${variantTheme.accent}18`, color: variantTheme.accent, borderBottom: `1px solid ${variantTheme.accent}30` }}>
+          ✨ Demo Empire AI · Stile {variantTheme.label}{subParam ? ` · ${subParam}` : ""}
+        </div>
+      )}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {/* Primary sector glow */}
         <div className="absolute rounded-full" style={{ top: "-8%", left: "-5%", width: "600px", height: "600px", opacity: layoutConfig.accentGlow ? 0.08 : 0.04, background: `radial-gradient(circle, ${accentColor}, transparent 65%)`, filter: "blur(100px)" }} />
