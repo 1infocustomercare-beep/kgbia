@@ -828,14 +828,42 @@ body.menu-open .nav-sheet a:nth-child(7){transition-delay:.35s}
   background:linear-gradient(90deg, rgba(10,11,13,.92), rgba(21,24,32,.95));
   border:1px solid rgba(201,162,75,.3); backdrop-filter:blur(16px);
   box-shadow:0 18px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(201,162,75,.08) inset;
-  transform:translateY(120%); transition:transform .5s var(--ease-out);
+  transform:translateY(160%); opacity:0; transition:transform .55s var(--ease-out), opacity .35s ease;
+  pointer-events:none;
 }
-.sticky-cta.shown{transform:translateY(0)}
+.sticky-cta.shown{transform:translateY(0); opacity:1; pointer-events:auto}
 .sticky-cta .text{flex:1; min-width:0; font-size:12.5px; line-height:1.25; color:var(--ivory)}
 .sticky-cta .text b{display:block; color:var(--gold-2); font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-weight:700}
 .sticky-cta .text span{display:block; color:rgba(246,243,238,.75)}
 .sticky-cta .btn{padding:11px 18px; font-size:12.5px; flex:0 0 auto}
+.sticky-cta .pulse{
+  position:absolute; top:-3px; left:18px; width:8px; height:8px; border-radius:50%;
+  background:#34d399; box-shadow:0 0 0 0 rgba(52,211,153,.55);
+  animation:stickyPulse 1.8s infinite;
+}
+@keyframes stickyPulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.55)} 70%{box-shadow:0 0 0 10px rgba(52,211,153,0)} 100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
 @media (max-width:900px){ .sticky-cta{display:flex} }
+
+/* Live Ticker */
+.live-ticker{
+  position:relative; padding:14px 0; border-top:1px solid rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(90deg, rgba(201,162,75,.04), rgba(138,124,255,.04), rgba(201,162,75,.04));
+  overflow:hidden;
+}
+.live-ticker .lt-wrap{display:flex; gap:clamp(28px,5vw,68px); align-items:center; justify-content:center; flex-wrap:wrap; padding:0 24px}
+.live-ticker .lt-item{display:flex; align-items:center; gap:10px; font-size:13px; color:rgba(246,243,238,.78); white-space:nowrap}
+.live-ticker .lt-item b{font-family:"Fraunces",serif; font-weight:500; font-size:18px; color:#fff; font-variant-numeric:tabular-nums}
+.live-ticker .lt-item .ic{width:8px; height:8px; border-radius:50%; background:#34d399; box-shadow:0 0 12px #34d399; animation:liveBlink 2s infinite}
+.live-ticker .lt-item .ic.gold{background:var(--gold-2); box-shadow:0 0 12px var(--gold-2)}
+.live-ticker .lt-item .ic.violet{background:#8a7cff; box-shadow:0 0 12px #8a7cff}
+@keyframes liveBlink{0%,60%,100%{opacity:1} 30%{opacity:.35}}
+@media (max-width:700px){ .live-ticker .lt-wrap{gap:18px; padding:0 14px} .live-ticker .lt-item{font-size:11.5px} .live-ticker .lt-item b{font-size:15px} }
+
+/* Reverse marquee */
+.marquee.reverse .marquee-track{animation-direction:reverse; animation-duration:48s}
+.marquee.reverse{border-top:1px solid rgba(255,255,255,.06); margin-top:0}
+.marquee.reverse span{color:rgba(201,162,75,.55)}
+.marquee.reverse span::after{display:none}
 
 /* ============ HERO SCROLL-PIN STAGE ============ */
 .hero-pin{
@@ -1061,11 +1089,27 @@ footer{padding:70px 0 32px; border-top:1px solid rgba(255,255,255,.08)}
   </div>
 </div>
 
+<!-- ===== LIVE TICKER ===== -->
+<div class="live-ticker" id="liveTicker" aria-label="Statistiche live">
+  <div class="lt-wrap">
+    <div class="lt-item"><span class="ic"></span><b id="ltCalls">0</b><span>chiamate AI gestite oggi</span></div>
+    <div class="lt-item"><span class="ic gold"></span><b id="ltRevenue">€0</b><span>incassati dai clienti Empire</span></div>
+    <div class="lt-item"><span class="ic violet"></span><b id="ltBookings">0</b><span>prenotazioni in tempo reale</span></div>
+    <div class="lt-item"><span class="ic"></span><b id="ltAgents">0</b><span>agenti AI operativi adesso</span></div>
+  </div>
+</div>
+
 <!-- ===== MARQUEE ===== -->
 <div class="marquee sec-ink">
   <div class="marquee-track">
     <span>Ristoranti</span><span>Pizzerie</span><span>Dentisti</span><span>Spa & Wellness</span><span>Pilates</span><span>Immobiliari</span><span>Hotel</span><span>Noleggio auto</span><span>Noleggio barche</span><span>Pet Care</span><span>Asili nido</span><span>Parrucchieri</span><span>Estetiste</span><span>Studi medici</span><span>E-commerce</span><span>Padel</span><span>Charter</span><span>Idraulici</span><span>Cevicherie</span><span>Pokerie</span>
     <span>Ristoranti</span><span>Pizzerie</span><span>Dentisti</span><span>Spa & Wellness</span><span>Pilates</span><span>Immobiliari</span><span>Hotel</span><span>Noleggio auto</span><span>Noleggio barche</span><span>Pet Care</span><span>Asili nido</span><span>Parrucchieri</span><span>Estetiste</span><span>Studi medici</span><span>E-commerce</span><span>Padel</span><span>Charter</span><span>Idraulici</span><span>Cevicherie</span><span>Pokerie</span>
+  </div>
+</div>
+<div class="marquee reverse sec-ink">
+  <div class="marquee-track">
+    <span>Voice Agent 24/7</span><span>·</span><span>Sales AI</span><span>·</span><span>Review Booster</span><span>·</span><span>Booking AI</span><span>·</span><span>WhatsApp AI</span><span>·</span><span>Dashboard Live</span><span>·</span><span>Multi-lingua</span><span>·</span><span>Stripe Integrato</span><span>·</span><span>CRM Custom</span><span>·</span><span>Analytics Real-time</span><span>·</span><span>Zero No-show</span>
+    <span>Voice Agent 24/7</span><span>·</span><span>Sales AI</span><span>·</span><span>Review Booster</span><span>·</span><span>Booking AI</span><span>·</span><span>WhatsApp AI</span><span>·</span><span>Dashboard Live</span><span>·</span><span>Multi-lingua</span><span>·</span><span>Stripe Integrato</span><span>·</span><span>CRM Custom</span><span>·</span><span>Analytics Real-time</span><span>·</span><span>Zero No-show</span>
   </div>
 </div>
 
@@ -1495,9 +1539,10 @@ footer{padding:70px 0 32px; border-top:1px solid rgba(255,255,255,.08)}
 
 <!-- ===== STICKY MOBILE CTA ===== -->
 <div class="sticky-cta" id="stickyCta" role="region" aria-label="CTA rapida">
+  <span class="pulse" aria-hidden="true"></span>
   <div class="text">
-    <b>3 posti · Aprile 2026</b>
-    <span>Setup in 14 giorni · Garanzia 90gg</span>
+    <b><span id="stickyLeft">3</span> posti · Aprile 2026</b>
+    <span>Setup 14gg · Garanzia 90gg · No vincoli</span>
   </div>
   <a href="#call" class="btn btn-gold">Prenota call <span class="arr">→</span></a>
 </div>
@@ -2111,6 +2156,76 @@ function lbPrev(){ lbIdx = (lbIdx-1+lbList.length)%lbList.length; lbRender(); }
       const y = t.getBoundingClientRect().top + (window.scrollY||document.documentElement.scrollTop) - 90;
       window.scrollTo({top:y, behavior:'smooth'});
     });
+  });
+})();
+
+/* ============ STICKY CTA: appears AFTER hero pin ends ============ */
+(function stickyCtaReveal(){
+  const cta = document.getElementById('stickyCta');
+  if(!cta) return;
+  const pin = document.querySelector('.hero-pin');
+  const footer = document.querySelector('footer');
+  function update(){
+    const sc = window.scrollY || document.documentElement.scrollTop;
+    const pinBottom = pin ? (pin.offsetTop + pin.offsetHeight - 160) : 600;
+    const footerTop = footer ? footer.getBoundingClientRect().top : Infinity;
+    const pastHero = sc > pinBottom;
+    const nearFooter = footerTop < window.innerHeight + 100;
+    if(pastHero && !nearFooter) cta.classList.add('shown');
+    else cta.classList.remove('shown');
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update, {passive:true});
+  update();
+})();
+
+/* ============ LIVE TICKER ============ */
+(function liveTicker(){
+  const elCalls = document.getElementById('ltCalls');
+  const elRev   = document.getElementById('ltRevenue');
+  const elBook  = document.getElementById('ltBookings');
+  const elAg    = document.getElementById('ltAgents');
+  if(!elCalls) return;
+  const today = new Date();
+  const dayMin = today.getHours()*60 + today.getMinutes();
+  let calls    = 1240 + Math.floor(dayMin*1.7);
+  let revenue  = 84000 + Math.floor(dayMin*82);
+  let bookings = 612 + Math.floor(dayMin*0.9);
+  let agents   = 142 + (today.getHours()%6);
+  function fmtEuro(n){
+    if(n >= 1000) return '€'+(n/1000).toFixed(1).replace('.0','')+'K';
+    return '€'+n;
+  }
+  function flash(el){ el.style.transition='color .35s'; el.style.color='#FFE3A0'; setTimeout(()=>{ el.style.color=''; }, 380); }
+  function paint(){
+    elCalls.textContent = calls.toLocaleString('it-IT');
+    elRev.textContent = fmtEuro(revenue);
+    elBook.textContent = bookings.toLocaleString('it-IT');
+    elAg.textContent = agents;
+  }
+  paint();
+  if(reduceMotion) return;
+  setInterval(()=>{ calls += 1+Math.floor(Math.random()*3); flash(elCalls); paint(); }, 3200);
+  setInterval(()=>{ revenue += 40+Math.floor(Math.random()*220); flash(elRev); paint(); }, 2400);
+  setInterval(()=>{ if(Math.random()>.35){ bookings += 1; flash(elBook); paint(); } }, 4100);
+  setInterval(()=>{ agents = Math.max(120, Math.min(180, agents + (Math.random()>.5?1:-1))); flash(elAg); paint(); }, 5200);
+
+  const stickyLeft = document.getElementById('stickyLeft');
+  if(stickyLeft){
+    let n = 3;
+    setInterval(()=>{ n = (Math.random()>.85)?(n===3?2:3):n; stickyLeft.textContent = n; }, 9000);
+  }
+})();
+
+/* ============ SAFETY: ensure preview surfaces are clickable (block child elements from swallowing clicks) ============ */
+(function ensureClickability(){
+  document.querySelectorAll('.phone-stack .phone[data-slug]').forEach(el=>{
+    el.style.cursor = 'zoom-in';
+    el.querySelectorAll('img').forEach(i=>{ i.draggable=false; i.style.pointerEvents='none'; });
+    el.querySelectorAll('.badge').forEach(b=>{ b.style.pointerEvents='none'; });
+  });
+  document.querySelectorAll('.preview-tap[data-slug], .sec-card-m[data-slug], .orbit-item[data-slug]').forEach(el=>{
+    el.querySelectorAll('img').forEach(i=>{ i.draggable=false; i.style.pointerEvents='none'; });
   });
 })();
 </script>
