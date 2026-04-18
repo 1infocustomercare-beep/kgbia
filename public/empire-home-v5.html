@@ -1783,7 +1783,7 @@ function stopAutoSector(){ if(autoTimer){ clearInterval(autoTimer); autoTimer = 
   const sizes = ["c-l","c-m","c-s","c-xs","c-s","c-m","c-s","c-xs","c-xs","c-l","c-s","c-m"];
   const pick = PROJECTS.slice(0,36);
   w.innerHTML = pick.map((p,i)=>`
-    <div class="card ${sizes[i%sizes.length]}">
+    <div class="card preview-tap ${sizes[i%sizes.length]}" data-slug="${p.slug}" role="button" tabindex="0" aria-label="Apri ${p.name}">
       <img loading="lazy" alt="${p.name}" src="${p.img}">
       <div class="meta">
         <div><b>${p.name}</b><span>${p.brand}</span></div>
