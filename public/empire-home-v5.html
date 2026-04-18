@@ -458,25 +458,36 @@ body.menu-open .nav-sheet a:nth-child(7){transition-delay:.35s}
 .sector-track::-webkit-scrollbar{display:none}
 .sector-track{scrollbar-width:none}
 .sec-card-m{
-  flex:0 0 78%; max-width:340px; scroll-snap-align:center;
+  flex:0 0 82%; max-width:340px; scroll-snap-align:center;
   border-radius:22px; overflow:hidden;
   background:#0B0C10; border:1px solid rgba(255,255,255,.08);
   box-shadow:0 20px 50px rgba(0,0,0,.4);
   position:relative;
+  cursor:zoom-in;
+  transition:transform .4s var(--ease), border-color .3s var(--ease);
 }
-.sec-card-m .shot{position:relative; aspect-ratio:4/5; background:#0B0C10; overflow:hidden}
-.sec-card-m .shot img{position:absolute; left:50%; top:50%; width:62%; aspect-ratio:9/19; object-fit:cover; border-radius:30px; transform:translate(-50%,-50%); border:1.5px solid rgba(255,255,255,.1); box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.sec-card-m:active{transform:scale(.98)}
+.sec-card-m.is-active{border-color:rgba(201,162,75,.45); box-shadow:0 30px 60px rgba(201,162,75,.18)}
+.sec-card-m .shot{position:relative; aspect-ratio:9/13; background:linear-gradient(180deg,#0B0C10 0%,#15171f 100%); overflow:hidden}
+.sec-card-m .shot img{position:absolute; left:50%; top:50%; width:72%; aspect-ratio:9/19; object-fit:cover; object-position:top; border-radius:32px; transform:translate(-50%,-52%); border:1.5px solid rgba(255,255,255,.12); box-shadow:0 30px 60px rgba(0,0,0,.6)}
 .sec-card-m .shot::before{
-  content:""; position:absolute; inset:0; z-index:1;
-  background:radial-gradient(circle at 50% 30%, rgba(201,162,75,.25), transparent 60%);
+  content:""; position:absolute; inset:0; z-index:0;
+  background:radial-gradient(circle at 50% 35%, rgba(201,162,75,.18), transparent 65%);
 }
-.sec-card-m .body{padding:20px 22px 24px}
+.sec-card-m .shot::after{
+  content:"⤢ Tocca per aprire"; position:absolute; left:50%; bottom:14px; transform:translateX(-50%); z-index:3;
+  font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+  padding:7px 14px; border-radius:999px;
+  background:rgba(10,11,13,.85); color:var(--gold-2);
+  border:1px solid rgba(201,162,75,.35); backdrop-filter:blur(8px);
+}
+.sec-card-m .body{padding:18px 22px 20px}
 .sec-card-m .chip{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-2); font-weight:700}
-.sec-card-m h4{margin:6px 0 8px; color:#fff; font-size:22px}
-.sec-card-m p{margin:0; color:rgba(246,243,238,.7); font-size:14px; line-height:1.5}
-.sec-card-m .brand-label{margin-top:14px; font-size:12px; color:var(--gold); letter-spacing:.02em}
-.sector-dots{display:flex; gap:6px; justify-content:center; margin-top:10px}
-.sector-dots span{width:18px; height:3px; border-radius:2px; background:rgba(255,255,255,.15); transition:background .3s, width .3s}
+.sec-card-m h4{margin:6px 0 8px; color:#fff; font-size:20px; font-family:"Fraunces",serif}
+.sec-card-m p{margin:0; color:rgba(246,243,238,.7); font-size:13.5px; line-height:1.5}
+.sec-card-m .brand-label{margin-top:12px; font-size:11.5px; color:var(--gold); letter-spacing:.04em; font-weight:600}
+.sector-dots{display:flex; gap:6px; justify-content:center; margin-top:14px}
+.sector-dots span{width:18px; height:3px; border-radius:2px; background:rgba(255,255,255,.15); transition:background .3s, width .3s; cursor:pointer}
 .sector-dots span.on{background:var(--gold); width:30px}
 
 /* ============ BENTO ============ */
