@@ -1230,8 +1230,11 @@ serve(async (req) => {
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
 
     const origin = originUrl || "";
+    // Preview = sito iPhone-style (FoodPublicSite gi richiamer Strapizzami/Paperfish/etc tramite theme_config.template_variant)
     const previewUrl = isFood ? `${origin}/r/${tenant.slug}` : `${origin}/b/${tenant.slug}`;
-    const adminUrl = `${origin}/admin`;
+    // Admin = pannello ammin DEMO che riflette il template iPhone scelto (route /demo-admin/:slug)
+    // Cos il lead apre l'admin e vede la stessa identit visiva del suo sito (dark+gold per braceria, sakura per sushi, etc.)
+    const adminUrl = `${origin}/demo-admin/${tenant.slug}?variant=${encodeURIComponent(match.variant)}&sub=${encodeURIComponent(match.sub)}`;
 
     await updateRun({
       agents_status: { scout: "done", analyst: "done", curator: "done", copywriter: "running", builder: "done", closer: "running" },
