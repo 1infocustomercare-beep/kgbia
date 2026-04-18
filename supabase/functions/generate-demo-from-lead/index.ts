@@ -1230,10 +1230,10 @@ serve(async (req) => {
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
 
     const origin = originUrl || "";
-    // Preview = renderer mockup-driven che mostra direttamente il template iPhone selezionato
-    const previewUrl = `${origin}/preview/${tenant.slug}?variant=${encodeURIComponent(match.variant)}&sub=${encodeURIComponent(match.sub)}`;
-    // Admin = pannello ammin DEMO che riflette il template iPhone scelto (route /demo-admin/:slug)
-    // Cos il lead apre l'admin e vede la stessa identit visiva del suo sito (dark+gold per braceria, sakura per sushi, etc.)
+    // Sito demo reale: usa il renderer pubblico /b/:slug che legge theme_config e monta il template corretto
+    // (anche per i tenant food, perché BusinessPage fa fallback su restaurants quando non trova companies)
+    const previewUrl = `${origin}/b/${tenant.slug}`;
+    // Admin = pannello demo coerente con il template iPhone scelto
     const adminUrl = `${origin}/demo-admin/${tenant.slug}?variant=${encodeURIComponent(match.variant)}&sub=${encodeURIComponent(match.sub)}`;
 
     await updateRun({

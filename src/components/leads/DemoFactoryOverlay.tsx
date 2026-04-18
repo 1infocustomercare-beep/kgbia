@@ -166,10 +166,10 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                     <div className="px-3 py-2 flex items-center justify-between border-b border-white/10 bg-white/[0.03]">
                       <p className="text-[0.6rem] uppercase tracking-wider text-white/60 font-black flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        Preview live · navigabile
+                        Sito demo live · navigabile
                       </p>
                       <a href={result.previewUrl} target="_blank" rel="noreferrer" className="text-[0.6rem] font-bold text-purple-300 hover:text-white flex items-center gap-1">
-                        Apri <ExternalLink className="w-3 h-3" />
+                        Apri sito <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                     <div className="aspect-[9/16] max-h-[420px] bg-black/40">
@@ -332,7 +332,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
 
                   {/* Links */}
                   <div className="space-y-2">
-                    <LinkRow label="Sito Demo" url={result.previewUrl} copied={copied === "Sito"} onCopy={() => copy("Sito", result.previewUrl)} accent="#a78bfa" />
+                    <LinkRow label="Sito Demo Reale" url={result.previewUrl} copied={copied === "Sito"} onCopy={() => copy("Sito", result.previewUrl)} accent="#a78bfa" />
                     <LinkRow label="Pannello Admin" url={result.adminUrl} copied={copied === "Admin"} onCopy={() => copy("Admin", result.adminUrl)} accent="#14b8a6" />
                     {result.magicLink && (
                       <LinkRow label="Magic Link Lead (1-click login)" url={result.magicLink} copied={copied === "Magic"} onCopy={() => copy("Magic", result.magicLink!)} accent="#f59e0b" highlight />
