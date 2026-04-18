@@ -902,6 +902,153 @@ async function createCompanyTenant(
   return { id: cid, slug: c.slug };
 }
 
+/* ─── 11. COPYWRITER AGENT — messaggio WhatsApp + script chiamata + obiezioni ─── */
+async function generateOutreachKit(
+  lead: LeadInput,
+  brand: any,
+  match: SubSectorMatch,
+  previewUrl: string,
+): Promise<{
+  whatsappMessage: string;
+  whatsappLink: string | null;
+  callScript: { hook: string; pitch: string; close: string }[];
+  objections: { objection: string; reply: string }[];
+}> {
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  const sectorLabel = lead.sectorLabel || lead.sector;
+  const ownerHint = lead.businessName.split(" ")[0];
+
+  // Default fallback content (always returned if AI fails)
+  const fallbackWhatsApp = `Ciao ${ownerHint}! 👋
+
+Ho preparato per ${lead.businessName} una demo gratuita del nuovo sistema gestionale + sito ordini online che usano già 200+ ${sectorLabel} in Italia.
+
+✨ Guarda la tua versione personalizzata (foto del tuo locale, menu, colori): ${previewUrl}
+
+Ti va se ne parliamo 5 minuti questa settimana? Risparmi 8h/settimana e raddoppi gli ordini.`;
+
+  const fallbackScript = [
+    { hook: `Buongiorno ${ownerHint}, sono in zona ${lead.city || "la sua città"} per ${lead.businessName} — ha 90 secondi?`, pitch: "Ho preparato gratis una demo del vostro sito ordini con menu e foto reali. Volevo mostrarvela.", close: "Le mando il link su WhatsApp così la vede dal telefono — qual è il numero migliore?" },
+    { hook: `${ownerHint}, ho visto le recensioni di ${lead.businessName}: complimenti! Ho una proposta veloce.`, pitch: "I vostri concorrenti stanno passando agli ordini diretti senza commissioni. Vi ho preparato un esempio.", close: "5 minuti di video-call domani alle 15:00 le va bene?" },
+    { hook: `Salve, chiamo perché ho una demo pronta per ${lead.businessName}.`, pitch: "Sito + cassa + WhatsApp + ordini, tutto in uno. Demo già caricata coi vostri dati.", close: "Le invio il link ora, può aprirlo mentre parliamo." },
+  ];
+
+  const fallbackObjections = [
+    { objection: "Ho già un sito", reply: `Perfetto, ma il vostro sito non prende ordini diretti. Il nostro sì, e senza commissioni: a differenza di JustEat/Glovo che vi prendono il 30%, qui tenete tutto. Guardate la demo che vi ho preparato.` },
+    { objection: "Non ho tempo", reply: `Capisco, è proprio per questo: il sistema gestisce ordini/prenotazioni/recensioni in automatico. Vi fa risparmiare 8h a settimana. La demo dura 5 minuti.` },
+    { objection: "Costa troppo", reply: `90 giorni gratis, poi 79€/mese. Con 2 ordini in più al giorno è già rientrato. Glovo costa 30% di ogni ordine, qui paghi un canone fisso.` },
+    { objection: "Devo pensarci", reply: `Certo. Le lascio aperta la demo personalizzata — la apre quando vuole, nessun impegno. Le chiamo venerdì per sapere com'è andata?` },
+    { objection: "Non sono interessato", reply: `Capito ${ownerHint}. Posso farle una domanda? Quante ore al giorno passa al telefono per prenotazioni? Se più di 1, vale 5 minuti di confronto.` },
+  ];
+
+  if (!LOVABLE_API_KEY) {
+    return {
+      whatsappMessage: fallbackWhatsApp,
+      whatsappLink: lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, "")}?text=${encodeURIComponent(fallbackWhatsApp)}` : null,
+      callScript: fallbackScript,
+      objections: fallbackObjections,
+    };
+  }
+
+  try {
+    const sys = `Sei un senior sales copywriter italiano per Empire AI Group (SaaS gestionale per ${sectorLabel}). Tono: caldo, diretto, professionale, mai venditoriale. Usa "tu", emoji con misura.`;
+    const userPrompt = `Lead: ${lead.businessName} (${sectorLabel}) a ${lead.city || "Italia"}.
+Tagline brand: "${brand.tagline}"
+Demo personalizzata pronta: ${previewUrl}
+Sub-settore: ${match.sub}
+
+Genera un kit outreach professionale.`;
+
+    const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: sys },
+          { role: "user", content: userPrompt },
+        ],
+        tools: [{
+          type: "function",
+          function: {
+            name: "outreach_kit",
+            description: "Kit completo outreach: WhatsApp + script chiamata + obiezioni",
+            parameters: {
+              type: "object",
+              properties: {
+                whatsapp_message: { type: "string", description: "Messaggio WhatsApp personalizzato (max 600 caratteri, include il link demo)" },
+                call_script: {
+                  type: "array",
+                  description: "3 varianti di apertura chiamata",
+                  items: {
+                    type: "object",
+                    properties: {
+                      hook: { type: "string", description: "Frase di apertura (max 25 parole)" },
+                      pitch: { type: "string", description: "Pitch breve (max 30 parole)" },
+                      close: { type: "string", description: "CTA finale (max 20 parole)" },
+                    },
+                    required: ["hook", "pitch", "close"],
+                  },
+                },
+                objections: {
+                  type: "array",
+                  description: "5 obiezioni tipiche del settore con risposte",
+                  items: {
+                    type: "object",
+                    properties: {
+                      objection: { type: "string", description: "Obiezione tipica del titolare" },
+                      reply: { type: "string", description: "Risposta convincente (max 50 parole)" },
+                    },
+                    required: ["objection", "reply"],
+                  },
+                },
+              },
+              required: ["whatsapp_message", "call_script", "objections"],
+            },
+          },
+        }],
+        tool_choice: { type: "function", function: { name: "outreach_kit" } },
+      }),
+    });
+
+    if (!resp.ok) {
+      console.warn("[copywriter] AI gateway error", resp.status);
+      throw new Error(`gateway ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const args = data?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
+    if (!args) throw new Error("no tool call");
+    const parsed = JSON.parse(args);
+
+    const whatsappMessage = parsed.whatsapp_message || fallbackWhatsApp;
+    return {
+      whatsappMessage,
+      whatsappLink: lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, "")}?text=${encodeURIComponent(whatsappMessage)}` : null,
+      callScript: Array.isArray(parsed.call_script) && parsed.call_script.length ? parsed.call_script.slice(0, 3) : fallbackScript,
+      objections: Array.isArray(parsed.objections) && parsed.objections.length ? parsed.objections.slice(0, 5) : fallbackObjections,
+    };
+  } catch (e) {
+    console.warn("[copywriter] fallback used:", e);
+    return {
+      whatsappMessage: fallbackWhatsApp,
+      whatsappLink: lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, "")}?text=${encodeURIComponent(fallbackWhatsApp)}` : null,
+      callScript: fallbackScript,
+      objections: fallbackObjections,
+    };
+  }
+}
+
+/* ─── 12. CLOSER AGENT — credenziali admin demo provvisorie ─── */
+function generateAdminCredentials(lead: LeadInput): { email: string; password: string } {
+  const slugBase = slugify(lead.businessName).replace(/-/g, "").slice(0, 12) || "demo";
+  const stamp = Date.now().toString(36).slice(-4);
+  const email = lead.email || `demo-${slugBase}-${stamp}@empireaigroup.com`;
+  // Password leggibile ma sicura, da consegnare al lead
+  const password = `Empire${slugBase.charAt(0).toUpperCase()}${slugBase.slice(1, 6)}!${stamp}`;
+  return { email, password };
+}
+
 /* ─── MAIN HANDLER ─── */
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
