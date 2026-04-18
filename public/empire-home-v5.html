@@ -1482,6 +1482,42 @@ footer{padding:70px 0 32px; border-top:1px solid rgba(255,255,255,.08)}
   </div>
 </footer>
 
+<!-- ===== STICKY MOBILE CTA ===== -->
+<div class="sticky-cta" id="stickyCta" role="region" aria-label="CTA rapida">
+  <div class="text">
+    <b>3 posti · Aprile 2026</b>
+    <span>Setup in 14 giorni · Garanzia 90gg</span>
+  </div>
+  <a href="#call" class="btn btn-gold">Prenota call <span class="arr">→</span></a>
+</div>
+
+<!-- ===== LIGHTBOX MODAL ===== -->
+<div class="lb-overlay" id="lbOverlay" role="dialog" aria-modal="true" aria-label="Anteprima progetto">
+  <div class="lb-shell">
+    <button class="lb-nav prev" id="lbPrev" type="button" aria-label="Precedente">‹</button>
+    <button class="lb-nav next" id="lbNext" type="button" aria-label="Successivo">›</button>
+    <div class="lb-phone">
+      <img id="lbImg" src="" alt="">
+      <div class="lb-glare"></div>
+    </div>
+    <div class="lb-info">
+      <span class="tag" id="lbTag">SETTORE</span>
+      <h3 id="lbName">—</h3>
+      <p id="lbDesc">Webapp custom + agenti AI dedicati. Costruita su misura per il cliente, già live e operativa 24/7.</p>
+      <div class="lb-meta" id="lbMeta"></div>
+      <div class="lb-ctas">
+        <a href="#call" class="btn btn-gold" id="lbCta">Voglio una webapp così <span class="arr">→</span></a>
+        <a href="#portfolio" class="btn btn-ghost">Vedi tutti i 38 progetti</a>
+      </div>
+      <div class="lb-counter">
+        <span id="lbCounter">1 / 36</span>
+        <button id="lbAuto" type="button">▶ Auto-play</button>
+      </div>
+    </div>
+    <button class="lb-close" id="lbClose" type="button" aria-label="Chiudi">✕</button>
+  </div>
+</div>
+
 <script>
 /* ============ DATA ============ */
 const SUPA = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
