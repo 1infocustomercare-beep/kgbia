@@ -550,6 +550,8 @@ function App() {
                       <Route path="/demo" element={<DemoDirectoryPage />} />
                       <Route path="/demo/:slug" element={<IndustryDemoPage />} />
                       <Route path="/demo/:slug/admin" element={<DemoAdminPage />} />
+                      {/* Demo admin generato dalla Demo Factory: stesso DemoAdminPage che applica theme tramite ?variant= */}
+                      <Route path="/demo-admin/:slug" element={<DemoAdminPage />} />
                       <Route path="/r/:slug" element={<RestaurantPage />} />
                       <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
                       <Route path="/admin" element={<AuthPage />} />
