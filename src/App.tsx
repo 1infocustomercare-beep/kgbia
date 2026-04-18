@@ -542,7 +542,7 @@ function App() {
                       {/* Public routes */}
                       <Route path="/" element={<LandingPage />} />
                       <Route path="/index" element={<LandingPage />} />
-                      <Route path="/home" element={<LandingPage />} />
+                      <Route path="/home" element={<StaticIframePage src="/empire-home-v4.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
                       <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/home#pricing" replace />} />
                       <Route path="/marketing" element={<MarketingPage />} />
