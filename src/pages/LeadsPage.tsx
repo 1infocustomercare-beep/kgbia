@@ -278,6 +278,10 @@ const RADIUS_OPTIONS = [
 
 /* ─── COMPONENT ─── */
 export default function LeadsPage() {
+  // 💰 Sistema crediti venditore — gating su azioni AI costose
+  const { balance: creditBalance, getCost, consume: consumeSellerCredits, totalSpent30d } = useSellerCredits();
+  const [pendingDemoFactory, setPendingDemoFactory] = useState<{ lead: Lead & { _sector: string }; preview: ManualPreviewSelection | null } | null>(null);
+
   // Search
   const [city, setCity] = useState("");
   const [sector, setSector] = useState("food");
