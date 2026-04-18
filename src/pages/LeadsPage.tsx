@@ -20,7 +20,10 @@ import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFa
 import SellerCRM from "@/components/leads/SellerCRM";
 import GpsRadarPanel, { GpsLocation } from "@/components/leads/GpsRadarPanel";
 import SpeedDialList from "@/components/leads/SpeedDialList";
+import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
+import CreditConfirmDialog from "@/components/leads/CreditConfirmDialog";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
+import { useSellerCredits } from "@/hooks/useSellerCredits";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
 
 /* ─── Types ─── */
@@ -275,6 +278,10 @@ const RADIUS_OPTIONS = [
 
 /* ─── COMPONENT ─── */
 export default function LeadsPage() {
+  // 💰 Sistema crediti venditore — gating su azioni AI costose
+  const { balance: creditBalance, getCost, consume: consumeSellerCredits, totalSpent30d } = useSellerCredits();
+  const [pendingDemoFactory, setPendingDemoFactory] = useState<{ lead: Lead & { _sector: string }; preview: ManualPreviewSelection | null } | null>(null);
+
   // Search
   const [city, setCity] = useState("");
   const [sector, setSector] = useState("food");
@@ -412,10 +419,28 @@ export default function LeadsPage() {
   const runDemoFactory = useCallback(async (lead: Lead & { _sector: string }, preview?: ManualPreviewSelection | null) => {
     if (!lead?.name) return;
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user?.id) {
-      toast.error("Devi essere autenticato come partner per generare la demo");
+    if (!user) {
+      toast.error("Devi essere loggato per generare una demo");
       return;
     }
+
+    // ─── 💰 GATING CREDITI: consuma 5 crediti server-side ───
+    const consumeRes = await consumeSellerCredits("generate_demo_from_lead", {
+      lead_name: lead.name, sector: lead._sector, city: lead.city,
+    });
+    if (!consumeRes.success) {
+      if (consumeRes.error === "insufficient_credits") {
+        toast.error(`Crediti insufficienti. Servono ${consumeRes.required}, hai ${consumeRes.balance}.`, {
+          description: "Ricarica dal tuo profilo per continuare.",
+          action: { label: "Ricarica", onClick: () => window.location.assign("/partner/profile?tab=credits") },
+          duration: 7000,
+        });
+      } else {
+        toast.error("Impossibile avviare la Demo Factory", { description: consumeRes.error });
+      }
+      return;
+    }
+
     setDemoFactoryOpen(true);
     setDemoFactoryLoading(true);
     setDemoFactoryResult(null);
@@ -469,9 +494,10 @@ export default function LeadsPage() {
         throw new Error(error?.message || data?.error || "Generazione fallita");
       }
 
-      setDemoFactoryResult(data as DemoFactoryResult);
-      setDemoFactoryProgress("Completato!");
-      toast.success(`Demo creata per ${lead.name}`, { description: data.previewUrl });
+      setDemoFactoryResult(data);
+      toast.success(`✓ Demo creata · -${consumeRes.credits_used} crediti · Saldo: ${consumeRes.remaining_balance}`, {
+        description: data.previewUrl,
+      });
     } catch (err: any) {
       console.error("[runDemoFactory] error", err);
       toast.error("Errore creazione demo", { description: err?.message || "Riprova" });
@@ -479,6 +505,11 @@ export default function LeadsPage() {
     } finally {
       setDemoFactoryLoading(false);
     }
+  }, [consumeSellerCredits]);
+
+  /* Wrapper: apre dialog di conferma crediti prima di lanciare la Demo Factory */
+  const requestDemoFactory = useCallback((lead: Lead & { _sector: string }, preview?: ManualPreviewSelection | null) => {
+    setPendingDemoFactory({ lead, preview: preview || null });
   }, []);
 
   /* ─── Validate & launch manual analysis ─── */
@@ -629,53 +660,13 @@ export default function LeadsPage() {
     }
   }, [city]);
 
-  /* ─── 🚀 AUTO DEMO PRE-WARM — genera demo in background per i top lead della ricerca ─── */
-  /* Limite: solo 3 top lead per non sprecare crediti AI/Firecrawl. Risultato salvato sul lead. */
-  const autoPrewarmDemos = useCallback(async (leads: (Lead & { _score: number; _sector: string })[]) => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user?.id) return;
-
-    // Top 3 con sito web (massima qualità di scraping) o telefono (per outreach)
-    const candidates = leads
-      .filter(l => l.website || l.phone)
-      .sort((a, b) => (b._score || 0) - (a._score || 0))
-      .slice(0, 3);
-
-    if (candidates.length === 0) return;
-
-    console.log(`[auto-prewarm] avvio pipeline silenziosa per ${candidates.length} lead`);
-
-    // Sequenziale per non saturare Firecrawl/AI Gateway
-    for (const lead of candidates) {
-      try {
-        await supabase.functions.invoke("generate-demo-from-lead", {
-          body: {
-            lead: {
-              businessName: lead.name,
-              sector: lead._sector,
-              sectorLabel: SECTOR_OPTIONS.find(s => s.value === lead._sector)?.label || lead._sector,
-              city: lead.city,
-              zone: lead.zone,
-              fullAddress: lead.full_address,
-              phone: lead.phone,
-              email: lead.email,
-              website: lead.website,
-              instagram: lead.instagram,
-              facebook: lead.facebook,
-              googleRating: lead.google_rating,
-              googleReviews: lead.google_reviews,
-              googleMapsUrl: lead.google_maps_url,
-            },
-            partnerId: user.id,
-            originUrl: window.location.origin,
-          },
-        });
-        // marca subito sul UI
-        setResults(prev => prev.map(r => r.name === lead.name ? { ...r, _demoReady: true } as any : r));
-      } catch (e) {
-        console.warn("[auto-prewarm] error per", lead.name, e);
-      }
-    }
+  /* ─── 🚀 AUTO DEMO PRE-WARM — DISABILITATO ───
+   * In passato pre-generava 3 demo in background per ogni ricerca, bruciando 15 crediti AI
+   * silenziosamente (€1.35 di costo reale per ogni search). Ora la Demo Factory parte SOLO
+   * su click esplicito del venditore, con dialog di conferma e gating crediti server-side. */
+  const autoPrewarmDemos = useCallback(async (_leads: (Lead & { _score: number; _sector: string })[]) => {
+    // No-op intenzionale — Demo Factory ora è on-demand con gating crediti.
+    return;
   }, []);
 
   /* ─── Search ─── */
@@ -963,12 +954,23 @@ export default function LeadsPage() {
         onClose={() => setShowPicker(false)}
         onSelect={(sel) => {
           setCustomPreview(sel);
-          // Auto-trigger demo factory with the selected preview if a lead is currently open
-          if (selected) {
-            runDemoFactory(selected, sel);
-          }
+          if (selected) requestDemoFactory(selected, sel);
         }}
         initialSector={selected?._sector}
+      />
+
+      {/* 💰 Dialog conferma consumo crediti prima della Demo Factory */}
+      <CreditConfirmDialog
+        open={!!pendingDemoFactory}
+        cost={getCost("generate_demo_from_lead")}
+        balance={creditBalance}
+        contextLabel={pendingDemoFactory ? `Demo per ${pendingDemoFactory.lead.name}` : undefined}
+        onCancel={() => setPendingDemoFactory(null)}
+        onConfirm={() => {
+          const p = pendingDemoFactory;
+          setPendingDemoFactory(null);
+          if (p) runDemoFactory(p.lead, p.preview);
+        }}
       />
 
       <DemoFactoryOverlay
@@ -1011,6 +1013,12 @@ export default function LeadsPage() {
       </div>
 
       <div className="relative z-10 space-y-4">
+
+      {/* 💰 Badge crediti AI sempre visibile in alto a destra */}
+      <div className="flex justify-end">
+        <SellerCreditsBadge balance={creditBalance} spent30d={totalSpent30d} />
+      </div>
+
 
       {/* HERO — UNIFIED LIVING MASCOT (single central organism with embedded data-core) */}
       <motion.div
@@ -1838,7 +1846,7 @@ export default function LeadsPage() {
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <button
-                      onClick={() => runDemoFactory(selected, customPreview)}
+                      onClick={() => requestDemoFactory(selected, customPreview)}
                       disabled={demoFactoryLoading}
                       className="text-[9px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1 disabled:opacity-50"
                       style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", color: "#fff", boxShadow: "0 4px 14px rgba(167,139,250,0.35)" }}

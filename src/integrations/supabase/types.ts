@@ -1569,26 +1569,35 @@ export type Database = {
       demo_credit_usage: {
         Row: {
           action: string
+          action_label: string | null
+          cost_eur_estimate: number | null
           created_at: string
           credits_used: number
           expires_at: string | null
           id: string
+          metadata: Json | null
           user_id: string
         }
         Insert: {
           action?: string
+          action_label?: string | null
+          cost_eur_estimate?: number | null
           created_at?: string
           credits_used?: number
           expires_at?: string | null
           id?: string
+          metadata?: Json | null
           user_id: string
         }
         Update: {
           action?: string
+          action_label?: string | null
+          cost_eur_estimate?: number | null
           created_at?: string
           credits_used?: number
           expires_at?: string | null
           id?: string
+          metadata?: Json | null
           user_id?: string
         }
         Relationships: []
@@ -3146,6 +3155,45 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_credit_purchases: {
+        Row: {
+          amount_eur: number
+          completed_at: string | null
+          created_at: string | null
+          credits_purchased: number
+          id: string
+          package_label: string
+          status: string
+          stripe_payment_intent: string | null
+          stripe_session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_eur: number
+          completed_at?: string | null
+          created_at?: string | null
+          credits_purchased: number
+          id?: string
+          package_label: string
+          status?: string
+          stripe_payment_intent?: string | null
+          stripe_session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_eur?: number
+          completed_at?: string | null
+          created_at?: string | null
+          credits_purchased?: number
+          id?: string
+          package_label?: string
+          status?: string
+          stripe_payment_intent?: string | null
+          stripe_session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       partner_demo_credits: {
         Row: {
           balance: number
@@ -4346,6 +4394,42 @@ export type Database = {
         }
         Relationships: []
       }
+      seller_action_costs: {
+        Row: {
+          action: string
+          cost_eur_estimate: number | null
+          created_at: string | null
+          credit_cost: number
+          description: string | null
+          id: string
+          is_active: boolean | null
+          label: string
+          updated_at: string | null
+        }
+        Insert: {
+          action: string
+          cost_eur_estimate?: number | null
+          created_at?: string | null
+          credit_cost?: number
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          label: string
+          updated_at?: string | null
+        }
+        Update: {
+          action?: string
+          cost_eur_estimate?: number | null
+          created_at?: string | null
+          credit_cost?: number
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          label?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       seo_settings: {
         Row: {
           company_id: string
@@ -5141,12 +5225,20 @@ export type Database = {
         Args: { p_partner_id: string }
         Returns: boolean
       }
+      consume_seller_credits: {
+        Args: { p_action: string; p_metadata?: Json }
+        Returns: Json
+      }
       get_partner_stripe_account: {
         Args: { partner_user_id: string }
         Returns: {
           onboarding_complete: boolean
           stripe_account_id: string
         }[]
+      }
+      get_seller_credit_balance: {
+        Args: { p_user_id?: string }
+        Returns: number
       }
       get_user_company: { Args: { p_user_id: string }; Returns: string }
       has_role: {
