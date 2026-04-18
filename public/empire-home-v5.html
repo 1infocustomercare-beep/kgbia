@@ -1686,7 +1686,7 @@ let activeSector = 0, autoTimer = null;
   if(list){
     list.innerHTML = SECTORS.map((s,i)=>{
       const p = proj(s.slug);
-      return `<div class="sector-card" data-idx="${i}" data-active="${i===0}">
+      return `<div class="sector-card" data-idx="${i}" data-slug="${p.slug}" data-active="${i===0}">
         <h4>${s.tag}<span class="chip">${s.agents}</span></h4>
         <p>${s.desc}</p>
         <div class="brand">${p.brand} — ${p.name}</div>
@@ -1696,7 +1696,7 @@ let activeSector = 0, autoTimer = null;
   if(track){
     track.innerHTML = SECTORS.map((s,i)=>{
       const p = proj(s.slug);
-      return `<div class="sec-card-m" data-idx="${i}">
+      return `<div class="sec-card-m" data-idx="${i}" data-slug="${p.slug}" role="button" tabindex="0" aria-label="Apri ${p.name}">
         <div class="shot"><img loading="lazy" alt="${p.name}" src="${p.img}"></div>
         <div class="body">
           <div class="chip">${s.agents}</div>
@@ -1812,8 +1812,8 @@ let orbAngle = 0, orbTarget = 0, orbPaused = false;
   const N = 12;
   const pick = PROJECTS.slice(0, N);
   orb.innerHTML = pick.map((p,i)=>`
-    <div class="orbit-item" data-i="${i}">
-      <div class="phone"><img loading="lazy" alt="${p.name}" src="${p.img}"><span class="badge">${p.brand}</span></div>
+    <div class="orbit-item" data-i="${i}" data-slug="${p.slug}" role="button" tabindex="0" aria-label="Apri ${p.name}">
+      <div class="phone" style="cursor:zoom-in"><img loading="lazy" alt="${p.name}" src="${p.img}"><span class="badge">${p.brand}</span></div>
     </div>`).join('');
   function layout(){
     const w = orb.clientWidth, h = orb.clientHeight;
