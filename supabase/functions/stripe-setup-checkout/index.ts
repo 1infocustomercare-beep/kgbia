@@ -67,8 +67,8 @@ serve(async (req) => {
           transfer_group: transferGroup,
           metadata,
         },
-        success_url: successUrl || "https://empire.app/dashboard?setup=success",
-        cancel_url: cancelUrl || "https://empire.app/dashboard?setup=cancelled",
+        success_url: successUrl || `${req.headers.get("origin") || "https://empireia.lovable.app"}/dashboard?setup=success`,
+        cancel_url: cancelUrl || `${req.headers.get("origin") || "https://empireia.lovable.app"}/dashboard?setup=cancelled`,
         metadata,
       });
 
@@ -93,8 +93,8 @@ serve(async (req) => {
         subscription_data: {
           metadata: { ...metadata, installmentsTotal: String(selectedPlan.installments) },
         },
-        success_url: successUrl || "https://empire.app/dashboard?setup=success",
-        cancel_url: cancelUrl || "https://empire.app/dashboard?setup=cancelled",
+        success_url: successUrl || `${req.headers.get("origin") || "https://empireia.lovable.app"}/dashboard?setup=success`,
+        cancel_url: cancelUrl || `${req.headers.get("origin") || "https://empireia.lovable.app"}/dashboard?setup=cancelled`,
         metadata,
       });
 

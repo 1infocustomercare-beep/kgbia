@@ -130,10 +130,12 @@ serve(async (req) => {
     }
 
     // Generate Account Link for onboarding
+    // Use request origin as fallback so it works on preview, custom domain and production
+    const origin = req.headers.get("origin") || req.headers.get("referer")?.replace(/\/[^/]*$/, "") || "https://empireia.lovable.app";
     const accountLink = await stripe.accountLinks.create({
       account: stripeAccountId,
-      refresh_url: refreshUrl || "https://empire.app/partner?stripe=refresh",
-      return_url: returnUrl || "https://empire.app/partner?stripe=success",
+      refresh_url: refreshUrl || `${origin}/partner?stripe=refresh`,
+      return_url: returnUrl || `${origin}/partner?stripe=success`,
       type: "account_onboarding",
     });
 
