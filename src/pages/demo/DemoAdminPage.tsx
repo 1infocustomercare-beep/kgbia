@@ -1032,7 +1032,6 @@ const VARIANT_THEME: Record<string, { accent: string; bg: string; surface: strin
   "cote-obsidian":       { accent: "#C9A84C", bg: "#0a0a0a", surface: "#1a1a1a", label: "Braceria Premium" },
   "cote-marble":         { accent: "#8b6f47", bg: "#1a1612", surface: "#2a221b", label: "Ristorante Marble" },
   "cote-ivory":          { accent: "#c9a876", bg: "#1a1612", surface: "#2a221b", label: "Bakery Ivory" },
-  "batey-pacifico":      { accent: "#5cbdb9", bg: "#0c2340", surface: "#143654", label: "Pesce Caraibico" },
   "lavang-noir":         { accent: "#d4af37", bg: "#0d0d0d", surface: "#1a1a1a", label: "Vietnamese Noir" },
   "midtown-kosher":      { accent: "#8b6f47", bg: "#1a1612", surface: "#2a221b", label: "Kosher Marble" },
   "neo-nails-lavender":  { accent: "#9b72cf", bg: "#1a0d24", surface: "#2a1840", label: "Nails Lavender" },
