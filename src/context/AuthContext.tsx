@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode, forwardRef } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 import { clearIndustryCache } from "@/hooks/useIndustry";
@@ -82,7 +82,7 @@ export const useAuth = () => {
   return ctx;
 };
 
-export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }, _ref) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -353,6 +353,4 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
       {children}
     </AuthContext.Provider>
   );
-});
-
-AuthProvider.displayName = "AuthProvider";
+};
