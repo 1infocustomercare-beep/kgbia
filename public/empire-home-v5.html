@@ -248,7 +248,12 @@ body.menu-open .nav-sheet a:nth-child(7){transition-delay:.35s}
   border:1.5px solid rgba(255,255,255,.09);
   box-shadow:0 40px 100px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.04) inset;
   overflow:hidden; transform-style:preserve-3d; will-change:transform;
+  --tx:0px; --ty:0px; --mx:0deg; --my:0deg; --rx:0deg; --ry:0deg;
+  transform:translate3d(var(--tx),var(--ty),0) rotateY(calc(var(--ry) + var(--mx))) rotateX(calc(var(--rx) + var(--my)));
+  transition:box-shadow .4s var(--ease);
+  cursor:zoom-in;
 }
+.phone:hover{box-shadow:0 50px 120px rgba(201,162,75,.25), 0 0 0 1px rgba(201,162,75,.18) inset}
 .phone::before{
   content:""; position:absolute; top:10px; left:50%; transform:translateX(-50%);
   width:90px; height:22px; border-radius:14px; background:#000;
@@ -259,12 +264,16 @@ body.menu-open .nav-sheet a:nth-child(7){transition-delay:.35s}
   position:absolute; bottom:14px; left:50%; transform:translateX(-50%);
   padding:6px 12px; border-radius:999px; font-size:10.5px; font-weight:600; letter-spacing:.04em;
   background:rgba(10,11,13,.75); border:1px solid rgba(255,255,255,.12);
-  backdrop-filter:blur(10px); white-space:nowrap; color:#fff;
+  backdrop-filter:blur(10px); white-space:nowrap; color:#fff; z-index:4;
 }
 .phone-stack .p1{left:4%; top:20px; --ry:-10deg; --rx:4deg; z-index:3}
 .phone-stack .p2{left:36%; top:-20px; --ry:2deg; z-index:4}
 .phone-stack .p3{right:-4%; top:70px; --ry:12deg; --rx:-3deg; z-index:2}
 .phone-stack .p4{left:18%; bottom:-10px; --ry:-5deg; z-index:1; opacity:.85}
+.phone-stack .phone.is-active{
+  box-shadow:0 60px 140px rgba(201,162,75,.32), 0 0 0 2px rgba(201,162,75,.4) inset;
+  z-index:10;
+}
 @media (max-width:560px){
   .phone-stack .p1{left:-2%; width:200px}
   .phone-stack .p2{left:32%; width:210px}
