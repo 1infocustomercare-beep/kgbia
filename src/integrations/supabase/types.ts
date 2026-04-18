@@ -1593,6 +1593,84 @@ export type Database = {
         }
         Relationships: []
       }
+      demo_factory_runs: {
+        Row: {
+          admin_email: string | null
+          admin_password: string | null
+          admin_url: string | null
+          agents_status: Json
+          brand_kit: Json | null
+          call_script: Json | null
+          completed_at: string | null
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          lead_id: string | null
+          objections: Json | null
+          owner_id: string
+          preview_url: string | null
+          scraped_data: Json | null
+          started_at: string
+          status: string
+          sub_sector: string | null
+          template_variant: string | null
+          updated_at: string
+          whatsapp_link: string | null
+          whatsapp_message: string | null
+        }
+        Insert: {
+          admin_email?: string | null
+          admin_password?: string | null
+          admin_url?: string | null
+          agents_status?: Json
+          brand_kit?: Json | null
+          call_script?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          lead_id?: string | null
+          objections?: Json | null
+          owner_id: string
+          preview_url?: string | null
+          scraped_data?: Json | null
+          started_at?: string
+          status?: string
+          sub_sector?: string | null
+          template_variant?: string | null
+          updated_at?: string
+          whatsapp_link?: string | null
+          whatsapp_message?: string | null
+        }
+        Update: {
+          admin_email?: string | null
+          admin_password?: string | null
+          admin_url?: string | null
+          agents_status?: Json
+          brand_kit?: Json | null
+          call_script?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          lead_id?: string | null
+          objections?: Json | null
+          owner_id?: string
+          preview_url?: string | null
+          scraped_data?: Json | null
+          started_at?: string
+          status?: string
+          sub_sector?: string | null
+          template_variant?: string | null
+          updated_at?: string
+          whatsapp_link?: string | null
+          whatsapp_message?: string | null
+        }
+        Relationships: []
+      }
       drivers: {
         Row: {
           company_id: string

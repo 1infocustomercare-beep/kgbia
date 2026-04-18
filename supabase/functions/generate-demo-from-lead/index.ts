@@ -902,6 +902,153 @@ async function createCompanyTenant(
   return { id: cid, slug: c.slug };
 }
 
+/* ─── 11. COPYWRITER AGENT — messaggio WhatsApp + script chiamata + obiezioni ─── */
+async function generateOutreachKit(
+  lead: LeadInput,
+  brand: any,
+  match: SubSectorMatch,
+  previewUrl: string,
+): Promise<{
+  whatsappMessage: string;
+  whatsappLink: string | null;
+  callScript: { hook: string; pitch: string; close: string }[];
+  objections: { objection: string; reply: string }[];
+}> {
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  const sectorLabel = lead.sectorLabel || lead.sector;
+  const ownerHint = lead.businessName.split(" ")[0];
+
+  // Default fallback content (always returned if AI fails)
+  const fallbackWhatsApp = `Ciao ${ownerHint}! 👋
+
+Ho preparato per ${lead.businessName} una demo gratuita del nuovo sistema gestionale + sito ordini online che usano già 200+ ${sectorLabel} in Italia.
+
+✨ Guarda la tua versione personalizzata (foto del tuo locale, menu, colori): ${previewUrl}
+
+Ti va se ne parliamo 5 minuti questa settimana? Risparmi 8h/settimana e raddoppi gli ordini.`;
+
+  const fallbackScript = [
+    { hook: `Buongiorno ${ownerHint}, sono in zona ${lead.city || "la sua città"} per ${lead.businessName} — ha 90 secondi?`, pitch: "Ho preparato gratis una demo del vostro sito ordini con menu e foto reali. Volevo mostrarvela.", close: "Le mando il link su WhatsApp così la vede dal telefono — qual è il numero migliore?" },
+    { hook: `${ownerHint}, ho visto le recensioni di ${lead.businessName}: complimenti! Ho una proposta veloce.`, pitch: "I vostri concorrenti stanno passando agli ordini diretti senza commissioni. Vi ho preparato un esempio.", close: "5 minuti di video-call domani alle 15:00 le va bene?" },
+    { hook: `Salve, chiamo perché ho una demo pronta per ${lead.businessName}.`, pitch: "Sito + cassa + WhatsApp + ordini, tutto in uno. Demo già caricata coi vostri dati.", close: "Le invio il link ora, può aprirlo mentre parliamo." },
+  ];
+
+  const fallbackObjections = [
+    { objection: "Ho già un sito", reply: `Perfetto, ma il vostro sito non prende ordini diretti. Il nostro sì, e senza commissioni: a differenza di JustEat/Glovo che vi prendono il 30%, qui tenete tutto. Guardate la demo che vi ho preparato.` },
+    { objection: "Non ho tempo", reply: `Capisco, è proprio per questo: il sistema gestisce ordini/prenotazioni/recensioni in automatico. Vi fa risparmiare 8h a settimana. La demo dura 5 minuti.` },
+    { objection: "Costa troppo", reply: `90 giorni gratis, poi 79€/mese. Con 2 ordini in più al giorno è già rientrato. Glovo costa 30% di ogni ordine, qui paghi un canone fisso.` },
+    { objection: "Devo pensarci", reply: `Certo. Le lascio aperta la demo personalizzata — la apre quando vuole, nessun impegno. Le chiamo venerdì per sapere com'è andata?` },
+    { objection: "Non sono interessato", reply: `Capito ${ownerHint}. Posso farle una domanda? Quante ore al giorno passa al telefono per prenotazioni? Se più di 1, vale 5 minuti di confronto.` },
+  ];
+
+  if (!LOVABLE_API_KEY) {
+    return {
+      whatsappMessage: fallbackWhatsApp,
+      whatsappLink: lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, "")}?text=${encodeURIComponent(fallbackWhatsApp)}` : null,
+      callScript: fallbackScript,
+      objections: fallbackObjections,
+    };
+  }
+
+  try {
+    const sys = `Sei un senior sales copywriter italiano per Empire AI Group (SaaS gestionale per ${sectorLabel}). Tono: caldo, diretto, professionale, mai venditoriale. Usa "tu", emoji con misura.`;
+    const userPrompt = `Lead: ${lead.businessName} (${sectorLabel}) a ${lead.city || "Italia"}.
+Tagline brand: "${brand.tagline}"
+Demo personalizzata pronta: ${previewUrl}
+Sub-settore: ${match.sub}
+
+Genera un kit outreach professionale.`;
+
+    const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: sys },
+          { role: "user", content: userPrompt },
+        ],
+        tools: [{
+          type: "function",
+          function: {
+            name: "outreach_kit",
+            description: "Kit completo outreach: WhatsApp + script chiamata + obiezioni",
+            parameters: {
+              type: "object",
+              properties: {
+                whatsapp_message: { type: "string", description: "Messaggio WhatsApp personalizzato (max 600 caratteri, include il link demo)" },
+                call_script: {
+                  type: "array",
+                  description: "3 varianti di apertura chiamata",
+                  items: {
+                    type: "object",
+                    properties: {
+                      hook: { type: "string", description: "Frase di apertura (max 25 parole)" },
+                      pitch: { type: "string", description: "Pitch breve (max 30 parole)" },
+                      close: { type: "string", description: "CTA finale (max 20 parole)" },
+                    },
+                    required: ["hook", "pitch", "close"],
+                  },
+                },
+                objections: {
+                  type: "array",
+                  description: "5 obiezioni tipiche del settore con risposte",
+                  items: {
+                    type: "object",
+                    properties: {
+                      objection: { type: "string", description: "Obiezione tipica del titolare" },
+                      reply: { type: "string", description: "Risposta convincente (max 50 parole)" },
+                    },
+                    required: ["objection", "reply"],
+                  },
+                },
+              },
+              required: ["whatsapp_message", "call_script", "objections"],
+            },
+          },
+        }],
+        tool_choice: { type: "function", function: { name: "outreach_kit" } },
+      }),
+    });
+
+    if (!resp.ok) {
+      console.warn("[copywriter] AI gateway error", resp.status);
+      throw new Error(`gateway ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const args = data?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
+    if (!args) throw new Error("no tool call");
+    const parsed = JSON.parse(args);
+
+    const whatsappMessage = parsed.whatsapp_message || fallbackWhatsApp;
+    return {
+      whatsappMessage,
+      whatsappLink: lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, "")}?text=${encodeURIComponent(whatsappMessage)}` : null,
+      callScript: Array.isArray(parsed.call_script) && parsed.call_script.length ? parsed.call_script.slice(0, 3) : fallbackScript,
+      objections: Array.isArray(parsed.objections) && parsed.objections.length ? parsed.objections.slice(0, 5) : fallbackObjections,
+    };
+  } catch (e) {
+    console.warn("[copywriter] fallback used:", e);
+    return {
+      whatsappMessage: fallbackWhatsApp,
+      whatsappLink: lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, "")}?text=${encodeURIComponent(fallbackWhatsApp)}` : null,
+      callScript: fallbackScript,
+      objections: fallbackObjections,
+    };
+  }
+}
+
+/* ─── 12. CLOSER AGENT — credenziali admin demo provvisorie ─── */
+function generateAdminCredentials(lead: LeadInput): { email: string; password: string } {
+  const slugBase = slugify(lead.businessName).replace(/-/g, "").slice(0, 12) || "demo";
+  const stamp = Date.now().toString(36).slice(-4);
+  const email = lead.email || `demo-${slugBase}-${stamp}@empireaigroup.com`;
+  // Password leggibile ma sicura, da consegnare al lead
+  const password = `Empire${slugBase.charAt(0).toUpperCase()}${slugBase.slice(1, 6)}!${stamp}`;
+  return { email, password };
+}
+
 /* ─── MAIN HANDLER ─── */
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -934,22 +1081,56 @@ serve(async (req) => {
     }
 
     const lead = { ...rawLead };
+    const startedAt = Date.now();
 
-    // 1. Scrape (parallel with IG if available)
+    // Track this pipeline run
+    const { leadId } = body as { leadId?: string };
+    let runId: string | null = null;
+    const updateRun = async (patch: Record<string, any>) => {
+      if (!runId) return;
+      try {
+        await supabase.from("demo_factory_runs").update(patch).eq("id", runId);
+      } catch (e) {
+        console.warn("[run-update] error", e);
+      }
+    };
+    try {
+      const { data: runRow } = await supabase
+        .from("demo_factory_runs")
+        .insert({
+          lead_id: leadId || null,
+          owner_id: partnerId,
+          status: "running",
+          agents_status: { scout: "running", analyst: "pending", curator: "pending", copywriter: "pending", builder: "pending", closer: "pending" },
+        })
+        .select("id")
+        .single();
+      runId = runRow?.id || null;
+    } catch (e) {
+      console.warn("[run-create] error", e);
+    }
+
+    // ─── AGENT 1: SCOUT — scrape sito + Instagram ───
     const [scraped, igImages] = await Promise.all([
       lead.website ? deepScrape(lead.website) : Promise.resolve(null),
       lead.instagram ? instagramOgImage(lead.instagram) : Promise.resolve([]),
     ]);
-
-    // 1b. Auto-correct sector if site detection finds something more specific
     if (scraped?.detectedSectorHint && lead.sector === "custom") {
       lead.sector = scraped.detectedSectorHint;
     }
+    await updateRun({ agents_status: { scout: "done", analyst: "running", curator: "pending", copywriter: "pending", builder: "pending", closer: "pending" } });
 
-    // 2. AI brand kit
+    // ─── AGENT 2: ANALYST — AI brand kit + sub-settore detection ───
     const brand = await aiEnrichBrand(lead, scraped);
+    const isFood = FOOD_SECTORS.has(lead.sector);
+    const match = detectSubSector(lead, scraped?.markdown);
+    await updateRun({
+      agents_status: { scout: "done", analyst: "done", curator: "running", copywriter: "pending", builder: "pending", closer: "pending" },
+      sub_sector: match.sub,
+      template_variant: match.variant,
+    });
 
-    // 3. Palette: scraped > preview style > AI
+    // ─── AGENT 3: CURATOR — palette + immagini + theme ───
     const aiPalette: BrandPalette = brand.palette;
     const scrapedColors = scraped?.branding?.colors;
     let palette: BrandPalette = aiPalette;
@@ -963,16 +1144,8 @@ serve(async (req) => {
     } else if (preview?.styleName) {
       palette = paletteFromStyleName(preview.styleName, aiPalette);
     }
-
-    // 4. Pre-create tenant ID for storage paths (UUID generation)
     const tenantUuid = crypto.randomUUID();
-
-    // 5. Resolve images (real → AI fallback)
     const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid);
-
-    // 6. Tenant — auto-detect sub-sector universale (food + tutti gli altri settori)
-    const isFood = FOOD_SECTORS.has(lead.sector);
-    const match = detectSubSector(lead, scraped?.markdown);
     const themeConfig: Record<string, any> = {
       template_variant: match.variant,
       sub_sector: match.sub,
@@ -982,8 +1155,12 @@ serve(async (req) => {
       auto_matched: true,
     };
     console.log(`[demo-factory] sector=${lead.sector} sub=${match.sub} variant=${match.variant} theme=${match.themeHint} brand=${lead.businessName}`);
+    await updateRun({
+      agents_status: { scout: "done", analyst: "done", curator: "done", copywriter: "pending", builder: "running", closer: "pending" },
+      brand_kit: { tagline: brand.tagline, palette, hero: images.hero, logo: images.logo },
+    });
 
-    // Se pizzeria con template strapizzami e l'AI ha generato menu generico → arricchisci col preset
+    // Menu enrichment per template specifici
     if (isFood && match.sub === "pizzeria" && match.variant === "strapizzami") {
       const aiMenu: any[] = Array.isArray(brand.menu) ? brand.menu : [];
       const pizzaCount = aiMenu.filter(m => /pizz|margh|marinar|diavol|capric|calzon/i.test(`${m.name} ${m.category}`)).length;
@@ -992,8 +1169,6 @@ serve(async (req) => {
         console.log("[demo-factory] pizzeria menu enriched with default preset");
       }
     }
-
-    // Se sushi/giapponese → arricchisci col preset Paperfish quando l'AI è generica
     if (isFood && match.sub === "sushi" && (match.variant === "paperfish-sakura" || match.variant === "paperfish-dark")) {
       const aiMenu: any[] = Array.isArray(brand.menu) ? brand.menu : [];
       const sushiCount = aiMenu.filter(m => /sushi|sashimi|nigiri|maki|roll|ramen|gyoza|temaki|uramaki/i.test(`${m.name} ${m.category}`)).length;
@@ -1003,36 +1178,72 @@ serve(async (req) => {
       }
     }
 
+    // ─── AGENT 4: BUILDER — crea tenant Supabase ───
     const tenant = isFood
       ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images, themeConfig)
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
-
-    // 7. Magic link
-    let magicLink: string | null = null;
-    if (lead.email) {
-      try {
-        const { data: linkData } = await supabase.auth.admin.generateLink({
-          type: "magiclink",
-          email: lead.email,
-          options: { redirectTo: `${originUrl || ""}/admin?demo=${tenant.id}` },
-        });
-        magicLink = linkData?.properties?.action_link || null;
-      } catch (e) {
-        console.warn("[magic-link] error", e);
-      }
-    }
 
     const origin = originUrl || "";
     const previewUrl = isFood ? `${origin}/r/${tenant.slug}` : `${origin}/b/${tenant.slug}`;
     const adminUrl = `${origin}/admin`;
 
+    await updateRun({
+      agents_status: { scout: "done", analyst: "done", curator: "done", copywriter: "running", builder: "done", closer: "running" },
+      preview_url: previewUrl,
+      admin_url: adminUrl,
+    });
+
+    // ─── AGENT 5: COPYWRITER — messaggio WhatsApp + script + obiezioni (parallel) ───
+    // ─── AGENT 6: CLOSER — magic link + credenziali admin ───
+    const [outreachKit, magicLinkResult] = await Promise.all([
+      generateOutreachKit(lead, brand, match, previewUrl),
+      (async () => {
+        if (!lead.email) return null;
+        try {
+          const { data: linkData } = await supabase.auth.admin.generateLink({
+            type: "magiclink",
+            email: lead.email,
+            options: { redirectTo: `${origin}/admin?demo=${tenant.id}` },
+          });
+          return linkData?.properties?.action_link || null;
+        } catch (e) {
+          console.warn("[magic-link] error", e);
+          return null;
+        }
+      })(),
+    ]);
+
+    const credentials = generateAdminCredentials(lead);
+    const durationMs = Date.now() - startedAt;
+
+    await updateRun({
+      status: "completed",
+      agents_status: { scout: "done", analyst: "done", curator: "done", copywriter: "done", builder: "done", closer: "done" },
+      whatsapp_message: outreachKit.whatsappMessage,
+      whatsapp_link: outreachKit.whatsappLink,
+      call_script: outreachKit.callScript,
+      objections: outreachKit.objections,
+      admin_email: credentials.email,
+      admin_password: credentials.password,
+      completed_at: new Date().toISOString(),
+      duration_ms: durationMs,
+    });
+
     return new Response(
       JSON.stringify({
         success: true,
+        runId,
         tenant,
         previewUrl,
         adminUrl,
-        magicLink,
+        magicLink: magicLinkResult,
+        credentials,
+        outreach: {
+          whatsappMessage: outreachKit.whatsappMessage,
+          whatsappLink: outreachKit.whatsappLink,
+          callScript: outreachKit.callScript,
+          objections: outreachKit.objections,
+        },
         brand: {
           tagline: brand.tagline,
           description: brand.description,
@@ -1059,6 +1270,7 @@ serve(async (req) => {
           logo: images.logo,
           totalReal: (scraped?.images?.length || 0) + (igImages?.length || 0),
         },
+        durationMs,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
