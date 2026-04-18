@@ -725,7 +725,7 @@ export default function LeadsPage() {
       setLoading(false);
       setDeepLoading(false);
     }
-  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram]);
+  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos]);
 
   /* ─── Deep search ─── */
   const handleDeepSearch = useCallback(() => {
@@ -762,6 +762,8 @@ export default function LeadsPage() {
         });
         setGpsOpen(false);
         setTimeout(() => batchEnrichInstagram(processed), 1500);
+        // 🚀 Auto pre-warm demo factory anche per GPS search
+        setTimeout(() => autoPrewarmDemos(processed), 3500);
         // Auto-open speed dial if many results
         if (processed.length >= 5) setTimeout(() => setSpeedDialOpen(true), 800);
       } else {
