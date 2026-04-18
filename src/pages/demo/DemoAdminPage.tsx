@@ -6,7 +6,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { getAdminLayout, type AdminLayoutConfig } from "@/config/admin-layout-config";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSectorConfig, SECTOR_CONFIGS } from "@/config/sectorConfig";
 import { getAllAgentsForSector } from "@/config/sectorFeatures";
