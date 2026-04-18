@@ -203,6 +203,52 @@ function pickTemplateVariant(_sub: any, _name: string): TemplateVariant {
   return "default";
 }
 
+function previewToMatch(preview?: PreviewSelection | null): SubSectorMatch | null {
+  if (!preview) return null;
+  const haystack = `${preview.sectorId || ""} ${preview.brandName || ""} ${preview.styleName || ""}`.toLowerCase();
+
+  if (/strapizzami|pizza|napolet/.test(haystack)) return { sub: "pizzeria", variant: "strapizzami", heroTagline: "LA VERA PIZZA NAPOLETANA", themeHint: "light-cream" };
+  if (/paperfish|sushi|omakase|japan/.test(haystack)) return { sub: "sushi", variant: /dark|noir|black|luxury/.test(haystack) ? "paperfish-dark" : "paperfish-sakura", heroTagline: "L'ARTE GIAPPONESE DEL GUSTO", themeHint: /dark|noir|black|luxury/.test(haystack) ? "noir" : "sakura" };
+  if (/batey|ceviche|pesce|fish|seafood/.test(haystack)) return { sub: "pesce", variant: "batey-pacifico", heroTagline: "DAL MARE ALLA TAVOLA", themeHint: "azure" };
+  if (/cote|obsidian|steak|bracer|grill/.test(haystack)) return { sub: "braceria", variant: "cote-obsidian", heroTagline: "FUOCO, CARNE, TRADIZIONE", themeHint: "dark-gold" };
+  if (/ivory|bakery|forno|bread|pane|marble/.test(haystack)) return { sub: "bakery", variant: /marble/.test(haystack) ? "cote-marble" : "cote-ivory", heroTagline: "L'ARTE DEL FORNO", themeHint: "marble" };
+  if (/neo nails|nails|lavender/.test(haystack)) return { sub: "nails", variant: "neo-nails-lavender", heroTagline: "BELLEZZA SU MISURA", themeHint: "lavender" };
+  if (/blush|rosegold/.test(haystack)) return { sub: "nails", variant: "neo-nails-blush", heroTagline: "BELLEZZA SU MISURA", themeHint: "blush" };
+  if (/hair|barber|tatush/.test(haystack)) return { sub: "hair", variant: "tatush-hair", heroTagline: "LO STILE È UN'ARTE", themeHint: "marble" };
+  if (/asinara|yacht|charter/.test(haystack)) return { sub: "yacht", variant: "asinara-azure", heroTagline: "LUSSO IN MARE APERTO", themeHint: "azure" };
+  if (/miami boats|boat/.test(haystack)) return { sub: "boat", variant: "miami-boats", heroTagline: "EXCLUSIVE BOAT EXPERIENCE", themeHint: "azure" };
+  if (/padel|city padel/.test(haystack)) return { sub: "padel", variant: "city-padel-sage", heroTagline: "GIOCA AL TUO MEGLIO", themeHint: "sage" };
+  if (/watersports|water sport|beach/.test(haystack)) return { sub: "watersports", variant: "miami-watersports", heroTagline: "ADRENALINA SUL MARE", themeHint: "azure" };
+
+  if (preview.sectorId === "beauty") return { sub: "nails", variant: "neo-nails-lavender", heroTagline: "BELLEZZA SU MISURA", themeHint: "lavender" };
+  if (preview.sectorId === "ncc") return { sub: "transfer", variant: "asinara-azure", heroTagline: "VIAGGIA CON STILE", themeHint: "azure" };
+  if (preview.sectorId === "fitness") return { sub: "gym", variant: "city-padel-sage", heroTagline: "ALLENATI AL TUO MEGLIO", themeHint: "sage" };
+  if (preview.sectorId === "food") return { sub: "ristorante", variant: "cote-ivory", heroTagline: "BENVENUTI A TAVOLA", themeHint: "marble" };
+
+  return null;
+}
+
+function getSubSectorKeywords(sub: SubSectorKey, sector: string): string[] {
+  const map: Partial<Record<SubSectorKey, string[]>> = {
+    pizzeria: ["pizza", "forno", "margherita", "impasto", "napoli"],
+    sushi: ["sushi", "nigiri", "maki", "sashimi", "ramen", "omakase"],
+    braceria: ["steak", "grill", "carne", "brace", "bbq", "fiorentina"],
+    pesce: ["fish", "pesce", "seafood", "mare", "ostriche", "ceviche"],
+    bakery: ["bakery", "pane", "bread", "croissant", "forno", "pastry"],
+    nails: ["nails", "manicure", "pedicure", "beauty", "salon"],
+    hair: ["hair", "barber", "salon", "styling", "capelli"],
+    yacht: ["yacht", "charter", "deck", "boat", "sea"],
+    boat: ["boat", "tender", "yacht", "sea", "harbor"],
+    limo: ["car", "chauffeur", "mercedes", "executive", "limo"],
+    transfer: ["transfer", "car", "mercedes", "chauffeur", "airport"],
+    padel: ["padel", "court", "racquet", "club", "match"],
+    gym: ["gym", "fitness", "training", "workout", "weights"],
+    watersports: ["watersport", "surf", "jet", "beach", "sea"],
+  };
+
+  return uniq([...(map[sub] || []), ...(SECTOR_IMAGE_KEYWORDS[sector] || [])]);
+}
+
 /* Default pizzeria menu (used as seed when AI brand kit is generic) */
 const DEFAULT_PIZZERIA_MENU = [
   { name: "Margherita DOC", description: "Pomodoro San Marzano DOP, mozzarella di bufala campana, basilico fresco, olio EVO", price: 9.5, category: "Classiche", popular: true },
