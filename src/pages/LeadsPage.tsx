@@ -1014,6 +1014,12 @@ export default function LeadsPage() {
 
       <div className="relative z-10 space-y-4">
 
+      {/* 💰 Badge crediti AI sempre visibile in alto a destra */}
+      <div className="flex justify-end">
+        <SellerCreditsBadge balance={creditBalance} spent30d={totalSpent30d} />
+      </div>
+
+
       {/* HERO — UNIFIED LIVING MASCOT (single central organism with embedded data-core) */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
