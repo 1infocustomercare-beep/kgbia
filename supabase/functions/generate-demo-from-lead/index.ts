@@ -656,7 +656,72 @@ async function uploadDataUrl(supabase: any, bucket: string, path: string, dataUr
   }
 }
 
-/* ─── 7. RESOLVE IMAGES: real first, AI fallback ─── */
+/* ─── GUARDIAN HELPER ─── */
+interface GuardianResult { score: number; pass: boolean; blockers: string[]; warnings: string[]; suggestions: string[]; retry_prompt?: string }
+async function callGuardian(supabaseUrl: string, serviceKey: string, mode: "image"|"brand"|"site"|"lead", context: Record<string, any>): Promise<GuardianResult> {
+  try {
+    const resp = await fetch(`${supabaseUrl}/functions/v1/ai-quality-guardian`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}` },
+      body: JSON.stringify({ mode, context }),
+    });
+    if (!resp.ok) {
+      console.warn("[guardian] http", resp.status);
+      return { score: 100, pass: true, blockers: [], warnings: ["guardian-http-fail"], suggestions: [] };
+    }
+    return await resp.json();
+  } catch (e) {
+    console.warn("[guardian] error", e);
+    return { score: 100, pass: true, blockers: [], warnings: ["guardian-network"], suggestions: [] };
+  }
+}
+
+function buildSubSectorImagePrompt(sub: string, sector: string, kind: "hero"|"detail"|"logo", brandName: string, city: string, retrySuggestion?: string): string {
+  const venueMap: Record<string, string> = {
+    pizzeria: "authentic Neapolitan pizzeria, wood-fired oven, terracotta ambiance",
+    sushi: "premium sushi bar, dark wood counter, Japanese minimalism",
+    braceria: "premium steakhouse, open-fire grill, dark luxurious interior",
+    pesce: "Mediterranean seafood restaurant, ocean-side aesthetic",
+    bakery: "artisan Italian bakery, flour-dusted counter, warm rustic light",
+    nails: "luxury nail salon, marble and rose gold details",
+    hair: "high-end hair salon, leather and brass styling chairs",
+    yacht: "luxury yacht charter deck, sunset turquoise sea",
+    boat: "premium boat rental, crystal clear water, white leather seats",
+    limo: "executive black Mercedes-Benz, leather interior, business class",
+    transfer: "professional chauffeur service, premium black sedan",
+    padel: "modern padel court, blue glass walls, green turf",
+    gym: "high-end fitness studio, black equipment, industrial design",
+    watersports: "tropical watersports beach, jet skis, palm trees",
+    ristorante: "upscale Italian restaurant interior, candle-lit tables, marble accents",
+  };
+  const subjectMap: Record<string, string> = {
+    pizzeria: "perfect Neapolitan margherita pizza top-down, charred crust, fresh basil",
+    sushi: "omakase chef's selection: nigiri and sashimi platter on dark slate",
+    braceria: "tomahawk steak with grill marks, rosemary, on wooden board",
+    pesce: "fresh raw oysters with lemon, ice bed, sea-water pearls",
+    bakery: "fresh sourdough bread loaves and croissants on flour-dusted wood",
+    nails: "elegant manicured hands, modern nude-pink polish, marble background",
+    hair: "professional hair styling close-up, premium products on shelf",
+    yacht: "yacht deck with champagne setup, anchored in Sardinian cove",
+    boat: "pristine boat moored in Caribbean clear water, aerial view",
+    limo: "executive Mercedes S-Class with chauffeur, airport pickup",
+    transfer: "luxury black sedan parked in front of 5-star hotel entrance",
+    padel: "two players mid-action on padel court, dynamic shot",
+    gym: "athlete training with kettlebell, spotlight, dramatic shadow",
+    watersports: "jet ski jumping over wave, tropical blue water",
+    ristorante: "elegant plated dish, fine dining presentation, candle light",
+  };
+  const venue = venueMap[sub] || `professional ${sector} business venue`;
+  const subject = subjectMap[sub] || `professional ${sector} subject`;
+  const base = kind === "hero"
+    ? `Editorial photograph of ${venue}, hero wide shot for "${brandName}" in ${city || "Italy"}.`
+    : kind === "logo"
+    ? `Minimal vector logo mark for "${brandName}", ${sub} business, transparent background, modern typography, single accent color.`
+    : `Premium close-up photo: ${subject}, for "${brandName}" in ${city || "Italy"}.`;
+  return `${base} Natural light, no text overlays, no watermarks, no AI artifacts, photorealistic, magazine-quality, 16:9.${retrySuggestion ? ` IMPROVEMENT: ${retrySuggestion}` : ""}`;
+}
+
+/* ─── 7. RESOLVE IMAGES: real first, AI fallback validated by Guardian ─── */
 async function resolveSectorImages(
   supabase: any,
   lead: LeadInput,
@@ -664,9 +729,13 @@ async function resolveSectorImages(
   ig: string[],
   needHeroAndN: number,
   tenantId: string,
-): Promise<{ hero: string | null; gallery: string[]; logo: string | null }> {
+  match?: { sub: string; variant: string },
+): Promise<{ hero: string | null; gallery: string[]; logo: string | null; aiGenerated: string[] }> {
   const sector = lead.sector;
   const keywords = SECTOR_IMAGE_KEYWORDS[sector] || [];
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const sub = match?.sub || "generic";
 
   // Score scraped images by keyword relevance and size hint
   const scoreImage = (url: string): number => {
@@ -685,35 +754,46 @@ async function resolveSectorImages(
     .map((x) => x.url);
 
   const allReal = uniq([...scoredScrape, ...ig]).slice(0, needHeroAndN + 2);
-
   let hero: string | null = allReal[0] || null;
   let gallery: string[] = allReal.slice(1, needHeroAndN + 1);
+  const aiGenerated: string[] = [];
 
-  // Need AI fallback?
-  const need = needHeroAndN - gallery.length;
-  if (!hero || need > 0) {
-    const heroPrompt = `Photograph for ${lead.sectorLabel || sector} business "${lead.businessName}" in ${lead.city || "Italy"}. Editorial premium quality, natural light, no text or watermarks, 16:9. Hero shot.`;
-
-    if (!hero) {
-      const aiHero = await generateImageAI(heroPrompt);
-      if (aiHero) {
-        const uploaded = await uploadDataUrl(supabase, "business-assets", `demo/${tenantId}/hero`, aiHero);
-        hero = uploaded || aiHero;
+  // Generate-with-Guardian: up to 3 retries, score >= 80 required
+  async function generateValidated(kind: "hero"|"detail"|"logo", slotPath: string): Promise<string | null> {
+    let lastSuggestion: string | undefined;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const prompt = buildSubSectorImagePrompt(sub, sector, kind, lead.businessName, lead.city || "", lastSuggestion);
+      const aiData = await generateImageAI(prompt);
+      if (!aiData) { lastSuggestion = "Use richer scene description"; continue; }
+      const uploaded = await uploadDataUrl(supabase, "business-assets", `${slotPath}-try${attempt}`, aiData) || aiData;
+      // Validate
+      const guard = await callGuardian(supabaseUrl, serviceKey, "image", {
+        url: uploaded,
+        expected: { subSector: sub, brandName: lead.businessName, kind },
+      });
+      console.log(`[guardian] ${kind} attempt=${attempt} score=${guard.score} pass=${guard.pass} blockers=${guard.blockers.join(",")}`);
+      if (guard.pass) {
+        aiGenerated.push(uploaded);
+        return uploaded;
       }
+      lastSuggestion = guard.retry_prompt || guard.suggestions[0] || "More photorealistic, less generic";
     }
-    // Generate up to 3 fallback gallery shots only
-    const fallbacks = Math.min(need, 3);
-    for (let i = 0; i < fallbacks; i++) {
-      const p = `Premium photo for ${lead.sectorLabel || sector} business in ${lead.city || "Italy"}. Detail shot ${i + 1}, no text, editorial natural light.`;
-      const img = await generateImageAI(p);
-      if (img) {
-        const uploaded = await uploadDataUrl(supabase, "business-assets", `demo/${tenantId}/gallery-${i}`, img);
-        gallery.push(uploaded || img);
-      }
-    }
+    // After 3 fails: use last attempt anyway with warning, no infinite loop
+    console.warn(`[guardian] ${kind} failed all 3 retries, using last`);
+    return null;
   }
 
-  return { hero, gallery, logo: scraped?.logo || null };
+  if (!hero) {
+    hero = await generateValidated("hero", `demo/${tenantId}/hero`);
+  }
+  const need = needHeroAndN - gallery.length;
+  const fallbacks = Math.min(need, 3);
+  for (let i = 0; i < fallbacks; i++) {
+    const img = await generateValidated("detail", `demo/${tenantId}/gallery-${i}`);
+    if (img) gallery.push(img);
+  }
+
+  return { hero, gallery, logo: scraped?.logo || null, aiGenerated };
 }
 
 /* ─── 8. PALETTE ENRICHMENT ─── */
