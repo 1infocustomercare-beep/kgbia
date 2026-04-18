@@ -2157,6 +2157,76 @@ function lbPrev(){ lbIdx = (lbIdx-1+lbList.length)%lbList.length; lbRender(); }
     });
   });
 })();
+
+/* ============ STICKY CTA: appears AFTER hero pin ends ============ */
+(function stickyCtaReveal(){
+  const cta = document.getElementById('stickyCta');
+  if(!cta) return;
+  const pin = document.querySelector('.hero-pin');
+  const footer = document.querySelector('footer');
+  function update(){
+    const sc = window.scrollY || document.documentElement.scrollTop;
+    const pinBottom = pin ? (pin.offsetTop + pin.offsetHeight - 160) : 600;
+    const footerTop = footer ? footer.getBoundingClientRect().top : Infinity;
+    const pastHero = sc > pinBottom;
+    const nearFooter = footerTop < window.innerHeight + 100;
+    if(pastHero && !nearFooter) cta.classList.add('shown');
+    else cta.classList.remove('shown');
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update, {passive:true});
+  update();
+})();
+
+/* ============ LIVE TICKER ============ */
+(function liveTicker(){
+  const elCalls = document.getElementById('ltCalls');
+  const elRev   = document.getElementById('ltRevenue');
+  const elBook  = document.getElementById('ltBookings');
+  const elAg    = document.getElementById('ltAgents');
+  if(!elCalls) return;
+  const today = new Date();
+  const dayMin = today.getHours()*60 + today.getMinutes();
+  let calls    = 1240 + Math.floor(dayMin*1.7);
+  let revenue  = 84000 + Math.floor(dayMin*82);
+  let bookings = 612 + Math.floor(dayMin*0.9);
+  let agents   = 142 + (today.getHours()%6);
+  function fmtEuro(n){
+    if(n >= 1000) return '€'+(n/1000).toFixed(1).replace('.0','')+'K';
+    return '€'+n;
+  }
+  function flash(el){ el.style.transition='color .35s'; el.style.color='#FFE3A0'; setTimeout(()=>{ el.style.color=''; }, 380); }
+  function paint(){
+    elCalls.textContent = calls.toLocaleString('it-IT');
+    elRev.textContent = fmtEuro(revenue);
+    elBook.textContent = bookings.toLocaleString('it-IT');
+    elAg.textContent = agents;
+  }
+  paint();
+  if(reduceMotion) return;
+  setInterval(()=>{ calls += 1+Math.floor(Math.random()*3); flash(elCalls); paint(); }, 3200);
+  setInterval(()=>{ revenue += 40+Math.floor(Math.random()*220); flash(elRev); paint(); }, 2400);
+  setInterval(()=>{ if(Math.random()>.35){ bookings += 1; flash(elBook); paint(); } }, 4100);
+  setInterval(()=>{ agents = Math.max(120, Math.min(180, agents + (Math.random()>.5?1:-1))); flash(elAg); paint(); }, 5200);
+
+  const stickyLeft = document.getElementById('stickyLeft');
+  if(stickyLeft){
+    let n = 3;
+    setInterval(()=>{ n = (Math.random()>.85)?(n===3?2:3):n; stickyLeft.textContent = n; }, 9000);
+  }
+})();
+
+/* ============ SAFETY: ensure preview surfaces are clickable (block child elements from swallowing clicks) ============ */
+(function ensureClickability(){
+  document.querySelectorAll('.phone-stack .phone[data-slug]').forEach(el=>{
+    el.style.cursor = 'zoom-in';
+    el.querySelectorAll('img').forEach(i=>{ i.draggable=false; i.style.pointerEvents='none'; });
+    el.querySelectorAll('.badge').forEach(b=>{ b.style.pointerEvents='none'; });
+  });
+  document.querySelectorAll('.preview-tap[data-slug], .sec-card-m[data-slug], .orbit-item[data-slug]').forEach(el=>{
+    el.querySelectorAll('img').forEach(i=>{ i.draggable=false; i.style.pointerEvents='none'; });
+  });
+})();
 </script>
 </body>
 </html>
