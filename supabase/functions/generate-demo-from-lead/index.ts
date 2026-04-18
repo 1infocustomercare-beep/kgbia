@@ -1207,6 +1207,26 @@ serve(async (req) => {
     }
 
     const lead = { ...rawLead };
+
+    // ─── PRE-FLIGHT: lead data quality check (blocker su dati finti) ───
+    const fakePatterns = /\b(test|esempio|example|demo|fake|lorem|ipsum|mario rossi|john doe)\b/i;
+    const fakePhone = /^(\+?0+|\+?1+|\+?123|0{3,}|1{3,})/;
+    const fakeEmail = /^(test|demo|fake|example|admin)@/i;
+    const leadIssues: string[] = [];
+    if (!lead.businessName || lead.businessName.length < 2 || fakePatterns.test(lead.businessName)) leadIssues.push("Nome attività non valido o di test");
+    if (lead.phone && (fakePhone.test(lead.phone.replace(/[\s-]/g, "")) || lead.phone.replace(/\D/g, "").length < 7)) leadIssues.push("Numero di telefono non plausibile");
+    if (lead.email && fakeEmail.test(lead.email)) leadIssues.push("Email di test/demo");
+    const hasContactSignal = !!(lead.phone || lead.email || lead.website || lead.instagram || lead.address);
+    if (!hasContactSignal) leadIssues.push("Nessun contatto o sito reale: impossibile generare demo");
+    if (leadIssues.length) {
+      console.warn("[guardian] lead pre-flight FAIL:", leadIssues);
+      return new Response(JSON.stringify({
+        error: "lead_data_insufficient",
+        message: "Lead con dati insufficienti o non reali. Arricchisci il lead prima di generare la demo.",
+        issues: leadIssues,
+      }), { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     const startedAt = Date.now();
 
     // Track this pipeline run
