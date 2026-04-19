@@ -14,7 +14,7 @@ export interface PaperfishSiteData {
   items: (PaperfishMenuItem & { extras?: PaperfishExtra[]; ingredients?: string })[];
 }
 
-type Screen = "home" | "menu" | "detail" | "cart";
+export type PaperfishScreen = "home" | "menu" | "detail" | "cart";
 
 const DEFAULT_EXTRAS: PaperfishExtra[] = [
   { id: "wasabi-extra", label: "Wasabi extra", price: 1 },
@@ -22,8 +22,21 @@ const DEFAULT_EXTRAS: PaperfishExtra[] = [
   { id: "zenzero", label: "Zenzero marinato", price: 1 },
 ];
 
-export function PaperfishSite({ data }: { data: PaperfishSiteData }) {
-  const [screen, setScreen] = useState<Screen>("home");
+export function PaperfishSite({
+  data,
+  controlledScreen,
+  onScreenChange,
+}: {
+  data: PaperfishSiteData;
+  controlledScreen?: PaperfishScreen;
+  onScreenChange?: (s: PaperfishScreen) => void;
+}) {
+  const [internalScreen, setInternalScreen] = useState<PaperfishScreen>("home");
+  const screen = controlledScreen ?? internalScreen;
+  const setScreen = (s: PaperfishScreen) => {
+    if (controlledScreen === undefined) setInternalScreen(s);
+    onScreenChange?.(s);
+  };
   const [selectedItem, setSelectedItem] = useState<PaperfishSiteData["items"][number] | null>(null);
   const [cart, setCart] = useState<PaperfishCartItem[]>([]);
 

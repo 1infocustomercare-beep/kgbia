@@ -14,7 +14,7 @@ export interface StrapizzamiSiteData {
   items: (StrapizzamiMenuItem & { extras?: StrapizzamiExtra[]; ingredients?: string })[];
 }
 
-type Screen = "home" | "menu" | "detail" | "cart";
+export type StrapizzamiScreen = "home" | "menu" | "detail" | "cart";
 
 const DEFAULT_EXTRAS: StrapizzamiExtra[] = [
   { id: "bufala", label: "Mozzarella di Bufala", price: 2 },
@@ -22,8 +22,21 @@ const DEFAULT_EXTRAS: StrapizzamiExtra[] = [
   { id: "funghi", label: "Funghi", price: 1.5 },
 ];
 
-export function StrapizzamiSite({ data }: { data: StrapizzamiSiteData }) {
-  const [screen, setScreen] = useState<Screen>("home");
+export function StrapizzamiSite({
+  data,
+  controlledScreen,
+  onScreenChange,
+}: {
+  data: StrapizzamiSiteData;
+  controlledScreen?: StrapizzamiScreen;
+  onScreenChange?: (s: StrapizzamiScreen) => void;
+}) {
+  const [internalScreen, setInternalScreen] = useState<StrapizzamiScreen>("home");
+  const screen = controlledScreen ?? internalScreen;
+  const setScreen = (s: StrapizzamiScreen) => {
+    if (controlledScreen === undefined) setInternalScreen(s);
+    onScreenChange?.(s);
+  };
   const [selectedItem, setSelectedItem] = useState<StrapizzamiSiteData["items"][number] | null>(null);
   const [cart, setCart] = useState<StrapizzamiCartItem[]>([]);
 
