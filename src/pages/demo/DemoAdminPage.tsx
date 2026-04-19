@@ -32,6 +32,8 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, Legend
 } from "recharts";
+import { PersonalizableBadge } from "@/components/demo/PersonalizableBadge";
+import { useDemoCompleteness } from "@/hooks/useDemoCompleteness";
 
 const ICON_MAP: Record<string, any> = {
   LayoutDashboard, Users, Calendar, BarChart3, Bot, MessageCircle, Settings,
@@ -1102,6 +1104,7 @@ export default function DemoAdminPage() {
   const layoutConfig = useMemo(() => getAdminLayout(sectorKey), [sectorKey]);
   const revenueData = useMemo(() => generateRevenueData(sectorKey), [sectorKey]);
   const calendarData = useMemo(generateCalendarDays, []);
+  const completeness = useDemoCompleteness(sectorKey);
 
   if (!resolvedSector || !config) {
     return (
@@ -1356,9 +1359,14 @@ export default function DemoAdminPage() {
         <Card className="lg:col-span-2 bg-white/[0.03] border-white/[0.06] overflow-hidden">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm text-white/80">
-                {sectorKey === "food" ? "Ordini Recenti" : sectorKey === "beauty" ? "Appuntamenti Oggi" : sectorKey === "healthcare" ? "Visite Recenti" : sectorKey === "ncc" ? "Corse Recenti" : "Attività Recenti"}
-              </CardTitle>
+              <div className="flex items-center gap-2 flex-wrap">
+                <CardTitle className="text-sm text-white/80">
+                  {sectorKey === "food" ? "Ordini Recenti" : sectorKey === "beauty" ? "Appuntamenti Oggi" : sectorKey === "healthcare" ? "Visite Recenti" : sectorKey === "ncc" ? "Corse Recenti" : "Attività Recenti"}
+                </CardTitle>
+                {completeness.isSeed("orders", tableData.rows.length) && (
+                  <PersonalizableBadge variant="dark" size="sm" />
+                )}
+              </div>
               <Button size="sm" variant="outline" className="text-[0.55rem] border-white/10 text-white/40 h-7">Vedi tutti</Button>
             </div>
           </CardHeader>
@@ -1403,7 +1411,15 @@ export default function DemoAdminPage() {
         <Card className="bg-white/[0.03] border-white/[0.06]">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm text-white/80">Agenti AI Attivi</CardTitle>
+              <div className="flex items-center gap-2 flex-wrap">
+                <CardTitle className="text-sm text-white/80">Agenti AI Attivi</CardTitle>
+                <PersonalizableBadge
+                  variant="dark"
+                  size="sm"
+                  label="Pre-installati per il settore"
+                  tooltip={`Tutti gli agenti del settore ${completeness.label} sono già attivi nella demo. Il titolare può disattivarli o personalizzarne il comportamento.`}
+                />
+              </div>
               <span className="text-[0.5rem] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-bold">{allAgents.length} Online</span>
             </div>
           </CardHeader>
@@ -1619,7 +1635,12 @@ export default function DemoAdminPage() {
     return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="text-base font-bold text-white">{sectorKey === "food" ? "Ordini & Delivery" : sectorKey === "ncc" ? "Corse & Transfer" : "Ordini & Prenotazioni"}</h2>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h2 className="text-base font-bold text-white">{sectorKey === "food" ? "Ordini & Delivery" : sectorKey === "ncc" ? "Corse & Transfer" : "Ordini & Prenotazioni"}</h2>
+          {completeness.isSeed("orders", tableData.rows.length) && (
+            <PersonalizableBadge variant="dark" size="sm" />
+          )}
+        </div>
         <div className="flex gap-2">
           {["Tutti", "In corso", "Completati"].map(f => (
             <Button key={f} variant="outline" size="sm" className="text-[0.6rem] border-white/10 text-white/40 h-7">{f}</Button>
