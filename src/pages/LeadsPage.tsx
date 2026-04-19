@@ -818,7 +818,7 @@ export default function LeadsPage() {
       setLoading(false);
       setDeepLoading(false);
     }
-  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos]);
+  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos, consumeSellerCredits]);
 
   /* ─── Deep search ─── */
   const handleDeepSearch = useCallback(() => {
