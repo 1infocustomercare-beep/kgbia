@@ -17,6 +17,75 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+/* ─── COMPLETEZZA SETTORIALE (mirror server-side di src/config/sectorCompleteness.ts) ─── */
+const SECTOR_AGENT_KEYS: Record<string, string[]> = {
+  food: ["chef-ai", "sommelier-ai", "kitchen-ai", "review-shield"],
+  ncc: ["fleet-manager", "dispatcher", "dynamic-pricing", "concierge-vip"],
+  beauty: ["beauty-advisor", "scheduling-ai", "social-beauty"],
+  healthcare: ["medical-scheduler", "patient-ai", "compliance-guard", "billing-ai-health"],
+  retail: ["merchandiser", "inventory-ai", "ecom-growth"],
+  fitness: ["coach-ai", "membership-retention", "class-optimizer"],
+  hospitality: ["rm-ai", "concierge-host", "housekeeping-ai"],
+  hotel: ["rm-ai", "concierge-host", "housekeeping-ai"],
+  beach: ["beach-ops", "beach-bar-ai", "season-pass"],
+  bakery: ["production-planner", "preorder-ai"],
+  agriturismo: ["farm-experience", "rm-ai"],
+  plumber: ["dispatch-pro", "quote-ai"],
+  electrician: ["dispatch-pro", "compliance-electric"],
+  cleaning: ["shift-planner", "qc-photo"],
+  legal: ["deadline-keeper", "billing-pro"],
+  accounting: ["tax-deadline-ai", "doc-collector"],
+  garage: ["service-advisor", "service-reminder"],
+  photography: ["shoot-planner", "delivery-portal"],
+  construction: ["site-coordinator", "quote-ai-build"],
+  gardening: ["season-planner"],
+  veterinary: ["pet-records", "vaccine-reminder"],
+  tattoo: ["portfolio-curator", "consent-aftercare"],
+  childcare: ["family-comms"],
+  education: ["course-engine"],
+  events: ["event-orchestrator"],
+  logistics: ["fleet-tracker"],
+};
+const UNIVERSAL_AGENT_KEYS = ["arianna", "analytics", "marketing", "sales", "operations", "compliance", "customer-success"];
+
+function buildSectorCompleteness(sector: string, sub: string) {
+  const key = (sector || "").toLowerCase();
+  const sectorOnly = SECTOR_AGENT_KEYS[key] || [];
+  return {
+    sectorId: key,
+    subSector: sub,
+    agentKeys: [...UNIVERSAL_AGENT_KEYS, ...sectorOnly],
+    sectorOnlyAgentKeys: sectorOnly,
+    badgeLabel: "Esempio personalizzabile",
+    badgeTooltip: "Dati di esempio realistici per il tuo settore. Modificabili in 1 click dal pannello.",
+    seededAt: new Date().toISOString(),
+  };
+}
+
+async function installSectorAgents(supabase: any, tenantId: string, agentKeys: string[]) {
+  if (!tenantId || !agentKeys?.length) return;
+  const { data: existing } = await supabase.from("agents").select("id, name").limit(500);
+  const matched: string[] = [];
+  for (const k of agentKeys) {
+    const norm = k.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    const hit = (existing || []).find((a: any) =>
+      (a.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "").includes(norm),
+    );
+    if (hit?.id) matched.push(hit.id);
+  }
+  if (!matched.length) return;
+  const rows = matched.map((agent_id) => ({
+    agent_id, tenant_id: tenantId, status: "active",
+    config: { source: "demo-factory", auto_installed: true },
+  }));
+  try {
+    await supabase.from("agent_installations").upsert(rows, { onConflict: "agent_id,tenant_id", ignoreDuplicates: true });
+  } catch (e) {
+    console.warn("[completeness] upsert agent_installations failed, trying insert", e);
+    await supabase.from("agent_installations").insert(rows);
+  }
+}
+
 const FOOD_SECTORS = new Set([
   "food", "bakery", "gelateria", "wine_bar", "catering", "pizzeria", "ristoration",
   "coffee", "pub", "trattoria", "osteria", "vegan", "burger",
@@ -1521,9 +1590,22 @@ serve(async (req) => {
     }
 
     // ─── AGENT 4: BUILDER — crea tenant Supabase ───
+    // Inietta nel themeConfig il manifest di completezza settoriale (agenti, moduli,
+    // blocchi sito, dataset attesi) — la UI lo legge per mostrare il badge
+    // "Esempio personalizzabile" e disegnare l'admin completo per il settore.
+    const completeness = buildSectorCompleteness(lead.sector, match.sub);
+    themeConfig.completeness = completeness;
+
     const tenant = isFood
       ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images, themeConfig)
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
+
+    // Installa tutti gli agenti settoriali sul nuovo tenant (best-effort, additivo).
+    try {
+      await installSectorAgents(supabase, tenant.id, completeness.agentKeys);
+    } catch (e) {
+      console.warn("[completeness] agent install warning:", e);
+    }
 
     const origin = originUrl || "";
     // ⭐ TUTTI i settori usano /b/<slug> → BusinessPage → TEMPLATE_MAP[industry] → *PublicSite
