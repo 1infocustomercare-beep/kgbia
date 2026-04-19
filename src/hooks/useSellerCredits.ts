@@ -29,6 +29,9 @@ export interface ConsumeResult {
   cost_eur?: number;
   remaining_balance?: number;
   action_label?: string;
+  cap?: number;
+  used?: number;
+  owner_bypass?: boolean;
 }
 
 /**
