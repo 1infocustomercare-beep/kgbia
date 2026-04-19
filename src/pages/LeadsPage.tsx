@@ -13,6 +13,7 @@ import { SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
+import { matchPreviewForLead, type PreviewMatch } from "@/lib/preview-matcher";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
@@ -937,7 +938,19 @@ export default function LeadsPage() {
 
   const hotLeads = results.filter(l => l._score >= 70).length;
   const sectorConfig = selected ? INDUSTRY_CONFIGS[selected._sector as keyof typeof INDUSTRY_CONFIGS] : null;
-  const previewScreens = selected ? getPreviewScreens(selected._sector) : [];
+  // ⭐ Match preview to the lead's NAME + sub-sector (sushi → Paperfish, pizza → Strapizzami, ecc.)
+  const previewMatch: PreviewMatch | null = selected
+    ? matchPreviewForLead({
+        name: selected.name,
+        sector: selected._sector,
+        sectorLabel: sectorConfig?.label,
+        cuisine: (selected as any).cuisine || null,
+        extra: (selected as any).full_address || null,
+      })
+    : null;
+  const previewScreens = previewMatch?.screens.length
+    ? previewMatch.screens
+    : (selected ? getPreviewScreens(selected._sector) : []);
 
   // Auto-focus city input on mount
   useEffect(() => {
@@ -1864,7 +1877,10 @@ export default function LeadsPage() {
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2 min-w-0">
                     <Eye className="w-3.5 h-3.5 shrink-0" style={{ color: "#a78bfa" }} />
-                    <span className="text-xs font-bold text-white truncate">📱 Preview {sectorConfig?.label || "Business"} per {selected.name}</span>
+                    <span className="text-xs font-bold text-white truncate">
+                      📱 Preview {previewMatch?.brandName || sectorConfig?.label || "Business"}
+                      {previewMatch?.styleName ? ` · ${previewMatch.styleName}` : ""} per {selected.name}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <button
@@ -1930,13 +1946,16 @@ export default function LeadsPage() {
                         </div>
                       )}
                       <div className="flex items-center gap-2 mt-2">
-                        <a href={getDemoSiteUrl(selected._sector)} target="_blank" rel="noopener noreferrer"
+                        <a
+                          href={previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector)}
+                          target="_blank" rel="noopener noreferrer"
                           className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-[10px] font-bold"
                           style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(16,185,129,0.1))", border: "1px solid rgba(124,58,237,0.2)", color: "#c4b5fd" }}>
                           <ExternalLink className="w-3 h-3" /> {sectorFeats.cta}
                         </a>
                         <button onClick={() => {
-                          navigator.clipboard.writeText(`${window.location.origin}${getDemoSiteUrl(selected._sector)}`);
+                          const url = previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector);
+                          navigator.clipboard.writeText(`${window.location.origin}${url}`);
                           toast.success("Link demo copiato!");
                         }} className="px-4 py-2 rounded-xl text-[10px] font-bold" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)", color: "#34d399" }}>
                           <Copy className="w-3 h-3" />
