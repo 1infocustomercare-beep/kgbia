@@ -2651,8 +2651,7 @@ export default function LeadsPage() {
                         const sf = getPreviewDetailsForMatch(matchPreviewFromManualSelection({
                           sectorId: manualSector,
                           brandName: portfolioName,
-                          styleName: styleName,
-                        }) || matchPreviewForLead({ sector: manualSector, name: `${portfolioName} ${styleName}` }));
+                        }) || matchPreviewForLead({ sector: manualSector, name: portfolioName }));
                         return (
                           <div className="mt-2 grid grid-cols-2 gap-1">
                             {sf.features.slice(0, 4).map((f, i) => (
