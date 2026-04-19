@@ -510,6 +510,17 @@ const ANALYSIS_TOOL = {
           },
           required: ["name", "why", "estimated_roi_days"],
         },
+        recommended_preview: {
+          type: "object",
+          description: "Il progetto del PORTFOLIO EMPIRE che meglio rappresenta il prospect 1:1. DEVI scegliere SOLO un project_name dalla lista CATALOGO PREVIEW. Il sub_sector DEVE corrispondere a quello del catalogo per quel project_name.",
+          properties: {
+            project_name: { type: "string", enum: PREVIEW_PROJECT_NAMES, description: "Nome esatto del progetto dal CATALOGO PREVIEW." },
+            sub_sector: { type: "string", enum: PREVIEW_SUB_SECTORS, description: "Sub-sector key abbinato al project_name (es. sushi, pizzeria, nails, padel)." },
+            why: { type: "string", description: "Perché QUESTO progetto è il match perfetto per il prospect (cita un dettaglio reale: nome, posizionamento, location)." },
+            similarity_score: { type: "number", description: "0-100 — quanto il progetto rispecchia il prospect (>=85 se è un match diretto)." },
+          },
+          required: ["project_name", "sub_sector", "why", "similarity_score"],
+        },
         next_actions: {
           type: "array",
           items: { type: "string" },
@@ -524,7 +535,7 @@ const ANALYSIS_TOOL = {
       required: [
         "executive_summary", "opportunity_score", "urgency_score", "budget_band",
         "decision_maker", "digital_audit", "pain_points", "sales_hooks",
-        "objections", "recommended_pitch", "recommended_package", "next_actions", "risk_flags",
+        "objections", "recommended_pitch", "recommended_package", "recommended_preview", "next_actions", "risk_flags",
       ],
       additionalProperties: false,
     },
