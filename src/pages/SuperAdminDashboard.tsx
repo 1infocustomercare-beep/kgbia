@@ -2717,7 +2717,31 @@ const SuperAdminDashboard = () => {
 
         {!loading && activeTab === "sales_agent" && (
           <motion.div className="mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <SalesAgentCockpit />
+            <div className="rounded-2xl p-6 text-center space-y-4" style={{
+              background: "linear-gradient(135deg, rgba(167,139,250,0.12), rgba(20,184,166,0.08))",
+              border: "1px solid rgba(167,139,250,0.3)",
+            }}>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl" style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)" }}>
+                <Bot className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold mb-1">Arianna · Sales Agent Autonomo</h2>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  Arianna ora vive <strong>direttamente dentro Lead Scout</strong>: vedi in tempo reale la pagina che ricerca lead, sceglie preview, genera siti e prepara messaggi — tutto sincronizzato e pilotato da lei.
+                </p>
+              </div>
+              <a
+                href="/leads"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white transition-all hover:scale-[1.03]"
+                style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", boxShadow: "0 8px 32px rgba(167,139,250,0.4)" }}
+              >
+                <Target className="w-5 h-5" />
+                Apri Lead Scout con Arianna
+              </a>
+              <p className="text-[10px] text-muted-foreground">
+                Trovi il pannello Arianna in cima a /leads — accendilo e parte in automatico
+              </p>
+            </div>
           </motion.div>
         )}
       </div>
