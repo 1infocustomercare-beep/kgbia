@@ -606,7 +606,7 @@ export default function LeadsPage() {
     } finally {
       setDemoFactoryLoading(false);
     }
-  }, [consumeSellerCredits]);
+  }, [consumeSellerCredits, deepReport]);
 
   /* Wrapper: apre dialog di conferma crediti prima di lanciare la Demo Factory */
   const requestDemoFactory = useCallback((lead: Lead & { _sector: string }, preview?: ManualPreviewSelection | null) => {
