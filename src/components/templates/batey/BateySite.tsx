@@ -15,7 +15,7 @@ export interface BateySiteData {
   items: (BateyMenuItem & { extras?: BateyExtra[]; ingredients?: string })[];
 }
 
-type Screen = "home" | "menu" | "detail" | "cart";
+export type BateyScreen = "home" | "menu" | "detail" | "cart";
 
 const DEFAULT_EXTRAS: BateyExtra[] = [
   { id: "limone", label: "Limone biologico", price: 0.5 },
@@ -23,7 +23,15 @@ const DEFAULT_EXTRAS: BateyExtra[] = [
   { id: "pane-cafone", label: "Pane cafone caldo", price: 1 },
 ];
 
-export function BateySite({ data }: { data: BateySiteData }) {
+export function BateySite({
+  data,
+  controlledScreen,
+  onScreenChange,
+}: {
+  data: BateySiteData;
+  controlledScreen?: BateyScreen;
+  onScreenChange?: (s: BateyScreen) => void;
+}) {
   // Inject theme CSS once
   useEffect(() => {
     const id = "batey-theme-style";
@@ -35,7 +43,12 @@ export function BateySite({ data }: { data: BateySiteData }) {
     }
   }, []);
 
-  const [screen, setScreen] = useState<Screen>("home");
+  const [internalScreen, setInternalScreen] = useState<BateyScreen>("home");
+  const screen = controlledScreen ?? internalScreen;
+  const setScreen = (s: BateyScreen) => {
+    if (controlledScreen === undefined) setInternalScreen(s);
+    onScreenChange?.(s);
+  };
   const [selectedItem, setSelectedItem] = useState<BateySiteData["items"][number] | null>(null);
   const [cart, setCart] = useState<BateyCartItem[]>([]);
 

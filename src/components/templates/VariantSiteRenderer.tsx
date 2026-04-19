@@ -13,8 +13,8 @@
  *  • footer "Identità Brand" con address, phone, social, descrizione
  *  • hero usa la prima foto reale se non c'è hero esplicito
  */
-import { useEffect, useMemo } from "react";
-import { Phone, MapPin, Globe, Instagram, Facebook } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Phone, MapPin, Globe, Instagram, Facebook, Home, BookOpen, Eye, ShoppingCart } from "lucide-react";
 import { StrapizzamiSite, type StrapizzamiSiteData } from "@/components/templates/strapizzami/StrapizzamiSite";
 import { PaperfishSite, type PaperfishSiteData } from "@/components/templates/paperfish/PaperfishSite";
 import { BateySite, type BateySiteData } from "@/components/templates/batey/BateySite";
@@ -23,6 +23,14 @@ import {
   buildVariantStyleTag,
   type VariantThemeSpec,
 } from "@/lib/template-variant-theme";
+
+type ScreenKey = "home" | "menu" | "detail" | "cart";
+const SCREEN_LABELS: Record<ScreenKey, { label: string; sub: string; Icon: any }> = {
+  home: { label: "Home", sub: "Brand & Hero", Icon: Home },
+  menu: { label: "Menu", sub: "Catalogo", Icon: BookOpen },
+  detail: { label: "Dettaglio", sub: "Singolo item", Icon: Eye },
+  cart: { label: "Carrello", sub: "Checkout", Icon: ShoppingCart },
+};
 
 interface ServiceItem {
   id: string;
@@ -323,6 +331,9 @@ export function VariantSiteRenderer({
   const spec = useMemo(() => resolveVariantTheme(variantId), [variantId]);
   useVariantThemeInjection(spec);
 
+  // ⭐ Screen control — sincronizza Home/Menu/Dettaglio/Carrello con switcher floating
+  const [activeScreen, setActiveScreen] = useState<ScreenKey>("home");
+
   const gallery = useMemo(
     () => Array.from(new Set((galleryImages || []).filter(Boolean) as string[])),
     [galleryImages],
@@ -350,6 +361,10 @@ export function VariantSiteRenderer({
     />
   );
 
+  const screenSwitcher = (
+    <ScreenSwitcher active={activeScreen} onChange={setActiveScreen} accent={spec.cssVars["--pf-primary"] || spec.cssVars["--strap-primary"] || spec.cssVars["--bt-primary"] || "#a78bfa"} />
+  );
+
   if (spec.shell === "paperfish") {
     const data: PaperfishSiteData = {
       brandName,
@@ -361,7 +376,8 @@ export function VariantSiteRenderer({
     };
     return (
       <>
-        <PaperfishSite data={data} />
+        <PaperfishSite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
+        {screenSwitcher}
         {sharedHalo}
       </>
     );
@@ -378,7 +394,8 @@ export function VariantSiteRenderer({
     };
     return (
       <>
-        <BateySite data={data} />
+        <BateySite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
+        {screenSwitcher}
         {sharedHalo}
       </>
     );
@@ -395,8 +412,62 @@ export function VariantSiteRenderer({
   };
   return (
     <>
-      <StrapizzamiSite data={data} />
+      <StrapizzamiSite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
+      {screenSwitcher}
       {sharedHalo}
     </>
+  );
+}
+
+/* ─── Floating Screen Switcher — replica le 4 preview viste dal venditore ─── */
+function ScreenSwitcher({
+  active,
+  onChange,
+  accent,
+}: {
+  active: ScreenKey;
+  onChange: (s: ScreenKey) => void;
+  accent: string;
+}) {
+  return (
+    <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[55] pointer-events-auto">
+      <div
+        className="flex items-center gap-1 px-2 py-1.5 rounded-full backdrop-blur-xl shadow-2xl"
+        style={{
+          background: "rgba(10,10,10,0.85)",
+          border: `1px solid ${accent}40`,
+          boxShadow: `0 8px 32px ${accent}30`,
+        }}
+      >
+        {(Object.keys(SCREEN_LABELS) as ScreenKey[]).map((k) => {
+          const meta = SCREEN_LABELS[k];
+          const isActive = active === k;
+          const Icon = meta.Icon;
+          return (
+            <button
+              key={k}
+              onClick={() => {
+                onChange(k);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-full transition-all"
+              style={{
+                background: isActive ? accent : "transparent",
+                color: isActive ? "#fff" : "rgba(255,255,255,0.7)",
+                minWidth: 56,
+              }}
+              aria-label={meta.label}
+              title={`${meta.label} — ${meta.sub}`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              <span className="text-[9px] font-bold mt-0.5">{meta.label}</span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="text-[8px] uppercase tracking-[0.25em] text-white/40 text-center mt-1.5">
+        4 schermate · come la preview
+      </p>
+    </div>
   );
 }
