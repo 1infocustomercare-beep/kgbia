@@ -878,7 +878,7 @@ export default function LeadsPage() {
     } finally {
       setLoading(false);
     }
-  }, [sector, processResults, batchEnrichInstagram, autoPrewarmDemos]);
+  }, [sector, processResults, batchEnrichInstagram, autoPrewarmDemos, consumeSellerCredits, selectedSpecialization]);
 
   /* ─── Add manual lead ─── */
   const addManualLead = () => {
