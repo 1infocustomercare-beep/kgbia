@@ -1269,7 +1269,11 @@ serve(async (req) => {
     // ─── AGENT 2: ANALYST — AI brand kit + sub-settore detection ───
     const brand = await aiEnrichBrand(lead, scraped);
     const isFood = FOOD_SECTORS.has(lead.sector);
-    const match = detectSubSector(lead, scraped?.markdown);
+    // Priority: preview selezionata manualmente dal venditore > auto-detect dal lead/scrape
+    const manualMatch = previewToMatch(preview);
+    const autoMatch = detectSubSector(lead, scraped?.markdown);
+    const match = manualMatch || autoMatch;
+    console.log(`[demo-factory] match-source=${manualMatch ? "manual-preview" : "auto-detect"} variant=${match.variant} sub=${match.sub}`);
     await updateRun({
       agents_status: { scout: "done", analyst: "done", curator: "running", copywriter: "pending", builder: "pending", closer: "pending" },
       sub_sector: match.sub,
