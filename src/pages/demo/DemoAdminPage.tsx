@@ -32,6 +32,8 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, Legend
 } from "recharts";
+import { PersonalizableBadge } from "@/components/demo/PersonalizableBadge";
+import { useDemoCompleteness } from "@/hooks/useDemoCompleteness";
 
 const ICON_MAP: Record<string, any> = {
   LayoutDashboard, Users, Calendar, BarChart3, Bot, MessageCircle, Settings,
