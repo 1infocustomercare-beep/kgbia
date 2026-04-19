@@ -342,7 +342,32 @@ function detectSubSector(lead: LeadInput, scrapedText?: string): SubSectorMatch 
     return { sub: "bnb", variant: "cote-ivory", heroTagline: "CASA LONTANO DA CASA", themeHint: "marble" };
   }
 
-  return { sub: "generic", variant: "default", themeHint: "default" };
+  /* ── RETAIL / SHOP ── */
+  if (/retail|shop|store|negozio|boutique|fashion|abbigliamento/.test(sector + haystack)) {
+    return { sub: "ristorante", variant: isLuxury ? "cote-marble" : "cote-ivory", heroTagline: "ECCELLENZA SU MISURA", themeHint: "marble" };
+  }
+
+  /* ── HEALTHCARE / WELLNESS MEDICAL ── */
+  if (/health|medic|dental|dentist|clinic|fisio|physio|veterinari/.test(sector + haystack)) {
+    return { sub: "spa", variant: "neo-nails-lavender", heroTagline: "LA TUA SALUTE, LA NOSTRA PRIORITÀ", themeHint: "lavender" };
+  }
+
+  /* ── TRADES / PROFESSIONAL SERVICES (plumber/electrician/garage/cleaning…) ── */
+  if (/plumber|electrician|garage|cleaning|construction|gardening|legal|accounting|photography|tattoo|childcare|education|events|logistics/.test(sector + haystack)) {
+    return { sub: "ristorante", variant: isLuxury ? "cote-obsidian" : "cote-ivory", heroTagline: "PROFESSIONALITÀ CHE FA LA DIFFERENZA", themeHint: isLuxury ? "dark-gold" : "marble" };
+  }
+
+  /* ⭐ FALLBACK universale: invece di "default" (= legacy template),
+   * usiamo cote-ivory editorial che funziona su qualsiasi settore.
+   * In questo modo non viene MAI mostrato il vecchio template stock
+   * con le sezioni Team/About/Footer fantasma.
+   */
+  return {
+    sub: "ristorante",
+    variant: isLuxury ? "cote-marble" : "cote-ivory",
+    heroTagline: "BENVENUTI",
+    themeHint: "marble",
+  };
 }
 
 /** Backward-compat helper (in caso qualcosa lo usi ancora) */
@@ -383,7 +408,9 @@ function previewToMatch(preview?: PreviewSelection | null): SubSectorMatch | nul
   if (preview.sectorId === "fitness") return { sub: "gym", variant: "city-padel-sage", heroTagline: "ALLENATI AL TUO MEGLIO", themeHint: "sage" };
   if (preview.sectorId === "food") return { sub: "ristorante", variant: "cote-ivory", heroTagline: "BENVENUTI A TAVOLA", themeHint: "marble" };
 
-  return null;
+  // ⭐ Fallback finale: mai null se la preview è presente — restituiamo cote-ivory
+  // così la generazione non ricade sul legacy template stock.
+  return { sub: "ristorante", variant: "cote-ivory", heroTagline: "BENVENUTI", themeHint: "marble" };
 }
 
 function exactVariantToMatch(variant?: string | null, subSector?: string | null): SubSectorMatch | null {
@@ -1466,7 +1493,10 @@ serve(async (req) => {
       lead.website ? deepScrape(lead.website) : Promise.resolve(null),
       lead.instagram ? instagramOgImage(lead.instagram) : Promise.resolve([]),
     ]);
-    if (scraped?.detectedSectorHint && lead.sector === "custom") {
+    if (scraped?.detectedSectorHint && (lead.sector === "custom" || !lead.sector || scraped.detectedSectorHint !== lead.sector)) {
+      // Il detectedSectorHint è più specifico (es. sito di pizza dichiarato come "food"
+      // generico → upgrade a "pizzeria"). Lo applichiamo sempre quando differisce.
+      console.log(`[demo-factory] sector upgraded by scrape: ${lead.sector} → ${scraped.detectedSectorHint}`);
       lead.sector = scraped.detectedSectorHint;
     }
     await updateRun({ agents_status: { scout: "done", analyst: "running", curator: "pending", copywriter: "pending", builder: "pending", closer: "pending" } });
@@ -1496,7 +1526,15 @@ serve(async (req) => {
       match = manualMatch || autoMatch;
       matchSource = manualMatch ? "manual-preview" : "auto-detect";
     }
-    console.log(`[demo-factory] match-source=${matchSource} variant=${match.variant} sub=${match.sub}`);
+
+    // ⭐ HARDENING: garantisce che variant non sia mai "default" (= legacy template stock).
+    // Se per qualche motivo è ancora "default", forziamo cote-ivory (editorial neutro).
+    if (!match.variant || (match.variant as string) === "default") {
+      console.warn(`[demo-factory] variant fallback: was "${match.variant}" → cote-ivory`);
+      match = { ...match, variant: "cote-ivory", themeHint: match.themeHint || "marble" };
+    }
+
+    console.log(`[demo-factory] match-source=${matchSource} variant=${match.variant} sub=${match.sub} sector=${lead.sector}`);
     await updateRun({
       agents_status: { scout: "done", analyst: "done", curator: "running", copywriter: "pending", builder: "pending", closer: "pending" },
       sub_sector: match.sub,
