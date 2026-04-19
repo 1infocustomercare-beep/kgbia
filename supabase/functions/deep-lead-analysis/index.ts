@@ -41,6 +41,63 @@ const PORTFOLIO_REFS: Record<string, string> = {
 };
 
 /* ═══════════════════════════════════════════════
+   PREVIEW CATALOG — exact project names the AI must pick from.
+   These names are the AUTHORITATIVE keys used by the frontend matcher
+   (matchPreviewFromRecommendedProject in src/lib/preview-matcher.ts).
+   The "sub_sector" values map 1:1 to SubSectorKey.
+   ═══════════════════════════════════════════════ */
+const PREVIEW_CATALOG: { project_name: string; sub_sector: string; sector: string; fits: string }[] = [
+  // FOOD
+  { project_name: "COTE Miami",                 sub_sector: "braceria",    sector: "food",        fits: "ristoranti fine-dining, braceria, steakhouse, locali eleganti carne/grill" },
+  { project_name: "Paperfish Sushi",            sub_sector: "sushi",       sector: "food",        fits: "sushi, omakase, giapponese, ramen, asian fusion premium" },
+  { project_name: "Flame Kebab",                sub_sector: "kebab",       sector: "food",        fits: "kebab, fast food, street food, pizzerie da asporto, delivery oriented" },
+  { project_name: "La Vang Vietnamese",         sub_sector: "vietnamese",  sector: "food",        fits: "vietnamese, pho bar, cucina del sud-est asiatico premium" },
+  { project_name: "Batey Cevicheria",           sub_sector: "pesce",       sector: "food",        fits: "ristoranti di pesce, ceviche, raw bar, poke, ostricheria, cucina marinara" },
+  { project_name: "Strapizzami",                sub_sector: "pizzeria",    sector: "food",        fits: "pizzeria napoletana, gourmet, trapizzino, focacceria" },
+  // BEAUTY
+  { project_name: "Neo Nails Brickell",         sub_sector: "nails",       sector: "beauty",      fits: "nail bar, manicure/pedicure, centri estetici femminili premium" },
+  { project_name: "Tatush Hair & Fragrance",    sub_sector: "hair",        sector: "beauty",      fits: "parrucchieri, hair salon, barber con vendita prodotti, profumeria" },
+  // NCC / NAUTICA
+  { project_name: "Amalfi Luxury Transfer",     sub_sector: "ncc",         sector: "ncc",         fits: "NCC, transfer aeroportuali/eventi, autisti privati" },
+  { project_name: "Miami Boats Rental",         sub_sector: "boats",       sector: "ncc",         fits: "noleggio barche/gommoni/jet ski, charter giornaliero" },
+  { project_name: "Asinara Charter",            sub_sector: "yacht",       sector: "ncc",         fits: "yacht charter, gulet, vela, escursioni di lusso" },
+  // FITNESS
+  { project_name: "City Padel Milano",          sub_sector: "padel",       sector: "fitness",     fits: "club padel/tennis, palestre premium con prenotazione campi" },
+  // HEALTHCARE
+  { project_name: "FAR Medical Center",         sub_sector: "clinic",      sector: "healthcare",  fits: "studi medici, dentisti, fisioterapisti, cliniche" },
+  // VETERINARY
+  { project_name: "Aloha Pet Resort",           sub_sector: "veterinary",  sector: "veterinary",  fits: "veterinari, pet shop, toelettatura, pet hotel" },
+  // CHILDCARE
+  { project_name: "Little Diamond Nursery",     sub_sector: "childcare",   sector: "childcare",   fits: "asili nido, scuole infanzia, ludoteche luminose" },
+  { project_name: "Ashley's Playhouse",         sub_sector: "childcare",   sector: "childcare",   fits: "ludoteche, feste compleanno, attività bambini" },
+  // BEACH
+  { project_name: "Miami Watersports",          sub_sector: "beach",       sector: "beach",       fits: "lidi balneari, beach club, watersports, surf/kayak" },
+  // ARTIGIANI / SERVIZI
+  { project_name: "Nick's Plumbing & AC",       sub_sector: "plumber",     sector: "plumber",     fits: "idraulici, termoidraulici, HVAC" },
+  { project_name: "Elite Electrical",           sub_sector: "electrician", sector: "electrician", fits: "elettricisti, fotovoltaico, domotica" },
+  { project_name: "Speed Auto Service",         sub_sector: "garage",      sector: "garage",      fits: "officine, carrozzerie, autolavaggio, gommisti" },
+  // RETAIL
+  { project_name: "Premium Store",              sub_sector: "shop",        sector: "retail",      fits: "negozi/boutique con e-commerce, gioiellerie, ottica" },
+  // HOSPITALITY
+  { project_name: "MMI Resident Hub",           sub_sector: "hotel",       sector: "hospitality", fits: "hotel, resort, B&B, residence, case vacanze" },
+  // ALTRO
+  { project_name: "Ink Masters Studio",         sub_sector: "tattoo",      sector: "tattoo",      fits: "tatuatori, body art, piercing" },
+  { project_name: "Vision Photography",         sub_sector: "photography", sector: "photography", fits: "fotografi, videografi, studi creativi" },
+  { project_name: "Premium Costruzioni",        sub_sector: "construction",sector: "construction",fits: "imprese edili, geometri, architetti, ristrutturazioni" },
+  { project_name: "Verde & Giardini",           sub_sector: "gardening",   sector: "gardening",   fits: "giardinieri, paesaggisti, vivai" },
+  { project_name: "Tuscan Country Estate",      sub_sector: "agriturismo", sector: "agriturismo", fits: "agriturismi, cantine, fattorie, masserie" },
+  { project_name: "Elite Events",               sub_sector: "events",      sector: "events",      fits: "wedding planner, catering eventi, location" },
+  { project_name: "Academy Pro",                sub_sector: "education",   sector: "education",   fits: "scuole, accademie, formazione" },
+  { project_name: "FastTrack Logistics",        sub_sector: "logistics",   sector: "logistics",   fits: "corrieri, spedizionieri" },
+  { project_name: "Premium Clean",              sub_sector: "cleaning",    sector: "cleaning",    fits: "imprese di pulizie, sanificazione" },
+  { project_name: "Studio Legale Associato",    sub_sector: "legal",       sector: "legal",       fits: "avvocati, notai, studi legali" },
+  { project_name: "Studio Commercialista Pro",  sub_sector: "accounting",  sector: "accounting",  fits: "commercialisti, CAF, consulenti fiscali" },
+];
+
+const PREVIEW_PROJECT_NAMES = PREVIEW_CATALOG.map((p) => p.project_name);
+const PREVIEW_SUB_SECTORS = Array.from(new Set(PREVIEW_CATALOG.map((p) => p.sub_sector)));
+
+/* ═══════════════════════════════════════════════
    Pain points + sector intel
    ═══════════════════════════════════════════════ */
 const SECTOR_INTEL: Record<string, { pains: string[]; kpis: string[]; obj: string[] }> = {
