@@ -9,6 +9,8 @@ import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
 import EmpireTeamStory from "@/components/public/EmpireTeamStory";
 import { LuxuryTicker } from "@/components/public/LuxuryTicker";
 import { motion, AnimatePresence } from "framer-motion";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
+import { resolveVariantTheme } from "@/lib/template-variant-theme";
 
 const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 
@@ -222,6 +224,55 @@ export default function BusinessPage() {
 
   if (showSplash) {
     return <BusinessSplash name={company.name} logoUrl={company.logo_url} accentColor={accentHex} emoji={config.emoji} onComplete={handleSplashDone} />;
+  }
+
+  /* ─── UNIVERSAL VARIANT GATE ───
+   * Se la Demo Factory ha scelto un mockup iPhone specifico (template_variant),
+   * renderizza ESATTAMENTE quello (Strapizzami / Paperfish / Batey shell + palette
+   * del variant) per QUALSIASI settore, invece dello stock site. 1:1 con preview.
+   */
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+  const hasVariant = !!templateVariant && templateVariant !== "default";
+  const variantSpec = hasVariant ? resolveVariantTheme(templateVariant) : null;
+
+  if (hasVariant && variantSpec) {
+    return (
+      <Suspense fallback={<SiteLoader />}>
+        <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
+        <VariantSiteRenderer
+          variantId={templateVariant}
+          brandName={company.name || config.label}
+          subtitle={themeConfig?.subtitle || variantSpec.subtitle}
+          heroImageOverride={themeConfig?.hero_image || company.logo_url}
+          heroTaglineOverride={themeConfig?.hero_tagline}
+          address={[company.address, company.city].filter(Boolean).join(", ")}
+          items={[]}
+        />
+
+        {/* Conversion maximizer */}
+        <LuxuryTicker items={tickerItems} accentColor={accentHex} />
+        <div className="py-16 sm:py-24" style={{ background: "#0a0a0a" }}>
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-10">
+              <span className="text-[10px] tracking-[0.3em] uppercase font-semibold" style={{ color: accentHex }}>
+                La Tua App Completa
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-bold text-white mt-3" style={{ fontFamily: "'DM Serif Display', serif" }}>
+                Tutto Quello Che Ti Serve, In Un'Unica Piattaforma
+              </h2>
+              <p className="text-sm text-white/40 mt-3 max-w-xl mx-auto">
+                Gestisci ogni aspetto della tua attività {config.label.toLowerCase()} con 14+ moduli professionali integrati.
+              </p>
+            </div>
+            <IndustryPhoneShowcase industryId={effectiveIndustry} />
+          </div>
+        </div>
+        <EmpireTeamStory />
+        <Suspense fallback={null}>
+          <EmpireVoiceAgent />
+        </Suspense>
+      </Suspense>
+    );
   }
 
   return (
