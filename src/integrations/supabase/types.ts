@@ -4430,6 +4430,108 @@ export type Database = {
         }
         Relationships: []
       }
+      seller_demo_vault: {
+        Row: {
+          admin_email: string | null
+          admin_password: string | null
+          admin_url: string
+          brand_payload: Json
+          created_at: string
+          display_name: string
+          full_result: Json | null
+          id: string
+          images_payload: Json | null
+          is_archived: boolean
+          is_favorite: boolean
+          last_reused_at: string | null
+          last_reused_for_lead: string | null
+          lead_snapshot: Json
+          magic_link: string | null
+          notes: string | null
+          original_lead_name: string
+          outreach_payload: Json | null
+          owner_id: string
+          preview_url: string
+          reuse_count: number
+          sector: string
+          sector_label: string | null
+          sub_sector: string | null
+          tags: string[] | null
+          template_variant: string
+          tenant_id: string | null
+          tenant_kind: string | null
+          tenant_slug: string | null
+          theme_hint: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_email?: string | null
+          admin_password?: string | null
+          admin_url: string
+          brand_payload?: Json
+          created_at?: string
+          display_name: string
+          full_result?: Json | null
+          id?: string
+          images_payload?: Json | null
+          is_archived?: boolean
+          is_favorite?: boolean
+          last_reused_at?: string | null
+          last_reused_for_lead?: string | null
+          lead_snapshot?: Json
+          magic_link?: string | null
+          notes?: string | null
+          original_lead_name: string
+          outreach_payload?: Json | null
+          owner_id: string
+          preview_url: string
+          reuse_count?: number
+          sector: string
+          sector_label?: string | null
+          sub_sector?: string | null
+          tags?: string[] | null
+          template_variant: string
+          tenant_id?: string | null
+          tenant_kind?: string | null
+          tenant_slug?: string | null
+          theme_hint?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_email?: string | null
+          admin_password?: string | null
+          admin_url?: string
+          brand_payload?: Json
+          created_at?: string
+          display_name?: string
+          full_result?: Json | null
+          id?: string
+          images_payload?: Json | null
+          is_archived?: boolean
+          is_favorite?: boolean
+          last_reused_at?: string | null
+          last_reused_for_lead?: string | null
+          lead_snapshot?: Json
+          magic_link?: string | null
+          notes?: string | null
+          original_lead_name?: string
+          outreach_payload?: Json | null
+          owner_id?: string
+          preview_url?: string
+          reuse_count?: number
+          sector?: string
+          sector_label?: string | null
+          sub_sector?: string | null
+          tags?: string[] | null
+          template_variant?: string
+          tenant_id?: string | null
+          tenant_kind?: string | null
+          tenant_slug?: string | null
+          theme_hint?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       seo_settings: {
         Row: {
           company_id: string
@@ -5266,6 +5368,10 @@ export type Database = {
       }
       is_staff: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      touch_demo_vault_reuse: {
+        Args: { p_lead_name: string; p_vault_id: string }
+        Returns: undefined
+      }
       verify_kitchen_pin: {
         Args: { p_pin: string }
         Returns: {
