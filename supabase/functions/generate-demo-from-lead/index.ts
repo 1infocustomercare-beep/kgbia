@@ -315,6 +315,33 @@ function previewToMatch(preview?: PreviewSelection | null): SubSectorMatch | nul
   return null;
 }
 
+function exactVariantToMatch(variant?: string | null, subSector?: string | null): SubSectorMatch | null {
+  if (!variant || variant === "default") return null;
+
+  const exactMap: Record<string, SubSectorMatch> = {
+    strapizzami: { sub: "pizzeria", variant: "strapizzami", heroTagline: "LA VERA PIZZA NAPOLETANA", themeHint: "light-cream" },
+    "paperfish-sakura": { sub: "sushi", variant: "paperfish-sakura", heroTagline: "L'ARTE GIAPPONESE DEL GUSTO", themeHint: "sakura" },
+    "paperfish-dark": { sub: "sushi", variant: "paperfish-dark", heroTagline: "OMAKASE EXPERIENCE", themeHint: "noir" },
+    "cote-obsidian": { sub: "braceria", variant: "cote-obsidian", heroTagline: "FUOCO, CARNE, TRADIZIONE", themeHint: "dark-gold" },
+    "cote-marble": { sub: "ristorante", variant: "cote-marble", heroTagline: "OSPITALITÀ ESCLUSIVA", themeHint: "marble" },
+    "cote-ivory": { sub: "ristorante", variant: "cote-ivory", heroTagline: "BENVENUTI A TAVOLA", themeHint: "marble" },
+    "lavang-noir": { sub: "vietnamese", variant: "lavang-noir", heroTagline: "ESSENCE OF VIETNAM", themeHint: "noir" },
+    "midtown-kosher": { sub: "kosher", variant: "midtown-kosher", heroTagline: "TRADITION & TASTE", themeHint: "marble" },
+    "batey-pacifico": { sub: "pesce", variant: "batey-pacifico", heroTagline: "DAL MARE ALLA TAVOLA", themeHint: "azure" },
+    "neo-nails-lavender": { sub: "nails", variant: "neo-nails-lavender", heroTagline: "BELLEZZA SU MISURA", themeHint: "lavender" },
+    "neo-nails-blush": { sub: "nails", variant: "neo-nails-blush", heroTagline: "BELLEZZA SU MISURA", themeHint: "blush" },
+    "tatush-hair": { sub: "hair", variant: "tatush-hair", heroTagline: "LO STILE È UN'ARTE", themeHint: "marble" },
+    "asinara-azure": { sub: "yacht", variant: "asinara-azure", heroTagline: "LUSSO IN MARE APERTO", themeHint: "azure" },
+    "miami-boats": { sub: "boat", variant: "miami-boats", heroTagline: "EXCLUSIVE BOAT EXPERIENCE", themeHint: "azure" },
+    "city-padel-sage": { sub: "padel", variant: "city-padel-sage", heroTagline: "GIOCA AL TUO MEGLIO", themeHint: "sage" },
+    "miami-watersports": { sub: "watersports", variant: "miami-watersports", heroTagline: "ADRENALINA SUL MARE", themeHint: "azure" },
+  };
+
+  const exact = exactMap[variant];
+  if (!exact) return null;
+  return subSector ? { ...exact, sub: subSector as SubSectorKey } : exact;
+}
+
 function getSubSectorKeywords(sub: SubSectorKey, sector: string): string[] {
   const map: Partial<Record<SubSectorKey, string[]>> = {
     pizzeria: ["pizza", "forno", "margherita", "impasto", "napoli"],
@@ -1378,8 +1405,8 @@ serve(async (req) => {
     let match: SubSectorMatch;
     let matchSource: string;
     if (preview?.templateVariant && preview.templateVariant !== "default") {
-      // Cliente ha già risolto il variant col matcher unificato → usa direttamente
-      const heroDefaults = previewToMatch(preview) || detectSubSector(lead, scraped?.markdown);
+      // Cliente ha già scelto il mockup preciso: variant e sub-sector sono autoritativi.
+      const heroDefaults = exactVariantToMatch(preview.templateVariant, preview.subSector) || detectSubSector(lead, scraped?.markdown);
       match = {
         sub: (preview.subSector as SubSectorKey) || heroDefaults.sub,
         variant: preview.templateVariant as TemplateVariant,
@@ -1492,9 +1519,8 @@ serve(async (req) => {
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
 
     const origin = originUrl || "";
-    // Sito demo reale: usa il renderer pubblico /b/:slug che legge theme_config e monta il template corretto
-    // (anche per i tenant food, perché BusinessPage fa fallback su restaurants quando non trova companies)
-    const previewUrl = `${origin}/b/${tenant.slug}`;
+    const previewBasePath = isFood ? "r" : "b";
+    const previewUrl = `${origin}/${previewBasePath}/${tenant.slug}`;
     // Admin = pannello demo coerente con il template iPhone scelto
     const adminUrl = `${origin}/demo-admin/${tenant.slug}?variant=${encodeURIComponent(match.variant)}&sub=${encodeURIComponent(match.sub)}`;
 
