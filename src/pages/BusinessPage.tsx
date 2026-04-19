@@ -235,17 +235,36 @@ export default function BusinessPage() {
   const hasVariant = !!templateVariant && templateVariant !== "default";
   const variantSpec = hasVariant ? resolveVariantTheme(templateVariant) : null;
 
+  // ⭐ Demo Factory injected assets (logo, gallery, menu, descrizione, social)
+  const brandKitMenu = Array.isArray(themeConfig?.brand_kit_menu) ? themeConfig.brand_kit_menu : [];
+  const galleryImages: string[] = Array.isArray(themeConfig?.gallery_images) ? themeConfig.gallery_images : [];
+  const brandDescription = themeConfig?.brand_description || company.tagline || null;
+  const brandLogo = themeConfig?.logo_url || company.logo_url || null;
+  const brandPhone = themeConfig?.brand_phone || company.phone || null;
+  const brandAddress = themeConfig?.brand_address || [company.address, company.city].filter(Boolean).join(", ") || null;
+  const brandCity = themeConfig?.brand_city || company.city || null;
+  const brandSocial = themeConfig?.brand_social || (company.social_links as any) || null;
+  // È un sito demo generato dalla Demo Factory? (per non aggiungere blocchi marketing legacy)
+  const isDemoFactorySite = !!themeConfig?.auto_matched || hasVariant;
+
   if (hasVariant && variantSpec) {
     return (
       <Suspense fallback={<SiteLoader />}>
+        <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
         <VariantSiteRenderer
           variantId={templateVariant}
           brandName={company.name || config.label}
           subtitle={themeConfig?.subtitle || variantSpec.subtitle}
-          heroImageOverride={themeConfig?.hero_image || company.logo_url}
+          heroImageOverride={themeConfig?.hero_image || brandLogo}
           heroTaglineOverride={themeConfig?.hero_tagline}
-          address={[company.address, company.city].filter(Boolean).join(", ")}
-          items={[]}
+          address={brandAddress}
+          items={brandKitMenu}
+          logoUrl={brandLogo}
+          galleryImages={galleryImages}
+          brandDescription={brandDescription}
+          phone={brandPhone}
+          socialLinks={brandSocial}
+          city={brandCity}
         />
       </Suspense>
     );
@@ -256,33 +275,36 @@ export default function BusinessPage() {
       <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
       <Template company={company} />
 
-      {/* ═══ CONVERSION MAXIMIZER — After template content ═══ */}
+      {/* ═══ CONVERSION MAXIMIZER — solo per siti NON generati dalla Demo Factory ═══
+       *  I siti demo Factory hanno già BrandIdentityHalo + dati reali sotto la shell;
+       *  evitiamo di sovraccaricare con contenuti marketing legacy (Team/Showcase/Ticker)
+       *  che facevano sembrare tutti i siti uguali. */}
+      {!isDemoFactorySite && (
+        <>
+          <LuxuryTicker items={tickerItems} accentColor={accentHex} />
 
-      {/* Luxury Ticker — social proof ribbon */}
-      <LuxuryTicker items={tickerItems} accentColor={accentHex} />
-
-      {/* Industry Phone Showcase — 14 app screens in iPhone mockups */}
-      <div className="py-16 sm:py-24" style={{ background: "#0a0a0a" }}>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-10">
-            <span className="text-[10px] tracking-[0.3em] uppercase font-semibold" style={{ color: accentHex }}>
-              La Tua App Completa
-            </span>
-            <h2 className="text-2xl sm:text-4xl font-bold text-white mt-3" style={{ fontFamily: "'DM Serif Display', serif" }}>
-              Tutto Quello Che Ti Serve, In Un'Unica Piattaforma
-            </h2>
-            <p className="text-sm text-white/40 mt-3 max-w-xl mx-auto">
-              Gestisci ogni aspetto della tua attività {config.label.toLowerCase()} con 14+ moduli professionali integrati — dalla prenotazione alla fatturazione, dall'AI al marketing.
-            </p>
+          <div className="py-16 sm:py-24" style={{ background: "#0a0a0a" }}>
+            <div className="max-w-6xl mx-auto px-4">
+              <div className="text-center mb-10">
+                <span className="text-[10px] tracking-[0.3em] uppercase font-semibold" style={{ color: accentHex }}>
+                  La Tua App Completa
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-bold text-white mt-3" style={{ fontFamily: "'DM Serif Display', serif" }}>
+                  Tutto Quello Che Ti Serve, In Un'Unica Piattaforma
+                </h2>
+                <p className="text-sm text-white/40 mt-3 max-w-xl mx-auto">
+                  Gestisci ogni aspetto della tua attività {config.label.toLowerCase()} con 14+ moduli professionali integrati — dalla prenotazione alla fatturazione, dall'AI al marketing.
+                </p>
+              </div>
+              <IndustryPhoneShowcase industryId={effectiveIndustry} />
+            </div>
           </div>
-          <IndustryPhoneShowcase industryId={effectiveIndustry} />
-        </div>
-      </div>
 
-      {/* Empire Team — credibility & trust */}
-      <EmpireTeamStory />
+          <EmpireTeamStory />
+        </>
+      )}
 
-      {/* Arianna Voice Agent */}
+      {/* Arianna Voice Agent — sempre disponibile */}
       <Suspense fallback={null}>
         <EmpireVoiceAgent />
       </Suspense>
