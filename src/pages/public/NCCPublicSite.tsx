@@ -218,6 +218,22 @@ const REVIEW_DATES = ["Gennaio 2024", "Dicembre 2023", "Novembre 2023", "Ottobre
    MAIN COMPONENT
    ════════════════════════════════════════════════════════════ */
 export default function NCCPublicSite({ company, afterHero }: Props) {
+  // ── Variant override (from Demo Factory) ──
+  const themeConfig = (company as any)?.theme_config;
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+  if (templateVariant && templateVariant !== "default") {
+    return (
+      <VariantSiteRenderer
+        variantId={templateVariant}
+        brandName={company.name || "NCC & Charter"}
+        subtitle={themeConfig?.subtitle}
+        heroImageOverride={themeConfig?.hero_image}
+        heroTaglineOverride={themeConfig?.hero_tagline}
+        address={[company.address, company.city].filter(Boolean).join(", ")}
+        items={[]}
+      />
+    );
+  }
   const companyId = company.id;
   const gold = company.primary_color || NCC.gold;
   const [bookingForm, setBookingForm] = useState({ name: "", phone: "", email: "", route: "", vehicle: "", pickup: "", dropoff: "", date: "", time: "", passengers: "1", luggage: "1", flight: "", notes: "" });

@@ -73,6 +73,22 @@ const FAQ_ITEMS = [
 ];
 
 export default function FitnessPublicSite({ company, afterHero }: Props) {
+  // ── Variant override (from Demo Factory) ──
+  const themeConfig = (company as any)?.theme_config;
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+  if (templateVariant && templateVariant !== "default") {
+    return (
+      <VariantSiteRenderer
+        variantId={templateVariant}
+        brandName={company.name || "Fitness Club"}
+        subtitle={themeConfig?.subtitle}
+        heroImageOverride={themeConfig?.hero_image}
+        heroTaglineOverride={themeConfig?.hero_tagline}
+        address={[company.address, company.city].filter(Boolean).join(", ")}
+        items={[]}
+      />
+    );
+  }
   const companyId = company.id;
   const name = company.name || "Fitness Club";
   const tagline = company.tagline || "Trasforma il Tuo Corpo";
