@@ -8,6 +8,8 @@ import { getAdminLayout, type AdminLayoutConfig } from "@/config/admin-layout-co
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
 import { useParams, useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { getSectorConfig, SECTOR_CONFIGS } from "@/config/sectorConfig";
 import { getAllAgentsForSector } from "@/config/sectorFeatures";
 import { DEMO_SLUGS } from "@/data/demo-industries";
@@ -1058,9 +1060,38 @@ export default function DemoAdminPage() {
   // Variant override dalla Demo Factory (es. ?variant=cote-obsidian&sub=braceria)
   const variantParam = searchParams.get("variant");
   const subParam = searchParams.get("sub");
-  const variantTheme = variantParam ? VARIANT_THEME[variantParam] : null;
 
-  const resolvedSector = useMemo(() => resolveIndustryFromSlug(slug || "food"), [slug]);
+  // ⭐ Per le demo generate dalla Lead Demo Factory: lookup live del tenant
+  // (companies/restaurants) per ottenere industry, name, theme_config reali.
+  const { data: generatedTenant } = useQuery({
+    queryKey: ["demo-admin-tenant", slug],
+    queryFn: async () => {
+      if (!slug) return null;
+      const { data: c } = await supabase.from("companies")
+        .select("id, name, industry, primary_color, logo_url, theme_config, slug")
+        .eq("slug", slug).maybeSingle();
+      if (c) return { ...c, kind: "company" as const };
+      const { data: r } = await supabase.from("restaurants")
+        .select("id, name, primary_color, logo_url, theme_config, slug")
+        .eq("slug", slug).maybeSingle();
+      if (r) return { ...r, industry: "food", kind: "restaurant" as const };
+      return null;
+    },
+    enabled: !!slug,
+    staleTime: 60_000,
+  });
+
+  // Variant: prima query string, poi theme_config del tenant generato
+  const tenantThemeConfig = (generatedTenant as any)?.theme_config || {};
+  const effectiveVariant = variantParam || tenantThemeConfig.template_variant || null;
+  const effectiveSub = subParam || tenantThemeConfig.sub_sector || null;
+  const variantTheme = effectiveVariant ? VARIANT_THEME[effectiveVariant] : null;
+
+  const resolvedSector = useMemo(() => {
+    // Priorità: industry del tenant DB → match DEMO_SLUGS → fallback food
+    if (generatedTenant?.industry) return generatedTenant.industry;
+    return resolveIndustryFromSlug(slug || "food");
+  }, [slug, generatedTenant?.industry]);
   const config = getSectorConfig(resolvedSector || "food");
   const allAgents = useMemo(() => getAllAgentsForSector(resolvedSector || "food"), [resolvedSector]);
   // Normalize industry IDs to data keys (some data maps use legacy short names)

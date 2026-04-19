@@ -1519,8 +1519,11 @@ serve(async (req) => {
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
 
     const origin = originUrl || "";
-    const previewBasePath = isFood ? "r" : "b";
-    const previewUrl = `${origin}/${previewBasePath}/${tenant.slug}`;
+    // ⭐ TUTTI i settori usano /b/<slug> → BusinessPage → TEMPLATE_MAP[industry] → *PublicSite
+    // I *PublicSite (Food/Beauty/NCC/Fitness) hanno il branch VariantSiteRenderer che renderizza
+    // 1:1 la shell iPhone scelta (Strapizzami / Paperfish / Batey / Côte / Neo Nails / Asinara…)
+    // se theme_config.template_variant è presente. Mai più /r/ stock per i demo lead.
+    const previewUrl = `${origin}/b/${tenant.slug}`;
     // Admin = pannello demo coerente con il template iPhone scelto
     const adminUrl = `${origin}/demo-admin/${tenant.slug}?variant=${encodeURIComponent(match.variant)}&sub=${encodeURIComponent(match.sub)}`;
 
