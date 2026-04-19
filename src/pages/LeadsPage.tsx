@@ -429,43 +429,28 @@ export default function LeadsPage() {
     const consumeRes = await consumeSellerCredits("generate_demo_from_lead", {
       lead_name: lead.name, sector: lead._sector, city: lead.city,
     });
-    if (!consumeRes.success) {
-      if (consumeRes.error === "insufficient_credits") {
-        toast.error(`Crediti insufficienti. Servono ${consumeRes.required}, hai ${consumeRes.balance}.`, {
-          description: "Ricarica dal tuo profilo per continuare.",
-          action: { label: "Ricarica", onClick: () => window.location.assign("/partner/profile?tab=credits") },
-          duration: 7000,
-        });
-      } else {
-        toast.error("Impossibile avviare la Demo Factory", { description: consumeRes.error });
-      }
-      return;
-    }
-
-    setDemoFactoryOpen(true);
-    setDemoFactoryLoading(true);
-    setDemoFactoryResult(null);
-    setDemoFactoryProgress("Avvio scraping del sito web…");
-
-    try {
-      // progress hints
-      const hints = [
-        "Estraggo brand identity reale dal sito…",
-        "Genero menu/listino e palette con AI…",
-        "Creo tenant, account admin e moduli…",
-        "Seed clienti, ordini e recensioni…",
-      ];
-      let i = 0;
-      const interval = setInterval(() => {
-        if (i < hints.length) { setDemoFactoryProgress(hints[i]); i++; }
-      }, 4000);
+...
+      // ⭐ GROUND TRUTH: il matcher frontend è la stessa logica usata per la
+      // preview iPhone. Lo ricalcoliamo qui e passiamo templateVariant +
+      // subSector come AUTORITÀ al backend, così sito + admin sono 1:1.
+      const sectorLabel = SECTOR_OPTIONS.find(s => s.value === lead._sector)?.label || lead._sector;
+      const canonical = matchPreviewForLead({
+        name: lead.name,
+        sector: lead._sector,
+        sectorLabel,
+        cuisine: (lead as any).cuisine || null,
+        extra: [lead.full_address, lead.city, lead.zone, lead.website, lead.instagram, (lead as any).osm_type].filter(Boolean).join(" · "),
+        website: lead.website,
+        openingHours: lead.opening_hours,
+        types: lead.types || [],
+      });
 
       const { data, error } = await supabase.functions.invoke("generate-demo-from-lead", {
         body: {
           lead: {
             businessName: lead.name,
             sector: lead._sector,
-            sectorLabel: SECTOR_OPTIONS.find(s => s.value === lead._sector)?.label || lead._sector,
+            sectorLabel,
             city: lead.city,
             zone: lead.zone,
             fullAddress: lead.full_address,
@@ -481,12 +466,18 @@ export default function LeadsPage() {
             cuisine: lead.cuisine,
             types: lead.types,
           },
-          preview: preview ? {
-            brandName: preview.brandName,
-            styleName: preview.styleName,
-            imageUrl: preview.imageUrl,
-            sectorId: preview.sectorId,
-          } : null,
+          preview: {
+            // 1) override manuale dal picker (se presente)
+            brandName: preview?.brandName || canonical.brandName,
+            styleName: preview?.styleName || canonical.styleName,
+            imageUrl: preview?.imageUrl || canonical.screens?.[0] || null,
+            sectorId: preview?.sectorId || canonical.sectorId,
+            // 2) ⭐ ground-truth dal matcher unificato → backend usa questo SENZA inferenza
+            templateVariant: canonical.templateVariant,
+            subSector: canonical.subSector,
+            demoSlug: canonical.demoSlug,
+            screens: canonical.screens,
+          },
           partnerId: user.id,
           originUrl: window.location.origin,
         },
