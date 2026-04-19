@@ -1440,11 +1440,17 @@ export default function LeadsPage() {
               {COUNTRIES.map(c => <option key={c.code} value={c.code} style={{ background: "#1a1a2e" }}>{c.label}</option>)}
             </select>
           </div>
-          <div className="relative">
+          <div>
             <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>📍 Città</label>
-            <MapPin className="absolute left-3 bottom-3 w-3.5 h-3.5" style={{ color: "#14b8a6" }} />
-            <input ref={cityInputRef} value={city} onChange={e => setCity(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Roma, Milano, Dubai..." className="w-full pl-9 pr-3 py-3 rounded-xl text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+            <SmartCityAutocomplete
+              value={city}
+              onChange={(v) => setCity(v)}
+              countryCode={country}
+              placeholder="Roma, Milano, Dubai..."
+              inputStyle={inputStyle}
+              onEnter={() => handleSearch()}
+              inputRef={cityInputRef}
+            />
           </div>
         </div>
 
