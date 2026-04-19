@@ -175,7 +175,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                         Apri <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
-                    <div className="aspect-[9/16] max-h-[360px] sm:max-h-[420px] bg-black/40 w-full">
+                    <div className="aspect-[9/16] max-h-[280px] sm:max-h-[340px] lg:max-h-[400px] bg-black/40 w-full">
                       <iframe
                         src={result.previewUrl}
                         title="Demo preview"
