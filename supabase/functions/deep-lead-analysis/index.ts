@@ -504,7 +504,7 @@ serve(async (req) => {
     const {
       name, city, sector, website, instagram, phone, email,
       google_rating = 0, google_reviews = 0, full_address = "",
-      country, opening_hours = null, types = [],
+      country, opening_hours = null, types = [], specialization_query = null, specialization_label = null,
     } = body || {};
 
     if (!name) {
@@ -548,6 +548,8 @@ TELEFONO: ${phone || "non noto"}
 EMAIL: ${email || "non nota"}
 ORARI: ${opening_hours || "non noti"}
 TIPO OSM/Google: ${types?.join?.(", ") || "n/d"}
+SOTTO-SETTORE SCELTO DAL VENDITORE: ${specialization_label || "non specificato"}
+QUERY SPECIALISTICA SCELTA: ${specialization_query || "non specificata"}
 
 AUDIT SITO WEB (dati REALI estratti dall'HTML):
 ${audit ? JSON.stringify(audit, null, 2) : "Nessun sito disponibile per l'audit — questa è già un'evidenza forte di gap digitale."}

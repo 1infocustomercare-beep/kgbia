@@ -96,8 +96,9 @@ function bboxFromRadius(lat: number, lon: number, radiusKm: number): number[] {
 }
 
 /* ═══ SOURCE 1: PHOTON ═══ */
-async function searchPhoton(city: string, sector: string, geo: { lat: number; lon: number }, page: number): Promise<any[]> {
-  const terms = SECTOR_TERMS[sector] || [sector];
+async function searchPhoton(city: string, sector: string, geo: { lat: number; lon: number }, page: number, specializationQuery = ""): Promise<any[]> {
+  const baseTerms = SECTOR_TERMS[sector] || [sector];
+  const terms = specializationQuery ? [specializationQuery, ...baseTerms.filter(t => t !== specializationQuery)] : baseTerms;
   const results: any[] = [];
   const seen = new Set<string>();
 
@@ -416,7 +417,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { query, city, sector, use_google, page = 0, existing_names = [], lat, lon, radius_km } = await req.json();
+    const { query, city, sector, use_google, page = 0, existing_names = [], lat, lon, radius_km, specialization_query } = await req.json();
     const hasCoords = typeof lat === "number" && typeof lon === "number";
     if (!city && !query && !hasCoords) {
       return new Response(JSON.stringify({ success: false, error: "Inserisci una città, una query o coordinate GPS" }),
@@ -424,7 +425,9 @@ serve(async (req) => {
     }
 
     const searchCity = (city || "").trim();
+    const specializationQuery = (specialization_query || "").trim();
     const searchQuery = (query || "").trim();
+    const combinedQuery = [specializationQuery, searchQuery].filter(Boolean).join(" ").trim();
     const searchSector = sector || "food";
     const searchPage = Math.max(0, Math.min(page, 10)); // max 10 pages
     const searchRadius = typeof radius_km === "number" ? Math.max(0.5, Math.min(radius_km, 100)) : null;
@@ -453,10 +456,10 @@ serve(async (req) => {
 
     // 2. Run ALL sources in parallel
     const [photonResults, nominatimResults, overpassResults, googleResults] = await Promise.all([
-      searchPhoton(resolvedCity || searchQuery, searchSector, geo, searchPage),
-      searchNominatim(resolvedCity || searchQuery, searchSector, searchQuery, geo, searchPage),
+      searchPhoton(resolvedCity || combinedQuery || searchQuery, searchSector, geo, searchPage, specializationQuery),
+      searchNominatim(resolvedCity || combinedQuery || searchQuery, searchSector, combinedQuery, geo, searchPage),
       searchOverpass(searchSector, geo, searchPage),
-      use_google ? searchGooglePlaces(searchQuery, resolvedCity || searchCity, searchSector, searchPage) : Promise.resolve([]),
+      use_google ? searchGooglePlaces(combinedQuery, resolvedCity || searchCity, searchSector, searchPage) : Promise.resolve([]),
     ]);
 
     console.log(`Sources [page=${searchPage}, gps=${hasCoords}, r=${searchRadius}km]: Photon=${photonResults.length} Nominatim=${nominatimResults.length} Overpass=${overpassResults.length} Google=${googleResults.length}`);

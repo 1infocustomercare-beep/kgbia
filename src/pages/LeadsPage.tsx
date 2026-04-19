@@ -56,6 +56,8 @@ interface Lead {
   isManual?: boolean;
   opening_hours?: string | null;
   cuisine?: string | null;
+  chosen_specialization_label?: string | null;
+  chosen_specialization_query?: string | null;
 }
 
 /* ─── Helpers ─── */
@@ -291,6 +293,7 @@ export default function LeadsPage() {
   const [city, setCity] = useState("");
   const [sector, setSector] = useState("food");
   const [query, setQuery] = useState("");
+  const [selectedSpecialization, setSelectedSpecialization] = useState<{ label: string; query: string } | null>(null);
   const [country, setCountry] = useState("");
   const [radius, setRadius] = useState(15);
   const [loading, setLoading] = useState(false);
@@ -476,7 +479,7 @@ export default function LeadsPage() {
         sector: lead._sector,
         sectorLabel,
         cuisine: (lead as any).cuisine || null,
-        extra: [lead.full_address, lead.city, lead.zone, lead.website, lead.instagram, (lead as any).osm_type].filter(Boolean).join(" · "),
+        extra: [lead.chosen_specialization_label, lead.chosen_specialization_query, lead.full_address, lead.city, lead.zone, lead.website, lead.instagram, (lead as any).osm_type].filter(Boolean).join(" · "),
         website: lead.website,
         openingHours: lead.opening_hours,
         types: lead.types || [],
@@ -502,6 +505,8 @@ export default function LeadsPage() {
             openingHours: lead.opening_hours,
             cuisine: lead.cuisine,
             types: lead.types,
+            specializationLabel: lead.chosen_specialization_label,
+            specializationQuery: lead.chosen_specialization_query,
           },
           preview: {
             // 1) override manuale dal picker (se presente)
@@ -686,7 +691,13 @@ export default function LeadsPage() {
         search_google: r.search_google, search_instagram: r.search_instagram, search_facebook: r.search_facebook,
       };
       const detSector = detectSector(lead, sector);
-      return { ...lead, _score: computeScore(lead), _sector: detSector };
+      return {
+        ...lead,
+        _score: computeScore(lead),
+        _sector: detSector,
+        chosen_specialization_label: selectedSpecialization?.label || null,
+        chosen_specialization_query: selectedSpecialization?.query || null,
+      };
     });
 
     let filtered = mapped;
@@ -770,6 +781,8 @@ export default function LeadsPage() {
       const { data, error } = await supabase.functions.invoke("lead-search", {
         body: {
           query: query.trim(), city: searchCity, sector,
+          specialization_query: selectedSpecialization?.query || null,
+          specialization_label: selectedSpecialization?.label || null,
           mode: "zone", use_google: true, page,
           existing_names: existingNames,
           radius,
@@ -816,6 +829,8 @@ export default function LeadsPage() {
       const { data, error } = await supabase.functions.invoke("lead-search", {
         body: {
           sector,
+          specialization_query: selectedSpecialization?.query || null,
+          specialization_label: selectedSpecialization?.label || null,
           mode: "gps",
           use_google: true,
           page: 0,
@@ -928,6 +943,8 @@ export default function LeadsPage() {
     supabase.functions.invoke("deep-lead-analysis", {
       body: {
         name: lead.name, city: lead.city, sector: lead._sector,
+        specialization_query: lead.chosen_specialization_query,
+        specialization_label: lead.chosen_specialization_label,
         website: lead.website, instagram: lead.instagram, phone: lead.phone, email: lead.email,
         google_rating: lead.google_rating, google_reviews: lead.google_reviews,
         full_address: lead.full_address, country: country || "",
@@ -1008,7 +1025,7 @@ export default function LeadsPage() {
         sector: selected._sector,
         sectorLabel: sectorConfig?.label,
         cuisine: (selected as any).cuisine || null,
-        extra: [selected.full_address, selected.city, selected.zone, selected.website, selected.instagram, selected.osm_type].filter(Boolean).join(" · "),
+        extra: [selected.chosen_specialization_label, selected.chosen_specialization_query, selected.full_address, selected.city, selected.zone, selected.website, selected.instagram, selected.osm_type].filter(Boolean).join(" · "),
         website: selected.website,
         openingHours: selected.opening_hours,
         types: selected.types || [],
@@ -1501,8 +1518,9 @@ export default function LeadsPage() {
           <SmartSectorAutocomplete
             sectorValue={sector}
             onSectorChange={setSector}
-            queryValue={query}
-            onQueryChange={setQuery}
+            subQueryValue={selectedSpecialization?.query || ""}
+            subLabelValue={selectedSpecialization?.label || ""}
+            onSubsectorChange={setSelectedSpecialization}
             inputStyle={inputStyle}
             onEnter={() => handleSearch()}
           />
