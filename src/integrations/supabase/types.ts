@@ -5368,6 +5368,15 @@ export type Database = {
       }
       is_staff: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      super_admin_grant_credits: {
+        Args: {
+          p_amount: number
+          p_mode?: string
+          p_note?: string
+          p_target_user_id: string
+        }
+        Returns: Json
+      }
       touch_demo_vault_reuse: {
         Args: { p_lead_name: string; p_vault_id: string }
         Returns: undefined

@@ -23,6 +23,7 @@ import empireMonkeyMascot from "@/assets/empire-monkey.png";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import AccountManagerPanel from "@/components/superadmin/AccountManagerPanel";
+import SuperAdminCreditsManager from "@/components/superadmin/SuperAdminCreditsManager";
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 
@@ -2500,7 +2501,10 @@ const SuperAdminDashboard = () => {
               </div>
             </div>
 
-            {/* Stripe Platform Config */}
+            {/* 🎁 Regala crediti AI a qualsiasi venditore */}
+            <SuperAdminCreditsManager />
+
+
             <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4 space-y-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #635bff, #7a73ff)" }}>
