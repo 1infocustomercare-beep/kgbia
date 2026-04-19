@@ -13,6 +13,7 @@ export interface ManualPreviewSelection {
   styleName: string;
   imageUrl: string;
   demoLink: string;
+  isManualOverride: true;
 }
 
 interface ManualPreviewPickerProps {
@@ -73,6 +74,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
       styleName,
       imageUrl,
       demoLink,
+      isManualOverride: true,
     });
     toast.success(`Preview "${brandName} ${styleName}" selezionata`);
     onClose();
