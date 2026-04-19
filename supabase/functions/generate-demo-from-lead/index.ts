@@ -342,7 +342,32 @@ function detectSubSector(lead: LeadInput, scrapedText?: string): SubSectorMatch 
     return { sub: "bnb", variant: "cote-ivory", heroTagline: "CASA LONTANO DA CASA", themeHint: "marble" };
   }
 
-  return { sub: "generic", variant: "default", themeHint: "default" };
+  /* ── RETAIL / SHOP ── */
+  if (/retail|shop|store|negozio|boutique|fashion|abbigliamento/.test(sector + haystack)) {
+    return { sub: "ristorante", variant: isLuxury ? "cote-marble" : "cote-ivory", heroTagline: "ECCELLENZA SU MISURA", themeHint: "marble" };
+  }
+
+  /* ── HEALTHCARE / WELLNESS MEDICAL ── */
+  if (/health|medic|dental|dentist|clinic|fisio|physio|veterinari/.test(sector + haystack)) {
+    return { sub: "spa", variant: "neo-nails-lavender", heroTagline: "LA TUA SALUTE, LA NOSTRA PRIORITÀ", themeHint: "lavender" };
+  }
+
+  /* ── TRADES / PROFESSIONAL SERVICES (plumber/electrician/garage/cleaning…) ── */
+  if (/plumber|electrician|garage|cleaning|construction|gardening|legal|accounting|photography|tattoo|childcare|education|events|logistics/.test(sector + haystack)) {
+    return { sub: "ristorante", variant: isLuxury ? "cote-obsidian" : "cote-ivory", heroTagline: "PROFESSIONALITÀ CHE FA LA DIFFERENZA", themeHint: isLuxury ? "dark-gold" : "marble" };
+  }
+
+  /* ⭐ FALLBACK universale: invece di "default" (= legacy template),
+   * usiamo cote-ivory editorial che funziona su qualsiasi settore.
+   * In questo modo non viene MAI mostrato il vecchio template stock
+   * con le sezioni Team/About/Footer fantasma.
+   */
+  return {
+    sub: "ristorante",
+    variant: isLuxury ? "cote-marble" : "cote-ivory",
+    heroTagline: "BENVENUTI",
+    themeHint: "marble",
+  };
 }
 
 /** Backward-compat helper (in caso qualcosa lo usi ancora) */
