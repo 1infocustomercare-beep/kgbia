@@ -417,6 +417,11 @@ interface PreviewSelection {
   styleName?: string;
   imageUrl?: string;
   sectorId?: string;
+  /** ⭐ Ground-truth da preview-matcher v3 frontend — se presente è AUTORITATIVA */
+  templateVariant?: string;
+  subSector?: string;
+  demoSlug?: string;
+  screens?: string[];
 }
 
 interface BrandPalette {
