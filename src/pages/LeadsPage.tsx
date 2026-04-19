@@ -25,6 +25,8 @@ import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
 import CreditConfirmDialog from "@/components/leads/CreditConfirmDialog";
 import SmartCityAutocomplete from "@/components/leads/SmartCityAutocomplete";
 import SmartSectorAutocomplete from "@/components/leads/SmartSectorAutocomplete";
+import DemoVaultPanel from "@/components/leads/DemoVaultPanel";
+import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
