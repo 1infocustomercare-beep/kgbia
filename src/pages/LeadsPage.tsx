@@ -291,6 +291,7 @@ export default function LeadsPage() {
   const [city, setCity] = useState("");
   const [sector, setSector] = useState("food");
   const [query, setQuery] = useState("");
+  const [selectedSpecialization, setSelectedSpecialization] = useState<{ label: string; query: string } | null>(null);
   const [country, setCountry] = useState("");
   const [radius, setRadius] = useState(15);
   const [loading, setLoading] = useState(false);
