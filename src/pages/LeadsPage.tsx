@@ -828,6 +828,15 @@ export default function LeadsPage() {
   /* ─── GPS Radar Search (coords + radius km, real OSM data) ─── */
   const handleGpsSearch = useCallback(async (loc: GpsLocation, radiusKm: number) => {
     setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null);
+    // 💰 Gating crediti: GPS search = 1 credito (lead_search)
+    const creditRes = await consumeSellerCredits("lead_search", { mode: "gps", lat: loc.lat, lon: loc.lon, radius_km: radiusKm });
+    if (!creditRes.success) {
+      setLoading(false);
+      toast.error(creditRes.error === "insufficient_credits"
+        ? `Servono ${creditRes.required} crediti (saldo: ${creditRes.balance})`
+        : "Crediti non disponibili");
+      return;
+    }
     try {
       const { data, error } = await supabase.functions.invoke("lead-search", {
         body: {
