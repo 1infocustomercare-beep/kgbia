@@ -578,39 +578,55 @@ async function draftMessage(
 
   const tone = config.voice_tone ?? "professional_friendly";
   const previewLink = preview?.preview_url ?? lead.demo_preview_url ?? "";
+  const signature = config.signature ?? "Arianna · Empire AI Group";
 
-  const draft = await callAI([
-    {
-      role: "system",
-      content: `Sei Arianna, sales agent senior di Empire AI Group. Scrivi un messaggio ${channel} in italiano, tono ${tone}, MAI spam. MAX 6 righe email / 3 whatsapp.
+  let parsed: { subject?: string; body?: string } = {};
+  let usedFallback = false;
+
+  try {
+    const draft = await callAI([
+      {
+        role: "system",
+        content: `Sei Arianna, sales agent senior di Empire AI Group. Scrivi un messaggio ${channel} in italiano, tono ${tone}, MAI spam. MAX 6 righe email / 3 whatsapp.
 - Aggancio personalizzato sul pain point + nome attività
 - Mostra che hai già preparato una preview personalizzata (link incluso se presente)
 - CTA: proporre call 15min
-- Firma: ${config.signature ?? "Arianna · Empire AI Group"}
+- Firma: ${signature}
 Ritorna SOLO JSON: {"subject":"...", "body":"..."}.`,
-    },
-    {
-      role: "user",
-      content: `Lead: ${JSON.stringify(lead)}
+      },
+      {
+        role: "user",
+        content: `Lead: ${JSON.stringify(lead)}
 Profilo: ${JSON.stringify(profile)}
 Preview personalizzata già pronta: ${previewLink || "(non disponibile)"}`,
-    },
-  ]);
-
-  let parsed: { subject?: string; body?: string } = {};
-  try {
-    const m = draft.match(/\{[\s\S]*\}/);
-    parsed = m ? JSON.parse(m[0]) : { body: draft };
-  } catch {
-    parsed = { body: draft };
+      },
+    ]);
+    try {
+      const m = draft.match(/\{[\s\S]*\}/);
+      parsed = m ? JSON.parse(m[0]) : { body: draft };
+    } catch {
+      parsed = { body: draft };
+    }
+    if (!parsed.body) {
+      parsed = heuristicDraft(lead, profile, channel, previewLink, signature);
+      usedFallback = true;
+    }
+  } catch (e: any) {
+    if (e instanceof AIUnavailableError) {
+      console.warn(`[arianna] AI unavailable (${e.status}) → using template draft for lead ${lead.id}`);
+      parsed = heuristicDraft(lead, profile, channel, previewLink, signature);
+      usedFallback = true;
+    } else {
+      throw e;
+    }
   }
 
   const actionId = await logAction(supabase, owner_id, job_id, lead.id, {
     type: "draft",
     channel,
-    title: `✍️ Bozza ${channel}: ${getLeadName(lead)}`,
+    title: `✍️ Bozza ${channel}: ${getLeadName(lead)}${usedFallback ? " (template)" : ""}`,
     description: parsed.subject ?? parsed.body?.slice(0, 80),
-    payload: { ...parsed, preview_url: previewLink, recipient },
+    payload: { ...parsed, preview_url: previewLink, recipient, fallback: usedFallback },
   }, config.autonomy_mode === "full_auto" ? "success" : "needs_approval", parsed, Date.now() - t0);
 
   if (config.autonomy_mode !== "full_auto") {
