@@ -3417,23 +3417,35 @@ export type Database = {
       }
       partner_demo_credits: {
         Row: {
+          alert_threshold_pct: number | null
+          auto_block_on_cap: boolean | null
           balance: number
           created_at: string
           id: string
+          monthly_cap: number | null
+          notes: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          alert_threshold_pct?: number | null
+          auto_block_on_cap?: boolean | null
           balance?: number
           created_at?: string
           id?: string
+          monthly_cap?: number | null
+          notes?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          alert_threshold_pct?: number | null
+          auto_block_on_cap?: boolean | null
           balance?: number
           created_at?: string
           id?: string
+          monthly_cap?: number | null
+          notes?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -4979,6 +4991,42 @@ export type Database = {
         }
         Relationships: []
       }
+      seller_credit_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          credits_used_month: number
+          id: string
+          is_read: boolean
+          message: string | null
+          monthly_cap: number | null
+          threshold_pct: number | null
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          credits_used_month?: number
+          id?: string
+          is_read?: boolean
+          message?: string | null
+          monthly_cap?: number | null
+          threshold_pct?: number | null
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          credits_used_month?: number
+          id?: string
+          is_read?: boolean
+          message?: string | null
+          monthly_cap?: number | null
+          threshold_pct?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       seller_demo_vault: {
         Row: {
           admin_email: string | null
@@ -5892,6 +5940,10 @@ export type Database = {
         Returns: number
       }
       get_user_company: { Args: { p_user_id: string }; Returns: string }
+      get_user_monthly_credits_used: {
+        Args: { p_user_id: string }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -5922,6 +5974,16 @@ export type Database = {
           p_amount: number
           p_mode?: string
           p_note?: string
+          p_target_user_id: string
+        }
+        Returns: Json
+      }
+      super_admin_set_credit_limits: {
+        Args: {
+          p_alert_threshold_pct?: number
+          p_auto_block?: boolean
+          p_monthly_cap?: number
+          p_notes?: string
           p_target_user_id: string
         }
         Returns: Json
