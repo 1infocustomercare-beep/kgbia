@@ -314,6 +314,40 @@ const SUB_TO_TARGET: Partial<Record<SubSectorKey, PreviewTarget>> = {
   agriturismo: { sectorId: "hospitality", brandKeywords: ["asinara"],      styleKeywords: ["emerald cove", "golden sunset"],    templateVariant: "asinara-azure", demoSlug: "" },
 };
 
+const RECOMMENDED_PROJECT_SUBSECTOR: Record<string, SubSectorKey> = {
+  "cote miami": "braceria",
+  "paperfish sushi": "sushi",
+  "flame kebab": "kebab",
+  "la vang vietnamese": "vietnamese",
+  "batey cevicheria": "pesce",
+  "neo nails brickell": "nails",
+  "tatush hair & fragrance": "hair",
+  "amalfi luxury transfer": "ncc",
+  "miami boats rental": "boats",
+  "asinara charter": "yacht",
+  "city padel milano": "padel",
+  "far medical center": "clinic",
+  "aloha pet resort": "veterinary",
+  "little diamond nursery": "childcare",
+  "ashley's playhouse": "childcare",
+  "miami watersports": "beach",
+  "nick's plumbing & ac": "plumber",
+  "premium store": "shop",
+  "elite electrical": "electrician",
+  "ink masters studio": "tattoo",
+  "speed auto service": "garage",
+  "vision photography": "photography",
+  "premium costruzioni": "construction",
+  "verde & giardini": "gardening",
+  "tuscan country estate": "agriturismo",
+  "elite events": "events",
+  "academy pro": "education",
+  "fasttrack logistics": "logistics",
+  "premium clean": "cleaning",
+  "studio legale associato": "legal",
+  "studio commercialista pro": "accounting",
+};
+
 /* ─── Brand & style lookup tolleranti ─── */
 
 function brandMatches(brand: MockupBrand, keywords: string[]): boolean {
@@ -372,6 +406,47 @@ function getAnyBrandFromSector(sectorId: IndustryId): { brand?: MockupBrand; por
   return {};
 }
 
+function resolvePreviewFromTarget(sub: SubSectorKey, sectorId: IndustryId, target?: PreviewTarget): PreviewMatch | null {
+  if (target) {
+    const portfolio = SECTOR_PORTFOLIO.find((sp) => sp.sectorId === target.sectorId);
+    const brand = findBrandInPortfolio(portfolio, target.brandKeywords);
+    if (brand) {
+      const style = pickStyle(brand, target.styleKeywords);
+      const screens = (style?.screens || []).slice(0, 4);
+      if (screens.length) {
+        return {
+          sectorId: target.sectorId,
+          subSector: sub,
+          brandName: brand.name,
+          styleName: style?.name || target.styleKeywords[0] || "Default",
+          screens,
+          templateVariant: target.templateVariant,
+          demoSlug: target.demoSlug,
+        };
+      }
+    }
+  }
+
+  const { brand: anyBrand, portfolio: anyPortfolio } = getAnyBrandFromSector(sectorId);
+  if (anyBrand && anyPortfolio) {
+    const style = anyBrand.styles.find((s) => s.screens?.length);
+    const screens = (style?.screens || []).slice(0, 4);
+    if (screens.length) {
+      return {
+        sectorId: anyPortfolio.sectorId,
+        subSector: sub,
+        brandName: anyBrand.name,
+        styleName: style?.name || "Default",
+        screens,
+        templateVariant: target?.templateVariant || "default",
+        demoSlug: target?.demoSlug || "",
+      };
+    }
+  }
+
+  return null;
+}
+
 /* ─── Main matcher ─── */
 
 export function matchPreviewForLead(input: {
@@ -398,38 +473,8 @@ export function matchPreviewForLead(input: {
     }
   }
 
-  // 2) Cerca brand+style nel portfolio
-  if (target) {
-    const portfolio = SECTOR_PORTFOLIO.find((sp) => sp.sectorId === target!.sectorId);
-    const brand = findBrandInPortfolio(portfolio, target.brandKeywords);
-    if (brand) {
-      const style = pickStyle(brand, target.styleKeywords);
-      const screens = (style?.screens || []).slice(0, 4);
-      if (screens.length) {
-        return {
-          sectorId: target.sectorId, subSector: sub,
-          brandName: brand.name, styleName: style?.name || target.styleKeywords[0] || "Default",
-          screens, templateVariant: target.templateVariant, demoSlug: target.demoSlug,
-        };
-      }
-    }
-  }
-
-  // 3) Fallback: PRIMO brand reale del settore (non hardcoded "primo del primo")
-  const { brand: anyBrand, portfolio: anyPortfolio } = getAnyBrandFromSector(sectorId);
-  if (anyBrand && anyPortfolio) {
-    const style = anyBrand.styles.find((s) => s.screens?.length);
-    const screens = (style?.screens || []).slice(0, 4);
-    if (screens.length) {
-      return {
-        sectorId: anyPortfolio.sectorId, subSector: sub,
-        brandName: anyBrand.name, styleName: style?.name || "Default",
-        screens,
-        templateVariant: target?.templateVariant || "default",
-        demoSlug: target?.demoSlug || "",
-      };
-    }
-  }
+  const resolved = resolvePreviewFromTarget(sub, sectorId, target);
+  if (resolved) return resolved;
 
   // 4) Ultimo fallback: flat array del settore
   const flat = getFlatSectorScreens(sectorId);
@@ -448,4 +493,38 @@ function toTitle(s: string) {
 
 export function getPreviewScreensForLead(input: Parameters<typeof matchPreviewForLead>[0]): string[] {
   return matchPreviewForLead(input).screens;
+}
+
+export function matchPreviewFromRecommendedProject(input: {
+  projectName?: string | null;
+  reason?: string | null;
+  sector?: string | null;
+  sectorLabel?: string | null;
+}): PreviewMatch | null {
+  const projectKey = (input.projectName || "").trim().toLowerCase();
+  const mappedSub = projectKey ? RECOMMENDED_PROJECT_SUBSECTOR[projectKey] : undefined;
+  if (mappedSub) {
+    const { sectorId } = detectSubSector({
+      name: input.projectName,
+      sector: input.sector,
+      sectorLabel: input.sectorLabel,
+      extra: input.reason,
+    });
+    const target = SUB_TO_TARGET[mappedSub];
+    return resolvePreviewFromTarget(mappedSub, target?.sectorId || sectorId, target) || matchPreviewForLead({
+      name: input.projectName,
+      sector: input.sector,
+      sectorLabel: input.sectorLabel,
+      extra: input.reason,
+    });
+  }
+
+  if (!input.projectName && !input.reason) return null;
+
+  return matchPreviewForLead({
+    name: input.projectName,
+    sector: input.sector,
+    sectorLabel: input.sectorLabel,
+    extra: input.reason,
+  });
 }
