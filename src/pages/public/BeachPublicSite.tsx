@@ -24,6 +24,8 @@ import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
+import { resolveVariantTheme } from "@/lib/template-variant-theme";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 
 /* ─── SUNSET CORAL + OCEAN DEEP AESTHETIC ─── */
@@ -70,6 +72,25 @@ const FALLBACK_REVIEWS = [
 ];
 
 export default function BeachPublicSite({ company, afterHero }: Props) {
+  const themeConfig = (company as any)?.theme_config;
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+  const hasVariant = !!templateVariant && templateVariant !== "default";
+  const variantSpec = hasVariant ? resolveVariantTheme(templateVariant) : null;
+
+  if (hasVariant && variantSpec) {
+    return (
+      <VariantSiteRenderer
+        variantId={templateVariant}
+        brandName={company.name || "Beach Club"}
+        subtitle={themeConfig?.subtitle || variantSpec.subtitle}
+        heroImageOverride={themeConfig?.hero_image}
+        heroTaglineOverride={themeConfig?.hero_tagline}
+        address={[company.address, company.city].filter(Boolean).join(", ")}
+        items={[]}
+      />
+    );
+  }
+
   const companyId = company.id;
   const phone = company.phone;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
