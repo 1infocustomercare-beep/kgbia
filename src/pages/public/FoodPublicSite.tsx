@@ -181,15 +181,24 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
 
   // Branch render: variant template (1:1 dei mockup iPhone scelti dalla Demo Factory)
   if (hasVariant && variantSpec) {
+    const tcfg = themeConfig || {};
+    const brandKitMenu: any[] = Array.isArray(tcfg.brand_kit_menu) ? tcfg.brand_kit_menu : [];
+    const realItems = menuItems.length > 0 ? menuItems : brandKitMenu;
     return (
       <VariantSiteRenderer
         variantId={templateVariant}
         brandName={company.name || "Ristorante"}
-        subtitle={themeConfig?.subtitle || variantSpec.subtitle}
-        heroImageOverride={themeConfig?.hero_image}
-        heroTaglineOverride={themeConfig?.hero_tagline}
-        address={[company.address, company.city].filter(Boolean).join(", ")}
-        items={(menuItems.length > 0 ? menuItems : []).map((i: any) => ({
+        subtitle={tcfg.subtitle || variantSpec.subtitle}
+        heroImageOverride={tcfg.hero_image}
+        heroTaglineOverride={tcfg.hero_tagline}
+        address={tcfg.brand_address || [company.address, company.city].filter(Boolean).join(", ")}
+        city={tcfg.brand_city || company.city}
+        logoUrl={tcfg.logo_url || (company as any).logo_url || (restaurant as any)?.logo_url}
+        galleryImages={Array.isArray(tcfg.gallery_images) ? tcfg.gallery_images : []}
+        brandDescription={tcfg.brand_description}
+        phone={tcfg.brand_phone || company.phone || (restaurant as any)?.phone}
+        socialLinks={tcfg.brand_social || (company as any).social_links}
+        items={realItems.map((i: any) => ({
           id: String(i.id),
           name: i.name,
           description: i.description || "",

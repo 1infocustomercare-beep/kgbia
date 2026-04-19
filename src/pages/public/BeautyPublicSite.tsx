@@ -145,15 +145,23 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
   const themeConfig = (company as any)?.theme_config;
   const templateVariant = themeConfig?.template_variant as string | undefined;
   if (templateVariant && templateVariant !== "default") {
+    const tcfg = themeConfig || {};
+    const brandKitMenu: any[] = Array.isArray(tcfg.brand_kit_menu) ? tcfg.brand_kit_menu : [];
     return (
       <VariantSiteRenderer
         variantId={templateVariant}
         brandName={company.name || "Beauty Studio"}
-        subtitle={themeConfig?.subtitle}
-        heroImageOverride={themeConfig?.hero_image}
-        heroTaglineOverride={themeConfig?.hero_tagline}
-        address={[company.address, company.city].filter(Boolean).join(", ")}
-        items={[]}
+        subtitle={tcfg.subtitle}
+        heroImageOverride={tcfg.hero_image}
+        heroTaglineOverride={tcfg.hero_tagline}
+        address={tcfg.brand_address || [company.address, company.city].filter(Boolean).join(", ")}
+        city={tcfg.brand_city || company.city}
+        logoUrl={tcfg.logo_url || (company as any).logo_url}
+        galleryImages={Array.isArray(tcfg.gallery_images) ? tcfg.gallery_images : []}
+        brandDescription={tcfg.brand_description}
+        phone={tcfg.brand_phone || company.phone}
+        socialLinks={tcfg.brand_social || (company as any).social_links}
+        items={brandKitMenu}
       />
     );
   }
