@@ -24,6 +24,7 @@ import SpeedDialList from "@/components/leads/SpeedDialList";
 import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
 import CreditConfirmDialog from "@/components/leads/CreditConfirmDialog";
 import SmartCityAutocomplete from "@/components/leads/SmartCityAutocomplete";
+import SmartSectorAutocomplete from "@/components/leads/SmartSectorAutocomplete";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
@@ -1457,13 +1458,17 @@ export default function LeadsPage() {
           </div>
         </div>
 
-        {/* Row 2: Sector */}
+        {/* Row 2: Sector + Sub-sector intelligent picker */}
         <div>
-          <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🏢 Settore / Categoria</label>
-          <select value={sector} onChange={e => setSector(e.target.value)}
-            className="w-full px-3 py-3 rounded-xl text-[11px] text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
-            {SECTOR_OPTIONS.map(s => <option key={s.value} value={s.value} style={{ background: "#1a1a2e" }}>{s.label}</option>)}
-          </select>
+          <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🏢 Settore / Specializzazione</label>
+          <SmartSectorAutocomplete
+            sectorValue={sector}
+            onSectorChange={setSector}
+            queryValue={query}
+            onQueryChange={setQuery}
+            inputStyle={inputStyle}
+            onEnter={() => handleSearch()}
+          />
         </div>
 
         {/* Row 3: Query + Search button */}
