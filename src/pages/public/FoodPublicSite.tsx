@@ -8,9 +8,8 @@ import { motion, useInView, useScroll, useTransform, AnimatePresence } from "fra
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { StrapizzamiSite, type StrapizzamiSiteData } from "@/components/templates/strapizzami/StrapizzamiSite";
-import { PaperfishSite, type PaperfishSiteData } from "@/components/templates/paperfish/PaperfishSite";
-import { BateySite, type BateySiteData } from "@/components/templates/batey/BateySite";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
+import { resolveVariantTheme } from "@/lib/template-variant-theme";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
