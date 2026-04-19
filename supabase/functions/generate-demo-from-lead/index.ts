@@ -19,6 +19,7 @@ const corsHeaders = {
 
 const FOOD_SECTORS = new Set([
   "food", "bakery", "gelateria", "wine_bar", "catering", "pizzeria", "ristoration",
+  "coffee", "pub", "trattoria", "osteria", "vegan", "burger",
 ]);
 
 /* ─── UNIVERSAL SUB-SECTOR DETECTION → preview/template auto-match ───
@@ -31,8 +32,9 @@ type SubSectorKey =
   // Food
   | "pizzeria" | "sushi" | "braceria" | "pesce" | "bakery"
   | "vietnamese" | "kosher" | "ceviche" | "gelateria" | "ristorante"
+  | "coffee" | "wine_bar" | "trattoria" | "pub" | "osteria" | "vegan" | "burger"
   // Beauty
-  | "nails" | "hair" | "spa"
+  | "nails" | "hair" | "spa" | "barber"
   // NCC / Mobility
   | "yacht" | "boat" | "limo" | "transfer"
   // Fitness
@@ -128,8 +130,68 @@ function detectSubSector(lead: LeadInput, scrapedText?: string): SubSectorMatch 
     if (/\b(kosher|jewish|kasher)\b/.test(haystack)) {
       return { sub: "kosher", variant: "midtown-kosher", heroTagline: "TRADITION & TASTE", themeHint: "marble" };
     }
-    if (/\b(gelater|gelato|ice cream|sorbet)\b/.test(haystack) || sector === "gelateria") {
-      return { sub: "gelateria", variant: "cote-ivory", heroTagline: "GELATO ARTIGIANALE", themeHint: "marble" };
+    if (/\b(gelater|gelato|ice cream|sorbet|sorbett)\b/.test(haystack) || sector === "gelateria") {
+      return {
+        sub: "gelateria",
+        variant: isLuxury ? "cote-marble" : "cote-ivory",
+        heroTagline: "GELATO ARTIGIANALE",
+        themeHint: "marble",
+      };
+    }
+    // ── Coffee shop / specialty coffee / caffetteria ──
+    if (/\b(caffetter|coffee|caffè|espresso|bar tavola|cappucc|barista|specialty coffee|brunch)\b/.test(haystack)) {
+      return {
+        sub: "coffee",
+        variant: isLuxury ? "cote-marble" : "cote-ivory",
+        heroTagline: "L'ARTE DEL CAFFÈ",
+        themeHint: "marble",
+      };
+    }
+    // ── Wine bar / enoteca ──
+    if (/\b(wine bar|enotec|cantina|wine|vino|sommelier|degustazion)\b/.test(haystack)) {
+      return {
+        sub: "wine_bar",
+        variant: isLuxury ? "paperfish-dark" : "cote-obsidian",
+        heroTagline: "L'ESPERIENZA DEL VINO",
+        themeHint: "dark-gold",
+      };
+    }
+    // ── Pub / birreria / craft beer ──
+    if (/\b(pub|birrer|brewery|craft beer|birra artigian|tap room|gastropub)\b/.test(haystack)) {
+      return {
+        sub: "pub",
+        variant: "cote-obsidian",
+        heroTagline: "BIRRA, MUSICA, CONVIVIALITÀ",
+        themeHint: "dark-gold",
+      };
+    }
+    // ── Vegan / vegetariano / healthy ──
+    if (/\b(vegan|vegano|vegetarian|plant based|healthy|raw food|biologic|bio)\b/.test(haystack)) {
+      return {
+        sub: "vegan",
+        variant: "city-padel-sage",
+        heroTagline: "GUSTO NATURALE, SCELTA CONSAPEVOLE",
+        themeHint: "sage",
+      };
+    }
+    // ── Burger / smash / american diner ──
+    if (/\b(burger|hamburger|smash|american diner|cheeseburg|fast food gourmet)\b/.test(haystack)) {
+      return {
+        sub: "burger",
+        variant: "cote-obsidian",
+        heroTagline: "BURGER GOURMET",
+        themeHint: "dark-gold",
+      };
+    }
+    // ── Trattoria / osteria tipica ──
+    if (/\b(trattoria|osteria|cucina tipica|cucina casalinga|cucina tradizion)\b/.test(haystack)) {
+      const isOsteria = /\bosteria\b/.test(haystack);
+      return {
+        sub: isOsteria ? "osteria" : "trattoria",
+        variant: "cote-ivory",
+        heroTagline: "CUCINA DI CASA, SAPORI VERI",
+        themeHint: "marble",
+      };
     }
     // Ristorante generico — scegli stile in base a luxury vs classic
     return {
@@ -150,7 +212,10 @@ function detectSubSector(lead: LeadInput, scrapedText?: string): SubSectorMatch 
         themeHint: isLuxury ? "blush" : "lavender",
       };
     }
-    if (/\b(hair|capelli|parrucchier|barber|salon)\b/.test(haystack)) {
+    if (/\b(barber|barbiere|barbershop|men.?s grooming|rasatura)\b/.test(haystack)) {
+      return { sub: "barber", variant: "tatush-hair", heroTagline: "L'ARTE DELLA BARBA", themeHint: "marble" };
+    }
+    if (/\b(hair|capelli|parrucchier|salon)\b/.test(haystack)) {
       return { sub: "hair", variant: "tatush-hair", heroTagline: "LO STILE È UN'ARTE", themeHint: "marble" };
     }
     if (/\b(spa|massagg|wellness|terme)\b/.test(haystack)) {
@@ -214,11 +279,22 @@ function previewToMatch(preview?: PreviewSelection | null): SubSectorMatch | nul
   if (/ivory|bakery|forno|bread|pane|marble/.test(haystack)) return { sub: "bakery", variant: /marble/.test(haystack) ? "cote-marble" : "cote-ivory", heroTagline: "L'ARTE DEL FORNO", themeHint: "marble" };
   if (/neo nails|nails|lavender/.test(haystack)) return { sub: "nails", variant: "neo-nails-lavender", heroTagline: "BELLEZZA SU MISURA", themeHint: "lavender" };
   if (/blush|rosegold/.test(haystack)) return { sub: "nails", variant: "neo-nails-blush", heroTagline: "BELLEZZA SU MISURA", themeHint: "blush" };
-  if (/hair|barber|tatush/.test(haystack)) return { sub: "hair", variant: "tatush-hair", heroTagline: "LO STILE È UN'ARTE", themeHint: "marble" };
+  if (/barber|barbiere|barbershop/.test(haystack)) return { sub: "barber", variant: "tatush-hair", heroTagline: "L'ARTE DELLA BARBA", themeHint: "marble" };
+  if (/hair|tatush|parrucchier|salon/.test(haystack)) return { sub: "hair", variant: "tatush-hair", heroTagline: "LO STILE È UN'ARTE", themeHint: "marble" };
+  if (/spa|wellness|terme/.test(haystack)) return { sub: "spa", variant: "neo-nails-lavender", heroTagline: "RILASSO PROFONDO", themeHint: "lavender" };
   if (/asinara|yacht|charter/.test(haystack)) return { sub: "yacht", variant: "asinara-azure", heroTagline: "LUSSO IN MARE APERTO", themeHint: "azure" };
   if (/miami boats|boat/.test(haystack)) return { sub: "boat", variant: "miami-boats", heroTagline: "EXCLUSIVE BOAT EXPERIENCE", themeHint: "azure" };
   if (/padel|city padel/.test(haystack)) return { sub: "padel", variant: "city-padel-sage", heroTagline: "GIOCA AL TUO MEGLIO", themeHint: "sage" };
   if (/watersports|water sport|beach/.test(haystack)) return { sub: "watersports", variant: "miami-watersports", heroTagline: "ADRENALINA SUL MARE", themeHint: "azure" };
+  // ── Food sub-sectors via preview style/brand name ──
+  if (/coffee|caffe|caffetter|espresso|brunch|barista/.test(haystack)) return { sub: "coffee", variant: "cote-ivory", heroTagline: "L'ARTE DEL CAFFÈ", themeHint: "marble" };
+  if (/wine|enotec|cantina|sommelier/.test(haystack)) return { sub: "wine_bar", variant: "cote-obsidian", heroTagline: "L'ESPERIENZA DEL VINO", themeHint: "dark-gold" };
+  if (/gelato|gelater|ice cream|sorbet/.test(haystack)) return { sub: "gelateria", variant: "cote-ivory", heroTagline: "GELATO ARTIGIANALE", themeHint: "marble" };
+  if (/trattoria|cucina casalinga|cucina tipica/.test(haystack)) return { sub: "trattoria", variant: "cote-ivory", heroTagline: "CUCINA DI CASA, SAPORI VERI", themeHint: "marble" };
+  if (/osteria/.test(haystack)) return { sub: "osteria", variant: "cote-ivory", heroTagline: "OSTERIA TIPICA", themeHint: "marble" };
+  if (/pub|birrer|brewery|craft beer|gastropub/.test(haystack)) return { sub: "pub", variant: "cote-obsidian", heroTagline: "BIRRA, MUSICA, CONVIVIALITÀ", themeHint: "dark-gold" };
+  if (/vegan|plant based|healthy|biolog/.test(haystack)) return { sub: "vegan", variant: "city-padel-sage", heroTagline: "GUSTO NATURALE", themeHint: "sage" };
+  if (/burger|smash|hamburger/.test(haystack)) return { sub: "burger", variant: "cote-obsidian", heroTagline: "BURGER GOURMET", themeHint: "dark-gold" };
 
   if (preview.sectorId === "beauty") return { sub: "nails", variant: "neo-nails-lavender", heroTagline: "BELLEZZA SU MISURA", themeHint: "lavender" };
   if (preview.sectorId === "ncc") return { sub: "transfer", variant: "asinara-azure", heroTagline: "VIAGGIA CON STILE", themeHint: "azure" };
@@ -244,6 +320,16 @@ function getSubSectorKeywords(sub: SubSectorKey, sector: string): string[] {
     padel: ["padel", "court", "racquet", "club", "match"],
     gym: ["gym", "fitness", "training", "workout", "weights"],
     watersports: ["watersport", "surf", "jet", "beach", "sea"],
+    coffee: ["coffee", "espresso", "caffè", "barista", "latte art", "brunch"],
+    wine_bar: ["wine", "vino", "enoteca", "calice", "cantina", "sommelier"],
+    gelateria: ["gelato", "ice cream", "sorbetto", "cono", "coppetta"],
+    trattoria: ["pasta", "trattoria", "tavola", "casalinga", "tradizionale"],
+    osteria: ["osteria", "vino", "tavolo legno", "tradizionale", "rustic"],
+    pub: ["beer", "birra", "pub", "tap", "craft beer", "pinta"],
+    vegan: ["vegan", "plant based", "bowl", "healthy", "fresh"],
+    burger: ["burger", "smash burger", "fries", "cheeseburger", "diner"],
+    barber: ["barber", "barbiere", "rasoio", "barba", "men grooming"],
+    spa: ["spa", "wellness", "massage", "candles", "stones"],
   };
 
   return uniq([...(map[sub] || []), ...(SECTOR_IMAGE_KEYWORDS[sector] || [])]);

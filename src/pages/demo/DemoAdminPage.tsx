@@ -1107,7 +1107,11 @@ export default function DemoAdminPage() {
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-sm font-bold text-white truncate">{config.name}</h2>
-            <p className="text-[0.55rem] text-white/35">{layoutConfig.type === "operations" ? "Operations Hub" : layoutConfig.type === "services" ? "Service Studio" : layoutConfig.type === "professional" ? "Professional Suite" : layoutConfig.type === "creative" ? "Creative Studio" : layoutConfig.type === "care" ? "Care Platform" : layoutConfig.type === "mobility" ? "Mobility Center" : layoutConfig.type === "commerce" ? "Commerce Hub" : "Empire AI Platform"}</p>
+            <p className="text-[0.55rem] text-white/35">
+              {variantTheme
+                ? `${variantTheme.label}${subParam ? ` · ${subParam}` : ""}`
+                : layoutConfig.type === "operations" ? "Operations Hub" : layoutConfig.type === "services" ? "Service Studio" : layoutConfig.type === "professional" ? "Professional Suite" : layoutConfig.type === "creative" ? "Creative Studio" : layoutConfig.type === "care" ? "Care Platform" : layoutConfig.type === "mobility" ? "Mobility Center" : layoutConfig.type === "commerce" ? "Commerce Hub" : "Empire AI Platform"}
+            </p>
           </div>
         </div>
       </div>
@@ -2373,12 +2377,16 @@ export default function DemoAdminPage() {
         <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar — styled per layout config */}
+      {/* Sidebar — styled per layout config + variant override */}
       <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 transform transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
         style={{
-          background: layoutConfig.sidebarStyle === "glass" ? "rgba(13,13,26,0.7)" : layoutConfig.sidebarStyle === "accent-bar" ? `linear-gradient(180deg, ${accentColor}08, rgba(13,13,26,0.95))` : layoutConfig.sidebarStyle === "floating" ? "rgba(20,20,35,0.85)" : "#0d0d1a",
+          background: themeSurface
+            ? `linear-gradient(180deg, ${themeSurface}, ${themeBg || themeSurface})`
+            : layoutConfig.sidebarStyle === "glass" ? "rgba(13,13,26,0.7)" : layoutConfig.sidebarStyle === "accent-bar" ? `linear-gradient(180deg, ${accentColor}08, rgba(13,13,26,0.95))` : layoutConfig.sidebarStyle === "floating" ? "rgba(20,20,35,0.85)" : "#0d0d1a",
           backdropFilter: layoutConfig.sidebarStyle === "glass" || layoutConfig.sidebarStyle === "floating" ? "blur(20px) saturate(1.5)" : undefined,
-          borderRight: layoutConfig.sidebarStyle === "accent-bar" ? `2px solid ${accentColor}30` : layoutConfig.sidebarStyle === "minimal" ? "none" : "1px solid rgba(255,255,255,0.06)",
+          borderRight: variantTheme
+            ? `1px solid ${accentColor}30`
+            : layoutConfig.sidebarStyle === "accent-bar" ? `2px solid ${accentColor}30` : layoutConfig.sidebarStyle === "minimal" ? "none" : "1px solid rgba(255,255,255,0.06)",
           borderRadius: layoutConfig.sidebarStyle === "floating" ? "0 24px 24px 0" : undefined,
           margin: layoutConfig.sidebarStyle === "floating" ? "12px 0 12px 0" : undefined,
           boxShadow: layoutConfig.sidebarStyle === "floating" ? `0 0 40px rgba(0,0,0,0.5), inset 0 0 30px ${accentColor}05` : layoutConfig.sidebarStyle === "glass" ? `inset -1px 0 0 ${accentColor}08` : undefined,
@@ -2398,7 +2406,7 @@ export default function DemoAdminPage() {
         </div>
 
         {/* Top bar */}
-        <header className="sticky top-8 z-20 bg-[#0a0a12]/80 backdrop-blur-xl border-b border-white/[0.04] px-4 py-3 flex items-center justify-between">
+        <header className="sticky top-8 z-20 backdrop-blur-xl border-b border-white/[0.04] px-4 py-3 flex items-center justify-between" style={{ background: themeSurface ? `${themeSurface}cc` : "rgba(10,10,18,0.8)" }}>
           <div className="flex items-center gap-3">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden w-9 h-9 rounded-xl bg-white/[0.04] flex items-center justify-center text-white/50">
               <MenuIcon className="w-4 h-4" />
@@ -2429,7 +2437,7 @@ export default function DemoAdminPage() {
       </main>
 
       {/* Mobile bottom nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 lg:hidden bg-[#0d0d1a]/95 backdrop-blur-xl border-t border-white/[0.06] px-2 py-1.5 flex items-center justify-around safe-area-pb">
+      <div className="fixed bottom-0 left-0 right-0 z-30 lg:hidden backdrop-blur-xl border-t border-white/[0.06] px-2 py-1.5 flex items-center justify-around safe-area-pb" style={{ background: themeSurface ? `${themeSurface}f2` : "rgba(13,13,26,0.95)" }}>
         {config.adminModules.slice(0, 5).map(mod => {
           const Icon = resolveIcon(mod.icon);
           const isActive = activeModule === mod.route;
