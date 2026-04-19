@@ -4659,11 +4659,13 @@ export type Database = {
         Row: {
           autonomy_mode: string
           channels_enabled: Json
+          continuous_mode: boolean
           created_at: string
           daily_limits: Json
           email_from: string | null
           id: string
           is_active: boolean
+          last_auto_run_at: string | null
           operating_hours: Json
           signature: string | null
           target_cities: string[] | null
@@ -4680,11 +4682,13 @@ export type Database = {
         Insert: {
           autonomy_mode?: string
           channels_enabled?: Json
+          continuous_mode?: boolean
           created_at?: string
           daily_limits?: Json
           email_from?: string | null
           id?: string
           is_active?: boolean
+          last_auto_run_at?: string | null
           operating_hours?: Json
           signature?: string | null
           target_cities?: string[] | null
@@ -4701,11 +4705,13 @@ export type Database = {
         Update: {
           autonomy_mode?: string
           channels_enabled?: Json
+          continuous_mode?: boolean
           created_at?: string
           daily_limits?: Json
           email_from?: string | null
           id?: string
           is_active?: boolean
+          last_auto_run_at?: string | null
           operating_hours?: Json
           signature?: string | null
           target_cities?: string[] | null
@@ -5920,6 +5926,7 @@ export type Database = {
         }
         Returns: Json
       }
+      tick_arianna_continuous: { Args: never; Returns: undefined }
       touch_demo_vault_reuse: {
         Args: { p_lead_name: string; p_vault_id: string }
         Returns: undefined
