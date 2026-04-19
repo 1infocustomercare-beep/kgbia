@@ -429,6 +429,37 @@ export default function LeadsPage() {
     const consumeRes = await consumeSellerCredits("generate_demo_from_lead", {
       lead_name: lead.name, sector: lead._sector, city: lead.city,
     });
+    if (!consumeRes.success) {
+      if (consumeRes.error === "insufficient_credits") {
+        toast.error(`Crediti insufficienti. Servono ${consumeRes.required}, hai ${consumeRes.balance}.`, {
+          description: "Ricarica dal tuo profilo per continuare.",
+          action: { label: "Ricarica", onClick: () => window.location.assign("/partner/profile?tab=credits") },
+          duration: 7000,
+        });
+      } else {
+        toast.error("Impossibile avviare la Demo Factory", { description: consumeRes.error });
+      }
+      return;
+    }
+
+    setDemoFactoryOpen(true);
+    setDemoFactoryLoading(true);
+    setDemoFactoryResult(null);
+    setDemoFactoryProgress("Avvio scraping del sito web…");
+
+    try {
+      // progress hints
+      const hints = [
+        "Estraggo brand identity reale dal sito…",
+        "Genero menu/listino e palette con AI…",
+        "Creo tenant, account admin e moduli…",
+        "Seed clienti, ordini e recensioni…",
+      ];
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < hints.length) { setDemoFactoryProgress(hints[i]); i++; }
+      }, 4000);
+
       // ⭐ GROUND TRUTH: il matcher frontend è la stessa logica usata per la
       // preview iPhone. Lo ricalcoliamo qui e passiamo templateVariant +
       // subSector come AUTORITÀ al backend, così sito + admin sono 1:1.
