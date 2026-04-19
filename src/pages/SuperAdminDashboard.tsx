@@ -640,6 +640,7 @@ const SuperAdminDashboard = () => {
     { label: "🤖 AI & Agenti", tabs: [
       { id: "mary", label: "AI-Mary", icon: <Bot className="w-4 h-4" /> },
       { id: "agents", label: "Agenti IA", icon: <Cpu className="w-4 h-4" /> },
+      { id: "empire_brain" as SuperTab, label: "Empire Brain", icon: <Brain className="w-4 h-4" /> },
       { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-4 h-4" /> },
       { id: "lead_scout" as SuperTab, label: "Lead Scout", icon: <Search className="w-4 h-4" /> },
     ]},
