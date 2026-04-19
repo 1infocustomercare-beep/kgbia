@@ -528,3 +528,44 @@ export function matchPreviewFromRecommendedProject(input: {
     extra: input.reason,
   });
 }
+
+export function matchPreviewFromManualSelection(input: {
+  sectorId?: string | null;
+  brandName?: string | null;
+  styleName?: string | null;
+  imageUrl?: string | null;
+}): PreviewMatch | null {
+  const sectorId = normalizeSector(input.sectorId);
+  const portfolio = SECTOR_PORTFOLIO.find((entry) => entry.sectorId === sectorId);
+  const brand = portfolio?.brands.find((entry) => entry.name.toLowerCase() === (input.brandName || "").toLowerCase())
+    || portfolio?.brands.find((entry) => brandMatches(entry, [input.brandName || ""]));
+  const style = brand?.styles.find((entry) => entry.name.toLowerCase() === (input.styleName || "").toLowerCase())
+    || brand?.styles.find((entry) => entry.name.toLowerCase().includes((input.styleName || "").toLowerCase()));
+
+  if (brand && style?.screens?.length) {
+    const inferred = matchPreviewForLead({
+      name: `${brand.name} ${style.name}`,
+      sector: sectorId,
+      sectorLabel: sectorId,
+    });
+    return {
+      sectorId,
+      subSector: inferred.subSector,
+      brandName: brand.name,
+      styleName: style.name,
+      screens: style.screens.slice(0, 4),
+      templateVariant: inferred.templateVariant,
+      demoSlug: inferred.demoSlug,
+    };
+  }
+
+  if (input.brandName || input.styleName) {
+    return matchPreviewForLead({
+      name: `${input.brandName || ""} ${input.styleName || ""}`.trim(),
+      sector: sectorId,
+      sectorLabel: sectorId,
+    });
+  }
+
+  return null;
+}

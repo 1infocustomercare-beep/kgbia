@@ -13,7 +13,7 @@ import { SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
-import { matchPreviewForLead, matchPreviewFromRecommendedProject, type PreviewMatch } from "@/lib/preview-matcher";
+import { matchPreviewForLead, matchPreviewFromManualSelection, matchPreviewFromRecommendedProject, type PreviewMatch } from "@/lib/preview-matcher";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
@@ -497,9 +497,15 @@ export default function LeadsPage() {
           })
         : null;
       // Manual override > AI recommendation > heuristic
-      const canonical: PreviewMatch = preview?.isManualOverride
-        ? heuristic // manual override sets brand/style/imageUrl explicitly below; canonical only feeds template fallback
-        : (aiRecommended || heuristic);
+      const manualCanonical = preview?.isManualOverride
+        ? matchPreviewFromManualSelection({
+            sectorId: preview.sectorId,
+            brandName: preview.brandName,
+            styleName: preview.styleName,
+            imageUrl: preview.imageUrl,
+          })
+        : null;
+      const canonical: PreviewMatch = manualCanonical || aiRecommended || heuristic;
 
       const { data, error } = await supabase.functions.invoke("generate-demo-from-lead", {
         body: {
@@ -525,12 +531,10 @@ export default function LeadsPage() {
             specializationQuery: lead.chosen_specialization_query,
           },
           preview: {
-            // 1) override manuale dal picker (se presente)
             brandName: preview?.brandName || canonical.brandName,
             styleName: preview?.styleName || canonical.styleName,
             imageUrl: preview?.imageUrl || canonical.screens?.[0] || null,
             sectorId: preview?.sectorId || canonical.sectorId,
-            // 2) ⭐ ground-truth dal matcher unificato → backend usa questo SENZA inferenza
             templateVariant: canonical.templateVariant,
             subSector: canonical.subSector,
             demoSlug: canonical.demoSlug,

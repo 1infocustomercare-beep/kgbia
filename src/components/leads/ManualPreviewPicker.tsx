@@ -13,6 +13,7 @@ export interface ManualPreviewSelection {
   styleName: string;
   imageUrl: string;
   demoLink: string;
+  screens?: string[];
   isManualOverride: true;
 }
 
@@ -67,6 +68,8 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
   const handlePick = (brandName: string, styleName: string, imageUrl: string) => {
     const sectorLabel = currentSector?.sectorLabel || INDUSTRY_CONFIGS[activeSector as keyof typeof INDUSTRY_CONFIGS]?.label || activeSector;
     const demoLink = `${window.location.origin}${getDemoSiteUrl(activeSector)}`;
+    const matchedBrand = currentSector?.brands.find((brand) => brand.name === brandName);
+    const matchedStyle = matchedBrand?.styles.find((style) => style.name === styleName);
     onSelect({
       sectorId: activeSector,
       sectorLabel,
@@ -74,6 +77,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
       styleName,
       imageUrl,
       demoLink,
+      screens: matchedStyle?.screens?.slice(0, 4),
       isManualOverride: true,
     });
     toast.success(`Preview "${brandName} ${styleName}" selezionata`);
