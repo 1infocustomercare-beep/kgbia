@@ -477,6 +477,9 @@ export default function LeadsPage() {
             googleRating: lead.google_rating,
             googleReviews: lead.google_reviews,
             googleMapsUrl: lead.google_maps_url,
+            openingHours: lead.opening_hours,
+            cuisine: lead.cuisine,
+            types: lead.types,
           },
           preview: preview ? {
             brandName: preview.brandName,
@@ -945,7 +948,10 @@ export default function LeadsPage() {
         sector: selected._sector,
         sectorLabel: sectorConfig?.label,
         cuisine: (selected as any).cuisine || null,
-        extra: (selected as any).full_address || null,
+        extra: [selected.full_address, selected.city, selected.zone, selected.website, selected.instagram, selected.osm_type].filter(Boolean).join(" · "),
+        website: selected.website,
+        openingHours: selected.opening_hours,
+        types: selected.types || [],
       })
     : null;
   const previewScreens = previewMatch?.screens.length
