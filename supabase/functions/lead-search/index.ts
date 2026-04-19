@@ -408,13 +408,18 @@ serve(async (req) => {
   try {
     // ── Auth guard ──
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
-    const _authClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: authHeader } } });
-    const { data: { user: _authUser }, error: _authErr } = await _authClient.auth.getUser();
-    if (_authErr || !_authUser) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const isInternalServiceCall = !!serviceRoleKey && authHeader === `Bearer ${serviceRoleKey}`;
+
+    if (!isInternalServiceCall) {
+      if (!authHeader?.startsWith("Bearer ")) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      const _authClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: authHeader } } });
+      const { data: { user: _authUser }, error: _authErr } = await _authClient.auth.getUser();
+      if (_authErr || !_authUser) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
     }
 
     const { query, city, sector, use_google, page = 0, existing_names = [], lat, lon, radius_km, specialization_query } = await req.json();
