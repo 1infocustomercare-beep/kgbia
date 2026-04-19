@@ -13,7 +13,7 @@ import { SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
-import { matchPreviewForLead, matchPreviewFromManualSelection, matchPreviewFromRecommendedProject, type PreviewMatch } from "@/lib/preview-matcher";
+import { getPreviewDetailsForMatch, matchPreviewForLead, matchPreviewFromManualSelection, matchPreviewFromRecommendedProject, type PreviewMatch } from "@/lib/preview-matcher";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
@@ -199,35 +199,6 @@ const getPreviewScreens = (sectorId: string): string[] => {
   }
   return [];
 };
-
-/* ─── Sector-specific features to show in preview ─── */
-const SECTOR_FEATURES: Record<string, { features: string[]; value: string; cta: string }> = {
-  food: { features: ["Menu digitale QR", "Prenotazioni online", "Ordini delivery/asporto", "CRM clienti + loyalty"], value: "Aumenta ordini del 40%", cta: "Vedi demo ristorante" },
-  beauty: { features: ["Booking online 24/7", "Promemoria automatici", "Galleria servizi", "Programma fedeltà"], value: "Riduci no-show del 60%", cta: "Vedi demo beauty" },
-  ncc: { features: ["Booking con preventivo", "Tracking GPS flotta", "Fatturazione automatica", "Tariffe dinamiche"], value: "Più prenotazioni dirette", cta: "Vedi demo NCC" },
-  healthcare: { features: ["Prenotazione visite", "Telemedicina", "Promemoria SMS", "Schede paziente digitali"], value: "Meno telefonate, più visite", cta: "Vedi demo clinica" },
-  fitness: { features: ["Iscrizioni online", "Prenotazione corsi", "App membri", "Pagamenti ricorrenti"], value: "+35% retention membri", cta: "Vedi demo palestra" },
-  hospitality: { features: ["Booking diretto (no OTA)", "Check-in digitale", "Upselling automatico", "Guest CRM"], value: "Zero commissioni OTA", cta: "Vedi demo hotel" },
-  retail: { features: ["Catalogo online", "E-commerce integrato", "Inventario smart", "Programma fedeltà"], value: "Vendite online 24/7", cta: "Vedi demo negozio" },
-  plumber: { features: ["Richiesta intervento online", "Preventivi automatici", "Tracking interventi", "Fatturazione digitale"], value: "Più clienti, meno chiamate", cta: "Vedi demo idraulico" },
-  electrician: { features: ["Preventivi online", "Calendario interventi", "Portfolio lavori", "Recensioni verificate"], value: "Professionalità digitale", cta: "Vedi demo elettricista" },
-  construction: { features: ["Portfolio progetti", "Timeline lavori", "Preventivi interattivi", "Gestione cantieri"], value: "Progetti gestiti al meglio", cta: "Vedi demo edilizia" },
-  veterinary: { features: ["Prenotazione visite", "Cartella clinica pet", "Promemoria vaccini", "Shop prodotti"], value: "Fidelizza proprietari", cta: "Vedi demo veterinario" },
-  beach: { features: ["Mappa ombrelloni", "Prenotazione online", "Abbonamenti stagionali", "Bar/Ristoro integrato"], value: "Gestione spiaggia smart", cta: "Vedi demo stabilimento" },
-  tattoo: { features: ["Portfolio artisti", "Booking appuntamenti", "Galleria lavori", "Consensi digitali"], value: "Più prenotazioni online", cta: "Vedi demo tattoo" },
-  photography: { features: ["Portfolio professionale", "Booking sessioni", "Galleria clienti", "Preventivi automatici"], value: "Showcase professionale", cta: "Vedi demo fotografo" },
-  events: { features: ["Catalogo eventi", "Booking location", "Preventivi wedding", "Gestione fornitori"], value: "Più eventi prenotati", cta: "Vedi demo eventi" },
-  gardening: { features: ["Catalogo servizi", "Preventivi online", "Portfolio giardini", "Manutenzione programmata"], value: "Clienti tutto l'anno", cta: "Vedi demo giardinaggio" },
-  legal: { features: ["Consulenze online", "Gestione pratiche", "Appuntamenti digitali", "Area clienti riservata"], value: "Studio più efficiente", cta: "Vedi demo studio legale" },
-  accounting: { features: ["Portale clienti", "Scadenzario fiscale", "Documenti digitali", "Consulenze online"], value: "Gestione clienti smart", cta: "Vedi demo commercialista" },
-  cleaning: { features: ["Preventivi istantanei", "Booking pulizie", "Abbonamenti", "Tracking interventi"], value: "Più contratti regolari", cta: "Vedi demo pulizie" },
-  garage: { features: ["Prenotazione tagliandi", "Storico interventi", "Preventivi digitali", "Promemoria revisioni"], value: "Fidelizza automobilisti", cta: "Vedi demo officina" },
-  agriturismo: { features: ["Booking camere", "Menu degustazione", "Esperienze/attività", "Vendita prodotti"], value: "Prenotazioni dirette", cta: "Vedi demo agriturismo" },
-  logistics: { features: ["Tracking spedizioni", "Preventivi online", "Dashboard corrieri", "Notifiche consegna"], value: "Logistica ottimizzata", cta: "Vedi demo logistica" },
-  education: { features: ["Iscrizioni corsi", "Calendario lezioni", "Area studenti", "Pagamenti online"], value: "Più iscrizioni online", cta: "Vedi demo formazione" },
-  childcare: { features: ["Iscrizioni online", "Comunicazioni genitori", "Diario digitale", "Pagamenti ricorrenti"], value: "Genitori sempre informati", cta: "Vedi demo asilo" },
-};
-const getSectorFeatures = (sectorId: string) => SECTOR_FEATURES[sectorId] || SECTOR_FEATURES.retail || { features: ["Sito professionale", "Booking online", "CRM clienti", "Marketing AI"], value: "Presenza digitale completa", cta: "Vedi demo" };
 
 /* ─── Sector-specific pain points for real analysis ─── */
 const SECTOR_PAIN_ANALYSIS: Record<string, string[]> = {
@@ -1054,6 +1025,7 @@ export default function LeadsPage() {
   const previewScreens = previewMatch?.screens.length
     ? previewMatch.screens
     : (selected ? getPreviewScreens(selected._sector) : []);
+  const previewDetails = getPreviewDetailsForMatch(previewMatch);
 
   // Auto-focus city input on mount
   useEffect(() => {
@@ -1988,7 +1960,7 @@ export default function LeadsPage() {
 
             {/* ═══ CUSTOMIZED DEMO PREVIEW — Sector-Specific ═══ */}
             {(() => {
-              const sectorFeats = getSectorFeatures(selected._sector);
+              const sectorFeats = previewDetails;
               return (
               <div className="p-4 rounded-2xl space-y-2" style={{ background: "rgba(167,139,250,0.03)", border: "1px solid rgba(167,139,250,0.1)" }}>
                 <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -2676,7 +2648,10 @@ export default function LeadsPage() {
                       <p className="text-[8px] mt-1" style={{ color: "#6b7280" }}>Ref portfolio reale: <span className="font-bold" style={{ color: "#a78bfa" }}>{portfolioName}</span></p>
                       {/* Sector value props */}
                       {(() => {
-                        const sf = getSectorFeatures(manualSector);
+                        const sf = getPreviewDetailsForMatch(matchPreviewFromManualSelection({
+                          sectorId: manualSector,
+                          brandName: portfolioName,
+                        }) || matchPreviewForLead({ sector: manualSector, name: portfolioName }));
                         return (
                           <div className="mt-2 grid grid-cols-2 gap-1">
                             {sf.features.slice(0, 4).map((f, i) => (
