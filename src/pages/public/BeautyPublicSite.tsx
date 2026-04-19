@@ -157,6 +157,10 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
       />
     );
   }
+  return <BeautyPublicSiteInner company={company} afterHero={afterHero} />;
+}
+
+function BeautyPublicSiteInner({ company, afterHero }: Props) {
   const companyId = company.id;
   const [form, setForm] = useState({ name: "", phone: "", service: "", date: "", time: "", notes: "" });
   const [submitting, setSubmitting] = useState(false);

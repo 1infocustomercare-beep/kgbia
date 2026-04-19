@@ -90,6 +90,10 @@ export default function FitnessPublicSite({ company, afterHero }: Props) {
       />
     );
   }
+  return <FitnessPublicSiteInner company={company} afterHero={afterHero} />;
+}
+
+function FitnessPublicSiteInner({ company, afterHero }: Props) {
   const companyId = company.id;
   const name = company.name || "Fitness Club";
   const tagline = company.tagline || "Trasforma il Tuo Corpo";

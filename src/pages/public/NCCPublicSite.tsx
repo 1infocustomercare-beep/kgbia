@@ -235,6 +235,10 @@ export default function NCCPublicSite({ company, afterHero }: Props) {
       />
     );
   }
+  return <NCCPublicSiteInner company={company} afterHero={afterHero} />;
+}
+
+function NCCPublicSiteInner({ company, afterHero }: Props) {
   const companyId = company.id;
   const gold = company.primary_color || NCC.gold;
   const [bookingForm, setBookingForm] = useState({ name: "", phone: "", email: "", route: "", vehicle: "", pickup: "", dropoff: "", date: "", time: "", passengers: "1", luggage: "1", flight: "", notes: "" });
