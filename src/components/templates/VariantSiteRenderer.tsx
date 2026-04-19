@@ -13,8 +13,8 @@
  *  • footer "Identità Brand" con address, phone, social, descrizione
  *  • hero usa la prima foto reale se non c'è hero esplicito
  */
-import { useEffect, useMemo } from "react";
-import { Phone, MapPin, Globe, Instagram, Facebook } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Phone, MapPin, Globe, Instagram, Facebook, Home, BookOpen, Eye, ShoppingCart } from "lucide-react";
 import { StrapizzamiSite, type StrapizzamiSiteData } from "@/components/templates/strapizzami/StrapizzamiSite";
 import { PaperfishSite, type PaperfishSiteData } from "@/components/templates/paperfish/PaperfishSite";
 import { BateySite, type BateySiteData } from "@/components/templates/batey/BateySite";
@@ -23,6 +23,14 @@ import {
   buildVariantStyleTag,
   type VariantThemeSpec,
 } from "@/lib/template-variant-theme";
+
+type ScreenKey = "home" | "menu" | "detail" | "cart";
+const SCREEN_LABELS: Record<ScreenKey, { label: string; sub: string; Icon: any }> = {
+  home: { label: "Home", sub: "Brand & Hero", Icon: Home },
+  menu: { label: "Menu", sub: "Catalogo", Icon: BookOpen },
+  detail: { label: "Dettaglio", sub: "Singolo item", Icon: Eye },
+  cart: { label: "Carrello", sub: "Checkout", Icon: ShoppingCart },
+};
 
 interface ServiceItem {
   id: string;
