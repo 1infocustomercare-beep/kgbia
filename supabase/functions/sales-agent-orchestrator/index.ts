@@ -61,15 +61,103 @@ interface ScoutedLead {
   source?: string | null;
 }
 
+class AIUnavailableError extends Error {
+  constructor(public status: number, public detail: string) {
+    super(`AI gateway ${status}: ${detail}`);
+  }
+}
+
 async function callAI(messages: any[], model = "google/gemini-2.5-flash"): Promise<string> {
   const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({ model, messages }),
   });
-  if (!r.ok) throw new Error(`AI gateway ${r.status}: ${await r.text()}`);
+  if (!r.ok) {
+    const detail = await r.text();
+    // 402 = no credits, 429 = rate limit → fallback degraded mode
+    throw new AIUnavailableError(r.status, detail);
+  }
   const j = await r.json();
   return j.choices?.[0]?.message?.content ?? "";
+}
+
+// ============= FALLBACK HEURISTICS (when AI gateway unavailable) =============
+
+function heuristicProfile(lead: any): any {
+  const sector = getLeadSector(lead);
+  const city = getLeadCity(lead);
+  const name = getLeadName(lead);
+  const hasWebsite = !!lead.website;
+  const hasInsta = !!lead.instagram;
+  const hasReviews = (lead.google_reviews ?? 0) > 0;
+  const lowRating = (lead.google_rating ?? 5) < 4.0;
+
+  // Score euristico: più info pubbliche = più caldo
+  let score = 50;
+  if (lead.email) score += 15;
+  if (lead.phone) score += 10;
+  if (hasInsta) score += 8;
+  if (hasReviews) score += 7;
+  if (lowRating) score += 10; // attività con problemi reputazionali = più bisognose
+  if (!hasWebsite) score += 5;
+  score = Math.min(95, score);
+
+  const sectorPains: Record<string, string[]> = {
+    food: ["Commissioni JustEat/Deliveroo al 30%", "Recensioni negative non gestite", "Menu QR e prenotazioni manuali"],
+    beauty: ["Appuntamenti gestiti su WhatsApp/agenda cartacea", "No-show senza acconto", "Zero CRM clienti"],
+    ncc: ["Prenotazioni via telefono/WhatsApp", "Niente tracking GPS clienti", "Gestione flotta su Excel"],
+    fitness: ["Iscrizioni cartacee", "Niente app prenotazione corsi", "Membership su carta"],
+    hospitality: ["OTA prendono il 15-25%", "Check-in manuale", "Niente upselling automatico"],
+    healthcare: ["Agenda manuale", "Promemoria appuntamenti via SMS pagati", "GDPR a rischio"],
+  };
+
+  const pain_points = sectorPains[sector] ?? sectorPains.food;
+  const value_props = [
+    "App white-label personalizzata + sito SEO in 24h",
+    "Solo 2% commissioni vs 30% delle piattaforme",
+    "AI agents 24/7 per prenotazioni, recensioni, marketing",
+  ];
+
+  const recommended_channel = lead.email ? "email" : lead.phone ? "whatsapp" : lead.instagram ? "instagram" : "email";
+
+  return {
+    pain_points,
+    value_props,
+    best_hook: `Ho dato un'occhiata a ${name} a ${city}${lowRating ? ` e ho visto che alcune recensioni recenti penalizzano il rating` : ""}. Ho preparato una preview personalizzata gratuita.`,
+    risk_objections: ["Già abbiamo un sito", "Costa troppo / non ho tempo"],
+    recommended_channel,
+    urgency: score >= 75 ? "high" : score >= 60 ? "medium" : "low",
+    best_time_to_contact: sector === "food" ? "10:00-11:30 o 15:00-17:00" : "9:30-12:00",
+    score,
+    _fallback: true,
+  };
+}
+
+function heuristicDraft(lead: any, profile: any, channel: string, previewLink: string, signature: string): { subject: string; body: string } {
+  const name = getLeadName(lead);
+  const city = getLeadCity(lead);
+  const pain = profile.pain_points?.[0] ?? "gestione manuale di clienti e prenotazioni";
+  const linkLine = previewLink ? `\n\nGuarda la preview personalizzata che ho preparato per te:\n${previewLink}` : "";
+
+  if (channel === "whatsapp") {
+    return {
+      subject: "",
+      body: `Ciao ${name}! Sono Arianna di Empire AI Group. Ho notato che probabilmente gestite ancora ${pain} — ho preparato per voi una demo gratuita su misura.${linkLine}\n\nPosso mostrartela in 15 min? — ${signature}`,
+    };
+  }
+
+  if (channel === "instagram") {
+    return {
+      subject: "",
+      body: `Ciao ${name}! Adoro quello che fate a ${city} ✨ Ho preparato una demo personalizzata di un'app white-label per voi.${linkLine}\n\n15 min per mostrartela? — ${signature}`,
+    };
+  }
+
+  return {
+    subject: `${name} — preview personalizzata Empire (gratis)`,
+    body: `Ciao,\n\nSono Arianna di Empire AI Group. Ho analizzato ${name} a ${city} e ho notato che potreste risparmiare tempo su ${pain}.\n\nPer farti vedere concretamente cosa intendo, ho già preparato una preview personalizzata della vostra futura app + sito (white-label, brandizzata sul vostro nome).${linkLine}\n\nTi va una call di 15 minuti questa settimana per fartela vedere dal vivo?\n\n— ${signature}`,
+  };
 }
 
 function getLeadName(lead: Partial<ScoutedLead> & Record<string, any>) {
@@ -327,20 +415,35 @@ async function enrichAndScore(supabase: any, owner_id: string, job_id: string, l
     description: `Settore ${getLeadSector(lead)} · ${getLeadCity(lead)}`,
   }, "running");
 
-  const profile = await callAI([
-    {
-      role: "system",
-      content: "Sei un Senior Sales Consultant di Empire AI Group. Analizza un lead e ritorna SOLO JSON valido con: pain_points (array di 3 stringhe), value_props (array 3 stringhe), best_hook (stringa per aprire conversazione), risk_objections (array 2 stringhe), recommended_channel (email|whatsapp|linkedin|instagram), urgency (low|medium|high), best_time_to_contact (stringa), score (0-100 di interesse stimato).",
-    },
-    { role: "user", content: `Lead: ${JSON.stringify(lead)}` },
-  ]);
-
   let parsed: any = {};
+  let usedFallback = false;
+
   try {
-    const m = profile.match(/\{[\s\S]*\}/);
-    parsed = m ? JSON.parse(m[0]) : {};
-  } catch {
-    parsed = {};
+    const profile = await callAI([
+      {
+        role: "system",
+        content: "Sei un Senior Sales Consultant di Empire AI Group. Analizza un lead e ritorna SOLO JSON valido con: pain_points (array di 3 stringhe), value_props (array 3 stringhe), best_hook (stringa per aprire conversazione), risk_objections (array 2 stringhe), recommended_channel (email|whatsapp|linkedin|instagram), urgency (low|medium|high), best_time_to_contact (stringa), score (0-100 di interesse stimato).",
+      },
+      { role: "user", content: `Lead: ${JSON.stringify(lead)}` },
+    ]);
+    try {
+      const m = profile.match(/\{[\s\S]*\}/);
+      parsed = m ? JSON.parse(m[0]) : {};
+    } catch {
+      parsed = {};
+    }
+    if (!parsed.score && !parsed.pain_points) {
+      parsed = heuristicProfile(lead);
+      usedFallback = true;
+    }
+  } catch (e: any) {
+    if (e instanceof AIUnavailableError) {
+      console.warn(`[arianna] AI unavailable (${e.status}) → using heuristic profile for lead ${lead.id}`);
+      parsed = heuristicProfile(lead);
+      usedFallback = true;
+    } else {
+      throw e;
+    }
   }
 
   if (parsed.score !== undefined && parsed.score !== null) {
@@ -351,14 +454,14 @@ async function enrichAndScore(supabase: any, owner_id: string, job_id: string, l
     owner_id,
     lead_id: lead.id,
     knowledge_type: "lead_profile",
-    title: `Profilo ${new Date().toISOString().slice(0, 10)}`,
+    title: `Profilo ${new Date().toISOString().slice(0, 10)}${usedFallback ? " (euristica)" : ""}`,
     content: parsed,
-    confidence: 0.85,
+    confidence: usedFallback ? 0.55 : 0.85,
   });
 
   await logAction(supabase, owner_id, job_id, lead.id, {
     type: "score",
-    title: `📊 Score ${parsed.score ?? "?"}/100 · canale: ${parsed.recommended_channel ?? "email"}`,
+    title: `📊 Score ${parsed.score ?? "?"}/100 · canale: ${parsed.recommended_channel ?? "email"}${usedFallback ? " (modalità euristica)" : ""}`,
     description: `Hook: ${parsed.best_hook ?? "-"}`,
     payload: parsed,
   }, "success", parsed, Date.now() - t0);
@@ -475,39 +578,55 @@ async function draftMessage(
 
   const tone = config.voice_tone ?? "professional_friendly";
   const previewLink = preview?.preview_url ?? lead.demo_preview_url ?? "";
+  const signature = config.signature ?? "Arianna · Empire AI Group";
 
-  const draft = await callAI([
-    {
-      role: "system",
-      content: `Sei Arianna, sales agent senior di Empire AI Group. Scrivi un messaggio ${channel} in italiano, tono ${tone}, MAI spam. MAX 6 righe email / 3 whatsapp.
+  let parsed: { subject?: string; body?: string } = {};
+  let usedFallback = false;
+
+  try {
+    const draft = await callAI([
+      {
+        role: "system",
+        content: `Sei Arianna, sales agent senior di Empire AI Group. Scrivi un messaggio ${channel} in italiano, tono ${tone}, MAI spam. MAX 6 righe email / 3 whatsapp.
 - Aggancio personalizzato sul pain point + nome attività
 - Mostra che hai già preparato una preview personalizzata (link incluso se presente)
 - CTA: proporre call 15min
-- Firma: ${config.signature ?? "Arianna · Empire AI Group"}
+- Firma: ${signature}
 Ritorna SOLO JSON: {"subject":"...", "body":"..."}.`,
-    },
-    {
-      role: "user",
-      content: `Lead: ${JSON.stringify(lead)}
+      },
+      {
+        role: "user",
+        content: `Lead: ${JSON.stringify(lead)}
 Profilo: ${JSON.stringify(profile)}
 Preview personalizzata già pronta: ${previewLink || "(non disponibile)"}`,
-    },
-  ]);
-
-  let parsed: { subject?: string; body?: string } = {};
-  try {
-    const m = draft.match(/\{[\s\S]*\}/);
-    parsed = m ? JSON.parse(m[0]) : { body: draft };
-  } catch {
-    parsed = { body: draft };
+      },
+    ]);
+    try {
+      const m = draft.match(/\{[\s\S]*\}/);
+      parsed = m ? JSON.parse(m[0]) : { body: draft };
+    } catch {
+      parsed = { body: draft };
+    }
+    if (!parsed.body) {
+      parsed = heuristicDraft(lead, profile, channel, previewLink, signature);
+      usedFallback = true;
+    }
+  } catch (e: any) {
+    if (e instanceof AIUnavailableError) {
+      console.warn(`[arianna] AI unavailable (${e.status}) → using template draft for lead ${lead.id}`);
+      parsed = heuristicDraft(lead, profile, channel, previewLink, signature);
+      usedFallback = true;
+    } else {
+      throw e;
+    }
   }
 
   const actionId = await logAction(supabase, owner_id, job_id, lead.id, {
     type: "draft",
     channel,
-    title: `✍️ Bozza ${channel}: ${getLeadName(lead)}`,
+    title: `✍️ Bozza ${channel}: ${getLeadName(lead)}${usedFallback ? " (template)" : ""}`,
     description: parsed.subject ?? parsed.body?.slice(0, 80),
-    payload: { ...parsed, preview_url: previewLink, recipient },
+    payload: { ...parsed, preview_url: previewLink, recipient, fallback: usedFallback },
   }, config.autonomy_mode === "full_auto" ? "success" : "needs_approval", parsed, Date.now() - t0);
 
   if (config.autonomy_mode !== "full_auto") {
