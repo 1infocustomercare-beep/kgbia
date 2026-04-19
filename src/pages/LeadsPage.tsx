@@ -766,6 +766,18 @@ export default function LeadsPage() {
     if (append) setDeepLoading(true);
     else { setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null); }
 
+    // 💰 Gating crediti: ricerca lead = 1 credito (server-side)
+    const creditRes = await consumeSellerCredits("lead_search", { city: city.trim(), sector, mode: "zone" });
+    if (!creditRes.success) {
+      setLoading(false); setDeepLoading(false);
+      toast.error(creditRes.error === "insufficient_credits"
+        ? `Servono ${creditRes.required} crediti (saldo: ${creditRes.balance})`
+        : creditRes.error === "monthly_cap_reached"
+        ? `Tetto mensile raggiunto (${creditRes.used}/${creditRes.cap})`
+        : "Crediti non disponibili");
+      return;
+    }
+
     try {
       const existingNames = append ? results.map(r => r.name) : [];
       const searchCity = country ? `${city.trim()}, ${COUNTRIES.find(c => c.code === country)?.label.replace(/^..\s/, '') || country}` : city.trim();
@@ -806,7 +818,7 @@ export default function LeadsPage() {
       setLoading(false);
       setDeepLoading(false);
     }
-  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos]);
+  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos, consumeSellerCredits]);
 
   /* ─── Deep search ─── */
   const handleDeepSearch = useCallback(() => {
@@ -816,6 +828,15 @@ export default function LeadsPage() {
   /* ─── GPS Radar Search (coords + radius km, real OSM data) ─── */
   const handleGpsSearch = useCallback(async (loc: GpsLocation, radiusKm: number) => {
     setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null);
+    // 💰 Gating crediti: GPS search = 1 credito (lead_search)
+    const creditRes = await consumeSellerCredits("lead_search", { mode: "gps", lat: loc.lat, lon: loc.lon, radius_km: radiusKm });
+    if (!creditRes.success) {
+      setLoading(false);
+      toast.error(creditRes.error === "insufficient_credits"
+        ? `Servono ${creditRes.required} crediti (saldo: ${creditRes.balance})`
+        : "Crediti non disponibili");
+      return;
+    }
     try {
       const { data, error } = await supabase.functions.invoke("lead-search", {
         body: {
@@ -857,7 +878,7 @@ export default function LeadsPage() {
     } finally {
       setLoading(false);
     }
-  }, [sector, processResults, batchEnrichInstagram, autoPrewarmDemos]);
+  }, [sector, processResults, batchEnrichInstagram, autoPrewarmDemos, consumeSellerCredits, selectedSpecialization]);
 
   /* ─── Add manual lead ─── */
   const addManualLead = () => {
