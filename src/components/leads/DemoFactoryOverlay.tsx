@@ -87,13 +87,16 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
             onClick={!loading ? onClose : undefined}
           />
           <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.96 }}
+            initial={{ opacity: 0, y: 20, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.96 }}
+            exit={{ opacity: 0, y: 20, scale: 0.97 }}
             transition={{ type: "spring", damping: 25 }}
-            className="fixed left-1/2 -translate-x-1/2 top-[max(env(safe-area-inset-top),0.5rem)] bottom-[max(env(safe-area-inset-bottom),0.5rem)] w-[calc(100vw-0.75rem)] max-w-[680px] lg:top-8 lg:bottom-8 z-[61] rounded-2xl lg:rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
-            style={{ background: "linear-gradient(160deg, #0a0a14, #0d0a1f 50%, #14091a)" }}
+            className="fixed inset-0 z-[61] flex items-center justify-center p-2 sm:p-4 lg:p-6 pointer-events-none"
           >
+            <div
+              className="pointer-events-auto w-full max-w-[640px] rounded-2xl lg:rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
+              style={{ background: "linear-gradient(160deg, #0a0a14, #0d0a1f 50%, #14091a)", maxHeight: "calc(100dvh - 1rem)" }}
+            >
             {/* Header */}
             <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0"
               style={{ background: "linear-gradient(90deg, rgba(167,139,250,0.1), rgba(20,184,166,0.06))" }}>
@@ -172,7 +175,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                         Apri <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
-                    <div className="aspect-[9/16] max-h-[360px] sm:max-h-[420px] bg-black/40 w-full">
+                    <div className="aspect-[9/16] max-h-[280px] sm:max-h-[340px] lg:max-h-[400px] bg-black/40 w-full">
                       <iframe
                         src={result.previewUrl}
                         title="Demo preview"
@@ -354,6 +357,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                   </div>
                 </div>
               )}
+            </div>
             </div>
           </motion.div>
         </>
