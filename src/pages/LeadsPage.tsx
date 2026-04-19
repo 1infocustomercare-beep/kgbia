@@ -2551,29 +2551,21 @@ export default function LeadsPage() {
             ))}
           </div>
 
-          {/* Quick start — one-tap search */}
-          <p className="text-[9px] font-bold uppercase tracking-widest mb-2.5" style={{ color: "#4b5563" }}>⚡ Ricerca rapida — un tap per iniziare</p>
-          <div className="grid grid-cols-2 gap-2 max-w-sm mx-auto">
-            {[
-              { city: "Roma", sector: "food", label: "Ristoranti a Roma", emoji: "🍕", color: "#ef4444" },
-              { city: "Milano", sector: "beauty", label: "Beauty a Milano", emoji: "💇", color: "#ec4899" },
-              { city: "London", sector: "fitness", label: "Gym a Londra", emoji: "🏋️", color: "#3b82f6" },
-              { city: "Dubai", sector: "hospitality", label: "Hotel a Dubai", emoji: "🏨", color: "#f59e0b" },
-              { city: "Napoli", sector: "food", label: "Pizzerie a Napoli", emoji: "🍕", color: "#22c55e" },
-              { city: "Miami", sector: "beauty", label: "Beauty a Miami", emoji: "💅", color: "#a855f7" },
-            ].map((s, i) => (
-              <motion.button key={i} whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.02 }}
-                onClick={() => { pendingQuickSearch.current = { city: s.city, sector: s.sector }; setCity(s.city); setSector(s.sector); }}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all"
-                style={{ background: `${s.color}08`, border: `1px solid ${s.color}18` }}>
-                <span className="text-base">{s.emoji}</span>
-                <div>
-                  <p className="text-[10px] font-bold text-white">{s.label}</p>
-                  <p className="text-[8px]" style={{ color: "#6b7280" }}>Tap per avviare</p>
-                </div>
-              </motion.button>
-            ))}
-          </div>
+          {/* Quick start — real, ordered, professional suggestions */}
+          <QuickSearchSuggestions
+            currentSector={sector}
+            currentSpecialization={selectedSpecialization}
+            onPick={(s) => {
+              if (s.specializationQuery && s.specializationLabel) {
+                setSelectedSpecialization({ label: s.specializationLabel, query: s.specializationQuery });
+              } else {
+                setSelectedSpecialization(null);
+              }
+              pendingQuickSearch.current = { city: s.city, sector: s.sector };
+              setCity(s.city);
+              setSector(s.sector);
+            }}
+          />
 
           {/* ═══ MANUAL MODE — Sector-targeted preview & message generation ═══ */}
           <div className="mt-8 max-w-md mx-auto">
