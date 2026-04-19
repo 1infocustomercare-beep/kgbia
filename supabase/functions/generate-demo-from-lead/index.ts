@@ -39,6 +39,8 @@ type SubSectorKey =
   | "yacht" | "boat" | "limo" | "transfer"
   // Fitness
   | "padel" | "gym" | "watersports"
+  // Beach
+  | "beach" | "beach_club"
   // Hospitality
   | "luxury_hotel" | "agriturismo" | "bnb"
   // Generic fallback
@@ -1350,7 +1352,7 @@ serve(async (req) => {
     if (!lead.businessName || lead.businessName.length < 2 || fakePatterns.test(lead.businessName)) leadIssues.push("Nome attività non valido o di test");
     if (lead.phone && (fakePhone.test(lead.phone.replace(/[\s-]/g, "")) || lead.phone.replace(/\D/g, "").length < 7)) leadIssues.push("Numero di telefono non plausibile");
     if (lead.email && fakeEmail.test(lead.email)) leadIssues.push("Email di test/demo");
-    const hasContactSignal = !!(lead.phone || lead.email || lead.website || lead.instagram || lead.facebook || lead.address || lead.fullAddress || lead.googleMapsUrl || lead.city);
+    const hasContactSignal = !!(lead.phone || lead.email || lead.website || lead.instagram || lead.facebook || lead.fullAddress || lead.googleMapsUrl || lead.city);
     if (!hasContactSignal) leadIssues.push("Nessun contatto o sito reale: impossibile generare demo");
     if (leadIssues.length) {
       console.warn("[guardian] lead pre-flight FAIL:", leadIssues);

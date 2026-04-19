@@ -210,12 +210,15 @@ export default function BusinessPage() {
     );
   }
 
-  const industry = (company.industry || "custom") as IndustryId;
-  const Template = TEMPLATE_MAP[industry] || LuxuryPublicSite;
-  const config = getIndustryConfig(industry);
-  const theme = getSectorTheme(industry);
+  const themeConfig = (company.theme_config || {}) as Record<string, any>;
+  const effectiveIndustry = ((themeConfig?.sub_sector === "beach" || themeConfig?.sub_sector === "beach_club")
+    ? "beach"
+    : (company.industry || "custom")) as IndustryId;
+  const Template = TEMPLATE_MAP[effectiveIndustry] || LuxuryPublicSite;
+  const config = getIndustryConfig(effectiveIndustry);
+  const theme = getSectorTheme(effectiveIndustry);
   const accentHex = theme.palette.accentHex;
-  const tickerItems = TICKER_ITEMS[industry] || TICKER_ITEMS.default;
+  const tickerItems = TICKER_ITEMS[effectiveIndustry] || TICKER_ITEMS.default;
 
   if (showSplash) {
     return <BusinessSplash name={company.name} logoUrl={company.logo_url} accentColor={accentHex} emoji={config.emoji} onComplete={handleSplashDone} />;
@@ -245,7 +248,7 @@ export default function BusinessPage() {
               Gestisci ogni aspetto della tua attività {config.label.toLowerCase()} con 14+ moduli professionali integrati — dalla prenotazione alla fatturazione, dall'AI al marketing.
             </p>
           </div>
-          <IndustryPhoneShowcase industryId={industry} />
+          <IndustryPhoneShowcase industryId={effectiveIndustry} />
         </div>
       </div>
 
