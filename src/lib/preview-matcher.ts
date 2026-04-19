@@ -54,6 +54,12 @@ export interface PreviewMatch {
   matchedBy?: string;
 }
 
+export interface SectorPreviewDetails {
+  features: string[];
+  value: string;
+  cta: string;
+}
+
 type PreviewTarget = {
   sectorId: IndustryId;
   brandKeywords: string[];
@@ -358,6 +364,36 @@ const SUB_TO_TARGET: Partial<Record<SubSectorKey, PreviewTarget>> = {
 
   /* AGRITURISMO → riusa Asinara */
   agriturismo: { sectorId: "hospitality", brandKeywords: ["asinara"],      styleKeywords: ["emerald cove", "golden sunset"],    templateVariant: "asinara-azure", demoSlug: "" },
+};
+
+const SUB_SECTOR_PREVIEW_DETAILS: Partial<Record<SubSectorKey, SectorPreviewDetails>> = {
+  pizzeria: { features: ["Menu pizza live", "Ordini delivery/asporto", "Prenotazioni tavoli", "Loyalty + coupon"], value: "Più ordini diretti, meno dipendenza dalle app", cta: "Vedi demo pizzeria" },
+  sushi: { features: ["Menu fusion visuale", "Takeaway & delivery", "Omakase / degustazioni", "CRM clienti premium"], value: "Esperienza più premium e ordini più alti", cta: "Vedi demo sushi" },
+  braceria: { features: ["Menu premium", "Prenotazioni smart", "Wine pairing", "Gift card & eventi"], value: "Più coperti di fascia alta", cta: "Vedi demo braceria" },
+  pesce: { features: ["Crudi e pescato del giorno", "Booking tavoli", "Delivery gourmet", "Storytelling prodotti"], value: "Valorizza il pescato e alza lo scontrino medio", cta: "Vedi demo pescheria / seafood" },
+  bakery: { features: ["Catalogo forno", "Preordini smart", "Ritiro in negozio", "Promo colazioni"], value: "Più vendite quotidiane e preordini", cta: "Vedi demo bakery" },
+  gelateria: { features: ["Vetrina gusti live", "Ordini take-away", "Promo stagionali", "Fidelity card"], value: "Più ritorni e più ordini impulsivi", cta: "Vedi demo gelateria" },
+  coffee: { features: ["Brunch & specialty menu", "Prenotazioni tavoli", "Take-away rapido", "Promo ricorrenti"], value: "Più clienti abituali durante tutta la giornata", cta: "Vedi demo coffee shop" },
+  wine_bar: { features: ["Carta vini digitale", "Prenotazioni eventi", "Degustazioni", "CRM clienti VIP"], value: "Più prenotazioni serali e degustazioni", cta: "Vedi demo wine bar" },
+  trattoria: { features: ["Menu tradizione", "Prenotazioni tavoli", "Asporto", "Recensioni + loyalty"], value: "Più coperti e clienti di ritorno", cta: "Vedi demo trattoria" },
+  osteria: { features: ["Menu del giorno", "Prenotazioni online", "Eventi e serate", "CRM clienti"], value: "Più riempimento settimanale", cta: "Vedi demo osteria" },
+  pub: { features: ["Eventi live", "Tavoli e booking", "Menu food & beer", "Promo loyalty"], value: "Più affluenza nelle serate chiave", cta: "Vedi demo pub" },
+  vegan: { features: ["Menu healthy", "Ordini smart", "Abbonamenti lunch", "Community & loyalty"], value: "Più recurring customers", cta: "Vedi demo vegan" },
+  burger: { features: ["Menu burger visuale", "Delivery & pickup", "Combo smart", "Recensioni + loyalty"], value: "Più conversione sul delivery", cta: "Vedi demo burger" },
+  nails: { features: ["Booking online 24/7", "Listino servizi", "Galleria lavori", "Reminder automatici"], value: "Meno no-show e agenda piena", cta: "Vedi demo nails" },
+  hair: { features: ["Prenota styling", "Listino trattamenti", "Lookbook gallery", "Promo fidelizzazione"], value: "Più appuntamenti ricorrenti", cta: "Vedi demo hair salon" },
+  barber: { features: ["Prenota slot", "Servizi barber", "Membership uomo", "Reminder automatici"], value: "Agenda più piena e clienti abituali", cta: "Vedi demo barber" },
+  spa: { features: ["Percorsi benessere", "Booking trattamenti", "Gift card", "Upsell pacchetti"], value: "Più pacchetti premium venduti", cta: "Vedi demo spa" },
+  yacht: { features: ["Fleet showcase", "Booking charter", "Itinerari premium", "Richieste concierge"], value: "Più richieste private ad alto valore", cta: "Vedi demo yacht charter" },
+  boats: { features: ["Flotta barche", "Booking immediato", "Extra e skipper", "WhatsApp veloce"], value: "Più prenotazioni dirette", cta: "Vedi demo boat rental" },
+  ncc: { features: ["Prenotazioni transfer", "Preventivi smart", "Flotta premium", "CRM clienti VIP"], value: "Più corse dirette e clienti business", cta: "Vedi demo NCC" },
+  limo: { features: ["Executive booking", "Flotta luxury", "Servizi VIP", "Richieste rapide"], value: "Più lead premium convertiti", cta: "Vedi demo limousine" },
+  padel: { features: ["Prenota campo", "Lezioni & maestri", "Tornei", "Abbonamenti club"], value: "Più prenotazioni e più retention", cta: "Vedi demo padel" },
+  watersports: { features: ["Booking attività", "Pacchetti mare", "Noleggi", "Calendario live"], value: "Più prenotazioni stagionali", cta: "Vedi demo watersports" },
+  gym: { features: ["Membership online", "Prenota classi", "App membri", "Pagamenti ricorrenti"], value: "+35% retention membri", cta: "Vedi demo palestra" },
+  hotel: { features: ["Booking diretto", "Camere & esperienze", "Upsell automatico", "Guest CRM"], value: "Meno commissioni OTA", cta: "Vedi demo hotel" },
+  bnb: { features: ["Prenotazione camere", "Esperienze locali", "Check-in digitale", "Recensioni smart"], value: "Più prenotazioni dirette", cta: "Vedi demo B&B" },
+  agriturismo: { features: ["Booking camere", "Esperienze in struttura", "Degustazioni", "Vendita prodotti"], value: "Più prenotazioni dirette", cta: "Vedi demo agriturismo" },
 };
 
 const RECOMMENDED_PROJECT_SUBSECTOR: Record<string, SubSectorKey> = {
