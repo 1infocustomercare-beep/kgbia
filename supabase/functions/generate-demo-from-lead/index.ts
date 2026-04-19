@@ -249,6 +249,17 @@ function detectSubSector(lead: LeadInput, scrapedText?: string): SubSectorMatch 
     return { sub: "gym", variant: "city-padel-sage", heroTagline: "ALLENATI AL TUO MEGLIO", themeHint: "sage" };
   }
 
+  /* ── BEACH / STABILIMENTI BALNEARI ── */
+  if (/beach|balneare|stabiliment|lido|spiaggia|bagno\s|bagni\s|ombrellon|lettino|chiringuito|beach club/.test(sector + " " + haystack)) {
+    if (/\b(watersport|surf|kite|windsurf|sup|jet ski|paddle)\b/.test(haystack)) {
+      return { sub: "watersports", variant: "miami-watersports", heroTagline: "ADRENALINA SUL MARE", themeHint: "azure" };
+    }
+    if (isLuxury || /\b(luxury|exclusive|vip|beach club|premium)\b/.test(haystack)) {
+      return { sub: "beach_club", variant: "miami-watersports", heroTagline: "IL TUO PARADISO SUL MARE", themeHint: "azure" };
+    }
+    return { sub: "beach", variant: "miami-watersports", heroTagline: "MARE, SOLE, RELAX", themeHint: "azure" };
+  }
+
   /* ── HOSPITALITY ── */
   if (/hotel|hospitality|bnb|b&b|resort|agriturismo/.test(sector + haystack)) {
     if (/\b(agriturismo|farm|country)\b/.test(haystack)) {
