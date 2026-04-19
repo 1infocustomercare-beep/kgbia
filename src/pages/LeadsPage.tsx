@@ -23,6 +23,7 @@ import GpsRadarPanel, { GpsLocation } from "@/components/leads/GpsRadarPanel";
 import SpeedDialList from "@/components/leads/SpeedDialList";
 import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
 import CreditConfirmDialog from "@/components/leads/CreditConfirmDialog";
+import SmartCityAutocomplete from "@/components/leads/SmartCityAutocomplete";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
