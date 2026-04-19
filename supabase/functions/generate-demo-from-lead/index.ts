@@ -19,6 +19,7 @@ const corsHeaders = {
 
 const FOOD_SECTORS = new Set([
   "food", "bakery", "gelateria", "wine_bar", "catering", "pizzeria", "ristoration",
+  "coffee", "pub", "trattoria", "osteria", "vegan", "burger",
 ]);
 
 /* ─── UNIVERSAL SUB-SECTOR DETECTION → preview/template auto-match ───
