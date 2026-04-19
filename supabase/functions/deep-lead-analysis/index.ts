@@ -699,6 +699,35 @@ REGOLE INDEROGABILI (violazione = report scartato):
       throw new Error("Malformed AI response");
     }
 
+    // ⭐ Normalize recommended_preview against the authoritative catalog so the
+    // frontend matcher always receives a project_name we know how to map.
+    if (report?.recommended_preview?.project_name) {
+      const wanted = String(report.recommended_preview.project_name).toLowerCase().trim();
+      const exact = PREVIEW_CATALOG.find((p) => p.project_name.toLowerCase() === wanted);
+      const fuzzy = exact || PREVIEW_CATALOG.find((p) => {
+        const n = p.project_name.toLowerCase();
+        return n.includes(wanted) || wanted.includes(n.split(" ")[0]);
+      });
+      if (fuzzy) {
+        report.recommended_preview.project_name = fuzzy.project_name;
+        report.recommended_preview.sub_sector = fuzzy.sub_sector;
+        report.recommended_preview.sector = fuzzy.sector;
+      }
+    } else {
+      // Fallback: pick first catalog entry whose sector matches the lead sector
+      const fallback = PREVIEW_CATALOG.find((p) => p.sector === sectorKey)
+        || PREVIEW_CATALOG.find((p) => p.sector === "food");
+      if (fallback) {
+        report.recommended_preview = {
+          project_name: fallback.project_name,
+          sub_sector: fallback.sub_sector,
+          sector: fallback.sector,
+          why: `Match di settore (${fallback.sector}) — nessuna scelta specifica restituita dal modello.`,
+          similarity_score: 60,
+        };
+      }
+    }
+
     return new Response(JSON.stringify({
       success: true,
       report,
@@ -706,6 +735,7 @@ REGOLE INDEROGABILI (violazione = report scartato):
       discovered_website,
       ig_snapshot: igSnapshot,
       portfolio_ref: portfolio,
+      recommended_preview: report?.recommended_preview || null,
       analyzed_at: new Date().toISOString(),
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
