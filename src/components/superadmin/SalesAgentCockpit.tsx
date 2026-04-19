@@ -137,6 +137,28 @@ export default function SalesAgentCockpit() {
     }
   };
 
+  // Estrai link cliccabili da payload (preview/admin generati)
+  const renderActionExtras = (a: AgentAction) => {
+    const p = a.payload || {};
+    const preview = p.preview_url;
+    const admin = p.admin_url;
+    if (!preview && !admin) return null;
+    return (
+      <div className="flex gap-2 mt-1.5 flex-wrap">
+        {preview && (
+          <a href={preview} target="_blank" rel="noreferrer" className="text-[11px] text-primary underline hover:no-underline">
+            🌐 Apri preview
+          </a>
+        )}
+        {admin && (
+          <a href={admin} target="_blank" rel="noreferrer" className="text-[11px] text-accent-foreground underline hover:no-underline">
+            🛠️ Apri admin demo
+          </a>
+        )}
+      </div>
+    );
+  };
+
   const handleApproval = async (id: string, decision: "approve" | "reject", edited?: string) => {
     const { error } = await supabase.functions.invoke("sales-agent-send", {
       body: { approval_id: id, decision, edited_body: edited },
@@ -276,6 +298,7 @@ export default function SalesAgentCockpit() {
                           )}
                         </div>
                         {a.description && <p className="text-xs text-muted-foreground mt-0.5">{a.description}</p>}
+                        {renderActionExtras(a)}
                         <div className="flex gap-3 text-[11px] text-muted-foreground mt-1">
                           <span>{new Date(a.created_at).toLocaleTimeString("it-IT")}</span>
                           {a.duration_ms ? <span>{a.duration_ms}ms</span> : null}
