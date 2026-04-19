@@ -1521,9 +1521,22 @@ serve(async (req) => {
     }
 
     // ─── AGENT 4: BUILDER — crea tenant Supabase ───
+    // Inietta nel themeConfig il manifest di completezza settoriale (agenti, moduli,
+    // blocchi sito, dataset attesi) — la UI lo legge per mostrare il badge
+    // "Esempio personalizzabile" e disegnare l'admin completo per il settore.
+    const completeness = buildSectorCompleteness(lead.sector, match.sub);
+    themeConfig.completeness = completeness;
+
     const tenant = isFood
       ? await createFoodTenant(supabase, partnerId, lead, brand, palette, images, themeConfig)
       : await createCompanyTenant(supabase, partnerId, lead, brand, palette, images, themeConfig);
+
+    // Installa tutti gli agenti settoriali sul nuovo tenant (best-effort, additivo).
+    try {
+      await installSectorAgents(supabase, tenant.id, completeness.agentKeys);
+    } catch (e) {
+      console.warn("[completeness] agent install warning:", e);
+    }
 
     const origin = originUrl || "";
     // ⭐ TUTTI i settori usano /b/<slug> → BusinessPage → TEMPLATE_MAP[industry] → *PublicSite
