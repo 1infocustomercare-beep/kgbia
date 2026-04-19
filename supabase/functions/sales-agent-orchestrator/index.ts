@@ -61,15 +61,103 @@ interface ScoutedLead {
   source?: string | null;
 }
 
+class AIUnavailableError extends Error {
+  constructor(public status: number, public detail: string) {
+    super(`AI gateway ${status}: ${detail}`);
+  }
+}
+
 async function callAI(messages: any[], model = "google/gemini-2.5-flash"): Promise<string> {
   const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({ model, messages }),
   });
-  if (!r.ok) throw new Error(`AI gateway ${r.status}: ${await r.text()}`);
+  if (!r.ok) {
+    const detail = await r.text();
+    // 402 = no credits, 429 = rate limit → fallback degraded mode
+    throw new AIUnavailableError(r.status, detail);
+  }
   const j = await r.json();
   return j.choices?.[0]?.message?.content ?? "";
+}
+
+// ============= FALLBACK HEURISTICS (when AI gateway unavailable) =============
+
+function heuristicProfile(lead: any): any {
+  const sector = getLeadSector(lead);
+  const city = getLeadCity(lead);
+  const name = getLeadName(lead);
+  const hasWebsite = !!lead.website;
+  const hasInsta = !!lead.instagram;
+  const hasReviews = (lead.google_reviews ?? 0) > 0;
+  const lowRating = (lead.google_rating ?? 5) < 4.0;
+
+  // Score euristico: più info pubbliche = più caldo
+  let score = 50;
+  if (lead.email) score += 15;
+  if (lead.phone) score += 10;
+  if (hasInsta) score += 8;
+  if (hasReviews) score += 7;
+  if (lowRating) score += 10; // attività con problemi reputazionali = più bisognose
+  if (!hasWebsite) score += 5;
+  score = Math.min(95, score);
+
+  const sectorPains: Record<string, string[]> = {
+    food: ["Commissioni JustEat/Deliveroo al 30%", "Recensioni negative non gestite", "Menu QR e prenotazioni manuali"],
+    beauty: ["Appuntamenti gestiti su WhatsApp/agenda cartacea", "No-show senza acconto", "Zero CRM clienti"],
+    ncc: ["Prenotazioni via telefono/WhatsApp", "Niente tracking GPS clienti", "Gestione flotta su Excel"],
+    fitness: ["Iscrizioni cartacee", "Niente app prenotazione corsi", "Membership su carta"],
+    hospitality: ["OTA prendono il 15-25%", "Check-in manuale", "Niente upselling automatico"],
+    healthcare: ["Agenda manuale", "Promemoria appuntamenti via SMS pagati", "GDPR a rischio"],
+  };
+
+  const pain_points = sectorPains[sector] ?? sectorPains.food;
+  const value_props = [
+    "App white-label personalizzata + sito SEO in 24h",
+    "Solo 2% commissioni vs 30% delle piattaforme",
+    "AI agents 24/7 per prenotazioni, recensioni, marketing",
+  ];
+
+  const recommended_channel = lead.email ? "email" : lead.phone ? "whatsapp" : lead.instagram ? "instagram" : "email";
+
+  return {
+    pain_points,
+    value_props,
+    best_hook: `Ho dato un'occhiata a ${name} a ${city}${lowRating ? ` e ho visto che alcune recensioni recenti penalizzano il rating` : ""}. Ho preparato una preview personalizzata gratuita.`,
+    risk_objections: ["Già abbiamo un sito", "Costa troppo / non ho tempo"],
+    recommended_channel,
+    urgency: score >= 75 ? "high" : score >= 60 ? "medium" : "low",
+    best_time_to_contact: sector === "food" ? "10:00-11:30 o 15:00-17:00" : "9:30-12:00",
+    score,
+    _fallback: true,
+  };
+}
+
+function heuristicDraft(lead: any, profile: any, channel: string, previewLink: string, signature: string): { subject: string; body: string } {
+  const name = getLeadName(lead);
+  const city = getLeadCity(lead);
+  const pain = profile.pain_points?.[0] ?? "gestione manuale di clienti e prenotazioni";
+  const linkLine = previewLink ? `\n\nGuarda la preview personalizzata che ho preparato per te:\n${previewLink}` : "";
+
+  if (channel === "whatsapp") {
+    return {
+      subject: "",
+      body: `Ciao ${name}! Sono Arianna di Empire AI Group. Ho notato che probabilmente gestite ancora ${pain} — ho preparato per voi una demo gratuita su misura.${linkLine}\n\nPosso mostrartela in 15 min? — ${signature}`,
+    };
+  }
+
+  if (channel === "instagram") {
+    return {
+      subject: "",
+      body: `Ciao ${name}! Adoro quello che fate a ${city} ✨ Ho preparato una demo personalizzata di un'app white-label per voi.${linkLine}\n\n15 min per mostrartela? — ${signature}`,
+    };
+  }
+
+  return {
+    subject: `${name} — preview personalizzata Empire (gratis)`,
+    body: `Ciao,\n\nSono Arianna di Empire AI Group. Ho analizzato ${name} a ${city} e ho notato che potreste risparmiare tempo su ${pain}.\n\nPer farti vedere concretamente cosa intendo, ho già preparato una preview personalizzata della vostra futura app + sito (white-label, brandizzata sul vostro nome).${linkLine}\n\nTi va una call di 15 minuti questa settimana per fartela vedere dal vivo?\n\n— ${signature}`,
+  };
 }
 
 function getLeadName(lead: Partial<ScoutedLead> & Record<string, any>) {
