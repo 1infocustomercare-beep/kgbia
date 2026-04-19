@@ -1360,11 +1360,29 @@ serve(async (req) => {
     // ─── AGENT 2: ANALYST — AI brand kit + sub-settore detection ───
     const brand = await aiEnrichBrand(lead, scraped);
     const isFood = FOOD_SECTORS.has(lead.sector);
-    // Priority: preview selezionata manualmente dal venditore > auto-detect dal lead/scrape
-    const manualMatch = previewToMatch(preview);
-    const autoMatch = detectSubSector(lead, scraped?.markdown);
-    const match = manualMatch || autoMatch;
-    console.log(`[demo-factory] match-source=${manualMatch ? "manual-preview" : "auto-detect"} variant=${match.variant} sub=${match.sub}`);
+    // ⭐ PRIORITY ORDER:
+    //   1) preview.templateVariant ESPLICITO dal client (preview-matcher v3) — AUTORITATIVO
+    //   2) preview.brandName/styleName via regex (legacy)
+    //   3) auto-detect su lead + scrape
+    let match: SubSectorMatch;
+    let matchSource: string;
+    if (preview?.templateVariant && preview.templateVariant !== "default") {
+      // Cliente ha già risolto il variant col matcher unificato → usa direttamente
+      const heroDefaults = previewToMatch(preview) || detectSubSector(lead, scraped?.markdown);
+      match = {
+        sub: (preview.subSector as SubSectorKey) || heroDefaults.sub,
+        variant: preview.templateVariant as TemplateVariant,
+        heroTagline: heroDefaults.heroTagline,
+        themeHint: heroDefaults.themeHint,
+      };
+      matchSource = "client-canonical";
+    } else {
+      const manualMatch = previewToMatch(preview);
+      const autoMatch = detectSubSector(lead, scraped?.markdown);
+      match = manualMatch || autoMatch;
+      matchSource = manualMatch ? "manual-preview" : "auto-detect";
+    }
+    console.log(`[demo-factory] match-source=${matchSource} variant=${match.variant} sub=${match.sub}`);
     await updateRun({
       agents_status: { scout: "done", analyst: "done", curator: "running", copywriter: "pending", builder: "pending", closer: "pending" },
       sub_sector: match.sub,
