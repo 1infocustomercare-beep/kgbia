@@ -91,7 +91,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.96 }}
             transition={{ type: "spring", damping: 25 }}
-            className="fixed inset-x-1 top-[max(env(safe-area-inset-top),0.5rem)] bottom-[max(env(safe-area-inset-bottom),0.5rem)] lg:inset-x-auto lg:left-1/2 lg:-translate-x-1/2 lg:top-8 lg:bottom-8 lg:w-[680px] lg:max-w-[calc(100vw-2rem)] z-[61] rounded-2xl lg:rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col max-w-[calc(100vw-0.5rem)] mx-auto"
+            className="fixed left-1/2 -translate-x-1/2 top-[max(env(safe-area-inset-top),0.5rem)] bottom-[max(env(safe-area-inset-bottom),0.5rem)] w-[calc(100vw-0.75rem)] max-w-[680px] lg:top-8 lg:bottom-8 z-[61] rounded-2xl lg:rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
             style={{ background: "linear-gradient(160deg, #0a0a14, #0d0a1f 50%, #14091a)" }}
           >
             {/* Header */}
