@@ -8,9 +8,8 @@ import { motion, useInView, useScroll, useTransform, AnimatePresence } from "fra
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { StrapizzamiSite, type StrapizzamiSiteData } from "@/components/templates/strapizzami/StrapizzamiSite";
-import { PaperfishSite, type PaperfishSiteData } from "@/components/templates/paperfish/PaperfishSite";
-import { BateySite, type BateySiteData } from "@/components/templates/batey/BateySite";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
+import { resolveVariantTheme } from "@/lib/template-variant-theme";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -136,101 +135,11 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
 
   useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
 
-  // ── Strapizzami template branch (pizzeria tradizionale) ──
+  // ── Universal variant renderer (Strapizzami / Paperfish / Batey shells, themed per variant) ──
   const themeConfig = (restaurant as any)?.theme_config || (company as any)?.theme_config;
   const templateVariant = themeConfig?.template_variant as string | undefined;
-
-  const strapizzamiData = useMemo<StrapizzamiSiteData | null>(() => {
-    if (templateVariant !== "strapizzami") return null;
-    const items = (menuItems.length > 0 ? menuItems : []).map((i: any) => ({
-      id: String(i.id),
-      name: i.name,
-      description: i.description || "",
-      price: Number(i.price) || 0,
-      image: i.image_url || "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=600",
-      category: i.category || "Pizze",
-      is_popular: !!i.is_popular,
-      ingredients: i.description,
-    }));
-    return {
-      brandName: company.name || "Pizzeria",
-      subtitle: company.tagline || "Pizzeria Napoletana",
-      heroImage: themeConfig?.hero_image || "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      heroTagline: themeConfig?.hero_tagline || "LA VERA PIZZA NAPOLETANA",
-      address: [company.address, company.city].filter(Boolean).join(", ") || "Via Roma 1, Napoli",
-      items: items.length > 0 ? items : [
-        { id: "1", name: "Margherita DOC", description: "San Marzano, bufala, basilico, olio EVO", price: 9.5, image: "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Classiche", is_popular: true },
-        { id: "2", name: "Diavola", description: "Salame piccante, mozzarella, peperoncino", price: 11, image: "https://images.pexels.com/photos/845811/pexels-photo-845811.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Classiche" },
-        { id: "3", name: "Capricciosa", description: "Cotto, funghi, carciofi, olive", price: 12.5, image: "https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Speciali" },
-        { id: "4", name: "Salsiccia e Friarielli", description: "Salsiccia, friarielli, provola", price: 13, image: "https://images.pexels.com/photos/1146760/pexels-photo-1146760.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Speciali" },
-      ],
-    };
-  }, [templateVariant, menuItems, company, themeConfig]);
-
-  // ── Paperfish Sakura template branch (sushi/giapponese) ──
-  const paperfishData = useMemo<PaperfishSiteData | null>(() => {
-    if (templateVariant !== "paperfish-sakura" && templateVariant !== "paperfish-dark") return null;
-    const items = (menuItems.length > 0 ? menuItems : []).map((i: any) => ({
-      id: String(i.id),
-      name: i.name,
-      description: i.description || "",
-      price: Number(i.price) || 0,
-      image: i.image_url || "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=600",
-      category: i.category || "Sushi",
-      is_popular: !!i.is_popular,
-      ingredients: i.description,
-      jp_label: (i as any).jp_label,
-    }));
-    return {
-      brandName: company.name || "Sushi Bar",
-      subtitle: themeConfig?.subtitle || "寿司 · 刺身",
-      heroImage: themeConfig?.hero_image || "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      heroTagline: themeConfig?.hero_tagline || "OMAKASE EXPERIENCE",
-      address: [company.address, company.city].filter(Boolean).join(", ") || "Via Tokyo 1, Milano",
-      items: items.length > 0 ? items : [
-        { id: "1", name: "Salmon Nigiri", description: "Riso shari, salmone fresco norvegese, wasabi", price: 8, image: "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Nigiri", is_popular: true, jp_label: "鮭にぎり" },
-        { id: "2", name: "Tuna Sashimi", description: "Tonno rosso del Mediterraneo, taglio premium", price: 16, image: "https://images.pexels.com/photos/884600/pexels-photo-884600.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Sashimi", is_popular: true, jp_label: "鮪刺身" },
-        { id: "3", name: "Dragon Roll", description: "Gambero tempura, avocado, anguilla, salsa unagi", price: 18, image: "https://images.pexels.com/photos/1148086/pexels-photo-1148086.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Special Roll", is_popular: true, jp_label: "ドラゴンロール" },
-        { id: "4", name: "Tonkotsu Ramen", description: "Brodo di maiale 12h, chashu, ajitama, scalogno", price: 16, image: "https://images.pexels.com/photos/1907244/pexels-photo-1907244.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Ramen", jp_label: "豚骨ラーメン" },
-        { id: "5", name: "Edamame", description: "Fagioli di soia al sale marino", price: 6, image: "https://images.pexels.com/photos/8951403/pexels-photo-8951403.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Antipasti", jp_label: "枝豆" },
-        { id: "6", name: "Mochi Trio", description: "Tre dolcetti di riso glutinoso: matcha, fragola, cocco", price: 8, image: "https://images.pexels.com/photos/4253318/pexels-photo-4253318.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Dolci", jp_label: "餅" },
-      ],
-    };
-  }, [templateVariant, menuItems, company, themeConfig]);
-
-  // ── Batey Pacifico template branch (pesce/seafood/yacht — azure caraibico) ──
-  const bateyData = useMemo<BateySiteData | null>(() => {
-    const isBatey = templateVariant === "batey-pacifico" || templateVariant === "asinara-azure" || templateVariant === "batey-azure";
-    if (!isBatey) return null;
-    const items = (menuItems.length > 0 ? menuItems : []).map((i: any) => ({
-      id: String(i.id),
-      name: i.name,
-      description: i.description || "",
-      price: Number(i.price) || 0,
-      image: i.image_url || "https://images.pexels.com/photos/3296434/pexels-photo-3296434.jpeg?auto=compress&cs=tinysrgb&w=600",
-      category: i.category || "Pesce Fresco",
-      is_popular: !!i.is_popular,
-      ingredients: i.description,
-      es_label: (i as any).es_label,
-    }));
-    return {
-      brandName: company.name || "Pescheria",
-      subtitle: themeConfig?.subtitle || "PESCA DEL DÍA · MARE",
-      heroImage: themeConfig?.hero_image || "https://images.pexels.com/photos/3296434/pexels-photo-3296434.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      heroTagline: themeConfig?.hero_tagline || "PESCA FRESCA OGNI GIORNO",
-      address: [company.address, company.city].filter(Boolean).join(", ") || "Lungomare 1, Napoli",
-      items: items.length > 0 ? items : [
-        { id: "1", name: "Crudo di Branzino", description: "Branzino selvaggio, olio EVO Liguria, fior di sale, lime", price: 22, image: "https://images.pexels.com/photos/3296434/pexels-photo-3296434.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Crudi", is_popular: true, es_label: "del mar" },
-        { id: "2", name: "Tartare di Tonno Rosso", description: "Tonno Mediterraneo, avocado, sesamo nero, salsa ponzu", price: 24, image: "https://images.pexels.com/photos/8697540/pexels-photo-8697540.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Crudi", is_popular: true, es_label: "atún rojo" },
-        { id: "3", name: "Ostriche Bretagna n°2", description: "6 pezzi, limone, mignonette al pepe rosa", price: 28, image: "https://images.pexels.com/photos/616835/pexels-photo-616835.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Crudi", es_label: "ostras" },
-        { id: "4", name: "Spaghetto allo Scoglio", description: "Cozze, vongole, gamberi, pomodorini gialli", price: 22, image: "https://images.pexels.com/photos/8951403/pexels-photo-8951403.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Primi", is_popular: true, es_label: "del puerto" },
-        { id: "5", name: "Linguine ai Ricci", description: "Pasta fresca, ricci di mare di Sardegna, bottarga", price: 28, image: "https://images.pexels.com/photos/1438672/pexels-photo-1438672.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Primi", es_label: "erizos de mar" },
-        { id: "6", name: "Branzino al Sale", description: "Branzino intero in crosta di sale marino, patate ratte", price: 38, image: "https://images.pexels.com/photos/3763847/pexels-photo-3763847.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Secondi", is_popular: true, es_label: "lubina entera" },
-        { id: "7", name: "Frittura di Paranza", description: "Selezione del giorno: gamberi, calamari, alici, totanetti", price: 26, image: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Secondi", es_label: "fritura" },
-        { id: "8", name: "Ceviche Caraibico", description: "Pesce bianco, lime, peperoncino habanero, mais croccante", price: 18, image: "https://images.pexels.com/photos/2087748/pexels-photo-2087748.jpeg?auto=compress&cs=tinysrgb&w=600", category: "Crudi", is_popular: true, es_label: "ceviche del chef" },
-      ],
-    };
-  }, [templateVariant, menuItems, company, themeConfig]);
+  const hasVariant = !!templateVariant && templateVariant !== "default";
+  const variantSpec = hasVariant ? resolveVariantTheme(templateVariant) : null;
 
   const handleReservation = async () => {
     if (!form.name || !form.phone || !form.date || !form.time) { toast.error("Compila tutti i campi obbligatori"); return; }
@@ -270,15 +179,29 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
   const displayMenuItems = filteredItems.length > 0 ? filteredItems : demoMenu;
   const displayCategories = categories.length > 0 ? categories : [...new Set(demoMenu.map(i => i.category))];
 
-  // Branch render: template specifici — DOPO tutti gli hooks
-  if (strapizzamiData) {
-    return <StrapizzamiSite data={strapizzamiData} />;
-  }
-  if (paperfishData) {
-    return <PaperfishSite data={paperfishData} />;
-  }
-  if (bateyData) {
-    return <BateySite data={bateyData} />;
+  // Branch render: variant template (1:1 dei mockup iPhone scelti dalla Demo Factory)
+  if (hasVariant && variantSpec) {
+    return (
+      <VariantSiteRenderer
+        variantId={templateVariant}
+        brandName={company.name || "Ristorante"}
+        subtitle={themeConfig?.subtitle || variantSpec.subtitle}
+        heroImageOverride={themeConfig?.hero_image}
+        heroTaglineOverride={themeConfig?.hero_tagline}
+        address={[company.address, company.city].filter(Boolean).join(", ")}
+        items={(menuItems.length > 0 ? menuItems : []).map((i: any) => ({
+          id: String(i.id),
+          name: i.name,
+          description: i.description || "",
+          price: Number(i.price) || 0,
+          image_url: i.image_url,
+          category: i.category,
+          is_popular: !!i.is_popular,
+          jp_label: (i as any).jp_label,
+          es_label: (i as any).es_label,
+        }))}
+      />
+    );
   }
 
   return (

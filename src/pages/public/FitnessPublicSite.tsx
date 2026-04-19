@@ -15,6 +15,7 @@ import {
   Phone, Clock, Calendar, Dumbbell, Flame, Heart, Zap, Users,
   Target, Timer, ArrowRight, MessageCircle, Trophy, ChevronDown, Star, MapPin, Mail, Menu, X, ChevronLeft, ChevronRight, Sparkles, Shield, Quote, Award, CheckCircle
 } from "lucide-react";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
@@ -73,6 +74,26 @@ const FAQ_ITEMS = [
 ];
 
 export default function FitnessPublicSite({ company, afterHero }: Props) {
+  // ── Variant override (from Demo Factory) ──
+  const themeConfig = (company as any)?.theme_config;
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+  if (templateVariant && templateVariant !== "default") {
+    return (
+      <VariantSiteRenderer
+        variantId={templateVariant}
+        brandName={company.name || "Fitness Club"}
+        subtitle={themeConfig?.subtitle}
+        heroImageOverride={themeConfig?.hero_image}
+        heroTaglineOverride={themeConfig?.hero_tagline}
+        address={[company.address, company.city].filter(Boolean).join(", ")}
+        items={[]}
+      />
+    );
+  }
+  return <FitnessPublicSiteInner company={company} afterHero={afterHero} />;
+}
+
+function FitnessPublicSiteInner({ company, afterHero }: Props) {
   const companyId = company.id;
   const name = company.name || "Fitness Club";
   const tagline = company.tagline || "Trasforma il Tuo Corpo";

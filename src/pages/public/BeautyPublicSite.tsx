@@ -14,6 +14,7 @@ import {
   Users, Award, Quote, ArrowRight, MessageCircle, Menu, X, ChevronLeft, ChevronRight,
   Eye, Droplets, Gem, Crown, Flower2, Palette, Zap, Shield
 } from "lucide-react";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
 
 /* ── NEO NAILS / BEAUTY DESIGN SYSTEM — Pastel Lavender + Glass ── */
 const B = {
@@ -140,6 +141,26 @@ const FAQ_ITEMS = [
 ];
 
 export default function BeautyPublicSite({ company, afterHero }: Props) {
+  // ── Variant override (from Demo Factory) ──
+  const themeConfig = (company as any)?.theme_config;
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+  if (templateVariant && templateVariant !== "default") {
+    return (
+      <VariantSiteRenderer
+        variantId={templateVariant}
+        brandName={company.name || "Beauty Studio"}
+        subtitle={themeConfig?.subtitle}
+        heroImageOverride={themeConfig?.hero_image}
+        heroTaglineOverride={themeConfig?.hero_tagline}
+        address={[company.address, company.city].filter(Boolean).join(", ")}
+        items={[]}
+      />
+    );
+  }
+  return <BeautyPublicSiteInner company={company} afterHero={afterHero} />;
+}
+
+function BeautyPublicSiteInner({ company, afterHero }: Props) {
   const companyId = company.id;
   const [form, setForm] = useState({ name: "", phone: "", service: "", date: "", time: "", notes: "" });
   const [submitting, setSubmitting] = useState(false);
