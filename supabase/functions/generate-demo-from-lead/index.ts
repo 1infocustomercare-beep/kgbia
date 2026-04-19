@@ -1081,6 +1081,11 @@ async function createCompanyTenant(
 ): Promise<{ id: string; slug: string }> {
   const baseSlug = slugify(lead.businessName);
   const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
+  const canonicalIndustry =
+    themeConfig?.client_preview?.sectorId ||
+    (themeConfig?.sub_sector === "agriturismo" ? "agriturismo" : null) ||
+    (themeConfig?.sub_sector === "beach" || themeConfig?.sub_sector === "beach_club" ? "beach" : null) ||
+    lead.sector;
 
   const allModules = [
     "dashboard", "clients", "appointments", "agents", "whatsapp",
@@ -1092,7 +1097,7 @@ async function createCompanyTenant(
     .insert({
       name: lead.businessName,
       slug,
-      industry: lead.sector,
+      industry: canonicalIndustry,
       owner_id: ownerId,
       tagline: brand.tagline,
       primary_color: palette.primary,
