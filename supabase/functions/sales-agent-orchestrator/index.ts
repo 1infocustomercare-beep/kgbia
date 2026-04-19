@@ -415,20 +415,35 @@ async function enrichAndScore(supabase: any, owner_id: string, job_id: string, l
     description: `Settore ${getLeadSector(lead)} · ${getLeadCity(lead)}`,
   }, "running");
 
-  const profile = await callAI([
-    {
-      role: "system",
-      content: "Sei un Senior Sales Consultant di Empire AI Group. Analizza un lead e ritorna SOLO JSON valido con: pain_points (array di 3 stringhe), value_props (array 3 stringhe), best_hook (stringa per aprire conversazione), risk_objections (array 2 stringhe), recommended_channel (email|whatsapp|linkedin|instagram), urgency (low|medium|high), best_time_to_contact (stringa), score (0-100 di interesse stimato).",
-    },
-    { role: "user", content: `Lead: ${JSON.stringify(lead)}` },
-  ]);
-
   let parsed: any = {};
+  let usedFallback = false;
+
   try {
-    const m = profile.match(/\{[\s\S]*\}/);
-    parsed = m ? JSON.parse(m[0]) : {};
-  } catch {
-    parsed = {};
+    const profile = await callAI([
+      {
+        role: "system",
+        content: "Sei un Senior Sales Consultant di Empire AI Group. Analizza un lead e ritorna SOLO JSON valido con: pain_points (array di 3 stringhe), value_props (array 3 stringhe), best_hook (stringa per aprire conversazione), risk_objections (array 2 stringhe), recommended_channel (email|whatsapp|linkedin|instagram), urgency (low|medium|high), best_time_to_contact (stringa), score (0-100 di interesse stimato).",
+      },
+      { role: "user", content: `Lead: ${JSON.stringify(lead)}` },
+    ]);
+    try {
+      const m = profile.match(/\{[\s\S]*\}/);
+      parsed = m ? JSON.parse(m[0]) : {};
+    } catch {
+      parsed = {};
+    }
+    if (!parsed.score && !parsed.pain_points) {
+      parsed = heuristicProfile(lead);
+      usedFallback = true;
+    }
+  } catch (e: any) {
+    if (e instanceof AIUnavailableError) {
+      console.warn(`[arianna] AI unavailable (${e.status}) → using heuristic profile for lead ${lead.id}`);
+      parsed = heuristicProfile(lead);
+      usedFallback = true;
+    } else {
+      throw e;
+    }
   }
 
   if (parsed.score !== undefined && parsed.score !== null) {
@@ -439,14 +454,14 @@ async function enrichAndScore(supabase: any, owner_id: string, job_id: string, l
     owner_id,
     lead_id: lead.id,
     knowledge_type: "lead_profile",
-    title: `Profilo ${new Date().toISOString().slice(0, 10)}`,
+    title: `Profilo ${new Date().toISOString().slice(0, 10)}${usedFallback ? " (euristica)" : ""}`,
     content: parsed,
-    confidence: 0.85,
+    confidence: usedFallback ? 0.55 : 0.85,
   });
 
   await logAction(supabase, owner_id, job_id, lead.id, {
     type: "score",
-    title: `📊 Score ${parsed.score ?? "?"}/100 · canale: ${parsed.recommended_channel ?? "email"}`,
+    title: `📊 Score ${parsed.score ?? "?"}/100 · canale: ${parsed.recommended_channel ?? "email"}${usedFallback ? " (modalità euristica)" : ""}`,
     description: `Hook: ${parsed.best_hook ?? "-"}`,
     payload: parsed,
   }, "success", parsed, Date.now() - t0);
