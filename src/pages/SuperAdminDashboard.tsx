@@ -23,7 +23,7 @@ import empireMonkeyMascot from "@/assets/empire-monkey.png";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import AccountManagerPanel from "@/components/superadmin/AccountManagerPanel";
-import SuperAdminCreditsManager from "@/components/superadmin/SuperAdminCreditsManager";
+import SuperAdminCreditsCenter from "@/components/superadmin/SuperAdminCreditsCenter";
 import EmpireBrainPanel from "@/components/superadmin/EmpireBrainPanel";
 import SalesAgentCockpit from "@/components/superadmin/SalesAgentCockpit";
 import { toast } from "@/hooks/use-toast";
@@ -2505,8 +2505,8 @@ const SuperAdminDashboard = () => {
               </div>
             </div>
 
-            {/* 🎁 Regala crediti AI a qualsiasi venditore */}
-            <SuperAdminCreditsManager />
+            {/* 🪙 Centro completo gestione crediti AI */}
+            <SuperAdminCreditsCenter />
 
 
             <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4 space-y-3">
