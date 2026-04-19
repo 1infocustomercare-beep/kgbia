@@ -88,10 +88,11 @@ function normalizeSector(rawSector?: string | null, haystack = ""): IndustryId {
   if (KNOWN_SECTORS.has(sector as IndustryId)) return sector as IndustryId;
   if (SECTOR_PARENT[sector]) return SECTOR_PARENT[sector] as IndustryId;
 
+  // ⭐ PRIORITÀ ALTA: agriturismo va catturato PRIMA di hospitality
+  if (/\b(agriturism|ittituris|masseria|fattoria didattica|country house|farm stay|cantina sociale|tenuta|podere|casale|borgo antico|relais di campagna|wine resort)\b/.test(haystack)) return "agriturismo";
   // Inferenza dal testo
   if (/\b(stabiliment|balneare|beach club|beach|lido|spiaggia|ombrellone|lettino)\b/.test(haystack)) return "beach";
   if (/\b(hotel|resort|suite|room|camere|bed and breakfast|b&b|guest house|ospitalità|albergo)\b/.test(haystack)) return "hospitality";
-  if (/\b(agriturismo|masseria|fattoria|country house|farm stay|cantina sociale)\b/.test(haystack)) return "agriturismo";
   if (/\b(dentista|clinica|medico|studio medico|fisioterapia|psicologo|farmacia|ambulatorio|visita medica)\b/.test(haystack)) return "healthcare";
   if (/\b(palestra|gym|fitness|crossfit|yoga|pilates|padel|tennis|piscina)\b/.test(haystack)) return "fitness";
   if (/\b(parrucch|estet|nail|barber|spa|wellness|hair|beauty|makeup|trucco)\b/.test(haystack)) return "beauty";
@@ -140,12 +141,16 @@ export function detectSubSector(input: {
   const isLuxury = /\b(gourmet|luxury|prive|exclusive|noir|black|gold|royal|prestige|premium|fine dining|stellato|michelin|signature)\b/.test(`${name} ${haystack}`);
 
   /* ── FOOD sub-sectors ── */
-  if (sectorId === "food" || /\b(menu|piatto|chef|ristoran|trattoria|osteria|pizzeria|cucina)\b/.test(haystack)) {
+  // ⭐ Forziamo l'analisi food anche se sectorId è ambiguo ma il nome contiene segnali asiatici/specifici
+  const hasAsianNameSignal = /\b(ninja|tokyo|osaka|kyoto|saigon|hanoi|seoul|bangkok|shanghai|beijing|pechino|wok|teppan|hibachi|chopstick|dragon|samurai|geisha|panda|tiger|lotus|bamboo)\b/.test(name);
+  if (sectorId === "food" || hasAsianNameSignal || /\b(menu|piatto|chef|ristoran|trattoria|osteria|pizzeria|cucina)\b/.test(haystack)) {
     if (/\b(pizz(a|eria|aiolo)|napolet|forno a legna|margherita|marinara|trapizz|focacc)\b/.test(haystack)) return { sub: "pizzeria", isLuxury, sectorId: "food" };
-    if (/\b(sushi|sashimi|ramen|nigiri|maki|temaki|giappones|japanese|izakaya|wagyu|omakase|hosomaki|uramaki|sake bar)\b/.test(haystack)) return { sub: "sushi", isLuxury, sectorId: "food" };
+    // ⭐ SUSHI: estesa con "ninja, tokyo, asian, fusion asiatic, wok, korean, thai, china, hibachi…"
+    if (/\b(sushi|sashimi|ramen|nigiri|maki|temaki|giappones|japanese|izakaya|wagyu|omakase|hosomaki|uramaki|sake bar|ninja|tokyo|osaka|kyoto|teppan|hibachi|wok|asian fusion|asiatic|korean|coreano|thai|thailand|cinese|chinese|panda|dragon|samurai|geisha|lotus|bamboo|chopstick|tiger)\b/.test(haystack)) return { sub: "sushi", isLuxury, sectorId: "food" };
     if (/\b(braceri|steak|grill|fiorentin|bistecc|carne alla brace|smokehouse|barbecue|bbq|churrasc|asado|tagliata)\b/.test(haystack)) return { sub: "braceria", isLuxury, sectorId: "food" };
     if (/\b(kebab|doner|shawarma|kabap)\b/.test(haystack)) return { sub: "kebab", isLuxury, sectorId: "food" };
-    if (/\b(pesce|fish|frutti di mare|crostacei|seafood|raw bar|ostriche|cevich|tartare di pesce|sea food|pescheria)\b/.test(haystack)) return { sub: "pesce", isLuxury, sectorId: "food" };
+    // ⭐ PESCE: estesa con "ittico, ittiturismo, marinaro, frutti di mare, ostricheria, cozze, vongole, scoglio"
+    if (/\b(pesce|fish|frutti di mare|crostacei|seafood|raw bar|ostriche|ostricheri|cevich|tartare di pesce|sea food|pescheria|ittic|ittituris|marinaro|alla marinara|cozze|vongole|allo scoglio|catalana|gambero|gamberetti|aragosta|astice|cantieri del mare)\b/.test(haystack)) return { sub: "pesce", isLuxury, sectorId: "food" };
     if (/\b(panett|fornai|panificio|bakery|pasticceria|cornett|brioche|lievit|forno|bread|croissant|dolci)\b/.test(haystack) || (input.sector || "").toLowerCase() === "bakery") return { sub: "bakery", isLuxury, sectorId: "food" };
     if (/\b(vietnam|pho|banh|saigon|hanoi|spring roll)\b/.test(haystack)) return { sub: "vietnamese", isLuxury, sectorId: "food" };
     if (/\b(kosher|jewish|kasher)\b/.test(haystack)) return { sub: "kosher", isLuxury, sectorId: "food" };
