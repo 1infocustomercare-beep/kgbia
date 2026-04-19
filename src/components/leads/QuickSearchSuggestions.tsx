@@ -242,7 +242,7 @@ export default function QuickSearchSuggestions({ currentSector, currentSpecializ
 
   /* ── 3. PREMIUM — curated foreign luxury markets ── */
   const premium = useMemo<QuickSuggestion[]>(() => {
-    return PREMIUM_MARKETS.map((m) => ({
+    return PREMIUM_MARKETS.map<QuickSuggestion>((m) => ({
       city: m.city,
       sector: m.sector,
       sectorLabel: sectorLabel(m.sector),
