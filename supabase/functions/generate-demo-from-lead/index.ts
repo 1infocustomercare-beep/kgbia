@@ -1493,7 +1493,10 @@ serve(async (req) => {
       lead.website ? deepScrape(lead.website) : Promise.resolve(null),
       lead.instagram ? instagramOgImage(lead.instagram) : Promise.resolve([]),
     ]);
-    if (scraped?.detectedSectorHint && lead.sector === "custom") {
+    if (scraped?.detectedSectorHint && (lead.sector === "custom" || !lead.sector || scraped.detectedSectorHint !== lead.sector)) {
+      // Il detectedSectorHint è più specifico (es. sito di pizza dichiarato come "food"
+      // generico → upgrade a "pizzeria"). Lo applichiamo sempre quando differisce.
+      console.log(`[demo-factory] sector upgraded by scrape: ${lead.sector} → ${scraped.detectedSectorHint}`);
       lead.sector = scraped.detectedSectorHint;
     }
     await updateRun({ agents_status: { scout: "done", analyst: "running", curator: "pending", copywriter: "pending", builder: "pending", closer: "pending" } });
@@ -1523,7 +1526,15 @@ serve(async (req) => {
       match = manualMatch || autoMatch;
       matchSource = manualMatch ? "manual-preview" : "auto-detect";
     }
-    console.log(`[demo-factory] match-source=${matchSource} variant=${match.variant} sub=${match.sub}`);
+
+    // ⭐ HARDENING: garantisce che variant non sia mai "default" (= legacy template stock).
+    // Se per qualche motivo è ancora "default", forziamo cote-ivory (editorial neutro).
+    if (!match.variant || (match.variant as string) === "default") {
+      console.warn(`[demo-factory] variant fallback: was "${match.variant}" → cote-ivory`);
+      match = { ...match, variant: "cote-ivory", themeHint: match.themeHint || "marble" };
+    }
+
+    console.log(`[demo-factory] match-source=${matchSource} variant=${match.variant} sub=${match.sub} sector=${lead.sector}`);
     await updateRun({
       agents_status: { scout: "done", analyst: "done", curator: "running", copywriter: "pending", builder: "pending", closer: "pending" },
       sub_sector: match.sub,
