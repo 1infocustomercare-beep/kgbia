@@ -1411,6 +1411,17 @@ serve(async (req) => {
       theme_hint: match.themeHint,
       hero_image: images.hero,
       hero_tagline: match.heroTagline || brand.tagline,
+      // ⭐ subtitle/description preservati per il rendering 1:1 nelle shell iPhone
+      subtitle: brand.tagline || match.heroTagline,
+      brand_description: brand.description,
+      // ⭐ Riferimento alla preview cliente (per QA + admin demo coerente)
+      client_preview: preview ? {
+        brandName: preview.brandName,
+        styleName: preview.styleName,
+        sectorId: preview.sectorId,
+        demoSlug: preview.demoSlug,
+        screens: (preview.screens || []).slice(0, 4),
+      } : null,
       auto_matched: true,
       ai_generated_images: images.aiGenerated || [],
       quality_validated: true,
