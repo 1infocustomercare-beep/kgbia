@@ -24,6 +24,7 @@ const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRe
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import AccountManagerPanel from "@/components/superadmin/AccountManagerPanel";
 import SuperAdminCreditsManager from "@/components/superadmin/SuperAdminCreditsManager";
+import EmpireBrainPanel from "@/components/superadmin/EmpireBrainPanel";
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 
@@ -2702,6 +2703,13 @@ const SuperAdminDashboard = () => {
                 </div>
               )}
             </div>
+          </motion.div>
+        )}
+
+        {/* ===== EMPIRE BRAIN ===== */}
+        {!loading && activeTab === "empire_brain" && (
+          <motion.div className="mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <EmpireBrainPanel />
           </motion.div>
         )}
       </div>
