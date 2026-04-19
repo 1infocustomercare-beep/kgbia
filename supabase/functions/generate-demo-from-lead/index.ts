@@ -408,7 +408,9 @@ function previewToMatch(preview?: PreviewSelection | null): SubSectorMatch | nul
   if (preview.sectorId === "fitness") return { sub: "gym", variant: "city-padel-sage", heroTagline: "ALLENATI AL TUO MEGLIO", themeHint: "sage" };
   if (preview.sectorId === "food") return { sub: "ristorante", variant: "cote-ivory", heroTagline: "BENVENUTI A TAVOLA", themeHint: "marble" };
 
-  return null;
+  // ⭐ Fallback finale: mai null se la preview è presente — restituiamo cote-ivory
+  // così la generazione non ricade sul legacy template stock.
+  return { sub: "ristorante", variant: "cote-ivory", heroTagline: "BENVENUTI", themeHint: "marble" };
 }
 
 function exactVariantToMatch(variant?: string | null, subSector?: string | null): SubSectorMatch | null {
