@@ -467,11 +467,14 @@ export default function LeadsPage() {
         if (i < hints.length) { setDemoFactoryProgress(hints[i]); i++; }
       }, 4000);
 
-      // ⭐ GROUND TRUTH: il matcher frontend è la stessa logica usata per la
-      // preview iPhone. Lo ricalcoliamo qui e passiamo templateVariant +
-      // subSector come AUTORITÀ al backend, così sito + admin sono 1:1.
+      // ⭐ GROUND TRUTH: pipeline a 3 livelli per scegliere la preview canonica
+      //   1) Manual override dal ManualPreviewPicker (massima priorità).
+      //   2) Recommended preview dell'AI deep analysis (1:1 con un progetto Empire reale).
+      //   3) Matcher heuristico (sub-sector dal nome/filtri).
+      // Il templateVariant + subSector finali vengono passati come AUTORITÀ al backend
+      // così il sito demo + admin sono identici alla preview iPhone mostrata al venditore.
       const sectorLabel = SECTOR_OPTIONS.find(s => s.value === lead._sector)?.label || lead._sector;
-      const canonical = matchPreviewForLead({
+      const heuristic = matchPreviewForLead({
         name: lead.name,
         sector: lead._sector,
         sectorLabel,
@@ -481,6 +484,18 @@ export default function LeadsPage() {
         openingHours: lead.opening_hours,
         types: lead.types || [],
       });
+      const aiRecommended = deepReport?.recommended_preview
+        ? matchPreviewFromRecommendedProject({
+            projectName: deepReport.recommended_preview.project_name,
+            reason: deepReport.recommended_preview.why,
+            sector: lead._sector,
+            sectorLabel,
+          })
+        : null;
+      // Manual override > AI recommendation > heuristic
+      const canonical: PreviewMatch = preview?.isManualOverride
+        ? heuristic // manual override sets brand/style/imageUrl explicitly below; canonical only feeds template fallback
+        : (aiRecommended || heuristic);
 
       const { data, error } = await supabase.functions.invoke("generate-demo-from-lead", {
         body: {
