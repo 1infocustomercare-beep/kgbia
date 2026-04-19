@@ -350,7 +350,8 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const authHeader = req.headers.get("Authorization") ?? "";
+    // Per il cron usiamo direttamente l'anon key (Bearer) per chiamare le altre edge functions
+    const authHeader = req.headers.get("Authorization") ?? `Bearer ${ANON_KEY}`;
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
     const body = await req.json().catch(() => ({}));
     const { owner_id, job_type = "hunt_and_outreach", trigger_source = "manual" } = body;
