@@ -26,6 +26,7 @@ import CreditConfirmDialog from "@/components/leads/CreditConfirmDialog";
 import SmartCityAutocomplete from "@/components/leads/SmartCityAutocomplete";
 import SmartSectorAutocomplete from "@/components/leads/SmartSectorAutocomplete";
 import DemoVaultPanel from "@/components/leads/DemoVaultPanel";
+import QuickSearchSuggestions from "@/components/leads/QuickSearchSuggestions";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
