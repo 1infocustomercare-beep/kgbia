@@ -27,6 +27,7 @@ import SmartCityAutocomplete from "@/components/leads/SmartCityAutocomplete";
 import SmartSectorAutocomplete from "@/components/leads/SmartSectorAutocomplete";
 import DemoVaultPanel from "@/components/leads/DemoVaultPanel";
 import QuickSearchSuggestions from "@/components/leads/QuickSearchSuggestions";
+import AriannaLeadScoutPanel, { AriannaPilot } from "@/components/leads/AriannaLeadScoutPanel";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
@@ -1495,6 +1496,25 @@ export default function LeadsPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ═══ ARIANNA — SALES AGENT PANEL ═══ */}
+      <AriannaLeadScoutPanel
+        defaultTarget={{ city: city || "Roma", sector: sector || "food" }}
+        pilot={{
+          setSearchInputs: (c, s) => { setCity(c); setSector(s); },
+          triggerSearch: async () => { await handleSearch(); },
+          triggerDemoFactoryOnTopLead: async () => {
+            const top = sorted[0];
+            if (top) await runDemoFactory(top, null);
+          },
+          getResultsCount: () => results.length,
+          getTopLead: () => {
+            const top = sorted[0];
+            if (!top) return null;
+            return { name: top.name, phone: top.phone, email: top.email, sector: top._sector };
+          },
+        }}
+      />
 
       {/* ═══ SEARCH BAR ═══ */}
       <div className="rounded-2xl p-4 space-y-3" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
