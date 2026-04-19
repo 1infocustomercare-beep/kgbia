@@ -1025,6 +1025,7 @@ export default function LeadsPage() {
   const previewScreens = previewMatch?.screens.length
     ? previewMatch.screens
     : (selected ? getPreviewScreens(selected._sector) : []);
+  const previewDetails = getPreviewDetailsForMatch(previewMatch);
 
   // Auto-focus city input on mount
   useEffect(() => {
@@ -1959,7 +1960,7 @@ export default function LeadsPage() {
 
             {/* ═══ CUSTOMIZED DEMO PREVIEW — Sector-Specific ═══ */}
             {(() => {
-              const sectorFeats = getSectorFeatures(selected._sector);
+              const sectorFeats = previewDetails;
               return (
               <div className="p-4 rounded-2xl space-y-2" style={{ background: "rgba(167,139,250,0.03)", border: "1px solid rgba(167,139,250,0.1)" }}>
                 <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -2647,7 +2648,11 @@ export default function LeadsPage() {
                       <p className="text-[8px] mt-1" style={{ color: "#6b7280" }}>Ref portfolio reale: <span className="font-bold" style={{ color: "#a78bfa" }}>{portfolioName}</span></p>
                       {/* Sector value props */}
                       {(() => {
-                        const sf = getSectorFeatures(manualSector);
+                        const sf = getPreviewDetailsForMatch(matchPreviewFromManualSelection({
+                          sectorId: manualSector,
+                          brandName: portfolioName,
+                          styleName: styleName,
+                        }) || matchPreviewForLead({ sector: manualSector, name: `${portfolioName} ${styleName}` }));
                         return (
                           <div className="mt-2 grid grid-cols-2 gap-1">
                             {sf.features.slice(0, 4).map((f, i) => (
