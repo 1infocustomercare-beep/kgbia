@@ -1755,6 +1755,227 @@ export type Database = {
           },
         ]
       }
+      empire_brain_agents: {
+        Row: {
+          ai_model: string | null
+          avg_duration_ms: number | null
+          category_code: string
+          category_label: string
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_orchestrator: boolean | null
+          model_preference: string | null
+          name: string
+          slug: string
+          system_prompt: string
+          tools: string | null
+          total_runs: number | null
+          total_success: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          ai_model?: string | null
+          avg_duration_ms?: number | null
+          category_code: string
+          category_label: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_orchestrator?: boolean | null
+          model_preference?: string | null
+          name: string
+          slug: string
+          system_prompt: string
+          tools?: string | null
+          total_runs?: number | null
+          total_success?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          ai_model?: string | null
+          avg_duration_ms?: number | null
+          category_code?: string
+          category_label?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_orchestrator?: boolean | null
+          model_preference?: string | null
+          name?: string
+          slug?: string
+          system_prompt?: string
+          tools?: string | null
+          total_runs?: number | null
+          total_success?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      empire_brain_messages: {
+        Row: {
+          agent_name: string
+          agent_slug: string
+          created_at: string | null
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          input_payload: Json | null
+          output_data: Json | null
+          output_text: string | null
+          role: string
+          run_id: string
+          status: string
+          step_index: number
+        }
+        Insert: {
+          agent_name: string
+          agent_slug: string
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_payload?: Json | null
+          output_data?: Json | null
+          output_text?: string | null
+          role?: string
+          run_id: string
+          status?: string
+          step_index: number
+        }
+        Update: {
+          agent_name?: string
+          agent_slug?: string
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_payload?: Json | null
+          output_data?: Json | null
+          output_text?: string | null
+          role?: string
+          run_id?: string
+          status?: string
+          step_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "empire_brain_messages_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "empire_brain_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      empire_brain_runs: {
+        Row: {
+          agents_used: string[] | null
+          completed_at: string | null
+          completed_steps: number | null
+          created_at: string | null
+          created_by: string | null
+          duration_ms: number | null
+          error_message: string | null
+          final_output: string | null
+          id: string
+          orchestrator_plan: Json | null
+          schedule_id: string | null
+          shared_context: Json | null
+          status: string
+          task_input: string
+          task_title: string
+          total_steps: number | null
+          trigger_source: string
+        }
+        Insert: {
+          agents_used?: string[] | null
+          completed_at?: string | null
+          completed_steps?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          final_output?: string | null
+          id?: string
+          orchestrator_plan?: Json | null
+          schedule_id?: string | null
+          shared_context?: Json | null
+          status?: string
+          task_input: string
+          task_title: string
+          total_steps?: number | null
+          trigger_source?: string
+        }
+        Update: {
+          agents_used?: string[] | null
+          completed_at?: string | null
+          completed_steps?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          final_output?: string | null
+          id?: string
+          orchestrator_plan?: Json | null
+          schedule_id?: string | null
+          shared_context?: Json | null
+          status?: string
+          task_input?: string
+          task_title?: string
+          total_steps?: number | null
+          trigger_source?: string
+        }
+        Relationships: []
+      }
+      empire_brain_schedules: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          cron_expression: string
+          id: string
+          is_active: boolean | null
+          last_run_at: string | null
+          last_run_status: string | null
+          next_run_at: string | null
+          preferred_agents: string[] | null
+          task_input: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          cron_expression: string
+          id?: string
+          is_active?: boolean | null
+          last_run_at?: string | null
+          last_run_status?: string | null
+          next_run_at?: string | null
+          preferred_agents?: string[] | null
+          task_input: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          cron_expression?: string
+          id?: string
+          is_active?: boolean | null
+          last_run_at?: string | null
+          last_run_status?: string | null
+          next_run_at?: string | null
+          preferred_agents?: string[] | null
+          task_input?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       extra_prices: {
         Row: {
           company_id: string
