@@ -24,6 +24,8 @@ import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
+import { resolveVariantTheme } from "@/lib/template-variant-theme";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 
 /* ─── SUNSET CORAL + OCEAN DEEP AESTHETIC ─── */
@@ -53,6 +55,27 @@ Section.displayName = "Section";
 
 interface Props { company: any; afterHero?: React.ReactNode; }
 
+function BeachVariantGate({ company }: { company: any }) {
+  const themeConfig = (company as any)?.theme_config;
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+  const hasVariant = !!templateVariant && templateVariant !== "default";
+  const variantSpec = hasVariant ? resolveVariantTheme(templateVariant) : null;
+
+  if (!hasVariant || !variantSpec) return null;
+
+  return (
+    <VariantSiteRenderer
+      variantId={templateVariant}
+      brandName={company.name || "Beach Club"}
+      subtitle={themeConfig?.subtitle || variantSpec.subtitle}
+      heroImageOverride={themeConfig?.hero_image}
+      heroTaglineOverride={themeConfig?.hero_tagline}
+      address={[company.address, company.city].filter(Boolean).join(", ")}
+      items={[]}
+    />
+  );
+}
+
 const HERO_VIDEO = "https://videos.pexels.com/video-files/20446096/20446096-uhd_2560_1440_25fps.mp4";
 const GALLERY = [
   "https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -69,7 +92,19 @@ const FALLBACK_REVIEWS = [
   { name: "Andrea G.", text: "Servizio bar al posto eccellente. Area bambini perfetta per le famiglie.", rating: 5, photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function BeachPublicSite({ company, afterHero }: Props) {
+export default function BeachPublicSite(props: Props) {
+  const themeConfig = (props.company as any)?.theme_config;
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+  const hasVariant = !!templateVariant && templateVariant !== "default";
+
+  if (hasVariant) {
+    return <BeachVariantGate company={props.company} />;
+  }
+
+  return <BeachPublicSiteInner {...props} />;
+}
+
+function BeachPublicSiteInner({ company, afterHero }: Props) {
   const companyId = company.id;
   const phone = company.phone;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -39,6 +39,8 @@ type SubSectorKey =
   | "yacht" | "boat" | "limo" | "transfer"
   // Fitness
   | "padel" | "gym" | "watersports"
+  // Beach
+  | "beach" | "beach_club"
   // Hospitality
   | "luxury_hotel" | "agriturismo" | "bnb"
   // Generic fallback
@@ -1081,6 +1083,11 @@ async function createCompanyTenant(
 ): Promise<{ id: string; slug: string }> {
   const baseSlug = slugify(lead.businessName);
   const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
+  const canonicalIndustry =
+    themeConfig?.client_preview?.sectorId ||
+    (themeConfig?.sub_sector === "agriturismo" ? "agriturismo" : null) ||
+    (themeConfig?.sub_sector === "beach" || themeConfig?.sub_sector === "beach_club" ? "beach" : null) ||
+    lead.sector;
 
   const allModules = [
     "dashboard", "clients", "appointments", "agents", "whatsapp",
@@ -1092,7 +1099,7 @@ async function createCompanyTenant(
     .insert({
       name: lead.businessName,
       slug,
-      industry: lead.sector,
+      industry: canonicalIndustry,
       owner_id: ownerId,
       tagline: brand.tagline,
       primary_color: palette.primary,
@@ -1345,7 +1352,7 @@ serve(async (req) => {
     if (!lead.businessName || lead.businessName.length < 2 || fakePatterns.test(lead.businessName)) leadIssues.push("Nome attività non valido o di test");
     if (lead.phone && (fakePhone.test(lead.phone.replace(/[\s-]/g, "")) || lead.phone.replace(/\D/g, "").length < 7)) leadIssues.push("Numero di telefono non plausibile");
     if (lead.email && fakeEmail.test(lead.email)) leadIssues.push("Email di test/demo");
-    const hasContactSignal = !!(lead.phone || lead.email || lead.website || lead.instagram || lead.facebook || lead.address || lead.fullAddress || lead.googleMapsUrl || lead.city);
+    const hasContactSignal = !!(lead.phone || lead.email || lead.website || lead.instagram || lead.facebook || lead.fullAddress || lead.googleMapsUrl || lead.city);
     if (!hasContactSignal) leadIssues.push("Nessun contatto o sito reale: impossibile generare demo");
     if (leadIssues.length) {
       console.warn("[guardian] lead pre-flight FAIL:", leadIssues);
