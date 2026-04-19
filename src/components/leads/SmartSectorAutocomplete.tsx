@@ -179,8 +179,9 @@ interface Suggestion {
 interface Props {
   sectorValue: string;
   onSectorChange: (sectorId: string) => void;
-  queryValue: string;
-  onQueryChange: (q: string) => void;
+  subQueryValue: string;
+  subLabelValue?: string;
+  onSubsectorChange: (selection: { label: string; query: string } | null) => void;
   inputStyle?: React.CSSProperties;
   onEnter?: () => void;
 }
@@ -188,8 +189,9 @@ interface Props {
 export default function SmartSectorAutocomplete({
   sectorValue,
   onSectorChange,
-  queryValue,
-  onQueryChange,
+  subQueryValue,
+  subLabelValue,
+  onSubsectorChange,
   inputStyle,
   onEnter,
 }: Props) {
@@ -256,15 +258,16 @@ export default function SmartSectorAutocomplete({
   }, [search, sectorValue]);
 
   const currentSectorLabel = SECTOR_OPTIONS.find(s => s.value === sectorValue)?.label || "Seleziona settore";
-  const hasSubQuery = !!queryValue && Object.values(SUB_SECTORS).flat().some(s => s.query === queryValue);
+  const selectedSubsector = Object.values(SUB_SECTORS).flat().find(s => s.query === subQueryValue);
+  const hasSubQuery = !!subQueryValue && !!selectedSubsector;
+  const displaySubLabel = subLabelValue || selectedSubsector?.label || subQueryValue;
 
   const handlePick = (s: Suggestion) => {
     onSectorChange(s.sectorId);
     if (s.type === "sub" && s.query) {
-      onQueryChange(s.query);
+      onSubsectorChange({ label: s.label, query: s.query });
     } else {
-      // Picking a sector clears any sub-query
-      onQueryChange("");
+      onSubsectorChange(null);
     }
     setOpen(false);
     setSearch("");
@@ -296,7 +299,7 @@ export default function SmartSectorAutocomplete({
             <span className="font-bold">{currentSectorLabel}</span>
             {hasSubQuery && (
               <span className="ml-1.5 text-[10px]" style={{ color: "#5eead4" }}>
-                · {queryValue}
+                · {displaySubLabel}
               </span>
             )}
           </span>
@@ -305,7 +308,7 @@ export default function SmartSectorAutocomplete({
           {hasSubQuery && (
             <span
               role="button"
-              onClick={(e) => { e.stopPropagation(); onQueryChange(""); }}
+              onClick={(e) => { e.stopPropagation(); onSubsectorChange(null); }}
               className="p-0.5 rounded hover:bg-white/10"
               style={{ color: "#9ca3af" }}
             >
@@ -362,7 +365,7 @@ export default function SmartSectorAutocomplete({
                   const isActive = i === highlightIdx;
                   const isSelected = s.sectorId === sectorValue && (
                     (s.type === "sector" && !hasSubQuery) ||
-                    (s.type === "sub" && s.query === queryValue)
+                    (s.type === "sub" && s.query === subQueryValue)
                   );
                   return (
                     <button
