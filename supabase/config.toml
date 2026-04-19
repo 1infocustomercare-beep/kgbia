@@ -62,3 +62,6 @@ verify_jwt = false
 
 [functions.generate-demo-from-lead]
 verify_jwt = false
+
+[functions.temp-ncc-magic-links]
+verify_jwt = false
