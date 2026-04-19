@@ -1566,6 +1566,29 @@ serve(async (req) => {
       // ⭐ subtitle/description preservati per il rendering 1:1 nelle shell iPhone
       subtitle: brand.tagline || match.heroTagline,
       brand_description: brand.description,
+      // ⭐ BRAND IDENTITY — tutti gli asset reali estratti dal lead per il sito demo
+      logo_url: images.logo || null,
+      gallery_images: (images.gallery || []).slice(0, 12),
+      brand_phone: lead.phone || null,
+      brand_address: lead.fullAddress || null,
+      brand_city: lead.city || null,
+      brand_social: {
+        website: lead.website || null,
+        instagram: lead.instagram || null,
+        facebook: lead.facebook || null,
+      },
+      // ⭐ Brand kit menu/listino per i settori senza tabella menu (Beauty/NCC/Fitness)
+      brand_kit_menu: Array.isArray(brand.menu)
+        ? brand.menu.slice(0, 18).map((m: any, i: number) => ({
+            id: `bk-${i}`,
+            name: String(m.name || "").slice(0, 120),
+            description: String(m.description || "").slice(0, 500),
+            price: Number(m.price) || 0,
+            category: String(m.category || "Servizi").slice(0, 60),
+            is_popular: !!m.popular,
+            image_url: (images.gallery || [])[i % Math.max((images.gallery || []).length, 1)] || null,
+          }))
+        : [],
       // ⭐ Riferimento alla preview cliente (per QA + admin demo coerente)
       client_preview: preview ? {
         brandName: preview.brandName,
