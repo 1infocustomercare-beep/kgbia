@@ -429,7 +429,6 @@ export default function LeadsPage() {
     const consumeRes = await consumeSellerCredits("generate_demo_from_lead", {
       lead_name: lead.name, sector: lead._sector, city: lead.city,
     });
-...
       // ⭐ GROUND TRUTH: il matcher frontend è la stessa logica usata per la
       // preview iPhone. Lo ricalcoliamo qui e passiamo templateVariant +
       // subSector come AUTORITÀ al backend, così sito + admin sono 1:1.
