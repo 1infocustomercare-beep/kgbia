@@ -320,6 +320,16 @@ function getSubSectorKeywords(sub: SubSectorKey, sector: string): string[] {
     padel: ["padel", "court", "racquet", "club", "match"],
     gym: ["gym", "fitness", "training", "workout", "weights"],
     watersports: ["watersport", "surf", "jet", "beach", "sea"],
+    coffee: ["coffee", "espresso", "caffè", "barista", "latte art", "brunch"],
+    wine_bar: ["wine", "vino", "enoteca", "calice", "cantina", "sommelier"],
+    gelateria: ["gelato", "ice cream", "sorbetto", "cono", "coppetta"],
+    trattoria: ["pasta", "trattoria", "tavola", "casalinga", "tradizionale"],
+    osteria: ["osteria", "vino", "tavolo legno", "tradizionale", "rustic"],
+    pub: ["beer", "birra", "pub", "tap", "craft beer", "pinta"],
+    vegan: ["vegan", "plant based", "bowl", "healthy", "fresh"],
+    burger: ["burger", "smash burger", "fries", "cheeseburger", "diner"],
+    barber: ["barber", "barbiere", "rasoio", "barba", "men grooming"],
+    spa: ["spa", "wellness", "massage", "candles", "stones"],
   };
 
   return uniq([...(map[sub] || []), ...(SECTOR_IMAGE_KEYWORDS[sector] || [])]);
