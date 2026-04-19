@@ -4537,6 +4537,328 @@ export type Database = {
           },
         ]
       }
+      sales_agent_actions: {
+        Row: {
+          action_type: string
+          channel: string | null
+          created_at: string
+          description: string | null
+          duration_ms: number | null
+          id: string
+          job_id: string | null
+          lead_id: string | null
+          owner_id: string
+          payload: Json | null
+          result: Json | null
+          status: string
+          title: string
+        }
+        Insert: {
+          action_type: string
+          channel?: string | null
+          created_at?: string
+          description?: string | null
+          duration_ms?: number | null
+          id?: string
+          job_id?: string | null
+          lead_id?: string | null
+          owner_id: string
+          payload?: Json | null
+          result?: Json | null
+          status?: string
+          title: string
+        }
+        Update: {
+          action_type?: string
+          channel?: string | null
+          created_at?: string
+          description?: string | null
+          duration_ms?: number | null
+          id?: string
+          job_id?: string | null
+          lead_id?: string | null
+          owner_id?: string
+          payload?: Json | null
+          result?: Json | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_agent_actions_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "sales_agent_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_agent_approvals: {
+        Row: {
+          action_id: string | null
+          approved_at: string | null
+          approved_by: string | null
+          channel: string
+          created_at: string
+          draft_body: string
+          draft_subject: string | null
+          edited_body: string | null
+          expires_at: string
+          id: string
+          lead_id: string | null
+          owner_id: string
+          reasoning: string | null
+          recipient: string | null
+          status: string
+        }
+        Insert: {
+          action_id?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          channel: string
+          created_at?: string
+          draft_body: string
+          draft_subject?: string | null
+          edited_body?: string | null
+          expires_at?: string
+          id?: string
+          lead_id?: string | null
+          owner_id: string
+          reasoning?: string | null
+          recipient?: string | null
+          status?: string
+        }
+        Update: {
+          action_id?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          channel?: string
+          created_at?: string
+          draft_body?: string
+          draft_subject?: string | null
+          edited_body?: string | null
+          expires_at?: string
+          id?: string
+          lead_id?: string | null
+          owner_id?: string
+          reasoning?: string | null
+          recipient?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_agent_approvals_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "sales_agent_actions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_agent_config: {
+        Row: {
+          autonomy_mode: string
+          channels_enabled: Json
+          created_at: string
+          daily_limits: Json
+          email_from: string | null
+          id: string
+          is_active: boolean
+          operating_hours: Json
+          signature: string | null
+          target_cities: string[] | null
+          target_sectors: string[] | null
+          total_conversions: number
+          total_jobs_run: number
+          total_meetings_booked: number
+          total_messages_sent: number
+          updated_at: string
+          user_id: string
+          voice_tone: string
+          whatsapp_from: string | null
+        }
+        Insert: {
+          autonomy_mode?: string
+          channels_enabled?: Json
+          created_at?: string
+          daily_limits?: Json
+          email_from?: string | null
+          id?: string
+          is_active?: boolean
+          operating_hours?: Json
+          signature?: string | null
+          target_cities?: string[] | null
+          target_sectors?: string[] | null
+          total_conversions?: number
+          total_jobs_run?: number
+          total_meetings_booked?: number
+          total_messages_sent?: number
+          updated_at?: string
+          user_id: string
+          voice_tone?: string
+          whatsapp_from?: string | null
+        }
+        Update: {
+          autonomy_mode?: string
+          channels_enabled?: Json
+          created_at?: string
+          daily_limits?: Json
+          email_from?: string | null
+          id?: string
+          is_active?: boolean
+          operating_hours?: Json
+          signature?: string | null
+          target_cities?: string[] | null
+          target_sectors?: string[] | null
+          total_conversions?: number
+          total_jobs_run?: number
+          total_meetings_booked?: number
+          total_messages_sent?: number
+          updated_at?: string
+          user_id?: string
+          voice_tone?: string
+          whatsapp_from?: string | null
+        }
+        Relationships: []
+      }
+      sales_agent_conversations: {
+        Row: {
+          body: string
+          channel: string
+          created_at: string
+          delivered_at: string | null
+          direction: string
+          id: string
+          lead_id: string
+          metadata: Json | null
+          owner_id: string
+          read_at: string | null
+          replied_at: string | null
+          sent_by_agent: boolean
+          subject: string | null
+        }
+        Insert: {
+          body: string
+          channel: string
+          created_at?: string
+          delivered_at?: string | null
+          direction: string
+          id?: string
+          lead_id: string
+          metadata?: Json | null
+          owner_id: string
+          read_at?: string | null
+          replied_at?: string | null
+          sent_by_agent?: boolean
+          subject?: string | null
+        }
+        Update: {
+          body?: string
+          channel?: string
+          created_at?: string
+          delivered_at?: string | null
+          direction?: string
+          id?: string
+          lead_id?: string
+          metadata?: Json | null
+          owner_id?: string
+          read_at?: string | null
+          replied_at?: string | null
+          sent_by_agent?: boolean
+          subject?: string | null
+        }
+        Relationships: []
+      }
+      sales_agent_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          input_payload: Json
+          job_type: string
+          lead_id: string | null
+          output_payload: Json | null
+          owner_id: string
+          priority: number
+          started_at: string | null
+          status: string
+          trigger_source: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_payload?: Json
+          job_type: string
+          lead_id?: string | null
+          output_payload?: Json | null
+          owner_id: string
+          priority?: number
+          started_at?: string | null
+          status?: string
+          trigger_source?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_payload?: Json
+          job_type?: string
+          lead_id?: string | null
+          output_payload?: Json | null
+          owner_id?: string
+          priority?: number
+          started_at?: string | null
+          status?: string
+          trigger_source?: string
+        }
+        Relationships: []
+      }
+      sales_agent_knowledge: {
+        Row: {
+          confidence: number | null
+          content: Json
+          created_at: string
+          id: string
+          knowledge_type: string
+          last_used_at: string | null
+          lead_id: string | null
+          owner_id: string
+          title: string
+          used_count: number
+        }
+        Insert: {
+          confidence?: number | null
+          content: Json
+          created_at?: string
+          id?: string
+          knowledge_type: string
+          last_used_at?: string | null
+          lead_id?: string | null
+          owner_id: string
+          title: string
+          used_count?: number
+        }
+        Update: {
+          confidence?: number | null
+          content?: Json
+          created_at?: string
+          id?: string
+          knowledge_type?: string
+          last_used_at?: string | null
+          lead_id?: string | null
+          owner_id?: string
+          title?: string
+          used_count?: number
+        }
+        Relationships: []
+      }
       seasonal_prices: {
         Row: {
           created_at: string
