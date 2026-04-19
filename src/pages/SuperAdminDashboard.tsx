@@ -13,7 +13,7 @@ import {
   ChevronRight, Filter, Plus, ArrowUpRight, ArrowDownRight,
   Building2, MapPin, Zap, Activity, Lightbulb,
   ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info, ImageIcon, ArrowLeft,
-  MessageCircle, Phone, Shield, X, Key, Handshake, Copy
+  MessageCircle, Phone, Shield, X, Key, Handshake, Copy, Brain
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -24,6 +24,7 @@ const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRe
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import AccountManagerPanel from "@/components/superadmin/AccountManagerPanel";
 import SuperAdminCreditsManager from "@/components/superadmin/SuperAdminCreditsManager";
+import EmpireBrainPanel from "@/components/superadmin/EmpireBrainPanel";
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 
@@ -74,7 +75,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout" | "empire_brain";
 
 interface SubscriptionRecord {
   id: string;
@@ -640,6 +641,7 @@ const SuperAdminDashboard = () => {
     { label: "🤖 AI & Agenti", tabs: [
       { id: "mary", label: "AI-Mary", icon: <Bot className="w-4 h-4" /> },
       { id: "agents", label: "Agenti IA", icon: <Cpu className="w-4 h-4" /> },
+      { id: "empire_brain" as SuperTab, label: "Empire Brain", icon: <Brain className="w-4 h-4" /> },
       { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-4 h-4" /> },
       { id: "lead_scout" as SuperTab, label: "Lead Scout", icon: <Search className="w-4 h-4" /> },
     ]},
@@ -2701,6 +2703,13 @@ const SuperAdminDashboard = () => {
                 </div>
               )}
             </div>
+          </motion.div>
+        )}
+
+        {/* ===== EMPIRE BRAIN ===== */}
+        {!loading && activeTab === "empire_brain" && (
+          <motion.div className="mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <EmpireBrainPanel />
           </motion.div>
         )}
       </div>
