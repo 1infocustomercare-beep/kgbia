@@ -13,6 +13,7 @@ import { SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
+import { matchPreviewForLead, type PreviewMatch } from "@/lib/preview-matcher";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
@@ -937,7 +938,19 @@ export default function LeadsPage() {
 
   const hotLeads = results.filter(l => l._score >= 70).length;
   const sectorConfig = selected ? INDUSTRY_CONFIGS[selected._sector as keyof typeof INDUSTRY_CONFIGS] : null;
-  const previewScreens = selected ? getPreviewScreens(selected._sector) : [];
+  // ⭐ Match preview to the lead's NAME + sub-sector (sushi → Paperfish, pizza → Strapizzami, ecc.)
+  const previewMatch: PreviewMatch | null = selected
+    ? matchPreviewForLead({
+        name: selected.name,
+        sector: selected._sector,
+        sectorLabel: sectorConfig?.label,
+        cuisine: (selected as any).cuisine || null,
+        extra: (selected as any).full_address || null,
+      })
+    : null;
+  const previewScreens = previewMatch?.screens.length
+    ? previewMatch.screens
+    : (selected ? getPreviewScreens(selected._sector) : []);
 
   // Auto-focus city input on mount
   useEffect(() => {
