@@ -13,7 +13,7 @@ import { SECTOR_OPTIONS } from "@/data/mock-leads-data";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
-import { matchPreviewForLead, type PreviewMatch } from "@/lib/preview-matcher";
+import { matchPreviewForLead, matchPreviewFromRecommendedProject, type PreviewMatch } from "@/lib/preview-matcher";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
