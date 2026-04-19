@@ -25,6 +25,8 @@ import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
 import CreditConfirmDialog from "@/components/leads/CreditConfirmDialog";
 import SmartCityAutocomplete from "@/components/leads/SmartCityAutocomplete";
 import SmartSectorAutocomplete from "@/components/leads/SmartSectorAutocomplete";
+import DemoVaultPanel from "@/components/leads/DemoVaultPanel";
+import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
@@ -543,9 +545,41 @@ export default function LeadsPage() {
       }
 
       setDemoFactoryResult(data);
+
+      // 💾 Auto-save in vault per riutilizzo futuro (zero crediti next time)
+      try {
+        await demoVault.saveDemo({
+          leadName: lead.name,
+          sector: lead._sector,
+          sectorLabel,
+          subSector: data?.autoMatch?.subSector,
+          templateVariant: data?.autoMatch?.templateVariant || canonical.templateVariant,
+          themeHint: data?.autoMatch?.themeHint,
+          tenantId: data?.tenant?.id || null,
+          tenantKind: ["food","bakery","gelateria","wine_bar","catering"].includes(lead._sector) ? "restaurant" : "company",
+          tenantSlug: data?.tenant?.slug || null,
+          previewUrl: data.previewUrl,
+          adminUrl: data.adminUrl,
+          magicLink: data.magicLink,
+          adminEmail: data.credentials?.email,
+          adminPassword: data.credentials?.password,
+          leadSnapshot: {
+            name: lead.name, phone: lead.phone, email: lead.email,
+            website: lead.website, instagram: lead.instagram, city: lead.city,
+            full_address: lead.full_address,
+          },
+          brandPayload: data.brand || {},
+          imagesPayload: data.images || {},
+          outreachPayload: data.outreach || {},
+          fullResult: data,
+        });
+      } catch (e) {
+        console.warn("[vault] auto-save failed", e);
+      }
+
       const guardWarn = data?.brand?.guardian_warnings?.length;
-      toast.success(`✓ Demo creata · -${consumeRes.credits_used} crediti · Saldo: ${consumeRes.remaining_balance}`, {
-        description: guardWarn ? `${data.previewUrl} · ${guardWarn} note di qualità` : data.previewUrl,
+      toast.success(`✓ Demo creata · -${consumeRes.credits_used} crediti · 💾 Salvata in Cassaforte`, {
+        description: guardWarn ? `${data.previewUrl} · ${guardWarn} note di qualità` : `Saldo: ${consumeRes.remaining_balance} · riutilizzabile gratis`,
       });
     } catch (err: any) {
       console.error("[runDemoFactory] error", err);
