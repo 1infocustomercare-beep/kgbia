@@ -138,6 +138,7 @@ export function useDemoVault() {
         .eq("tenant_slug", slug)
         .eq("template_variant", input.templateVariant)
         .maybeSingle();
+      const existingId = (existing as any)?.id as string | undefined;
 
       const payload: any = {
         owner_id: userId,
@@ -163,11 +164,11 @@ export function useDemoVault() {
         full_result: input.fullResult || {},
       };
 
-      if (existing?.id) {
+      if (existingId) {
         const { data, error } = await supabase
           .from("seller_demo_vault" as any)
           .update(payload)
-          .eq("id", existing.id)
+          .eq("id", existingId)
           .select()
           .single();
         if (error) throw error;
