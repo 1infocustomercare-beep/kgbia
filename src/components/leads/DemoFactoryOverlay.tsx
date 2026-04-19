@@ -162,14 +162,14 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                   </div>
 
                   {/* Live preview iframe */}
-                  <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
-                    <div className="px-3 py-2 flex items-center justify-between border-b border-white/10 bg-white/[0.03]">
-                      <p className="text-[0.6rem] uppercase tracking-wider text-white/60 font-black flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        Sito demo live · navigabile
+                  <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02] w-full">
+                    <div className="px-3 py-2 flex items-center justify-between gap-2 border-b border-white/10 bg-white/[0.03]">
+                      <p className="text-[0.6rem] uppercase tracking-wider text-white/60 font-black flex items-center gap-1.5 min-w-0 truncate">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                        <span className="truncate">Sito demo live · navigabile</span>
                       </p>
-                      <a href={result.previewUrl} target="_blank" rel="noreferrer" className="text-[0.6rem] font-bold text-purple-300 hover:text-white flex items-center gap-1">
-                        Apri sito <ExternalLink className="w-3 h-3" />
+                      <a href={result.previewUrl} target="_blank" rel="noreferrer" className="text-[0.6rem] font-bold text-purple-300 hover:text-white flex items-center gap-1 shrink-0">
+                        Apri <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                     <div className="aspect-[9/16] max-h-[360px] sm:max-h-[420px] bg-black/40 w-full">
