@@ -279,11 +279,22 @@ function previewToMatch(preview?: PreviewSelection | null): SubSectorMatch | nul
   if (/ivory|bakery|forno|bread|pane|marble/.test(haystack)) return { sub: "bakery", variant: /marble/.test(haystack) ? "cote-marble" : "cote-ivory", heroTagline: "L'ARTE DEL FORNO", themeHint: "marble" };
   if (/neo nails|nails|lavender/.test(haystack)) return { sub: "nails", variant: "neo-nails-lavender", heroTagline: "BELLEZZA SU MISURA", themeHint: "lavender" };
   if (/blush|rosegold/.test(haystack)) return { sub: "nails", variant: "neo-nails-blush", heroTagline: "BELLEZZA SU MISURA", themeHint: "blush" };
-  if (/hair|barber|tatush/.test(haystack)) return { sub: "hair", variant: "tatush-hair", heroTagline: "LO STILE È UN'ARTE", themeHint: "marble" };
+  if (/barber|barbiere|barbershop/.test(haystack)) return { sub: "barber", variant: "tatush-hair", heroTagline: "L'ARTE DELLA BARBA", themeHint: "marble" };
+  if (/hair|tatush|parrucchier|salon/.test(haystack)) return { sub: "hair", variant: "tatush-hair", heroTagline: "LO STILE È UN'ARTE", themeHint: "marble" };
+  if (/spa|wellness|terme/.test(haystack)) return { sub: "spa", variant: "neo-nails-lavender", heroTagline: "RILASSO PROFONDO", themeHint: "lavender" };
   if (/asinara|yacht|charter/.test(haystack)) return { sub: "yacht", variant: "asinara-azure", heroTagline: "LUSSO IN MARE APERTO", themeHint: "azure" };
   if (/miami boats|boat/.test(haystack)) return { sub: "boat", variant: "miami-boats", heroTagline: "EXCLUSIVE BOAT EXPERIENCE", themeHint: "azure" };
   if (/padel|city padel/.test(haystack)) return { sub: "padel", variant: "city-padel-sage", heroTagline: "GIOCA AL TUO MEGLIO", themeHint: "sage" };
   if (/watersports|water sport|beach/.test(haystack)) return { sub: "watersports", variant: "miami-watersports", heroTagline: "ADRENALINA SUL MARE", themeHint: "azure" };
+  // ── Food sub-sectors via preview style/brand name ──
+  if (/coffee|caffe|caffetter|espresso|brunch|barista/.test(haystack)) return { sub: "coffee", variant: "cote-ivory", heroTagline: "L'ARTE DEL CAFFÈ", themeHint: "marble" };
+  if (/wine|enotec|cantina|sommelier/.test(haystack)) return { sub: "wine_bar", variant: "cote-obsidian", heroTagline: "L'ESPERIENZA DEL VINO", themeHint: "dark-gold" };
+  if (/gelato|gelater|ice cream|sorbet/.test(haystack)) return { sub: "gelateria", variant: "cote-ivory", heroTagline: "GELATO ARTIGIANALE", themeHint: "marble" };
+  if (/trattoria|cucina casalinga|cucina tipica/.test(haystack)) return { sub: "trattoria", variant: "cote-ivory", heroTagline: "CUCINA DI CASA, SAPORI VERI", themeHint: "marble" };
+  if (/osteria/.test(haystack)) return { sub: "osteria", variant: "cote-ivory", heroTagline: "OSTERIA TIPICA", themeHint: "marble" };
+  if (/pub|birrer|brewery|craft beer|gastropub/.test(haystack)) return { sub: "pub", variant: "cote-obsidian", heroTagline: "BIRRA, MUSICA, CONVIVIALITÀ", themeHint: "dark-gold" };
+  if (/vegan|plant based|healthy|biolog/.test(haystack)) return { sub: "vegan", variant: "city-padel-sage", heroTagline: "GUSTO NATURALE", themeHint: "sage" };
+  if (/burger|smash|hamburger/.test(haystack)) return { sub: "burger", variant: "cote-obsidian", heroTagline: "BURGER GOURMET", themeHint: "dark-gold" };
 
   if (preview.sectorId === "beauty") return { sub: "nails", variant: "neo-nails-lavender", heroTagline: "BELLEZZA SU MISURA", themeHint: "lavender" };
   if (preview.sectorId === "ncc") return { sub: "transfer", variant: "asinara-azure", heroTagline: "VIAGGIA CON STILE", themeHint: "azure" };
