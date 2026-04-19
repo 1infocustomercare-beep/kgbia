@@ -172,11 +172,11 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                         Apri sito <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
-                    <div className="aspect-[9/16] max-h-[420px] bg-black/40">
+                    <div className="aspect-[9/16] max-h-[360px] sm:max-h-[420px] bg-black/40 w-full">
                       <iframe
                         src={result.previewUrl}
                         title="Demo preview"
-                        className="w-full h-full border-0"
+                        className="w-full h-full border-0 block"
                         sandbox="allow-scripts allow-same-origin"
                       />
                     </div>
