@@ -629,6 +629,9 @@ INTELLIGENCE DI SETTORE (${sector}) — usa SOLO come riferimento, non come fatt
 - Obiezioni comuni:\n  • ${intel.obj.join("\n  • ")}
 
 PORTFOLIO EMPIRE PIÙ RILEVANTE: ${portfolio}
+
+CATALOGO PREVIEW EMPIRE (DEVI scegliere UN solo project_name esatto da questa lista per recommended_preview):
+${PREVIEW_CATALOG.map((p) => `- "${p.project_name}" [sub_sector=${p.sub_sector}, sector=${p.sector}] → ${p.fits}`).join("\n")}
 `.trim();
 
     const systemPrompt = `Sei un Senior Business Development Consultant di Empire AI Group, specializzato in trasformazione digitale per PMI italiane. Devi analizzare il prospect FORNITO e produrre un report di intelligence operativo che permetta al venditore di chiudere il cliente.
@@ -643,8 +646,9 @@ REGOLE INDEROGABILI (violazione = report scartato):
 7. recommended_package deve riflettere il budget_band e citare il pacchetto Empire reale (Digital Start €1.997, Growth AI €4.997, Empire Domination €9.997).
 8. Cita SEMPRE un progetto del PORTFOLIO EMPIRE come prova concreta.
 9. opener del recommended_pitch: massimo 25 parole, deve menzionare un dettaglio reale del prospect (nome, città, un dato osservato).
-10. Tono: professionale, consulenziale, zero fuffa. Italiano impeccabile.
-11. Restituisci ESCLUSIVAMENTE il tool call deliver_lead_intel — niente testo extra.`;
+10. recommended_preview: scegli il progetto del CATALOGO PREVIEW che meglio rispecchia 1:1 il prospect (sotto-settore, posizionamento, tipo cucina/servizio). Il sub_sector DEVE corrispondere a quello del catalogo. Se è un sushi → "Paperfish Sushi". Se è una pizzeria → "Strapizzami". Se è un nail bar → "Neo Nails Brickell". Se è un NCC → "Amalfi Luxury Transfer". Se è uno yacht charter → "Asinara Charter". MAI scegliere un progetto generico se ne esiste uno specifico.
+11. Tono: professionale, consulenziale, zero fuffa. Italiano impeccabile.
+12. Restituisci ESCLUSIVAMENTE il tool call deliver_lead_intel — niente testo extra.`;
 
     const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
