@@ -25,6 +25,7 @@ import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSect
 import AccountManagerPanel from "@/components/superadmin/AccountManagerPanel";
 import SuperAdminCreditsManager from "@/components/superadmin/SuperAdminCreditsManager";
 import EmpireBrainPanel from "@/components/superadmin/EmpireBrainPanel";
+import SalesAgentCockpit from "@/components/superadmin/SalesAgentCockpit";
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 
@@ -75,7 +76,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout" | "empire_brain";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout" | "empire_brain" | "sales_agent";
 
 interface SubscriptionRecord {
   id: string;
@@ -642,6 +643,7 @@ const SuperAdminDashboard = () => {
       { id: "mary", label: "AI-Mary", icon: <Bot className="w-4 h-4" /> },
       { id: "agents", label: "Agenti IA", icon: <Cpu className="w-4 h-4" /> },
       { id: "empire_brain" as SuperTab, label: "Empire Brain", icon: <Brain className="w-4 h-4" /> },
+      { id: "sales_agent" as SuperTab, label: "Arianna Sales", icon: <Bot className="w-4 h-4" /> },
       { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-4 h-4" /> },
       { id: "lead_scout" as SuperTab, label: "Lead Scout", icon: <Search className="w-4 h-4" /> },
     ]},
@@ -2710,6 +2712,12 @@ const SuperAdminDashboard = () => {
         {!loading && activeTab === "empire_brain" && (
           <motion.div className="mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <EmpireBrainPanel />
+          </motion.div>
+        )}
+
+        {!loading && activeTab === "sales_agent" && (
+          <motion.div className="mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <SalesAgentCockpit />
           </motion.div>
         )}
       </div>
