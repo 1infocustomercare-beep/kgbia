@@ -15,6 +15,7 @@ import {
   Phone, Clock, Calendar, Dumbbell, Flame, Heart, Zap, Users,
   Target, Timer, ArrowRight, MessageCircle, Trophy, ChevronDown, Star, MapPin, Mail, Menu, X, ChevronLeft, ChevronRight, Sparkles, Shield, Quote, Award, CheckCircle
 } from "lucide-react";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";

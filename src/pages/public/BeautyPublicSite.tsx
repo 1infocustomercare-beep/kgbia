@@ -14,6 +14,7 @@ import {
   Users, Award, Quote, ArrowRight, MessageCircle, Menu, X, ChevronLeft, ChevronRight,
   Eye, Droplets, Gem, Crown, Flower2, Palette, Zap, Shield
 } from "lucide-react";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
 
 /* ── NEO NAILS / BEAUTY DESIGN SYSTEM — Pastel Lavender + Glass ── */
 const B = {

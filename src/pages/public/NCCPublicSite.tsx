@@ -42,6 +42,7 @@ import {
   Wifi, Snowflake, MessageCircle, Sparkles, Heart, Menu, X,
   Tv, Coffee, Baby, Waves, UtensilsCrossed, Camera, Compass, Zap
 } from "lucide-react";
+import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
 
 /* ── NCC Design Tokens ── */
 const NCC = {
