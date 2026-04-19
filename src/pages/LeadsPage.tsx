@@ -1450,6 +1450,9 @@ export default function LeadsPage() {
               inputStyle={inputStyle}
               onEnter={() => handleSearch()}
               inputRef={cityInputRef}
+              selectedArea={query}
+              onAreaSelect={(area) => setQuery(area)}
+              onCountryDetected={(cc) => setCountry(cc)}
             />
           </div>
         </div>
