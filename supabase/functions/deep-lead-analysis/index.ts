@@ -41,6 +41,63 @@ const PORTFOLIO_REFS: Record<string, string> = {
 };
 
 /* ═══════════════════════════════════════════════
+   PREVIEW CATALOG — exact project names the AI must pick from.
+   These names are the AUTHORITATIVE keys used by the frontend matcher
+   (matchPreviewFromRecommendedProject in src/lib/preview-matcher.ts).
+   The "sub_sector" values map 1:1 to SubSectorKey.
+   ═══════════════════════════════════════════════ */
+const PREVIEW_CATALOG: { project_name: string; sub_sector: string; sector: string; fits: string }[] = [
+  // FOOD
+  { project_name: "COTE Miami",                 sub_sector: "braceria",    sector: "food",        fits: "ristoranti fine-dining, braceria, steakhouse, locali eleganti carne/grill" },
+  { project_name: "Paperfish Sushi",            sub_sector: "sushi",       sector: "food",        fits: "sushi, omakase, giapponese, ramen, asian fusion premium" },
+  { project_name: "Flame Kebab",                sub_sector: "kebab",       sector: "food",        fits: "kebab, fast food, street food, pizzerie da asporto, delivery oriented" },
+  { project_name: "La Vang Vietnamese",         sub_sector: "vietnamese",  sector: "food",        fits: "vietnamese, pho bar, cucina del sud-est asiatico premium" },
+  { project_name: "Batey Cevicheria",           sub_sector: "pesce",       sector: "food",        fits: "ristoranti di pesce, ceviche, raw bar, poke, ostricheria, cucina marinara" },
+  { project_name: "Strapizzami",                sub_sector: "pizzeria",    sector: "food",        fits: "pizzeria napoletana, gourmet, trapizzino, focacceria" },
+  // BEAUTY
+  { project_name: "Neo Nails Brickell",         sub_sector: "nails",       sector: "beauty",      fits: "nail bar, manicure/pedicure, centri estetici femminili premium" },
+  { project_name: "Tatush Hair & Fragrance",    sub_sector: "hair",        sector: "beauty",      fits: "parrucchieri, hair salon, barber con vendita prodotti, profumeria" },
+  // NCC / NAUTICA
+  { project_name: "Amalfi Luxury Transfer",     sub_sector: "ncc",         sector: "ncc",         fits: "NCC, transfer aeroportuali/eventi, autisti privati" },
+  { project_name: "Miami Boats Rental",         sub_sector: "boats",       sector: "ncc",         fits: "noleggio barche/gommoni/jet ski, charter giornaliero" },
+  { project_name: "Asinara Charter",            sub_sector: "yacht",       sector: "ncc",         fits: "yacht charter, gulet, vela, escursioni di lusso" },
+  // FITNESS
+  { project_name: "City Padel Milano",          sub_sector: "padel",       sector: "fitness",     fits: "club padel/tennis, palestre premium con prenotazione campi" },
+  // HEALTHCARE
+  { project_name: "FAR Medical Center",         sub_sector: "clinic",      sector: "healthcare",  fits: "studi medici, dentisti, fisioterapisti, cliniche" },
+  // VETERINARY
+  { project_name: "Aloha Pet Resort",           sub_sector: "veterinary",  sector: "veterinary",  fits: "veterinari, pet shop, toelettatura, pet hotel" },
+  // CHILDCARE
+  { project_name: "Little Diamond Nursery",     sub_sector: "childcare",   sector: "childcare",   fits: "asili nido, scuole infanzia, ludoteche luminose" },
+  { project_name: "Ashley's Playhouse",         sub_sector: "childcare",   sector: "childcare",   fits: "ludoteche, feste compleanno, attività bambini" },
+  // BEACH
+  { project_name: "Miami Watersports",          sub_sector: "beach",       sector: "beach",       fits: "lidi balneari, beach club, watersports, surf/kayak" },
+  // ARTIGIANI / SERVIZI
+  { project_name: "Nick's Plumbing & AC",       sub_sector: "plumber",     sector: "plumber",     fits: "idraulici, termoidraulici, HVAC" },
+  { project_name: "Elite Electrical",           sub_sector: "electrician", sector: "electrician", fits: "elettricisti, fotovoltaico, domotica" },
+  { project_name: "Speed Auto Service",         sub_sector: "garage",      sector: "garage",      fits: "officine, carrozzerie, autolavaggio, gommisti" },
+  // RETAIL
+  { project_name: "Premium Store",              sub_sector: "shop",        sector: "retail",      fits: "negozi/boutique con e-commerce, gioiellerie, ottica" },
+  // HOSPITALITY
+  { project_name: "MMI Resident Hub",           sub_sector: "hotel",       sector: "hospitality", fits: "hotel, resort, B&B, residence, case vacanze" },
+  // ALTRO
+  { project_name: "Ink Masters Studio",         sub_sector: "tattoo",      sector: "tattoo",      fits: "tatuatori, body art, piercing" },
+  { project_name: "Vision Photography",         sub_sector: "photography", sector: "photography", fits: "fotografi, videografi, studi creativi" },
+  { project_name: "Premium Costruzioni",        sub_sector: "construction",sector: "construction",fits: "imprese edili, geometri, architetti, ristrutturazioni" },
+  { project_name: "Verde & Giardini",           sub_sector: "gardening",   sector: "gardening",   fits: "giardinieri, paesaggisti, vivai" },
+  { project_name: "Tuscan Country Estate",      sub_sector: "agriturismo", sector: "agriturismo", fits: "agriturismi, cantine, fattorie, masserie" },
+  { project_name: "Elite Events",               sub_sector: "events",      sector: "events",      fits: "wedding planner, catering eventi, location" },
+  { project_name: "Academy Pro",                sub_sector: "education",   sector: "education",   fits: "scuole, accademie, formazione" },
+  { project_name: "FastTrack Logistics",        sub_sector: "logistics",   sector: "logistics",   fits: "corrieri, spedizionieri" },
+  { project_name: "Premium Clean",              sub_sector: "cleaning",    sector: "cleaning",    fits: "imprese di pulizie, sanificazione" },
+  { project_name: "Studio Legale Associato",    sub_sector: "legal",       sector: "legal",       fits: "avvocati, notai, studi legali" },
+  { project_name: "Studio Commercialista Pro",  sub_sector: "accounting",  sector: "accounting",  fits: "commercialisti, CAF, consulenti fiscali" },
+];
+
+const PREVIEW_PROJECT_NAMES = PREVIEW_CATALOG.map((p) => p.project_name);
+const PREVIEW_SUB_SECTORS = Array.from(new Set(PREVIEW_CATALOG.map((p) => p.sub_sector)));
+
+/* ═══════════════════════════════════════════════
    Pain points + sector intel
    ═══════════════════════════════════════════════ */
 const SECTOR_INTEL: Record<string, { pains: string[]; kpis: string[]; obj: string[] }> = {
@@ -453,6 +510,17 @@ const ANALYSIS_TOOL = {
           },
           required: ["name", "why", "estimated_roi_days"],
         },
+        recommended_preview: {
+          type: "object",
+          description: "Il progetto del PORTFOLIO EMPIRE che meglio rappresenta il prospect 1:1. DEVI scegliere SOLO un project_name dalla lista CATALOGO PREVIEW. Il sub_sector DEVE corrispondere a quello del catalogo per quel project_name.",
+          properties: {
+            project_name: { type: "string", enum: PREVIEW_PROJECT_NAMES, description: "Nome esatto del progetto dal CATALOGO PREVIEW." },
+            sub_sector: { type: "string", enum: PREVIEW_SUB_SECTORS, description: "Sub-sector key abbinato al project_name (es. sushi, pizzeria, nails, padel)." },
+            why: { type: "string", description: "Perché QUESTO progetto è il match perfetto per il prospect (cita un dettaglio reale: nome, posizionamento, location)." },
+            similarity_score: { type: "number", description: "0-100 — quanto il progetto rispecchia il prospect (>=85 se è un match diretto)." },
+          },
+          required: ["project_name", "sub_sector", "why", "similarity_score"],
+        },
         next_actions: {
           type: "array",
           items: { type: "string" },
@@ -467,7 +535,7 @@ const ANALYSIS_TOOL = {
       required: [
         "executive_summary", "opportunity_score", "urgency_score", "budget_band",
         "decision_maker", "digital_audit", "pain_points", "sales_hooks",
-        "objections", "recommended_pitch", "recommended_package", "next_actions", "risk_flags",
+        "objections", "recommended_pitch", "recommended_package", "recommended_preview", "next_actions", "risk_flags",
       ],
       additionalProperties: false,
     },
@@ -563,6 +631,9 @@ INTELLIGENCE DI SETTORE (${sector}) — usa SOLO come riferimento, non come fatt
 - Obiezioni comuni:\n  • ${intel.obj.join("\n  • ")}
 
 PORTFOLIO EMPIRE PIÙ RILEVANTE: ${portfolio}
+
+CATALOGO PREVIEW EMPIRE (DEVI scegliere UN solo project_name esatto da questa lista per recommended_preview):
+${PREVIEW_CATALOG.map((p) => `- "${p.project_name}" [sub_sector=${p.sub_sector}, sector=${p.sector}] → ${p.fits}`).join("\n")}
 `.trim();
 
     const systemPrompt = `Sei un Senior Business Development Consultant di Empire AI Group, specializzato in trasformazione digitale per PMI italiane. Devi analizzare il prospect FORNITO e produrre un report di intelligence operativo che permetta al venditore di chiudere il cliente.
@@ -577,8 +648,9 @@ REGOLE INDEROGABILI (violazione = report scartato):
 7. recommended_package deve riflettere il budget_band e citare il pacchetto Empire reale (Digital Start €1.997, Growth AI €4.997, Empire Domination €9.997).
 8. Cita SEMPRE un progetto del PORTFOLIO EMPIRE come prova concreta.
 9. opener del recommended_pitch: massimo 25 parole, deve menzionare un dettaglio reale del prospect (nome, città, un dato osservato).
-10. Tono: professionale, consulenziale, zero fuffa. Italiano impeccabile.
-11. Restituisci ESCLUSIVAMENTE il tool call deliver_lead_intel — niente testo extra.`;
+10. recommended_preview: scegli il progetto del CATALOGO PREVIEW che meglio rispecchia 1:1 il prospect (sotto-settore, posizionamento, tipo cucina/servizio). Il sub_sector DEVE corrispondere a quello del catalogo. Se è un sushi → "Paperfish Sushi". Se è una pizzeria → "Strapizzami". Se è un nail bar → "Neo Nails Brickell". Se è un NCC → "Amalfi Luxury Transfer". Se è uno yacht charter → "Asinara Charter". MAI scegliere un progetto generico se ne esiste uno specifico.
+11. Tono: professionale, consulenziale, zero fuffa. Italiano impeccabile.
+12. Restituisci ESCLUSIVAMENTE il tool call deliver_lead_intel — niente testo extra.`;
 
     const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -629,6 +701,35 @@ REGOLE INDEROGABILI (violazione = report scartato):
       throw new Error("Malformed AI response");
     }
 
+    // ⭐ Normalize recommended_preview against the authoritative catalog so the
+    // frontend matcher always receives a project_name we know how to map.
+    if (report?.recommended_preview?.project_name) {
+      const wanted = String(report.recommended_preview.project_name).toLowerCase().trim();
+      const exact = PREVIEW_CATALOG.find((p) => p.project_name.toLowerCase() === wanted);
+      const fuzzy = exact || PREVIEW_CATALOG.find((p) => {
+        const n = p.project_name.toLowerCase();
+        return n.includes(wanted) || wanted.includes(n.split(" ")[0]);
+      });
+      if (fuzzy) {
+        report.recommended_preview.project_name = fuzzy.project_name;
+        report.recommended_preview.sub_sector = fuzzy.sub_sector;
+        report.recommended_preview.sector = fuzzy.sector;
+      }
+    } else {
+      // Fallback: pick first catalog entry whose sector matches the lead sector
+      const fallback = PREVIEW_CATALOG.find((p) => p.sector === sectorKey)
+        || PREVIEW_CATALOG.find((p) => p.sector === "food");
+      if (fallback) {
+        report.recommended_preview = {
+          project_name: fallback.project_name,
+          sub_sector: fallback.sub_sector,
+          sector: fallback.sector,
+          why: `Match di settore (${fallback.sector}) — nessuna scelta specifica restituita dal modello.`,
+          similarity_score: 60,
+        };
+      }
+    }
+
     return new Response(JSON.stringify({
       success: true,
       report,
@@ -636,6 +737,7 @@ REGOLE INDEROGABILI (violazione = report scartato):
       discovered_website,
       ig_snapshot: igSnapshot,
       portfolio_ref: portfolio,
+      recommended_preview: report?.recommended_preview || null,
       analyzed_at: new Date().toISOString(),
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -27,6 +27,14 @@ export interface DeepReport {
   objections: { objection: string; response: string }[];
   recommended_pitch: { opener: string; value_prop: string; proof: string; cta: string };
   recommended_package: { name: string; why: string; estimated_roi_days: number };
+  /** ⭐ Match 1:1 con il portfolio Empire — usato per scegliere la preview iPhone e il tema demo. */
+  recommended_preview?: {
+    project_name: string;
+    sub_sector: string;
+    sector?: string;
+    why: string;
+    similarity_score: number;
+  };
   next_actions: string[];
   risk_flags: string[];
 }
