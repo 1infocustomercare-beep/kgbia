@@ -352,6 +352,9 @@ export default function LeadsPage() {
   // ═══ CRM Venditore (persistent pipeline) ═══
   const [crmOpen, setCrmOpen] = useState(false);
   const pipeline = useSellerPipeline();
+  // 💾 Cassaforte Demo (riuso senza crediti)
+  const demoVault = useDemoVault();
+  const [vaultOpen, setVaultOpen] = useState(false);
   const overdueFollowups = getOverdueFollowups(pipeline.leads);
   const savedLeadKeys = new Set(pipeline.leads.map(l => `${l.name.toLowerCase()}|${(l.city || "").toLowerCase()}`));
   const isLeadSaved = (lead: Lead) => savedLeadKeys.has(`${lead.name.toLowerCase()}|${(lead.city || "").toLowerCase()}`);
