@@ -1104,6 +1104,7 @@ export default function DemoAdminPage() {
   const layoutConfig = useMemo(() => getAdminLayout(sectorKey), [sectorKey]);
   const revenueData = useMemo(() => generateRevenueData(sectorKey), [sectorKey]);
   const calendarData = useMemo(generateCalendarDays, []);
+  const completeness = useDemoCompleteness(sectorKey);
 
   if (!resolvedSector || !config) {
     return (
