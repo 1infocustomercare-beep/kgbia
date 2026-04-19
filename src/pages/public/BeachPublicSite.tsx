@@ -92,10 +92,19 @@ const FALLBACK_REVIEWS = [
   { name: "Andrea G.", text: "Servizio bar al posto eccellente. Area bambini perfetta per le famiglie.", rating: 5, photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function BeachPublicSite({ company, afterHero }: Props) {
-  const variantView = <BeachVariantGate company={company} />;
-  if (variantView) return variantView;
+export default function BeachPublicSite(props: Props) {
+  const themeConfig = (props.company as any)?.theme_config;
+  const templateVariant = themeConfig?.template_variant as string | undefined;
+  const hasVariant = !!templateVariant && templateVariant !== "default";
 
+  if (hasVariant) {
+    return <BeachVariantGate company={props.company} />;
+  }
+
+  return <BeachPublicSiteInner {...props} />;
+}
+
+function BeachPublicSiteInner({ company, afterHero }: Props) {
   const companyId = company.id;
   const phone = company.phone;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
