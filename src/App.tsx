@@ -242,6 +242,8 @@ const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
 const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
 const DemoAccountsPage = lazy(() => import("./pages/superadmin/DemoAccountsPage"));
 const ConnectionsPage = lazy(() => import("./pages/superadmin/ConnectionsPage"));
+const VoiceOrchestratorPage = lazy(() => import("./pages/superadmin/VoiceOrchestratorPage"));
+const VoiceOrchestratorFAB = lazy(() => import("./components/superadmin/VoiceOrchestratorFAB"));
 
 // Part 6 — AI Marketplace + Sector pages
 const AIMarketplacePage = lazy(() => import("./pages/app/AIMarketplacePage"));
@@ -633,6 +635,11 @@ function App() {
                           <ConnectionsPage />
                         </ProtectedRoute>
                       } />
+                      <Route path="/superadmin/voice-orchestrator" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <VoiceOrchestratorPage />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/staff" element={
                         <ProtectedRoute requiredRole="staff">
                           <StaffPanel />
@@ -738,6 +745,9 @@ function App() {
                     </Routes>
                   </Suspense>
                 </RouteErrorBoundary>
+                <Suspense fallback={null}>
+                  <VoiceOrchestratorFAB />
+                </Suspense>
               </BrowserRouter>
             </CartProvider>
           </AuthProvider>
