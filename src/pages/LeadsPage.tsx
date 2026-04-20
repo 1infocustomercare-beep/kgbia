@@ -28,6 +28,8 @@ import SmartSectorAutocomplete from "@/components/leads/SmartSectorAutocomplete"
 import DemoVaultPanel from "@/components/leads/DemoVaultPanel";
 import QuickSearchSuggestions from "@/components/leads/QuickSearchSuggestions";
 import AriannaLeadScoutPanel, { AriannaPilot } from "@/components/leads/AriannaLeadScoutPanel";
+import AriannaInsightsDashboard from "@/components/leads/AriannaInsightsDashboard";
+import SellerOnboardingWizard from "@/components/leads/SellerOnboardingWizard";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
@@ -1515,6 +1517,12 @@ export default function LeadsPage() {
           },
         }}
       />
+
+      {/* ═══ INSIGHTS — "COSA HO IMPARATO" ═══ */}
+      <AriannaInsightsDashboard />
+
+      {/* ═══ ONBOARDING WIZARD (one-time) ═══ */}
+      <SellerOnboardingWizard />
 
       {/* ═══ VOICE ORCHESTRATOR TRIGGER ═══ */}
       <button
