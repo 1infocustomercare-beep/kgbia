@@ -311,7 +311,7 @@ export default function PartnerLayout() {
             transition={{ duration: 4, repeat: Infinity }}
             style={{ background: `linear-gradient(90deg, transparent 10%, ${accentColor}60 50%, transparent 90%)` }}
           />
-          <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
+          <div className="grid h-16 grid-cols-7 items-center gap-1 max-w-lg mx-auto px-1.5">
             {NAV_ITEMS_FULL.filter((item) => (demoMode ? item.showInDemo : true)).map((item) => {
               const active = isActive(item.path, item.exact);
               return (
@@ -319,7 +319,7 @@ export default function PartnerLayout() {
                   key={item.path}
                   onClick={() => navigate(item.path)}
                   whileTap={{ scale: 0.9 }}
-                  className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all relative min-w-[52px]"
+                  className="flex min-w-0 flex-col items-center gap-0.5 px-1 py-1.5 rounded-2xl transition-all relative"
                   style={active ? {
                     background: isDark ? "rgba(16,18,36,0.98)" : "rgba(255,255,255,0.98)",
                     border: `1px solid ${accentColor}33`,
@@ -349,7 +349,7 @@ export default function PartnerLayout() {
                   <motion.div animate={active ? { y: [0, -1, 0] } : {}} transition={{ duration: 2, repeat: Infinity }}>
                     <item.icon className="w-5 h-5" style={{ color: active ? accentColor : "#6b7280", filter: active ? `drop-shadow(0 0 6px ${accentColor}50)` : "none" }} />
                   </motion.div>
-                  <span className="text-[9px] font-semibold" style={{ color: active ? accentColor : "#6b7280" }}>{item.label}</span>
+                  <span className="max-w-full truncate text-[8px] font-semibold leading-none" style={{ color: active ? accentColor : "#6b7280" }}>{item.label}</span>
                 </motion.button>
               );
             })}
