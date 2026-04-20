@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, ExternalLink, Copy, Check, Loader2, Zap, Crown, Users, ShoppingBag, MessageCircle, Phone, Shield, KeyRound, ChevronDown, ChevronUp, Mail, Monitor, Smartphone, Wand2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { TEMPLATES, renderTemplate, type EmailTemplate } from "@/lib/email-templates/aurora-templates";
+import { TEMPLATES, renderTemplate, pickRecommendedAuroraTemplate, type EmailTemplate } from "@/lib/email-templates/aurora-templates";
 import { analyzeEmailDeliverability } from "@/lib/email-templates/deliverability";
 
 export interface DemoFactoryResult {
@@ -58,6 +58,7 @@ interface Props {
   leadCity?: string;
   leadSector?: string;
   leadRating?: number | null;
+  leadScore?: number | null;
   onClose: () => void;
   onSendWhatsApp?: () => void;
 }
@@ -71,25 +72,21 @@ const PIPELINE_STEPS = [
   { key: "closer", icon: "🔑", label: "Closer — credenziali + magic link" },
 ];
 
-/** AI auto-pick template Aurora basato su settore + rating */
-function pickAuroraTemplateId(sector?: string, rating?: number | null): { id: string; reason: string } {
-  const s = (sector || "").toLowerCase();
-  const r = rating ?? 0;
-  if (r >= 4.5) return { id: "aurora-demo-invite", reason: "Lead premium (rating ≥4.5): invito diretto alla demo." };
-  if (["beauty", "fitness"].includes(s)) return { id: "aurora-playful-creative", reason: `Settore ${s}: tono creativo.` };
-  if (["food", "retail", "hospitality"].includes(s)) return { id: "aurora-case-study", reason: `Settore ${s}: prova sociale converte di più.` };
-  if (["healthcare", "professional", "ncc"].includes(s)) return { id: "aurora-executive-brief", reason: `Settore ${s}: tono consulenziale.` };
-  return { id: "aurora-cold-personal", reason: "Primo contatto a freddo: tono personale." };
-}
-
-export default function DemoFactoryOverlay({ open, loading, progress, result, leadName, leadEmail, leadCity, leadSector, leadRating, onClose, onSendWhatsApp }: Props) {
+export default function DemoFactoryOverlay({ open, loading, progress, result, leadName, leadEmail, leadCity, leadSector, leadRating, leadScore, onClose, onSendWhatsApp }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
   const [scriptIdx, setScriptIdx] = useState(0);
   const [objectionsOpen, setObjectionsOpen] = useState(false);
   const [emailOpen, setEmailOpen] = useState(true);
   const [emailDevice, setEmailDevice] = useState<"desktop" | "mobile">("mobile");
-  const aiPick = useMemo(() => pickAuroraTemplateId(leadSector, leadRating), [leadSector, leadRating]);
+  const aiPick = useMemo(() => pickRecommendedAuroraTemplate({
+    sector: leadSector,
+    googleRating: leadRating,
+    score: leadScore,
+  }), [leadSector, leadRating, leadScore]);
   const [selectedTplId, setSelectedTplId] = useState<string>(aiPick.id);
+  useEffect(() => {
+    if (open) setSelectedTplId(aiPick.id);
+  }, [open, aiPick.id, result?.runId, leadName]);
   const recipientName = useMemo(() => (leadEmail || "").split("@")[0] || leadName.split(" ")[0] || "ciao", [leadEmail, leadName]);
   const renderedEmail = useMemo(() => renderTemplate(selectedTplId, {
     recipientName,
