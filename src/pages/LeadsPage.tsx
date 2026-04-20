@@ -1156,18 +1156,16 @@ export default function LeadsPage() {
       {/* 💰 Badge crediti AI sempre visibile in alto a destra */}
       <div className="flex justify-end items-center gap-2">
         <Sheet>
-          <button
-            type="button"
-            onClick={(e) => {
-              const trigger = e.currentTarget.nextElementSibling as HTMLElement | null;
-              trigger?.click();
-            }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-violet-400/30 bg-gradient-to-r from-violet-500/10 to-cyan-500/10 text-violet-200 text-[11px] font-bold hover:from-violet-500/20 hover:to-cyan-500/20 transition-colors"
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Best practice</span>
-            <span>Deliverability</span>
-          </button>
+          <SheetTrigger asChild>
+            <button
+              type="button"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-violet-400/30 bg-gradient-to-r from-violet-500/10 to-cyan-500/10 text-violet-200 text-[11px] font-bold hover:from-violet-500/20 hover:to-cyan-500/20 transition-colors"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Best practice</span>
+              <span>Deliverability</span>
+            </button>
+          </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto bg-zinc-950 border-l border-violet-500/20">
             <SheetHeader>
               <SheetTitle className="text-white">Guida Deliverability</SheetTitle>
