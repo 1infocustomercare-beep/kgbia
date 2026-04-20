@@ -4860,6 +4860,7 @@ export type Database = {
           action_type: string
           channel: string | null
           created_at: string
+          deliverability_score: number | null
           description: string | null
           duration_ms: number | null
           id: string
@@ -4869,12 +4870,14 @@ export type Database = {
           payload: Json | null
           result: Json | null
           status: string
+          template_id: string | null
           title: string
         }
         Insert: {
           action_type: string
           channel?: string | null
           created_at?: string
+          deliverability_score?: number | null
           description?: string | null
           duration_ms?: number | null
           id?: string
@@ -4884,12 +4887,14 @@ export type Database = {
           payload?: Json | null
           result?: Json | null
           status?: string
+          template_id?: string | null
           title: string
         }
         Update: {
           action_type?: string
           channel?: string | null
           created_at?: string
+          deliverability_score?: number | null
           description?: string | null
           duration_ms?: number | null
           id?: string
@@ -4899,6 +4904,7 @@ export type Database = {
           payload?: Json | null
           result?: Json | null
           status?: string
+          template_id?: string | null
           title?: string
         }
         Relationships: [
@@ -4916,8 +4922,11 @@ export type Database = {
           action_id: string | null
           approved_at: string | null
           approved_by: string | null
+          body_html: string | null
           channel: string
           created_at: string
+          deliverability_score: number | null
+          deliverability_warnings: Json | null
           draft_body: string
           draft_subject: string | null
           edited_body: string | null
@@ -4928,13 +4937,18 @@ export type Database = {
           reasoning: string | null
           recipient: string | null
           status: string
+          template_id: string | null
+          template_metadata: Json | null
         }
         Insert: {
           action_id?: string | null
           approved_at?: string | null
           approved_by?: string | null
+          body_html?: string | null
           channel: string
           created_at?: string
+          deliverability_score?: number | null
+          deliverability_warnings?: Json | null
           draft_body: string
           draft_subject?: string | null
           edited_body?: string | null
@@ -4945,13 +4959,18 @@ export type Database = {
           reasoning?: string | null
           recipient?: string | null
           status?: string
+          template_id?: string | null
+          template_metadata?: Json | null
         }
         Update: {
           action_id?: string | null
           approved_at?: string | null
           approved_by?: string | null
+          body_html?: string | null
           channel?: string
           created_at?: string
+          deliverability_score?: number | null
+          deliverability_warnings?: Json | null
           draft_body?: string
           draft_subject?: string | null
           edited_body?: string | null
@@ -4962,6 +4981,8 @@ export type Database = {
           reasoning?: string | null
           recipient?: string | null
           status?: string
+          template_id?: string | null
+          template_metadata?: Json | null
         }
         Relationships: [
           {
