@@ -667,7 +667,7 @@ export default function PartnerHomePage() {
         )}
       </AnimatePresence>
 
-      <PartnerVoiceAgent activeTab="dashboard" demoMode={demoMode} />
+      {/* Voice agent fornito centralmente da PartnerLayout (PartnerVoiceOrchestratorFAB) per evitare FAB sovrapposti */}
     </div>
   );
 }
