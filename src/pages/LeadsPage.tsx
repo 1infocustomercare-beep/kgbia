@@ -36,6 +36,7 @@ import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
 import DeliverabilityPanel from "@/components/leads/DeliverabilityPanel";
+import { TEMPLATES, pickRecommendedAuroraTemplate, renderTemplate } from "@/lib/email-templates/aurora-templates";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShieldCheck } from "lucide-react";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
@@ -1024,8 +1025,11 @@ export default function LeadsPage() {
   }, [activeChannel, enrichLeadSocial, country]);
 
   const copyMessage = () => {
-    if (generatedMessage) {
-      navigator.clipboard.writeText(generatedMessage);
+    const textToCopy = activeChannel === "email"
+      ? (auroraEmailPreview?.text || generatedMessage)
+      : generatedMessage;
+    if (textToCopy) {
+      navigator.clipboard.writeText(textToCopy);
       toast.success("Messaggio copiato!");
     }
   };
@@ -1055,6 +1059,31 @@ export default function LeadsPage() {
     ? previewMatch.screens
     : (selected ? getPreviewScreens(selected._sector) : []);
   const previewDetails = getPreviewDetailsForMatch(previewMatch);
+  const selectedPreviewPath = selected
+    ? (previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector))
+    : "";
+  const selectedPreviewUrl = selected ? `${window.location.origin}${selectedPreviewPath}` : "";
+  const auroraPick = selected
+    ? pickRecommendedAuroraTemplate({
+        sector: selected._sector,
+        googleRating: selected.google_rating ?? null,
+        score: (selected as any)._score ?? null,
+      })
+    : null;
+  const auroraTemplateName = auroraPick
+    ? TEMPLATES.find((template) => template.id === auroraPick.id)?.name.replace(" — Aurora", "") || "Aurora"
+    : "Aurora";
+  const auroraEmailPreview = selected && activeChannel === "email"
+    ? renderTemplate(auroraPick?.id || "aurora-cold-personal", {
+        recipientName: (selected.email || "").split("@")[0] || selected.name.split(" ")[0] || "ciao",
+        businessName: selected.name || "la vostra attività",
+        city: selected.city,
+        sectorLabel: sectorConfig?.label || selected._sector,
+        previewLink: demoFactoryResult?.previewUrl || selectedPreviewUrl,
+        senderName: "Arianna",
+        senderRole: "Empire AI Group",
+      })
+    : null;
 
   // Auto-focus city input on mount
   useEffect(() => {
