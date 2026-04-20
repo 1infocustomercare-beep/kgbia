@@ -1407,21 +1407,31 @@
     padding-top: max(env(safe-area-inset-top, 0px), 0.5rem);
   }
 
-  /* Partner assistants — dock mobile sopra la bottom nav senza coprire il profilo */
+  /* Partner floating dock — stack verticale sopra la bottom nav senza coprire CTA o profilo */
+  .partner-mobile-content-safe {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 12rem);
+  }
+
+  .partner-page-guide-fab {
+    left: 0.75rem;
+    right: auto;
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 0.75rem);
+  }
+
   .partner-arianna-fab {
     left: 0.75rem;
     right: auto;
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 0.875rem);
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 4rem);
   }
 
   .partner-voice-fab {
-    left: 5.15rem;
+    left: 0.75rem;
     right: auto;
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 0.875rem);
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 8.35rem);
   }
 
   .partner-voice-status-panel {
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 4.75rem);
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 12.6rem);
   }
 
   .partner-arianna-panel {
@@ -1433,6 +1443,16 @@
   }
 
   @media (min-width: 1024px) {
+    .partner-mobile-content-safe {
+      padding-bottom: 1.5rem;
+    }
+
+    .partner-page-guide-fab {
+      left: 1rem;
+      right: auto;
+      bottom: 1rem;
+    }
+
     .partner-arianna-fab {
       left: auto;
       right: 1rem;
