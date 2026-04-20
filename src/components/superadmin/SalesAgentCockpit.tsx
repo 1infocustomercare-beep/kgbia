@@ -8,8 +8,11 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Play, Pause, Search, Sparkles, Send, Phone, Mail, MessageSquare, Linkedin, CheckCircle2, XCircle, Loader2, Activity, LayoutGrid, Zap, Brain, Target, TrendingUp } from "lucide-react";
+import { Bot, Play, Pause, Search, Sparkles, Send, Phone, Mail, MessageSquare, Linkedin, CheckCircle2, XCircle, Loader2, Activity, LayoutGrid, Zap, Brain, Target, TrendingUp, Smartphone, Monitor, Wand2, Code2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { DeliverabilityHints } from "@/components/leads/DeliverabilityPanel";
+import EmailTemplatePicker from "@/components/leads/EmailTemplatePicker";
+import { TEMPLATE_BY_ID, renderTemplate } from "@/lib/email-templates/aurora-templates";
 
 type AgentAction = {
   id: string;
