@@ -99,6 +99,33 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
     }
   }, []);
 
+  const speakBrowser = useCallback((text: string): Promise<void> => {
+    return new Promise<void>((resolve) => {
+      if (typeof window === "undefined" || !window.speechSynthesis) {
+        resolve();
+        return;
+      }
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "it-IT";
+        utter.rate = 1.05;
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        utter.onend = finish;
+        utter.onerror = finish;
+        // Safety timeout — some browsers never fire onend if voice not loaded
+        const estimatedMs = Math.max(1500, text.length * 65);
+        const t = setTimeout(finish, estimatedMs + 4000);
+        utter.onend = () => { clearTimeout(t); finish(); };
+        utter.onerror = () => { clearTimeout(t); finish(); };
+        window.speechSynthesis.speak(utter);
+      } catch {
+        resolve();
+      }
+    });
+  }, []);
+
   const speak = useCallback(async (text: string): Promise<void> => {
     if (!text?.trim()) return;
     stopAudio();
@@ -108,30 +135,28 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
       const { data, error } = await supabase.functions.invoke("voice-orchestrator-tts", {
         body: { text },
       });
-      if (error || !data?.audio_base64) throw new Error(error?.message || "TTS failed");
+      if (error) throw new Error(error.message || "TTS invoke failed");
+      if (data?.fallback || !data?.audio_base64) {
+        // Server signaled fallback (quota / auth) — use browser TTS
+        console.warn("[VoiceOrch] TTS fallback:", data?.error);
+        await speakBrowser(text);
+        return;
+      }
 
       await new Promise<void>((resolve) => {
         const audio = new Audio(`data:audio/mpeg;base64,${data.audio_base64}`);
         audioRef.current = audio;
-        audio.onended = () => resolve();
-        audio.onerror = () => resolve();
-        audio.play().catch(() => resolve());
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        audio.onended = finish;
+        audio.onerror = finish;
+        audio.play().catch(finish);
       });
     } catch (e) {
       console.warn("[VoiceOrch] TTS failed, falling back to browser TTS:", e);
-      // Fallback: browser speechSynthesis
-      try {
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "it-IT";
-        utter.rate = 1.05;
-        await new Promise<void>((resolve) => {
-          utter.onend = () => resolve();
-          utter.onerror = () => resolve();
-          window.speechSynthesis.speak(utter);
-        });
-      } catch { /* noop */ }
+      await speakBrowser(text);
     }
-  }, [stopAudio]);
+  }, [stopAudio, speakBrowser]);
 
   /* --- STT --- */
   const stopListening = useCallback(() => {
@@ -141,12 +166,18 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
     }
   }, []);
 
-  const listenOnce = useCallback((options?: { silent?: boolean }): Promise<string> => {
+  const listenOnce = useCallback((options?: { silent?: boolean; timeoutMs?: number }): Promise<string> => {
     return new Promise((resolve, reject) => {
       const SR = getSpeechRecognition();
       if (!SR) {
         reject(new Error("Speech recognition non supportato in questo browser"));
         return;
+      }
+
+      // Defensive: stop any previous session
+      if (recognitionRef.current) {
+        try { recognitionRef.current.abort(); } catch { /* noop */ }
+        recognitionRef.current = null;
       }
 
       const recog = new SR();
@@ -158,6 +189,15 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
 
       let finalText = "";
       let interimText = "";
+      let settled = false;
+      const settle = (fn: () => void) => { if (!settled) { settled = true; fn(); } };
+
+      // Hard safety timeout — kill mic after N seconds of no result
+      const timeoutMs = options?.timeoutMs ?? 9000;
+      const timeoutId = setTimeout(() => {
+        try { recog.stop(); } catch { /* noop */ }
+        settle(() => resolve(finalText.trim() || interimText.trim()));
+      }, timeoutMs);
 
       recog.onresult = (e: any) => {
         finalText = "";
@@ -172,23 +212,26 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
 
       recog.onerror = (e: any) => {
         console.warn("[VoiceOrch] STT error:", e?.error);
+        clearTimeout(timeoutId);
         if (e?.error === "no-speech" || e?.error === "aborted") {
-          resolve("");
+          settle(() => resolve(""));
         } else {
-          reject(new Error(`STT error: ${e?.error || "unknown"}`));
+          settle(() => reject(new Error(`STT error: ${e?.error || "unknown"}`)));
         }
       };
 
       recog.onend = () => {
+        clearTimeout(timeoutId);
         recognitionRef.current = null;
         if (!options?.silent) setInterimTranscript("");
-        resolve(finalText.trim());
+        settle(() => resolve(finalText.trim()));
       };
 
       try {
         recog.start();
       } catch (err) {
-        reject(err);
+        clearTimeout(timeoutId);
+        settle(() => reject(err));
       }
     });
   }, []);
@@ -236,26 +279,44 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
   /* --- Confirmation listener (parses SI/NO) --- */
   const waitVoiceConfirmation = useCallback(async (question: string): Promise<boolean> => {
     await speak(question);
+    // Brief pause so the mic doesn't pick up audio tail / browser releases mic
+    await new Promise(r => setTimeout(r, 400));
     setState("awaiting_confirmation");
 
-    // Try up to 2 times
-    for (let attempt = 0; attempt < 2; attempt++) {
+    const YES_RE = /\b(s[iì]+|conferm[oa]|ok|okay|okey|va\s*bene|d['’]?accordo|esegui|procedi|fallo|certo|certamente|assolutamente|affermativo|yes|yep|yeah)\b/i;
+    const NO_RE = /\b(no+|annulla|stop|ferma|interrompi|cancella|negativo|nope|nah)\b/i;
+
+    // Try up to 3 attempts
+    for (let attempt = 0; attempt < 3; attempt++) {
       try {
         const reply = await listenOnce();
         const normalized = reply.toLowerCase().trim();
-        if (/(^|\s)(si|sì|conferma|conferm[oa]|ok|va bene|d['’]accordo|esegui|procedi|fallo)(\s|$|\.|\,|!|\?)/i.test(normalized) ||
-            normalized === "si" || normalized === "sì" || normalized === "ok") {
-          return true;
+        console.log(`[VoiceOrch] confirmation attempt ${attempt + 1}: "${normalized}"`);
+
+        if (!normalized) {
+          if (attempt < 2) {
+            await speak(attempt === 0 ? "Ti ascolto. Dimmi SI o NO." : "Non ti sento. Parla pure: SI o NO.");
+            await new Promise(r => setTimeout(r, 350));
+            setState("awaiting_confirmation");
+          }
+          continue;
         }
-        if (/(^|\s)(no|annulla|stop|ferma|interrompi|cancella|negativo)(\s|$|\.|\,|!|\?)/i.test(normalized) ||
-            normalized === "no") {
-          return false;
-        }
-        if (attempt === 0) {
+
+        if (YES_RE.test(normalized)) return true;
+        if (NO_RE.test(normalized)) return false;
+
+        if (attempt < 2) {
           await speak("Non ho capito. Dimmi solo SI per procedere o NO per annullare.");
+          await new Promise(r => setTimeout(r, 350));
+          setState("awaiting_confirmation");
         }
-      } catch {
-        await speak("Non sono riuscita a sentirti. Riprova.");
+      } catch (e) {
+        console.warn("[VoiceOrch] confirmation listen error:", e);
+        if (attempt < 2) {
+          await speak("Non sono riuscita a sentirti. Riprova: SI o NO.");
+          await new Promise(r => setTimeout(r, 350));
+          setState("awaiting_confirmation");
+        }
       }
     }
 
