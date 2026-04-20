@@ -224,11 +224,29 @@ Deno.serve(async (req) => {
       const allLeads = searchData?.results ?? [];
       leadsScanned = allLeads.length;
 
-      // 4. Filtra solo hot leads
-      const hotLeads = filterHotLeads(allLeads, enrichedState.quality_filters);
+      // 4. Filtra base (no sito + rating)
+      const preFiltered = filterHotLeads(allLeads, enrichedState.quality_filters);
+
+      // 5. Arricchimento PRO via Firecrawl: scarta chi ha social/Yelp basso
+      const hotLeads: any[] = [];
+      for (const lead of preFiltered.slice(0, 15)) {
+        try {
+          const { data: enr } = await supabase.functions.invoke("lead-enrichment-pro", {
+            body: { lead, skip_credit_check: true },
+          });
+          const e = enr?.enrichment;
+          if (!e) { continue; }
+          // Filtro hard: deve avere score >= 75 (no sito + no social + rating ok)
+          if (e.hot_score >= 75) {
+            hotLeads.push({ ...lead, _enrichment: e });
+          }
+        } catch (err) {
+          console.warn("[autopilot] enrichment fail:", err);
+        }
+      }
       leadsHot = hotLeads.length;
 
-      // 5. Salva nella pipeline (tabella `leads`) — solo hot
+      // 6. Salva nella pipeline (tabella `leads`) — solo hot
       for (const lead of hotLeads.slice(0, 10)) {
         const phone = lead.phone || lead.tags?.phone || null;
         const website = lead.website || null;
@@ -256,9 +274,12 @@ Deno.serve(async (req) => {
           full_address: lead.address || null,
           source: "arianna_autopilot",
           status: "new",
-          ai_score: 75 + Math.floor(Math.random() * 20),
-          notes: `🤖 Trovato da Arianna autopilot · ciclo #${cycleNumber} · zona ${target.city} · ${target.reason}`,
-          lead_source_data: { autopilot: true, cycle: cycleNumber, found_via: "arianna_adaptive", reason: target.reason },
+          ai_score: lead._enrichment?.hot_score ?? 75,
+          notes: `🤖 Arianna autopilot · ciclo #${cycleNumber} · ${target.city} · score ${lead._enrichment?.hot_score ?? "?"}/100 · ${target.reason}`,
+          lead_source_data: {
+            autopilot: true, cycle: cycleNumber, found_via: "arianna_adaptive", reason: target.reason,
+            enrichment: lead._enrichment,
+          },
         });
         leadsSaved++;
       }
