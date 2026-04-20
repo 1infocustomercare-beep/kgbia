@@ -504,6 +504,34 @@ export function listTemplatesForSector(sector?: string): EmailTemplate[] {
   return TEMPLATES.filter((t) => t.bestFor.includes(sector));
 }
 
+export function pickRecommendedAuroraTemplate(input: {
+  sector?: string | null;
+  googleRating?: number | null;
+  score?: number | null;
+}): { id: string; reason: string } {
+  const sector = (input.sector || "").toLowerCase();
+  const rating = input.googleRating ?? 0;
+  const score = input.score ?? 0;
+
+  if (score >= 80 || rating >= 4.5) {
+    return { id: "aurora-demo-invite", reason: "Lead premium o molto caldo: meglio mostrare subito la demo pronta." };
+  }
+
+  if (["beauty", "fitness"].includes(sector)) {
+    return { id: "aurora-playful-creative", reason: `Settore ${sector}: tono creativo e visivo.` };
+  }
+
+  if (["food", "retail", "hospitality", "hotel"].includes(sector)) {
+    return { id: "aurora-case-study", reason: `Settore ${sector}: prova sociale e caso studio convertono meglio.` };
+  }
+
+  if (["healthcare", "ncc", "legal", "accounting", "professional"].includes(sector)) {
+    return { id: "aurora-executive-brief", reason: `Settore ${sector}: tono consulenziale più autorevole.` };
+  }
+
+  return { id: "aurora-cold-personal", reason: "Primo contatto personalizzato: approccio diretto ma umano." };
+}
+
 export function renderTemplate(id: string, vars: TemplateVariables): { subject: string; html: string; text: string } | null {
   const t = getTemplate(id);
   if (!t) return null;
