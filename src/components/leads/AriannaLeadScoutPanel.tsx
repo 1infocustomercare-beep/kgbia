@@ -92,19 +92,6 @@ const actionEmoji = (t: string, status: string) => {
   }
 };
 
-const SECTORS_QUICK = [
-  { value: "food", label: "Ristorazione" },
-  { value: "beauty", label: "Beauty" },
-  { value: "ncc", label: "NCC / Transfer" },
-  { value: "fitness", label: "Fitness" },
-  { value: "hospitality", label: "Hotel" },
-  { value: "healthcare", label: "Medico" },
-  { value: "plumber", label: "Idraulico" },
-  { value: "electrician", label: "Elettricista" },
-];
-
-const CITIES_QUICK = ["Roma", "Milano", "Napoli", "Torino", "Firenze", "Bologna", "Bari", "Palermo"];
-
 export default function AriannaLeadScoutPanel({ pilot, defaultTarget }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [config, setConfig] = useState<ConfigRow | null>(null);
@@ -112,7 +99,9 @@ export default function AriannaLeadScoutPanel({ pilot, defaultTarget }: Props) {
   const [approvals, setApprovals] = useState<ApprovalRow[]>([]);
   const [running, setRunning] = useState(false);
   const [autoSend, setAutoSend] = useState(false);
-  const [target, setTarget] = useState<AriannaTarget>(defaultTarget || { city: "Roma", sector: "food" });
+  // Target è SEMPRE in sync coi controlli reali del Lead Scout (city/sector della pagina).
+  // Non c'è più selezione manuale duplicata — Arianna eredita ciò che il venditore sta cercando.
+  const target: AriannaTarget = defaultTarget || { city: "Roma", sector: "food" };
   const [userId, setUserId] = useState<string | null>(null);
   const cycleTimerRef = useRef<number | null>(null);
   const isCyclingRef = useRef(false);
