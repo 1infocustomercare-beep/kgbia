@@ -64,10 +64,18 @@ serve(async (req) => {
     if (!resp.ok) {
       const errTxt = await resp.text();
       console.error("ElevenLabs error:", resp.status, errTxt);
-      return new Response(JSON.stringify({ error: `TTS failed ${resp.status}` }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      // Return 200 with fallback flag so the client can switch to browser TTS
+      // instead of crashing the voice orchestrator session.
+      const isAuth = resp.status === 401 || resp.status === 403;
+      return new Response(
+        JSON.stringify({
+          success: false,
+          fallback: true,
+          error: isAuth ? "tts_auth_or_quota" : `tts_failed_${resp.status}`,
+          detail: errTxt.slice(0, 300),
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
     const audioBuffer = await resp.arrayBuffer();
