@@ -503,7 +503,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
       <AnimatePresence>
         {!isOpen && (
           <motion.button
-            className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] right-3 z-[201] touch-manipulation"
+            className="fixed right-3 z-[9997] touch-manipulation partner-arianna-fab"
             onClick={() => setIsOpen(true)}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -534,6 +534,13 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                   GUIDA ON
                 </motion.div>
               )}
+
+              <div className="absolute right-[calc(100%+0.55rem)] top-1/2 hidden -translate-y-1/2 rounded-2xl border border-primary/15 bg-background/95 px-3 py-2 shadow-xl backdrop-blur-xl sm:block">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">Arianna</p>
+                <p className="mt-0.5 max-w-[170px] text-[10px] leading-relaxed text-muted-foreground">
+                  Consulente AI: spiega sezioni, risponde alle domande e guida i venditori.
+                </p>
+              </div>
             </div>
           </motion.button>
         )}
