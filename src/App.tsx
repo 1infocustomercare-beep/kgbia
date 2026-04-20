@@ -652,6 +652,8 @@ function App() {
                       }>
                         <Route index element={<PartnerHomePage />} />
                         <Route path="leads" element={<LeadsPage />} />
+                        <Route path="api-connections" element={<PartnerApiConnectionsPage />} />
+                        <Route path="custom-preview" element={<PartnerCustomPreviewPage />} />
                         <Route path="earnings" element={<PartnerEarningsPage />} />
                         <Route path="portfolio" element={<PartnerPortfolioPage />} />
                         <Route path="profile" element={<PartnerProfilePage />} />

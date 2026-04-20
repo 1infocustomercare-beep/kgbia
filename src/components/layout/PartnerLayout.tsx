@@ -6,7 +6,7 @@ import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Target, DollarSign, FolderOpen, User, LogOut, ArrowLeft,
-  Eye, Presentation,
+  Eye, Presentation, Zap, Palette,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
@@ -19,6 +19,8 @@ export const usePartnerDemoMode = () => useContext(DemoModeContext);
 const NAV_ITEMS_FULL = [
   { path: "/partner", icon: LayoutDashboard, label: "Home", exact: true, showInDemo: true },
   { path: "/partner/leads", icon: Target, label: "Leads", showInDemo: false },
+  { path: "/partner/api-connections", icon: Zap, label: "API", showInDemo: false },
+  { path: "/partner/custom-preview", icon: Palette, label: "Preview", showInDemo: false },
   { path: "/partner/earnings", icon: DollarSign, label: "Guadagni", showInDemo: false },
   { path: "/partner/portfolio", icon: FolderOpen, label: "Portfolio", showInDemo: true },
   { path: "/partner/profile", icon: User, label: "Profilo", showInDemo: false },
