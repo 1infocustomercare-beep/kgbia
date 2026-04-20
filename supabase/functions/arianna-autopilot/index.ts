@@ -251,13 +251,14 @@ Deno.serve(async (req) => {
           phone,
           email: lead.email || null,
           website,
-          rating: lead.rating || null,
-          reviews_count: lead.reviews_count || lead.reviews || null,
+          google_rating: lead.rating || null,
+          google_reviews: lead.reviews_count || lead.reviews || null,
+          full_address: lead.address || null,
           source: "arianna_autopilot",
           status: "new",
           ai_score: 75 + Math.floor(Math.random() * 20),
           notes: `🤖 Trovato da Arianna autopilot · ciclo #${cycleNumber} · zona ${target.city} · ${target.reason}`,
-          tags: { autopilot: true, cycle: cycleNumber, found_via: "arianna_adaptive" },
+          lead_source_data: { autopilot: true, cycle: cycleNumber, found_via: "arianna_adaptive", reason: target.reason },
         });
         leadsSaved++;
       }
