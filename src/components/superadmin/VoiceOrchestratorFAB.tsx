@@ -90,7 +90,7 @@ export default function VoiceOrchestratorFAB() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 280, damping: 30 }}
-            className="fixed bottom-24 left-3 right-3 z-[9999] max-w-md mx-auto"
+            className="superadmin-voice-panel z-[9999] mx-auto"
           >
             <div className="rounded-2xl border border-amber-500/30 bg-zinc-950/95 backdrop-blur-xl p-4 shadow-2xl shadow-amber-500/20">
               <div className="flex items-center gap-2 mb-2">
