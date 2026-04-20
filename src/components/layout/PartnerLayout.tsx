@@ -11,6 +11,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
+import PartnerVoiceOrchestratorFAB from "@/components/partner/PartnerVoiceOrchestratorFAB";
 
 const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
 export const usePartnerDemoMode = () => useContext(DemoModeContext);
@@ -342,6 +343,9 @@ export default function PartnerLayout() {
             })}
           </div>
         </nav>
+
+        {/* Voice Agent FAB — limitato ai dati del partner (max privacy) */}
+        <PartnerVoiceOrchestratorFAB />
       </div>
     </DemoModeContext.Provider>
   );
