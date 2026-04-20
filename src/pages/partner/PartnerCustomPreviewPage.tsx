@@ -298,23 +298,26 @@ export default function PartnerCustomPreviewPage() {
 
             <TabsContent value="lead" className="space-y-4 mt-4">
               <div>
-                <Label>Seleziona lead già analizzato</Label>
+                <Label>Seleziona lead da Intelligence o Scout</Label>
                 <Select value={selectedLeadId} onValueChange={setSelectedLeadId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Scegli un lead dall'inbox intelligence…" />
+                    <SelectValue placeholder="Scegli un lead già scoperto…" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {intelligenceLeads.length === 0 ? (
-                      <SelectItem value="none" disabled>Nessun lead analizzato — usa "Manuale"</SelectItem>
-                    ) : intelligenceLeads.map(l => (
+                  <SelectContent className="max-h-72">
+                    {availableLeads.length === 0 ? (
+                      <SelectItem value="none" disabled>Nessun lead trovato — usa lo Scout o l'Intelligence prima</SelectItem>
+                    ) : availableLeads.map(l => (
                       <SelectItem key={l.id} value={l.id}>
-                        {l.lead_name} {l.lead_city ? `· ${l.lead_city}` : ""} {l.lead_sector ? `· ${l.lead_sector}` : ""}
+                        <span className="font-medium">{l.lead_name}</span>
+                        {l.lead_city ? ` · ${l.lead_city}` : ""}
+                        {l.lead_sector ? ` · ${l.lead_sector}` : ""}
+                        {l.badge ? `  [${l.badge}]` : ""}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground mt-1">
-                  I dati del lead pre-compilano il form. Puoi modificarli sotto.
+                  Disponibili: <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence · <strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout. I dati pre-compilano il form qui sotto (modificabili).
                 </p>
               </div>
             </TabsContent>
