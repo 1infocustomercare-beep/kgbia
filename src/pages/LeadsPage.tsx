@@ -19,6 +19,7 @@ import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
 import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFactoryOverlay";
 import SellerCRM from "@/components/leads/SellerCRM";
+import LeadIntelligenceLauncher from "@/components/leads/LeadIntelligenceLauncher";
 import GpsRadarPanel, { GpsLocation } from "@/components/leads/GpsRadarPanel";
 import SpeedDialList from "@/components/leads/SpeedDialList";
 import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
@@ -1913,6 +1914,24 @@ export default function LeadsPage() {
                     <XIcon className="w-3.5 h-3.5" style={{ color: "#f87171" }} />
                   </button>
                 </div>
+              </div>
+
+              {/* ═══ Intelligence Analyzer — analizza profondamente questo lead ═══ */}
+              <div className="mt-3">
+                <LeadIntelligenceLauncher
+                  lead={{
+                    name: selected.name,
+                    city: selected.city,
+                    full_address: selected.full_address,
+                    sector: sectorConfig?.label?.toLowerCase() || null,
+                    website: selected.website,
+                    phone: selected.phone,
+                    instagram: selected.instagram || enrichedData?.instagram || null,
+                    google_rating: selected.google_rating,
+                    google_reviews_count: (selected as any).google_reviews_count ?? null,
+                  }}
+                  variant="full"
+                />
               </div>
 
               {/* Analysis indicators */}
