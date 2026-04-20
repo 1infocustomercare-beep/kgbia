@@ -401,7 +401,6 @@ export default function SalesAgentCockpit() {
                 </div>
               );
             })}
-            ))}
           </div>
         </Card>
       )}
