@@ -31,6 +31,10 @@ type Approval = {
   channel: string;
   draft_subject: string | null;
   draft_body: string;
+  body_html: string | null;
+  template_id: string | null;
+  template_metadata: any;
+  deliverability_score: number | null;
   reasoning: string | null;
   recipient: string | null;
   status: string;
