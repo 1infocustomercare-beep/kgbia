@@ -222,59 +222,73 @@ Deno.serve(async (req) => {
         body: { query: "", city: target.city, sector: target.sector, mode: "zone", use_google: true, limit: 25 },
       });
 
-      if (searchError) throw new Error(searchError.message);
+      if (searchError) {
+        console.error("[autopilot] lead-search error:", searchError);
+        throw new Error(searchError.message);
+      }
       const allLeads = searchData?.results ?? [];
       leadsScanned = allLeads.length;
+      console.log(`[autopilot] lead-search returned ${leadsScanned} leads. Sample:`, JSON.stringify(allLeads[0] || {}).slice(0, 300));
 
-      // 4. Per OGNI lead → analisi Intelligence completa (anche con sito/social)
-      // Salviamo tutti tranne i "freddo" puri (gestione già perfetta, score < 30)
+      // 4. Per OGNI lead → score euristico veloce + (opzionale) arricchimento AI
+      // L'autopilot deve essere VELOCE: niente scraping, niente chiamate auth complesse.
+      // Salviamo tutti i lead con score >= 30 nella pipeline.
+      const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY");
       const analyzedLeads: any[] = [];
-      for (const lead of allLeads.slice(0, 12)) {
-        try {
-          // Chiamiamo direttamente la edge function intelligence con service role
-          const intelligenceResp = await fetch(`${SUPABASE_URL}/functions/v1/lead-intelligence-analyzer`, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${SERVICE_KEY}`,
-              "Content-Type": "application/json",
-              "x-impersonate-user": user_id,
-            },
-            body: JSON.stringify({
-              lead: {
-                name: lead.name,
-                city: lead.city || target.city,
-                sector: target.sector,
-                website: lead.website,
-                phone: lead.phone,
-                email: lead.email,
-                rating: lead.rating,
-                reviews: lead.reviews_count ?? lead.reviews,
-              },
-              skip_credit_check: true, // l'autopilot già consuma crediti per il ciclo
-            }),
-          });
-          if (!intelligenceResp.ok) continue;
-          const intelData = await intelligenceResp.json();
-          const report = intelData?.report;
-          if (!report) continue;
 
-          leadsAnalyzed++;
-          categoryStats[report.category] = (categoryStats[report.category] || 0) + 1;
+      for (const lead of allLeads.slice(0, 15)) {
+        const rating = Number(lead.rating) || 0;
+        const reviews = Number(lead.reviews_count ?? lead.reviews) || 0;
+        const hasWebsite = !!lead.website;
+        const hasPhone = !!lead.phone;
+        const hasEmail = !!lead.email;
 
-          // Conserviamo solo se vendibility_score >= 30 (filtriamo SOLO chi è davvero "freddo perfetto")
-          if (report.vendibility_score >= 30) {
-            analyzedLeads.push({ ...lead, _intelligence: report });
-          }
-        } catch (err) {
-          console.warn("[autopilot] intelligence fail:", err);
+        // Score euristico (immediato, no AI)
+        let score = 25;
+        if (!hasWebsite) score += 35;        // niente sito = grande opportunità
+        if (rating >= 4.0) score += 20; else if (rating >= 3.5) score += 10;
+        if (reviews >= 50) score += 20; else if (reviews >= 15) score += 10;
+        if (hasPhone) score += 8;
+        if (hasEmail) score += 4;
+        score = Math.min(95, score);
+
+        const category = score >= 80 ? "hot" : score >= 60 ? "warm" : score >= 40 ? "tiepido" : "freddo";
+        const reason = !hasWebsite
+          ? `Senza sito web · ${rating}/5 (${reviews} rec.) · canale ${hasPhone ? "WhatsApp" : "in persona"}`
+          : `Sito presente da migliorare · ${rating}/5 (${reviews} rec.)`;
+
+        const recommended_package = score >= 75 ? "growth_ai" : score >= 50 ? "digital_start" : "digital_start";
+        const approach_strategy = hasPhone ? "whatsapp" : hasEmail ? "email" : "in_persona";
+
+        const report = {
+          id: null,
+          vendibility_score: score,
+          category,
+          category_reason: reason,
+          recommended_package,
+          approach_strategy,
+        };
+
+        leadsAnalyzed++;
+        categoryStats[category] = (categoryStats[category] || 0) + 1;
+        if (score >= 30) {
+          analyzedLeads.push({ ...lead, _intelligence: report });
         }
       }
 
+
+      console.log(`[autopilot] analyzed=${leadsAnalyzed} → ready to save=${analyzedLeads.length} (cats: ${JSON.stringify(categoryStats)})`);
+
       // 5. Salva nella pipeline (tabella `leads`) tutti gli analyzed
       for (const lead of analyzedLeads) {
+        if (!lead.name) {
+          console.warn("[autopilot] skip lead without name");
+          continue;
+        }
         const phone = lead.phone || lead.tags?.phone || null;
         const website = lead.website || null;
         const intel = lead._intelligence;
+        const leadCity = lead.city || target.city;
 
         // Skip duplicati per owner
         const { data: existing } = await supabase
@@ -282,15 +296,18 @@ Deno.serve(async (req) => {
           .select("id")
           .eq("owner_id", user_id)
           .eq("name", lead.name)
-          .eq("city", lead.city || target.city)
+          .eq("city", leadCity)
           .maybeSingle();
-        if (existing) continue;
+        if (existing) {
+          console.log(`[autopilot] duplicate skip: ${lead.name} / ${leadCity}`);
+          continue;
+        }
 
         const categoryEmoji: Record<string, string> = { hot: "🔥", warm: "♨️", tiepido: "🌡️", freddo: "❄️" };
-        await supabase.from("leads").insert({
+        const { error: insertErr } = await supabase.from("leads").insert({
           owner_id: user_id,
           name: lead.name,
-          city: lead.city || target.city,
+          city: leadCity,
           sector: target.sector,
           phone,
           email: lead.email || null,
@@ -310,7 +327,11 @@ Deno.serve(async (req) => {
             approach_strategy: intel.approach_strategy,
           },
         });
-        leadsSaved++;
+        if (insertErr) {
+          console.error(`[autopilot] insert error for ${lead.name}:`, insertErr.message, insertErr.details);
+        } else {
+          leadsSaved++;
+        }
       }
     } catch (e: any) {
       errorMsg = e.message;
