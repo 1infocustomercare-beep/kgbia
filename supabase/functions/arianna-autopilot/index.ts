@@ -222,9 +222,13 @@ Deno.serve(async (req) => {
         body: { query: "", city: target.city, sector: target.sector, mode: "zone", use_google: true, limit: 25 },
       });
 
-      if (searchError) throw new Error(searchError.message);
+      if (searchError) {
+        console.error("[autopilot] lead-search error:", searchError);
+        throw new Error(searchError.message);
+      }
       const allLeads = searchData?.results ?? [];
       leadsScanned = allLeads.length;
+      console.log(`[autopilot] lead-search returned ${leadsScanned} leads. Sample:`, JSON.stringify(allLeads[0] || {}).slice(0, 300));
 
       // 4. Per OGNI lead → score euristico veloce + (opzionale) arricchimento AI
       // L'autopilot deve essere VELOCE: niente scraping, niente chiamate auth complesse.
