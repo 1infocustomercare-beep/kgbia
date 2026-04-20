@@ -119,21 +119,23 @@ export default function PartnerCustomPreviewPage() {
     })();
   }, [user?.id]);
 
-  // Pre-fill form da lead selezionato (intelligence o scout)
+  // Pre-fill form da lead selezionato (intelligence o scout) — sovrascrive sempre
   useEffect(() => {
-    if (!selectedLeadId) return;
+    if (!selectedLeadId || selectedLeadId === "none") return;
     const lead = availableLeads.find(l => l.id === selectedLeadId);
-    if (lead) {
-      setForm(f => ({
-        ...f,
-        lead_name: lead.lead_name || "",
-        lead_city: lead.lead_city || "",
-        lead_sector: lead.lead_sector || "",
-        lead_website: lead.lead_website || "",
-        lead_phone: lead.lead_phone || "",
-        lead_email: lead.lead_email || "",
-      }));
-    }
+    if (!lead) return;
+    setMode("lead");
+    setForm(f => ({
+      ...f,
+      lead_name: lead.lead_name || "",
+      lead_city: lead.lead_city || "",
+      lead_sector: lead.lead_sector || "",
+      lead_website: lead.lead_website || "",
+      lead_phone: lead.lead_phone || "",
+      lead_email: lead.lead_email || "",
+      lead_address: "",
+    }));
+    toast.success(`Dati di "${lead.lead_name}" caricati nel form`);
   }, [selectedLeadId, availableLeads]);
 
   const handleFileUpload = async (file: File, kind: "logo" | "gallery") => {
