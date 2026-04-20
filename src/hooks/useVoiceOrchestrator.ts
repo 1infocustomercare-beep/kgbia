@@ -99,6 +99,33 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
     }
   }, []);
 
+  const speakBrowser = useCallback((text: string): Promise<void> => {
+    return new Promise<void>((resolve) => {
+      if (typeof window === "undefined" || !window.speechSynthesis) {
+        resolve();
+        return;
+      }
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "it-IT";
+        utter.rate = 1.05;
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        utter.onend = finish;
+        utter.onerror = finish;
+        // Safety timeout — some browsers never fire onend if voice not loaded
+        const estimatedMs = Math.max(1500, text.length * 65);
+        const t = setTimeout(finish, estimatedMs + 4000);
+        utter.onend = () => { clearTimeout(t); finish(); };
+        utter.onerror = () => { clearTimeout(t); finish(); };
+        window.speechSynthesis.speak(utter);
+      } catch {
+        resolve();
+      }
+    });
+  }, []);
+
   const speak = useCallback(async (text: string): Promise<void> => {
     if (!text?.trim()) return;
     stopAudio();
@@ -108,30 +135,28 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
       const { data, error } = await supabase.functions.invoke("voice-orchestrator-tts", {
         body: { text },
       });
-      if (error || !data?.audio_base64) throw new Error(error?.message || "TTS failed");
+      if (error) throw new Error(error.message || "TTS invoke failed");
+      if (data?.fallback || !data?.audio_base64) {
+        // Server signaled fallback (quota / auth) — use browser TTS
+        console.warn("[VoiceOrch] TTS fallback:", data?.error);
+        await speakBrowser(text);
+        return;
+      }
 
       await new Promise<void>((resolve) => {
         const audio = new Audio(`data:audio/mpeg;base64,${data.audio_base64}`);
         audioRef.current = audio;
-        audio.onended = () => resolve();
-        audio.onerror = () => resolve();
-        audio.play().catch(() => resolve());
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        audio.onended = finish;
+        audio.onerror = finish;
+        audio.play().catch(finish);
       });
     } catch (e) {
       console.warn("[VoiceOrch] TTS failed, falling back to browser TTS:", e);
-      // Fallback: browser speechSynthesis
-      try {
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "it-IT";
-        utter.rate = 1.05;
-        await new Promise<void>((resolve) => {
-          utter.onend = () => resolve();
-          utter.onerror = () => resolve();
-          window.speechSynthesis.speak(utter);
-        });
-      } catch { /* noop */ }
+      await speakBrowser(text);
     }
-  }, [stopAudio]);
+  }, [stopAudio, speakBrowser]);
 
   /* --- STT --- */
   const stopListening = useCallback(() => {
