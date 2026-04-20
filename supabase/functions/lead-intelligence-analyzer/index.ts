@@ -158,11 +158,18 @@ Deno.serve(async (req) => {
 
     const adminClient = createClient(SUPABASE_URL, SERVICE_KEY);
 
-    // Auth
+    // Auth — supporta sia chiamate utente (anon JWT) che service-role con impersonation header
     const authHeader = req.headers.get("Authorization");
+    const impersonateUser = req.headers.get("x-impersonate-user");
     let userId: string | null = null;
     let userClient: any = null;
-    if (authHeader) {
+    const isServiceCall = authHeader?.includes(SERVICE_KEY);
+
+    if (isServiceCall && impersonateUser) {
+      // Chiamata da autopilot/orchestrator: usa service client e fidati dell'header impersonation
+      userId = impersonateUser;
+      userClient = adminClient;
+    } else if (authHeader) {
       userClient = createClient(SUPABASE_URL, ANON_KEY, { global: { headers: { Authorization: authHeader } } });
       const { data: u } = await userClient.auth.getUser();
       userId = u?.user?.id ?? null;
