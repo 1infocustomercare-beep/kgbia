@@ -289,7 +289,7 @@ export default function PartnerLayout() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto overflow-x-hidden pb-20 lg:pb-6 relative z-10">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden pb-20 lg:pb-6 relative z-10 partner-mobile-content-safe">
           <div className="max-w-[1600px] mx-auto w-full px-0 lg:px-6">
             <Outlet />
           </div>
