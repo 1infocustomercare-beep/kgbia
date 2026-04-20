@@ -14,7 +14,6 @@ import {
   Globe, Search, Zap, Presentation, Bot, Package
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import PageGuide from "@/components/ui/page-guide";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
@@ -919,7 +918,6 @@ const PartnerDashboard = () => {
         )}
       </AnimatePresence>
 
-      <PageGuide />
     </div>
   );
 };
