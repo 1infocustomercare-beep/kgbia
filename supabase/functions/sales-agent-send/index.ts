@@ -1,4 +1,4 @@
-// Sales Agent - Approva e invia su canale appropriato
+// Sales Agent - Approva e invia su canale appropriato (HTML Aurora + suppression check)
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -9,17 +9,31 @@ const corsHeaders = {
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-async function sendViaChannel(channel: string, recipient: string, subject: string | null, body: string): Promise<{ ok: boolean; error?: string; provider?: string }> {
-  // Email via Resend (se configurato)
+async function sendViaChannel(
+  channel: string,
+  recipient: string,
+  subject: string | null,
+  textBody: string,
+  htmlBody: string | null,
+): Promise<{ ok: boolean; error?: string; provider?: string }> {
   const RESEND = Deno.env.get("RESEND_API_KEY");
   const LOVABLE = Deno.env.get("LOVABLE_API_KEY");
+
   if (channel === "email" && RESEND && LOVABLE) {
+    const finalHtml = htmlBody || `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:15px;color:#0f0a1f;line-height:1.6;max-width:600px;margin:0 auto;padding:20px;">${textBody.replace(/\n/g, "<br/>")}</div>`;
     const r = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${LOVABLE}`, "X-Connection-Api-Key": RESEND, "Content-Type": "application/json" },
       body: JSON.stringify({
         from: "Arianna <arianna@empireaigroup.com>",
-        to: [recipient], subject: subject ?? "Una proposta per la tua attività", html: body.replace(/\n/g, "<br>"),
+        to: [recipient],
+        subject: subject ?? "Una proposta per la tua attività",
+        html: finalHtml,
+        text: textBody,
+        headers: {
+          "List-Unsubscribe": `<mailto:unsubscribe@empireaigroup.com?subject=unsub-${encodeURIComponent(recipient)}>`,
+          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        },
       }),
     });
     if (!r.ok) return { ok: false, error: await r.text(), provider: "resend" };
@@ -33,7 +47,7 @@ async function sendViaChannel(channel: string, recipient: string, subject: strin
       method: "POST",
       headers: { Authorization: `Bearer ${LOVABLE}`, "X-Connection-Api-Key": TWILIO, "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        To: `whatsapp:${recipient}`, From: "whatsapp:+14155238886", Body: body,
+        To: `whatsapp:${recipient}`, From: "whatsapp:+14155238886", Body: textBody,
       }),
     });
     if (!r.ok) return { ok: false, error: await r.text(), provider: "twilio" };
@@ -49,7 +63,7 @@ Deno.serve(async (req) => {
 
   try {
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
-    const { approval_id, decision, edited_body } = await req.json();
+    const { approval_id, decision, edited_body, edited_subject, edited_html, override_template_id } = await req.json();
     if (!approval_id) return new Response(JSON.stringify({ error: "approval_id required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     const { data: approval } = await supabase
@@ -63,12 +77,37 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ success: true, action: "rejected" }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const finalBody = edited_body || approval.draft_body;
-    const result = await sendViaChannel(approval.channel, approval.recipient, approval.draft_subject, finalBody);
+    // Override template (utente ha cambiato template prima di approvare)
+    let finalHtml: string | null = edited_html ?? approval.body_html ?? null;
+    let finalTemplateId: string | null = override_template_id ?? approval.template_id ?? null;
+    if (override_template_id && override_template_id !== approval.template_id) {
+      try {
+        const { renderAuroraTemplate } = await import("../_shared/aurora-email-renderer.ts");
+        const rendered = renderAuroraTemplate(override_template_id, {
+          recipientName: (approval.recipient || "").split("@")[0] || "ciao",
+          businessName: approval.draft_subject?.replace(/^[^A-Za-z]+/, "") || "la vostra attività",
+          previewLink: approval.template_metadata?.preview_url || "",
+          senderName: "Arianna",
+          senderRole: "Empire AI Group",
+        });
+        if (rendered) {
+          finalHtml = rendered.html;
+          finalTemplateId = rendered.meta.id;
+        }
+      } catch (e) {
+        console.warn("Override template render failed:", e);
+      }
+    }
+
+    const finalSubject = edited_subject ?? approval.draft_subject;
+    const finalText = edited_body || approval.draft_body;
+    const result = await sendViaChannel(approval.channel, approval.recipient, finalSubject, finalText, finalHtml);
 
     await supabase.from("sales_agent_approvals").update({
-      status: edited_body ? "edited" : "approved",
+      status: edited_body || edited_html || override_template_id ? "edited" : "approved",
       edited_body: edited_body ?? null,
+      template_id: finalTemplateId,
+      body_html: finalHtml,
       approved_at: new Date().toISOString(),
     }).eq("id", approval_id);
 
@@ -81,10 +120,10 @@ Deno.serve(async (req) => {
       await supabase.from("sales_agent_conversations").insert({
         owner_id: approval.owner_id, lead_id: approval.lead_id,
         channel: approval.channel, direction: "outbound",
-        subject: approval.draft_subject, body: finalBody,
+        subject: finalSubject, body: finalText,
         sent_by_agent: true,
         delivered_at: new Date().toISOString(),
-        metadata: { provider: result.provider },
+        metadata: { provider: result.provider, template_id: finalTemplateId, has_html: !!finalHtml },
       });
     }
 
