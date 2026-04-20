@@ -11,6 +11,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
+import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import PartnerVoiceOrchestratorFAB from "@/components/partner/PartnerVoiceOrchestratorFAB";
 
 const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
@@ -25,6 +26,15 @@ const NAV_ITEMS_FULL = [
   { path: "/partner/portfolio", icon: FolderOpen, label: "Portfolio", showInDemo: true },
   { path: "/partner/profile", icon: User, label: "Profilo", showInDemo: false },
 ];
+
+const resolvePartnerVoiceTab = (pathname: string) => {
+  if (pathname.startsWith("/partner/earnings")) return "earnings";
+  if (pathname.startsWith("/partner/portfolio")) return "showcase";
+  if (pathname.startsWith("/partner/custom-preview")) return "projects";
+  if (pathname.startsWith("/partner/profile")) return "dashboard";
+  if (pathname.startsWith("/partner/api-connections")) return "toolkit";
+  return "dashboard";
+};
 
 export default function PartnerLayout() {
   const navigate = useNavigate();
@@ -345,6 +355,11 @@ export default function PartnerLayout() {
             })}
           </div>
         </nav>
+
+        <PartnerVoiceAgent
+          activeTab={resolvePartnerVoiceTab(location.pathname)}
+          demoMode={demoMode}
+        />
 
         {/* Voice Agent FAB — limitato ai dati del partner (max privacy) */}
         <PartnerVoiceOrchestratorFAB />

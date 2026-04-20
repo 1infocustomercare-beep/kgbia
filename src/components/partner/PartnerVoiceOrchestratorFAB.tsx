@@ -120,29 +120,42 @@ export default function PartnerVoiceOrchestratorFAB() {
         )}
       </AnimatePresence>
 
-      <motion.button
-        type="button"
-        onClick={handleClick}
-        disabled={!supported && state === "idle"}
-        whileTap={{ scale: 0.92 }}
-        animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
-        transition={isActive ? { repeat: Infinity, duration: 1.4 } : {}}
-        className={`fixed right-4 lg:right-5 z-[9999] w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br ${STATE_COLOR[state]} shadow-2xl flex items-center justify-center text-white border-2 border-white/20 partner-voice-fab ${!supported && state === "idle" ? "opacity-50 cursor-not-allowed" : ""}`}
-        aria-label="Voice Agent Partner"
-        title={supported ? "Voice Agent — comanda con la voce (solo i tuoi dati)" : "Voice non supportato in questo browser"}
-        style={{ touchAction: "manipulation" }}
-      >
-        {(() => {
-          const s: string = state;
-          if (isActive && s !== "speaking" && s !== "error") {
-            if (s === "thinking" || s === "executing") {
-              return <Loader2 className="w-6 h-6 animate-spin" />;
+      <div className="fixed right-4 lg:right-5 z-[9999] flex items-center justify-end gap-2.5 partner-voice-fab">
+        <div className="hidden max-w-[170px] rounded-2xl border border-violet-400/20 bg-zinc-950/92 px-3 py-2 text-right shadow-xl backdrop-blur-xl sm:block">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-violet-300">Microfono AI</p>
+          <p className="mt-0.5 text-[10px] leading-relaxed text-zinc-300">
+            Comandi vocali: esegue task, apre sezioni e risponde sui tuoi dati.
+          </p>
+        </div>
+
+        <motion.button
+          type="button"
+          onClick={handleClick}
+          disabled={!supported && state === "idle"}
+          whileTap={{ scale: 0.92 }}
+          animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+          transition={isActive ? { repeat: Infinity, duration: 1.4 } : {}}
+          className={`z-[9999] w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br ${STATE_COLOR[state]} shadow-2xl flex items-center justify-center text-white border-2 border-white/20 ${!supported && state === "idle" ? "opacity-50 cursor-not-allowed" : ""}`}
+          aria-label="Microfono AI per task vocali"
+          title={supported ? "Microfono AI — esegue task e risponde con la voce sui tuoi dati" : "Voice non supportato in questo browser"}
+          style={{ touchAction: "manipulation" }}
+        >
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full border border-violet-400/30 bg-zinc-950/95 px-2.5 py-1 shadow-xl backdrop-blur-xl sm:hidden">
+            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-violet-300 whitespace-nowrap">Mic AI</p>
+          </div>
+
+          {(() => {
+            const s: string = state;
+            if (isActive && s !== "speaking" && s !== "error") {
+              if (s === "thinking" || s === "executing") {
+                return <Loader2 className="w-6 h-6 animate-spin" />;
+              }
+              return <X className="w-6 h-6" />;
             }
-            return <X className="w-6 h-6" />;
-          }
-          return <Icon className={`w-6 h-6 ${s === "executing" || s === "thinking" ? "animate-spin" : ""}`} />;
-        })()}
-      </motion.button>
+            return <Icon className={`w-6 h-6 ${s === "executing" || s === "thinking" ? "animate-spin" : ""}`} />;
+          })()}
+        </motion.button>
+      </div>
     </>
   );
 }
