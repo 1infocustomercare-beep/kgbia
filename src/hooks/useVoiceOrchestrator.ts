@@ -315,7 +315,7 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
           id: crypto.randomUUID(),
           timestamp: Date.now(),
           transcript: userText,
-          status: "error",
+          status: "error" as const,
           error: msg,
         }, ...prev].slice(0, 50));
         releaseVoiceAgent(MUTEX_ID);
@@ -337,7 +337,7 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
           transcript: userText,
           intent_summary: plan.intent_summary,
           reply_text: plan.reply_text,
-          status: "success",
+          status: "success" as const,
           actions_executed: [],
         }, ...prev].slice(0, 50));
         releaseVoiceAgent(MUTEX_ID);
@@ -357,7 +357,7 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
           transcript: userText,
           intent_summary: plan.intent_summary,
           reply_text: plan.reply_text,
-          status: "cancelled",
+          status: "cancelled" as const,
         }, ...prev].slice(0, 50));
         releaseVoiceAgent(MUTEX_ID);
         return;
@@ -391,7 +391,7 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
         transcript: userText,
         intent_summary: plan.intent_summary,
         reply_text: finalReport,
-        status: failCount === 0 ? "success" : "error",
+        status: (failCount === 0 ? "success" : "error") as "success" | "error",
         actions_executed: results.map(r => ({ description: r.description, ok: r.ok })),
       }, ...prev].slice(0, 50));
 

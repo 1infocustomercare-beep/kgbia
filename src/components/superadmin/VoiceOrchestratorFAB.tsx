@@ -46,7 +46,12 @@ export default function VoiceOrchestratorFAB() {
   }
 
   const isActive = state !== "idle";
-  const Icon = state === "idle" ? Mic : state === "speaking" ? Volume2 : state === "error" ? AlertTriangle : state === "executing" || state === "thinking" ? Loader2 : Mic;
+  const Icon: any =
+    state === "idle" ? Mic :
+    state === "speaking" ? Volume2 :
+    state === "error" ? AlertTriangle :
+    (state === "executing" || state === "thinking") ? Loader2 :
+    Mic;
 
   const handleClick = () => {
     if (state === "idle") {
@@ -130,15 +135,16 @@ export default function VoiceOrchestratorFAB() {
         title={supported ? "Empire Voice Orchestrator (parla)" : "Voice non supportato in questo browser"}
         style={{ touchAction: "manipulation" }}
       >
-        {isActive && state !== "speaking" && state !== "error" ? (
-          state === "thinking" || state === "executing" ? (
-            <Loader2 className="w-6 h-6 animate-spin" />
-          ) : (
-            <X className="w-6 h-6" />
-          )
-        ) : (
-          <Icon className={`w-6 h-6 ${state === "executing" || state === "thinking" ? "animate-spin" : ""}`} />
-        )}
+        {(() => {
+          const s: string = state;
+          if (isActive && s !== "speaking" && s !== "error") {
+            if (s === "thinking" || s === "executing") {
+              return <Loader2 className="w-6 h-6 animate-spin" />;
+            }
+            return <X className="w-6 h-6" />;
+          }
+          return <Icon className={`w-6 h-6 ${s === "executing" || s === "thinking" ? "animate-spin" : ""}`} />;
+        })()}
       </motion.button>
     </>
   );
