@@ -2732,7 +2732,7 @@ const SuperAdminDashboard = () => {
                 </p>
               </div>
               <a
-                href="/leads"
+                href="/superadmin/leads"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white transition-all hover:scale-[1.03]"
                 style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", boxShadow: "0 8px 32px rgba(167,139,250,0.4)" }}
               >
@@ -2740,7 +2740,7 @@ const SuperAdminDashboard = () => {
                 Apri Lead Scout con Arianna
               </a>
               <p className="text-[10px] text-muted-foreground">
-                Trovi il pannello Arianna in cima a /leads — accendilo e parte in automatico
+                Trovi il pannello Arianna in cima a /superadmin/leads — accendilo e parte in automatico. Userà gli stessi motori di scouting (lead-search, deep-lead-analysis, scan-prospect) con dati reali, loghi, analisi e demo factory.
               </p>
             </div>
           </motion.div>
