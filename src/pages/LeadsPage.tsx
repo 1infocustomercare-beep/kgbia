@@ -36,7 +36,7 @@ import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
 import DeliverabilityPanel from "@/components/leads/DeliverabilityPanel";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShieldCheck } from "lucide-react";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
 
