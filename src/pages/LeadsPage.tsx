@@ -1118,6 +1118,10 @@ export default function LeadsPage() {
         progress={demoFactoryProgress}
         result={demoFactoryResult}
         leadName={selected?.name || ""}
+        leadEmail={selected?.email || ""}
+        leadCity={selected?.city || ""}
+        leadSector={(selected as any)?._sector || ""}
+        leadRating={(selected as any)?.google_rating ?? null}
         onClose={() => { setDemoFactoryOpen(false); setDemoFactoryResult(null); }}
         onSendWhatsApp={() => {
           if (!demoFactoryResult || !selected) return;
