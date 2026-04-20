@@ -5006,6 +5006,7 @@ export type Database = {
           is_active: boolean
           last_auto_run_at: string | null
           operating_hours: Json
+          preferred_email_template_id: string | null
           signature: string | null
           target_cities: string[] | null
           target_sectors: string[] | null
@@ -5029,6 +5030,7 @@ export type Database = {
           is_active?: boolean
           last_auto_run_at?: string | null
           operating_hours?: Json
+          preferred_email_template_id?: string | null
           signature?: string | null
           target_cities?: string[] | null
           target_sectors?: string[] | null
@@ -5052,6 +5054,7 @@ export type Database = {
           is_active?: boolean
           last_auto_run_at?: string | null
           operating_hours?: Json
+          preferred_email_template_id?: string | null
           signature?: string | null
           target_cities?: string[] | null
           target_sectors?: string[] | null
