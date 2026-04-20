@@ -78,7 +78,7 @@ export default function PartnerVoiceOrchestratorFAB() {
           <motion.div
             initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 280, damping: 30 }}
-            className="fixed bottom-24 left-3 right-3 z-[9999] max-w-md mx-auto"
+            className="fixed left-3 right-3 z-[9999] max-w-md mx-auto partner-voice-status-panel"
           >
             <div className="rounded-2xl border border-violet-500/30 bg-zinc-950/95 backdrop-blur-xl p-4 shadow-2xl shadow-violet-500/20">
               <div className="flex items-center gap-2 mb-2">
@@ -120,7 +120,7 @@ export default function PartnerVoiceOrchestratorFAB() {
         )}
       </AnimatePresence>
 
-      <div className="fixed right-4 lg:right-5 z-[9999] flex items-center justify-end gap-2.5 partner-voice-fab">
+      <div className="fixed z-[9999] flex items-center justify-end gap-2.5 partner-voice-fab">
         <div className="hidden max-w-[170px] rounded-2xl border border-violet-400/20 bg-zinc-950/92 px-3 py-2 text-right shadow-xl backdrop-blur-xl sm:block">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-violet-300">Microfono AI</p>
           <p className="mt-0.5 text-[10px] leading-relaxed text-zinc-300">

@@ -503,7 +503,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
       <AnimatePresence>
         {!isOpen && (
           <motion.button
-            className="fixed right-3 z-[9997] touch-manipulation partner-arianna-fab"
+            className="fixed z-[9997] touch-manipulation partner-arianna-fab"
             onClick={() => setIsOpen(true)}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -554,7 +554,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-0 right-0 z-[10000] w-full sm:w-[400px] sm:bottom-4 sm:right-4 max-h-[80dvh] sm:max-h-[650px] flex flex-col rounded-t-2xl sm:rounded-2xl border border-primary/10 bg-background/95 backdrop-blur-2xl shadow-[0_0_60px_hsla(var(--primary)/0.15)]"
+            className="fixed z-[10000] w-[calc(100vw-1.5rem)] sm:w-[400px] max-h-[80dvh] sm:max-h-[650px] flex flex-col rounded-2xl border border-primary/10 bg-background/95 backdrop-blur-2xl shadow-[0_0_60px_hsla(var(--primary)/0.15)] partner-arianna-panel"
             style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             initial={{ opacity: 0, y: 100, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
