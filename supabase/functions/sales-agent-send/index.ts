@@ -77,25 +77,40 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ success: true, action: "rejected" }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // Override template (utente ha cambiato template prima di approvare)
+    // Override template OR backfill HTML on legacy approvals senza body_html
     let finalHtml: string | null = edited_html ?? approval.body_html ?? null;
     let finalTemplateId: string | null = override_template_id ?? approval.template_id ?? null;
-    if (override_template_id && override_template_id !== approval.template_id) {
+    const needsBackfill = !finalHtml && approval.channel === "email";
+    const needsOverride = override_template_id && override_template_id !== approval.template_id;
+    if (needsOverride || needsBackfill) {
       try {
-        const { renderAuroraTemplate } = await import("../_shared/aurora-email-renderer.ts");
-        const rendered = renderAuroraTemplate(override_template_id, {
-          recipientName: (approval.recipient || "").split("@")[0] || "ciao",
-          businessName: approval.draft_subject?.replace(/^[^A-Za-z]+/, "") || "la vostra attività",
-          previewLink: approval.template_metadata?.preview_url || "",
-          senderName: "Arianna",
-          senderRole: "Empire AI Group",
-        });
-        if (rendered) {
-          finalHtml = rendered.html;
-          finalTemplateId = rendered.meta.id;
+        const { renderAuroraTemplate, pickAuroraTemplateForLead } = await import("../_shared/aurora-email-renderer.ts");
+        // Carica lead per AI auto-pick se backfill
+        let pickedId = override_template_id;
+        if (!pickedId && needsBackfill && approval.lead_id) {
+          const { data: lead } = await supabase.from("leads").select("sector,google_rating,ai_score,name").eq("id", approval.lead_id).maybeSingle();
+          const ai = pickAuroraTemplateForLead({
+            sector: lead?.sector,
+            google_rating: lead?.google_rating ?? null,
+            ai_score: lead?.ai_score ?? null,
+          });
+          pickedId = ai.id;
+        }
+        if (pickedId) {
+          const rendered = renderAuroraTemplate(pickedId, {
+            recipientName: (approval.recipient || "").split("@")[0] || "ciao",
+            businessName: approval.draft_subject?.replace(/^[✍️📧📩💌\s]+/, "").replace(/^Bozza\s+\w+:\s+/i, "") || "la vostra attività",
+            previewLink: approval.template_metadata?.preview_url || approval.template_metadata?.meta?.preview_url || "",
+            senderName: "Arianna",
+            senderRole: "Empire AI Group",
+          });
+          if (rendered) {
+            finalHtml = rendered.html;
+            finalTemplateId = rendered.meta.id;
+          }
         }
       } catch (e) {
-        console.warn("Override template render failed:", e);
+        console.warn("Aurora render (override/backfill) failed:", e);
       }
     }
 
