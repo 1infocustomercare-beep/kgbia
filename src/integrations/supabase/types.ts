@@ -5660,6 +5660,54 @@ export type Database = {
         }
         Relationships: []
       }
+      voice_command_log: {
+        Row: {
+          actions_executed: Json
+          actions_planned: Json
+          confirmation_required: boolean
+          confirmed: boolean
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          intent: Json
+          reply_text: string | null
+          status: string
+          transcript: string
+          user_id: string
+        }
+        Insert: {
+          actions_executed?: Json
+          actions_planned?: Json
+          confirmation_required?: boolean
+          confirmed?: boolean
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          intent?: Json
+          reply_text?: string | null
+          status?: string
+          transcript: string
+          user_id: string
+        }
+        Update: {
+          actions_executed?: Json
+          actions_planned?: Json
+          confirmation_required?: boolean
+          confirmed?: boolean
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          intent?: Json
+          reply_text?: string | null
+          status?: string
+          transcript?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       wallet_passes: {
         Row: {
           created_at: string
