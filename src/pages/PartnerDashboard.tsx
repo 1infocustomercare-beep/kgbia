@@ -896,7 +896,7 @@ const PartnerDashboard = () => {
         )}
       </AnimatePresence>
 
-      <PartnerVoiceAgent activeTab="dashboard" demoMode={demoMode} />
+      {/* Voice agent fornito centralmente da PartnerLayout (PartnerVoiceOrchestratorFAB) per evitare FAB sovrapposti */}
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
 
       <AnimatePresence>
