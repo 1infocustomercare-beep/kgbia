@@ -121,7 +121,7 @@ export default function PartnerVoiceOrchestratorFAB() {
       </AnimatePresence>
 
       <div className="fixed z-[9999] flex items-center justify-end gap-2.5 partner-voice-fab">
-        <div className="hidden max-w-[170px] rounded-2xl border border-violet-400/20 bg-zinc-950/92 px-3 py-2 text-right shadow-xl backdrop-blur-xl sm:block">
+        <div className="hidden max-w-[170px] rounded-2xl border border-violet-400/20 bg-zinc-950/92 px-3 py-2 text-right shadow-xl backdrop-blur-xl sm:hidden">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-violet-300">Microfono AI</p>
           <p className="mt-0.5 text-[10px] leading-relaxed text-zinc-300">
             Comandi vocali: esegue task, apre sezioni e risponde sui tuoi dati.
