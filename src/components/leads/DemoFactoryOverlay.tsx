@@ -54,6 +54,10 @@ interface Props {
   progress: string;
   result: DemoFactoryResult | null;
   leadName: string;
+  leadEmail?: string;
+  leadCity?: string;
+  leadSector?: string;
+  leadRating?: number | null;
   onClose: () => void;
   onSendWhatsApp?: () => void;
 }
@@ -67,10 +71,38 @@ const PIPELINE_STEPS = [
   { key: "closer", icon: "🔑", label: "Closer — credenziali + magic link" },
 ];
 
-export default function DemoFactoryOverlay({ open, loading, progress, result, leadName, onClose, onSendWhatsApp }: Props) {
+/** AI auto-pick template Aurora basato su settore + rating */
+function pickAuroraTemplateId(sector?: string, rating?: number | null): { id: string; reason: string } {
+  const s = (sector || "").toLowerCase();
+  const r = rating ?? 0;
+  if (r >= 4.5) return { id: "aurora-demo-invite", reason: "Lead premium (rating ≥4.5): invito diretto alla demo." };
+  if (["beauty", "fitness"].includes(s)) return { id: "aurora-playful-creative", reason: `Settore ${s}: tono creativo.` };
+  if (["food", "retail", "hospitality"].includes(s)) return { id: "aurora-case-study", reason: `Settore ${s}: prova sociale converte di più.` };
+  if (["healthcare", "professional", "ncc"].includes(s)) return { id: "aurora-executive-brief", reason: `Settore ${s}: tono consulenziale.` };
+  return { id: "aurora-cold-personal", reason: "Primo contatto a freddo: tono personale." };
+}
+
+export default function DemoFactoryOverlay({ open, loading, progress, result, leadName, leadEmail, leadCity, leadSector, leadRating, onClose, onSendWhatsApp }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
   const [scriptIdx, setScriptIdx] = useState(0);
   const [objectionsOpen, setObjectionsOpen] = useState(false);
+  const [emailOpen, setEmailOpen] = useState(true);
+  const [emailDevice, setEmailDevice] = useState<"desktop" | "mobile">("mobile");
+  const aiPick = useMemo(() => pickAuroraTemplateId(leadSector, leadRating), [leadSector, leadRating]);
+  const [selectedTplId, setSelectedTplId] = useState<string>(aiPick.id);
+  const recipientName = useMemo(() => (leadEmail || "").split("@")[0] || leadName.split(" ")[0] || "ciao", [leadEmail, leadName]);
+  const renderedEmail = useMemo(() => renderTemplate(selectedTplId, {
+    recipientName,
+    businessName: leadName || "la vostra attività",
+    city: leadCity,
+    sectorLabel: leadSector,
+    previewLink: result?.previewUrl,
+    senderName: "Arianna",
+    senderRole: "Empire AI Group",
+  }), [selectedTplId, recipientName, leadName, leadCity, leadSector, result?.previewUrl]);
+  const deliverability = useMemo(() => renderedEmail ? analyzeEmailDeliverability({
+    subject: renderedEmail.subject, body: renderedEmail.text, hasUnsubscribe: true,
+  }) : null, [renderedEmail]);
 
   const copy = (label: string, text: string) => {
     navigator.clipboard.writeText(text);
