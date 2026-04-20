@@ -2744,6 +2744,75 @@ export type Database = {
           },
         ]
       }
+      lead_enrichment_cache: {
+        Row: {
+          cache_key: string
+          city: string | null
+          created_at: string | null
+          expires_at: string | null
+          facebook_url: string | null
+          has_facebook: boolean | null
+          has_instagram: boolean | null
+          has_website: boolean | null
+          hot_score: number | null
+          id: string
+          instagram_url: string | null
+          lead_name: string
+          paginegialle_listing: boolean | null
+          piva: string | null
+          raw_data: Json | null
+          registro_imprese_status: string | null
+          tripadvisor_rating: number | null
+          tripadvisor_reviews: number | null
+          yelp_rating: number | null
+          yelp_reviews: number | null
+        }
+        Insert: {
+          cache_key: string
+          city?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          facebook_url?: string | null
+          has_facebook?: boolean | null
+          has_instagram?: boolean | null
+          has_website?: boolean | null
+          hot_score?: number | null
+          id?: string
+          instagram_url?: string | null
+          lead_name: string
+          paginegialle_listing?: boolean | null
+          piva?: string | null
+          raw_data?: Json | null
+          registro_imprese_status?: string | null
+          tripadvisor_rating?: number | null
+          tripadvisor_reviews?: number | null
+          yelp_rating?: number | null
+          yelp_reviews?: number | null
+        }
+        Update: {
+          cache_key?: string
+          city?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          facebook_url?: string | null
+          has_facebook?: boolean | null
+          has_instagram?: boolean | null
+          has_website?: boolean | null
+          hot_score?: number | null
+          id?: string
+          instagram_url?: string | null
+          lead_name?: string
+          paginegialle_listing?: boolean | null
+          piva?: string | null
+          raw_data?: Json | null
+          registro_imprese_status?: string | null
+          tripadvisor_rating?: number | null
+          tripadvisor_reviews?: number | null
+          yelp_rating?: number | null
+          yelp_reviews?: number | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           ai_score: number | null
@@ -5141,6 +5210,60 @@ export type Database = {
           monthly_cap?: number | null
           threshold_pct?: number | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      seller_custom_previews: {
+        Row: {
+          created_at: string | null
+          features: Json | null
+          hero_subtitle: string | null
+          hero_title: string | null
+          id: string
+          is_published: boolean | null
+          owner_id: string
+          preview_html: string | null
+          preview_url: string | null
+          primary_color: string | null
+          reuse_count: number | null
+          sector_label: string
+          sector_slug: string
+          template_style: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          features?: Json | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: string
+          is_published?: boolean | null
+          owner_id: string
+          preview_html?: string | null
+          preview_url?: string | null
+          primary_color?: string | null
+          reuse_count?: number | null
+          sector_label: string
+          sector_slug: string
+          template_style?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          features?: Json | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: string
+          is_published?: boolean | null
+          owner_id?: string
+          preview_html?: string | null
+          preview_url?: string | null
+          primary_color?: string | null
+          reuse_count?: number | null
+          sector_label?: string
+          sector_slug?: string
+          template_style?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
