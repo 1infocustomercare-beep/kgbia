@@ -84,6 +84,12 @@ export default function SalesAgentCockpit() {
   const [running, setRunning] = useState(false);
   const [editingApproval, setEditingApproval] = useState<string | null>(null);
   const [editedBody, setEditedBody] = useState("");
+  const [editedSubject, setEditedSubject] = useState("");
+  const [editedHtml, setEditedHtml] = useState<string | null>(null);
+  const [overrideTemplateId, setOverrideTemplateId] = useState<string | null>(null);
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
+  const [showSource, setShowSource] = useState(false);
+  const [pickerOpenFor, setPickerOpenFor] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
