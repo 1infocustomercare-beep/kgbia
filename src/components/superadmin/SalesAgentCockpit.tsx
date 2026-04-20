@@ -251,43 +251,156 @@ export default function SalesAgentCockpit() {
             <Sparkles className="w-4 h-4 text-amber-500" />
             Bozze in attesa di approvazione ({approvals.length})
           </h3>
-          <div className="space-y-2">
-            {approvals.slice(0, 5).map(a => (
-              <div key={a.id} className="border border-border rounded-lg p-3 bg-background">
-                <div className="flex items-center gap-2 text-xs mb-2">
-                  <Badge variant="outline" className="gap-1">{channelIcon(a.channel)} {a.channel}</Badge>
-                  <span className="text-muted-foreground">→ {a.recipient ?? "—"}</span>
-                </div>
-                {a.draft_subject && <div className="font-semibold text-sm mb-1">{a.draft_subject}</div>}
-                {editingApproval === a.id ? (
-                  <Textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} className="text-xs min-h-[120px] mb-2" />
-                ) : (
-                  <p className="text-xs text-foreground/80 whitespace-pre-wrap mb-2">{a.draft_body}</p>
-                )}
-                {a.reasoning && <p className="text-xs italic text-muted-foreground mb-2">💡 {a.reasoning}</p>}
-                <div className="flex gap-2">
-                  {editingApproval === a.id ? (
-                    <>
-                      <Button size="sm" onClick={() => handleApproval(a.id, "approve", editedBody)}>
-                        <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Invia modificato
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => setEditingApproval(null)}>Annulla</Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button size="sm" onClick={() => handleApproval(a.id, "approve")}>
-                        <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Approva e invia
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => { setEditingApproval(a.id); setEditedBody(a.draft_body); }}>
-                        Modifica
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => handleApproval(a.id, "reject")}>
-                        <XCircle className="w-3.5 h-3.5 mr-1" /> Rifiuta
-                      </Button>
-                    </>
+          <div className="space-y-3">
+            {approvals.slice(0, 5).map(a => {
+              const isEditing = editingApproval === a.id;
+              const tplId = isEditing ? overrideTemplateId : a.template_id;
+              const tplMeta = tplId ? TEMPLATE_BY_ID[tplId] : null;
+              const currentSubject = isEditing ? editedSubject : (a.draft_subject ?? "");
+              const currentBody = isEditing ? editedBody : a.draft_body;
+              const currentHtml = isEditing ? editedHtml : a.body_html;
+
+              return (
+                <div key={a.id} className="border border-border rounded-xl p-3 bg-background space-y-3">
+                  <div className="flex items-center gap-2 text-xs flex-wrap">
+                    <Badge variant="outline" className="gap-1">{channelIcon(a.channel)} {a.channel}</Badge>
+                    <span className="text-muted-foreground">→ {a.recipient ?? "—"}</span>
+                    {tplMeta && (
+                      <Badge variant="secondary" className="gap-1 text-[10px]">
+                        <Wand2 className="w-3 h-3" /> {tplMeta.name}
+                      </Badge>
+                    )}
+                    {typeof a.deliverability_score === "number" && (
+                      <Badge variant={a.deliverability_score >= 80 ? "default" : a.deliverability_score >= 60 ? "secondary" : "destructive"} className="text-[10px]">
+                        Inbox {a.deliverability_score}/100
+                      </Badge>
+                    )}
+                  </div>
+
+                  {isEditing && a.channel === "email" && (
+                    <input
+                      type="text"
+                      value={editedSubject}
+                      onChange={e => setEditedSubject(e.target.value)}
+                      placeholder="Oggetto email"
+                      className="w-full px-3 py-2 text-sm rounded-md border border-border bg-background"
+                    />
                   )}
+                  {!isEditing && a.draft_subject && (
+                    <div className="font-semibold text-sm">{a.draft_subject}</div>
+                  )}
+
+                  {/* HTML Preview / Source toggle */}
+                  {a.channel === "email" && currentHtml && (
+                    <div className="rounded-lg border border-border overflow-hidden bg-zinc-950/40">
+                      <div className="flex items-center justify-between px-2 py-1.5 border-b border-border bg-muted/40">
+                        <div className="flex items-center gap-1">
+                          <Button size="sm" variant={previewDevice === "desktop" ? "default" : "ghost"} onClick={() => setPreviewDevice("desktop")} className="h-6 px-2 text-[11px]">
+                            <Monitor className="w-3 h-3 mr-1" /> Desktop
+                          </Button>
+                          <Button size="sm" variant={previewDevice === "mobile" ? "default" : "ghost"} onClick={() => setPreviewDevice("mobile")} className="h-6 px-2 text-[11px]">
+                            <Smartphone className="w-3 h-3 mr-1" /> Mobile
+                          </Button>
+                        </div>
+                        <Button size="sm" variant="ghost" onClick={() => setShowSource(s => !s)} className="h-6 px-2 text-[11px]">
+                          <Code2 className="w-3 h-3 mr-1" /> {showSource ? "Preview" : "Sorgente"}
+                        </Button>
+                      </div>
+                      {showSource ? (
+                        <pre className="text-[10px] text-zinc-300 p-2 max-h-[280px] overflow-auto">{currentHtml}</pre>
+                      ) : (
+                        <div className="flex justify-center bg-zinc-900/40 p-2">
+                          <iframe
+                            title="email-preview"
+                            srcDoc={currentHtml}
+                            className="bg-white rounded"
+                            style={{
+                              width: previewDevice === "mobile" ? 360 : "100%",
+                              maxWidth: previewDevice === "mobile" ? 360 : 640,
+                              height: 360,
+                              border: 0,
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Plain text fallback / editor */}
+                  {isEditing ? (
+                    <Textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} className="text-xs min-h-[120px]" placeholder="Testo plain (fallback)" />
+                  ) : !currentHtml ? (
+                    <p className="text-xs text-foreground/80 whitespace-pre-wrap">{a.draft_body}</p>
+                  ) : null}
+
+                  {a.reasoning && <p className="text-xs italic text-muted-foreground">💡 {a.reasoning}</p>}
+
+                  {/* Deliverability inline hint (live) */}
+                  {a.channel === "email" && (
+                    <DeliverabilityHints subject={currentSubject} body={currentBody} compact />
+                  )}
+
+                  {/* Template picker (override) */}
+                  {pickerOpenFor === a.id && (
+                    <div className="rounded-lg border border-primary/30 bg-primary/5 p-2">
+                      <EmailTemplatePicker
+                        variables={{
+                          recipientName: (a.recipient || "").split("@")[0] || "ciao",
+                          businessName: a.draft_subject?.replace(/^[^A-Za-z]+/, "") || "la vostra attività",
+                          previewLink: a.template_metadata?.preview_url || "",
+                          senderName: "Arianna",
+                          senderRole: "Empire AI Group",
+                        }}
+                        selectedId={overrideTemplateId || undefined}
+                        recommendedId={a.template_id || undefined}
+                        recommendedReason="AI ha scelto questo per il profilo del lead"
+                        onSelect={(id, rendered) => {
+                          setOverrideTemplateId(id);
+                          setEditedHtml(rendered.html);
+                          setEditedSubject(rendered.subject);
+                          setEditedBody(rendered.text);
+                          setEditingApproval(a.id);
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 flex-wrap">
+                    {isEditing ? (
+                      <>
+                        <Button size="sm" onClick={() => handleApproval(a.id, "approve", {
+                          edited_body: editedBody,
+                          edited_subject: editedSubject,
+                          edited_html: editedHtml,
+                          override_template_id: overrideTemplateId,
+                        })}>
+                          <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Invia modificato
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => { setEditingApproval(null); setPickerOpenFor(null); }}>Annulla</Button>
+                        <Button size="sm" variant="ghost" onClick={() => setPickerOpenFor(pickerOpenFor === a.id ? null : a.id)}>
+                          <Wand2 className="w-3.5 h-3.5 mr-1" /> {pickerOpenFor === a.id ? "Chiudi template" : "Cambia template"}
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button size="sm" onClick={() => handleApproval(a.id, "approve")}>
+                          <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Approva e invia
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => startEditing(a)}>
+                          Modifica
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => { startEditing(a); setPickerOpenFor(a.id); }}>
+                          <Wand2 className="w-3.5 h-3.5 mr-1" /> Cambia template
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => handleApproval(a.id, "reject")}>
+                          <XCircle className="w-3.5 h-3.5 mr-1" /> Rifiuta
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
+              );
+            })}
             ))}
           </div>
         </Card>
