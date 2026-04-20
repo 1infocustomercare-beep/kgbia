@@ -1492,6 +1492,20 @@
       width: 400px;
       max-width: min(400px, calc(100vw - 2rem));
     }
+
+    .superadmin-voice-fab {
+      left: auto;
+      right: 1.25rem;
+      bottom: 1.25rem;
+    }
+
+    .superadmin-voice-panel {
+      left: auto;
+      right: 1.25rem;
+      bottom: 6rem;
+      width: 420px;
+      max-width: min(420px, calc(100vw - 2rem));
+    }
   }
 
   .phone-iframe-scale {
