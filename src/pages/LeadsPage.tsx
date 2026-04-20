@@ -35,6 +35,9 @@ import SellerOnboardingWizard from "@/components/leads/SellerOnboardingWizard";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
+import DeliverabilityPanel from "@/components/leads/DeliverabilityPanel";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ShieldCheck } from "lucide-react";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
 
 /* ─── Types ─── */
@@ -1151,7 +1154,27 @@ export default function LeadsPage() {
       <div className="relative z-10 space-y-4">
 
       {/* 💰 Badge crediti AI sempre visibile in alto a destra */}
-      <div className="flex justify-end">
+      <div className="flex justify-end items-center gap-2">
+        <Sheet>
+          <SheetTrigger asChild>
+            <button
+              type="button"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-violet-400/30 bg-gradient-to-r from-violet-500/10 to-cyan-500/10 text-violet-200 text-[11px] font-bold hover:from-violet-500/20 hover:to-cyan-500/20 transition-colors"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Best practice</span>
+              <span>Deliverability</span>
+            </button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto bg-zinc-950 border-l border-violet-500/20">
+            <SheetHeader>
+              <SheetTitle className="text-white">Guida Deliverability</SheetTitle>
+            </SheetHeader>
+            <div className="mt-4">
+              <DeliverabilityPanel />
+            </div>
+          </SheetContent>
+        </Sheet>
         <SellerCreditsBadge balance={creditBalance} spent30d={totalSpent30d} />
       </div>
 
