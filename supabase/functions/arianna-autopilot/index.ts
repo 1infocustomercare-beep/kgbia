@@ -230,14 +230,15 @@ Deno.serve(async (req) => {
       // Salviamo tutti tranne i "freddo" puri (gestione già perfetta, score < 30)
       const analyzedLeads: any[] = [];
       for (const lead of allLeads.slice(0, 12)) {
+        let report: any = null;
         try {
-          // Chiamiamo direttamente la edge function intelligence con service role
           const intelligenceResp = await fetch(`${SUPABASE_URL}/functions/v1/lead-intelligence-analyzer`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${SERVICE_KEY}`,
               "Content-Type": "application/json",
               "x-impersonate-user": user_id,
+              apikey: SERVICE_KEY,
             },
             body: JSON.stringify({
               lead: {
@@ -250,23 +251,50 @@ Deno.serve(async (req) => {
                 rating: lead.rating,
                 reviews: lead.reviews_count ?? lead.reviews,
               },
-              skip_credit_check: true, // l'autopilot già consuma crediti per il ciclo
+              skip_credit_check: true,
             }),
           });
-          if (!intelligenceResp.ok) continue;
-          const intelData = await intelligenceResp.json();
-          const report = intelData?.report;
-          if (!report) continue;
-
-          leadsAnalyzed++;
-          categoryStats[report.category] = (categoryStats[report.category] || 0) + 1;
-
-          // Conserviamo solo se vendibility_score >= 30 (filtriamo SOLO chi è davvero "freddo perfetto")
-          if (report.vendibility_score >= 30) {
-            analyzedLeads.push({ ...lead, _intelligence: report });
+          if (intelligenceResp.ok) {
+            const intelData = await intelligenceResp.json();
+            report = intelData?.report ?? null;
+          } else {
+            console.warn(`[autopilot] intelligence ${intelligenceResp.status} for ${lead.name}`);
           }
         } catch (err) {
           console.warn("[autopilot] intelligence fail:", err);
+        }
+
+        // Fallback euristico: anche senza analyzer, costruisci uno score base
+        // per non perdere mai lead reali nella pipeline.
+        if (!report) {
+          const rating = Number(lead.rating) || 0;
+          const reviews = Number(lead.reviews_count ?? lead.reviews) || 0;
+          const hasWebsite = !!lead.website;
+          const hasPhone = !!lead.phone;
+          // Score: niente sito = +35, rating alto = +20, recensioni buone = +20, ha telefono = +10, base 25
+          let heuristic = 25;
+          if (!hasWebsite) heuristic += 35;
+          if (rating >= 4.0) heuristic += 20; else if (rating >= 3.5) heuristic += 10;
+          if (reviews >= 50) heuristic += 20; else if (reviews >= 15) heuristic += 10;
+          if (hasPhone) heuristic += 10;
+          heuristic = Math.min(95, heuristic);
+          const cat = heuristic >= 80 ? "hot" : heuristic >= 60 ? "warm" : heuristic >= 40 ? "tiepido" : "freddo";
+          report = {
+            id: null,
+            vendibility_score: heuristic,
+            category: cat,
+            category_reason: hasWebsite
+              ? `Rating ${rating}/5 · ${reviews} recensioni · sito presente da analizzare`
+              : `Senza sito web · rating ${rating}/5 · ${reviews} recensioni`,
+            recommended_package: heuristic >= 70 ? "growth_ai" : "digital_start",
+            approach_strategy: hasPhone ? "whatsapp" : "in_persona",
+          };
+        }
+
+        leadsAnalyzed++;
+        categoryStats[report.category] = (categoryStats[report.category] || 0) + 1;
+        if (report.vendibility_score >= 30) {
+          analyzedLeads.push({ ...lead, _intelligence: report });
         }
       }
 
