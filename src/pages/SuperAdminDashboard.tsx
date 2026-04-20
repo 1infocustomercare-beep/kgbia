@@ -2745,6 +2745,48 @@ const SuperAdminDashboard = () => {
             </div>
           </motion.div>
         )}
+
+        {/* ===== VOICE ORCHESTRATOR QUICK CARD ===== */}
+        {!loading && activeTab === "voice_orch" && (
+          <motion.div className="mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="rounded-2xl p-6 text-center space-y-4" style={{
+              background: "linear-gradient(135deg, rgba(245,158,11,0.14), rgba(249,115,22,0.08))",
+              border: "1px solid rgba(245,158,11,0.3)",
+            }}>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl" style={{ background: "linear-gradient(135deg, #f59e0b, #f97316)" }}>
+                <Mic className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold mb-1">Empire Voice Orchestrator</h2>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  Pilota tutta la piattaforma con la voce: naviga, crea, modifica, lancia agenti, fai query e ricevi risposte parlate. Disponibile anche come <strong>FAB globale</strong> in basso a destra.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => navigate("/superadmin/voice-orchestrator")}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white transition-all hover:scale-[1.03]"
+                  style={{ background: "linear-gradient(135deg, #f59e0b, #f97316)", boxShadow: "0 8px 32px rgba(245,158,11,0.4)" }}
+                >
+                  <Mic className="w-5 h-5" />
+                  Apri Cockpit Vocale
+                </button>
+                <button
+                  type="button"
+                  onClick={() => (window as any).__empireVoiceStart?.()}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold border border-amber-500/40 text-amber-300 hover:bg-amber-500/10 transition-all"
+                >
+                  <Mic className="w-4 h-4" />
+                  Parla ora (FAB globale)
+                </button>
+              </div>
+              <p className="text-[10px] text-muted-foreground">
+                Comandi: "vai a lead scout", "quanti lead nuovi oggi?", "lancia Arianna", "aggiungi piatto Pizza Margherita a 10 euro"
+              </p>
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );
