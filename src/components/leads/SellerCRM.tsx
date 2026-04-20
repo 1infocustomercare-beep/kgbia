@@ -432,6 +432,24 @@ function LeadCard({
                 )}
               </div>
 
+              {/* ═══ Intelligence Report — analisi profonda + script vendita ═══ */}
+              <div>
+                <p className="text-[9px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "#6b7280" }}>
+                  🧠 Intelligence — analisi profonda & script vendita
+                </p>
+                <LeadIntelligenceLauncher
+                  lead={{
+                    name: lead.name,
+                    city: lead.city,
+                    sector: lead.sector,
+                    website: lead.website,
+                    phone: lead.phone,
+                    instagram: lead.instagram,
+                  }}
+                  variant="full"
+                />
+              </div>
+
               {/* Move to stage */}
               <div>
                 <p className="text-[9px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "#6b7280" }}>Sposta in stato</p>
