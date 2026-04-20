@@ -332,28 +332,14 @@ export default function AriannaLeadScoutPanel({ pilot, defaultTarget }: Props) {
             className="overflow-hidden"
           >
             <div className="px-3 pb-3 space-y-3 border-t border-white/5 pt-3">
-              {/* Target + auto-send */}
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Città target</label>
-                  <select
-                    value={target.city}
-                    onChange={(e) => setTarget(t => ({ ...t, city: e.target.value }))}
-                    className="w-full text-xs px-2 py-1.5 rounded bg-background/50 border border-white/10 text-foreground focus:outline-none focus:border-primary"
-                  >
-                    {CITIES_QUICK.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Settore</label>
-                  <select
-                    value={target.sector}
-                    onChange={(e) => setTarget(t => ({ ...t, sector: e.target.value }))}
-                    className="w-full text-xs px-2 py-1.5 rounded bg-background/50 border border-white/10 text-foreground focus:outline-none focus:border-primary"
-                  >
-                    {SECTORS_QUICK.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-                  </select>
-                </div>
+              {/* Target auto-sync coi controlli reali del Lead Scout (read-only) */}
+              <div className="rounded-lg px-2.5 py-2 flex items-center gap-2 text-[10px]" style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.18)" }}>
+                <Target className="w-3 h-3 text-violet-300 shrink-0" />
+                <span className="text-muted-foreground">Pilota la ricerca su</span>
+                <span className="font-bold text-foreground truncate">{target.city || "—"}</span>
+                <span className="text-muted-foreground">·</span>
+                <span className="font-bold text-foreground truncate">{target.sector || "—"}</span>
+                <span className="ml-auto text-[9px] text-violet-300/70 italic shrink-0">cambia sopra ↑</span>
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
