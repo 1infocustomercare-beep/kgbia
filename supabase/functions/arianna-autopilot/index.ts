@@ -277,11 +277,18 @@ Deno.serve(async (req) => {
       }
 
 
+      console.log(`[autopilot] analyzed=${leadsAnalyzed} → ready to save=${analyzedLeads.length} (cats: ${JSON.stringify(categoryStats)})`);
+
       // 5. Salva nella pipeline (tabella `leads`) tutti gli analyzed
       for (const lead of analyzedLeads) {
+        if (!lead.name) {
+          console.warn("[autopilot] skip lead without name");
+          continue;
+        }
         const phone = lead.phone || lead.tags?.phone || null;
         const website = lead.website || null;
         const intel = lead._intelligence;
+        const leadCity = lead.city || target.city;
 
         // Skip duplicati per owner
         const { data: existing } = await supabase
@@ -289,15 +296,18 @@ Deno.serve(async (req) => {
           .select("id")
           .eq("owner_id", user_id)
           .eq("name", lead.name)
-          .eq("city", lead.city || target.city)
+          .eq("city", leadCity)
           .maybeSingle();
-        if (existing) continue;
+        if (existing) {
+          console.log(`[autopilot] duplicate skip: ${lead.name} / ${leadCity}`);
+          continue;
+        }
 
         const categoryEmoji: Record<string, string> = { hot: "🔥", warm: "♨️", tiepido: "🌡️", freddo: "❄️" };
-        await supabase.from("leads").insert({
+        const { error: insertErr } = await supabase.from("leads").insert({
           owner_id: user_id,
           name: lead.name,
-          city: lead.city || target.city,
+          city: leadCity,
           sector: target.sector,
           phone,
           email: lead.email || null,
@@ -317,7 +327,11 @@ Deno.serve(async (req) => {
             approach_strategy: intel.approach_strategy,
           },
         });
-        leadsSaved++;
+        if (insertErr) {
+          console.error(`[autopilot] insert error for ${lead.name}:`, insertErr.message, insertErr.details);
+        } else {
+          leadsSaved++;
+        }
       }
     } catch (e: any) {
       errorMsg = e.message;
