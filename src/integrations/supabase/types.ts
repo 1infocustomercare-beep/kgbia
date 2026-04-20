@@ -6336,6 +6336,10 @@ export type Database = {
         Args: { p_action: string; p_metadata?: Json }
         Returns: Json
       }
+      consume_seller_credits_for: {
+        Args: { p_action: string; p_metadata?: Json; p_user_id: string }
+        Returns: Json
+      }
       get_partner_stripe_account: {
         Args: { partner_user_id: string }
         Returns: {

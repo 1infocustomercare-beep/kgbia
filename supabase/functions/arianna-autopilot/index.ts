@@ -192,8 +192,9 @@ Deno.serve(async (req) => {
 
     console.log(`[Autopilot] User ${user_id} ciclo #${cycleNumber}: ${target.city}/${target.sector} (${target.reason})`);
 
-    // 2. Consuma crediti per il ciclo
-    const { data: creditCheck } = await supabase.rpc("consume_seller_credits", {
+    // 2. Consuma crediti per il ciclo (versione service-role: passa user_id esplicito)
+    const { data: creditCheck } = await supabase.rpc("consume_seller_credits_for", {
+      p_user_id: user_id,
       p_action: "arianna_autopilot_cycle",
       p_metadata: { city: target.city, sector: target.sector, cycle: cycleNumber },
     });
