@@ -137,7 +137,7 @@ export default function VoiceOrchestratorFAB() {
         whileTap={{ scale: 0.92 }}
         animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
         transition={isActive ? { repeat: Infinity, duration: 1.4 } : {}}
-        className={`fixed bottom-5 right-5 z-[9999] w-14 h-14 rounded-full bg-gradient-to-br ${STATE_COLOR[state]} shadow-2xl flex items-center justify-center text-white border-2 border-white/20 ${!supported && state === "idle" ? "opacity-50 cursor-not-allowed" : ""}`}
+        className={`superadmin-voice-fab z-[9999] w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br ${STATE_COLOR[state]} shadow-2xl flex items-center justify-center text-white border-2 border-white/20 ${!supported && state === "idle" ? "opacity-50 cursor-not-allowed" : ""}`}
         aria-label="Empire Voice Orchestrator"
         title={supported ? "Empire Voice Orchestrator (parla)" : "Voice non supportato in questo browser"}
         style={{ touchAction: "manipulation" }}
