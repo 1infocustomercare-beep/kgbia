@@ -11,6 +11,7 @@ import {
   type PipelineLead, type PipelineStageId, type Interaction
 } from "@/hooks/useSellerPipeline";
 import { exportLeadsToCSV, buildWhatsAppLink, buildOutreachMessage } from "@/lib/seller-export";
+import LeadIntelligenceLauncher from "@/components/leads/LeadIntelligenceLauncher";
 
 interface Props {
   open: boolean;
