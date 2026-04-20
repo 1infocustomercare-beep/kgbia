@@ -19,6 +19,7 @@ import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
 import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFactoryOverlay";
 import SellerCRM from "@/components/leads/SellerCRM";
+import LeadIntelligenceLauncher from "@/components/leads/LeadIntelligenceLauncher";
 import GpsRadarPanel, { GpsLocation } from "@/components/leads/GpsRadarPanel";
 import SpeedDialList from "@/components/leads/SpeedDialList";
 import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
