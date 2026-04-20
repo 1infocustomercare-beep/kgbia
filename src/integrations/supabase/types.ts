@@ -5335,55 +5335,121 @@ export type Database = {
       }
       seller_custom_previews: {
         Row: {
+          ai_generated_content: Json | null
           created_at: string | null
           features: Json | null
+          gallery_images: Json | null
+          generated_at: string | null
+          generation_error: string | null
+          generation_status: string | null
+          hero_image_url: string | null
           hero_subtitle: string | null
           hero_title: string | null
           id: string
           is_published: boolean | null
+          last_viewed_at: string | null
+          lead_address: string | null
+          lead_city: string | null
+          lead_email: string | null
+          lead_id: string | null
+          lead_intelligence_id: string | null
+          lead_name: string | null
+          lead_phone: string | null
+          lead_rating: number | null
+          lead_reviews_count: number | null
+          lead_website: string | null
+          logo_url: string | null
           owner_id: string
           preview_html: string | null
           preview_url: string | null
           primary_color: string | null
+          public_slug: string | null
           reuse_count: number | null
+          scraped_data: Json | null
           sector_label: string
           sector_slug: string
           template_style: string
           updated_at: string | null
+          view_count: number | null
+          whatsapp_message: string | null
         }
         Insert: {
+          ai_generated_content?: Json | null
           created_at?: string | null
           features?: Json | null
+          gallery_images?: Json | null
+          generated_at?: string | null
+          generation_error?: string | null
+          generation_status?: string | null
+          hero_image_url?: string | null
           hero_subtitle?: string | null
           hero_title?: string | null
           id?: string
           is_published?: boolean | null
+          last_viewed_at?: string | null
+          lead_address?: string | null
+          lead_city?: string | null
+          lead_email?: string | null
+          lead_id?: string | null
+          lead_intelligence_id?: string | null
+          lead_name?: string | null
+          lead_phone?: string | null
+          lead_rating?: number | null
+          lead_reviews_count?: number | null
+          lead_website?: string | null
+          logo_url?: string | null
           owner_id: string
           preview_html?: string | null
           preview_url?: string | null
           primary_color?: string | null
+          public_slug?: string | null
           reuse_count?: number | null
+          scraped_data?: Json | null
           sector_label: string
           sector_slug: string
           template_style?: string
           updated_at?: string | null
+          view_count?: number | null
+          whatsapp_message?: string | null
         }
         Update: {
+          ai_generated_content?: Json | null
           created_at?: string | null
           features?: Json | null
+          gallery_images?: Json | null
+          generated_at?: string | null
+          generation_error?: string | null
+          generation_status?: string | null
+          hero_image_url?: string | null
           hero_subtitle?: string | null
           hero_title?: string | null
           id?: string
           is_published?: boolean | null
+          last_viewed_at?: string | null
+          lead_address?: string | null
+          lead_city?: string | null
+          lead_email?: string | null
+          lead_id?: string | null
+          lead_intelligence_id?: string | null
+          lead_name?: string | null
+          lead_phone?: string | null
+          lead_rating?: number | null
+          lead_reviews_count?: number | null
+          lead_website?: string | null
+          logo_url?: string | null
           owner_id?: string
           preview_html?: string | null
           preview_url?: string | null
           primary_color?: string | null
+          public_slug?: string | null
           reuse_count?: number | null
+          scraped_data?: Json | null
           sector_label?: string
           sector_slug?: string
           template_style?: string
           updated_at?: string | null
+          view_count?: number | null
+          whatsapp_message?: string | null
         }
         Relationships: []
       }
@@ -6362,6 +6428,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_custom_preview_view: {
+        Args: { p_slug: string }
+        Returns: undefined
       }
       is_company_member: {
         Args: { _company_id: string; _user_id?: string }

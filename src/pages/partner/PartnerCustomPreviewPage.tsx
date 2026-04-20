@@ -5,7 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Sparkles, Plus, Trash2, ExternalLink, Palette } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Loader2, Sparkles, Trash2, ExternalLink, Palette, Upload, Eye, Copy, MessageCircle, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
@@ -17,94 +19,195 @@ const STYLES = [
   { key: "minimal_zen", label: "Minimal Zen", color: "#F8F8F8", accent: "#222222" },
 ];
 
+const COST = 15;
+
 interface CustomPreview {
   id: string;
-  sector_slug: string;
   sector_label: string;
   template_style: string;
   primary_color: string;
   hero_title: string | null;
-  hero_subtitle: string | null;
   preview_url: string | null;
-  is_published: boolean;
+  public_slug: string | null;
+  lead_name: string | null;
+  lead_city: string | null;
+  hero_image_url: string | null;
+  logo_url: string | null;
+  generation_status: string;
+  view_count: number;
   reuse_count: number;
   created_at: string;
+  whatsapp_message: string | null;
+}
+
+interface IntelligenceLead {
+  id: string;
+  lead_name: string;
+  lead_city: string | null;
+  lead_sector: string | null;
+  lead_website: string | null;
+  lead_phone: string | null;
+  google_rating: number | null;
 }
 
 export default function PartnerCustomPreviewPage() {
   const { user } = useAuth();
   const [previews, setPreviews] = useState<CustomPreview[]>([]);
+  const [intelligenceLeads, setIntelligenceLeads] = useState<IntelligenceLead[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+
+  const [mode, setMode] = useState<"lead" | "manual">("lead");
+  const [selectedLeadId, setSelectedLeadId] = useState<string>("");
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [galleryUploading, setGalleryUploading] = useState(false);
+
   const [form, setForm] = useState({
-    sector_label: "",
+    lead_name: "",
+    lead_city: "",
+    lead_sector: "",
+    lead_phone: "",
+    lead_website: "",
+    lead_address: "",
+    lead_email: "",
     template_style: "modern_dark",
-    hero_title: "",
-    hero_subtitle: "",
     primary_color: "#C8963E",
+    logo_url: "",
+    gallery_images: [] as string[],
   });
 
+  // Load previews + intelligence leads
   useEffect(() => {
     if (!user?.id) return;
     (async () => {
-      const { data } = await supabase
-        .from("seller_custom_previews" as any)
-        .select("*")
-        .eq("owner_id", user.id)
-        .order("created_at", { ascending: false });
-      setPreviews((data as any) || []);
+      const [pRes, iRes] = await Promise.all([
+        supabase.from("seller_custom_previews" as any).select("*").eq("owner_id", user.id).order("created_at", { ascending: false }),
+        supabase.from("lead_intelligence_reports").select("id, lead_name, lead_city, lead_sector, lead_website, lead_phone, google_rating").eq("owner_id", user.id).order("created_at", { ascending: false }).limit(50),
+      ]);
+      setPreviews((pRes.data as any) || []);
+      setIntelligenceLeads((iRes.data as any) || []);
       setLoading(false);
     })();
   }, [user?.id]);
 
+  // Pre-fill form from selected intelligence lead
+  useEffect(() => {
+    if (!selectedLeadId) return;
+    const lead = intelligenceLeads.find(l => l.id === selectedLeadId);
+    if (lead) {
+      setForm(f => ({
+        ...f,
+        lead_name: lead.lead_name || "",
+        lead_city: lead.lead_city || "",
+        lead_sector: lead.lead_sector || "",
+        lead_website: lead.lead_website || "",
+        lead_phone: lead.lead_phone || "",
+      }));
+    }
+  }, [selectedLeadId, intelligenceLeads]);
+
+  const handleFileUpload = async (file: File, kind: "logo" | "gallery") => {
+    if (!user?.id) return null;
+    const path = `custom-previews/${user.id}/uploads/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+    const { error } = await supabase.storage.from("media-vault").upload(path, file, { upsert: true });
+    if (error) {
+      toast.error(`Errore upload: ${error.message}`);
+      return null;
+    }
+    const { data } = supabase.storage.from("media-vault").getPublicUrl(path);
+    return data.publicUrl;
+  };
+
+  const onLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setLogoUploading(true);
+    const url = await handleFileUpload(f, "logo");
+    if (url) setForm(p => ({ ...p, logo_url: url }));
+    setLogoUploading(false);
+  };
+
+  const onGalleryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    setGalleryUploading(true);
+    const urls: string[] = [];
+    for (const f of files.slice(0, 6)) {
+      const url = await handleFileUpload(f, "gallery");
+      if (url) urls.push(url);
+    }
+    setForm(p => ({ ...p, gallery_images: [...p.gallery_images, ...urls].slice(0, 6) }));
+    setGalleryUploading(false);
+  };
+
   const handleGenerate = async () => {
-    if (!form.sector_label.trim()) {
-      toast.error("Inserisci il nome del settore");
+    if (!form.lead_name.trim()) {
+      toast.error("Nome attività obbligatorio");
       return;
     }
     setGenerating(true);
     try {
-      // Consuma crediti
-      const { data: creditCheck } = await supabase.rpc("consume_seller_credits" as any, {
-        p_action: "custom_preview_generation",
-        p_metadata: { sector: form.sector_label, style: form.template_style },
-      });
-      if (!(creditCheck as any)?.success) {
-        toast.error(`Crediti insufficienti: servono 8 crediti`);
-        setGenerating(false);
+      const payload: any = {
+        template_style: form.template_style,
+        primary_color: form.primary_color,
+        logo_url: form.logo_url || undefined,
+        gallery_images: form.gallery_images,
+      };
+
+      if (mode === "lead" && selectedLeadId) {
+        payload.lead_intelligence_id = selectedLeadId;
+        // Allow overrides via manual_data
+        payload.manual_data = {
+          lead_name: form.lead_name,
+          lead_city: form.lead_city,
+          lead_sector: form.lead_sector,
+          lead_website: form.lead_website,
+          lead_phone: form.lead_phone,
+          lead_address: form.lead_address,
+          lead_email: form.lead_email,
+        };
+      } else {
+        payload.manual_data = {
+          lead_name: form.lead_name,
+          lead_city: form.lead_city,
+          lead_sector: form.lead_sector,
+          lead_website: form.lead_website,
+          lead_phone: form.lead_phone,
+          lead_address: form.lead_address,
+          lead_email: form.lead_email,
+        };
+      }
+
+      const { data, error } = await supabase.functions.invoke("custom-preview-generator", { body: payload });
+      if (error) throw error;
+      if (!(data as any)?.success) {
+        const err = (data as any)?.error || "Errore generazione";
+        if (err === "insufficient_credits") {
+          toast.error(`Crediti insufficienti: servono ${COST} crediti`);
+        } else {
+          toast.error(`Errore: ${err}`);
+        }
         return;
       }
 
-      const slug = form.sector_label.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 32);
+      toast.success(`Preview "${form.lead_name}" generata! 🎉`);
 
-      // Salva il record (la generazione HTML reale può essere espansa via edge function)
-      const { data, error } = await supabase
-        .from("seller_custom_previews" as any)
-        .insert({
-          owner_id: user!.id,
-          sector_slug: slug,
-          sector_label: form.sector_label,
-          template_style: form.template_style,
-          primary_color: form.primary_color,
-          hero_title: form.hero_title || form.sector_label,
-          hero_subtitle: form.hero_subtitle || `Soluzione digitale professionale per ${form.sector_label}`,
-          features: [
-            { icon: "📱", title: "Sito vetrina mobile-first" },
-            { icon: "📅", title: "Prenotazioni online" },
-            { icon: "💬", title: "WhatsApp Business integrato" },
-            { icon: "⭐", title: "Gestione recensioni AI" },
-          ],
-          preview_url: `/demo/custom/${slug}-${Date.now().toString(36)}`,
-          is_published: true,
-        })
-        .select()
-        .single();
+      // Reload list
+      const { data: list } = await supabase.from("seller_custom_previews" as any).select("*").eq("owner_id", user!.id).order("created_at", { ascending: false });
+      setPreviews((list as any) || []);
 
-      if (error) throw error;
+      // Reset form
+      setForm({
+        lead_name: "", lead_city: "", lead_sector: "", lead_phone: "", lead_website: "",
+        lead_address: "", lead_email: "",
+        template_style: "modern_dark", primary_color: "#C8963E",
+        logo_url: "", gallery_images: [],
+      });
+      setSelectedLeadId("");
 
-      setPreviews(prev => [data as any, ...prev]);
-      setForm({ sector_label: "", template_style: "modern_dark", hero_title: "", hero_subtitle: "", primary_color: "#C8963E" });
-      toast.success(`Preview "${form.sector_label}" creata! Costo: 8 crediti.`);
+      // Auto-open
+      const url = (data as any).public_url;
+      if (url) window.open(url, "_blank");
     } catch (e: any) {
       toast.error(e.message || "Errore generazione");
     } finally {
@@ -119,16 +222,33 @@ export default function PartnerCustomPreviewPage() {
     toast.success("Preview eliminata");
   };
 
+  const copyLink = (slug: string | null) => {
+    if (!slug) return;
+    const url = `${window.location.origin}/preview/custom/${slug}`;
+    navigator.clipboard.writeText(url);
+    toast.success("Link copiato");
+  };
+
+  const openWhatsApp = (preview: CustomPreview) => {
+    if (!preview.whatsapp_message) {
+      toast.error("Messaggio WhatsApp non disponibile");
+      return;
+    }
+    const url = `https://wa.me/?text=${encodeURIComponent(preview.whatsapp_message)}`;
+    window.open(url, "_blank");
+  };
+
   return (
-    <div className="container max-w-5xl py-6 space-y-6">
+    <div className="container max-w-6xl py-6 space-y-6">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <Palette className="h-7 w-7 text-primary" />
-          Preview Custom per Settori Nuovi
+          Preview Custom AI
         </h1>
         <p className="text-muted-foreground">
-          Hai trovato un settore non in catalogo (es. tatuatori, fioristi)? Crea al volo una preview professionale
-          con lo stesso stile dei nostri template. <strong>Costo: 8 crediti</strong>.
+          Genera una landing page premium personalizzata per qualsiasi lead.
+          L'AI scrive testi, crea l'immagine hero e compone l'HTML — pronto da mostrare al cliente.
+          <strong className="ml-1">Costo: {COST} crediti per preview.</strong>
         </p>
       </div>
 
@@ -139,89 +259,147 @@ export default function PartnerCustomPreviewPage() {
             Genera nuova preview
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <CardContent className="space-y-5">
+          <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
+            <TabsList className="grid grid-cols-2 w-full max-w-md">
+              <TabsTrigger value="lead">Da Lead Analizzato</TabsTrigger>
+              <TabsTrigger value="manual">Inserimento Manuale</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="lead" className="space-y-4 mt-4">
+              <div>
+                <Label>Seleziona lead già analizzato</Label>
+                <Select value={selectedLeadId} onValueChange={setSelectedLeadId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Scegli un lead dall'inbox intelligence…" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {intelligenceLeads.length === 0 ? (
+                      <SelectItem value="none" disabled>Nessun lead analizzato — usa "Manuale"</SelectItem>
+                    ) : intelligenceLeads.map(l => (
+                      <SelectItem key={l.id} value={l.id}>
+                        {l.lead_name} {l.lead_city ? `· ${l.lead_city}` : ""} {l.lead_sector ? `· ${l.lead_sector}` : ""}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground mt-1">
+                  I dati del lead pre-compilano il form. Puoi modificarli sotto.
+                </p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="manual" className="mt-4">
+              <p className="text-sm text-muted-foreground">Inserisci tutti i dati a mano. Più dati metti, più l'AI personalizza.</p>
+            </TabsContent>
+          </Tabs>
+
+          {/* Dati lead */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div>
-              <Label htmlFor="sector">Nome settore *</Label>
-              <Input
-                id="sector"
-                placeholder="es. Tatuatore, Fiorista, Veterinario…"
-                value={form.sector_label}
-                onChange={e => setForm({ ...form, sector_label: e.target.value })}
-              />
+              <Label htmlFor="lead_name">Nome attività *</Label>
+              <Input id="lead_name" placeholder="es. Tatuaggi Black Rose" value={form.lead_name} onChange={e => setForm({ ...form, lead_name: e.target.value })} />
             </div>
             <div>
-              <Label htmlFor="color">Colore principale</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="color"
-                  type="color"
-                  value={form.primary_color}
-                  onChange={e => setForm({ ...form, primary_color: e.target.value })}
-                  className="w-16 h-10 p-1"
-                />
-                <Input
-                  value={form.primary_color}
-                  onChange={e => setForm({ ...form, primary_color: e.target.value })}
-                  className="flex-1 font-mono"
-                />
-              </div>
+              <Label htmlFor="lead_sector">Settore</Label>
+              <Input id="lead_sector" placeholder="es. Tatuatore, Fiorista, Veterinario" value={form.lead_sector} onChange={e => setForm({ ...form, lead_sector: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="lead_city">Città</Label>
+              <Input id="lead_city" placeholder="es. Roma" value={form.lead_city} onChange={e => setForm({ ...form, lead_city: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="lead_phone">Telefono</Label>
+              <Input id="lead_phone" placeholder="+39 06 1234 5678" value={form.lead_phone} onChange={e => setForm({ ...form, lead_phone: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="lead_website">Sito web (verrà analizzato dall'AI)</Label>
+              <Input id="lead_website" placeholder="https://…" value={form.lead_website} onChange={e => setForm({ ...form, lead_website: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="lead_email">Email</Label>
+              <Input id="lead_email" placeholder="info@esempio.it" value={form.lead_email} onChange={e => setForm({ ...form, lead_email: e.target.value })} />
+            </div>
+            <div className="sm:col-span-2">
+              <Label htmlFor="lead_address">Indirizzo</Label>
+              <Input id="lead_address" placeholder="Via Roma 1, Milano" value={form.lead_address} onChange={e => setForm({ ...form, lead_address: e.target.value })} />
             </div>
           </div>
 
+          {/* Logo + Gallery */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Label>Logo (opzionale)</Label>
+              <div className="flex items-center gap-3 mt-1">
+                {form.logo_url ? (
+                  <img src={form.logo_url} alt="logo" className="h-12 w-12 rounded object-cover border" />
+                ) : (
+                  <div className="h-12 w-12 rounded border-2 border-dashed flex items-center justify-center text-muted-foreground"><ImageIcon className="h-5 w-5" /></div>
+                )}
+                <label className="flex-1">
+                  <Input type="file" accept="image/*" onChange={onLogoChange} disabled={logoUploading} />
+                </label>
+              </div>
+              {form.logo_url && (
+                <button type="button" className="text-xs text-destructive mt-1 hover:underline" onClick={() => setForm(p => ({ ...p, logo_url: "" }))}>Rimuovi logo</button>
+              )}
+            </div>
+            <div>
+              <Label>Galleria foto (max 6 — opzionale)</Label>
+              <Input type="file" accept="image/*" multiple onChange={onGalleryChange} disabled={galleryUploading} className="mt-1" />
+              {form.gallery_images.length > 0 && (
+                <div className="flex gap-1 mt-2 flex-wrap">
+                  {form.gallery_images.map((g, i) => (
+                    <div key={i} className="relative h-12 w-12 rounded overflow-hidden border group">
+                      <img src={g} alt="" className="h-full w-full object-cover" />
+                      <button type="button" onClick={() => setForm(p => ({ ...p, gallery_images: p.gallery_images.filter((_, j) => j !== i) }))}
+                        className="absolute inset-0 bg-black/60 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs">×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Stile + colore */}
           <div>
             <Label>Stile template</Label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
               {STYLES.map(s => (
-                <button
-                  key={s.key}
-                  type="button"
-                  onClick={() => setForm({ ...form, template_style: s.key, primary_color: s.accent })}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    form.template_style === s.key ? "border-primary scale-105" : "border-border hover:border-primary/50"
-                  }`}
-                  style={{ background: s.color }}
-                >
+                <button key={s.key} type="button" onClick={() => setForm({ ...form, template_style: s.key, primary_color: s.accent })}
+                  className={`p-3 rounded-lg border-2 transition-all ${form.template_style === s.key ? "border-primary scale-105" : "border-border hover:border-primary/50"}`}
+                  style={{ background: s.color }}>
                   <div className="h-6 w-full rounded mb-2" style={{ background: s.accent }} />
-                  <p className="text-xs font-medium" style={{ color: s.color === "#F8F8F8" || s.color === "#FAF6F0" ? "#222" : "#fff" }}>
-                    {s.label}
-                  </p>
+                  <p className="text-xs font-medium" style={{ color: s.color === "#F8F8F8" || s.color === "#FAF6F0" ? "#222" : "#fff" }}>{s.label}</p>
                 </button>
               ))}
             </div>
           </div>
 
-          <div>
-            <Label htmlFor="hero">Titolo hero (opzionale)</Label>
-            <Input
-              id="hero"
-              placeholder="es. Tattoo Studio Roma — Arte sulla pelle dal 1998"
-              value={form.hero_title}
-              onChange={e => setForm({ ...form, hero_title: e.target.value })}
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="color">Colore accento</Label>
+              <div className="flex gap-2">
+                <Input id="color" type="color" value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="w-16 h-10 p-1" />
+                <Input value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="flex-1 font-mono" />
+              </div>
+            </div>
           </div>
 
-          <div>
-            <Label htmlFor="sub">Sottotitolo (opzionale)</Label>
-            <Textarea
-              id="sub"
-              placeholder="Descrizione breve del settore/attività"
-              value={form.hero_subtitle}
-              onChange={e => setForm({ ...form, hero_subtitle: e.target.value })}
-              rows={2}
-            />
-          </div>
-
-          <Button onClick={handleGenerate} disabled={generating || !form.sector_label.trim()} className="w-full">
+          <Button onClick={handleGenerate} disabled={generating || !form.lead_name.trim()} className="w-full" size="lg">
             {generating ? (
-              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generazione in corso…</>
+              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> AI sta generando (15-30s)…</>
             ) : (
-              <><Plus className="h-4 w-4 mr-2" /> Crea preview (8 crediti)</>
+              <><Sparkles className="h-4 w-4 mr-2" /> Genera preview AI ({COST} crediti)</>
             )}
           </Button>
+          <p className="text-xs text-muted-foreground text-center">
+            ✓ Testi AI personalizzati  ·  ✓ Immagine hero generata  ·  ✓ Sito web scrapato  ·  ✓ HTML pro responsive  ·  ✓ Link condivisibile
+          </p>
         </CardContent>
       </Card>
 
+      {/* Lista preview */}
       <div>
         <h2 className="text-xl font-semibold mb-3">Le tue preview ({previews.length})</h2>
         {loading ? (
@@ -231,25 +409,47 @@ export default function PartnerCustomPreviewPage() {
             Nessuna preview ancora. Crea la prima qui sopra.
           </CardContent></Card>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {previews.map(p => (
               <Card key={p.id} className="overflow-hidden">
-                <div className="h-24 flex items-center justify-center" style={{ background: p.primary_color }}>
-                  <p className="text-white font-bold text-lg">{p.sector_label}</p>
-                </div>
-                <CardContent className="pt-4 space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <Badge variant="outline">{p.template_style}</Badge>
-                    <Badge variant="secondary" className="text-xs">{p.reuse_count} riutilizzi</Badge>
+                <div className="h-32 relative" style={{ background: p.hero_image_url ? `url(${p.hero_image_url}) center/cover` : p.primary_color }}>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                    <p className="font-bold text-sm line-clamp-1">{p.lead_name || p.sector_label}</p>
+                    {p.lead_city && <p className="text-xs opacity-80">{p.lead_city}</p>}
                   </div>
-                  {p.hero_title && <p className="text-sm font-medium line-clamp-1">{p.hero_title}</p>}
-                  <div className="flex gap-2 pt-2">
-                    {p.preview_url && (
-                      <Button variant="outline" size="sm" onClick={() => window.open(p.preview_url!, "_blank")}>
+                  {p.generation_status === "generating" && (
+                    <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <Loader2 className="h-3 w-3 animate-spin" /> Generazione
+                    </div>
+                  )}
+                  {p.generation_status === "error" && (
+                    <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">Errore</div>
+                  )}
+                </div>
+                <CardContent className="pt-3 space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge variant="outline" className="text-xs">{p.template_style.replace("_", " ")}</Badge>
+                    <Badge variant="secondary" className="text-xs"><Eye className="h-3 w-3 mr-1" />{p.view_count || 0}</Badge>
+                  </div>
+                  {p.hero_title && <p className="text-xs font-medium line-clamp-2 text-muted-foreground">{p.hero_title}</p>}
+                  <div className="flex gap-1 pt-1 flex-wrap">
+                    {p.preview_url && p.generation_status === "completed" && (
+                      <Button variant="outline" size="sm" onClick={() => window.open(p.preview_url!, "_blank")} className="flex-1">
                         <ExternalLink className="h-3 w-3 mr-1" /> Apri
                       </Button>
                     )}
-                    <Button variant="ghost" size="sm" onClick={() => handleDelete(p.id)} className="text-destructive">
+                    {p.public_slug && (
+                      <Button variant="ghost" size="sm" onClick={() => copyLink(p.public_slug)} title="Copia link">
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    )}
+                    {p.whatsapp_message && (
+                      <Button variant="ghost" size="sm" onClick={() => openWhatsApp(p)} title="Invia su WhatsApp">
+                        <MessageCircle className="h-3 w-3" />
+                      </Button>
+                    )}
+                    <Button variant="ghost" size="sm" onClick={() => handleDelete(p.id)} className="text-destructive" title="Elimina">
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
