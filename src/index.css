@@ -1478,11 +1478,15 @@
     .partner-voice-fab {
       left: auto;
       right: 1rem;
-      bottom: 5.75rem;
+      bottom: 7.5rem;
     }
 
     .partner-voice-status-panel {
-      bottom: 6rem;
+      left: auto;
+      right: 1rem;
+      bottom: 14rem;
+      width: 400px;
+      max-width: min(400px, calc(100vw - 2rem));
     }
 
     .partner-arianna-panel {
