@@ -626,12 +626,73 @@ Preview personalizzata già pronta: ${previewLink || "(non disponibile)"}`,
     }
   }
 
+  // ─── Email enhancement: AI auto-pick template Aurora + render HTML + deliverability ───
+  let emailEnhancement: {
+    template_id: string | null;
+    template_meta: any | null;
+    body_html: string | null;
+    deliverability_score: number | null;
+    deliverability_warnings: any[];
+    template_picker_reason: string | null;
+  } = {
+    template_id: null, template_meta: null, body_html: null,
+    deliverability_score: null, deliverability_warnings: [], template_picker_reason: null,
+  };
+
+  if (channel === "email") {
+    // Override manuale dal config (override > AI)
+    const overrideId: string | undefined = config.preferred_email_template_id || undefined;
+    const picked = overrideId
+      ? { id: overrideId, reason: "Template fissato manualmente nel config." }
+      : pickAuroraTemplateForLead({
+          sector: getLeadSector(lead),
+          google_rating: lead.google_rating ?? null,
+          ai_score: profile?.score ?? lead.ai_score ?? 0,
+        });
+
+    const rendered = renderAuroraTemplate(picked.id, {
+      recipientName: profile?.contact_first_name || getLeadName(lead).split(" ")[0] || "ciao",
+      businessName: getLeadName(lead),
+      city: getLeadCity(lead),
+      sectorLabel: getLeadSector(lead),
+      painPoint: (profile?.pain_points ?? [])[0] || parsed.body?.split("\n").find((l: string) => l.length > 30) || "",
+      previewLink: previewLink,
+      senderName: (config.signature ?? "Arianna").split("·")[0]?.trim() || "Arianna",
+      senderRole: (config.signature ?? "Empire AI Group").split("·")[1]?.trim() || "Empire AI Group",
+    });
+
+    if (rendered) {
+      const ds = scoreDeliverability({ subject: rendered.subject, body: rendered.text });
+      emailEnhancement = {
+        template_id: rendered.meta.id,
+        template_meta: rendered.meta,
+        body_html: rendered.html,
+        deliverability_score: ds.score,
+        deliverability_warnings: ds.warnings,
+        template_picker_reason: picked.reason,
+      };
+      // Sovrascrivi il subject AI con quello del template (più consistente, no spam)
+      // Ma se l'AI ha scritto un body più ricco, lo manteniamo come fallback testuale.
+      parsed.subject = rendered.subject;
+      // Body testo plain pulito viene preso dal template se l'AI ne ha prodotto uno generico
+      if (!parsed.body || parsed.body.length < 60) parsed.body = rendered.text;
+    }
+  }
+
   const actionId = await logAction(supabase, owner_id, job_id, lead.id, {
     type: "draft",
     channel,
-    title: `✍️ Bozza ${channel}: ${getLeadName(lead)}${usedFallback ? " (template)" : ""}`,
+    title: `✍️ Bozza ${channel}: ${getLeadName(lead)}${usedFallback ? " (template AI)" : ""}${emailEnhancement.template_id ? ` · ${emailEnhancement.template_meta?.name}` : ""}`,
     description: parsed.subject ?? parsed.body?.slice(0, 80),
-    payload: { ...parsed, preview_url: previewLink, recipient, fallback: usedFallback },
+    payload: {
+      ...parsed,
+      preview_url: previewLink,
+      recipient,
+      fallback: usedFallback,
+      template_id: emailEnhancement.template_id,
+      template_picker_reason: emailEnhancement.template_picker_reason,
+      deliverability_score: emailEnhancement.deliverability_score,
+    },
   }, config.autonomy_mode === "full_auto" ? "success" : "needs_approval", parsed, Date.now() - t0);
 
   if (config.autonomy_mode !== "full_auto") {
@@ -642,7 +703,15 @@ Preview personalizzata già pronta: ${previewLink || "(non disponibile)"}`,
       channel,
       draft_subject: parsed.subject ?? null,
       draft_body: parsed.body ?? "",
-      reasoning: `Hook: ${profile.best_hook ?? ""} · Pain: ${(profile.pain_points ?? []).join(", ")} · Preview: ${previewLink || "no"}`,
+      body_html: emailEnhancement.body_html,
+      template_id: emailEnhancement.template_id,
+      template_metadata: {
+        meta: emailEnhancement.template_meta,
+        picker_reason: emailEnhancement.template_picker_reason,
+      },
+      deliverability_score: emailEnhancement.deliverability_score,
+      deliverability_warnings: emailEnhancement.deliverability_warnings,
+      reasoning: `Hook: ${profile.best_hook ?? ""} · Pain: ${(profile.pain_points ?? []).join(", ")} · Preview: ${previewLink || "no"}${emailEnhancement.template_picker_reason ? ` · Template: ${emailEnhancement.template_picker_reason}` : ""}`,
       recipient,
     });
   }
