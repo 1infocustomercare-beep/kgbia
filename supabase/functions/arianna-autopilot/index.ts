@@ -211,45 +211,69 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 3. Lancia lead-search
-    let leadsScanned = 0, leadsHot = 0, leadsSaved = 0;
+    // 3. Lancia lead-search — NON scartiamo nulla, analizziamo tutti
+    let leadsScanned = 0, leadsAnalyzed = 0, leadsSaved = 0;
     let errorMsg: string | null = null;
+    const categoryStats: Record<string, number> = { hot: 0, warm: 0, tiepido: 0, freddo: 0 };
 
     try {
       const { data: searchData, error: searchError } = await supabase.functions.invoke("lead-search", {
-        body: { query: "", city: target.city, sector: target.sector, mode: "zone", use_google: true, limit: 30 },
+        body: { query: "", city: target.city, sector: target.sector, mode: "zone", use_google: true, limit: 25 },
       });
 
       if (searchError) throw new Error(searchError.message);
       const allLeads = searchData?.results ?? [];
       leadsScanned = allLeads.length;
 
-      // 4. Filtra base (no sito + rating)
-      const preFiltered = filterHotLeads(allLeads, enrichedState.quality_filters);
-
-      // 5. Arricchimento PRO via Firecrawl: scarta chi ha social/Yelp basso
-      const hotLeads: any[] = [];
-      for (const lead of preFiltered.slice(0, 15)) {
+      // 4. Per OGNI lead → analisi Intelligence completa (anche con sito/social)
+      // Salviamo tutti tranne i "freddo" puri (gestione già perfetta, score < 30)
+      const analyzedLeads: any[] = [];
+      for (const lead of allLeads.slice(0, 12)) {
         try {
-          const { data: enr } = await supabase.functions.invoke("lead-enrichment-pro", {
-            body: { lead, skip_credit_check: true },
+          // Chiamiamo direttamente la edge function intelligence con service role
+          const intelligenceResp = await fetch(`${SUPABASE_URL}/functions/v1/lead-intelligence-analyzer`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${SERVICE_KEY}`,
+              "Content-Type": "application/json",
+              "x-impersonate-user": user_id,
+            },
+            body: JSON.stringify({
+              lead: {
+                name: lead.name,
+                city: lead.city || target.city,
+                sector: target.sector,
+                website: lead.website,
+                phone: lead.phone,
+                email: lead.email,
+                rating: lead.rating,
+                reviews: lead.reviews_count ?? lead.reviews,
+              },
+              skip_credit_check: true, // l'autopilot già consuma crediti per il ciclo
+            }),
           });
-          const e = enr?.enrichment;
-          if (!e) { continue; }
-          // Filtro hard: deve avere score >= 75 (no sito + no social + rating ok)
-          if (e.hot_score >= 75) {
-            hotLeads.push({ ...lead, _enrichment: e });
+          if (!intelligenceResp.ok) continue;
+          const intelData = await intelligenceResp.json();
+          const report = intelData?.report;
+          if (!report) continue;
+
+          leadsAnalyzed++;
+          categoryStats[report.category] = (categoryStats[report.category] || 0) + 1;
+
+          // Conserviamo solo se vendibility_score >= 30 (filtriamo SOLO chi è davvero "freddo perfetto")
+          if (report.vendibility_score >= 30) {
+            analyzedLeads.push({ ...lead, _intelligence: report });
           }
         } catch (err) {
-          console.warn("[autopilot] enrichment fail:", err);
+          console.warn("[autopilot] intelligence fail:", err);
         }
       }
-      leadsHot = hotLeads.length;
 
-      // 6. Salva nella pipeline (tabella `leads`) — solo hot
-      for (const lead of hotLeads.slice(0, 10)) {
+      // 5. Salva nella pipeline (tabella `leads`) tutti gli analyzed
+      for (const lead of analyzedLeads) {
         const phone = lead.phone || lead.tags?.phone || null;
         const website = lead.website || null;
+        const intel = lead._intelligence;
 
         // Skip duplicati per owner
         const { data: existing } = await supabase
@@ -261,6 +285,7 @@ Deno.serve(async (req) => {
           .maybeSingle();
         if (existing) continue;
 
+        const categoryEmoji: Record<string, string> = { hot: "🔥", warm: "♨️", tiepido: "🌡️", freddo: "❄️" };
         await supabase.from("leads").insert({
           owner_id: user_id,
           name: lead.name,
@@ -274,11 +299,14 @@ Deno.serve(async (req) => {
           full_address: lead.address || null,
           source: "arianna_autopilot",
           status: "new",
-          ai_score: lead._enrichment?.hot_score ?? 75,
-          notes: `🤖 Arianna autopilot · ciclo #${cycleNumber} · ${target.city} · score ${lead._enrichment?.hot_score ?? "?"}/100 · ${target.reason}`,
+          ai_score: intel.vendibility_score,
+          notes: `${categoryEmoji[intel.category] || "🤖"} ${intel.category.toUpperCase()} · score ${intel.vendibility_score}/100 · ${intel.category_reason || target.reason}`,
           lead_source_data: {
             autopilot: true, cycle: cycleNumber, found_via: "arianna_adaptive", reason: target.reason,
-            enrichment: lead._enrichment,
+            intelligence_report_id: intel.id,
+            category: intel.category,
+            recommended_package: intel.recommended_package,
+            approach_strategy: intel.approach_strategy,
           },
         });
         leadsSaved++;
@@ -287,6 +315,7 @@ Deno.serve(async (req) => {
       errorMsg = e.message;
       console.error(`[Autopilot] errore search:`, e);
     }
+    const leadsHot = categoryStats.hot;
 
     const duration = Date.now() - tStart;
 

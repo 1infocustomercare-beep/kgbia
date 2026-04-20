@@ -2813,6 +2813,126 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_intelligence_reports: {
+        Row: {
+          ai_model_used: string | null
+          approach_strategy: string | null
+          cache_key: string
+          category: string
+          category_reason: string | null
+          created_at: string
+          credits_spent: number | null
+          expires_at: string
+          google_rating: number | null
+          google_reviews_count: number | null
+          has_facebook: boolean | null
+          has_instagram: boolean | null
+          has_website: boolean | null
+          id: string
+          improvement_proposal: string | null
+          lead_city: string | null
+          lead_name: string
+          lead_phone: string | null
+          lead_sector: string | null
+          lead_website: string | null
+          missing_features: Json | null
+          mockup_after_url: string | null
+          mockup_before_url: string | null
+          mockup_generated_at: string | null
+          owner_id: string
+          raw_analysis: Json | null
+          recommended_package: string | null
+          reputation_issues: Json | null
+          reputation_score: number | null
+          sales_pitch: string | null
+          social_engagement_score: number | null
+          social_issues: Json | null
+          updated_at: string
+          vendibility_score: number
+          weak_points: Json | null
+          website_issues: Json | null
+          website_quality_score: number | null
+        }
+        Insert: {
+          ai_model_used?: string | null
+          approach_strategy?: string | null
+          cache_key: string
+          category?: string
+          category_reason?: string | null
+          created_at?: string
+          credits_spent?: number | null
+          expires_at?: string
+          google_rating?: number | null
+          google_reviews_count?: number | null
+          has_facebook?: boolean | null
+          has_instagram?: boolean | null
+          has_website?: boolean | null
+          id?: string
+          improvement_proposal?: string | null
+          lead_city?: string | null
+          lead_name: string
+          lead_phone?: string | null
+          lead_sector?: string | null
+          lead_website?: string | null
+          missing_features?: Json | null
+          mockup_after_url?: string | null
+          mockup_before_url?: string | null
+          mockup_generated_at?: string | null
+          owner_id: string
+          raw_analysis?: Json | null
+          recommended_package?: string | null
+          reputation_issues?: Json | null
+          reputation_score?: number | null
+          sales_pitch?: string | null
+          social_engagement_score?: number | null
+          social_issues?: Json | null
+          updated_at?: string
+          vendibility_score?: number
+          weak_points?: Json | null
+          website_issues?: Json | null
+          website_quality_score?: number | null
+        }
+        Update: {
+          ai_model_used?: string | null
+          approach_strategy?: string | null
+          cache_key?: string
+          category?: string
+          category_reason?: string | null
+          created_at?: string
+          credits_spent?: number | null
+          expires_at?: string
+          google_rating?: number | null
+          google_reviews_count?: number | null
+          has_facebook?: boolean | null
+          has_instagram?: boolean | null
+          has_website?: boolean | null
+          id?: string
+          improvement_proposal?: string | null
+          lead_city?: string | null
+          lead_name?: string
+          lead_phone?: string | null
+          lead_sector?: string | null
+          lead_website?: string | null
+          missing_features?: Json | null
+          mockup_after_url?: string | null
+          mockup_before_url?: string | null
+          mockup_generated_at?: string | null
+          owner_id?: string
+          raw_analysis?: Json | null
+          recommended_package?: string | null
+          reputation_issues?: Json | null
+          reputation_score?: number | null
+          sales_pitch?: string | null
+          social_engagement_score?: number | null
+          social_issues?: Json | null
+          updated_at?: string
+          vendibility_score?: number
+          weak_points?: Json | null
+          website_issues?: Json | null
+          website_quality_score?: number | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           ai_score: number | null

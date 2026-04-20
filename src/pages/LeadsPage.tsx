@@ -29,6 +29,7 @@ import DemoVaultPanel from "@/components/leads/DemoVaultPanel";
 import QuickSearchSuggestions from "@/components/leads/QuickSearchSuggestions";
 import AriannaLeadScoutPanel, { AriannaPilot } from "@/components/leads/AriannaLeadScoutPanel";
 import AriannaInsightsDashboard from "@/components/leads/AriannaInsightsDashboard";
+import LeadIntelligenceInbox from "@/components/leads/LeadIntelligenceInbox";
 import SellerOnboardingWizard from "@/components/leads/SellerOnboardingWizard";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
@@ -1520,6 +1521,11 @@ export default function LeadsPage() {
 
       {/* ═══ INSIGHTS — "COSA HO IMPARATO" ═══ */}
       <AriannaInsightsDashboard />
+
+      {/* ═══ INTELLIGENCE INBOX — report dei lead analizzati con script vendita + mockup ═══ */}
+      <div className="mt-4">
+        <LeadIntelligenceInbox />
+      </div>
 
       {/* ═══ ONBOARDING WIZARD (one-time) ═══ */}
       <SellerOnboardingWizard />
