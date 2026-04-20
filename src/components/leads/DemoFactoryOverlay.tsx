@@ -272,7 +272,112 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                           >
                             <Sparkles className="w-3.5 h-3.5" /> Invia al Lead
                           </button>
-                        )}
+                      )}
+
+                      {/* 5b ️⃣ EMAIL AURORA — Template HTML stilizzato con preview live */}
+                      {renderedEmail && (
+                        <div className="rounded-2xl border border-violet-400/30 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/5 overflow-hidden">
+                          <button
+                            onClick={() => setEmailOpen(o => !o)}
+                            className="w-full px-3 py-2.5 flex items-center justify-between text-left gap-2"
+                          >
+                            <p className="text-[0.6rem] uppercase tracking-wider font-black text-violet-200 flex items-center gap-1.5 min-w-0 truncate">
+                              <Mail className="w-3 h-3 shrink-0" />
+                              <span className="truncate">Email Aurora · {TEMPLATES.find(t => t.id === selectedTplId)?.name.replace(" — Aurora","")}</span>
+                              {deliverability && (
+                                <span className={`ml-1 text-[9px] px-1.5 py-0.5 rounded-md font-black ${deliverability.score >= 85 ? "bg-emerald-500/20 text-emerald-200" : deliverability.score >= 70 ? "bg-amber-500/20 text-amber-200" : "bg-rose-500/20 text-rose-200"}`}>
+                                  Inbox {deliverability.score}
+                                </span>
+                              )}
+                            </p>
+                            {emailOpen ? <ChevronUp className="w-3.5 h-3.5 text-violet-300 shrink-0" /> : <ChevronDown className="w-3.5 h-3.5 text-violet-300 shrink-0" />}
+                          </button>
+                          {emailOpen && (
+                            <div className="px-3 pb-3 space-y-2.5">
+                              {/* AI hint */}
+                              <p className="text-[10px] text-violet-300/80 italic flex items-start gap-1">
+                                <Wand2 className="w-2.5 h-2.5 mt-0.5 shrink-0" />
+                                <span>AI ha scelto: {aiPick.reason}</span>
+                              </p>
+
+                              {/* Template chips */}
+                              <div className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+                                {TEMPLATES.map(t => {
+                                  const active = t.id === selectedTplId;
+                                  const isFit = leadSector && t.bestFor.includes(leadSector);
+                                  return (
+                                    <button
+                                      key={t.id}
+                                      onClick={() => setSelectedTplId(t.id)}
+                                      className={`shrink-0 px-2 py-1 rounded-md text-[9.5px] font-bold border transition-all ${active ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white border-violet-400" : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"}`}
+                                    >
+                                      {t.name.replace(" — Aurora","")}
+                                      {isFit && !active && <span className="ml-1 text-emerald-400">★</span>}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+
+                              {/* Subject */}
+                              <div className="rounded-lg border border-white/10 bg-black/30 px-2.5 py-1.5">
+                                <p className="text-[8.5px] uppercase tracking-wider font-bold text-white/40">Oggetto</p>
+                                <p className="text-[11px] text-white/95 font-semibold truncate">{renderedEmail.subject}</p>
+                              </div>
+
+                              {/* Device toggle + iframe HTML preview */}
+                              <div className="rounded-lg border border-white/10 overflow-hidden">
+                                <div className="flex items-center justify-between bg-white/[0.03] px-2 py-1 border-b border-white/10">
+                                  <span className="text-[9px] uppercase font-bold text-white/50">Anteprima HTML live</span>
+                                  <div className="flex gap-0.5">
+                                    <button onClick={() => setEmailDevice("desktop")} className={`p-1 rounded ${emailDevice === "desktop" ? "bg-violet-500/30 text-violet-200" : "text-white/40"}`}><Monitor className="w-3 h-3" /></button>
+                                    <button onClick={() => setEmailDevice("mobile")} className={`p-1 rounded ${emailDevice === "mobile" ? "bg-violet-500/30 text-violet-200" : "text-white/40"}`}><Smartphone className="w-3 h-3" /></button>
+                                  </div>
+                                </div>
+                                <div className="bg-[#f5f3ff] flex justify-center p-2 max-h-[360px] overflow-y-auto">
+                                  <div className="bg-white rounded shadow-xl" style={{ width: emailDevice === "mobile" ? 320 : "100%", maxWidth: 560 }}>
+                                    <iframe
+                                      title="aurora-preview"
+                                      srcDoc={renderedEmail.html}
+                                      sandbox=""
+                                      className="w-full"
+                                      style={{ height: 340, border: "none", borderRadius: 4 }}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Deliverability hints inline */}
+                              {deliverability && deliverability.issues.length > 0 && (
+                                <div className="rounded-lg bg-black/30 border border-amber-400/20 px-2.5 py-1.5 space-y-0.5">
+                                  <p className="text-[9px] uppercase tracking-wider font-bold text-amber-300">Hint deliverability</p>
+                                  {deliverability.issues.slice(0,3).map((iss, i) => (
+                                    <p key={i} className="text-[10px] text-white/70 leading-snug">
+                                      <span className={iss.level === "critical" ? "text-rose-300" : iss.level === "warning" ? "text-amber-300" : "text-cyan-300"}>•</span> {iss.message}
+                                    </p>
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* Actions */}
+                              <div className="grid grid-cols-2 gap-1.5">
+                                <button
+                                  onClick={() => copy("Email HTML", renderedEmail.html)}
+                                  className="flex items-center justify-center gap-1 py-2 rounded-lg text-[10px] font-bold bg-white/5 hover:bg-white/10 text-white/80 border border-white/10"
+                                >
+                                  {copied === "Email HTML" ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                                  Copia HTML
+                                </button>
+                                <a
+                                  href={leadEmail ? `mailto:${leadEmail}?subject=${encodeURIComponent(renderedEmail.subject)}&body=${encodeURIComponent(renderedEmail.text)}` : `mailto:?subject=${encodeURIComponent(renderedEmail.subject)}&body=${encodeURIComponent(renderedEmail.text)}`}
+                                  className="flex items-center justify-center gap-1 py-2 rounded-lg text-[10px] font-black bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-500/30"
+                                >
+                                  <Mail className="w-3 h-3" /> Apri in client mail
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                       </div>
 
                       {/* 5️⃣ WHATSAPP message */}
