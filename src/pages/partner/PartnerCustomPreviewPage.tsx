@@ -40,20 +40,23 @@ interface CustomPreview {
   whatsapp_message: string | null;
 }
 
-interface IntelligenceLead {
+interface SelectableLead {
   id: string;
+  source: "intelligence" | "scout";
   lead_name: string;
   lead_city: string | null;
   lead_sector: string | null;
   lead_website: string | null;
   lead_phone: string | null;
+  lead_email: string | null;
   google_rating: number | null;
+  badge?: string;
 }
 
 export default function PartnerCustomPreviewPage() {
   const { user } = useAuth();
   const [previews, setPreviews] = useState<CustomPreview[]>([]);
-  const [intelligenceLeads, setIntelligenceLeads] = useState<IntelligenceLead[]>([]);
+  const [availableLeads, setAvailableLeads] = useState<SelectableLead[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
@@ -76,24 +79,50 @@ export default function PartnerCustomPreviewPage() {
     gallery_images: [] as string[],
   });
 
-  // Load previews + intelligence leads
+  // Load previews + intelligence + scout leads (uniti)
   useEffect(() => {
     if (!user?.id) return;
     (async () => {
-      const [pRes, iRes] = await Promise.all([
+      const [pRes, iRes, sRes] = await Promise.all([
         supabase.from("seller_custom_previews" as any).select("*").eq("owner_id", user.id).order("created_at", { ascending: false }),
-        supabase.from("lead_intelligence_reports").select("id, lead_name, lead_city, lead_sector, lead_website, lead_phone, google_rating").eq("owner_id", user.id).order("created_at", { ascending: false }).limit(50),
+        supabase.from("lead_intelligence_reports").select("id, lead_name, lead_city, lead_sector, lead_website, lead_phone, google_rating, vendibility_score, category").eq("owner_id", user.id).order("vendibility_score", { ascending: false }).limit(100),
+        supabase.from("leads").select("id, name, city, sector, website, phone, email, ai_score").eq("owner_id", user.id).order("created_at", { ascending: false }).limit(100),
       ]);
       setPreviews((pRes.data as any) || []);
-      setIntelligenceLeads((iRes.data as any) || []);
+
+      const intel: SelectableLead[] = ((iRes.data as any[]) || []).map(r => ({
+        id: `intel:${r.id}`,
+        source: "intelligence",
+        lead_name: r.lead_name,
+        lead_city: r.lead_city,
+        lead_sector: r.lead_sector,
+        lead_website: r.lead_website,
+        lead_phone: r.lead_phone,
+        lead_email: null,
+        google_rating: r.google_rating,
+        badge: r.category ? `${String(r.category).toUpperCase()} · score ${r.vendibility_score ?? "?"}` : "Intelligence",
+      }));
+      const scout: SelectableLead[] = ((sRes.data as any[]) || []).map(r => ({
+        id: `scout:${r.id}`,
+        source: "scout",
+        lead_name: r.name,
+        lead_city: r.city,
+        lead_sector: r.sector,
+        lead_website: r.website,
+        lead_phone: r.phone,
+        lead_email: r.email,
+        google_rating: null,
+        badge: r.ai_score ? `Scout · score ${r.ai_score}` : "Scout",
+      }));
+      setAvailableLeads([...intel, ...scout]);
       setLoading(false);
     })();
   }, [user?.id]);
 
-  // Pre-fill form from selected intelligence lead
+  // Pre-fill form da lead selezionato (intelligence o scout)
   useEffect(() => {
     if (!selectedLeadId) return;
-    const lead = intelligenceLeads.find(l => l.id === selectedLeadId);
+    const lead = availableLeads.find(l => l.id === selectedLeadId);
     if (lead) {
       setForm(f => ({
         ...f,
@@ -102,9 +131,10 @@ export default function PartnerCustomPreviewPage() {
         lead_sector: lead.lead_sector || "",
         lead_website: lead.lead_website || "",
         lead_phone: lead.lead_phone || "",
+        lead_email: lead.lead_email || "",
       }));
     }
-  }, [selectedLeadId, intelligenceLeads]);
+  }, [selectedLeadId, availableLeads]);
 
   const handleFileUpload = async (file: File, kind: "logo" | "gallery") => {
     if (!user?.id) return null;
@@ -154,9 +184,11 @@ export default function PartnerCustomPreviewPage() {
         gallery_images: form.gallery_images,
       };
 
-      if (mode === "lead" && selectedLeadId) {
-        payload.lead_intelligence_id = selectedLeadId;
-        // Allow overrides via manual_data
+      if (mode === "lead" && selectedLeadId && selectedLeadId !== "none") {
+        const [src, realId] = selectedLeadId.split(":");
+        if (src === "intel") payload.lead_intelligence_id = realId;
+        else if (src === "scout") payload.lead_id = realId;
+        // override sempre con i dati visibili nel form (l'utente potrebbe aver corretto)
         payload.manual_data = {
           lead_name: form.lead_name,
           lead_city: form.lead_city,
@@ -268,23 +300,26 @@ export default function PartnerCustomPreviewPage() {
 
             <TabsContent value="lead" className="space-y-4 mt-4">
               <div>
-                <Label>Seleziona lead già analizzato</Label>
+                <Label>Seleziona lead da Intelligence o Scout</Label>
                 <Select value={selectedLeadId} onValueChange={setSelectedLeadId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Scegli un lead dall'inbox intelligence…" />
+                    <SelectValue placeholder="Scegli un lead già scoperto…" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {intelligenceLeads.length === 0 ? (
-                      <SelectItem value="none" disabled>Nessun lead analizzato — usa "Manuale"</SelectItem>
-                    ) : intelligenceLeads.map(l => (
+                  <SelectContent className="max-h-72">
+                    {availableLeads.length === 0 ? (
+                      <SelectItem value="none" disabled>Nessun lead trovato — usa lo Scout o l'Intelligence prima</SelectItem>
+                    ) : availableLeads.map(l => (
                       <SelectItem key={l.id} value={l.id}>
-                        {l.lead_name} {l.lead_city ? `· ${l.lead_city}` : ""} {l.lead_sector ? `· ${l.lead_sector}` : ""}
+                        <span className="font-medium">{l.lead_name}</span>
+                        {l.lead_city ? ` · ${l.lead_city}` : ""}
+                        {l.lead_sector ? ` · ${l.lead_sector}` : ""}
+                        {l.badge ? `  [${l.badge}]` : ""}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground mt-1">
-                  I dati del lead pre-compilano il form. Puoi modificarli sotto.
+                  Disponibili: <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence · <strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout. I dati pre-compilano il form qui sotto (modificabili).
                 </p>
               </div>
             </TabsContent>

@@ -507,15 +507,12 @@ Deno.serve(async (req) => {
       const { data: ld } = await admin.from("leads").select("*").eq("id", lead_id).maybeSingle();
       if (ld) {
         lead = {
-          lead_name: ld.business_name || ld.name,
+          lead_name: ld.name,
           lead_city: ld.city,
-          lead_sector: ld.sector || ld.industry,
+          lead_sector: ld.sector,
           lead_website: ld.website,
           lead_phone: ld.phone,
-          lead_address: ld.address,
           lead_email: ld.email,
-          lead_rating: ld.google_rating,
-          lead_reviews_count: ld.google_reviews_count,
         };
       }
     }
