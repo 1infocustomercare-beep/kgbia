@@ -1916,6 +1916,24 @@ export default function LeadsPage() {
                 </div>
               </div>
 
+              {/* ═══ Intelligence Analyzer — analizza profondamente questo lead ═══ */}
+              <div className="mt-3">
+                <LeadIntelligenceLauncher
+                  lead={{
+                    name: selected.name,
+                    city: selected.city,
+                    full_address: selected.full_address,
+                    sector: sectorConfig?.label?.toLowerCase() || null,
+                    website: selected.website,
+                    phone: selected.phone,
+                    instagram: selected.instagram || enrichedData?.instagram || null,
+                    google_rating: selected.google_rating,
+                    google_reviews_count: (selected as any).google_reviews_count ?? null,
+                  }}
+                  variant="full"
+                />
+              </div>
+
               {/* Analysis indicators */}
               <div className="grid grid-cols-4 gap-2 mt-3">
                 {(() => {
