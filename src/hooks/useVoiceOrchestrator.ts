@@ -166,12 +166,18 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
     }
   }, []);
 
-  const listenOnce = useCallback((options?: { silent?: boolean }): Promise<string> => {
+  const listenOnce = useCallback((options?: { silent?: boolean; timeoutMs?: number }): Promise<string> => {
     return new Promise((resolve, reject) => {
       const SR = getSpeechRecognition();
       if (!SR) {
         reject(new Error("Speech recognition non supportato in questo browser"));
         return;
+      }
+
+      // Defensive: stop any previous session
+      if (recognitionRef.current) {
+        try { recognitionRef.current.abort(); } catch { /* noop */ }
+        recognitionRef.current = null;
       }
 
       const recog = new SR();
@@ -183,6 +189,15 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
 
       let finalText = "";
       let interimText = "";
+      let settled = false;
+      const settle = (fn: () => void) => { if (!settled) { settled = true; fn(); } };
+
+      // Hard safety timeout — kill mic after N seconds of no result
+      const timeoutMs = options?.timeoutMs ?? 9000;
+      const timeoutId = setTimeout(() => {
+        try { recog.stop(); } catch { /* noop */ }
+        settle(() => resolve(finalText.trim() || interimText.trim()));
+      }, timeoutMs);
 
       recog.onresult = (e: any) => {
         finalText = "";
@@ -197,23 +212,26 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
 
       recog.onerror = (e: any) => {
         console.warn("[VoiceOrch] STT error:", e?.error);
+        clearTimeout(timeoutId);
         if (e?.error === "no-speech" || e?.error === "aborted") {
-          resolve("");
+          settle(() => resolve(""));
         } else {
-          reject(new Error(`STT error: ${e?.error || "unknown"}`));
+          settle(() => reject(new Error(`STT error: ${e?.error || "unknown"}`)));
         }
       };
 
       recog.onend = () => {
+        clearTimeout(timeoutId);
         recognitionRef.current = null;
         if (!options?.silent) setInterimTranscript("");
-        resolve(finalText.trim());
+        settle(() => resolve(finalText.trim()));
       };
 
       try {
         recog.start();
       } catch (err) {
-        reject(err);
+        clearTimeout(timeoutId);
+        settle(() => reject(err));
       }
     });
   }, []);
