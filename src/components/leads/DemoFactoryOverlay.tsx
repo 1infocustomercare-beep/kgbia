@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, ExternalLink, Copy, Check, Loader2, Zap, Crown, Users, ShoppingBag, MessageCircle, Phone, Shield, KeyRound, ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { X, Sparkles, ExternalLink, Copy, Check, Loader2, Zap, Crown, Users, ShoppingBag, MessageCircle, Phone, Shield, KeyRound, ChevronDown, ChevronUp, Mail, Monitor, Smartphone, Wand2 } from "lucide-react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { TEMPLATES, renderTemplate, type EmailTemplate } from "@/lib/email-templates/aurora-templates";
+import { analyzeEmailDeliverability } from "@/lib/email-templates/deliverability";
 
 export interface DemoFactoryResult {
   success: boolean;
