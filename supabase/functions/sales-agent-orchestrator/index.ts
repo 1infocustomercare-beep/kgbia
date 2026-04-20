@@ -1,6 +1,11 @@
 // Sales Agent "Arianna" Orchestrator — usa il vero motore Lead Scout + Demo Factory
 // Flusso: Hunt(lead-search) → Save → Enrich → Score → Preview(generate-demo-from-lead) → Draft → Approve
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import {
+  pickAuroraTemplateForLead,
+  renderAuroraTemplate,
+  scoreDeliverability,
+} from "../_shared/aurora-email-renderer.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
