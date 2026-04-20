@@ -1407,6 +1407,16 @@
     padding-top: max(env(safe-area-inset-top, 0px), 0.5rem);
   }
 
+  /* Partner Voice FAB — sopra la bottom nav su mobile, in basso su desktop */
+  .partner-voice-fab {
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 14px);
+  }
+  @media (min-width: 1024px) {
+    .partner-voice-fab {
+      bottom: 1.5rem;
+    }
+  }
+
   .phone-iframe-scale {
     width: 375px;
     height: 812px;
