@@ -1409,7 +1409,8 @@
 
   /* Partner Voice FAB — sopra la bottom nav su mobile, in basso su desktop */
   .partner-arianna-fab {
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 88px);
+    right: calc(1rem + 3.5rem + 0.75rem);
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 18px);
   }
 
   .partner-voice-fab {
@@ -1418,6 +1419,7 @@
 
   @media (min-width: 1024px) {
     .partner-arianna-fab {
+      right: 0.75rem;
       bottom: 1.5rem;
     }
 
