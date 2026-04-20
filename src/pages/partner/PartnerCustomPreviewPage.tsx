@@ -40,20 +40,23 @@ interface CustomPreview {
   whatsapp_message: string | null;
 }
 
-interface IntelligenceLead {
+interface SelectableLead {
   id: string;
+  source: "intelligence" | "scout";
   lead_name: string;
   lead_city: string | null;
   lead_sector: string | null;
   lead_website: string | null;
   lead_phone: string | null;
+  lead_email: string | null;
   google_rating: number | null;
+  badge?: string;
 }
 
 export default function PartnerCustomPreviewPage() {
   const { user } = useAuth();
   const [previews, setPreviews] = useState<CustomPreview[]>([]);
-  const [intelligenceLeads, setIntelligenceLeads] = useState<IntelligenceLead[]>([]);
+  const [availableLeads, setAvailableLeads] = useState<SelectableLead[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
@@ -76,24 +79,50 @@ export default function PartnerCustomPreviewPage() {
     gallery_images: [] as string[],
   });
 
-  // Load previews + intelligence leads
+  // Load previews + intelligence + scout leads (uniti)
   useEffect(() => {
     if (!user?.id) return;
     (async () => {
-      const [pRes, iRes] = await Promise.all([
+      const [pRes, iRes, sRes] = await Promise.all([
         supabase.from("seller_custom_previews" as any).select("*").eq("owner_id", user.id).order("created_at", { ascending: false }),
-        supabase.from("lead_intelligence_reports").select("id, lead_name, lead_city, lead_sector, lead_website, lead_phone, google_rating").eq("owner_id", user.id).order("created_at", { ascending: false }).limit(50),
+        supabase.from("lead_intelligence_reports").select("id, lead_name, lead_city, lead_sector, lead_website, lead_phone, google_rating, vendibility_score, category").eq("owner_id", user.id).order("vendibility_score", { ascending: false }).limit(100),
+        supabase.from("leads").select("id, name, city, sector, website, phone, email, ai_score").eq("owner_id", user.id).order("created_at", { ascending: false }).limit(100),
       ]);
       setPreviews((pRes.data as any) || []);
-      setIntelligenceLeads((iRes.data as any) || []);
+
+      const intel: SelectableLead[] = ((iRes.data as any[]) || []).map(r => ({
+        id: `intel:${r.id}`,
+        source: "intelligence",
+        lead_name: r.lead_name,
+        lead_city: r.lead_city,
+        lead_sector: r.lead_sector,
+        lead_website: r.lead_website,
+        lead_phone: r.lead_phone,
+        lead_email: null,
+        google_rating: r.google_rating,
+        badge: r.category ? `${String(r.category).toUpperCase()} · score ${r.vendibility_score ?? "?"}` : "Intelligence",
+      }));
+      const scout: SelectableLead[] = ((sRes.data as any[]) || []).map(r => ({
+        id: `scout:${r.id}`,
+        source: "scout",
+        lead_name: r.name,
+        lead_city: r.city,
+        lead_sector: r.sector,
+        lead_website: r.website,
+        lead_phone: r.phone,
+        lead_email: r.email,
+        google_rating: null,
+        badge: r.ai_score ? `Scout · score ${r.ai_score}` : "Scout",
+      }));
+      setAvailableLeads([...intel, ...scout]);
       setLoading(false);
     })();
   }, [user?.id]);
 
-  // Pre-fill form from selected intelligence lead
+  // Pre-fill form da lead selezionato (intelligence o scout)
   useEffect(() => {
     if (!selectedLeadId) return;
-    const lead = intelligenceLeads.find(l => l.id === selectedLeadId);
+    const lead = availableLeads.find(l => l.id === selectedLeadId);
     if (lead) {
       setForm(f => ({
         ...f,
@@ -102,9 +131,10 @@ export default function PartnerCustomPreviewPage() {
         lead_sector: lead.lead_sector || "",
         lead_website: lead.lead_website || "",
         lead_phone: lead.lead_phone || "",
+        lead_email: lead.lead_email || "",
       }));
     }
-  }, [selectedLeadId, intelligenceLeads]);
+  }, [selectedLeadId, availableLeads]);
 
   const handleFileUpload = async (file: File, kind: "logo" | "gallery") => {
     if (!user?.id) return null;
