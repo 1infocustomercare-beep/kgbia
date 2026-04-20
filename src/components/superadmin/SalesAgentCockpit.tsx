@@ -172,17 +172,39 @@ export default function SalesAgentCockpit() {
     );
   };
 
-  const handleApproval = async (id: string, decision: "approve" | "reject", edited?: string) => {
+  const handleApproval = async (
+    id: string,
+    decision: "approve" | "reject",
+    opts?: { edited_body?: string; edited_subject?: string; edited_html?: string | null; override_template_id?: string | null },
+  ) => {
     const { error } = await supabase.functions.invoke("sales-agent-send", {
-      body: { approval_id: id, decision, edited_body: edited },
+      body: {
+        approval_id: id,
+        decision,
+        edited_body: opts?.edited_body,
+        edited_subject: opts?.edited_subject,
+        edited_html: opts?.edited_html,
+        override_template_id: opts?.override_template_id,
+      },
     });
     if (error) {
       toast({ title: "Errore invio", description: error.message, variant: "destructive" });
     } else {
       toast({ title: decision === "approve" ? "✅ Inviato" : "❌ Rifiutato" });
       setEditingApproval(null);
+      setOverrideTemplateId(null);
+      setEditedHtml(null);
+      setPickerOpenFor(null);
       load();
     }
+  };
+
+  const startEditing = (a: Approval) => {
+    setEditingApproval(a.id);
+    setEditedBody(a.draft_body);
+    setEditedSubject(a.draft_subject ?? "");
+    setEditedHtml(a.body_html);
+    setOverrideTemplateId(a.template_id);
   };
 
   if (!config) return <div className="p-8 text-center text-muted-foreground">Caricamento Arianna...</div>;
