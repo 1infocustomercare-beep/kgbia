@@ -262,7 +262,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"voice" | "chat">("chat");
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Ciao! 👋 Sono **ATLAS PRO**, il tuo consulente IA a **massima potenza**.\n\nConosco ogni aspetto di Empire: vendite, commissioni, demo, settori, obiezioni, dashboard, tecniche avanzate — **tutto, nel dettaglio**.\n\n🎯 **Chiedimi qualsiasi cosa** — ti guido passo-passo con risposte concrete e azionabili.\n\n💡 **Attiva la Guida Vocale** per farmi spiegare ogni sezione mentre navighi!" }
+    { role: "assistant", content: "Ciao! 👋 Sono **Arianna**, la tua consulente IA partner.\n\nTi aiuto con vendite, commissioni, demo, settori, obiezioni e uso completo della dashboard — tutto in modo pratico e professionale.\n\n🎯 **Chiedimi qualsiasi cosa** o apri il microfono AI per eseguire task vocali sui tuoi dati.\n\n💡 **Attiva la Guida Vocale** e ti accompagno sezione per sezione mentre navighi!" }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -517,7 +517,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                 transition={{ duration: 2.5, repeat: Infinity }}
               />
               <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-xl border-2 border-primary/30 bg-background">
-                <img src={voiceAgentAvatar} alt="ATLAS" className="w-full h-full object-cover" />
+                <img src={voiceAgentAvatar} alt="Arianna" className="w-full h-full object-cover" />
                 {(isSpeaking && !isPaused) && (
                   <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
                 )}
@@ -535,6 +535,10 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                 </motion.div>
               )}
 
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full border border-primary/20 bg-background/95 px-2.5 py-1 shadow-xl backdrop-blur-xl sm:hidden">
+                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-primary whitespace-nowrap">Arianna AI</p>
+              </div>
+
               <div className="absolute right-[calc(100%+0.55rem)] top-1/2 hidden -translate-y-1/2 rounded-2xl border border-primary/15 bg-background/95 px-3 py-2 shadow-xl backdrop-blur-xl sm:block">
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">Arianna</p>
                 <p className="mt-0.5 max-w-[170px] text-[10px] leading-relaxed text-muted-foreground">
@@ -550,7 +554,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-0 right-0 z-[200] w-full sm:w-[400px] sm:bottom-4 sm:right-4 max-h-[80dvh] sm:max-h-[650px] flex flex-col rounded-t-2xl sm:rounded-2xl border border-primary/10 bg-background/95 backdrop-blur-2xl shadow-[0_0_60px_hsla(var(--primary)/0.15)]"
+            className="fixed bottom-0 right-0 z-[10000] w-full sm:w-[400px] sm:bottom-4 sm:right-4 max-h-[80dvh] sm:max-h-[650px] flex flex-col rounded-t-2xl sm:rounded-2xl border border-primary/10 bg-background/95 backdrop-blur-2xl shadow-[0_0_60px_hsla(var(--primary)/0.15)]"
             style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             initial={{ opacity: 0, y: 100, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -567,7 +571,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                     transition={{ duration: 1.4, repeat: isSpeaking ? Infinity : 0 }}
                   />
                   <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30">
-                    <img src={voiceAgentAvatar} alt="ATLAS" className="w-full h-full object-cover" />
+                    <img src={voiceAgentAvatar} alt="Arianna" className="w-full h-full object-cover" />
                   </div>
                   <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${
                     isPaused ? "bg-amber-400" : isSpeaking ? "bg-green-400" : isListening ? "bg-amber-400" : isLoading ? "bg-blue-400" : guideMode ? "bg-emerald-400" : "bg-primary/60"
@@ -575,7 +579,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                    ATLAS <span className="text-[0.55rem] font-normal text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">PRO</span>
+                    Arianna <span className="text-[0.55rem] font-normal text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">AI</span>
                   </h3>
                   <p className="text-[0.55rem] text-muted-foreground tracking-wider uppercase">
                     {isPaused ? "⏸ In pausa" : isSpeaking ? "🔊 Sta parlando..." : isListening ? "🎙️ Ti ascolta..." : isLoading ? "💭 Sta pensando..." : guideMode ? "🧭 Guida Vocale Attiva" : `📍 ${tabLabel}`}
