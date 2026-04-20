@@ -587,6 +587,123 @@ export type Database = {
           },
         ]
       }
+      arianna_autopilot_state: {
+        Row: {
+          created_at: string
+          current_city: string | null
+          current_sector: string | null
+          cycles_completed: number
+          hot_leads_found: number
+          id: string
+          is_running: boolean
+          last_cycle_at: string | null
+          next_cycle_at: string | null
+          quality_filters: Json
+          recently_scanned: Json
+          updated_at: string
+          user_id: string
+          zone_sector_weights: Json
+        }
+        Insert: {
+          created_at?: string
+          current_city?: string | null
+          current_sector?: string | null
+          cycles_completed?: number
+          hot_leads_found?: number
+          id?: string
+          is_running?: boolean
+          last_cycle_at?: string | null
+          next_cycle_at?: string | null
+          quality_filters?: Json
+          recently_scanned?: Json
+          updated_at?: string
+          user_id: string
+          zone_sector_weights?: Json
+        }
+        Update: {
+          created_at?: string
+          current_city?: string | null
+          current_sector?: string | null
+          cycles_completed?: number
+          hot_leads_found?: number
+          id?: string
+          is_running?: boolean
+          last_cycle_at?: string | null
+          next_cycle_at?: string | null
+          quality_filters?: Json
+          recently_scanned?: Json
+          updated_at?: string
+          user_id?: string
+          zone_sector_weights?: Json
+        }
+        Relationships: []
+      }
+      arianna_learning_log: {
+        Row: {
+          city: string
+          created_at: string
+          credits_spent: number
+          cycle_number: number
+          decision_reasoning: string | null
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          leads_contacted: number
+          leads_converted: number
+          leads_passed_filters: number
+          leads_replied: number
+          leads_saved_to_pipeline: number
+          leads_scanned: number
+          performance_score: number
+          sector: string
+          selected_weight: number | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          credits_spent?: number
+          cycle_number: number
+          decision_reasoning?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          leads_contacted?: number
+          leads_converted?: number
+          leads_passed_filters?: number
+          leads_replied?: number
+          leads_saved_to_pipeline?: number
+          leads_scanned?: number
+          performance_score?: number
+          sector: string
+          selected_weight?: number | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          credits_spent?: number
+          cycle_number?: number
+          decision_reasoning?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          leads_contacted?: number
+          leads_converted?: number
+          leads_passed_filters?: number
+          leads_replied?: number
+          leads_saved_to_pipeline?: number
+          leads_scanned?: number
+          performance_score?: number
+          sector?: string
+          selected_weight?: number | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       automations: {
         Row: {
           automation_type: string
