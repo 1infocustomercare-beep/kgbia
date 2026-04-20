@@ -58,9 +58,7 @@ Deno.serve(async (req) => {
     }
 
     // Load seed JSON shipped with function
-    const url = new URL("../_seed/empire-brain-agents.json", import.meta.url);
-    const text = await Deno.readTextFile(url);
-    const seeds: AgentSeed[] = JSON.parse(text);
+    const seeds: AgentSeed[] = seedData as AgentSeed[];
 
     // Upsert in batches of 30
     let inserted = 0;
