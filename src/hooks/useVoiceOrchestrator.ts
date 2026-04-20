@@ -261,26 +261,44 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
   /* --- Confirmation listener (parses SI/NO) --- */
   const waitVoiceConfirmation = useCallback(async (question: string): Promise<boolean> => {
     await speak(question);
+    // Brief pause so the mic doesn't pick up audio tail / browser releases mic
+    await new Promise(r => setTimeout(r, 400));
     setState("awaiting_confirmation");
 
-    // Try up to 2 times
-    for (let attempt = 0; attempt < 2; attempt++) {
+    const YES_RE = /\b(s[iì]+|conferm[oa]|ok|okay|okey|va\s*bene|d['’]?accordo|esegui|procedi|fallo|certo|certamente|assolutamente|affermativo|yes|yep|yeah)\b/i;
+    const NO_RE = /\b(no+|annulla|stop|ferma|interrompi|cancella|negativo|nope|nah)\b/i;
+
+    // Try up to 3 attempts
+    for (let attempt = 0; attempt < 3; attempt++) {
       try {
         const reply = await listenOnce();
         const normalized = reply.toLowerCase().trim();
-        if (/(^|\s)(si|sì|conferma|conferm[oa]|ok|va bene|d['’]accordo|esegui|procedi|fallo)(\s|$|\.|\,|!|\?)/i.test(normalized) ||
-            normalized === "si" || normalized === "sì" || normalized === "ok") {
-          return true;
+        console.log(`[VoiceOrch] confirmation attempt ${attempt + 1}: "${normalized}"`);
+
+        if (!normalized) {
+          if (attempt < 2) {
+            await speak(attempt === 0 ? "Ti ascolto. Dimmi SI o NO." : "Non ti sento. Parla pure: SI o NO.");
+            await new Promise(r => setTimeout(r, 350));
+            setState("awaiting_confirmation");
+          }
+          continue;
         }
-        if (/(^|\s)(no|annulla|stop|ferma|interrompi|cancella|negativo)(\s|$|\.|\,|!|\?)/i.test(normalized) ||
-            normalized === "no") {
-          return false;
-        }
-        if (attempt === 0) {
+
+        if (YES_RE.test(normalized)) return true;
+        if (NO_RE.test(normalized)) return false;
+
+        if (attempt < 2) {
           await speak("Non ho capito. Dimmi solo SI per procedere o NO per annullare.");
+          await new Promise(r => setTimeout(r, 350));
+          setState("awaiting_confirmation");
         }
-      } catch {
-        await speak("Non sono riuscita a sentirti. Riprova.");
+      } catch (e) {
+        console.warn("[VoiceOrch] confirmation listen error:", e);
+        if (attempt < 2) {
+          await speak("Non sono riuscita a sentirti. Riprova: SI o NO.");
+          await new Promise(r => setTimeout(r, 350));
+          setState("awaiting_confirmation");
+        }
       }
     }
 
