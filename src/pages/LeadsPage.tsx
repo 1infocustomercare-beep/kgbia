@@ -36,6 +36,7 @@ import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
 import DeliverabilityPanel from "@/components/leads/DeliverabilityPanel";
+import { TEMPLATES, pickRecommendedAuroraTemplate, renderTemplate } from "@/lib/email-templates/aurora-templates";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShieldCheck } from "lucide-react";
 import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
@@ -1024,8 +1025,11 @@ export default function LeadsPage() {
   }, [activeChannel, enrichLeadSocial, country]);
 
   const copyMessage = () => {
-    if (generatedMessage) {
-      navigator.clipboard.writeText(generatedMessage);
+    const textToCopy = activeChannel === "email"
+      ? (auroraEmailPreview?.text || generatedMessage)
+      : generatedMessage;
+    if (textToCopy) {
+      navigator.clipboard.writeText(textToCopy);
       toast.success("Messaggio copiato!");
     }
   };
@@ -1055,6 +1059,31 @@ export default function LeadsPage() {
     ? previewMatch.screens
     : (selected ? getPreviewScreens(selected._sector) : []);
   const previewDetails = getPreviewDetailsForMatch(previewMatch);
+  const selectedPreviewPath = selected
+    ? (previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector))
+    : "";
+  const selectedPreviewUrl = selected ? `${window.location.origin}${selectedPreviewPath}` : "";
+  const auroraPick = selected
+    ? pickRecommendedAuroraTemplate({
+        sector: selected._sector,
+        googleRating: selected.google_rating ?? null,
+        score: (selected as any)._score ?? null,
+      })
+    : null;
+  const auroraTemplateName = auroraPick
+    ? TEMPLATES.find((template) => template.id === auroraPick.id)?.name.replace(" — Aurora", "") || "Aurora"
+    : "Aurora";
+  const auroraEmailPreview = selected && activeChannel === "email"
+    ? renderTemplate(auroraPick?.id || "aurora-cold-personal", {
+        recipientName: (selected.email || "").split("@")[0] || selected.name.split(" ")[0] || "ciao",
+        businessName: selected.name || "la vostra attività",
+        city: selected.city,
+        sectorLabel: sectorConfig?.label || selected._sector,
+        previewLink: demoFactoryResult?.previewUrl || selectedPreviewUrl,
+        senderName: "Arianna",
+        senderRole: "Empire AI Group",
+      })
+    : null;
 
   // Auto-focus city input on mount
   useEffect(() => {
@@ -2316,21 +2345,20 @@ export default function LeadsPage() {
 
                   {/* ── Email Professional ── */}
                   {activeChannel === "email" && (() => {
-                    const lines = generatedMessage.split("\n");
-                    const subjectLine = lines.find(l => l.toLowerCase().startsWith("oggetto:"));
-                    const subject = subjectLine?.replace(/^oggetto:\s*/i, "").trim() || "Proposta Empire AI";
-                    const bodyLines = lines.filter(l => !l.toLowerCase().startsWith("oggetto:")).join("\n").trim();
-                    const demoUrl = getDemoSiteUrl(selected._sector);
-                    const previewImg = previewScreens[0];
+                    const fallbackLines = generatedMessage.split("\n");
+                    const fallbackSubjectLine = fallbackLines.find(l => l.toLowerCase().startsWith("oggetto:"));
+                    const fallbackSubject = fallbackSubjectLine?.replace(/^oggetto:\s*/i, "").trim() || "Proposta Empire AI";
+                    const subject = auroraEmailPreview?.subject || fallbackSubject;
+                    const templateLabel = auroraEmailPreview ? auroraTemplateName : "Plain Text";
 
                     return (
                       <div className="rounded-2xl overflow-hidden" style={{ background: "#fff" }}>
                         <div className="px-4 py-3" style={{ borderBottom: "1px solid #e5e7eb" }}>
                           <div className="flex items-center gap-2 mb-2">
                             <div className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "linear-gradient(135deg, #7c3aed, #3b82f6)", color: "#fff" }}>EA</div>
-                            <div>
+                            <div className="min-w-0">
                               <p className="text-[11px] font-semibold" style={{ color: "#111827" }}>Empire AI Group</p>
-                              <p className="text-[8px]" style={{ color: "#6b7280" }}>info@empireaigroup.com</p>
+                              <p className="text-[8px]" style={{ color: "#6b7280" }}>info@empireaigroup.com · {templateLabel}</p>
                             </div>
                           </div>
                           <p className="text-xs font-bold" style={{ color: "#111827" }}>{subject}</p>
@@ -2338,35 +2366,24 @@ export default function LeadsPage() {
                             A: {selected.email || selected.name.toLowerCase().replace(/\s+/g, "") + "@email.com"}
                           </p>
                         </div>
-                        <div className="px-4 py-3">
-                          <div className="text-[11px] leading-relaxed whitespace-pre-line" style={{ color: "#374151" }}>
-                            {bodyLines}
-                          </div>
-                          {previewImg && (
-                            <div className="mt-3 rounded-xl overflow-hidden" style={{ border: "1px solid #e5e7eb" }}>
-                              <img src={previewImg} alt="Preview progetto" className="w-full h-32 object-cover object-top" />
-                              <div className="p-2.5" style={{ background: "#f9fafb" }}>
-                                <p className="text-[10px] font-bold" style={{ color: "#111827" }}>
-                                  📱 Demo personalizzata — {selected.name}
-                                </p>
-                                <p className="text-[8px]" style={{ color: "#6b7280" }}>
-                                  {window.location.origin}{demoUrl}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        <div className="px-4 py-2.5" style={{ background: "#f9fafb", borderTop: "1px solid #e5e7eb" }}>
-                          <div className="flex items-center gap-3">
-                            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #7c3aed, #3b82f6)" }}>
-                              <Zap className="w-3 h-3 text-white" />
-                            </div>
-                            <div>
-                              <p className="text-[9px] font-bold" style={{ color: "#374151" }}>Empire AI Group</p>
-                              <p className="text-[7px]" style={{ color: "#9ca3af" }}>Digital Transformation Partner</p>
+                        {auroraEmailPreview ? (
+                          <div className="bg-[#f5f3ff] p-2 flex justify-center">
+                            <div className="w-full max-w-[560px] rounded-xl overflow-hidden shadow-sm" style={{ background: "#ffffff", border: "1px solid #e5e7eb" }}>
+                              <iframe
+                                title="aurora-email-inline-preview"
+                                srcDoc={auroraEmailPreview.html}
+                                className="w-full"
+                                style={{ height: 420, border: "none" }}
+                              />
                             </div>
                           </div>
-                        </div>
+                        ) : (
+                          <div className="px-4 py-3">
+                            <div className="text-[11px] leading-relaxed whitespace-pre-line" style={{ color: "#374151" }}>
+                              {fallbackLines.filter(l => !l.toLowerCase().startsWith("oggetto:")).join("\n").trim()}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })()}
@@ -2400,7 +2417,7 @@ export default function LeadsPage() {
                     })()}
                     {activeChannel === "email" && (
                       <motion.a whileTap={{ scale: 0.97 }}
-                        href={`mailto:${selected.email || ""}?subject=${encodeURIComponent(generatedMessage.split("\n").find(l => l.toLowerCase().startsWith("oggetto:"))?.replace(/^oggetto:\s*/i, "") || "Proposta Empire AI")}&body=${encodeURIComponent(generatedMessage)}`}
+                        href={`mailto:${selected.email || ""}?subject=${encodeURIComponent(auroraEmailPreview?.subject || generatedMessage.split("\n").find(l => l.toLowerCase().startsWith("oggetto:"))?.replace(/^oggetto:\s*/i, "") || "Proposta Empire AI")}&body=${encodeURIComponent(auroraEmailPreview?.text || generatedMessage)}`}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold" style={{ background: "#3B82F6", color: "#fff" }}>
                         <Mail className="w-4 h-4" /> Invia Email
                       </motion.a>
