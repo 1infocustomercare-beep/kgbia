@@ -90,7 +90,7 @@ export default function VoiceOrchestratorFAB() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 280, damping: 30 }}
-            className="fixed bottom-24 left-3 right-3 z-[9999] max-w-md mx-auto"
+            className="superadmin-voice-panel z-[9999] mx-auto"
           >
             <div className="rounded-2xl border border-amber-500/30 bg-zinc-950/95 backdrop-blur-xl p-4 shadow-2xl shadow-amber-500/20">
               <div className="flex items-center gap-2 mb-2">
@@ -137,7 +137,7 @@ export default function VoiceOrchestratorFAB() {
         whileTap={{ scale: 0.92 }}
         animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
         transition={isActive ? { repeat: Infinity, duration: 1.4 } : {}}
-        className={`fixed bottom-5 right-5 z-[9999] w-14 h-14 rounded-full bg-gradient-to-br ${STATE_COLOR[state]} shadow-2xl flex items-center justify-center text-white border-2 border-white/20 ${!supported && state === "idle" ? "opacity-50 cursor-not-allowed" : ""}`}
+        className={`superadmin-voice-fab z-[9999] w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br ${STATE_COLOR[state]} shadow-2xl flex items-center justify-center text-white border-2 border-white/20 ${!supported && state === "idle" ? "opacity-50 cursor-not-allowed" : ""}`}
         aria-label="Empire Voice Orchestrator"
         title={supported ? "Empire Voice Orchestrator (parla)" : "Voice non supportato in questo browser"}
         style={{ touchAction: "manipulation" }}

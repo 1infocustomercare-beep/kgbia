@@ -1434,6 +1434,22 @@
     bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 12.6rem);
   }
 
+  /* Super Admin Voice FAB — stessa logica del partner per non coprire la bottom nav mobile */
+  .superadmin-voice-fab {
+    position: fixed;
+    left: 0.75rem;
+    right: auto;
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 0.75rem);
+  }
+
+  .superadmin-voice-panel {
+    position: fixed;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 5rem);
+    max-width: calc(100vw - 1.5rem);
+  }
+
   .partner-arianna-panel {
     left: 0.75rem;
     right: 0.75rem;
@@ -1475,6 +1491,20 @@
       bottom: 1rem;
       width: 400px;
       max-width: min(400px, calc(100vw - 2rem));
+    }
+
+    .superadmin-voice-fab {
+      left: auto;
+      right: 1.25rem;
+      bottom: 1.25rem;
+    }
+
+    .superadmin-voice-panel {
+      left: auto;
+      right: 1.25rem;
+      bottom: 6rem;
+      width: 420px;
+      max-width: min(420px, calc(100vw - 2rem));
     }
   }
 
