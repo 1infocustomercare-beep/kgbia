@@ -184,9 +184,11 @@ export default function PartnerCustomPreviewPage() {
         gallery_images: form.gallery_images,
       };
 
-      if (mode === "lead" && selectedLeadId) {
-        payload.lead_intelligence_id = selectedLeadId;
-        // Allow overrides via manual_data
+      if (mode === "lead" && selectedLeadId && selectedLeadId !== "none") {
+        const [src, realId] = selectedLeadId.split(":");
+        if (src === "intel") payload.lead_intelligence_id = realId;
+        else if (src === "scout") payload.lead_id = realId;
+        // override sempre con i dati visibili nel form (l'utente potrebbe aver corretto)
         payload.manual_data = {
           lead_name: form.lead_name,
           lead_city: form.lead_city,
