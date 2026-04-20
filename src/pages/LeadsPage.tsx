@@ -1516,6 +1516,19 @@ export default function LeadsPage() {
         }}
       />
 
+      {/* ═══ VOICE ORCHESTRATOR TRIGGER ═══ */}
+      <button
+        type="button"
+        onClick={() => (window as any).__empireVoiceStart?.()}
+        className="w-full rounded-2xl px-4 py-3 flex items-center justify-center gap-2 font-bold text-sm text-white transition-all hover:scale-[1.01]"
+        style={{
+          background: "linear-gradient(135deg, #f59e0b, #f97316)",
+          boxShadow: "0 6px 24px rgba(245,158,11,0.35)",
+        }}
+      >
+        🎙 Comanda con la voce — "Trova lead a Milano", "Lancia demo sul primo lead"
+      </button>
+
       {/* ═══ SEARCH BAR ═══ */}
       <div className="rounded-2xl p-4 space-y-3" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
         

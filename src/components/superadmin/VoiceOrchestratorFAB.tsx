@@ -61,6 +61,13 @@ export default function VoiceOrchestratorFAB() {
     }
   };
 
+  // Global trigger — any component can dispatch `empire:voice-start` to open this session.
+  if (typeof window !== "undefined") {
+    (window as any).__empireVoiceStart = () => {
+      if (state === "idle") startSession();
+    };
+  }
+
   return (
     <>
       {/* Backdrop overlay when active */}

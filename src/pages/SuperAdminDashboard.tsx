@@ -13,7 +13,7 @@ import {
   ChevronRight, Filter, Plus, ArrowUpRight, ArrowDownRight,
   Building2, MapPin, Zap, Activity, Lightbulb,
   ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info, ImageIcon, ArrowLeft,
-  MessageCircle, Phone, Shield, X, Key, Handshake, Copy, Brain, Target
+  MessageCircle, Phone, Shield, X, Key, Handshake, Copy, Brain, Target, Mic
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -76,7 +76,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout" | "empire_brain" | "sales_agent";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout" | "empire_brain" | "sales_agent" | "voice_orch";
 
 interface SubscriptionRecord {
   id: string;
@@ -646,6 +646,7 @@ const SuperAdminDashboard = () => {
       { id: "sales_agent" as SuperTab, label: "Arianna Sales", icon: <Bot className="w-4 h-4" /> },
       { id: "content_ai" as SuperTab, label: "Content AI", icon: <Send className="w-4 h-4" /> },
       { id: "lead_scout" as SuperTab, label: "Lead Scout", icon: <Search className="w-4 h-4" /> },
+      { id: "voice_orch" as SuperTab, label: "Voice Orchestrator", icon: <Mic className="w-4 h-4" /> },
     ]},
     { label: "🎨 Contenuti", tabs: [
       { id: "media", label: "Media Vault", icon: <Film className="w-4 h-4" /> },
@@ -2740,6 +2741,48 @@ const SuperAdminDashboard = () => {
               </a>
               <p className="text-[10px] text-muted-foreground">
                 Trovi il pannello Arianna in cima a /leads — accendilo e parte in automatico
+              </p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ===== VOICE ORCHESTRATOR QUICK CARD ===== */}
+        {!loading && activeTab === "voice_orch" && (
+          <motion.div className="mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="rounded-2xl p-6 text-center space-y-4" style={{
+              background: "linear-gradient(135deg, rgba(245,158,11,0.14), rgba(249,115,22,0.08))",
+              border: "1px solid rgba(245,158,11,0.3)",
+            }}>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl" style={{ background: "linear-gradient(135deg, #f59e0b, #f97316)" }}>
+                <Mic className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold mb-1">Empire Voice Orchestrator</h2>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  Pilota tutta la piattaforma con la voce: naviga, crea, modifica, lancia agenti, fai query e ricevi risposte parlate. Disponibile anche come <strong>FAB globale</strong> in basso a destra.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => navigate("/superadmin/voice-orchestrator")}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white transition-all hover:scale-[1.03]"
+                  style={{ background: "linear-gradient(135deg, #f59e0b, #f97316)", boxShadow: "0 8px 32px rgba(245,158,11,0.4)" }}
+                >
+                  <Mic className="w-5 h-5" />
+                  Apri Cockpit Vocale
+                </button>
+                <button
+                  type="button"
+                  onClick={() => (window as any).__empireVoiceStart?.()}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold border border-amber-500/40 text-amber-300 hover:bg-amber-500/10 transition-all"
+                >
+                  <Mic className="w-4 h-4" />
+                  Parla ora (FAB globale)
+                </button>
+              </div>
+              <p className="text-[10px] text-muted-foreground">
+                Comandi: "vai a lead scout", "quanti lead nuovi oggi?", "lancia Arianna", "aggiungi piatto Pizza Margherita a 10 euro"
               </p>
             </div>
           </motion.div>
