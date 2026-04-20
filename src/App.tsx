@@ -3,7 +3,6 @@ import { ThemeProvider } from "next-themes";
 import type { ErrorInfo, ReactNode } from 'react';
 import UnifiedIntro from "@/components/UnifiedIntro";
 import LandingPage from "@/pages/LandingPage";
-import AuroraLandingPage from "@/pages/AuroraLandingPage";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -547,10 +546,9 @@ function App() {
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
                       {/* Public routes */}
-                      <Route path="/" element={<AuroraLandingPage />} />
-                      <Route path="/index" element={<AuroraLandingPage />} />
-                      <Route path="/home" element={<AuroraLandingPage />} />
-                      <Route path="/empire-home-v5" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Legacy" />} />
+                      <Route path="/" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
+                      <Route path="/index" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
+                      <Route path="/home" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
                       <Route path="/landing-legacy" element={<LandingPage />} />
                       <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/home#pricing" replace />} />
