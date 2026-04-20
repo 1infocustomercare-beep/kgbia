@@ -1,6 +1,7 @@
 // Empire Brain — Seeder: carica/aggiorna i 140 agenti meta nel DB.
 // Solo super_admin può invocarlo.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import seedData from "../_seed/empire-brain-agents.json" with { type: "json" };
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -57,9 +58,7 @@ Deno.serve(async (req) => {
     }
 
     // Load seed JSON shipped with function
-    const url = new URL("../_seed/empire-brain-agents.json", import.meta.url);
-    const text = await Deno.readTextFile(url);
-    const seeds: AgentSeed[] = JSON.parse(text);
+    const seeds: AgentSeed[] = seedData as AgentSeed[];
 
     // Upsert in batches of 30
     let inserted = 0;
