@@ -67,6 +67,7 @@ export default function AriannaLeadScoutPanel(_props: Props) {
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState<number>(0);
+  const [criteriaDialogOpen, setCriteriaDialogOpen] = useState(false);
   const cycleTimerRef = useRef<number | null>(null);
 
   /* ─── Load state + live stream ─── */
