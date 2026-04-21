@@ -163,7 +163,10 @@ export default function PartnerPortfolioPage() {
       </header>
 
       {/* ═══ DEMO CUSTOMIZATION ═══ */}
-      {demoSectionEnabled && selectedProject && (
+      {demoSectionEnabled && demoLoading && !demoRestaurant && (
+        <PartnerCardSkeleton lines={3} />
+      )}
+      {demoSectionEnabled && selectedProject && !demoLoading && (
         <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(167,139,250,0.04)", border: "1px solid rgba(167,139,250,0.12)" }}>
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-foreground">Demo Personalizzata</h3>
