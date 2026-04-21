@@ -319,19 +319,47 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                 </div>
               )}
 
-              {/* Filtri qualità (informativi) */}
-              <div className="rounded-lg p-2 space-y-1" style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <div className="text-[10px] font-bold flex items-center gap-1.5 text-muted-foreground mb-1">
-                  <Flame className="w-3 h-3 text-orange-400" />
-                  Criteri lead caldi (non modificabili)
+              {/* Filtri qualità — dinamici, AI-tunable + override manuale */}
+              <div className="rounded-lg p-2 space-y-1.5" style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                <div className="flex items-center justify-between">
+                  <div className="text-[10px] font-bold flex items-center gap-1.5 text-muted-foreground">
+                    <Flame className="w-3 h-3 text-orange-400" />
+                    Criteri lead caldi
+                    {state?.auto_tune_enabled !== false ? (
+                      <span className="px-1.5 py-0.5 rounded text-[8px] font-bold" style={{ background: "rgba(167,139,250,0.18)", color: "#c4b5fd" }}>
+                        AI auto
+                      </span>
+                    ) : (
+                      <span className="px-1.5 py-0.5 rounded text-[8px] font-bold" style={{ background: "rgba(251,191,36,0.18)", color: "#fbbf24" }}>
+                        manuale
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setCriteriaDialogOpen(true)}
+                    className="flex items-center gap-1 text-[9px] font-semibold px-1.5 py-0.5 rounded hover:bg-white/5 transition-colors text-violet-300"
+                  >
+                    <Settings2 className="w-3 h-3" />
+                    Personalizza
+                  </button>
                 </div>
                 <div className="grid grid-cols-2 gap-1 text-[9px] text-foreground/70">
-                  <div>❌ Senza sito web</div>
-                  <div>📱 Senza social</div>
-                  <div>⭐ Rating ≥ 4.0</div>
-                  <div>💬 ≥ 20 recensioni</div>
-                  <div className="col-span-2">💰 Settori premium: food, beauty, fitness, healthcare</div>
+                  {state?.quality_filters?.require_no_website && <div>❌ Senza sito web</div>}
+                  {state?.quality_filters?.require_no_social && <div>📱 Senza social</div>}
+                  <div>⭐ Rating ≥ {(state?.quality_filters?.min_rating ?? 4).toFixed(1)}</div>
+                  <div>💬 ≥ {state?.quality_filters?.min_reviews ?? 20} recensioni</div>
+                  {state?.quality_filters?.premium_sectors_only && (
+                    <div className="col-span-2">
+                      💰 Settori: {state?.quality_filters?.premium_sectors?.join(", ") || "food, beauty, fitness, healthcare"}
+                    </div>
+                  )}
                 </div>
+                {state?.last_tuned_at && (
+                  <div className="text-[8px] text-muted-foreground italic pt-0.5">
+                    Ultima calibrazione AI: {new Date(state.last_tuned_at).toLocaleDateString("it-IT")}
+                  </div>
+                )}
               </div>
 
               {/* KPI */}
