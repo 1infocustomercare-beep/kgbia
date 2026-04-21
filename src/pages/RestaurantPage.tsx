@@ -168,7 +168,7 @@ const RestaurantPage = () => {
   ];
 
   if (showSplash) {
-    return <SplashScreen restaurantName={restaurantName} logoUrl={restaurantLogoUrl} onComplete={handleSplashComplete} />;
+    return <SplashScreen restaurantName={restaurantName} logoUrl={restaurantLogoUrl} primaryColor={dbRestaurant?.primary_color} onComplete={handleSplashComplete} />;
   }
 
   // Kill-switch: blocked restaurant
