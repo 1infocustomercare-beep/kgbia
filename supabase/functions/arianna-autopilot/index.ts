@@ -394,6 +394,31 @@ Deno.serve(async (req) => {
           console.error(`[autopilot] insert error for ${lead.name}:`, insertErr.message, insertErr.details);
         } else {
           leadsSaved++;
+          // Invio automatico messaggi se abilitato dal venditore
+          if (state.auto_send_messages === true) {
+            try {
+              const channel = intel.approach_strategy === "whatsapp" && phone ? "whatsapp"
+                : intel.approach_strategy === "email" && lead.email ? "email"
+                : null;
+              if (channel) {
+                await supabase.functions.invoke("lead-outreach-send", {
+                  body: {
+                    user_id,
+                    lead_name: lead.name,
+                    lead_city: leadCity,
+                    lead_phone: phone,
+                    lead_email: lead.email,
+                    channel,
+                    auto_generated: true,
+                    intelligence_report_id: intel.id,
+                    source: "arianna_autopilot",
+                  },
+                }).catch((err: any) => console.warn(`[autopilot] outreach send failed for ${lead.name}:`, err?.message));
+              }
+            } catch (sendErr: any) {
+              console.warn(`[autopilot] auto-send error for ${lead.name}:`, sendErr.message);
+            }
+          }
         }
       }
     } catch (e: any) {
