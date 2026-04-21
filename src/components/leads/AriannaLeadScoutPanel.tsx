@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import AriannaCriteriaOverrideDialog from "./AriannaCriteriaOverrideDialog";
 import OutreachPreflightDialog, { type PreflightResult } from "./OutreachPreflightDialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface AutopilotState {
   is_running: boolean;
