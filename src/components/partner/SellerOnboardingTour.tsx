@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Joyride, STATUS, type CallBackProps, type Step } from "react-joyride";
+import { Joyride, STATUS, type Step } from "react-joyride";
+type CallBackProps = { status: string };
 import { getCoachForRoute } from "@/data/sellerCoach";
 
 const TOUR_STORAGE_PREFIX = "empire_seller_tour_v1_";
@@ -59,19 +60,12 @@ export default function SellerOnboardingTour() {
       callback={handleCallback}
       locale={{ back: "Indietro", close: "Chiudi", last: "Fine", next: "Avanti", skip: "Salta tour" }}
       styles={{
-        options: {
-          primaryColor: "hsl(var(--primary))",
-          zIndex: 9999,
-          arrowColor: "hsl(var(--card))",
-          backgroundColor: "hsl(var(--card))",
-          textColor: "hsl(var(--foreground))",
-          overlayColor: "rgba(0,0,0,0.5)",
-        },
-        tooltip: { borderRadius: 12, padding: 16 },
-        buttonNext: { borderRadius: 8, fontSize: 13 },
+        tooltip: { borderRadius: 12, padding: 16, backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" },
+        buttonNext: { borderRadius: 8, fontSize: 13, backgroundColor: "hsl(var(--primary))" },
         buttonBack: { color: "hsl(var(--muted-foreground))", fontSize: 13 },
         buttonSkip: { color: "hsl(var(--muted-foreground))", fontSize: 12 },
-      }}
+        overlay: { backgroundColor: "rgba(0,0,0,0.5)" },
+      } as any}
     />
   );
 }
