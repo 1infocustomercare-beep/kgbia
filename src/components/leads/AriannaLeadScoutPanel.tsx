@@ -275,14 +275,14 @@ export default function AriannaLeadScoutPanel(_props: Props) {
       }}
     >
       {/* Header */}
-      <button onClick={() => setCollapsed(c => !c)} className="w-full p-3 flex items-center justify-between gap-3 text-left">
-        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+      <button onClick={() => setCollapsed(c => !c)} className="w-full p-2.5 sm:p-3 flex items-center justify-between gap-2 sm:gap-3 text-left">
+        <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
           <div className="relative shrink-0">
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center"
               style={{ background: isActive ? "linear-gradient(135deg, #a78bfa, #14b8a6)" : "rgba(255,255,255,0.05)" }}
             >
-              <Bot className="w-5 h-5" style={{ color: isActive ? "#fff" : "#a78bfa" }} />
+              <Bot className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: isActive ? "#fff" : "#a78bfa" }} />
             </div>
             {isActive && (
               <motion.div
@@ -293,18 +293,19 @@ export default function AriannaLeadScoutPanel(_props: Props) {
               />
             )}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-sm font-bold text-foreground tracking-tight">Arianna Autopilot</span>
+              <span className="text-[13px] sm:text-sm font-bold text-foreground tracking-tight">Arianna Autopilot</span>
               <span
-                className="partner-badge-pro text-[10px]"
+                className="partner-badge-pro text-[9px] sm:text-[10px]"
                 data-tone={isActive ? (loading ? "primary" : "success") : "muted"}
               >
                 {isActive ? (
                   loading ? (
                     <>
                       <Loader2 className="w-2.5 h-2.5 animate-spin" />
-                      In esecuzione
+                      <span className="hidden sm:inline">In esecuzione</span>
+                      <span className="sm:hidden">Run</span>
                     </>
                   ) : (
                     <>
@@ -315,30 +316,78 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                 ) : (
                   <>
                     <CircleDot className="w-2.5 h-2.5 opacity-70" />
-                    In pausa
+                    <span className="hidden sm:inline">In pausa</span>
+                    <span className="sm:hidden">Off</span>
                   </>
                 )}
               </span>
             </div>
             <p className="text-[10px] text-muted-foreground truncate">
               {isActive && state?.current_city
-                ? <>Sto analizzando <span className="text-foreground font-semibold">{state.current_city}</span> · settore <span className="text-foreground font-semibold">{state.current_sector}</span></>
-                : "AI che trova nuovi clienti per te 24/7. Accendi l'interruttore →"}
+                ? <>Analizzo <span className="text-foreground font-semibold">{state.current_city}</span> · <span className="text-foreground font-semibold">{state.current_sector}</span></>
+                : "AI che trova clienti 24/7. Accendi →"}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <button
+            onClick={(e) => { e.stopPropagation(); setCriteriaDialogOpen(true); }}
+            className="hidden sm:flex items-center justify-center w-8 h-6 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+            title="Modifica criteri lead caldi"
+            aria-label="Modifica criteri lead caldi"
+          >
+            <Settings2 className="w-3.5 h-3.5 text-violet-300" />
+          </button>
           <button
             onClick={(e) => { e.stopPropagation(); toggleActive(!isActive); }}
-            className="relative w-11 h-6 rounded-full transition-all"
+            className="relative w-10 h-6 sm:w-11 sm:h-6 rounded-full transition-all shrink-0"
             style={{ background: isActive ? "linear-gradient(90deg, #a78bfa, #14b8a6)" : "rgba(255,255,255,0.1)" }}
+            aria-label={isActive ? "Spegni autopilot" : "Accendi autopilot"}
           >
-            <motion.div animate={{ x: isActive ? 22 : 2 }} className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow" />
+            <motion.div animate={{ x: isActive ? 20 : 2 }} className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow" />
           </button>
           {collapsed ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronUp className="w-4 h-4 text-muted-foreground" />}
         </div>
       </button>
+
+      {/* Filtri rapidi — sempre accessibili sotto l'header (anche con pannello chiuso) */}
+      {state?.quality_filters && (
+        <div className="px-2.5 sm:px-3 pb-2 -mt-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none -mx-0.5 px-0.5">
+            <button
+              type="button"
+              onClick={() => setCriteriaDialogOpen(true)}
+              className="shrink-0 flex items-center gap-1 text-[9px] font-bold px-2 py-1 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-200 hover:bg-violet-500/25 transition-colors"
+              aria-label="Modifica filtri"
+            >
+              <Settings2 className="w-2.5 h-2.5" />
+              Filtri
+            </button>
+            {state.quality_filters.require_no_website && (
+              <span className="shrink-0 inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-1 rounded-full bg-white/5 border border-white/10 text-foreground/80">
+                <Globe className="w-2.5 h-2.5 text-violet-300" />no sito
+              </span>
+            )}
+            {state.quality_filters.require_no_social && (
+              <span className="shrink-0 inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-1 rounded-full bg-white/5 border border-white/10 text-foreground/80">
+                <Share2 className="w-2.5 h-2.5 text-violet-300" />no social
+              </span>
+            )}
+            <span className="shrink-0 inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-1 rounded-full bg-white/5 border border-white/10 text-foreground/80">
+              <Star className="w-2.5 h-2.5 text-amber-300" />≥{(state.quality_filters.min_rating ?? 4).toFixed(1)}
+            </span>
+            <span className="shrink-0 inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-1 rounded-full bg-white/5 border border-white/10 text-foreground/80">
+              <MessageSquare className="w-2.5 h-2.5 text-emerald-300" />≥{state.quality_filters.min_reviews ?? 20} rec
+            </span>
+            {state.quality_filters.premium_sectors_only && (
+              <span className="shrink-0 inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-1 rounded-full bg-white/5 border border-white/10 text-foreground/80">
+                <Gem className="w-2.5 h-2.5 text-cyan-300" />premium
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Body espanso */}
       <AnimatePresence initial={false}>
