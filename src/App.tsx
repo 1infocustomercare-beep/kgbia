@@ -187,6 +187,7 @@ const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const CustomPreviewPublicPage = lazy(() => import("./pages/CustomPreviewPublicPage"));
+const PublicMockupSuitePage = lazy(() => import("./pages/PublicMockupSuitePage"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
 const BusinessPage = lazy(() => import("./pages/BusinessPage"));
@@ -570,6 +571,7 @@ function App() {
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/cookie-policy" element={<CookiePolicy />} />
                       <Route path="/preview/custom/:slug" element={<CustomPreviewPublicPage />} />
+                      <Route path="/preview/mockup/:slug" element={<PublicMockupSuitePage />} />
                       <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/login" element={<AuthPage />} />
