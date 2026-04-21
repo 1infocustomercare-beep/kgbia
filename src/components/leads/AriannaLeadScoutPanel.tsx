@@ -382,19 +382,9 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                   </div>
                 </SectionCard>
               )}
-                  <Kpi icon={<Activity className="w-3 h-3" />} value={state.cycles_completed} label="cicli" />
-                  <Kpi icon={<Flame className="w-3 h-3" />} value={state.hot_leads_found} label="lead caldi" highlight />
-                  <Kpi icon={<TrendingUp className="w-3 h-3" />} value={topZones.length} label="zone top" />
-                </div>
-              )}
-
-              {/* Zone performanti (cosa Arianna ha imparato) */}
+              {/* ────────── 5. ZONE TOP (apprese) ────────── */}
               {topZones.length > 0 && (
-                <div className="rounded-lg p-2" style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.18)" }}>
-                  <div className="text-[10px] font-bold mb-1 flex items-center gap-1.5" style={{ color: "#4ade80" }}>
-                    <Brain className="w-3 h-3" />
-                    Cosa ho imparato (zone top)
-                  </div>
+                <SectionCard title="Cosa Arianna ha imparato" tone="green">
                   <div className="space-y-0.5">
                     {topZones.map(z => {
                       const [city, sector] = z.key.split("|");
@@ -406,17 +396,13 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                       );
                     })}
                   </div>
-                </div>
+                </SectionCard>
               )}
 
-              {/* Storia recente (ultimi cicli) */}
+              {/* ────────── 6. STREAM CICLI ────────── */}
               {history.length > 0 && (
-                <div className="rounded-lg p-2" style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                  <div className="text-[10px] font-bold mb-1.5 flex items-center gap-1.5 text-muted-foreground">
-                    <Activity className={`w-3 h-3 ${isActive ? "text-primary animate-pulse" : ""}`} />
-                    Stream live cicli ({history.length})
-                  </div>
-                  <div className="space-y-0.5 max-h-44 overflow-y-auto">
+                <SectionCard title={`Cicli recenti (${history.length})`}>
+                  <div className="space-y-0.5 max-h-40 overflow-y-auto">
                     <AnimatePresence initial={false}>
                       {history.slice(0, 10).map(h => (
                         <motion.div
@@ -441,7 +427,7 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                       ))}
                     </AnimatePresence>
                   </div>
-                </div>
+                </SectionCard>
               )}
 
               {/* Esegui ciclo manuale */}
@@ -452,13 +438,13 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                 style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", color: "#fff" }}
               >
                 {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
-                {loading ? "Sto scansionando…" : "Esegui ciclo ora (manuale)"}
+                {loading ? "Sto scansionando…" : "Esegui un ciclo ora"}
               </button>
 
               {/* Empty */}
               {history.length === 0 && !isActive && (
                 <div className="text-center py-2 text-[10px] text-muted-foreground">
-                  Accendi Arianna ↑ per partire — sceglie tutto da sola
+                  Accendi l'interruttore in alto per iniziare ↑
                 </div>
               )}
             </div>
