@@ -4,6 +4,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 import { MockupSuiteViewer, type SuiteScreen } from "@/components/partner/MockupSuiteViewer";
 
+function normalizeScreens(raw: any): SuiteScreen[] {
+  const arr = Array.isArray(raw) ? raw : (raw?.screens || []);
+  return arr.map((sc: any, i: number): SuiteScreen => {
+    if (typeof sc === "string") {
+      return { type: ["home", "menu", "booking", "profile"][i] || `screen_${i}`, title: `Screen ${i + 1}`, image_url: sc, render_mode: "ai" };
+    }
+    return {
+      type: sc?.type || ["home", "menu", "booking", "profile"][i] || `screen_${i}`,
+      title: sc?.title || `Screen ${i + 1}`,
+      image_url: sc?.image_url || sc?.url || null,
+      render_mode: sc?.render_mode || (sc?.image_url ? "ai" : "react"),
+      template_variant: sc?.template_variant,
+      engine: sc?.engine,
+    };
+  });
+}
+
 export default function PublicMockupSuitePage() {
   const { slug } = useParams<{ slug: string }>();
   const [suite, setSuite] = useState<any>(null);
@@ -48,7 +65,7 @@ export default function PublicMockupSuitePage() {
         </div>
 
         <MockupSuiteViewer
-          screens={suite.screens as SuiteScreen[]}
+          screens={normalizeScreens(suite.screens)}
           templateVariant={suite.template_variant}
           businessName={suite.business_name}
           businessSector={suite.business_sector}
