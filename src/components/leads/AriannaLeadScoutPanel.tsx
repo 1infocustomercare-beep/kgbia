@@ -451,42 +451,19 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                     onClick={async () => {
                       if (!userId) return;
                       const next = !(state?.auto_send_messages ?? false);
-
-                      // Quando si vuole ATTIVARE → preflight obbligatorio
                       if (next) {
-                        const probeToast = toast.loading("Verifico canali di invio…");
-                        try {
-                          const { data: probe, error: probeErr } = await supabase.functions.invoke(
-                            "arianna-autopilot",
-                            { body: { user_id: userId, action: "probe_outreach" } },
-                          );
-                          toast.dismiss(probeToast);
-                          if (probeErr || !probe?.operational) {
-                            toast.error("⚠️ Invio automatico NON disponibile", {
-                              description: probe?.message
-                                || "I canali di invio (email/WhatsApp) non sono ancora configurati. Il toggle resta spento.",
-                              duration: 8000,
-                            });
-                            return; // toggle resta OFF
-                          }
-                          toast.success(`✅ Canali pronti: ${(probe.channels || []).join(" + ")}`);
-                        } catch (e: any) {
-                          toast.dismiss(probeToast);
-                          toast.error("⚠️ Impossibile verificare l'invio automatico", {
-                            description: e?.message || "Riprova fra qualche secondo.",
-                            duration: 8000,
-                          });
-                          return;
-                        }
+                        // Accensione → preflight con popup visibile in caso di errore
+                        await tryEnableAutoSend();
+                        return;
                       }
-
+                      // Spegnimento → diretto
                       const { error } = await supabase
                         .from("arianna_autopilot_state" as any)
-                        .update({ auto_send_messages: next })
+                        .update({ auto_send_messages: false })
                         .eq("user_id", userId);
                       if (error) { toast.error("Errore aggiornamento"); return; }
-                      setState(prev => prev ? { ...prev, auto_send_messages: next } : prev);
-                      toast.success(next ? "📤 Contatto automatico attivato" : "💾 Solo salvataggio in pipeline");
+                      setState(prev => prev ? { ...prev, auto_send_messages: false } : prev);
+                      toast.success("💾 Solo salvataggio in pipeline");
                     }}
                     className="relative w-9 h-5 rounded-full transition-all shrink-0"
                     style={{ background: state?.auto_send_messages ? "#22c55e" : "rgba(255,255,255,0.15)" }}
