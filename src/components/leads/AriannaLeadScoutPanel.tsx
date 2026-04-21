@@ -448,6 +448,20 @@ export default function AriannaLeadScoutPanel(_props: Props) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Dialog override criteri lead caldi */}
+      {userId && state && (
+        <AriannaCriteriaOverrideDialog
+          open={criteriaDialogOpen}
+          onOpenChange={setCriteriaDialogOpen}
+          userId={userId}
+          initialFilters={state.quality_filters}
+          initialAutoTune={state.auto_tune_enabled !== false}
+          onSaved={({ filters, auto_tune_enabled }) =>
+            setState((prev) => prev ? { ...prev, quality_filters: filters, auto_tune_enabled } : prev)
+          }
+        />
+      )}
     </motion.div>
   );
 }
