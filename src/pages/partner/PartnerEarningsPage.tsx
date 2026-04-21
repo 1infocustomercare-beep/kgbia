@@ -9,6 +9,11 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
+import {
+  PartnerHeaderSkeleton,
+  PartnerCardSkeleton,
+  PartnerKpiGridSkeleton,
+} from "@/components/partner/PartnerSkeleton";
 import { toast } from "sonner";
 
 /* ─── Types ─── */
@@ -157,12 +162,12 @@ export default function PartnerEarningsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <motion.div className="relative" animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
-          <Sparkles className="w-8 h-8" style={{ color: "#a78bfa" }} />
-          <motion.div className="absolute inset-[-8px] rounded-full" animate={{ opacity: [0, 0.5, 0], scale: [0.8, 1.3, 0.8] }}
-            transition={{ duration: 2, repeat: Infinity }} style={{ border: "1px solid rgba(167,139,250,0.3)" }} />
-        </motion.div>
+      <div className="space-y-5 px-4 pt-5 pb-24 max-w-2xl lg:max-w-6xl mx-auto">
+        <PartnerHeaderSkeleton />
+        <PartnerCardSkeleton lines={4} />
+        <PartnerKpiGridSkeleton count={4} />
+        <PartnerCardSkeleton lines={3} />
+        <PartnerCardSkeleton lines={2} />
       </div>
     );
   }
