@@ -418,7 +418,43 @@ export default function TenantLogin() {
           </Button>
         </form>
 
-        <p className="mt-6 text-[11px] text-muted-foreground text-center">
+        {/* Verified unlock link — visible always, especially useful when locked */}
+        <div className="mt-4 pt-4 border-t border-border/60">
+          {unlockSent ? (
+            <div
+              role="status"
+              className="flex items-start gap-2 px-3 py-2.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10"
+            >
+              <MailCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                  Controlla la tua email
+                </p>
+                <p className="text-[11px] text-emerald-700/90 dark:text-emerald-400/90 mt-0.5 leading-snug">
+                  Ti abbiamo inviato un link di sblocco valido 15 minuti. Aprilo per rimuovere il blocco temporaneo.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleRequestUnlock}
+              disabled={requestingUnlock}
+              className="w-full inline-flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors py-2 disabled:opacity-50"
+            >
+              {requestingUnlock ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <KeyRound className="w-3.5 h-3.5" />
+              )}
+              {throttle.locked
+                ? "Hai sbagliato? Sblocca via email senza aspettare"
+                : "Hai sbagliato password? Richiedi sblocco verificato"}
+            </button>
+          )}
+        </div>
+
+        <p className="mt-5 text-[11px] text-muted-foreground text-center">
           Accesso protetto da Empire · isolamento per tenant
         </p>
       </motion.div>
