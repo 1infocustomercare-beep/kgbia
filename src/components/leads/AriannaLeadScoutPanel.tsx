@@ -242,23 +242,18 @@ export default function AriannaLeadScoutPanel(_props: Props) {
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-sm font-bold text-foreground">Arianna</span>
-              <span className="text-[9px] px-1.5 py-0.5 rounded font-semibold" style={{
-                background: "rgba(167,139,250,0.18)", color: "#c4b5fd",
-              }}>
-                AUTOPILOT ADATTIVO
-              </span>
+              <span className="text-sm font-bold text-foreground">Arianna Autopilot</span>
               <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold" style={{
                 background: isActive ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.05)",
                 color: isActive ? "#4ade80" : "#9ca3af",
               }}>
-                {isActive ? (loading ? "⚡ AL LAVORO" : "🟢 ATTIVA") : "⚪ STANDBY"}
+                {isActive ? (loading ? "⚡ AL LAVORO" : "🟢 ATTIVA") : "⚪ SPENTA"}
               </span>
             </div>
             <p className="text-[10px] text-muted-foreground truncate">
               {isActive && state?.current_city
-                ? <>Sto scansionando <span className="text-foreground font-semibold">{state.current_city}</span> · <span className="text-foreground font-semibold">{state.current_sector}</span></>
-                : "Accendimi: scelgo zone e settori da sola, trovo solo lead caldi"}
+                ? <>Sto cercando lead a <span className="text-foreground font-semibold">{state.current_city}</span> · <span className="text-foreground font-semibold">{state.current_sector}</span></>
+                : "Trova lead caldi da sola 24/7. Accendi l'interruttore →"}
             </p>
           </div>
         </div>
@@ -284,101 +279,72 @@ export default function AriannaLeadScoutPanel(_props: Props) {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="px-3 pb-3 space-y-3 border-t border-white/5 pt-3">
+            <div className="px-3 pb-3 space-y-2.5 border-t border-white/5 pt-3">
 
-              {/* Stato live: cosa sta facendo Arianna ora */}
-              {isActive && (
-                <div className="rounded-lg p-2.5 space-y-1.5" style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.25)" }}>
-                  <div className="flex items-center gap-2 text-[11px] font-bold" style={{ color: "#c4b5fd" }}>
-                    <Brain className="w-3.5 h-3.5" />
-                    Cervello adattivo in azione
-                  </div>
-                  <div className="grid grid-cols-2 gap-1.5 text-[10px]">
-                    <div className="flex items-center gap-1.5">
-                      <MapPin className="w-3 h-3 text-violet-300" />
-                      <span className="text-muted-foreground">Zona:</span>
-                      <span className="font-bold text-foreground">{state?.current_city || "—"}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Layers className="w-3 h-3 text-violet-300" />
-                      <span className="text-muted-foreground">Settore:</span>
-                      <span className="font-bold text-foreground">{state?.current_sector || "—"}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="w-3 h-3 text-violet-300" />
-                      <span className="text-muted-foreground">Prossimo ciclo:</span>
-                      <span className="font-bold text-foreground">
-                        {countdown > 0 ? `${countdown}s` : loading ? "ora…" : "—"}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Target className="w-3 h-3 text-violet-300" />
-                      <span className="text-muted-foreground">Filtri:</span>
-                      <span className="font-bold text-foreground">solo lead caldi</span>
-                    </div>
+              {/* COME FUNZIONA — visibile solo quando spenta, per orientare il venditore */}
+              {!isActive && (
+                <div className="rounded-lg p-2.5" style={{ background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.2)" }}>
+                  <div className="text-[10px] font-bold mb-1.5 text-violet-300">Come funziona</div>
+                  <div className="space-y-1 text-[10px] text-foreground/80">
+                    <div className="flex gap-1.5"><span className="text-violet-400 font-bold">1.</span> Arianna sceglie città+settore in base ai tuoi risultati</div>
+                    <div className="flex gap-1.5"><span className="text-violet-400 font-bold">2.</span> Scansiona Google Maps, filtra solo lead caldi</div>
+                    <div className="flex gap-1.5"><span className="text-violet-400 font-bold">3.</span> Salva in pipeline (e contatta, se attivi l'invio auto)</div>
                   </div>
                 </div>
               )}
 
-              {/* Filtri qualità — dinamici, AI-tunable + override manuale */}
-              <div className="rounded-lg p-2 space-y-1.5" style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <div className="flex items-center justify-between">
-                  <div className="text-[10px] font-bold flex items-center gap-1.5 text-muted-foreground">
-                    <Flame className="w-3 h-3 text-orange-400" />
-                    Criteri lead caldi
-                    {state?.auto_tune_enabled !== false ? (
-                      <span className="px-1.5 py-0.5 rounded text-[8px] font-bold" style={{ background: "rgba(167,139,250,0.18)", color: "#c4b5fd" }}>
-                        AI auto
-                      </span>
-                    ) : (
-                      <span className="px-1.5 py-0.5 rounded text-[8px] font-bold" style={{ background: "rgba(251,191,36,0.18)", color: "#fbbf24" }}>
-                        manuale
-                      </span>
-                    )}
+              {/* ────────── 1. STATO LIVE ────────── */}
+              {isActive && (
+                <SectionCard title="In tempo reale" tone="violet" step={1}>
+                  <div className="grid grid-cols-2 gap-y-1 gap-x-2 text-[10px]">
+                    <Row icon={<MapPin className="w-3 h-3 text-violet-300" />} label="Zona" value={state?.current_city || "—"} />
+                    <Row icon={<Layers className="w-3 h-3 text-violet-300" />} label="Settore" value={state?.current_sector || "—"} />
+                    <Row icon={<Clock className="w-3 h-3 text-violet-300" />} label="Prossimo ciclo" value={countdown > 0 ? `${countdown}s` : loading ? "in corso…" : "—"} />
+                    <Row icon={<Target className="w-3 h-3 text-violet-300" />} label="Modalità" value={state?.auto_send_messages ? "auto-invio" : "solo salva"} />
                   </div>
+                </SectionCard>
+              )}
+
+              {/* ────────── 2. CRITERI LEAD CALDI ────────── */}
+              <SectionCard
+                title="Criteri lead caldi"
+                step={isActive ? 2 : 1}
+                badge={state?.auto_tune_enabled !== false
+                  ? { label: "AI auto", color: "#c4b5fd", bg: "rgba(167,139,250,0.18)" }
+                  : { label: "manuale", color: "#fbbf24", bg: "rgba(251,191,36,0.18)" }}
+                action={
                   <button
                     type="button"
                     onClick={() => setCriteriaDialogOpen(true)}
                     className="flex items-center gap-1 text-[9px] font-semibold px-1.5 py-0.5 rounded hover:bg-white/5 transition-colors text-violet-300"
                   >
                     <Settings2 className="w-3 h-3" />
-                    Personalizza
+                    Modifica
                   </button>
-                </div>
-                <div className="grid grid-cols-2 gap-1 text-[9px] text-foreground/70">
+                }
+              >
+                <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] text-foreground/75">
                   {state?.quality_filters?.require_no_website && <div>❌ Senza sito web</div>}
                   {state?.quality_filters?.require_no_social && <div>📱 Senza social</div>}
                   <div>⭐ Rating ≥ {(state?.quality_filters?.min_rating ?? 4).toFixed(1)}</div>
                   <div>💬 ≥ {state?.quality_filters?.min_reviews ?? 20} recensioni</div>
                   {state?.quality_filters?.premium_sectors_only && (
-                    <div className="col-span-2">
-                      💰 Settori: {state?.quality_filters?.premium_sectors?.join(", ") || "food, beauty, fitness, healthcare"}
-                    </div>
+                    <div className="col-span-2 truncate">💰 {state?.quality_filters?.premium_sectors?.join(", ") || "food, beauty, fitness, healthcare"}</div>
                   )}
                 </div>
                 {state?.last_tuned_at && (
-                  <div className="text-[8px] text-muted-foreground italic pt-0.5">
-                    Ultima calibrazione AI: {new Date(state.last_tuned_at).toLocaleDateString("it-IT")}
+                  <div className="text-[8px] text-muted-foreground italic mt-1">
+                    Ultima calibrazione: {new Date(state.last_tuned_at).toLocaleDateString("it-IT")}
                   </div>
                 )}
-              </div>
+              </SectionCard>
 
-              {/* Toggle: invio automatico messaggi ai lead trovati */}
-              <div className="rounded-lg p-2.5" style={{
-                background: state?.auto_send_messages ? "rgba(34,197,94,0.08)" : "rgba(0,0,0,0.25)",
-                border: `1px solid ${state?.auto_send_messages ? "rgba(34,197,94,0.3)" : "rgba(255,255,255,0.05)"}`,
-              }}>
-                <div className="flex items-center justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[11px] font-bold flex items-center gap-1.5" style={{ color: state?.auto_send_messages ? "#4ade80" : undefined }}>
-                      {state?.auto_send_messages ? "📤" : "💾"} Invio automatico messaggi
-                    </div>
-                    <p className="text-[9px] text-muted-foreground leading-tight mt-0.5">
-                      {state?.auto_send_messages
-                        ? "Arianna contatta i lead caldi via WhatsApp/email da sola"
-                        : "Solo salvataggio in pipeline — tu decidi quando contattarli"}
-                    </p>
-                  </div>
+              {/* ────────── 3. INVIO AUTO ────────── */}
+              <SectionCard
+                title={state?.auto_send_messages ? "Invio automatico ATTIVO" : "Invio messaggi manuale"}
+                step={isActive ? 3 : 2}
+                tone={state?.auto_send_messages ? "green" : "neutral"}
+                action={
                   <button
                     type="button"
                     onClick={async () => {
@@ -392,30 +358,33 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                       setState(prev => prev ? { ...prev, auto_send_messages: next } : prev);
                       toast.success(next ? "📤 Invio automatico ATTIVO" : "💾 Solo salvataggio in pipeline");
                     }}
-                    className="relative w-10 h-5 rounded-full transition-all shrink-0"
-                    style={{ background: state?.auto_send_messages ? "#22c55e" : "rgba(255,255,255,0.1)" }}
+                    className="relative w-9 h-5 rounded-full transition-all shrink-0"
+                    style={{ background: state?.auto_send_messages ? "#22c55e" : "rgba(255,255,255,0.15)" }}
                   >
-                    <motion.div animate={{ x: state?.auto_send_messages ? 21 : 2 }} className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow" />
+                    <motion.div animate={{ x: state?.auto_send_messages ? 18 : 2 }} className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow" />
                   </button>
-                </div>
-              </div>
+                }
+              >
+                <p className="text-[10px] text-muted-foreground leading-snug">
+                  {state?.auto_send_messages
+                    ? "Arianna contatta i lead caldi via WhatsApp/email da sola, appena li trova."
+                    : "I lead vengono salvati in pipeline. Sei tu a decidere quando contattarli."}
+                </p>
+              </SectionCard>
 
-              {/* KPI */}
+              {/* ────────── 4. RISULTATI (KPI) ────────── */}
               {state && (
-                <div className="grid grid-cols-3 gap-1.5">
-                  <Kpi icon={<Activity className="w-3 h-3" />} value={state.cycles_completed} label="cicli" />
-                  <Kpi icon={<Flame className="w-3 h-3" />} value={state.hot_leads_found} label="lead caldi" highlight />
-                  <Kpi icon={<TrendingUp className="w-3 h-3" />} value={topZones.length} label="zone top" />
-                </div>
-              )}
-
-              {/* Zone performanti (cosa Arianna ha imparato) */}
-              {topZones.length > 0 && (
-                <div className="rounded-lg p-2" style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.18)" }}>
-                  <div className="text-[10px] font-bold mb-1 flex items-center gap-1.5" style={{ color: "#4ade80" }}>
-                    <Brain className="w-3 h-3" />
-                    Cosa ho imparato (zone top)
+                <SectionCard title="I tuoi risultati" step={isActive ? 4 : 3}>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <Kpi icon={<Activity className="w-3 h-3" />} value={state.cycles_completed} label="cicli" />
+                    <Kpi icon={<Flame className="w-3 h-3" />} value={state.hot_leads_found} label="lead caldi" highlight />
+                    <Kpi icon={<TrendingUp className="w-3 h-3" />} value={topZones.length} label="zone top" />
                   </div>
+                </SectionCard>
+              )}
+              {/* ────────── 5. ZONE TOP (apprese) ────────── */}
+              {topZones.length > 0 && (
+                <SectionCard title="Cosa Arianna ha imparato" tone="green">
                   <div className="space-y-0.5">
                     {topZones.map(z => {
                       const [city, sector] = z.key.split("|");
@@ -427,17 +396,13 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                       );
                     })}
                   </div>
-                </div>
+                </SectionCard>
               )}
 
-              {/* Storia recente (ultimi cicli) */}
+              {/* ────────── 6. STREAM CICLI ────────── */}
               {history.length > 0 && (
-                <div className="rounded-lg p-2" style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                  <div className="text-[10px] font-bold mb-1.5 flex items-center gap-1.5 text-muted-foreground">
-                    <Activity className={`w-3 h-3 ${isActive ? "text-primary animate-pulse" : ""}`} />
-                    Stream live cicli ({history.length})
-                  </div>
-                  <div className="space-y-0.5 max-h-44 overflow-y-auto">
+                <SectionCard title={`Cicli recenti (${history.length})`}>
+                  <div className="space-y-0.5 max-h-40 overflow-y-auto">
                     <AnimatePresence initial={false}>
                       {history.slice(0, 10).map(h => (
                         <motion.div
@@ -462,7 +427,7 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                       ))}
                     </AnimatePresence>
                   </div>
-                </div>
+                </SectionCard>
               )}
 
               {/* Esegui ciclo manuale */}
@@ -473,13 +438,13 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                 style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", color: "#fff" }}
               >
                 {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
-                {loading ? "Sto scansionando…" : "Esegui ciclo ora (manuale)"}
+                {loading ? "Sto scansionando…" : "Esegui un ciclo ora"}
               </button>
 
               {/* Empty */}
               {history.length === 0 && !isActive && (
                 <div className="text-center py-2 text-[10px] text-muted-foreground">
-                  Accendi Arianna ↑ per partire — sceglie tutto da sola
+                  Accendi l'interruttore in alto per iniziare ↑
                 </div>
               )}
             </div>
@@ -513,6 +478,61 @@ function Kpi({ icon, value, label, highlight }: { icon: React.ReactNode; value: 
       <div className="flex items-center justify-center gap-1 mb-0.5" style={{ color: highlight ? "#fb923c" : undefined }}>{icon}</div>
       <div className="text-sm font-bold leading-none" style={{ color: highlight ? "#fb923c" : undefined }}>{value.toLocaleString("it-IT")}</div>
       <div className="text-[8px] uppercase tracking-wider text-muted-foreground">{label}</div>
+    </div>
+  );
+}
+
+/* ─── SectionCard: card titolata uniforme con badge step opzionale ─── */
+function SectionCard({
+  title,
+  step,
+  badge,
+  action,
+  tone = "neutral",
+  children,
+}: {
+  title: string;
+  step?: number;
+  badge?: { label: string; color: string; bg: string };
+  action?: React.ReactNode;
+  tone?: "neutral" | "violet" | "green";
+  children: React.ReactNode;
+}) {
+  const palette = {
+    neutral: { bg: "rgba(0,0,0,0.25)", border: "rgba(255,255,255,0.06)", title: undefined as string | undefined, stepBg: "rgba(255,255,255,0.08)", stepColor: "#9ca3af" },
+    violet: { bg: "rgba(167,139,250,0.08)", border: "rgba(167,139,250,0.25)", title: "#c4b5fd", stepBg: "rgba(167,139,250,0.25)", stepColor: "#c4b5fd" },
+    green: { bg: "rgba(34,197,94,0.06)", border: "rgba(34,197,94,0.18)", title: "#4ade80", stepBg: "rgba(34,197,94,0.25)", stepColor: "#4ade80" },
+  }[tone];
+  return (
+    <div className="rounded-lg p-2.5 space-y-1.5" style={{ background: palette.bg, border: `1px solid ${palette.border}` }}>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          {step !== undefined && (
+            <span className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0" style={{ background: palette.stepBg, color: palette.stepColor }}>
+              {step}
+            </span>
+          )}
+          <span className="text-[11px] font-bold truncate" style={{ color: palette.title }}>{title}</span>
+          {badge && (
+            <span className="px-1.5 py-0.5 rounded text-[8px] font-bold shrink-0" style={{ background: badge.bg, color: badge.color }}>
+              {badge.label}
+            </span>
+          )}
+        </div>
+        {action}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/* ─── Row: riga icona + label + valore ─── */
+function Row({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex items-center gap-1.5 min-w-0">
+      {icon}
+      <span className="text-muted-foreground">{label}:</span>
+      <span className="font-bold text-foreground truncate">{value}</span>
     </div>
   );
 }
