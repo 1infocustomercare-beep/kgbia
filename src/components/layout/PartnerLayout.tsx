@@ -19,6 +19,7 @@ import DailyBriefToast from "@/components/partner/DailyBriefToast";
 import {
   Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
+import { usePartnerReveal } from "@/hooks/usePartnerReveal";
 
 const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
 export const usePartnerDemoMode = () => useContext(DemoModeContext);
