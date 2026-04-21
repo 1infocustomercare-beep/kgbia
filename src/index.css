@@ -1421,7 +1421,71 @@
 
   /* Content padding: bottom-nav 64px + safe-area + breathing room for FAB stack */
   .partner-mobile-content-safe {
-    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 9rem);
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 5.5rem);
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  /* ════════════════════════════════════════════════════════════════
+     PARTNER PAGE POLISH — Reusable card / section / reveal utilities
+     Applied to wrappers for consistent spacing, depth, and animation
+     ════════════════════════════════════════════════════════════════ */
+  .partner-page-shell {
+    padding: 1rem 0.875rem 0;
+    animation: partner-page-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @media (min-width: 1024px) {
+    .partner-page-shell {
+      padding: 1.5rem 0 0;
+    }
+  }
+  @keyframes partner-page-enter {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Stagger reveal for grid children */
+  .partner-stagger > * {
+    animation: partner-stagger-in 540ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .partner-stagger > *:nth-child(1) { animation-delay: 40ms; }
+  .partner-stagger > *:nth-child(2) { animation-delay: 90ms; }
+  .partner-stagger > *:nth-child(3) { animation-delay: 140ms; }
+  .partner-stagger > *:nth-child(4) { animation-delay: 190ms; }
+  .partner-stagger > *:nth-child(5) { animation-delay: 240ms; }
+  .partner-stagger > *:nth-child(6) { animation-delay: 290ms; }
+  .partner-stagger > *:nth-child(n+7) { animation-delay: 340ms; }
+  @keyframes partner-stagger-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.985); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Avoid horizontal overflow caused by long unbreakable strings on mobile */
+  .partner-mobile-content-safe,
+  .partner-mobile-content-safe * {
+    min-width: 0;
+  }
+  .partner-mobile-content-safe img,
+  .partner-mobile-content-safe video,
+  .partner-mobile-content-safe iframe {
+    max-width: 100%;
+  }
+
+  /* Soft tap highlight removal (cleaner mobile feel) */
+  .partner-toaster-zone button,
+  .partner-toaster-zone a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .partner-page-shell,
+    .partner-stagger > * {
+      animation: none !important;
+    }
+    .partner-mobile-content-safe {
+      scroll-behavior: auto;
+    }
   }
 
   /* Coach Empire button — sits below the header, above content */
