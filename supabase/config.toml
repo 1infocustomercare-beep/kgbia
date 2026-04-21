@@ -65,3 +65,9 @@ verify_jwt = false
 
 [functions.temp-ncc-magic-links]
 verify_jwt = false
+
+[functions.tenant-login-unlock-request]
+verify_jwt = false
+
+[functions.tenant-login-unlock-verify]
+verify_jwt = false
