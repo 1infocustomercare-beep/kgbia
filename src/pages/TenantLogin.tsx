@@ -46,8 +46,41 @@ export default function TenantLogin() {
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Load tenant by slug
+  // Brute-force throttle state (per slug+email)
+  const [throttle, setThrottle] = useState<ThrottleStatus>({
+    locked: false,
+    remainingMs: 0,
+    failures: 0,
+    warning: null,
+    message: null,
+  });
+  const [nowTick, setNowTick] = useState(0);
+
+  // Re-evaluate throttle whenever email/slug changes
   useEffect(() => {
+    if (!slug || !email) {
+      setThrottle({ locked: false, remainingMs: 0, failures: 0, warning: null, message: null });
+      return;
+    }
+    setThrottle(getLoginThrottleStatus(slug, email));
+  }, [slug, email, nowTick]);
+
+  // Live countdown while locked
+  useEffect(() => {
+    if (!throttle.locked) return;
+    const id = window.setInterval(() => setNowTick((n) => n + 1), 1000);
+    return () => window.clearInterval(id);
+  }, [throttle.locked]);
+
+  const lockoutLabel = useMemo(() => {
+    if (!throttle.locked) return null;
+    const sec = Math.max(1, Math.ceil(throttle.remainingMs / 1000));
+    if (sec < 60) return `${sec}s`;
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}m ${s.toString().padStart(2, "0")}s`;
+  }, [throttle.locked, throttle.remainingMs]);
+
     let cancelled = false;
     (async () => {
       setLoadingTenant(true);
