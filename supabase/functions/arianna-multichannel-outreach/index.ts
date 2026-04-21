@@ -568,33 +568,3 @@ async function processSequenceTouch(supabase: any, seq: Sequence, lead: Lead, dr
   }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 }
 
-  // Update sequence + schedule next
-  const nextDelay = pick.hours_delay > 0 ? pick.hours_delay : 48;
-  const nextAt = new Date();
-  nextAt.setHours(nextAt.getHours() + nextDelay);
-
-  await supabase.from("lead_outreach_sequences").update({
-    current_touch_number: newTouchNumber,
-    last_touch_at: new Date().toISOString(),
-    next_touch_at: newTouchNumber >= seq.max_touches ? null : nextAt.toISOString(),
-    next_touch_channel: null,
-    ai_reasoning: pick.reasoning,
-    status: newTouchNumber >= seq.max_touches ? "exhausted" : "active",
-  }).eq("id", seq.id);
-
-  // Update lead last_contacted
-  await supabase.from("leads").update({
-    last_contacted_at: new Date().toISOString(),
-    contact_stage: newTouchNumber === 1 ? "contattato" : "in_follow_up",
-    channel_used: pick.channel,
-  }).eq("id", seq.lead_id);
-
-  return new Response(JSON.stringify({
-    ok: result.ok,
-    touch_number: newTouchNumber,
-    channel: pick.channel,
-    manual_url: result.manual_url,
-    next_touch_at: nextAt.toISOString(),
-    reasoning: pick.reasoning,
-  }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
-}
