@@ -38,7 +38,7 @@ const VARIANT_VISIBLE = "opacity-100 translate-x-0 translate-y-0 scale-100";
 export const RevealCard = forwardRef<HTMLDivElement, RevealCardProps>(
   ({ children, variant = "fade-up", index = 0, stepDelayMs = 90, repeat = false,
      threshold = 0.15, as = "div", className, style, ...rest }, _ref) => {
-    const { ref, isRevealed } = useScrollReveal<HTMLDivElement>({
+    const { ref, isVisible } = useScrollReveal<HTMLDivElement>({
       once: !repeat,
       threshold,
       delay: index * stepDelayMs,
@@ -48,10 +48,10 @@ export const RevealCard = forwardRef<HTMLDivElement, RevealCardProps>(
     return (
       <Tag
         ref={ref}
-        data-revealed={isRevealed ? "true" : "false"}
+        data-revealed={isVisible ? "true" : "false"}
         className={cn(
           "transition-all duration-700 ease-out will-change-transform motion-reduce:transition-none motion-reduce:transform-none",
-          isRevealed ? VARIANT_VISIBLE : VARIANT_HIDDEN[variant],
+          isVisible ? VARIANT_VISIBLE : VARIANT_HIDDEN[variant],
           className
         )}
         style={style}
