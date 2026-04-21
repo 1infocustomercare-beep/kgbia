@@ -81,6 +81,8 @@ export default function TenantLogin() {
     return `${m}m ${s.toString().padStart(2, "0")}s`;
   }, [throttle.locked, throttle.remainingMs]);
 
+  // Load tenant by slug
+  useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoadingTenant(true);
