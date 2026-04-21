@@ -5579,6 +5579,72 @@ export type Database = {
         }
         Relationships: []
       }
+      seller_mockup_suites: {
+        Row: {
+          business_city: string | null
+          business_name: string
+          business_sector: string | null
+          created_at: string
+          credits_spent: number | null
+          engine: string
+          error_message: string | null
+          generated_at: string | null
+          id: string
+          lead_id: string | null
+          owner_id: string
+          preview_id: string | null
+          primary_color: string | null
+          screens: Json
+          share_slug: string | null
+          status: string
+          template_variant: string | null
+          updated_at: string
+          view_count: number | null
+        }
+        Insert: {
+          business_city?: string | null
+          business_name: string
+          business_sector?: string | null
+          created_at?: string
+          credits_spent?: number | null
+          engine?: string
+          error_message?: string | null
+          generated_at?: string | null
+          id?: string
+          lead_id?: string | null
+          owner_id: string
+          preview_id?: string | null
+          primary_color?: string | null
+          screens?: Json
+          share_slug?: string | null
+          status?: string
+          template_variant?: string | null
+          updated_at?: string
+          view_count?: number | null
+        }
+        Update: {
+          business_city?: string | null
+          business_name?: string
+          business_sector?: string | null
+          created_at?: string
+          credits_spent?: number | null
+          engine?: string
+          error_message?: string | null
+          generated_at?: string | null
+          id?: string
+          lead_id?: string | null
+          owner_id?: string
+          preview_id?: string | null
+          primary_color?: string | null
+          screens?: Json
+          share_slug?: string | null
+          status?: string
+          template_variant?: string | null
+          updated_at?: string
+          view_count?: number | null
+        }
+        Relationships: []
+      }
       seo_settings: {
         Row: {
           company_id: string
