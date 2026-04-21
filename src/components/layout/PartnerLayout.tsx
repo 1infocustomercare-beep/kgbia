@@ -15,6 +15,7 @@ import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import PartnerVoiceOrchestratorFAB from "@/components/partner/PartnerVoiceOrchestratorFAB";
 import CoachEmpireDrawer from "@/components/partner/CoachEmpireDrawer";
 import SellerOnboardingTour from "@/components/partner/SellerOnboardingTour";
+import SellerOnboardingChecklist from "@/components/partner/SellerOnboardingChecklist";
 import DailyBriefToast from "@/components/partner/DailyBriefToast";
 import {
   Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle,
@@ -470,6 +471,7 @@ export default function PartnerLayout() {
         {/* Coach Empire: drawer aiuto contestuale + tour onboarding + brief mattutino AI */}
         <CoachEmpireDrawer />
         <SellerOnboardingTour />
+        <SellerOnboardingChecklist />
         <DailyBriefToast />
       </div>
     </DemoModeContext.Provider>
