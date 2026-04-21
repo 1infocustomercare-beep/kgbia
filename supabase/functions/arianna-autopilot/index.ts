@@ -165,6 +165,26 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ success: true, stopped: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
+    // ─── Preflight: verifica se l'invio automatico messaggi è realmente operativo ───
+    if (action === "probe_outreach") {
+      const hasResend = !!Deno.env.get("RESEND_API_KEY");
+      const hasTwilio = !!Deno.env.get("TWILIO_API_KEY") || !!Deno.env.get("TWILIO_ACCOUNT_SID");
+      const hasWhatsAppCloud = !!Deno.env.get("WHATSAPP_ACCESS_TOKEN") || !!Deno.env.get("WHATSAPP_PHONE_NUMBER_ID");
+      const channels: string[] = [];
+      if (hasResend) channels.push("email");
+      if (hasTwilio || hasWhatsAppCloud) channels.push("whatsapp");
+      const ok = channels.length > 0;
+      return new Response(JSON.stringify({
+        success: ok,
+        operational: ok,
+        channels,
+        missing: ok ? [] : ["RESEND_API_KEY (email)", "TWILIO_API_KEY o WHATSAPP_ACCESS_TOKEN (WhatsApp)"],
+        message: ok
+          ? `Invio automatico operativo via ${channels.join(" + ")}`
+          : "Nessun canale di invio configurato. Contatta il super admin per attivare le API di invio (email/WhatsApp).",
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     if (action === "start") {
       await supabase.from("arianna_autopilot_state").update({ is_running: true, next_cycle_at: new Date().toISOString() }).eq("user_id", user_id);
       // Esegui subito il primo ciclo
@@ -395,22 +415,27 @@ Deno.serve(async (req) => {
         } else {
           leadsSaved++;
           // Invio automatico messaggi se abilitato dal venditore
+          // Usa arianna-multichannel-outreach (funzione realmente esistente)
           if (state.auto_send_messages === true) {
             try {
               const channel = intel.approach_strategy === "whatsapp" && phone ? "whatsapp"
                 : intel.approach_strategy === "email" && lead.email ? "email"
                 : null;
               if (channel) {
-                await supabase.functions.invoke("lead-outreach-send", {
+                await supabase.functions.invoke("arianna-multichannel-outreach", {
                   body: {
-                    user_id,
-                    lead_name: lead.name,
-                    lead_city: leadCity,
-                    lead_phone: phone,
-                    lead_email: lead.email,
-                    channel,
+                    owner_id: user_id,
+                    lead: {
+                      name: lead.name,
+                      city: leadCity,
+                      sector: target.sector,
+                      phone,
+                      email: lead.email,
+                      website,
+                      ai_score: intel.vendibility_score,
+                    },
+                    preferred_channel: channel,
                     auto_generated: true,
-                    intelligence_report_id: intel.id,
                     source: "arianna_autopilot",
                   },
                 }).catch((err: any) => console.warn(`[autopilot] outreach send failed for ${lead.name}:`, err?.message));
