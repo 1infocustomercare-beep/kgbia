@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, AlertTriangle, ExternalLink, Search, Sparkles, Globe, Instagram, Building2, Zap } from "lucide-react";
+import { CheckCircle2, AlertTriangle, ExternalLink, Search, Sparkles, Globe, Instagram, Building2, Zap, Mail, MessageSquare, Facebook, CreditCard, KeyRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -105,6 +105,78 @@ export default function PartnerApiConnectionsPage() {
         "Empire fornisce alternativa via Firecrawl scraping pubblico (gratis ma più lento)",
       ],
       setupUrl: "https://www.registroimprese.it",
+      isManaged: false,
+    },
+    {
+      key: "RESEND_API_KEY",
+      name: "Resend (Email Outreach)",
+      description: "Invio email automatico ai lead da parte di Arianna Autopilot. Necessario per la sequenza multi-canale.",
+      icon: Mail,
+      status: "missing",
+      costPerCall: "Gratis fino a 3.000 email/mese, poi $20/mese (50K)",
+      requiredFor: ["Arianna Outreach Email", "Follow-up automatici", "Mockup preview email"],
+      setupSteps: [
+        "Vai su resend.com e crea un account gratuito",
+        "Verifica un dominio email (es. tuostudio.it) seguendo la guida DNS",
+        "Vai su Dashboard → API Keys → Create API Key (permessi 'Sending')",
+        "Copia la chiave (inizia con re_…) e incollala nel campo qui sotto cliccando 'Aggiungi chiave'",
+        "Empire userà quella chiave per inviare email a nome tuo (sender personalizzabile)",
+      ],
+      setupUrl: "https://resend.com/api-keys",
+      isManaged: false,
+    },
+    {
+      key: "TWILIO_API_KEY",
+      name: "Twilio (WhatsApp Business)",
+      description: "Invio WhatsApp automatici ai lead via Twilio API. Necessario per il canale WhatsApp di Arianna.",
+      icon: MessageSquare,
+      status: "missing",
+      costPerCall: "~€0.005/msg WhatsApp",
+      requiredFor: ["Arianna Outreach WhatsApp", "Notifiche cliente", "Follow-up vocali"],
+      setupSteps: [
+        "Vai su twilio.com e registrati (riceverai $15 di credito di prova)",
+        "Console → Messaging → Try it out → Send a WhatsApp message → attiva sandbox",
+        "Per produzione: richiedi numero WhatsApp Business approvato da Meta",
+        "Account → API keys & tokens → crea Auth Token e copia anche Account SID",
+        "Aggiungi qui la chiave; Empire combinerà SID + Token per autenticare",
+      ],
+      setupUrl: "https://console.twilio.com/us1/account/keys-credentials/api-keys",
+      isManaged: false,
+    },
+    {
+      key: "META_GRAPH_API_KEY",
+      name: "Meta Graph API (Instagram + Facebook DM)",
+      description: "Invio diretto messaggi Instagram DM e Facebook Messenger ai lead. Senza, generiamo solo link 'apri DM'.",
+      icon: Facebook,
+      status: "missing",
+      costPerCall: "Gratis (rate limit Meta)",
+      requiredFor: ["DM Instagram automatico", "Facebook Messenger outreach"],
+      setupSteps: [
+        "Vai su developers.facebook.com → My Apps → Create App → tipo 'Business'",
+        "Aggiungi prodotti: 'Instagram Graph API' + 'Messenger'",
+        "Collega la tua pagina Facebook business e l'account Instagram professionale",
+        "Genera 'Page Access Token' a lungo termine (60 giorni → poi rinnovo automatico)",
+        "Copia il token qui. Empire lo userà per inviare DM solo a chi ha già interagito (regola Meta anti-spam)",
+      ],
+      setupUrl: "https://developers.facebook.com/apps",
+      isManaged: false,
+    },
+    {
+      key: "STRIPE_SECRET_KEY",
+      name: "Stripe (Pagamenti & Commissioni Partner)",
+      description: "Necessario per Stripe Connect (pagamenti partner), checkout cliente e commissioni Empire.",
+      icon: CreditCard,
+      status: "missing",
+      costPerCall: "1.4% + €0.25/transazione UE",
+      requiredFor: ["Onboarding partner Stripe", "Checkout cliente", "Fee Empire automatica"],
+      setupSteps: [
+        "Vai su dashboard.stripe.com e crea un account business",
+        "Completa la verifica identità (richiede documento + IBAN)",
+        "Developers → API keys → copia la 'Secret key' (inizia con sk_live_…)",
+        "Attiva 'Stripe Connect' in Settings → Connect → Get started",
+        "Incolla la chiave qui. Empire la userà SOLO server-side, mai esposta al cliente",
+      ],
+      setupUrl: "https://dashboard.stripe.com/apikeys",
       isManaged: false,
     },
   ]);
@@ -257,16 +329,33 @@ export default function PartnerApiConnectionsPage() {
                 <div className="flex flex-wrap gap-2 pt-2 border-t">
                   {api.setupUrl && (
                     <Button variant="outline" size="sm" onClick={() => window.open(api.setupUrl, "_blank")}>
-                      <ExternalLink className="h-4 w-4 mr-1" /> Apri portale
+                      <ExternalLink className="h-4 w-4 mr-1" /> Apri portale {api.name.split(" ")[0]}
                     </Button>
                   )}
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => toast.info("Empire gestisce questa API per te. Usa Arianna Autopilot direttamente nei Lead.")}
-                  >
-                    <Zap className="h-4 w-4 mr-1" /> Usa con crediti
-                  </Button>
+                  {!api.isManaged && api.status !== "connected" && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => {
+                        toast.info(
+                          `Per attivare ${api.name}: contatta info@empireaigroup.com con la tua chiave API. Il team la configurerà entro 1 giorno lavorativo in modo sicuro (mai esposta al frontend).`,
+                          { duration: 8000 }
+                        );
+                        window.open(`mailto:info@empireaigroup.com?subject=Attivazione ${api.name}&body=Ciao Empire,%0A%0AVorrei attivare ${api.name} sul mio account.%0AHo già ottenuto la chiave seguendo la guida.%0A%0AGrazie!`, "_blank");
+                      }}
+                    >
+                      <KeyRound className="h-4 w-4 mr-1" /> Attiva ora
+                    </Button>
+                  )}
+                  {api.isManaged && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => toast.info("Empire gestisce questa API per te. Usa Arianna Autopilot direttamente nei Lead.")}
+                    >
+                      <Zap className="h-4 w-4 mr-1" /> Usa con crediti
+                    </Button>
+                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>
