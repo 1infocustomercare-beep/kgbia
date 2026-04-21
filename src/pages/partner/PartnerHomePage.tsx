@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -14,24 +14,36 @@ import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import { usePartnerDemoMode } from "@/components/layout/PartnerLayout";
 import { SectorPhoneCarousel } from "@/components/partner/SectorPhoneCarousel";
 
-/* Animated counter component */
-const AnimatedCounter = ({ value, prefix = "", color }: { value: number; prefix?: string; color: string }) => {
-  const [display, setDisplay] = useState(0);
-  useEffect(() => {
-    if (value === 0) { setDisplay(0); return; }
-    const dur = 1200;
-    const start = Date.now();
-    const tick = () => {
-      const elapsed = Date.now() - start;
-      const progress = Math.min(elapsed / dur, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(eased * value));
-      if (progress < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [value]);
-  return <p className="text-xl font-bold text-foreground" style={{ textShadow: `0 0 20px ${color}30` }}>{prefix}{display.toLocaleString("it-IT")}</p>;
-};
+/* Animated counter component — forwardRef so it can sit inside motion children that pass refs */
+const AnimatedCounter = forwardRef<HTMLParagraphElement, { value: number; prefix?: string; color: string }>(
+  ({ value, prefix = "", color }, ref) => {
+    const [display, setDisplay] = useState(0);
+    useEffect(() => {
+      if (value === 0) { setDisplay(0); return; }
+      const dur = 1200;
+      const start = Date.now();
+      const tick = () => {
+        const elapsed = Date.now() - start;
+        const progress = Math.min(elapsed / dur, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setDisplay(Math.round(eased * value));
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, [value]);
+    return (
+      <p
+        ref={ref}
+        className="text-xl font-bold text-foreground"
+        style={{ textShadow: `0 0 20px ${color}30` }}
+      >
+        {prefix}
+        {display.toLocaleString("it-IT")}
+      </p>
+    );
+  }
+);
+AnimatedCounter.displayName = "AnimatedCounter";
 
 export default function PartnerHomePage() {
   const navigate = useNavigate();
