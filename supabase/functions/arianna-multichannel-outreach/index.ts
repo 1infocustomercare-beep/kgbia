@@ -376,8 +376,17 @@ Deno.serve(async (req) => {
         try {
           await processSequenceTouch(supabase, s as any, s.leads as Lead, false);
           processed++;
-        } catch (e) {
+        } catch (e: any) {
           console.error(`Touch failed for seq ${s.id}:`, e);
+          await logOutreachFailure(supabase, {
+            channel: (s as any).next_touch_channel || "unknown",
+            error_message: e?.message || String(e),
+            owner_id: (s as any).owner_id,
+            lead_id: (s as any).lead_id,
+            sequence_id: (s as any).id,
+            severity: "error",
+            payload: { context: "tick_loop" },
+          });
         }
       }
       return new Response(JSON.stringify({ processed }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
