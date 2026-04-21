@@ -481,3 +481,58 @@ function Kpi({ icon, value, label, highlight }: { icon: React.ReactNode; value: 
     </div>
   );
 }
+
+/* ─── SectionCard: card titolata uniforme con badge step opzionale ─── */
+function SectionCard({
+  title,
+  step,
+  badge,
+  action,
+  tone = "neutral",
+  children,
+}: {
+  title: string;
+  step?: number;
+  badge?: { label: string; color: string; bg: string };
+  action?: React.ReactNode;
+  tone?: "neutral" | "violet" | "green";
+  children: React.ReactNode;
+}) {
+  const palette = {
+    neutral: { bg: "rgba(0,0,0,0.25)", border: "rgba(255,255,255,0.06)", title: undefined as string | undefined, stepBg: "rgba(255,255,255,0.08)", stepColor: "#9ca3af" },
+    violet: { bg: "rgba(167,139,250,0.08)", border: "rgba(167,139,250,0.25)", title: "#c4b5fd", stepBg: "rgba(167,139,250,0.25)", stepColor: "#c4b5fd" },
+    green: { bg: "rgba(34,197,94,0.06)", border: "rgba(34,197,94,0.18)", title: "#4ade80", stepBg: "rgba(34,197,94,0.25)", stepColor: "#4ade80" },
+  }[tone];
+  return (
+    <div className="rounded-lg p-2.5 space-y-1.5" style={{ background: palette.bg, border: `1px solid ${palette.border}` }}>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          {step !== undefined && (
+            <span className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0" style={{ background: palette.stepBg, color: palette.stepColor }}>
+              {step}
+            </span>
+          )}
+          <span className="text-[11px] font-bold truncate" style={{ color: palette.title }}>{title}</span>
+          {badge && (
+            <span className="px-1.5 py-0.5 rounded text-[8px] font-bold shrink-0" style={{ background: badge.bg, color: badge.color }}>
+              {badge.label}
+            </span>
+          )}
+        </div>
+        {action}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/* ─── Row: riga icona + label + valore ─── */
+function Row({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex items-center gap-1.5 min-w-0">
+      {icon}
+      <span className="text-muted-foreground">{label}:</span>
+      <span className="font-bold text-foreground truncate">{value}</span>
+    </div>
+  );
+}
