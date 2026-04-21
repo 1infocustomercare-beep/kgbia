@@ -13,6 +13,9 @@ import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import PartnerVoiceOrchestratorFAB from "@/components/partner/PartnerVoiceOrchestratorFAB";
+import CoachEmpireDrawer from "@/components/partner/CoachEmpireDrawer";
+import SellerOnboardingTour from "@/components/partner/SellerOnboardingTour";
+import DailyBriefToast from "@/components/partner/DailyBriefToast";
 
 const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
 export const usePartnerDemoMode = () => useContext(DemoModeContext);
@@ -363,6 +366,11 @@ export default function PartnerLayout() {
 
         {/* Voice Agent FAB — limitato ai dati del partner (max privacy) */}
         <PartnerVoiceOrchestratorFAB />
+
+        {/* Coach Empire: drawer aiuto contestuale + tour onboarding + brief mattutino AI */}
+        <CoachEmpireDrawer />
+        <SellerOnboardingTour />
+        <DailyBriefToast />
       </div>
     </DemoModeContext.Provider>
   );
