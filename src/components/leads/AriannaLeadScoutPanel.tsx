@@ -13,6 +13,7 @@ import {
   CircleDot,
 } from "lucide-react";
 import AriannaCriteriaOverrideDialog from "./AriannaCriteriaOverrideDialog";
+import OutreachPreflightDialog, { type PreflightResult } from "./OutreachPreflightDialog";
 
 interface AutopilotState {
   is_running: boolean;
@@ -71,7 +72,57 @@ export default function AriannaLeadScoutPanel(_props: Props) {
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState<number>(0);
   const [criteriaDialogOpen, setCriteriaDialogOpen] = useState(false);
+  const [preflightOpen, setPreflightOpen] = useState(false);
+  const [preflightResult, setPreflightResult] = useState<PreflightResult | null>(null);
   const cycleTimerRef = useRef<number | null>(null);
+
+  // Preflight runner — verifica i canali di invio prima di accendere il toggle.
+  const runOutreachPreflight = useCallback(async (): Promise<PreflightResult | null> => {
+    if (!userId) return null;
+    const probeToast = toast.loading("Verifico canali di invio…");
+    try {
+      const { data: probe, error: probeErr } = await supabase.functions.invoke(
+        "arianna-autopilot",
+        { body: { user_id: userId, action: "probe_outreach" } },
+      );
+      toast.dismiss(probeToast);
+      if (probeErr) {
+        return {
+          operational: false,
+          channels: [],
+          missing: ["Errore di rete con il servizio di verifica"],
+          message: probeErr.message || "Impossibile contattare il servizio di preflight.",
+        };
+      }
+      return probe as PreflightResult;
+    } catch (e: any) {
+      toast.dismiss(probeToast);
+      return {
+        operational: false,
+        channels: [],
+        missing: ["Errore inatteso durante il preflight"],
+        message: e?.message || "Riprova fra qualche secondo.",
+      };
+    }
+  }, [userId]);
+
+  const tryEnableAutoSend = useCallback(async () => {
+    if (!userId) return;
+    const probe = await runOutreachPreflight();
+    if (!probe || !probe.operational) {
+      setPreflightResult(probe);
+      setPreflightOpen(true);
+      return;
+    }
+    toast.success(`✅ Canali pronti: ${(probe.channels || []).join(" + ")}`);
+    const { error } = await supabase
+      .from("arianna_autopilot_state" as any)
+      .update({ auto_send_messages: true })
+      .eq("user_id", userId);
+    if (error) { toast.error("Errore aggiornamento"); return; }
+    setState(prev => prev ? { ...prev, auto_send_messages: true } : prev);
+    toast.success("📤 Contatto automatico attivato");
+  }, [userId, runOutreachPreflight]);
 
   /* ─── Load state + live stream ─── */
   const load = useCallback(async () => {
