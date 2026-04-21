@@ -14,17 +14,16 @@ import { useIndustry } from "@/hooks/useIndustry";
 import { motion } from "framer-motion";
 import { SitePreviewOverlay } from "@/components/app/SitePreviewOverlay";
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
+import { useTenantLogout } from "@/hooks/useTenantLogout";
 
 export function TopBar() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { company, config } = useIndustry();
   const [sitePreviewOpen, setSitePreviewOpen] = useState(false);
+  const tenantLogout = useTenantLogout();
 
-  const handleLogout = async () => {
-    await signOut();
-    navigate("/auth");
-  };
+  const handleLogout = () => tenantLogout({ reason: "topbar_logout" });
 
   return (
     <>
