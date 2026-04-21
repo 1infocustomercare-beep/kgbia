@@ -3800,6 +3800,132 @@ export type Database = {
           },
         ]
       }
+      outreach_failures: {
+        Row: {
+          channel: string
+          created_at: string
+          deploy_version: string | null
+          error_code: string | null
+          error_message: string
+          http_status: number | null
+          id: string
+          lead_id: string | null
+          owner_id: string | null
+          payload: Json | null
+          provider: string | null
+          recipient: string | null
+          resolved: boolean
+          resolved_at: string | null
+          resolved_by: string | null
+          sequence_id: string | null
+          severity: string
+          source_function: string
+          touch_id: string | null
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          deploy_version?: string | null
+          error_code?: string | null
+          error_message: string
+          http_status?: number | null
+          id?: string
+          lead_id?: string | null
+          owner_id?: string | null
+          payload?: Json | null
+          provider?: string | null
+          recipient?: string | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          sequence_id?: string | null
+          severity?: string
+          source_function?: string
+          touch_id?: string | null
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          deploy_version?: string | null
+          error_code?: string | null
+          error_message?: string
+          http_status?: number | null
+          id?: string
+          lead_id?: string | null
+          owner_id?: string | null
+          payload?: Json | null
+          provider?: string | null
+          recipient?: string | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          sequence_id?: string | null
+          severity?: string
+          source_function?: string
+          touch_id?: string | null
+        }
+        Relationships: []
+      }
+      outreach_health_alerts: {
+        Row: {
+          acknowledged: boolean
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          alert_level: string
+          attempts_count: number
+          created_at: string
+          deploy_version: string | null
+          failure_rate: number
+          failures_count: number
+          id: string
+          message: string
+          metadata: Json | null
+          resolved: boolean
+          resolved_at: string | null
+          source_function: string
+          title: string
+          window_minutes: number
+        }
+        Insert: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_level?: string
+          attempts_count?: number
+          created_at?: string
+          deploy_version?: string | null
+          failure_rate?: number
+          failures_count?: number
+          id?: string
+          message: string
+          metadata?: Json | null
+          resolved?: boolean
+          resolved_at?: string | null
+          source_function: string
+          title: string
+          window_minutes?: number
+        }
+        Update: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_level?: string
+          attempts_count?: number
+          created_at?: string
+          deploy_version?: string | null
+          failure_rate?: number
+          failures_count?: number
+          id?: string
+          message?: string
+          metadata?: Json | null
+          resolved?: boolean
+          resolved_at?: string | null
+          source_function?: string
+          title?: string
+          window_minutes?: number
+        }
+        Relationships: []
+      }
       outreach_suppression: {
         Row: {
           channel: string
@@ -6699,6 +6825,16 @@ export type Database = {
         Args: { p_month: string; p_partner_id: string }
         Returns: number
       }
+      check_outreach_health: {
+        Args: {
+          p_critical_rate?: number
+          p_deploy_version?: string
+          p_min_attempts?: number
+          p_warn_rate?: number
+          p_window_minutes?: number
+        }
+        Returns: Json
+      }
       check_overdue_payments: { Args: never; Returns: undefined }
       check_team_leader_promotion: {
         Args: { p_partner_id: string }
@@ -6761,6 +6897,25 @@ export type Database = {
       }
       is_staff: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      log_outreach_failure: {
+        Args: {
+          p_channel: string
+          p_deploy_version?: string
+          p_error_code?: string
+          p_error_message: string
+          p_http_status?: number
+          p_lead_id?: string
+          p_owner_id?: string
+          p_payload?: Json
+          p_provider?: string
+          p_recipient?: string
+          p_sequence_id?: string
+          p_severity?: string
+          p_source_function: string
+          p_touch_id?: string
+        }
+        Returns: string
+      }
       super_admin_grant_credits: {
         Args: {
           p_amount: number

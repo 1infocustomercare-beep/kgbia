@@ -15,6 +15,44 @@ const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const TWILIO_API_KEY = Deno.env.get("TWILIO_API_KEY");
+const DEPLOY_VERSION = Deno.env.get("DEPLOY_VERSION") || Deno.env.get("SUPABASE_FUNCTION_VERSION") || "unknown";
+
+// ─────────── CENTRALIZED FAILURE LOG ───────────
+async function logOutreachFailure(supabase: any, params: {
+  channel: string;
+  error_message: string;
+  owner_id?: string | null;
+  lead_id?: string | null;
+  sequence_id?: string | null;
+  touch_id?: string | null;
+  recipient?: string | null;
+  provider?: string | null;
+  error_code?: string | null;
+  http_status?: number | null;
+  payload?: Record<string, unknown>;
+  severity?: "warning" | "error" | "critical";
+}) {
+  try {
+    await supabase.rpc("log_outreach_failure", {
+      p_source_function: "arianna-multichannel-outreach",
+      p_channel: params.channel,
+      p_error_message: (params.error_message || "unknown_error").slice(0, 2000),
+      p_owner_id: params.owner_id ?? null,
+      p_lead_id: params.lead_id ?? null,
+      p_sequence_id: params.sequence_id ?? null,
+      p_touch_id: params.touch_id ?? null,
+      p_recipient: params.recipient ?? null,
+      p_provider: params.provider ?? null,
+      p_error_code: params.error_code ?? null,
+      p_http_status: params.http_status ?? null,
+      p_deploy_version: DEPLOY_VERSION,
+      p_payload: params.payload ?? {},
+      p_severity: params.severity ?? "error",
+    });
+  } catch (logErr) {
+    console.error("[outreach-failure-log] failed to record failure:", logErr);
+  }
+}
 
 type Channel = "email" | "whatsapp" | "instagram" | "facebook";
 
@@ -338,8 +376,17 @@ Deno.serve(async (req) => {
         try {
           await processSequenceTouch(supabase, s as any, s.leads as Lead, false);
           processed++;
-        } catch (e) {
+        } catch (e: any) {
           console.error(`Touch failed for seq ${s.id}:`, e);
+          await logOutreachFailure(supabase, {
+            channel: (s as any).next_touch_channel || "unknown",
+            error_message: e?.message || String(e),
+            owner_id: (s as any).owner_id,
+            lead_id: (s as any).lead_id,
+            sequence_id: (s as any).id,
+            severity: "error",
+            payload: { context: "tick_loop" },
+          });
         }
       }
       return new Response(JSON.stringify({ processed }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -437,7 +484,7 @@ async function processSequenceTouch(supabase: any, seq: Sequence, lead: Lead, dr
   }
 
   // Send
-  let result: { ok: boolean; error?: string; manual_url?: string; provider?: string } = { ok: false };
+  let result: { ok: boolean; error?: string; manual_url?: string; provider?: string; http_status?: number } = { ok: false };
   if (pick.channel === "email") {
     const r = await sendEmail(recipient, copy.subject, copy.body, copy.html || copy.body);
     result = { ...r, provider: "resend" };
@@ -452,7 +499,8 @@ async function processSequenceTouch(supabase: any, seq: Sequence, lead: Lead, dr
 
   // Log touch
   const newTouchNumber = seq.current_touch_number + 1;
-  await supabase.from("lead_outreach_touches").insert({
+  const touchStatus = result.ok ? (result.manual_url ? "manual_link" : "sent") : "failed";
+  const { data: touchRow } = await supabase.from("lead_outreach_touches").insert({
     sequence_id: seq.id,
     owner_id: seq.owner_id,
     lead_id: seq.lead_id,
@@ -463,14 +511,31 @@ async function processSequenceTouch(supabase: any, seq: Sequence, lead: Lead, dr
     body_text: copy.body,
     body_html: copy.html || null,
     preview_url: previewUrl,
-    status: result.ok ? (result.manual_url ? "manual_link" : "sent") : "failed",
+    status: touchStatus,
     provider: result.provider,
     manual_dm_url: result.manual_url || null,
     ai_persuasion_score: copy.persuasion_score,
     sent_at: result.ok && !result.manual_url ? new Date().toISOString() : null,
     error_message: result.error || null,
-    metadata: { reasoning: pick.reasoning },
-  });
+    metadata: { reasoning: pick.reasoning, deploy_version: DEPLOY_VERSION },
+  }).select("id").maybeSingle();
+
+  // Centralized failure log (errors AND degraded "manual_link" fallback for twilio)
+  if (!result.ok || (result.provider === "manual_link" && pick.channel === "whatsapp" && result.error)) {
+    await logOutreachFailure(supabase, {
+      channel: pick.channel,
+      error_message: result.error || "send_failed",
+      owner_id: seq.owner_id,
+      lead_id: seq.lead_id,
+      sequence_id: seq.id,
+      touch_id: touchRow?.id ?? null,
+      recipient,
+      provider: result.provider,
+      http_status: result.http_status ?? null,
+      severity: result.ok ? "warning" : "error",
+      payload: { touch_number: newTouchNumber, reasoning: pick.reasoning },
+    });
+  }
 
   // Update sequence + schedule next
   const nextDelay = pick.hours_delay > 0 ? pick.hours_delay : 48;
@@ -502,3 +567,4 @@ async function processSequenceTouch(supabase: any, seq: Sequence, lead: Lead, dr
     reasoning: pick.reasoning,
   }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 }
+
