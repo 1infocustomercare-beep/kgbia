@@ -437,6 +437,15 @@ export default function PartnerCustomPreviewPage() {
         </CardContent>
       </Card>
 
+      {/* MOCKUP IPHONE SUITE — 4 schermate app del business */}
+      <MockupSuiteGenerator
+        businessName={form.lead_name}
+        businessSector={form.lead_sector}
+        businessCity={form.lead_city}
+        primaryColor={form.primary_color}
+        templateVariant={form.template_style}
+      />
+
       {/* Lista preview */}
       <div>
         <h2 className="text-xl font-semibold mb-3">Le tue preview ({previews.length})</h2>
