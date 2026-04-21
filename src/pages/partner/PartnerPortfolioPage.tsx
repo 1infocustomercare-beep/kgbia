@@ -127,7 +127,12 @@ export default function PartnerPortfolioPage() {
 
   return (
     <div className="space-y-6 px-4 pt-6 pb-8 max-w-2xl lg:max-w-7xl mx-auto">
-      <h2 className="text-lg font-bold text-foreground">Portfolio & Demo</h2>
+      <header className="space-y-1.5">
+        <p className="partner-eyebrow">Portfolio Empire</p>
+        <h2 className="partner-h2">Portfolio &amp; Demo</h2>
+        <p className="partner-subtle">Catalogo dei settori — preview cliente, dashboard admin e demo personalizzate.</p>
+        <div className="partner-divider mt-3" />
+      </header>
 
       {/* ═══ DEMO CUSTOMIZATION ═══ */}
       {demoSectionEnabled && selectedProject && (
