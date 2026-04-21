@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
+import { Joyride, STATUS, type CallBackProps, type Step } from "react-joyride";
 import { getCoachForRoute } from "@/data/sellerCoach";
 
 const TOUR_STORAGE_PREFIX = "empire_seller_tour_v1_";

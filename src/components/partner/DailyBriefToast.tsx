@@ -27,8 +27,7 @@ export default function DailyBriefToast() {
 
         const top = data.actions.slice(0, 3);
         toast(
-          (t) => (
-            <div className="space-y-2">
+          <div className="space-y-2">
               <div className="flex items-center gap-2 font-semibold text-sm">
                 <Sparkles className="h-4 w-4 text-primary" />
                 {data.pep_talk || "Piano della giornata"}
@@ -44,8 +43,7 @@ export default function DailyBriefToast() {
                   </li>
                 ))}
               </ul>
-            </div>
-          ),
+            </div>,
           { duration: 12000, id: "daily-brief" }
         );
       } catch (e) {
