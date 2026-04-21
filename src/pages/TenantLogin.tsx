@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Loader2, ShieldCheck, Lock, AlertTriangle, ShieldAlert, Clock } from "lucide-react";
+import { Loader2, ShieldCheck, Lock, AlertTriangle, ShieldAlert, Clock, KeyRound, MailCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { setActiveTenant, clearActiveTenant } from "@/lib/active-tenant";
