@@ -398,7 +398,7 @@ export default function AriannaLeadScoutPanel(_props: Props) {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="px-3 pb-3 space-y-2.5 border-t border-white/5 pt-3">
+            <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 space-y-2 sm:space-y-2.5 border-t border-white/5 pt-2.5 sm:pt-3">
 
               {/* COME FUNZIONA — visibile solo quando spenta, per orientare il venditore */}
               {!isActive && (
