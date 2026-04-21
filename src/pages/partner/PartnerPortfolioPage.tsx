@@ -74,49 +74,76 @@ export default function PartnerPortfolioPage() {
   const handleUploadLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !demoRestaurant) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File troppo grande", { description: "Il logo deve essere inferiore a 5 MB." });
+      return;
+    }
     setUploadingLogo(true);
-    try {
+    const task = (async () => {
       const ext = file.name.split(".").pop();
       const path = `${demoRestaurant.id}/logo.${ext}`;
-      await supabase.storage.from("restaurant-logos").upload(path, file, { upsert: true });
+      const { error: upErr } = await supabase.storage.from("restaurant-logos").upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
       const { data: urlData } = supabase.storage.from("restaurant-logos").getPublicUrl(path);
-      await supabase.from("restaurants").update({ logo_url: urlData.publicUrl + "?t=" + Date.now() }).eq("id", demoRestaurant.id);
-      toast({ title: "Logo caricato!" });
+      const { error: updErr } = await supabase.from("restaurants")
+        .update({ logo_url: urlData.publicUrl + "?t=" + Date.now() })
+        .eq("id", demoRestaurant.id);
+      if (updErr) throw updErr;
       refetchDemo();
-    } catch (err: any) {
-      toast({ title: "Errore", description: err.message, variant: "destructive" });
-    } finally { setUploadingLogo(false); }
+    })();
+    toast.promise(task, {
+      loading: "Carico il logo…",
+      success: "Logo aggiornato — visibile nella tua demo",
+      error: (err: any) => err?.message || "Upload fallito, riprova.",
+    });
+    try { await task; } catch {} finally { setUploadingLogo(false); }
   };
 
   const handleSaveCustomization = async () => {
     if (!demoRestaurant || savingDemo) return;
     setSavingDemo(true);
-    try {
-      await supabase.from("restaurants").update({ name: editName.trim() || demoRestaurant.name, primary_color: editColor }).eq("id", demoRestaurant.id);
-      toast({ title: "✅ Personalizzazione salvata!" });
+    const task = (async () => {
+      const { error } = await supabase.from("restaurants")
+        .update({ name: editName.trim() || demoRestaurant.name, primary_color: editColor })
+        .eq("id", demoRestaurant.id);
+      if (error) throw error;
       setEditingDemo(false);
       refetchDemo();
-    } catch (err: any) {
-      toast({ title: "Errore", description: err.message, variant: "destructive" });
-    } finally { setSavingDemo(false); }
+    })();
+    toast.promise(task, {
+      loading: "Salvo le modifiche…",
+      success: "Personalizzazione salvata ✨",
+      error: (err: any) => err?.message || "Impossibile salvare, riprova.",
+    });
+    try { await task; } catch {} finally { setSavingDemo(false); }
   };
 
   const handleResetDemo = async () => {
     if (resettingDemo) return;
     setResettingDemo(true);
-    try {
+    const task = (async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Non autenticato");
+      if (!session) throw new Error("Sessione scaduta — accedi di nuovo");
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/reset-partner-demo`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
       });
-      if (!res.ok) throw new Error("Reset fallito");
-      toast({ title: "✅ Demo Resettata" });
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        throw new Error(txt || "Reset fallito sul server");
+      }
       refetchDemo();
-    } catch (err: any) {
-      toast({ title: "Errore", description: err.message, variant: "destructive" });
-    } finally { setResettingDemo(false); }
+    })();
+    toast.promise(task, {
+      loading: "Resetto la demo ai valori di fabbrica…",
+      success: "Demo resettata correttamente",
+      error: (err: any) => err?.message || "Reset fallito, riprova.",
+    });
+    try { await task; } catch {} finally { setResettingDemo(false); }
   };
 
   const matchesSectorSearch = (card: typeof SECTOR_CARDS[0], q: string): boolean => {
