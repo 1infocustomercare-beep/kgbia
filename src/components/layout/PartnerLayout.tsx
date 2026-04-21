@@ -69,6 +69,9 @@ export default function PartnerLayout() {
   const [moreOpen, setMoreOpen] = useState(false);
   const userName = profileFullName || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
+  // Auto-reveal cards/sections inside the partner shell as they scroll into view
+  usePartnerReveal();
+
   // Scroll-driven header shrink (wow factor)
   const { scrollY } = useScroll();
   const headerHeight = useTransform(scrollY, [0, 80], [56, 48]);
