@@ -4,11 +4,24 @@ import { AlertTriangle, Mail, MessageSquare, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
+export interface ChannelDetail {
+  ready: boolean;
+  provider: string | null;
+  missing: string[];
+}
+
 export interface PreflightResult {
   operational: boolean;
   channels?: string[];
   missing?: string[];
   message?: string;
+  channel_details?: {
+    email?: ChannelDetail;
+    whatsapp?: ChannelDetail;
+    sms?: ChannelDetail;
+    instagram?: ChannelDetail;
+  };
+  checked_at?: string;
 }
 
 interface Props {
