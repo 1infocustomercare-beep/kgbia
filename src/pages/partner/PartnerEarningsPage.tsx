@@ -9,7 +9,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 /* ─── Types ─── */
 interface SaleRecord {
@@ -134,11 +134,16 @@ export default function PartnerEarningsPage() {
     recruitsDone: teamMembers.length >= TEAM_LEADER_REQ_RECRUITS,
   } : null;
 
-  const handleCopyInviteLink = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/partner/register?ref=${user?.id}`);
-    setInviteCopied(true);
-    toast({ title: "Link copiato!", description: "Chi si registra sarà nel tuo team." });
-    setTimeout(() => setInviteCopied(false), 2000);
+  const handleCopyInviteLink = async () => {
+    const url = `${window.location.origin}/partner/register?ref=${user?.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setInviteCopied(true);
+      toast.success("Link invito copiato", { description: "Chi si registra entrerà nel tuo team." });
+      setTimeout(() => setInviteCopied(false), 2000);
+    } catch {
+      toast.error("Impossibile copiare il link", { description: "Selezionalo manualmente e prova di nuovo." });
+    }
   };
 
   const formatMonth = (m: string) => { const [y, mo] = m.split("-"); const months = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"]; return `${months[parseInt(mo) - 1]} ${y}`; };
