@@ -329,16 +329,33 @@ export default function PartnerApiConnectionsPage() {
                 <div className="flex flex-wrap gap-2 pt-2 border-t">
                   {api.setupUrl && (
                     <Button variant="outline" size="sm" onClick={() => window.open(api.setupUrl, "_blank")}>
-                      <ExternalLink className="h-4 w-4 mr-1" /> Apri portale
+                      <ExternalLink className="h-4 w-4 mr-1" /> Apri portale {api.name.split(" ")[0]}
                     </Button>
                   )}
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => toast.info("Empire gestisce questa API per te. Usa Arianna Autopilot direttamente nei Lead.")}
-                  >
-                    <Zap className="h-4 w-4 mr-1" /> Usa con crediti
-                  </Button>
+                  {!api.isManaged && api.status !== "connected" && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => {
+                        toast.info(
+                          `Per attivare ${api.name}: contatta info@empireaigroup.com con la tua chiave API. Il team la configurerà entro 1 giorno lavorativo in modo sicuro (mai esposta al frontend).`,
+                          { duration: 8000 }
+                        );
+                        window.open(`mailto:info@empireaigroup.com?subject=Attivazione ${api.name}&body=Ciao Empire,%0A%0AVorrei attivare ${api.name} sul mio account.%0AHo già ottenuto la chiave seguendo la guida.%0A%0AGrazie!`, "_blank");
+                      }}
+                    >
+                      <KeyRound className="h-4 w-4 mr-1" /> Attiva ora
+                    </Button>
+                  )}
+                  {api.isManaged && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => toast.info("Empire gestisce questa API per te. Usa Arianna Autopilot direttamente nei Lead.")}
+                    >
+                      <Zap className="h-4 w-4 mr-1" /> Usa con crediti
+                    </Button>
+                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>
