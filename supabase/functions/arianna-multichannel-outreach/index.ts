@@ -475,7 +475,7 @@ async function processSequenceTouch(supabase: any, seq: Sequence, lead: Lead, dr
   }
 
   // Send
-  let result: { ok: boolean; error?: string; manual_url?: string; provider?: string } = { ok: false };
+  let result: { ok: boolean; error?: string; manual_url?: string; provider?: string; http_status?: number } = { ok: false };
   if (pick.channel === "email") {
     const r = await sendEmail(recipient, copy.subject, copy.body, copy.html || copy.body);
     result = { ...r, provider: "resend" };
@@ -490,7 +490,8 @@ async function processSequenceTouch(supabase: any, seq: Sequence, lead: Lead, dr
 
   // Log touch
   const newTouchNumber = seq.current_touch_number + 1;
-  await supabase.from("lead_outreach_touches").insert({
+  const touchStatus = result.ok ? (result.manual_url ? "manual_link" : "sent") : "failed";
+  const { data: touchRow } = await supabase.from("lead_outreach_touches").insert({
     sequence_id: seq.id,
     owner_id: seq.owner_id,
     lead_id: seq.lead_id,
@@ -501,14 +502,62 @@ async function processSequenceTouch(supabase: any, seq: Sequence, lead: Lead, dr
     body_text: copy.body,
     body_html: copy.html || null,
     preview_url: previewUrl,
-    status: result.ok ? (result.manual_url ? "manual_link" : "sent") : "failed",
+    status: touchStatus,
     provider: result.provider,
     manual_dm_url: result.manual_url || null,
     ai_persuasion_score: copy.persuasion_score,
     sent_at: result.ok && !result.manual_url ? new Date().toISOString() : null,
     error_message: result.error || null,
-    metadata: { reasoning: pick.reasoning },
-  });
+    metadata: { reasoning: pick.reasoning, deploy_version: DEPLOY_VERSION },
+  }).select("id").maybeSingle();
+
+  // Centralized failure log (errors AND degraded "manual_link" fallback for twilio)
+  if (!result.ok || (result.provider === "manual_link" && pick.channel === "whatsapp" && result.error)) {
+    await logOutreachFailure(supabase, {
+      channel: pick.channel,
+      error_message: result.error || "send_failed",
+      owner_id: seq.owner_id,
+      lead_id: seq.lead_id,
+      sequence_id: seq.id,
+      touch_id: touchRow?.id ?? null,
+      recipient,
+      provider: result.provider,
+      http_status: result.http_status ?? null,
+      severity: result.ok ? "warning" : "error",
+      payload: { touch_number: newTouchNumber, reasoning: pick.reasoning },
+    });
+  }
+
+  // Update sequence + schedule next
+  const nextDelay = pick.hours_delay > 0 ? pick.hours_delay : 48;
+  const nextAt = new Date();
+  nextAt.setHours(nextAt.getHours() + nextDelay);
+
+  await supabase.from("lead_outreach_sequences").update({
+    current_touch_number: newTouchNumber,
+    last_touch_at: new Date().toISOString(),
+    next_touch_at: newTouchNumber >= seq.max_touches ? null : nextAt.toISOString(),
+    next_touch_channel: null,
+    ai_reasoning: pick.reasoning,
+    status: newTouchNumber >= seq.max_touches ? "exhausted" : "active",
+  }).eq("id", seq.id);
+
+  // Update lead last_contacted
+  await supabase.from("leads").update({
+    last_contacted_at: new Date().toISOString(),
+    contact_stage: newTouchNumber === 1 ? "contattato" : "in_follow_up",
+    channel_used: pick.channel,
+  }).eq("id", seq.lead_id);
+
+  return new Response(JSON.stringify({
+    ok: result.ok,
+    touch_number: newTouchNumber,
+    channel: pick.channel,
+    manual_url: result.manual_url,
+    next_touch_at: nextAt.toISOString(),
+    reasoning: pick.reasoning,
+  }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+}
 
   // Update sequence + schedule next
   const nextDelay = pick.hours_delay > 0 ? pick.hours_delay : 48;
