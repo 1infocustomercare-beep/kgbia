@@ -242,23 +242,18 @@ export default function AriannaLeadScoutPanel(_props: Props) {
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-sm font-bold text-foreground">Arianna</span>
-              <span className="text-[9px] px-1.5 py-0.5 rounded font-semibold" style={{
-                background: "rgba(167,139,250,0.18)", color: "#c4b5fd",
-              }}>
-                AUTOPILOT ADATTIVO
-              </span>
+              <span className="text-sm font-bold text-foreground">Arianna Autopilot</span>
               <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold" style={{
                 background: isActive ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.05)",
                 color: isActive ? "#4ade80" : "#9ca3af",
               }}>
-                {isActive ? (loading ? "⚡ AL LAVORO" : "🟢 ATTIVA") : "⚪ STANDBY"}
+                {isActive ? (loading ? "⚡ AL LAVORO" : "🟢 ATTIVA") : "⚪ SPENTA"}
               </span>
             </div>
             <p className="text-[10px] text-muted-foreground truncate">
               {isActive && state?.current_city
-                ? <>Sto scansionando <span className="text-foreground font-semibold">{state.current_city}</span> · <span className="text-foreground font-semibold">{state.current_sector}</span></>
-                : "Accendimi: scelgo zone e settori da sola, trovo solo lead caldi"}
+                ? <>Sto cercando lead a <span className="text-foreground font-semibold">{state.current_city}</span> · <span className="text-foreground font-semibold">{state.current_sector}</span></>
+                : "Trova lead caldi da sola 24/7. Accendi l'interruttore →"}
             </p>
           </div>
         </div>
