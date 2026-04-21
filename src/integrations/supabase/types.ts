@@ -589,6 +589,7 @@ export type Database = {
       }
       arianna_autopilot_state: {
         Row: {
+          auto_tune_enabled: boolean
           created_at: string
           current_city: string | null
           current_sector: string | null
@@ -597,14 +598,17 @@ export type Database = {
           id: string
           is_running: boolean
           last_cycle_at: string | null
+          last_tuned_at: string | null
           next_cycle_at: string | null
           quality_filters: Json
           recently_scanned: Json
+          tuning_history: Json
           updated_at: string
           user_id: string
           zone_sector_weights: Json
         }
         Insert: {
+          auto_tune_enabled?: boolean
           created_at?: string
           current_city?: string | null
           current_sector?: string | null
@@ -613,14 +617,17 @@ export type Database = {
           id?: string
           is_running?: boolean
           last_cycle_at?: string | null
+          last_tuned_at?: string | null
           next_cycle_at?: string | null
           quality_filters?: Json
           recently_scanned?: Json
+          tuning_history?: Json
           updated_at?: string
           user_id: string
           zone_sector_weights?: Json
         }
         Update: {
+          auto_tune_enabled?: boolean
           created_at?: string
           current_city?: string | null
           current_sector?: string | null
@@ -629,9 +636,11 @@ export type Database = {
           id?: string
           is_running?: boolean
           last_cycle_at?: string | null
+          last_tuned_at?: string | null
           next_cycle_at?: string | null
           quality_filters?: Json
           recently_scanned?: Json
+          tuning_history?: Json
           updated_at?: string
           user_id?: string
           zone_sector_weights?: Json
