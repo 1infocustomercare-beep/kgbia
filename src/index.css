@@ -1517,6 +1517,86 @@
     padding-left: 0.125rem;
   }
 
+  /* ─── Partner shared design tokens (extends .partner-card) ───
+     Keep visuals consistent across every Partner page (Home, Leads,
+     Portfolio, Earnings, Sandbox…). Combine modifiers as needed:
+       <div class="partner-card partner-card--padded partner-card--lift partner-card--depth-2">
+   */
+
+  /* Padding scale */
+  .partner-card--padded-sm { padding: 0.875rem; }
+  .partner-card--padded    { padding: 1.25rem; }
+  .partner-card--padded-lg { padding: 1.75rem; }
+
+  /* Border emphasis */
+  .partner-card--bordered  { border-color: hsl(var(--border)); }
+  .partner-card--accent    { border-color: hsl(var(--primary) / 0.45); }
+  .partner-card--ghost     { background: transparent; border-color: hsl(var(--border) / 0.45); box-shadow: none; }
+
+  /* Depth scale (resting elevation) */
+  .partner-card--depth-1 { box-shadow:
+      0 1px 0 hsl(var(--foreground) / 0.02) inset,
+      0 4px 14px -8px hsl(var(--foreground) / 0.08); }
+  .partner-card--depth-2 { box-shadow:
+      0 1px 0 hsl(var(--foreground) / 0.02) inset,
+      0 12px 30px -16px hsl(var(--foreground) / 0.14); }
+  .partner-card--depth-3 { box-shadow:
+      0 1px 0 hsl(var(--foreground) / 0.03) inset,
+      0 24px 60px -22px hsl(var(--primary) / 0.22); }
+  .dark .partner-card--depth-1 { box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.03) inset,
+      0 6px 18px -10px hsl(0 0% 0% / 0.5); }
+  .dark .partner-card--depth-2 { box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.03) inset,
+      0 16px 40px -18px hsl(0 0% 0% / 0.6); }
+  .dark .partner-card--depth-3 { box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.04) inset,
+      0 28px 70px -22px hsl(248 70% 66% / 0.32); }
+
+  /* Hover intensities */
+  .partner-card--lift:hover      { transform: translateY(-3px); }
+  .partner-card--lift-lg:hover   { transform: translateY(-5px); }
+  .partner-card--glow:hover {
+    border-color: hsl(var(--primary) / 0.55);
+    box-shadow:
+      0 1px 0 hsl(var(--foreground) / 0.02) inset,
+      0 22px 56px -18px hsl(var(--primary) / 0.32);
+  }
+  .partner-card--static { transition: none; }
+  .partner-card--static:hover { transform: none; box-shadow: inherit; }
+
+  /* Interactive surface (clickable cards) */
+  .partner-card--interactive {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .partner-card--interactive:active { transform: translateY(-1px) scale(0.995); }
+  .partner-card--interactive:focus-visible {
+    outline: 2px solid hsl(var(--primary) / 0.6);
+    outline-offset: 3px;
+  }
+
+  /* Section spacing scale */
+  .partner-section--tight   { margin-top: 0.75rem; }
+  .partner-section--cozy    { margin-top: 1.25rem; }
+  .partner-section--roomy   { margin-top: 2rem; }
+  .partner-section--spacious{ margin-top: 2.75rem; }
+
+  /* Reusable card grid */
+  .partner-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+  .partner-grid--tight { gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .partner-grid--wide  { gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .partner-card--lift:hover,
+    .partner-card--lift-lg:hover,
+    .partner-card--interactive:active { transform: none !important; }
+  }
+
   /* ════════════════════════════════════════════════════════════════
      PARTNER PREMIUM TYPOGRAPHY & PRO BADGES — sober luxury polish
      Use sparingly to give a more professional, editorial feel
