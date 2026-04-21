@@ -297,31 +297,74 @@ export default function AriannaLeadScoutPanel(_props: Props) {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-[13px] sm:text-sm font-bold text-foreground tracking-tight">Arianna Autopilot</span>
-              <span
-                className="partner-badge-pro text-[9px] sm:text-[10px]"
-                data-tone={isActive ? (loading ? "primary" : "success") : "muted"}
-              >
-                {isActive ? (
-                  loading ? (
-                    <>
-                      <Loader2 className="w-2.5 h-2.5 animate-spin" />
-                      <span className="hidden sm:inline">In esecuzione</span>
-                      <span className="sm:hidden">Run</span>
-                    </>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    onClick={(e) => e.stopPropagation()}
+                    className="partner-badge-pro text-[9px] sm:text-[10px] cursor-help"
+                    data-tone={isActive ? (loading ? "primary" : "success") : "muted"}
+                    aria-label={
+                      isActive
+                        ? loading
+                          ? "Stato: scansione in corso"
+                          : "Stato: autopilot attivo"
+                        : "Stato: autopilot in pausa"
+                    }
+                  >
+                    {isActive ? (
+                      loading ? (
+                        <>
+                          <Loader2 className="w-2.5 h-2.5 animate-spin" />
+                          <span className="hidden sm:inline">In esecuzione</span>
+                          <span className="sm:hidden">Run</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="partner-status-dot" aria-hidden />
+                          Attiva
+                        </>
+                      )
+                    ) : (
+                      <>
+                        <CircleDot className="w-2.5 h-2.5 opacity-70" />
+                        <span className="hidden sm:inline">In pausa</span>
+                        <span className="sm:hidden">Off</span>
+                      </>
+                    )}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="start" className="max-w-[260px] text-[11px] leading-snug">
+                  {isActive ? (
+                    loading ? (
+                      <div className="space-y-1">
+                        <p className="font-bold text-foreground">⚡ Scansione in corso</p>
+                        <p className="text-muted-foreground">
+                          Arianna sta cercando lead caldi su Google Maps
+                          {state?.current_city ? <> in <b>{state.current_city}</b> · {state.current_sector}</> : null}.
+                          Filtra per qualità e salva solo quelli che rispettano i tuoi criteri.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <p className="font-bold text-foreground">✅ Autopilot attivo</p>
+                        <p className="text-muted-foreground">
+                          Arianna lavora in background 24/7. Prossima scansione
+                          {countdown > 0 ? <> tra <b>{countdown}s</b></> : <> a breve</>}.
+                          Sceglie da sola la combinazione zona + settore con maggior potenziale.
+                        </p>
+                      </div>
+                    )
                   ) : (
-                    <>
-                      <span className="partner-status-dot" aria-hidden />
-                      Attiva
-                    </>
-                  )
-                ) : (
-                  <>
-                    <CircleDot className="w-2.5 h-2.5 opacity-70" />
-                    <span className="hidden sm:inline">In pausa</span>
-                    <span className="sm:hidden">Off</span>
-                  </>
-                )}
-              </span>
+                    <div className="space-y-1">
+                      <p className="font-bold text-foreground">⏸️ In pausa</p>
+                      <p className="text-muted-foreground">
+                        Nessuna scansione automatica. I tuoi crediti non vengono consumati.
+                        Accendi l'interruttore a destra per ripartire.
+                      </p>
+                    </div>
+                  )}
+                </TooltipContent>
+              </Tooltip>
             </div>
             <p className="text-[10px] text-muted-foreground truncate">
               {isActive && state?.current_city
