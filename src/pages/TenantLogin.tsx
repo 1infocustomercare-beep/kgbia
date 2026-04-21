@@ -205,6 +205,61 @@ export default function TenantLogin() {
     }
   };
 
+  const handleRequestUnlock = async () => {
+    if (!tenant) return;
+    const targetEmail = email.trim().toLowerCase();
+    if (!targetEmail || !targetEmail.includes("@")) {
+      toast({
+        title: "Inserisci la tua email",
+        description: "Scrivi prima l'email del tuo account, poi clicca su 'Hai sbagliato password?'.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setRequestingUnlock(true);
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        "tenant-login-unlock-request",
+        {
+          body: {
+            slug: tenant.slug,
+            email: targetEmail,
+            redirect_origin:
+              typeof window !== "undefined" ? window.location.origin : undefined,
+          },
+        },
+      );
+
+      if (error) {
+        console.error("[tenant-login] unlock request error", error);
+        toast({
+          title: "Impossibile inviare la richiesta",
+          description: "Riprova tra qualche secondo o contatta il supporto.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setUnlockSent(true);
+      toast({
+        title: data?.throttled ? "Richiesta già in coda" : "Email di sblocco inviata",
+        description:
+          data?.message ??
+          "Se l'email è associata a questo ristorante, riceverai un link di sblocco entro pochi minuti.",
+      });
+    } catch (err) {
+      console.error("[tenant-login] unlock request failed", err);
+      toast({
+        title: "Errore di rete",
+        description: "Controlla la connessione e riprova.",
+        variant: "destructive",
+      });
+    } finally {
+      setRequestingUnlock(false);
+    }
+  };
+
   if (loadingTenant) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
