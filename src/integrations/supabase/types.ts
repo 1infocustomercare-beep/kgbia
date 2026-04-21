@@ -2933,6 +2933,151 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_outreach_sequences: {
+        Row: {
+          ai_reasoning: string | null
+          channels_priority: string[]
+          conversion_signal: string | null
+          created_at: string
+          current_touch_number: number
+          id: string
+          last_touch_at: string | null
+          lead_id: string
+          max_touches: number
+          next_touch_at: string | null
+          next_touch_channel: string | null
+          owner_id: string
+          status: string
+          strategy: string
+          updated_at: string
+        }
+        Insert: {
+          ai_reasoning?: string | null
+          channels_priority?: string[]
+          conversion_signal?: string | null
+          created_at?: string
+          current_touch_number?: number
+          id?: string
+          last_touch_at?: string | null
+          lead_id: string
+          max_touches?: number
+          next_touch_at?: string | null
+          next_touch_channel?: string | null
+          owner_id: string
+          status?: string
+          strategy?: string
+          updated_at?: string
+        }
+        Update: {
+          ai_reasoning?: string | null
+          channels_priority?: string[]
+          conversion_signal?: string | null
+          created_at?: string
+          current_touch_number?: number
+          id?: string
+          last_touch_at?: string | null
+          lead_id?: string
+          max_touches?: number
+          next_touch_at?: string | null
+          next_touch_channel?: string | null
+          owner_id?: string
+          status?: string
+          strategy?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_outreach_sequences_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_outreach_touches: {
+        Row: {
+          ai_persuasion_score: number | null
+          body_html: string | null
+          body_text: string | null
+          channel: string
+          created_at: string
+          error_message: string | null
+          id: string
+          lead_id: string
+          manual_dm_url: string | null
+          metadata: Json | null
+          opened_at: string | null
+          owner_id: string
+          preview_url: string | null
+          provider: string | null
+          recipient: string | null
+          replied_at: string | null
+          scheduled_for: string | null
+          sent_at: string | null
+          sequence_id: string | null
+          status: string
+          subject: string | null
+          touch_number: number
+        }
+        Insert: {
+          ai_persuasion_score?: number | null
+          body_html?: string | null
+          body_text?: string | null
+          channel: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          lead_id: string
+          manual_dm_url?: string | null
+          metadata?: Json | null
+          opened_at?: string | null
+          owner_id: string
+          preview_url?: string | null
+          provider?: string | null
+          recipient?: string | null
+          replied_at?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          sequence_id?: string | null
+          status?: string
+          subject?: string | null
+          touch_number: number
+        }
+        Update: {
+          ai_persuasion_score?: number | null
+          body_html?: string | null
+          body_text?: string | null
+          channel?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          lead_id?: string
+          manual_dm_url?: string | null
+          metadata?: Json | null
+          opened_at?: string | null
+          owner_id?: string
+          preview_url?: string | null
+          provider?: string | null
+          recipient?: string | null
+          replied_at?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          sequence_id?: string | null
+          status?: string
+          subject?: string | null
+          touch_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_outreach_touches_sequence_id_fkey"
+            columns: ["sequence_id"]
+            isOneToOne: false
+            referencedRelation: "lead_outreach_sequences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           ai_score: number | null
@@ -3639,6 +3784,44 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outreach_suppression: {
+        Row: {
+          channel: string
+          created_at: string
+          id: string
+          identifier: string
+          owner_id: string
+          reason: string
+          source_touch_id: string | null
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          id?: string
+          identifier: string
+          owner_id: string
+          reason?: string
+          source_touch_id?: string | null
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          id?: string
+          identifier?: string
+          owner_id?: string
+          reason?: string
+          source_touch_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_suppression_source_touch_id_fkey"
+            columns: ["source_touch_id"]
+            isOneToOne: false
+            referencedRelation: "lead_outreach_touches"
             referencedColumns: ["id"]
           },
         ]
@@ -4996,6 +5179,10 @@ export type Database = {
       }
       sales_agent_config: {
         Row: {
+          auto_send_email: boolean
+          auto_send_facebook: boolean
+          auto_send_instagram: boolean
+          auto_send_whatsapp: boolean
           autonomy_mode: string
           channels_enabled: Json
           continuous_mode: boolean
@@ -5005,7 +5192,10 @@ export type Database = {
           id: string
           is_active: boolean
           last_auto_run_at: string | null
+          max_touches_per_lead: number
+          min_hours_between_touches: number
           operating_hours: Json
+          outreach_strategy: string
           preferred_email_template_id: string | null
           signature: string | null
           target_cities: string[] | null
@@ -5020,6 +5210,10 @@ export type Database = {
           whatsapp_from: string | null
         }
         Insert: {
+          auto_send_email?: boolean
+          auto_send_facebook?: boolean
+          auto_send_instagram?: boolean
+          auto_send_whatsapp?: boolean
           autonomy_mode?: string
           channels_enabled?: Json
           continuous_mode?: boolean
@@ -5029,7 +5223,10 @@ export type Database = {
           id?: string
           is_active?: boolean
           last_auto_run_at?: string | null
+          max_touches_per_lead?: number
+          min_hours_between_touches?: number
           operating_hours?: Json
+          outreach_strategy?: string
           preferred_email_template_id?: string | null
           signature?: string | null
           target_cities?: string[] | null
@@ -5044,6 +5241,10 @@ export type Database = {
           whatsapp_from?: string | null
         }
         Update: {
+          auto_send_email?: boolean
+          auto_send_facebook?: boolean
+          auto_send_instagram?: boolean
+          auto_send_whatsapp?: boolean
           autonomy_mode?: string
           channels_enabled?: Json
           continuous_mode?: boolean
@@ -5053,7 +5254,10 @@ export type Database = {
           id?: string
           is_active?: boolean
           last_auto_run_at?: string | null
+          max_touches_per_lead?: number
+          min_hours_between_touches?: number
           operating_hours?: Json
+          outreach_strategy?: string
           preferred_email_template_id?: string | null
           signature?: string | null
           target_cities?: string[] | null
@@ -6529,6 +6733,10 @@ export type Database = {
       }
       is_company_owner: {
         Args: { _company_id: string; _user_id?: string }
+        Returns: boolean
+      }
+      is_outreach_suppressed: {
+        Args: { p_channel: string; p_identifier: string; p_owner_id: string }
         Returns: boolean
       }
       is_restaurant_member: {
