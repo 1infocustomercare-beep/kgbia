@@ -660,6 +660,11 @@ function App() {
                           <VoiceOrchestratorPage />
                         </ProtectedRoute>
                       } />
+                      <Route path="/superadmin/outreach-health" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <OutreachHealthPage />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/staff" element={
                         <ProtectedRoute requiredRole="staff">
                           <StaffPanel />
