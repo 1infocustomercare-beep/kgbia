@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 import { clearIndustryCache } from "@/hooks/useIndustry";
+import { clearActiveTenant } from "@/lib/active-tenant";
 
 type AppRole = "super_admin" | "staff" | "restaurant_admin" | "customer" | "partner" | "team_leader";
 type SignupRole = "partner" | "customer";
@@ -320,6 +321,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signOut = async () => {
     try {
       clearIndustryCache();
+      // Clear tenant context FIRST so cross-tab listeners log out instantly
+      clearActiveTenant("user_signout");
       await supabase.auth.signOut();
     } catch (error) {
       console.error("Sign out failed", error);

@@ -49,7 +49,7 @@ const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
   (window.location.pathname === "/" ||
     window.location.pathname === "/home" ||
-    /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding)/.test(window.location.pathname));
+    /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding|t\/)/.test(window.location.pathname));
 
 const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 25000 : 25000;
 
@@ -194,6 +194,8 @@ const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => importWithRetry(() => import("./pages/OnboardingPage")));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AuthPage = lazy(() => importWithRetry(() => import("./pages/AuthPage")));
+const TenantLogin = lazy(() => import("./pages/TenantLogin"));
+const TenantGuard = lazy(() => import("./components/TenantGuard"));
 
 // App layout + adaptive pages
 const AppLayout = lazy(() => importWithRetry(() => import("./components/layout/AppLayout")));
@@ -406,7 +408,7 @@ class IntroErrorBoundary extends React.Component<{ children: ReactNode; onFail: 
 }
 
 /** Hide Empire DNA background on client public sites, demo pages, and all admin dashboards */
-const HIDE_DNA_PATTERN = /^\/(b|r|ncc-demo|demo|dashboard|app|superadmin|admin|auth|login|reset-password|kitchen|partner|join|onboarding)(\/|$)/;
+const HIDE_DNA_PATTERN = /^\/(b|r|t|ncc-demo|demo|dashboard|app|superadmin|admin|auth|login|reset-password|kitchen|partner|join|onboarding)(\/|$)/;
 
 function ConditionalDNABackground() {
   const { pathname } = useLocation();
@@ -575,6 +577,17 @@ function App() {
                       <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/login" element={<AuthPage />} />
+
+                      {/* ═══ Empire Tenant-Isolated Login ═══ */}
+                      <Route path="/t/:slug/login" element={<TenantLogin />} />
+                      <Route path="/t/:slug" element={<Navigate to="login" replace />} />
+                      <Route path="/t/:slug/admin/*" element={
+                        <ProtectedRoute>
+                          <TenantGuard>
+                            <AppLayout />
+                          </TenantGuard>
+                        </ProtectedRoute>
+                      } />
                       <Route path="/landing" element={<StaticIframePage src="/homepage.html" title="Empire.AI" />} />
                       <Route path="/catalogo" element={<StaticIframePage src="/catalogo-completo.html" title="Catalogo Completo" />} />
 
