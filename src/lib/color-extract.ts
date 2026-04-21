@@ -119,6 +119,80 @@ export function hexToHsl(hex: string): string {
   return `${Math.round(hsl[0])} ${Math.round(hsl[1])}% ${Math.round(hsl[2])}%`;
 }
 
+/* ──────────────────────────────────────────────────────────────
+ * WCAG contrast helpers
+ * Compute relative luminance + contrast ratio so we can pick
+ * an accessible foreground (black/white tinted) for any surface.
+ * ────────────────────────────────────────────────────────────── */
+
+/** Convert HSL components to linear RGB then to relative luminance (WCAG). */
+function hslToLuminance(h: number, s: number, l: number): number {
+  // hsl -> rgb (0..1)
+  const sN = s / 100, lN = l / 100;
+  const c = (1 - Math.abs(2 * lN - 1)) * sN;
+  const hp = h / 60;
+  const x = c * (1 - Math.abs((hp % 2) - 1));
+  let r = 0, g = 0, b = 0;
+  if (hp >= 0 && hp < 1) { r = c; g = x; }
+  else if (hp < 2)       { r = x; g = c; }
+  else if (hp < 3)       { g = c; b = x; }
+  else if (hp < 4)       { g = x; b = c; }
+  else if (hp < 5)       { r = x; b = c; }
+  else                   { r = c; b = x; }
+  const m = lN - c / 2;
+  const [rL, gL, bL] = [r + m, g + m, b + m].map((v) =>
+    v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+  );
+  return 0.2126 * rL + 0.7152 * gL + 0.0722 * bL;
+}
+
+/** Contrast ratio between two luminances (WCAG 2.1). */
+function contrastRatio(l1: number, l2: number): number {
+  const [hi, lo] = l1 > l2 ? [l1, l2] : [l2, l1];
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+/**
+ * Pick an accessible foreground HSL string for a given background HSL.
+ * Returns a tinted near-white or near-black so it stays on-brand
+ * while keeping a contrast ratio ≥ 4.5 (WCAG AA for body text).
+ */
+export function accessibleForeground(
+  bgH: number,
+  bgS: number,
+  bgL: number,
+  opts: { minContrast?: number; tint?: number } = {}
+): string {
+  const minContrast = opts.minContrast ?? 4.5;
+  const tint = opts.tint ?? Math.min(bgS * 0.25, 18);
+  const bgLum = hslToLuminance(bgH, bgS, bgL);
+
+  // Try light foreground first, then dark, then push lightness further.
+  const candidates: Array<[number, number]> = [
+    [tint, 96], [tint, 92], [tint, 98],
+    [tint, 8],  [tint, 4],  [tint, 12],
+  ];
+  for (const [s, l] of candidates) {
+    const lum = hslToLuminance(bgH, s, l);
+    if (contrastRatio(lum, bgLum) >= minContrast) {
+      return `${Math.round(bgH)} ${Math.round(s)}% ${Math.round(l)}%`;
+    }
+  }
+  // Fallback: pure white or black, whichever wins.
+  const whiteContrast = contrastRatio(1, bgLum);
+  const blackContrast = contrastRatio(0, bgLum);
+  return whiteContrast >= blackContrast
+    ? `${Math.round(bgH)} 0% 100%`
+    : `${Math.round(bgH)} 0% 0%`;
+}
+
+/** Parse "H S% L%" CSS-style HSL string into numeric components. */
+function parseHsl(hslStr: string): [number, number, number] | null {
+  const parts = hslStr.match(/[\d.]+/g);
+  if (!parts || parts.length < 3) return null;
+  return [parseFloat(parts[0]), parseFloat(parts[1]), parseFloat(parts[2])];
+}
+
 /** The default Empire gold theme primary HSL */
 export const DEFAULT_PRIMARY_HSL = "38 75% 55%";
 export const DEFAULT_PRIMARY_HEX = "#C8963E";
