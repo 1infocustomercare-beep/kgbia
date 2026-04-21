@@ -167,21 +167,75 @@ Deno.serve(async (req) => {
 
     // ─── Preflight: verifica se l'invio automatico messaggi è realmente operativo ───
     if (action === "probe_outreach") {
+      // Email — Resend (provider primario per outreach)
       const hasResend = !!Deno.env.get("RESEND_API_KEY");
-      const hasTwilio = !!Deno.env.get("TWILIO_API_KEY") || !!Deno.env.get("TWILIO_ACCOUNT_SID");
-      const hasWhatsAppCloud = !!Deno.env.get("WHATSAPP_ACCESS_TOKEN") || !!Deno.env.get("WHATSAPP_PHONE_NUMBER_ID");
+
+      // WhatsApp — supporta sia Twilio che Meta WhatsApp Cloud
+      const hasTwilioSid = !!Deno.env.get("TWILIO_ACCOUNT_SID");
+      const hasTwilioToken = !!Deno.env.get("TWILIO_AUTH_TOKEN") || !!Deno.env.get("TWILIO_API_KEY");
+      const hasTwilioFrom = !!Deno.env.get("TWILIO_WHATSAPP_FROM") || !!Deno.env.get("TWILIO_PHONE_NUMBER");
+      const twilioReady = hasTwilioSid && hasTwilioToken;
+
+      const hasMetaToken = !!Deno.env.get("WHATSAPP_ACCESS_TOKEN") || !!Deno.env.get("META_GRAPH_API_KEY");
+      const hasMetaPhoneId = !!Deno.env.get("WHATSAPP_PHONE_NUMBER_ID");
+      const metaReady = hasMetaToken && hasMetaPhoneId;
+
+      const whatsappReady = twilioReady || metaReady;
+      const whatsappProvider = metaReady ? "meta_cloud" : (twilioReady ? "twilio" : null);
+
+      // SMS (fallback) — Twilio
+      const smsReady = twilioReady && hasTwilioFrom;
+
+      // Instagram DM (canale opzionale)
+      const instagramReady = !!Deno.env.get("INSTAGRAM_GRAPH_API");
+
+      const channelDetails = {
+        email: {
+          ready: hasResend,
+          provider: hasResend ? "resend" : null,
+          missing: hasResend ? [] : ["RESEND_API_KEY"],
+        },
+        whatsapp: {
+          ready: whatsappReady,
+          provider: whatsappProvider,
+          missing: whatsappReady ? [] : [
+            "WHATSAPP_ACCESS_TOKEN + WHATSAPP_PHONE_NUMBER_ID (Meta Cloud)",
+            "oppure TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN (Twilio)",
+          ],
+        },
+        sms: {
+          ready: smsReady,
+          provider: smsReady ? "twilio" : null,
+          missing: smsReady ? [] : ["TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN + TWILIO_WHATSAPP_FROM"],
+        },
+        instagram: {
+          ready: instagramReady,
+          provider: instagramReady ? "meta_graph" : null,
+          missing: instagramReady ? [] : ["INSTAGRAM_GRAPH_API"],
+        },
+      };
+
       const channels: string[] = [];
       if (hasResend) channels.push("email");
-      if (hasTwilio || hasWhatsAppCloud) channels.push("whatsapp");
+      if (whatsappReady) channels.push("whatsapp");
+      if (smsReady) channels.push("sms");
+      if (instagramReady) channels.push("instagram");
+
       const ok = channels.length > 0;
+      const missing: string[] = [];
+      if (!hasResend) missing.push("RESEND_API_KEY (email)");
+      if (!whatsappReady) missing.push("WHATSAPP_ACCESS_TOKEN + WHATSAPP_PHONE_NUMBER_ID (Meta) o TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN (Twilio)");
+
       return new Response(JSON.stringify({
         success: ok,
         operational: ok,
         channels,
-        missing: ok ? [] : ["RESEND_API_KEY (email)", "TWILIO_API_KEY o WHATSAPP_ACCESS_TOKEN (WhatsApp)"],
+        channel_details: channelDetails,
+        missing,
         message: ok
           ? `Invio automatico operativo via ${channels.join(" + ")}`
           : "Nessun canale di invio configurato. Contatta il super admin per attivare le API di invio (email/WhatsApp).",
+        checked_at: new Date().toISOString(),
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
