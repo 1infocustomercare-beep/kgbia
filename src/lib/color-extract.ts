@@ -202,66 +202,83 @@ export const DEFAULT_PRIMARY_HEX = "#C8963E";
  * generating a FULL adaptive palette: background, card, secondary,
  * muted, accent, border, glass, sidebar — all derived from the hue.
  */
-export function applyBrandTheme(hexColor: string | null | undefined) {
+export function applyBrandTheme(
+  hexColor: string | null | undefined,
+  secondaryHex?: string | null
+) {
   const hsl = hexColor ? hexToHsl(hexColor) : DEFAULT_PRIMARY_HSL;
-  const parts = hsl.match(/[\d.]+/g);
-  if (!parts || parts.length < 3) return;
-  const h = parseFloat(parts[0]);
-  const s = parseFloat(parts[1]);
-  const l = parseFloat(parts[2]);
+  const parts = parseHsl(hsl);
+  if (!parts) return;
+  const [h, s, l] = parts;
+
+  // Optional secondary brand color (e.g. extracted accent).
+  // Falls back to a complementary warm shift when not provided.
+  const secondary = secondaryHex ? parseHsl(hexToHsl(secondaryHex)) : null;
+  const accentH = secondary ? secondary[0] : (h + 330) % 360;
+  const accentS = secondary ? secondary[1] : 70;
+  const accentL = secondary ? secondary[2] : 50;
 
   const root = document.documentElement;
   const set = (k: string, v: string) => root.style.setProperty(k, v);
 
+  // Surface lightness values used across tokens
+  const bs = Math.max(s * 0.15, 5);
+  const bgL = 4;
+  const cardL = 8;
+  const secondaryL = 14;
+  const mutedL = 12;
+  const sidebarL = 6;
+  const secS = Math.max(s * 0.12, 4);
+  const mutedS = Math.max(s * 0.1, 3);
+  const cardS = Math.max(bs - 2, 3);
+
   // ── Primary ──
   set("--primary", `${h} ${s}% ${l}%`);
-  set("--primary-foreground", `${h} ${Math.min(s, 20)}% 4%`);
+  set("--primary-foreground", accessibleForeground(h, s, l));
   set("--ring", `${h} ${s}% ${l}%`);
 
-  // ── Backgrounds — very dark, tinted with brand hue ──
-  const bs = Math.max(s * 0.15, 5); // subtle saturation for bg
-  set("--background", `${h} ${bs}% 4%`);
-  set("--foreground", `${h} ${Math.min(s * 0.3, 20)}% 92%`);
+  // ── Backgrounds ──
+  set("--background", `${h} ${bs}% ${bgL}%`);
+  set("--foreground", accessibleForeground(h, bs, bgL));
 
-  // ── Card — slightly lighter than bg ──
-  set("--card", `${h} ${Math.max(bs - 2, 3)}% 8%`);
-  set("--card-foreground", `${h} ${Math.min(s * 0.3, 20)}% 92%`);
+  // ── Card ──
+  set("--card", `${h} ${cardS}% ${cardL}%`);
+  set("--card-foreground", accessibleForeground(h, cardS, cardL));
 
   // ── Popover ──
-  set("--popover", `${h} ${Math.max(bs - 2, 3)}% 8%`);
-  set("--popover-foreground", `${h} ${Math.min(s * 0.3, 20)}% 92%`);
+  set("--popover", `${h} ${cardS}% ${cardL}%`);
+  set("--popover-foreground", accessibleForeground(h, cardS, cardL));
 
-  // ── Secondary — muted brand tint ──
-  set("--secondary", `${h} ${Math.max(s * 0.12, 4)}% 14%`);
-  set("--secondary-foreground", `${h} ${Math.min(s * 0.3, 20)}% 85%`);
+  // ── Secondary ──
+  set("--secondary", `${h} ${secS}% ${secondaryL}%`);
+  set("--secondary-foreground", accessibleForeground(h, secS, secondaryL));
 
-  // ── Muted ──
-  set("--muted", `${h} ${Math.max(s * 0.1, 3)}% 12%`);
-  set("--muted-foreground", `${h} ${Math.min(s * 0.15, 10)}% 50%`);
+  // ── Muted (lower contrast threshold for secondary text) ──
+  set("--muted", `${h} ${mutedS}% ${mutedL}%`);
+  set("--muted-foreground", accessibleForeground(h, mutedS, mutedL, { minContrast: 3 }));
 
-  // ── Accent — complementary warm shift ──
-  const accentH = (h + 330) % 360; // slight warm shift for contrast
-  set("--accent", `${accentH} 70% 50%`);
-  set("--accent-foreground", `${h} ${Math.min(s * 0.3, 20)}% 95%`);
+  // ── Accent (secondary brand or complementary) ──
+  set("--accent", `${accentH} ${accentS}% ${accentL}%`);
+  set("--accent-foreground", accessibleForeground(accentH, accentS, accentL));
 
   // ── Borders & inputs ──
-  set("--border", `${h} ${Math.max(s * 0.12, 4)}% 16%`);
-  set("--input", `${h} ${Math.max(s * 0.12, 4)}% 16%`);
+  set("--border", `${h} ${secS}% 16%`);
+  set("--input", `${h} ${secS}% 16%`);
 
   // ── Glassmorphism ──
-  set("--glass", `${h} ${Math.max(bs - 2, 3)}% 10% / 0.6`);
+  set("--glass", `${h} ${cardS}% 10% / 0.6`);
   set("--glass-border", `${h} ${Math.min(s * 0.3, 20)}% 92% / 0.08`);
   set("--glass-shine", `${h} ${Math.min(s * 0.3, 20)}% 92% / 0.04`);
   set("--gold-glow", `${h} ${s}% ${l}% / 0.3`);
 
   // ── Sidebar ──
-  set("--sidebar-background", `${h} ${Math.max(bs - 1, 3)}% 6%`);
-  set("--sidebar-foreground", `${h} ${Math.min(s * 0.3, 20)}% 85%`);
+  set("--sidebar-background", `${h} ${Math.max(bs - 1, 3)}% ${sidebarL}%`);
+  set("--sidebar-foreground", accessibleForeground(h, Math.max(bs - 1, 3), sidebarL));
   set("--sidebar-primary", `${h} ${s}% ${l}%`);
-  set("--sidebar-primary-foreground", `${h} ${Math.min(s, 20)}% 4%`);
-  set("--sidebar-accent", `${h} ${Math.max(s * 0.12, 4)}% 14%`);
-  set("--sidebar-accent-foreground", `${h} ${Math.min(s * 0.3, 20)}% 85%`);
-  set("--sidebar-border", `${h} ${Math.max(s * 0.12, 4)}% 16%`);
+  set("--sidebar-primary-foreground", accessibleForeground(h, s, l));
+  set("--sidebar-accent", `${h} ${secS}% ${secondaryL}%`);
+  set("--sidebar-accent-foreground", accessibleForeground(h, secS, secondaryL));
+  set("--sidebar-border", `${h} ${secS}% 16%`);
   set("--sidebar-ring", `${h} ${s}% ${l}%`);
 }
 
