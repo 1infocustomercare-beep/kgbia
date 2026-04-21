@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import {
   Bot, Loader2, Activity, ChevronDown, ChevronUp, Brain,
   Sparkles, MapPin, Layers, Zap, TrendingUp, Target, Clock, Flame, Settings2,
+  Globe, Share2, Star, MessageSquare, Gem, AlertCircle, Search as SearchIcon,
+  CircleDot,
 } from "lucide-react";
 import AriannaCriteriaOverrideDialog from "./AriannaCriteriaOverrideDialog";
 
