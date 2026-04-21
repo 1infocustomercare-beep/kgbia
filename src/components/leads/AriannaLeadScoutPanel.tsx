@@ -252,8 +252,8 @@ export default function AriannaLeadScoutPanel(_props: Props) {
             </div>
             <p className="text-[10px] text-muted-foreground truncate">
               {isActive && state?.current_city
-                ? <>Sto cercando lead a <span className="text-foreground font-semibold">{state.current_city}</span> · <span className="text-foreground font-semibold">{state.current_sector}</span></>
-                : "Trova lead caldi da sola 24/7. Accendi l'interruttore →"}
+                ? <>Sto analizzando <span className="text-foreground font-semibold">{state.current_city}</span> · settore <span className="text-foreground font-semibold">{state.current_sector}</span></>
+                : "AI che trova nuovi clienti per te 24/7. Accendi l'interruttore →"}
             </p>
           </div>
         </div>
@@ -284,34 +284,43 @@ export default function AriannaLeadScoutPanel(_props: Props) {
               {/* COME FUNZIONA — visibile solo quando spenta, per orientare il venditore */}
               {!isActive && (
                 <div className="rounded-lg p-2.5" style={{ background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.2)" }}>
-                  <div className="text-[10px] font-bold mb-1.5 text-violet-300">Come funziona</div>
-                  <div className="space-y-1 text-[10px] text-foreground/80">
-                    <div className="flex gap-1.5"><span className="text-violet-400 font-bold">1.</span> Arianna sceglie città+settore in base ai tuoi risultati</div>
-                    <div className="flex gap-1.5"><span className="text-violet-400 font-bold">2.</span> Scansiona Google Maps, filtra solo lead caldi</div>
-                    <div className="flex gap-1.5"><span className="text-violet-400 font-bold">3.</span> Salva in pipeline (e contatta, se attivi l'invio auto)</div>
+                  <div className="text-[10px] font-bold mb-1.5 text-violet-300">Come funziona — 3 step</div>
+                  <div className="space-y-1.5 text-[10px] text-foreground/85 leading-snug">
+                    <div className="flex gap-1.5">
+                      <span className="text-violet-400 font-bold shrink-0">1.</span>
+                      <span><b>Scelta target.</b> Arianna decide città e settore con il maggior potenziale, basandosi sui tuoi risultati passati.</span>
+                    </div>
+                    <div className="flex gap-1.5">
+                      <span className="text-violet-400 font-bold shrink-0">2.</span>
+                      <span><b>Scansione.</b> Cerca su Google Maps e tiene solo i lead che rispettano i tuoi criteri di qualità.</span>
+                    </div>
+                    <div className="flex gap-1.5">
+                      <span className="text-violet-400 font-bold shrink-0">3.</span>
+                      <span><b>Salva (e contatta).</b> Mette i lead caldi in pipeline. Se attivi l'invio auto, li contatta su WhatsApp/email da sola.</span>
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* ────────── 1. STATO LIVE ────────── */}
               {isActive && (
-                <SectionCard title="In tempo reale" tone="violet" step={1}>
-                  <div className="grid grid-cols-2 gap-y-1 gap-x-2 text-[10px]">
-                    <Row icon={<MapPin className="w-3 h-3 text-violet-300" />} label="Zona" value={state?.current_city || "—"} />
+                <SectionCard title="Cosa sta facendo adesso" tone="violet" step={1}>
+                  <div className="grid grid-cols-2 gap-y-1.5 gap-x-2 text-[10px]">
+                    <Row icon={<MapPin className="w-3 h-3 text-violet-300" />} label="Città" value={state?.current_city || "—"} />
                     <Row icon={<Layers className="w-3 h-3 text-violet-300" />} label="Settore" value={state?.current_sector || "—"} />
-                    <Row icon={<Clock className="w-3 h-3 text-violet-300" />} label="Prossimo ciclo" value={countdown > 0 ? `${countdown}s` : loading ? "in corso…" : "—"} />
-                    <Row icon={<Target className="w-3 h-3 text-violet-300" />} label="Modalità" value={state?.auto_send_messages ? "auto-invio" : "solo salva"} />
+                    <Row icon={<Clock className="w-3 h-3 text-violet-300" />} label="Prossima scansione" value={countdown > 0 ? `tra ${countdown}s` : loading ? "in corso…" : "a breve"} />
+                    <Row icon={<Target className="w-3 h-3 text-violet-300" />} label="Cosa fa al lead" value={state?.auto_send_messages ? "salva + contatta" : "solo salva"} />
                   </div>
                 </SectionCard>
               )}
 
               {/* ────────── 2. CRITERI LEAD CALDI ────────── */}
               <SectionCard
-                title="Criteri lead caldi"
+                title="Quali lead considera “caldi”"
                 step={isActive ? 2 : 1}
                 badge={state?.auto_tune_enabled !== false
-                  ? { label: "AI auto", color: "#c4b5fd", bg: "rgba(167,139,250,0.18)" }
-                  : { label: "manuale", color: "#fbbf24", bg: "rgba(251,191,36,0.18)" }}
+                  ? { label: "AI decide da sola", color: "#c4b5fd", bg: "rgba(167,139,250,0.18)" }
+                  : { label: "criteri tuoi", color: "#fbbf24", bg: "rgba(251,191,36,0.18)" }}
                 action={
                   <button
                     type="button"
@@ -323,25 +332,28 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                   </button>
                 }
               >
-                <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] text-foreground/75">
-                  {state?.quality_filters?.require_no_website && <div>❌ Senza sito web</div>}
-                  {state?.quality_filters?.require_no_social && <div>📱 Senza social</div>}
-                  <div>⭐ Rating ≥ {(state?.quality_filters?.min_rating ?? 4).toFixed(1)}</div>
-                  <div>💬 ≥ {state?.quality_filters?.min_reviews ?? 20} recensioni</div>
+                <p className="text-[9px] text-muted-foreground mb-1 leading-snug">
+                  Un lead viene salvato solo se rispetta <b>tutti</b> questi requisiti:
+                </p>
+                <div className="grid grid-cols-1 gap-y-0.5 text-[9px] text-foreground/80">
+                  {state?.quality_filters?.require_no_website && <div>❌ <b>Senza sito web</b> — più bisognoso del tuo servizio</div>}
+                  {state?.quality_filters?.require_no_social && <div>📱 <b>Senza social</b> — visibilità da costruire</div>}
+                  <div>⭐ <b>Rating ≥ {(state?.quality_filters?.min_rating ?? 4).toFixed(1)}</b> — attività credibile</div>
+                  <div>💬 <b>≥ {state?.quality_filters?.min_reviews ?? 20} recensioni</b> — clienti reali, fatturato attivo</div>
                   {state?.quality_filters?.premium_sectors_only && (
-                    <div className="col-span-2 truncate">💰 {state?.quality_filters?.premium_sectors?.join(", ") || "food, beauty, fitness, healthcare"}</div>
+                    <div className="truncate">💰 <b>Settori premium:</b> {state?.quality_filters?.premium_sectors?.join(", ") || "food, beauty, fitness, healthcare"}</div>
                   )}
                 </div>
                 {state?.last_tuned_at && (
                   <div className="text-[8px] text-muted-foreground italic mt-1">
-                    Ultima calibrazione: {new Date(state.last_tuned_at).toLocaleDateString("it-IT")}
+                    Ultima volta che l'AI ha ricalibrato: {new Date(state.last_tuned_at).toLocaleDateString("it-IT")}
                   </div>
                 )}
               </SectionCard>
 
               {/* ────────── 3. INVIO AUTO ────────── */}
               <SectionCard
-                title={state?.auto_send_messages ? "Invio automatico ATTIVO" : "Invio messaggi manuale"}
+                title={state?.auto_send_messages ? "Contatto automatico — ATTIVO" : "Contatto manuale (consigliato all'inizio)"}
                 step={isActive ? 3 : 2}
                 tone={state?.auto_send_messages ? "green" : "neutral"}
                 action={
@@ -356,7 +368,7 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                         .eq("user_id", userId);
                       if (error) { toast.error("Errore aggiornamento"); return; }
                       setState(prev => prev ? { ...prev, auto_send_messages: next } : prev);
-                      toast.success(next ? "📤 Invio automatico ATTIVO" : "💾 Solo salvataggio in pipeline");
+                      toast.success(next ? "📤 Contatto automatico attivato" : "💾 Solo salvataggio in pipeline");
                     }}
                     className="relative w-9 h-5 rounded-full transition-all shrink-0"
                     style={{ background: state?.auto_send_messages ? "#22c55e" : "rgba(255,255,255,0.15)" }}
@@ -367,31 +379,46 @@ export default function AriannaLeadScoutPanel(_props: Props) {
               >
                 <p className="text-[10px] text-muted-foreground leading-snug">
                   {state?.auto_send_messages
-                    ? "Arianna contatta i lead caldi via WhatsApp/email da sola, appena li trova."
-                    : "I lead vengono salvati in pipeline. Sei tu a decidere quando contattarli."}
+                    ? "Appena trova un lead caldo, Arianna gli invia direttamente il messaggio personalizzato su WhatsApp/email."
+                    : "I lead vengono solo salvati in pipeline. Decidi tu quando contattarli — più sicuro all'inizio."}
                 </p>
               </SectionCard>
 
               {/* ────────── 4. RISULTATI (KPI) ────────── */}
-              {state && (
-                <SectionCard title="I tuoi risultati" step={isActive ? 4 : 3}>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    <Kpi icon={<Activity className="w-3 h-3" />} value={state.cycles_completed} label="cicli" />
-                    <Kpi icon={<Flame className="w-3 h-3" />} value={state.hot_leads_found} label="lead caldi" highlight />
-                    <Kpi icon={<TrendingUp className="w-3 h-3" />} value={topZones.length} label="zone top" />
-                  </div>
-                </SectionCard>
-              )}
+              {state && (() => {
+                const cycles = state.cycles_completed || 0;
+                const hot = state.hot_leads_found || 0;
+                const conv = cycles > 0 ? Math.round((hot / cycles) * 100) : 0;
+                return (
+                  <SectionCard title="I tuoi risultati" step={isActive ? 4 : 3}>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      <Kpi icon={<Activity className="w-3 h-3" />} value={cycles} label="scansioni fatte" />
+                      <Kpi icon={<Flame className="w-3 h-3" />} value={hot} label="lead caldi salvati" highlight />
+                      <Kpi icon={<TrendingUp className="w-3 h-3" />} value={conv} label="% di successo" suffix="%" />
+                    </div>
+                    <p className="text-[9px] text-muted-foreground mt-1.5 leading-snug">
+                      In media <b>{cycles > 0 ? (hot / cycles).toFixed(1) : "0"} lead caldi per scansione</b>. Più Arianna lavora, più impara dove trovarli.
+                    </p>
+                  </SectionCard>
+                );
+              })()}
+
               {/* ────────── 5. ZONE TOP (apprese) ────────── */}
               {topZones.length > 0 && (
-                <SectionCard title="Cosa Arianna ha imparato" tone="green">
+                <SectionCard title="Zone più redditizie (apprese dall'AI)" tone="green">
+                  <p className="text-[9px] text-muted-foreground mb-1 leading-snug">
+                    Combinazioni dove Arianna trova più lead caldi. Le scansionerà più spesso.
+                  </p>
                   <div className="space-y-0.5">
                     {topZones.map(z => {
                       const [city, sector] = z.key.split("|");
+                      const priorityPct = Math.round((z.weight - 1) * 100);
                       return (
                         <div key={z.key} className="flex items-center gap-1.5 text-[10px]">
-                          <span className="text-foreground/80 flex-1">{city} · {sector}</span>
-                          <span className="font-bold text-emerald-300">×{z.weight.toFixed(1)}</span>
+                          <span className="text-foreground/85 flex-1 truncate">{city} · {sector}</span>
+                          <span className="font-bold text-emerald-300 text-[9px]" title={`Priorità ×${z.weight.toFixed(2)}`}>
+                            +{priorityPct}% priorità
+                          </span>
                         </div>
                       );
                     })}
@@ -401,7 +428,12 @@ export default function AriannaLeadScoutPanel(_props: Props) {
 
               {/* ────────── 6. STREAM CICLI ────────── */}
               {history.length > 0 && (
-                <SectionCard title={`Cicli recenti (${history.length})`}>
+                <SectionCard title={`Cronologia scansioni (${history.length})`}>
+                  <div className="flex items-center gap-2 mb-1 text-[9px] text-muted-foreground">
+                    <span className="flex items-center gap-0.5">🔥 con lead</span>
+                    <span className="flex items-center gap-0.5">🔍 nessun lead</span>
+                    <span className="flex items-center gap-0.5">✗ errore</span>
+                  </div>
                   <div className="space-y-0.5 max-h-40 overflow-y-auto">
                     <AnimatePresence initial={false}>
                       {history.slice(0, 10).map(h => (
@@ -411,13 +443,17 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                           animate={{ opacity: 1, x: 0 }}
                           className="flex items-center gap-1.5 text-[10px] py-0.5"
                         >
-                          <span className="w-4 text-center">
+                          <span className="w-4 text-center" title={
+                            h.status === "failed" ? "Errore" :
+                            h.leads_saved_to_pipeline > 0 ? `${h.leads_saved_to_pipeline} lead salvati` :
+                            "Nessun lead caldo trovato"
+                          }>
                             {h.status === "failed" ? "✗" : h.leads_saved_to_pipeline > 0 ? "🔥" : "🔍"}
                           </span>
                           <span className="flex-1 truncate text-foreground/80">
-                            #{h.cycle_number} {h.city}/{h.sector}
+                            <span className="text-muted-foreground">#{h.cycle_number}</span> {h.city} · {h.sector}
                             {h.leads_saved_to_pipeline > 0 && (
-                              <span className="ml-1 text-emerald-300 font-bold">+{h.leads_saved_to_pipeline}</span>
+                              <span className="ml-1 text-emerald-300 font-bold">+{h.leads_saved_to_pipeline} lead</span>
                             )}
                           </span>
                           <span className="text-muted-foreground text-[9px]">
@@ -436,9 +472,10 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                 disabled={loading || !userId}
                 className="w-full flex items-center justify-center gap-1.5 text-[11px] font-bold py-2 rounded-lg transition-all hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", color: "#fff" }}
+                title="Lancia subito una scansione di test, senza aspettare il ciclo automatico"
               >
                 {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
-                {loading ? "Sto scansionando…" : "Esegui un ciclo ora"}
+                {loading ? "Sto scansionando…" : "Prova adesso una scansione"}
               </button>
 
               {/* Empty */}
@@ -469,15 +506,17 @@ export default function AriannaLeadScoutPanel(_props: Props) {
   );
 }
 
-function Kpi({ icon, value, label, highlight }: { icon: React.ReactNode; value: number; label: string; highlight?: boolean }) {
+function Kpi({ icon, value, label, highlight, suffix }: { icon: React.ReactNode; value: number; label: string; highlight?: boolean; suffix?: string }) {
   return (
     <div className="rounded p-1.5 text-center" style={{
       background: highlight ? "rgba(249,115,22,0.1)" : "rgba(255,255,255,0.03)",
       border: `1px solid ${highlight ? "rgba(249,115,22,0.25)" : "rgba(255,255,255,0.06)"}`,
     }}>
       <div className="flex items-center justify-center gap-1 mb-0.5" style={{ color: highlight ? "#fb923c" : undefined }}>{icon}</div>
-      <div className="text-sm font-bold leading-none" style={{ color: highlight ? "#fb923c" : undefined }}>{value.toLocaleString("it-IT")}</div>
-      <div className="text-[8px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-sm font-bold leading-none" style={{ color: highlight ? "#fb923c" : undefined }}>
+        {value.toLocaleString("it-IT")}{suffix ?? ""}
+      </div>
+      <div className="text-[8px] uppercase tracking-wider text-muted-foreground leading-tight">{label}</div>
     </div>
   );
 }
