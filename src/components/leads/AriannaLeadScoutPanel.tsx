@@ -252,8 +252,8 @@ export default function AriannaLeadScoutPanel(_props: Props) {
             </div>
             <p className="text-[10px] text-muted-foreground truncate">
               {isActive && state?.current_city
-                ? <>Sto cercando lead a <span className="text-foreground font-semibold">{state.current_city}</span> · <span className="text-foreground font-semibold">{state.current_sector}</span></>
-                : "Trova lead caldi da sola 24/7. Accendi l'interruttore →"}
+                ? <>Sto analizzando <span className="text-foreground font-semibold">{state.current_city}</span> · settore <span className="text-foreground font-semibold">{state.current_sector}</span></>
+                : "AI che trova nuovi clienti per te 24/7. Accendi l'interruttore →"}
             </p>
           </div>
         </div>
