@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import {
   Bot, Loader2, Activity, ChevronDown, ChevronUp, Brain,
   Sparkles, MapPin, Layers, Zap, TrendingUp, Target, Clock, Flame, Settings2,
+  Globe, Share2, Star, MessageSquare, Gem, AlertCircle, Search as SearchIcon,
+  CircleDot,
 } from "lucide-react";
 import AriannaCriteriaOverrideDialog from "./AriannaCriteriaOverrideDialog";
 
@@ -242,12 +244,29 @@ export default function AriannaLeadScoutPanel(_props: Props) {
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-sm font-bold text-foreground">Arianna Autopilot</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold" style={{
-                background: isActive ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.05)",
-                color: isActive ? "#4ade80" : "#9ca3af",
-              }}>
-                {isActive ? (loading ? "⚡ AL LAVORO" : "🟢 ATTIVA") : "⚪ SPENTA"}
+              <span className="text-sm font-bold text-foreground tracking-tight">Arianna Autopilot</span>
+              <span
+                className="partner-badge-pro text-[10px]"
+                data-tone={isActive ? (loading ? "primary" : "success") : "muted"}
+              >
+                {isActive ? (
+                  loading ? (
+                    <>
+                      <Loader2 className="w-2.5 h-2.5 animate-spin" />
+                      In esecuzione
+                    </>
+                  ) : (
+                    <>
+                      <span className="partner-status-dot" aria-hidden />
+                      Attiva
+                    </>
+                  )
+                ) : (
+                  <>
+                    <CircleDot className="w-2.5 h-2.5 opacity-70" />
+                    In pausa
+                  </>
+                )}
               </span>
             </div>
             <p className="text-[10px] text-muted-foreground truncate">
@@ -335,15 +354,34 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                 <p className="text-[9px] text-muted-foreground mb-1 leading-snug">
                   Un lead viene salvato solo se rispetta <b>tutti</b> questi requisiti:
                 </p>
-                <div className="grid grid-cols-1 gap-y-0.5 text-[9px] text-foreground/80">
-                  {state?.quality_filters?.require_no_website && <div>❌ <b>Senza sito web</b> — più bisognoso del tuo servizio</div>}
-                  {state?.quality_filters?.require_no_social && <div>📱 <b>Senza social</b> — visibilità da costruire</div>}
-                  <div>⭐ <b>Rating ≥ {(state?.quality_filters?.min_rating ?? 4).toFixed(1)}</b> — attività credibile</div>
-                  <div>💬 <b>≥ {state?.quality_filters?.min_reviews ?? 20} recensioni</b> — clienti reali, fatturato attivo</div>
-                  {state?.quality_filters?.premium_sectors_only && (
-                    <div className="truncate">💰 <b>Settori premium:</b> {state?.quality_filters?.premium_sectors?.join(", ") || "food, beauty, fitness, healthcare"}</div>
+                <ul className="grid grid-cols-1 gap-y-1 text-[10px] text-foreground/85">
+                  {state?.quality_filters?.require_no_website && (
+                    <li className="flex items-start gap-1.5">
+                      <Globe className="w-3 h-3 mt-px text-violet-300/80 shrink-0" />
+                      <span><b>Nessun sito web</b> — alto bisogno di presenza digitale</span>
+                    </li>
                   )}
-                </div>
+                  {state?.quality_filters?.require_no_social && (
+                    <li className="flex items-start gap-1.5">
+                      <Share2 className="w-3 h-3 mt-px text-violet-300/80 shrink-0" />
+                      <span><b>Nessun profilo social</b> — visibilità da costruire</span>
+                    </li>
+                  )}
+                  <li className="flex items-start gap-1.5">
+                    <Star className="w-3 h-3 mt-px text-amber-300/80 shrink-0" />
+                    <span><b>Rating ≥ {(state?.quality_filters?.min_rating ?? 4).toFixed(1)}</b> — reputazione consolidata</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <MessageSquare className="w-3 h-3 mt-px text-emerald-300/80 shrink-0" />
+                    <span><b>≥ {state?.quality_filters?.min_reviews ?? 20} recensioni</b> — base clienti attiva</span>
+                  </li>
+                  {state?.quality_filters?.premium_sectors_only && (
+                    <li className="flex items-start gap-1.5">
+                      <Gem className="w-3 h-3 mt-px text-cyan-300/80 shrink-0" />
+                      <span className="truncate"><b>Settori premium:</b> {state?.quality_filters?.premium_sectors?.join(", ") || "food, beauty, fitness, healthcare"}</span>
+                    </li>
+                  )}
+                </ul>
                 {state?.last_tuned_at && (
                   <div className="text-[8px] text-muted-foreground italic mt-1">
                     Ultima volta che l'AI ha ricalibrato: {new Date(state.last_tuned_at).toLocaleDateString("it-IT")}
@@ -458,10 +496,10 @@ export default function AriannaLeadScoutPanel(_props: Props) {
               {/* ────────── 6. STREAM CICLI ────────── */}
               {history.length > 0 && (
                 <SectionCard title={`Cronologia scansioni (${history.length})`}>
-                  <div className="flex items-center gap-2 mb-1 text-[9px] text-muted-foreground">
-                    <span className="flex items-center gap-0.5">🔥 con lead</span>
-                    <span className="flex items-center gap-0.5">🔍 nessun lead</span>
-                    <span className="flex items-center gap-0.5">✗ errore</span>
+                  <div className="flex items-center gap-3 mb-1.5 text-[9px] text-muted-foreground">
+                    <span className="inline-flex items-center gap-1"><Flame className="w-2.5 h-2.5 text-orange-400" /> con lead</span>
+                    <span className="inline-flex items-center gap-1"><SearchIcon className="w-2.5 h-2.5 opacity-70" /> nessun lead</span>
+                    <span className="inline-flex items-center gap-1"><AlertCircle className="w-2.5 h-2.5 text-rose-400" /> errore</span>
                   </div>
                   <div className="space-y-0.5 max-h-40 overflow-y-auto">
                     <AnimatePresence initial={false}>
@@ -472,12 +510,21 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                           animate={{ opacity: 1, x: 0 }}
                           className="flex items-center gap-1.5 text-[10px] py-0.5"
                         >
-                          <span className="w-4 text-center" title={
-                            h.status === "failed" ? "Errore" :
-                            h.leads_saved_to_pipeline > 0 ? `${h.leads_saved_to_pipeline} lead salvati` :
-                            "Nessun lead caldo trovato"
-                          }>
-                            {h.status === "failed" ? "✗" : h.leads_saved_to_pipeline > 0 ? "🔥" : "🔍"}
+                          <span
+                            className="w-4 inline-flex items-center justify-center"
+                            title={
+                              h.status === "failed" ? "Errore" :
+                              h.leads_saved_to_pipeline > 0 ? `${h.leads_saved_to_pipeline} lead salvati` :
+                              "Nessun lead caldo trovato"
+                            }
+                          >
+                            {h.status === "failed" ? (
+                              <AlertCircle className="w-3 h-3 text-rose-400" />
+                            ) : h.leads_saved_to_pipeline > 0 ? (
+                              <Flame className="w-3 h-3 text-orange-400" />
+                            ) : (
+                              <SearchIcon className="w-3 h-3 opacity-60" />
+                            )}
                           </span>
                           <span className="flex-1 truncate text-foreground/80">
                             <span className="text-muted-foreground">#{h.cycle_number}</span> {h.city} · {h.sector}

@@ -1517,6 +1517,143 @@
     padding-left: 0.125rem;
   }
 
+  /* ════════════════════════════════════════════════════════════════
+     PARTNER PREMIUM TYPOGRAPHY & PRO BADGES — sober luxury polish
+     Use sparingly to give a more professional, editorial feel
+     ════════════════════════════════════════════════════════════════ */
+  .partner-eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .partner-eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 1.25rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.55));
+  }
+  .partner-h1 {
+    font-family: 'Playfair Display', 'Space Grotesk', serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 2.4vw + 1rem, 2.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    color: hsl(var(--foreground));
+  }
+  .partner-h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 0.6vw + 0.95rem, 1.35rem);
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+    color: hsl(var(--foreground));
+  }
+  .partner-subtle {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: hsl(var(--muted-foreground));
+  }
+  .partner-divider {
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      hsl(var(--border)) 22%,
+      hsl(var(--border)) 78%,
+      transparent);
+  }
+
+  /* Slim KPI tile — neutral by default, subtle accent on data */
+  .partner-kpi {
+    border-radius: 0.875rem;
+    padding: 0.75rem 0.875rem;
+    background: hsl(var(--card) / 0.96);
+    border: 1px solid hsl(var(--border) / 0.6);
+    transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+  }
+  .dark .partner-kpi {
+    background: hsl(225 14% 11% / 0.85);
+    border-color: hsl(0 0% 100% / 0.06);
+  }
+  .partner-kpi:hover {
+    transform: translateY(-1px);
+    border-color: hsl(var(--primary) / 0.32);
+  }
+  .partner-kpi__label {
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+    font-weight: 600;
+  }
+  .partner-kpi__value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: hsl(var(--foreground));
+    margin-top: 0.25rem;
+  }
+
+  /* Professional pill badge — three sober variants */
+  .partner-badge-pro {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+    background: hsl(var(--muted) / 0.6);
+    color: hsl(var(--muted-foreground));
+  }
+  .partner-badge-pro[data-tone="primary"] {
+    background: hsl(var(--primary) / 0.10);
+    border-color: hsl(var(--primary) / 0.28);
+    color: hsl(var(--primary));
+  }
+  .partner-badge-pro[data-tone="success"] {
+    background: hsl(var(--accent) / 0.12);
+    border-color: hsl(var(--accent) / 0.32);
+    color: hsl(var(--accent));
+  }
+  .partner-badge-pro[data-tone="warning"] {
+    background: hsl(var(--gold) / 0.12);
+    border-color: hsl(var(--gold) / 0.32);
+    color: hsl(var(--gold));
+  }
+  .partner-badge-pro[data-tone="muted"] {
+    background: hsl(var(--muted) / 0.5);
+    border-color: hsl(var(--border));
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Status dot with pulse — for "Live", "In corso" indicators */
+  .partner-status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: hsl(var(--accent));
+    box-shadow: 0 0 0 0 hsl(var(--accent) / 0.55);
+    animation: partner-status-pulse 1.8s ease-out infinite;
+  }
+  @keyframes partner-status-pulse {
+    0%   { box-shadow: 0 0 0 0 hsl(var(--accent) / 0.45); }
+    70%  { box-shadow: 0 0 0 7px hsl(var(--accent) / 0); }
+    100% { box-shadow: 0 0 0 0 hsl(var(--accent) / 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .partner-status-dot { animation: none !important; }
+  }
+
   /* ─── Scroll-reveal utility (CSS-only, with IO-friendly opt-in) ─── */
   .partner-reveal {
     opacity: 0;

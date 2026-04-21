@@ -206,10 +206,11 @@ export default function PartnerLayout() {
 
             <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0">
               <motion.span
-                animate={{ opacity: demoMode ? 0.4 : 1 }}
-                className="text-[9px] font-bold uppercase tracking-[0.15em] hidden sm:inline"
-                style={{ color: "#a78bfa" }}
+                animate={{ opacity: demoMode ? 0.35 : 1 }}
+                className="hidden sm:inline-flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.18em]"
+                style={{ color: demoMode ? "#9ca3af" : "#a78bfa" }}
               >
+                {!demoMode && <span className="partner-status-dot" aria-hidden style={{ background: "#a78bfa" }} />}
                 Live
               </motion.span>
 
@@ -272,9 +273,9 @@ export default function PartnerLayout() {
               </div>
 
               <motion.span
-                animate={{ opacity: demoMode ? 1 : 0.4 }}
-                className="text-[9px] font-bold uppercase tracking-[0.15em] hidden sm:inline"
-                style={{ color: "#d4a052" }}
+                animate={{ opacity: demoMode ? 1 : 0.35 }}
+                className="hidden sm:inline-flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.18em]"
+                style={{ color: demoMode ? "#d4a052" : "#9ca3af" }}
               >
                 Demo
               </motion.span>

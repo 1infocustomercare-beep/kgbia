@@ -114,22 +114,20 @@ export default function PartnerHomePage() {
             )}
           </motion.div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-medium text-muted-foreground tracking-wide">
-              {demoMode ? "Presentazione per" : "Bentornato,"}
+            <p className="partner-eyebrow">
+              {demoMode ? "Presentazione per" : "Bentornato"}
             </p>
-            <h1 className="text-xl font-bold text-foreground truncate mt-0.5">
+            <h1 className="partner-h1 truncate mt-1.5">
               {demoMode ? "Il Tuo Business" : userName}
             </h1>
             <div className="flex items-center gap-2 mt-1.5">
               {!demoMode && isTeamLeader && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-bold"
-                  style={{ background: "rgba(167,139,250,0.12)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.15)" }}>
+                <span className="partner-badge-pro" data-tone="primary">
                   <Crown className="w-3 h-3" /> Team Leader
                 </span>
               )}
               {demoMode && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-bold"
-                  style={{ background: "rgba(245,158,11,0.1)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.15)" }}>
+                <span className="partner-badge-pro" data-tone="warning">
                   <Presentation className="w-3 h-3" /> Presentazione Live
                 </span>
               )}

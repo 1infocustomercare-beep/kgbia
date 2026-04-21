@@ -164,6 +164,14 @@ export default function PartnerEarningsPage() {
 
   return (
     <div className="space-y-5 px-4 pt-5 pb-24 max-w-2xl lg:max-w-6xl mx-auto">
+      {/* ═══ PREMIUM HEADER ═══ */}
+      <header className="space-y-1.5">
+        <p className="partner-eyebrow">Performance &amp; Compensi</p>
+        <h2 className="partner-h2">I tuoi guadagni</h2>
+        <p className="partner-subtle">Commissioni, override di team e bonus performance — aggiornati in tempo reale.</p>
+        <div className="partner-divider mt-3" />
+      </header>
+
       {/* ═══ RANK BANNER — Animated Glow ═══ */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
         className={`${cardBase} p-5 relative overflow-hidden`}
