@@ -335,12 +335,21 @@ export default function TenantLogin() {
 
           <Button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || throttle.locked}
             className="w-full"
-            style={{ backgroundColor: brand, color: "#fff" }}
+            style={{
+              backgroundColor: throttle.locked ? undefined : brand,
+              color: throttle.locked ? undefined : "#fff",
+            }}
+            variant={throttle.locked ? "secondary" : "default"}
           >
             {submitting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
+            ) : throttle.locked ? (
+              <>
+                <ShieldAlert className="w-4 h-4 mr-2" />
+                Bloccato — riprova tra {lockoutLabel}
+              </>
             ) : (
               <>
                 <Lock className="w-4 h-4 mr-2" />
