@@ -19,6 +19,7 @@ import DailyBriefToast from "@/components/partner/DailyBriefToast";
 import {
   Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
+import { usePartnerReveal } from "@/hooks/usePartnerReveal";
 
 const DemoModeContext = createContext<{ demoMode: boolean; setDemoMode: (v: boolean) => void }>({ demoMode: false, setDemoMode: () => {} });
 export const usePartnerDemoMode = () => useContext(DemoModeContext);
@@ -67,6 +68,9 @@ export default function PartnerLayout() {
   const [profileFullName, setProfileFullName] = useState<string | null>(null);
   const [moreOpen, setMoreOpen] = useState(false);
   const userName = profileFullName || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
+
+  // Auto-reveal cards/sections inside the partner shell as they scroll into view
+  usePartnerReveal();
 
   // Scroll-driven header shrink (wow factor)
   const { scrollY } = useScroll();

@@ -1461,6 +1461,84 @@
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
+  /* ─── Partner Card / Section design tokens ─── */
+  .partner-card {
+    position: relative;
+    border-radius: 1rem;
+    background: hsl(var(--card) / 0.98);
+    border: 1px solid hsl(var(--border) / 0.7);
+    box-shadow:
+      0 1px 0 hsl(var(--foreground) / 0.02) inset,
+      0 8px 24px -12px hsl(var(--foreground) / 0.08);
+    transition:
+      transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 280ms ease;
+    will-change: transform;
+  }
+  .partner-card:hover {
+    transform: translateY(-2px);
+    border-color: hsl(var(--primary) / 0.35);
+    box-shadow:
+      0 1px 0 hsl(var(--foreground) / 0.02) inset,
+      0 18px 40px -16px hsl(var(--primary) / 0.22);
+  }
+  .dark .partner-card {
+    background: hsl(225 14% 11% / 0.92);
+    border-color: hsl(0 0% 100% / 0.07);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.03) inset,
+      0 12px 32px -14px hsl(0 0% 0% / 0.55);
+  }
+  .dark .partner-card:hover {
+    border-color: hsl(248 70% 66% / 0.35);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.04) inset,
+      0 20px 48px -18px hsl(248 70% 66% / 0.28);
+  }
+
+  .partner-section {
+    margin-top: 1.25rem;
+  }
+  .partner-section:first-child { margin-top: 0; }
+  .partner-section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+    margin: 0 0 0.625rem;
+    padding-left: 0.125rem;
+  }
+
+  /* ─── Scroll-reveal utility (CSS-only, with IO-friendly opt-in) ─── */
+  .partner-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .partner-reveal.is-visible,
+  .partner-reveal[data-visible="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Native scroll-driven fallback for browsers that support animation-timeline */
+  @supports (animation-timeline: view()) {
+    .partner-reveal:not(.is-visible):not([data-visible="true"]) {
+      animation: partner-reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+  @keyframes partner-reveal-in {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
   /* Avoid horizontal overflow caused by long unbreakable strings on mobile */
   .partner-mobile-content-safe,
   .partner-mobile-content-safe * {
@@ -1480,12 +1558,16 @@
 
   @media (prefers-reduced-motion: reduce) {
     .partner-page-shell,
-    .partner-stagger > * {
+    .partner-stagger > *,
+    .partner-reveal {
       animation: none !important;
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
     }
-    .partner-mobile-content-safe {
-      scroll-behavior: auto;
-    }
+    .partner-card { transition: none !important; }
+    .partner-card:hover { transform: none !important; }
+    .partner-mobile-content-safe { scroll-behavior: auto; }
   }
 
   /* Coach Empire button — sits below the header, above content */
