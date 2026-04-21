@@ -589,6 +589,7 @@ export type Database = {
       }
       arianna_autopilot_state: {
         Row: {
+          auto_send_messages: boolean
           auto_tune_enabled: boolean
           created_at: string
           current_city: string | null
@@ -608,6 +609,7 @@ export type Database = {
           zone_sector_weights: Json
         }
         Insert: {
+          auto_send_messages?: boolean
           auto_tune_enabled?: boolean
           created_at?: string
           current_city?: string | null
@@ -627,6 +629,7 @@ export type Database = {
           zone_sector_weights?: Json
         }
         Update: {
+          auto_send_messages?: boolean
           auto_tune_enabled?: boolean
           created_at?: string
           current_city?: string | null

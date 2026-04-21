@@ -22,6 +22,7 @@ interface AutopilotState {
   next_cycle_at: string | null;
   zone_sector_weights: Record<string, number>;
   auto_tune_enabled?: boolean;
+  auto_send_messages?: boolean;
   last_tuned_at?: string | null;
   quality_filters: {
     require_no_website: boolean;
@@ -360,6 +361,43 @@ export default function AriannaLeadScoutPanel(_props: Props) {
                     Ultima calibrazione AI: {new Date(state.last_tuned_at).toLocaleDateString("it-IT")}
                   </div>
                 )}
+              </div>
+
+              {/* Toggle: invio automatico messaggi ai lead trovati */}
+              <div className="rounded-lg p-2.5" style={{
+                background: state?.auto_send_messages ? "rgba(34,197,94,0.08)" : "rgba(0,0,0,0.25)",
+                border: `1px solid ${state?.auto_send_messages ? "rgba(34,197,94,0.3)" : "rgba(255,255,255,0.05)"}`,
+              }}>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[11px] font-bold flex items-center gap-1.5" style={{ color: state?.auto_send_messages ? "#4ade80" : undefined }}>
+                      {state?.auto_send_messages ? "📤" : "💾"} Invio automatico messaggi
+                    </div>
+                    <p className="text-[9px] text-muted-foreground leading-tight mt-0.5">
+                      {state?.auto_send_messages
+                        ? "Arianna contatta i lead caldi via WhatsApp/email da sola"
+                        : "Solo salvataggio in pipeline — tu decidi quando contattarli"}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!userId) return;
+                      const next = !(state?.auto_send_messages ?? false);
+                      const { error } = await supabase
+                        .from("arianna_autopilot_state" as any)
+                        .update({ auto_send_messages: next })
+                        .eq("user_id", userId);
+                      if (error) { toast.error("Errore aggiornamento"); return; }
+                      setState(prev => prev ? { ...prev, auto_send_messages: next } : prev);
+                      toast.success(next ? "📤 Invio automatico ATTIVO" : "💾 Solo salvataggio in pipeline");
+                    }}
+                    className="relative w-10 h-5 rounded-full transition-all shrink-0"
+                    style={{ background: state?.auto_send_messages ? "#22c55e" : "rgba(255,255,255,0.1)" }}
+                  >
+                    <motion.div animate={{ x: state?.auto_send_messages ? 21 : 2 }} className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow" />
+                  </button>
+                </div>
               </div>
 
               {/* KPI */}
