@@ -108,10 +108,10 @@ export default function CoachEmpireDrawer() {
       <SheetTrigger asChild>
         <button
           aria-label="Aiuto e Coach Empire"
-          className="fixed top-3 right-3 z-[60] h-9 w-9 rounded-full bg-primary/10 hover:bg-primary/20 backdrop-blur border border-primary/30 flex items-center justify-center transition-all hover:scale-105 shadow-lg"
+          className="partner-coach-button h-10 w-10 rounded-full bg-primary/15 hover:bg-primary/25 backdrop-blur-xl border border-primary/30 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-lg shadow-primary/10"
         >
           <HelpCircle className="h-4 w-4 text-primary" />
-          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
         </button>
       </SheetTrigger>
       <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col">

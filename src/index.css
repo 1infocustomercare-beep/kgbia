@@ -1407,9 +1407,29 @@
     padding-top: max(env(safe-area-inset-top, 0px), 0.5rem);
   }
 
-  /* Partner floating dock — stack verticale sopra la bottom nav senza coprire CTA o profilo */
+  /* ════════════════════════════════════════════════════════════════
+     PARTNER OVERLAY SYSTEM — Unified z-index scale (avoids overlap)
+     ────────────────────────────────────────────────────────────────
+     z 50 → header sticky + bottom nav
+     z 55 → Coach Empire button (top-right, under header)
+     z 60 → Voice / Page-guide FAB
+     z 70 → Voice status panel + Daily brief toast
+     z 80 → Sheet / Drawer
+     z 90 → Dialog / Modal
+     z 9990 → Onboarding tour (Joyride overlay)
+     ════════════════════════════════════════════════════════════════ */
+
+  /* Content padding: bottom-nav 64px + safe-area + breathing room for FAB stack */
   .partner-mobile-content-safe {
-    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 12rem);
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 9rem);
+  }
+
+  /* Coach Empire button — sits below the header, above content */
+  .partner-coach-button {
+    position: fixed;
+    top: calc(56px + env(safe-area-inset-top, 0px) + 0.5rem);
+    right: 0.75rem;
+    z-index: 55;
   }
 
   .partner-page-guide-fab {
@@ -1427,11 +1447,11 @@
   .partner-voice-fab {
     left: 0.75rem;
     right: auto;
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 8.35rem);
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 0.75rem);
   }
 
   .partner-voice-status-panel {
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 12.6rem);
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 5.5rem);
   }
 
   /* Super Admin Voice FAB — stessa logica del partner per non coprire la bottom nav mobile */
@@ -1456,6 +1476,15 @@
     bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 0.875rem);
     width: auto;
     max-width: calc(100vw - 1.5rem);
+  }
+
+  /* Sonner toast: avoid colliding with Coach button (top-right) by docking top-center on partner area */
+  .partner-toaster-zone [data-sonner-toaster][data-y-position="top"] {
+    top: calc(56px + env(safe-area-inset-top, 0px) + 0.5rem) !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    max-width: min(380px, calc(100vw - 5rem)) !important;
   }
 
   @media (min-width: 1024px) {
