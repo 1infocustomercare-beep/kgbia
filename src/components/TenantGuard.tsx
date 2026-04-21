@@ -5,6 +5,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
 import { clearActiveTenant, setActiveTenant, subscribeActiveTenant } from "@/lib/active-tenant";
+import {
+  bindSessionToTenant,
+  hardWipeTenantSession,
+  verifyTenantSessionFingerprint,
+} from "@/lib/tenant-session-isolation";
 
 interface TenantGuardProps {
   children: ReactNode;
@@ -59,10 +64,26 @@ export default function TenantGuard({ children }: TenantGuardProps) {
       if (cancelled) return;
 
       if (!rest || rest.id !== activeTenant.restaurantId || rest.is_blocked) {
-        clearActiveTenant("tenant_invalid");
+        await hardWipeTenantSession("tenant_invalid");
         setAllowed(false);
         setVerifying(false);
         return;
+      }
+
+      // 2.5) Session fingerprint must match this tenant — detects cookie/session
+      // reuse from another restaurant in the same browser
+      const fp = await verifyTenantSessionFingerprint();
+      if (!fp.ok) {
+        if (fp.reason === "missing_fingerprint") {
+          // First navigation after login — bind now
+          await bindSessionToTenant(activeTenant.restaurantId, user.id);
+        } else {
+          await hardWipeTenantSession(`session_isolation_${fp.reason}`);
+          if (cancelled) return;
+          setAllowed(false);
+          setVerifying(false);
+          return;
+        }
       }
 
       const { data: owned } = await supabase
@@ -86,7 +107,7 @@ export default function TenantGuard({ children }: TenantGuardProps) {
       if (cancelled) return;
 
       if (!isMember) {
-        clearActiveTenant("membership_revoked");
+        await hardWipeTenantSession("membership_revoked");
         setAllowed(false);
       } else {
         // Refresh setAt timestamp so other tabs see liveness
