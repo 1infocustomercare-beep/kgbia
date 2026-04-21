@@ -606,6 +606,21 @@ export default function AriannaLeadScoutPanel(_props: Props) {
           }
         />
       )}
+
+      {/* Popup di errore preflight invio automatico */}
+      <OutreachPreflightDialog
+        open={preflightOpen}
+        onOpenChange={setPreflightOpen}
+        result={preflightResult}
+        onRetry={async () => {
+          const probe = await runOutreachPreflight();
+          setPreflightResult(probe);
+          if (probe?.operational) {
+            setPreflightOpen(false);
+            await tryEnableAutoSend();
+          }
+        }}
+      />
     </motion.div>
   );
 }
