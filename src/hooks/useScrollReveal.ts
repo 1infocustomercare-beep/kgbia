@@ -3,9 +3,12 @@ import { useEffect, useRef, useState, useCallback } from "react";
 /**
  * Scroll-triggered reveal hook with stagger support.
  * Elements enter with fade-in + translateY(20px) using IntersectionObserver.
+ *
+ * Honours `prefers-reduced-motion`: if the user requests reduced motion the
+ * element is reported visible immediately so no animation runs.
  */
 export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
-  options?: { threshold?: number; rootMargin?: string; once?: boolean }
+  options?: { threshold?: number; rootMargin?: string; once?: boolean; delay?: number }
 ) {
   const ref = useRef<T>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -14,11 +17,34 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     const el = ref.current;
     if (!el) return;
 
+    // Respect reduced-motion preference — skip the observer dance.
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      setIsVisible(true);
+      return;
+    }
+
+    if (typeof IntersectionObserver === "undefined") {
+      setIsVisible(true);
+      return;
+    }
+
+    let timeoutId: number | undefined;
+    const delay = options?.delay ?? 0;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
+          if (delay > 0) {
+            timeoutId = window.setTimeout(() => setIsVisible(true), delay);
+          } else {
+            setIsVisible(true);
+          }
           if (options?.once !== false) observer.unobserve(el);
+        } else if (options?.once === false) {
+          setIsVisible(false);
         }
       },
       {
@@ -28,8 +54,11 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
-  }, [options?.threshold, options?.rootMargin, options?.once]);
+    return () => {
+      observer.disconnect();
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+  }, [options?.threshold, options?.rootMargin, options?.once, options?.delay]);
 
   return { ref, isVisible };
 }
