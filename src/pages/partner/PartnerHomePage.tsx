@@ -493,41 +493,143 @@ export default function PartnerHomePage() {
               </motion.div>
             </motion.div>
             
-            {/* ═══ ANIMATED STATS HUB ═══ */}
+            {/* ═══ PREMIUM KPI GRID ═══ */}
             <section className="px-4">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="flex items-end justify-between mb-2.5">
+                <div>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground">I tuoi numeri</p>
+                  <p className="text-[11px] text-foreground/70 leading-tight mt-0.5">Aggiornati in tempo reale</p>
+                </div>
+                <motion.div
+                  className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25"
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.4, repeat: Infinity }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="text-[9px] font-semibold tracking-wider text-emerald-300 uppercase">Live</span>
+                </motion.div>
+              </div>
+              <div className="grid grid-cols-3 gap-2.5">
                 {[
-                  { icon: Trophy, value: salesCount, label: "Vendite", sub: "totali", gradient: "from-violet-600/20 to-purple-600/5", color: "#a78bfa", glow: "rgba(167,139,250,0.12)" },
-                  { icon: TrendingUp, value: totalCommissions, label: "Commissioni", sub: "€ netti", gradient: "from-emerald-600/20 to-teal-600/5", color: "#34d399", glow: "rgba(52,211,153,0.12)", isCurrency: true },
-                  { icon: isTeamLeader ? Users : Target, value: isTeamLeader ? teamCount : salesCount, label: isTeamLeader ? "Team" : "Obiettivo", sub: isTeamLeader ? "membri" : `${salesCount}/4 → Leader`, gradient: "from-blue-600/20 to-indigo-600/5", color: "#818cf8", glow: "rgba(129,140,248,0.12)" },
-                ].map((s, i) => (
-                  <motion.div key={i}
-                    initial={{ opacity: 0, y: 16, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ delay: i * 0.12, type: "spring", stiffness: 200 }}
-                    whileHover={{ scale: 1.04, y: -4 }}
-                    whileTap={{ scale: 0.97 }}
-                    className={`${liveGlass} p-4 text-center bg-gradient-to-br ${s.gradient} relative overflow-hidden cursor-default group`}>
-                    {/* Animated top accent */}
-                    <motion.div className="absolute top-0 left-0 right-0 h-[2px]" animate={{ opacity: [0.3, 0.8, 0.3] }}
-                      transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4 }}
-                      style={{ background: `linear-gradient(90deg, transparent, ${s.color}, transparent)` }} />
-                    {/* Hover glow */}
-                    <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ background: `radial-gradient(circle at 50% 40%, ${s.glow}, transparent 70%)` }} />
-                    {/* Orbital ring */}
-                    <motion.div className="absolute -top-6 -right-6 w-16 h-16 rounded-full opacity-[0.04] pointer-events-none"
-                      animate={{ rotate: 360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                      style={{ border: `1px solid ${s.color}` }} />
-                    <motion.div animate={{ y: [0, -2, 0] }} transition={{ duration: 3, repeat: Infinity, delay: i * 0.3 }} className="relative z-10">
-                      <s.icon className="w-5 h-5 mb-2 mx-auto" style={{ color: s.color, filter: `drop-shadow(0 0 6px ${s.color}40)` }} />
+                  {
+                    icon: Trophy,
+                    value: salesCount,
+                    label: "Vendite",
+                    sub: "totali",
+                    badge: salesCount >= 5 ? { text: "Elite", tone: "gold" } : salesCount >= 3 ? { text: "Pro", tone: "violet" } : salesCount >= 1 ? { text: "Active", tone: "cyan" } : { text: "Start", tone: "muted" },
+                    color: "#a78bfa",
+                    glow: "rgba(167,139,250,0.18)",
+                  },
+                  {
+                    icon: TrendingUp,
+                    value: totalCommissions,
+                    label: "Commissioni",
+                    sub: "€ netti",
+                    isCurrency: true,
+                    badge: totalCommissions > 0 ? { text: "+", tone: "emerald" } : null,
+                    color: "#34d399",
+                    glow: "rgba(52,211,153,0.18)",
+                  },
+                  {
+                    icon: isTeamLeader ? Users : Target,
+                    value: isTeamLeader ? teamCount : salesCount,
+                    label: isTeamLeader ? "Team" : "Obiettivo",
+                    sub: isTeamLeader ? "membri attivi" : `${salesCount}/4 → Leader`,
+                    progress: isTeamLeader ? null : Math.min(salesCount / 4, 1),
+                    badge: isTeamLeader ? { text: "Leader", tone: "gold" } : salesCount >= 4 ? { text: "Pronto", tone: "emerald" } : null,
+                    color: "#818cf8",
+                    glow: "rgba(129,140,248,0.18)",
+                  },
+                ].map((s, i) => {
+                  const toneClasses: Record<string, string> = {
+                    gold: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+                    violet: "bg-violet-500/15 text-violet-300 border-violet-500/30",
+                    cyan: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",
+                    emerald: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+                    muted: "bg-muted/40 text-muted-foreground border-border/40",
+                  };
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 18, scale: 0.92 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ delay: i * 0.1, type: "spring", stiffness: 220, damping: 18 }}
+                      whileHover={{ y: -3, scale: 1.025 }}
+                      whileTap={{ scale: 0.97 }}
+                      className={`${liveGlass} relative overflow-hidden cursor-default group rounded-2xl p-3.5 flex flex-col items-center text-center min-h-[122px] justify-between`}
+                      style={{ background: `linear-gradient(160deg, ${s.glow}, transparent 70%)` }}
+                    >
+                      {/* Top accent line */}
+                      <motion.div
+                        className="absolute top-0 left-0 right-0 h-[2px]"
+                        animate={{ opacity: [0.25, 0.85, 0.25] }}
+                        transition={{ duration: 2.6, repeat: Infinity, delay: i * 0.35 }}
+                        style={{ background: `linear-gradient(90deg, transparent, ${s.color}, transparent)` }}
+                      />
+                      {/* Hover radial glow */}
+                      <motion.div
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style={{ background: `radial-gradient(circle at 50% 35%, ${s.glow}, transparent 70%)` }}
+                      />
+                      {/* Sparkle on hover */}
+                      <motion.span
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
+                        animate={{ rotate: [0, 15, -10, 0] }}
+                        transition={{ duration: 1.8, repeat: Infinity }}
+                      >
+                        <Sparkles className="w-3 h-3" style={{ color: s.color }} />
+                      </motion.span>
+
+                      {/* Badge tono corretto */}
+                      {s.badge && (
+                        <motion.span
+                          initial={{ opacity: 0, scale: 0.6 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 0.45 + i * 0.1, type: "spring", stiffness: 280 }}
+                          className={`absolute top-2 left-2 px-1.5 h-4 inline-flex items-center rounded-full border text-[8px] font-bold uppercase tracking-wider ${toneClasses[s.badge.tone]}`}
+                        >
+                          {s.badge.text}
+                        </motion.span>
+                      )}
+
+                      {/* Icon with float */}
+                      <motion.div
+                        animate={{ y: [0, -2.5, 0] }}
+                        transition={{ duration: 3.2, repeat: Infinity, delay: i * 0.3 }}
+                        className="relative z-10 mt-3"
+                      >
+                        <s.icon className="w-5 h-5 mx-auto" style={{ color: s.color, filter: `drop-shadow(0 0 8px ${s.color}55)` }} />
+                      </motion.div>
+
+                      {/* Counter */}
+                      <div className="relative z-10 mt-1.5 leading-none">
+                        <AnimatedCounter value={s.value} prefix={s.isCurrency ? "€" : ""} color={s.color} />
+                      </div>
+
+                      {/* Labels */}
+                      <div className="relative z-10 mt-1 space-y-0.5 w-full">
+                        <p className="text-[10px] font-semibold text-foreground/80 leading-tight">{s.label}</p>
+                        <p className="text-[8.5px] text-muted-foreground leading-tight">{s.sub}</p>
+
+                        {/* Mini progress (solo terza card non-leader) */}
+                        {typeof s.progress === "number" && (
+                          <div className="mt-1.5 h-1 w-full rounded-full bg-secondary/60 overflow-hidden">
+                            <motion.div
+                              className="h-full rounded-full"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${s.progress * 100}%` }}
+                              transition={{ duration: 1.2, delay: 0.6 + i * 0.1, ease: "easeOut" }}
+                              style={{ background: `linear-gradient(90deg, ${s.color}, ${s.color}99)`, boxShadow: `0 0 8px ${s.color}55` }}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </motion.div>
-                    <AnimatedCounter value={s.isCurrency ? s.value : s.value} prefix={s.isCurrency ? "€" : ""} color={s.color} />
-                    <p className="text-[10px] font-semibold text-foreground/70 mt-0.5">{s.label}</p>
-                    <p className="text-[8px] text-muted-foreground">{s.sub}</p>
-                  </motion.div>
-                ))}
+                  );
+                })}
               </div>
             </section>
+
 
             {/* ═══ PERFORMANCE PULSE — Motivation Card ═══ */}
             <section className="px-4">
