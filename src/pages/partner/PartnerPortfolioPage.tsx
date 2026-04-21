@@ -12,7 +12,7 @@ import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
 import ProjectDetailOverlay from "@/components/partner/ProjectDetailOverlay";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 const getDemoSiteUrl = (sectorId: string) => {
   if (sectorId === "food") return "/r/impero-roma";

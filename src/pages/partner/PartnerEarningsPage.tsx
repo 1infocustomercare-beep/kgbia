@@ -9,7 +9,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 /* ─── Types ─── */
 interface SaleRecord {
