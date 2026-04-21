@@ -7,10 +7,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Sparkles, Trash2, ExternalLink, Palette, Upload, Eye, Copy, MessageCircle, Image as ImageIcon } from "lucide-react";
+import { Loader2, Sparkles, Trash2, ExternalLink, Palette, Upload, Eye, Copy, MessageCircle, Image as ImageIcon, Smartphone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
 
 const STYLES = [
   { key: "modern_dark", label: "Modern Dark", color: "#0F172A", accent: "#C8963E" },
