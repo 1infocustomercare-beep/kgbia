@@ -506,15 +506,17 @@ export default function AriannaLeadScoutPanel(_props: Props) {
   );
 }
 
-function Kpi({ icon, value, label, highlight }: { icon: React.ReactNode; value: number; label: string; highlight?: boolean }) {
+function Kpi({ icon, value, label, highlight, suffix }: { icon: React.ReactNode; value: number; label: string; highlight?: boolean; suffix?: string }) {
   return (
     <div className="rounded p-1.5 text-center" style={{
       background: highlight ? "rgba(249,115,22,0.1)" : "rgba(255,255,255,0.03)",
       border: `1px solid ${highlight ? "rgba(249,115,22,0.25)" : "rgba(255,255,255,0.06)"}`,
     }}>
       <div className="flex items-center justify-center gap-1 mb-0.5" style={{ color: highlight ? "#fb923c" : undefined }}>{icon}</div>
-      <div className="text-sm font-bold leading-none" style={{ color: highlight ? "#fb923c" : undefined }}>{value.toLocaleString("it-IT")}</div>
-      <div className="text-[8px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-sm font-bold leading-none" style={{ color: highlight ? "#fb923c" : undefined }}>
+        {value.toLocaleString("it-IT")}{suffix ?? ""}
+      </div>
+      <div className="text-[8px] uppercase tracking-wider text-muted-foreground leading-tight">{label}</div>
     </div>
   );
 }
