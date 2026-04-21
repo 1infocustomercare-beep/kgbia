@@ -163,7 +163,7 @@ export default function Orbital3DShowcase() {
         <div className="pointer-events-none absolute inset-0">
           <motion.div
             style={{ y: decorY }}
-            className="absolute inset-0 transition-[background] duration-[1200ms]"
+            className="absolute inset-0 transition-[background] duration-1000"
           >
             <div
               className="absolute inset-0"

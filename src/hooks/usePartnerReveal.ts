@@ -12,36 +12,53 @@ export function usePartnerReveal(rootSelector = ".partner-mobile-content-safe") 
     if (typeof window === "undefined") return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
 
-    const root = document.querySelector(rootSelector);
-    if (!root) return;
+    let root = document.querySelector(rootSelector);
+    let rootWatcher: MutationObserver | null = null;
+    let io: IntersectionObserver | null = null;
+    let mo: MutationObserver | null = null;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            io.unobserve(entry.target);
+    const setup = (targetRoot: Element) => {
+      io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              io?.unobserve(entry.target);
+            }
           }
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
-    );
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      );
 
-    const scan = () => {
-      root.querySelectorAll<HTMLElement>(".partner-reveal:not(.is-visible)").forEach((el) => {
-        io.observe(el);
-      });
+      const scan = () => {
+        targetRoot.querySelectorAll<HTMLElement>(".partner-reveal:not(.is-visible)").forEach((el) => {
+          io?.observe(el);
+        });
+      };
+
+      scan();
+
+      // Re-scan when subpages mount/unmount new content
+      mo = new MutationObserver(() => scan());
+      mo.observe(targetRoot, { childList: true, subtree: true });
     };
 
-    scan();
-
-    // Re-scan when subpages mount/unmount new content
-    const mo = new MutationObserver(() => scan());
-    mo.observe(root, { childList: true, subtree: true });
+    if (root) {
+      setup(root);
+    } else {
+      rootWatcher = new MutationObserver(() => {
+        root = document.querySelector(rootSelector);
+        if (!root) return;
+        rootWatcher?.disconnect();
+        setup(root);
+      });
+      rootWatcher.observe(document.body, { childList: true, subtree: true });
+    }
 
     return () => {
-      io.disconnect();
-      mo.disconnect();
+      rootWatcher?.disconnect();
+      io?.disconnect();
+      mo?.disconnect();
     };
   }, [rootSelector]);
 }

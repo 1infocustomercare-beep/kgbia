@@ -673,7 +673,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                 transition={{ delay: i * 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               >
                 <a href="#prenota" className="group block relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[2/3] sm:aspect-[3/4]">
-                  <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.2s] ease-out" />
+                  <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
                   {/* Gold line accent */}
                   <motion.div
