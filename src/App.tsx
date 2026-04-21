@@ -194,6 +194,8 @@ const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => importWithRetry(() => import("./pages/OnboardingPage")));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AuthPage = lazy(() => importWithRetry(() => import("./pages/AuthPage")));
+const TenantLogin = lazy(() => import("./pages/TenantLogin"));
+const TenantGuard = lazy(() => import("./components/TenantGuard"));
 
 // App layout + adaptive pages
 const AppLayout = lazy(() => importWithRetry(() => import("./components/layout/AppLayout")));
@@ -575,6 +577,17 @@ function App() {
                       <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/login" element={<AuthPage />} />
+
+                      {/* ═══ Empire Tenant-Isolated Login ═══ */}
+                      <Route path="/t/:slug/login" element={<TenantLogin />} />
+                      <Route path="/t/:slug" element={<Navigate to="login" replace />} />
+                      <Route path="/t/:slug/admin/*" element={
+                        <ProtectedRoute>
+                          <TenantGuard>
+                            <AppLayout />
+                          </TenantGuard>
+                        </ProtectedRoute>
+                      } />
                       <Route path="/landing" element={<StaticIframePage src="/homepage.html" title="Empire.AI" />} />
                       <Route path="/catalogo" element={<StaticIframePage src="/catalogo-completo.html" title="Catalogo Completo" />} />
 
