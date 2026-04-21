@@ -18,6 +18,11 @@ const PREMIUM_CITIES = [
 // Settori "premium" = alta marginalità = budget per i nostri pacchetti
 const PREMIUM_SECTORS = ["food", "beauty", "fitness", "healthcare"];
 
+// Helper: città stabile per cache_key dell'intelligence report
+function leadCity_for_key(lead: any, target: { city: string }): string {
+  return (lead?.city || target?.city || "unknown").toString();
+}
+
 interface AutopilotState {
   user_id: string;
   current_city: string | null;
