@@ -8,8 +8,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   Bot, Loader2, Activity, ChevronDown, ChevronUp, Brain,
-  Sparkles, MapPin, Layers, Zap, TrendingUp, Target, Clock, Flame,
+  Sparkles, MapPin, Layers, Zap, TrendingUp, Target, Clock, Flame, Settings2,
 } from "lucide-react";
+import AriannaCriteriaOverrideDialog from "./AriannaCriteriaOverrideDialog";
 
 interface AutopilotState {
   is_running: boolean;
@@ -20,12 +21,15 @@ interface AutopilotState {
   last_cycle_at: string | null;
   next_cycle_at: string | null;
   zone_sector_weights: Record<string, number>;
+  auto_tune_enabled?: boolean;
+  last_tuned_at?: string | null;
   quality_filters: {
     require_no_website: boolean;
     require_no_social: boolean;
     min_rating: number;
     min_reviews: number;
     premium_sectors_only: boolean;
+    premium_sectors?: string[];
   };
 }
 
