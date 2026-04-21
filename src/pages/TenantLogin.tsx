@@ -46,6 +46,10 @@ export default function TenantLogin() {
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // "Hai sbagliato?" — verified unlock flow
+  const [requestingUnlock, setRequestingUnlock] = useState(false);
+  const [unlockSent, setUnlockSent] = useState(false);
+
   // Brute-force throttle state (per slug+email)
   const [throttle, setThrottle] = useState<ThrottleStatus>({
     locked: false,
