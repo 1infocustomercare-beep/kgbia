@@ -50,8 +50,9 @@ export default function SellerOnboardingTour() {
 
   if (!run || steps.length === 0) return null;
 
+  const J: any = Joyride;
   return (
-    <Joyride
+    <J
       steps={steps}
       run={run}
       continuous
@@ -65,7 +66,7 @@ export default function SellerOnboardingTour() {
         buttonBack: { color: "hsl(var(--muted-foreground))", fontSize: 13 },
         buttonSkip: { color: "hsl(var(--muted-foreground))", fontSize: 12 },
         overlay: { backgroundColor: "rgba(0,0,0,0.5)" },
-      } as any}
+      }}
     />
   );
 }
