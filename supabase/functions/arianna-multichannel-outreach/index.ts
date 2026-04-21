@@ -15,6 +15,44 @@ const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const TWILIO_API_KEY = Deno.env.get("TWILIO_API_KEY");
+const DEPLOY_VERSION = Deno.env.get("DEPLOY_VERSION") || Deno.env.get("SUPABASE_FUNCTION_VERSION") || "unknown";
+
+// ─────────── CENTRALIZED FAILURE LOG ───────────
+async function logOutreachFailure(supabase: any, params: {
+  channel: string;
+  error_message: string;
+  owner_id?: string | null;
+  lead_id?: string | null;
+  sequence_id?: string | null;
+  touch_id?: string | null;
+  recipient?: string | null;
+  provider?: string | null;
+  error_code?: string | null;
+  http_status?: number | null;
+  payload?: Record<string, unknown>;
+  severity?: "warning" | "error" | "critical";
+}) {
+  try {
+    await supabase.rpc("log_outreach_failure", {
+      p_source_function: "arianna-multichannel-outreach",
+      p_channel: params.channel,
+      p_error_message: (params.error_message || "unknown_error").slice(0, 2000),
+      p_owner_id: params.owner_id ?? null,
+      p_lead_id: params.lead_id ?? null,
+      p_sequence_id: params.sequence_id ?? null,
+      p_touch_id: params.touch_id ?? null,
+      p_recipient: params.recipient ?? null,
+      p_provider: params.provider ?? null,
+      p_error_code: params.error_code ?? null,
+      p_http_status: params.http_status ?? null,
+      p_deploy_version: DEPLOY_VERSION,
+      p_payload: params.payload ?? {},
+      p_severity: params.severity ?? "error",
+    });
+  } catch (logErr) {
+    console.error("[outreach-failure-log] failed to record failure:", logErr);
+  }
+}
 
 type Channel = "email" | "whatsapp" | "instagram" | "facebook";
 
