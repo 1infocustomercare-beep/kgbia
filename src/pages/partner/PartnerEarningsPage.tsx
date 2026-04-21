@@ -9,6 +9,11 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
+import {
+  PartnerHeaderSkeleton,
+  PartnerCardSkeleton,
+  PartnerKpiGridSkeleton,
+} from "@/components/partner/PartnerSkeleton";
 import { toast } from "sonner";
 
 /* ─── Types ─── */
