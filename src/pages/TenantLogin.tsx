@@ -261,13 +261,50 @@ export default function TenantLogin() {
         </div>
 
         {/* Isolation badge */}
-        <div className="flex items-center gap-2 mb-6 px-3 py-2 rounded-lg bg-secondary/50 border border-border">
+        <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-secondary/50 border border-border">
           <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
           <p className="text-xs text-muted-foreground leading-tight">
             Sessione isolata per <span className="text-foreground font-medium">{tenant.slug}</span>.
             Solo i membri autorizzati possono accedere.
           </p>
         </div>
+
+        {/* Brute-force lockout banner */}
+        {throttle.locked && (
+          <div
+            role="alert"
+            className="flex items-start gap-2 mb-4 px-3 py-2.5 rounded-lg border border-destructive/40 bg-destructive/10"
+          >
+            <ShieldAlert className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-destructive leading-tight">
+                Accesso temporaneamente bloccato
+              </p>
+              <p className="text-[11px] text-destructive/90 mt-0.5 leading-snug">
+                {throttle.message ?? "Troppi tentativi falliti. Riprova più tardi."}
+              </p>
+              {lockoutLabel && (
+                <p className="text-[11px] mt-1 inline-flex items-center gap-1 text-destructive/90">
+                  <Clock className="w-3 h-3" />
+                  Sblocco tra <span className="font-mono font-semibold">{lockoutLabel}</span>
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Soft warning before lockout */}
+        {!throttle.locked && throttle.warning && (
+          <div
+            role="status"
+            className="flex items-start gap-2 mb-4 px-3 py-2 rounded-lg border border-amber-500/30 bg-amber-500/10"
+          >
+            <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+            <p className="text-[11px] text-amber-600 dark:text-amber-400 leading-snug">
+              {throttle.warning}
+            </p>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
