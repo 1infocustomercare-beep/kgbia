@@ -1,11 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Loader2, ShieldCheck, Lock, AlertTriangle } from "lucide-react";
+import { Loader2, ShieldCheck, Lock, AlertTriangle, ShieldAlert, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { setActiveTenant, clearActiveTenant } from "@/lib/active-tenant";
 import { bindSessionToTenant, hardWipeTenantSession } from "@/lib/tenant-session-isolation";
+import {
+  clearLoginThrottle,
+  getLoginThrottleStatus,
+  registerLoginFailure,
+  type ThrottleStatus,
+} from "@/lib/tenant-login-throttle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
