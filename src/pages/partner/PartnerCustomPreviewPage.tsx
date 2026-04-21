@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
+import { MockupSuiteVaultList } from "@/components/partner/MockupSuiteVaultList";
 
 const STYLES = [
   { key: "modern_dark", label: "Modern Dark", color: "#0F172A", accent: "#C8963E" },
@@ -446,9 +447,12 @@ export default function PartnerCustomPreviewPage() {
         templateVariant={form.template_style}
       />
 
-      {/* Lista preview */}
+      {/* Lista Mockup iPhone Generati — con ricerca e filtri */}
+      <MockupSuiteVaultList />
+
+      {/* Lista preview HTML */}
       <div>
-        <h2 className="text-xl font-semibold mb-3">Le tue preview ({previews.length})</h2>
+        <h2 className="text-xl font-semibold mb-3">Le tue preview HTML ({previews.length})</h2>
         {loading ? (
           <Card><CardContent className="pt-6 text-center"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></CardContent></Card>
         ) : previews.length === 0 ? (
