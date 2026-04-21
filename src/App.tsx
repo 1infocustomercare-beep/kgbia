@@ -195,6 +195,7 @@ const OnboardingPage = lazy(() => importWithRetry(() => import("./pages/Onboardi
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AuthPage = lazy(() => importWithRetry(() => import("./pages/AuthPage")));
 const TenantLogin = lazy(() => import("./pages/TenantLogin"));
+const TenantLoginUnlock = lazy(() => import("./pages/TenantLoginUnlock"));
 const TenantGuard = lazy(() => import("./components/TenantGuard"));
 
 // App layout + adaptive pages
@@ -581,6 +582,7 @@ function App() {
 
                       {/* ═══ Empire Tenant-Isolated Login ═══ */}
                       <Route path="/t/:slug/login" element={<TenantLogin />} />
+                      <Route path="/t/:slug/unlock" element={<TenantLoginUnlock />} />
                       <Route path="/t/:slug" element={<Navigate to="login" replace />} />
                       <Route path="/t/:slug/admin/*" element={
                         <ProtectedRoute>

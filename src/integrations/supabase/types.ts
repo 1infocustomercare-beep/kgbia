@@ -6434,6 +6434,53 @@ export type Database = {
         }
         Relationships: []
       }
+      tenant_login_unlock_tokens: {
+        Row: {
+          consumed_at: string | null
+          created_at: string
+          email_lower: string
+          expires_at: string
+          id: string
+          ip_hash: string | null
+          restaurant_id: string
+          slug: string
+          token_hash: string
+          user_agent_hash: string | null
+        }
+        Insert: {
+          consumed_at?: string | null
+          created_at?: string
+          email_lower: string
+          expires_at?: string
+          id?: string
+          ip_hash?: string | null
+          restaurant_id: string
+          slug: string
+          token_hash: string
+          user_agent_hash?: string | null
+        }
+        Update: {
+          consumed_at?: string | null
+          created_at?: string
+          email_lower?: string
+          expires_at?: string
+          id?: string
+          ip_hash?: string | null
+          restaurant_id?: string
+          slug?: string
+          token_hash?: string
+          user_agent_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_login_unlock_tokens_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_subscriptions: {
         Row: {
           active_modules: string[] | null
