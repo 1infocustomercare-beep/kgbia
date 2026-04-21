@@ -300,7 +300,7 @@ export default function PartnerLayout() {
 
         {/* ═══ MAIN CONTENT — animated page transitions ═══ */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden relative z-10 partner-mobile-content-safe">
-          <div className="max-w-[1600px] mx-auto w-full px-0 lg:px-6">
+          <div className="max-w-[1600px] mx-auto w-full px-0 lg:px-6 partner-page-shell">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={location.pathname}
