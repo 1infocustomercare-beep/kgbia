@@ -22,6 +22,7 @@ interface AutopilotState {
   next_cycle_at: string | null;
   zone_sector_weights: Record<string, number>;
   auto_tune_enabled?: boolean;
+  auto_send_messages?: boolean;
   last_tuned_at?: string | null;
   quality_filters: {
     require_no_website: boolean;
