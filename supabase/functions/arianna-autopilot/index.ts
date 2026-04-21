@@ -260,8 +260,66 @@ Deno.serve(async (req) => {
         const recommended_package = score >= 75 ? "growth_ai" : score >= 50 ? "digital_start" : "digital_start";
         const approach_strategy = hasPhone ? "whatsapp" : hasEmail ? "email" : "in_persona";
 
+        // Costruzione weak_points + improvement_proposal sintetici (Intelligence Inbox)
+        const weak_points: string[] = [];
+        if (!hasWebsite) weak_points.push("Nessun sito web — perde clienti che cercano online");
+        if (rating > 0 && rating < 4) weak_points.push(`Reputazione bassa (${rating}/5) — recensioni da gestire`);
+        if (reviews < 15) weak_points.push("Poche recensioni Google — bassa trust digitale");
+        if (!hasPhone && !hasEmail) weak_points.push("Nessun contatto diretto pubblicato");
+
+        const improvement_proposal = !hasWebsite
+          ? "Sito web professionale + sistema prenotazioni online + presenza Google ottimizzata."
+          : "Restyling sito + automazione prenotazioni + reputation management + AI per recensioni.";
+
+        const sales_pitch = `${lead.name || "Questo locale"} a ${lead.city || target.city} ha potenziale ${category.toUpperCase()} (score ${score}/100). ${reason}. Proposta: ${recommended_package === "growth_ai" ? "Growth AI" : "Digital Start"}.`;
+
+        // Salva/aggiorna il report nell'Intelligence Inbox
+        const cacheKey = `${(lead.name || "").toLowerCase().trim()}|${(leadCity_for_key(lead, target)).toLowerCase().trim()}`;
+        const reportRow = {
+          owner_id: user_id,
+          cache_key: cacheKey,
+          lead_name: lead.name || "Sconosciuto",
+          lead_city: lead.city || target.city || null,
+          lead_sector: target.sector || null,
+          lead_website: lead.website || null,
+          lead_phone: lead.phone || null,
+          vendibility_score: score,
+          category,
+          category_reason: reason,
+          has_website: hasWebsite,
+          has_instagram: false,
+          has_facebook: false,
+          google_rating: rating || null,
+          google_reviews_count: reviews || null,
+          weak_points: weak_points as any,
+          improvement_proposal,
+          recommended_package,
+          sales_pitch,
+          approach_strategy,
+          ai_model_used: "heuristic_autopilot",
+          credits_spent: 0,
+          raw_analysis: { source: "arianna_autopilot", cycle: cycleNumber, target } as any,
+          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        };
+
+        let savedIntelId: string | null = null;
+        try {
+          const { data: savedIntel, error: intelErr } = await supabase
+            .from("lead_intelligence_reports")
+            .upsert(reportRow, { onConflict: "owner_id,cache_key" })
+            .select("id")
+            .maybeSingle();
+          if (intelErr) {
+            console.error(`[autopilot] intel upsert error for ${lead.name}:`, intelErr.message);
+          } else {
+            savedIntelId = savedIntel?.id || null;
+          }
+        } catch (e: any) {
+          console.error(`[autopilot] intel exception for ${lead.name}:`, e.message);
+        }
+
         const report = {
-          id: null,
+          id: savedIntelId,
           vendibility_score: score,
           category,
           category_reason: reason,
