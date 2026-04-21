@@ -321,9 +321,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signOut = async () => {
     try {
       clearIndustryCache();
-      // Clear tenant context FIRST so cross-tab listeners log out instantly
+      // Clear tenant context FIRST so cross-tab listeners log out instantly,
+      // then hard-wipe any tenant session fingerprints so cookies/tokens
+      // cannot be reused against another restaurant.
       clearActiveTenant("user_signout");
-      await supabase.auth.signOut();
+      const { hardWipeTenantSession } = await import("@/lib/tenant-session-isolation");
+      await hardWipeTenantSession("user_signout");
     } catch (error) {
       console.error("Sign out failed", error);
     } finally {

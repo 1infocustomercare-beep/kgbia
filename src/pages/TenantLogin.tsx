@@ -5,6 +5,7 @@ import { Loader2, ShieldCheck, Lock, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { setActiveTenant, clearActiveTenant } from "@/lib/active-tenant";
+import { bindSessionToTenant, hardWipeTenantSession } from "@/lib/tenant-session-isolation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -78,6 +79,7 @@ export default function TenantLogin() {
           userId: user.id,
           setAt: Date.now(),
         });
+        await bindSessionToTenant(tenant.id, user.id);
         navigate(`/t/${tenant.slug}/admin`, { replace: true });
       }
     })();
@@ -102,9 +104,8 @@ export default function TenantLogin() {
 
       const allowed = await verifyTenantAccess(session.user.id, tenant.id);
       if (!allowed) {
-        // Hard isolation: not a member of this tenant → sign out + clear
-        clearActiveTenant("unauthorized_tenant");
-        await signOut();
+        // Hard isolation: not a member of this tenant → wipe session + cookies
+        await hardWipeTenantSession("unauthorized_tenant");
         toast({
           title: "Accesso non autorizzato",
           description: `Il tuo account non ha accesso a ${tenant.name}.`,
@@ -120,6 +121,7 @@ export default function TenantLogin() {
         userId: session.user.id,
         setAt: Date.now(),
       });
+      await bindSessionToTenant(tenant.id, session.user.id);
 
       toast({
         title: `Benvenuto in ${tenant.name}`,
