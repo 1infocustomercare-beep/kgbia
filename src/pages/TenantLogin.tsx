@@ -130,14 +130,33 @@ export default function TenantLogin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!tenant) return;
+
+    // Pre-flight throttle check (defense-in-depth client-side)
+    const pre = getLoginThrottleStatus(tenant.slug, email);
+    if (pre.locked) {
+      setThrottle(pre);
+      toast({
+        title: "Accesso temporaneamente bloccato",
+        description: pre.message ?? "Troppi tentativi falliti. Riprova più tardi.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
 
     try {
       const { error, session } = await signIn(email.trim(), password);
       if (error || !session?.user) {
+        const next = registerLoginFailure(tenant.slug, email);
+        setThrottle(next);
         toast({
-          title: "Accesso negato",
-          description: error?.message || "Credenziali non valide.",
+          title: next.locked ? "Accesso bloccato" : "Credenziali non valide",
+          description:
+            next.message ||
+            next.warning ||
+            error?.message ||
+            "Email o password non corretti.",
           variant: "destructive",
         });
         return;
@@ -147,13 +166,21 @@ export default function TenantLogin() {
       if (!allowed) {
         // Hard isolation: not a member of this tenant → wipe session + cookies
         await hardWipeTenantSession("unauthorized_tenant");
+        // Treat unauthorized-tenant as a failed attempt for throttle purposes too
+        const next = registerLoginFailure(tenant.slug, email);
+        setThrottle(next);
         toast({
           title: "Accesso non autorizzato",
-          description: `Il tuo account non ha accesso a ${tenant.name}.`,
+          description:
+            next.message ||
+            `Il tuo account non ha accesso a ${tenant.name}.`,
           variant: "destructive",
         });
         return;
       }
+
+      // Success → reset throttle for this email
+      clearLoginThrottle(tenant.slug, email);
 
       setActiveTenant({
         restaurantId: tenant.id,
