@@ -119,6 +119,80 @@ export function hexToHsl(hex: string): string {
   return `${Math.round(hsl[0])} ${Math.round(hsl[1])}% ${Math.round(hsl[2])}%`;
 }
 
+/* ──────────────────────────────────────────────────────────────
+ * WCAG contrast helpers
+ * Compute relative luminance + contrast ratio so we can pick
+ * an accessible foreground (black/white tinted) for any surface.
+ * ────────────────────────────────────────────────────────────── */
+
+/** Convert HSL components to linear RGB then to relative luminance (WCAG). */
+function hslToLuminance(h: number, s: number, l: number): number {
+  // hsl -> rgb (0..1)
+  const sN = s / 100, lN = l / 100;
+  const c = (1 - Math.abs(2 * lN - 1)) * sN;
+  const hp = h / 60;
+  const x = c * (1 - Math.abs((hp % 2) - 1));
+  let r = 0, g = 0, b = 0;
+  if (hp >= 0 && hp < 1) { r = c; g = x; }
+  else if (hp < 2)       { r = x; g = c; }
+  else if (hp < 3)       { g = c; b = x; }
+  else if (hp < 4)       { g = x; b = c; }
+  else if (hp < 5)       { r = x; b = c; }
+  else                   { r = c; b = x; }
+  const m = lN - c / 2;
+  const [rL, gL, bL] = [r + m, g + m, b + m].map((v) =>
+    v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+  );
+  return 0.2126 * rL + 0.7152 * gL + 0.0722 * bL;
+}
+
+/** Contrast ratio between two luminances (WCAG 2.1). */
+function contrastRatio(l1: number, l2: number): number {
+  const [hi, lo] = l1 > l2 ? [l1, l2] : [l2, l1];
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+/**
+ * Pick an accessible foreground HSL string for a given background HSL.
+ * Returns a tinted near-white or near-black so it stays on-brand
+ * while keeping a contrast ratio ≥ 4.5 (WCAG AA for body text).
+ */
+export function accessibleForeground(
+  bgH: number,
+  bgS: number,
+  bgL: number,
+  opts: { minContrast?: number; tint?: number } = {}
+): string {
+  const minContrast = opts.minContrast ?? 4.5;
+  const tint = opts.tint ?? Math.min(bgS * 0.25, 18);
+  const bgLum = hslToLuminance(bgH, bgS, bgL);
+
+  // Try light foreground first, then dark, then push lightness further.
+  const candidates: Array<[number, number]> = [
+    [tint, 96], [tint, 92], [tint, 98],
+    [tint, 8],  [tint, 4],  [tint, 12],
+  ];
+  for (const [s, l] of candidates) {
+    const lum = hslToLuminance(bgH, s, l);
+    if (contrastRatio(lum, bgLum) >= minContrast) {
+      return `${Math.round(bgH)} ${Math.round(s)}% ${Math.round(l)}%`;
+    }
+  }
+  // Fallback: pure white or black, whichever wins.
+  const whiteContrast = contrastRatio(1, bgLum);
+  const blackContrast = contrastRatio(0, bgLum);
+  return whiteContrast >= blackContrast
+    ? `${Math.round(bgH)} 0% 100%`
+    : `${Math.round(bgH)} 0% 0%`;
+}
+
+/** Parse "H S% L%" CSS-style HSL string into numeric components. */
+function parseHsl(hslStr: string): [number, number, number] | null {
+  const parts = hslStr.match(/[\d.]+/g);
+  if (!parts || parts.length < 3) return null;
+  return [parseFloat(parts[0]), parseFloat(parts[1]), parseFloat(parts[2])];
+}
+
 /** The default Empire gold theme primary HSL */
 export const DEFAULT_PRIMARY_HSL = "38 75% 55%";
 export const DEFAULT_PRIMARY_HEX = "#C8963E";
@@ -128,66 +202,83 @@ export const DEFAULT_PRIMARY_HEX = "#C8963E";
  * generating a FULL adaptive palette: background, card, secondary,
  * muted, accent, border, glass, sidebar — all derived from the hue.
  */
-export function applyBrandTheme(hexColor: string | null | undefined) {
+export function applyBrandTheme(
+  hexColor: string | null | undefined,
+  secondaryHex?: string | null
+) {
   const hsl = hexColor ? hexToHsl(hexColor) : DEFAULT_PRIMARY_HSL;
-  const parts = hsl.match(/[\d.]+/g);
-  if (!parts || parts.length < 3) return;
-  const h = parseFloat(parts[0]);
-  const s = parseFloat(parts[1]);
-  const l = parseFloat(parts[2]);
+  const parts = parseHsl(hsl);
+  if (!parts) return;
+  const [h, s, l] = parts;
+
+  // Optional secondary brand color (e.g. extracted accent).
+  // Falls back to a complementary warm shift when not provided.
+  const secondary = secondaryHex ? parseHsl(hexToHsl(secondaryHex)) : null;
+  const accentH = secondary ? secondary[0] : (h + 330) % 360;
+  const accentS = secondary ? secondary[1] : 70;
+  const accentL = secondary ? secondary[2] : 50;
 
   const root = document.documentElement;
   const set = (k: string, v: string) => root.style.setProperty(k, v);
 
+  // Surface lightness values used across tokens
+  const bs = Math.max(s * 0.15, 5);
+  const bgL = 4;
+  const cardL = 8;
+  const secondaryL = 14;
+  const mutedL = 12;
+  const sidebarL = 6;
+  const secS = Math.max(s * 0.12, 4);
+  const mutedS = Math.max(s * 0.1, 3);
+  const cardS = Math.max(bs - 2, 3);
+
   // ── Primary ──
   set("--primary", `${h} ${s}% ${l}%`);
-  set("--primary-foreground", `${h} ${Math.min(s, 20)}% 4%`);
+  set("--primary-foreground", accessibleForeground(h, s, l));
   set("--ring", `${h} ${s}% ${l}%`);
 
-  // ── Backgrounds — very dark, tinted with brand hue ──
-  const bs = Math.max(s * 0.15, 5); // subtle saturation for bg
-  set("--background", `${h} ${bs}% 4%`);
-  set("--foreground", `${h} ${Math.min(s * 0.3, 20)}% 92%`);
+  // ── Backgrounds ──
+  set("--background", `${h} ${bs}% ${bgL}%`);
+  set("--foreground", accessibleForeground(h, bs, bgL));
 
-  // ── Card — slightly lighter than bg ──
-  set("--card", `${h} ${Math.max(bs - 2, 3)}% 8%`);
-  set("--card-foreground", `${h} ${Math.min(s * 0.3, 20)}% 92%`);
+  // ── Card ──
+  set("--card", `${h} ${cardS}% ${cardL}%`);
+  set("--card-foreground", accessibleForeground(h, cardS, cardL));
 
   // ── Popover ──
-  set("--popover", `${h} ${Math.max(bs - 2, 3)}% 8%`);
-  set("--popover-foreground", `${h} ${Math.min(s * 0.3, 20)}% 92%`);
+  set("--popover", `${h} ${cardS}% ${cardL}%`);
+  set("--popover-foreground", accessibleForeground(h, cardS, cardL));
 
-  // ── Secondary — muted brand tint ──
-  set("--secondary", `${h} ${Math.max(s * 0.12, 4)}% 14%`);
-  set("--secondary-foreground", `${h} ${Math.min(s * 0.3, 20)}% 85%`);
+  // ── Secondary ──
+  set("--secondary", `${h} ${secS}% ${secondaryL}%`);
+  set("--secondary-foreground", accessibleForeground(h, secS, secondaryL));
 
-  // ── Muted ──
-  set("--muted", `${h} ${Math.max(s * 0.1, 3)}% 12%`);
-  set("--muted-foreground", `${h} ${Math.min(s * 0.15, 10)}% 50%`);
+  // ── Muted (lower contrast threshold for secondary text) ──
+  set("--muted", `${h} ${mutedS}% ${mutedL}%`);
+  set("--muted-foreground", accessibleForeground(h, mutedS, mutedL, { minContrast: 3 }));
 
-  // ── Accent — complementary warm shift ──
-  const accentH = (h + 330) % 360; // slight warm shift for contrast
-  set("--accent", `${accentH} 70% 50%`);
-  set("--accent-foreground", `${h} ${Math.min(s * 0.3, 20)}% 95%`);
+  // ── Accent (secondary brand or complementary) ──
+  set("--accent", `${accentH} ${accentS}% ${accentL}%`);
+  set("--accent-foreground", accessibleForeground(accentH, accentS, accentL));
 
   // ── Borders & inputs ──
-  set("--border", `${h} ${Math.max(s * 0.12, 4)}% 16%`);
-  set("--input", `${h} ${Math.max(s * 0.12, 4)}% 16%`);
+  set("--border", `${h} ${secS}% 16%`);
+  set("--input", `${h} ${secS}% 16%`);
 
   // ── Glassmorphism ──
-  set("--glass", `${h} ${Math.max(bs - 2, 3)}% 10% / 0.6`);
+  set("--glass", `${h} ${cardS}% 10% / 0.6`);
   set("--glass-border", `${h} ${Math.min(s * 0.3, 20)}% 92% / 0.08`);
   set("--glass-shine", `${h} ${Math.min(s * 0.3, 20)}% 92% / 0.04`);
   set("--gold-glow", `${h} ${s}% ${l}% / 0.3`);
 
   // ── Sidebar ──
-  set("--sidebar-background", `${h} ${Math.max(bs - 1, 3)}% 6%`);
-  set("--sidebar-foreground", `${h} ${Math.min(s * 0.3, 20)}% 85%`);
+  set("--sidebar-background", `${h} ${Math.max(bs - 1, 3)}% ${sidebarL}%`);
+  set("--sidebar-foreground", accessibleForeground(h, Math.max(bs - 1, 3), sidebarL));
   set("--sidebar-primary", `${h} ${s}% ${l}%`);
-  set("--sidebar-primary-foreground", `${h} ${Math.min(s, 20)}% 4%`);
-  set("--sidebar-accent", `${h} ${Math.max(s * 0.12, 4)}% 14%`);
-  set("--sidebar-accent-foreground", `${h} ${Math.min(s * 0.3, 20)}% 85%`);
-  set("--sidebar-border", `${h} ${Math.max(s * 0.12, 4)}% 16%`);
+  set("--sidebar-primary-foreground", accessibleForeground(h, s, l));
+  set("--sidebar-accent", `${h} ${secS}% ${secondaryL}%`);
+  set("--sidebar-accent-foreground", accessibleForeground(h, secS, secondaryL));
+  set("--sidebar-border", `${h} ${secS}% 16%`);
   set("--sidebar-ring", `${h} ${s}% ${l}%`);
 }
 
