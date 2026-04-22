@@ -24,6 +24,12 @@ interface Props {
   glassIntensity?: number;
   /** vivid (originale) | muted (-20% sat) | pastel (+luminosità, -sat) | mono (B/N + accent). */
   colorStyle?: ColorStyle;
+  /** Padding interno orizzontale aggiuntivo (px) per garantire safe-area dai bordi del frame. Default 0. */
+  safeAreaPx?: number;
+  /** Moltiplicatore tipografia (0.85–1.20). Default 1.00. Scala via CSS var --mockup-type-scale. */
+  typeScale?: number;
+  /** Forza testo con contrasto AA: opacizza meno il muted, schiarisce/scurisce il text base. */
+  boostContrast?: boolean;
 }
 
 interface ThemeTokens {
