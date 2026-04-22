@@ -32,12 +32,16 @@ import {
 import { useDemoVault, type VaultDemo } from "@/hooks/useDemoVault";
 import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSuiteVault";
 import { GenerateSiteFromMockupDialog } from "@/components/partner/GenerateSiteFromMockupDialog";
+import { DemoStudioPresentationMode } from "@/components/partner/DemoStudioPresentationMode";
 import { toast } from "sonner";
+import { Play } from "lucide-react";
 
 export default function DemoStudioPage() {
   const vault = useDemoVault();
   const mockupVault = useMockupSuiteVault();
   const [generateSuite, setGenerateSuite] = useState<VaultMockupSuite | null>(null);
+  const [presentationOpen, setPresentationOpen] = useState(false);
+  const [presentationInitialId, setPresentationInitialId] = useState<string | undefined>();
   const [search, setSearch] = useState("");
 
   const refresh = async () => {
