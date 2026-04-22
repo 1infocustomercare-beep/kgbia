@@ -219,6 +219,81 @@ function getTheme(variant: string, primaryOverride?: string, colorStyle?: ColorS
       fontBody: "'Inter', system-ui, sans-serif",
       vibe: "fitness-energy", radius: 14, imageStyle: "energy",
     },
+    // ─────────────────────────────────────────────────────────────────
+    // MODERN 2026 — Apple Liquid Glass, glacial, spatial, holo, chrome
+    // ─────────────────────────────────────────────────────────────────
+    apple_liquid_glass: {
+      // Apple "Liquid Glass" (visionOS / iOS 26 vibe): inky base, vivid translucent layers
+      bg: "#06070C", bgPanel: "rgba(255,255,255,0.06)", bgPanelAlt: "rgba(255,255,255,0.10)",
+      text: "#F2F4F8", textMuted: "rgba(242,244,248,0.55)",
+      primary: "#7AA2FF", accent: "#FF6FB1",
+      fontHead: "'SF Pro Display', 'Inter', system-ui, sans-serif",
+      fontBody: "'SF Pro Text', 'Inter', system-ui, sans-serif",
+      vibe: "apple-liquid-glass", radius: 26, imageStyle: "liquid-glass",
+    },
+    glacial_frost: {
+      // Glaciale: bianco-azzurro ghiaccio, vetro chiaro, leggerissimo
+      bg: "#EAF2FA", bgPanel: "rgba(255,255,255,0.65)", bgPanelAlt: "rgba(255,255,255,0.85)",
+      text: "#0E1A2C", textMuted: "rgba(14,26,44,0.55)",
+      primary: "#5BB8FF", accent: "#9CF0E2",
+      fontHead: "'SF Pro Display', 'Inter', system-ui, sans-serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "glacial-frost", radius: 22, imageStyle: "glacial",
+    },
+    spatial_visionos: {
+      // Spatial / visionOS: deep space + halo bianchi traslucidi, depth
+      bg: "#0A0B12", bgPanel: "rgba(255,255,255,0.08)", bgPanelAlt: "rgba(255,255,255,0.14)",
+      text: "#FFFFFF", textMuted: "rgba(255,255,255,0.6)",
+      primary: "#CFC2FF", accent: "#7CD8FF",
+      fontHead: "'SF Pro Display', 'Inter', system-ui, sans-serif",
+      fontBody: "'SF Pro Text', 'Inter', system-ui, sans-serif",
+      vibe: "spatial-visionos", radius: 28, imageStyle: "liquid-glass",
+    },
+    cyber_holo: {
+      // Cyber holographic: dark + iridescenza viola/ciano
+      bg: "#05050E", bgPanel: "#0E0E1F", bgPanelAlt: "#161630",
+      text: "#F4F1FF", textMuted: "rgba(244,241,255,0.55)",
+      primary: "#A66CFF", accent: "#22F1D6",
+      fontHead: "'Space Grotesk', 'Sora', sans-serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "cyber-holo", radius: 18, imageStyle: "holographic",
+    },
+    y2k_chrome: {
+      // Y2K / chrome metallico, lucido, modern retro-futuro
+      bg: "#101015", bgPanel: "#1A1A22", bgPanelAlt: "#23232E",
+      text: "#F4F4F8", textMuted: "rgba(244,244,248,0.55)",
+      primary: "#C0C7D6", accent: "#FF8AD8",
+      fontHead: "'Space Grotesk', 'Inter', sans-serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "y2k-chrome", radius: 16, imageStyle: "chrome",
+    },
+    midnight_aurora: {
+      // Midnight aurora: navy profondo + lampi smeraldo / viola (Apple-ish dark)
+      bg: "#070B18", bgPanel: "#0F1730", bgPanelAlt: "#16224A",
+      text: "#EAF1FF", textMuted: "rgba(234,241,255,0.55)",
+      primary: "#5EEAD4", accent: "#A78BFA",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "midnight-aurora", radius: 22, imageStyle: "aurora",
+    },
+    sunset_gradient: {
+      // Sunset gradient: caldo coral/magenta su crema, modernissimo Instagram-grade
+      bg: "#FFF4EE", bgPanel: "#FFFFFF", bgPanelAlt: "#FFE5DC",
+      text: "#2A1530", textMuted: "rgba(42,21,48,0.55)",
+      primary: "#FF6B9C", accent: "#FFB454",
+      fontHead: "'Outfit', 'Sora', sans-serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "sunset-gradient", radius: 24, imageStyle: "sunset",
+    },
+    swiss_grid: {
+      // Swiss grid: tipografia pulita, ipergrigio, accenti rossi — modernità editoriale
+      bg: "#F4F4F4", bgPanel: "#FFFFFF", bgPanelAlt: "#EAEAEA",
+      text: "#0A0A0A", textMuted: "rgba(10,10,10,0.55)",
+      primary: "#E4002B", accent: "#0A0A0A",
+      fontHead: "'Inter', 'Helvetica Neue', sans-serif",
+      fontBody: "'Inter', 'Helvetica Neue', sans-serif",
+      vibe: "swiss-grid", radius: 4, imageStyle: "monochrome",
+    },
   };
   // Aliases for variants used in edge function but mapped to closest existing theme
   const aliases: Record<string, string> = {
@@ -254,6 +329,11 @@ function ArtImage({ theme, seed = 0, className = "", style = {} }: { theme: Them
     "aurora":     [["#7C9FFF","#A5F3D0","#0B0F1F"], ["#C9A4FF","#7CD8FF","#141B33"], ["#A5F3D0","#FFD3B6","#0B0F1F"], ["#FF9EC7","#A8B0FF","#1B2547"]],
     "estate":     [["#B89760","#7A6240","#1B2A3A"], ["#D4BC8A","#9C8557","#2C3E50"], ["#E0C9A0","#A88B5C","#34495E"], ["#F5E9D2","#B89760","#1B2A3A"]],
     "energy":     [["#C8FF00","#7AAD00","#0D0D0D"], ["#FF3D3D","#A02020","#0D0D0D"], ["#00FFE5","#0099A8","#171717"], ["#FFD60A","#B89500","#0D0D0D"]],
+    "liquid-glass": [["#7AA2FF","#FF6FB1","#06070C"], ["#A78BFA","#7CD8FF","#0A0B12"], ["#5EEAD4","#A78BFA","#070B18"], ["#FF9EC7","#7AA2FF","#06070C"]],
+    "glacial":     [["#9CF0E2","#5BB8FF","#EAF2FA"], ["#C8E6FF","#7DC8F0","#F0F8FF"], ["#A0DCEB","#5FA8D9","#E8F4FB"], ["#B5E8E0","#6FB8C8","#EAF2FA"]],
+    "holographic": [["#A66CFF","#22F1D6","#05050E"], ["#FF6FB1","#A66CFF","#0E0E1F"], ["#22F1D6","#7AA2FF","#05050E"], ["#FF8AD8","#A66CFF","#161630"]],
+    "chrome":      [["#C0C7D6","#7C8597","#101015"], ["#E5EAF2","#9CA3B5","#1A1A22"], ["#B0B7C5","#5C6577","#23232E"], ["#D6DCE6","#8990A2","#101015"]],
+    "sunset":      [["#FF6B9C","#FFB454","#FFF4EE"], ["#FF8AD8","#FFB454","#FFE5DC"], ["#FFB454","#FF6B9C","#FFFFFF"], ["#FF6B9C","#A78BFA","#FFE5DC"]],
   };
   const palette = palettes[theme.imageStyle][seed % palettes[theme.imageStyle].length];
   const id = `g-${theme.imageStyle}-${seed}`;
