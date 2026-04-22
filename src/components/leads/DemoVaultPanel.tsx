@@ -661,7 +661,7 @@ function MockupCard({ suite, onDelete, onCopy, onToggleFavorite }: { suite: Vaul
         />
       </button>
 
-      <div className="flex items-start gap-2 pr-14">
+      <div className="flex items-start gap-2 pl-9 pr-14">
         <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(192,132,252,0.15)" }}>
           <Smartphone className="w-4 h-4" style={{ color: "#e9d5ff" }} />
         </div>
