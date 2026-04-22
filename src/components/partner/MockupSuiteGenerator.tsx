@@ -5,11 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
-import { MockupReactScreen } from "./MockupReactScreen";
+import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -247,6 +247,9 @@ export function MockupSuiteGenerator({
 
   const [engine, setEngine] = useState<MockupEngine>("react");
   const [templateVariant, setTemplateVariant] = useState<string>(initialTemplate || "auto");
+  // Personalizzazione avanzata
+  const [glassIntensity, setGlassIntensity] = useState<number>(60);
+  const [colorStyle, setColorStyle] = useState<ColorStyle>("vivid");
   const [autoScreens, setAutoScreens] = useState(true);
   const [screens, setScreens] = useState<{ type: ScreenType; title: string }[]>(
     suggestScreensForSector(businessSector)
