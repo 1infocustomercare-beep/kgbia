@@ -32,6 +32,8 @@ import {
 import { useDemoVault, type VaultDemo } from "@/hooks/useDemoVault";
 import { useMockupSuiteVault } from "@/hooks/useMockupSuiteVault";
 import { DemoStudioPresentationMode } from "@/components/partner/DemoStudioPresentationMode";
+import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Play } from "lucide-react";
 
@@ -42,6 +44,7 @@ export default function DemoStudioPage() {
   const [presentationInitialId, setPresentationInitialId] = useState<string | undefined>();
   const [search, setSearch] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [generatorOpen, setGeneratorOpen] = useState(false);
 
   // Auto-open presentation mode quando si arriva con ?present=1 (es. da Home Partner)
   useEffect(() => {
@@ -174,12 +177,12 @@ export default function DemoStudioPage() {
               <Smartphone className="w-4 h-4 text-violet-400" />
               Mockup pronti da mostrare ({readyMockups.length})
             </h2>
-            <Link
-              to="/partner/preview"
-              className="text-xs text-violet-300 hover:text-violet-200 flex items-center gap-1"
+            <button
+              onClick={() => setGeneratorOpen(true)}
+              className="text-xs text-violet-300 hover:text-violet-200 flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-violet-500/10 transition-colors"
             >
-              <Wand2 className="w-3 h-3" /> Nuovo mockup
-            </Link>
+              <Wand2 className="w-3 h-3" /> Nuovo Mockup Suite
+            </button>
           </div>
 
           {loading && readyMockups.length === 0 ? (
@@ -191,14 +194,14 @@ export default function DemoStudioPage() {
               <Smartphone className="w-10 h-10 mx-auto mb-2 text-muted-foreground opacity-50" />
               <p className="text-sm font-semibold">Nessun mockup approvato</p>
               <p className="text-xs text-muted-foreground mt-1 mb-3">
-                Crea un Mockup Suite prima — il sito demo ne replicherà ogni dettaglio.
+                Crea un Mockup Suite — diventerà la base 1:1 del sito demo da generare dai Leads.
               </p>
-              <Link
-                to="/partner/preview"
-                className="inline-block px-4 py-2 rounded-lg bg-violet-500 text-white text-sm font-semibold"
+              <button
+                onClick={() => setGeneratorOpen(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-500 hover:bg-violet-400 text-white text-sm font-semibold transition-colors"
               >
-                Apri Mockup Suite Generator
-              </Link>
+                <Wand2 className="w-4 h-4" /> Apri Mockup Suite Generator
+              </button>
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 gap-3">
