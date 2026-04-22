@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
 import { MockupSuiteVaultList } from "@/components/partner/MockupSuiteVaultList";
 import PartnerHeroMascot from "@/components/partner/PartnerHeroMascot";
+import alienDesigner from "@/assets/empire-alien-designer.png";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 
 const STYLES = [
@@ -370,6 +371,8 @@ export default function PartnerCustomPreviewPage() {
         subtitle={`Costruisci a mano un mockup iPhone per UN cliente specifico — tu inserisci dati e brand, l'AI genera l'anteprima. Costo: ${COST} crediti. Diverso da Lead+Demo (auto-genera) e dalla Vetrina (catalogo).`}
         icon={Palette}
         active={generating}
+        mascotSrc={alienDesigner}
+        mascotAlt="Alien Designer — Mockup su Misura"
       />
 
       {/* ═══ FLUSSO 3 STEP (sei al passo 1) ═══ */}
