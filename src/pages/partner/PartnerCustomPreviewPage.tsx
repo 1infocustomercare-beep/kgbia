@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import {
   Loader2, Sparkles, Trash2, ExternalLink, Palette, Eye, Copy, MessageCircle,
-  Image as ImageIcon, Smartphone, Star, Bookmark, Search,
+  Image as ImageIcon, Smartphone, Star, Bookmark, Search, ChevronDown,
+  User as UserIcon, Building2, Brush, Upload,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
@@ -104,6 +105,11 @@ export default function PartnerCustomPreviewPage() {
     logo_url: "",
     gallery_images: [] as string[],
   });
+
+  // Sezioni collassabili form (UX professionale: 1 step alla volta su mobile)
+  const [openSection, setOpenSection] = useState<"data" | "brand" | "style" | null>("data");
+  const toggleSection = (s: "data" | "brand" | "style") =>
+    setOpenSection(prev => (prev === s ? null : s));
 
   // Load previews + intelligence + scout leads
   useEffect(() => {
@@ -364,37 +370,44 @@ export default function PartnerCustomPreviewPage() {
   };
 
   return (
-    <div className="container max-w-6xl px-3 sm:px-4 pt-2 pb-24 sm:pb-10 space-y-5 sm:space-y-7">
-      {/* ═══ HERO MASCOT (agente animato viola, identico stile Leads) ═══ */}
+    <div className="w-full max-w-[680px] md:max-w-5xl xl:max-w-7xl mx-auto px-3 sm:px-5 lg:px-7 pt-2 pb-28 sm:pb-12 space-y-5 sm:space-y-6 lg:space-y-8">
+      {/* ═══ HERO MASCOT ═══ */}
       <PartnerHeroMascot
         title="Mockup su Misura"
-        subtitle={`Costruisci a mano un mockup iPhone per UN cliente specifico — tu inserisci dati e brand, l'AI genera l'anteprima. Costo: ${COST} crediti. Diverso da Lead+Demo (auto-genera) e dalla Vetrina (catalogo).`}
+        subtitle={`Costruisci a mano un mockup iPhone per UN cliente specifico — tu inserisci dati e brand, l'AI genera l'anteprima. Costo: ${COST} crediti.`}
         icon={Palette}
         active={generating}
         mascotSrc={alienDesigner}
         mascotAlt="Alien Designer — Mockup su Misura"
       />
 
-      {/* ═══ FLUSSO 3 STEP (sei al passo 1) ═══ */}
+      {/* ═══ FLUSSO 3 STEP ═══ */}
       <PartnerFlowStepper currentStep="mockup" />
 
-      {/* ═══ FORM GENERAZIONE ═══ */}
-      <Card className="border-primary/30 overflow-hidden">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-            <Sparkles className="h-5 w-5 text-primary" />
-            Genera nuova preview
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-5 px-3 sm:px-6">
-          <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
-            <TabsList className="grid grid-cols-2 w-full">
-              <TabsTrigger value="lead" className="text-xs sm:text-sm">Da Lead Analizzato</TabsTrigger>
-              <TabsTrigger value="manual" className="text-xs sm:text-sm">Inserimento Manuale</TabsTrigger>
-            </TabsList>
+      {/* ═══ LAYOUT PRINCIPALE: 1 col mobile/tablet, 2 col xl+ ═══ */}
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-5 lg:gap-7 items-start">
 
-            <TabsContent value="lead" className="space-y-3 mt-4">
-              <div className="space-y-1.5">
+        {/* ═══════════ COLONNA SX: FORM ad ACCORDION ═══════════ */}
+        <Card className="border-primary/30 overflow-hidden xl:sticky xl:top-4">
+          <CardHeader className="pb-3 px-4 sm:px-6">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Sparkles className="h-5 w-5 text-primary" />
+              Genera nuova preview
+            </CardTitle>
+            <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">
+              3 passi rapidi · totale ~30 sec
+            </p>
+          </CardHeader>
+
+          <CardContent className="space-y-3 px-3 sm:px-5 pb-4">
+            {/* Tabs Lead vs Manuale */}
+            <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
+              <TabsList className="grid grid-cols-2 w-full h-10">
+                <TabsTrigger value="lead" className="text-xs sm:text-sm">Da Lead Analizzato</TabsTrigger>
+                <TabsTrigger value="manual" className="text-xs sm:text-sm">Inserimento Manuale</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="lead" className="space-y-2 mt-3">
                 <Label className="text-xs">Seleziona lead da Intelligence o Scout</Label>
                 <Select value={selectedLeadId} onValueChange={setSelectedLeadId}>
                   <SelectTrigger className="h-11">
@@ -413,149 +426,243 @@ export default function PartnerCustomPreviewPage() {
                   </SelectContent>
                 </Select>
                 <p className="text-[10px] sm:text-xs text-muted-foreground">
-                  <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence ·
-                  {" "}<strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout
+                  <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence ·{" "}
+                  <strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout
                 </p>
-              </div>
-            </TabsContent>
+              </TabsContent>
 
-            <TabsContent value="manual" className="mt-4">
-              <p className="text-xs text-muted-foreground">Inserisci tutti i dati a mano. Più dati metti, più l'AI personalizza.</p>
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="manual" className="mt-3">
+                <p className="text-xs text-muted-foreground">Inserisci tutti i dati a mano. Più dati metti, più l'AI personalizza.</p>
+              </TabsContent>
+            </Tabs>
 
-          {/* Dati lead — single column su mobile, 2 cols da sm */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="lead_name" className="text-xs">Nome attività *</Label>
-              <Input id="lead_name" className="h-11" placeholder="es. Tatuaggi Black Rose" value={form.lead_name} onChange={e => setForm({ ...form, lead_name: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="lead_sector" className="text-xs">Settore</Label>
-              <Input id="lead_sector" className="h-11" placeholder="es. Tatuatore, Fiorista" value={form.lead_sector} onChange={e => setForm({ ...form, lead_sector: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="lead_city" className="text-xs">Città</Label>
-              <Input id="lead_city" className="h-11" placeholder="es. Roma" value={form.lead_city} onChange={e => setForm({ ...form, lead_city: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="lead_phone" className="text-xs">Telefono</Label>
-              <Input id="lead_phone" className="h-11" inputMode="tel" placeholder="+39 06 1234 5678" value={form.lead_phone} onChange={e => setForm({ ...form, lead_phone: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="lead_website" className="text-xs">Sito web (analizzato dall'AI)</Label>
-              <Input id="lead_website" className="h-11" inputMode="url" placeholder="https://…" value={form.lead_website} onChange={e => setForm({ ...form, lead_website: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="lead_email" className="text-xs">Email</Label>
-              <Input id="lead_email" className="h-11" inputMode="email" placeholder="info@esempio.it" value={form.lead_email} onChange={e => setForm({ ...form, lead_email: e.target.value })} />
-            </div>
-            <div className="sm:col-span-2 space-y-1.5">
-              <Label htmlFor="lead_address" className="text-xs">Indirizzo</Label>
-              <Input id="lead_address" className="h-11" placeholder="Via Roma 1, Milano" value={form.lead_address} onChange={e => setForm({ ...form, lead_address: e.target.value })} />
-            </div>
-          </div>
-
-          {/* Logo + Gallery */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-xs">Logo (opzionale)</Label>
-              <div className="flex items-center gap-3">
-                {form.logo_url ? (
-                  <img src={form.logo_url} alt="logo" className="h-12 w-12 rounded-lg object-cover border shrink-0" />
-                ) : (
-                  <div className="h-12 w-12 rounded-lg border-2 border-dashed flex items-center justify-center text-muted-foreground shrink-0">
-                    <ImageIcon className="h-5 w-5" />
-                  </div>
-                )}
-                <Input type="file" accept="image/*" onChange={onLogoChange} disabled={logoUploading} className="h-11 text-xs flex-1 min-w-0" />
-              </div>
-              {form.logo_url && (
-                <button type="button" className="text-[10px] text-destructive hover:underline" onClick={() => setForm(p => ({ ...p, logo_url: "" }))}>Rimuovi logo</button>
-              )}
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Galleria (max 6)</Label>
-              <Input type="file" accept="image/*" multiple onChange={onGalleryChange} disabled={galleryUploading} className="h-11 text-xs" />
-              {form.gallery_images.length > 0 && (
-                <div className="flex gap-1 flex-wrap">
-                  {form.gallery_images.map((g, i) => (
-                    <div key={i} className="relative h-11 w-11 rounded-md overflow-hidden border group">
-                      <img src={g} alt="" className="h-full w-full object-cover" />
-                      <button type="button" onClick={() => setForm(p => ({ ...p, gallery_images: p.gallery_images.filter((_, j) => j !== i) }))}
-                        className="absolute inset-0 bg-black/60 text-white opacity-0 group-hover:opacity-100 active:opacity-100 flex items-center justify-center text-sm">×</button>
+            {/* ── STEP 1: ANAGRAFICA ── */}
+            <div className="border border-border/60 rounded-xl overflow-hidden bg-card/40">
+              <button
+                type="button"
+                onClick={() => toggleSection("data")}
+                className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 h-11 text-left hover:bg-muted/30 transition-colors"
+                aria-expanded={openSection === "data"}
+              >
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <span className="h-6 w-6 rounded-full bg-primary/15 text-primary text-[11px] flex items-center justify-center font-bold">1</span>
+                  <UserIcon className="h-4 w-4 text-primary/80" />
+                  Anagrafica cliente
+                  {form.lead_name && <Badge variant="secondary" className="text-[9px] ml-1">✓</Badge>}
+                </span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "data" ? "rotate-180" : ""}`} />
+              </button>
+              <AnimatePresence initial={false}>
+                {openSection === "data" && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-3 sm:px-4 pb-4 pt-1">
+                      <div className="space-y-1.5 sm:col-span-2">
+                        <Label htmlFor="lead_name" className="text-xs">Nome attività *</Label>
+                        <Input id="lead_name" className="h-11" placeholder="es. Tatuaggi Black Rose" value={form.lead_name} onChange={e => setForm({ ...form, lead_name: e.target.value })} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="lead_sector" className="text-xs">Settore</Label>
+                        <Input id="lead_sector" className="h-11" placeholder="es. Tatuatore, Fiorista" value={form.lead_sector} onChange={e => setForm({ ...form, lead_sector: e.target.value })} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="lead_city" className="text-xs">Città</Label>
+                        <Input id="lead_city" className="h-11" placeholder="es. Roma" value={form.lead_city} onChange={e => setForm({ ...form, lead_city: e.target.value })} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="lead_phone" className="text-xs">Telefono</Label>
+                        <Input id="lead_phone" className="h-11" inputMode="tel" placeholder="+39 06 1234 5678" value={form.lead_phone} onChange={e => setForm({ ...form, lead_phone: e.target.value })} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="lead_email" className="text-xs">Email</Label>
+                        <Input id="lead_email" className="h-11" inputMode="email" placeholder="info@esempio.it" value={form.lead_email} onChange={e => setForm({ ...form, lead_email: e.target.value })} />
+                      </div>
+                      <div className="space-y-1.5 sm:col-span-2">
+                        <Label htmlFor="lead_website" className="text-xs">Sito web (analizzato dall'AI)</Label>
+                        <Input id="lead_website" className="h-11" inputMode="url" placeholder="https://…" value={form.lead_website} onChange={e => setForm({ ...form, lead_website: e.target.value })} />
+                      </div>
+                      <div className="space-y-1.5 sm:col-span-2">
+                        <Label htmlFor="lead_address" className="text-xs">Indirizzo</Label>
+                        <Input id="lead_address" className="h-11" placeholder="Via Roma 1, Milano" value={form.lead_address} onChange={e => setForm({ ...form, lead_address: e.target.value })} />
+                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
 
-          {/* Stile template */}
-          <div className="space-y-2">
-            <Label className="text-xs">Stile template</Label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {STYLES.map(s => (
-                <button
-                  key={s.key}
-                  type="button"
-                  onClick={() => setForm({ ...form, template_style: s.key, primary_color: s.accent })}
-                  className={`p-2.5 rounded-xl border-2 transition-all active:scale-95 ${form.template_style === s.key ? "border-primary scale-[1.02]" : "border-border hover:border-primary/50"}`}
-                  style={{ background: s.color }}
-                >
-                  <div className="h-5 w-full rounded mb-1.5" style={{ background: s.accent }} />
-                  <p className="text-[10px] font-medium" style={{ color: s.color === "#F8F8F8" || s.color === "#FAF6F0" ? "#222" : "#fff" }}>{s.label}</p>
-                </button>
-              ))}
+            {/* ── STEP 2: BRAND (logo + gallery) ── */}
+            <div className="border border-border/60 rounded-xl overflow-hidden bg-card/40">
+              <button
+                type="button"
+                onClick={() => toggleSection("brand")}
+                className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 h-11 text-left hover:bg-muted/30 transition-colors"
+                aria-expanded={openSection === "brand"}
+              >
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <span className="h-6 w-6 rounded-full bg-primary/15 text-primary text-[11px] flex items-center justify-center font-bold">2</span>
+                  <Building2 className="h-4 w-4 text-primary/80" />
+                  Brand & Immagini
+                  <Badge variant="outline" className="text-[9px] ml-1">opzionale</Badge>
+                </span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "brand" ? "rotate-180" : ""}`} />
+              </button>
+              <AnimatePresence initial={false}>
+                {openSection === "brand" && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-3 sm:px-4 pb-4 pt-1">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs">Logo</Label>
+                        <div className="flex items-center gap-3">
+                          {form.logo_url ? (
+                            <img src={form.logo_url} alt="logo" className="h-12 w-12 rounded-lg object-cover border shrink-0" />
+                          ) : (
+                            <div className="h-12 w-12 rounded-lg border-2 border-dashed flex items-center justify-center text-muted-foreground shrink-0">
+                              <ImageIcon className="h-5 w-5" />
+                            </div>
+                          )}
+                          <Input type="file" accept="image/*" onChange={onLogoChange} disabled={logoUploading} className="h-11 text-xs flex-1 min-w-0" />
+                        </div>
+                        {form.logo_url && (
+                          <button type="button" className="text-[10px] text-destructive hover:underline" onClick={() => setForm(p => ({ ...p, logo_url: "" }))}>Rimuovi logo</button>
+                        )}
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs">Galleria <span className="text-muted-foreground">(max 6)</span></Label>
+                        <Input type="file" accept="image/*" multiple onChange={onGalleryChange} disabled={galleryUploading} className="h-11 text-xs" />
+                        {form.gallery_images.length > 0 && (
+                          <div className="flex gap-1.5 flex-wrap pt-1">
+                            {form.gallery_images.map((g, i) => (
+                              <div key={i} className="relative h-12 w-12 rounded-md overflow-hidden border group">
+                                <img src={g} alt="" className="h-full w-full object-cover" />
+                                <button type="button" onClick={() => setForm(p => ({ ...p, gallery_images: p.gallery_images.filter((_, j) => j !== i) }))}
+                                  className="absolute inset-0 bg-black/60 text-white opacity-0 group-hover:opacity-100 active:opacity-100 flex items-center justify-center text-sm">×</button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="color" className="text-xs">Colore accento</Label>
-            <div className="flex gap-2">
-              <Input id="color" type="color" value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="w-14 h-11 p-1 shrink-0" />
-              <Input value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="flex-1 font-mono h-11 text-sm" />
+            {/* ── STEP 3: STILE & COLORE ── */}
+            <div className="border border-border/60 rounded-xl overflow-hidden bg-card/40">
+              <button
+                type="button"
+                onClick={() => toggleSection("style")}
+                className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 h-11 text-left hover:bg-muted/30 transition-colors"
+                aria-expanded={openSection === "style"}
+              >
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <span className="h-6 w-6 rounded-full bg-primary/15 text-primary text-[11px] flex items-center justify-center font-bold">3</span>
+                  <Brush className="h-4 w-4 text-primary/80" />
+                  Stile & Colore
+                  <Badge variant="secondary" className="text-[9px] ml-1 capitalize">{form.template_style.replace("_", " ")}</Badge>
+                </span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "style" ? "rotate-180" : ""}`} />
+              </button>
+              <AnimatePresence initial={false}>
+                {openSection === "style" && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="space-y-3 px-3 sm:px-4 pb-4 pt-1">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {STYLES.map(s => (
+                          <button
+                            key={s.key}
+                            type="button"
+                            onClick={() => setForm({ ...form, template_style: s.key, primary_color: s.accent })}
+                            className={`p-2.5 rounded-xl border-2 transition-all active:scale-95 ${form.template_style === s.key ? "border-primary scale-[1.02] shadow-sm" : "border-border hover:border-primary/50"}`}
+                            style={{ background: s.color }}
+                          >
+                            <div className="h-5 w-full rounded mb-1.5" style={{ background: s.accent }} />
+                            <p className="text-[10px] font-medium" style={{ color: s.color === "#F8F8F8" || s.color === "#FAF6F0" ? "#222" : "#fff" }}>{s.label}</p>
+                          </button>
+                        ))}
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="color" className="text-xs">Colore accento</Label>
+                        <div className="flex gap-2">
+                          <Input id="color" type="color" value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="w-14 h-11 p-1 shrink-0 cursor-pointer" />
+                          <Input value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="flex-1 font-mono h-11 text-sm uppercase" />
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
 
-          <Button onClick={handleGenerate} disabled={generating || !form.lead_name.trim()} className="w-full h-12 text-sm sm:text-base font-semibold" size="lg">
-            {generating ? (
-              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> AI sta generando (15-30s)…</>
-            ) : (
-              <><Sparkles className="h-4 w-4 mr-2" /> Genera preview AI ({COST} crediti)</>
-            )}
-          </Button>
-          <p className="text-[10px] sm:text-xs text-muted-foreground text-center leading-relaxed">
-            ✓ Testi AI · ✓ Hero generato · ✓ Sito scrapato · ✓ HTML responsive · ✓ Link condivisibile
-          </p>
-        </CardContent>
-      </Card>
+            {/* ── CTA Genera (sticky su mobile) ── */}
+            <div className="sticky bottom-2 z-10 pt-2">
+              <Button
+                onClick={handleGenerate}
+                disabled={generating || !form.lead_name.trim()}
+                className="w-full h-12 sm:h-12 text-sm sm:text-base font-semibold shadow-lg shadow-primary/20"
+                size="lg"
+              >
+                {generating ? (
+                  <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> AI sta generando (15-30s)…</>
+                ) : (
+                  <><Sparkles className="h-4 w-4 mr-2" /> Genera preview AI ({COST} crediti)</>
+                )}
+              </Button>
+              <p className="text-[10px] sm:text-xs text-muted-foreground text-center leading-relaxed mt-2">
+                ✓ Testi AI · ✓ Hero generato · ✓ Sito scrapato · ✓ HTML responsive · ✓ Link condivisibile
+              </p>
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* ═══ MOCKUP IPHONE SUITE ═══ */}
-      <section className="space-y-3 pt-2 border-t border-border/50">
-        <div className="flex items-center gap-2">
-          <Smartphone className="h-5 w-5 text-primary shrink-0" />
-          <h2 className="text-base sm:text-xl font-semibold">Mockup iPhone Suite</h2>
-          <Badge variant="secondary" className="text-[10px]">4 schermate</Badge>
+        {/* ═══════════ COLONNA DX: MOCKUP SUITE + VAULT + LISTA ═══════════ */}
+        <div className="space-y-5 lg:space-y-6 min-w-0">
+          {/* MOCKUP IPHONE SUITE */}
+          <section className="space-y-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Smartphone className="h-5 w-5 text-primary shrink-0" />
+              <h2 className="text-base sm:text-lg lg:text-xl font-semibold">Mockup iPhone Suite</h2>
+              <Badge variant="secondary" className="text-[10px]">4 schermate</Badge>
+            </div>
+            <p className="text-[11px] sm:text-sm text-muted-foreground">
+              Genera 4 schermate iPhone professionali. Se hai compilato il form, i dati sono pre-caricati.
+            </p>
+            <MockupSuiteGenerator
+              businessName={form.lead_name}
+              businessSector={form.lead_sector}
+              businessCity={form.lead_city}
+              primaryColor={form.primary_color}
+              templateVariant={form.template_style}
+            />
+          </section>
+
+          <MockupSuiteVaultList />
         </div>
-        <p className="text-[11px] sm:text-sm text-muted-foreground">
-          Genera 4 schermate iPhone professionali. Se hai compilato il form sopra, i dati vengono pre-caricati.
-        </p>
-        <MockupSuiteGenerator
-          businessName={form.lead_name}
-          businessSector={form.lead_sector}
-          businessCity={form.lead_city}
-          primaryColor={form.primary_color}
-          templateVariant={form.template_style}
-        />
-      </section>
+      </div>
 
-      <MockupSuiteVaultList />
-
-      {/* ═══ LISTA PREVIEW HTML ═══ */}
-      <section className="space-y-3 pt-2 border-t border-border/50">
+      {/* ═══ LISTA PREVIEW HTML — full width sotto il layout 2-col ═══ */}
+      <section className="space-y-3 pt-4 sm:pt-6 border-t border-border/50">
         <div className="flex items-center justify-between gap-2 flex-wrap">
-          <h2 className="text-base sm:text-xl font-semibold flex items-center gap-2">
+          <h2 className="text-base sm:text-lg lg:text-xl font-semibold flex items-center gap-2">
+            <Bookmark className="h-5 w-5 text-primary" />
             Le tue preview HTML
             <Badge variant="outline" className="text-[10px]">{counts.total}</Badge>
           </h2>
@@ -606,7 +713,7 @@ export default function PartnerCustomPreviewPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             <AnimatePresence mode="popLayout">
               {visiblePreviews.map(p => (
                 <motion.div
