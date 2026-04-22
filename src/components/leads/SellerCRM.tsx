@@ -441,7 +441,7 @@ function LeadCard({
               {/* ═══ Test A/B WhatsApp — confronta 2 messaggi e traccia clic+risposte ═══ */}
               {lead.phone && onOpenAB && (
                 <button
-                  onClick={() => onOpenAB({ id: lead.id, name: lead.name, phone: lead.phone, city: lead.city, sector: lead.sector })}
+                  onClick={() => onOpenAB({ id: lead.id, name: lead.name, phone: lead.phone, city: lead.city, sector: lead.sector, language: (lead as any).language ?? null })}
                   className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-bold"
                   style={{
                     background: "linear-gradient(135deg, rgba(37,211,102,0.15), rgba(124,58,237,0.15))",
