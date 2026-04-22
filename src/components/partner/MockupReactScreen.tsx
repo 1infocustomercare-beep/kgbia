@@ -48,7 +48,51 @@ interface ThemeTokens {
     | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy";
 }
 
-function getTheme(variant: string, primaryOverride?: string): ThemeTokens {
+// ────────────────────────────────────────────────────────────────────────────
+// Color helpers — convert hex ↔ HSL to apply colorStyle transforms.
+// ────────────────────────────────────────────────────────────────────────────
+function hexToHsl(hex: string): { h: number; s: number; l: number } | null {
+  const m = hex.replace("#", "").trim();
+  if (!/^[0-9a-fA-F]{6}$/.test(m)) return null;
+  const r = parseInt(m.slice(0, 2), 16) / 255;
+  const g = parseInt(m.slice(2, 4), 16) / 255;
+  const b = parseInt(m.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h *= 60;
+  }
+  return { h, s: s * 100, l: l * 100 };
+}
+function hslToHex(h: number, s: number, l: number): string {
+  s /= 100; l /= 100;
+  const k = (n: number) => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) => {
+    const c = l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return Math.round(c * 255).toString(16).padStart(2, "0");
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+function applyColorStyle(hex: string | undefined, style: ColorStyle | undefined): string | undefined {
+  if (!hex || !style || style === "vivid") return hex;
+  const hsl = hexToHsl(hex);
+  if (!hsl) return hex;
+  if (style === "muted")  return hslToHex(hsl.h, Math.max(0, hsl.s - 25), hsl.l);
+  if (style === "pastel") return hslToHex(hsl.h, Math.max(0, Math.min(hsl.s, 55)), Math.min(88, hsl.l + 15));
+  if (style === "mono")   return hslToHex(hsl.h, 0, hsl.l); // grayscale
+  return hex;
+}
+
+function getTheme(variant: string, primaryOverride?: string, colorStyle?: ColorStyle): ThemeTokens {
   const themes: Record<string, ThemeTokens> = {
     paperfish: {
       bg: "#0E0B0F", bgPanel: "#181216", bgPanelAlt: "#221A1F",
