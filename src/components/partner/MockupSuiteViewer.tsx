@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, Loader2, Smartphone } from "lucide-react";
+import { Download, Loader2, Smartphone, Maximize2 } from "lucide-react";
 import { toast } from "sonner";
 import html2canvas from "html2canvas";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
+import { MockupFullscreenViewer } from "./MockupFullscreenViewer";
 
 export interface SuiteScreen {
   type: string;
