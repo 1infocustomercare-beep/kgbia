@@ -6175,6 +6175,7 @@ export type Database = {
           created_at: string
           display_name: string
           full_result: Json | null
+          generation_engine: string
           id: string
           images_payload: Json | null
           is_archived: boolean
@@ -6208,6 +6209,7 @@ export type Database = {
           created_at?: string
           display_name: string
           full_result?: Json | null
+          generation_engine?: string
           id?: string
           images_payload?: Json | null
           is_archived?: boolean
@@ -6241,6 +6243,7 @@ export type Database = {
           created_at?: string
           display_name?: string
           full_result?: Json | null
+          generation_engine?: string
           id?: string
           images_payload?: Json | null
           is_archived?: boolean
@@ -6278,6 +6281,7 @@ export type Database = {
           engine: string
           error_message: string | null
           generated_at: string | null
+          generation_engine: string
           id: string
           lead_id: string | null
           owner_id: string
@@ -6299,6 +6303,7 @@ export type Database = {
           engine?: string
           error_message?: string | null
           generated_at?: string | null
+          generation_engine?: string
           id?: string
           lead_id?: string | null
           owner_id: string
@@ -6320,6 +6325,7 @@ export type Database = {
           engine?: string
           error_message?: string | null
           generated_at?: string | null
+          generation_engine?: string
           id?: string
           lead_id?: string | null
           owner_id?: string

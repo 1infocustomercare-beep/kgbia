@@ -139,12 +139,15 @@ export default function PartnerPortfolioPage() {
   const [filterSector, setFilterSector] = useState<string>(() => localStorage.getItem("partner_portfolio_f_sector") || "all");
   const [filterVariant, setFilterVariant] = useState<string>(() => localStorage.getItem("partner_portfolio_f_variant") || "all");
   const [filterStatus, setFilterStatus] = useState<string>(() => localStorage.getItem("partner_portfolio_f_status") || "all");
+  // Engine = come è stato generato (AI vs template preset). Persistente.
+  const [filterEngine, setFilterEngine] = useState<string>(() => localStorage.getItem("partner_portfolio_f_engine") || "all");
   const [mockupSort, setMockupSort] = useState<MockupSort>(() => (localStorage.getItem("partner_portfolio_sort_mockup") as MockupSort) || "recent");
   const [siteSort, setSiteSort] = useState<SiteSort>(() => (localStorage.getItem("partner_portfolio_sort_site") as SiteSort) || "recent");
 
   useEffect(() => { localStorage.setItem("partner_portfolio_f_sector", filterSector); }, [filterSector]);
   useEffect(() => { localStorage.setItem("partner_portfolio_f_variant", filterVariant); }, [filterVariant]);
   useEffect(() => { localStorage.setItem("partner_portfolio_f_status", filterStatus); }, [filterStatus]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_f_engine", filterEngine); }, [filterEngine]);
   useEffect(() => { localStorage.setItem("partner_portfolio_sort_mockup", mockupSort); }, [mockupSort]);
   useEffect(() => { localStorage.setItem("partner_portfolio_sort_site", siteSort); }, [siteSort]);
 
@@ -182,13 +185,15 @@ export default function PartnerPortfolioPage() {
   const activeFiltersCount =
     (filterSector !== "all" ? 1 : 0) +
     (filterVariant !== "all" ? 1 : 0) +
-    (filterStatus !== "all" ? 1 : 0);
+    (filterStatus !== "all" ? 1 : 0) +
+    (filterEngine !== "all" ? 1 : 0);
 
   const readyMockups = useMemo(() => {
     const list = mockupVault.suites
       .filter((s) => (filterStatus === "all" ? s.status === "complete" : s.status === filterStatus))
       .filter((s) => filterSector === "all" || s.business_sector === filterSector)
       .filter((s) => filterVariant === "all" || s.template_variant === filterVariant)
+      .filter((s) => filterEngine === "all" || (s as any).generation_engine === filterEngine)
       .filter((s) => {
         if (!vaultSearch.trim()) return true;
         const q = vaultSearch.toLowerCase();
@@ -212,12 +217,13 @@ export default function PartnerPortfolioPage() {
         default: return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
       }
     });
-  }, [mockupVault.suites, vaultSearch, filterStatus, filterSector, filterVariant, mockupSort]);
+  }, [mockupVault.suites, vaultSearch, filterStatus, filterSector, filterVariant, filterEngine, mockupSort]);
 
   const generatedSites = useMemo(() => {
     const list = demoVault.demos
       .filter((d: any) => filterSector === "all" || d.sector === filterSector)
       .filter((d: any) => filterVariant === "all" || d.template_variant === filterVariant)
+      .filter((d: any) => filterEngine === "all" || d.generation_engine === filterEngine)
       .filter((d) => {
         if (!vaultSearch.trim()) return true;
         const q = vaultSearch.toLowerCase();
@@ -237,7 +243,7 @@ export default function PartnerPortfolioPage() {
         default: return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
       }
     });
-  }, [demoVault.demos, vaultSearch, filterSector, filterVariant, siteSort]);
+  }, [demoVault.demos, vaultSearch, filterSector, filterVariant, filterEngine, siteSort]);
 
   const vaultStats = {
     mockupsReady: mockupVault.suites.filter((s) => s.status === "complete").length,
@@ -514,9 +520,16 @@ export default function PartnerPortfolioPage() {
                 {filterStatus !== "all" && (
                   <FilterChip label="Stato" value={filterStatus} onClear={() => setFilterStatus("all")} />
                 )}
+                {filterEngine !== "all" && (
+                  <FilterChip
+                    label="Engine"
+                    value={filterEngine === "ai" ? "AI" : filterEngine === "template" ? "Template" : "Hybrid"}
+                    onClear={() => setFilterEngine("all")}
+                  />
+                )}
                 <button
                   onClick={() => {
-                    setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all");
+                    setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all"); setFilterEngine("all");
                   }}
                   className="ml-0.5 px-2 py-1 rounded-full text-[10px] font-semibold flex items-center gap-1 hover:bg-white/8 transition-colors"
                   style={{ color: "#c4b5fd", border: "1px dashed rgba(167,139,250,0.4)" }}
@@ -536,13 +549,20 @@ export default function PartnerPortfolioPage() {
                 >
                   <div className="p-3 rounded-xl space-y-3"
                     style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <FilterSelect label="Settore" value={filterSector} onChange={setFilterSector}
                         options={[{ value: "all", label: "Tutti i settori" }, ...sectorOptions.map((s) => ({ value: s, label: s }))]} />
                       <FilterSelect label="Template" value={filterVariant} onChange={setFilterVariant}
                         options={[{ value: "all", label: "Tutti i template" }, ...variantOptions.map((v) => ({ value: v, label: v }))]} />
                       <FilterSelect label="Stato mockup" value={filterStatus} onChange={setFilterStatus}
                         options={[{ value: "all", label: "Tutti gli stati" }, ...statusOptions.map((s) => ({ value: s, label: s }))]} />
+                      <FilterSelect label="Engine generazione" value={filterEngine} onChange={setFilterEngine}
+                        options={[
+                          { value: "all", label: "Tutti gli engine" },
+                          { value: "ai", label: "🤖 AI (scraping + generazione)" },
+                          { value: "template", label: "🎨 Template (preset manuale)" },
+                          { value: "hybrid", label: "🔀 Hybrid (AI + ritocchi)" },
+                        ]} />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-white/5">
                       <FilterSelect label="Ordina mockup" value={mockupSort} onChange={(v) => setMockupSort(v as any)}
@@ -561,9 +581,9 @@ export default function PartnerPortfolioPage() {
                     </div>
                     {activeFiltersCount > 0 && (
                       <button
-                        onClick={() => {
-                          setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all");
-                        }}
+                  onClick={() => {
+                    setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all"); setFilterEngine("all");
+                  }}
                         className="text-[10px] text-violet-300 hover:text-violet-200 flex items-center gap-1"
                       >
                         <XIcon className="w-3 h-3" /> Pulisci filtri
@@ -664,8 +684,9 @@ export default function PartnerPortfolioPage() {
                           </span>
                         ))}
                       </div>
-                      <h4 className="text-xs font-bold text-foreground uppercase tracking-wide truncate">
-                        {suite.business_name}
+                      <h4 className="text-xs font-bold text-foreground uppercase tracking-wide truncate flex items-center gap-1.5">
+                        <span className="truncate">{suite.business_name}</span>
+                        <EngineBadge engine={(suite as any).generation_engine} />
                       </h4>
                       <p className="text-[10px] text-muted-foreground line-clamp-2">{description}</p>
                       <p className="text-[9px] text-muted-foreground/70 flex items-center gap-1.5 pt-0.5">
@@ -810,6 +831,7 @@ function DemoSiteRow({
           <div className="flex items-center gap-1.5">
             <h5 className="text-xs font-semibold text-foreground truncate">{site.display_name}</h5>
             <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 uppercase">ready</span>
+            <EngineBadge engine={(site as any).generation_engine} />
           </div>
           <p className="text-[9px] text-muted-foreground mt-0.5">
             {site.sector?.toUpperCase()}
@@ -880,6 +902,27 @@ function FilterSelect({
 }
 
 /* ─── Chip filtro attivo (rimovibile con un tap) ─── */
+/** Badge per distinguere a colpo d'occhio l'engine di generazione (AI / Template / Hybrid). */
+function EngineBadge({ engine }: { engine?: string | null }) {
+  if (!engine) return null;
+  const cfg =
+    engine === "ai"
+      ? { label: "AI", bg: "rgba(34,211,238,0.18)", border: "rgba(34,211,238,0.45)", color: "#67e8f9", icon: "🤖" }
+      : engine === "hybrid"
+      ? { label: "Hybrid", bg: "rgba(244,114,182,0.18)", border: "rgba(244,114,182,0.45)", color: "#f9a8d4", icon: "🔀" }
+      : { label: "Template", bg: "rgba(167,139,250,0.18)", border: "rgba(167,139,250,0.45)", color: "#c4b5fd", icon: "🎨" };
+  return (
+    <span
+      title={`Generato con engine: ${cfg.label}`}
+      className="inline-flex items-center gap-0.5 text-[8px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide shrink-0"
+      style={{ background: cfg.bg, border: `1px solid ${cfg.border}`, color: cfg.color }}
+    >
+      <span className="text-[9px] leading-none">{cfg.icon}</span>
+      {cfg.label}
+    </span>
+  );
+}
+
 function FilterChip({
   label, value, onClear,
 }: { label: string; value: string; onClear: () => void }) {

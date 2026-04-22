@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+export type GenerationEngine = "ai" | "template" | "hybrid";
+
 export interface VaultDemo {
   id: string;
   owner_id: string;
@@ -11,6 +13,8 @@ export interface VaultDemo {
   sector_label: string | null;
   sub_sector: string | null;
   template_variant: string;
+  /** Engine usato per generare la demo: ai = AI Factory con scraping, template = preset manuale, hybrid = misto */
+  generation_engine: GenerationEngine;
   theme_hint: string | null;
   tenant_id: string | null;
   tenant_kind: string | null;
@@ -43,6 +47,8 @@ export interface SaveDemoInput {
   sectorLabel?: string;
   subSector?: string;
   templateVariant: string;
+  /** Override esplicito: 'ai' | 'template' | 'hybrid'. Se omesso, viene auto-classificato. */
+  generationEngine?: GenerationEngine;
   themeHint?: string;
   tenantId?: string | null;
   tenantKind?: "restaurant" | "company" | null;
@@ -57,6 +63,19 @@ export interface SaveDemoInput {
   imagesPayload?: Record<string, any>;
   outreachPayload?: Record<string, any>;
   fullResult?: Record<string, any>;
+}
+
+/** Euristica: deduce engine da contenuti payload. AI se ci sono marker di scraping/AI, template altrimenti. */
+function inferEngineFromPayload(input: SaveDemoInput): GenerationEngine {
+  if (input.generationEngine) return input.generationEngine;
+  const haystack = JSON.stringify({
+    full: input.fullResult || {},
+    brand: input.brandPayload || {},
+    images: input.imagesPayload || {},
+  }).toLowerCase();
+  const aiMarkers = ["scraped_data", "ai_factory", "ai_generated", "ai_prompt", "gemini", "scraping_source"];
+  if (aiMarkers.some((m) => haystack.includes(m))) return "ai";
+  return "template";
 }
 
 export interface RemapInput {
@@ -148,6 +167,7 @@ export function useDemoVault() {
         sector_label: input.sectorLabel || null,
         sub_sector: input.subSector || null,
         template_variant: input.templateVariant,
+        generation_engine: inferEngineFromPayload(input),
         theme_hint: input.themeHint || null,
         tenant_id: input.tenantId || null,
         tenant_kind: input.tenantKind || null,
@@ -269,6 +289,12 @@ export function useDemoVault() {
     }
   }, []);
 
+  /** Filtra le demo per engine ('ai' | 'template' | 'hybrid' | 'all') */
+  const filterByEngine = useCallback((engine: GenerationEngine | "all"): VaultDemo[] => {
+    if (engine === "all") return demos;
+    return demos.filter((d) => d.generation_engine === engine);
+  }, [demos]);
+
   return {
     demos,
     loading,
@@ -276,6 +302,7 @@ export function useDemoVault() {
     fetchAll,
     saveDemo,
     findCompatible,
+    filterByEngine,
     reuseDemo,
     toggleFavorite,
     renameDemo,
