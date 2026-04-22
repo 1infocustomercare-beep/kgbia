@@ -486,29 +486,115 @@ export function MockupSuiteGenerator({
           </div>
         </div>
 
-        {/* Template variante (raggruppato) */}
+        {/* Template variante (raggruppato) + ANTEPRIMA LIVE */}
         <div>
-          <Label htmlFor="template-variant">Stile grafico template</Label>
-          <Select value={templateVariant} onValueChange={setTemplateVariant}>
-            <SelectTrigger id="template-variant">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="max-h-[360px]">
-              {Object.entries(groupedTemplates).map(([group, items]) => (
-                <div key={group}>
-                  <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{group}</div>
-                  {items.map(t => (
-                    <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+          <div className="flex items-center justify-between mb-2">
+            <Label htmlFor="template-variant" className="flex items-center gap-1.5">
+              <Palette className="h-3.5 w-3.5" /> Stile grafico template
+            </Label>
+            <Badge variant="outline" className="text-[10px] gap-1"><Eye className="h-3 w-3" /> Anteprima live</Badge>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 items-start">
+            <div className="space-y-3">
+              <Select value={templateVariant} onValueChange={setTemplateVariant}>
+                <SelectTrigger id="template-variant">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-[360px]">
+                  {Object.entries(groupedTemplates).map(([group, items]) => (
+                    <div key={group}>
+                      <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{group}</div>
+                      {items.map(t => (
+                        <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+                      ))}
+                    </div>
                   ))}
+                </SelectContent>
+              </Select>
+              {detectedTemplateLabel && (
+                <p className="text-[11px] text-muted-foreground">
+                  ✨ Auto-rilevato dal settore: <span className="font-semibold text-foreground">{detectedTemplateLabel}</span>
+                </p>
+              )}
+
+              {/* Palette swap rapido */}
+              <div>
+                <Label className="text-[11px] text-muted-foreground mb-1.5 block">Palette colore brand</Label>
+                <div className="flex flex-wrap gap-1.5">
+                  {QUICK_PALETTES.map(p => {
+                    const active = (mode === "standalone" ? standalone.primaryColor : primaryColor).toLowerCase() === p.color.toLowerCase();
+                    return (
+                      <button
+                        key={p.color}
+                        type="button"
+                        onClick={() => {
+                          if (mode === "standalone") {
+                            setStandalone(prev => ({ ...prev, primaryColor: p.color }));
+                          } else {
+                            // Lead mode: forziamo override locale via standalone state come "preview color"
+                            setStandalone(prev => ({ ...prev, primaryColor: p.color }));
+                          }
+                        }}
+                        title={p.label}
+                        className={`relative w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
+                          active ? "border-foreground shadow-md scale-110" : "border-border"
+                        }`}
+                        style={{ background: p.color }}
+                      >
+                        {active && (
+                          <span className="absolute inset-0 flex items-center justify-center text-white text-[10px] font-black drop-shadow">✓</span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
-              ))}
-            </SelectContent>
-          </Select>
-          {detectedTemplateLabel && (
-            <p className="text-[11px] text-muted-foreground mt-1">
-              ✨ Auto-rilevato: <span className="font-semibold text-foreground">{detectedTemplateLabel}</span>
-            </p>
-          )}
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  Colore attuale:{" "}
+                  <span className="font-mono font-semibold">
+                    {(mode === "standalone" ? standalone.primaryColor : primaryColor).toUpperCase()}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {/* Anteprima live mini iPhone */}
+            <div className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-muted/30 border">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Anteprima tema</p>
+              <div className="relative" style={{ width: 110, height: Math.round(110 * 19.5 / 9) }}>
+                <div
+                  className="absolute -inset-2 rounded-[28px] opacity-30 blur-xl"
+                  style={{ background: mode === "standalone" ? standalone.primaryColor : primaryColor }}
+                />
+                <div
+                  className="relative rounded-[22px] border-[2px] overflow-hidden shadow-xl"
+                  style={{
+                    width: 110,
+                    height: Math.round(110 * 19.5 / 9),
+                    borderColor: "hsl(var(--foreground) / 0.2)",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[34px] h-[8px] bg-black rounded-full z-30" />
+                  <div className="absolute inset-[2px] overflow-hidden rounded-[20px]">
+                    <MockupReactScreen
+                      type="home"
+                      templateVariant={templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant}
+                      businessName={businessName || "Brand Demo"}
+                      businessSector={businessSector || "Servizi"}
+                      businessCity={businessCity || ""}
+                      primaryColor={mode === "standalone" ? standalone.primaryColor : primaryColor}
+                      width={106}
+                      height={Math.round(110 * 19.5 / 9) - 4}
+                    />
+                  </div>
+                  <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
+                </div>
+              </div>
+              <p className="text-[9px] text-muted-foreground text-center mt-1 max-w-[120px]">
+                Preview Home · cambia istantaneamente
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* 4 schermate configurabili */}
