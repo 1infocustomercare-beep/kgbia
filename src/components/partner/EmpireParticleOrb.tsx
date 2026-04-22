@@ -61,8 +61,6 @@ const EmpireParticleOrb = memo(() => {
   });
   // Tracked active pointers for multi-touch
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
-  // Click ripples (concentric waves emitted on tap inside orb)
-  const ripplesRef = useRef<{ x: number; y: number; t: number; max: number }[]>([]);
   const [mode, setMode] = useState<Mode>("orb");
   const [hint, setHint] = useState(true);
 
@@ -295,7 +293,7 @@ const EmpireParticleOrb = memo(() => {
         canvas.style.pointerEvents = stillInside ? "auto" : "none";
       }
 
-      // Tap (no significant move) inside orb → toggle mode + emit ripple
+      // Tap (no significant move) inside orb → toggle mode
       if (
         wasActive &&
         !moved &&
@@ -307,14 +305,6 @@ const EmpireParticleOrb = memo(() => {
         modeRef.current = next;
         setMode(next);
         setHint(false);
-        // Emit a ripple from the tap point (canvas-local coords)
-        const rect = canvas.getBoundingClientRect();
-        ripplesRef.current.push({
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-          t: 0,
-          max: Math.max(160, radius * 1.8),
-        });
       }
     };
 
@@ -392,8 +382,9 @@ const EmpireParticleOrb = memo(() => {
       const py = pointerRef.current.y;
       const pointerActive = pointerRef.current.active;
 
-      // Ring radius pushed further out so the central label stays readable in constellation mode
-      const ringR = effRadius * 1.55;
+      // Ring radius — wider on desktop for premium feel, tighter on mobile so cards + particles
+      // stay inside the orb container and the central label remains readable.
+      const ringR = effRadius * (isMobile ? 1.25 : 1.5);
       const arr = particlesRef.current;
 
       for (let i = 0; i < arr.length; i++) {
@@ -433,22 +424,6 @@ const EmpireParticleOrb = memo(() => {
           const reach = isMobile ? 70 : 110;
           if (dist < reach && dist > 0.01) {
             const force = (1 - dist / reach) * 1.8;
-            p.vx += (dx / dist) * force;
-            p.vy += (dy / dist) * force;
-          }
-        }
-
-        // Click ripples — radial wave that pushes particles outward as it expands
-        for (let r = 0; r < ripplesRef.current.length; r++) {
-          const rip = ripplesRef.current[r];
-          const dx = p.x - rip.x;
-          const dy = p.y - rip.y;
-          const dist = Math.hypot(dx, dy);
-          const ringPos = rip.t * rip.max; // current wavefront radius
-          const band = 28; // how thick the wavefront is
-          const off = Math.abs(dist - ringPos);
-          if (off < band && dist > 0.01) {
-            const force = (1 - off / band) * (1 - rip.t) * 3.5;
             p.vx += (dx / dist) * force;
             p.vy += (dy / dist) * force;
           }
@@ -518,30 +493,6 @@ const EmpireParticleOrb = memo(() => {
         ctx.fill();
       }
 
-      // ─── Click ripples — render expanding rings + advance lifetime ───
-      const rips = ripplesRef.current;
-      for (let r = rips.length - 1; r >= 0; r--) {
-        const rip = rips[r];
-        rip.t += 0.02;
-        if (rip.t >= 1) {
-          rips.splice(r, 1);
-          continue;
-        }
-        const rad = rip.t * rip.max;
-        const a = (1 - rip.t) * 0.55;
-        ctx.lineWidth = 1.4 + (1 - rip.t) * 1.6;
-        ctx.strokeStyle = `hsla(280, 90%, 75%, ${a})`;
-        ctx.beginPath();
-        ctx.arc(rip.x, rip.y, rad, 0, Math.PI * 2);
-        ctx.stroke();
-        // soft inner halo
-        ctx.strokeStyle = `hsla(265, 85%, 65%, ${a * 0.5})`;
-        ctx.lineWidth = 0.8;
-        ctx.beginPath();
-        ctx.arc(rip.x, rip.y, rad * 0.85, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
       raf = requestAnimationFrame(draw);
     };
     raf = requestAnimationFrame(draw);
@@ -562,7 +513,7 @@ const EmpireParticleOrb = memo(() => {
   return (
     <div
       ref={wrapRef}
-      className="relative w-full h-[280px] sm:h-[340px] md:h-[400px] lg:h-[440px] select-none"
+      className="relative w-full h-[280px] sm:h-[340px] md:h-[400px] lg:h-[440px] select-none overflow-hidden"
       style={{ pointerEvents: "none", background: "transparent" }}
       aria-label={mode === "orb" ? "Empire Core — trascina o tocca per esplorare" : "Empire Stack constellation"}
     >
@@ -618,23 +569,15 @@ const EmpireParticleOrb = memo(() => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.4, delay: 0.15 }}
-              className="text-center px-5 py-3 rounded-2xl"
-              style={{
-                background: "radial-gradient(ellipse at center, hsla(265,40%,8%,0.85) 0%, hsla(265,40%,8%,0.55) 60%, hsla(265,40%,8%,0) 100%)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-              }}
+              className="text-center px-4"
             >
-              <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-violet-200 mb-1.5"
-                style={{ textShadow: "0 1px 8px hsla(265,80%,20%,0.9)" }}>
+              <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-violet-300/80 mb-1.5">
                 Empire Stack
               </p>
-              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white"
-                style={{ textShadow: "0 2px 12px hsla(265,80%,20%,0.95), 0 0 24px hsla(265,80%,40%,0.5)" }}>
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white">
                 6 moduli sincronizzati
               </h3>
-              <p className="text-[10px] sm:text-xs text-violet-200/90 mt-2"
-                style={{ textShadow: "0 1px 6px hsla(265,80%,20%,0.9)" }}>
+              <p className="text-[10px] sm:text-xs text-violet-300/60 mt-2">
                 Tocca di nuovo per ricomporre
               </p>
             </motion.div>
@@ -642,15 +585,16 @@ const EmpireParticleOrb = memo(() => {
         </AnimatePresence>
       </div>
 
-      {/* Feature cards (constellation mode) */}
+      {/* Feature cards (constellation mode) — responsive distance: smaller on mobile to stay inside viewport */}
       <AnimatePresence>
         {mode === "constellation" &&
           FEATURES.map((f, i) => {
             const Icon = f.icon;
             const angRad = (f.angle * Math.PI) / 180;
-            // Push cards further out so they sit on the constellation ring (which is now at 1.55× radius)
-            const dx = Math.cos(angRad) * 48;
-            const dy = Math.sin(angRad) * 48;
+            // Use vmin so cards scale with the smaller viewport dimension and never escape the container
+            const distVmin = 22; // ~22% of the smaller side — safe on 320px screens
+            const dx = Math.cos(angRad) * distVmin;
+            const dy = Math.sin(angRad) * distVmin;
             return (
               <motion.div
                 key={f.label}
@@ -660,22 +604,23 @@ const EmpireParticleOrb = memo(() => {
                 transition={{ duration: 0.4, delay: 0.3 + i * 0.05 }}
                 className="absolute z-20"
                 style={{
-                  left: `calc(50% + ${dx}% )`,
-                  top: `calc(50% + ${dy}% )`,
+                  left: `calc(50% + ${dx}vmin)`,
+                  top: `calc(50% + ${dy}vmin)`,
                   transform: "translate(-50%, -50%)",
                   pointerEvents: "none",
+                  maxWidth: "40vw",
                 }}
               >
                 <div
-                  className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full backdrop-blur-md"
+                  className="flex items-center gap-1 sm:gap-2 px-2 py-1 sm:px-3 sm:py-2 rounded-full backdrop-blur-md"
                   style={{
-                    background: "hsla(265,40%,15%,0.75)",
+                    background: "hsla(265,40%,15%,0.85)",
                     border: "1px solid hsla(265,80%,65%,0.4)",
                     boxShadow: "0 4px 16px hsla(265,80%,40%,0.35)",
                   }}
                 >
-                  <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-violet-300" />
-                  <span className="text-[10px] sm:text-xs font-semibold text-white whitespace-nowrap">
+                  <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-violet-300 shrink-0" />
+                  <span className="text-[9px] sm:text-xs font-semibold text-white whitespace-nowrap">
                     {f.label}
                   </span>
                 </div>
