@@ -223,6 +223,7 @@ export default function PartnerPortfolioPage() {
     const list = demoVault.demos
       .filter((d: any) => filterSector === "all" || d.sector === filterSector)
       .filter((d: any) => filterVariant === "all" || d.template_variant === filterVariant)
+      .filter((d: any) => filterEngine === "all" || d.generation_engine === filterEngine)
       .filter((d) => {
         if (!vaultSearch.trim()) return true;
         const q = vaultSearch.toLowerCase();
@@ -242,7 +243,7 @@ export default function PartnerPortfolioPage() {
         default: return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
       }
     });
-  }, [demoVault.demos, vaultSearch, filterSector, filterVariant, siteSort]);
+  }, [demoVault.demos, vaultSearch, filterSector, filterVariant, filterEngine, siteSort]);
 
   const vaultStats = {
     mockupsReady: mockupVault.suites.filter((s) => s.status === "complete").length,
