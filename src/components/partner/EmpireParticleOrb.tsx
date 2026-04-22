@@ -61,6 +61,8 @@ const EmpireParticleOrb = memo(() => {
   });
   // Tracked active pointers for multi-touch
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
+  // Click ripples (concentric waves emitted on tap inside orb)
+  const ripplesRef = useRef<{ x: number; y: number; t: number; max: number }[]>([]);
   const [mode, setMode] = useState<Mode>("orb");
   const [hint, setHint] = useState(true);
 
