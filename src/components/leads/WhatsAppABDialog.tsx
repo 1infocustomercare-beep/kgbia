@@ -16,7 +16,9 @@ import { toast } from "sonner";
 import {
   X, Copy, MessageCircle, Loader2, Trophy, MousePointerClick,
   CheckCircle2, RefreshCw, Sparkles, FlaskConical, Send, Trash2,
+  Link2,
 } from "lucide-react";
+import { getSectorCTA, buildCTADemoUrl } from "@/lib/sector-cta";
 
 export interface ABLeadInput {
   id?: string;
@@ -61,39 +63,46 @@ function buildTrackUrl(shortId: string): string {
   return `https://${projectRef}.supabase.co/functions/v1/wa-track?s=${shortId}`;
 }
 
-/* Template default — A: diretto, B: storytelling */
-function defaultMessageA(lead: ABLeadInput, demoLink: string): string {
+/* Template default — A: diretto, B: storytelling.
+ * Entrambi includono ora un CTA cliccabile diretto alla sezione di conversione
+ * della preview (#prenota / #menu / #preventivo …) in base al settore del lead.
+ */
+function defaultMessageA(lead: ABLeadInput, ctaUrl: string, ctaLabel: string, emoji: string): string {
   const sectorLabel = lead.sector || "la tua attività";
   return [
     `Ciao ${lead.name} 👋`,
     ``,
-    `Sono di Empire AI Group. Vi ho preparato una preview personalizzata di come potrebbe diventare ${sectorLabel}:`,
+    `Sono di Empire AI Group. Vi ho preparato una preview personalizzata di come potrebbe diventare ${sectorLabel}.`,
     ``,
-    `${demoLink}`,
+    `${emoji} ${ctaLabel}:`,
+    `${ctaUrl}`,
     ``,
     `2 minuti per dare un'occhiata?`,
   ].join("\n");
 }
 
-function defaultMessageB(lead: ABLeadInput, demoLink: string): string {
+function defaultMessageB(lead: ABLeadInput, ctaUrl: string, ctaLabel: string, emoji: string): string {
   const sectorLabel = lead.sector || "la tua attività";
   return [
     `Ciao ${lead.name},`,
     ``,
     `Ho visto ${sectorLabel} e mi è venuta un'idea: con un sistema di prenotazioni + CRM + AI potreste recuperare ore di lavoro a settimana.`,
     ``,
-    `Ho già preparato una demo su misura: ${demoLink}`,
+    `Ho preparato una demo su misura — ${emoji} ${ctaLabel}:`,
+    `${ctaUrl}`,
     ``,
     `Quando hai 2 minuti per vederla insieme?`,
   ].join("\n");
 }
 
 export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLinkProp }: Props) {
-  const demoLink = demoLinkProp || `${window.location.origin}/demo`;
+  const baseDemoLink = demoLinkProp || `${window.location.origin}/demo`;
+  const sectorCTA = useMemo(() => getSectorCTA(lead.sector), [lead.sector]);
+  const ctaDemoUrl = useMemo(() => buildCTADemoUrl(baseDemoLink, lead.sector), [baseDemoLink, lead.sector]);
 
   const [test, setTest] = useState<ABTest | null>(null);
-  const [msgA, setMsgA] = useState(() => defaultMessageA(lead, demoLink));
-  const [msgB, setMsgB] = useState(() => defaultMessageB(lead, demoLink));
+  const [msgA, setMsgA] = useState(() => defaultMessageA(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
+  const [msgB, setMsgB] = useState(() => defaultMessageB(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -328,6 +337,54 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                   </div>
                   Scrivi due versioni del messaggio. Ricevi due link tracciati: ogni clic conta separatamente.
                   Quando il lead risponde, segnala quale variante ha funzionato. Il vincitore viene scelto automaticamente.
+                </div>
+
+                {/* CTA settoriale rilevato — link diretto alla sezione di conversione */}
+                <div className="rounded-xl p-3 flex items-start gap-3"
+                  style={{ background: "rgba(37,211,102,0.10)", border: "1px solid rgba(37,211,102,0.35)" }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0"
+                    style={{ background: "rgba(37,211,102,0.2)" }}>
+                    {sectorCTA.emoji}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <Link2 className="w-3 h-3 text-emerald-300" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-200">
+                        CTA settoriale rilevato
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-white font-semibold mb-1">
+                      {sectorCTA.label} · sezione <code className="text-emerald-300">#{sectorCTA.anchor}</code>
+                    </div>
+                    <div className="text-[10px] text-white/60 truncate" title={ctaDemoUrl}>
+                      {ctaDemoUrl}
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(ctaDemoUrl);
+                          toast.success("Link CTA copiato ✨");
+                        }}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold text-emerald-100 hover:bg-emerald-500/20"
+                        style={{ border: "1px solid rgba(37,211,102,0.4)" }}
+                      >
+                        <Copy className="w-3 h-3" /> Copia link CTA
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMsgA(defaultMessageA(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
+                          setMsgB(defaultMessageB(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
+                          toast.success("Template aggiornati con il CTA");
+                        }}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold text-white/80 hover:bg-white/10"
+                        style={{ border: "1px solid rgba(255,255,255,0.15)" }}
+                      >
+                        <RefreshCw className="w-3 h-3" /> Reimposta template
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
