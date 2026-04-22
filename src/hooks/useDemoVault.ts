@@ -289,6 +289,12 @@ export function useDemoVault() {
     }
   }, []);
 
+  /** Filtra le demo per engine ('ai' | 'template' | 'hybrid' | 'all') */
+  const filterByEngine = useCallback((engine: GenerationEngine | "all"): VaultDemo[] => {
+    if (engine === "all") return demos;
+    return demos.filter((d) => d.generation_engine === engine);
+  }, [demos]);
+
   return {
     demos,
     loading,
@@ -296,6 +302,7 @@ export function useDemoVault() {
     fetchAll,
     saveDemo,
     findCompatible,
+    filterByEngine,
     reuseDemo,
     toggleFavorite,
     renameDemo,
