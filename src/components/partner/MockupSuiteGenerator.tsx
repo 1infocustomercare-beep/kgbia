@@ -696,6 +696,9 @@ export function MockupSuiteGenerator({
                       height={Math.round(110 * 19.5 / 9) - 4}
                       glassIntensity={glassIntensity}
                       colorStyle={colorStyle}
+                      safeAreaPx={Math.round(safeAreaPx * 0.4)}
+                      typeScale={typeScale}
+                      boostContrast={boostContrast}
                     />
                   </div>
                   <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
