@@ -1,20 +1,22 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Eye, Copy, Download, ExternalLink } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
-export type ScreenType = "home" | "menu" | "booking" | "profile" | "gallery" | "checkout";
+export type ScreenType =
+  | "home" | "menu" | "booking" | "profile" | "gallery" | "checkout"
+  | "catalog" | "listing" | "dashboard" | "chat" | "map" | "stats";
 
 interface Props {
-  businessName: string;
+  businessName?: string;
   businessSector?: string;
   businessCity?: string;
   primaryColor?: string;
@@ -31,43 +33,219 @@ const ENGINE_OPTIONS: { key: MockupEngine; label: string; cost: number; icon: Re
 ];
 
 const TEMPLATE_VARIANTS = [
-  { key: "auto",         label: "Auto (rilevato)" },
-  { key: "paperfish",    label: "Paperfish Sakura (sushi/giapponese)" },
-  { key: "strapizzami",  label: "Strapizzami (pizzeria/italiano)" },
-  { key: "batey",        label: "Batey Pacifico (mare/lido)" },
-  { key: "luxury_gold",  label: "Luxury Gold (alta cucina)" },
-  { key: "modern_dark",  label: "Modern Dark (universale)" },
-  { key: "casual_warm",  label: "Casual Warm (trattoria/bistrot)" },
-  { key: "minimal_zen",  label: "Minimal Zen (spa/wellness)" },
+  { key: "auto",              label: "Auto (rilevato dal settore)", group: "Smart" },
+  // Premium nuovi
+  { key: "neon_vibrant",      label: "Neon Vibrant — energia, gaming, eventi", group: "Premium 2026" },
+  { key: "editorial_clean",   label: "Editorial Clean — magazine, fashion, lifestyle", group: "Premium 2026" },
+  { key: "boutique_pastel",   label: "Boutique Pastel — beauty, kids, wellness", group: "Premium 2026" },
+  { key: "monochrome_bold",   label: "Monochrome Bold — agenzie, design, tech", group: "Premium 2026" },
+  { key: "glass_aurora",      label: "Glass Aurora — fintech, AI, SaaS", group: "Premium 2026" },
+  { key: "real_estate_trust", label: "Real Estate Trust — immobiliare, legale, finanza", group: "Premium 2026" },
+  { key: "fitness_energy",    label: "Fitness Energy — palestre, sport, supplements", group: "Premium 2026" },
+  // Esistenti
+  { key: "paperfish",         label: "Paperfish Sakura — sushi/giapponese", group: "Food" },
+  { key: "strapizzami",       label: "Strapizzami — pizzeria/italiano", group: "Food" },
+  { key: "casual_warm",       label: "Casual Warm — trattoria/bistrot", group: "Food" },
+  { key: "luxury_gold",       label: "Luxury Gold — alta cucina/Michelin", group: "Hospitality" },
+  { key: "batey",             label: "Batey Pacifico — mare/lido/yacht", group: "Hospitality" },
+  { key: "minimal_zen",       label: "Minimal Zen — spa/wellness", group: "Wellness" },
+  { key: "modern_dark",       label: "Modern Dark — universale", group: "Universale" },
 ];
 
 const SCREEN_TYPES: { key: ScreenType; label: string }[] = [
-  { key: "home",     label: "Home" },
-  { key: "menu",     label: "Menu / Servizi" },
-  { key: "booking",  label: "Prenotazione" },
-  { key: "profile",  label: "Profilo / Recensioni" },
-  { key: "gallery",  label: "Galleria" },
-  { key: "checkout", label: "Checkout / Pagamento" },
+  { key: "home",      label: "Home" },
+  { key: "menu",      label: "Menu / Servizi" },
+  { key: "catalog",   label: "Catalogo prodotti" },
+  { key: "listing",   label: "Schede / Annunci" },
+  { key: "booking",   label: "Prenotazione" },
+  { key: "checkout",  label: "Checkout / Pagamento" },
+  { key: "profile",   label: "Profilo / Recensioni" },
+  { key: "gallery",   label: "Galleria foto" },
+  { key: "dashboard", label: "Dashboard utente" },
+  { key: "chat",      label: "Chat assistente AI" },
+  { key: "map",       label: "Mappa / Punti vendita" },
+  { key: "stats",     label: "Statistiche / Loyalty" },
 ];
 
+// Settori suggeriti (suggerimenti rapidi modalità standalone)
+const QUICK_SECTORS = [
+  "Ristorante", "Pizzeria", "Sushi Bar", "Caffetteria", "Wine Bar",
+  "Spa & Wellness", "Salone Beauty", "Barbershop", "Nail Studio",
+  "Hotel Boutique", "B&B", "Lido / Beach Club", "Yacht Charter",
+  "Palestra / Fitness", "Studio Yoga", "Crossfit Box",
+  "Studio Medico", "Studio Dentistico", "Fisioterapia",
+  "Agenzia Immobiliare", "Studio Legale", "Studio Commercialista",
+  "Boutique Moda", "E-commerce Fashion", "Concept Store",
+  "Tour Operator", "Wedding Planner", "Eventi & Catering",
+  "NCC / Transfer", "Autofficina", "Concessionaria",
+  "Impresa Edile", "Impianti Termoidraulici", "Falegnameria",
+  "Academy / Scuola", "Corsi Online", "Coaching",
+];
+
+// Screen pack adattivo per settore (suggerimento intelligente)
+function suggestScreensForSector(sector: string): { type: ScreenType; title: string }[] {
+  const s = (sector || "").toLowerCase();
+  if (/immobil|real ?estate|agenzi/.test(s)) {
+    return [
+      { type: "home",     title: "Home" },
+      { type: "listing",  title: "Annunci" },
+      { type: "map",      title: "Mappa zone" },
+      { type: "profile",  title: "Agente" },
+    ];
+  }
+  if (/ecommerce|shop|store|fashion|moda|boutique/.test(s)) {
+    return [
+      { type: "home",     title: "Vetrina" },
+      { type: "catalog",  title: "Catalogo" },
+      { type: "checkout", title: "Checkout" },
+      { type: "profile",  title: "Account" },
+    ];
+  }
+  if (/fitness|palestra|gym|crossfit|yoga/.test(s)) {
+    return [
+      { type: "home",     title: "Home" },
+      { type: "booking",  title: "Prenota lezione" },
+      { type: "stats",    title: "Progressi" },
+      { type: "profile",  title: "Profilo" },
+    ];
+  }
+  if (/medic|dent|cliniche|fisio/.test(s)) {
+    return [
+      { type: "home",     title: "Home" },
+      { type: "booking",  title: "Appuntamento" },
+      { type: "chat",     title: "Chat con clinica" },
+      { type: "profile",  title: "Cartella clinica" },
+    ];
+  }
+  if (/avvocat|legal|notai|commercia/.test(s)) {
+    return [
+      { type: "home",     title: "Home studio" },
+      { type: "menu",     title: "Servizi legali" },
+      { type: "booking",  title: "Consulenza" },
+      { type: "chat",     title: "Pratica AI" },
+    ];
+  }
+  if (/ncc|taxi|transfer|noleggi/.test(s)) {
+    return [
+      { type: "home",     title: "Prenota corsa" },
+      { type: "map",      title: "Tracking auto" },
+      { type: "booking",  title: "Tratta + orario" },
+      { type: "profile",  title: "Storico viaggi" },
+    ];
+  }
+  if (/hotel|albergh|lido|beach|yacht|b&b|bnb/.test(s)) {
+    return [
+      { type: "home",     title: "Home" },
+      { type: "gallery",  title: "Galleria" },
+      { type: "booking",  title: "Prenota" },
+      { type: "profile",  title: "Loyalty" },
+    ];
+  }
+  if (/turism|tour|viagg|escursion|event|wedding|cerimoni/.test(s)) {
+    return [
+      { type: "home",     title: "Esperienze" },
+      { type: "catalog",  title: "Tour & pacchetti" },
+      { type: "booking",  title: "Prenota data" },
+      { type: "profile",  title: "Le tue prenotazioni" },
+    ];
+  }
+  if (/edili|costruz|impresa|impiant|ristruttur|auto|moto|conces/.test(s)) {
+    return [
+      { type: "home",     title: "Home" },
+      { type: "menu",     title: "Servizi" },
+      { type: "booking",  title: "Sopralluogo" },
+      { type: "gallery",  title: "Lavori fatti" },
+    ];
+  }
+  if (/scuola|academy|corso|format|coach/.test(s)) {
+    return [
+      { type: "home",      title: "Home" },
+      { type: "catalog",   title: "Corsi" },
+      { type: "dashboard", title: "Dashboard studente" },
+      { type: "profile",   title: "Certificati" },
+    ];
+  }
+  // Default food / generic
+  return [
+    { type: "home",    title: "Home" },
+    { type: "menu",    title: "Menu" },
+    { type: "booking", title: "Prenotazione" },
+    { type: "profile", title: "Profilo" },
+  ];
+}
+
+// Auto-detect template per settore
+function suggestTemplateForSector(sector: string): string {
+  const s = (sector || "").toLowerCase();
+  if (/sushi|giappon|nikkei|asiatic/.test(s)) return "paperfish";
+  if (/pizz/.test(s)) return "strapizzami";
+  if (/spiagg|beach|bagn|stabilim|lido|yacht|charter/.test(s)) return "batey";
+  if (/lusso|luxury|gourmet|stellato|michelin|hotel/.test(s)) return "luxury_gold";
+  if (/casual|trattor|osteri|bistr/.test(s)) return "casual_warm";
+  if (/zen|mindful|yoga|spa|wellness|benesser/.test(s)) return "minimal_zen";
+  if (/beauty|estetic|parruc|hair|nail|kids|baby/.test(s)) return "boutique_pastel";
+  if (/fitness|palestra|gym|crossfit|sport|supplem/.test(s)) return "fitness_energy";
+  if (/immobil|real ?estate|legal|avvocat|notai|commercia|finanz/.test(s)) return "real_estate_trust";
+  if (/fintech|saas|ai|tech|startup|software|app/.test(s)) return "glass_aurora";
+  if (/fashion|moda|magazine|editor|lifestyle|design|agenzi/.test(s)) return "editorial_clean";
+  if (/event|wedding|gaming|nightlife|disco|club/.test(s)) return "neon_vibrant";
+  if (/architett|studio|brand/.test(s)) return "monochrome_bold";
+  return "modern_dark";
+}
+
 export function MockupSuiteGenerator({
-  businessName,
-  businessSector = "",
-  businessCity = "",
-  primaryColor = "#C8963E",
+  businessName: businessNameProp,
+  businessSector: businessSectorProp = "",
+  businessCity: businessCityProp = "",
+  primaryColor: primaryColorProp = "#C8963E",
   templateVariant: initialTemplate,
   leadId,
   previewId,
   onGenerated,
 }: Props) {
+  // Modalità: lead (usa props del lead) | standalone (form libero)
+  const isLeadMode = Boolean((businessNameProp || "").trim());
+  const [mode, setMode] = useState<"lead" | "standalone">(isLeadMode ? "lead" : "standalone");
+
+  // Form standalone
+  const [standalone, setStandalone] = useState({
+    name: "",
+    sector: "",
+    city: "",
+    primaryColor: "#C8963E",
+  });
+
+  // Sync con props lead
+  useEffect(() => {
+    if (isLeadMode) setMode("lead");
+  }, [isLeadMode, businessNameProp]);
+
+  // Valori effettivi
+  const businessName = mode === "standalone" ? standalone.name : (businessNameProp || "");
+  const businessSector = mode === "standalone" ? standalone.sector : businessSectorProp;
+  const businessCity = mode === "standalone" ? standalone.city : businessCityProp;
+  const primaryColor = mode === "standalone" ? standalone.primaryColor : primaryColorProp;
+
   const [engine, setEngine] = useState<MockupEngine>("react");
   const [templateVariant, setTemplateVariant] = useState<string>(initialTemplate || "auto");
-  const [screens, setScreens] = useState<{ type: ScreenType; title: string }[]>([
-    { type: "home",    title: "Home" },
-    { type: "menu",    title: "Menu" },
-    { type: "booking", title: "Prenotazione" },
-    { type: "profile", title: "Profilo" },
-  ]);
+  const [autoScreens, setAutoScreens] = useState(true);
+  const [screens, setScreens] = useState<{ type: ScreenType; title: string }[]>(
+    suggestScreensForSector(businessSector)
+  );
+
+  // Quando cambia il settore e autoScreens=on, aggiorna screens automaticamente
+  useEffect(() => {
+    if (autoScreens) {
+      setScreens(suggestScreensForSector(businessSector));
+    }
+  }, [businessSector, autoScreens]);
+
+  const detectedTemplateLabel = useMemo(() => {
+    if (templateVariant !== "auto") return null;
+    const detected = suggestTemplateForSector(businessSector);
+    return TEMPLATE_VARIANTS.find(t => t.key === detected)?.label || detected;
+  }, [templateVariant, businessSector]);
+
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<{
     suite_id: string;
@@ -79,7 +257,11 @@ export function MockupSuiteGenerator({
 
   const handleGenerate = async () => {
     if (!businessName?.trim()) {
-      toast.error("Inserisci prima il nome attività");
+      toast.error("Inserisci il nome dell'attività");
+      return;
+    }
+    if (!businessSector?.trim()) {
+      toast.error("Inserisci il settore o argomento");
       return;
     }
     setGenerating(true);
@@ -136,6 +318,12 @@ export function MockupSuiteGenerator({
 
   const selectedEngineCfg = ENGINE_OPTIONS.find(e => e.key === engine)!;
 
+  // Raggruppa template per categoria
+  const groupedTemplates = TEMPLATE_VARIANTS.reduce((acc, t) => {
+    (acc[t.group] ||= []).push(t);
+    return acc;
+  }, {} as Record<string, typeof TEMPLATE_VARIANTS>);
+
   return (
     <Card className="border-primary/30">
       <CardHeader>
@@ -145,6 +333,107 @@ export function MockupSuiteGenerator({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-5">
+        {/* Toggle modalità lead/standalone */}
+        <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-muted">
+          <button
+            type="button"
+            onClick={() => setMode("lead")}
+            disabled={!isLeadMode}
+            className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+              mode === "lead" ? "bg-background shadow-sm" : "opacity-60 hover:opacity-100"
+            } ${!isLeadMode ? "opacity-30 cursor-not-allowed" : ""}`}
+          >
+            <User className="h-4 w-4" /> Da lead {isLeadMode ? "" : "(seleziona prima un lead)"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("standalone")}
+            className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+              mode === "standalone" ? "bg-background shadow-sm" : "opacity-60 hover:opacity-100"
+            }`}
+          >
+            <Pencil className="h-4 w-4" /> Mockup libero (qualsiasi argomento)
+          </button>
+        </div>
+
+        {/* Form standalone */}
+        {mode === "standalone" && (
+          <div className="space-y-3 p-4 rounded-xl border bg-muted/20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="sa-name" className="text-xs">Nome attività / brand *</Label>
+                <Input
+                  id="sa-name"
+                  value={standalone.name}
+                  onChange={e => setStandalone(p => ({ ...p, name: e.target.value }))}
+                  placeholder="Es. Sakura Sushi Milano"
+                />
+              </div>
+              <div>
+                <Label htmlFor="sa-city" className="text-xs">Città</Label>
+                <Input
+                  id="sa-city"
+                  value={standalone.city}
+                  onChange={e => setStandalone(p => ({ ...p, city: e.target.value }))}
+                  placeholder="Es. Milano"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="sa-sector" className="text-xs">Settore / argomento *</Label>
+              <Input
+                id="sa-sector"
+                value={standalone.sector}
+                onChange={e => setStandalone(p => ({ ...p, sector: e.target.value }))}
+                placeholder="Es. Sushi Bar, Studio Legale, Fitness Club, E-commerce moda…"
+              />
+              <div className="flex flex-wrap gap-1 mt-2">
+                {QUICK_SECTORS.slice(0, 18).map(s => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setStandalone(p => ({ ...p, sector: s }))}
+                    className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="sa-color" className="text-xs">Colore brand</Label>
+              <div className="flex gap-2 items-center">
+                <input
+                  id="sa-color"
+                  type="color"
+                  value={standalone.primaryColor}
+                  onChange={e => setStandalone(p => ({ ...p, primaryColor: e.target.value }))}
+                  className="w-12 h-9 rounded cursor-pointer border"
+                />
+                <Input
+                  value={standalone.primaryColor}
+                  onChange={e => setStandalone(p => ({ ...p, primaryColor: e.target.value }))}
+                  className="flex-1 font-mono text-xs"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Riepilogo target */}
+        {businessName && businessSector && (
+          <div className="flex flex-wrap items-center gap-2 px-3 py-2 rounded-lg bg-primary/5 border border-primary/20">
+            <Badge variant="default" className="text-xs">{businessName}</Badge>
+            <Badge variant="outline" className="text-xs">{businessSector}</Badge>
+            {businessCity && <Badge variant="outline" className="text-xs">{businessCity}</Badge>}
+            <span
+              className="inline-block w-4 h-4 rounded-full border"
+              style={{ background: primaryColor }}
+              title={primaryColor}
+            />
+          </div>
+        )}
+
         {/* Selettore motore */}
         <div>
           <Label className="mb-2 block">Motore di generazione</Label>
@@ -178,31 +467,55 @@ export function MockupSuiteGenerator({
           </div>
         </div>
 
-        {/* Template variante */}
+        {/* Template variante (raggruppato) */}
         <div>
-          <Label htmlFor="template-variant">Stile template</Label>
+          <Label htmlFor="template-variant">Stile grafico template</Label>
           <Select value={templateVariant} onValueChange={setTemplateVariant}>
             <SelectTrigger id="template-variant">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              {TEMPLATE_VARIANTS.map(t => (
-                <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+            <SelectContent className="max-h-[360px]">
+              {Object.entries(groupedTemplates).map(([group, items]) => (
+                <div key={group}>
+                  <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{group}</div>
+                  {items.map(t => (
+                    <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+                  ))}
+                </div>
               ))}
             </SelectContent>
           </Select>
+          {detectedTemplateLabel && (
+            <p className="text-[11px] text-muted-foreground mt-1">
+              ✨ Auto-rilevato: <span className="font-semibold text-foreground">{detectedTemplateLabel}</span>
+            </p>
+          )}
         </div>
 
         {/* 4 schermate configurabili */}
         <div>
-          <Label className="mb-2 block">Schermate da generare (4 mockup)</Label>
+          <div className="flex items-center justify-between mb-2">
+            <Label>Schermate da generare (4 mockup)</Label>
+            <button
+              type="button"
+              onClick={() => setAutoScreens(v => !v)}
+              className={`text-[10px] px-2 py-1 rounded-full font-semibold transition-colors ${
+                autoScreens ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              {autoScreens ? "✓ Auto-pertinente al settore" : "Manuale"}
+            </button>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {screens.map((s, i) => (
               <div key={i} className="flex gap-2 items-center p-2 rounded-lg border bg-muted/30">
                 <Badge variant="outline" className="text-xs shrink-0">#{i + 1}</Badge>
                 <Select
                   value={s.type}
-                  onValueChange={(v) => setScreens(prev => prev.map((x, j) => j === i ? { ...x, type: v as ScreenType, title: SCREEN_TYPES.find(t => t.key === v)?.label || x.title } : x))}
+                  onValueChange={(v) => {
+                    setAutoScreens(false);
+                    setScreens(prev => prev.map((x, j) => j === i ? { ...x, type: v as ScreenType, title: SCREEN_TYPES.find(t => t.key === v)?.label || x.title } : x));
+                  }}
                 >
                   <SelectTrigger className="h-8 text-xs flex-1">
                     <SelectValue />
@@ -216,7 +529,10 @@ export function MockupSuiteGenerator({
                 <Input
                   className="h-8 text-xs w-32"
                   value={s.title}
-                  onChange={e => setScreens(prev => prev.map((x, j) => j === i ? { ...x, title: e.target.value } : x))}
+                  onChange={e => {
+                    setAutoScreens(false);
+                    setScreens(prev => prev.map((x, j) => j === i ? { ...x, title: e.target.value } : x));
+                  }}
                   placeholder="Titolo"
                 />
               </div>
@@ -227,7 +543,7 @@ export function MockupSuiteGenerator({
         {/* CTA */}
         <Button
           onClick={handleGenerate}
-          disabled={generating || !businessName?.trim()}
+          disabled={generating || !businessName?.trim() || !businessSector?.trim()}
           size="lg"
           className="w-full"
         >
@@ -240,7 +556,7 @@ export function MockupSuiteGenerator({
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] text-muted-foreground text-center">
           <span>✓ 4 schermate iPhone</span>
-          <span>✓ Template fedele al settore</span>
+          <span>✓ Stile fedele al settore</span>
           <span>✓ Link condivisibile</span>
           <span>✓ Download PNG</span>
         </div>
