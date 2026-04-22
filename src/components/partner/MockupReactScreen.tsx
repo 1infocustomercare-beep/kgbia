@@ -9,6 +9,8 @@
  * loyalty banners, payment summaries.
  */
 
+export type ColorStyle = "vivid" | "muted" | "pastel" | "mono";
+
 interface Props {
   type: string;
   templateVariant: string;
@@ -18,6 +20,10 @@ interface Props {
   primaryColor?: string;
   width: number;
   height: number;
+  /** 0–100. 0 = nessun blur, 100 = vetro massimo (default 60). Influisce su BottomNav e overlay. */
+  glassIntensity?: number;
+  /** vivid (originale) | muted (-20% sat) | pastel (+luminosità, -sat) | mono (B/N + accent). */
+  colorStyle?: ColorStyle;
 }
 
 interface ThemeTokens {
@@ -40,9 +46,55 @@ interface ThemeTokens {
   imageStyle:
     | "food-warm" | "spa-soft" | "ocean" | "noir" | "luxury" | "modern"
     | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy";
+  /** Optional runtime override for glass intensity propagated to BottomNav and overlays. */
+  glassIntensity?: number;
 }
 
-function getTheme(variant: string, primaryOverride?: string): ThemeTokens {
+// ────────────────────────────────────────────────────────────────────────────
+// Color helpers — convert hex ↔ HSL to apply colorStyle transforms.
+// ────────────────────────────────────────────────────────────────────────────
+function hexToHsl(hex: string): { h: number; s: number; l: number } | null {
+  const m = hex.replace("#", "").trim();
+  if (!/^[0-9a-fA-F]{6}$/.test(m)) return null;
+  const r = parseInt(m.slice(0, 2), 16) / 255;
+  const g = parseInt(m.slice(2, 4), 16) / 255;
+  const b = parseInt(m.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h *= 60;
+  }
+  return { h, s: s * 100, l: l * 100 };
+}
+function hslToHex(h: number, s: number, l: number): string {
+  s /= 100; l /= 100;
+  const k = (n: number) => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) => {
+    const c = l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return Math.round(c * 255).toString(16).padStart(2, "0");
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+function applyColorStyle(hex: string | undefined, style: ColorStyle | undefined): string | undefined {
+  if (!hex || !style || style === "vivid") return hex;
+  const hsl = hexToHsl(hex);
+  if (!hsl) return hex;
+  if (style === "muted")  return hslToHex(hsl.h, Math.max(0, hsl.s - 25), hsl.l);
+  if (style === "pastel") return hslToHex(hsl.h, Math.max(0, Math.min(hsl.s, 55)), Math.min(88, hsl.l + 15));
+  if (style === "mono")   return hslToHex(hsl.h, 0, hsl.l); // grayscale
+  return hex;
+}
+
+function getTheme(variant: string, primaryOverride?: string, colorStyle?: ColorStyle): ThemeTokens {
   const themes: Record<string, ThemeTokens> = {
     paperfish: {
       bg: "#0E0B0F", bgPanel: "#181216", bgPanelAlt: "#221A1F",
@@ -168,7 +220,9 @@ function getTheme(variant: string, primaryOverride?: string): ThemeTokens {
   };
   const resolved = aliases[variant] || variant;
   const base = themes[resolved] || themes.modern_dark;
-  return primaryOverride ? { ...base, primary: primaryOverride } : base;
+  const styledPrimary = applyColorStyle(primaryOverride || base.primary, colorStyle) || base.primary;
+  const styledAccent = applyColorStyle(base.accent, colorStyle) || base.accent;
+  return { ...base, primary: styledPrimary, accent: styledAccent };
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -237,17 +291,28 @@ function StatusBar({ theme }: { theme: ThemeTokens }) {
   );
 }
 
-function BottomNav({ theme, active = "home" }: { theme: ThemeTokens; active?: string }) {
+function BottomNav({ theme, active = "home", glassIntensity }: { theme: ThemeTokens; active?: string; glassIntensity?: number }) {
+  const intensity = glassIntensity ?? theme.glassIntensity ?? 60;
   const items = [
     { key: "home",    icon: "M3 9l9-7 9 7v11a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2z", label: "Home" },
     { key: "menu",    icon: "M4 6h16M4 12h16M4 18h16", label: "Menu", stroke: true },
     { key: "booking", icon: "M3 5h18v16H3zM3 10h18M8 3v4M16 3v4", label: "Prenota", stroke: true },
     { key: "profile", icon: "M12 12a4 4 0 100-8 4 4 0 000 8zm-7 9a7 7 0 0114 0z", label: "Profilo" },
   ];
+  // Glass intensity: 0 = nessun blur, opacità 100%; 100 = blur massimo, opacità ridotta
+  const clamped = Math.max(0, Math.min(100, intensity));
+  const blurPx = Math.round((clamped / 100) * 24); // 0–24px
+  // Alpha del pannello (più alto = più opaco): 100% glass → bg trasparente con blur, 0% → opaco
+  const alphaHex = Math.round(255 - (clamped * 1.4)).toString(16).padStart(2, "0"); // 100→ ~7d, 0→ ff
   return (
     <div
       className="absolute bottom-0 left-0 right-0 flex justify-around items-center pb-3 pt-2 px-2 z-10"
-      style={{ background: `${theme.bgPanel}f0`, backdropFilter: "blur(12px)", borderTop: `1px solid ${theme.primary}25` }}
+      style={{
+        background: `${theme.bgPanel}${alphaHex}`,
+        backdropFilter: blurPx > 0 ? `blur(${blurPx}px) saturate(160%)` : undefined,
+        WebkitBackdropFilter: blurPx > 0 ? `blur(${blurPx}px) saturate(160%)` : undefined,
+        borderTop: `1px solid ${theme.primary}${clamped > 30 ? "40" : "25"}`,
+      }}
     >
       {items.map((it) => {
         const isActive = it.key === active;
@@ -1113,8 +1178,10 @@ function MapScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: st
 // ════════════════════════════════════════════════════════════════════════════
 export function MockupReactScreen({
   type, templateVariant, businessName, businessSector = "", businessCity = "", primaryColor, width, height,
+  glassIntensity = 60, colorStyle = "vivid",
 }: Props) {
-  const theme = getTheme(templateVariant, primaryColor);
+  const baseTheme = getTheme(templateVariant, primaryColor, colorStyle);
+  const theme: ThemeTokens = { ...baseTheme, glassIntensity };
 
   const renderContent = () => {
     switch (type) {
