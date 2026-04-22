@@ -291,9 +291,9 @@ export function GenerateSiteFromMockupDialog({ open, onOpenChange, suite }: Prop
               </div>
             </div>
 
-            <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 flex gap-2">
-              <AlertCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-              <p className="text-xs text-amber-700 dark:text-amber-400">
+            <div className="rounded-lg border border-muted-foreground/30 bg-muted/40 p-3 flex gap-2">
+              <AlertCircle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+              <p className="text-xs text-muted-foreground">
                 Più dati reali = sito più convincente. L'AI fa scrape del sito + Instagram per immagini reali, menu/servizi e brand kit prima di costruire la demo.
               </p>
             </div>
@@ -316,10 +316,10 @@ export function GenerateSiteFromMockupDialog({ open, onOpenChange, suite }: Prop
 
         {/* Risultato */}
         {result && (
-          <div className="rounded-xl border-2 border-green-500/40 bg-green-500/5 p-4 space-y-3">
+          <div className="rounded-xl border-2 border-primary/40 bg-primary/5 p-4 space-y-3">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-6 w-6 text-green-600" />
-              <p className="font-bold text-green-700 dark:text-green-400">Sito Demo Completo Pronto!</p>
+              <CheckCircle2 className="h-6 w-6 text-primary" />
+              <p className="font-bold text-primary">Sito Demo Completo Pronto!</p>
             </div>
             <p className="text-xs text-muted-foreground">
               Il sito replica 1:1 il mockup approvato, con {sectorAgentCount} agenti AI attivi, automazioni complete del settore e magic link inviato al cliente.
