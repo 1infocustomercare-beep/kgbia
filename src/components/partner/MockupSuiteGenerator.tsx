@@ -307,6 +307,129 @@ export function MockupSuiteGenerator({
     screens: SuiteScreen[];
   } | null>(null);
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // VERSIONI · storico locale per ogni set di mockup generato
+  // Permette di tornare a una versione precedente con TUTTE le impostazioni
+  // (template, glass, color style, safe-area, palette, colore brand, screens)
+  // Persistenza: localStorage per chiave business+lead. Max 20 versioni.
+  // ═══════════════════════════════════════════════════════════════════════
+  type MockupVersion = {
+    id: string;
+    created_at: number;
+    label: string;
+    suite_id: string;
+    share_slug: string;
+    engine: MockupEngine;
+    template_variant: string;
+    primary_color: string;
+    glass_intensity: number;
+    color_style: ColorStyle;
+    safe_area_px: number;
+    type_scale: number;
+    boost_contrast: boolean;
+    screens_config: { type: ScreenType; title: string }[];
+    result_screens: SuiteScreen[];
+    business_name: string;
+    business_sector: string;
+    business_city: string;
+  };
+
+  const versionsKey = useMemo(() => {
+    const key = (leadId || (businessNameProp || standalone.name || "standalone")).toString().toLowerCase().replace(/\s+/g, "-");
+    return `mockup-suite-versions:${key}`;
+  }, [leadId, businessNameProp, standalone.name]);
+
+  const [versions, setVersions] = useState<MockupVersion[]>([]);
+  const [showVersions, setShowVersions] = useState(false);
+
+  // Carica versioni dallo storage al mount / cambio chiave
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(versionsKey);
+      if (raw) {
+        const parsed = JSON.parse(raw) as MockupVersion[];
+        setVersions(Array.isArray(parsed) ? parsed : []);
+      } else {
+        setVersions([]);
+      }
+    } catch {
+      setVersions([]);
+    }
+  }, [versionsKey]);
+
+  const persistVersions = (next: MockupVersion[]) => {
+    setVersions(next);
+    try {
+      localStorage.setItem(versionsKey, JSON.stringify(next));
+    } catch (e) {
+      console.warn("[MockupVersions] persist failed", e);
+    }
+  };
+
+  const snapshotVersion = (
+    suite_id: string,
+    share_slug: string,
+    eng: MockupEngine,
+    tpl: string,
+    finalScreens: SuiteScreen[]
+  ) => {
+    const v: MockupVersion = {
+      id: `v_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      created_at: Date.now(),
+      label: `${ENGINE_OPTIONS.find(e => e.key === eng)?.label || eng} · ${tpl.replace(/_/g, " ")}`,
+      suite_id,
+      share_slug,
+      engine: eng,
+      template_variant: tpl,
+      primary_color: primaryColor,
+      glass_intensity: glassIntensity,
+      color_style: colorStyle,
+      safe_area_px: safeAreaPx,
+      type_scale: typeScale,
+      boost_contrast: boostContrast,
+      screens_config: screens,
+      result_screens: finalScreens,
+      business_name: businessName,
+      business_sector: businessSector,
+      business_city: businessCity,
+    };
+    persistVersions([v, ...versions].slice(0, 20));
+  };
+
+  const restoreVersion = (v: MockupVersion) => {
+    setEngine(v.engine);
+    setTemplateVariant(v.template_variant);
+    setGlassIntensity(v.glass_intensity);
+    setColorStyle(v.color_style);
+    setSafeAreaPx(v.safe_area_px);
+    setTypeScale(v.type_scale);
+    setBoostContrast(v.boost_contrast);
+    setScreens(v.screens_config);
+    setAutoScreens(false);
+    setLockToTemplate(false);
+    setStandalone(prev => ({ ...prev, primaryColor: v.primary_color }));
+    setResult({
+      suite_id: v.suite_id,
+      share_slug: v.share_slug,
+      template_variant: v.template_variant,
+      engine: v.engine,
+      screens: v.result_screens,
+    });
+    setPreviewPhase("complete");
+    toast.success(`Versione ripristinata · ${new Date(v.created_at).toLocaleString("it-IT")}`);
+  };
+
+  const deleteVersion = (id: string) => {
+    persistVersions(versions.filter(v => v.id !== id));
+    toast.info("Versione eliminata dallo storico");
+  };
+
+  const clearAllVersions = () => {
+    if (versions.length === 0) return;
+    persistVersions([]);
+    toast.info("Storico versioni svuotato");
+  };
+
   const handleGenerate = async () => {
     if (!businessName?.trim()) {
       toast.error("Inserisci il nome dell'attività");
