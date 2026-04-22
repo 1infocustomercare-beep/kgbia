@@ -1143,15 +1143,34 @@ export function MockupSuiteGenerator({
           </p>
         </div>
 
+        {/* Banner di lock durante upgrade 4K/8K */}
+        {controlsLocked && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/[0.06] px-3 py-2 text-xs text-foreground"
+          >
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-primary shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold leading-tight">
+                {previewPhase === "upgrading" ? "Upgrade 4K/8K in corso · impostazioni bloccate" : "Generazione in corso · impostazioni bloccate"}
+              </p>
+              <p className="text-[10px] text-muted-foreground leading-snug">
+                Engine, template, palette, glassmorphism, color style, safe-area, tipografia e schermate sono bloccati per garantire risultati coerenti. Attendi il completamento.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* CTA */}
         <Button
           onClick={handleGenerate}
-          disabled={generating || !businessName?.trim() || !businessSector?.trim()}
+          disabled={controlsLocked || !businessName?.trim() || !businessSector?.trim()}
           size="lg"
           className="w-full"
         >
-          {generating ? (
-            <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generazione 4 mockup in corso…</>
+          {controlsLocked ? (
+            <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> {previewPhase === "upgrading" ? "Upgrade 4K/8K in corso…" : "Generazione 4 mockup in corso…"}</>
           ) : (
             <><Sparkles className="h-4 w-4 mr-2" /> Genera Suite ({selectedEngineCfg.cost === 0 ? "GRATIS" : `${selectedEngineCfg.cost} crediti`})</>
           )}
