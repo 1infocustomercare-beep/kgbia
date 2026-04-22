@@ -602,6 +602,8 @@ export function MockupSuiteGenerator({
                       primaryColor={mode === "standalone" ? standalone.primaryColor : primaryColor}
                       width={106}
                       height={Math.round(110 * 19.5 / 9) - 4}
+                      glassIntensity={glassIntensity}
+                      colorStyle={colorStyle}
                     />
                   </div>
                   <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
@@ -612,6 +614,83 @@ export function MockupSuiteGenerator({
               </p>
             </div>
           </div>
+        </div>
+
+        {/* ────────────────────────────────────────────────────────────────── */}
+        {/* PERSONALIZZAZIONE AVANZATA — glass intensity + color style         */}
+        {/* ────────────────────────────────────────────────────────────────── */}
+        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] to-transparent p-4 space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <Label className="flex items-center gap-1.5 m-0">
+              <Sliders className="h-3.5 w-3.5 text-primary" /> Personalizzazione avanzata
+            </Label>
+            <button
+              type="button"
+              onClick={() => { setGlassIntensity(60); setColorStyle("vivid"); }}
+              className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors"
+            >
+              Reset default
+            </button>
+          </div>
+
+          {/* Glassmorphism slider */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="glass-slider" className="text-xs flex items-center gap-1.5 m-0">
+                <Droplets className="h-3 w-3" /> Intensità glassmorphism
+              </Label>
+              <Badge variant="outline" className="text-[10px] font-mono">{glassIntensity}%</Badge>
+            </div>
+            <input
+              id="glass-slider"
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={glassIntensity}
+              onChange={(e) => setGlassIntensity(Number(e.target.value))}
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
+            />
+            <div className="flex justify-between text-[9px] text-muted-foreground">
+              <span>Solido</span>
+              <span>Bilanciato</span>
+              <span>Vetro intenso</span>
+            </div>
+          </div>
+
+          {/* Color style segmented */}
+          <div className="space-y-1.5">
+            <Label className="text-xs m-0">Stile cromatico</Label>
+            <div className="grid grid-cols-4 gap-1.5">
+              {([
+                { key: "vivid",  label: "Vivid",  desc: "Originale" },
+                { key: "muted",  label: "Muted",  desc: "−25% sat." },
+                { key: "pastel", label: "Pastel", desc: "Soft" },
+                { key: "mono",   label: "Mono",   desc: "B/N" },
+              ] as { key: ColorStyle; label: string; desc: string }[]).map(opt => {
+                const active = colorStyle === opt.key;
+                return (
+                  <button
+                    key={opt.key}
+                    type="button"
+                    onClick={() => setColorStyle(opt.key)}
+                    className={`px-2 py-2 rounded-lg border text-center transition-all ${
+                      active
+                        ? "border-primary bg-primary/10 shadow-sm scale-[1.02]"
+                        : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    <p className="text-[11px] font-bold leading-tight">{opt.label}</p>
+                    <p className="text-[8px] text-muted-foreground leading-tight mt-0.5">{opt.desc}</p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <p className="text-[10px] text-muted-foreground italic">
+            🎨 Clicca <span className="font-semibold not-italic">Genera Suite</span> per applicare queste impostazioni alle 4 schermate. L'anteprima live in alto si aggiorna istantaneamente.
+          </p>
         </div>
 
         {/* 4 schermate configurabili */}
