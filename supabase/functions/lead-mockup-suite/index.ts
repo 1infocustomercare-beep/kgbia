@@ -103,12 +103,40 @@ async function uploadDataUrl(client: any, dataUrl: string, path: string): Promis
   }
 }
 
+// ──────────────────────────────────────────────────────────────────────────────
+// VARIATION SYSTEM — fa sì che le 4 schermate siano sempre diverse tra loro
+// (layout, densità, ordine sezioni, componenti) anche con stesso lead+template.
+// ──────────────────────────────────────────────────────────────────────────────
+const LAYOUT_VARIATIONS = [
+  { key: "airy-editorial", desc: "layout AERATO stile editorial: hero molto grande full-bleed in alto, abbondante white-space, tipografia generosa, max 2-3 card visibili, focus su una sola call-to-action centrale" },
+  { key: "dense-discovery", desc: "layout DENSO stile discovery feed: header compatto, search bar prominente, chip categorie scrollabili orizzontalmente, griglia 2 colonne di card piccole, molti elementi visibili" },
+  { key: "story-stacked", desc: "layout NARRATIVO stacked: sezioni verticali separate da titoli grandi maiuscoli, stories circolari in alto, card large rectangulari con immagine sopra e testo sotto, ritmo a blocchi" },
+  { key: "card-spotlight", desc: "layout SPOTLIGHT a card singola: una card grande protagonista al centro con immagine, titolo, descrizione e CTA inline, sotto lista compatta a 1 colonna di alternative" },
+  { key: "split-grid", desc: "layout SPLIT GRID: parte alta hero immagine 60% altezza, parte bassa griglia bento 2x2 con card asimmetriche di dimensioni diverse, badge e prezzi prominenti" },
+  { key: "minimal-list", desc: "layout LIST minimal: header con saluto personalizzato, niente hero immagine, lista verticale pulita di 4-5 elementi con divider sottili, prezzo a destra grande, immagini piccole quadrate a sinistra" },
+];
+
+const COMPONENT_VARIATIONS = [
+  "segmented control in alto + tab switcher",
+  "search bar sticky + filtri chip + ordina-per dropdown",
+  "stories carousel circolare + categorie a pill",
+  "banner promo sticky + lista verticale + FAB azione primaria",
+  "header collassabile + grid bento 2 colonne + bottom sheet preview",
+  "hero card singola + CTA grande + lista compatta sotto",
+];
+
+function pickByIndex<T>(arr: T[], seed: number, index: number): T {
+  return arr[(seed + index * 7) % arr.length];
+}
+
 function buildScreenPrompt(
   screen: ScreenConfig,
   business: { name: string; sector: string; city: string },
   templateVariant: string,
   primaryColor: string,
   pro: boolean,
+  variationSeed: number,
+  variantIndex: number,
 ): string {
   const styleMap: Record<string, string> = {
     paperfish:        "DARK SAKURA LUXURY giapponese: nero obsidian #0E0B0F, sakura pink #E89BAE, oro caldo #C9A86A. Font Cormorant Garamond serif elegante per heading, Inter per body. Texture carta giapponese sottile, ideogrammi kanji decorativi minimali",
@@ -132,7 +160,6 @@ function buildScreenPrompt(
   };
   const style = styleMap[templateVariant] || styleMap.modern_dark;
 
-  // Bottom nav adattivo per tipo di app
   const navMap: Record<string, string> = {
     real_estate_trust: "Home, Annunci, Mappa, Agenti, Profilo",
     navy_trust: "Home, Servizi, Appuntamenti, Documenti, Profilo",
@@ -151,55 +178,66 @@ function buildScreenPrompt(
     ? "ULTRA-CINEMATOGRAFICO 8K, qualità Apple Store keynote, illuminazione studio professionale a 3 punti, riflessi vetro perfetti del display, anti-aliasing perfetto, grana sottile cinematica, color grading premium"
     : "fotorealistico premium 4K, illuminazione studio soft, dettagli UI nitidi e leggibili, color grading professionale";
 
-  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).
+  // VARIATION: layout + componenti diversi per ogni screen
+  const layout = pickByIndex(LAYOUT_VARIATIONS, variationSeed, variantIndex);
+  const components = pickByIndex(COMPONENT_VARIATIONS, variationSeed + 3, variantIndex);
+  const accentRotation = ["più caldo", "più freddo", "più saturo", "più desaturato"][variantIndex % 4];
+
+  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).
 
 ═══ COMPOSIZIONE FOTOGRAFICA (REGOLE INDEROGABILI) ═══
-• iPhone PERFETTAMENTE CENTRATO sia orizzontalmente che verticalmente nel frame quadrato/verticale
-• Vista ESCLUSIVAMENTE FRONTALE ortogonale: ZERO prospettiva, ZERO inclinazione, ZERO angolazione 3D, ZERO tilt, ZERO rotazione su qualsiasi asse
-• Aspect ratio dispositivo REALE 9:19.5, proporzioni iPhone 16 Pro Max accurate al millimetro
-• Cornice in titanio naturale visibile sottile e uniforme su tutti i lati (spessore identico)
-• Display interamente visibile, NESSUN cropping, NESSUNA distorsione ottica, NESSUN fish-eye
-• Sfondo: gradiente neutro morbido in tinta col tema (toni puliti tipo studio fotografico Apple)
-• Ombra naturale soft sotto il dispositivo (floating leggero, NO ombre dure)
-• NESSUN testo, watermark, cornice o decorazione FUORI dallo schermo iPhone
-• Risoluzione del display nitida e leggibile in ogni pixel
+• iPhone PERFETTAMENTE CENTRATO sia orizzontalmente che verticalmente nel frame
+• Vista ESCLUSIVAMENTE FRONTALE ortogonale: ZERO prospettiva, ZERO inclinazione, ZERO 3D, ZERO tilt
+• Aspect ratio dispositivo REALE 9:19.5, proporzioni iPhone 16 Pro Max accurate
+• Cornice in titanio naturale visibile sottile e uniforme su tutti i lati
+• Display interamente visibile, NESSUN cropping, NESSUNA distorsione ottica
+• Sfondo: gradiente neutro morbido in tinta col tema (studio fotografico Apple)
+• Ombra naturale soft sotto il dispositivo
+• NESSUN testo o decorazione FUORI dallo schermo iPhone
 
 ═══ CONTENUTO SCHERMATA (PERTINENTE AL SETTORE) ═══
 ${screen.prompt_hint || screen.title}
-Il contenuto deve essere AUTENTICO e SPECIFICO per il settore "${business.sector}":
+Il contenuto deve essere AUTENTICO per il settore "${business.sector}":
 • Nomi servizi/prodotti realistici tipici del settore italiano
 • Prezzi in € credibili e coerenti col mercato italiano
-• Indirizzi italiani plausibili (vie, città italiane reali)
-• Orari formato italiano 24h
+• Indirizzi italiani plausibili, orari formato 24h
 • Microcopy 100% in italiano professionale (zero inglese eccetto status bar iOS)
 • ZERO testo placeholder/lorem ipsum/finto
-• Dati pertinenti: se ristorante → piatti reali; se immobiliare → annunci con mq/camere; se fitness → workout/lezioni; se legale → pratiche/consulenze; ecc.
+
+═══ VARIAZIONE OBBLIGATORIA TRA LE 4 SCHERMATE ═══
+🎨 Questa è la schermata #${variantIndex + 1} di 4 — DEVE essere visivamente DIVERSA dalle altre 3 in layout, densità, ordine sezioni e componenti.
+• Layout di QUESTA schermata: ${layout.desc}
+• Componenti UI specifici: ${components}
+• Variazione palette: usa una sfumatura ${accentRotation} del primario per gli elementi attivi
+• Cambia ordine, dimensioni e tipologia delle sezioni rispetto alle altre 3 schermate
+• Card layout, immagini, CTA e ritmo visivo distintivi di questa singola schermata
+• Anche titoli, sottotitoli, prodotti in evidenza diversi dagli altri screen
 
 ═══ STILE GRAFICO ═══
 ${style}
-Colore primario brand del cliente (USARE come accent CTA principale e elementi attivi): ${primaryColor}
+Colore primario brand del cliente (accent CTA principale): ${primaryColor}
 
 ═══ UI COMPONENTS OBBLIGATORI ═══
-• Status bar iOS perfetta in alto: ora 9:41, segnale 5G pieno, WiFi pieno, batteria 100%
-• Dynamic Island nera centrata in alto, dimensioni iPhone 16 Pro reali
-• Header app con titolo schermata + icona profilo/back coerente
-• Contenuto principale ben spaziato, gerarchia tipografica chiara (h1 24-28pt, body 15-17pt, label 11-13pt)
-• Card con border-radius 16-20px e ombre soft naturali
-• Bottom navigation bar fissa con 5 icone (${bottomNav}), icona attiva colorata col primary, altre grigie
+• Status bar iOS in alto: ora 9:41, segnale 5G, WiFi, batteria 100%
+• Dynamic Island nera centrata in alto
+• Header app con titolo schermata coerente
+• Contenuto ben spaziato, gerarchia tipografica chiara
+• Card con border-radius 16-20px e ombre soft
+• Bottom navigation bar fissa con 5 icone (${bottomNav}), attiva colorata col primary
 • Home indicator iOS sottile in basso
-• CTA primari grandi (52px altezza), full-width, contrasto perfetto
+• CTA primari grandi (52px altezza), full-width
 
 ═══ QUALITÀ ═══
 ${quality}
 
-═══ DIVIETI ASSOLUTI (NON NEGOZIABILI) ═══
-🚫 VIETATO scrivere "Empire", "Empire AI", "Empire AI Group", "Lovable", "Empireia" o qualsiasi nome di piattaforma/agenzia esterna
-🚫 VIETATO mostrare loghi Apple, Google, Meta, Lovable, o brand di terze parti (eccetto le icone status bar iOS standard)
-🚫 VIETATO testo in inglese nei contenuti dell'app (solo italiano corretto)
-🚫 VIETATO prospettive isometriche, 3D rotation, tilt, dispositivo inclinato o ruotato
-🚫 VIETATO testo distorto, illeggibile, lorem ipsum, placeholder generici
-🚫 VIETATO mockup wireframe, low-fi, sketch, illustrazioni cartoon — SOLO render fotografici premium realistici
-🚫 VIETATO contenuti generici "Lorem", "Sample", "Demo", "Test" — usa SEMPRE dati realistici del settore "${business.sector}"`;
+═══ DIVIETI ASSOLUTI ═══
+🚫 VIETATO scrivere "Empire", "Empire AI", "Empire AI Group", "Lovable", "Empireia"
+🚫 VIETATO loghi Apple, Google, Meta o brand di terze parti
+🚫 VIETATO testo in inglese nei contenuti dell'app
+🚫 VIETATO prospettive 3D, tilt, dispositivo inclinato
+🚫 VIETATO testo distorto, lorem ipsum, placeholder generici
+🚫 VIETATO mockup wireframe o sketch — SOLO render fotografici premium
+🚫 VIETATO che le 4 schermate sembrino la stessa: DEVONO avere layout strutturalmente DIVERSI`;
 }
 
 Deno.serve(async (req) => {
