@@ -899,7 +899,6 @@ export function MockupSuiteGenerator({
             setTypeScale(p.typeScale);
             setBoostContrast(p.boostContrast);
           }}
-          locked={controlsLocked}
         />
 
         {/* ────────────────────────────────────────────────────────────────── */}
