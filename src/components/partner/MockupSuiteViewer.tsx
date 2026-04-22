@@ -272,7 +272,7 @@ export function MockupSuiteViewer({
               variant="ghost"
               size="sm"
               className="h-7 text-xs"
-              onClick={() => downloadScreen(idx)}
+              onClick={(e) => { e.stopPropagation(); downloadScreen(idx); }}
               disabled={downloading !== null}
             >
               {downloading === idx ? (
@@ -284,6 +284,24 @@ export function MockupSuiteViewer({
           </div>
         ))}
       </div>
+
+      {/* Fullscreen immersive viewer */}
+      <MockupFullscreenViewer
+        open={fullscreenIndex !== null}
+        onClose={() => setFullscreenIndex(null)}
+        screens={screens}
+        initialIndex={fullscreenIndex ?? 0}
+        templateVariant={templateVariant}
+        businessName={businessName}
+        businessSector={businessSector}
+        businessCity={businessCity}
+        primaryColor={primaryColor}
+        glassIntensity={glassIntensity}
+        colorStyle={colorStyle}
+        safeAreaPx={safeAreaPx}
+        typeScale={typeScale}
+        boostContrast={boostContrast}
+      />
     </div>
   );
 }
