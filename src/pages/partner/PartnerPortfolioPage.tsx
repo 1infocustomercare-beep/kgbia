@@ -185,13 +185,15 @@ export default function PartnerPortfolioPage() {
   const activeFiltersCount =
     (filterSector !== "all" ? 1 : 0) +
     (filterVariant !== "all" ? 1 : 0) +
-    (filterStatus !== "all" ? 1 : 0);
+    (filterStatus !== "all" ? 1 : 0) +
+    (filterEngine !== "all" ? 1 : 0);
 
   const readyMockups = useMemo(() => {
     const list = mockupVault.suites
       .filter((s) => (filterStatus === "all" ? s.status === "complete" : s.status === filterStatus))
       .filter((s) => filterSector === "all" || s.business_sector === filterSector)
       .filter((s) => filterVariant === "all" || s.template_variant === filterVariant)
+      .filter((s) => filterEngine === "all" || (s as any).generation_engine === filterEngine)
       .filter((s) => {
         if (!vaultSearch.trim()) return true;
         const q = vaultSearch.toLowerCase();
@@ -215,7 +217,7 @@ export default function PartnerPortfolioPage() {
         default: return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
       }
     });
-  }, [mockupVault.suites, vaultSearch, filterStatus, filterSector, filterVariant, mockupSort]);
+  }, [mockupVault.suites, vaultSearch, filterStatus, filterSector, filterVariant, filterEngine, mockupSort]);
 
   const generatedSites = useMemo(() => {
     const list = demoVault.demos
