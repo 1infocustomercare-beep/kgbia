@@ -411,6 +411,8 @@ export default function LeadsPage() {
   // ═══ GPS Radar + Speed Dial ═══
   const [gpsOpen, setGpsOpen] = useState(false);
   const [speedDialOpen, setSpeedDialOpen] = useState(false);
+  // Origine GPS attiva (per calcolo distanza per ogni lead)
+  const [gpsOrigin, setGpsOrigin] = useState<{ lat: number; lon: number; label: string } | null>(null);
 
   /* ─── Auto-detect sector from manual name ─── */
   useEffect(() => {
@@ -902,6 +904,7 @@ export default function LeadsPage() {
   /* ─── GPS Radar Search (coords + radius km, real OSM data) ─── */
   const handleGpsSearch = useCallback(async (loc: GpsLocation, radiusKm: number) => {
     setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null);
+    setGpsOrigin({ lat: loc.lat, lon: loc.lon, label: loc.label });
     // 💰 Gating crediti: GPS search = 1 credito (lead_search)
     const creditRes = await consumeSellerCredits("lead_search", { mode: "gps", lat: loc.lat, lon: loc.lon, radius_km: radiusKm });
     if (!creditRes.success) {
@@ -2077,6 +2080,23 @@ export default function LeadsPage() {
                 const srcInfo = SOURCE_LABELS[lead.source] || { label: lead.source, color: "#9ca3af" };
                 const rowKey = `${lead.name}|${lead.full_address}`;
                 const isQuickOpen = quickPreviewKey === rowKey;
+                // 📏 Distanza dal venditore (Haversine, km) — solo se GPS origin disponibile
+                const distanceKm = (() => {
+                  if (!gpsOrigin || typeof lead.lat !== "number" || typeof lead.lon !== "number") return null;
+                  const R = 6371;
+                  const dLat = (lead.lat - gpsOrigin.lat) * Math.PI / 180;
+                  const dLon = (lead.lon - gpsOrigin.lon) * Math.PI / 180;
+                  const a = Math.sin(dLat / 2) ** 2 +
+                    Math.cos(gpsOrigin.lat * Math.PI / 180) * Math.cos(lead.lat * Math.PI / 180) *
+                    Math.sin(dLon / 2) ** 2;
+                  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                })();
+                const distanceLabel = distanceKm == null ? null
+                  : distanceKm < 1 ? `${Math.round(distanceKm * 1000)} m`
+                  : `${distanceKm.toFixed(distanceKm < 10 ? 1 : 0)} km`;
+                // 🎯 Punteggio di conversione (etichetta rapida basata su _score)
+                const convLabel = lead._score >= 70 ? "Alta" : lead._score >= 45 ? "Media" : "Bassa";
+                const convIcon = lead._score >= 70 ? "🔥" : lead._score >= 45 ? "⚡" : "💤";
                 return (
                   <motion.div key={`${lead.name}-${i}`}
                     initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(i * 0.01, 0.5) }}
