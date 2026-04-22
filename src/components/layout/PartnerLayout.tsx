@@ -126,7 +126,10 @@ export default function PartnerLayout() {
   };
 
   const accentColor = demoMode ? "#d4a052" : "#a78bfa";
-  const visibleItems = NAV_ITEMS_FULL.filter((item) => (demoMode ? item.showInDemo : true));
+  const visibleItems = NAV_ITEMS_FULL
+    .filter((item) => (demoMode ? item.showInDemo : true))
+    // In modalità Demo il Portfolio diventa primario nella dock (accanto a Home)
+    .map((item) => (demoMode && item.path === "/partner/portfolio" ? { ...item, primary: true } : item));
   const primaryItems = visibleItems.filter((i) => i.primary);
   const secondaryItems = visibleItems.filter((i) => !i.primary);
 

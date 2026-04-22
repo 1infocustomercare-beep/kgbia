@@ -4,8 +4,69 @@ import { Link, useSearchParams } from "react-router-dom";
 import {
   Search, X as XIcon, Globe, LayoutDashboard, Pencil, Upload, Save,
   RefreshCw, ChevronRight, Smartphone, Sparkles, Layers, Star, Trash2,
-  Play, ExternalLink, MessageCircle, Rocket, Wand2,
+  Play, ExternalLink, MessageCircle, Rocket, Wand2, SlidersHorizontal,
 } from "lucide-react";
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Mockup helpers — descrizione smart + estrazione screens
+ * ─────────────────────────────────────────────────────────────────────── */
+
+// Ordine logico delle sezioni di un mockup iPhone (stesso del template ufficiale)
+const SCREEN_TYPE_ORDER = [
+  "home", "menu", "gallery", "rooms", "services", "fleet",
+  "booking", "reservation", "order", "checkout",
+  "profile", "loyalty", "account", "contact", "about",
+];
+
+function sortScreens(screensArr: any[]): any[] {
+  return [...screensArr].sort((a, b) => {
+    const ai = SCREEN_TYPE_ORDER.indexOf((a?.type || "").toLowerCase());
+    const bi = SCREEN_TYPE_ORDER.indexOf((b?.type || "").toLowerCase());
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+}
+
+function buildSmartMockupDescription(suite: {
+  business_name: string;
+  business_sector: string | null;
+  business_city: string | null;
+  template_variant: string | null;
+  screens: any;
+}): string {
+  const arr: any[] = Array.isArray(suite.screens)
+    ? suite.screens
+    : suite.screens && typeof suite.screens === "object"
+      ? Object.values(suite.screens)
+      : [];
+  const sorted = sortScreens(arr);
+  const titles = sorted
+    .map((s: any) => (s?.title || s?.type || "").toString().trim())
+    .filter(Boolean);
+
+  // 1) Se ci sono titoli → "Home · Menu · Galleria · Prenota" (max 5)
+  if (titles.length > 0) {
+    const sample = titles.slice(0, 5).map((t) =>
+      t.charAt(0).toUpperCase() + t.slice(1).toLowerCase(),
+    );
+    const more = titles.length > sample.length ? "…" : "";
+    return `Suite mockup iPhone${suite.business_sector ? ` · ${suite.business_sector}` : ""} — ${sample.join(" · ")}${more}`;
+  }
+
+  // 2) Fallback: settore + città + variante
+  const parts: string[] = [];
+  if (suite.business_sector) parts.push(suite.business_sector);
+  if (suite.business_city) parts.push(suite.business_city);
+  if (suite.template_variant) parts.push(`stile ${suite.template_variant}`);
+  if (parts.length > 0) {
+    return `Mockup iPhone su misura per ${suite.business_name} — ${parts.join(" · ")}.`;
+  }
+
+  // 3) Fallback finale
+  return `Mockup iPhone su misura generato dal venditore per ${suite.business_name}.`;
+}
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
