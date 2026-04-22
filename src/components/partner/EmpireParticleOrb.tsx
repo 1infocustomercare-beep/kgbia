@@ -583,14 +583,16 @@ const EmpireParticleOrb = memo(() => {
         </AnimatePresence>
       </div>
 
-      {/* Feature cards (constellation mode) */}
+      {/* Feature cards (constellation mode) — responsive distance: smaller on mobile to stay inside viewport */}
       <AnimatePresence>
         {mode === "constellation" &&
           FEATURES.map((f, i) => {
             const Icon = f.icon;
             const angRad = (f.angle * Math.PI) / 180;
-            const dx = Math.cos(angRad) * 38;
-            const dy = Math.sin(angRad) * 38;
+            // Use vmin so cards scale with the smaller viewport dimension and never escape the container
+            const distVmin = 22; // ~22% of the smaller side — safe on 320px screens
+            const dx = Math.cos(angRad) * distVmin;
+            const dy = Math.sin(angRad) * distVmin;
             return (
               <motion.div
                 key={f.label}
@@ -600,22 +602,23 @@ const EmpireParticleOrb = memo(() => {
                 transition={{ duration: 0.4, delay: 0.3 + i * 0.05 }}
                 className="absolute z-20"
                 style={{
-                  left: `calc(50% + ${dx}% )`,
-                  top: `calc(50% + ${dy}% )`,
+                  left: `calc(50% + ${dx}vmin)`,
+                  top: `calc(50% + ${dy}vmin)`,
                   transform: "translate(-50%, -50%)",
                   pointerEvents: "none",
+                  maxWidth: "40vw",
                 }}
               >
                 <div
-                  className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full backdrop-blur-md"
+                  className="flex items-center gap-1 sm:gap-2 px-2 py-1 sm:px-3 sm:py-2 rounded-full backdrop-blur-md"
                   style={{
-                    background: "hsla(265,40%,15%,0.75)",
+                    background: "hsla(265,40%,15%,0.85)",
                     border: "1px solid hsla(265,80%,65%,0.4)",
                     boxShadow: "0 4px 16px hsla(265,80%,40%,0.35)",
                   }}
                 >
-                  <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-violet-300" />
-                  <span className="text-[10px] sm:text-xs font-semibold text-white whitespace-nowrap">
+                  <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-violet-300 shrink-0" />
+                  <span className="text-[9px] sm:text-xs font-semibold text-white whitespace-nowrap">
                     {f.label}
                   </span>
                 </div>
