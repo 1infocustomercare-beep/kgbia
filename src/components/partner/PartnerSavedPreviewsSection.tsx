@@ -341,30 +341,90 @@ export default function PartnerSavedPreviewsSection() {
               })}
             </div>
 
-            {/* Search + Sort */}
+            {/* Search + Sort + Date */}
             {previews.length > 0 && (
-              <div className="flex items-center gap-2 flex-wrap">
-                <div className="relative flex-1 min-w-[180px]">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-                  <input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cerca etichetta, lead, città, settore…"
-                    className="w-full pl-8 pr-3 h-10 rounded-lg text-xs text-foreground placeholder:text-muted-foreground"
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="relative flex-1 min-w-[180px]">
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <input
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Cerca etichetta, lead, città, settore…"
+                      className="w-full pl-8 pr-3 h-10 rounded-lg text-xs text-foreground placeholder:text-muted-foreground"
+                      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                    />
+                  </div>
+                  <select
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value as SortKey)}
+                    aria-label="Ordina per"
+                    className="h-10 px-2.5 rounded-lg text-xs text-foreground appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-400/30"
                     style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-                  />
+                  >
+                    <option value="recent" className="bg-[#0f0f1a]">Più recenti</option>
+                    <option value="oldest" className="bg-[#0f0f1a]">Meno recenti</option>
+                    <option value="az" className="bg-[#0f0f1a]">A → Z</option>
+                    <option value="favorites" className="bg-[#0f0f1a]">Preferite prima</option>
+                    <option value="views" className="bg-[#0f0f1a]">Più viste</option>
+                  </select>
+                  <div
+                    className="relative h-10 flex items-center rounded-lg pl-2 pr-1.5"
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-muted-foreground mr-1.5" />
+                    <select
+                      value={dateRange}
+                      onChange={(e) => setDateRange(e.target.value as DateRangeKey)}
+                      aria-label="Periodo di generazione"
+                      className="h-full bg-transparent pr-1 text-xs text-foreground appearance-none cursor-pointer focus:outline-none"
+                    >
+                      <option value="any" className="bg-[#0f0f1a]">Sempre</option>
+                      <option value="today" className="bg-[#0f0f1a]">Oggi</option>
+                      <option value="7d" className="bg-[#0f0f1a]">Ultimi 7 giorni</option>
+                      <option value="30d" className="bg-[#0f0f1a]">Ultimi 30 giorni</option>
+                      <option value="90d" className="bg-[#0f0f1a]">Ultimi 90 giorni</option>
+                    </select>
+                  </div>
                 </div>
-                <select
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value as SortKey)}
-                  className="h-10 px-2.5 rounded-lg text-xs text-foreground appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-400/30"
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-                >
-                  <option value="recent" className="bg-[#0f0f1a]">Più recenti</option>
-                  <option value="az" className="bg-[#0f0f1a]">A → Z</option>
-                  <option value="favorites" className="bg-[#0f0f1a]">Preferite prima</option>
-                  <option value="views" className="bg-[#0f0f1a]">Più viste</option>
-                </select>
+
+                {/* Engine pills */}
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[9px] uppercase tracking-wider text-muted-foreground mr-0.5">Engine:</span>
+                  {([
+                    { key: "all" as EngineKey, label: "Tutti", count: previews.length, color: "#f472b6", Icon: Sparkles },
+                    { key: "ai" as EngineKey, label: ENGINE_META.ai.label, count: engineCounts.ai, color: ENGINE_META.ai.color, Icon: ENGINE_META.ai.Icon },
+                    { key: "template" as EngineKey, label: ENGINE_META.template.label, count: engineCounts.template, color: ENGINE_META.template.color, Icon: ENGINE_META.template.Icon },
+                    { key: "hybrid" as EngineKey, label: ENGINE_META.hybrid.label, count: engineCounts.hybrid, color: ENGINE_META.hybrid.color, Icon: ENGINE_META.hybrid.Icon },
+                  ]).map((opt) => {
+                    const active = engineFilter === opt.key;
+                    const Icon = opt.Icon;
+                    return (
+                      <button
+                        key={opt.key}
+                        onClick={() => setEngineFilter(opt.key)}
+                        className="px-2 py-1 rounded-full text-[10px] font-semibold flex items-center gap-1 transition-all"
+                        style={{
+                          background: active ? `${opt.color}25` : "rgba(255,255,255,0.03)",
+                          border: `1px solid ${active ? opt.color + "70" : "rgba(255,255,255,0.08)"}`,
+                          color: active ? opt.color : "rgba(255,255,255,0.7)",
+                        }}
+                      >
+                        <Icon className="w-2.5 h-2.5" />
+                        {opt.label}
+                        <span className="opacity-70">({opt.count})</span>
+                      </button>
+                    );
+                  })}
+                  {(engineFilter !== "all" || dateRange !== "any" || search.trim()) && (
+                    <button
+                      onClick={() => { setEngineFilter("all"); setDateRange("any"); setSearch(""); }}
+                      className="ml-auto px-2 py-1 rounded-full text-[10px] font-semibold text-muted-foreground hover:text-foreground flex items-center gap-1"
+                    >
+                      <XIcon className="w-2.5 h-2.5" /> Reset
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
