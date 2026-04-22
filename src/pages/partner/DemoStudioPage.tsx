@@ -303,6 +303,29 @@ export default function DemoStudioPage() {
         suites={mockupVault.suites}
         initialSuiteId={presentationInitialId}
       />
+
+      {/* Mockup Suite Generator — UNICO punto di creazione mockup iPhone (era in /partner/custom-preview, ora unificato qui) */}
+      <Dialog open={generatorOpen} onOpenChange={setGeneratorOpen}>
+        <DialogContent className="max-w-5xl max-h-[92vh] overflow-y-auto p-0">
+          <DialogHeader className="px-6 pt-6 pb-2 border-b border-border/50 sticky top-0 bg-background z-10">
+            <DialogTitle className="flex items-center gap-2 text-lg">
+              <Wand2 className="w-5 h-5 text-violet-400" /> Nuovo Mockup Suite iPhone
+            </DialogTitle>
+            <p className="text-xs text-muted-foreground mt-1">
+              4 schermate iPhone professionali. Una volta approvato, il mockup diventa la base 1:1 del sito demo da generare dai Leads.
+            </p>
+          </DialogHeader>
+          <div className="px-6 pb-6 pt-4">
+            <MockupSuiteGenerator
+              onGenerated={() => {
+                setGeneratorOpen(false);
+                refresh();
+                toast.success("Mockup pronto nel Vault");
+              }}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
