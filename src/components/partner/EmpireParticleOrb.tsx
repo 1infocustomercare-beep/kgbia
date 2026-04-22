@@ -39,9 +39,10 @@ const EmpireParticleOrb = memo(() => {
   const pointerRef = useRef({ x: -9999, y: -9999, active: false, inside: false });
   const modeRef = useRef<Mode>("orb");
   const morphRef = useRef(0);
-  // Orb position offset (drag) and rotation
+  // Orb position offset (drag), rotation, and scale (pinch)
   const offsetRef = useRef({ x: 0, y: 0 });
   const rotRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
+  const scaleRef = useRef(1);
   const dragRef = useRef({
     active: false,
     moved: false,
@@ -50,6 +51,16 @@ const EmpireParticleOrb = memo(() => {
     startX: 0, startY: 0,
     startTime: 0,
   });
+  // Multi-touch gesture state (mobile pinch + rotate)
+  const gestureRef = useRef({
+    active: false,
+    startDist: 0,
+    startAngle: 0,
+    startScale: 1,
+    startRotZ: 0,
+  });
+  // Tracked active pointers for multi-touch
+  const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const [mode, setMode] = useState<Mode>("orb");
   const [hint, setHint] = useState(true);
 
@@ -122,22 +133,48 @@ const EmpireParticleOrb = memo(() => {
       pointerRef.current.active = true;
       pointerRef.current.inside = isInsideOrb(e.clientX, e.clientY);
 
+      // Update tracked pointer position
+      if (pointersRef.current.has(e.pointerId)) {
+        pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      }
+
+      // ─── Multi-touch gesture (2 fingers): pinch (scale) + twist (rotate Z) ───
+      if (gestureRef.current.active && pointersRef.current.size >= 2) {
+        const pts = Array.from(pointersRef.current.values()).slice(0, 2);
+        const dx = pts[1].x - pts[0].x;
+        const dy = pts[1].y - pts[0].y;
+        const dist = Math.hypot(dx, dy);
+        const ang = Math.atan2(dy, dx);
+
+        const g = gestureRef.current;
+        // Pinch → scale (clamped 0.6–1.8)
+        const newScale = Math.max(0.6, Math.min(1.8, g.startScale * (dist / Math.max(1, g.startDist))));
+        scaleRef.current = newScale;
+        // Twist → spin Y axis (in-plane rotation feels like spinning the sphere)
+        const angDelta = ang - g.startAngle;
+        rotRef.current.y = g.startRotZ + angDelta;
+        rotRef.current.vy = 0; // hold steady while gesturing
+
+        e.preventDefault();
+        return;
+      }
+
+      // ─── Single-pointer drag/rotate ───
       const drag = dragRef.current;
-      if (drag.active) {
+      if (drag.active && pointersRef.current.size === 1) {
         const dx = e.clientX - drag.lastX;
         const dy = e.clientY - drag.lastY;
         drag.lastX = e.clientX;
         drag.lastY = e.clientY;
 
-        // Determine mode after small threshold
         const totalDx = e.clientX - drag.startX;
         const totalDy = e.clientY - drag.startY;
         const totalDist = Math.hypot(totalDx, totalDy);
         if (!drag.mode && totalDist > 6) {
           drag.moved = true;
-          // Two-finger or shift for rotate; default = drag move; right area = rotate
-          // Simpler heuristic: if shift held → rotate, else drag
-          drag.mode = e.shiftKey ? "rotate" : "drag";
+          // Touch device: swipe = rotate (more natural). Mouse: shift = rotate, default = drag.
+          const isTouch = e.pointerType === "touch" || e.pointerType === "pen";
+          drag.mode = isTouch ? "rotate" : (e.shiftKey ? "rotate" : "drag");
         }
 
         if (drag.mode === "drag") {
@@ -153,6 +190,27 @@ const EmpireParticleOrb = memo(() => {
 
     const handlePointerDown = (e: PointerEvent) => {
       if (!isInsideOrb(e.clientX, e.clientY)) return;
+      pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      // Two pointers down → start pinch/twist gesture
+      if (pointersRef.current.size === 2) {
+        const pts = Array.from(pointersRef.current.values()).slice(0, 2);
+        const dx = pts[1].x - pts[0].x;
+        const dy = pts[1].y - pts[0].y;
+        gestureRef.current = {
+          active: true,
+          startDist: Math.hypot(dx, dy) || 1,
+          startAngle: Math.atan2(dy, dx),
+          startScale: scaleRef.current,
+          startRotZ: rotRef.current.y,
+        };
+        // Cancel single-finger drag while gesturing
+        dragRef.current.active = false;
+        dragRef.current.moved = true; // prevent tap toggle on release
+        return;
+      }
+
+      // Single pointer → drag/tap
       dragRef.current = {
         active: true,
         moved: false,
@@ -167,6 +225,15 @@ const EmpireParticleOrb = memo(() => {
     };
 
     const handlePointerUp = (e: PointerEvent) => {
+      pointersRef.current.delete(e.pointerId);
+
+      // End gesture when fewer than 2 pointers remain
+      if (gestureRef.current.active && pointersRef.current.size < 2) {
+        gestureRef.current.active = false;
+        // Carry slight rotation momentum from last twist
+        rotRef.current.vy = 0;
+      }
+
       const drag = dragRef.current;
       const wasActive = drag.active;
       const moved = drag.moved;
@@ -175,7 +242,13 @@ const EmpireParticleOrb = memo(() => {
       drag.mode = null;
 
       // Tap (no significant move) inside orb → toggle mode
-      if (wasActive && !moved && dt < 400 && isInsideOrb(e.clientX, e.clientY)) {
+      if (
+        wasActive &&
+        !moved &&
+        dt < 400 &&
+        pointersRef.current.size === 0 &&
+        isInsideOrb(e.clientX, e.clientY)
+      ) {
         const next: Mode = modeRef.current === "orb" ? "constellation" : "orb";
         modeRef.current = next;
         setMode(next);
@@ -190,11 +263,21 @@ const EmpireParticleOrb = memo(() => {
       pointerRef.current.y = -9999;
     };
 
+    // Block native gestures (pinch-zoom on iOS Safari) while interacting with the orb
+    const handleTouchPrevent = (e: TouchEvent) => {
+      if (e.touches.length >= 2 || gestureRef.current.active || dragRef.current.active) {
+        e.preventDefault();
+      }
+    };
+
     window.addEventListener("pointermove", handlePointerMove, { passive: false });
     window.addEventListener("pointerdown", handlePointerDown);
     window.addEventListener("pointerup", handlePointerUp);
     window.addEventListener("pointercancel", handlePointerUp);
     canvas.addEventListener("pointerleave", handlePointerLeave);
+    canvas.addEventListener("touchmove", handleTouchPrevent, { passive: false });
+    canvas.addEventListener("gesturestart", (e) => e.preventDefault() as never);
+    canvas.addEventListener("gesturechange", (e) => e.preventDefault() as never);
 
     // ─── Animate ───
     const draw = () => {
@@ -214,13 +297,17 @@ const EmpireParticleOrb = memo(() => {
       rotRef.current.y += rotRef.current.vy;
 
       // Spring offset back toward 0 when not dragging (gentle elastic anchor)
-      if (!dragRef.current.active) {
+      if (!dragRef.current.active && !gestureRef.current.active) {
         offsetRef.current.x *= 0.94;
         offsetRef.current.y *= 0.94;
+        // Scale eases back to 1 when not pinching
+        scaleRef.current += (1 - scaleRef.current) * 0.08;
       }
 
       const ox = offsetRef.current.x;
       const oy = offsetRef.current.y;
+      const scl = scaleRef.current;
+      const effRadius = radius * scl;
       const rotX = rotRef.current.x;
       const rotY = rotRef.current.y;
       const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
@@ -230,7 +317,7 @@ const EmpireParticleOrb = memo(() => {
       const py = pointerRef.current.y;
       const pointerActive = pointerRef.current.active;
 
-      const ringR = radius * 1.05;
+      const ringR = effRadius * 1.05;
       const arr = particlesRef.current;
 
       for (let i = 0; i < arr.length; i++) {
@@ -244,9 +331,9 @@ const EmpireParticleOrb = memo(() => {
         let y1 = p.sy * cosX - z1 * sinX;
         let z2 = p.sy * sinX + z1 * cosX;
 
-        // Project to 2D (orb mode position)
-        const orbX = cx + ox + x1 * radius;
-        const orbY = cy + oy + y1 * radius;
+        // Project to 2D (orb mode position) using effective (scaled) radius
+        const orbX = cx + ox + x1 * effRadius;
+        const orbY = cy + oy + y1 * effRadius;
 
         // Constellation target (ring around orb centre)
         const nodeIdx = i % FEATURES.length;
@@ -323,18 +410,19 @@ const EmpireParticleOrb = memo(() => {
         }
       }
 
-      // Soft core glow (additive, no hard background)
+      // Soft core glow (additive, no hard background) — uses scaled radius
       if (m < 0.85) {
         const ccx = cx + ox;
         const ccy = cy + oy;
+        const coreR = effRadius * 0.8;
         const coreAlpha = (1 - m) * (0.28 + Math.sin(t * 2) * 0.06);
-        const coreGrad = ctx.createRadialGradient(ccx, ccy, 0, ccx, ccy, radius * 0.8);
+        const coreGrad = ctx.createRadialGradient(ccx, ccy, 0, ccx, ccy, coreR);
         coreGrad.addColorStop(0, `hsla(280, 95%, 75%, ${coreAlpha})`);
         coreGrad.addColorStop(0.45, `hsla(265, 85%, 55%, ${coreAlpha * 0.35})`);
         coreGrad.addColorStop(1, "hsla(265, 70%, 40%, 0)");
         ctx.fillStyle = coreGrad;
         ctx.beginPath();
-        ctx.arc(ccx, ccy, radius * 0.8, 0, Math.PI * 2);
+        ctx.arc(ccx, ccy, coreR, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -350,6 +438,8 @@ const EmpireParticleOrb = memo(() => {
       window.removeEventListener("pointerup", handlePointerUp);
       window.removeEventListener("pointercancel", handlePointerUp);
       canvas.removeEventListener("pointerleave", handlePointerLeave);
+      canvas.removeEventListener("touchmove", handleTouchPrevent);
+      pointersRef.current.clear();
     };
   }, []);
 
@@ -400,7 +490,7 @@ const EmpireParticleOrb = memo(() => {
                     transition={{ duration: 2.2, repeat: Infinity }}
                     className="text-[10px] sm:text-xs text-violet-300/70 mt-3 font-medium"
                   >
-                    Trascina · ruota · tocca per esplorare
+                    Trascina · ruota · pizzica · tocca
                   </motion.p>
                 )}
               </AnimatePresence>
