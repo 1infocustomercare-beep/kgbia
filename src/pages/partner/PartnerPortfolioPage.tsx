@@ -479,6 +479,72 @@ export default function PartnerPortfolioPage() {
       <AnimatePresence>
         {detailProject && <ProjectDetailOverlay sectorId={detailProject} onClose={() => setDetailProject(null)} />}
       </AnimatePresence>
+
+      {/* ═══ MODALITÀ PRONTA DA MOSTRARE ═══ */}
+      <DemoStudioPresentationMode
+        open={presentationOpen}
+        onClose={() => setPresentationOpen(false)}
+        suites={mockupVault.suites}
+        initialSuiteId={presentationInitialId}
+      />
+    </div>
+  );
+}
+
+/* ─── Riga sito demo generato (riusabile dentro il vault) ─── */
+function DemoSiteRow({
+  site,
+  onToggleFav,
+  onArchive,
+}: {
+  site: VaultDemo;
+  onToggleFav: () => void;
+  onArchive: () => void;
+}) {
+  return (
+    <div className="p-3 rounded-xl space-y-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5">
+            <h5 className="text-xs font-semibold text-foreground truncate">{site.display_name}</h5>
+            <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 uppercase">ready</span>
+          </div>
+          <p className="text-[9px] text-muted-foreground mt-0.5">
+            {site.sector?.toUpperCase()}
+            {site.template_variant ? ` · ${site.template_variant}` : ""}
+            {" · "}{new Date(site.created_at).toLocaleDateString("it-IT")}
+          </p>
+        </div>
+        <div className="flex items-center gap-0.5 shrink-0">
+          <button onClick={onToggleFav} className="p-1 rounded hover:bg-white/5" aria-label="Preferito">
+            <Star className={`w-3 h-3 ${site.is_favorite ? "text-amber-400 fill-amber-400" : "text-muted-foreground"}`} />
+          </button>
+          <button onClick={onArchive} className="p-1 rounded hover:bg-white/5 text-muted-foreground hover:text-red-400" aria-label="Archivia">
+            <Trash2 className="w-3 h-3" />
+          </button>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {site.preview_url && (
+          <a href={site.preview_url} target="_blank" rel="noopener"
+            className="px-2 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[9px] font-medium flex items-center gap-1 hover:bg-blue-500/20">
+            <ExternalLink className="w-2.5 h-2.5" /> Preview
+          </a>
+        )}
+        {site.admin_url && (
+          <a href={site.admin_url} target="_blank" rel="noopener"
+            className="px-2 py-1 rounded-md bg-violet-500/10 border border-violet-500/20 text-violet-300 text-[9px] font-medium flex items-center gap-1 hover:bg-violet-500/20">
+            <Sparkles className="w-2.5 h-2.5" /> Admin
+          </a>
+        )}
+        {site.outreach_payload?.whatsapp_link && (
+          <a href={site.outreach_payload.whatsapp_link} target="_blank" rel="noopener"
+            className="px-2 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-[9px] font-medium flex items-center gap-1 hover:bg-emerald-500/20">
+            <MessageCircle className="w-2.5 h-2.5" /> WhatsApp
+          </a>
+        )}
+      </div>
     </div>
   );
 }
