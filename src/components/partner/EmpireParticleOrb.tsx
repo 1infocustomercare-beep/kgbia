@@ -490,7 +490,7 @@ const EmpireParticleOrb = memo(() => {
                     transition={{ duration: 2.2, repeat: Infinity }}
                     className="text-[10px] sm:text-xs text-violet-300/70 mt-3 font-medium"
                   >
-                    Trascina · ruota · tocca per esplorare
+                    Trascina · ruota · pizzica · tocca
                   </motion.p>
                 )}
               </AnimatePresence>
