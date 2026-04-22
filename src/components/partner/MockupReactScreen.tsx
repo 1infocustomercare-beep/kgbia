@@ -1180,7 +1180,8 @@ export function MockupReactScreen({
   type, templateVariant, businessName, businessSector = "", businessCity = "", primaryColor, width, height,
   glassIntensity = 60, colorStyle = "vivid",
 }: Props) {
-  const theme = getTheme(templateVariant, primaryColor, colorStyle);
+  const baseTheme = getTheme(templateVariant, primaryColor, colorStyle);
+  const theme: ThemeTokens = { ...baseTheme, glassIntensity };
 
   const renderContent = () => {
     switch (type) {
