@@ -1866,6 +1866,233 @@ export type Database = {
         }
         Relationships: []
       }
+      demo_site_analytics: {
+        Row: {
+          created_at: string
+          demo_site_id: string
+          event_metadata: Json | null
+          event_type: string
+          id: string
+          referrer: string | null
+          session_duration_ms: number | null
+          user_agent: string | null
+          visitor_ip: string | null
+        }
+        Insert: {
+          created_at?: string
+          demo_site_id: string
+          event_metadata?: Json | null
+          event_type: string
+          id?: string
+          referrer?: string | null
+          session_duration_ms?: number | null
+          user_agent?: string | null
+          visitor_ip?: string | null
+        }
+        Update: {
+          created_at?: string
+          demo_site_id?: string
+          event_metadata?: Json | null
+          event_type?: string
+          id?: string
+          referrer?: string | null
+          session_duration_ms?: number | null
+          user_agent?: string | null
+          visitor_ip?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "demo_site_analytics_demo_site_id_fkey"
+            columns: ["demo_site_id"]
+            isOneToOne: false
+            referencedRelation: "demo_sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      demo_site_blueprints: {
+        Row: {
+          created_at: string
+          default_colors: Json | null
+          default_fonts: Json | null
+          display_order: number | null
+          functional_modules: Json
+          id: string
+          is_active: boolean
+          name: string
+          preview_thumbnail_url: string | null
+          required_agents: Json
+          sector: string
+          seed_schema: Json
+          slug: string
+          sub_sectors: string[] | null
+          template_variants: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          default_colors?: Json | null
+          default_fonts?: Json | null
+          display_order?: number | null
+          functional_modules?: Json
+          id?: string
+          is_active?: boolean
+          name: string
+          preview_thumbnail_url?: string | null
+          required_agents?: Json
+          sector: string
+          seed_schema?: Json
+          slug: string
+          sub_sectors?: string[] | null
+          template_variants?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          default_colors?: Json | null
+          default_fonts?: Json | null
+          display_order?: number | null
+          functional_modules?: Json
+          id?: string
+          is_active?: boolean
+          name?: string
+          preview_thumbnail_url?: string | null
+          required_agents?: Json
+          sector?: string
+          seed_schema?: Json
+          slug?: string
+          sub_sectors?: string[] | null
+          template_variants?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      demo_sites: {
+        Row: {
+          ab_test_group: string | null
+          admin_email: string | null
+          admin_password: string | null
+          admin_url: string | null
+          agents_activated: Json | null
+          archived_at: string | null
+          blueprint_id: string | null
+          branding_snapshot: Json
+          business_name: string
+          conversion_status: string | null
+          converted_at: string | null
+          created_at: string
+          cta_click_count: number
+          generated_at: string | null
+          generation_duration_ms: number | null
+          generation_error: string | null
+          id: string
+          last_viewed_at: string | null
+          lead_id: string | null
+          modules_enabled: Json | null
+          owner_id: string
+          preview_url: string | null
+          public_slug: string
+          reuse_count: number
+          reuse_source_id: string | null
+          scraped_data: Json | null
+          sector: string
+          status: string
+          sub_sector: string | null
+          template_variant: string | null
+          updated_at: string
+          view_count: number
+          whatsapp_link: string | null
+          whatsapp_message: string | null
+        }
+        Insert: {
+          ab_test_group?: string | null
+          admin_email?: string | null
+          admin_password?: string | null
+          admin_url?: string | null
+          agents_activated?: Json | null
+          archived_at?: string | null
+          blueprint_id?: string | null
+          branding_snapshot?: Json
+          business_name: string
+          conversion_status?: string | null
+          converted_at?: string | null
+          created_at?: string
+          cta_click_count?: number
+          generated_at?: string | null
+          generation_duration_ms?: number | null
+          generation_error?: string | null
+          id?: string
+          last_viewed_at?: string | null
+          lead_id?: string | null
+          modules_enabled?: Json | null
+          owner_id: string
+          preview_url?: string | null
+          public_slug: string
+          reuse_count?: number
+          reuse_source_id?: string | null
+          scraped_data?: Json | null
+          sector: string
+          status?: string
+          sub_sector?: string | null
+          template_variant?: string | null
+          updated_at?: string
+          view_count?: number
+          whatsapp_link?: string | null
+          whatsapp_message?: string | null
+        }
+        Update: {
+          ab_test_group?: string | null
+          admin_email?: string | null
+          admin_password?: string | null
+          admin_url?: string | null
+          agents_activated?: Json | null
+          archived_at?: string | null
+          blueprint_id?: string | null
+          branding_snapshot?: Json
+          business_name?: string
+          conversion_status?: string | null
+          converted_at?: string | null
+          created_at?: string
+          cta_click_count?: number
+          generated_at?: string | null
+          generation_duration_ms?: number | null
+          generation_error?: string | null
+          id?: string
+          last_viewed_at?: string | null
+          lead_id?: string | null
+          modules_enabled?: Json | null
+          owner_id?: string
+          preview_url?: string | null
+          public_slug?: string
+          reuse_count?: number
+          reuse_source_id?: string | null
+          scraped_data?: Json | null
+          sector?: string
+          status?: string
+          sub_sector?: string | null
+          template_variant?: string | null
+          updated_at?: string
+          view_count?: number
+          whatsapp_link?: string | null
+          whatsapp_message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "demo_sites_blueprint_id_fkey"
+            columns: ["blueprint_id"]
+            isOneToOne: false
+            referencedRelation: "demo_site_blueprints"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demo_sites_reuse_source_id_fkey"
+            columns: ["reuse_source_id"]
+            isOneToOne: false
+            referencedRelation: "demo_sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       drivers: {
         Row: {
           company_id: string
