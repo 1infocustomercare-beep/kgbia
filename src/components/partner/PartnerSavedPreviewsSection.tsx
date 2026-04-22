@@ -618,12 +618,21 @@ function SavedPreviewCard({
             <h4 className="text-xs font-bold text-foreground truncate">{label}</h4>
             {subtitle && <p className="text-[10px] text-muted-foreground truncate mt-0.5">{subtitle}</p>}
           </div>
-          <span
-            className="shrink-0 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide"
-            style={{ background: `${accent}25`, color: accent, border: `1px solid ${accent}40` }}
-          >
-            <Bookmark className="w-2.5 h-2.5 inline -mt-0.5 mr-0.5" /> Saved
-          </span>
+          <div className="flex flex-col items-end gap-1 shrink-0">
+            <span
+              className="px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide flex items-center gap-0.5"
+              style={{ background: `${engineMeta.color}20`, color: engineMeta.color, border: `1px solid ${engineMeta.color}50` }}
+              title={`Engine di generazione: ${engineMeta.label}`}
+            >
+              <EngineIcon className="w-2.5 h-2.5" /> {engineMeta.label}
+            </span>
+            <span
+              className="px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide"
+              style={{ background: `${accent}25`, color: accent, border: `1px solid ${accent}40` }}
+            >
+              <Bookmark className="w-2.5 h-2.5 inline -mt-0.5 mr-0.5" /> Saved
+            </span>
+          </div>
         </div>
 
         {preview.portfolio_notes && (
