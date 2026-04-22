@@ -382,7 +382,9 @@ const EmpireParticleOrb = memo(() => {
       const py = pointerRef.current.y;
       const pointerActive = pointerRef.current.active;
 
-      const ringR = effRadius * 1.05;
+      // Ring radius — wider on desktop for premium feel, tighter on mobile so cards + particles
+      // stay inside the orb container and the central label remains readable.
+      const ringR = effRadius * (isMobile ? 1.25 : 1.5);
       const arr = particlesRef.current;
 
       for (let i = 0; i < arr.length; i++) {
