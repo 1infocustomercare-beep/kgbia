@@ -609,9 +609,11 @@ function App() {
                       <Route path="/landing" element={<StaticIframePage src="/homepage.html" title="Empire.AI" />} />
                       <Route path="/catalogo" element={<StaticIframePage src="/catalogo-completo.html" title="Catalogo Completo" />} />
 
-                      {/* Onboarding */}
+                      {/* Onboarding (post-payment branding/data completion) */}
                       <Route path="/onboarding" element={
-                        <ProtectedRoute><OnboardingPage /></ProtectedRoute>
+                        <ProtectedRoute>
+                          <SetupPaidGuard><OnboardingPage /></SetupPaidGuard>
+                        </ProtectedRoute>
                       } />
                       {/* partner/leads and partner/content-ai are now nested under /partner layout */}
                       {/* leads is partner-only, not superadmin */}
@@ -626,10 +628,10 @@ function App() {
                         </ProtectedRoute>
                       } />
 
-                      {/* Legacy protected routes (kept intact) */}
+                      {/* Legacy protected routes (kept intact, gated by paid setup) */}
                       <Route path="/dashboard" element={
                         <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
-                          <AdminDashboard />
+                          <SetupPaidGuard><AdminDashboard /></SetupPaidGuard>
                         </ProtectedRoute>
                       } />
                       <Route path="/superadmin" element={
@@ -703,14 +705,16 @@ function App() {
                       </Route>
                       <Route path="/admin/dashboard" element={
                         <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
-                          <AdminDashboard />
+                          <SetupPaidGuard><AdminDashboard /></SetupPaidGuard>
                         </ProtectedRoute>
                       } />
                       <Route path="/setup" element={<Navigate to="/onboarding" replace />} />
 
                       {/* ═══ Adaptive App Routes (industry-aware) ═══ */}
                       <Route path="/app" element={
-                        <ProtectedRoute><AppLayout /></ProtectedRoute>
+                        <ProtectedRoute>
+                          <SetupPaidGuard><AppLayout /></SetupPaidGuard>
+                        </ProtectedRoute>
                       }>
                         <Route index element={<AdaptiveDashboard />} />
                         {/* Food modules */}
