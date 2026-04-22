@@ -366,6 +366,7 @@ Deno.serve(async (req) => {
         template_variant: templateVariant,
         screens: reactScreens,
         credits_spent: creditsSpent,
+        variation_seed: variationSeed,
         message: "React render mode — il client genera gli screenshot dei template",
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
@@ -416,6 +417,7 @@ Deno.serve(async (req) => {
         template_variant: templateVariant,
         screens: finalScreens,
         credits_spent: creditsSpent,
+        variation_seed: variationSeed,
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     } catch (e: any) {
       await adminClient.from("seller_mockup_suites").update({ status: "error", error_message: e.message }).eq("id", suite.id);
