@@ -1469,6 +1469,39 @@ export function MockupSuiteGenerator({
               )}
             </div>
 
+            {/* Banner Validazione · Rigenera solo le schermate non validate */}
+            {invalidScreenIndexes.length > 0 && previewPhase !== "upgrading" && (
+              <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 flex items-start gap-3">
+                <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-amber-900 dark:text-amber-200">
+                    {invalidScreenIndexes.length}/{result.screens.length} schermate non hanno superato la validazione automatica
+                  </p>
+                  <p className="text-[11px] text-amber-800/80 dark:text-amber-300/80 mt-0.5">
+                    Possibili problemi: branding fuori palette, testo in inglese, contenuto fuori dalla safe-area.
+                    Posizioni: {invalidScreenIndexes.map(i => `#${i + 1} ${result.screens[i].title}`).join(" · ")}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <Button
+                      size="sm"
+                      onClick={handleRegenerateInvalid}
+                      disabled={generating}
+                      className="h-7 text-xs bg-amber-600 hover:bg-amber-700 text-white"
+                    >
+                      {generating ? (
+                        <><Loader2 className="h-3 w-3 mr-1 animate-spin" /> Rigenerazione…</>
+                      ) : (
+                        <><RefreshCw className="h-3 w-3 mr-1" /> Rigenera solo le {invalidScreenIndexes.length} non validate</>
+                      )}
+                    </Button>
+                    <Badge variant="outline" className="h-7 text-[10px] border-amber-500/40 text-amber-800 dark:text-amber-300">
+                      Mantiene template, palette e impostazioni correnti
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <MockupSuiteViewer
               screens={result.screens}
               templateVariant={result.template_variant}
