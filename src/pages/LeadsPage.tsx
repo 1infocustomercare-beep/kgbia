@@ -2191,7 +2191,7 @@ export default function LeadsPage() {
               </div>
             )}
 
-            <div className="space-y-1.5 max-h-[380px] overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-[420px] md:max-h-[560px] lg:max-h-[640px] overflow-y-auto pr-1">
               {sorted.length === 0 && resultsQuery && (
                 <div className="text-center text-[11px] text-muted-foreground py-6">
                   Nessun lead corrisponde a “{resultsQuery}”.
