@@ -511,7 +511,7 @@ const EmpireParticleOrb = memo(() => {
   return (
     <div
       ref={wrapRef}
-      className="relative w-full h-[280px] sm:h-[340px] md:h-[400px] lg:h-[440px] select-none"
+      className="relative w-full h-[280px] sm:h-[340px] md:h-[400px] lg:h-[440px] select-none overflow-hidden"
       style={{ pointerEvents: "none", background: "transparent" }}
       aria-label={mode === "orb" ? "Empire Core — trascina o tocca per esplorare" : "Empire Stack constellation"}
     >
