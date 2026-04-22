@@ -1,16 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type, Lock, Unlock, Cloud, CloudOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 import { MockupLookPresets, type MockupLookPreset } from "./MockupLookPresets";
+import { useBrandingKitSettings } from "@/hooks/useBrandingKitSettings";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -350,12 +351,27 @@ export function MockupSuiteGenerator({
     suggestScreensForSector(businessSector)
   );
 
-  // Branding Kit — coppia font heading/body (override del template)
+  // Branding Kit — coppia font heading/body (override del template) + persistenza cloud+locale
+  const branding = useBrandingKitSettings();
   const [brandFontKey, setBrandFontKey] = useState<string>("template");
   const brandFont = useMemo(
     () => BRAND_FONT_PAIRS.find(p => p.key === brandFontKey) || BRAND_FONT_PAIRS[0],
     [brandFontKey]
   );
+
+  // Idratazione iniziale dalle impostazioni salvate (cloud o cache locale)
+  // — applica brandFontKey + primaryColor (se brand_locked=true ha priorità sul prop)
+  const hydratedRef = useRef(false);
+  useEffect(() => {
+    if (branding.loading || hydratedRef.current) return;
+    hydratedRef.current = true;
+    if (branding.settings.fontPairKey && branding.settings.fontPairKey !== brandFontKey) {
+      setBrandFontKey(branding.settings.fontPairKey);
+    }
+    if (branding.settings.brandLocked && branding.settings.primaryColor) {
+      setStandalone(s => ({ ...s, primaryColor: branding.settings.primaryColor! }));
+    }
+  }, [branding.loading, branding.settings, brandFontKey]);
 
   // Inietta dinamicamente il <link> Google Fonts del brand selezionato
   useEffect(() => {
@@ -369,6 +385,30 @@ export function MockupSuiteGenerator({
     document.head.appendChild(link);
     // Nessun cleanup: i font restano caricati per le preview successive
   }, [brandFont]);
+
+  // Persiste il font pair scelto (cloud + cache locale) — niente flicker, debounced cloud
+  useEffect(() => {
+    if (branding.loading || !hydratedRef.current) return;
+    if (branding.settings.fontPairKey === brandFontKey) return;
+    branding.update({
+      fontPairKey: brandFontKey,
+      fontHead: brandFont.fontHead || null,
+      fontBody: brandFont.fontBody || null,
+      googleFontsHref: brandFont.googleFontsHref || null,
+    });
+  }, [brandFontKey, brandFont, branding]);
+
+  // Se il brand è bloccato, sincronizza qualsiasi cambio di colore primario
+  // (l'utente ha esplicitamente scelto "preserva tra sessioni")
+  useEffect(() => {
+    if (branding.loading || !hydratedRef.current) return;
+    if (!branding.settings.brandLocked) return;
+    const current = mode === "standalone" ? standalone.primaryColor : primaryColor;
+    if (current && current !== branding.settings.primaryColor) {
+      branding.update({ primaryColor: current });
+    }
+  }, [standalone.primaryColor, primaryColor, mode, branding]);
+
 
   // Quando cambia il settore e autoScreens=on, aggiorna screens automaticamente
   useEffect(() => {
@@ -970,22 +1010,79 @@ export function MockupSuiteGenerator({
             </div>
           </div>
 
-          {/* Branding Kit — coppia font heading/body */}
+          {/* Branding Kit — coppia font heading/body + lock + sync cloud */}
           <div className="space-y-1.5 pt-2 border-t border-border/50">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <Label className="text-xs flex items-center gap-1.5 m-0">
                 <Type className="h-3 w-3 text-primary" /> Branding Kit · Tipografia
+                {/* Indicatore sincronizzazione */}
+                <span
+                  className="inline-flex items-center gap-0.5 text-[9px] font-normal text-muted-foreground"
+                  title={
+                    branding.syncing
+                      ? "Salvataggio in corso…"
+                      : branding.lastSyncedAt
+                      ? `Sincronizzato ${branding.lastSyncedAt.toLocaleTimeString()}`
+                      : "Salvato solo in locale (login per sincronizzare cross-device)"
+                  }
+                >
+                  {branding.syncing ? (
+                    <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                  ) : branding.lastSyncedAt ? (
+                    <Cloud className="h-2.5 w-2.5 text-emerald-500" />
+                  ) : (
+                    <CloudOff className="h-2.5 w-2.5" />
+                  )}
+                </span>
               </Label>
-              <Badge variant="outline" className="text-[9px] font-mono max-w-[180px] truncate">
-                {brandFont.key === "template" ? "Default template" : brandFont.label}
-              </Badge>
+              <div className="flex items-center gap-1.5">
+                {/* Lock toggle — blocca le modifiche del Branding Kit per evitare cambi accidentali */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    branding.update({
+                      brandLocked: !branding.settings.brandLocked,
+                      primaryColor:
+                        mode === "standalone" ? standalone.primaryColor : primaryColor,
+                    })
+                  }
+                  disabled={controlsLocked}
+                  title={
+                    branding.settings.brandLocked
+                      ? "Branding Kit bloccato — clicca per sbloccare"
+                      : "Blocca Branding Kit (preserva colore + font tra sessioni)"
+                  }
+                  className={`text-[9px] px-2 py-0.5 rounded-full border transition-all flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    branding.settings.brandLocked
+                      ? "border-amber-500/60 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                      : "border-border/60 hover:border-primary hover:bg-primary/10"
+                  }`}
+                >
+                  {branding.settings.brandLocked ? (
+                    <Lock className="h-2.5 w-2.5" />
+                  ) : (
+                    <Unlock className="h-2.5 w-2.5" />
+                  )}
+                  {branding.settings.brandLocked ? "Bloccato" : "Sblocca"}
+                </button>
+                <Badge variant="outline" className="text-[9px] font-mono max-w-[140px] truncate">
+                  {brandFont.key === "template" ? "Default template" : brandFont.label}
+                </Badge>
+              </div>
             </div>
             <Select
               value={brandFontKey}
               onValueChange={setBrandFontKey}
-              disabled={controlsLocked}
+              disabled={controlsLocked || branding.settings.brandLocked}
             >
-              <SelectTrigger className="h-9 text-xs" title={lockTitle}>
+              <SelectTrigger
+                className="h-9 text-xs"
+                title={
+                  branding.settings.brandLocked
+                    ? "Branding Kit bloccato — sblocca per cambiare font"
+                    : lockTitle
+                }
+              >
                 <SelectValue placeholder="Seleziona coppia font" />
               </SelectTrigger>
               <SelectContent className="max-h-[300px]">
@@ -1029,9 +1126,12 @@ export function MockupSuiteGenerator({
               </div>
             )}
             <p className="text-[9px] text-muted-foreground italic">
-              I font del Branding Kit sostituiscono quelli del template e si aggiornano live nella preview React.
+              {branding.settings.brandLocked
+                ? "🔒 Branding Kit bloccato — colore e font vengono ripristinati tra sessioni."
+                : "I font del Branding Kit sostituiscono quelli del template e si aggiornano live nella preview React. Salvati su cloud + cache locale."}
             </p>
           </div>
+
 
           <p className="text-[10px] text-muted-foreground italic">
             🎨 Clicca <span className="font-semibold not-italic">Genera Suite</span> per applicare queste impostazioni alle 4 schermate. L'anteprima live in alto si aggiorna istantaneamente.
