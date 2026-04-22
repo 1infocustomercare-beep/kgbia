@@ -21,7 +21,8 @@ import {
 import { getSectorCTA, buildCTADemoUrl } from "@/lib/sector-cta";
 import {
   detectWALang, localizeCTA, buildTemplateA, buildTemplateB,
-  WA_LANGS, UI_LABELS, type WALang,
+  WA_LANGS, UI_LABELS, WA_TONES, TONE_UI_LABELS,
+  type WALang, type WATone,
 } from "@/lib/wa-i18n";
 
 export interface ABLeadInput {
