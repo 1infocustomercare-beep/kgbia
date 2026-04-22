@@ -286,7 +286,11 @@ export default function LeadsPage() {
   const [filterNoWebsite, setFilterNoWebsite] = useState(false);
   const [filterNoSocial, setFilterNoSocial] = useState(false);
   const [filterHasPhone, setFilterHasPhone] = useState(false);
-  const [sortBy, setSortBy] = useState<"score" | "rating" | "name">("score");
+  const [sortBy, setSortBy] = useState<"score" | "rating" | "name" | "reviews">("score");
+  // 🔎 Ricerca testuale interna ai risultati (filtra senza nuove chiamate API)
+  const [resultsQuery, setResultsQuery] = useState("");
+  // 👁 Anteprima rapida inline (id riga espansa)
+  const [quickPreviewKey, setQuickPreviewKey] = useState<string | null>(null);
   const [searchPage, setSearchPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [lastSearchCity, setLastSearchCity] = useState("");
@@ -1034,11 +1038,20 @@ export default function LeadsPage() {
     }
   };
 
-  const sorted = [...results].sort((a, b) =>
-    sortBy === "score" ? b._score - a._score :
-    sortBy === "rating" ? (b.google_rating || 0) - (a.google_rating || 0) :
-    a.name.localeCompare(b.name)
-  );
+  const sorted = [...results]
+    .filter((r) => {
+      if (!resultsQuery.trim()) return true;
+      const q = resultsQuery.toLowerCase();
+      return [r.name, r.city, r.zone, r.full_address, r.phone, r.email, r.website]
+        .filter(Boolean)
+        .some((v) => String(v).toLowerCase().includes(q));
+    })
+    .sort((a, b) =>
+      sortBy === "score" ? b._score - a._score :
+      sortBy === "rating" ? (b.google_rating || 0) - (a.google_rating || 0) :
+      sortBy === "reviews" ? (b.google_reviews || 0) - (a.google_reviews || 0) :
+      a.name.localeCompare(b.name)
+    );
 
   const hotLeads = results.filter(l => l._score >= 70).length;
   const sectorConfig = selected ? INDUSTRY_CONFIGS[selected._sector as keyof typeof INDUSTRY_CONFIGS] : null;
