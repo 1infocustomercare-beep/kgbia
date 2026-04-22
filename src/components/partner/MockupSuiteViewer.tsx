@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, Loader2, Smartphone } from "lucide-react";
+import { Download, Loader2, Smartphone, FileArchive } from "lucide-react";
 import { toast } from "sonner";
 import html2canvas from "html2canvas";
+import JSZip from "jszip";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 
 export interface SuiteScreen {
