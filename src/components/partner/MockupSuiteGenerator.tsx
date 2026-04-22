@@ -856,8 +856,10 @@ export function MockupSuiteGenerator({
                   <button
                     key={opt.key}
                     type="button"
+                    disabled={controlsLocked}
                     onClick={() => setColorStyle(opt.key)}
-                    className={`px-2 py-2 rounded-lg border text-center transition-all ${
+                    title={lockTitle}
+                    className={`px-2 py-2 rounded-lg border text-center transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                       active
                         ? "border-primary bg-primary/10 shadow-sm scale-[1.02]"
                         : "border-border hover:border-primary/40"
