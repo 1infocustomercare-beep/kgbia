@@ -31,9 +31,15 @@ interface ThemeTokens {
   fontHead: string;
   fontBody: string;
   // Visual identity flags
-  vibe: "dark-luxury" | "warm-craft" | "ocean-breeze" | "minimal-zen" | "sushi-noir" | "gold-elegance" | "tech-modern";
+  vibe:
+    | "dark-luxury" | "warm-craft" | "ocean-breeze" | "minimal-zen"
+    | "sushi-noir" | "gold-elegance" | "tech-modern" | "neon-vibrant"
+    | "editorial-clean" | "boutique-pastel" | "monochrome-bold" | "glass-aurora"
+    | "real-estate-trust" | "fitness-energy";
   radius: number;
-  imageStyle: "food-warm" | "spa-soft" | "ocean" | "noir" | "luxury" | "modern";
+  imageStyle:
+    | "food-warm" | "spa-soft" | "ocean" | "noir" | "luxury" | "modern"
+    | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy";
 }
 
 function getTheme(variant: string, primaryOverride?: string): ThemeTokens {
