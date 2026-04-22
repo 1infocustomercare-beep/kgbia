@@ -303,6 +303,9 @@ export function MockupSuiteGenerator({
         preview_id: previewId,
         screens,
         variation_seed: variationSeed,
+        // Personalizzazione UI propagata anche all'edge (per AI prompt) e persistita nei screens
+        glass_intensity: glassIntensity,
+        color_style: colorStyle,
       };
 
       const { data, error } = await supabase.functions.invoke("lead-mockup-suite", { body: payload });
