@@ -32,6 +32,12 @@ interface Props {
   glassIntensity?: number;
   /** vivid (default) | muted | pastel | mono. */
   colorStyle?: ColorStyle;
+  /** Safe-area px (margine interno). Default 0. */
+  safeAreaPx?: number;
+  /** Type scale 0.85–1.20. Default 1.00. */
+  typeScale?: number;
+  /** Boost contrasto AA su testo e muted. Default false. */
+  boostContrast?: boolean;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -52,6 +58,9 @@ export function MockupSuiteViewer({
   compact = false,
   glassIntensity = 60,
   colorStyle = "vivid",
+  safeAreaPx = 0,
+  typeScale = 1,
+  boostContrast = false,
 }: Props) {
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
@@ -199,6 +208,9 @@ export function MockupSuiteViewer({
                       height={screenHeight}
                       glassIntensity={glassIntensity}
                       colorStyle={colorStyle}
+                      safeAreaPx={safeAreaPx}
+                      typeScale={typeScale}
+                      boostContrast={boostContrast}
                     />
                   )}
 

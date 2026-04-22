@@ -24,6 +24,12 @@ interface Props {
   glassIntensity?: number;
   /** vivid (originale) | muted (-20% sat) | pastel (+luminosità, -sat) | mono (B/N + accent). */
   colorStyle?: ColorStyle;
+  /** Padding interno orizzontale aggiuntivo (px) per garantire safe-area dai bordi del frame. Default 0. */
+  safeAreaPx?: number;
+  /** Moltiplicatore tipografia (0.85–1.20). Default 1.00. Scala via CSS var --mockup-type-scale. */
+  typeScale?: number;
+  /** Forza testo con contrasto AA: opacizza meno il muted, schiarisce/scurisce il text base. */
+  boostContrast?: boolean;
 }
 
 interface ThemeTokens {
@@ -1179,9 +1185,24 @@ function MapScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: st
 export function MockupReactScreen({
   type, templateVariant, businessName, businessSector = "", businessCity = "", primaryColor, width, height,
   glassIntensity = 60, colorStyle = "vivid",
+  safeAreaPx = 0, typeScale = 1, boostContrast = false,
 }: Props) {
   const baseTheme = getTheme(templateVariant, primaryColor, colorStyle);
-  const theme: ThemeTokens = { ...baseTheme, glassIntensity };
+
+  // ─── Readability boost: garantisce contrasto AA su qualsiasi template ────
+  // - text: forza luminosità verso gli estremi (chiaro su scuro, scuro su chiaro)
+  // - textMuted: alza l'opacità minima a 0.78 invece di 0.55
+  let text = baseTheme.text;
+  let textMuted = baseTheme.textMuted;
+  if (boostContrast) {
+    const bgHsl = hexToHsl(baseTheme.bg.startsWith("#") ? baseTheme.bg : "#ffffff");
+    const isDark = (bgHsl?.l ?? 100) < 50;
+    text = isDark ? "#FFFFFF" : "#0A0A0A";
+    // textMuted può essere rgba(...) — lo sostituiamo con una versione più contrastata
+    textMuted = isDark ? "rgba(255,255,255,0.82)" : "rgba(10,10,10,0.78)";
+  }
+
+  const theme: ThemeTokens = { ...baseTheme, glassIntensity, text, textMuted };
 
   const renderContent = () => {
     switch (type) {
@@ -1213,13 +1234,36 @@ export function MockupReactScreen({
     }
   };
 
+  // Type scale clamp 0.85–1.20 — viene moltiplicato sui font-size dei figli via CSS zoom
+  // su mobile stack (no zoom) usiamo `fontSize` sul contenitore + transform-scale del child wrapper.
+  const clampedScale = Math.max(0.85, Math.min(1.20, typeScale));
+  const safe = Math.max(0, Math.min(24, safeAreaPx));
+
   return (
     <div
       className="relative overflow-hidden flex flex-col"
-      style={{ width, height, background: theme.bg, fontFamily: theme.fontBody }}
+      style={{
+        width,
+        height,
+        background: theme.bg,
+        fontFamily: theme.fontBody,
+        // CSS var disponibile ai figli che vogliono leggerla; fallback gestito sotto via fontSize
+        ["--mockup-type-scale" as any]: clampedScale,
+        // fontSize base scalato → tutti i `text-[Npx]` Tailwind restano in px assoluti,
+        // ma i figli che usano `em`/`rem` o ereditano da parent ne beneficiano.
+        fontSize: `${clampedScale}em`,
+      }}
     >
       <StatusBar theme={theme} />
-      <div className="flex-1 overflow-hidden">
+      <div
+        className="flex-1 overflow-hidden"
+        style={{
+          paddingLeft: safe,
+          paddingRight: safe,
+          // safe-area verticale leggermente ridotta (top già coperto da StatusBar/Dynamic Island)
+          paddingBottom: Math.round(safe * 0.5),
+        }}
+      >
         {renderContent()}
       </div>
     </div>

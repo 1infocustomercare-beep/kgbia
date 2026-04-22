@@ -250,6 +250,10 @@ export function MockupSuiteGenerator({
   // Personalizzazione avanzata
   const [glassIntensity, setGlassIntensity] = useState<number>(60);
   const [colorStyle, setColorStyle] = useState<ColorStyle>("vivid");
+  // Safe Area & Leggibilità — padding interno, scala tipografica, contrasto AA
+  const [safeAreaPx, setSafeAreaPx] = useState<number>(8);
+  const [typeScale, setTypeScale] = useState<number>(1);
+  const [boostContrast, setBoostContrast] = useState<boolean>(true);
   const [autoScreens, setAutoScreens] = useState(true);
   const [screens, setScreens] = useState<{ type: ScreenType; title: string }[]>(
     suggestScreensForSector(businessSector)
@@ -341,6 +345,10 @@ export function MockupSuiteGenerator({
         // Personalizzazione UI propagata anche all'edge (per AI prompt) e persistita nei screens
         glass_intensity: glassIntensity,
         color_style: colorStyle,
+        // Safe-area & leggibilità (vengono letti dall'edge per costruire il prompt AI)
+        safe_area_px: safeAreaPx,
+        type_scale: typeScale,
+        boost_contrast: boostContrast,
       };
 
       if (isAIEngine) setPreviewPhase("upgrading");
@@ -688,6 +696,9 @@ export function MockupSuiteGenerator({
                       height={Math.round(110 * 19.5 / 9) - 4}
                       glassIntensity={glassIntensity}
                       colorStyle={colorStyle}
+                      safeAreaPx={Math.round(safeAreaPx * 0.4)}
+                      typeScale={typeScale}
+                      boostContrast={boostContrast}
                     />
                   </div>
                   <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
@@ -710,7 +721,10 @@ export function MockupSuiteGenerator({
             </Label>
             <button
               type="button"
-              onClick={() => { setGlassIntensity(60); setColorStyle("vivid"); }}
+              onClick={() => {
+                setGlassIntensity(60); setColorStyle("vivid");
+                setSafeAreaPx(8); setTypeScale(1); setBoostContrast(true);
+              }}
               className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors"
             >
               Reset default
@@ -774,6 +788,101 @@ export function MockupSuiteGenerator({
 
           <p className="text-[10px] text-muted-foreground italic">
             🎨 Clicca <span className="font-semibold not-italic">Genera Suite</span> per applicare queste impostazioni alle 4 schermate. L'anteprima live in alto si aggiorna istantaneamente.
+          </p>
+        </div>
+
+        {/* ────────────────────────────────────────────────────────────────── */}
+        {/* SAFE AREA & LEGGIBILITÀ — margini, tipografia, contrasto AA       */}
+        {/* Garantiscono che testo e UI restino dentro il frame iPhone        */}
+        {/* su qualsiasi template selezionato (auto + manuali).               */}
+        {/* ────────────────────────────────────────────────────────────────── */}
+        <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent p-4 space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <Label className="flex items-center gap-1.5 m-0">
+              <Eye className="h-3.5 w-3.5 text-accent-foreground" /> Safe Area & Leggibilità
+            </Label>
+            <Badge variant="outline" className="text-[9px] uppercase tracking-wider">
+              {boostContrast ? "AA on" : "AA off"} · {typeScale.toFixed(2)}× · {safeAreaPx}px
+            </Badge>
+          </div>
+
+          {/* Safe Area slider */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="safe-area-slider" className="text-xs flex items-center gap-1.5 m-0">
+                Margine interno (safe-area)
+              </Label>
+              <Badge variant="outline" className="text-[10px] font-mono">{safeAreaPx}px</Badge>
+            </div>
+            <input
+              id="safe-area-slider"
+              type="range"
+              min={0}
+              max={24}
+              step={2}
+              value={safeAreaPx}
+              onChange={(e) => setSafeAreaPx(Number(e.target.value))}
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
+            />
+            <div className="flex justify-between text-[9px] text-muted-foreground">
+              <span>Edge-to-edge</span>
+              <span>Bilanciato</span>
+              <span>Massima sicurezza</span>
+            </div>
+          </div>
+
+          {/* Type scale slider */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="type-scale-slider" className="text-xs flex items-center gap-1.5 m-0">
+                Dimensione tipografia
+              </Label>
+              <Badge variant="outline" className="text-[10px] font-mono">{typeScale.toFixed(2)}×</Badge>
+            </div>
+            <input
+              id="type-scale-slider"
+              type="range"
+              min={0.85}
+              max={1.20}
+              step={0.05}
+              value={typeScale}
+              onChange={(e) => setTypeScale(Number(e.target.value))}
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
+            />
+            <div className="flex justify-between text-[9px] text-muted-foreground">
+              <span>Compatta (0.85×)</span>
+              <span>Standard (1.00×)</span>
+              <span>Maxi (1.20×)</span>
+            </div>
+          </div>
+
+          {/* Contrast toggle */}
+          <div className="flex items-start justify-between gap-3 p-2.5 rounded-lg bg-muted/40 border border-border/40">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold leading-tight">Boost contrasto AA</p>
+              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
+                Forza testo e didascalie a contrasto WCAG AA su qualsiasi sfondo del template.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setBoostContrast(v => !v)}
+              role="switch"
+              aria-checked={boostContrast}
+              className={`shrink-0 relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+                boostContrast ? "bg-primary" : "bg-muted-foreground/30"
+              }`}
+            >
+              <span
+                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-background shadow transition-transform ${
+                  boostContrast ? "translate-x-5" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
+
+          <p className="text-[10px] text-muted-foreground italic">
+            🛡️ Validazione: nessun testo finisce sotto la Dynamic Island o l'Home Indicator. Ottimale per AI-render 4K/8K.
           </p>
         </div>
 
@@ -895,6 +1004,9 @@ export function MockupSuiteGenerator({
               suiteId={result.suite_id}
               glassIntensity={glassIntensity}
               colorStyle={colorStyle}
+              safeAreaPx={safeAreaPx}
+              typeScale={typeScale}
+              boostContrast={boostContrast}
             />
           </div>
         )}
