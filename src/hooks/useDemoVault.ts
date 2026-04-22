@@ -47,6 +47,8 @@ export interface SaveDemoInput {
   sectorLabel?: string;
   subSector?: string;
   templateVariant: string;
+  /** Override esplicito: 'ai' | 'template' | 'hybrid'. Se omesso, viene auto-classificato. */
+  generationEngine?: GenerationEngine;
   themeHint?: string;
   tenantId?: string | null;
   tenantKind?: "restaurant" | "company" | null;
@@ -61,6 +63,19 @@ export interface SaveDemoInput {
   imagesPayload?: Record<string, any>;
   outreachPayload?: Record<string, any>;
   fullResult?: Record<string, any>;
+}
+
+/** Euristica: deduce engine da contenuti payload. AI se ci sono marker di scraping/AI, template altrimenti. */
+function inferEngineFromPayload(input: SaveDemoInput): GenerationEngine {
+  if (input.generationEngine) return input.generationEngine;
+  const haystack = JSON.stringify({
+    full: input.fullResult || {},
+    brand: input.brandPayload || {},
+    images: input.imagesPayload || {},
+  }).toLowerCase();
+  const aiMarkers = ["scraped_data", "ai_factory", "ai_generated", "ai_prompt", "gemini", "scraping_source"];
+  if (aiMarkers.some((m) => haystack.includes(m))) return "ai";
+  return "template";
 }
 
 export interface RemapInput {
