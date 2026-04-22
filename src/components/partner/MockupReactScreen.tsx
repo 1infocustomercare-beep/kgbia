@@ -927,6 +927,188 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+// DASHBOARD / STATS SCREEN — analytics-style con KPI e grafici
+// ════════════════════════════════════════════════════════════════════════════
+function DashboardScreen({ theme, name, sector }: { theme: ThemeTokens; name: string; sector: string }) {
+  const sLabel = sectorLabel(sector);
+  const kpis = [
+    { v: "€12.4k", l: "Ricavi mese", trend: "+18%" },
+    { v: "247", l: "Clienti attivi", trend: "+12%" },
+    { v: "4.9★", l: "Rating medio", trend: "+0.2" },
+  ];
+  const bars = [40, 65, 50, 85, 70, 95, 78];
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2">
+        <p className="text-[7px] uppercase tracking-wider font-semibold" style={{ color: theme.textMuted }}>Dashboard · {sLabel}</p>
+        <p className="text-[11px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>Ciao, {name.split(" ")[0]} 👋</p>
+      </div>
+      <div className="px-4 grid grid-cols-3 gap-1.5 mb-2">
+        {kpis.map((k, i) => (
+          <div key={i} className="rounded-xl p-2" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
+            <p className="text-[10px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>{k.v}</p>
+            <p className="text-[6px] font-semibold" style={{ color: theme.textMuted }}>{k.l}</p>
+            <p className="text-[6px] font-bold mt-0.5" style={{ color: theme.primary }}>↑ {k.trend}</p>
+          </div>
+        ))}
+      </div>
+      <div className="px-4 mb-2">
+        <div className="rounded-xl p-2.5" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.8 }}>
+          <div className="flex items-center justify-between mb-1.5">
+            <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: theme.text }}>Andamento settimanale</p>
+            <span className="text-[6px] px-1.5 py-0.5 rounded font-bold" style={{ background: `${theme.primary}25`, color: theme.primary }}>7gg</span>
+          </div>
+          <div className="flex items-end justify-between gap-1 h-16">
+            {bars.map((h, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
+                <div className="w-full rounded-t" style={{ height: `${h}%`, background: i === 5 ? theme.primary : `${theme.primary}55` }} />
+                <span className="text-[5px] font-bold" style={{ color: theme.textMuted }}>{["L","M","M","G","V","S","D"][i]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="px-4 space-y-1">
+        <p className="text-[7px] font-bold uppercase tracking-wider" style={{ color: theme.textMuted }}>Attività recente</p>
+        {["Nuova prenotazione · Tavolo per 4", "Recensione 5★ ricevuta", "Pagamento €45 ricevuto"].map((a, i) => (
+          <div key={i} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.5 }}>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: theme.accent }} />
+            <p className="text-[8px] flex-1" style={{ color: theme.text }}>{a}</p>
+            <span className="text-[6px]" style={{ color: theme.textMuted }}>{i === 0 ? "ora" : i === 1 ? "12m" : "1h"}</span>
+          </div>
+        ))}
+      </div>
+      <BottomNav theme={theme} active="profile" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CHAT SCREEN — assistente AI / chat support
+// ════════════════════════════════════════════════════════════════════════════
+function ChatScreen({ theme, name, sector }: { theme: ThemeTokens; name: string; sector: string }) {
+  const sLabel = sectorLabel(sector);
+  const msgs = [
+    { from: "ai", text: `Ciao! Sono l'assistente di ${name}. Come posso aiutarti oggi?` },
+    { from: "me", text: "Vorrei prenotare per sabato sera, sei persone." },
+    { from: "ai", text: `Perfetto! Per ${sLabel.toLowerCase()} sabato 26 abbiamo disponibilità alle 19:30, 20:00 e 21:30. Quale preferisci?` },
+    { from: "me", text: "20:00 va benissimo." },
+    { from: "ai", text: "Confermato ✓ Ti ho inviato il riepilogo via WhatsApp. A presto!" },
+  ];
+  return (
+    <div className="pb-14 overflow-hidden h-full flex flex-col">
+      <div className="px-4 pt-1 pb-2 border-b flex items-center gap-2" style={{ borderColor: `${theme.text}10` }}>
+        <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black"
+          style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg }}>
+          AI
+        </div>
+        <div className="flex-1">
+          <p className="text-[10px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>Assistente {name}</p>
+          <p className="text-[6px] flex items-center gap-1" style={{ color: theme.textMuted }}>
+            <span className="w-1 h-1 rounded-full" style={{ background: "#22c55e" }} />
+            Online · Risponde subito
+          </p>
+        </div>
+      </div>
+      <div className="flex-1 overflow-hidden px-3 py-2 space-y-1.5">
+        {msgs.map((m, i) => (
+          <div key={i} className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[75%] px-2 py-1.5 text-[8px] leading-snug`}
+              style={{
+                background: m.from === "me" ? theme.primary : theme.bgPanel,
+                color: m.from === "me" ? theme.bg : theme.text,
+                borderRadius: 12,
+                borderBottomRightRadius: m.from === "me" ? 4 : 12,
+                borderBottomLeftRadius: m.from === "me" ? 12 : 4,
+              }}>
+              {m.text}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="px-3 pb-2">
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full" style={{ background: theme.bgPanel }}>
+          <span className="text-[8px] flex-1" style={{ color: theme.textMuted }}>Scrivi un messaggio…</span>
+          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: theme.primary }}>
+            <svg width="9" height="9" viewBox="0 0 24 24" fill={theme.bg}><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          </div>
+        </div>
+      </div>
+      <BottomNav theme={theme} active="profile" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// MAP SCREEN — mappa punti vendita / annunci geo
+// ════════════════════════════════════════════════════════════════════════════
+function MapScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: string; sector: string; city: string }) {
+  const sLabel = sectorLabel(sector);
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2">
+        <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>Esplora {city || "la zona"}</p>
+        <div className="flex items-center gap-2 mt-1.5 px-2.5 py-1.5 rounded-full" style={{ background: theme.bgPanel }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth="2.5" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <span className="text-[7px]" style={{ color: theme.textMuted }}>Cerca {sLabel.toLowerCase()} vicino a te…</span>
+        </div>
+      </div>
+      {/* Faux map */}
+      <div className="px-4 mb-2">
+        <div className="relative rounded-2xl overflow-hidden h-[140px]" style={{ borderRadius: theme.radius, background: theme.bgPanelAlt }}>
+          <svg viewBox="0 0 200 140" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="200" height="140" fill={theme.bgPanelAlt} />
+            {/* streets */}
+            <path d="M0 40 L200 50 M0 90 L200 80 M50 0 L60 140 M120 0 L130 140 M170 0 L175 140" stroke={`${theme.text}20`} strokeWidth="1.5" fill="none" />
+            <path d="M0 70 Q100 60 200 75" stroke={theme.primary} strokeWidth="2" fill="none" opacity="0.6" />
+            {/* park / water */}
+            <ellipse cx="40" cy="110" rx="30" ry="18" fill={`${theme.accent}30`} />
+            <rect x="140" y="20" width="35" height="25" fill={`${theme.accent}25`} rx="3" />
+          </svg>
+          {/* Pins */}
+          {[
+            { x: "30%", y: "45%", price: "€89" },
+            { x: "55%", y: "30%", price: "€120" },
+            { x: "70%", y: "60%", price: "€65", active: true },
+            { x: "20%", y: "70%", price: "€95" },
+          ].map((p, i) => (
+            <div key={i} className="absolute -translate-x-1/2 -translate-y-full text-[7px] font-black px-1.5 py-0.5 rounded-full whitespace-nowrap"
+              style={{
+                left: p.x, top: p.y,
+                background: p.active ? theme.primary : `${theme.bg}f0`,
+                color: p.active ? theme.bg : theme.text,
+                border: `1.5px solid ${theme.primary}`,
+              }}>
+              {p.price}
+            </div>
+          ))}
+          {/* User location */}
+          <div className="absolute left-1/2 top-1/2 w-3 h-3 rounded-full -translate-x-1/2 -translate-y-1/2"
+            style={{ background: "#3B82F6", border: "2px solid #fff", boxShadow: "0 0 0 6px rgba(59,130,246,0.25)" }} />
+        </div>
+      </div>
+      {/* Card slider */}
+      <div className="px-4">
+        <p className="text-[7px] font-bold uppercase tracking-wider mb-1" style={{ color: theme.textMuted }}>4 risultati nelle vicinanze</p>
+        <div className="space-y-1.5">
+          {getMenuItems(sector).slice(0, 2).map((it, i) => (
+            <div key={i} className="flex items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
+              <ArtImage theme={theme} seed={i + 60} className="w-9 h-9 shrink-0" style={{ borderRadius: theme.radius * 0.5 }} />
+              <div className="flex-1 min-w-0">
+                <p className="text-[9px] font-bold truncate" style={{ color: theme.text }}>{it.name}</p>
+                <p className="text-[6px] truncate" style={{ color: theme.textMuted }}>{0.4 + i * 0.3} km · ★ 4.{8 - i}</p>
+              </div>
+              <p className="text-[10px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>€{it.price}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <BottomNav theme={theme} active="home" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 // Main export
 // ════════════════════════════════════════════════════════════════════════════
 export function MockupReactScreen({
@@ -946,12 +1128,15 @@ export function MockupReactScreen({
       case "contact":
         return <BookingScreen theme={theme} sector={businessSector} />;
       case "profile":
+        return <ProfileScreen theme={theme} name={businessName} />;
       case "dashboard":
       case "stats":
-        return <ProfileScreen theme={theme} name={businessName} />;
-      case "gallery":
-      case "map":
+        return <DashboardScreen theme={theme} name={businessName} sector={businessSector} />;
       case "chat":
+        return <ChatScreen theme={theme} name={businessName} sector={businessSector} />;
+      case "map":
+        return <MapScreen theme={theme} name={businessName} sector={businessSector} city={businessCity} />;
+      case "gallery":
         return <GalleryScreen theme={theme} name={businessName} />;
       case "checkout":
         return <CheckoutScreen theme={theme} sector={businessSector} />;
