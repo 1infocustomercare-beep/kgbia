@@ -624,17 +624,42 @@ function SiteCard({
   );
 }
 
-function MockupCard({ suite, onDelete, onCopy }: { suite: VaultMockupSuite; onDelete: () => void; onCopy: (t: string, l: string) => void }) {
+function MockupCard({ suite, onDelete, onCopy, onToggleFavorite }: { suite: VaultMockupSuite; onDelete: () => void; onCopy: (t: string, l: string) => void; onToggleFavorite: () => void }) {
   const engineCfg = ENGINE_LABEL[suite.engine] || { label: suite.engine, color: "#9ca3af", icon: Smartphone };
   const EngineIcon = engineCfg.icon;
   const screens = Array.isArray(suite.screens) ? suite.screens : [];
   const shareUrl = suite.share_slug ? `${window.location.origin}/preview/mockup/${suite.share_slug}` : null;
+  const isFav = !!suite.is_favorite;
 
   return (
-    <div className="rounded-xl p-3 space-y-2 relative" style={{ background: "rgba(192,132,252,0.05)", border: "1px solid rgba(192,132,252,0.18)" }}>
+    <div
+      className="rounded-xl p-3 space-y-2 relative"
+      style={{
+        background: isFav ? "rgba(251,191,36,0.06)" : "rgba(192,132,252,0.05)",
+        border: `1px solid ${isFav ? "rgba(251,191,36,0.28)" : "rgba(192,132,252,0.18)"}`,
+      }}
+    >
       <span className="absolute top-2 right-2 text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider" style={{ background: "rgba(192,132,252,0.18)", color: "#e9d5ff" }}>
         <Smartphone className="w-2.5 h-2.5 inline mr-0.5" /> Mockup
       </span>
+
+      {/* Salva come preferita — top-left, sempre visibile */}
+      <button
+        onClick={onToggleFavorite}
+        title={isFav ? "Rimuovi dai preferiti" : "Salva come preferita"}
+        aria-label={isFav ? "Rimuovi dai preferiti" : "Salva come preferita"}
+        aria-pressed={isFav}
+        className="absolute top-2 left-2 w-7 h-7 rounded-full flex items-center justify-center transition-colors"
+        style={{
+          background: isFav ? "rgba(251,191,36,0.18)" : "rgba(255,255,255,0.05)",
+          border: `1px solid ${isFav ? "rgba(251,191,36,0.45)" : "rgba(255,255,255,0.08)"}`,
+        }}
+      >
+        <Star
+          className="w-3.5 h-3.5"
+          style={{ color: isFav ? "#fbbf24" : "#9ca3af", fill: isFav ? "#fbbf24" : "none" }}
+        />
+      </button>
 
       <div className="flex items-start gap-2 pr-14">
         <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(192,132,252,0.15)" }}>
