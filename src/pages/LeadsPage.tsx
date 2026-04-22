@@ -32,6 +32,7 @@ import AriannaLeadScoutPanel, { AriannaPilot } from "@/components/leads/AriannaL
 import AriannaInsightsDashboard from "@/components/leads/AriannaInsightsDashboard";
 import LeadIntelligenceInbox from "@/components/leads/LeadIntelligenceInbox";
 import SellerOnboardingWizard from "@/components/leads/SellerOnboardingWizard";
+import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
@@ -1667,6 +1668,9 @@ export default function LeadsPage() {
       >
         🎙 Comanda con la voce — "Trova lead a Milano", "Lancia demo sul primo lead"
       </button>
+
+      {/* ═══ FLUSSO 3 STEP (sei al passo 2: caccia lead + AI genera demo) ═══ */}
+      <PartnerFlowStepper currentStep="leads" />
 
       {/* ═══ SEARCH BAR ═══ */}
       <div className="rounded-2xl p-4 space-y-3" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
