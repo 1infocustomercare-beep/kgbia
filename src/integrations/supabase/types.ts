@@ -1273,8 +1273,13 @@ export type Database = {
           phone: string | null
           primary_color: string | null
           secondary_color: string | null
+          selected_installments: number | null
+          selected_plan: string | null
+          setup_paid: boolean
+          setup_paid_at: string | null
           slug: string
           social_links: Json | null
+          stripe_setup_session_id: string | null
           subscription_plan: string
           tagline: string | null
           theme_config: Json | null
@@ -1300,8 +1305,13 @@ export type Database = {
           phone?: string | null
           primary_color?: string | null
           secondary_color?: string | null
+          selected_installments?: number | null
+          selected_plan?: string | null
+          setup_paid?: boolean
+          setup_paid_at?: string | null
           slug: string
           social_links?: Json | null
+          stripe_setup_session_id?: string | null
           subscription_plan?: string
           tagline?: string | null
           theme_config?: Json | null
@@ -1327,8 +1337,13 @@ export type Database = {
           phone?: string | null
           primary_color?: string | null
           secondary_color?: string | null
+          selected_installments?: number | null
+          selected_plan?: string | null
+          setup_paid?: boolean
+          setup_paid_at?: string | null
           slug?: string
           social_links?: Json | null
+          stripe_setup_session_id?: string | null
           subscription_plan?: string
           tagline?: string | null
           theme_config?: Json | null
@@ -4970,11 +4985,15 @@ export type Database = {
           policy_accepted: boolean | null
           policy_accepted_at: string | null
           primary_color: string | null
+          selected_installments: number | null
+          selected_plan: string | null
           setup_paid: boolean
+          setup_paid_at: string | null
           slug: string
           stripe_account_id: string | null
           stripe_connect_account_id: string | null
           stripe_onboarding_complete: boolean
+          stripe_setup_session_id: string | null
           table_orders_enabled: boolean
           tagline: string | null
           takeaway_enabled: boolean
@@ -5003,11 +5022,15 @@ export type Database = {
           policy_accepted?: boolean | null
           policy_accepted_at?: string | null
           primary_color?: string | null
+          selected_installments?: number | null
+          selected_plan?: string | null
           setup_paid?: boolean
+          setup_paid_at?: string | null
           slug: string
           stripe_account_id?: string | null
           stripe_connect_account_id?: string | null
           stripe_onboarding_complete?: boolean
+          stripe_setup_session_id?: string | null
           table_orders_enabled?: boolean
           tagline?: string | null
           takeaway_enabled?: boolean
@@ -5036,11 +5059,15 @@ export type Database = {
           policy_accepted?: boolean | null
           policy_accepted_at?: string | null
           primary_color?: string | null
+          selected_installments?: number | null
+          selected_plan?: string | null
           setup_paid?: boolean
+          setup_paid_at?: string | null
           slug?: string
           stripe_account_id?: string | null
           stripe_connect_account_id?: string | null
           stripe_onboarding_complete?: boolean
+          stripe_setup_session_id?: string | null
           table_orders_enabled?: boolean
           tagline?: string | null
           takeaway_enabled?: boolean
@@ -6069,6 +6096,57 @@ export type Database = {
           },
         ]
       }
+      setup_payment_log: {
+        Row: {
+          amount_cents: number | null
+          created_at: string
+          currency: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          installments: number | null
+          metadata: Json | null
+          paid_at: string | null
+          plan: string | null
+          status: string
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_cents?: number | null
+          created_at?: string
+          currency?: string | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          installments?: number | null
+          metadata?: Json | null
+          paid_at?: string | null
+          plan?: string | null
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number | null
+          created_at?: string
+          currency?: string | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          installments?: number | null
+          metadata?: Json | null
+          paid_at?: string | null
+          plan?: string | null
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       shifts: {
         Row: {
           break_minutes: number | null
@@ -6942,6 +7020,7 @@ export type Database = {
         Args: { _restaurant_id: string }
         Returns: boolean
       }
+      is_setup_paid: { Args: { _user_id?: string }; Returns: boolean }
       is_staff: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
       log_outreach_failure: {
