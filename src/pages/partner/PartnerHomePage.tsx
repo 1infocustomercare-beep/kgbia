@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import empireMonkeyMascot from "@/assets/empire-monkey.png";
 import { usePartnerDemoMode } from "@/components/layout/PartnerLayout";
 import { SectorPhoneCarousel } from "@/components/partner/SectorPhoneCarousel";
+import EmpireParticleOrb from "@/components/partner/EmpireParticleOrb";
 
 /* Animated counter component — forwardRef so it can sit inside motion children that pass refs */
 const AnimatedCounter = forwardRef<HTMLParagraphElement, { value: number; prefix?: string; color: string }>(
@@ -152,6 +153,13 @@ export default function PartnerHomePage() {
           </div>
         </div>
       </section>
+
+      {/* ═══ EMPIRE PARTICLE ORB — interactive WOW hero ═══ */}
+      {!demoMode && (
+        <section className="px-4">
+          <EmpireParticleOrb />
+        </section>
+      )}
 
       <AnimatePresence mode="wait">
         {demoMode ? (
