@@ -5,10 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
+import { MockupReactScreen } from "./MockupReactScreen";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -49,8 +50,26 @@ const TEMPLATE_VARIANTS = [
   { key: "luxury_gold",       label: "Luxury Gold — alta cucina/Michelin", group: "Hospitality" },
   { key: "batey",             label: "Batey Pacifico — mare/lido/yacht", group: "Hospitality" },
   { key: "minimal_zen",       label: "Minimal Zen — spa/wellness", group: "Wellness" },
-  { key: "modern_dark",       label: "Modern Dark — universale", group: "Universale" },
 ];
+
+// Palette rapide per swap veloce del colore brand prima della generazione
+const QUICK_PALETTES: { label: string; color: string }[] = [
+  { label: "Oro Imperiale",  color: "#C8963E" },
+  { label: "Oro Champagne",  color: "#D4AF37" },
+  { label: "Sakura Pink",    color: "#E89BAE" },
+  { label: "Coral Vibrant",  color: "#FF6B5C" },
+  { label: "Terracotta",     color: "#C84A2A" },
+  { label: "Ocean Azure",    color: "#5CC8D9" },
+  { label: "Navy Trust",     color: "#1B2A3A" },
+  { label: "Emerald",        color: "#10B981" },
+  { label: "Lime Energy",    color: "#C8FF00" },
+  { label: "Royal Indigo",   color: "#6366F1" },
+  { label: "Magenta Neon",   color: "#FF2E9A" },
+  { label: "Bordeaux",       color: "#6B1F2C" },
+  { label: "Mono Black",     color: "#0A0A0A" },
+  { label: "Pure White",     color: "#FAFAFA" },
+];
+
 
 const SCREEN_TYPES: { key: ScreenType; label: string }[] = [
   { key: "home",      label: "Home" },
@@ -467,29 +486,115 @@ export function MockupSuiteGenerator({
           </div>
         </div>
 
-        {/* Template variante (raggruppato) */}
+        {/* Template variante (raggruppato) + ANTEPRIMA LIVE */}
         <div>
-          <Label htmlFor="template-variant">Stile grafico template</Label>
-          <Select value={templateVariant} onValueChange={setTemplateVariant}>
-            <SelectTrigger id="template-variant">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="max-h-[360px]">
-              {Object.entries(groupedTemplates).map(([group, items]) => (
-                <div key={group}>
-                  <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{group}</div>
-                  {items.map(t => (
-                    <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+          <div className="flex items-center justify-between mb-2">
+            <Label htmlFor="template-variant" className="flex items-center gap-1.5">
+              <Palette className="h-3.5 w-3.5" /> Stile grafico template
+            </Label>
+            <Badge variant="outline" className="text-[10px] gap-1"><Eye className="h-3 w-3" /> Anteprima live</Badge>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 items-start">
+            <div className="space-y-3">
+              <Select value={templateVariant} onValueChange={setTemplateVariant}>
+                <SelectTrigger id="template-variant">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-[360px]">
+                  {Object.entries(groupedTemplates).map(([group, items]) => (
+                    <div key={group}>
+                      <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{group}</div>
+                      {items.map(t => (
+                        <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+                      ))}
+                    </div>
                   ))}
+                </SelectContent>
+              </Select>
+              {detectedTemplateLabel && (
+                <p className="text-[11px] text-muted-foreground">
+                  ✨ Auto-rilevato dal settore: <span className="font-semibold text-foreground">{detectedTemplateLabel}</span>
+                </p>
+              )}
+
+              {/* Palette swap rapido */}
+              <div>
+                <Label className="text-[11px] text-muted-foreground mb-1.5 block">Palette colore brand</Label>
+                <div className="flex flex-wrap gap-1.5">
+                  {QUICK_PALETTES.map(p => {
+                    const active = (mode === "standalone" ? standalone.primaryColor : primaryColor).toLowerCase() === p.color.toLowerCase();
+                    return (
+                      <button
+                        key={p.color}
+                        type="button"
+                        onClick={() => {
+                          if (mode === "standalone") {
+                            setStandalone(prev => ({ ...prev, primaryColor: p.color }));
+                          } else {
+                            // Lead mode: forziamo override locale via standalone state come "preview color"
+                            setStandalone(prev => ({ ...prev, primaryColor: p.color }));
+                          }
+                        }}
+                        title={p.label}
+                        className={`relative w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
+                          active ? "border-foreground shadow-md scale-110" : "border-border"
+                        }`}
+                        style={{ background: p.color }}
+                      >
+                        {active && (
+                          <span className="absolute inset-0 flex items-center justify-center text-white text-[10px] font-black drop-shadow">✓</span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
-              ))}
-            </SelectContent>
-          </Select>
-          {detectedTemplateLabel && (
-            <p className="text-[11px] text-muted-foreground mt-1">
-              ✨ Auto-rilevato: <span className="font-semibold text-foreground">{detectedTemplateLabel}</span>
-            </p>
-          )}
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  Colore attuale:{" "}
+                  <span className="font-mono font-semibold">
+                    {(mode === "standalone" ? standalone.primaryColor : primaryColor).toUpperCase()}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {/* Anteprima live mini iPhone */}
+            <div className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-muted/30 border">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Anteprima tema</p>
+              <div className="relative" style={{ width: 110, height: Math.round(110 * 19.5 / 9) }}>
+                <div
+                  className="absolute -inset-2 rounded-[28px] opacity-30 blur-xl"
+                  style={{ background: mode === "standalone" ? standalone.primaryColor : primaryColor }}
+                />
+                <div
+                  className="relative rounded-[22px] border-[2px] overflow-hidden shadow-xl"
+                  style={{
+                    width: 110,
+                    height: Math.round(110 * 19.5 / 9),
+                    borderColor: "hsl(var(--foreground) / 0.2)",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[34px] h-[8px] bg-black rounded-full z-30" />
+                  <div className="absolute inset-[2px] overflow-hidden rounded-[20px]">
+                    <MockupReactScreen
+                      type="home"
+                      templateVariant={templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant}
+                      businessName={businessName || "Brand Demo"}
+                      businessSector={businessSector || "Servizi"}
+                      businessCity={businessCity || ""}
+                      primaryColor={mode === "standalone" ? standalone.primaryColor : primaryColor}
+                      width={106}
+                      height={Math.round(110 * 19.5 / 9) - 4}
+                    />
+                  </div>
+                  <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
+                </div>
+              </div>
+              <p className="text-[9px] text-muted-foreground text-center mt-1 max-w-[120px]">
+                Preview Home · cambia istantaneamente
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* 4 schermate configurabili */}

@@ -26,11 +26,14 @@ interface Props {
   compact?: boolean;
 }
 
-/**
- * Renderizza 4 mockup iPhone affiancati.
- * - Per render_mode='ai': mostra l'immagine generata dentro la cornice iPhone
- * - Per render_mode='react': renderizza il template React (Paperfish/Strapizzami/etc) dentro la cornice iPhone
- */
+// ──────────────────────────────────────────────────────────────────────────────
+// iPhone 16 Pro Max — proporzioni reali fisse: 9 : 19.5
+// Usiamo dimensioni fisse calcolate da una larghezza base + aspect ratio.
+// In questo modo CAMBIANDO TEMPLATE/COLORI il frame resta SEMPRE proporzionato
+// e il contenuto interno scala 1:1 senza mai distorcersi.
+// ──────────────────────────────────────────────────────────────────────────────
+const IPHONE_RATIO = 19.5 / 9; // height / width
+
 export function MockupSuiteViewer({
   screens,
   templateVariant,
@@ -73,17 +76,21 @@ export function MockupSuiteViewer({
     }
   };
 
-  const phoneSize = compact
-    ? { w: 220, h: 460, scale: 0.55 }
-    : { w: 280, h: 580, scale: 0.71 };
+  // Frame dimensions — derivati da una larghezza base, con aspect ratio reale iPhone
+  const frameWidth = compact ? 220 : 280;
+  const frameHeight = Math.round(frameWidth * IPHONE_RATIO); // 220→477 / 280→607
+  const borderThickness = compact ? 3 : 4;
+  // Inner screen è sempre frameWidth - 2*border (mai distorto)
+  const screenWidth = frameWidth - borderThickness * 2;
+  const screenHeight = frameHeight - borderThickness * 2;
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Smartphone className="h-4 w-4" />
-          <span>4 schermate iPhone 16 Pro</span>
-          <Badge variant="outline" className="text-xs">{templateVariant.replace("_", " ")}</Badge>
+          <span>4 schermate iPhone 16 Pro Max · proporzioni reali 9:19.5</span>
+          <Badge variant="outline" className="text-xs">{templateVariant.replace(/_/g, " ")}</Badge>
         </div>
         <Button variant="outline" size="sm" onClick={downloadAll} disabled={downloading !== null}>
           <Download className="h-3 w-3 mr-1" /> Scarica tutti
@@ -96,35 +103,79 @@ export function MockupSuiteViewer({
             <div
               ref={el => { containerRefs.current[idx] = el; }}
               className="relative group"
+              style={{ width: frameWidth, height: frameHeight }}
             >
-              {/* Ambient glow */}
+              {/* Ambient glow personalizzato sul colore brand */}
               <div
                 className="absolute -inset-3 rounded-[48px] opacity-20 blur-2xl pointer-events-none transition-opacity group-hover:opacity-40"
                 style={{ background: primaryColor }}
               />
 
-              {/* iPhone frame */}
+              {/* iPhone titanium frame — proporzioni reali, mai distorte */}
               <div
-                className="relative rounded-[40px] border-[3px] border-foreground/15 bg-foreground/5 shadow-2xl overflow-hidden"
-                style={{ width: phoneSize.w, height: phoneSize.h }}
+                className="relative rounded-[42px] shadow-2xl overflow-hidden"
+                style={{
+                  width: frameWidth,
+                  height: frameHeight,
+                  borderWidth: borderThickness,
+                  borderStyle: "solid",
+                  borderColor: "hsl(var(--foreground) / 0.18)",
+                  background: "hsl(var(--foreground) / 0.05)",
+                  boxSizing: "border-box",
+                }}
               >
-                {/* Dynamic Island */}
-                <div className="absolute top-[8px] left-1/2 -translate-x-1/2 w-[80px] h-[22px] bg-black rounded-full z-30" />
+                {/* Dynamic Island — proporzionata al frame */}
+                <div
+                  className="absolute left-1/2 -translate-x-1/2 bg-black rounded-full z-30"
+                  style={{
+                    top: Math.round(frameWidth * 0.035),
+                    width: Math.round(frameWidth * 0.30),
+                    height: Math.round(frameWidth * 0.085),
+                  }}
+                />
 
-                {/* Side buttons */}
-                <div className="absolute -left-[3px] top-[80px] w-[3px] h-[24px] bg-foreground/20 rounded-l-full" />
-                <div className="absolute -left-[3px] top-[112px] w-[3px] h-[36px] bg-foreground/20 rounded-l-full" />
-                <div className="absolute -left-[3px] top-[156px] w-[3px] h-[36px] bg-foreground/20 rounded-l-full" />
-                <div className="absolute -right-[3px] top-[110px] w-[3px] h-[52px] bg-foreground/20 rounded-r-full" />
+                {/* Side titanium buttons */}
+                <div
+                  className="absolute bg-foreground/25 rounded-l-full"
+                  style={{ left: -borderThickness, top: frameHeight * 0.14, width: borderThickness, height: 22 }}
+                />
+                <div
+                  className="absolute bg-foreground/25 rounded-l-full"
+                  style={{ left: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 38 }}
+                />
+                <div
+                  className="absolute bg-foreground/25 rounded-l-full"
+                  style={{ left: -borderThickness, top: frameHeight * 0.28, width: borderThickness, height: 38 }}
+                />
+                <div
+                  className="absolute bg-foreground/25 rounded-r-full"
+                  style={{ right: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 56 }}
+                />
 
-                {/* Screen content */}
-                <div className="absolute inset-[3px] rounded-[36px] overflow-hidden bg-background">
+                {/* Screen — riempie esattamente l'area interna, niente distorsioni */}
+                <div
+                  className="absolute overflow-hidden bg-background"
+                  style={{
+                    top: borderThickness,
+                    left: borderThickness,
+                    width: screenWidth,
+                    height: screenHeight,
+                    borderRadius: 38,
+                  }}
+                >
                   {screen.render_mode === "ai" && screen.image_url ? (
                     <img
                       src={screen.image_url}
                       alt={screen.title}
-                      className="w-full h-full object-cover"
-                      style={{ objectPosition: "center top" }}
+                      className="w-full h-full"
+                      draggable={false}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "center top",
+                        display: "block",
+                      }}
                     />
                   ) : (
                     <MockupReactScreen
@@ -134,14 +185,21 @@ export function MockupSuiteViewer({
                       businessSector={businessSector}
                       businessCity={businessCity}
                       primaryColor={primaryColor}
-                      width={phoneSize.w - 6}
-                      height={phoneSize.h - 6}
+                      width={screenWidth}
+                      height={screenHeight}
                     />
                   )}
                 </div>
 
                 {/* Home indicator */}
-                <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[90px] h-[3px] bg-foreground/25 rounded-full z-20" />
+                <div
+                  className="absolute left-1/2 -translate-x-1/2 bg-foreground/30 rounded-full z-20"
+                  style={{
+                    bottom: Math.max(5, Math.round(frameWidth * 0.025)),
+                    width: Math.round(frameWidth * 0.34),
+                    height: 3,
+                  }}
+                />
               </div>
             </div>
 

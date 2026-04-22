@@ -151,47 +151,55 @@ function buildScreenPrompt(
     ? "ULTRA-CINEMATOGRAFICO 8K, qualità Apple Store keynote, illuminazione studio professionale a 3 punti, riflessi vetro perfetti del display, anti-aliasing perfetto, grana sottile cinematica, color grading premium"
     : "fotorealistico premium 4K, illuminazione studio soft, dettagli UI nitidi e leggibili, color grading professionale";
 
-  return `Mockup professionale iPhone 16 Pro Max FOTOREALISTICO PERFETTAMENTE CENTRATO E FRONTALE mostrando la schermata "${screen.title}" di un'app mobile premium per "${business.name}" — ${business.sector} a ${business.city}.
+  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).
 
-═══ CONTENUTO SCHERMATA ═══
+═══ COMPOSIZIONE FOTOGRAFICA (REGOLE INDEROGABILI) ═══
+• iPhone PERFETTAMENTE CENTRATO sia orizzontalmente che verticalmente nel frame quadrato/verticale
+• Vista ESCLUSIVAMENTE FRONTALE ortogonale: ZERO prospettiva, ZERO inclinazione, ZERO angolazione 3D, ZERO tilt, ZERO rotazione su qualsiasi asse
+• Aspect ratio dispositivo REALE 9:19.5, proporzioni iPhone 16 Pro Max accurate al millimetro
+• Cornice in titanio naturale visibile sottile e uniforme su tutti i lati (spessore identico)
+• Display interamente visibile, NESSUN cropping, NESSUNA distorsione ottica, NESSUN fish-eye
+• Sfondo: gradiente neutro morbido in tinta col tema (toni puliti tipo studio fotografico Apple)
+• Ombra naturale soft sotto il dispositivo (floating leggero, NO ombre dure)
+• NESSUN testo, watermark, cornice o decorazione FUORI dallo schermo iPhone
+• Risoluzione del display nitida e leggibile in ogni pixel
+
+═══ CONTENUTO SCHERMATA (PERTINENTE AL SETTORE) ═══
 ${screen.prompt_hint || screen.title}
-Il contenuto deve essere REALISTICO e PERTINENTE al settore "${business.sector}" — usa dati credibili italiani (nomi piatti/servizi tipici, prezzi in € realistici, indirizzi italiani plausibili, orari italiani 12h/24h).
+Il contenuto deve essere AUTENTICO e SPECIFICO per il settore "${business.sector}":
+• Nomi servizi/prodotti realistici tipici del settore italiano
+• Prezzi in € credibili e coerenti col mercato italiano
+• Indirizzi italiani plausibili (vie, città italiane reali)
+• Orari formato italiano 24h
+• Microcopy 100% in italiano professionale (zero inglese eccetto status bar iOS)
+• ZERO testo placeholder/lorem ipsum/finto
+• Dati pertinenti: se ristorante → piatti reali; se immobiliare → annunci con mq/camere; se fitness → workout/lezioni; se legale → pratiche/consulenze; ecc.
 
 ═══ STILE GRAFICO ═══
 ${style}
-Colore primario brand del cliente: ${primaryColor} — usalo come accent CTA principale.
+Colore primario brand del cliente (USARE come accent CTA principale e elementi attivi): ${primaryColor}
 
-═══ UI COMPONENTS OBBLIGATORI (DEVONO APPARIRE) ═══
-- Status bar iOS perfetta in alto (ora 9:41, indicatore segnale 5G, WiFi pieno, batteria 100% piena)
-- Dynamic Island nera centrata in alto, dimensioni iPhone 16 Pro reali
-- Header app con titolo schermata + eventuale icona profilo/back
-- Contenuto principale ben spaziato, gerarchia tipografica chiara (h1 24-28pt, body 15-17pt, label 11-13pt)
-- Componenti card con border-radius 16-20px, ombre soft naturali
-- Bottom navigation bar fissa: 5 icone (${bottomNav}), icona attiva colorata col primary, altre grigie
-- Home indicator iOS sottile in basso (barra orizzontale)
-- Bottoni CTA grandi (52px altezza), full-width, ombra sottile, testo bianco/contrasto perfetto
-- Microcopy 100% in italiano professionale, ZERO inglese (eccetto status bar)
-
-═══ COMPOSIZIONE FOTOGRAFICA (CRITICA) ═══
-- iPhone in posizione PERFETTAMENTE FRONTALE, ZERO PROSPETTIVA, ZERO INCLINAZIONE, ZERO ANGOLAZIONE
-- iPhone CENTRATO orizzontalmente E verticalmente nel frame
-- Aspect ratio iPhone reale 9:19.5, proporzioni dispositivo accurate
-- Cornice titanio iPhone visibile sottile, finitura matte
-- Sfondo: gradiente morbido neutro premium in tinta col tema (${style.split(":")[1]?.split(",")[0] || "neutro"})
-- Ombra naturale sotto il dispositivo, soft floating
-- NESSUN testo o decorazione fuori dallo schermo iPhone
-- Display interamente visibile e leggibile, nessun cropping
+═══ UI COMPONENTS OBBLIGATORI ═══
+• Status bar iOS perfetta in alto: ora 9:41, segnale 5G pieno, WiFi pieno, batteria 100%
+• Dynamic Island nera centrata in alto, dimensioni iPhone 16 Pro reali
+• Header app con titolo schermata + icona profilo/back coerente
+• Contenuto principale ben spaziato, gerarchia tipografica chiara (h1 24-28pt, body 15-17pt, label 11-13pt)
+• Card con border-radius 16-20px e ombre soft naturali
+• Bottom navigation bar fissa con 5 icone (${bottomNav}), icona attiva colorata col primary, altre grigie
+• Home indicator iOS sottile in basso
+• CTA primari grandi (52px altezza), full-width, contrasto perfetto
 
 ═══ QUALITÀ ═══
 ${quality}
 
-═══ DIVIETI ASSOLUTI ═══
-- VIETATO scrivere "Empire", "Empire AI", "Lovable", o qualsiasi branding piattaforma
-- VIETATO logo Apple, Google, Meta o brand esterni (eccetto status bar iOS standard)
-- VIETATO testo in inglese nei contenuti app (solo italiano)
-- VIETATO prospettive isometriche/3D rotation/tilt
-- VIETATO testo distorto, illeggibile o lorem ipsum
-- VIETATO mockup wireframe, low-fi, sketch — solo render fotografici premium fedeli`;
+═══ DIVIETI ASSOLUTI (NON NEGOZIABILI) ═══
+🚫 VIETATO scrivere "Empire", "Empire AI", "Empire AI Group", "Lovable", "Empireia" o qualsiasi nome di piattaforma/agenzia esterna
+🚫 VIETATO mostrare loghi Apple, Google, Meta, Lovable, o brand di terze parti (eccetto le icone status bar iOS standard)
+🚫 VIETATO testo in inglese nei contenuti dell'app (solo italiano corretto)
+🚫 VIETATO prospettive isometriche, 3D rotation, tilt, dispositivo inclinato o ruotato
+🚫 VIETATO testo distorto, illeggibile, lorem ipsum, placeholder generici
+🚫 VIETATO mockup wireframe, low-fi, sketch, illustrazioni cartoon — SOLO render fotografici premium realistici
+🚫 VIETATO contenuti generici "Lorem", "Sample", "Demo", "Test" — usa SEMPRE dati realistici del settore "${business.sector}"`;
 }
 
 Deno.serve(async (req) => {
