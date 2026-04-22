@@ -468,15 +468,84 @@ export default function PartnerPortfolioPage() {
           })}
         </div>
 
-        {/* Search vault */}
-        {(readyMockups.length > 0 || generatedSites.length > 0) && (
-          <input
-            value={vaultSearch}
-            onChange={(e) => setVaultSearch(e.target.value)}
-            placeholder="Cerca per nome attività, settore o lead..."
-            className="w-full px-3 py-2 rounded-lg text-xs text-foreground placeholder:text-muted-foreground"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-          />
+        {/* Search + filtri avanzati + ordinamento (persistenti) */}
+        {(mockupVault.suites.length > 0 || demoVault.demos.length > 0) && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                value={vaultSearch}
+                onChange={(e) => setVaultSearch(e.target.value)}
+                placeholder="Cerca per nome attività, settore o città..."
+                className="flex-1 px-3 py-2 rounded-lg text-xs text-foreground placeholder:text-muted-foreground"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+              />
+              <button
+                onClick={() => setFiltersOpen((v) => !v)}
+                className="relative px-3 py-2 rounded-lg text-xs flex items-center gap-1.5 transition-colors"
+                style={{
+                  background: filtersOpen ? "rgba(167,139,250,0.18)" : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${filtersOpen ? "rgba(167,139,250,0.4)" : "rgba(255,255,255,0.08)"}`,
+                  color: filtersOpen ? "#c4b5fd" : "#9ca3af",
+                }}
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Filtri</span>
+                {activeFiltersCount > 0 && (
+                  <span className="px-1.5 py-0.5 rounded-full bg-violet-500 text-white text-[9px] font-bold leading-none">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {filtersOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="p-3 rounded-xl space-y-3"
+                    style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <FilterSelect label="Settore" value={filterSector} onChange={setFilterSector}
+                        options={[{ value: "all", label: "Tutti i settori" }, ...sectorOptions.map((s) => ({ value: s, label: s }))]} />
+                      <FilterSelect label="Template" value={filterVariant} onChange={setFilterVariant}
+                        options={[{ value: "all", label: "Tutti i template" }, ...variantOptions.map((v) => ({ value: v, label: v }))]} />
+                      <FilterSelect label="Stato mockup" value={filterStatus} onChange={setFilterStatus}
+                        options={[{ value: "all", label: "Tutti gli stati" }, ...statusOptions.map((s) => ({ value: s, label: s }))]} />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-white/5">
+                      <FilterSelect label="Ordina mockup" value={mockupSort} onChange={(v) => setMockupSort(v as any)}
+                        options={[
+                          { value: "recent", label: "Più recenti" },
+                          { value: "az", label: "A → Z" },
+                          { value: "screens", label: "Più schermate" },
+                          { value: "views", label: "Più visualizzati" },
+                        ]} />
+                      <FilterSelect label="Ordina siti demo" value={siteSort} onChange={(v) => setSiteSort(v as any)}
+                        options={[
+                          { value: "recent", label: "Più recenti" },
+                          { value: "az", label: "A → Z" },
+                          { value: "favorites", label: "Preferiti prima" },
+                        ]} />
+                    </div>
+                    {activeFiltersCount > 0 && (
+                      <button
+                        onClick={() => {
+                          setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all");
+                        }}
+                        className="text-[10px] text-violet-300 hover:text-violet-200 flex items-center gap-1"
+                      >
+                        <XIcon className="w-3 h-3" /> Pulisci filtri
+                      </button>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
 
         {/* Mockup generati */}
