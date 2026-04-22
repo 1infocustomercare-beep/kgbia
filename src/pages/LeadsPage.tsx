@@ -1308,76 +1308,97 @@ export default function LeadsPage() {
 
       <div className="relative z-10 space-y-4">
 
-      {/* ═══ TOP-BAR PROFESSIONALE — sticky responsive (mobile/tablet/desktop) ═══ */}
+      {/* ═══ TOP-BAR PROFESSIONALE — sticky, mobile-first, app-grade ═══ */}
       <div
-        className="sticky top-0 z-30 -mx-3 sm:-mx-5 md:-mx-6 lg:-mx-8 px-3 sm:px-5 md:px-6 lg:px-8 py-2.5 md:py-3 backdrop-blur-md"
+        className="sticky top-0 z-30 -mx-3 sm:-mx-5 md:-mx-6 lg:-mx-8 px-3 sm:px-5 md:px-6 lg:px-8 py-2 sm:py-2.5 md:py-3 backdrop-blur-xl"
         style={{
-          background: "linear-gradient(180deg, rgba(10,10,18,0.95) 0%, rgba(10,10,18,0.82) 70%, rgba(10,10,18,0) 100%)",
+          background: "linear-gradient(180deg, rgba(10,10,18,0.96) 0%, rgba(10,10,18,0.86) 65%, rgba(10,10,18,0.55) 100%)",
+          borderBottom: "1px solid rgba(167,139,250,0.10)",
         }}
       >
-        <div className="flex items-center gap-2 md:gap-3">
-          {/* Brand mini — visibile fino a md (su lg c'è l'hero grande) */}
-          <div className="flex items-center gap-2 md:gap-2.5 min-w-0 lg:hidden">
+        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
+          {/* Brand — visibile fino a md (su lg c'è l'hero grande) */}
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1 lg:hidden">
             <motion.div
               animate={{ scale: loading ? [1, 1.08, 1] : [1, 1.02, 1] }}
               transition={{ repeat: Infinity, duration: loading ? 1 : 2.6 }}
-              className="relative w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0"
+              className="relative w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0"
               style={{
-                background: "radial-gradient(circle, rgba(167,139,250,0.4), rgba(20,184,166,0.15) 70%)",
+                background: "radial-gradient(circle, rgba(167,139,250,0.45), rgba(20,184,166,0.18) 70%)",
                 boxShadow: "0 0 14px rgba(167,139,250,0.45)",
               }}
             >
               <Target className="w-4 h-4 md:w-5 md:h-5 text-white" />
+              {/* Live dot durante scansione */}
+              {loading && (
+                <motion.span
+                  animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.25, 1] }}
+                  transition={{ repeat: Infinity, duration: 1.2 }}
+                  className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full"
+                  style={{ background: "#10b981", boxShadow: "0 0 6px #10b981" }}
+                />
+              )}
             </motion.div>
-            <div className="min-w-0">
-              <p className="text-[13px] md:text-sm font-extrabold text-white leading-tight truncate">LeadEngine Scout</p>
-              <p className="text-[9px] md:text-[10px] font-bold tracking-[0.18em] uppercase text-violet-300/80 leading-tight truncate">
-                {loading ? "◉ scansione" : "AI · real-time"}
+            <div className="min-w-0 leading-tight">
+              <p className="text-[12px] sm:text-[13px] md:text-sm font-extrabold text-white truncate">LeadEngine Scout</p>
+              <p className="text-[8.5px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.16em] uppercase text-violet-300/80 truncate">
+                {loading ? "◉ scansione live" : "AI · real-time"}
               </p>
             </div>
           </div>
 
-          {/* Spacer flessibile */}
-          <div className="flex-1" />
+          {/* Spacer su desktop dove non c'è brand */}
+          <div className="hidden lg:block flex-1" />
 
-          {/* Azioni rapide — touch target 36-40px, gap consistente */}
+          {/* Azioni — icona-only su mobile (≤sm), label visibili da sm+ */}
+          {/* CRM */}
           <button
             onClick={() => setCrmOpen(true)}
-            aria-label="Apri CRM pipeline"
-            className="relative flex items-center gap-1.5 px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl text-[11px] md:text-xs font-bold transition-all active:scale-95 shrink-0 min-h-[36px] md:min-h-[40px]"
+            aria-label={`Apri CRM pipeline${pipeline.leads.length > 0 ? ` (${pipeline.leads.length} lead)` : ""}`}
+            className="relative flex items-center justify-center sm:justify-start gap-1.5 w-9 h-9 sm:w-auto sm:h-auto sm:px-3 sm:py-2 md:px-3.5 md:py-2.5 rounded-xl text-[11px] md:text-xs font-bold transition-all active:scale-95 shrink-0 sm:min-h-[36px] md:min-h-[40px]"
             style={{
-              background: "linear-gradient(135deg, rgba(167,139,250,0.18), rgba(20,184,166,0.12))",
+              background: "linear-gradient(135deg, rgba(167,139,250,0.20), rgba(20,184,166,0.12))",
               border: "1px solid rgba(167,139,250,0.35)",
               color: "#c4b5fd",
             }}
           >
-            <Briefcase className="w-3.5 h-3.5 md:w-4 md:h-4" />
-            <span>CRM</span>
+            <Briefcase className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+            <span className="hidden sm:inline">CRM</span>
             {pipeline.leads.length > 0 && (
-              <span className="text-[9px] md:text-[10px] font-black px-1.5 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.3)", color: "#fff", minWidth: 16, textAlign: "center" }}>
-                {pipeline.leads.length}
+              <span
+                className="absolute sm:static -top-1 -right-1 text-[9px] sm:text-[10px] font-black px-1 sm:px-1.5 py-0.5 rounded-full leading-none"
+                style={{
+                  background: "rgba(167,139,250,0.85)",
+                  color: "#fff",
+                  minWidth: 16,
+                  textAlign: "center",
+                  boxShadow: "0 0 6px rgba(167,139,250,0.5)",
+                }}
+              >
+                {pipeline.leads.length > 99 ? "99+" : pipeline.leads.length}
               </span>
             )}
             {overdueFollowups.length > 0 && (
               <motion.span
                 animate={{ scale: [1, 1.25, 1] }}
                 transition={{ repeat: Infinity, duration: 1.4 }}
-                className="absolute -top-1 -right-1 text-[9px] font-black px-1 py-0.5 rounded-full"
-                style={{ background: "#ef4444", color: "#fff", minWidth: 14, textAlign: "center", boxShadow: "0 0 8px rgba(239,68,68,0.6)" }}
-              >
-                {overdueFollowups.length}
-              </motion.span>
+                aria-label={`${overdueFollowups.length} follow-up in ritardo`}
+                className="absolute -bottom-1 -right-1 sm:-top-1 sm:-bottom-auto w-2.5 h-2.5 rounded-full"
+                style={{ background: "#ef4444", boxShadow: "0 0 8px rgba(239,68,68,0.7)" }}
+              />
             )}
           </button>
 
+          {/* Crediti AI — compatto su mobile */}
           <SellerCreditsBadge balance={creditBalance} spent30d={totalSpent30d} />
 
+          {/* Guida — icon-only sempre, super pulito */}
           <Sheet>
             <SheetTrigger asChild>
               <button
                 type="button"
                 aria-label="Guida best practice e deliverability"
-                className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-xl border border-violet-400/30 bg-violet-500/10 text-violet-200 active:scale-95 transition-transform shrink-0"
+                className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-xl border border-violet-400/30 bg-violet-500/10 text-violet-200 active:scale-95 transition-transform shrink-0 hover:bg-violet-500/15"
               >
                 <ShieldCheck className="w-4 h-4 md:w-[18px] md:h-[18px]" />
               </button>

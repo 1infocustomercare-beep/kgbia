@@ -23,7 +23,7 @@ export default function SellerCreditsBadge({ balance, spent30d = 0, compact }: P
       title={`Saldo crediti AI · Spesi 30g: €${spent30d.toFixed(2)}`}
     >
       <motion.div
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition ${
+        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 h-9 sm:h-9 md:h-10 rounded-xl sm:rounded-full border transition ${
           empty
             ? "bg-red-500/15 border-red-500/40 text-red-300"
             : low
@@ -34,10 +34,10 @@ export default function SellerCreditsBadge({ balance, spent30d = 0, compact }: P
         animate={empty ? { boxShadow: ["0 0 0 0 hsl(var(--destructive)/0.4)", "0 0 0 6px hsl(var(--destructive)/0)"] } : {}}
         transition={empty ? { duration: 1.4, repeat: Infinity } : {}}
       >
-        <Coins className="w-3.5 h-3.5" />
-        <span className="text-xs font-bold">{balance}</span>
-        {!compact && <span className="text-[10px] opacity-70">crediti AI</span>}
-        <Plus className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
+        <Coins className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+        <span className="text-[12px] sm:text-xs font-bold leading-none">{balance}</span>
+        {!compact && <span className="hidden sm:inline text-[10px] opacity-70">crediti AI</span>}
+        <Plus className="hidden sm:inline w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
       </motion.div>
     </Link>
   );
