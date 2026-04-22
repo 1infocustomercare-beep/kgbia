@@ -40,7 +40,7 @@ import DeliverabilityPanel from "@/components/leads/DeliverabilityPanel";
 import { TEMPLATES, pickRecommendedAuroraTemplate, renderTemplate } from "@/lib/email-templates/aurora-templates";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShieldCheck } from "lucide-react";
-import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
+import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks, Crosshair } from "lucide-react";
 
 /* ─── Types ─── */
 interface Lead {
@@ -1735,6 +1735,25 @@ export default function LeadsPage() {
 
         {/* Quick actions */}
         <div className="flex items-center gap-2 flex-wrap">
+          {/* 📍 PRIMARY CTA: Trova lead vicino a me (posizione attuale venditore) */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            animate={!gpsOpen ? { boxShadow: ["0 0 0 0 rgba(6,182,212,0.4)", "0 0 0 8px rgba(6,182,212,0)", "0 0 0 0 rgba(6,182,212,0)"] } : {}}
+            transition={{ repeat: Infinity, duration: 2.2 }}
+            onClick={() => setGpsOpen(true)}
+            className="flex items-center gap-1.5 text-[10px] font-black px-3 py-1.5 rounded-lg relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, #06b6d4, #14b8a6, #10b981)",
+              border: "1px solid rgba(6,182,212,0.6)",
+              color: "#fff",
+            }}
+            title="Cerca lead reali nel raggio della tua posizione GPS attuale"
+          >
+            <Crosshair className="w-3 h-3" />
+            Trova vicino a me
+            <span className="text-[7px] px-1 rounded font-black" style={{ background: "rgba(255,255,255,0.25)", color: "#fff" }}>GPS</span>
+          </motion.button>
+
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setGpsOpen(!gpsOpen)}
