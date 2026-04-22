@@ -721,7 +721,10 @@ export function MockupSuiteGenerator({
             </Label>
             <button
               type="button"
-              onClick={() => { setGlassIntensity(60); setColorStyle("vivid"); }}
+              onClick={() => {
+                setGlassIntensity(60); setColorStyle("vivid");
+                setSafeAreaPx(8); setTypeScale(1); setBoostContrast(true);
+              }}
               className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors"
             >
               Reset default
