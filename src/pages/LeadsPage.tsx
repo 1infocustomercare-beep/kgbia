@@ -344,6 +344,12 @@ export default function LeadsPage() {
   const [sortBy, setSortBy] = useState<"score" | "rating" | "name" | "reviews">("score");
   // 🔎 Ricerca testuale interna ai risultati (filtra senza nuove chiamate API)
   const [resultsQuery, setResultsQuery] = useState("");
+  // 🎯 Quick filters "più convertibili" (operano sui risultati locali, no API)
+  const [qfHot, setQfHot] = useState(false);              // score ≥ 70
+  const [qfHasPhone, setQfHasPhone] = useState(false);    // ha telefono → contattabile subito
+  const [qfOpenNow, setQfOpenNow] = useState(false);      // aperto adesso (parsing opening_hours)
+  const [qfNoWebsite, setQfNoWebsite] = useState(false);  // no sito → bisogno digitale immediato
+  const [qfPriorityCat, setQfPriorityCat] = useState(false); // categorie top-conversion
   // 👁 Anteprima rapida inline (id riga espansa)
   const [quickPreviewKey, setQuickPreviewKey] = useState<string | null>(null);
   const [searchPage, setSearchPage] = useState(0);
