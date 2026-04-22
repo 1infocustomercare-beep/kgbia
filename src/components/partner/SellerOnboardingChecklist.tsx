@@ -54,9 +54,9 @@ const STEPS: ChecklistStep[] = [
     id: "demo",
     icon: <Palette className="w-4 h-4" />,
     title: "Genera la tua prima preview",
-    micro: "Crea un mockup iPhone personalizzato per mostrare al cliente in 30 sec.",
+    micro: "Crea un mockup iPhone su misura per UN cliente specifico in 30 sec.",
     why: "Le preview pre-generate aumentano la conversione dell'85% al primo contatto.",
-    cta: { label: "Custom Preview", path: "/partner/custom-preview" },
+    cta: { label: "Mockup su Misura", path: "/partner/custom-preview" },
     accent: "from-pink-500 to-rose-500",
   },
   {

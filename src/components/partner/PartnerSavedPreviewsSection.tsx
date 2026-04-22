@@ -227,10 +227,11 @@ export default function PartnerSavedPreviewsSection() {
             </motion.span>
           </h3>
           <p className="text-[11px] text-muted-foreground">
-            Le custom preview che hai marcato come 🔖 Portfolio in{" "}
+            Le preview generate in{" "}
             <Link to="/partner/custom-preview" className="text-pink-300 underline" onClick={(e) => e.stopPropagation()}>
-              Custom Preview
-            </Link>.
+              Mockup su Misura
+            </Link>{" "}
+            che hai marcato 🔖 per archiviarle qui.
           </p>
         </button>
         <Link
@@ -315,7 +316,7 @@ export default function PartnerSavedPreviewsSection() {
                 <Bookmark className="w-8 h-8 mx-auto mb-2 text-pink-300/60" />
                 <p className="text-xs text-foreground font-semibold mb-1">Nessuna preview salvata ancora</p>
                 <p className="text-[10px] text-muted-foreground mb-3">
-                  Vai in <span className="text-pink-300">Custom Preview</span>, genera la tua preview e premi 🔖 per salvarla qui.
+                  Vai in <span className="text-pink-300">Mockup su Misura</span>, genera la tua preview e premi 🔖 per salvarla qui.
                 </p>
                 <Link
                   to="/partner/custom-preview"
