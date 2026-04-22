@@ -569,11 +569,12 @@ export default function PartnerPortfolioPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {readyMockups.map((suite, i) => {
                 const accent = suite.primary_color || "#a78bfa";
-                const screensArr: any[] = Array.isArray(suite.screens)
+                const rawScreens: any[] = Array.isArray(suite.screens)
                   ? suite.screens
                   : suite.screens && typeof suite.screens === "object"
                     ? Object.values(suite.screens)
                     : [];
+                const screensArr = sortScreens(rawScreens);
                 const screenImgs = screensArr
                   .map((s: any) => s?.image_url || s?.url || s?.src)
                   .filter(Boolean) as string[];
@@ -588,9 +589,7 @@ export default function PartnerPortfolioPage() {
                   variantTag,
                   `${screenImgs.length} screen`,
                 ].filter(Boolean) as string[];
-                const description = screenTitles.length
-                  ? `${screenTitles.slice(0, 4).join(" · ")}${screenTitles.length > 4 ? "…" : ""}`
-                  : "Mockup iPhone su misura generato dal venditore.";
+                const description = buildSmartMockupDescription(suite);
                 return (
                   <motion.div
                     key={suite.id}
