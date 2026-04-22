@@ -796,10 +796,10 @@ export function MockupSuiteGenerator({
         {/* Garantiscono che testo e UI restino dentro il frame iPhone        */}
         {/* su qualsiasi template selezionato (auto + manuali).               */}
         {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/[0.05] to-transparent p-4 space-y-4">
+        <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent p-4 space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <Label className="flex items-center gap-1.5 m-0">
-              <Eye className="h-3.5 w-3.5 text-emerald-500" /> Safe Area & Leggibilità
+              <Eye className="h-3.5 w-3.5 text-accent-foreground" /> Safe Area & Leggibilità
             </Label>
             <Badge variant="outline" className="text-[9px] uppercase tracking-wider">
               {boostContrast ? "AA on" : "AA off"} · {typeScale.toFixed(2)}× · {safeAreaPx}px
@@ -822,10 +822,7 @@ export function MockupSuiteGenerator({
               step={2}
               value={safeAreaPx}
               onChange={(e) => setSafeAreaPx(Number(e.target.value))}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-emerald-500"
-            />
-            <div className="flex justify-between text-[9px] text-muted-foreground">
-              <span>Edge-to-edge</span>
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
               <span>Bilanciato</span>
               <span>Massima sicurezza</span>
             </div>
