@@ -23,6 +23,8 @@ const inputStyle = {
   border: "1px solid rgba(255,255,255,0.10)",
 };
 
+type PermState = "idle" | "prompt" | "granted" | "denied" | "unsupported" | "unavailable" | "timeout";
+
 export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Props) {
   const RADIUS_STORAGE_KEY = "empire:gps-radar:radius-km";
   const [mode, setMode] = useState<"browser" | "address">("browser");
@@ -35,6 +37,7 @@ export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Prop
   });
   const [geoLoading, setGeoLoading] = useState(false);
   const [geocodeLoading, setGeocodeLoading] = useState(false);
+  const [permState, setPermState] = useState<PermState>("idle");
 
   // Persist radius preference for next access
   useEffect(() => {
@@ -43,20 +46,40 @@ export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Prop
     } catch {}
   }, [radius]);
 
-  // Auto-request browser GPS when opening in browser mode
+  // Auto-request browser GPS when opening in browser mode (only if not previously denied)
   useEffect(() => {
-    if (open && mode === "browser" && !coords) requestBrowserGps();
+    if (!open || mode !== "browser" || coords) return;
+    // Check existing permission first to avoid re-prompting silently
+    if (navigator.permissions?.query) {
+      navigator.permissions
+        .query({ name: "geolocation" as PermissionName })
+        .then((res) => {
+          setPermState(res.state as PermState);
+          if (res.state === "granted" || res.state === "prompt") {
+            requestBrowserGps();
+          }
+        })
+        .catch(() => requestBrowserGps());
+    } else {
+      requestBrowserGps();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, mode]);
 
   const requestBrowserGps = useCallback(() => {
     if (!navigator.geolocation) {
-      toast.error("Geolocalizzazione non supportata dal browser");
+      setPermState("unsupported");
+      toast.error("Geolocalizzazione non supportata", {
+        description: "Il tuo browser non supporta il GPS. Usa la modalità Indirizzo qui sotto.",
+      });
+      setMode("address");
       return;
     }
     setGeoLoading(true);
+    setPermState("prompt");
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
+        setPermState("granted");
         const { latitude, longitude } = pos.coords;
         // Reverse geocode for friendly label
         try {
@@ -73,11 +96,29 @@ export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Prop
           setCoords({ lat: latitude, lon: longitude, label: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`, source: "browser" });
         }
         setGeoLoading(false);
-        toast.success("Posizione rilevata");
+        toast.success("📍 Posizione rilevata con precisione");
       },
       (err) => {
         setGeoLoading(false);
-        toast.error(err.code === err.PERMISSION_DENIED ? "Permesso GPS negato" : "Impossibile ottenere la posizione");
+        if (err.code === err.PERMISSION_DENIED) {
+          setPermState("denied");
+          toast.error("Permesso GPS negato", {
+            description: "Riabilita la geolocalizzazione nelle impostazioni del browser, oppure usa la modalità Indirizzo.",
+          });
+        } else if (err.code === err.POSITION_UNAVAILABLE) {
+          setPermState("unavailable");
+          toast.error("Posizione non disponibile", {
+            description: "Il dispositivo non riesce a ottenere coordinate GPS valide. Prova con un indirizzo.",
+          });
+        } else if (err.code === err.TIMEOUT) {
+          setPermState("timeout");
+          toast.error("Timeout GPS", {
+            description: "Il rilevamento sta impiegando troppo. Riprova o inserisci un indirizzo.",
+          });
+        } else {
+          setPermState("idle");
+          toast.error("Impossibile ottenere la posizione");
+        }
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
@@ -199,14 +240,90 @@ export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Prop
                     Aggiorna
                   </button>
                 </div>
-              ) : (
-                <button
-                  onClick={requestBrowserGps}
-                  className="w-full py-3 rounded-xl text-[11px] font-bold flex items-center justify-center gap-2"
-                  style={{ background: "linear-gradient(135deg, #06b6d4, #14b8a6)", color: "#fff" }}
+              ) : permState === "denied" || permState === "unsupported" ? (
+                <div
+                  className="p-3 rounded-xl space-y-2"
+                  style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.25)" }}
                 >
-                  <Crosshair className="w-4 h-4" /> Attiva GPS
-                </button>
+                  <div className="flex items-start gap-2">
+                    <X className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "#ef4444" }} />
+                    <div className="space-y-0.5">
+                      <p className="text-[11px] font-bold" style={{ color: "#fca5a5" }}>
+                        {permState === "denied" ? "Permesso GPS negato" : "GPS non supportato"}
+                      </p>
+                      <p className="text-[9px] leading-relaxed" style={{ color: "#9ca3af" }}>
+                        {permState === "denied"
+                          ? "Per usare “vicino a me” riabilita la geolocalizzazione: clicca sul lucchetto 🔒 nella barra indirizzi → Posizione → Consenti, poi ricarica."
+                          : "Il browser non supporta il GPS. Continua inserendo manualmente un indirizzo qui sotto."}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    {permState === "denied" && (
+                      <button
+                        onClick={requestBrowserGps}
+                        className="flex-1 py-2 rounded-lg text-[10px] font-bold"
+                        style={{ background: "rgba(6,182,212,0.15)", color: "#22d3ee", border: "1px solid rgba(6,182,212,0.3)" }}
+                      >
+                        Riprova GPS
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setMode("address")}
+                      className="flex-1 py-2 rounded-lg text-[10px] font-bold"
+                      style={{ background: "linear-gradient(135deg, #06b6d4, #14b8a6)", color: "#fff" }}
+                    >
+                      🏠 Usa indirizzo
+                    </button>
+                  </div>
+                </div>
+              ) : permState === "unavailable" || permState === "timeout" ? (
+                <div
+                  className="p-3 rounded-xl space-y-2"
+                  style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.25)" }}
+                >
+                  <p className="text-[11px] font-bold" style={{ color: "#fbbf24" }}>
+                    {permState === "timeout" ? "Timeout rilevamento" : "Posizione non disponibile"}
+                  </p>
+                  <p className="text-[9px]" style={{ color: "#9ca3af" }}>
+                    Il dispositivo non ha fornito coordinate valide. Riprova all'aperto o passa a indirizzo manuale.
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={requestBrowserGps}
+                      className="flex-1 py-2 rounded-lg text-[10px] font-bold"
+                      style={{ background: "rgba(6,182,212,0.15)", color: "#22d3ee", border: "1px solid rgba(6,182,212,0.3)" }}
+                    >
+                      Riprova
+                    </button>
+                    <button
+                      onClick={() => setMode("address")}
+                      className="flex-1 py-2 rounded-lg text-[10px] font-bold"
+                      style={{ background: "linear-gradient(135deg, #06b6d4, #14b8a6)", color: "#fff" }}
+                    >
+                      🏠 Indirizzo
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div
+                    className="p-2.5 rounded-xl flex items-start gap-2"
+                    style={{ background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.2)" }}
+                  >
+                    <Crosshair className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "#22d3ee" }} />
+                    <p className="text-[9px] leading-relaxed" style={{ color: "#94a3b8" }}>
+                      Empire userà il tuo GPS <strong className="text-white">solo per scansionare lead reali nel raggio scelto</strong>. La posizione non viene salvata né condivisa.
+                    </p>
+                  </div>
+                  <button
+                    onClick={requestBrowserGps}
+                    className="w-full py-3 rounded-xl text-[11px] font-bold flex items-center justify-center gap-2"
+                    style={{ background: "linear-gradient(135deg, #06b6d4, #14b8a6)", color: "#fff" }}
+                  >
+                    <Crosshair className="w-4 h-4" /> Consenti e attiva GPS
+                  </button>
+                </div>
               )}
             </div>
           )}
