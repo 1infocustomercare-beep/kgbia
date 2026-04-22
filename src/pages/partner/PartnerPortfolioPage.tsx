@@ -831,6 +831,7 @@ function DemoSiteRow({
           <div className="flex items-center gap-1.5">
             <h5 className="text-xs font-semibold text-foreground truncate">{site.display_name}</h5>
             <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 uppercase">ready</span>
+            <EngineBadge engine={(site as any).generation_engine} />
           </div>
           <p className="text-[9px] text-muted-foreground mt-0.5">
             {site.sector?.toUpperCase()}
