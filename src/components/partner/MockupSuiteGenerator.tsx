@@ -350,6 +350,26 @@ export function MockupSuiteGenerator({
     suggestScreensForSector(businessSector)
   );
 
+  // Branding Kit — coppia font heading/body (override del template)
+  const [brandFontKey, setBrandFontKey] = useState<string>("template");
+  const brandFont = useMemo(
+    () => BRAND_FONT_PAIRS.find(p => p.key === brandFontKey) || BRAND_FONT_PAIRS[0],
+    [brandFontKey]
+  );
+
+  // Inietta dinamicamente il <link> Google Fonts del brand selezionato
+  useEffect(() => {
+    if (!brandFont.googleFontsHref) return;
+    const id = `brand-font-${brandFont.key}`;
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = brandFont.googleFontsHref;
+    document.head.appendChild(link);
+    // Nessun cleanup: i font restano caricati per le preview successive
+  }, [brandFont]);
+
   // Quando cambia il settore e autoScreens=on, aggiorna screens automaticamente
   useEffect(() => {
     if (autoScreens) {
