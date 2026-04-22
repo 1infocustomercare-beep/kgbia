@@ -26,6 +26,7 @@ export interface VaultMockupSuite {
   generated_at: string | null;
   created_at: string;
   updated_at: string;
+  is_favorite: boolean;
 }
 
 export function useMockupSuiteVault() {
@@ -78,5 +79,25 @@ export function useMockupSuiteVault() {
     }
   }, []);
 
-  return { suites, loading, userId, fetchAll, deleteSuite };
+  /**
+   * Marca/smarca una mockup suite come "preferita" del seller, così la
+   * versione scelta è subito ritrovabile nelle prossime sessioni.
+   * Update ottimistico + rollback in caso di errore.
+   */
+  const toggleFavorite = useCallback(async (id: string, current: boolean) => {
+    const next = !current;
+    setSuites(prev => prev.map(s => s.id === id ? { ...s, is_favorite: next } : s));
+    const { error } = await supabase
+      .from("seller_mockup_suites")
+      .update({ is_favorite: next } as any)
+      .eq("id", id);
+    if (error) {
+      setSuites(prev => prev.map(s => s.id === id ? { ...s, is_favorite: current } : s));
+      toast.error("Impossibile aggiornare il preferito");
+      return;
+    }
+    toast.success(next ? "Aggiunta ai preferiti ⭐" : "Rimossa dai preferiti");
+  }, []);
+
+  return { suites, loading, userId, fetchAll, deleteSuite, toggleFavorite };
 }
