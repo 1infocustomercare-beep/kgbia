@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+export type MockupGenerationEngine = "ai" | "template" | "hybrid";
+
 export interface VaultMockupSuite {
   id: string;
   owner_id: string;
@@ -9,7 +11,10 @@ export interface VaultMockupSuite {
   business_sector: string | null;
   business_city: string | null;
   primary_color: string | null;
+  /** Engine tecnico di rendering (es. 'react'). Distinto da generation_engine. */
   engine: string;
+  /** Engine logico di generazione: ai = generato da AI con scraping, template = preset manuale, hybrid = misto */
+  generation_engine: MockupGenerationEngine;
   template_variant: string | null;
   status: string;
   screens: any;
