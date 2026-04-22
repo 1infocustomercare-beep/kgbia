@@ -5,12 +5,11 @@ import {
   Target, DollarSign, FolderOpen, User, ChevronRight, Crown, Trophy,
   Sparkles, Zap, TrendingUp, Users, Bot, Package, CheckCircle, Presentation,
   ShieldCheck, Globe, Clock, Headphones, BarChart3, Smartphone, Star,
-  MessageCircle, Heart, Lock, Rocket, Award, ArrowRight,
+  MessageCircle, Heart, Lock, Rocket, Award, ArrowRight, Wand2, Palette,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import empireMonkeyMascot from "@/assets/empire-monkey.png";
-import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import { usePartnerDemoMode } from "@/components/layout/PartnerLayout";
 import { SectorPhoneCarousel } from "@/components/partner/SectorPhoneCarousel";
 
@@ -73,10 +72,12 @@ export default function PartnerHomePage() {
   const userName = profileName || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
   const QUICK_NAV = [
-    { icon: Target, label: "LeadEngine Scout", desc: "Trova, analizza e contatta lead reali con AI", gradient: "from-violet-600/20 to-purple-600/10", iconColor: "#a78bfa", path: "/partner/leads" },
-    { icon: DollarSign, label: "Guadagni & Team", desc: "Commissioni, bonus e reclutamento venditori", gradient: "from-emerald-600/20 to-teal-600/10", iconColor: "#34d399", path: "/partner/earnings" },
-    { icon: FolderOpen, label: "Portfolio Demo", desc: "Catalogo 25+ settori con preview personalizzate", gradient: "from-blue-600/20 to-indigo-600/10", iconColor: "#818cf8", path: "/partner/portfolio" },
-    { icon: User, label: "Il Mio Profilo", desc: "Dati personali, avatar e impostazioni", gradient: "from-amber-600/20 to-orange-600/10", iconColor: "#fbbf24", path: "/partner/profile" },
+    { icon: Target,     label: "LeadEngine Scout", desc: "Trova, analizza e contatta lead reali con AI",          gradient: "from-violet-600/20 to-purple-600/10",  iconColor: "#a78bfa", path: "/partner/leads" },
+    { icon: Wand2,      label: "Demo Studio",      desc: "Genera siti Full Power 1:1 dal mockup approvato",       gradient: "from-fuchsia-600/20 to-pink-600/10",   iconColor: "#e879f9", path: "/partner/demo-studio" },
+    { icon: FolderOpen, label: "Portfolio Demo",   desc: "Catalogo 25+ settori con preview pronte",               gradient: "from-blue-600/20 to-indigo-600/10",    iconColor: "#818cf8", path: "/partner/portfolio" },
+    { icon: Palette,    label: "Custom Preview",   desc: "Mockup iPhone su misura per un cliente specifico",      gradient: "from-rose-600/20 to-pink-600/10",      iconColor: "#fb7185", path: "/partner/custom-preview" },
+    { icon: DollarSign, label: "Guadagni & Team",  desc: "Commissioni, bonus e reclutamento venditori",           gradient: "from-emerald-600/20 to-teal-600/10",   iconColor: "#34d399", path: "/partner/earnings" },
+    { icon: User,       label: "Il Mio Profilo",   desc: "Dati personali, avatar e impostazioni",                 gradient: "from-amber-600/20 to-orange-600/10",   iconColor: "#fbbf24", path: "/partner/profile" },
   ];
 
   const fadeUp = (delay = 0) => ({ initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { delay, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] } });
