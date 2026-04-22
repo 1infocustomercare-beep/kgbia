@@ -40,7 +40,7 @@ const EmpireParticleOrb = memo(() => {
   const modeRef = useRef<Mode>("orb");
   const morphRef = useRef(0);
   // Orb position offset (drag), rotation, and scale (pinch)
-  const offsetRef = useRef({ x: 0, y: 0 });
+  const offsetRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   const rotRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   const scaleRef = useRef(1);
   const dragRef = useRef({
