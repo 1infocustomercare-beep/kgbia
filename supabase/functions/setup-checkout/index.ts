@@ -162,6 +162,45 @@ serve(async (req) => {
       );
     }
 
+    // ── Reuse a recent pending session for the same entity+plan+installments ──
+    // Prevents duplicate Stripe sessions on double clicks / page refreshes.
+    const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
+    const { data: pendingLog } = await supabase
+      .from("setup_payment_log")
+      .select("stripe_session_id, plan, installments, amount_cents, created_at")
+      .eq("user_id", user.id)
+      .eq("entity_id", entityId)
+      .eq("status", "pending")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (
+      pendingLog?.stripe_session_id &&
+      pendingLog.plan === planKey &&
+      pendingLog.installments === installments &&
+      pendingLog.amount_cents === amountCents
+    ) {
+      try {
+        const prior = await stripe.checkout.sessions.retrieve(pendingLog.stripe_session_id);
+        if (prior?.url && prior.status === "open") {
+          return new Response(
+            JSON.stringify({
+              checkout_url: prior.url,
+              session_id: prior.id,
+              amount_cents: amountCents,
+              plan: planKey,
+              installments,
+              reused: true,
+            }),
+            { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      } catch {
+        // expired/invalid → fall through to create a new one
+      }
+    }
+
     // ── Find referral partner (if signup_role had referral_id) ───
     let partnerId: string | null = null;
     const referralId = (user.user_metadata?.referral_id as string | undefined) ?? null;
@@ -177,7 +216,7 @@ serve(async (req) => {
     }
 
     // ── Create Stripe checkout session ───────────────────────────
-    const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
+    // (stripe client already instantiated above for session-reuse check)
 
     const transferGroup = `setup_${entityId}_${Date.now()}`;
     const planLabel =
