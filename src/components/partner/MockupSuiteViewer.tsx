@@ -58,6 +58,9 @@ export function MockupSuiteViewer({
   compact = false,
   glassIntensity = 60,
   colorStyle = "vivid",
+  safeAreaPx = 0,
+  typeScale = 1,
+  boostContrast = false,
 }: Props) {
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
