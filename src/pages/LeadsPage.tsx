@@ -4,7 +4,7 @@ import {
   Search, Target, MapPin, Filter, ChevronDown, Loader2, Phone, Globe, Mail,
   Instagram, Star, ExternalLink, MessageCircle, Copy, Sparkles, Send, RefreshCw,
   Wand2, Building2, Eye, Map, Zap, ArrowUpDown, X as XIcon, UserPlus, Link2,
-  CheckCircle, TrendingUp, AlertTriangle, Crown, Plus, Layers, Facebook
+  CheckCircle, TrendingUp, AlertTriangle, Crown, Plus, Layers, Facebook, Download
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
