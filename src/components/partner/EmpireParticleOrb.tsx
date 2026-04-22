@@ -297,13 +297,17 @@ const EmpireParticleOrb = memo(() => {
       rotRef.current.y += rotRef.current.vy;
 
       // Spring offset back toward 0 when not dragging (gentle elastic anchor)
-      if (!dragRef.current.active) {
+      if (!dragRef.current.active && !gestureRef.current.active) {
         offsetRef.current.x *= 0.94;
         offsetRef.current.y *= 0.94;
+        // Scale eases back to 1 when not pinching
+        scaleRef.current += (1 - scaleRef.current) * 0.08;
       }
 
       const ox = offsetRef.current.x;
       const oy = offsetRef.current.y;
+      const scl = scaleRef.current;
+      const effRadius = radius * scl;
       const rotX = rotRef.current.x;
       const rotY = rotRef.current.y;
       const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
@@ -313,7 +317,7 @@ const EmpireParticleOrb = memo(() => {
       const py = pointerRef.current.y;
       const pointerActive = pointerRef.current.active;
 
-      const ringR = radius * 1.05;
+      const ringR = effRadius * 1.05;
       const arr = particlesRef.current;
 
       for (let i = 0; i < arr.length; i++) {
@@ -327,9 +331,9 @@ const EmpireParticleOrb = memo(() => {
         let y1 = p.sy * cosX - z1 * sinX;
         let z2 = p.sy * sinX + z1 * cosX;
 
-        // Project to 2D (orb mode position)
-        const orbX = cx + ox + x1 * radius;
-        const orbY = cy + oy + y1 * radius;
+        // Project to 2D (orb mode position) using effective (scaled) radius
+        const orbX = cx + ox + x1 * effRadius;
+        const orbY = cy + oy + y1 * effRadius;
 
         // Constellation target (ring around orb centre)
         const nodeIdx = i % FEATURES.length;
