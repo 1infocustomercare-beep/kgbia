@@ -216,7 +216,7 @@ serve(async (req) => {
     }
 
     // ── Create Stripe checkout session ───────────────────────────
-    const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
+    // (stripe client already instantiated above for session-reuse check)
 
     const transferGroup = `setup_${entityId}_${Date.now()}`;
     const planLabel =
