@@ -170,19 +170,24 @@ const EmpireParticleOrb = memo(() => {
         const totalDx = e.clientX - drag.startX;
         const totalDy = e.clientY - drag.startY;
         const totalDist = Math.hypot(totalDx, totalDy);
-        if (!drag.mode && totalDist > 6) {
+        // Soglia minima — parte quasi subito (2px)
+        if (!drag.mode && totalDist > 2) {
           drag.moved = true;
-          // Touch device: swipe = rotate (more natural). Mouse: shift = rotate, default = drag.
+          // Touch device: swipe = rotate (più naturale). Mouse: shift = rotate, default = drag.
           const isTouch = e.pointerType === "touch" || e.pointerType === "pen";
           drag.mode = isTouch ? "rotate" : (e.shiftKey ? "rotate" : "drag");
+          if (canvas) canvas.style.cursor = drag.mode === "rotate" ? "grabbing" : "grabbing";
         }
 
         if (drag.mode === "drag") {
           offsetRef.current.x += dx;
           offsetRef.current.y += dy;
         } else if (drag.mode === "rotate") {
-          rotRef.current.vy += dx * 0.005;
-          rotRef.current.vx -= dy * 0.005;
+          // Rotazione DIRETTA per reattività immediata (no momentum builder)
+          rotRef.current.y += dx * 0.012;
+          rotRef.current.x -= dy * 0.012;
+          rotRef.current.vy = dx * 0.004; // momentum residuo per inerzia al rilascio
+          rotRef.current.vx = -dy * 0.004;
         }
         e.preventDefault();
       }
