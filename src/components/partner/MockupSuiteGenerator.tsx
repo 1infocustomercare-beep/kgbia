@@ -686,8 +686,8 @@ export function MockupSuiteGenerator({
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 items-start">
             <div className="space-y-3">
-              <Select value={templateVariant} onValueChange={setTemplateVariant}>
-                <SelectTrigger id="template-variant">
+              <Select value={templateVariant} onValueChange={setTemplateVariant} disabled={controlsLocked}>
+                <SelectTrigger id="template-variant" title={lockTitle}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="max-h-[360px]">
