@@ -140,6 +140,8 @@ export function MockupSuiteViewer({
 }: Props) {
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
+  const [zipping, setZipping] = useState(false);
+  const [zipProgress, setZipProgress] = useState(0);
 
   // Preload aggressivo delle prime 2 schermate AI: appena le URL sono note,
   // iniettiamo <link rel="preload" as="image" fetchpriority="high"> nel <head>
@@ -185,9 +187,55 @@ export function MockupSuiteViewer({
   };
 
   const downloadAll = async () => {
-    for (let i = 0; i < screens.length; i++) {
-      await downloadScreen(i);
-      await new Promise(r => setTimeout(r, 300));
+    if (zipping) return;
+    setZipping(true);
+    setZipProgress(0);
+    const safeName = businessName.replace(/\s+/g, "_") || "mockup";
+    const zip = new JSZip();
+    const folder = zip.folder(`${safeName}_mockup_suite`) ?? zip;
+
+    try {
+      for (let i = 0; i < screens.length; i++) {
+        const el = containerRefs.current[i];
+        if (!el) continue;
+
+        const canvas = await html2canvas(el, {
+          backgroundColor: null,
+          scale: 2,
+          useCORS: true,
+          logging: false,
+        });
+
+        const blob: Blob | null = await new Promise(resolve =>
+          canvas.toBlob(b => resolve(b), "image/png", 1)
+        );
+        if (!blob) throw new Error(`Conversione PNG fallita per ${screens[i].title}`);
+
+        const filename = `${String(i + 1).padStart(2, "0")}_${screens[i].type}.png`;
+        folder.file(filename, blob);
+        setZipProgress(Math.round(((i + 1) / screens.length) * 80));
+      }
+
+      const zipBlob = await zip.generateAsync(
+        { type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 } },
+        meta => setZipProgress(80 + Math.round(meta.percent * 0.2))
+      );
+
+      const url = URL.createObjectURL(zipBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${safeName}_mockup_suite.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      toast.success(`Scaricate ${screens.length} schermate in un unico ZIP`);
+    } catch (e: any) {
+      toast.error(`Errore creazione ZIP: ${e.message ?? e}`);
+    } finally {
+      setZipping(false);
+      setZipProgress(0);
     }
   };
 
@@ -207,8 +255,22 @@ export function MockupSuiteViewer({
           <span>4 schermate iPhone 16 Pro Max · proporzioni reali 9:19.5</span>
           <Badge variant="outline" className="text-xs">{templateVariant.replace(/_/g, " ")}</Badge>
         </div>
-        <Button variant="outline" size="sm" onClick={downloadAll} disabled={downloading !== null}>
-          <Download className="h-3 w-3 mr-1" /> Scarica tutti
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={downloadAll}
+          disabled={downloading !== null || zipping}
+        >
+          {zipping ? (
+            <>
+              <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+              ZIP {zipProgress}%
+            </>
+          ) : (
+            <>
+              <FileArchive className="h-3 w-3 mr-1" /> Scarica ZIP ({screens.length})
+            </>
+          )}
         </Button>
       </div>
 
