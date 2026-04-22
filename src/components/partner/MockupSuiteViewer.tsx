@@ -208,8 +208,7 @@ export function MockupSuiteViewer({
                       {/* Shimmer sweep diagonale */}
                       <div className="pointer-events-none absolute inset-0 overflow-hidden">
                         <div
-                          className="absolute inset-y-0 -inset-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-[shimmer_2.2s_linear_infinite]"
-                          style={{ width: "200%" }}
+                          className="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-mockup-sweep"
                         />
                       </div>
                       {/* Badge "Anteprima rapida" */}
