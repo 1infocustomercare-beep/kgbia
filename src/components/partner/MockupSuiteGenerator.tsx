@@ -269,6 +269,8 @@ export function MockupSuiteGenerator({
   }, [templateVariant, businessSector]);
 
   const [generating, setGenerating] = useState(false);
+  // Stato per preview progressiva: "preview" = mostra subito React render, "upgrading" = AI in arrivo, "complete" = finita
+  const [previewPhase, setPreviewPhase] = useState<"idle" | "preview" | "upgrading" | "complete">("idle");
   const [result, setResult] = useState<{
     suite_id: string;
     share_slug: string;
@@ -288,10 +290,43 @@ export function MockupSuiteGenerator({
     }
     setGenerating(true);
     setResult(null);
+    setPreviewPhase("idle");
     try {
       // Nuovo seed ad ogni click → garantisce che le 4 schermate siano sempre diverse
       // tra loro e che run successivi sullo stesso lead/template producano varianti nuove.
       const variationSeed = Math.floor(Math.random() * 1_000_000);
+      const resolvedTemplate = templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant;
+
+      // ═══════════════════════════════════════════════════════════════════════
+      // FASE 1 — PREVIEW PROGRESSIVA ISTANTANEA
+      // Per gli engine AI (che richiedono 10-30s), mostriamo SUBITO le 4 schermate
+      // renderizzate via React (centrate, fedeli al template, gratis lato client).
+      // L'utente vede l'anteprima entro 200ms invece di aspettare 30 secondi.
+      // ═══════════════════════════════════════════════════════════════════════
+      const isAIEngine = engine === "nano_banana" || engine === "nano_banana_pro";
+      if (isAIEngine) {
+        const previewScreens: SuiteScreen[] = screens.map((s, i) => ({
+          type: s.type,
+          title: s.title,
+          image_url: null,
+          render_mode: "react" as const,
+          template_variant: resolvedTemplate,
+          variation_seed: variationSeed,
+          variant_index: i,
+          // Flag per il viewer: preview temporanea, in attesa di upgrade AI
+          is_preview: true,
+        } as any));
+        setResult({
+          suite_id: "preview-pending",
+          share_slug: "",
+          template_variant: resolvedTemplate,
+          engine,
+          screens: previewScreens,
+        });
+        setPreviewPhase("preview");
+        toast.info("Anteprima istantanea pronta · upgrade AI in arrivo…", { duration: 3000 });
+      }
+
       const payload = {
         business_name: businessName,
         business_sector: businessSector,
@@ -308,6 +343,8 @@ export function MockupSuiteGenerator({
         color_style: colorStyle,
       };
 
+      if (isAIEngine) setPreviewPhase("upgrading");
+
       const { data, error } = await supabase.functions.invoke("lead-mockup-suite", { body: payload });
       if (error) throw error;
       const d = data as any;
@@ -319,23 +356,57 @@ export function MockupSuiteGenerator({
         } else {
           toast.error(`Errore: ${d?.error || "sconosciuto"}`);
         }
+        // Mantieni la preview React come fallback se eravamo in upgrade
+        if (isAIEngine) {
+          toast.warning("Mostro l'anteprima React come fallback. Riprova per generare la versione AI 4K/8K.");
+        } else {
+          setResult(null);
+          setPreviewPhase("idle");
+        }
         return;
       }
 
-      // Garantisce variation_seed/variant_index su ogni screen anche se l'edge non li propaga
+      // ═══════════════════════════════════════════════════════════════════════
+      // FASE 2 — UPGRADE PROGRESSIVO 4K/8K
+      // Sostituisco screen-by-screen con un piccolo delay di stagger (250ms)
+      // per ottenere un effetto fade-in "a cascata" più premium.
+      // ═══════════════════════════════════════════════════════════════════════
       const enrichedScreens: SuiteScreen[] = (d.screens || []).map((s: any, i: number) => ({
         ...s,
         variation_seed: s.variation_seed ?? d.variation_seed ?? variationSeed,
         variant_index: s.variant_index ?? i,
+        is_preview: false,
       }));
 
-      setResult({
-        suite_id: d.suite_id,
-        share_slug: d.share_slug,
-        template_variant: d.template_variant,
-        engine: d.engine,
-        screens: enrichedScreens,
-      });
+      if (isAIEngine && enrichedScreens.some(s => s.render_mode === "ai" && s.image_url)) {
+        // Swap progressivo screen-by-screen
+        for (let i = 0; i < enrichedScreens.length; i++) {
+          await new Promise(r => setTimeout(r, 250));
+          setResult(prev => {
+            if (!prev) return prev;
+            const updated = [...prev.screens];
+            updated[i] = enrichedScreens[i];
+            return {
+              ...prev,
+              suite_id: d.suite_id,
+              share_slug: d.share_slug,
+              template_variant: d.template_variant,
+              engine: d.engine,
+              screens: updated,
+            };
+          });
+        }
+      } else {
+        setResult({
+          suite_id: d.suite_id,
+          share_slug: d.share_slug,
+          template_variant: d.template_variant,
+          engine: d.engine,
+          screens: enrichedScreens,
+        });
+      }
+      setPreviewPhase("complete");
+
       // Validation feedback (engine AI)
       const vs = d.validation_summary;
       if (vs && vs.all_validated === false) {
@@ -352,6 +423,7 @@ export function MockupSuiteGenerator({
       onGenerated?.(d.suite_id, d.share_slug);
     } catch (e: any) {
       toast.error(e.message || "Errore generazione");
+      setPreviewPhase("idle");
     } finally {
       setGenerating(false);
     }
@@ -781,16 +853,36 @@ export function MockupSuiteGenerator({
               <div>
                 <h3 className="font-semibold text-sm flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-primary" />
-                  Suite generata · {result.template_variant.replace("_", " ")} · {ENGINE_OPTIONS.find(e => e.key === result.engine)?.label}
+                  {previewPhase === "upgrading"
+                    ? "Anteprima istantanea · upgrade 4K/8K in corso…"
+                    : `Suite generata · ${result.template_variant.replace("_", " ")} · ${ENGINE_OPTIONS.find(e => e.key === result.engine)?.label}`}
                 </h3>
-                <p className="text-xs text-muted-foreground mt-1">4 mockup pronti da mostrare al cliente</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {previewPhase === "upgrading"
+                    ? "Le 4 schermate si aggiornano una a una appena pronte (fade-in progressivo)"
+                    : "4 mockup pronti da mostrare al cliente"}
+                </p>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={copyShareLink}><Copy className="h-3 w-3 mr-1" />Link</Button>
-                <Button variant="outline" size="sm" onClick={() => window.open(`${window.location.origin}/preview/mockup/${result.share_slug}`, "_blank")}>
-                  <ExternalLink className="h-3 w-3 mr-1" />Apri
-                </Button>
-              </div>
+              {previewPhase === "upgrading" ? (
+                <Badge variant="outline" className="gap-1.5 animate-pulse">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Upgrade AI…
+                </Badge>
+              ) : (
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={copyShareLink} disabled={!result.share_slug}>
+                    <Copy className="h-3 w-3 mr-1" />Link
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.open(`${window.location.origin}/preview/mockup/${result.share_slug}`, "_blank")}
+                    disabled={!result.share_slug}
+                  >
+                    <ExternalLink className="h-3 w-3 mr-1" />Apri
+                  </Button>
+                </div>
+              )}
             </div>
 
             <MockupSuiteViewer
