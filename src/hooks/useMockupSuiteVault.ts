@@ -69,6 +69,33 @@ export function useMockupSuiteVault() {
     if (userId) fetchAll();
   }, [userId, fetchAll]);
 
+  // 🔄 Realtime sync: ascolta INSERT/UPDATE/DELETE sulle suite del seller corrente
+  useEffect(() => {
+    if (!userId) return;
+    const channel = supabase
+      .channel(`mockup-suite-vault-${userId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "seller_mockup_suites", filter: `owner_id=eq.${userId}` },
+        () => { fetchAll(); }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [userId, fetchAll]);
+
+  // 🔄 Refresh on tab focus / visibility change
+  useEffect(() => {
+    if (!userId) return;
+    const onFocus = () => fetchAll();
+    const onVisibility = () => { if (document.visibilityState === "visible") fetchAll(); };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [userId, fetchAll]);
+
   const deleteSuite = useCallback(async (id: string) => {
     try {
       await supabase.from("seller_mockup_suites").delete().eq("id", id);
