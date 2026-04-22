@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {
   Bookmark, Star, ExternalLink, MessageCircle, Trash2, Search,
   Wand2, Sparkles, Eye, Pencil, Save, X as XIcon, ChevronDown,
+  Cpu, LayoutTemplate, Blend, Calendar,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
@@ -22,6 +23,7 @@ interface SavedPreview {
   public_slug: string | null;
   lead_name: string | null;
   lead_city: string | null;
+  lead_id: string | null;
   whatsapp_message: string | null;
   view_count: number | null;
   is_favorite: boolean | null;
@@ -29,10 +31,36 @@ interface SavedPreview {
   saved_to_portfolio_at: string | null;
   portfolio_label: string | null;
   portfolio_notes: string | null;
+  ai_generated_content: any | null;
+  scraped_data: any | null;
+  generated_at: string | null;
   created_at: string;
 }
 
-type SortKey = "recent" | "az" | "favorites" | "views";
+type SortKey = "recent" | "oldest" | "az" | "favorites" | "views";
+type EngineKey = "all" | "ai" | "template" | "hybrid";
+type DateRangeKey = "any" | "today" | "7d" | "30d" | "90d";
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Engine inference: i Custom Preview non hanno una colonna dedicata
+ * ─ AI         → contiene ai_generated_content (testi/seo generati da AI)
+ * ─ Hybrid     → ha scraped_data o lead_id (parte da dati reali del lead)
+ * ─ Template   → tutto il resto (template puro, scelto manualmente)
+ * ─────────────────────────────────────────────────────────────────────── */
+function inferEngine(p: SavedPreview): Exclude<EngineKey, "all"> {
+  const hasAI = !!p.ai_generated_content && Object.keys(p.ai_generated_content || {}).length > 0;
+  const hasLeadData = !!p.lead_id || (!!p.scraped_data && Object.keys(p.scraped_data || {}).length > 0);
+  if (hasAI && hasLeadData) return "hybrid";
+  if (hasAI) return "ai";
+  if (hasLeadData) return "hybrid";
+  return "template";
+}
+
+const ENGINE_META: Record<Exclude<EngineKey, "all">, { label: string; color: string; Icon: any }> = {
+  ai:       { label: "AI",       color: "#a78bfa", Icon: Cpu },
+  template: { label: "Template", color: "#fb7185", Icon: LayoutTemplate },
+  hybrid:   { label: "Ibrido",   color: "#34d399", Icon: Blend },
+};
 
 /* ─────────────────────────────────────────────────────────────────────────
  * Sezione "Le tue Preview salvate" — integra le custom preview taggate
@@ -47,15 +75,21 @@ export default function PartnerSavedPreviewsSection() {
   const [sort, setSort] = useState<SortKey>(
     () => (localStorage.getItem("partner_saved_previews_sort") as SortKey) || "recent"
   );
+  const [engineFilter, setEngineFilter] = useState<EngineKey>(
+    () => (localStorage.getItem("partner_saved_previews_engine") as EngineKey) || "all"
+  );
+  const [dateRange, setDateRange] = useState<DateRangeKey>(
+    () => (localStorage.getItem("partner_saved_previews_range") as DateRangeKey) || "any"
+  );
   const [editing, setEditing] = useState<SavedPreview | null>(null);
   const [editLabel, setEditLabel] = useState("");
   const [editNotes, setEditNotes] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
-  useEffect(() => {
-    localStorage.setItem("partner_saved_previews_sort", sort);
-  }, [sort]);
+  useEffect(() => { localStorage.setItem("partner_saved_previews_sort", sort); }, [sort]);
+  useEffect(() => { localStorage.setItem("partner_saved_previews_engine", engineFilter); }, [engineFilter]);
+  useEffect(() => { localStorage.setItem("partner_saved_previews_range", dateRange); }, [dateRange]);
 
   /* ── Fetch ── */
   useEffect(() => {
@@ -110,9 +144,41 @@ export default function PartnerSavedPreviewsSection() {
     return () => { supabase.removeChannel(channel); };
   }, [user?.id]);
 
+  /* ── Engine derivato + conteggi ── */
+  const previewsWithEngine = useMemo(
+    () => previews.map((p) => ({ ...p, _engine: inferEngine(p) })),
+    [previews]
+  );
+
+  const engineCounts = useMemo(() => {
+    const counts = { ai: 0, template: 0, hybrid: 0 };
+    previewsWithEngine.forEach((p) => { counts[p._engine] += 1; });
+    return counts;
+  }, [previewsWithEngine]);
+
   /* ── Lista filtrata + ordinata ── */
   const filtered = useMemo(() => {
-    const list = previews.filter((p) => {
+    const now = Date.now();
+    const rangeMs: Record<DateRangeKey, number | null> = {
+      any: null,
+      today: 24 * 60 * 60 * 1000,
+      "7d": 7 * 24 * 60 * 60 * 1000,
+      "30d": 30 * 24 * 60 * 60 * 1000,
+      "90d": 90 * 24 * 60 * 60 * 1000,
+    };
+    const cutoff = rangeMs[dateRange];
+
+    const list = previewsWithEngine.filter((p) => {
+      // Engine filter
+      if (engineFilter !== "all" && p._engine !== engineFilter) return false;
+
+      // Date range filter (basato su data di generazione)
+      if (cutoff !== null) {
+        const ts = new Date(p.generated_at || p.saved_to_portfolio_at || p.created_at).getTime();
+        if (now - ts > cutoff) return false;
+      }
+
+      // Search
       if (!search.trim()) return true;
       const q = search.toLowerCase();
       const hay = [
@@ -122,21 +188,26 @@ export default function PartnerSavedPreviewsSection() {
       return hay.includes(q);
     });
 
+    const tsOf = (p: SavedPreview) =>
+      new Date(p.generated_at || p.saved_to_portfolio_at || p.created_at).getTime();
+
     return [...list].sort((a, b) => {
       switch (sort) {
         case "az":
           return (a.portfolio_label || a.lead_name || "").localeCompare(b.portfolio_label || b.lead_name || "");
         case "favorites":
           if (!!a.is_favorite !== !!b.is_favorite) return a.is_favorite ? -1 : 1;
-          return new Date(b.saved_to_portfolio_at || b.created_at).getTime() - new Date(a.saved_to_portfolio_at || a.created_at).getTime();
+          return tsOf(b) - tsOf(a);
         case "views":
           return (b.view_count || 0) - (a.view_count || 0);
+        case "oldest":
+          return tsOf(a) - tsOf(b);
         case "recent":
         default:
-          return new Date(b.saved_to_portfolio_at || b.created_at).getTime() - new Date(a.saved_to_portfolio_at || a.created_at).getTime();
+          return tsOf(b) - tsOf(a);
       }
     });
-  }, [previews, search, sort]);
+  }, [previewsWithEngine, search, sort, engineFilter, dateRange]);
 
   const stats = {
     total: previews.length,
@@ -270,30 +341,90 @@ export default function PartnerSavedPreviewsSection() {
               })}
             </div>
 
-            {/* Search + Sort */}
+            {/* Search + Sort + Date */}
             {previews.length > 0 && (
-              <div className="flex items-center gap-2 flex-wrap">
-                <div className="relative flex-1 min-w-[180px]">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-                  <input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cerca etichetta, lead, città, settore…"
-                    className="w-full pl-8 pr-3 h-10 rounded-lg text-xs text-foreground placeholder:text-muted-foreground"
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="relative flex-1 min-w-[180px]">
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <input
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Cerca etichetta, lead, città, settore…"
+                      className="w-full pl-8 pr-3 h-10 rounded-lg text-xs text-foreground placeholder:text-muted-foreground"
+                      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                    />
+                  </div>
+                  <select
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value as SortKey)}
+                    aria-label="Ordina per"
+                    className="h-10 px-2.5 rounded-lg text-xs text-foreground appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-400/30"
                     style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-                  />
+                  >
+                    <option value="recent" className="bg-[#0f0f1a]">Più recenti</option>
+                    <option value="oldest" className="bg-[#0f0f1a]">Meno recenti</option>
+                    <option value="az" className="bg-[#0f0f1a]">A → Z</option>
+                    <option value="favorites" className="bg-[#0f0f1a]">Preferite prima</option>
+                    <option value="views" className="bg-[#0f0f1a]">Più viste</option>
+                  </select>
+                  <div
+                    className="relative h-10 flex items-center rounded-lg pl-2 pr-1.5"
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-muted-foreground mr-1.5" />
+                    <select
+                      value={dateRange}
+                      onChange={(e) => setDateRange(e.target.value as DateRangeKey)}
+                      aria-label="Periodo di generazione"
+                      className="h-full bg-transparent pr-1 text-xs text-foreground appearance-none cursor-pointer focus:outline-none"
+                    >
+                      <option value="any" className="bg-[#0f0f1a]">Sempre</option>
+                      <option value="today" className="bg-[#0f0f1a]">Oggi</option>
+                      <option value="7d" className="bg-[#0f0f1a]">Ultimi 7 giorni</option>
+                      <option value="30d" className="bg-[#0f0f1a]">Ultimi 30 giorni</option>
+                      <option value="90d" className="bg-[#0f0f1a]">Ultimi 90 giorni</option>
+                    </select>
+                  </div>
                 </div>
-                <select
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value as SortKey)}
-                  className="h-10 px-2.5 rounded-lg text-xs text-foreground appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-400/30"
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-                >
-                  <option value="recent" className="bg-[#0f0f1a]">Più recenti</option>
-                  <option value="az" className="bg-[#0f0f1a]">A → Z</option>
-                  <option value="favorites" className="bg-[#0f0f1a]">Preferite prima</option>
-                  <option value="views" className="bg-[#0f0f1a]">Più viste</option>
-                </select>
+
+                {/* Engine pills */}
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[9px] uppercase tracking-wider text-muted-foreground mr-0.5">Engine:</span>
+                  {([
+                    { key: "all" as EngineKey, label: "Tutti", count: previews.length, color: "#f472b6", Icon: Sparkles },
+                    { key: "ai" as EngineKey, label: ENGINE_META.ai.label, count: engineCounts.ai, color: ENGINE_META.ai.color, Icon: ENGINE_META.ai.Icon },
+                    { key: "template" as EngineKey, label: ENGINE_META.template.label, count: engineCounts.template, color: ENGINE_META.template.color, Icon: ENGINE_META.template.Icon },
+                    { key: "hybrid" as EngineKey, label: ENGINE_META.hybrid.label, count: engineCounts.hybrid, color: ENGINE_META.hybrid.color, Icon: ENGINE_META.hybrid.Icon },
+                  ]).map((opt) => {
+                    const active = engineFilter === opt.key;
+                    const Icon = opt.Icon;
+                    return (
+                      <button
+                        key={opt.key}
+                        onClick={() => setEngineFilter(opt.key)}
+                        className="px-2 py-1 rounded-full text-[10px] font-semibold flex items-center gap-1 transition-all"
+                        style={{
+                          background: active ? `${opt.color}25` : "rgba(255,255,255,0.03)",
+                          border: `1px solid ${active ? opt.color + "70" : "rgba(255,255,255,0.08)"}`,
+                          color: active ? opt.color : "rgba(255,255,255,0.7)",
+                        }}
+                      >
+                        <Icon className="w-2.5 h-2.5" />
+                        {opt.label}
+                        <span className="opacity-70">({opt.count})</span>
+                      </button>
+                    );
+                  })}
+                  {(engineFilter !== "all" || dateRange !== "any" || search.trim()) && (
+                    <button
+                      onClick={() => { setEngineFilter("all"); setDateRange("any"); setSearch(""); }}
+                      className="ml-auto px-2 py-1 rounded-full text-[10px] font-semibold text-muted-foreground hover:text-foreground flex items-center gap-1"
+                    >
+                      <XIcon className="w-2.5 h-2.5" /> Reset
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
@@ -336,6 +467,7 @@ export default function PartnerSavedPreviewsSection() {
                   <SavedPreviewCard
                     key={p.id}
                     preview={p}
+                    engine={p._engine}
                     delay={i * 0.04}
                     onToggleFavorite={() => toggleFavorite(p)}
                     onEdit={() => openEdit(p)}
@@ -417,14 +549,17 @@ export default function PartnerSavedPreviewsSection() {
  * Card singola preview salvata — stessa estetica delle altre card del vault
  * ─────────────────────────────────────────────────────────────────────── */
 function SavedPreviewCard({
-  preview, delay, onToggleFavorite, onEdit, onRemove,
+  preview, engine, delay, onToggleFavorite, onEdit, onRemove,
 }: {
   preview: SavedPreview;
+  engine: Exclude<EngineKey, "all">;
   delay: number;
   onToggleFavorite: () => void;
   onEdit: () => void;
   onRemove: () => void;
 }) {
+  const engineMeta = ENGINE_META[engine];
+  const EngineIcon = engineMeta.Icon;
   const accent = preview.primary_color || "#f472b6";
   const label = preview.portfolio_label || preview.lead_name || "Preview senza nome";
   const subtitle = [preview.sector_label, preview.template_style, preview.lead_city].filter(Boolean).join(" · ");
@@ -483,12 +618,21 @@ function SavedPreviewCard({
             <h4 className="text-xs font-bold text-foreground truncate">{label}</h4>
             {subtitle && <p className="text-[10px] text-muted-foreground truncate mt-0.5">{subtitle}</p>}
           </div>
-          <span
-            className="shrink-0 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide"
-            style={{ background: `${accent}25`, color: accent, border: `1px solid ${accent}40` }}
-          >
-            <Bookmark className="w-2.5 h-2.5 inline -mt-0.5 mr-0.5" /> Saved
-          </span>
+          <div className="flex flex-col items-end gap-1 shrink-0">
+            <span
+              className="px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide flex items-center gap-0.5"
+              style={{ background: `${engineMeta.color}20`, color: engineMeta.color, border: `1px solid ${engineMeta.color}50` }}
+              title={`Engine di generazione: ${engineMeta.label}`}
+            >
+              <EngineIcon className="w-2.5 h-2.5" /> {engineMeta.label}
+            </span>
+            <span
+              className="px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide"
+              style={{ background: `${accent}25`, color: accent, border: `1px solid ${accent}40` }}
+            >
+              <Bookmark className="w-2.5 h-2.5 inline -mt-0.5 mr-0.5" /> Saved
+            </span>
+          </div>
         </div>
 
         {preview.portfolio_notes && (
