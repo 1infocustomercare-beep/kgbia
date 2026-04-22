@@ -153,15 +153,27 @@ export default function PartnerLayout() {
         style={isDark ? { background: "#0a0a14" } : undefined}
       >
         {isDark && (
-          <div className="fixed inset-0 z-0 pointer-events-none" style={{ opacity: 1 }}>
+          <div className="fixed inset-0 z-0 pointer-events-none partner-bg-stage" style={{ opacity: 1 }}>
             <EmpireDNABackground />
+            {/* Aurora wash — più visibile fra le card, più viva ai bordi */}
             <div
-              className="absolute inset-0"
+              className="absolute inset-0 partner-aurora-a"
               style={{
                 background:
-                  "radial-gradient(ellipse 60% 40% at 20% 30%, rgba(167,139,250,0.06), transparent 70%), radial-gradient(ellipse 50% 50% at 80% 70%, rgba(99,102,241,0.05), transparent 60%)",
+                  "radial-gradient(ellipse 70% 50% at 18% 26%, rgba(167,139,250,0.18), transparent 65%), radial-gradient(ellipse 55% 50% at 82% 72%, rgba(99,102,241,0.14), transparent 60%)",
+                mixBlendMode: "screen",
               }}
             />
+            <div
+              className="absolute inset-0 partner-aurora-b"
+              style={{
+                background:
+                  "radial-gradient(ellipse 45% 35% at 50% 8%, rgba(212,160,82,0.10), transparent 70%), radial-gradient(ellipse 60% 40% at 50% 95%, rgba(124,58,237,0.10), transparent 70%)",
+                mixBlendMode: "screen",
+              }}
+            />
+            {/* Subtle noise to add cinematic grain */}
+            <div className="absolute inset-0 partner-bg-grain" aria-hidden />
           </div>
         )}
 
