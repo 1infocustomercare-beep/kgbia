@@ -177,6 +177,7 @@ const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
 const PartnerLayout = lazy(() => import("./components/layout/PartnerLayout"));
 const PartnerHomePage = lazy(() => import("./pages/partner/PartnerHomePage"));
+const DemoStudioPage = lazy(() => import("./pages/partner/DemoStudioPage"));
 const PartnerEarningsPage = lazy(() => import("./pages/partner/PartnerEarningsPage"));
 const PartnerPortfolioPage = lazy(() => import("./pages/partner/PartnerPortfolioPage"));
 const PartnerProfilePage = lazy(() => import("./pages/partner/PartnerProfilePage"));
