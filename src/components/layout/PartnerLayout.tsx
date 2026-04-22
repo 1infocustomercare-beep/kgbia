@@ -35,34 +35,32 @@ type NavItem = {
 };
 
 /**
- * NAVIGAZIONE PARTNER — 6 sezioni principali, zero doppioni.
+ * NAVIGAZIONE PARTNER — sezioni essenziali, zero doppioni.
  *
  * Logica:
- *  • Home        → dashboard / pitch (visibile in demo presentazione)
- *  • Leads       → LeadEngine Scout: trova + qualifica prospect (operativo, nascosto in demo)
- *  • Portfolio   → Catalogo 25+ settori pronti da mostrare al cliente (visibile in demo)
- *  • Demo Studio → Genera siti Full Power 1:1 dal mockup approvato (operativo, nascosto in demo)
- *  • Guadagni    → Commissioni, bonus, team (operativo, nascosto in demo)
- *  • Profilo     → Dati personali, avatar (operativo, nascosto in demo)
+ *  • Home            → dashboard / pitch (visibile in demo presentazione)
+ *  • Leads           → LeadEngine Scout: trova + qualifica + GENERA sito demo 1:1 (nascosto in demo)
+ *  • Custom Preview  → Mockup iPhone su misura per un cliente specifico (nascosto in demo)
+ *  • Guadagni        → Commissioni, bonus, team (nascosto in demo)
+ *  • Portfolio       → Catalogo 25+ settori + Mockup generati + Siti demo + Modalità Presentazione (visibile in demo)
+ *  • Profilo         → Dati personali, avatar (nascosto in demo)
  *
  * Bottom nav mobile (max 4 + Altro):
- *  LIVE  →  Home · Leads · Demo Studio · Guadagni  +  Altro (Portfolio, Custom Preview, Profilo, API)
- *  DEMO  →  Home · Portfolio                       (zero dati sensibili davanti al cliente)
+ *  LIVE  →  Home · Leads · Custom Preview · Guadagni  +  Altro (Portfolio, Profilo, API)
+ *  DEMO  →  Home · Portfolio                          (zero dati sensibili davanti al cliente)
  */
 const NAV_ITEMS_FULL: NavItem[] = [
   { path: "/partner",                icon: LayoutDashboard, label: "Home",        exact: true, showInDemo: true,  primary: true  },
   { path: "/partner/leads",          icon: Target,          label: "Leads",                    showInDemo: false, primary: true  },
-  { path: "/partner/demo-studio",    icon: Wand2,           label: "Demo Studio",              showInDemo: false, primary: true  },
+  { path: "/partner/custom-preview", icon: Palette,         label: "Custom Preview",           showInDemo: false, primary: true  },
   { path: "/partner/earnings",       icon: DollarSign,      label: "Guadagni",                 showInDemo: false, primary: true  },
   { path: "/partner/portfolio",      icon: FolderOpen,      label: "Portfolio",                showInDemo: true,  primary: false },
-  { path: "/partner/custom-preview", icon: Palette,         label: "Custom Preview",           showInDemo: false, primary: false },
   { path: "/partner/profile",        icon: User,            label: "Profilo",                  showInDemo: false, primary: false },
   { path: "/partner/api-connections",icon: Zap,             label: "API",                      showInDemo: false, primary: false },
 ];
 
 const resolvePartnerVoiceTab = (pathname: string) => {
   if (pathname.startsWith("/partner/leads")) return "leads";
-  if (pathname.startsWith("/partner/demo-studio")) return "showcase";
   if (pathname.startsWith("/partner/earnings")) return "earnings";
   if (pathname.startsWith("/partner/portfolio")) return "showcase";
   if (pathname.startsWith("/partner/custom-preview")) return "projects";
