@@ -133,8 +133,13 @@ export function MockupSuiteViewer({
           <div key={idx} className="flex flex-col items-center gap-2">
             <div
               ref={el => { containerRefs.current[idx] = el; }}
-              className="relative group"
+              className="relative group cursor-zoom-in"
               style={{ width: frameWidth, height: frameHeight }}
+              onClick={() => setFullscreenIndex(idx)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter") setFullscreenIndex(idx); }}
+              title="Apri a schermo intero"
             >
               {/* Ambient glow personalizzato sul colore brand */}
               <div
