@@ -312,6 +312,7 @@ function PipelineTab(props: {
           {leads.map(lead => (
             <LeadCard key={lead.id} lead={lead} expanded={expandedId === lead.id}
               onToggle={() => setExpandedId(expandedId === lead.id ? null : lead.id)}
+              onOpenAB={(props as any).onOpenAB}
               {...props}
             />
           ))}
@@ -325,6 +326,7 @@ function PipelineTab(props: {
 function LeadCard({
   lead, expanded, onToggle,
   onUpdateStage, onAddInteraction, onScheduleFollowup, onUpdateNotes, onUpdateValue, onDeleteLead,
+  onOpenAB,
 }: {
   lead: PipelineLead; expanded: boolean; onToggle: () => void;
   onUpdateStage: (id: string, status: PipelineStageId) => void;
@@ -333,6 +335,7 @@ function LeadCard({
   onUpdateNotes: (id: string, notes: string) => void;
   onUpdateValue: (id: string, value: number) => void;
   onDeleteLead: (id: string) => void;
+  onOpenAB?: (lead: ABLeadInput) => void;
 }) {
   const stage = getStageMeta(lead.status);
   const [editingNotes, setEditingNotes] = useState(false);
@@ -434,6 +437,21 @@ function LeadCard({
                   </a>
                 )}
               </div>
+
+              {/* ═══ Test A/B WhatsApp — confronta 2 messaggi e traccia clic+risposte ═══ */}
+              {lead.phone && onOpenAB && (
+                <button
+                  onClick={() => onOpenAB({ id: lead.id, name: lead.name, phone: lead.phone, city: lead.city, sector: lead.sector })}
+                  className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-bold"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(37,211,102,0.15), rgba(124,58,237,0.15))",
+                    border: "1px solid rgba(124,58,237,0.4)",
+                    color: "#c4b5fd",
+                  }}>
+                  <FlaskConical className="w-3 h-3" />
+                  Test A/B WhatsApp · confronta 2 messaggi
+                </button>
+              )}
 
               {/* ═══ Intelligence Report — analisi profonda + script vendita ═══ */}
               <div>
