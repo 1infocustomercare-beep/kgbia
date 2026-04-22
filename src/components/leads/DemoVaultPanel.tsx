@@ -473,6 +473,7 @@ export default function DemoVaultPanel({ open, onClose, targetLead, onReused }: 
                       if (confirm(`Eliminare il mockup "${suite.business_name}"?`)) mockupVault.deleteSuite(suite.id);
                     }}
                     onCopy={copy}
+                    onToggleFavorite={() => mockupVault.toggleFavorite(suite.id, suite.is_favorite)}
                   />
                 ))}
               </>
