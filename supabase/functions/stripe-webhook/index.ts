@@ -96,8 +96,62 @@ serve(async (req) => {
     }
 
     // ── Setup Fee Processing ──
-    const { restaurantId, partnerId, plan, transferGroup } = meta;
+    const { restaurantId, companyId, entity_type, entity_id, partnerId, plan, transferGroup, userId } = meta;
 
+    // ── Branch A: Company-based setup (NCC, beach, beauty, etc. — non-food sectors) ──
+    if ((entity_type === "company" || (companyId && !restaurantId)) && (companyId || entity_id)) {
+      const cid = companyId || entity_id;
+
+      await supabase
+        .from("companies")
+        .update({
+          setup_paid: true,
+          setup_paid_at: new Date().toISOString(),
+        })
+        .eq("id", cid);
+
+      // Update setup_payment_log
+      if (session.id) {
+        await supabase
+          .from("setup_payment_log")
+          .update({
+            status: "paid",
+            paid_at: new Date().toISOString(),
+            stripe_payment_intent_id: (session.payment_intent as string) || null,
+          })
+          .eq("stripe_session_id", session.id);
+      }
+
+      console.log(`Company ${cid} setup_paid=true via session ${session.id}`);
+
+      // Record partner sale if applicable (same logic as restaurants below, but for company)
+      if (partnerId && userId) {
+        const { count: priorSalesCount } = await supabase
+          .from("partner_sales")
+          .select("id", { count: "exact", head: true })
+          .eq("partner_id", partnerId);
+        const currentSaleNumber = (priorSalesCount || 0) + 1;
+
+        await supabase.from("partner_sales").insert({
+          partner_id: partnerId,
+          sale_amount: ((session.amount_total as number) || 0) / 100,
+          partner_commission: 997,
+          team_leader_override: 0,
+          sale_month: new Date().toISOString().slice(0, 7),
+        } as any);
+
+        await supabase.rpc("check_team_leader_promotion" as any, { p_partner_id: partnerId });
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        await supabase.rpc("calculate_monthly_bonus" as any, { p_partner_id: partnerId, p_month: currentMonth });
+      }
+
+      return new Response(
+        JSON.stringify({ received: true, type: "setup_fee", entity: "company", id: cid }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // ── Branch B: Restaurant-based setup (food sector — preserved original logic) ──
     if (!restaurantId) {
       return new Response(JSON.stringify({ received: true, skipped: "no restaurantId" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -105,7 +159,22 @@ serve(async (req) => {
     }
 
     // Mark restaurant as paid
-    await supabase.from("restaurants").update({ setup_paid: true }).eq("id", restaurantId);
+    await supabase
+      .from("restaurants")
+      .update({ setup_paid: true, setup_paid_at: new Date().toISOString() })
+      .eq("id", restaurantId);
+
+    // Update setup_payment_log for restaurant flow too
+    if (session.id) {
+      await supabase
+        .from("setup_payment_log")
+        .update({
+          status: "paid",
+          paid_at: new Date().toISOString(),
+          stripe_payment_intent_id: (session.payment_intent as string) || null,
+        })
+        .eq("stripe_session_id", session.id);
+    }
 
     // Plan split calculations (€2,997 = €1,950 platform + €997 partner + €50 TL override from 5th sale)
     // Override amounts are conditional — only applied when leader is active & sub-partner sale >= 5
