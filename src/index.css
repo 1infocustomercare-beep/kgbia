@@ -1830,6 +1830,30 @@
     isolation: isolate;
   }
 
+  /* Superficie interna leggera ma opaca al DNA — usabile dentro le card */
+  .partner-soft-tile {
+    background: hsl(var(--card) / 0.96);
+    border: 1px solid hsl(var(--border) / 0.6);
+    border-radius: 0.875rem;
+    isolation: isolate;
+  }
+  .dark .partner-soft-tile {
+    background: linear-gradient(180deg, hsl(225 18% 14% / 0.95), hsl(228 18% 11% / 0.95));
+    border-color: hsl(0 0% 100% / 0.06);
+  }
+
+  /* Pannello "vetrina" semi-trasparente con isolation per non lasciare passare il DNA dietro i contenuti */
+  .partner-vault-panel {
+    isolation: isolate;
+  }
+  .dark .partner-vault-panel {
+    background:
+      linear-gradient(180deg, hsl(248 30% 12% / 0.85), hsl(248 30% 9% / 0.85)) !important;
+    border-color: hsl(248 70% 66% / 0.18) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .partner-page-shell,
     .partner-stagger > *,
