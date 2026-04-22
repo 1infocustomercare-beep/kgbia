@@ -853,16 +853,36 @@ export function MockupSuiteGenerator({
               <div>
                 <h3 className="font-semibold text-sm flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-primary" />
-                  Suite generata · {result.template_variant.replace("_", " ")} · {ENGINE_OPTIONS.find(e => e.key === result.engine)?.label}
+                  {previewPhase === "upgrading"
+                    ? "Anteprima istantanea · upgrade 4K/8K in corso…"
+                    : `Suite generata · ${result.template_variant.replace("_", " ")} · ${ENGINE_OPTIONS.find(e => e.key === result.engine)?.label}`}
                 </h3>
-                <p className="text-xs text-muted-foreground mt-1">4 mockup pronti da mostrare al cliente</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {previewPhase === "upgrading"
+                    ? "Le 4 schermate si aggiornano una a una appena pronte (fade-in progressivo)"
+                    : "4 mockup pronti da mostrare al cliente"}
+                </p>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={copyShareLink}><Copy className="h-3 w-3 mr-1" />Link</Button>
-                <Button variant="outline" size="sm" onClick={() => window.open(`${window.location.origin}/preview/mockup/${result.share_slug}`, "_blank")}>
-                  <ExternalLink className="h-3 w-3 mr-1" />Apri
-                </Button>
-              </div>
+              {previewPhase === "upgrading" ? (
+                <Badge variant="outline" className="gap-1.5 animate-pulse">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Upgrade AI…
+                </Badge>
+              ) : (
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={copyShareLink} disabled={!result.share_slug}>
+                    <Copy className="h-3 w-3 mr-1" />Link
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.open(`${window.location.origin}/preview/mockup/${result.share_slug}`, "_blank")}
+                    disabled={!result.share_slug}
+                  >
+                    <ExternalLink className="h-3 w-3 mr-1" />Apri
+                  </Button>
+                </div>
+              )}
             </div>
 
             <MockupSuiteViewer
