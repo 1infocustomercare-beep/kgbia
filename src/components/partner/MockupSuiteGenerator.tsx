@@ -297,6 +297,13 @@ export function MockupSuiteGenerator({
   }, [brandingKit.primary, lockToTemplate]);
 
   const [generating, setGenerating] = useState(false);
+  // Mockup Libero — preview on-demand: l'utente clicca "Carica anteprima" per renderizzarla
+  const [standalonePreviewLoaded, setStandalonePreviewLoaded] = useState(false);
+  const [standalonePreviewLoading, setStandalonePreviewLoading] = useState(false);
+  // Invalida la preview on-demand quando cambia settore o colore brand
+  useEffect(() => {
+    setStandalonePreviewLoaded(false);
+  }, [standalone.sector, standalone.primaryColor]);
   // Stato per preview progressiva: "preview" = mostra subito React render, "upgrading" = AI in arrivo, "complete" = finita
   const [previewPhase, setPreviewPhase] = useState<"idle" | "preview" | "upgrading" | "complete">("idle");
   const [result, setResult] = useState<{
@@ -673,6 +680,116 @@ export function MockupSuiteGenerator({
                   ? "Cambia template → palette e colore brand si aggiornano."
                   : "Sblocca-lock attivo: stai usando un colore custom fuori dalle regole."}
               </p>
+            </div>
+
+            {/* ────────────────────────────────────────────────────────── */}
+            {/* MOCKUP LIBERO — Template + Preview on-demand               */}
+            {/* Selettore template inline + bottone "Carica anteprima"     */}
+            {/* per renderizzare la mini-preview solo quando richiesto.    */}
+            {/* ────────────────────────────────────────────────────────── */}
+            <div className="rounded-xl border border-border/60 bg-background/40 p-3 space-y-3">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <Label htmlFor="sa-template" className="text-xs font-semibold flex items-center gap-1.5 m-0">
+                  <Palette className="h-3.5 w-3.5 text-primary" />
+                  Template grafico
+                </Label>
+                {templateVariant === "auto" && businessSector && (
+                  <Badge variant="outline" className="text-[9px]">
+                    ✨ Auto: {TEMPLATE_VARIANTS.find(t => t.key === suggestTemplateForSector(businessSector))?.label.split(" — ")[0]}
+                  </Badge>
+                )}
+              </div>
+
+              <Select value={templateVariant} onValueChange={(v) => { setTemplateVariant(v); setStandalonePreviewLoaded(false); }}>
+                <SelectTrigger id="sa-template" className="h-9 text-sm">
+                  <SelectValue placeholder="Scegli un template…" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[340px]">
+                  {Object.entries(groupedTemplates).map(([group, items]) => (
+                    <div key={group}>
+                      <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{group}</div>
+                      {items.map(t => (
+                        <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+                      ))}
+                    </div>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Preview on-demand */}
+              <div className="flex items-center justify-between gap-3 pt-1">
+                <div className="min-w-0">
+                  <p className="text-[11px] font-semibold">Anteprima al momento</p>
+                  <p className="text-[10px] text-muted-foreground leading-snug">
+                    {standalonePreviewLoaded
+                      ? "Anteprima caricata · cambia template o colore per ricaricare."
+                      : "Carica una mini-preview con i parametri scelti prima di generare."}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={standalonePreviewLoaded ? "outline" : "default"}
+                  className="shrink-0 gap-1.5 h-8"
+                  disabled={standalonePreviewLoading || !standalone.sector.trim()}
+                  onClick={() => {
+                    setStandalonePreviewLoading(true);
+                    // micro-delay per dare feedback visivo
+                    setTimeout(() => {
+                      setStandalonePreviewLoaded(true);
+                      setStandalonePreviewLoading(false);
+                    }, 350);
+                  }}
+                >
+                  {standalonePreviewLoading ? (
+                    <><Loader2 className="h-3 w-3 animate-spin" /> Carico…</>
+                  ) : standalonePreviewLoaded ? (
+                    <><Eye className="h-3 w-3" /> Ricarica</>
+                  ) : (
+                    <><Eye className="h-3 w-3" /> Carica anteprima</>
+                  )}
+                </Button>
+              </div>
+
+              {standalonePreviewLoaded && standalone.sector.trim() && (
+                <div className="flex justify-center pt-1">
+                  <div className="relative" style={{ width: 130, height: Math.round(130 * 19.5 / 9) }}>
+                    <div
+                      className="absolute -inset-2 rounded-[32px] opacity-30 blur-xl pointer-events-none"
+                      style={{ background: standalone.primaryColor }}
+                    />
+                    <div
+                      className="relative rounded-[24px] border-[2px] overflow-hidden shadow-xl bg-background"
+                      style={{
+                        width: 130,
+                        height: Math.round(130 * 19.5 / 9),
+                        borderColor: "hsl(var(--foreground) / 0.22)",
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[40px] h-[10px] bg-black rounded-full z-30" />
+                      <div className="absolute inset-[2px] overflow-hidden rounded-[22px]">
+                        <MockupReactScreen
+                          type="home"
+                          templateVariant={resolvedTemplateKey}
+                          businessName={standalone.name || "Brand Demo"}
+                          businessSector={standalone.sector || "Servizi"}
+                          businessCity={standalone.city || ""}
+                          primaryColor={standalone.primaryColor}
+                          width={126}
+                          height={Math.round(130 * 19.5 / 9) - 4}
+                          glassIntensity={glassIntensity}
+                          colorStyle={colorStyle}
+                          safeAreaPx={Math.round(safeAreaPx * 0.4)}
+                          typeScale={typeScale}
+                          boostContrast={boostContrast}
+                        />
+                      </div>
+                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[42px] h-[2px] bg-foreground/30 rounded-full z-20" />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
