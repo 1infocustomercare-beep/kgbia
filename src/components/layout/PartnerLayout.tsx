@@ -342,6 +342,31 @@ export default function PartnerLayout() {
               </motion.span>
 
               <div className="flex items-center gap-1 ml-1">
+                {/* Wow Mode toggle: cicla full → soft → off */}
+                {isDark && (
+                  <button
+                    onClick={cycleWow}
+                    aria-label={`Wow Mode: ${wowLevel}`}
+                    title={`Wow Mode: ${wowLevel === "full" ? "Pieno" : wowLevel === "soft" ? "Soft" : "Off"} — tocca per cambiare`}
+                    className="flex items-center justify-center w-9 h-9 rounded-xl transition-all hover:scale-105 active:scale-95 relative"
+                    style={{
+                      background: "rgba(16,18,36,0.96)",
+                      color: wowLevel === "off" ? "#6b7280" : accentColor,
+                      border: `1px solid ${wowLevel === "off" ? "rgba(255,255,255,0.08)" : accentColor + "33"}`,
+                      boxShadow: wowLevel === "full" ? `0 0 14px ${accentColor}33` : "0 6px 18px rgba(0,0,0,0.22)",
+                    }}
+                  >
+                    <Sparkles className="w-3.5 h-3.5" style={{ opacity: wowLevel === "off" ? 0.45 : 1 }} />
+                    {/* indicatore livello */}
+                    <span
+                      className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 flex gap-[2px]"
+                      aria-hidden
+                    >
+                      <span className="w-1 h-1 rounded-full" style={{ background: wowLevel !== "off" ? accentColor : "rgba(255,255,255,0.18)" }} />
+                      <span className="w-1 h-1 rounded-full" style={{ background: wowLevel === "full" ? accentColor : "rgba(255,255,255,0.18)" }} />
+                    </span>
+                  </button>
+                )}
                 <DarkModeToggle />
                 <button
                   onClick={async () => {
