@@ -706,7 +706,7 @@ export default function PartnerHomePage() {
             <section className="px-4 space-y-3">
               <h3 className="text-[9px] font-bold uppercase tracking-[0.25em] text-muted-foreground/60 px-1 flex items-center gap-2">
                 <span className="w-5 h-[1px] inline-block" style={{ background: "linear-gradient(90deg, rgba(167,139,250,0.4), transparent)" }} />
-                Strumenti Operativi
+                {demoMode ? "Esplora il Sistema" : "Strumenti Operativi"}
               </h3>
               {QUICK_NAV.map((item, i) => (
                 <motion.div key={item.path}
