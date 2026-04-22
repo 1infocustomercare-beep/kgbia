@@ -1100,12 +1100,57 @@ export default function LeadsPage() {
   };
 
   const sorted = [...results]
+  // 🎯 Categorie prioritarie con storico conversione alta
+  const PRIORITY_SECTORS = new Set(["food", "beauty", "ncc", "fitness", "healthcare", "hotel", "tattoo"]);
+
+  // 🕐 Parser leggero "Mo-Fr 09:00-19:00; Sa 10:00-14:00" (formato OSM/Nominatim)
+  const isOpenNow = (oh?: string | null): boolean => {
+    if (!oh || typeof oh !== "string") return false;
+    if (/24\s*\/\s*7/i.test(oh)) return true;
+    const now = new Date();
+    const dayMap = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    const today = dayMap[now.getDay()];
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    const blocks = oh.split(";").map(s => s.trim()).filter(Boolean);
+    for (const blk of blocks) {
+      const m = blk.match(/^([A-Za-z,\-]+)?\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
+      if (!m) continue;
+      const dayPart = m[1] || "";
+      const dayOk = !dayPart
+        || dayPart.split(",").some(seg => {
+          const r = seg.trim().split("-");
+          if (r.length === 1) return r[0].startsWith(today);
+          const i1 = dayMap.findIndex(d => r[0].startsWith(d));
+          const i2 = dayMap.findIndex(d => r[1].startsWith(d));
+          const ti = dayMap.indexOf(today);
+          if (i1 < 0 || i2 < 0 || ti < 0) return false;
+          return i1 <= i2 ? (ti >= i1 && ti <= i2) : (ti >= i1 || ti <= i2);
+        });
+      if (!dayOk) continue;
+      const start = parseInt(m[2]) * 60 + parseInt(m[3]);
+      const end = parseInt(m[4]) * 60 + parseInt(m[5]);
+      if (nowMin >= start && nowMin <= end) return true;
+    }
+    return false;
+  };
+
+  const quickFiltersActive = qfHot || qfHasPhone || qfOpenNow || qfNoWebsite || qfPriorityCat;
+
+  const sorted = [...results]
     .filter((r) => {
       if (!resultsQuery.trim()) return true;
       const q = resultsQuery.toLowerCase();
       return [r.name, r.city, r.zone, r.full_address, r.phone, r.email, r.website]
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(q));
+    })
+    .filter((r) => {
+      if (qfHot && r._score < 70) return false;
+      if (qfHasPhone && !r.phone) return false;
+      if (qfNoWebsite && r.website) return false;
+      if (qfPriorityCat && !PRIORITY_SECTORS.has(r._sector)) return false;
+      if (qfOpenNow && !isOpenNow(r.opening_hours)) return false;
+      return true;
     })
     .sort((a, b) =>
       sortBy === "score" ? b._score - a._score :
