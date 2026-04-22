@@ -223,11 +223,23 @@ function suggestTemplateForSector(sector: string): string {
   if (/beauty|estetic|parruc|hair|nail|kids|baby/.test(s)) return "boutique_pastel";
   if (/fitness|palestra|gym|crossfit|sport|supplem/.test(s)) return "fitness_energy";
   if (/immobil|real ?estate|legal|avvocat|notai|commercia|finanz/.test(s)) return "real_estate_trust";
-  if (/fintech|saas|ai|tech|startup|software|app/.test(s)) return "glass_aurora";
+  // AI / SaaS / fintech moderni → Apple Liquid Glass (top tier)
+  if (/fintech|crypto|web3|nft|saas|ai|tech|startup|software|app/.test(s)) return "apple_liquid_glass";
+  // Spatial / VR / AR / metaverse / iOS native
+  if (/visionos|spatial|vr|ar|metavers|3d|immersiv/.test(s)) return "spatial_visionos";
+  // Cool brands / artic / scandinav / ice cream / surgelati
+  if (/artic|polar|ice|gelat|surgel|nordic|scandinav/.test(s)) return "glacial_frost";
+  // Gaming / esports / cyber
+  if (/gaming|esport|stream|twitch|cyber/.test(s)) return "cyber_holo";
+  // Editorial / fashion / magazine
   if (/fashion|moda|magazine|editor|lifestyle|design|agenzi/.test(s)) return "editorial_clean";
-  if (/event|wedding|gaming|nightlife|disco|club/.test(s)) return "neon_vibrant";
+  if (/event|wedding|nightlife|disco|club/.test(s)) return "neon_vibrant";
   if (/architett|studio|brand/.test(s)) return "monochrome_bold";
-  return "modern_dark";
+  // Tropical / cocktail / summer / sunset bar
+  if (/cocktail|tropic|tiki|summer|sunset|aperit/.test(s)) return "sunset_gradient";
+  // News / journal / Swiss editorial
+  if (/news|giornal|editori|press|magazine|publish/.test(s)) return "swiss_grid";
+  return "midnight_aurora";
 }
 
 export function MockupSuiteGenerator({
