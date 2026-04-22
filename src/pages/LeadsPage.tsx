@@ -1928,6 +1928,171 @@ export default function LeadsPage() {
         </AnimatePresence>
       </div>
 
+      {/* ═══ STRUMENTI & AUTOMAZIONI AI — collassabile, chiuso di default su mobile ═══
+           Contiene: Tips, Arianna Autopilot, Insights, Intelligence Inbox, Voice, Stepper.
+           Su desktop tutto è espanso/visibile come prima.
+      */}
+      <details
+        className="lg:hidden rounded-2xl overflow-hidden group"
+        style={{
+          background: "linear-gradient(135deg, rgba(167,139,250,0.06), rgba(20,184,166,0.04))",
+          border: "1px solid rgba(167,139,250,0.18)",
+        }}
+      >
+        <summary className="flex items-center justify-between gap-2 px-4 py-3 cursor-pointer select-none list-none active:opacity-80">
+          <div className="flex items-center gap-2 min-w-0">
+            <Sparkles className="w-4 h-4 shrink-0" style={{ color: "#a78bfa" }} />
+            <div className="min-w-0">
+              <p className="text-[12px] font-bold text-white leading-tight">Strumenti & Automazioni AI</p>
+              <p className="text-[9px] text-violet-300/70 leading-tight">Autopilot Arianna · Insights · Inbox · Voce</p>
+            </div>
+          </div>
+          <ChevronDown className="w-4 h-4 text-violet-300 transition-transform group-open:rotate-180 shrink-0" />
+        </summary>
+        <div className="px-3 pb-4 pt-1 space-y-4">
+          {/* TIPS */}
+          <AnimatePresence>
+            {showTips && results.length === 0 && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                className="rounded-xl p-3 flex items-start gap-2.5" style={{ background: "rgba(20,184,166,0.04)", border: "1px solid rgba(20,184,166,0.12)" }}>
+                <Sparkles className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#14b8a6" }} />
+                <div className="flex-1">
+                  <p className="text-[10px] font-bold mb-1" style={{ color: "#5eead4" }}>Come funziona in 3 step:</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { step: "1", title: "Cerca", desc: "Città + settore: parte automatica" },
+                      { step: "2", title: "Analizza", desc: "Score, social, contatti reali" },
+                      { step: "3", title: "Contatta", desc: "Messaggio AI WhatsApp/Email" },
+                    ].map((s, i) => (
+                      <div key={i} className="text-center">
+                        <span className="inline-flex w-5 h-5 rounded-full items-center justify-center text-[9px] font-bold mb-1" style={{ background: "rgba(20,184,166,0.15)", color: "#14b8a6" }}>{s.step}</span>
+                        <p className="text-[9px] font-bold text-white">{s.title}</p>
+                        <p className="text-[8px]" style={{ color: "#6b7280" }}>{s.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <button onClick={(e) => { e.preventDefault(); setShowTips(false); sessionStorage.setItem("leads_tips_hidden", "1"); }}
+                  className="p-1 rounded shrink-0" style={{ color: "#6b7280" }}>
+                  <XIcon className="w-3 h-3" />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* AUTOPILOT */}
+          <AriannaLeadScoutPanel
+            defaultTarget={{ city: city || "Roma", sector: sector || "food" }}
+            pilot={{
+              setSearchInputs: (c, s) => { setCity(c); setSector(s); },
+              triggerSearch: async () => { await handleSearch(); },
+              triggerDemoFactoryOnTopLead: async () => {
+                const top = sorted[0];
+                if (top) await runDemoFactory(top, null);
+              },
+              getResultsCount: () => results.length,
+              getTopLead: () => {
+                const top = sorted[0];
+                if (!top) return null;
+                return { name: top.name, phone: top.phone, email: top.email, sector: top._sector };
+              },
+            }}
+          />
+
+          {/* INSIGHTS */}
+          <AriannaInsightsDashboard />
+
+          {/* INTELLIGENCE INBOX */}
+          <LeadIntelligenceInbox />
+
+          {/* VOICE */}
+          <button
+            type="button"
+            onClick={() => (window as any).__empireVoiceStart?.()}
+            className="w-full rounded-2xl px-4 py-3 flex items-center justify-center gap-2 font-bold text-sm text-white transition-all active:scale-[0.99]"
+            style={{
+              background: "linear-gradient(135deg, #f59e0b, #f97316)",
+              boxShadow: "0 6px 24px rgba(245,158,11,0.35)",
+            }}
+          >
+            🎙 Comanda con la voce
+          </button>
+
+          {/* FLUSSO STEPPER */}
+          <PartnerFlowStepper currentStep="leads" />
+        </div>
+      </details>
+
+      {/* ═══ DESKTOP-ONLY: gli stessi moduli espansi (no collasso, esperienza piena su lg+) ═══ */}
+      <div className="hidden lg:block space-y-4">
+        <AnimatePresence>
+          {showTips && results.length === 0 && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+              className="rounded-xl p-3 flex items-start gap-2.5" style={{ background: "rgba(20,184,166,0.04)", border: "1px solid rgba(20,184,166,0.12)" }}>
+              <Sparkles className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#14b8a6" }} />
+              <div className="flex-1">
+                <p className="text-[10px] font-bold mb-1" style={{ color: "#5eead4" }}>Come funziona in 3 step:</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { step: "1", title: "Cerca", desc: "Inserisci città e settore — la ricerca parte in automatico su 4+ fonti" },
+                    { step: "2", title: "Analizza", desc: "Ogni lead ha uno score di opportunità, dati social e contatti reali" },
+                    { step: "3", title: "Contatta", desc: "Messaggio AI personalizzato per WhatsApp, Instagram o Email" },
+                  ].map((s, i) => (
+                    <div key={i} className="text-center">
+                      <span className="inline-flex w-5 h-5 rounded-full items-center justify-center text-[9px] font-bold mb-1" style={{ background: "rgba(20,184,166,0.15)", color: "#14b8a6" }}>{s.step}</span>
+                      <p className="text-[9px] font-bold text-white">{s.title}</p>
+                      <p className="text-[8px]" style={{ color: "#6b7280" }}>{s.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <button onClick={() => { setShowTips(false); sessionStorage.setItem("leads_tips_hidden", "1"); }}
+                className="p-1 rounded shrink-0" style={{ color: "#6b7280" }}>
+                <XIcon className="w-3 h-3" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AriannaLeadScoutPanel
+          defaultTarget={{ city: city || "Roma", sector: sector || "food" }}
+          pilot={{
+            setSearchInputs: (c, s) => { setCity(c); setSector(s); },
+            triggerSearch: async () => { await handleSearch(); },
+            triggerDemoFactoryOnTopLead: async () => {
+              const top = sorted[0];
+              if (top) await runDemoFactory(top, null);
+            },
+            getResultsCount: () => results.length,
+            getTopLead: () => {
+              const top = sorted[0];
+              if (!top) return null;
+              return { name: top.name, phone: top.phone, email: top.email, sector: top._sector };
+            },
+          }}
+        />
+
+        <AriannaInsightsDashboard />
+
+        <div className="mt-4">
+          <LeadIntelligenceInbox />
+        </div>
+
+        <button
+          type="button"
+          onClick={() => (window as any).__empireVoiceStart?.()}
+          className="w-full rounded-2xl px-4 py-3 flex items-center justify-center gap-2 font-bold text-sm text-white transition-all hover:scale-[1.01]"
+          style={{
+            background: "linear-gradient(135deg, #f59e0b, #f97316)",
+            boxShadow: "0 6px 24px rgba(245,158,11,0.35)",
+          }}
+        >
+          🎙 Comanda con la voce — "Trova lead a Milano", "Lancia demo sul primo lead"
+        </button>
+
+        <PartnerFlowStepper currentStep="leads" />
+      </div>
+
       {/* ═══ RESULTS LIST ═══ */}
       <AnimatePresence>
         {results.length > 0 && (
