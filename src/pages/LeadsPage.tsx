@@ -1236,7 +1236,7 @@ export default function LeadsPage() {
   });
 
   return (
-    <div className="min-h-screen p-4 lg:p-6 space-y-4 pb-24 lg:pb-8 max-w-2xl lg:max-w-7xl mx-auto relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
+    <div className="min-h-screen px-3 sm:px-5 md:px-6 lg:px-8 py-4 md:py-5 lg:py-6 space-y-4 md:space-y-5 lg:space-y-6 pb-24 lg:pb-10 w-full max-w-[680px] md:max-w-[860px] lg:max-w-6xl xl:max-w-7xl mx-auto relative overflow-x-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
       <SalesPlaybook autoOpen />
       <ManualPreviewPicker
         open={showPicker}
