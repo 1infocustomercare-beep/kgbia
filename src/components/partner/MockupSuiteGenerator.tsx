@@ -891,6 +891,7 @@ export function MockupSuiteGenerator({
             boostContrast,
           }}
           onApply={(p: MockupLookPreset) => {
+            if (controlsLocked) return;
             setTemplateVariant(p.templateVariant);
             setGlassIntensity(p.glassIntensity);
             setColorStyle(p.colorStyle);
@@ -898,6 +899,7 @@ export function MockupSuiteGenerator({
             setTypeScale(p.typeScale);
             setBoostContrast(p.boostContrast);
           }}
+          locked={controlsLocked}
         />
 
         {/* ────────────────────────────────────────────────────────────────── */}
