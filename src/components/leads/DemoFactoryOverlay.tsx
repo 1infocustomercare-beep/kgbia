@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, ExternalLink, Copy, Check, Loader2, Zap, Crown, Users, ShoppingBag, MessageCircle, Phone, Shield, KeyRound, ChevronDown, ChevronUp, Mail, Monitor, Smartphone, Wand2 } from "lucide-react";
+import { X, Sparkles, ExternalLink, Copy, Check, Loader2, Zap, Crown, Users, ShoppingBag, MessageCircle, Phone, Shield, KeyRound, ChevronDown, ChevronUp, Mail, Monitor, Smartphone, Wand2, FolderOpen, BookmarkCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { TEMPLATES, renderTemplate, pickRecommendedAuroraTemplate, type EmailTemplate } from "@/lib/email-templates/aurora-templates";
 import { analyzeEmailDeliverability } from "@/lib/email-templates/deliverability";
@@ -212,6 +213,14 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                                 </span>
                               </div>
                             )}
+                            {/* 💾 Auto-save badge — informa l'utente che la demo è già nel Portfolio */}
+                            <div className="mt-2 flex items-center gap-1.5 flex-wrap">
+                              <span className="inline-flex items-center gap-1 text-[0.55rem] uppercase tracking-wider font-black px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-200 border border-emerald-400/30">
+                                <BookmarkCheck className="w-2.5 h-2.5" />
+                                Salvata nel Portfolio
+                              </span>
+                              <span className="text-[0.55rem] text-white/40">riusabile gratis</span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -269,7 +278,17 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                           >
                             <Sparkles className="w-3.5 h-3.5" /> Invia al Lead
                           </button>
-                      )}
+                        )}
+                      </div>
+
+                      {/* 4b ️⃣ SECONDARY — Apri Portfolio (la demo è già salvata lì) */}
+                      <Link
+                        to="/partner/portfolio"
+                        onClick={onClose}
+                        className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-bold bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white/80 hover:text-white transition-colors"
+                      >
+                        <FolderOpen className="w-3.5 h-3.5" /> Apri Portfolio · ritrovi qui tutte le tue demo
+                      </Link>
 
                       {/* 5b ️⃣ EMAIL AURORA — Template HTML stilizzato con preview live */}
                       {renderedEmail && (
@@ -375,7 +394,6 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                           )}
                         </div>
                       )}
-                      </div>
 
                       {/* 5️⃣ WHATSAPP message */}
                       {result.outreach?.whatsappMessage && (
