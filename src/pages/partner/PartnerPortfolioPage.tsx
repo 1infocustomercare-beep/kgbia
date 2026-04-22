@@ -650,25 +650,53 @@ export default function PartnerPortfolioPage() {
                       border: `1px solid ${accent}30`,
                     }}
                   >
-                    {/* Anteprima screens (stesso layout delle card settore) */}
+                    {/* Anteprima screens — sempre 4 mini-mockup per decidere a colpo d'occhio quale ripristinare */}
                     <div
-                      className="p-4 flex gap-2 justify-center overflow-hidden h-[140px] items-end"
+                      className="p-3 flex gap-1.5 justify-center overflow-hidden h-[150px] items-end"
                       style={{ background: `linear-gradient(135deg, ${accent}20, rgba(10,10,20,0.9))` }}
+                      title="Mini-anteprima delle 4 schermate principali"
                     >
                       {screenImgs.length === 0 && (
                         <div className="self-center text-[10px] text-white/40 flex flex-col items-center gap-1">
                           <Smartphone className="w-6 h-6" /> Nessuna anteprima
                         </div>
                       )}
-                      {screenImgs.slice(0, 3).map((src, j) => (
-                        <div
+                      {screenImgs.slice(0, 4).map((src, j) => (
+                        <button
+                          type="button"
                           key={j}
-                          className={`${j === 1 ? "w-[70px]" : "w-[55px]"} aspect-[9/19.5] rounded-[10px] overflow-hidden shrink-0`}
-                          style={{ border: "1px solid rgba(255,255,255,0.1)" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPresentationInitialId(suite.id);
+                            setPresentationOpen(true);
+                          }}
+                          className="w-[52px] aspect-[9/19.5] rounded-[10px] overflow-hidden shrink-0 relative group/screen transition-transform hover:scale-105 hover:-translate-y-0.5 focus:outline-none focus:ring-2"
+                          style={{ border: `1px solid ${accent}55`, boxShadow: `0 4px 12px ${accent}25` }}
+                          aria-label={`Apri ${screenTitles[j] || `Schermata ${j + 1}`}`}
                         >
-                          <img src={src} alt={screenTitles[j] || `Screen ${j + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
-                        </div>
+                          <img
+                            src={src}
+                            alt={screenTitles[j] || `Screen ${j + 1}`}
+                            className="w-full h-full object-cover object-top"
+                            loading="lazy"
+                          />
+                          <span
+                            className="absolute inset-x-0 bottom-0 px-1 py-0.5 text-[7px] font-bold uppercase tracking-wide text-white/90 truncate text-center"
+                            style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85), transparent)" }}
+                          >
+                            {screenTitles[j] || `#${j + 1}`}
+                          </span>
+                        </button>
                       ))}
+                      {/* Indicatore "+N" se ci sono più di 4 schermate */}
+                      {screenImgs.length > 4 && (
+                        <div
+                          className="self-end mb-1 px-1.5 py-0.5 rounded-md text-[8px] font-bold"
+                          style={{ background: `${accent}30`, color: accent, border: `1px solid ${accent}55` }}
+                        >
+                          +{screenImgs.length - 4}
+                        </div>
+                      )}
                     </div>
 
                     {/* Metadati ricchi (allineati a SECTOR_CARDS) */}
