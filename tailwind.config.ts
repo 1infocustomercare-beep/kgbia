@@ -134,6 +134,10 @@ export default {
           "0%": { opacity: "0.4", transform: "translateX(20px)" },
           "100%": { opacity: "1", transform: "translateX(0)" },
         },
+        "mockup-sweep": {
+          "0%":   { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -147,6 +151,7 @@ export default {
         "ncc-marquee-reverse": "ncc-marquee-reverse 90s linear infinite",
         "shimmer-gold": "shimmer-gold 3s ease-in-out infinite",
         "carousel-slide": "carousel-slide 0.5s ease-out forwards",
+        "mockup-sweep": "mockup-sweep 2.2s linear infinite",
       },
     },
   },
