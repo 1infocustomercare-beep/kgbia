@@ -50,6 +50,7 @@ const SECTOR_CARDS = ALL_INDUSTRY_IDS.map(key => {
 
 export default function PartnerPortfolioPage() {
   const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [sectorSearch, setSectorSearch] = useState("");
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [detailProject, setDetailProject] = useState<string | null>(null);
@@ -62,6 +63,59 @@ export default function PartnerPortfolioPage() {
   const [resettingDemo, setResettingDemo] = useState(false);
   const logoFileRef = useRef<HTMLInputElement>(null);
   const { demoRestaurant, loading: demoLoading, refetch: refetchDemo } = usePartnerDemoRestaurant();
+
+  /* ── Vault: mockup generati + siti demo generati ── */
+  const demoVault = useDemoVault();
+  const mockupVault = useMockupSuiteVault();
+  const [presentationOpen, setPresentationOpen] = useState(false);
+  const [presentationInitialId, setPresentationInitialId] = useState<string | undefined>();
+  const [vaultSearch, setVaultSearch] = useState("");
+
+  // Apertura automatica della modalità "Pronta da Mostrare" via ?present=1 (es. da Home Partner)
+  useEffect(() => {
+    if (searchParams.get("present") === "1") {
+      setPresentationOpen(true);
+      const next = new URLSearchParams(searchParams);
+      next.delete("present");
+      setSearchParams(next, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
+  const readyMockups = useMemo(
+    () =>
+      mockupVault.suites
+        .filter((s) => s.status === "complete")
+        .filter(
+          (s) =>
+            !vaultSearch.trim() ||
+            s.business_name.toLowerCase().includes(vaultSearch.toLowerCase()) ||
+            (s.business_sector || "").toLowerCase().includes(vaultSearch.toLowerCase()),
+        )
+        .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()),
+    [mockupVault.suites, vaultSearch],
+  );
+
+  const generatedSites = useMemo(
+    () =>
+      demoVault.demos
+        .filter(
+          (d) =>
+            !vaultSearch.trim() ||
+            d.display_name.toLowerCase().includes(vaultSearch.toLowerCase()) ||
+            d.original_lead_name.toLowerCase().includes(vaultSearch.toLowerCase()),
+        )
+        .sort((a, b) => {
+          if (a.is_favorite !== b.is_favorite) return a.is_favorite ? -1 : 1;
+          return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+        }),
+    [demoVault.demos, vaultSearch],
+  );
+
+  const vaultStats = {
+    mockupsReady: mockupVault.suites.filter((s) => s.status === "complete").length,
+    sitesGenerated: demoVault.demos.length,
+    favorites: demoVault.demos.filter((d) => d.is_favorite).length,
+  };
 
   useEffect(() => {
     if (demoRestaurant) {
