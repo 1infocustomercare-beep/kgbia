@@ -327,6 +327,26 @@ export function MockupSuiteVaultList() {
                         <Copy className="h-3 w-3" />
                       </Button>
                     )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => handleDownloadAll(e, s)}
+                      title="Scarica tutte le schermate"
+                      className="h-8 w-8 p-0"
+                      disabled={busyId === s.id}
+                    >
+                      {busyId === s.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3" />}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => handleDuplicate(e, s.id)}
+                      title="Duplica mockup"
+                      className="h-8 w-8 p-0"
+                      disabled={busyId === s.id}
+                    >
+                      <CopyPlus className="h-3 w-3" />
+                    </Button>
                     <Button variant="ghost" size="sm" onClick={(e) => handleDelete(e, s.id)} className="text-destructive h-8 w-8 p-0" title="Elimina">
                       <Trash2 className="h-3 w-3" />
                     </Button>
