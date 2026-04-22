@@ -463,6 +463,18 @@ export function MockupSuiteGenerator({
 
   const selectedEngineCfg = ENGINE_OPTIONS.find(e => e.key === engine)!;
 
+  // ──────────────────────────────────────────────────────────────────────────
+  // CONTROLS LOCK — durante la generazione e l'upgrade 4K/8K blocchiamo tutti
+  // i parametri (engine, template, palette, glass/color style, safe-area,
+  // type-scale, contrast, screens, presets, CTA) per evitare che l'utente
+  // cambi qualcosa a metà pipeline e ottenga risultati incoerenti tra
+  // preview React e immagine AI finale.
+  // ──────────────────────────────────────────────────────────────────────────
+  const controlsLocked = generating || previewPhase === "upgrading";
+  const lockTitle = controlsLocked
+    ? "Impostazioni bloccate durante la generazione/upgrade 4K — attendi il completamento"
+    : undefined;
+
   // Raggruppa template per categoria
   const groupedTemplates = TEMPLATE_VARIANTS.reduce((acc, t) => {
     (acc[t.group] ||= []).push(t);
