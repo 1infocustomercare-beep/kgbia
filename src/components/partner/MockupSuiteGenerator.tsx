@@ -823,6 +823,9 @@ export function MockupSuiteGenerator({
               value={safeAreaPx}
               onChange={(e) => setSafeAreaPx(Number(e.target.value))}
               className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
+            />
+            <div className="flex justify-between text-[9px] text-muted-foreground">
+              <span>Edge-to-edge</span>
               <span>Bilanciato</span>
               <span>Massima sicurezza</span>
             </div>
@@ -844,7 +847,7 @@ export function MockupSuiteGenerator({
               step={0.05}
               value={typeScale}
               onChange={(e) => setTypeScale(Number(e.target.value))}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-emerald-500"
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
             />
             <div className="flex justify-between text-[9px] text-muted-foreground">
               <span>Compatta (0.85×)</span>
