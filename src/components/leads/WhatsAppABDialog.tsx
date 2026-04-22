@@ -19,6 +19,10 @@ import {
   Link2,
 } from "lucide-react";
 import { getSectorCTA, buildCTADemoUrl } from "@/lib/sector-cta";
+import {
+  detectWALang, localizeCTA, buildTemplateA, buildTemplateB,
+  WA_LANGS, UI_LABELS, type WALang,
+} from "@/lib/wa-i18n";
 
 export interface ABLeadInput {
   id?: string;
@@ -26,6 +30,8 @@ export interface ABLeadInput {
   phone?: string | null;
   city?: string | null;
   sector?: string | null;
+  /** Lingua preferita del lead (it/en/es/fr/de o stringa libera) */
+  language?: string | null;
 }
 
 interface ABTest {
