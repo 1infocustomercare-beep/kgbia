@@ -71,13 +71,30 @@ export default function PartnerHomePage() {
 
   const userName = profileName || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Partner";
 
-  const QUICK_NAV = [
+  /**
+   * Quick Nav dinamica:
+   * - LIVE (vista venditore): focus operativo — pipeline vendita, guadagni, profilo.
+   *   Ordine = priorità d'uso quotidiana (lead → custom → portfolio → guadagni → profilo).
+   * - DEMO (vista cliente): focus vetrina — solo strumenti che mostrano valore al cliente,
+   *   nessun dato privato (guadagni/team/profilo nascosti per evitare leak commerciali).
+   *   Ordine ed etichette riformulati con linguaggio cliente, per evitare sovrapposizioni
+   *   con la CTA "Vedi le Demo" in fondo alla vista demo.
+   */
+  const QUICK_NAV_LIVE = [
     { icon: Target,     label: "LeadEngine Scout", desc: "Trova, analizza, contatta lead e genera il sito demo 1:1",  gradient: "from-violet-600/20 to-purple-600/10",  iconColor: "#a78bfa", path: "/partner/leads" },
     { icon: Palette,    label: "Custom Preview",   desc: "Mockup iPhone su misura per un cliente specifico",          gradient: "from-rose-600/20 to-pink-600/10",      iconColor: "#fb7185", path: "/partner/custom-preview" },
     { icon: FolderOpen, label: "Portfolio",        desc: "Catalogo settori, mockup e siti demo già generati",         gradient: "from-blue-600/20 to-indigo-600/10",    iconColor: "#818cf8", path: "/partner/portfolio" },
     { icon: DollarSign, label: "Guadagni & Team",  desc: "Commissioni, bonus e reclutamento venditori",               gradient: "from-emerald-600/20 to-teal-600/10",   iconColor: "#34d399", path: "/partner/earnings" },
     { icon: User,       label: "Il Mio Profilo",   desc: "Dati personali, avatar e impostazioni",                     gradient: "from-amber-600/20 to-orange-600/10",   iconColor: "#fbbf24", path: "/partner/profile" },
   ];
+
+  const QUICK_NAV_DEMO = [
+    { icon: FolderOpen, label: "Esempi nel Tuo Settore", desc: "Sfoglia il catalogo demo: ristoranti, NCC, beauty, gym e altro", gradient: "from-amber-600/20 to-orange-600/10",  iconColor: "#d4a052", path: "/partner/portfolio" },
+    { icon: Palette,    label: "Anteprima Personalizzata", desc: "Mockup del tuo brand su iPhone, pronto in 60 secondi",         gradient: "from-violet-600/20 to-fuchsia-600/10", iconColor: "#a78bfa", path: "/partner/custom-preview" },
+    { icon: Presentation, label: "Modalità Presentazione", desc: "Schermo intero, solo preview — ideale per mostrarti tutto",     gradient: "from-rose-600/20 to-pink-600/10",      iconColor: "#fb7185", path: "/partner/portfolio?present=1" },
+  ];
+
+  const QUICK_NAV = demoMode ? QUICK_NAV_DEMO : QUICK_NAV_LIVE;
 
   const fadeUp = (delay = 0) => ({ initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { delay, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] } });
 
@@ -689,7 +706,7 @@ export default function PartnerHomePage() {
             <section className="px-4 space-y-3">
               <h3 className="text-[9px] font-bold uppercase tracking-[0.25em] text-muted-foreground/60 px-1 flex items-center gap-2">
                 <span className="w-5 h-[1px] inline-block" style={{ background: "linear-gradient(90deg, rgba(167,139,250,0.4), transparent)" }} />
-                Strumenti Operativi
+                {demoMode ? "Esplora il Sistema" : "Strumenti Operativi"}
               </h3>
               {QUICK_NAV.map((item, i) => (
                 <motion.div key={item.path}
