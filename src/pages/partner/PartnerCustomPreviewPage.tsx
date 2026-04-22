@@ -370,9 +370,6 @@ export default function PartnerCustomPreviewPage() {
   };
 
   return (
-    <div className="container max-w-6xl px-3 sm:px-4 pt-2 pb-24 sm:pb-10 space-y-5 sm:space-y-7">
-      {/* ═══ HERO MASCOT (agente animato viola, identico stile Leads) ═══ */}
-  return (
     <div className="w-full max-w-[680px] md:max-w-5xl xl:max-w-7xl mx-auto px-3 sm:px-5 lg:px-7 pt-2 pb-28 sm:pb-12 space-y-5 sm:space-y-6 lg:space-y-8">
       {/* ═══ HERO MASCOT ═══ */}
       <PartnerHeroMascot
