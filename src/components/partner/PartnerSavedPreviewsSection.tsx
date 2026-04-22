@@ -549,14 +549,17 @@ export default function PartnerSavedPreviewsSection() {
  * Card singola preview salvata — stessa estetica delle altre card del vault
  * ─────────────────────────────────────────────────────────────────────── */
 function SavedPreviewCard({
-  preview, delay, onToggleFavorite, onEdit, onRemove,
+  preview, engine, delay, onToggleFavorite, onEdit, onRemove,
 }: {
   preview: SavedPreview;
+  engine: Exclude<EngineKey, "all">;
   delay: number;
   onToggleFavorite: () => void;
   onEdit: () => void;
   onRemove: () => void;
 }) {
+  const engineMeta = ENGINE_META[engine];
+  const EngineIcon = engineMeta.Icon;
   const accent = preview.primary_color || "#f472b6";
   const label = preview.portfolio_label || preview.lead_name || "Preview senza nome";
   const subtitle = [preview.sector_label, preview.template_style, preview.lead_city].filter(Boolean).join(" · ");
