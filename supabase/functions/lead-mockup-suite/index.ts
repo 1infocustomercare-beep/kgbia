@@ -565,87 +565,107 @@ Deno.serve(async (req) => {
     const pro = engine === "nano_banana_pro";
     const business = { name: business_name, sector: business_sector || "attività commerciale", city: business_city || "Italia" };
 
-    try {
-      // Genera 4 immagini con paralelismo limitato a 2 (riduce rate-limit) + validazione + retry/upgrade
-      // Ogni screen ha fino a 5 tentativi e auto-upgrade a Nano Banana Pro nelle ultime iterazioni.
-      const imageResults: Awaited<ReturnType<typeof generateValidatedAIImage>>[] = [];
-      const concurrency = 2;
-      for (let i = 0; i < screens.length; i += concurrency) {
-        const batch = screens.slice(i, i + concurrency);
-        const batchResults = await Promise.all(
-          batch.map((s, k) =>
-            generateValidatedAIImage(
-              LOVABLE_KEY,
-              buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i + k),
-              pro,
-              5,
+    // ═══════════════════════════════════════════════════════════════════════
+    // BACKGROUND JOB — il lavoro AI (4 immagini × fino a 5 tentativi + validazione
+    // + upload) può richiedere 2-4 minuti. Edge function ha limite 150s, quindi
+    // processiamo in background con EdgeRuntime.waitUntil e il client polla
+    // la tabella seller_mockup_suites finché status diventa "complete"/"error".
+    // ═══════════════════════════════════════════════════════════════════════
+    const backgroundJob = (async () => {
+      try {
+        const imageResults: Awaited<ReturnType<typeof generateValidatedAIImage>>[] = [];
+        const concurrency = 2;
+        for (let i = 0; i < screens.length; i += concurrency) {
+          const batch = screens.slice(i, i + concurrency);
+          const batchResults = await Promise.all(
+            batch.map((s, k) =>
+              generateValidatedAIImage(
+                LOVABLE_KEY,
+                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i + k),
+                pro,
+                5,
+              )
             )
-          )
-        );
-        imageResults.push(...batchResults);
-        // Piccola pausa tra batch per non saturare il gateway
-        if (i + concurrency < screens.length) {
-          await new Promise(r => setTimeout(r, 400));
+          );
+          imageResults.push(...batchResults);
+          if (i + concurrency < screens.length) {
+            await new Promise(r => setTimeout(r, 400));
+          }
         }
+
+        const uploadPromises = imageResults.map((res, i) =>
+          res.dataUrl ? uploadDataUrl(adminClient, res.dataUrl, `mockup-suites/${userId}/${suite.id}/${i}-${screens[i].type}-v${variationSeed}.png`) : Promise.resolve(null)
+        );
+        const publicUrls = await Promise.all(uploadPromises);
+
+        const finalScreens = screens.map((s, i) => ({
+          type: s.type,
+          title: s.title,
+          image_url: publicUrls[i],
+          render_mode: "ai" as const,
+          engine,
+          variation_seed: variationSeed,
+          variant_index: i,
+          validation: {
+            validated: imageResults[i].validated,
+            attempts: imageResults[i].attempts,
+            issues: imageResults[i].lastIssues,
+            engine_used: imageResults[i].engine_used,
+            has_image: !!publicUrls[i],
+          },
+        }));
+
+        const allValidated = finalScreens.every(s => s.validation.validated);
+
+        await adminClient
+          .from("seller_mockup_suites")
+          .update({
+            screens: finalScreens,
+            status: allValidated ? "complete" : "complete_with_warnings",
+            generated_at: new Date().toISOString(),
+          })
+          .eq("id", suite.id);
+        console.log(`[mockup-suite] background complete suite=${suite.id} validated=${allValidated}`);
+      } catch (e: any) {
+        console.error("[mockup-suite] background error", e);
+        const errMsg = e?.message === "rate_limited"
+          ? "AI temporaneamente sovraccarica. Riprova."
+          : e?.message === "payment_required"
+            ? "Crediti AI gateway esauriti."
+            : e?.message || "errore generazione";
+        await adminClient
+          .from("seller_mockup_suites")
+          .update({ status: "error", error_message: errMsg })
+          .eq("id", suite.id);
       }
+    })();
 
-      // Upload su storage
-      const uploadPromises = imageResults.map((res, i) =>
-        res.dataUrl ? uploadDataUrl(adminClient, res.dataUrl, `mockup-suites/${userId}/${suite.id}/${i}-${screens[i].type}-v${variationSeed}.png`) : Promise.resolve(null)
-      );
-      const publicUrls = await Promise.all(uploadPromises);
-
-      const finalScreens = screens.map((s, i) => ({
-        type: s.type,
-        title: s.title,
-        image_url: publicUrls[i],
-        render_mode: "ai" as const,
-        engine,
-        variation_seed: variationSeed,
-        variant_index: i,
-        validation: {
-          validated: imageResults[i].validated,
-          attempts: imageResults[i].attempts,
-          issues: imageResults[i].lastIssues,
-          engine_used: imageResults[i].engine_used,
-          // Soft-fail: l'immagine c'è anche se validazione non passa — il client decide come mostrarla
-          has_image: !!publicUrls[i],
-        },
-      }));
-
-      const allValidated = finalScreens.every(s => s.validation.validated);
-      const totalAttempts = finalScreens.reduce((acc, s) => acc + s.validation.attempts, 0);
-
-      await adminClient
-        .from("seller_mockup_suites")
-        .update({ screens: finalScreens, status: allValidated ? "complete" : "complete_with_warnings", generated_at: new Date().toISOString() })
-        .eq("id", suite.id);
-
-      return new Response(JSON.stringify({
-        success: true,
-        suite_id: suite.id,
-        share_slug: shareSlug,
-        engine,
-        template_variant: templateVariant,
-        screens: finalScreens,
-        credits_spent: creditsSpent,
-        variation_seed: variationSeed,
-        validation_summary: {
-          all_validated: allValidated,
-          total_attempts: totalAttempts,
-          per_screen: finalScreens.map(s => ({ type: s.type, validated: s.validation.validated, attempts: s.validation.attempts, issues: s.validation.issues })),
-        },
-      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    } catch (e: any) {
-      await adminClient.from("seller_mockup_suites").update({ status: "error", error_message: e.message }).eq("id", suite.id);
-      if (e.message === "rate_limited") {
-        return new Response(JSON.stringify({ success: false, error: "ai_rate_limited", suite_id: suite.id }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
-      if (e.message === "payment_required") {
-        return new Response(JSON.stringify({ success: false, error: "ai_payment_required", suite_id: suite.id }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
-      throw e;
+    // @ts-ignore EdgeRuntime è iniettato dal runtime Supabase
+    if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) {
+      // @ts-ignore
+      EdgeRuntime.waitUntil(backgroundJob);
+    } else {
+      // Fallback (locale): non blocchiamo comunque la response
+      backgroundJob.catch(() => {});
     }
+
+    // Risposta IMMEDIATA: il client polla la suite via tabella per gli aggiornamenti
+    return new Response(JSON.stringify({
+      success: true,
+      suite_id: suite.id,
+      share_slug: shareSlug,
+      engine,
+      template_variant: templateVariant,
+      screens: [],
+      credits_spent: creditsSpent,
+      variation_seed: variationSeed,
+      status: "generating",
+      async: true,
+      message: "Generazione AI avviata in background. Polla seller_mockup_suites per aggiornamenti.",
+    }), {
+      status: 202,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (e: any) {
     console.error("[mockup-suite] fatal:", e);
     return new Response(JSON.stringify({ success: false, error: e.message }), {

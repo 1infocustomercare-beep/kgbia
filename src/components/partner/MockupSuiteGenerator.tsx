@@ -526,7 +526,7 @@ export function MockupSuiteGenerator({
 
       const { data, error } = await supabase.functions.invoke("lead-mockup-suite", { body: payload });
       if (error) throw error;
-      const d = data as any;
+      let d = data as any;
       if (!d?.success) {
         if (d?.error === "insufficient_credits") {
           toast.error(`Crediti insufficienti per ${ENGINE_OPTIONS.find(e => e.key === engine)?.label}`);
@@ -535,7 +535,6 @@ export function MockupSuiteGenerator({
         } else {
           toast.error(`Errore: ${d?.error || "sconosciuto"}`);
         }
-        // Mantieni la preview React come fallback se eravamo in upgrade
         if (isAIEngine) {
           toast.warning("Mostro l'anteprima React come fallback. Riprova per generare la versione AI 4K/8K.");
         } else {
@@ -543,6 +542,67 @@ export function MockupSuiteGenerator({
           setPreviewPhase("idle");
         }
         return;
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════
+      // ASYNC POLLING — quando l'engine è AI, l'edge function ritorna subito
+      // (async:true) e processa in background. Polliamo seller_mockup_suites
+      // finché status diventa "complete"/"error".
+      // ═══════════════════════════════════════════════════════════════════════
+      if (d?.async && d?.suite_id && isAIEngine) {
+        toast.info("Generazione AI avviata · attendi 1-3 minuti…", { duration: 4000 });
+        const suiteId = d.suite_id as string;
+        const maxPollMs = 5 * 60 * 1000;
+        const intervalMs = 4000;
+        const startedAt = Date.now();
+        let polled: any = null;
+        while (Date.now() - startedAt < maxPollMs) {
+          await new Promise(r => setTimeout(r, intervalMs));
+          const { data: row } = await supabase
+            .from("seller_mockup_suites")
+            .select("id, status, screens, share_slug, engine, template_variant, error_message")
+            .eq("id", suiteId)
+            .maybeSingle();
+          if (!row) continue;
+          if (row.status === "complete" || row.status === "complete_with_warnings") {
+            polled = row;
+            break;
+          }
+          if (row.status === "error") {
+            toast.error(`Errore generazione AI: ${row.error_message || "sconosciuto"}`);
+            toast.warning("Anteprima React mantenuta come fallback.");
+            setPreviewPhase("complete");
+            return;
+          }
+        }
+        if (!polled) {
+          toast.error("Generazione AI in timeout. Riprova o usa modalità React.");
+          setPreviewPhase("complete");
+          return;
+        }
+        const polledScreens = (polled.screens as any[]) || [];
+        d = {
+          success: true,
+          suite_id: polled.id,
+          share_slug: polled.share_slug,
+          engine: polled.engine,
+          template_variant: polled.template_variant,
+          screens: polledScreens,
+          credits_spent: d.credits_spent,
+          variation_seed: variationSeed,
+          validation_summary: polled.status === "complete_with_warnings"
+            ? {
+                all_validated: false,
+                per_screen: polledScreens.map((s: any) => ({
+                  type: s.type,
+                  validated: s.validation?.validated,
+                  attempts: s.validation?.attempts,
+                  issues: s.validation?.issues,
+                })),
+                total_attempts: polledScreens.reduce((acc: number, s: any) => acc + (s.validation?.attempts || 0), 0),
+              }
+            : { all_validated: true, per_screen: [], total_attempts: 0 },
+        };
       }
 
       // ═══════════════════════════════════════════════════════════════════════
