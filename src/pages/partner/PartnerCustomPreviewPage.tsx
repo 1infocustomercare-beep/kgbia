@@ -942,23 +942,50 @@ export default function PartnerCustomPreviewPage() {
                       )}
                       {p.hero_title && <p className="text-[11px] font-medium line-clamp-2 text-muted-foreground">{p.hero_title}</p>}
 
-                      <div className="flex gap-1 pt-1 flex-wrap">
-                        {p.preview_url && p.generation_status === "completed" && (
-                          <Button variant="outline" size="sm" onClick={() => window.open(p.preview_url!, "_blank")} className="flex-1 h-9 text-xs">
-                            <ExternalLink className="h-3 w-3 mr-1" /> Apri
+                      {/* Azioni primarie sempre visibili — touch friendly */}
+                      <div className="grid grid-cols-2 gap-1.5 pt-1">
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={() => p.preview_url && window.open(p.preview_url, "_blank")}
+                          disabled={!p.preview_url || p.generation_status !== "completed"}
+                          className="h-10 text-xs font-semibold"
+                          title="Apri preview"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Apri
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => copyLink(p.public_slug)}
+                          disabled={!p.public_slug}
+                          className="h-10 text-xs font-semibold"
+                          title="Copia link condivisibile"
+                        >
+                          <Copy className="h-3.5 w-3.5 mr-1.5" /> Copia
+                        </Button>
+                      </div>
+
+                      {/* Azioni secondarie compatte */}
+                      <div className="flex items-center justify-between gap-1 pt-0.5">
+                        {p.whatsapp_message ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openWhatsApp(p)}
+                            className="flex-1 h-9 text-[11px] text-emerald-600 hover:text-emerald-700 hover:bg-emerald-500/10"
+                          >
+                            <MessageCircle className="h-3.5 w-3.5 mr-1" /> WhatsApp
                           </Button>
-                        )}
-                        {p.public_slug && (
-                          <Button variant="ghost" size="sm" onClick={() => copyLink(p.public_slug)} title="Copia link" className="h-9 w-9 p-0">
-                            <Copy className="h-3.5 w-3.5" />
-                          </Button>
-                        )}
-                        {p.whatsapp_message && (
-                          <Button variant="ghost" size="sm" onClick={() => openWhatsApp(p)} title="WhatsApp" className="h-9 w-9 p-0 text-emerald-600">
-                            <MessageCircle className="h-3.5 w-3.5" />
-                          </Button>
-                        )}
-                        <Button variant="ghost" size="sm" onClick={() => handleDelete(p.id)} className="h-9 w-9 p-0 text-destructive" title="Elimina">
+                        ) : <span className="flex-1" />}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(p.id)}
+                          className="h-9 w-9 p-0 text-destructive hover:bg-destructive/10"
+                          title="Elimina"
+                          aria-label="Elimina preview"
+                        >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </div>
