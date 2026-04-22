@@ -345,6 +345,10 @@ export function MockupSuiteGenerator({
         // Personalizzazione UI propagata anche all'edge (per AI prompt) e persistita nei screens
         glass_intensity: glassIntensity,
         color_style: colorStyle,
+        // Safe-area & leggibilità (vengono letti dall'edge per costruire il prompt AI)
+        safe_area_px: safeAreaPx,
+        type_scale: typeScale,
+        boost_contrast: boostContrast,
       };
 
       if (isAIEngine) setPreviewPhase("upgrading");
