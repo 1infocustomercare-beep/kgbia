@@ -208,7 +208,7 @@ export default function PartnerLayout() {
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
-              <span className="text-sm lg:text-base font-bold text-foreground tracking-tight">Partner</span>
+              <span className="text-sm lg:text-base font-bold text-foreground tracking-tight hidden xs:inline">Partner</span>
 
               {/* Desktop horizontal nav */}
               <nav className="hidden lg:flex items-center gap-1 ml-4">
