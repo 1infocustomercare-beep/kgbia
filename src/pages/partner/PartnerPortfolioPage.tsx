@@ -350,9 +350,9 @@ export default function PartnerPortfolioPage() {
   return (
     <div className="space-y-6 px-4 pt-6 pb-8 max-w-2xl lg:max-w-7xl mx-auto">
       <header className="space-y-1.5">
-        <p className="partner-eyebrow">Portfolio Empire</p>
-        <h2 className="partner-h2">Portfolio &amp; Demo</h2>
-        <p className="partner-subtle">Catalogo dei settori — preview cliente, dashboard admin e demo personalizzate.</p>
+        <p className="partner-eyebrow">Vetrina Empire</p>
+        <h2 className="partner-h2">Vetrina Demo &amp; Mockup</h2>
+        <p className="partner-subtle">Catalogo di tutto ciò che è già pronto da mostrare — siti demo per settore, mockup approvati e preview salvate.</p>
         <div className="partner-divider mt-3" />
       </header>
 
