@@ -82,21 +82,22 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
   );
   const [lang, setLang] = useState<WALang>(detected.lang);
   const [langSource, setLangSource] = useState<typeof detected.source>(detected.source);
+  const [tone, setTone] = useState<WATone>("direct");
   const localizedCTA = useMemo(() => localizeCTA(sectorCTA, lang), [sectorCTA, lang]);
 
-  // Helper per costruire i template nella lingua corrente
-  const buildA = (l: WALang = lang) => buildTemplateA(l, {
+  // Helper per costruire i template nella lingua + tono corrente
+  const buildA = (l: WALang = lang, t: WATone = tone) => buildTemplateA(l, {
     name: lead.name, sector: lead.sector, ctaUrl: ctaDemoUrl,
     ctaLabel: localizeCTA(sectorCTA, l).label, emoji: sectorCTA.emoji,
-  });
-  const buildB = (l: WALang = lang) => buildTemplateB(l, {
+  }, t);
+  const buildB = (l: WALang = lang, t: WATone = tone) => buildTemplateB(l, {
     name: lead.name, sector: lead.sector, ctaUrl: ctaDemoUrl,
     ctaLabel: localizeCTA(sectorCTA, l).label, emoji: sectorCTA.emoji,
-  });
+  }, t);
 
   const [test, setTest] = useState<ABTest | null>(null);
-  const [msgA, setMsgA] = useState(() => buildA(detected.lang));
-  const [msgB, setMsgB] = useState(() => buildB(detected.lang));
+  const [msgA, setMsgA] = useState(() => buildA(detected.lang, "direct"));
+  const [msgB, setMsgB] = useState(() => buildB(detected.lang, "direct"));
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -105,8 +106,17 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
   const changeLang = (next: WALang) => {
     setLang(next);
     setLangSource("lead");
-    setMsgA(buildA(next));
-    setMsgB(buildB(next));
+    setMsgA(buildA(next, tone));
+    setMsgB(buildB(next, tone));
+  };
+
+  /* Quando l'utente cambia tono dal selector → rigenera entrambe le varianti */
+  const changeTone = (next: WATone) => {
+    setTone(next);
+    setMsgA(buildA(lang, next));
+    setMsgB(buildB(lang, next));
+    const meta = WA_TONES.find((tn) => tn.code === next);
+    if (meta) toast.success(`Tono ${meta.label} ${meta.emoji} — testi rigenerati`);
   };
 
   /* Cerca test esistente per questo lead */
