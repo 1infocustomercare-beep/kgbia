@@ -167,6 +167,7 @@ export function useDemoVault() {
         sector_label: input.sectorLabel || null,
         sub_sector: input.subSector || null,
         template_variant: input.templateVariant,
+        generation_engine: inferEngineFromPayload(input),
         theme_hint: input.themeHint || null,
         tenant_id: input.tenantId || null,
         tenant_kind: input.tenantKind || null,
