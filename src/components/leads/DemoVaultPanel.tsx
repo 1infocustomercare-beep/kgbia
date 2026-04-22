@@ -169,6 +169,9 @@ export default function DemoVaultPanel({ open, onClose, targetLead, onReused }: 
         (s.engine || "").toLowerCase().includes(term)
       )
       .sort((a, b) => {
+        if (sortBy === "favorites") {
+          if (!!a.is_favorite !== !!b.is_favorite) return a.is_favorite ? -1 : 1;
+        }
         if (sortBy === "most_reused") return (b.view_count || 0) - (a.view_count || 0);
         if (sortBy === "az") return a.business_name.localeCompare(b.business_name);
         return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
