@@ -157,7 +157,17 @@ function getTheme(variant: string, primaryOverride?: string): ThemeTokens {
       vibe: "fitness-energy", radius: 14, imageStyle: "energy",
     },
   };
-  const base = themes[variant] || themes.modern_dark;
+  // Aliases for variants used in edge function but mapped to closest existing theme
+  const aliases: Record<string, string> = {
+    noir_gold: "luxury_gold",
+    blush_lavender: "boutique_pastel",
+    ocean_deep: "batey",
+    clinical_clean: "minimal_zen",
+    luxury_chrome: "monochrome_bold",
+    navy_trust: "real_estate_trust",
+  };
+  const resolved = aliases[variant] || variant;
+  const base = themes[resolved] || themes.modern_dark;
   return primaryOverride ? { ...base, primary: primaryOverride } : base;
 }
 
