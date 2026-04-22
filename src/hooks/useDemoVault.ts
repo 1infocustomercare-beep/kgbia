@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+export type GenerationEngine = "ai" | "template" | "hybrid";
+
 export interface VaultDemo {
   id: string;
   owner_id: string;
@@ -11,6 +13,8 @@ export interface VaultDemo {
   sector_label: string | null;
   sub_sector: string | null;
   template_variant: string;
+  /** Engine usato per generare la demo: ai = AI Factory con scraping, template = preset manuale, hybrid = misto */
+  generation_engine: GenerationEngine;
   theme_hint: string | null;
   tenant_id: string | null;
   tenant_kind: string | null;
