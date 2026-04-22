@@ -659,9 +659,10 @@ export default function PartnerCustomPreviewPage() {
       </div>
 
       {/* ═══ LISTA PREVIEW HTML — full width sotto il layout 2-col ═══ */}
-      <section className="space-y-3 pt-2 border-t border-border/50">
+      <section className="space-y-3 pt-4 sm:pt-6 border-t border-border/50">
         <div className="flex items-center justify-between gap-2 flex-wrap">
-          <h2 className="text-base sm:text-xl font-semibold flex items-center gap-2">
+          <h2 className="text-base sm:text-lg lg:text-xl font-semibold flex items-center gap-2">
+            <Bookmark className="h-5 w-5 text-primary" />
             Le tue preview HTML
             <Badge variant="outline" className="text-[10px]">{counts.total}</Badge>
           </h2>
