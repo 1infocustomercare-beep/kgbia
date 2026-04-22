@@ -177,7 +177,7 @@ export function MockupSuiteViewer({
                     <img
                       src={screen.image_url}
                       alt={screen.title}
-                      className="w-full h-full"
+                      className="w-full h-full animate-in fade-in duration-700"
                       draggable={false}
                       style={{
                         width: "100%",
@@ -200,6 +200,26 @@ export function MockupSuiteViewer({
                       glassIntensity={glassIntensity}
                       colorStyle={colorStyle}
                     />
+                  )}
+
+                  {/* Overlay shimmer + badge quando è una preview rapida in attesa di upgrade AI */}
+                  {screen.is_preview && (
+                    <>
+                      {/* Shimmer sweep diagonale */}
+                      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                        <div
+                          className="absolute inset-y-0 -inset-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-[shimmer_2.2s_linear_infinite]"
+                          style={{ width: "200%" }}
+                        />
+                      </div>
+                      {/* Badge "Anteprima rapida" */}
+                      <div className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
+                        <div className="px-2 py-0.5 rounded-full bg-foreground/80 backdrop-blur-md text-[8px] font-bold text-background flex items-center gap-1 shadow-lg">
+                          <Loader2 className="h-2 w-2 animate-spin" />
+                          ANTEPRIMA · 4K IN ARRIVO
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
 
