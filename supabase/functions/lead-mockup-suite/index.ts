@@ -243,24 +243,46 @@ async function generateValidatedAIImage(
   lovableKey: string,
   basePrompt: string,
   pro: boolean,
-  maxAttempts = 3,
-): Promise<{ dataUrl: string | null; attempts: number; lastIssues: string[]; validated: boolean }> {
+  maxAttempts = 5,
+): Promise<{ dataUrl: string | null; attempts: number; lastIssues: string[]; validated: boolean; engine_used: string }> {
   let lastIssues: string[] = [];
   let lastDataUrl: string | null = null;
+  let engineUsed = pro ? "nano_banana_pro" : "nano_banana_2";
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const prompt = attempt === 1 ? basePrompt : basePrompt + buildCorrectionSuffix(lastIssues);
-    const dataUrl = await generateAIImage(lovableKey, prompt, pro);
+    // AUTO-UPGRADE: gli ultimi 2 tentativi usano il modello Pro (più affidabile e accurato)
+    // per recuperare casi difficili senza richiedere intervento manuale dell'utente.
+    const usePro = pro || attempt >= maxAttempts - 1;
+    const modelOverride = usePro ? "google/gemini-3-pro-image-preview" : undefined;
+    if (!pro && attempt >= maxAttempts - 1) {
+      engineUsed = "nano_banana_pro_fallback";
+      console.log(`[validate] attempt ${attempt}: AUTO-UPGRADE a Nano Banana Pro per garantire qualità`);
+    }
+    let dataUrl: string | null = null;
+    try {
+      dataUrl = await generateAIImage(lovableKey, prompt, usePro, modelOverride);
+    } catch (e: any) {
+      console.warn(`[validate] attempt ${attempt} generation error: ${e.message}`);
+      lastIssues = [`gen_error:${e.message?.slice(0, 80) || "unknown"}`];
+      // su rate_limited aspetta più a lungo
+      if (e.message === "rate_limited") {
+        await new Promise(r => setTimeout(r, 3000 + Math.random() * 2000));
+      }
+      continue;
+    }
     lastDataUrl = dataUrl;
     if (!dataUrl) {
       lastIssues = ["no_image_returned"];
       continue;
     }
     const v = await validateMockupImage(lovableKey, dataUrl);
-    console.log(`[validate] attempt ${attempt} ok=${v.ok} issues=${JSON.stringify(v.issues)}`);
-    if (v.ok) return { dataUrl, attempts: attempt, lastIssues: [], validated: true };
+    console.log(`[validate] attempt ${attempt}/${maxAttempts} engine=${engineUsed} ok=${v.ok} issues=${JSON.stringify(v.issues)}`);
+    if (v.ok) return { dataUrl, attempts: attempt, lastIssues: v.issues, validated: true, engine_used: engineUsed };
     lastIssues = v.issues;
   }
-  return { dataUrl: lastDataUrl, attempts: maxAttempts, lastIssues, validated: false };
+  // Tutti i tentativi falliti: ritorniamo l'ultima immagine generata comunque (meglio mostrare qualcosa che niente)
+  console.warn(`[validate] FINAL FAIL after ${maxAttempts} attempts. issues=${JSON.stringify(lastIssues)} hasImage=${!!lastDataUrl}`);
+  return { dataUrl: lastDataUrl, attempts: maxAttempts, lastIssues, validated: false, engine_used: engineUsed };
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
