@@ -430,6 +430,22 @@ const EmpireParticleOrb = memo(() => {
           }
         }
 
+        // Click ripples — radial wave that pushes particles outward as it expands
+        for (let r = 0; r < ripplesRef.current.length; r++) {
+          const rip = ripplesRef.current[r];
+          const dx = p.x - rip.x;
+          const dy = p.y - rip.y;
+          const dist = Math.hypot(dx, dy);
+          const ringPos = rip.t * rip.max; // current wavefront radius
+          const band = 28; // how thick the wavefront is
+          const off = Math.abs(dist - ringPos);
+          if (off < band && dist > 0.01) {
+            const force = (1 - off / band) * (1 - rip.t) * 3.5;
+            p.vx += (dx / dist) * force;
+            p.vy += (dy / dist) * force;
+          }
+        }
+
         p.vx *= 0.84;
         p.vy *= 0.84;
         p.x += p.vx;
