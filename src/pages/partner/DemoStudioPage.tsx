@@ -32,12 +32,16 @@ import {
 import { useDemoVault, type VaultDemo } from "@/hooks/useDemoVault";
 import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSuiteVault";
 import { GenerateSiteFromMockupDialog } from "@/components/partner/GenerateSiteFromMockupDialog";
+import { DemoStudioPresentationMode } from "@/components/partner/DemoStudioPresentationMode";
 import { toast } from "sonner";
+import { Play } from "lucide-react";
 
 export default function DemoStudioPage() {
   const vault = useDemoVault();
   const mockupVault = useMockupSuiteVault();
   const [generateSuite, setGenerateSuite] = useState<VaultMockupSuite | null>(null);
+  const [presentationOpen, setPresentationOpen] = useState(false);
+  const [presentationInitialId, setPresentationInitialId] = useState<string | undefined>();
   const [search, setSearch] = useState("");
 
   const refresh = async () => {
@@ -103,13 +107,25 @@ export default function DemoStudioPage() {
           </button>
         </div>
 
-        <div>
-          <h1 className="text-2xl md:text-3xl font-display font-bold flex items-center gap-2">
-            <Rocket className="w-7 h-7 text-amber-400" /> Demo Studio Full Power
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Ogni sito demo nasce da un <span className="text-amber-300 font-semibold">mockup approvato</span> e ne è la replica 1:1 — zero template generici.
-          </p>
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-display font-bold flex items-center gap-2">
+              <Rocket className="w-7 h-7 text-amber-400" /> Demo Studio Full Power
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Ogni sito demo nasce da un <span className="text-amber-300 font-semibold">mockup approvato</span> e ne è la replica 1:1 — zero template generici.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setPresentationInitialId(undefined);
+              setPresentationOpen(true);
+            }}
+            disabled={stats.mockupsReady === 0}
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-sm font-bold flex items-center gap-2 shadow-lg shadow-violet-500/30 hover:from-violet-400 hover:to-fuchsia-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Play className="w-4 h-4 fill-white" /> Pronta da mostrare
+          </button>
         </div>
 
         {/* Stats */}
@@ -207,12 +223,24 @@ export default function DemoStudioPage() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => setGenerateSuite(suite)}
-                    className="w-full py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black text-xs font-bold flex items-center justify-center gap-1.5 hover:from-amber-400 hover:to-amber-500 transition-colors"
-                  >
-                    <Rocket className="w-3.5 h-3.5" /> Genera Sito Demo Full Power
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setGenerateSuite(suite)}
+                      className="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black text-xs font-bold flex items-center justify-center gap-1.5 hover:from-amber-400 hover:to-amber-500 transition-colors"
+                    >
+                      <Rocket className="w-3.5 h-3.5" /> Genera Sito
+                    </button>
+                    <button
+                      onClick={() => {
+                        setPresentationInitialId(suite.id);
+                        setPresentationOpen(true);
+                      }}
+                      className="px-3 py-2 rounded-xl bg-violet-500/15 border border-violet-500/30 text-violet-200 text-xs font-bold flex items-center gap-1.5 hover:bg-violet-500/25 transition-colors"
+                      title="Modalità presentazione cliente"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-current" /> Mostra
+                    </button>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -259,6 +287,14 @@ export default function DemoStudioPage() {
         open={!!generateSuite}
         onOpenChange={(o) => !o && setGenerateSuite(null)}
         suite={generateSuite}
+      />
+
+      {/* Modalità Pronta da Mostrare — flusso vendita 60s */}
+      <DemoStudioPresentationMode
+        open={presentationOpen}
+        onClose={() => setPresentationOpen(false)}
+        suites={mockupVault.suites}
+        initialSuiteId={presentationInitialId}
       />
     </div>
   );
