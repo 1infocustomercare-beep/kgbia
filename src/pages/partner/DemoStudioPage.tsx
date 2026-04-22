@@ -225,21 +225,22 @@ export default function DemoStudioPage() {
 
                   <div className="flex gap-2">
                     <button
-                      onClick={() => setGenerateSuite(suite)}
-                      className="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black text-xs font-bold flex items-center justify-center gap-1.5 hover:from-amber-400 hover:to-amber-500 transition-colors"
-                    >
-                      <Rocket className="w-3.5 h-3.5" /> Genera Sito
-                    </button>
-                    <button
                       onClick={() => {
                         setPresentationInitialId(suite.id);
                         setPresentationOpen(true);
                       }}
-                      className="px-3 py-2 rounded-xl bg-violet-500/15 border border-violet-500/30 text-violet-200 text-xs font-bold flex items-center gap-1.5 hover:bg-violet-500/25 transition-colors"
+                      className="flex-1 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 hover:from-violet-400 hover:to-fuchsia-400 transition-colors"
                       title="Modalità presentazione cliente"
                     >
-                      <Play className="w-3.5 h-3.5 fill-current" /> Mostra
+                      <Play className="w-3.5 h-3.5 fill-current" /> Mostra al cliente
                     </button>
+                    <Link
+                      to="/partner/leads"
+                      className="px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center gap-1.5 hover:bg-amber-500/20 transition-colors"
+                      title="Vai in Leads → seleziona lead → genera sito 1:1 da questo mockup"
+                    >
+                      <Rocket className="w-3.5 h-3.5" /> Genera in Leads
+                    </Link>
                   </div>
                 </motion.div>
               ))}
