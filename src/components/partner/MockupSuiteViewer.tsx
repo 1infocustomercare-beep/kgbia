@@ -65,7 +65,7 @@ export function MockupSuiteViewer({
 }: Props) {
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
-
+  const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
   const downloadScreen = async (idx: number) => {
     const el = containerRefs.current[idx];
     if (!el) return;
