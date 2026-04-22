@@ -370,6 +370,8 @@ export default function PartnerCustomPreviewPage() {
         subtitle={`Costruisci a mano un mockup iPhone per UN cliente specifico — tu inserisci dati e brand, l'AI genera l'anteprima. Costo: ${COST} crediti. Diverso da Lead+Demo (auto-genera) e dalla Vetrina (catalogo).`}
         icon={Palette}
         active={generating}
+        mascotSrc={new URL("@/assets/empire-alien-designer.png", import.meta.url).href}
+        mascotAlt="Alien Designer — Mockup su Misura"
       />
 
       {/* ═══ FLUSSO 3 STEP (sei al passo 1) ═══ */}
