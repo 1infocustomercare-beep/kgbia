@@ -223,12 +223,24 @@ export default function DemoStudioPage() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => setGenerateSuite(suite)}
-                    className="w-full py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black text-xs font-bold flex items-center justify-center gap-1.5 hover:from-amber-400 hover:to-amber-500 transition-colors"
-                  >
-                    <Rocket className="w-3.5 h-3.5" /> Genera Sito Demo Full Power
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setGenerateSuite(suite)}
+                      className="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black text-xs font-bold flex items-center justify-center gap-1.5 hover:from-amber-400 hover:to-amber-500 transition-colors"
+                    >
+                      <Rocket className="w-3.5 h-3.5" /> Genera Sito
+                    </button>
+                    <button
+                      onClick={() => {
+                        setPresentationInitialId(suite.id);
+                        setPresentationOpen(true);
+                      }}
+                      className="px-3 py-2 rounded-xl bg-violet-500/15 border border-violet-500/30 text-violet-200 text-xs font-bold flex items-center gap-1.5 hover:bg-violet-500/25 transition-colors"
+                      title="Modalità presentazione cliente"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-current" /> Mostra
+                    </button>
+                  </div>
                 </motion.div>
               ))}
             </div>
