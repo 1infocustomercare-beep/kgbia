@@ -9,6 +9,8 @@
  * loyalty banners, payment summaries.
  */
 
+export type ColorStyle = "vivid" | "muted" | "pastel" | "mono";
+
 interface Props {
   type: string;
   templateVariant: string;
@@ -18,6 +20,10 @@ interface Props {
   primaryColor?: string;
   width: number;
   height: number;
+  /** 0–100. 0 = nessun blur, 100 = vetro massimo (default 60). Influisce su BottomNav e overlay. */
+  glassIntensity?: number;
+  /** vivid (originale) | muted (-20% sat) | pastel (+luminosità, -sat) | mono (B/N + accent). */
+  colorStyle?: ColorStyle;
 }
 
 interface ThemeTokens {
