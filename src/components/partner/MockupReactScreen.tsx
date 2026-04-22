@@ -47,11 +47,16 @@ interface ThemeTokens {
     | "dark-luxury" | "warm-craft" | "ocean-breeze" | "minimal-zen"
     | "sushi-noir" | "gold-elegance" | "tech-modern" | "neon-vibrant"
     | "editorial-clean" | "boutique-pastel" | "monochrome-bold" | "glass-aurora"
-    | "real-estate-trust" | "fitness-energy";
+    | "real-estate-trust" | "fitness-energy"
+    // Modern 2026 — Apple/glass/spatial inspired
+    | "apple-liquid-glass" | "glacial-frost" | "spatial-visionos"
+    | "cyber-holo" | "y2k-chrome" | "midnight-aurora"
+    | "sunset-gradient" | "swiss-grid";
   radius: number;
   imageStyle:
     | "food-warm" | "spa-soft" | "ocean" | "noir" | "luxury" | "modern"
-    | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy";
+    | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy"
+    | "liquid-glass" | "glacial" | "holographic" | "chrome" | "sunset";
   /** Optional runtime override for glass intensity propagated to BottomNav and overlays. */
   glassIntensity?: number;
 }
