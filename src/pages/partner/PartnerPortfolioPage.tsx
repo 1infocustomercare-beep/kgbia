@@ -428,7 +428,7 @@ export default function PartnerPortfolioPage() {
            VAULT — Mockup generati + Siti demo + Modalità presentazione
            Sostituisce la vecchia pagina /partner/demo-studio.
            ═══════════════════════════════════════════════════════════ */}
-      <section className="rounded-2xl p-4 md:p-5 space-y-4"
+      <section className="partner-vault-panel rounded-2xl p-4 md:p-5 space-y-4"
         style={{ background: "rgba(167,139,250,0.04)", border: "1px solid rgba(167,139,250,0.12)" }}>
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div className="space-y-1">
@@ -457,7 +457,7 @@ export default function PartnerPortfolioPage() {
           ].map((s) => {
             const Icon = s.icon;
             return (
-              <div key={s.label} className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={s.label} className="partner-soft-tile p-3">
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] uppercase text-muted-foreground tracking-wider">{s.label}</span>
                   <Icon className={`w-3 h-3 ${s.color}`} />
