@@ -227,7 +227,10 @@ export function MockupSuiteGenerator({
   const isLeadMode = Boolean((businessNameProp || "").trim());
   const [mode, setMode] = useState<"lead" | "standalone">(isLeadMode ? "lead" : "standalone");
 
-  // Form standalone
+  // Override manuale dei dati lead (sblocca i campi per modificarli senza cambiare modalità)
+  const [leadOverride, setLeadOverride] = useState(false);
+
+  // Form standalone / override
   const [standalone, setStandalone] = useState({
     name: "",
     sector: "",
@@ -240,11 +243,24 @@ export function MockupSuiteGenerator({
     if (isLeadMode) setMode("lead");
   }, [isLeadMode, businessNameProp]);
 
-  // Valori effettivi
-  const businessName = mode === "standalone" ? standalone.name : (businessNameProp || "");
-  const businessSector = mode === "standalone" ? standalone.sector : businessSectorProp;
-  const businessCity = mode === "standalone" ? standalone.city : businessCityProp;
-  const primaryColor = mode === "standalone" ? standalone.primaryColor : primaryColorProp;
+  // Quando attivo l'override in lead mode, pre-compilo lo standalone con i dati del lead
+  useEffect(() => {
+    if (leadOverride && mode === "lead") {
+      setStandalone({
+        name: businessNameProp || "",
+        sector: businessSectorProp || "",
+        city: businessCityProp || "",
+        primaryColor: primaryColorProp || "#C8963E",
+      });
+    }
+  }, [leadOverride, mode, businessNameProp, businessSectorProp, businessCityProp, primaryColorProp]);
+
+  // Valori effettivi: standalone se modalità standalone OPPURE se override attivo in lead mode
+  const useStandaloneValues = mode === "standalone" || (mode === "lead" && leadOverride);
+  const businessName = useStandaloneValues ? standalone.name : (businessNameProp || "");
+  const businessSector = useStandaloneValues ? standalone.sector : businessSectorProp;
+  const businessCity = useStandaloneValues ? standalone.city : businessCityProp;
+  const primaryColor = useStandaloneValues ? standalone.primaryColor : primaryColorProp;
 
   const [engine, setEngine] = useState<MockupEngine>("react");
   const [templateVariant, setTemplateVariant] = useState<string>(initialTemplate || "auto");
