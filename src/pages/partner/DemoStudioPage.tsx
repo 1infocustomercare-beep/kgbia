@@ -107,13 +107,25 @@ export default function DemoStudioPage() {
           </button>
         </div>
 
-        <div>
-          <h1 className="text-2xl md:text-3xl font-display font-bold flex items-center gap-2">
-            <Rocket className="w-7 h-7 text-amber-400" /> Demo Studio Full Power
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Ogni sito demo nasce da un <span className="text-amber-300 font-semibold">mockup approvato</span> e ne è la replica 1:1 — zero template generici.
-          </p>
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-display font-bold flex items-center gap-2">
+              <Rocket className="w-7 h-7 text-amber-400" /> Demo Studio Full Power
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Ogni sito demo nasce da un <span className="text-amber-300 font-semibold">mockup approvato</span> e ne è la replica 1:1 — zero template generici.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setPresentationInitialId(undefined);
+              setPresentationOpen(true);
+            }}
+            disabled={stats.mockupsReady === 0}
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-sm font-bold flex items-center gap-2 shadow-lg shadow-violet-500/30 hover:from-violet-400 hover:to-fuchsia-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Play className="w-4 h-4 fill-white" /> Pronta da mostrare
+          </button>
         </div>
 
         {/* Stats */}
