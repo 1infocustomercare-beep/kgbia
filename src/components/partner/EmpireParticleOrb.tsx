@@ -131,7 +131,13 @@ const EmpireParticleOrb = memo(() => {
       pointerRef.current.x = e.clientX - rect.left;
       pointerRef.current.y = e.clientY - rect.top;
       pointerRef.current.active = true;
-      pointerRef.current.inside = isInsideOrb(e.clientX, e.clientY);
+      const inside = isInsideOrb(e.clientX, e.clientY);
+      pointerRef.current.inside = inside;
+
+      // Cursor feedback: grab quando sopra l'orb, default altrove
+      if (!dragRef.current.active && !gestureRef.current.active) {
+        canvas.style.cursor = inside ? "grab" : "default";
+      }
 
       // Update tracked pointer position
       if (pointersRef.current.has(e.pointerId)) {
