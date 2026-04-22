@@ -394,7 +394,6 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                           )}
                         </div>
                       )}
-                      </div>
 
                       {/* 5️⃣ WHATSAPP message */}
                       {result.outreach?.whatsappMessage && (
