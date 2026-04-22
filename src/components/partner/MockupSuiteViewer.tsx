@@ -423,7 +423,7 @@ export function MockupSuiteViewer({
               size="sm"
               className="h-7 text-xs"
               onClick={() => downloadScreen(idx)}
-              disabled={downloading !== null}
+              disabled={downloading !== null || zipping}
             >
               {downloading === idx ? (
                 <Loader2 className="h-3 w-3 animate-spin" />
