@@ -300,6 +300,10 @@ export function MockupSuiteGenerator({
   // Mockup Libero — preview on-demand: l'utente clicca "Carica anteprima" per renderizzarla
   const [standalonePreviewLoaded, setStandalonePreviewLoaded] = useState(false);
   const [standalonePreviewLoading, setStandalonePreviewLoading] = useState(false);
+  // Invalida la preview on-demand quando cambia settore o colore brand
+  useEffect(() => {
+    setStandalonePreviewLoaded(false);
+  }, [standalone.sector, standalone.primaryColor]);
   // Stato per preview progressiva: "preview" = mostra subito React render, "upgrading" = AI in arrivo, "complete" = finita
   const [previewPhase, setPreviewPhase] = useState<"idle" | "preview" | "upgrading" | "complete">("idle");
   const [result, setResult] = useState<{
