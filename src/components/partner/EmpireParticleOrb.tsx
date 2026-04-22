@@ -410,18 +410,19 @@ const EmpireParticleOrb = memo(() => {
         }
       }
 
-      // Soft core glow (additive, no hard background)
+      // Soft core glow (additive, no hard background) — uses scaled radius
       if (m < 0.85) {
         const ccx = cx + ox;
         const ccy = cy + oy;
+        const coreR = effRadius * 0.8;
         const coreAlpha = (1 - m) * (0.28 + Math.sin(t * 2) * 0.06);
-        const coreGrad = ctx.createRadialGradient(ccx, ccy, 0, ccx, ccy, radius * 0.8);
+        const coreGrad = ctx.createRadialGradient(ccx, ccy, 0, ccx, ccy, coreR);
         coreGrad.addColorStop(0, `hsla(280, 95%, 75%, ${coreAlpha})`);
         coreGrad.addColorStop(0.45, `hsla(265, 85%, 55%, ${coreAlpha * 0.35})`);
         coreGrad.addColorStop(1, "hsla(265, 70%, 40%, 0)");
         ctx.fillStyle = coreGrad;
         ctx.beginPath();
-        ctx.arc(ccx, ccy, radius * 0.8, 0, Math.PI * 2);
+        ctx.arc(ccx, ccy, coreR, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -437,6 +438,8 @@ const EmpireParticleOrb = memo(() => {
       window.removeEventListener("pointerup", handlePointerUp);
       window.removeEventListener("pointercancel", handlePointerUp);
       canvas.removeEventListener("pointerleave", handlePointerLeave);
+      canvas.removeEventListener("touchmove", handleTouchPrevent);
+      pointersRef.current.clear();
     };
   }, []);
 
