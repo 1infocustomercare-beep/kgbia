@@ -6298,6 +6298,7 @@ export type Database = {
           generated_at: string | null
           generation_engine: string
           id: string
+          is_favorite: boolean
           lead_id: string | null
           owner_id: string
           preview_id: string | null
@@ -6320,6 +6321,7 @@ export type Database = {
           generated_at?: string | null
           generation_engine?: string
           id?: string
+          is_favorite?: boolean
           lead_id?: string | null
           owner_id: string
           preview_id?: string | null
@@ -6342,6 +6344,7 @@ export type Database = {
           generated_at?: string | null
           generation_engine?: string
           id?: string
+          is_favorite?: boolean
           lead_id?: string | null
           owner_id?: string
           preview_id?: string | null
