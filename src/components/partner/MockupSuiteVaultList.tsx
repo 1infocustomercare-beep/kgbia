@@ -267,19 +267,29 @@ export function MockupSuiteVaultList() {
                   </div>
                   <div className="flex gap-1 pt-0.5">
                     {s.share_slug && (
-                      <>
-                        <Button variant="outline" size="sm" onClick={(e) => openShare(e, s.share_slug)} className="flex-1 h-8 text-xs">
-                          <ExternalLink className="h-3 w-3 mr-1" /> Link
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={(e) => copyShare(e, s.share_slug)} title="Copia link" className="h-8 w-8 p-0">
-                          <Copy className="h-3 w-3" />
-                        </Button>
-                      </>
+                      <Button variant="outline" size="sm" onClick={(e) => openShare(e, s.share_slug)} className="flex-1 h-8 text-xs">
+                        <ExternalLink className="h-3 w-3 mr-1" /> Link
+                      </Button>
+                    )}
+                    {s.share_slug && (
+                      <Button variant="ghost" size="sm" onClick={(e) => copyShare(e, s.share_slug)} title="Copia link" className="h-8 w-8 p-0">
+                        <Copy className="h-3 w-3" />
+                      </Button>
                     )}
                     <Button variant="ghost" size="sm" onClick={(e) => handleDelete(e, s.id)} className="text-destructive h-8 w-8 p-0" title="Elimina">
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
+                  {s.status === "complete" && (
+                    <Button
+                      size="sm"
+                      onClick={(e) => { e.stopPropagation(); setGenerateSiteSuite(s); }}
+                      className="w-full h-8 text-xs bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground"
+                      title="Genera sito demo completo replica 1:1 di questo mockup"
+                    >
+                      <Rocket className="h-3 w-3 mr-1" /> Genera sito demo completo
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             );
