@@ -354,12 +354,6 @@ export function MockupSuiteVaultList() {
         </DialogContent>
       </Dialog>
 
-      {/* Dialog generazione sito demo completo dal mockup */}
-      <GenerateSiteFromMockupDialog
-        open={!!generateSiteSuite}
-        onOpenChange={(o) => !o && setGenerateSiteSuite(null)}
-        suite={generateSiteSuite}
-      />
     </div>
   );
 }
