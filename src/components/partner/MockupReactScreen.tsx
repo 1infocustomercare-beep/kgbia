@@ -46,6 +46,8 @@ interface ThemeTokens {
   imageStyle:
     | "food-warm" | "spa-soft" | "ocean" | "noir" | "luxury" | "modern"
     | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy";
+  /** Optional runtime override for glass intensity propagated to BottomNav and overlays. */
+  glassIntensity?: number;
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -289,7 +291,8 @@ function StatusBar({ theme }: { theme: ThemeTokens }) {
   );
 }
 
-function BottomNav({ theme, active = "home", glassIntensity = 60 }: { theme: ThemeTokens; active?: string; glassIntensity?: number }) {
+function BottomNav({ theme, active = "home", glassIntensity }: { theme: ThemeTokens; active?: string; glassIntensity?: number }) {
+  const intensity = glassIntensity ?? theme.glassIntensity ?? 60;
   const items = [
     { key: "home",    icon: "M3 9l9-7 9 7v11a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2z", label: "Home" },
     { key: "menu",    icon: "M4 6h16M4 12h16M4 18h16", label: "Menu", stroke: true },
