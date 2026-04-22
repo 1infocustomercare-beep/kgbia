@@ -53,11 +53,29 @@ const VARIANT_LABEL: Record<string, string> = {
   "miami-watersports": "Miami Watersports",
   "default": "Standard",
   "paperfish": "Paperfish",
+  "strapizzami": "Strapizzami",
   "batey": "Batey",
   "luxury_gold": "Luxury Gold",
   "modern_dark": "Modern Dark",
   "casual_warm": "Casual Warm",
   "minimal_zen": "Minimal Zen",
+  // Premium 2026
+  "neon_vibrant": "Neon Vibrant",
+  "editorial_clean": "Editorial Clean",
+  "boutique_pastel": "Boutique Pastel",
+  "monochrome_bold": "Monochrome Bold",
+  "glass_aurora": "Glass Aurora",
+  "real_estate_trust": "Real Estate Trust",
+  "fitness_energy": "Fitness Energy",
+  // Modern 2026 — Apple / glass / spatial
+  "apple_liquid_glass": "Apple Liquid Glass",
+  "glacial_frost": "Glacial Frost",
+  "spatial_visionos": "Spatial visionOS",
+  "midnight_aurora": "Midnight Aurora",
+  "cyber_holo": "Cyber Holo",
+  "y2k_chrome": "Y2K Chrome",
+  "sunset_gradient": "Sunset Gradient",
+  "swiss_grid": "Swiss Grid",
 };
 
 const ENGINE_LABEL: Record<string, { label: string; color: string; icon: any }> = {
