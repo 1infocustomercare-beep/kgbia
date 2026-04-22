@@ -63,39 +63,46 @@ function buildTrackUrl(shortId: string): string {
   return `https://${projectRef}.supabase.co/functions/v1/wa-track?s=${shortId}`;
 }
 
-/* Template default — A: diretto, B: storytelling */
-function defaultMessageA(lead: ABLeadInput, demoLink: string): string {
+/* Template default — A: diretto, B: storytelling.
+ * Entrambi includono ora un CTA cliccabile diretto alla sezione di conversione
+ * della preview (#prenota / #menu / #preventivo …) in base al settore del lead.
+ */
+function defaultMessageA(lead: ABLeadInput, ctaUrl: string, ctaLabel: string, emoji: string): string {
   const sectorLabel = lead.sector || "la tua attività";
   return [
     `Ciao ${lead.name} 👋`,
     ``,
-    `Sono di Empire AI Group. Vi ho preparato una preview personalizzata di come potrebbe diventare ${sectorLabel}:`,
+    `Sono di Empire AI Group. Vi ho preparato una preview personalizzata di come potrebbe diventare ${sectorLabel}.`,
     ``,
-    `${demoLink}`,
+    `${emoji} ${ctaLabel}:`,
+    `${ctaUrl}`,
     ``,
     `2 minuti per dare un'occhiata?`,
   ].join("\n");
 }
 
-function defaultMessageB(lead: ABLeadInput, demoLink: string): string {
+function defaultMessageB(lead: ABLeadInput, ctaUrl: string, ctaLabel: string, emoji: string): string {
   const sectorLabel = lead.sector || "la tua attività";
   return [
     `Ciao ${lead.name},`,
     ``,
     `Ho visto ${sectorLabel} e mi è venuta un'idea: con un sistema di prenotazioni + CRM + AI potreste recuperare ore di lavoro a settimana.`,
     ``,
-    `Ho già preparato una demo su misura: ${demoLink}`,
+    `Ho preparato una demo su misura — ${emoji} ${ctaLabel}:`,
+    `${ctaUrl}`,
     ``,
     `Quando hai 2 minuti per vederla insieme?`,
   ].join("\n");
 }
 
 export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLinkProp }: Props) {
-  const demoLink = demoLinkProp || `${window.location.origin}/demo`;
+  const baseDemoLink = demoLinkProp || `${window.location.origin}/demo`;
+  const sectorCTA = useMemo(() => getSectorCTA(lead.sector), [lead.sector]);
+  const ctaDemoUrl = useMemo(() => buildCTADemoUrl(baseDemoLink, lead.sector), [baseDemoLink, lead.sector]);
 
   const [test, setTest] = useState<ABTest | null>(null);
-  const [msgA, setMsgA] = useState(() => defaultMessageA(lead, demoLink));
-  const [msgB, setMsgB] = useState(() => defaultMessageB(lead, demoLink));
+  const [msgA, setMsgA] = useState(() => defaultMessageA(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
+  const [msgB, setMsgB] = useState(() => defaultMessageB(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
