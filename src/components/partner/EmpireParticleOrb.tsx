@@ -345,24 +345,24 @@ const EmpireParticleOrb = memo(() => {
         const tgtX = orbX * (1 - m) + ringX * m;
         const tgtY = orbY * (1 - m) + ringY * m;
 
-        // Spring
-        p.vx += (tgtX - p.x) * 0.05;
-        p.vy += (tgtY - p.y) * 0.05;
+        // Spring (più reattivo)
+        p.vx += (tgtX - p.x) * 0.08;
+        p.vy += (tgtY - p.y) * 0.08;
 
-        // Pointer repel (only when pointer is near the orb area)
+        // Pointer repel — più forte e reattivo
         if (pointerActive) {
           const dx = p.x - px;
           const dy = p.y - py;
           const dist = Math.hypot(dx, dy);
-          const reach = isMobile ? 70 : 110;
+          const reach = isMobile ? 90 : 140;
           if (dist < reach && dist > 0.01) {
-            const force = (1 - dist / reach) * 1.8;
+            const force = (1 - dist / reach) * 3.5;
             p.vx += (dx / dist) * force;
             p.vy += (dy / dist) * force;
           }
         }
 
-        p.vx *= 0.84;
+        p.vx *= 0.82;
         p.vy *= 0.84;
         p.x += p.vx;
         p.y += p.vy;
