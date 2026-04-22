@@ -1209,6 +1209,117 @@ export function MockupSuiteGenerator({
           <span>✓ Download PNG</span>
         </div>
 
+        {/* ────────────────────────────────────────────────────────────── */}
+        {/* STORICO VERSIONI · ogni generazione viene snapshottata        */}
+        {/* localmente con tutte le impostazioni. Click "Ripristina" per  */}
+        {/* tornare ad una versione precedente (settings + risultato).    */}
+        {/* ────────────────────────────────────────────────────────────── */}
+        {versions.length > 0 && (
+          <div className="rounded-xl border border-primary/25 bg-gradient-to-br from-primary/[0.04] to-transparent overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setShowVersions(v => !v)}
+              className="w-full flex items-center justify-between gap-2 px-4 py-3 hover:bg-primary/5 transition-colors"
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <History className="h-4 w-4 text-primary shrink-0" />
+                <span className="text-sm font-semibold">Storico Versioni</span>
+                <Badge variant="secondary" className="text-[10px]">{versions.length}</Badge>
+              </div>
+              <span className="text-[11px] text-muted-foreground">
+                {showVersions ? "Nascondi" : "Mostra"}
+              </span>
+            </button>
+
+            {showVersions && (
+              <div className="border-t border-border/40 p-3 space-y-2 max-h-[420px] overflow-y-auto">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[10px] text-muted-foreground italic">
+                    Ultime {versions.length} generazioni · ripristina settings + risultato
+                  </p>
+                  <button
+                    type="button"
+                    onClick={clearAllVersions}
+                    className="text-[10px] px-2 py-0.5 rounded-full border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors"
+                  >
+                    Svuota tutto
+                  </button>
+                </div>
+                {versions.map((v, idx) => {
+                  const isActive = result?.suite_id === v.suite_id;
+                  return (
+                    <div
+                      key={v.id}
+                      className={`flex items-center gap-2 p-2.5 rounded-lg border transition-all ${
+                        isActive ? "border-primary bg-primary/5 shadow-sm" : "border-border/60 bg-muted/20 hover:border-primary/40"
+                      }`}
+                    >
+                      {/* Indicatore numerico + colore brand */}
+                      <div className="flex flex-col items-center gap-1 shrink-0">
+                        <Badge variant={isActive ? "default" : "outline"} className="text-[10px] font-mono">
+                          v{versions.length - idx}
+                        </Badge>
+                        <span
+                          className="block w-4 h-4 rounded-full border border-border"
+                          style={{ background: v.primary_color }}
+                          title={v.primary_color}
+                        />
+                      </div>
+
+                      {/* Dettagli versione */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <p className="text-xs font-semibold truncate">{v.label}</p>
+                          {isActive && <Badge variant="default" className="text-[9px] px-1.5 py-0">Attiva</Badge>}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground">
+                          {new Date(v.created_at).toLocaleString("it-IT", {
+                            day: "2-digit", month: "2-digit", year: "2-digit",
+                            hour: "2-digit", minute: "2-digit",
+                          })}
+                          {" · "}
+                          {v.business_name || "—"}
+                        </p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          <Badge variant="outline" className="text-[9px] px-1 py-0">Glass {v.glass_intensity}%</Badge>
+                          <Badge variant="outline" className="text-[9px] px-1 py-0 capitalize">{v.color_style}</Badge>
+                          <Badge variant="outline" className="text-[9px] px-1 py-0">SA {v.safe_area_px}px</Badge>
+                          <Badge variant="outline" className="text-[9px] px-1 py-0">{v.type_scale.toFixed(2)}×</Badge>
+                          {v.boost_contrast && <Badge variant="outline" className="text-[9px] px-1 py-0">AA</Badge>}
+                        </div>
+                      </div>
+
+                      {/* Azioni */}
+                      <div className="flex flex-col gap-1 shrink-0">
+                        <Button
+                          size="sm"
+                          variant={isActive ? "outline" : "default"}
+                          onClick={() => restoreVersion(v)}
+                          disabled={isActive}
+                          className="h-7 text-[10px] px-2"
+                          title="Ripristina questa versione"
+                        >
+                          <RotateCcw className="h-3 w-3 mr-1" />
+                          Ripristina
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => deleteVersion(v.id)}
+                          className="h-6 text-[10px] px-2 text-destructive hover:bg-destructive/10"
+                          title="Rimuovi dallo storico"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Risultato */}
         {result && (
           <div className="pt-4 border-t space-y-3">
