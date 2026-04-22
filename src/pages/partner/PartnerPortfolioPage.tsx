@@ -605,14 +605,14 @@ export default function PartnerPortfolioPage() {
               Mockup pronti ({readyMockups.length})
             </h4>
             <Link to="/partner/custom-preview" className="text-[10px] text-violet-300 hover:text-violet-200 flex items-center gap-1">
-              <Wand2 className="w-3 h-3" /> Nuovo mockup
+              <Wand2 className="w-3 h-3" /> Nuovo mockup su misura
             </Link>
           </div>
 
           {readyMockups.length === 0 ? (
             <div className="p-5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.1)" }}>
               <Smartphone className="w-7 h-7 mx-auto mb-1.5 text-muted-foreground opacity-50" />
-              <p className="text-[11px] text-muted-foreground">Nessun mockup approvato — creane uno in Custom Preview.</p>
+              <p className="text-[11px] text-muted-foreground">Nessun mockup approvato — creane uno in <span className="text-violet-300">Mockup su Misura</span>.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
