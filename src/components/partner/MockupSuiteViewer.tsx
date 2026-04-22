@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, Loader2, Smartphone } from "lucide-react";
+import { Download, Loader2, Smartphone, Maximize2 } from "lucide-react";
 import { toast } from "sonner";
 import html2canvas from "html2canvas";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
+import { MockupFullscreenViewer } from "./MockupFullscreenViewer";
 
 export interface SuiteScreen {
   type: string;
@@ -64,7 +65,7 @@ export function MockupSuiteViewer({
 }: Props) {
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
-
+  const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
   const downloadScreen = async (idx: number) => {
     const el = containerRefs.current[idx];
     if (!el) return;
@@ -111,9 +112,20 @@ export function MockupSuiteViewer({
           <span>4 schermate iPhone 16 Pro Max · proporzioni reali 9:19.5</span>
           <Badge variant="outline" className="text-xs">{templateVariant.replace(/_/g, " ")}</Badge>
         </div>
-        <Button variant="outline" size="sm" onClick={downloadAll} disabled={downloading !== null}>
-          <Download className="h-3 w-3 mr-1" /> Scarica tutti
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setFullscreenIndex(0)}
+            disabled={!screens.length}
+            title="Visualizza a schermo intero"
+          >
+            <Maximize2 className="h-3 w-3 mr-1" /> Full-screen
+          </Button>
+          <Button variant="outline" size="sm" onClick={downloadAll} disabled={downloading !== null}>
+            <Download className="h-3 w-3 mr-1" /> Scarica tutti
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-items-center">
@@ -121,8 +133,13 @@ export function MockupSuiteViewer({
           <div key={idx} className="flex flex-col items-center gap-2">
             <div
               ref={el => { containerRefs.current[idx] = el; }}
-              className="relative group"
+              className="relative group cursor-zoom-in"
               style={{ width: frameWidth, height: frameHeight }}
+              onClick={() => setFullscreenIndex(idx)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter") setFullscreenIndex(idx); }}
+              title="Apri a schermo intero"
             >
               {/* Ambient glow personalizzato sul colore brand */}
               <div
@@ -255,7 +272,7 @@ export function MockupSuiteViewer({
               variant="ghost"
               size="sm"
               className="h-7 text-xs"
-              onClick={() => downloadScreen(idx)}
+              onClick={(e) => { e.stopPropagation(); downloadScreen(idx); }}
               disabled={downloading !== null}
             >
               {downloading === idx ? (
@@ -267,6 +284,24 @@ export function MockupSuiteViewer({
           </div>
         ))}
       </div>
+
+      {/* Fullscreen immersive viewer */}
+      <MockupFullscreenViewer
+        open={fullscreenIndex !== null}
+        onClose={() => setFullscreenIndex(null)}
+        screens={screens}
+        initialIndex={fullscreenIndex ?? 0}
+        templateVariant={templateVariant}
+        businessName={businessName}
+        businessSector={businessSector}
+        businessCity={businessCity}
+        primaryColor={primaryColor}
+        glassIntensity={glassIntensity}
+        colorStyle={colorStyle}
+        safeAreaPx={safeAreaPx}
+        typeScale={typeScale}
+        boostContrast={boostContrast}
+      />
     </div>
   );
 }

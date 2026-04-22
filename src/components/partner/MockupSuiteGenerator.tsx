@@ -5,12 +5,12 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, History, RotateCcw, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
-import { MockupLookPresets, type MockupLookPreset } from "./MockupLookPresets";
+import { getBrandingKit, type TemplateBrandingKit } from "./templateBranding";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -255,6 +255,8 @@ export function MockupSuiteGenerator({
   const [safeAreaPx, setSafeAreaPx] = useState<number>(8);
   const [typeScale, setTypeScale] = useState<number>(1);
   const [boostContrast, setBoostContrast] = useState<boolean>(true);
+  // Branding Kit (Mockup Libero) — sincronizza palette e tipografia con il template scelto
+  const [lockToTemplate, setLockToTemplate] = useState<boolean>(true);
   const [autoScreens, setAutoScreens] = useState(true);
   const [screens, setScreens] = useState<{ type: ScreenType; title: string }[]>(
     suggestScreensForSector(businessSector)
@@ -273,6 +275,27 @@ export function MockupSuiteGenerator({
     return TEMPLATE_VARIANTS.find(t => t.key === detected)?.label || detected;
   }, [templateVariant, businessSector]);
 
+  // Risolvi il template effettivo (anche quando "auto") per derivare il branding kit corretto
+  const resolvedTemplateKey = useMemo(() => {
+    return templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant;
+  }, [templateVariant, businessSector]);
+
+  const brandingKit: TemplateBrandingKit = useMemo(
+    () => getBrandingKit(resolvedTemplateKey),
+    [resolvedTemplateKey]
+  );
+
+  // Quando il template cambia e il lock è attivo, sincronizza il colore brand standalone
+  // sul primary del template scelto. Funziona sia in standalone che lead-mode (preview color).
+  useEffect(() => {
+    if (!lockToTemplate) return;
+    setStandalone(prev =>
+      prev.primaryColor.toLowerCase() === brandingKit.primary.toLowerCase()
+        ? prev
+        : { ...prev, primaryColor: brandingKit.primary }
+    );
+  }, [brandingKit.primary, lockToTemplate]);
+
   const [generating, setGenerating] = useState(false);
   // Stato per preview progressiva: "preview" = mostra subito React render, "upgrading" = AI in arrivo, "complete" = finita
   const [previewPhase, setPreviewPhase] = useState<"idle" | "preview" | "upgrading" | "complete">("idle");
@@ -283,6 +306,129 @@ export function MockupSuiteGenerator({
     engine: MockupEngine;
     screens: SuiteScreen[];
   } | null>(null);
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // VERSIONI · storico locale per ogni set di mockup generato
+  // Permette di tornare a una versione precedente con TUTTE le impostazioni
+  // (template, glass, color style, safe-area, palette, colore brand, screens)
+  // Persistenza: localStorage per chiave business+lead. Max 20 versioni.
+  // ═══════════════════════════════════════════════════════════════════════
+  type MockupVersion = {
+    id: string;
+    created_at: number;
+    label: string;
+    suite_id: string;
+    share_slug: string;
+    engine: MockupEngine;
+    template_variant: string;
+    primary_color: string;
+    glass_intensity: number;
+    color_style: ColorStyle;
+    safe_area_px: number;
+    type_scale: number;
+    boost_contrast: boolean;
+    screens_config: { type: ScreenType; title: string }[];
+    result_screens: SuiteScreen[];
+    business_name: string;
+    business_sector: string;
+    business_city: string;
+  };
+
+  const versionsKey = useMemo(() => {
+    const key = (leadId || (businessNameProp || standalone.name || "standalone")).toString().toLowerCase().replace(/\s+/g, "-");
+    return `mockup-suite-versions:${key}`;
+  }, [leadId, businessNameProp, standalone.name]);
+
+  const [versions, setVersions] = useState<MockupVersion[]>([]);
+  const [showVersions, setShowVersions] = useState(false);
+
+  // Carica versioni dallo storage al mount / cambio chiave
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(versionsKey);
+      if (raw) {
+        const parsed = JSON.parse(raw) as MockupVersion[];
+        setVersions(Array.isArray(parsed) ? parsed : []);
+      } else {
+        setVersions([]);
+      }
+    } catch {
+      setVersions([]);
+    }
+  }, [versionsKey]);
+
+  const persistVersions = (next: MockupVersion[]) => {
+    setVersions(next);
+    try {
+      localStorage.setItem(versionsKey, JSON.stringify(next));
+    } catch (e) {
+      console.warn("[MockupVersions] persist failed", e);
+    }
+  };
+
+  const snapshotVersion = (
+    suite_id: string,
+    share_slug: string,
+    eng: MockupEngine,
+    tpl: string,
+    finalScreens: SuiteScreen[]
+  ) => {
+    const v: MockupVersion = {
+      id: `v_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      created_at: Date.now(),
+      label: `${ENGINE_OPTIONS.find(e => e.key === eng)?.label || eng} · ${tpl.replace(/_/g, " ")}`,
+      suite_id,
+      share_slug,
+      engine: eng,
+      template_variant: tpl,
+      primary_color: primaryColor,
+      glass_intensity: glassIntensity,
+      color_style: colorStyle,
+      safe_area_px: safeAreaPx,
+      type_scale: typeScale,
+      boost_contrast: boostContrast,
+      screens_config: screens,
+      result_screens: finalScreens,
+      business_name: businessName,
+      business_sector: businessSector,
+      business_city: businessCity,
+    };
+    persistVersions([v, ...versions].slice(0, 20));
+  };
+
+  const restoreVersion = (v: MockupVersion) => {
+    setEngine(v.engine);
+    setTemplateVariant(v.template_variant);
+    setGlassIntensity(v.glass_intensity);
+    setColorStyle(v.color_style);
+    setSafeAreaPx(v.safe_area_px);
+    setTypeScale(v.type_scale);
+    setBoostContrast(v.boost_contrast);
+    setScreens(v.screens_config);
+    setAutoScreens(false);
+    setLockToTemplate(false);
+    setStandalone(prev => ({ ...prev, primaryColor: v.primary_color }));
+    setResult({
+      suite_id: v.suite_id,
+      share_slug: v.share_slug,
+      template_variant: v.template_variant,
+      engine: v.engine,
+      screens: v.result_screens,
+    });
+    setPreviewPhase("complete");
+    toast.success(`Versione ripristinata · ${new Date(v.created_at).toLocaleString("it-IT")}`);
+  };
+
+  const deleteVersion = (id: string) => {
+    persistVersions(versions.filter(v => v.id !== id));
+    toast.info("Versione eliminata dallo storico");
+  };
+
+  const clearAllVersions = () => {
+    if (versions.length === 0) return;
+    persistVersions([]);
+    toast.info("Storico versioni svuotato");
+  };
 
   const handleGenerate = async () => {
     if (!businessName?.trim()) {
@@ -350,6 +496,18 @@ export function MockupSuiteGenerator({
         safe_area_px: safeAreaPx,
         type_scale: typeScale,
         boost_contrast: boostContrast,
+        // Branding kit del template — coerenza palette + tipografia per AI prompt
+        branding: {
+          template: brandingKit.variant,
+          locked: lockToTemplate,
+          primary: brandingKit.primary,
+          accent: brandingKit.accent,
+          palette: brandingKit.palette.map(p => p.hex),
+          typography_pair: brandingKit.typography.pairLabel,
+          heading_font: brandingKit.typography.headingFont,
+          body_font: brandingKit.typography.bodyFont,
+          rule: brandingKit.rule,
+        },
       };
 
       if (isAIEngine) setPreviewPhase("upgrading");
@@ -416,7 +574,9 @@ export function MockupSuiteGenerator({
       }
       setPreviewPhase("complete");
 
-      // Validation feedback (engine AI)
+      // Snapshot in storico Versioni (suite generata con successo)
+      snapshotVersion(d.suite_id, d.share_slug, d.engine, d.template_variant, enrichedScreens);
+
       const vs = d.validation_summary;
       if (vs && vs.all_validated === false) {
         const failed = (vs.per_screen || []).filter((p: any) => !p.validated);
@@ -545,6 +705,99 @@ export function MockupSuiteGenerator({
                   className="flex-1 font-mono text-xs"
                 />
               </div>
+            </div>
+
+            {/* ────────────────────────────────────────────────────────── */}
+            {/* BRANDING KIT — coerenza palette + tipografia col template  */}
+            {/* Solo in Mockup Libero (standalone): collega il colore brand */}
+            {/* e i font alle regole del template selezionato.              */}
+            {/* ────────────────────────────────────────────────────────── */}
+            <div className="rounded-xl border border-primary/25 bg-gradient-to-br from-primary/[0.05] to-transparent p-3 space-y-3">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Palette className="h-3.5 w-3.5 text-primary shrink-0" />
+                  <Label className="text-xs font-semibold m-0 truncate">
+                    Branding Kit · {brandingKit.label}
+                  </Label>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setLockToTemplate(v => !v)}
+                  role="switch"
+                  aria-checked={lockToTemplate}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-bold transition-colors border ${
+                    lockToTemplate
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-muted text-muted-foreground border-border hover:border-primary/40"
+                  }`}
+                >
+                  {lockToTemplate ? "🔒 Sincronizzato" : "🔓 Manuale"}
+                </button>
+              </div>
+
+              {/* Palette swatches del template */}
+              <div className="space-y-1">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Palette consigliata</p>
+                <div className="flex gap-1.5 flex-wrap">
+                  {brandingKit.palette.map(swatch => {
+                    const active = standalone.primaryColor.toLowerCase() === swatch.hex.toLowerCase();
+                    return (
+                      <button
+                        key={swatch.hex}
+                        type="button"
+                        onClick={() => {
+                          setLockToTemplate(false); // override esplicito = unlock
+                          setStandalone(prev => ({ ...prev, primaryColor: swatch.hex }));
+                        }}
+                        title={`${swatch.name} · ${swatch.hex}`}
+                        className={`group relative h-9 w-9 rounded-lg border-2 transition-all hover:scale-110 ${
+                          active ? "border-foreground shadow-md scale-110" : "border-border"
+                        }`}
+                        style={{ background: swatch.hex }}
+                      >
+                        {active && (
+                          <span
+                            className="absolute inset-0 flex items-center justify-center text-[12px] font-black drop-shadow"
+                            style={{ color: brandingKit.primary === swatch.hex ? "#fff" : "#000" }}
+                          >
+                            ✓
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Typography pair preview */}
+              <div className="grid grid-cols-[auto_1fr] gap-3 items-center p-2 rounded-lg bg-muted/40 border border-border/40">
+                <div className="text-center px-2">
+                  <p
+                    className="text-lg leading-none"
+                    style={{ fontFamily: brandingKit.typography.headingFont }}
+                  >
+                    Aa
+                  </p>
+                  <p className="text-[8px] text-muted-foreground mt-0.5">Heading</p>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold leading-tight truncate">
+                    {brandingKit.typography.pairLabel}
+                  </p>
+                  <p
+                    className="text-[10px] text-muted-foreground leading-snug truncate"
+                    style={{ fontFamily: brandingKit.typography.bodyFont }}
+                  >
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-[10px] text-muted-foreground italic leading-snug">
+                💡 {brandingKit.rule} {lockToTemplate
+                  ? "Cambia template → palette e colore brand si aggiornano."
+                  : "Sblocca-lock attivo: stai usando un colore custom fuori dalle regole."}
+              </p>
             </div>
           </div>
         )}
@@ -793,28 +1046,6 @@ export function MockupSuiteGenerator({
         </div>
 
         {/* ────────────────────────────────────────────────────────────────── */}
-        {/* PRESET LOOK — salva/carica combinazioni di template+glass+color   */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <MockupLookPresets
-          current={{
-            templateVariant,
-            glassIntensity,
-            colorStyle,
-            safeAreaPx,
-            typeScale,
-            boostContrast,
-          }}
-          onApply={(p: MockupLookPreset) => {
-            setTemplateVariant(p.templateVariant);
-            setGlassIntensity(p.glassIntensity);
-            setColorStyle(p.colorStyle);
-            setSafeAreaPx(p.safeAreaPx);
-            setTypeScale(p.typeScale);
-            setBoostContrast(p.boostContrast);
-          }}
-        />
-
-        {/* ────────────────────────────────────────────────────────────────── */}
         {/* SAFE AREA & LEGGIBILITÀ — margini, tipografia, contrasto AA       */}
         {/* Garantiscono che testo e UI restino dentro il frame iPhone        */}
         {/* su qualsiasi template selezionato (auto + manuali).               */}
@@ -957,94 +1188,6 @@ export function MockupSuiteGenerator({
           </div>
         </div>
 
-        {/* ────────────────────────────────────────────────────────────────── */}
-        {/* PRE-GEN PREVIEW STRIP — 4 mini iPhone con tutte le opzioni live   */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.03] to-transparent p-4 space-y-3">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <Label className="flex items-center gap-1.5 m-0">
-              <Eye className="h-3.5 w-3.5 text-primary" /> Anteprima pre-generazione
-            </Label>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className="text-[9px]">
-                {(templateVariant === "auto"
-                  ? `Auto → ${TEMPLATE_VARIANTS.find(t => t.key === suggestTemplateForSector(businessSector))?.label?.split("—")[0]?.trim() || "—"}`
-                  : TEMPLATE_VARIANTS.find(t => t.key === templateVariant)?.label?.split("—")[0]?.trim() || templateVariant)}
-              </Badge>
-              <Badge variant="outline" className="text-[9px]">
-                <Droplets className="h-2.5 w-2.5 mr-1" />Glass {glassIntensity}%
-              </Badge>
-              <Badge variant="outline" className="text-[9px] capitalize">
-                <Palette className="h-2.5 w-2.5 mr-1" />{colorStyle}
-              </Badge>
-              <Badge
-                variant="outline"
-                className="text-[9px] gap-1"
-                style={{ borderColor: (mode === "standalone" ? standalone.primaryColor : primaryColor) }}
-              >
-                <span
-                  className="inline-block w-2 h-2 rounded-full"
-                  style={{ background: mode === "standalone" ? standalone.primaryColor : primaryColor }}
-                />
-                {(mode === "standalone" ? standalone.primaryColor : primaryColor).toUpperCase()}
-              </Badge>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4 gap-2 justify-items-center">
-            {screens.map((s, i) => {
-              const w = 78;
-              const h = Math.round(w * 19.5 / 9);
-              const resolved = templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant;
-              return (
-                <div key={`${s.type}-${i}`} className="flex flex-col items-center gap-1">
-                  <div className="relative" style={{ width: w, height: h }}>
-                    <div
-                      className="absolute -inset-1.5 rounded-[20px] opacity-25 blur-md"
-                      style={{ background: mode === "standalone" ? standalone.primaryColor : primaryColor }}
-                    />
-                    <div
-                      className="relative rounded-[16px] border-[1.5px] overflow-hidden shadow-md"
-                      style={{
-                        width: w,
-                        height: h,
-                        borderColor: "hsl(var(--foreground) / 0.2)",
-                        boxSizing: "border-box",
-                      }}
-                    >
-                      <div className="absolute top-[2px] left-1/2 -translate-x-1/2 w-[22px] h-[5px] bg-black rounded-full z-30" />
-                      <div className="absolute inset-[1.5px] overflow-hidden rounded-[14px]">
-                        <MockupReactScreen
-                          type={s.type}
-                          templateVariant={resolved}
-                          businessName={businessName || "Brand Demo"}
-                          businessSector={businessSector || "Servizi"}
-                          businessCity={businessCity || ""}
-                          primaryColor={mode === "standalone" ? standalone.primaryColor : primaryColor}
-                          width={w - 3}
-                          height={h - 3}
-                          glassIntensity={glassIntensity}
-                          colorStyle={colorStyle}
-                          safeAreaPx={Math.round(safeAreaPx * 0.3)}
-                          typeScale={typeScale}
-                          boostContrast={boostContrast}
-                        />
-                      </div>
-                      <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-[24px] h-[1.5px] bg-foreground/30 rounded-full z-20" />
-                    </div>
-                  </div>
-                  <p className="text-[9px] font-semibold text-center leading-tight max-w-[80px] truncate">{s.title}</p>
-                  <p className="text-[8px] text-muted-foreground capitalize leading-none">{s.type}</p>
-                </div>
-              );
-            })}
-          </div>
-
-          <p className="text-[9px] text-muted-foreground italic text-center">
-            Anteprima React istantanea con tutte le opzioni applicate · clicca <span className="font-semibold not-italic">Genera Suite</span> per la versione finale.
-          </p>
-        </div>
-
         {/* CTA */}
         <Button
           onClick={handleGenerate}
@@ -1065,6 +1208,117 @@ export function MockupSuiteGenerator({
           <span>✓ Link condivisibile</span>
           <span>✓ Download PNG</span>
         </div>
+
+        {/* ────────────────────────────────────────────────────────────── */}
+        {/* STORICO VERSIONI · ogni generazione viene snapshottata        */}
+        {/* localmente con tutte le impostazioni. Click "Ripristina" per  */}
+        {/* tornare ad una versione precedente (settings + risultato).    */}
+        {/* ────────────────────────────────────────────────────────────── */}
+        {versions.length > 0 && (
+          <div className="rounded-xl border border-primary/25 bg-gradient-to-br from-primary/[0.04] to-transparent overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setShowVersions(v => !v)}
+              className="w-full flex items-center justify-between gap-2 px-4 py-3 hover:bg-primary/5 transition-colors"
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <History className="h-4 w-4 text-primary shrink-0" />
+                <span className="text-sm font-semibold">Storico Versioni</span>
+                <Badge variant="secondary" className="text-[10px]">{versions.length}</Badge>
+              </div>
+              <span className="text-[11px] text-muted-foreground">
+                {showVersions ? "Nascondi" : "Mostra"}
+              </span>
+            </button>
+
+            {showVersions && (
+              <div className="border-t border-border/40 p-3 space-y-2 max-h-[420px] overflow-y-auto">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[10px] text-muted-foreground italic">
+                    Ultime {versions.length} generazioni · ripristina settings + risultato
+                  </p>
+                  <button
+                    type="button"
+                    onClick={clearAllVersions}
+                    className="text-[10px] px-2 py-0.5 rounded-full border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors"
+                  >
+                    Svuota tutto
+                  </button>
+                </div>
+                {versions.map((v, idx) => {
+                  const isActive = result?.suite_id === v.suite_id;
+                  return (
+                    <div
+                      key={v.id}
+                      className={`flex items-center gap-2 p-2.5 rounded-lg border transition-all ${
+                        isActive ? "border-primary bg-primary/5 shadow-sm" : "border-border/60 bg-muted/20 hover:border-primary/40"
+                      }`}
+                    >
+                      {/* Indicatore numerico + colore brand */}
+                      <div className="flex flex-col items-center gap-1 shrink-0">
+                        <Badge variant={isActive ? "default" : "outline"} className="text-[10px] font-mono">
+                          v{versions.length - idx}
+                        </Badge>
+                        <span
+                          className="block w-4 h-4 rounded-full border border-border"
+                          style={{ background: v.primary_color }}
+                          title={v.primary_color}
+                        />
+                      </div>
+
+                      {/* Dettagli versione */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <p className="text-xs font-semibold truncate">{v.label}</p>
+                          {isActive && <Badge variant="default" className="text-[9px] px-1.5 py-0">Attiva</Badge>}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground">
+                          {new Date(v.created_at).toLocaleString("it-IT", {
+                            day: "2-digit", month: "2-digit", year: "2-digit",
+                            hour: "2-digit", minute: "2-digit",
+                          })}
+                          {" · "}
+                          {v.business_name || "—"}
+                        </p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          <Badge variant="outline" className="text-[9px] px-1 py-0">Glass {v.glass_intensity}%</Badge>
+                          <Badge variant="outline" className="text-[9px] px-1 py-0 capitalize">{v.color_style}</Badge>
+                          <Badge variant="outline" className="text-[9px] px-1 py-0">SA {v.safe_area_px}px</Badge>
+                          <Badge variant="outline" className="text-[9px] px-1 py-0">{v.type_scale.toFixed(2)}×</Badge>
+                          {v.boost_contrast && <Badge variant="outline" className="text-[9px] px-1 py-0">AA</Badge>}
+                        </div>
+                      </div>
+
+                      {/* Azioni */}
+                      <div className="flex flex-col gap-1 shrink-0">
+                        <Button
+                          size="sm"
+                          variant={isActive ? "outline" : "default"}
+                          onClick={() => restoreVersion(v)}
+                          disabled={isActive}
+                          className="h-7 text-[10px] px-2"
+                          title="Ripristina questa versione"
+                        >
+                          <RotateCcw className="h-3 w-3 mr-1" />
+                          Ripristina
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => deleteVersion(v.id)}
+                          className="h-6 text-[10px] px-2 text-destructive hover:bg-destructive/10"
+                          title="Rimuovi dallo storico"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Risultato */}
         {result && (
@@ -1089,17 +1343,7 @@ export function MockupSuiteGenerator({
                   Upgrade AI…
                 </Badge>
               ) : (
-                <div className="flex gap-2 flex-wrap">
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={handleGenerate}
-                    disabled={generating}
-                    title="Ri-genera le 4 schermate con le impostazioni attuali (nuovo seed)"
-                  >
-                    <RefreshCw className={`h-3 w-3 mr-1 ${generating ? "animate-spin" : ""}`} />
-                    Rigenera
-                  </Button>
+                <div className="flex gap-2">
                   <Button variant="outline" size="sm" onClick={copyShareLink} disabled={!result.share_slug}>
                     <Copy className="h-3 w-3 mr-1" />Link
                   </Button>
