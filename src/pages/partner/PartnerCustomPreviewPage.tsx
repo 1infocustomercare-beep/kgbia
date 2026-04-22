@@ -15,32 +15,10 @@ import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator"
 import { MockupSuiteVaultList } from "@/components/partner/MockupSuiteVaultList";
 
 const STYLES = [
-  // Modern 2026 — Apple Liquid Glass / glaciale / spatial / holo
-  { key: "apple_liquid_glass", label: "Apple Liquid Glass", color: "#06070C", accent: "#7AA2FF" },
-  { key: "glacial_frost",      label: "Glacial Frost",      color: "#EAF2FA", accent: "#5BB8FF" },
-  { key: "spatial_visionos",   label: "Spatial visionOS",   color: "#0A0B12", accent: "#CFC2FF" },
-  { key: "midnight_aurora",    label: "Midnight Aurora",    color: "#070B18", accent: "#5EEAD4" },
-  { key: "cyber_holo",         label: "Cyber Holo",         color: "#05050E", accent: "#A66CFF" },
-  { key: "y2k_chrome",         label: "Y2K Chrome",         color: "#101015", accent: "#C0C7D6" },
-  { key: "sunset_gradient",    label: "Sunset Gradient",    color: "#FFF4EE", accent: "#FF6B9C" },
-  { key: "swiss_grid",         label: "Swiss Grid",         color: "#F4F4F4", accent: "#E4002B" },
-  // Premium 2026
-  { key: "neon_vibrant",       label: "Neon Vibrant",       color: "#0A0118", accent: "#FF2E9A" },
-  { key: "editorial_clean",    label: "Editorial Clean",    color: "#FFFFFF", accent: "#D9534F" },
-  { key: "boutique_pastel",    label: "Boutique Pastel",    color: "#FFF6F2", accent: "#E8A0B8" },
-  { key: "monochrome_bold",    label: "Monochrome Bold",    color: "#0A0A0A", accent: "#FFD60A" },
-  { key: "glass_aurora",       label: "Glass Aurora",       color: "#0B0F1F", accent: "#7C9FFF" },
-  { key: "real_estate_trust",  label: "Real Estate Trust",  color: "#F5F2EC", accent: "#B89760" },
-  { key: "fitness_energy",     label: "Fitness Energy",     color: "#0D0D0D", accent: "#C8FF00" },
-  // Replica 1:1 dei mockup forniti
-  { key: "paperfish",          label: "Paperfish Sakura",   color: "#0E0B0F", accent: "#E89BAE" },
-  { key: "strapizzami",        label: "Strapizzami",        color: "#F5EBD8", accent: "#C84A2A" },
-  { key: "batey",              label: "Batey Pacifico",     color: "#08131F", accent: "#5CC8D9" },
-  // Classici
-  { key: "modern_dark",        label: "Modern Dark",        color: "#0F172A", accent: "#C8963E" },
-  { key: "luxury_gold",        label: "Luxury Gold",        color: "#1A1410", accent: "#D4AF37" },
-  { key: "casual_warm",        label: "Casual Warm",        color: "#FAF6F0", accent: "#E07856" },
-  { key: "minimal_zen",        label: "Minimal Zen",        color: "#F8F8F8", accent: "#222222" },
+  { key: "modern_dark", label: "Modern Dark", color: "#0F172A", accent: "#C8963E" },
+  { key: "luxury_gold", label: "Luxury Gold", color: "#1A1410", accent: "#D4AF37" },
+  { key: "casual_warm", label: "Casual Warm", color: "#FAF6F0", accent: "#E07856" },
+  { key: "minimal_zen", label: "Minimal Zen", color: "#F8F8F8", accent: "#222222" },
 ];
 
 const COST = 15;

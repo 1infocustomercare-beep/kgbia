@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
-import { getBrandingKit, type TemplateBrandingKit } from "./templateBranding";
+import { MockupLookPresets, type MockupLookPreset } from "./MockupLookPresets";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -36,16 +36,7 @@ const ENGINE_OPTIONS: { key: MockupEngine; label: string; cost: number; icon: Re
 
 const TEMPLATE_VARIANTS = [
   { key: "auto",              label: "Auto (rilevato dal settore)", group: "Smart" },
-  // ── MODERN 2026 — Apple Liquid Glass, glacial, spatial, holo ──
-  { key: "apple_liquid_glass",label: "Apple Liquid Glass — vetro vivido iOS 26 / visionOS", group: "Modern 2026" },
-  { key: "glacial_frost",     label: "Glacial Frost — bianco-azzurro ghiaccio, vetro chiaro", group: "Modern 2026" },
-  { key: "spatial_visionos",  label: "Spatial visionOS — depth, halo bianchi, deep space", group: "Modern 2026" },
-  { key: "midnight_aurora",   label: "Midnight Aurora — navy + smeraldo / viola", group: "Modern 2026" },
-  { key: "cyber_holo",        label: "Cyber Holo — iridescenza viola/ciano, gaming/tech", group: "Modern 2026" },
-  { key: "y2k_chrome",        label: "Y2K Chrome — metallo lucido, retro-futuro", group: "Modern 2026" },
-  { key: "sunset_gradient",   label: "Sunset Gradient — coral/magenta caldo, social-grade", group: "Modern 2026" },
-  { key: "swiss_grid",        label: "Swiss Grid — tipografia editoriale pulita, accenti rossi", group: "Modern 2026" },
-  // Premium 2026
+  // Premium nuovi
   { key: "neon_vibrant",      label: "Neon Vibrant — energia, gaming, eventi", group: "Premium 2026" },
   { key: "editorial_clean",   label: "Editorial Clean — magazine, fashion, lifestyle", group: "Premium 2026" },
   { key: "boutique_pastel",   label: "Boutique Pastel — beauty, kids, wellness", group: "Premium 2026" },
@@ -53,14 +44,13 @@ const TEMPLATE_VARIANTS = [
   { key: "glass_aurora",      label: "Glass Aurora — fintech, AI, SaaS", group: "Premium 2026" },
   { key: "real_estate_trust", label: "Real Estate Trust — immobiliare, legale, finanza", group: "Premium 2026" },
   { key: "fitness_energy",    label: "Fitness Energy — palestre, sport, supplements", group: "Premium 2026" },
-  // Esistenti (replica 1:1 dei mockup forniti)
+  // Esistenti
   { key: "paperfish",         label: "Paperfish Sakura — sushi/giapponese", group: "Food" },
   { key: "strapizzami",       label: "Strapizzami — pizzeria/italiano", group: "Food" },
   { key: "casual_warm",       label: "Casual Warm — trattoria/bistrot", group: "Food" },
   { key: "luxury_gold",       label: "Luxury Gold — alta cucina/Michelin", group: "Hospitality" },
   { key: "batey",             label: "Batey Pacifico — mare/lido/yacht", group: "Hospitality" },
   { key: "minimal_zen",       label: "Minimal Zen — spa/wellness", group: "Wellness" },
-  { key: "modern_dark",       label: "Modern Dark — multi-settore base", group: "Classic" },
 ];
 
 // Palette rapide per swap veloce del colore brand prima della generazione
@@ -71,19 +61,12 @@ const QUICK_PALETTES: { label: string; color: string }[] = [
   { label: "Coral Vibrant",  color: "#FF6B5C" },
   { label: "Terracotta",     color: "#C84A2A" },
   { label: "Ocean Azure",    color: "#5CC8D9" },
-  { label: "Glacial Sky",    color: "#5BB8FF" },
-  { label: "Aurora Mint",    color: "#5EEAD4" },
-  { label: "Liquid Lilac",   color: "#A78BFA" },
-  { label: "Holo Cyan",      color: "#22F1D6" },
-  { label: "Chrome Silver",  color: "#C0C7D6" },
-  { label: "Sunset Pink",    color: "#FF6B9C" },
   { label: "Navy Trust",     color: "#1B2A3A" },
   { label: "Emerald",        color: "#10B981" },
   { label: "Lime Energy",    color: "#C8FF00" },
   { label: "Royal Indigo",   color: "#6366F1" },
   { label: "Magenta Neon",   color: "#FF2E9A" },
   { label: "Bordeaux",       color: "#6B1F2C" },
-  { label: "Swiss Red",      color: "#E4002B" },
   { label: "Mono Black",     color: "#0A0A0A" },
   { label: "Pure White",     color: "#FAFAFA" },
 ];
@@ -223,23 +206,11 @@ function suggestTemplateForSector(sector: string): string {
   if (/beauty|estetic|parruc|hair|nail|kids|baby/.test(s)) return "boutique_pastel";
   if (/fitness|palestra|gym|crossfit|sport|supplem/.test(s)) return "fitness_energy";
   if (/immobil|real ?estate|legal|avvocat|notai|commercia|finanz/.test(s)) return "real_estate_trust";
-  // AI / SaaS / fintech moderni → Apple Liquid Glass (top tier)
-  if (/fintech|crypto|web3|nft|saas|ai|tech|startup|software|app/.test(s)) return "apple_liquid_glass";
-  // Spatial / VR / AR / metaverse / iOS native
-  if (/visionos|spatial|vr|ar|metavers|3d|immersiv/.test(s)) return "spatial_visionos";
-  // Cool brands / artic / scandinav / ice cream / surgelati
-  if (/artic|polar|ice|gelat|surgel|nordic|scandinav/.test(s)) return "glacial_frost";
-  // Gaming / esports / cyber
-  if (/gaming|esport|stream|twitch|cyber/.test(s)) return "cyber_holo";
-  // Editorial / fashion / magazine
+  if (/fintech|saas|ai|tech|startup|software|app/.test(s)) return "glass_aurora";
   if (/fashion|moda|magazine|editor|lifestyle|design|agenzi/.test(s)) return "editorial_clean";
-  if (/event|wedding|nightlife|disco|club/.test(s)) return "neon_vibrant";
+  if (/event|wedding|gaming|nightlife|disco|club/.test(s)) return "neon_vibrant";
   if (/architett|studio|brand/.test(s)) return "monochrome_bold";
-  // Tropical / cocktail / summer / sunset bar
-  if (/cocktail|tropic|tiki|summer|sunset|aperit/.test(s)) return "sunset_gradient";
-  // News / journal / Swiss editorial
-  if (/news|giornal|editori|press|magazine|publish/.test(s)) return "swiss_grid";
-  return "midnight_aurora";
+  return "modern_dark";
 }
 
 export function MockupSuiteGenerator({
@@ -284,8 +255,6 @@ export function MockupSuiteGenerator({
   const [safeAreaPx, setSafeAreaPx] = useState<number>(8);
   const [typeScale, setTypeScale] = useState<number>(1);
   const [boostContrast, setBoostContrast] = useState<boolean>(true);
-  // Branding Kit (Mockup Libero) — sincronizza palette e tipografia con il template scelto
-  const [lockToTemplate, setLockToTemplate] = useState<boolean>(true);
   const [autoScreens, setAutoScreens] = useState(true);
   const [screens, setScreens] = useState<{ type: ScreenType; title: string }[]>(
     suggestScreensForSector(businessSector)
@@ -304,35 +273,7 @@ export function MockupSuiteGenerator({
     return TEMPLATE_VARIANTS.find(t => t.key === detected)?.label || detected;
   }, [templateVariant, businessSector]);
 
-  // Risolvi il template effettivo (anche quando "auto") per derivare il branding kit corretto
-  const resolvedTemplateKey = useMemo(() => {
-    return templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant;
-  }, [templateVariant, businessSector]);
-
-  const brandingKit: TemplateBrandingKit = useMemo(
-    () => getBrandingKit(resolvedTemplateKey),
-    [resolvedTemplateKey]
-  );
-
-  // Quando il template cambia e il lock è attivo, sincronizza il colore brand standalone
-  // sul primary del template scelto. Funziona sia in standalone che lead-mode (preview color).
-  useEffect(() => {
-    if (!lockToTemplate) return;
-    setStandalone(prev =>
-      prev.primaryColor.toLowerCase() === brandingKit.primary.toLowerCase()
-        ? prev
-        : { ...prev, primaryColor: brandingKit.primary }
-    );
-  }, [brandingKit.primary, lockToTemplate]);
-
   const [generating, setGenerating] = useState(false);
-  // Mockup Libero — preview on-demand: l'utente clicca "Carica anteprima" per renderizzarla
-  const [standalonePreviewLoaded, setStandalonePreviewLoaded] = useState(false);
-  const [standalonePreviewLoading, setStandalonePreviewLoading] = useState(false);
-  // Invalida la preview on-demand quando cambia settore o colore brand
-  useEffect(() => {
-    setStandalonePreviewLoaded(false);
-  }, [standalone.sector, standalone.primaryColor]);
   // Stato per preview progressiva: "preview" = mostra subito React render, "upgrading" = AI in arrivo, "complete" = finita
   const [previewPhase, setPreviewPhase] = useState<"idle" | "preview" | "upgrading" | "complete">("idle");
   const [result, setResult] = useState<{
@@ -409,18 +350,6 @@ export function MockupSuiteGenerator({
         safe_area_px: safeAreaPx,
         type_scale: typeScale,
         boost_contrast: boostContrast,
-        // Branding kit del template — coerenza palette + tipografia per AI prompt
-        branding: {
-          template: brandingKit.variant,
-          locked: lockToTemplate,
-          primary: brandingKit.primary,
-          accent: brandingKit.accent,
-          palette: brandingKit.palette.map(p => p.hex),
-          typography_pair: brandingKit.typography.pairLabel,
-          heading_font: brandingKit.typography.headingFont,
-          body_font: brandingKit.typography.bodyFont,
-          rule: brandingKit.rule,
-        },
       };
 
       if (isAIEngine) setPreviewPhase("upgrading");
@@ -616,209 +545,6 @@ export function MockupSuiteGenerator({
                   className="flex-1 font-mono text-xs"
                 />
               </div>
-            </div>
-
-            {/* ────────────────────────────────────────────────────────── */}
-            {/* BRANDING KIT — coerenza palette + tipografia col template  */}
-            {/* Solo in Mockup Libero (standalone): collega il colore brand */}
-            {/* e i font alle regole del template selezionato.              */}
-            {/* ────────────────────────────────────────────────────────── */}
-            <div className="rounded-xl border border-primary/25 bg-gradient-to-br from-primary/[0.05] to-transparent p-3 space-y-3">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  <Palette className="h-3.5 w-3.5 text-primary shrink-0" />
-                  <Label className="text-xs font-semibold m-0 truncate">
-                    Branding Kit · {brandingKit.label}
-                  </Label>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setLockToTemplate(v => !v)}
-                  role="switch"
-                  aria-checked={lockToTemplate}
-                  className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-bold transition-colors border ${
-                    lockToTemplate
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-muted text-muted-foreground border-border hover:border-primary/40"
-                  }`}
-                >
-                  {lockToTemplate ? "🔒 Sincronizzato" : "🔓 Manuale"}
-                </button>
-              </div>
-
-              {/* Palette swatches del template */}
-              <div className="space-y-1">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Palette consigliata</p>
-                <div className="flex gap-1.5 flex-wrap">
-                  {brandingKit.palette.map(swatch => {
-                    const active = standalone.primaryColor.toLowerCase() === swatch.hex.toLowerCase();
-                    return (
-                      <button
-                        key={swatch.hex}
-                        type="button"
-                        onClick={() => {
-                          setLockToTemplate(false); // override esplicito = unlock
-                          setStandalone(prev => ({ ...prev, primaryColor: swatch.hex }));
-                        }}
-                        title={`${swatch.name} · ${swatch.hex}`}
-                        className={`group relative h-9 w-9 rounded-lg border-2 transition-all hover:scale-110 ${
-                          active ? "border-foreground shadow-md scale-110" : "border-border"
-                        }`}
-                        style={{ background: swatch.hex }}
-                      >
-                        {active && (
-                          <span
-                            className="absolute inset-0 flex items-center justify-center text-[12px] font-black drop-shadow"
-                            style={{ color: brandingKit.primary === swatch.hex ? "#fff" : "#000" }}
-                          >
-                            ✓
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Typography pair preview */}
-              <div className="grid grid-cols-[auto_1fr] gap-3 items-center p-2 rounded-lg bg-muted/40 border border-border/40">
-                <div className="text-center px-2">
-                  <p
-                    className="text-lg leading-none"
-                    style={{ fontFamily: brandingKit.typography.headingFont }}
-                  >
-                    Aa
-                  </p>
-                  <p className="text-[8px] text-muted-foreground mt-0.5">Heading</p>
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[11px] font-bold leading-tight truncate">
-                    {brandingKit.typography.pairLabel}
-                  </p>
-                  <p
-                    className="text-[10px] text-muted-foreground leading-snug truncate"
-                    style={{ fontFamily: brandingKit.typography.bodyFont }}
-                  >
-                    The quick brown fox jumps over the lazy dog
-                  </p>
-                </div>
-              </div>
-
-              <p className="text-[10px] text-muted-foreground italic leading-snug">
-                💡 {brandingKit.rule} {lockToTemplate
-                  ? "Cambia template → palette e colore brand si aggiornano."
-                  : "Sblocca-lock attivo: stai usando un colore custom fuori dalle regole."}
-              </p>
-            </div>
-
-            {/* ────────────────────────────────────────────────────────── */}
-            {/* MOCKUP LIBERO — Template + Preview on-demand               */}
-            {/* Selettore template inline + bottone "Carica anteprima"     */}
-            {/* per renderizzare la mini-preview solo quando richiesto.    */}
-            {/* ────────────────────────────────────────────────────────── */}
-            <div className="rounded-xl border border-border/60 bg-background/40 p-3 space-y-3">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <Label htmlFor="sa-template" className="text-xs font-semibold flex items-center gap-1.5 m-0">
-                  <Palette className="h-3.5 w-3.5 text-primary" />
-                  Template grafico
-                </Label>
-                {templateVariant === "auto" && businessSector && (
-                  <Badge variant="outline" className="text-[9px]">
-                    ✨ Auto: {TEMPLATE_VARIANTS.find(t => t.key === suggestTemplateForSector(businessSector))?.label.split(" — ")[0]}
-                  </Badge>
-                )}
-              </div>
-
-              <Select value={templateVariant} onValueChange={(v) => { setTemplateVariant(v); setStandalonePreviewLoaded(false); }}>
-                <SelectTrigger id="sa-template" className="h-9 text-sm">
-                  <SelectValue placeholder="Scegli un template…" />
-                </SelectTrigger>
-                <SelectContent className="max-h-[340px]">
-                  {Object.entries(groupedTemplates).map(([group, items]) => (
-                    <div key={group}>
-                      <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{group}</div>
-                      {items.map(t => (
-                        <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
-                      ))}
-                    </div>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Preview on-demand */}
-              <div className="flex items-center justify-between gap-3 pt-1">
-                <div className="min-w-0">
-                  <p className="text-[11px] font-semibold">Anteprima al momento</p>
-                  <p className="text-[10px] text-muted-foreground leading-snug">
-                    {standalonePreviewLoaded
-                      ? "Anteprima caricata · cambia template o colore per ricaricare."
-                      : "Carica una mini-preview con i parametri scelti prima di generare."}
-                  </p>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={standalonePreviewLoaded ? "outline" : "default"}
-                  className="shrink-0 gap-1.5 h-8"
-                  disabled={standalonePreviewLoading || !standalone.sector.trim()}
-                  onClick={() => {
-                    setStandalonePreviewLoading(true);
-                    // micro-delay per dare feedback visivo
-                    setTimeout(() => {
-                      setStandalonePreviewLoaded(true);
-                      setStandalonePreviewLoading(false);
-                    }, 350);
-                  }}
-                >
-                  {standalonePreviewLoading ? (
-                    <><Loader2 className="h-3 w-3 animate-spin" /> Carico…</>
-                  ) : standalonePreviewLoaded ? (
-                    <><Eye className="h-3 w-3" /> Ricarica</>
-                  ) : (
-                    <><Eye className="h-3 w-3" /> Carica anteprima</>
-                  )}
-                </Button>
-              </div>
-
-              {standalonePreviewLoaded && standalone.sector.trim() && (
-                <div className="flex justify-center pt-1">
-                  <div className="relative" style={{ width: 130, height: Math.round(130 * 19.5 / 9) }}>
-                    <div
-                      className="absolute -inset-2 rounded-[32px] opacity-30 blur-xl pointer-events-none"
-                      style={{ background: standalone.primaryColor }}
-                    />
-                    <div
-                      className="relative rounded-[24px] border-[2px] overflow-hidden shadow-xl bg-background"
-                      style={{
-                        width: 130,
-                        height: Math.round(130 * 19.5 / 9),
-                        borderColor: "hsl(var(--foreground) / 0.22)",
-                        boxSizing: "border-box",
-                      }}
-                    >
-                      <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[40px] h-[10px] bg-black rounded-full z-30" />
-                      <div className="absolute inset-[2px] overflow-hidden rounded-[22px]">
-                        <MockupReactScreen
-                          type="home"
-                          templateVariant={resolvedTemplateKey}
-                          businessName={standalone.name || "Brand Demo"}
-                          businessSector={standalone.sector || "Servizi"}
-                          businessCity={standalone.city || ""}
-                          primaryColor={standalone.primaryColor}
-                          width={126}
-                          height={Math.round(130 * 19.5 / 9) - 4}
-                          glassIntensity={glassIntensity}
-                          colorStyle={colorStyle}
-                          safeAreaPx={Math.round(safeAreaPx * 0.4)}
-                          typeScale={typeScale}
-                          boostContrast={boostContrast}
-                        />
-                      </div>
-                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[42px] h-[2px] bg-foreground/30 rounded-full z-20" />
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         )}
@@ -1065,6 +791,28 @@ export function MockupSuiteGenerator({
             🎨 Clicca <span className="font-semibold not-italic">Genera Suite</span> per applicare queste impostazioni alle 4 schermate. L'anteprima live in alto si aggiorna istantaneamente.
           </p>
         </div>
+
+        {/* ────────────────────────────────────────────────────────────────── */}
+        {/* PRESET LOOK — salva/carica combinazioni di template+glass+color   */}
+        {/* ────────────────────────────────────────────────────────────────── */}
+        <MockupLookPresets
+          current={{
+            templateVariant,
+            glassIntensity,
+            colorStyle,
+            safeAreaPx,
+            typeScale,
+            boostContrast,
+          }}
+          onApply={(p: MockupLookPreset) => {
+            setTemplateVariant(p.templateVariant);
+            setGlassIntensity(p.glassIntensity);
+            setColorStyle(p.colorStyle);
+            setSafeAreaPx(p.safeAreaPx);
+            setTypeScale(p.typeScale);
+            setBoostContrast(p.boostContrast);
+          }}
+        />
 
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* SAFE AREA & LEGGIBILITÀ — margini, tipografia, contrasto AA       */}

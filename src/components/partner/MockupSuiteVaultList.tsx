@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, ExternalLink, Copy, Trash2, Smartphone, Eye, Loader2, X, Maximize2, Rocket, CopyPlus, Download } from "lucide-react";
+import { Search, ExternalLink, Copy, Trash2, Smartphone, Eye, Loader2, X, Maximize2, Rocket } from "lucide-react";
 import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSuiteVault";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { GenerateSiteFromMockupDialog } from "./GenerateSiteFromMockupDialog";
@@ -37,7 +37,7 @@ function normalizeScreens(raw: any): SuiteScreen[] {
 }
 
 export function MockupSuiteVaultList() {
-  const { suites, loading, deleteSuite, duplicateSuite } = useMockupSuiteVault();
+  const { suites, loading, deleteSuite } = useMockupSuiteVault();
   const [search, setSearch] = useState("");
   const [filterSector, setFilterSector] = useState("all");
   const [filterCity, setFilterCity] = useState("all");
@@ -46,7 +46,6 @@ export function MockupSuiteVaultList() {
   const [sortBy, setSortBy] = useState<SortKey>("recent");
   const [openSuite, setOpenSuite] = useState<VaultMockupSuite | null>(null);
   const [generateSiteSuite, setGenerateSiteSuite] = useState<VaultMockupSuite | null>(null);
-  const [busyId, setBusyId] = useState<string | null>(null);
 
   const sectors = useMemo(() => {
     const s = new Set<string>();
@@ -103,56 +102,6 @@ export function MockupSuiteVaultList() {
   const handleDelete = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     deleteSuite(id);
-  };
-
-  const handleDuplicate = async (e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
-    setBusyId(id);
-    try { await duplicateSuite(id); } finally { setBusyId(null); }
-  };
-
-  const sanitize = (s: string) =>
-    (s || "mockup").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 60) || "mockup";
-
-  const handleDownloadAll = async (e: React.MouseEvent, suite: VaultMockupSuite) => {
-    e.stopPropagation();
-    const screens = normalizeScreens(suite.screens).filter(sc => sc.image_url);
-    if (screens.length === 0) {
-      toast.error("Nessuna immagine scaricabile per questa suite");
-      return;
-    }
-    setBusyId(suite.id);
-    const base = sanitize(suite.business_name);
-    const labels = ["home", "menu", "booking", "profile"];
-    toast.info(`Scarico ${screens.length} schermate…`);
-    try {
-      for (let i = 0; i < screens.length; i++) {
-        const sc = screens[i];
-        const url = sc.image_url as string;
-        try {
-          const res = await fetch(url, { mode: "cors" });
-          const blob = await res.blob();
-          const ext = (blob.type.split("/")[1] || "png").split("+")[0];
-          const filename = `${base}-${labels[i] || sc.type || `screen-${i + 1}`}.${ext}`;
-          const blobUrl = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = blobUrl;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          setTimeout(() => URL.revokeObjectURL(blobUrl), 4000);
-          // small delay so browsers don't block bulk downloads
-          await new Promise(r => setTimeout(r, 350));
-        } catch {
-          // CORS fallback: open in new tab
-          window.open(url, "_blank");
-        }
-      }
-      toast.success("Download completato");
-    } finally {
-      setBusyId(null);
-    }
   };
 
   const hasActiveFilters = filterSector !== "all" || filterCity !== "all" || filterEngine !== "all" || filterTemplate !== "all" || search;
@@ -327,26 +276,6 @@ export function MockupSuiteVaultList() {
                         <Copy className="h-3 w-3" />
                       </Button>
                     )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => handleDownloadAll(e, s)}
-                      title="Scarica tutte le schermate"
-                      className="h-8 w-8 p-0"
-                      disabled={busyId === s.id}
-                    >
-                      {busyId === s.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3" />}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => handleDuplicate(e, s.id)}
-                      title="Duplica mockup"
-                      className="h-8 w-8 p-0"
-                      disabled={busyId === s.id}
-                    >
-                      <CopyPlus className="h-3 w-3" />
-                    </Button>
                     <Button variant="ghost" size="sm" onClick={(e) => handleDelete(e, s.id)} className="text-destructive h-8 w-8 p-0" title="Elimina">
                       <Trash2 className="h-3 w-3" />
                     </Button>

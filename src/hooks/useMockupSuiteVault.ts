@@ -73,56 +73,5 @@ export function useMockupSuiteVault() {
     }
   }, []);
 
-  const duplicateSuite = useCallback(async (id: string): Promise<VaultMockupSuite | null> => {
-    if (!userId) {
-      toast.error("Non autenticato");
-      return null;
-    }
-    const original = suites.find(s => s.id === id);
-    if (!original) {
-      toast.error("Mockup non trovato");
-      return null;
-    }
-    try {
-      // Build a clean copy: NEW id/slug/dates, reset counters, mark as copy
-      const baseName = original.business_name || "Mockup";
-      const copyName = baseName.match(/\(copia( \d+)?\)$/i)
-        ? baseName
-        : `${baseName} (copia)`;
-
-      const insertPayload: Record<string, any> = {
-        owner_id: userId,
-        business_name: copyName,
-        business_sector: original.business_sector,
-        business_city: original.business_city,
-        primary_color: original.primary_color,
-        engine: original.engine,
-        template_variant: original.template_variant,
-        status: original.status || "complete",
-        screens: original.screens,
-        view_count: 0,
-        credits_spent: 0,
-        // share_slug intentionally omitted -> generated fresh by DB / left null
-        // lead_id / preview_id omitted -> standalone copy
-      };
-
-      const { data, error } = await supabase
-        .from("seller_mockup_suites")
-        .insert(insertPayload as any)
-        .select()
-        .single();
-      if (error) throw error;
-
-      const created = data as unknown as VaultMockupSuite;
-      setSuites(prev => [created, ...prev]);
-      toast.success("Mockup duplicato");
-      return created;
-    } catch (e: any) {
-      console.error("[useMockupSuiteVault] duplicate error", e);
-      toast.error(e?.message || "Errore duplicazione mockup");
-      return null;
-    }
-  }, [userId, suites]);
-
-  return { suites, loading, userId, fetchAll, deleteSuite, duplicateSuite };
+  return { suites, loading, userId, fetchAll, deleteSuite };
 }
