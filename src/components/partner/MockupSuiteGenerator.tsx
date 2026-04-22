@@ -829,8 +829,10 @@ export function MockupSuiteGenerator({
               max={100}
               step={5}
               value={glassIntensity}
+              disabled={controlsLocked}
               onChange={(e) => setGlassIntensity(Number(e.target.value))}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
+              title={lockTitle}
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <div className="flex justify-between text-[9px] text-muted-foreground">
               <span>Solido</span>
