@@ -618,15 +618,23 @@ const EmpireParticleOrb = memo(() => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.4, delay: 0.15 }}
-              className="text-center px-4"
+              className="text-center px-5 py-3 rounded-2xl"
+              style={{
+                background: "radial-gradient(ellipse at center, hsla(265,40%,8%,0.85) 0%, hsla(265,40%,8%,0.55) 60%, hsla(265,40%,8%,0) 100%)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+              }}
             >
-              <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-violet-300/80 mb-1.5">
+              <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-violet-200 mb-1.5"
+                style={{ textShadow: "0 1px 8px hsla(265,80%,20%,0.9)" }}>
                 Empire Stack
               </p>
-              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white">
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white"
+                style={{ textShadow: "0 2px 12px hsla(265,80%,20%,0.95), 0 0 24px hsla(265,80%,40%,0.5)" }}>
                 6 moduli sincronizzati
               </h3>
-              <p className="text-[10px] sm:text-xs text-violet-300/60 mt-2">
+              <p className="text-[10px] sm:text-xs text-violet-200/90 mt-2"
+                style={{ textShadow: "0 1px 6px hsla(265,80%,20%,0.9)" }}>
                 Tocca di nuovo per ricomporre
               </p>
             </motion.div>
