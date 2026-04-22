@@ -44,10 +44,10 @@ export default function ContactCTA() {
 
             <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
               <button
-                onClick={() => navigate("/onboarding")}
+                onClick={() => navigate("/auth?plan=empire_pro&mode=register")}
                 className="landing-button-primary group inline-flex items-center justify-center gap-2.5 rounded-full px-9 py-4 font-heading text-base font-semibold transition-transform hover:-translate-y-0.5"
               >
-                <span>Prenota la demo strategica</span>
+                <span>Inizia ora — attiva Empire</span>
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
               </button>
               <button onClick={() => navigate("/demo")} className="landing-button-secondary rounded-full px-9 py-4 text-base font-semibold">

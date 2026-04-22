@@ -11,6 +11,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-route
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import SetupPaidGuard from "@/components/SetupPaidGuard";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
 
 // Detect mobile for tighter safety timeouts
@@ -194,6 +195,8 @@ const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => importWithRetry(() => import("./pages/OnboardingPage")));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AuthPage = lazy(() => importWithRetry(() => import("./pages/AuthPage")));
+const SetupCheckoutPage = lazy(() => import("./pages/SetupCheckoutPage"));
+const SetupSuccessPage = lazy(() => import("./pages/SetupSuccessPage"));
 const TenantLogin = lazy(() => import("./pages/TenantLogin"));
 const TenantLoginUnlock = lazy(() => import("./pages/TenantLoginUnlock"));
 const TenantGuard = lazy(() => import("./components/TenantGuard"));
@@ -580,6 +583,18 @@ function App() {
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/login" element={<AuthPage />} />
 
+                      {/* Mandatory setup payment gate (€1.997+) before dashboard access */}
+                      <Route path="/checkout-setup" element={
+                        <ProtectedRoute>
+                          <SetupCheckoutPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/checkout-setup/success" element={
+                        <ProtectedRoute>
+                          <SetupSuccessPage />
+                        </ProtectedRoute>
+                      } />
+
                       {/* ═══ Empire Tenant-Isolated Login ═══ */}
                       <Route path="/t/:slug/login" element={<TenantLogin />} />
                       <Route path="/t/:slug/unlock" element={<TenantLoginUnlock />} />
@@ -594,9 +609,11 @@ function App() {
                       <Route path="/landing" element={<StaticIframePage src="/homepage.html" title="Empire.AI" />} />
                       <Route path="/catalogo" element={<StaticIframePage src="/catalogo-completo.html" title="Catalogo Completo" />} />
 
-                      {/* Onboarding */}
+                      {/* Onboarding (post-payment branding/data completion) */}
                       <Route path="/onboarding" element={
-                        <ProtectedRoute><OnboardingPage /></ProtectedRoute>
+                        <ProtectedRoute>
+                          <SetupPaidGuard><OnboardingPage /></SetupPaidGuard>
+                        </ProtectedRoute>
                       } />
                       {/* partner/leads and partner/content-ai are now nested under /partner layout */}
                       {/* leads is partner-only, not superadmin */}
@@ -611,10 +628,10 @@ function App() {
                         </ProtectedRoute>
                       } />
 
-                      {/* Legacy protected routes (kept intact) */}
+                      {/* Legacy protected routes (kept intact, gated by paid setup) */}
                       <Route path="/dashboard" element={
                         <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
-                          <AdminDashboard />
+                          <SetupPaidGuard><AdminDashboard /></SetupPaidGuard>
                         </ProtectedRoute>
                       } />
                       <Route path="/superadmin" element={
@@ -688,14 +705,16 @@ function App() {
                       </Route>
                       <Route path="/admin/dashboard" element={
                         <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
-                          <AdminDashboard />
+                          <SetupPaidGuard><AdminDashboard /></SetupPaidGuard>
                         </ProtectedRoute>
                       } />
                       <Route path="/setup" element={<Navigate to="/onboarding" replace />} />
 
                       {/* ═══ Adaptive App Routes (industry-aware) ═══ */}
                       <Route path="/app" element={
-                        <ProtectedRoute><AppLayout /></ProtectedRoute>
+                        <ProtectedRoute>
+                          <SetupPaidGuard><AppLayout /></SetupPaidGuard>
+                        </ProtectedRoute>
                       }>
                         <Route index element={<AdaptiveDashboard />} />
                         {/* Food modules */}
