@@ -808,16 +808,26 @@ export default function PartnerCustomPreviewPage() {
           </h2>
         </div>
 
-        {/* Filtri + ricerca — sticky-friendly su mobile */}
-        <div className="space-y-2">
+        {/* Filtri + ricerca — sticky su mobile per restare a portata di pollice */}
+        <div className="sticky top-0 z-20 -mx-3 sm:mx-0 px-3 sm:px-0 py-2 bg-background/85 backdrop-blur-md space-y-2 border-b border-border/40 sm:border-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <Input
               value={previewSearch}
               onChange={(e) => setPreviewSearch(e.target.value)}
               placeholder="Cerca per nome, città, settore…"
-              className="h-11 pl-9 text-sm"
+              className="h-11 pl-9 pr-9 text-sm"
             />
+            {previewSearch && (
+              <button
+                type="button"
+                onClick={() => setPreviewSearch("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted"
+                aria-label="Pulisci ricerca"
+              >
+                ×
+              </button>
+            )}
           </div>
           <div className="flex gap-1.5 overflow-x-auto -mx-3 px-3 pb-1 scrollbar-none">
             {[
