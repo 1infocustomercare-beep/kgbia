@@ -2000,6 +2000,46 @@ export default function LeadsPage() {
               </div>
             </div>
 
+            {/* 🎯 Quick filters "più convertibili" — operano sui risultati locali (anche dopo GPS search) */}
+            <div className="px-1 flex items-center gap-1.5 flex-wrap">
+              <span className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#6b7280" }}>
+                🎯 Più convertibili:
+              </span>
+              {([
+                { key: "hot", label: "🔥 Hot", desc: "Score ≥ 70", state: qfHot, set: setQfHot, color: "#ef4444" },
+                { key: "phone", label: "📞 Telefono", desc: "Contattabile subito", state: qfHasPhone, set: setQfHasPhone, color: "#10b981" },
+                { key: "open", label: "🟢 Aperto ora", desc: "In orario di apertura", state: qfOpenNow, set: setQfOpenNow, color: "#22c55e" },
+                { key: "nosite", label: "🌐 Senza sito", desc: "Bisogno digitale immediato", state: qfNoWebsite, set: setQfNoWebsite, color: "#f59e0b" },
+                { key: "prio", label: "⭐ Top categorie", desc: "Settori a conversione alta", state: qfPriorityCat, set: setQfPriorityCat, color: "#a78bfa" },
+              ] as const).map(f => (
+                <button
+                  key={f.key}
+                  onClick={() => f.set(!f.state)}
+                  title={f.desc}
+                  className="text-[9px] font-bold px-2 py-1 rounded-md transition-all"
+                  style={{
+                    background: f.state ? `${f.color}28` : "rgba(255,255,255,0.03)",
+                    color: f.state ? f.color : "#9ca3af",
+                    border: `1px solid ${f.state ? `${f.color}80` : "rgba(255,255,255,0.06)"}`,
+                  }}
+                >
+                  {f.label}
+                </button>
+              ))}
+              {quickFiltersActive && (
+                <button
+                  onClick={() => {
+                    setQfHot(false); setQfHasPhone(false); setQfOpenNow(false);
+                    setQfNoWebsite(false); setQfPriorityCat(false);
+                  }}
+                  className="text-[9px] font-bold px-2 py-1 rounded-md ml-1"
+                  style={{ background: "rgba(255,255,255,0.05)", color: "#9ca3af" }}
+                >
+                  ✕ Pulisci
+                </button>
+              )}
+            </div>
+
             {/* 🔎 Ricerca testuale interna ai risultati (no chiamate API) */}
             {results.length > 4 && (
               <div className="relative px-1">
