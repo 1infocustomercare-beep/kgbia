@@ -1004,6 +1004,9 @@ export function MockupSuiteGenerator({
               suiteId={result.suite_id}
               glassIntensity={glassIntensity}
               colorStyle={colorStyle}
+              safeAreaPx={safeAreaPx}
+              typeScale={typeScale}
+              boostContrast={boostContrast}
             />
           </div>
         )}
