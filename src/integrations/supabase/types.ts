@@ -6059,6 +6059,7 @@ export type Database = {
           hero_subtitle: string | null
           hero_title: string | null
           id: string
+          is_favorite: boolean
           is_published: boolean | null
           last_viewed_at: string | null
           lead_address: string | null
@@ -6073,11 +6074,15 @@ export type Database = {
           lead_website: string | null
           logo_url: string | null
           owner_id: string
+          portfolio_label: string | null
+          portfolio_notes: string | null
           preview_html: string | null
           preview_url: string | null
           primary_color: string | null
           public_slug: string | null
           reuse_count: number | null
+          saved_to_portfolio: boolean
+          saved_to_portfolio_at: string | null
           scraped_data: Json | null
           sector_label: string
           sector_slug: string
@@ -6098,6 +6103,7 @@ export type Database = {
           hero_subtitle?: string | null
           hero_title?: string | null
           id?: string
+          is_favorite?: boolean
           is_published?: boolean | null
           last_viewed_at?: string | null
           lead_address?: string | null
@@ -6112,11 +6118,15 @@ export type Database = {
           lead_website?: string | null
           logo_url?: string | null
           owner_id: string
+          portfolio_label?: string | null
+          portfolio_notes?: string | null
           preview_html?: string | null
           preview_url?: string | null
           primary_color?: string | null
           public_slug?: string | null
           reuse_count?: number | null
+          saved_to_portfolio?: boolean
+          saved_to_portfolio_at?: string | null
           scraped_data?: Json | null
           sector_label: string
           sector_slug: string
@@ -6137,6 +6147,7 @@ export type Database = {
           hero_subtitle?: string | null
           hero_title?: string | null
           id?: string
+          is_favorite?: boolean
           is_published?: boolean | null
           last_viewed_at?: string | null
           lead_address?: string | null
@@ -6151,11 +6162,15 @@ export type Database = {
           lead_website?: string | null
           logo_url?: string | null
           owner_id?: string
+          portfolio_label?: string | null
+          portfolio_notes?: string | null
           preview_html?: string | null
           preview_url?: string | null
           primary_color?: string | null
           public_slug?: string | null
           reuse_count?: number | null
+          saved_to_portfolio?: boolean
+          saved_to_portfolio_at?: string | null
           scraped_data?: Json | null
           sector_label?: string
           sector_slug?: string
