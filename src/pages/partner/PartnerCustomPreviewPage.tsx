@@ -725,7 +725,7 @@ export default function PartnerCustomPreviewPage() {
                     className="overflow-hidden"
                   >
                     <div className="space-y-3 px-3 sm:px-4 pb-4 pt-1">
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                         {STYLES.map(s => (
                           <button
                             key={s.key}
