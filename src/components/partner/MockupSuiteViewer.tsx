@@ -32,6 +32,12 @@ interface Props {
   glassIntensity?: number;
   /** vivid (default) | muted | pastel | mono. */
   colorStyle?: ColorStyle;
+  /** Safe-area px (margine interno). Default 0. */
+  safeAreaPx?: number;
+  /** Type scale 0.85–1.20. Default 1.00. */
+  typeScale?: number;
+  /** Boost contrasto AA su testo e muted. Default false. */
+  boostContrast?: boolean;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
