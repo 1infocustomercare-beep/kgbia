@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Download, Loader2, Smartphone } from "lucide-react";
 import { toast } from "sonner";
 import html2canvas from "html2canvas";
-import { MockupReactScreen } from "./MockupReactScreen";
+import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 
 export interface SuiteScreen {
   type: string;
@@ -24,6 +24,10 @@ interface Props {
   primaryColor?: string;
   suiteId?: string;
   compact?: boolean;
+  /** 0–100 — propagato a MockupReactScreen (BottomNav glass). Default 60. */
+  glassIntensity?: number;
+  /** vivid (default) | muted | pastel | mono. */
+  colorStyle?: ColorStyle;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -42,6 +46,8 @@ export function MockupSuiteViewer({
   businessCity = "",
   primaryColor = "#C8963E",
   compact = false,
+  glassIntensity = 60,
+  colorStyle = "vivid",
 }: Props) {
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
@@ -187,6 +193,8 @@ export function MockupSuiteViewer({
                       primaryColor={primaryColor}
                       width={screenWidth}
                       height={screenHeight}
+                      glassIntensity={glassIntensity}
+                      colorStyle={colorStyle}
                     />
                   )}
                 </div>
