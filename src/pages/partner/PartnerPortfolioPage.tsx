@@ -520,9 +520,16 @@ export default function PartnerPortfolioPage() {
                 {filterStatus !== "all" && (
                   <FilterChip label="Stato" value={filterStatus} onClear={() => setFilterStatus("all")} />
                 )}
+                {filterEngine !== "all" && (
+                  <FilterChip
+                    label="Engine"
+                    value={filterEngine === "ai" ? "AI" : filterEngine === "template" ? "Template" : "Hybrid"}
+                    onClear={() => setFilterEngine("all")}
+                  />
+                )}
                 <button
                   onClick={() => {
-                    setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all");
+                    setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all"); setFilterEngine("all");
                   }}
                   className="ml-0.5 px-2 py-1 rounded-full text-[10px] font-semibold flex items-center gap-1 hover:bg-white/8 transition-colors"
                   style={{ color: "#c4b5fd", border: "1px dashed rgba(167,139,250,0.4)" }}
