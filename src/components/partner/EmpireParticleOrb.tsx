@@ -178,11 +178,17 @@ const EmpireParticleOrb = memo(() => {
         }
 
         if (drag.mode === "drag") {
+          // 1:1 follow finger/mouse + build throw velocity
           offsetRef.current.x += dx;
           offsetRef.current.y += dy;
+          offsetRef.current.vx = dx;
+          offsetRef.current.vy = dy;
         } else if (drag.mode === "rotate") {
-          rotRef.current.vy += dx * 0.005;
-          rotRef.current.vx -= dy * 0.005;
+          // Direct rotation for snappy 1:1 response
+          rotRef.current.y += dx * 0.012;
+          rotRef.current.x -= dy * 0.012;
+          rotRef.current.vy = dx * 0.004;
+          rotRef.current.vx = -dy * 0.004;
         }
         e.preventDefault();
       }
