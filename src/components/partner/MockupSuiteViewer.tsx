@@ -18,6 +18,12 @@ export interface SuiteScreen {
   is_preview?: boolean;
   variation_seed?: number;
   variant_index?: number;
+  /** Esito validazione AI automatica (branding/inglese/centratura). Disponibile per engine AI. */
+  validation?: {
+    validated: boolean;
+    attempts: number;
+    issues?: string[];
+  };
 }
 
 interface Props {
