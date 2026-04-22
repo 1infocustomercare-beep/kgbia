@@ -549,13 +549,20 @@ export default function PartnerPortfolioPage() {
                 >
                   <div className="p-3 rounded-xl space-y-3"
                     style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <FilterSelect label="Settore" value={filterSector} onChange={setFilterSector}
                         options={[{ value: "all", label: "Tutti i settori" }, ...sectorOptions.map((s) => ({ value: s, label: s }))]} />
                       <FilterSelect label="Template" value={filterVariant} onChange={setFilterVariant}
                         options={[{ value: "all", label: "Tutti i template" }, ...variantOptions.map((v) => ({ value: v, label: v }))]} />
                       <FilterSelect label="Stato mockup" value={filterStatus} onChange={setFilterStatus}
                         options={[{ value: "all", label: "Tutti gli stati" }, ...statusOptions.map((s) => ({ value: s, label: s }))]} />
+                      <FilterSelect label="Engine generazione" value={filterEngine} onChange={setFilterEngine}
+                        options={[
+                          { value: "all", label: "Tutti gli engine" },
+                          { value: "ai", label: "🤖 AI (scraping + generazione)" },
+                          { value: "template", label: "🎨 Template (preset manuale)" },
+                          { value: "hybrid", label: "🔀 Hybrid (AI + ritocchi)" },
+                        ]} />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-white/5">
                       <FilterSelect label="Ordina mockup" value={mockupSort} onChange={(v) => setMockupSort(v as any)}
