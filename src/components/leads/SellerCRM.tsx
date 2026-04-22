@@ -12,6 +12,8 @@ import {
 } from "@/hooks/useSellerPipeline";
 import { exportLeadsToCSV, buildWhatsAppLink, buildOutreachMessage } from "@/lib/seller-export";
 import LeadIntelligenceLauncher from "@/components/leads/LeadIntelligenceLauncher";
+import WhatsAppABDialog, { type ABLeadInput } from "@/components/leads/WhatsAppABDialog";
+import { FlaskConical } from "lucide-react";
 
 interface Props {
   open: boolean;
@@ -42,6 +44,7 @@ export default function SellerCRM({
   const [tab, setTab] = useState<Tab>("pipeline");
   const [stageFilter, setStageFilter] = useState<PipelineStageId | "all">("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [abDialogLead, setAbDialogLead] = useState<ABLeadInput | null>(null);
 
   /* ─── Derived metrics: 100% real data, no fake values ─── */
   const metrics = useMemo(() => {
