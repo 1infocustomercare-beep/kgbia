@@ -195,53 +195,6 @@ export default function PartnerHomePage() {
               </div>
             </div>
           </div>
-
-          {/* Bottom row: Quick stats — only in LIVE mode */}
-          {!demoMode && (
-            <motion.div
-              className="grid grid-cols-3 gap-1.5 sm:gap-3 mt-4 pt-4 border-t border-white/[0.06]"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
-            >
-              <button
-                onClick={() => navigate("/partner/leads")}
-                className="flex flex-col items-center justify-center text-center px-1 py-2 sm:py-2.5 rounded-xl transition-all hover:bg-white/[0.04] active:scale-95"
-              >
-                <div className="flex items-center gap-1 mb-0.5">
-                  <Target className="w-3 h-3 text-violet-400/80" />
-                  <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">Vendite</p>
-                </div>
-                <AnimatedCounter value={salesCount} color="#a78bfa" />
-              </button>
-              <button
-                onClick={() => navigate("/partner/earnings")}
-                className="flex flex-col items-center justify-center text-center px-1 py-2 sm:py-2.5 rounded-xl transition-all hover:bg-white/[0.04] active:scale-95 border-x border-white/[0.05]"
-              >
-                <div className="flex items-center gap-1 mb-0.5">
-                  <DollarSign className="w-3 h-3 text-emerald-400/80" />
-                  <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">Commissioni</p>
-                </div>
-                <AnimatedCounter value={Math.round(totalCommissions)} prefix="€" color="#34d399" />
-              </button>
-              <button
-                onClick={() => navigate(isTeamLeader ? "/partner/earnings" : "/partner/profile")}
-                className="flex flex-col items-center justify-center text-center px-1 py-2 sm:py-2.5 rounded-xl transition-all hover:bg-white/[0.04] active:scale-95"
-              >
-                <div className="flex items-center gap-1 mb-0.5">
-                  {isTeamLeader ? <Users className="w-3 h-3 text-amber-400/80" /> : <Trophy className="w-3 h-3 text-amber-400/80" />}
-                  <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-                    {isTeamLeader ? "Team" : "Livello"}
-                  </p>
-                </div>
-                {isTeamLeader ? (
-                  <AnimatedCounter value={teamCount} color="#fbbf24" />
-                ) : (
-                  <p className="text-xl font-bold text-foreground" style={{ textShadow: "0 0 20px #fbbf2430" }}>Pro</p>
-                )}
-              </button>
-            </motion.div>
-          )}
         </motion.div>
       </section>
 
