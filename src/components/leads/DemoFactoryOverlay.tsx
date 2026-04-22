@@ -288,6 +288,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                         className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-bold bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white/80 hover:text-white transition-colors"
                       >
                         <FolderOpen className="w-3.5 h-3.5" /> Apri Portfolio · ritrovi qui tutte le tue demo
+                      </Link>
 
                       {/* 5b ️⃣ EMAIL AURORA — Template HTML stilizzato con preview live */}
                       {renderedEmail && (
