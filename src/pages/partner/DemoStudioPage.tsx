@@ -32,8 +32,6 @@ import {
 import { useDemoVault, type VaultDemo } from "@/hooks/useDemoVault";
 import { useMockupSuiteVault } from "@/hooks/useMockupSuiteVault";
 import { DemoStudioPresentationMode } from "@/components/partner/DemoStudioPresentationMode";
-import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Play } from "lucide-react";
 
@@ -44,7 +42,6 @@ export default function DemoStudioPage() {
   const [presentationInitialId, setPresentationInitialId] = useState<string | undefined>();
   const [search, setSearch] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
-  const [generatorOpen, setGeneratorOpen] = useState(false);
 
   // Auto-open presentation mode quando si arriva con ?present=1 (es. da Home Partner)
   useEffect(() => {
@@ -177,12 +174,12 @@ export default function DemoStudioPage() {
               <Smartphone className="w-4 h-4 text-violet-400" />
               Mockup pronti da mostrare ({readyMockups.length})
             </h2>
-            <button
-              onClick={() => setGeneratorOpen(true)}
-              className="text-xs text-violet-300 hover:text-violet-200 flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-violet-500/10 transition-colors"
+            <Link
+              to="/partner/preview"
+              className="text-xs text-violet-300 hover:text-violet-200 flex items-center gap-1"
             >
-              <Wand2 className="w-3 h-3" /> Nuovo Mockup Suite
-            </button>
+              <Wand2 className="w-3 h-3" /> Nuovo mockup
+            </Link>
           </div>
 
           {loading && readyMockups.length === 0 ? (
@@ -194,14 +191,14 @@ export default function DemoStudioPage() {
               <Smartphone className="w-10 h-10 mx-auto mb-2 text-muted-foreground opacity-50" />
               <p className="text-sm font-semibold">Nessun mockup approvato</p>
               <p className="text-xs text-muted-foreground mt-1 mb-3">
-                Crea un Mockup Suite — diventerà la base 1:1 del sito demo da generare dai Leads.
+                Crea un Mockup Suite prima — il sito demo ne replicherà ogni dettaglio.
               </p>
-              <button
-                onClick={() => setGeneratorOpen(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-500 hover:bg-violet-400 text-white text-sm font-semibold transition-colors"
+              <Link
+                to="/partner/preview"
+                className="inline-block px-4 py-2 rounded-lg bg-violet-500 text-white text-sm font-semibold"
               >
-                <Wand2 className="w-4 h-4" /> Apri Mockup Suite Generator
-              </button>
+                Apri Mockup Suite Generator
+              </Link>
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 gap-3">
@@ -303,29 +300,6 @@ export default function DemoStudioPage() {
         suites={mockupVault.suites}
         initialSuiteId={presentationInitialId}
       />
-
-      {/* Mockup Suite Generator — UNICO punto di creazione mockup iPhone (era in /partner/custom-preview, ora unificato qui) */}
-      <Dialog open={generatorOpen} onOpenChange={setGeneratorOpen}>
-        <DialogContent className="max-w-5xl max-h-[92vh] overflow-y-auto p-0">
-          <DialogHeader className="px-6 pt-6 pb-2 border-b border-border/50 sticky top-0 bg-background z-10">
-            <DialogTitle className="flex items-center gap-2 text-lg">
-              <Wand2 className="w-5 h-5 text-violet-400" /> Nuovo Mockup Suite iPhone
-            </DialogTitle>
-            <p className="text-xs text-muted-foreground mt-1">
-              4 schermate iPhone professionali. Una volta approvato, il mockup diventa la base 1:1 del sito demo da generare dai Leads.
-            </p>
-          </DialogHeader>
-          <div className="px-6 pb-6 pt-4">
-            <MockupSuiteGenerator
-              onGenerated={() => {
-                setGeneratorOpen(false);
-                refresh();
-                toast.success("Mockup pronto nel Vault");
-              }}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

@@ -59,15 +59,15 @@ const STEPS: Step[] = [
   },
   {
     icon: <Wand2 className="w-6 h-6" />,
-    title: "Mockup iPhone su misura nel Demo Studio",
-    highlight: "Crea mockup iPhone professionali per qualsiasi settore.",
-    body: "Hai un fioraio, un tatuatore, un'attività particolare? Apri il Demo Studio e genera 4 schermate iPhone con stile (Modern, Luxury, Casual, Zen) e colori personalizzati. Il mockup approvato diventa la base 1:1 del sito demo che generi dai Leads.",
+    title: "Preview custom per qualsiasi settore",
+    highlight: "Genera anteprime professionali anche per settori non standard.",
+    body: "Hai un fioraio, un tatuatore, un'attività particolare? Crea una preview iPhone su misura scegliendo stile (Modern, Luxury, Casual, Zen) e colori. Da mostrare al cliente in 30 secondi.",
     bullets: [
-      "🎨 Template Premium 2026 + 4 stili classici",
-      "📱 Mockup iPhone fotorealistico (React, Nano Banana, Pro)",
-      "🚀 Sito demo 1:1 dal mockup direttamente dai Leads",
+      "🎨 4 stili visuali pronti",
+      "📱 Mockup iPhone professionale",
+      "💼 Perfetto per chiusura in trattativa",
     ],
-    cta: { label: "Apri Demo Studio", path: "/partner/demo-studio" },
+    cta: { label: "Apri Custom Preview", path: "/partner/custom-preview" },
     accent: "linear-gradient(135deg, #ec4899, #a78bfa)",
   },
 ];

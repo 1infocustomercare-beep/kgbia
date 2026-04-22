@@ -73,8 +73,9 @@ export default function PartnerHomePage() {
 
   const QUICK_NAV = [
     { icon: Target,     label: "LeadEngine Scout", desc: "Trova, analizza e contatta lead reali con AI",          gradient: "from-violet-600/20 to-purple-600/10",  iconColor: "#a78bfa", path: "/partner/leads" },
-    { icon: Wand2,      label: "Demo Studio",      desc: "Crea mockup iPhone & gestisci siti Full Power 1:1",     gradient: "from-fuchsia-600/20 to-pink-600/10",   iconColor: "#e879f9", path: "/partner/demo-studio" },
+    { icon: Wand2,      label: "Demo Studio",      desc: "Genera siti Full Power 1:1 dal mockup approvato",       gradient: "from-fuchsia-600/20 to-pink-600/10",   iconColor: "#e879f9", path: "/partner/demo-studio" },
     { icon: FolderOpen, label: "Portfolio Demo",   desc: "Catalogo 25+ settori con preview pronte",               gradient: "from-blue-600/20 to-indigo-600/10",    iconColor: "#818cf8", path: "/partner/portfolio" },
+    { icon: Palette,    label: "Custom Preview",   desc: "Mockup iPhone su misura per un cliente specifico",      gradient: "from-rose-600/20 to-pink-600/10",      iconColor: "#fb7185", path: "/partner/custom-preview" },
     { icon: DollarSign, label: "Guadagni & Team",  desc: "Commissioni, bonus e reclutamento venditori",           gradient: "from-emerald-600/20 to-teal-600/10",   iconColor: "#34d399", path: "/partner/earnings" },
     { icon: User,       label: "Il Mio Profilo",   desc: "Dati personali, avatar e impostazioni",                 gradient: "from-amber-600/20 to-orange-600/10",   iconColor: "#fbbf24", path: "/partner/profile" },
   ];

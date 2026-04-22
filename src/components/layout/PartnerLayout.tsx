@@ -55,6 +55,7 @@ const NAV_ITEMS_FULL: NavItem[] = [
   { path: "/partner/demo-studio",    icon: Wand2,           label: "Demo Studio",              showInDemo: false, primary: true  },
   { path: "/partner/earnings",       icon: DollarSign,      label: "Guadagni",                 showInDemo: false, primary: true  },
   { path: "/partner/portfolio",      icon: FolderOpen,      label: "Portfolio",                showInDemo: true,  primary: false },
+  { path: "/partner/custom-preview", icon: Palette,         label: "Custom Preview",           showInDemo: false, primary: false },
   { path: "/partner/profile",        icon: User,            label: "Profilo",                  showInDemo: false, primary: false },
   { path: "/partner/api-connections",icon: Zap,             label: "API",                      showInDemo: false, primary: false },
 ];
@@ -64,6 +65,7 @@ const resolvePartnerVoiceTab = (pathname: string) => {
   if (pathname.startsWith("/partner/demo-studio")) return "showcase";
   if (pathname.startsWith("/partner/earnings")) return "earnings";
   if (pathname.startsWith("/partner/portfolio")) return "showcase";
+  if (pathname.startsWith("/partner/custom-preview")) return "projects";
   if (pathname.startsWith("/partner/profile")) return "dashboard";
   if (pathname.startsWith("/partner/api-connections")) return "toolkit";
   return "dashboard";
