@@ -467,6 +467,7 @@ export default function PartnerSavedPreviewsSection() {
                   <SavedPreviewCard
                     key={p.id}
                     preview={p}
+                    engine={p._engine}
                     delay={i * 0.04}
                     onToggleFavorite={() => toggleFavorite(p)}
                     onEdit={() => openEdit(p)}
