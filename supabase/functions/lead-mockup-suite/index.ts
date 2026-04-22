@@ -508,13 +508,21 @@ Deno.serve(async (req) => {
     const business = { name: business_name, sector: business_sector || "attività commerciale", city: business_city || "Italia" };
 
     try {
-      // Genera 4 immagini in parallelo
-      const imagePromises = screens.map((s, i) => generateAIImage(LOVABLE_KEY, buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i), pro));
-      const dataUrls = await Promise.all(imagePromises);
+      // Genera 4 immagini in parallelo CON validazione + retry mirato (max 3 tentativi per screen)
+      const imageResults = await Promise.all(
+        screens.map((s, i) =>
+          generateValidatedAIImage(
+            LOVABLE_KEY,
+            buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i),
+            pro,
+            3,
+          )
+        )
+      );
 
       // Upload su storage
-      const uploadPromises = dataUrls.map((du, i) =>
-        du ? uploadDataUrl(adminClient, du, `mockup-suites/${userId}/${suite.id}/${i}-${screens[i].type}-v${variationSeed}.png`) : Promise.resolve(null)
+      const uploadPromises = imageResults.map((res, i) =>
+        res.dataUrl ? uploadDataUrl(adminClient, res.dataUrl, `mockup-suites/${userId}/${suite.id}/${i}-${screens[i].type}-v${variationSeed}.png`) : Promise.resolve(null)
       );
       const publicUrls = await Promise.all(uploadPromises);
 
@@ -526,11 +534,19 @@ Deno.serve(async (req) => {
         engine,
         variation_seed: variationSeed,
         variant_index: i,
+        validation: {
+          validated: imageResults[i].validated,
+          attempts: imageResults[i].attempts,
+          issues: imageResults[i].lastIssues,
+        },
       }));
+
+      const allValidated = finalScreens.every(s => s.validation.validated);
+      const totalAttempts = finalScreens.reduce((acc, s) => acc + s.validation.attempts, 0);
 
       await adminClient
         .from("seller_mockup_suites")
-        .update({ screens: finalScreens, status: "complete", generated_at: new Date().toISOString() })
+        .update({ screens: finalScreens, status: allValidated ? "complete" : "complete_with_warnings", generated_at: new Date().toISOString() })
         .eq("id", suite.id);
 
       return new Response(JSON.stringify({
@@ -542,6 +558,11 @@ Deno.serve(async (req) => {
         screens: finalScreens,
         credits_spent: creditsSpent,
         variation_seed: variationSeed,
+        validation_summary: {
+          all_validated: allValidated,
+          total_attempts: totalAttempts,
+          per_screen: finalScreens.map(s => ({ type: s.type, validated: s.validation.validated, attempts: s.validation.attempts, issues: s.validation.issues })),
+        },
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     } catch (e: any) {
       await adminClient.from("seller_mockup_suites").update({ status: "error", error_message: e.message }).eq("id", suite.id);
