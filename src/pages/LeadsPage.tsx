@@ -3075,3 +3075,13 @@ export default function LeadsPage() {
     </div>
   );
 }
+
+/* ─── Stat compatta usata nelle anteprime rapide della lista lead ─── */
+function QuickStat({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+  return (
+    <div className="rounded-md px-2 py-1.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="text-[8px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className={`text-[10px] text-foreground truncate ${mono ? "font-mono" : "font-semibold"}`}>{value}</div>
+    </div>
+  );
+}
