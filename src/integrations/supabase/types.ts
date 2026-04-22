@@ -398,6 +398,48 @@ export type Database = {
           },
         ]
       }
+      ai_token_purchases: {
+        Row: {
+          amount_cents: number
+          buyer_user_id: string | null
+          created_at: string
+          credits: number
+          currency: string
+          id: string
+          paid_at: string | null
+          restaurant_id: string
+          status: string
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+        }
+        Insert: {
+          amount_cents: number
+          buyer_user_id?: string | null
+          created_at?: string
+          credits: number
+          currency?: string
+          id?: string
+          paid_at?: string | null
+          restaurant_id: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          buyer_user_id?: string | null
+          created_at?: string
+          credits?: number
+          currency?: string
+          id?: string
+          paid_at?: string | null
+          restaurant_id?: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+        }
+        Relationships: []
+      }
       ai_token_usage: {
         Row: {
           company_id: string
@@ -4650,6 +4692,57 @@ export type Database = {
           },
         ]
       }
+      pwa_orders_log: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          customer_email: string | null
+          customer_user_id: string | null
+          fee_cents: number
+          id: string
+          metadata: Json | null
+          order_id: string
+          paid_at: string | null
+          restaurant_id: string
+          status: string
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          customer_email?: string | null
+          customer_user_id?: string | null
+          fee_cents?: number
+          id?: string
+          metadata?: Json | null
+          order_id: string
+          paid_at?: string | null
+          restaurant_id: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          customer_email?: string | null
+          customer_user_id?: string | null
+          fee_cents?: number
+          id?: string
+          metadata?: Json | null
+          order_id?: string
+          paid_at?: string | null
+          restaurant_id?: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+        }
+        Relationships: []
+      }
       reservations: {
         Row: {
           created_at: string
@@ -6425,6 +6518,39 @@ export type Database = {
           },
         ]
       }
+      stripe_webhook_events: {
+        Row: {
+          error_message: string | null
+          event_id: string
+          event_type: string
+          livemode: boolean
+          payload_summary: Json | null
+          processed_at: string | null
+          received_at: string
+          status: string
+        }
+        Insert: {
+          error_message?: string | null
+          event_id: string
+          event_type: string
+          livemode?: boolean
+          payload_summary?: Json | null
+          processed_at?: string | null
+          received_at?: string
+          status?: string
+        }
+        Update: {
+          error_message?: string | null
+          event_id?: string
+          event_type?: string
+          livemode?: boolean
+          payload_summary?: Json | null
+          processed_at?: string | null
+          received_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       subscription_modules: {
         Row: {
           compatible_sectors: string[] | null
@@ -6965,6 +7091,15 @@ export type Database = {
         Args: { p_partner_id: string }
         Returns: boolean
       }
+      claim_stripe_event: {
+        Args: {
+          p_event_id: string
+          p_event_type: string
+          p_livemode?: boolean
+          p_summary?: Json
+        }
+        Returns: boolean
+      }
       consume_seller_credits: {
         Args: { p_action: string; p_metadata?: Json }
         Returns: Json
@@ -7041,6 +7176,10 @@ export type Database = {
           p_touch_id?: string
         }
         Returns: string
+      }
+      mark_stripe_event_processed: {
+        Args: { p_error?: string; p_event_id: string; p_status?: string }
+        Returns: undefined
       }
       super_admin_grant_credits: {
         Args: {
