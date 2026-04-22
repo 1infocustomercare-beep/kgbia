@@ -30,6 +30,10 @@ interface Props {
   typeScale?: number;
   /** Forza testo con contrasto AA: opacizza meno il muted, schiarisce/scurisce il text base. */
   boostContrast?: boolean;
+  /** Override font heading dal Branding Kit (es. "'Playfair Display', serif"). Se assente, usa il font del template. */
+  fontHeadOverride?: string;
+  /** Override font body dal Branding Kit (es. "'Inter', sans-serif"). Se assente, usa il font del template. */
+  fontBodyOverride?: string;
 }
 
 interface ThemeTokens {
@@ -1186,6 +1190,7 @@ export function MockupReactScreen({
   type, templateVariant, businessName, businessSector = "", businessCity = "", primaryColor, width, height,
   glassIntensity = 60, colorStyle = "vivid",
   safeAreaPx = 0, typeScale = 1, boostContrast = false,
+  fontHeadOverride, fontBodyOverride,
 }: Props) {
   const baseTheme = getTheme(templateVariant, primaryColor, colorStyle);
 
@@ -1202,7 +1207,11 @@ export function MockupReactScreen({
     textMuted = isDark ? "rgba(255,255,255,0.82)" : "rgba(10,10,10,0.78)";
   }
 
-  const theme: ThemeTokens = { ...baseTheme, glassIntensity, text, textMuted };
+  // Override font dal Branding Kit (se presente, sovrascrive il font del template)
+  const fontHead = (fontHeadOverride && fontHeadOverride.trim()) || baseTheme.fontHead;
+  const fontBody = (fontBodyOverride && fontBodyOverride.trim()) || baseTheme.fontBody;
+
+  const theme: ThemeTokens = { ...baseTheme, glassIntensity, text, textMuted, fontHead, fontBody };
 
   const renderContent = () => {
     switch (type) {

@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
@@ -69,6 +69,80 @@ const QUICK_PALETTES: { label: string; color: string }[] = [
   { label: "Bordeaux",       color: "#6B1F2C" },
   { label: "Mono Black",     color: "#0A0A0A" },
   { label: "Pure White",     color: "#FAFAFA" },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BRANDING KIT — coppie font heading/body curate (Google Fonts)
+// Quando l'utente seleziona un preset, viene applicato live alla preview React
+// (override di theme.fontHead/fontBody) e iniettato il <link> Google Fonts.
+// ─────────────────────────────────────────────────────────────────────────────
+export interface BrandFontPair {
+  key: string;
+  label: string;
+  description: string;
+  fontHead: string;          // CSS font-family stack
+  fontBody: string;
+  googleFontsHref: string;   // URL stylesheet Google Fonts
+}
+export const BRAND_FONT_PAIRS: BrandFontPair[] = [
+  {
+    key: "template", label: "Default template", description: "Usa i font del template selezionato",
+    fontHead: "", fontBody: "", googleFontsHref: "",
+  },
+  {
+    key: "playfair-inter", label: "Playfair × Inter", description: "Editoriale luxury — magazine, fashion, ristoranti",
+    fontHead: "'Playfair Display', Georgia, serif",
+    fontBody: "'Inter', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "cormorant-inter", label: "Cormorant × Inter", description: "Boutique elegante — sushi, beauty, hotel",
+    fontHead: "'Cormorant Garamond', Georgia, serif",
+    fontBody: "'Inter', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "space-dm", label: "Space Grotesk × DM Sans", description: "Tech moderno — startup, SaaS, fintech",
+    fontHead: "'Space Grotesk', sans-serif",
+    fontBody: "'DM Sans', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "syne-jakarta", label: "Syne × Jakarta", description: "Creativo audace — design studio, agenzie",
+    fontHead: "'Syne', sans-serif",
+    fontBody: "'Plus Jakarta Sans', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "outfit-figtree", label: "Outfit × Figtree", description: "Lifestyle friendly — wellness, food casual",
+    fontHead: "'Outfit', sans-serif",
+    fontBody: "'Figtree', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "dmserif-worksans", label: "DM Serif × Work Sans", description: "Brand storytelling — premium service",
+    fontHead: "'DM Serif Display', serif",
+    fontBody: "'Work Sans', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Work+Sans:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "bebas-barlow", label: "Bebas Neue × Barlow", description: "Sport energy — palestre, eventi",
+    fontHead: "'Bebas Neue', Impact, sans-serif",
+    fontBody: "'Barlow', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "archivo-hind", label: "Archivo Black × Hind", description: "Bold statement — news, attivismo, monochrome",
+    fontHead: "'Archivo Black', Impact, sans-serif",
+    fontBody: "'Hind', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hind:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "abril-cabin", label: "Abril Fatface × Cabin", description: "Portfolio creativo — fotografi, illustratori",
+    fontHead: "'Abril Fatface', serif",
+    fontBody: "'Cabin', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Cabin:wght@400;500;600;700&display=swap",
+  },
 ];
 
 
@@ -275,6 +349,26 @@ export function MockupSuiteGenerator({
   const [screens, setScreens] = useState<{ type: ScreenType; title: string }[]>(
     suggestScreensForSector(businessSector)
   );
+
+  // Branding Kit — coppia font heading/body (override del template)
+  const [brandFontKey, setBrandFontKey] = useState<string>("template");
+  const brandFont = useMemo(
+    () => BRAND_FONT_PAIRS.find(p => p.key === brandFontKey) || BRAND_FONT_PAIRS[0],
+    [brandFontKey]
+  );
+
+  // Inietta dinamicamente il <link> Google Fonts del brand selezionato
+  useEffect(() => {
+    if (!brandFont.googleFontsHref) return;
+    const id = `brand-font-${brandFont.key}`;
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = brandFont.googleFontsHref;
+    document.head.appendChild(link);
+    // Nessun cleanup: i font restano caricati per le preview successive
+  }, [brandFont]);
 
   // Quando cambia il settore e autoScreens=on, aggiorna screens automaticamente
   useEffect(() => {
@@ -780,6 +874,8 @@ export function MockupSuiteGenerator({
                       safeAreaPx={Math.round(safeAreaPx * 0.4)}
                       typeScale={typeScale}
                       boostContrast={boostContrast}
+                      fontHeadOverride={brandFont.fontHead || undefined}
+                      fontBodyOverride={brandFont.fontBody || undefined}
                     />
                   </div>
                   <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
@@ -806,6 +902,7 @@ export function MockupSuiteGenerator({
               onClick={() => {
                 setGlassIntensity(60); setColorStyle("vivid");
                 setSafeAreaPx(8); setTypeScale(1); setBoostContrast(true);
+                setBrandFontKey("template");
               }}
               title={lockTitle}
               className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -871,6 +968,69 @@ export function MockupSuiteGenerator({
                 );
               })}
             </div>
+          </div>
+
+          {/* Branding Kit — coppia font heading/body */}
+          <div className="space-y-1.5 pt-2 border-t border-border/50">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <Label className="text-xs flex items-center gap-1.5 m-0">
+                <Type className="h-3 w-3 text-primary" /> Branding Kit · Tipografia
+              </Label>
+              <Badge variant="outline" className="text-[9px] font-mono max-w-[180px] truncate">
+                {brandFont.key === "template" ? "Default template" : brandFont.label}
+              </Badge>
+            </div>
+            <Select
+              value={brandFontKey}
+              onValueChange={setBrandFontKey}
+              disabled={controlsLocked}
+            >
+              <SelectTrigger className="h-9 text-xs" title={lockTitle}>
+                <SelectValue placeholder="Seleziona coppia font" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {BRAND_FONT_PAIRS.map(p => (
+                  <SelectItem key={p.key} value={p.key} className="text-xs">
+                    <div className="flex flex-col gap-0.5 py-0.5">
+                      <span
+                        className="font-semibold leading-tight"
+                        style={p.fontHead ? { fontFamily: p.fontHead } : undefined}
+                      >
+                        {p.label}
+                      </span>
+                      <span
+                        className="text-[10px] text-muted-foreground leading-tight"
+                        style={p.fontBody ? { fontFamily: p.fontBody } : undefined}
+                      >
+                        {p.description}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {brandFont.key !== "template" && (
+              <div
+                className="rounded-md border border-border/50 bg-background/40 px-2.5 py-1.5 flex items-baseline gap-2 overflow-hidden"
+                title="Anteprima coppia font"
+              >
+                <span
+                  className="text-[14px] leading-none truncate"
+                  style={{ fontFamily: brandFont.fontHead, fontWeight: 700 }}
+                >
+                  {businessName || "Brand Demo"}
+                </span>
+                <span
+                  className="text-[10px] text-muted-foreground truncate"
+                  style={{ fontFamily: brandFont.fontBody }}
+                >
+                  body · esperienza moderna
+                </span>
+              </div>
+            )}
+            <p className="text-[9px] text-muted-foreground italic">
+              I font del Branding Kit sostituiscono quelli del template e si aggiornano live nella preview React.
+            </p>
           </div>
 
           <p className="text-[10px] text-muted-foreground italic">
@@ -1126,6 +1286,8 @@ export function MockupSuiteGenerator({
                           safeAreaPx={Math.round(safeAreaPx * 0.3)}
                           typeScale={typeScale}
                           boostContrast={boostContrast}
+                          fontHeadOverride={brandFont.fontHead || undefined}
+                          fontBodyOverride={brandFont.fontBody || undefined}
                         />
                       </div>
                       <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-[24px] h-[1.5px] bg-foreground/30 rounded-full z-20" />
