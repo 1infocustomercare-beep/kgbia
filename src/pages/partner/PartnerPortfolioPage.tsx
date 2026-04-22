@@ -369,35 +369,113 @@ export default function PartnerPortfolioPage() {
               <p className="text-[11px] text-muted-foreground">Nessun mockup approvato — creane uno in Custom Preview.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {readyMockups.map((suite) => (
-                <div key={suite.id} className="p-3 rounded-xl flex items-start gap-2.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: suite.primary_color || "#a78bfa" }}>
-                    <Smartphone className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h5 className="text-xs font-semibold text-foreground truncate">{suite.business_name}</h5>
-                    <p className="text-[9px] text-muted-foreground truncate">
-                      {suite.business_sector || "—"}{suite.template_variant ? ` · ${suite.template_variant}` : ""}
-                    </p>
-                    <div className="flex gap-1.5 mt-1.5">
-                      <button
-                        onClick={() => { setPresentationInitialId(suite.id); setPresentationOpen(true); }}
-                        className="px-2 py-1 rounded-md bg-violet-500/15 text-violet-200 text-[9px] font-bold flex items-center gap-1 hover:bg-violet-500/25"
-                      >
-                        <Play className="w-2.5 h-2.5 fill-current" /> Mostra
-                      </button>
-                      <Link
-                        to="/partner/leads"
-                        className="px-2 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[9px] font-bold flex items-center gap-1 hover:bg-amber-500/20"
-                        title="Genera sito 1:1 in Leads"
-                      >
-                        <Rocket className="w-2.5 h-2.5" /> Genera
-                      </Link>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {readyMockups.map((suite, i) => {
+                const accent = suite.primary_color || "#a78bfa";
+                const screensArr: any[] = Array.isArray(suite.screens)
+                  ? suite.screens
+                  : suite.screens && typeof suite.screens === "object"
+                    ? Object.values(suite.screens)
+                    : [];
+                const screenImgs = screensArr
+                  .map((s: any) => s?.image_url || s?.url || s?.src)
+                  .filter(Boolean) as string[];
+                const screenTitles = screensArr
+                  .map((s: any) => s?.title || s?.type)
+                  .filter(Boolean) as string[];
+                const variantTag = suite.template_variant
+                  ? suite.template_variant.charAt(0).toUpperCase() + suite.template_variant.slice(1)
+                  : null;
+                const tags = [
+                  suite.business_sector,
+                  variantTag,
+                  `${screenImgs.length} screen`,
+                ].filter(Boolean) as string[];
+                const description = screenTitles.length
+                  ? `${screenTitles.slice(0, 4).join(" · ")}${screenTitles.length > 4 ? "…" : ""}`
+                  : "Mockup iPhone su misura generato dal venditore.";
+                return (
+                  <motion.div
+                    key={suite.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className="rounded-2xl overflow-hidden group transition-all"
+                    style={{
+                      background: "rgba(255,255,255,0.02)",
+                      border: `1px solid ${accent}30`,
+                    }}
+                  >
+                    {/* Anteprima screens (stesso layout delle card settore) */}
+                    <div
+                      className="p-4 flex gap-2 justify-center overflow-hidden h-[140px] items-end"
+                      style={{ background: `linear-gradient(135deg, ${accent}20, rgba(10,10,20,0.9))` }}
+                    >
+                      {screenImgs.length === 0 && (
+                        <div className="self-center text-[10px] text-white/40 flex flex-col items-center gap-1">
+                          <Smartphone className="w-6 h-6" /> Nessuna anteprima
+                        </div>
+                      )}
+                      {screenImgs.slice(0, 3).map((src, j) => (
+                        <div
+                          key={j}
+                          className={`${j === 1 ? "w-[70px]" : "w-[55px]"} aspect-[9/19.5] rounded-[10px] overflow-hidden shrink-0`}
+                          style={{ border: "1px solid rgba(255,255,255,0.1)" }}
+                        >
+                          <img src={src} alt={screenTitles[j] || `Screen ${j + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
+                        </div>
+                      ))}
                     </div>
-                  </div>
-                </div>
-              ))}
+
+                    {/* Metadati ricchi (allineati a SECTOR_CARDS) */}
+                    <div className="p-3.5 space-y-1.5">
+                      <div className="flex gap-1.5 flex-wrap">
+                        {tags.slice(0, 3).map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-0.5 rounded text-[8px] font-semibold uppercase"
+                            style={{ background: `${accent}25`, color: accent }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <h4 className="text-xs font-bold text-foreground uppercase tracking-wide truncate">
+                        {suite.business_name}
+                      </h4>
+                      <p className="text-[10px] text-muted-foreground line-clamp-2">{description}</p>
+                      <p className="text-[9px] text-muted-foreground/70 flex items-center gap-1.5 pt-0.5">
+                        {suite.business_city && <span>{suite.business_city}</span>}
+                        <span>·</span>
+                        <span>{new Date(suite.updated_at).toLocaleDateString("it-IT")}</span>
+                        {suite.view_count && suite.view_count > 0 ? (
+                          <>
+                            <span>·</span>
+                            <span>{suite.view_count} view</span>
+                          </>
+                        ) : null}
+                      </p>
+
+                      <div className="flex gap-1.5 pt-1">
+                        <button
+                          onClick={() => { setPresentationInitialId(suite.id); setPresentationOpen(true); }}
+                          className="px-2.5 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 transition-colors"
+                          style={{ background: `${accent}20`, color: accent, border: `1px solid ${accent}40` }}
+                        >
+                          <Play className="w-2.5 h-2.5 fill-current" /> Mostra
+                        </button>
+                        <Link
+                          to="/partner/leads"
+                          className="px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] font-bold flex items-center gap-1 hover:bg-amber-500/20"
+                          title="Genera sito 1:1 in Leads"
+                        >
+                          <Rocket className="w-2.5 h-2.5" /> Genera sito
+                        </Link>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </div>
