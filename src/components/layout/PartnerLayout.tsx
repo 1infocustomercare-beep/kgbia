@@ -178,7 +178,11 @@ export default function PartnerLayout() {
         style={isDark ? { background: "#0a0a14" } : undefined}
       >
         {isDark && (
-          <div className="fixed inset-0 z-0 pointer-events-none partner-bg-stage" style={{ opacity: 1 }}>
+          <div
+            className="fixed inset-0 z-0 pointer-events-none partner-bg-stage"
+            data-wow={wowLevel}
+            style={{ opacity: wowIntensity }}
+          >
             <EmpireDNABackground />
             {/* Aurora wash — più visibile fra le card, più viva ai bordi */}
             <div
