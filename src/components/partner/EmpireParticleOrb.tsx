@@ -204,6 +204,7 @@ const EmpireParticleOrb = memo(() => {
 
     const handlePointerDown = (e: PointerEvent) => {
       if (!isInsideOrb(e.clientX, e.clientY)) return;
+      canvas.style.cursor = "grabbing";
       pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
       // Two pointers down → start pinch/twist gesture
