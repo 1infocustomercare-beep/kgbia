@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import {
   Loader2, Sparkles, Trash2, ExternalLink, Palette, Eye, Copy, MessageCircle,
-  Image as ImageIcon, Smartphone, Star, Bookmark, Search,
+  Image as ImageIcon, Smartphone, Star, Bookmark, Search, ChevronDown,
+  User as UserIcon, Building2, Brush, Upload,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
