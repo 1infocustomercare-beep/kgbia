@@ -460,7 +460,7 @@ export default function PartnerCustomPreviewPage() {
   };
 
   return (
-    <div className="w-full max-w-[680px] md:max-w-5xl xl:max-w-7xl mx-auto px-3 sm:px-5 lg:px-7 pt-2 pb-28 sm:pb-12 space-y-5 sm:space-y-6 lg:space-y-8">
+    <div className="w-full max-w-[720px] md:max-w-[920px] lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] mx-auto px-3 sm:px-5 md:px-6 lg:px-8 pt-2 pb-32 sm:pb-12 space-y-5 sm:space-y-6 lg:space-y-8">
       {/* ═══ HERO MASCOT ═══ */}
       <PartnerHeroMascot
         title="Mockup su Misura"
@@ -474,11 +474,11 @@ export default function PartnerCustomPreviewPage() {
       {/* ═══ FLUSSO 3 STEP ═══ */}
       <PartnerFlowStepper currentStep="mockup" />
 
-      {/* ═══ LAYOUT PRINCIPALE: 1 col mobile/tablet, 2 col xl+ ═══ */}
-      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-5 lg:gap-7 items-start">
+      {/* ═══ LAYOUT PRINCIPALE: 1 col mobile/tablet, 2 col da lg+ per desktop+iPad landscape ═══ */}
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 lg:gap-6 xl:gap-8 items-start">
 
         {/* ═══════════ COLONNA SX: FORM ad ACCORDION ═══════════ */}
-        <Card className="border-primary/30 overflow-hidden xl:sticky xl:top-4">
+        <Card className="border-primary/30 overflow-hidden lg:sticky lg:top-4 shadow-sm">
           <CardHeader className="pb-3 px-4 sm:px-6">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
