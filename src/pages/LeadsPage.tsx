@@ -2132,6 +2132,24 @@ export default function LeadsPage() {
                                 ⭐ {lead.google_rating}
                               </span>
                             )}
+                            {/* 🎯 Punteggio di conversione */}
+                            <span
+                              className="text-[8px] font-bold px-1.5 py-0.5 rounded-full"
+                              style={{ background: `${scoreColor}15`, color: scoreColor, border: `1px solid ${scoreColor}40` }}
+                              title={`Score AI: ${lead._score}/100 — Probabilità conversione ${convLabel.toLowerCase()}`}
+                            >
+                              {convIcon} {convLabel}
+                            </span>
+                            {/* 📏 Distanza dal venditore */}
+                            {distanceLabel && (
+                              <span
+                                className="text-[8px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5"
+                                style={{ background: "rgba(6,182,212,0.12)", color: "#22d3ee", border: "1px solid rgba(6,182,212,0.3)" }}
+                                title={`Distanza da ${gpsOrigin?.label || "tua posizione"}`}
+                              >
+                                📍 {distanceLabel}
+                              </span>
+                            )}
                           </div>
                           <p className="text-[10px] truncate mt-0.5" style={{ color: "#6b7280" }}>{lead.full_address || lead.city}</p>
                           <div className="flex items-center gap-2.5 mt-1 flex-wrap">
