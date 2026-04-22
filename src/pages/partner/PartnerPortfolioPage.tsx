@@ -684,8 +684,9 @@ export default function PartnerPortfolioPage() {
                           </span>
                         ))}
                       </div>
-                      <h4 className="text-xs font-bold text-foreground uppercase tracking-wide truncate">
-                        {suite.business_name}
+                      <h4 className="text-xs font-bold text-foreground uppercase tracking-wide truncate flex items-center gap-1.5">
+                        <span className="truncate">{suite.business_name}</span>
+                        <EngineBadge engine={(suite as any).generation_engine} />
                       </h4>
                       <p className="text-[10px] text-muted-foreground line-clamp-2">{description}</p>
                       <p className="text-[9px] text-muted-foreground/70 flex items-center gap-1.5 pt-0.5">
