@@ -574,7 +574,9 @@ export function MockupSuiteGenerator({
       }
       setPreviewPhase("complete");
 
-      // Validation feedback (engine AI)
+      // Snapshot in storico Versioni (suite generata con successo)
+      snapshotVersion(d.suite_id, d.share_slug, d.engine, d.template_variant, enrichedScreens);
+
       const vs = d.validation_summary;
       if (vs && vs.all_validated === false) {
         const failed = (vs.per_screen || []).filter((p: any) => !p.validated);
