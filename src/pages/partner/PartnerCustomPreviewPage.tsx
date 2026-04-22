@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
 import { MockupSuiteVaultList } from "@/components/partner/MockupSuiteVaultList";
 import PartnerHeroMascot from "@/components/partner/PartnerHeroMascot";
+import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 
 const STYLES = [
   { key: "modern_dark", label: "Modern Dark", color: "#0F172A", accent: "#C8963E" },
@@ -370,6 +371,9 @@ export default function PartnerCustomPreviewPage() {
         icon={Palette}
         active={generating}
       />
+
+      {/* ═══ FLUSSO 3 STEP (sei al passo 1) ═══ */}
+      <PartnerFlowStepper currentStep="mockup" />
 
       {/* ═══ FORM GENERAZIONE ═══ */}
       <Card className="border-primary/30 overflow-hidden">
