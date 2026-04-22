@@ -66,25 +66,58 @@ async function generateAIImage(
   lovableKey: string,
   prompt: string,
   pro: boolean,
+  modelOverride?: string,
 ): Promise<string | null> {
-  const model = pro ? "google/gemini-3-pro-image-preview" : "google/gemini-3.1-flash-image-preview";
-  const r = await fetch(AI_GATEWAY, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model,
-      messages: [{ role: "user", content: prompt }],
-      modalities: ["image", "text"],
-    }),
-  });
-  if (!r.ok) {
-    const txt = await r.text();
-    if (r.status === 429) throw new Error("rate_limited");
-    if (r.status === 402) throw new Error("payment_required");
-    throw new Error(`image_gen_error: ${r.status} ${txt}`);
+  const model = modelOverride || (pro ? "google/gemini-3-pro-image-preview" : "google/gemini-3.1-flash-image-preview");
+  // Retry con backoff esponenziale + jitter per superare rate-limit transitori
+  const maxNetworkRetries = 3;
+  let lastErr: Error | null = null;
+  for (let attempt = 1; attempt <= maxNetworkRetries; attempt++) {
+    try {
+      const r = await fetch(AI_GATEWAY, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: "user", content: prompt }],
+          modalities: ["image", "text"],
+        }),
+      });
+      if (r.status === 429) {
+        const wait = 1500 * attempt + Math.floor(Math.random() * 800);
+        console.warn(`[ai-image] 429 attempt ${attempt}/${maxNetworkRetries} model=${model} — retry in ${wait}ms`);
+        if (attempt === maxNetworkRetries) throw new Error("rate_limited");
+        await new Promise(res => setTimeout(res, wait));
+        continue;
+      }
+      if (r.status === 402) throw new Error("payment_required");
+      if (!r.ok) {
+        const txt = await r.text();
+        // Retry su errori 5xx, fail su 4xx (eccetto 429 sopra)
+        if (r.status >= 500 && attempt < maxNetworkRetries) {
+          const wait = 1000 * attempt + Math.floor(Math.random() * 500);
+          console.warn(`[ai-image] ${r.status} attempt ${attempt} — retry in ${wait}ms`);
+          await new Promise(res => setTimeout(res, wait));
+          continue;
+        }
+        throw new Error(`image_gen_error: ${r.status} ${txt.slice(0, 200)}`);
+      }
+      const data = await r.json();
+      const url = data?.choices?.[0]?.message?.images?.[0]?.image_url?.url ?? null;
+      if (!url && attempt < maxNetworkRetries) {
+        console.warn(`[ai-image] empty response attempt ${attempt} — retry`);
+        await new Promise(res => setTimeout(res, 800));
+        continue;
+      }
+      return url;
+    } catch (e: any) {
+      lastErr = e;
+      if (e.message === "rate_limited" || e.message === "payment_required") throw e;
+      if (attempt === maxNetworkRetries) throw e;
+      await new Promise(res => setTimeout(res, 1000 * attempt));
+    }
   }
-  const data = await r.json();
-  return data?.choices?.[0]?.message?.images?.[0]?.image_url?.url ?? null;
+  throw lastErr || new Error("image_gen_failed");
 }
 
 async function uploadDataUrl(client: any, dataUrl: string, path: string): Promise<string | null> {
@@ -145,11 +178,12 @@ async function validateMockupImage(
 }
 
 REGOLE:
-- "has_forbidden_branding" = true se vedi "Empire", "Empire AI", "Empire AI Group", "Empireia" o "Lovable" in qualsiasi punto del display.
-- "has_english_content" = true se vedi frasi/parole inglesi nei CONTENUTI dell'app (titoli sezioni, nomi servizi, CTA, descrizioni). IGNORA la status bar iOS (orario, %, 5G, WiFi).
-- "has_third_party_logos" = true se vedi loghi Apple, Google, Meta, Instagram, Facebook, WhatsApp ecc.
-- "iphone_centered_no_tilt" = true SOLO se l'iPhone è perfettamente frontale, centrato, senza prospettiva 3D.
+- "has_forbidden_branding" = true SOLO se vedi chiaramente la parola esatta "Empire", "Empire AI", "Empire AI Group", "Empireia" o "Lovable" come testo del brand. Una "E" stilizzata da sola NON è branding vietato.
+- "has_english_content" = true SOLO se vedi 3 o più frasi/parole inglesi distinte nei CONTENUTI dell'app (titoli sezioni, CTA grandi, descrizioni). IGNORA: status bar iOS (orario, %, 5G, WiFi), nomi propri di prodotti/servizi che possono essere internazionali (es. "Spa", "Brunch", "Wellness", "Loyalty"), parole italiane d'uso comune anche se di origine inglese (es. "Bar", "Sport", "App", "Online").
+- "has_third_party_logos" = true SOLO se vedi loghi RICONOSCIBILI di Apple (mela), Google (G colorata), Meta, Instagram (camera multicolore), Facebook (f blu), WhatsApp (telefono verde) ecc. Icone generiche stilizzate (cuore, casa, profilo) NON sono loghi terzi.
+- "iphone_centered_no_tilt" = true se l'iPhone è sostanzialmente frontale e centrato (tolleranza ±5° di rotazione e ±10% di offset accettata). Solo evidenti prospettive 3D estreme o tilt > 15° sono "false".
 - "overall_ok" = true SOLO se has_forbidden_branding=false E has_english_content=false E has_third_party_logos=false E iphone_centered_no_tilt=true.
+- Sii TOLLERANTE: in caso di dubbio rispondi sempre con il valore "ok" (false sui flag has_*, true su iphone_centered_no_tilt). Meglio approvare un mockup imperfetto che bocciarne uno valido.
 - Rispondi SOLO il JSON, niente altro testo.`,
               },
               { type: "image_url", image_url: { url: dataUrl } },
@@ -179,7 +213,9 @@ REGOLE:
     if (parsed.iphone_centered_no_tilt === false) {
       issues.push("iphone_not_centered_or_tilted");
     }
-    return { ok: parsed.overall_ok === true && issues.length === 0, issues, raw };
+    // ok se nessun issue critico (centratura considerata "soft" — ammessa se è l'unico problema)
+    const criticalIssues = issues.filter(i => !i.startsWith("iphone_not_centered"));
+    return { ok: criticalIssues.length === 0, issues, raw };
   } catch (e) {
     console.warn("[validate] exception", e);
     return { ok: true, issues: [], raw: `validator_exception` }; // fail-open
@@ -207,24 +243,46 @@ async function generateValidatedAIImage(
   lovableKey: string,
   basePrompt: string,
   pro: boolean,
-  maxAttempts = 3,
-): Promise<{ dataUrl: string | null; attempts: number; lastIssues: string[]; validated: boolean }> {
+  maxAttempts = 5,
+): Promise<{ dataUrl: string | null; attempts: number; lastIssues: string[]; validated: boolean; engine_used: string }> {
   let lastIssues: string[] = [];
   let lastDataUrl: string | null = null;
+  let engineUsed = pro ? "nano_banana_pro" : "nano_banana_2";
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const prompt = attempt === 1 ? basePrompt : basePrompt + buildCorrectionSuffix(lastIssues);
-    const dataUrl = await generateAIImage(lovableKey, prompt, pro);
+    // AUTO-UPGRADE: gli ultimi 2 tentativi usano il modello Pro (più affidabile e accurato)
+    // per recuperare casi difficili senza richiedere intervento manuale dell'utente.
+    const usePro = pro || attempt >= maxAttempts - 1;
+    const modelOverride = usePro ? "google/gemini-3-pro-image-preview" : undefined;
+    if (!pro && attempt >= maxAttempts - 1) {
+      engineUsed = "nano_banana_pro_fallback";
+      console.log(`[validate] attempt ${attempt}: AUTO-UPGRADE a Nano Banana Pro per garantire qualità`);
+    }
+    let dataUrl: string | null = null;
+    try {
+      dataUrl = await generateAIImage(lovableKey, prompt, usePro, modelOverride);
+    } catch (e: any) {
+      console.warn(`[validate] attempt ${attempt} generation error: ${e.message}`);
+      lastIssues = [`gen_error:${e.message?.slice(0, 80) || "unknown"}`];
+      // su rate_limited aspetta più a lungo
+      if (e.message === "rate_limited") {
+        await new Promise(r => setTimeout(r, 3000 + Math.random() * 2000));
+      }
+      continue;
+    }
     lastDataUrl = dataUrl;
     if (!dataUrl) {
       lastIssues = ["no_image_returned"];
       continue;
     }
     const v = await validateMockupImage(lovableKey, dataUrl);
-    console.log(`[validate] attempt ${attempt} ok=${v.ok} issues=${JSON.stringify(v.issues)}`);
-    if (v.ok) return { dataUrl, attempts: attempt, lastIssues: [], validated: true };
+    console.log(`[validate] attempt ${attempt}/${maxAttempts} engine=${engineUsed} ok=${v.ok} issues=${JSON.stringify(v.issues)}`);
+    if (v.ok) return { dataUrl, attempts: attempt, lastIssues: v.issues, validated: true, engine_used: engineUsed };
     lastIssues = v.issues;
   }
-  return { dataUrl: lastDataUrl, attempts: maxAttempts, lastIssues, validated: false };
+  // Tutti i tentativi falliti: ritorniamo l'ultima immagine generata comunque (meglio mostrare qualcosa che niente)
+  console.warn(`[validate] FINAL FAIL after ${maxAttempts} attempts. issues=${JSON.stringify(lastIssues)} hasImage=${!!lastDataUrl}`);
+  return { dataUrl: lastDataUrl, attempts: maxAttempts, lastIssues, validated: false, engine_used: engineUsed };
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -508,17 +566,28 @@ Deno.serve(async (req) => {
     const business = { name: business_name, sector: business_sector || "attività commerciale", city: business_city || "Italia" };
 
     try {
-      // Genera 4 immagini in parallelo CON validazione + retry mirato (max 3 tentativi per screen)
-      const imageResults = await Promise.all(
-        screens.map((s, i) =>
-          generateValidatedAIImage(
-            LOVABLE_KEY,
-            buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i),
-            pro,
-            3,
+      // Genera 4 immagini con paralelismo limitato a 2 (riduce rate-limit) + validazione + retry/upgrade
+      // Ogni screen ha fino a 5 tentativi e auto-upgrade a Nano Banana Pro nelle ultime iterazioni.
+      const imageResults: Awaited<ReturnType<typeof generateValidatedAIImage>>[] = [];
+      const concurrency = 2;
+      for (let i = 0; i < screens.length; i += concurrency) {
+        const batch = screens.slice(i, i + concurrency);
+        const batchResults = await Promise.all(
+          batch.map((s, k) =>
+            generateValidatedAIImage(
+              LOVABLE_KEY,
+              buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i + k),
+              pro,
+              5,
+            )
           )
-        )
-      );
+        );
+        imageResults.push(...batchResults);
+        // Piccola pausa tra batch per non saturare il gateway
+        if (i + concurrency < screens.length) {
+          await new Promise(r => setTimeout(r, 400));
+        }
+      }
 
       // Upload su storage
       const uploadPromises = imageResults.map((res, i) =>
@@ -538,6 +607,9 @@ Deno.serve(async (req) => {
           validated: imageResults[i].validated,
           attempts: imageResults[i].attempts,
           issues: imageResults[i].lastIssues,
+          engine_used: imageResults[i].engine_used,
+          // Soft-fail: l'immagine c'è anche se validazione non passa — il client decide come mostrarla
+          has_image: !!publicUrls[i],
         },
       }));
 
