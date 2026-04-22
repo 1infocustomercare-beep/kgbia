@@ -106,6 +106,11 @@ export default function PartnerCustomPreviewPage() {
     gallery_images: [] as string[],
   });
 
+  // Sezioni collassabili form (UX professionale: 1 step alla volta su mobile)
+  const [openSection, setOpenSection] = useState<"data" | "brand" | "style" | null>("data");
+  const toggleSection = (s: "data" | "brand" | "style") =>
+    setOpenSection(prev => (prev === s ? null : s));
+
   // Load previews + intelligence + scout leads
   useEffect(() => {
     if (!user?.id) return;
