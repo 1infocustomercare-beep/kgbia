@@ -579,8 +579,36 @@ Deno.serve(async (req) => {
       heroPublicUrl = await uploadDataUrl(admin, heroDataUrl, `custom-previews/${userId}/${previewRow.id}-hero.png`);
     }
 
-    // 7. Compose HTML
-    const whatsappMsg = `Ciao ${lead.lead_name}, ho creato per voi un'anteprima del nuovo sito. Date un'occhiata: ${SUPABASE_URL.includes("localhost") ? "http://localhost:8080" : "https://empireia.lovable.app"}/preview/custom/${publicSlug}`;
+    // 7. Compose HTML — personalized WhatsApp message
+    const baseUrl = SUPABASE_URL.includes("localhost") ? "http://localhost:8080" : "https://empireia.lovable.app";
+    const previewUrl = `${baseUrl}/preview/custom/${publicSlug}`;
+    const sectorLabel = lead.lead_sector ? lead.lead_sector.charAt(0).toUpperCase() + lead.lead_sector.slice(1) : "la vostra attività";
+    const cityLabel = lead.lead_city ? ` a ${lead.lead_city}` : "";
+    const sectorCta: Record<string, string> = {
+      ristorante: "👉 Provate la prenotazione tavolo dal sito",
+      pizzeria: "👉 Provate l'ordine online direttamente dalla preview",
+      sushi: "👉 Provate l'ordine online direttamente dalla preview",
+      bar: "👉 Provate la prenotazione dal sito",
+      hotel: "👉 Provate la prenotazione camere dal sito",
+      ncc: "👉 Provate la prenotazione corsa dal sito",
+      parrucchiere: "👉 Provate la prenotazione appuntamento dal sito",
+      estetista: "👉 Provate la prenotazione appuntamento dal sito",
+      palestra: "👉 Provate la prenotazione lezione dal sito",
+    };
+    const ctaLine = sectorCta[(lead.lead_sector || "").toLowerCase()] || "👉 Provate ad ordinare/prenotare direttamente dalla preview";
+    const whatsappMsg = `Ciao ${lead.lead_name}! 👋
+
+Ho creato un'anteprima del *nuovo sito* per ${lead.lead_name}${cityLabel} — pensato su misura per ${sectorLabel}.
+
+✨ Cosa trovate dentro:
+• Hero image generata da AI
+• Sezioni personalizzate
+• ${ctaLine}
+
+🔗 Guardatela qui:
+${previewUrl}
+
+Fatemi sapere cosa ne pensate — se vi piace possiamo metterla online entro 48h. 🚀`;
     const html = buildHtml(lead, finalContent, template_style, primary_color, logo_url, heroPublicUrl, gallery_images, whatsappMsg);
 
     // 8. Update record finale
