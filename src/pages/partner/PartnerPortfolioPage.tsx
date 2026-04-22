@@ -498,6 +498,34 @@ export default function PartnerPortfolioPage() {
               </button>
             </div>
 
+            {/* ─── Chip filtri attivi (sempre visibili, con dismiss singolo) ─── */}
+            {activeFiltersCount > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-1.5 flex-wrap"
+              >
+                {filterSector !== "all" && (
+                  <FilterChip label="Settore" value={filterSector} onClear={() => setFilterSector("all")} />
+                )}
+                {filterVariant !== "all" && (
+                  <FilterChip label="Template" value={filterVariant} onClear={() => setFilterVariant("all")} />
+                )}
+                {filterStatus !== "all" && (
+                  <FilterChip label="Stato" value={filterStatus} onClear={() => setFilterStatus("all")} />
+                )}
+                <button
+                  onClick={() => {
+                    setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all");
+                  }}
+                  className="ml-0.5 px-2 py-1 rounded-full text-[10px] font-semibold flex items-center gap-1 hover:bg-white/8 transition-colors"
+                  style={{ color: "#c4b5fd", border: "1px dashed rgba(167,139,250,0.4)" }}
+                >
+                  <RefreshCw className="w-2.5 h-2.5" /> Reset rapido
+                </button>
+              </motion.div>
+            )}
+
             <AnimatePresence>
               {filtersOpen && (
                 <motion.div
