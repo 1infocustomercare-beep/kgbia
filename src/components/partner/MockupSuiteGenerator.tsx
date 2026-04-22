@@ -361,7 +361,9 @@ export function MockupSuiteGenerator({
   );
 
   // Idratazione iniziale dalle impostazioni salvate (cloud o cache locale)
-  // — applica brandFontKey + primaryColor (se brand_locked=true ha priorità sul prop)
+  // — quando brand_locked=true, sia primaryColor sia font pair hanno priorità sui prop:
+  //   il "Branding Kit lock" diventa così l'unica fonte di verità per l'identità visiva
+  //   (palette + tipografia restano allineate tra sessioni senza override manuali).
   const hydratedRef = useRef(false);
   useEffect(() => {
     if (branding.loading || hydratedRef.current) return;
@@ -387,28 +389,45 @@ export function MockupSuiteGenerator({
     // Nessun cleanup: i font restano caricati per le preview successive
   }, [brandFont]);
 
-  // Persiste il font pair scelto (cloud + cache locale) — niente flicker, debounced cloud
-  useEffect(() => {
-    if (branding.loading || !hydratedRef.current) return;
-    if (branding.settings.fontPairKey === brandFontKey) return;
-    branding.update({
-      fontPairKey: brandFontKey,
-      fontHead: brandFont.fontHead || null,
-      fontBody: brandFont.fontBody || null,
-      googleFontsHref: brandFont.googleFontsHref || null,
-    });
-  }, [brandFontKey, brandFont, branding]);
-
-  // Se il brand è bloccato, sincronizza qualsiasi cambio di colore primario
-  // (l'utente ha esplicitamente scelto "preserva tra sessioni")
+  // ─────────────────────────────────────────────────────────────────────────
+  // Sync Branding Kit ↔ stato live — gated dal lock per palette E tipografia
+  // ─────────────────────────────────────────────────────────────────────────
+  // Quando il brand è BLOCCATO, qualsiasi cambio di colore o di font pair viene
+  // persistito (cloud + cache locale): il lock dichiara "questa è la mia brand
+  // identity, mantienila tra sessioni e dispositivi". Palette e tipografia
+  // restano sempre allineate al template scelto senza richiedere override manuali.
+  // Quando è SBLOCCATO, le scelte restano effimere (template-driven) e non
+  // sovrascrivono l'identità salvata, così l'utente può sperimentare senza
+  // perdere il preset bloccato.
   useEffect(() => {
     if (branding.loading || !hydratedRef.current) return;
     if (!branding.settings.brandLocked) return;
-    const current = mode === "standalone" ? standalone.primaryColor : primaryColor;
-    if (current && current !== branding.settings.primaryColor) {
-      branding.update({ primaryColor: current });
-    }
-  }, [standalone.primaryColor, primaryColor, mode, branding]);
+
+    const currentColor = mode === "standalone" ? standalone.primaryColor : primaryColor;
+    const colorChanged = !!currentColor && currentColor !== branding.settings.primaryColor;
+    const fontChanged = brandFontKey !== branding.settings.fontPairKey;
+
+    if (!colorChanged && !fontChanged) return;
+
+    branding.update({
+      ...(colorChanged ? { primaryColor: currentColor } : {}),
+      ...(fontChanged
+        ? {
+            fontPairKey: brandFontKey,
+            fontHead: brandFont.fontHead || null,
+            fontBody: brandFont.fontBody || null,
+            googleFontsHref: brandFont.googleFontsHref || null,
+          }
+        : {}),
+    });
+  }, [
+    standalone.primaryColor,
+    primaryColor,
+    mode,
+    brandFontKey,
+    brandFont,
+    branding,
+  ]);
 
 
   // Quando cambia il settore e autoScreens=on, aggiorna screens automaticamente
