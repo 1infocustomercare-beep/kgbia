@@ -650,25 +650,53 @@ export default function PartnerPortfolioPage() {
                       border: `1px solid ${accent}30`,
                     }}
                   >
-                    {/* Anteprima screens (stesso layout delle card settore) */}
+                    {/* Anteprima screens — sempre 4 mini-mockup per decidere a colpo d'occhio quale ripristinare */}
                     <div
-                      className="p-4 flex gap-2 justify-center overflow-hidden h-[140px] items-end"
+                      className="p-3 flex gap-1.5 justify-center overflow-hidden h-[150px] items-end"
                       style={{ background: `linear-gradient(135deg, ${accent}20, rgba(10,10,20,0.9))` }}
+                      title="Mini-anteprima delle 4 schermate principali"
                     >
                       {screenImgs.length === 0 && (
                         <div className="self-center text-[10px] text-white/40 flex flex-col items-center gap-1">
                           <Smartphone className="w-6 h-6" /> Nessuna anteprima
                         </div>
                       )}
-                      {screenImgs.slice(0, 3).map((src, j) => (
-                        <div
+                      {screenImgs.slice(0, 4).map((src, j) => (
+                        <button
+                          type="button"
                           key={j}
-                          className={`${j === 1 ? "w-[70px]" : "w-[55px]"} aspect-[9/19.5] rounded-[10px] overflow-hidden shrink-0`}
-                          style={{ border: "1px solid rgba(255,255,255,0.1)" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPresentationInitialId(suite.id);
+                            setPresentationOpen(true);
+                          }}
+                          className="w-[52px] aspect-[9/19.5] rounded-[10px] overflow-hidden shrink-0 relative group/screen transition-transform hover:scale-105 hover:-translate-y-0.5 focus:outline-none focus:ring-2"
+                          style={{ border: `1px solid ${accent}55`, boxShadow: `0 4px 12px ${accent}25` }}
+                          aria-label={`Apri ${screenTitles[j] || `Schermata ${j + 1}`}`}
                         >
-                          <img src={src} alt={screenTitles[j] || `Screen ${j + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
-                        </div>
+                          <img
+                            src={src}
+                            alt={screenTitles[j] || `Screen ${j + 1}`}
+                            className="w-full h-full object-cover object-top"
+                            loading="lazy"
+                          />
+                          <span
+                            className="absolute inset-x-0 bottom-0 px-1 py-0.5 text-[7px] font-bold uppercase tracking-wide text-white/90 truncate text-center"
+                            style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85), transparent)" }}
+                          >
+                            {screenTitles[j] || `#${j + 1}`}
+                          </span>
+                        </button>
                       ))}
+                      {/* Indicatore "+N" se ci sono più di 4 schermate */}
+                      {screenImgs.length > 4 && (
+                        <div
+                          className="self-end mb-1 px-1.5 py-0.5 rounded-md text-[8px] font-bold"
+                          style={{ background: `${accent}30`, color: accent, border: `1px solid ${accent}55` }}
+                        >
+                          +{screenImgs.length - 4}
+                        </div>
+                      )}
                     </div>
 
                     {/* Metadati ricchi (allineati a SECTOR_CARDS) */}
@@ -824,6 +852,40 @@ function DemoSiteRow({
   onToggleFav: () => void;
   onArchive: () => void;
 }) {
+  // Estrae fino a 4 mini-anteprime dagli screen disponibili nel payload
+  const screenThumbs = useMemo<{ src: string; label: string }[]>(() => {
+    const candidates: any[] = [
+      site.images_payload,
+      (site.brand_payload as any)?.screens,
+      (site.full_result as any)?.screens,
+      (site.full_result as any)?.mockup?.screens,
+      (site.lead_snapshot as any)?.screens,
+    ];
+    const collected: { src: string; label: string }[] = [];
+    const seen = new Set<string>();
+    for (const c of candidates) {
+      if (!c) continue;
+      const arr = Array.isArray(c) ? c : typeof c === "object" ? Object.values(c) : [];
+      for (const item of arr) {
+        const src =
+          typeof item === "string"
+            ? item
+            : (item as any)?.image_url || (item as any)?.url || (item as any)?.src || (item as any)?.preview_url;
+        if (!src || typeof src !== "string" || seen.has(src)) continue;
+        seen.add(src);
+        const label =
+          (typeof item === "object" && ((item as any)?.title || (item as any)?.type || (item as any)?.name)) ||
+          `#${collected.length + 1}`;
+        collected.push({ src, label: String(label) });
+        if (collected.length >= 4) break;
+      }
+      if (collected.length >= 4) break;
+    }
+    return collected;
+  }, [site]);
+
+  const accent = "#a78bfa";
+
   return (
     <div className="p-3 rounded-xl space-y-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
       <div className="flex items-start justify-between gap-2">
@@ -848,6 +910,39 @@ function DemoSiteRow({
           </button>
         </div>
       </div>
+
+      {/* Mini-anteprima delle 4 schermate per decidere quale versione ripristinare senza aprirla */}
+      {screenThumbs.length > 0 && (
+        <div
+          className="flex gap-1.5 items-end p-2 rounded-lg"
+          style={{ background: `linear-gradient(135deg, ${accent}14, rgba(10,10,20,0.6))`, border: `1px solid ${accent}22` }}
+          title="Mini-anteprima — clicca per aprire la preview completa"
+        >
+          {screenThumbs.map((sc, j) => (
+            <a
+              key={j}
+              href={site.preview_url || "#"}
+              target={site.preview_url ? "_blank" : undefined}
+              rel="noopener"
+              className="w-[40px] aspect-[9/19.5] rounded-md overflow-hidden shrink-0 relative transition-transform hover:scale-110 hover:-translate-y-0.5"
+              style={{ border: `1px solid ${accent}55`, boxShadow: `0 2px 8px ${accent}30` }}
+              aria-label={`Schermata ${sc.label}`}
+            >
+              <img src={sc.src} alt={sc.label} className="w-full h-full object-cover object-top" loading="lazy" />
+            </a>
+          ))}
+          {/* Slot vuoti per mantenere il layout a 4 colonne */}
+          {Array.from({ length: Math.max(0, 4 - screenThumbs.length) }).map((_, j) => (
+            <div
+              key={`ph-${j}`}
+              className="w-[40px] aspect-[9/19.5] rounded-md shrink-0 flex items-center justify-center"
+              style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)" }}
+            >
+              <Smartphone className="w-3 h-3 text-white/20" />
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-1.5">
         {site.preview_url && (
