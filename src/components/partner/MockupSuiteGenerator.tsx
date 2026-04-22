@@ -336,7 +336,19 @@ export function MockupSuiteGenerator({
         engine: d.engine,
         screens: enrichedScreens,
       });
-      toast.success(`Suite generata! ${d.credits_spent} crediti usati.`);
+      // Validation feedback (engine AI)
+      const vs = d.validation_summary;
+      if (vs && vs.all_validated === false) {
+        const failed = (vs.per_screen || []).filter((p: any) => !p.validated);
+        toast.warning(
+          `Suite generata, ma ${failed.length}/${vs.per_screen.length} schermate non superano la validazione automatica (branding/inglese/centratura). Tentativi totali: ${vs.total_attempts}. Puoi rigenerare per tentare di nuovo.`,
+          { duration: 8000 }
+        );
+      } else if (vs?.all_validated) {
+        toast.success(`Suite generata e validata! ${d.credits_spent} crediti usati · ${vs.total_attempts} tentativi totali.`);
+      } else {
+        toast.success(`Suite generata! ${d.credits_spent} crediti usati.`);
+      }
       onGenerated?.(d.suite_id, d.share_slug);
     } catch (e: any) {
       toast.error(e.message || "Errore generazione");
