@@ -250,6 +250,10 @@ export function MockupSuiteGenerator({
   // Personalizzazione avanzata
   const [glassIntensity, setGlassIntensity] = useState<number>(60);
   const [colorStyle, setColorStyle] = useState<ColorStyle>("vivid");
+  // Safe Area & Leggibilità — padding interno, scala tipografica, contrasto AA
+  const [safeAreaPx, setSafeAreaPx] = useState<number>(8);
+  const [typeScale, setTypeScale] = useState<number>(1);
+  const [boostContrast, setBoostContrast] = useState<boolean>(true);
   const [autoScreens, setAutoScreens] = useState(true);
   const [screens, setScreens] = useState<{ type: ScreenType; title: string }[]>(
     suggestScreensForSector(businessSector)
