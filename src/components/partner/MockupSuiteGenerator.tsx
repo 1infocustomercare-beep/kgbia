@@ -789,6 +789,8 @@ export function MockupSuiteGenerator({
               businessCity={businessCity}
               primaryColor={primaryColor}
               suiteId={result.suite_id}
+              glassIntensity={glassIntensity}
+              colorStyle={colorStyle}
             />
           </div>
         )}
