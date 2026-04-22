@@ -100,6 +100,62 @@ function getTheme(variant: string, primaryOverride?: string): ThemeTokens {
       fontBody: "'Inter', system-ui, sans-serif",
       vibe: "tech-modern", radius: 16, imageStyle: "modern",
     },
+    neon_vibrant: {
+      bg: "#0A0118", bgPanel: "#15082A", bgPanelAlt: "#1F0F3D",
+      text: "#F8F4FF", textMuted: "rgba(248,244,255,0.55)",
+      primary: "#FF2E9A", accent: "#00E5FF",
+      fontHead: "'Space Grotesk', 'Sora', sans-serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "neon-vibrant", radius: 22, imageStyle: "vibrant",
+    },
+    editorial_clean: {
+      bg: "#FFFFFF", bgPanel: "#F7F5F1", bgPanelAlt: "#EFEBE3",
+      text: "#0A0A0A", textMuted: "rgba(10,10,10,0.55)",
+      primary: "#0A0A0A", accent: "#D9534F",
+      fontHead: "'Playfair Display', 'Cormorant Garamond', serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "editorial-clean", radius: 6, imageStyle: "monochrome",
+    },
+    boutique_pastel: {
+      bg: "#FFF6F2", bgPanel: "#FFFFFF", bgPanelAlt: "#FFEDE3",
+      text: "#3A2A35", textMuted: "rgba(58,42,53,0.55)",
+      primary: "#E8A0B8", accent: "#A89DC9",
+      fontHead: "'DM Serif Display', 'Cormorant Garamond', serif",
+      fontBody: "'Outfit', system-ui, sans-serif",
+      vibe: "boutique-pastel", radius: 24, imageStyle: "pastel",
+    },
+    monochrome_bold: {
+      bg: "#0A0A0A", bgPanel: "#161616", bgPanelAlt: "#1F1F1F",
+      text: "#FAFAFA", textMuted: "rgba(250,250,250,0.55)",
+      primary: "#FAFAFA", accent: "#FFD60A",
+      fontHead: "'Archivo Black', 'Inter', sans-serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "monochrome-bold", radius: 4, imageStyle: "monochrome",
+    },
+    glass_aurora: {
+      bg: "#0B0F1F", bgPanel: "#141B33", bgPanelAlt: "#1B2547",
+      text: "#E8EEFF", textMuted: "rgba(232,238,255,0.55)",
+      primary: "#7C9FFF", accent: "#A5F3D0",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "glass-aurora", radius: 20, imageStyle: "aurora",
+    },
+    real_estate_trust: {
+      bg: "#F5F2EC", bgPanel: "#FFFFFF", bgPanelAlt: "#EAE3D3",
+      text: "#1B2A3A", textMuted: "rgba(27,42,58,0.55)",
+      primary: "#1B2A3A", accent: "#B89760",
+      fontHead: "'Cormorant Garamond', 'Playfair Display', serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "real-estate-trust", radius: 10, imageStyle: "estate",
+    },
+    fitness_energy: {
+      bg: "#0D0D0D", bgPanel: "#171717", bgPanelAlt: "#222222",
+      text: "#F5F5F5", textMuted: "rgba(245,245,245,0.55)",
+      primary: "#C8FF00", accent: "#FF3D3D",
+      fontHead: "'Archivo Black', 'Bebas Neue', sans-serif",
+      fontBody: "'Inter', system-ui, sans-serif",
+      vibe: "fitness-energy", radius: 14, imageStyle: "energy",
+    },
   };
   const base = themes[variant] || themes.modern_dark;
   return primaryOverride ? { ...base, primary: primaryOverride } : base;
@@ -117,6 +173,12 @@ function ArtImage({ theme, seed = 0, className = "", style = {} }: { theme: Them
     "noir":       [["#E89BAE","#A66578","#3D1A28"], ["#C9A86A","#8B7548","#2A1F12"], ["#D4A0B8","#7A4858","#1F0F18"], ["#F0DCC8","#A0826B","#2D1F18"]],
     "luxury":     [["#D4AF37","#9B8030","#3D2F18"], ["#F0D78C","#B89548","#5C4220"], ["#E8C46A","#A07830","#2D1F0E"], ["#F5E9D8","#C8A878","#5C4828"]],
     "modern":     [["#3B82F6","#1E40AF","#0F172A"], ["#C8963E","#8B6928","#3D2D14"], ["#8B5CF6","#5B21B6","#1E1B4B"], ["#10B981","#047857","#022C22"]],
+    "vibrant":    [["#FF2E9A","#9C27B0","#0A0118"], ["#00E5FF","#1976D2","#0A0118"], ["#FFD60A","#FF8C00","#1F0F3D"], ["#7C4DFF","#311B92","#0A0118"]],
+    "pastel":     [["#FAD0C4","#FFD3DC","#A89DC9"], ["#FFEAA7","#FAB1A0","#E8A0B8"], ["#A8E6CF","#FFD3B6","#FFAAA5"], ["#D4A5C9","#F5C6E0","#B8E0D2"]],
+    "monochrome": [["#0A0A0A","#3F3F3F","#FAFAFA"], ["#FAFAFA","#A1A1A1","#0A0A0A"], ["#1F1F1F","#5C5C5C","#E5E5E5"], ["#FAFAFA","#737373","#0A0A0A"]],
+    "aurora":     [["#7C9FFF","#A5F3D0","#0B0F1F"], ["#C9A4FF","#7CD8FF","#141B33"], ["#A5F3D0","#FFD3B6","#0B0F1F"], ["#FF9EC7","#A8B0FF","#1B2547"]],
+    "estate":     [["#B89760","#7A6240","#1B2A3A"], ["#D4BC8A","#9C8557","#2C3E50"], ["#E0C9A0","#A88B5C","#34495E"], ["#F5E9D2","#B89760","#1B2A3A"]],
+    "energy":     [["#C8FF00","#7AAD00","#0D0D0D"], ["#FF3D3D","#A02020","#0D0D0D"], ["#00FFE5","#0099A8","#171717"], ["#FFD60A","#B89500","#0D0D0D"]],
   };
   const palette = palettes[theme.imageStyle][seed % palettes[theme.imageStyle].length];
   const id = `g-${theme.imageStyle}-${seed}`;
