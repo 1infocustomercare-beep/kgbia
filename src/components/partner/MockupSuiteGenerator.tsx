@@ -931,8 +931,10 @@ export function MockupSuiteGenerator({
               max={24}
               step={2}
               value={safeAreaPx}
+              disabled={controlsLocked}
               onChange={(e) => setSafeAreaPx(Number(e.target.value))}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
+              title={lockTitle}
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <div className="flex justify-between text-[9px] text-muted-foreground">
               <span>Edge-to-edge</span>
