@@ -39,9 +39,10 @@ const EmpireParticleOrb = memo(() => {
   const pointerRef = useRef({ x: -9999, y: -9999, active: false, inside: false });
   const modeRef = useRef<Mode>("orb");
   const morphRef = useRef(0);
-  // Orb position offset (drag) and rotation
+  // Orb position offset (drag), rotation, and scale (pinch)
   const offsetRef = useRef({ x: 0, y: 0 });
   const rotRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
+  const scaleRef = useRef(1);
   const dragRef = useRef({
     active: false,
     moved: false,
@@ -50,6 +51,16 @@ const EmpireParticleOrb = memo(() => {
     startX: 0, startY: 0,
     startTime: 0,
   });
+  // Multi-touch gesture state (mobile pinch + rotate)
+  const gestureRef = useRef({
+    active: false,
+    startDist: 0,
+    startAngle: 0,
+    startScale: 1,
+    startRotZ: 0,
+  });
+  // Tracked active pointers for multi-touch
+  const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const [mode, setMode] = useState<Mode>("orb");
   const [hint, setHint] = useState(true);
 
