@@ -384,7 +384,8 @@ const EmpireParticleOrb = memo(() => {
       const py = pointerRef.current.y;
       const pointerActive = pointerRef.current.active;
 
-      const ringR = effRadius * 1.05;
+      // Ring radius pushed further out so the central label stays readable in constellation mode
+      const ringR = effRadius * 1.55;
       const arr = particlesRef.current;
 
       for (let i = 0; i < arr.length; i++) {
