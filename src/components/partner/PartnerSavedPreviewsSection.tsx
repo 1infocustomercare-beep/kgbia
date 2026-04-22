@@ -144,9 +144,41 @@ export default function PartnerSavedPreviewsSection() {
     return () => { supabase.removeChannel(channel); };
   }, [user?.id]);
 
+  /* ── Engine derivato + conteggi ── */
+  const previewsWithEngine = useMemo(
+    () => previews.map((p) => ({ ...p, _engine: inferEngine(p) })),
+    [previews]
+  );
+
+  const engineCounts = useMemo(() => {
+    const counts = { ai: 0, template: 0, hybrid: 0 };
+    previewsWithEngine.forEach((p) => { counts[p._engine] += 1; });
+    return counts;
+  }, [previewsWithEngine]);
+
   /* ── Lista filtrata + ordinata ── */
   const filtered = useMemo(() => {
-    const list = previews.filter((p) => {
+    const now = Date.now();
+    const rangeMs: Record<DateRangeKey, number | null> = {
+      any: null,
+      today: 24 * 60 * 60 * 1000,
+      "7d": 7 * 24 * 60 * 60 * 1000,
+      "30d": 30 * 24 * 60 * 60 * 1000,
+      "90d": 90 * 24 * 60 * 60 * 1000,
+    };
+    const cutoff = rangeMs[dateRange];
+
+    const list = previewsWithEngine.filter((p) => {
+      // Engine filter
+      if (engineFilter !== "all" && p._engine !== engineFilter) return false;
+
+      // Date range filter (basato su data di generazione)
+      if (cutoff !== null) {
+        const ts = new Date(p.generated_at || p.saved_to_portfolio_at || p.created_at).getTime();
+        if (now - ts > cutoff) return false;
+      }
+
+      // Search
       if (!search.trim()) return true;
       const q = search.toLowerCase();
       const hay = [
@@ -156,21 +188,26 @@ export default function PartnerSavedPreviewsSection() {
       return hay.includes(q);
     });
 
+    const tsOf = (p: SavedPreview) =>
+      new Date(p.generated_at || p.saved_to_portfolio_at || p.created_at).getTime();
+
     return [...list].sort((a, b) => {
       switch (sort) {
         case "az":
           return (a.portfolio_label || a.lead_name || "").localeCompare(b.portfolio_label || b.lead_name || "");
         case "favorites":
           if (!!a.is_favorite !== !!b.is_favorite) return a.is_favorite ? -1 : 1;
-          return new Date(b.saved_to_portfolio_at || b.created_at).getTime() - new Date(a.saved_to_portfolio_at || a.created_at).getTime();
+          return tsOf(b) - tsOf(a);
         case "views":
           return (b.view_count || 0) - (a.view_count || 0);
+        case "oldest":
+          return tsOf(a) - tsOf(b);
         case "recent":
         default:
-          return new Date(b.saved_to_portfolio_at || b.created_at).getTime() - new Date(a.saved_to_portfolio_at || a.created_at).getTime();
+          return tsOf(b) - tsOf(a);
       }
     });
-  }, [previews, search, sort]);
+  }, [previewsWithEngine, search, sort, engineFilter, dateRange]);
 
   const stats = {
     total: previews.length,
