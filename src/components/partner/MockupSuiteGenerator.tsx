@@ -598,6 +598,116 @@ export function MockupSuiteGenerator({
     }
   };
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // RIGENERA SOLO LE SCHERMATE NON VALIDATE
+  // Mantiene template + impostazioni correnti, sostituisce in-place gli
+  // screen che non hanno superato la validazione AI (branding/inglese/centratura).
+  // I screen già validati restano intatti — niente costo aggiuntivo per loro.
+  // ═══════════════════════════════════════════════════════════════════════
+  const invalidScreenIndexes = useMemo(() => {
+    if (!result?.screens) return [] as number[];
+    return result.screens
+      .map((s, i) => (s.validation && s.validation.validated === false ? i : -1))
+      .filter(i => i >= 0);
+  }, [result]);
+
+  const handleRegenerateInvalid = async () => {
+    if (!result || invalidScreenIndexes.length === 0) return;
+    if (engine === "react") {
+      toast.info("React render non ha validazione AI: rigenera tutto se vuoi una nuova variante.");
+      return;
+    }
+    setGenerating(true);
+    setPreviewPhase("upgrading");
+    try {
+      const failedScreens = invalidScreenIndexes.map(i => ({
+        type: result.screens[i].type as ScreenType,
+        title: result.screens[i].title,
+      }));
+      const variationSeed = Math.floor(Math.random() * 1_000_000);
+
+      const payload = {
+        business_name: businessName,
+        business_sector: businessSector,
+        business_city: businessCity,
+        primary_color: primaryColor,
+        engine,
+        template_variant: templateVariant === "auto" ? undefined : templateVariant,
+        lead_id: leadId,
+        preview_id: previewId,
+        screens: failedScreens,
+        variation_seed: variationSeed,
+        glass_intensity: glassIntensity,
+        color_style: colorStyle,
+        safe_area_px: safeAreaPx,
+        type_scale: typeScale,
+        boost_contrast: boostContrast,
+        branding: {
+          template: brandingKit.variant,
+          locked: lockToTemplate,
+          primary: brandingKit.primary,
+          accent: brandingKit.accent,
+          palette: brandingKit.palette.map(p => p.hex),
+          typography_pair: brandingKit.typography.pairLabel,
+          heading_font: brandingKit.typography.headingFont,
+          body_font: brandingKit.typography.bodyFont,
+          rule: brandingKit.rule,
+        },
+      };
+
+      toast.info(`Rigenerazione ${failedScreens.length}/${result.screens.length} schermate non validate…`, { duration: 3000 });
+
+      const { data, error } = await supabase.functions.invoke("lead-mockup-suite", { body: payload });
+      if (error) throw error;
+      const d = data as any;
+      if (!d?.success) {
+        if (d?.error === "insufficient_credits") {
+          toast.error(`Crediti insufficienti per rigenerare ${failedScreens.length} schermate`);
+        } else if (d?.error === "ai_rate_limited") {
+          toast.error("AI sovraccarica. Riprova tra qualche secondo.");
+        } else {
+          toast.error(`Errore: ${d?.error || "sconosciuto"}`);
+        }
+        setPreviewPhase("complete");
+        return;
+      }
+
+      // Merge: sostituisce SOLO gli screen non validati nel result corrente
+      const newScreens = (d.screens || []) as any[];
+      setResult(prev => {
+        if (!prev) return prev;
+        const updated = [...prev.screens];
+        invalidScreenIndexes.forEach((origIdx, k) => {
+          const replacement = newScreens[k];
+          if (!replacement) return;
+          updated[origIdx] = {
+            ...replacement,
+            variation_seed: replacement.variation_seed ?? variationSeed,
+            variant_index: origIdx,
+            is_preview: false,
+          };
+        });
+        const merged = { ...prev, screens: updated };
+        // Snapshot della versione aggiornata
+        snapshotVersion(prev.suite_id, prev.share_slug, prev.engine, prev.template_variant, updated);
+        return merged;
+      });
+      setPreviewPhase("complete");
+
+      const stillFailing = (newScreens || []).filter((s: any) => s?.validation?.validated === false).length;
+      if (stillFailing === 0) {
+        toast.success(`✓ ${failedScreens.length} schermate rigenerate e validate · ${d.credits_spent} crediti usati`);
+      } else {
+        toast.warning(`Rigenerate ${failedScreens.length} · ${stillFailing} ancora non validate. Puoi riprovare.`, { duration: 6000 });
+      }
+    } catch (e: any) {
+      toast.error(e.message || "Errore rigenerazione");
+      setPreviewPhase("complete");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const copyShareLink = () => {
     if (!result?.share_slug) return;
     const url = `${window.location.origin}/preview/mockup/${result.share_slug}`;
