@@ -3374,6 +3374,87 @@ export type Database = {
           },
         ]
       }
+      lead_whatsapp_ab_tests: {
+        Row: {
+          created_at: string
+          id: string
+          lead_id: string | null
+          lead_name: string
+          lead_phone: string | null
+          notes: string | null
+          owner_id: string
+          status: string
+          updated_at: string
+          variant_a_clicks: number
+          variant_a_first_clicked_at: string | null
+          variant_a_label: string
+          variant_a_last_clicked_at: string | null
+          variant_a_message: string
+          variant_a_replies: number
+          variant_a_short_id: string
+          variant_b_clicks: number
+          variant_b_first_clicked_at: string | null
+          variant_b_label: string
+          variant_b_last_clicked_at: string | null
+          variant_b_message: string
+          variant_b_replies: number
+          variant_b_short_id: string
+          winner: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          lead_name: string
+          lead_phone?: string | null
+          notes?: string | null
+          owner_id?: string
+          status?: string
+          updated_at?: string
+          variant_a_clicks?: number
+          variant_a_first_clicked_at?: string | null
+          variant_a_label?: string
+          variant_a_last_clicked_at?: string | null
+          variant_a_message: string
+          variant_a_replies?: number
+          variant_a_short_id?: string
+          variant_b_clicks?: number
+          variant_b_first_clicked_at?: string | null
+          variant_b_label?: string
+          variant_b_last_clicked_at?: string | null
+          variant_b_message: string
+          variant_b_replies?: number
+          variant_b_short_id?: string
+          winner?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          lead_name?: string
+          lead_phone?: string | null
+          notes?: string | null
+          owner_id?: string
+          status?: string
+          updated_at?: string
+          variant_a_clicks?: number
+          variant_a_first_clicked_at?: string | null
+          variant_a_label?: string
+          variant_a_last_clicked_at?: string | null
+          variant_a_message?: string
+          variant_a_replies?: number
+          variant_a_short_id?: string
+          variant_b_clicks?: number
+          variant_b_first_clicked_at?: string | null
+          variant_b_label?: string
+          variant_b_last_clicked_at?: string | null
+          variant_b_message?: string
+          variant_b_replies?: number
+          variant_b_short_id?: string
+          winner?: string | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           ai_score: number | null
@@ -7474,6 +7555,10 @@ export type Database = {
         Args: { p_error?: string; p_event_id: string; p_status?: string }
         Returns: undefined
       }
+      mark_wa_ab_reply: {
+        Args: { p_test_id: string; p_variant: string }
+        Returns: Json
+      }
       super_admin_grant_credits: {
         Args: {
           p_amount: number
@@ -7498,6 +7583,7 @@ export type Database = {
         Args: { p_lead_name: string; p_vault_id: string }
         Returns: undefined
       }
+      track_wa_ab_click: { Args: { p_short_id: string }; Returns: Json }
       verify_kitchen_pin: {
         Args: { p_pin: string }
         Returns: {
