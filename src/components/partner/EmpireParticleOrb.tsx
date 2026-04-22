@@ -501,7 +501,7 @@ const EmpireParticleOrb = memo(() => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerdown", handlePointerDown);
       window.removeEventListener("pointerup", handlePointerUp);
-      window.removeEventListener("pointercancel", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerCancel);
       canvas.removeEventListener("pointerleave", handlePointerLeave);
       canvas.removeEventListener("touchmove", handleTouchPrevent);
       pointersRef.current.clear();
