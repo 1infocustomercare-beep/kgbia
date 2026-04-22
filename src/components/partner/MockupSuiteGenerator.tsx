@@ -1001,7 +1001,17 @@ export function MockupSuiteGenerator({
                   Upgrade AI…
                 </Badge>
               ) : (
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={handleGenerate}
+                    disabled={generating}
+                    title="Ri-genera le 4 schermate con le impostazioni attuali (nuovo seed)"
+                  >
+                    <RefreshCw className={`h-3 w-3 mr-1 ${generating ? "animate-spin" : ""}`} />
+                    Rigenera
+                  </Button>
                   <Button variant="outline" size="sm" onClick={copyShareLink} disabled={!result.share_slug}>
                     <Copy className="h-3 w-3 mr-1" />Link
                   </Button>
