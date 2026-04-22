@@ -112,9 +112,20 @@ export function MockupSuiteViewer({
           <span>4 schermate iPhone 16 Pro Max · proporzioni reali 9:19.5</span>
           <Badge variant="outline" className="text-xs">{templateVariant.replace(/_/g, " ")}</Badge>
         </div>
-        <Button variant="outline" size="sm" onClick={downloadAll} disabled={downloading !== null}>
-          <Download className="h-3 w-3 mr-1" /> Scarica tutti
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setFullscreenIndex(0)}
+            disabled={!screens.length}
+            title="Visualizza a schermo intero"
+          >
+            <Maximize2 className="h-3 w-3 mr-1" /> Full-screen
+          </Button>
+          <Button variant="outline" size="sm" onClick={downloadAll} disabled={downloading !== null}>
+            <Download className="h-3 w-3 mr-1" /> Scarica tutti
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-items-center">
