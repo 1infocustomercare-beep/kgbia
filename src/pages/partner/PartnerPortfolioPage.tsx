@@ -296,6 +296,143 @@ export default function PartnerPortfolioPage() {
         </div>
       )}
 
+      {/* ═══════════════════════════════════════════════════════════
+           VAULT — Mockup generati + Siti demo + Modalità presentazione
+           Sostituisce la vecchia pagina /partner/demo-studio.
+           ═══════════════════════════════════════════════════════════ */}
+      <section className="rounded-2xl p-4 md:p-5 space-y-4"
+        style={{ background: "rgba(167,139,250,0.04)", border: "1px solid rgba(167,139,250,0.12)" }}>
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div className="space-y-1">
+            <p className="partner-eyebrow flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-violet-300" /> Vetrina Vendite</p>
+            <h3 className="text-base md:text-lg font-display font-bold text-foreground">I tuoi mockup &amp; siti demo</h3>
+            <p className="text-[11px] text-muted-foreground">
+              Ogni sito demo è la replica 1:1 di un mockup approvato. Per generare un nuovo sito vai su{" "}
+              <Link to="/partner/leads" className="text-amber-300 underline">Leads</Link>.
+            </p>
+          </div>
+          <button
+            onClick={() => { setPresentationInitialId(undefined); setPresentationOpen(true); }}
+            disabled={vaultStats.mockupsReady === 0}
+            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-violet-500/20 hover:from-violet-400 hover:to-fuchsia-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Play className="w-3.5 h-3.5 fill-white" /> Pronta da Mostrare
+          </button>
+        </div>
+
+        {/* Stats vault */}
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { label: "Mockup pronti", value: vaultStats.mockupsReady, color: "text-violet-300", icon: Smartphone },
+            { label: "Siti generati", value: vaultStats.sitesGenerated, color: "text-emerald-300", icon: Layers },
+            { label: "Preferiti", value: vaultStats.favorites, color: "text-amber-300", icon: Star },
+          ].map((s) => {
+            const Icon = s.icon;
+            return (
+              <div key={s.label} className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] uppercase text-muted-foreground tracking-wider">{s.label}</span>
+                  <Icon className={`w-3 h-3 ${s.color}`} />
+                </div>
+                <div className={`text-xl font-display font-bold mt-1 ${s.color}`}>{s.value}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Search vault */}
+        {(readyMockups.length > 0 || generatedSites.length > 0) && (
+          <input
+            value={vaultSearch}
+            onChange={(e) => setVaultSearch(e.target.value)}
+            placeholder="Cerca per nome attività, settore o lead..."
+            className="w-full px-3 py-2 rounded-lg text-xs text-foreground placeholder:text-muted-foreground"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+          />
+        )}
+
+        {/* Mockup generati */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+              <Smartphone className="w-3.5 h-3.5 text-violet-400" />
+              Mockup pronti ({readyMockups.length})
+            </h4>
+            <Link to="/partner/custom-preview" className="text-[10px] text-violet-300 hover:text-violet-200 flex items-center gap-1">
+              <Wand2 className="w-3 h-3" /> Nuovo mockup
+            </Link>
+          </div>
+
+          {readyMockups.length === 0 ? (
+            <div className="p-5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.1)" }}>
+              <Smartphone className="w-7 h-7 mx-auto mb-1.5 text-muted-foreground opacity-50" />
+              <p className="text-[11px] text-muted-foreground">Nessun mockup approvato — creane uno in Custom Preview.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {readyMockups.map((suite) => (
+                <div key={suite.id} className="p-3 rounded-xl flex items-start gap-2.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: suite.primary_color || "#a78bfa" }}>
+                    <Smartphone className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h5 className="text-xs font-semibold text-foreground truncate">{suite.business_name}</h5>
+                    <p className="text-[9px] text-muted-foreground truncate">
+                      {suite.business_sector || "—"}{suite.template_variant ? ` · ${suite.template_variant}` : ""}
+                    </p>
+                    <div className="flex gap-1.5 mt-1.5">
+                      <button
+                        onClick={() => { setPresentationInitialId(suite.id); setPresentationOpen(true); }}
+                        className="px-2 py-1 rounded-md bg-violet-500/15 text-violet-200 text-[9px] font-bold flex items-center gap-1 hover:bg-violet-500/25"
+                      >
+                        <Play className="w-2.5 h-2.5 fill-current" /> Mostra
+                      </button>
+                      <Link
+                        to="/partner/leads"
+                        className="px-2 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[9px] font-bold flex items-center gap-1 hover:bg-amber-500/20"
+                        title="Genera sito 1:1 in Leads"
+                      >
+                        <Rocket className="w-2.5 h-2.5" /> Genera
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Siti demo generati */}
+        <div className="space-y-2">
+          <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            Siti demo generati ({generatedSites.length})
+          </h4>
+
+          {generatedSites.length === 0 ? (
+            <div className="p-5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.1)" }}>
+              <Layers className="w-7 h-7 mx-auto mb-1.5 text-muted-foreground opacity-50" />
+              <p className="text-[11px] text-muted-foreground">Nessun sito demo ancora generato — vai in Leads e usa “Genera Demo”.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {generatedSites.map((site) => (
+                <DemoSiteRow
+                  key={site.id}
+                  site={site}
+                  onToggleFav={() => demoVault.toggleFavorite(site.id, site.is_favorite)}
+                  onArchive={async () => {
+                    if (!confirm("Archiviare questo sito demo?")) return;
+                    await demoVault.archiveDemo(site.id);
+                    toast.success("Archiviato");
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* ═══ SEARCH ═══ */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
