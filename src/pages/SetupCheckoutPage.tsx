@@ -83,24 +83,22 @@ const SetupCheckoutPage = () => {
   // ── Verify user actually has a pending entity (avoid showing this page if already paid) ──
   useEffect(() => {
     if (!user) return;
-    let cancelled = false;
+    let isCancelled = false;
     (async () => {
       try {
-        const { data: paid } = await supabase.rpc("is_setup_paid" as never, { _user_id: user.id });
-        if (cancelled) return;
-        if (paid === true) {
-          // Already paid → redirect to dashboard
-          navigate("/app", { replace: true });
-        }
+        const [{ data: paidRestaurant }, { data: paidCompany }] = await Promise.all([
+          supabase.from("restaurants").select("id").eq("owner_id", user.id).eq("setup_paid", true).limit(1).maybeSingle(),
+          supabase.from("companies").select("id").eq("owner_id", user.id).eq("setup_paid", true).limit(1).maybeSingle(),
+        ]);
+        if (isCancelled) return;
+        if (paidRestaurant || paidCompany) navigate("/app", { replace: true });
       } catch (err) {
-        console.warn("[SetupCheckout] is_setup_paid check failed", err);
+        console.warn("[SetupCheckout] paid check failed", err);
       } finally {
-        if (!cancelled) setCheckingStatus(false);
+        if (!isCancelled) setCheckingStatus(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { isCancelled = true; };
   }, [user, navigate]);
 
   const handleCheckout = async () => {

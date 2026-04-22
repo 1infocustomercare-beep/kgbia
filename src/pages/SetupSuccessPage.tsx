@@ -36,11 +36,13 @@ const SetupSuccessPage = () => {
         attempt++;
         setAttempts(attempt);
         try {
-          const { data: paid } = await supabase.rpc("is_setup_paid" as never, { _user_id: user.id });
-          if (paid === true) {
+          const [{ data: paidRestaurant }, { data: paidCompany }] = await Promise.all([
+            supabase.from("restaurants").select("id").eq("owner_id", user.id).eq("setup_paid", true).limit(1).maybeSingle(),
+            supabase.from("companies").select("id").eq("owner_id", user.id).eq("setup_paid", true).limit(1).maybeSingle(),
+          ]);
+          if (paidRestaurant || paidCompany) {
             if (!cancelled) {
               setStatus("ready");
-              // Force session refresh so AuthContext picks up new role/state
               await supabase.auth.refreshSession();
               setTimeout(() => navigate("/app", { replace: true }), 1500);
             }
