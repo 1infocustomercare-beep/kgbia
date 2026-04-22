@@ -375,9 +375,9 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                       <button
                         type="button"
                         onClick={() => {
-                          setMsgA(defaultMessageA(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
-                          setMsgB(defaultMessageB(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
-                          toast.success("Template aggiornati con il CTA");
+                          setMsgA(buildA());
+                          setMsgB(buildB());
+                          toast.success("Template aggiornati");
                         }}
                         className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold text-white/80 hover:bg-white/10"
                         style={{ border: "1px solid rgba(255,255,255,0.15)" }}
