@@ -327,7 +327,7 @@ function getMenuItems(sector: string) {
   }
   if (/spa|wellness|benesser/.test(s)) {
     return [
-      { name: "Massaggio Rituale Empire", desc: "90 min · Oli essenziali · Pietre calde", price: 145, badge: "Top" },
+      { name: "Massaggio Rituale Signature", desc: "90 min · Oli essenziali · Pietre calde", price: 145, badge: "Top" },
       { name: "Percorso Hammam", desc: "120 min · Vapore, scrub, idromassaggio", price: 95 },
       { name: "Trattamento Viso Gold", desc: "75 min · Maschera 24K · Anti-age", price: 110, badge: "Chef" },
       { name: "Riflessologia Plantare", desc: "45 min · Riequilibrio energetico", price: 65 },
@@ -460,7 +460,7 @@ function getMenuItems(sector: string) {
     { name: "Consulenza Esperto", desc: "Analisi personalizzata · 90 min", price: 95 },
     { name: "Pacchetto Completo", desc: "Servizio full · Risultati garantiti", price: 180, badge: "Chef" },
     { name: "Abbonamento Mensile", desc: "Accesso illimitato · 30 giorni", price: 99 },
-    { name: "Gift Card Empire", desc: "Da 50€ a 500€ · Personalizzabile", price: 50 },
+    { name: "Gift Card Brand", desc: "Da 50€ a 500€ · Personalizzabile", price: 50 },
     { name: "Esperienza VIP", desc: "Servizio dedicato · Champagne", price: 250, badge: "Hot" },
   ];
 }
@@ -730,7 +730,7 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[11px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>Marco Rossi</p>
-            <p className="text-[7px]" style={{ color: theme.textMuted }}>marco.rossi@empire.com · Membro Gold dal 2024</p>
+            <p className="text-[7px]" style={{ color: theme.textMuted }}>marco.rossi@email.com · Membro Gold dal 2024</p>
           </div>
           <span className="text-[6px] font-bold px-1.5 py-0.5 rounded" style={{ background: theme.primary, color: theme.bg }}>VIP</span>
         </div>
@@ -750,7 +750,7 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
           <div className="absolute -right-4 -top-4 w-16 h-16 rounded-full opacity-20" style={{ background: "white" }} />
           <div className="relative">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-[7px] font-black uppercase tracking-wider" style={{ color: theme.bg }}>Fedeltà Empire Gold</p>
+              <p className="text-[7px] font-black uppercase tracking-wider" style={{ color: theme.bg }}>Fedeltà Gold Member</p>
               <p className="text-[7px] font-bold" style={{ color: theme.bg }}>★★★★★</p>
             </div>
             <p className="text-[12px] font-black" style={{ color: theme.bg, fontFamily: theme.fontHead }}>240 / 300 punti</p>
@@ -879,7 +879,7 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
         <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border-2 border-dashed" style={{ borderColor: `${theme.primary}50` }}>
           <span className="text-[10px]">🎁</span>
           <div className="flex-1">
-            <p className="text-[8px] font-bold" style={{ color: theme.primary }}>EMPIRE10 applicato</p>
+            <p className="text-[8px] font-bold" style={{ color: theme.primary }}>WELCOME10 applicato</p>
             <p className="text-[6px]" style={{ color: theme.textMuted }}>Sconto del 10% sul totale</p>
           </div>
           <span className="text-[8px] font-bold" style={{ color: theme.primary }}>−€{(subtotal * 0.1).toFixed(2)}</span>
