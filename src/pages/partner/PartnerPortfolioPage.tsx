@@ -132,6 +132,22 @@ export default function PartnerPortfolioPage() {
   const [presentationInitialId, setPresentationInitialId] = useState<string | undefined>();
   const [vaultSearch, setVaultSearch] = useState("");
 
+  // ── Filtri avanzati + ordinamento PERSISTENTE (localStorage) ──
+  type MockupSort = "recent" | "az" | "screens" | "views";
+  type SiteSort = "recent" | "az" | "favorites";
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filterSector, setFilterSector] = useState<string>(() => localStorage.getItem("partner_portfolio_f_sector") || "all");
+  const [filterVariant, setFilterVariant] = useState<string>(() => localStorage.getItem("partner_portfolio_f_variant") || "all");
+  const [filterStatus, setFilterStatus] = useState<string>(() => localStorage.getItem("partner_portfolio_f_status") || "all");
+  const [mockupSort, setMockupSort] = useState<MockupSort>(() => (localStorage.getItem("partner_portfolio_sort_mockup") as MockupSort) || "recent");
+  const [siteSort, setSiteSort] = useState<SiteSort>(() => (localStorage.getItem("partner_portfolio_sort_site") as SiteSort) || "recent");
+
+  useEffect(() => { localStorage.setItem("partner_portfolio_f_sector", filterSector); }, [filterSector]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_f_variant", filterVariant); }, [filterVariant]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_f_status", filterStatus); }, [filterStatus]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_sort_mockup", mockupSort); }, [mockupSort]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_sort_site", siteSort); }, [siteSort]);
+
   // Apertura automatica della modalità "Pronta da Mostrare" via ?present=1 (es. da Home Partner)
   useEffect(() => {
     if (searchParams.get("present") === "1") {
@@ -142,35 +158,86 @@ export default function PartnerPortfolioPage() {
     }
   }, [searchParams, setSearchParams]);
 
-  const readyMockups = useMemo(
-    () =>
-      mockupVault.suites
-        .filter((s) => s.status === "complete")
-        .filter(
-          (s) =>
-            !vaultSearch.trim() ||
-            s.business_name.toLowerCase().includes(vaultSearch.toLowerCase()) ||
-            (s.business_sector || "").toLowerCase().includes(vaultSearch.toLowerCase()),
-        )
-        .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()),
-    [mockupVault.suites, vaultSearch],
-  );
+  // Opzioni filtro derivate dai dati reali
+  const sectorOptions = useMemo(() => {
+    const set = new Set<string>();
+    mockupVault.suites.forEach((s) => s.business_sector && set.add(s.business_sector));
+    demoVault.demos.forEach((d) => d.sector && set.add(d.sector));
+    return Array.from(set).sort();
+  }, [mockupVault.suites, demoVault.demos]);
 
-  const generatedSites = useMemo(
-    () =>
-      demoVault.demos
-        .filter(
-          (d) =>
-            !vaultSearch.trim() ||
-            d.display_name.toLowerCase().includes(vaultSearch.toLowerCase()) ||
-            d.original_lead_name.toLowerCase().includes(vaultSearch.toLowerCase()),
-        )
-        .sort((a, b) => {
+  const variantOptions = useMemo(() => {
+    const set = new Set<string>();
+    mockupVault.suites.forEach((s) => s.template_variant && set.add(s.template_variant));
+    demoVault.demos.forEach((d: any) => d.template_variant && set.add(d.template_variant));
+    return Array.from(set).sort();
+  }, [mockupVault.suites, demoVault.demos]);
+
+  const statusOptions = useMemo(() => {
+    const set = new Set<string>();
+    mockupVault.suites.forEach((s) => s.status && set.add(s.status));
+    return Array.from(set).sort();
+  }, [mockupVault.suites]);
+
+  const activeFiltersCount =
+    (filterSector !== "all" ? 1 : 0) +
+    (filterVariant !== "all" ? 1 : 0) +
+    (filterStatus !== "all" ? 1 : 0);
+
+  const readyMockups = useMemo(() => {
+    const list = mockupVault.suites
+      .filter((s) => (filterStatus === "all" ? s.status === "complete" : s.status === filterStatus))
+      .filter((s) => filterSector === "all" || s.business_sector === filterSector)
+      .filter((s) => filterVariant === "all" || s.template_variant === filterVariant)
+      .filter((s) => {
+        if (!vaultSearch.trim()) return true;
+        const q = vaultSearch.toLowerCase();
+        return (
+          s.business_name.toLowerCase().includes(q) ||
+          (s.business_sector || "").toLowerCase().includes(q) ||
+          (s.business_city || "").toLowerCase().includes(q)
+        );
+      });
+
+    const screensCount = (s: any) =>
+      Array.isArray(s.screens) ? s.screens.length :
+        s.screens && typeof s.screens === "object" ? Object.keys(s.screens).length : 0;
+
+    return list.sort((a, b) => {
+      switch (mockupSort) {
+        case "az": return a.business_name.localeCompare(b.business_name);
+        case "screens": return screensCount(b) - screensCount(a);
+        case "views": return (b.view_count || 0) - (a.view_count || 0);
+        case "recent":
+        default: return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      }
+    });
+  }, [mockupVault.suites, vaultSearch, filterStatus, filterSector, filterVariant, mockupSort]);
+
+  const generatedSites = useMemo(() => {
+    const list = demoVault.demos
+      .filter((d: any) => filterSector === "all" || d.sector === filterSector)
+      .filter((d: any) => filterVariant === "all" || d.template_variant === filterVariant)
+      .filter((d) => {
+        if (!vaultSearch.trim()) return true;
+        const q = vaultSearch.toLowerCase();
+        return (
+          d.display_name.toLowerCase().includes(q) ||
+          d.original_lead_name.toLowerCase().includes(q)
+        );
+      });
+
+    return list.sort((a, b) => {
+      switch (siteSort) {
+        case "az": return a.display_name.localeCompare(b.display_name);
+        case "favorites":
           if (a.is_favorite !== b.is_favorite) return a.is_favorite ? -1 : 1;
           return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
-        }),
-    [demoVault.demos, vaultSearch],
-  );
+        case "recent":
+        default: return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      }
+    });
+  }, [demoVault.demos, vaultSearch, filterSector, filterVariant, siteSort]);
 
   const vaultStats = {
     mockupsReady: mockupVault.suites.filter((s) => s.status === "complete").length,
