@@ -200,11 +200,11 @@ const SetupCheckoutPage = () => {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 flex gap-3"
+            className="mb-6 p-4 rounded-xl border border-destructive/30 bg-destructive/10 flex gap-3"
           >
-            <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
             <div className="text-sm">
-              <p className="text-amber-300 font-semibold">Pagamento annullato</p>
+              <p className="text-destructive font-semibold">Pagamento annullato</p>
               <p className="text-foreground/70 mt-0.5">
                 Nessun addebito effettuato. Riprova quando vuoi.
               </p>
