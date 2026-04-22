@@ -653,7 +653,9 @@ export function MockupSuiteGenerator({
                   key={opt.key}
                   type="button"
                   onClick={() => setEngine(opt.key)}
-                  className={`relative p-4 rounded-xl border-2 text-left transition-all overflow-hidden group ${
+                  disabled={controlsLocked}
+                  title={lockTitle}
+                  className={`relative p-4 rounded-xl border-2 text-left transition-all overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed ${
                     selected ? "border-primary scale-[1.02] shadow-lg" : "border-border hover:border-primary/50"
                   }`}
                 >
