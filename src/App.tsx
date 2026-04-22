@@ -583,6 +583,18 @@ function App() {
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/login" element={<AuthPage />} />
 
+                      {/* Mandatory setup payment gate (€1.997+) before dashboard access */}
+                      <Route path="/checkout-setup" element={
+                        <ProtectedRoute>
+                          <SetupCheckoutPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/checkout-setup/success" element={
+                        <ProtectedRoute>
+                          <SetupSuccessPage />
+                        </ProtectedRoute>
+                      } />
+
                       {/* ═══ Empire Tenant-Isolated Login ═══ */}
                       <Route path="/t/:slug/login" element={<TenantLogin />} />
                       <Route path="/t/:slug/unlock" element={<TenantLoginUnlock />} />
