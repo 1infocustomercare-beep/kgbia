@@ -275,7 +275,11 @@ Deno.serve(async (req) => {
       lead_id,
       preview_id,
       screens: screensInput,
+      variation_seed: variationSeedInput,
     } = body;
+    const variationSeed: number = Number.isFinite(Number(variationSeedInput))
+      ? Number(variationSeedInput)
+      : Math.floor(Math.random() * 1_000_000);
 
     if (!business_name?.trim()) {
       return new Response(JSON.stringify({ error: "business_name_required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -340,12 +344,14 @@ Deno.serve(async (req) => {
 
     // ENGINE = REACT: nessuna AI image, ritorna config — il client renderizza via html2canvas
     if (engine === "react") {
-      const reactScreens = screens.map(s => ({
+      const reactScreens = screens.map((s, i) => ({
         type: s.type,
         title: s.title,
         image_url: null,
         render_mode: "react" as const,
         template_variant: templateVariant,
+        variation_seed: variationSeed,
+        variant_index: i,
       }));
       await adminClient
         .from("seller_mockup_suites")
@@ -378,12 +384,12 @@ Deno.serve(async (req) => {
 
     try {
       // Genera 4 immagini in parallelo
-      const imagePromises = screens.map(s => generateAIImage(LOVABLE_KEY, buildScreenPrompt(s, business, templateVariant, primary_color, pro), pro));
+      const imagePromises = screens.map((s, i) => generateAIImage(LOVABLE_KEY, buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i), pro));
       const dataUrls = await Promise.all(imagePromises);
 
       // Upload su storage
       const uploadPromises = dataUrls.map((du, i) =>
-        du ? uploadDataUrl(adminClient, du, `mockup-suites/${userId}/${suite.id}/${i}-${screens[i].type}.png`) : Promise.resolve(null)
+        du ? uploadDataUrl(adminClient, du, `mockup-suites/${userId}/${suite.id}/${i}-${screens[i].type}-v${variationSeed}.png`) : Promise.resolve(null)
       );
       const publicUrls = await Promise.all(uploadPromises);
 
@@ -393,6 +399,8 @@ Deno.serve(async (req) => {
         image_url: publicUrls[i],
         render_mode: "ai" as const,
         engine,
+        variation_seed: variationSeed,
+        variant_index: i,
       }));
 
       await adminClient
