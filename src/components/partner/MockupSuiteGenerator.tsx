@@ -1024,12 +1024,13 @@ export function MockupSuiteGenerator({
                 <Badge variant="outline" className="text-xs shrink-0">#{i + 1}</Badge>
                 <Select
                   value={s.type}
+                  disabled={controlsLocked}
                   onValueChange={(v) => {
                     setAutoScreens(false);
                     setScreens(prev => prev.map((x, j) => j === i ? { ...x, type: v as ScreenType, title: SCREEN_TYPES.find(t => t.key === v)?.label || x.title } : x));
                   }}
                 >
-                  <SelectTrigger className="h-8 text-xs flex-1">
+                  <SelectTrigger className="h-8 text-xs flex-1" title={lockTitle}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1041,11 +1042,13 @@ export function MockupSuiteGenerator({
                 <Input
                   className="h-8 text-xs w-32"
                   value={s.title}
+                  disabled={controlsLocked}
                   onChange={e => {
                     setAutoScreens(false);
                     setScreens(prev => prev.map((x, j) => j === i ? { ...x, title: e.target.value } : x));
                   }}
                   placeholder="Titolo"
+                  title={lockTitle}
                 />
               </div>
             ))}
