@@ -40,7 +40,7 @@ import DeliverabilityPanel from "@/components/leads/DeliverabilityPanel";
 import { TEMPLATES, pickRecommendedAuroraTemplate, renderTemplate } from "@/lib/email-templates/aurora-templates";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShieldCheck } from "lucide-react";
-import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks } from "lucide-react";
+import { Briefcase, Bookmark, Wand2 as WandIcon, Radar, ListChecks, Crosshair } from "lucide-react";
 
 /* ─── Types ─── */
 interface Lead {
