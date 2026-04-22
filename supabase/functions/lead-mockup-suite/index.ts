@@ -178,11 +178,12 @@ async function validateMockupImage(
 }
 
 REGOLE:
-- "has_forbidden_branding" = true se vedi "Empire", "Empire AI", "Empire AI Group", "Empireia" o "Lovable" in qualsiasi punto del display.
-- "has_english_content" = true se vedi frasi/parole inglesi nei CONTENUTI dell'app (titoli sezioni, nomi servizi, CTA, descrizioni). IGNORA la status bar iOS (orario, %, 5G, WiFi).
-- "has_third_party_logos" = true se vedi loghi Apple, Google, Meta, Instagram, Facebook, WhatsApp ecc.
-- "iphone_centered_no_tilt" = true SOLO se l'iPhone è perfettamente frontale, centrato, senza prospettiva 3D.
+- "has_forbidden_branding" = true SOLO se vedi chiaramente la parola esatta "Empire", "Empire AI", "Empire AI Group", "Empireia" o "Lovable" come testo del brand. Una "E" stilizzata da sola NON è branding vietato.
+- "has_english_content" = true SOLO se vedi 3 o più frasi/parole inglesi distinte nei CONTENUTI dell'app (titoli sezioni, CTA grandi, descrizioni). IGNORA: status bar iOS (orario, %, 5G, WiFi), nomi propri di prodotti/servizi che possono essere internazionali (es. "Spa", "Brunch", "Wellness", "Loyalty"), parole italiane d'uso comune anche se di origine inglese (es. "Bar", "Sport", "App", "Online").
+- "has_third_party_logos" = true SOLO se vedi loghi RICONOSCIBILI di Apple (mela), Google (G colorata), Meta, Instagram (camera multicolore), Facebook (f blu), WhatsApp (telefono verde) ecc. Icone generiche stilizzate (cuore, casa, profilo) NON sono loghi terzi.
+- "iphone_centered_no_tilt" = true se l'iPhone è sostanzialmente frontale e centrato (tolleranza ±5° di rotazione e ±10% di offset accettata). Solo evidenti prospettive 3D estreme o tilt > 15° sono "false".
 - "overall_ok" = true SOLO se has_forbidden_branding=false E has_english_content=false E has_third_party_logos=false E iphone_centered_no_tilt=true.
+- Sii TOLLERANTE: in caso di dubbio rispondi sempre con il valore "ok" (false sui flag has_*, true su iphone_centered_no_tilt). Meglio approvare un mockup imperfetto che bocciarne uno valido.
 - Rispondi SOLO il JSON, niente altro testo.`,
               },
               { type: "image_url", image_url: { url: dataUrl } },
@@ -212,7 +213,9 @@ REGOLE:
     if (parsed.iphone_centered_no_tilt === false) {
       issues.push("iphone_not_centered_or_tilted");
     }
-    return { ok: parsed.overall_ok === true && issues.length === 0, issues, raw };
+    // ok se nessun issue critico (centratura considerata "soft" — ammessa se è l'unico problema)
+    const criticalIssues = issues.filter(i => !i.startsWith("iphone_not_centered"));
+    return { ok: criticalIssues.length === 0, issues, raw };
   } catch (e) {
     console.warn("[validate] exception", e);
     return { ok: true, issues: [], raw: `validator_exception` }; // fail-open
