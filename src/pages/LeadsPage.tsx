@@ -1745,15 +1745,15 @@ export default function LeadsPage() {
         </div>
 
 
-        {/* Quick actions */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* 📍 PRIMARY CTA: Trova lead vicino a me (posizione attuale venditore) */}
+        {/* Quick actions — touch-friendly, professional sizing */}
+        <div className="flex items-center gap-2 md:gap-2.5 flex-wrap">
+          {/* 📍 PRIMARY CTA: Trova lead vicino a me */}
           <motion.button
             whileTap={{ scale: 0.95 }}
             animate={!gpsOpen ? { boxShadow: ["0 0 0 0 rgba(6,182,212,0.4)", "0 0 0 8px rgba(6,182,212,0)", "0 0 0 0 rgba(6,182,212,0)"] } : {}}
             transition={{ repeat: Infinity, duration: 2.2 }}
             onClick={() => setGpsOpen(true)}
-            className="flex items-center gap-1.5 text-[10px] font-black px-3 py-1.5 rounded-lg relative overflow-hidden"
+            className="flex items-center gap-1.5 text-[11px] md:text-xs font-black px-3.5 py-2 md:px-4 md:py-2.5 rounded-xl relative overflow-hidden min-h-[36px] md:min-h-[40px]"
             style={{
               background: "linear-gradient(135deg, #06b6d4, #14b8a6, #10b981)",
               border: "1px solid rgba(6,182,212,0.6)",
@@ -1761,15 +1761,15 @@ export default function LeadsPage() {
             }}
             title="Cerca lead reali nel raggio della tua posizione GPS attuale"
           >
-            <Crosshair className="w-3 h-3" />
+            <Crosshair className="w-3.5 h-3.5 md:w-4 md:h-4" />
             Trova vicino a me
-            <span className="text-[7px] px-1 rounded font-black" style={{ background: "rgba(255,255,255,0.25)", color: "#fff" }}>GPS</span>
+            <span className="text-[8px] md:text-[9px] px-1.5 py-0.5 rounded font-black" style={{ background: "rgba(255,255,255,0.25)", color: "#fff" }}>GPS</span>
           </motion.button>
 
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setGpsOpen(!gpsOpen)}
-            className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-lg relative overflow-hidden"
+            className="flex items-center gap-1.5 text-[11px] md:text-xs font-bold px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl relative overflow-hidden min-h-[36px] md:min-h-[40px]"
             style={{
               background: gpsOpen
                 ? "linear-gradient(135deg, rgba(6,182,212,0.25), rgba(20,184,166,0.15))"
@@ -1779,40 +1779,40 @@ export default function LeadsPage() {
             }}
           >
             <motion.span animate={{ rotate: gpsOpen ? 360 : 0 }} transition={{ duration: 1.5, repeat: gpsOpen ? Infinity : 0, ease: "linear" }}>
-              <Radar className="w-3 h-3" />
+              <Radar className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </motion.span>
             GPS Radar
-            <span className="text-[7px] px-1 rounded font-black" style={{ background: "rgba(34,197,94,0.2)", color: "#86efac" }}>FREE</span>
+            <span className="text-[8px] md:text-[9px] px-1.5 py-0.5 rounded font-black" style={{ background: "rgba(34,197,94,0.2)", color: "#86efac" }}>FREE</span>
           </motion.button>
           {results.length > 0 && (
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setSpeedDialOpen(true)}
-              className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-lg"
+              className="flex items-center gap-1.5 text-[11px] md:text-xs font-bold px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl min-h-[36px] md:min-h-[40px]"
               style={{
                 background: "linear-gradient(135deg, rgba(20,184,166,0.18), rgba(16,185,129,0.10))",
                 border: "1px solid rgba(20,184,166,0.4)",
                 color: "#5eead4",
               }}
             >
-              <ListChecks className="w-3 h-3" />
+              <ListChecks className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Lista nomi
-              <span className="text-[8px] font-black px-1 rounded" style={{ background: "rgba(20,184,166,0.3)", color: "#fff" }}>
+              <span className="text-[9px] md:text-[10px] font-black px-1.5 py-0.5 rounded" style={{ background: "rgba(20,184,166,0.3)", color: "#fff" }}>
                 {results.length}
               </span>
             </motion.button>
           )}
-          <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: showFilters ? "#14b8a6" : "#9ca3af" }}>
-            <Filter className="w-3 h-3" /> Filtri avanzati <ChevronDown className={`w-3 h-3 transition-transform ${showFilters ? "rotate-180" : ""}`} />
+          <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1.5 text-[11px] md:text-xs font-semibold px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl min-h-[36px] md:min-h-[40px]" style={{ ...inputStyle, color: showFilters ? "#14b8a6" : "#9ca3af" }}>
+            <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" /> Filtri avanzati <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showFilters ? "rotate-180" : ""}`} />
           </button>
-          <button onClick={() => setShowManual(!showManual)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: "#a78bfa" }}>
-            <UserPlus className="w-3 h-3" /> Lead esterno
+          <button onClick={() => setShowManual(!showManual)} className="flex items-center gap-1.5 text-[11px] md:text-xs font-semibold px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl min-h-[36px] md:min-h-[40px]" style={{ ...inputStyle, color: "#a78bfa" }}>
+            <UserPlus className="w-3.5 h-3.5 md:w-4 md:h-4" /> Lead esterno
           </button>
           {/* Source badges */}
           {results.length > 0 && Object.entries(sourceStats).map(([src, count]) => {
             const info = SOURCE_LABELS[src] || { label: src, color: "#9ca3af" };
             return (
-              <span key={src} className="text-[8px] font-bold px-2 py-1 rounded-lg" style={{ background: `${info.color}12`, color: info.color }}>
+              <span key={src} className="text-[9px] md:text-[10px] font-bold px-2 py-1 rounded-lg" style={{ background: `${info.color}12`, color: info.color }}>
                 {info.label}: {count}
               </span>
             );
