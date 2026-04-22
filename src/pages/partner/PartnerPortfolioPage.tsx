@@ -350,9 +350,9 @@ export default function PartnerPortfolioPage() {
   return (
     <div className="space-y-6 px-4 pt-6 pb-8 max-w-2xl lg:max-w-7xl mx-auto">
       <header className="space-y-1.5">
-        <p className="partner-eyebrow">Portfolio Empire</p>
-        <h2 className="partner-h2">Portfolio &amp; Demo</h2>
-        <p className="partner-subtle">Catalogo dei settori — preview cliente, dashboard admin e demo personalizzate.</p>
+        <p className="partner-eyebrow">Vetrina Empire</p>
+        <h2 className="partner-h2">Vetrina Demo &amp; Mockup</h2>
+        <p className="partner-subtle">Catalogo di tutto ciò che è già pronto da mostrare — siti demo per settore, mockup approvati e preview salvate.</p>
         <div className="partner-divider mt-3" />
       </header>
 
@@ -605,14 +605,14 @@ export default function PartnerPortfolioPage() {
               Mockup pronti ({readyMockups.length})
             </h4>
             <Link to="/partner/custom-preview" className="text-[10px] text-violet-300 hover:text-violet-200 flex items-center gap-1">
-              <Wand2 className="w-3 h-3" /> Nuovo mockup
+              <Wand2 className="w-3 h-3" /> Nuovo mockup su misura
             </Link>
           </div>
 
           {readyMockups.length === 0 ? (
             <div className="p-5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.1)" }}>
               <Smartphone className="w-7 h-7 mx-auto mb-1.5 text-muted-foreground opacity-50" />
-              <p className="text-[11px] text-muted-foreground">Nessun mockup approvato — creane uno in Custom Preview.</p>
+              <p className="text-[11px] text-muted-foreground">Nessun mockup approvato — creane uno in <span className="text-violet-300">Mockup su Misura</span>.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

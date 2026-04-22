@@ -37,24 +37,24 @@ type NavItem = {
 /**
  * NAVIGAZIONE PARTNER — sezioni essenziali, zero doppioni.
  *
- * Logica:
- *  • Home            → dashboard / pitch (visibile in demo presentazione)
- *  • Leads           → LeadEngine Scout: trova + qualifica + GENERA sito demo 1:1 (nascosto in demo)
- *  • Custom Preview  → Mockup iPhone su misura per un cliente specifico (nascosto in demo)
- *  • Guadagni        → Commissioni, bonus, team (nascosto in demo)
- *  • Portfolio       → Catalogo 25+ settori + Mockup generati + Siti demo + Modalità Presentazione (visibile in demo)
- *  • Profilo         → Dati personali, avatar (nascosto in demo)
+ * Logica funzionale (etichette riformulate per riflettere ESATTAMENTE cosa fanno):
+ *  • Home          → dashboard / pitch (visibile in demo presentazione)
+ *  • Lead+Demo     → /leads: trova prospect + AI genera in AUTOMATICO il sito demo 1:1
+ *  • Mockup        → /custom-preview: costruzione MANUALE di un mockup iPhone su misura
+ *  • Guadagni      → Commissioni, bonus, team (nascosto in demo)
+ *  • Vetrina       → /portfolio: catalogo + modalità presentazione (visibile in demo)
+ *  • Profilo       → Dati personali, avatar (nascosto in demo)
  *
- * Bottom nav mobile (max 4 + Altro):
- *  LIVE  →  Home · Leads · Custom Preview · Guadagni  +  Altro (Portfolio, Profilo, API)
- *  DEMO  →  Home · Portfolio                          (zero dati sensibili davanti al cliente)
+ * Bottom nav mobile (max 4 + Altro) — etichette accorciate per il tab bar:
+ *  LIVE  →  Home · Lead+Demo · Mockup · Guadagni  +  Altro (Vetrina, Profilo, API)
+ *  DEMO  →  Home · Vetrina                        (zero dati sensibili davanti al cliente)
  */
 const NAV_ITEMS_FULL: NavItem[] = [
   { path: "/partner",                icon: LayoutDashboard, label: "Home",        exact: true, showInDemo: true,  primary: true  },
-  { path: "/partner/leads",          icon: Target,          label: "Leads",                    showInDemo: false, primary: true  },
-  { path: "/partner/custom-preview", icon: Palette,         label: "Custom Preview",           showInDemo: false, primary: true  },
+  { path: "/partner/leads",          icon: Target,          label: "Lead+Demo",                showInDemo: false, primary: true  },
+  { path: "/partner/custom-preview", icon: Palette,         label: "Mockup",                   showInDemo: false, primary: true  },
   { path: "/partner/earnings",       icon: DollarSign,      label: "Guadagni",                 showInDemo: false, primary: true  },
-  { path: "/partner/portfolio",      icon: FolderOpen,      label: "Portfolio",                showInDemo: true,  primary: false },
+  { path: "/partner/portfolio",      icon: FolderOpen,      label: "Vetrina",                  showInDemo: true,  primary: false },
   { path: "/partner/profile",        icon: User,            label: "Profilo",                  showInDemo: false, primary: false },
   { path: "/partner/api-connections",icon: Zap,             label: "API",                      showInDemo: false, primary: false },
 ];

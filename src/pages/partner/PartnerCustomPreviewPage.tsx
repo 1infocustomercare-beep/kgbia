@@ -365,8 +365,8 @@ export default function PartnerCustomPreviewPage() {
     <div className="container max-w-6xl px-3 sm:px-4 pt-2 pb-24 sm:pb-10 space-y-5 sm:space-y-7">
       {/* ═══ HERO MASCOT (agente animato viola, identico stile Leads) ═══ */}
       <PartnerHeroMascot
-        title="Preview Custom AI"
-        subtitle={`Landing page premium per qualsiasi lead — l'AI scrive testi, crea l'hero e compone l'HTML pronto da mostrare. Costo: ${COST} crediti.`}
+        title="Mockup su Misura"
+        subtitle={`Costruisci a mano un mockup iPhone per UN cliente specifico — tu inserisci dati e brand, l'AI genera l'anteprima. Costo: ${COST} crediti. Diverso da Lead+Demo (auto-genera) e dalla Vetrina (catalogo).`}
         icon={Palette}
         active={generating}
       />

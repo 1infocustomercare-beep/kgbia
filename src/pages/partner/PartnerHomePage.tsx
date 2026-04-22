@@ -81,17 +81,17 @@ export default function PartnerHomePage() {
    *   con la CTA "Vedi le Demo" in fondo alla vista demo.
    */
   const QUICK_NAV_LIVE = [
-    { icon: Target,     label: "LeadEngine Scout", desc: "Trova, analizza, contatta lead e genera il sito demo 1:1",  gradient: "from-violet-600/20 to-purple-600/10",  iconColor: "#a78bfa", path: "/partner/leads" },
-    { icon: Palette,    label: "Custom Preview",   desc: "Mockup iPhone su misura per un cliente specifico",          gradient: "from-rose-600/20 to-pink-600/10",      iconColor: "#fb7185", path: "/partner/custom-preview" },
-    { icon: FolderOpen, label: "Portfolio",        desc: "Catalogo settori, mockup e siti demo già generati",         gradient: "from-blue-600/20 to-indigo-600/10",    iconColor: "#818cf8", path: "/partner/portfolio" },
-    { icon: DollarSign, label: "Guadagni & Team",  desc: "Commissioni, bonus e reclutamento venditori",               gradient: "from-emerald-600/20 to-teal-600/10",   iconColor: "#34d399", path: "/partner/earnings" },
-    { icon: User,       label: "Il Mio Profilo",   desc: "Dati personali, avatar e impostazioni",                     gradient: "from-amber-600/20 to-orange-600/10",   iconColor: "#fbbf24", path: "/partner/profile" },
+    { icon: Target,     label: "Caccia Lead + Demo Auto", desc: "Scova locali nuovi e l'AI genera in automatico il loro sito demo 1:1",  gradient: "from-violet-600/20 to-purple-600/10",  iconColor: "#a78bfa", path: "/partner/leads" },
+    { icon: Palette,    label: "Mockup su Misura",        desc: "Costruisci a mano un mockup iPhone per un cliente specifico",            gradient: "from-rose-600/20 to-pink-600/10",      iconColor: "#fb7185", path: "/partner/custom-preview" },
+    { icon: FolderOpen, label: "Vetrina Demo & Mockup",   desc: "Catalogo di tutto quello che hai già generato — pronto da mostrare",     gradient: "from-blue-600/20 to-indigo-600/10",    iconColor: "#818cf8", path: "/partner/portfolio" },
+    { icon: DollarSign, label: "Guadagni & Team",         desc: "Commissioni, bonus e reclutamento venditori",                            gradient: "from-emerald-600/20 to-teal-600/10",   iconColor: "#34d399", path: "/partner/earnings" },
+    { icon: User,       label: "Il Mio Profilo",          desc: "Dati personali, avatar e impostazioni",                                  gradient: "from-amber-600/20 to-orange-600/10",   iconColor: "#fbbf24", path: "/partner/profile" },
   ];
 
   const QUICK_NAV_DEMO = [
-    { icon: FolderOpen, label: "Esempi nel Tuo Settore", desc: "Sfoglia il catalogo demo: ristoranti, NCC, beauty, gym e altro", gradient: "from-amber-600/20 to-orange-600/10",  iconColor: "#d4a052", path: "/partner/portfolio" },
-    { icon: Palette,    label: "Anteprima Personalizzata", desc: "Mockup del tuo brand su iPhone, pronto in 60 secondi",         gradient: "from-violet-600/20 to-fuchsia-600/10", iconColor: "#a78bfa", path: "/partner/custom-preview" },
-    { icon: Presentation, label: "Modalità Presentazione", desc: "Schermo intero, solo preview — ideale per mostrarti tutto",     gradient: "from-rose-600/20 to-pink-600/10",      iconColor: "#fb7185", path: "/partner/portfolio?present=1" },
+    { icon: FolderOpen,   label: "Catalogo Settori Demo",  desc: "Sfoglia 25+ settori già pronti: ristoranti, NCC, beauty, gym e altro",  gradient: "from-amber-600/20 to-orange-600/10",  iconColor: "#d4a052", path: "/partner/portfolio" },
+    { icon: Palette,      label: "Mockup del Tuo Brand",   desc: "Crea ora un mockup iPhone con il tuo logo e i tuoi colori — 60 sec",    gradient: "from-violet-600/20 to-fuchsia-600/10", iconColor: "#a78bfa", path: "/partner/custom-preview" },
+    { icon: Presentation, label: "Pronta da Mostrare",     desc: "Apri la modalità presentazione fullscreen, solo preview, zero menu",    gradient: "from-rose-600/20 to-pink-600/10",      iconColor: "#fb7185", path: "/partner/portfolio?present=1" },
   ];
 
   const QUICK_NAV = demoMode ? QUICK_NAV_DEMO : QUICK_NAV_LIVE;
