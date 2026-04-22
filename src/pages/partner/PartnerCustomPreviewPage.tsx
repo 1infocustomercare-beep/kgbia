@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,12 +8,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Sparkles, Trash2, ExternalLink, Palette, Upload, Eye, Copy, MessageCircle, Image as ImageIcon, Smartphone } from "lucide-react";
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Loader2, Sparkles, Trash2, ExternalLink, Palette, Eye, Copy, MessageCircle,
+  Image as ImageIcon, Smartphone, Star, Bookmark, Search,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
 import { MockupSuiteVaultList } from "@/components/partner/MockupSuiteVaultList";
+import PartnerHeroMascot from "@/components/partner/PartnerHeroMascot";
 
 const STYLES = [
   { key: "modern_dark", label: "Modern Dark", color: "#0F172A", accent: "#C8963E" },
@@ -40,6 +48,10 @@ interface CustomPreview {
   reuse_count: number;
   created_at: string;
   whatsapp_message: string | null;
+  is_favorite?: boolean;
+  saved_to_portfolio?: boolean;
+  portfolio_label?: string | null;
+  portfolio_notes?: string | null;
 }
 
 interface SelectableLead {
@@ -67,6 +79,16 @@ export default function PartnerCustomPreviewPage() {
   const [logoUploading, setLogoUploading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
 
+  // Filtri lista preview
+  const [previewSearch, setPreviewSearch] = useState("");
+  const [previewFilter, setPreviewFilter] = useState<"all" | "favorites" | "portfolio">("all");
+
+  // Dialog "Salva nel Portfolio"
+  const [saveDialog, setSaveDialog] = useState<{ id: string; defaultLabel: string } | null>(null);
+  const [saveLabel, setSaveLabel] = useState("");
+  const [saveNotes, setSaveNotes] = useState("");
+  const [savingPortfolio, setSavingPortfolio] = useState(false);
+
   const [form, setForm] = useState({
     lead_name: "",
     lead_city: "",
@@ -81,7 +103,7 @@ export default function PartnerCustomPreviewPage() {
     gallery_images: [] as string[],
   });
 
-  // Load previews + intelligence + scout leads (uniti)
+  // Load previews + intelligence + scout leads
   useEffect(() => {
     if (!user?.id) return;
     (async () => {
@@ -121,7 +143,7 @@ export default function PartnerCustomPreviewPage() {
     })();
   }, [user?.id]);
 
-  // Pre-fill form da lead selezionato (intelligence o scout) — sovrascrive sempre
+  // Pre-fill form da lead selezionato
   useEffect(() => {
     if (!selectedLeadId || selectedLeadId === "none") return;
     const lead = availableLeads.find(l => l.id === selectedLeadId);
@@ -140,7 +162,7 @@ export default function PartnerCustomPreviewPage() {
     toast.success(`Dati di "${lead.lead_name}" caricati nel form`);
   }, [selectedLeadId, availableLeads]);
 
-  const handleFileUpload = async (file: File, kind: "logo" | "gallery") => {
+  const handleFileUpload = async (file: File, _kind: "logo" | "gallery") => {
     if (!user?.id) return null;
     const path = `custom-previews/${user.id}/uploads/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
     const { error } = await supabase.storage.from("media-vault").upload(path, file, { upsert: true });
@@ -192,25 +214,16 @@ export default function PartnerCustomPreviewPage() {
         const [src, realId] = selectedLeadId.split(":");
         if (src === "intel") payload.lead_intelligence_id = realId;
         else if (src === "scout") payload.lead_id = realId;
-        // override sempre con i dati visibili nel form (l'utente potrebbe aver corretto)
         payload.manual_data = {
-          lead_name: form.lead_name,
-          lead_city: form.lead_city,
-          lead_sector: form.lead_sector,
-          lead_website: form.lead_website,
-          lead_phone: form.lead_phone,
-          lead_address: form.lead_address,
-          lead_email: form.lead_email,
+          lead_name: form.lead_name, lead_city: form.lead_city, lead_sector: form.lead_sector,
+          lead_website: form.lead_website, lead_phone: form.lead_phone,
+          lead_address: form.lead_address, lead_email: form.lead_email,
         };
       } else {
         payload.manual_data = {
-          lead_name: form.lead_name,
-          lead_city: form.lead_city,
-          lead_sector: form.lead_sector,
-          lead_website: form.lead_website,
-          lead_phone: form.lead_phone,
-          lead_address: form.lead_address,
-          lead_email: form.lead_email,
+          lead_name: form.lead_name, lead_city: form.lead_city, lead_sector: form.lead_sector,
+          lead_website: form.lead_website, lead_phone: form.lead_phone,
+          lead_address: form.lead_address, lead_email: form.lead_email,
         };
       }
 
@@ -228,11 +241,9 @@ export default function PartnerCustomPreviewPage() {
 
       toast.success(`Preview "${form.lead_name}" generata! 🎉`);
 
-      // Reload list
       const { data: list } = await supabase.from("seller_custom_previews" as any).select("*").eq("owner_id", user!.id).order("created_at", { ascending: false });
       setPreviews((list as any) || []);
 
-      // Reset form
       setForm({
         lead_name: "", lead_city: "", lead_sector: "", lead_phone: "", lead_website: "",
         lead_address: "", lead_email: "",
@@ -241,7 +252,6 @@ export default function PartnerCustomPreviewPage() {
       });
       setSelectedLeadId("");
 
-      // Auto-open
       const url = (data as any).public_url;
       if (url) window.open(url, "_blank");
     } catch (e: any) {
@@ -274,125 +284,199 @@ export default function PartnerCustomPreviewPage() {
     window.open(url, "_blank");
   };
 
-  return (
-    <div className="container max-w-6xl py-6 space-y-6">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Palette className="h-7 w-7 text-primary" />
-          Preview Custom AI
-        </h1>
-        <p className="text-muted-foreground">
-          Genera una landing page premium personalizzata per qualsiasi lead.
-          L'AI scrive testi, crea l'immagine hero e compone l'HTML — pronto da mostrare al cliente.
-          <strong className="ml-1">Costo: {COST} crediti per preview.</strong>
-        </p>
-      </div>
+  /** Toggle preferito (rapido, senza dialog) */
+  const toggleFavorite = async (p: CustomPreview) => {
+    const next = !p.is_favorite;
+    setPreviews(prev => prev.map(x => x.id === p.id ? { ...x, is_favorite: next } : x));
+    const { error } = await supabase
+      .from("seller_custom_previews" as any)
+      .update({ is_favorite: next })
+      .eq("id", p.id);
+    if (error) {
+      toast.error("Impossibile aggiornare preferito");
+      setPreviews(prev => prev.map(x => x.id === p.id ? { ...x, is_favorite: !next } : x));
+      return;
+    }
+    toast.success(next ? "Aggiunta ai preferiti ⭐" : "Rimossa dai preferiti");
+  };
 
-      <Card className="border-primary/30">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+  /** Apre dialog di salvataggio nel Portfolio */
+  const openSaveDialog = (p: CustomPreview) => {
+    setSaveDialog({ id: p.id, defaultLabel: p.lead_name || p.sector_label || "Preview senza nome" });
+    setSaveLabel(p.portfolio_label || p.lead_name || "");
+    setSaveNotes(p.portfolio_notes || "");
+  };
+
+  const confirmSaveToPortfolio = async () => {
+    if (!saveDialog) return;
+    setSavingPortfolio(true);
+    const { error } = await supabase
+      .from("seller_custom_previews" as any)
+      .update({
+        saved_to_portfolio: true,
+        saved_to_portfolio_at: new Date().toISOString(),
+        portfolio_label: saveLabel.trim() || saveDialog.defaultLabel,
+        portfolio_notes: saveNotes.trim() || null,
+      })
+      .eq("id", saveDialog.id);
+    setSavingPortfolio(false);
+    if (error) {
+      toast.error("Salvataggio nel portfolio fallito");
+      return;
+    }
+    setPreviews(prev => prev.map(x => x.id === saveDialog.id
+      ? { ...x, saved_to_portfolio: true, portfolio_label: saveLabel.trim() || saveDialog.defaultLabel, portfolio_notes: saveNotes.trim() || null }
+      : x));
+    toast.success("Preview salvata nel Portfolio Partner ✨");
+    setSaveDialog(null);
+  };
+
+  const removeFromPortfolio = async (p: CustomPreview) => {
+    if (!confirm("Rimuovere questa preview dal Portfolio? La preview resta nella lista.")) return;
+    const { error } = await supabase
+      .from("seller_custom_previews" as any)
+      .update({ saved_to_portfolio: false, saved_to_portfolio_at: null })
+      .eq("id", p.id);
+    if (error) { toast.error("Operazione fallita"); return; }
+    setPreviews(prev => prev.map(x => x.id === p.id ? { ...x, saved_to_portfolio: false } : x));
+    toast.success("Rimossa dal Portfolio");
+  };
+
+  // Lista filtrata
+  const visiblePreviews = previews.filter(p => {
+    if (previewFilter === "favorites" && !p.is_favorite) return false;
+    if (previewFilter === "portfolio" && !p.saved_to_portfolio) return false;
+    if (previewSearch.trim()) {
+      const q = previewSearch.toLowerCase();
+      const hay = [p.lead_name, p.lead_city, p.sector_label, p.template_style, p.portfolio_label]
+        .filter(Boolean).join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const counts = {
+    total: previews.length,
+    favorites: previews.filter(p => p.is_favorite).length,
+    portfolio: previews.filter(p => p.saved_to_portfolio).length,
+  };
+
+  return (
+    <div className="container max-w-6xl px-3 sm:px-4 pt-2 pb-24 sm:pb-10 space-y-5 sm:space-y-7">
+      {/* ═══ HERO MASCOT (agente animato viola, identico stile Leads) ═══ */}
+      <PartnerHeroMascot
+        title="Preview Custom AI"
+        subtitle={`Landing page premium per qualsiasi lead — l'AI scrive testi, crea l'hero e compone l'HTML pronto da mostrare. Costo: ${COST} crediti.`}
+        icon={Palette}
+        active={generating}
+      />
+
+      {/* ═══ FORM GENERAZIONE ═══ */}
+      <Card className="border-primary/30 overflow-hidden">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
             <Sparkles className="h-5 w-5 text-primary" />
             Genera nuova preview
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-5">
+        <CardContent className="space-y-5 px-3 sm:px-6">
           <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
-            <TabsList className="grid grid-cols-2 w-full max-w-md">
-              <TabsTrigger value="lead">Da Lead Analizzato</TabsTrigger>
-              <TabsTrigger value="manual">Inserimento Manuale</TabsTrigger>
+            <TabsList className="grid grid-cols-2 w-full">
+              <TabsTrigger value="lead" className="text-xs sm:text-sm">Da Lead Analizzato</TabsTrigger>
+              <TabsTrigger value="manual" className="text-xs sm:text-sm">Inserimento Manuale</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="lead" className="space-y-4 mt-4">
-              <div>
-                <Label>Seleziona lead da Intelligence o Scout</Label>
+            <TabsContent value="lead" className="space-y-3 mt-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Seleziona lead da Intelligence o Scout</Label>
                 <Select value={selectedLeadId} onValueChange={setSelectedLeadId}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="Scegli un lead già scoperto…" />
                   </SelectTrigger>
                   <SelectContent className="max-h-72">
                     {availableLeads.length === 0 ? (
-                      <SelectItem value="none" disabled>Nessun lead trovato — usa lo Scout o l'Intelligence prima</SelectItem>
+                      <SelectItem value="none" disabled>Nessun lead — usa Scout o Intelligence prima</SelectItem>
                     ) : availableLeads.map(l => (
                       <SelectItem key={l.id} value={l.id}>
                         <span className="font-medium">{l.lead_name}</span>
                         {l.lead_city ? ` · ${l.lead_city}` : ""}
                         {l.lead_sector ? ` · ${l.lead_sector}` : ""}
-                        {l.badge ? `  [${l.badge}]` : ""}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Disponibili: <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence · <strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout. I dati pre-compilano il form qui sotto (modificabili).
+                <p className="text-[10px] sm:text-xs text-muted-foreground">
+                  <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence ·
+                  {" "}<strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout
                 </p>
               </div>
             </TabsContent>
 
             <TabsContent value="manual" className="mt-4">
-              <p className="text-sm text-muted-foreground">Inserisci tutti i dati a mano. Più dati metti, più l'AI personalizza.</p>
+              <p className="text-xs text-muted-foreground">Inserisci tutti i dati a mano. Più dati metti, più l'AI personalizza.</p>
             </TabsContent>
           </Tabs>
 
-          {/* Dati lead */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <div>
-              <Label htmlFor="lead_name">Nome attività *</Label>
-              <Input id="lead_name" placeholder="es. Tatuaggi Black Rose" value={form.lead_name} onChange={e => setForm({ ...form, lead_name: e.target.value })} />
+          {/* Dati lead — single column su mobile, 2 cols da sm */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="lead_name" className="text-xs">Nome attività *</Label>
+              <Input id="lead_name" className="h-11" placeholder="es. Tatuaggi Black Rose" value={form.lead_name} onChange={e => setForm({ ...form, lead_name: e.target.value })} />
             </div>
-            <div>
-              <Label htmlFor="lead_sector">Settore</Label>
-              <Input id="lead_sector" placeholder="es. Tatuatore, Fiorista, Veterinario" value={form.lead_sector} onChange={e => setForm({ ...form, lead_sector: e.target.value })} />
+            <div className="space-y-1.5">
+              <Label htmlFor="lead_sector" className="text-xs">Settore</Label>
+              <Input id="lead_sector" className="h-11" placeholder="es. Tatuatore, Fiorista" value={form.lead_sector} onChange={e => setForm({ ...form, lead_sector: e.target.value })} />
             </div>
-            <div>
-              <Label htmlFor="lead_city">Città</Label>
-              <Input id="lead_city" placeholder="es. Roma" value={form.lead_city} onChange={e => setForm({ ...form, lead_city: e.target.value })} />
+            <div className="space-y-1.5">
+              <Label htmlFor="lead_city" className="text-xs">Città</Label>
+              <Input id="lead_city" className="h-11" placeholder="es. Roma" value={form.lead_city} onChange={e => setForm({ ...form, lead_city: e.target.value })} />
             </div>
-            <div>
-              <Label htmlFor="lead_phone">Telefono</Label>
-              <Input id="lead_phone" placeholder="+39 06 1234 5678" value={form.lead_phone} onChange={e => setForm({ ...form, lead_phone: e.target.value })} />
+            <div className="space-y-1.5">
+              <Label htmlFor="lead_phone" className="text-xs">Telefono</Label>
+              <Input id="lead_phone" className="h-11" inputMode="tel" placeholder="+39 06 1234 5678" value={form.lead_phone} onChange={e => setForm({ ...form, lead_phone: e.target.value })} />
             </div>
-            <div>
-              <Label htmlFor="lead_website">Sito web (verrà analizzato dall'AI)</Label>
-              <Input id="lead_website" placeholder="https://…" value={form.lead_website} onChange={e => setForm({ ...form, lead_website: e.target.value })} />
+            <div className="space-y-1.5">
+              <Label htmlFor="lead_website" className="text-xs">Sito web (analizzato dall'AI)</Label>
+              <Input id="lead_website" className="h-11" inputMode="url" placeholder="https://…" value={form.lead_website} onChange={e => setForm({ ...form, lead_website: e.target.value })} />
             </div>
-            <div>
-              <Label htmlFor="lead_email">Email</Label>
-              <Input id="lead_email" placeholder="info@esempio.it" value={form.lead_email} onChange={e => setForm({ ...form, lead_email: e.target.value })} />
+            <div className="space-y-1.5">
+              <Label htmlFor="lead_email" className="text-xs">Email</Label>
+              <Input id="lead_email" className="h-11" inputMode="email" placeholder="info@esempio.it" value={form.lead_email} onChange={e => setForm({ ...form, lead_email: e.target.value })} />
             </div>
-            <div className="sm:col-span-2">
-              <Label htmlFor="lead_address">Indirizzo</Label>
-              <Input id="lead_address" placeholder="Via Roma 1, Milano" value={form.lead_address} onChange={e => setForm({ ...form, lead_address: e.target.value })} />
+            <div className="sm:col-span-2 space-y-1.5">
+              <Label htmlFor="lead_address" className="text-xs">Indirizzo</Label>
+              <Input id="lead_address" className="h-11" placeholder="Via Roma 1, Milano" value={form.lead_address} onChange={e => setForm({ ...form, lead_address: e.target.value })} />
             </div>
           </div>
 
           {/* Logo + Gallery */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <Label>Logo (opzionale)</Label>
-              <div className="flex items-center gap-3 mt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-xs">Logo (opzionale)</Label>
+              <div className="flex items-center gap-3">
                 {form.logo_url ? (
-                  <img src={form.logo_url} alt="logo" className="h-12 w-12 rounded object-cover border" />
+                  <img src={form.logo_url} alt="logo" className="h-12 w-12 rounded-lg object-cover border shrink-0" />
                 ) : (
-                  <div className="h-12 w-12 rounded border-2 border-dashed flex items-center justify-center text-muted-foreground"><ImageIcon className="h-5 w-5" /></div>
+                  <div className="h-12 w-12 rounded-lg border-2 border-dashed flex items-center justify-center text-muted-foreground shrink-0">
+                    <ImageIcon className="h-5 w-5" />
+                  </div>
                 )}
-                <label className="flex-1">
-                  <Input type="file" accept="image/*" onChange={onLogoChange} disabled={logoUploading} />
-                </label>
+                <Input type="file" accept="image/*" onChange={onLogoChange} disabled={logoUploading} className="h-11 text-xs flex-1 min-w-0" />
               </div>
               {form.logo_url && (
-                <button type="button" className="text-xs text-destructive mt-1 hover:underline" onClick={() => setForm(p => ({ ...p, logo_url: "" }))}>Rimuovi logo</button>
+                <button type="button" className="text-[10px] text-destructive hover:underline" onClick={() => setForm(p => ({ ...p, logo_url: "" }))}>Rimuovi logo</button>
               )}
             </div>
-            <div>
-              <Label>Galleria foto (max 6 — opzionale)</Label>
-              <Input type="file" accept="image/*" multiple onChange={onGalleryChange} disabled={galleryUploading} className="mt-1" />
+            <div className="space-y-1.5">
+              <Label className="text-xs">Galleria (max 6)</Label>
+              <Input type="file" accept="image/*" multiple onChange={onGalleryChange} disabled={galleryUploading} className="h-11 text-xs" />
               {form.gallery_images.length > 0 && (
-                <div className="flex gap-1 mt-2 flex-wrap">
+                <div className="flex gap-1 flex-wrap">
                   {form.gallery_images.map((g, i) => (
-                    <div key={i} className="relative h-12 w-12 rounded overflow-hidden border group">
+                    <div key={i} className="relative h-11 w-11 rounded-md overflow-hidden border group">
                       <img src={g} alt="" className="h-full w-full object-cover" />
                       <button type="button" onClick={() => setForm(p => ({ ...p, gallery_images: p.gallery_images.filter((_, j) => j !== i) }))}
-                        className="absolute inset-0 bg-black/60 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs">×</button>
+                        className="absolute inset-0 bg-black/60 text-white opacity-0 group-hover:opacity-100 active:opacity-100 flex items-center justify-center text-sm">×</button>
                     </div>
                   ))}
                 </div>
@@ -400,53 +484,55 @@ export default function PartnerCustomPreviewPage() {
             </div>
           </div>
 
-          {/* Stile + colore */}
-          <div>
-            <Label>Stile template</Label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+          {/* Stile template */}
+          <div className="space-y-2">
+            <Label className="text-xs">Stile template</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {STYLES.map(s => (
-                <button key={s.key} type="button" onClick={() => setForm({ ...form, template_style: s.key, primary_color: s.accent })}
-                  className={`p-3 rounded-lg border-2 transition-all ${form.template_style === s.key ? "border-primary scale-105" : "border-border hover:border-primary/50"}`}
-                  style={{ background: s.color }}>
-                  <div className="h-6 w-full rounded mb-2" style={{ background: s.accent }} />
-                  <p className="text-xs font-medium" style={{ color: s.color === "#F8F8F8" || s.color === "#FAF6F0" ? "#222" : "#fff" }}>{s.label}</p>
+                <button
+                  key={s.key}
+                  type="button"
+                  onClick={() => setForm({ ...form, template_style: s.key, primary_color: s.accent })}
+                  className={`p-2.5 rounded-xl border-2 transition-all active:scale-95 ${form.template_style === s.key ? "border-primary scale-[1.02]" : "border-border hover:border-primary/50"}`}
+                  style={{ background: s.color }}
+                >
+                  <div className="h-5 w-full rounded mb-1.5" style={{ background: s.accent }} />
+                  <p className="text-[10px] font-medium" style={{ color: s.color === "#F8F8F8" || s.color === "#FAF6F0" ? "#222" : "#fff" }}>{s.label}</p>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="color">Colore accento</Label>
-              <div className="flex gap-2">
-                <Input id="color" type="color" value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="w-16 h-10 p-1" />
-                <Input value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="flex-1 font-mono" />
-              </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="color" className="text-xs">Colore accento</Label>
+            <div className="flex gap-2">
+              <Input id="color" type="color" value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="w-14 h-11 p-1 shrink-0" />
+              <Input value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="flex-1 font-mono h-11 text-sm" />
             </div>
           </div>
 
-          <Button onClick={handleGenerate} disabled={generating || !form.lead_name.trim()} className="w-full" size="lg">
+          <Button onClick={handleGenerate} disabled={generating || !form.lead_name.trim()} className="w-full h-12 text-sm sm:text-base font-semibold" size="lg">
             {generating ? (
               <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> AI sta generando (15-30s)…</>
             ) : (
               <><Sparkles className="h-4 w-4 mr-2" /> Genera preview AI ({COST} crediti)</>
             )}
           </Button>
-          <p className="text-xs text-muted-foreground text-center">
-            ✓ Testi AI personalizzati  ·  ✓ Immagine hero generata  ·  ✓ Sito web scrapato  ·  ✓ HTML pro responsive  ·  ✓ Link condivisibile
+          <p className="text-[10px] sm:text-xs text-muted-foreground text-center leading-relaxed">
+            ✓ Testi AI · ✓ Hero generato · ✓ Sito scrapato · ✓ HTML responsive · ✓ Link condivisibile
           </p>
         </CardContent>
       </Card>
 
-      {/* MOCKUP IPHONE SUITE — unico generatore (auto-pre-fill da form sopra se compilato, altrimenti standalone) */}
-      <div className="border-t pt-8">
-        <div className="flex items-center gap-2 mb-3">
-          <Smartphone className="h-5 w-5 text-primary" />
-          <h2 className="text-xl font-semibold">Mockup iPhone Suite</h2>
-          <Badge variant="secondary">4 schermate</Badge>
+      {/* ═══ MOCKUP IPHONE SUITE ═══ */}
+      <section className="space-y-3 pt-2 border-t border-border/50">
+        <div className="flex items-center gap-2">
+          <Smartphone className="h-5 w-5 text-primary shrink-0" />
+          <h2 className="text-base sm:text-xl font-semibold">Mockup iPhone Suite</h2>
+          <Badge variant="secondary" className="text-[10px]">4 schermate</Badge>
         </div>
-        <p className="text-sm text-muted-foreground mb-3">
-          Genera 4 schermate iPhone professionali. Se hai compilato il form sopra (o selezionato un lead), i dati vengono pre-caricati automaticamente — altrimenti puoi inserirli a mano nel pannello qui sotto.
+        <p className="text-[11px] sm:text-sm text-muted-foreground">
+          Genera 4 schermate iPhone professionali. Se hai compilato il form sopra, i dati vengono pre-caricati.
         </p>
         <MockupSuiteGenerator
           businessName={form.lead_name}
@@ -455,71 +541,214 @@ export default function PartnerCustomPreviewPage() {
           primaryColor={form.primary_color}
           templateVariant={form.template_style}
         />
-      </div>
+      </section>
 
-      {/* Lista Mockup iPhone Generati — con ricerca e filtri */}
       <MockupSuiteVaultList />
 
-      {/* Lista preview HTML */}
-      <div>
-        <h2 className="text-xl font-semibold mb-3">Le tue preview HTML ({previews.length})</h2>
-        {loading ? (
-          <Card><CardContent className="pt-6 text-center"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></CardContent></Card>
-        ) : previews.length === 0 ? (
-          <Card><CardContent className="pt-6 text-center text-muted-foreground">
-            Nessuna preview ancora. Crea la prima qui sopra.
-          </CardContent></Card>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {previews.map(p => (
-              <Card key={p.id} className="overflow-hidden">
-                <div className="h-32 relative" style={{ background: p.hero_image_url ? `url(${p.hero_image_url}) center/cover` : p.primary_color }}>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                    <p className="font-bold text-sm line-clamp-1">{p.lead_name || p.sector_label}</p>
-                    {p.lead_city && <p className="text-xs opacity-80">{p.lead_city}</p>}
-                  </div>
-                  {p.generation_status === "generating" && (
-                    <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
-                      <Loader2 className="h-3 w-3 animate-spin" /> Generazione
-                    </div>
-                  )}
-                  {p.generation_status === "error" && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">Errore</div>
-                  )}
-                </div>
-                <CardContent className="pt-3 space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <Badge variant="outline" className="text-xs">{p.template_style.replace("_", " ")}</Badge>
-                    <Badge variant="secondary" className="text-xs"><Eye className="h-3 w-3 mr-1" />{p.view_count || 0}</Badge>
-                  </div>
-                  {p.hero_title && <p className="text-xs font-medium line-clamp-2 text-muted-foreground">{p.hero_title}</p>}
-                  <div className="flex gap-1 pt-1 flex-wrap">
-                    {p.preview_url && p.generation_status === "completed" && (
-                      <Button variant="outline" size="sm" onClick={() => window.open(p.preview_url!, "_blank")} className="flex-1">
-                        <ExternalLink className="h-3 w-3 mr-1" /> Apri
-                      </Button>
-                    )}
-                    {p.public_slug && (
-                      <Button variant="ghost" size="sm" onClick={() => copyLink(p.public_slug)} title="Copia link">
-                        <Copy className="h-3 w-3" />
-                      </Button>
-                    )}
-                    {p.whatsapp_message && (
-                      <Button variant="ghost" size="sm" onClick={() => openWhatsApp(p)} title="Invia su WhatsApp">
-                        <MessageCircle className="h-3 w-3" />
-                      </Button>
-                    )}
-                    <Button variant="ghost" size="sm" onClick={() => handleDelete(p.id)} className="text-destructive" title="Elimina">
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+      {/* ═══ LISTA PREVIEW HTML ═══ */}
+      <section className="space-y-3 pt-2 border-t border-border/50">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <h2 className="text-base sm:text-xl font-semibold flex items-center gap-2">
+            Le tue preview HTML
+            <Badge variant="outline" className="text-[10px]">{counts.total}</Badge>
+          </h2>
+        </div>
+
+        {/* Filtri + ricerca — sticky-friendly su mobile */}
+        <div className="space-y-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input
+              value={previewSearch}
+              onChange={(e) => setPreviewSearch(e.target.value)}
+              placeholder="Cerca per nome, città, settore…"
+              className="h-11 pl-9 text-sm"
+            />
+          </div>
+          <div className="flex gap-1.5 overflow-x-auto -mx-3 px-3 pb-1 scrollbar-none">
+            {[
+              { key: "all", label: "Tutte", count: counts.total, icon: null },
+              { key: "favorites", label: "Preferiti", count: counts.favorites, icon: <Star className="w-3 h-3" /> },
+              { key: "portfolio", label: "Portfolio", count: counts.portfolio, icon: <Bookmark className="w-3 h-3" /> },
+            ].map((f) => (
+              <button
+                key={f.key}
+                onClick={() => setPreviewFilter(f.key as any)}
+                className={`shrink-0 inline-flex items-center gap-1.5 px-3 h-9 rounded-full text-xs font-semibold border transition-all ${
+                  previewFilter === f.key
+                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                    : "bg-card text-muted-foreground border-border hover:border-primary/40"
+                }`}
+              >
+                {f.icon}
+                {f.label}
+                <span className="px-1.5 py-0.5 rounded-full text-[9px] bg-background/30">{f.count}</span>
+              </button>
             ))}
           </div>
+        </div>
+
+        {loading ? (
+          <Card><CardContent className="pt-6 text-center"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></CardContent></Card>
+        ) : visiblePreviews.length === 0 ? (
+          <Card>
+            <CardContent className="pt-6 text-center text-sm text-muted-foreground">
+              {previewFilter === "all" ? "Nessuna preview ancora — crea la prima qui sopra." :
+                previewFilter === "favorites" ? "Nessuna preview tra i preferiti. Tocca la stella ⭐ su una card." :
+                "Nessuna preview salvata nel Portfolio. Tocca il segnalibro 🔖 per salvarla."}
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <AnimatePresence mode="popLayout">
+              {visiblePreviews.map(p => (
+                <motion.div
+                  key={p.id}
+                  layout
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Card className="overflow-hidden border-border/60 hover:border-primary/40 transition-colors">
+                    {/* Hero */}
+                    <div
+                      className="h-28 sm:h-32 relative"
+                      style={{ background: p.hero_image_url ? `url(${p.hero_image_url}) center/cover` : p.primary_color }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+
+                      {/* Favorite + Bookmark — top-left, touch-friendly */}
+                      <div className="absolute top-2 left-2 flex gap-1.5">
+                        <button
+                          onClick={() => toggleFavorite(p)}
+                          aria-label={p.is_favorite ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+                          className={`h-8 w-8 rounded-full flex items-center justify-center backdrop-blur-md border transition-all active:scale-90 ${
+                            p.is_favorite
+                              ? "bg-amber-500/90 border-amber-300 text-white"
+                              : "bg-black/40 border-white/20 text-white/80 hover:bg-black/60"
+                          }`}
+                        >
+                          <Star className={`w-4 h-4 ${p.is_favorite ? "fill-current" : ""}`} />
+                        </button>
+                        <button
+                          onClick={() => p.saved_to_portfolio ? removeFromPortfolio(p) : openSaveDialog(p)}
+                          aria-label={p.saved_to_portfolio ? "Rimuovi dal Portfolio" : "Salva nel Portfolio"}
+                          disabled={p.generation_status !== "completed"}
+                          className={`h-8 w-8 rounded-full flex items-center justify-center backdrop-blur-md border transition-all active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed ${
+                            p.saved_to_portfolio
+                              ? "bg-violet-500/90 border-violet-300 text-white"
+                              : "bg-black/40 border-white/20 text-white/80 hover:bg-black/60"
+                          }`}
+                          title={p.saved_to_portfolio ? "Salvata nel Portfolio" : "Salva nel Portfolio"}
+                        >
+                          <Bookmark className={`w-4 h-4 ${p.saved_to_portfolio ? "fill-current" : ""}`} />
+                        </button>
+                      </div>
+
+                      {/* Stato generazione — top-right */}
+                      {p.generation_status === "generating" && (
+                        <div className="absolute top-2 right-2 bg-yellow-500 text-white text-[10px] px-2 py-1 rounded-full flex items-center gap-1">
+                          <Loader2 className="h-3 w-3 animate-spin" /> Generazione
+                        </div>
+                      )}
+                      {p.generation_status === "error" && (
+                        <div className="absolute top-2 right-2 bg-red-500 text-white text-[10px] px-2 py-1 rounded-full">Errore</div>
+                      )}
+
+                      {/* Titolo overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 p-2.5 text-white">
+                        <p className="font-bold text-sm line-clamp-1">{p.lead_name || p.sector_label}</p>
+                        <p className="text-[10px] opacity-80 line-clamp-1">
+                          {p.lead_city || "—"} · {new Date(p.created_at).toLocaleDateString("it-IT")}
+                        </p>
+                      </div>
+                    </div>
+
+                    <CardContent className="pt-3 pb-3 px-3 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <Badge variant="outline" className="text-[10px] capitalize">{p.template_style.replace("_", " ")}</Badge>
+                        <Badge variant="secondary" className="text-[10px]"><Eye className="h-3 w-3 mr-1" />{p.view_count || 0}</Badge>
+                      </div>
+                      {p.portfolio_label && p.saved_to_portfolio && (
+                        <p className="text-[10px] font-semibold text-violet-500 line-clamp-1 flex items-center gap-1">
+                          <Bookmark className="w-3 h-3 fill-current" />
+                          {p.portfolio_label}
+                        </p>
+                      )}
+                      {p.hero_title && <p className="text-[11px] font-medium line-clamp-2 text-muted-foreground">{p.hero_title}</p>}
+
+                      <div className="flex gap-1 pt-1 flex-wrap">
+                        {p.preview_url && p.generation_status === "completed" && (
+                          <Button variant="outline" size="sm" onClick={() => window.open(p.preview_url!, "_blank")} className="flex-1 h-9 text-xs">
+                            <ExternalLink className="h-3 w-3 mr-1" /> Apri
+                          </Button>
+                        )}
+                        {p.public_slug && (
+                          <Button variant="ghost" size="sm" onClick={() => copyLink(p.public_slug)} title="Copia link" className="h-9 w-9 p-0">
+                            <Copy className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                        {p.whatsapp_message && (
+                          <Button variant="ghost" size="sm" onClick={() => openWhatsApp(p)} title="WhatsApp" className="h-9 w-9 p-0 text-emerald-600">
+                            <MessageCircle className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(p.id)} className="h-9 w-9 p-0 text-destructive" title="Elimina">
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         )}
-      </div>
+      </section>
+
+      {/* ═══ DIALOG: salva nel Portfolio ═══ */}
+      <Dialog open={!!saveDialog} onOpenChange={(o) => !o && setSaveDialog(null)}>
+        <DialogContent className="max-w-sm sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Bookmark className="h-5 w-5 text-violet-500" />
+              Salva nel Portfolio
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              La preview verrà mostrata nel <strong>Portfolio Partner</strong> come riferimento permanente, ordinata per data e filtrabile.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="save_label" className="text-xs">Etichetta nel Portfolio *</Label>
+              <Input
+                id="save_label"
+                value={saveLabel}
+                onChange={(e) => setSaveLabel(e.target.value)}
+                placeholder={saveDialog?.defaultLabel}
+                className="h-11"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="save_notes" className="text-xs">Note interne (opzionale)</Label>
+              <Textarea
+                id="save_notes"
+                value={saveNotes}
+                onChange={(e) => setSaveNotes(e.target.value)}
+                placeholder="es. Cliente in trattativa, da rivedere ad agosto…"
+                className="min-h-[80px] text-sm"
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2 flex-col sm:flex-row">
+            <Button variant="outline" onClick={() => setSaveDialog(null)} className="h-11">Annulla</Button>
+            <Button onClick={confirmSaveToPortfolio} disabled={savingPortfolio} className="h-11">
+              {savingPortfolio ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Salvo…</> : <><Bookmark className="h-4 w-4 mr-2" /> Salva nel Portfolio</>}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
