@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
+import { getBrandingKit, type TemplateBrandingKit } from "./templateBranding";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -254,6 +255,8 @@ export function MockupSuiteGenerator({
   const [safeAreaPx, setSafeAreaPx] = useState<number>(8);
   const [typeScale, setTypeScale] = useState<number>(1);
   const [boostContrast, setBoostContrast] = useState<boolean>(true);
+  // Branding Kit (Mockup Libero) — sincronizza palette e tipografia con il template scelto
+  const [lockToTemplate, setLockToTemplate] = useState<boolean>(true);
   const [autoScreens, setAutoScreens] = useState(true);
   const [screens, setScreens] = useState<{ type: ScreenType; title: string }[]>(
     suggestScreensForSector(businessSector)
