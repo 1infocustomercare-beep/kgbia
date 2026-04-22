@@ -1236,7 +1236,7 @@ export default function LeadsPage() {
   });
 
   return (
-    <div className="min-h-screen p-4 lg:p-6 space-y-4 pb-24 lg:pb-8 max-w-2xl lg:max-w-7xl mx-auto relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
+    <div className="min-h-screen px-3 sm:px-5 md:px-6 lg:px-8 py-4 md:py-5 lg:py-6 space-y-4 md:space-y-5 lg:space-y-6 pb-24 lg:pb-10 w-full max-w-[680px] md:max-w-[860px] lg:max-w-6xl xl:max-w-7xl mx-auto relative overflow-x-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
       <SalesPlaybook autoOpen />
       <ManualPreviewPicker
         open={showPicker}
@@ -1308,30 +1308,30 @@ export default function LeadsPage() {
 
       <div className="relative z-10 space-y-4">
 
-      {/* ═══ TOP-BAR COMPATTA MOBILE — mascot mini + brand + azioni rapide in una sola riga sticky ═══ */}
+      {/* ═══ TOP-BAR PROFESSIONALE — sticky responsive (mobile/tablet/desktop) ═══ */}
       <div
-        className="sticky top-0 z-30 -mx-4 lg:mx-0 px-4 lg:px-0 py-2 lg:py-0 backdrop-blur-md lg:backdrop-blur-0"
+        className="sticky top-0 z-30 -mx-3 sm:-mx-5 md:-mx-6 lg:-mx-8 px-3 sm:px-5 md:px-6 lg:px-8 py-2.5 md:py-3 backdrop-blur-md"
         style={{
-          background: "linear-gradient(180deg, rgba(10,10,18,0.92) 0%, rgba(10,10,18,0.78) 70%, rgba(10,10,18,0) 100%)",
+          background: "linear-gradient(180deg, rgba(10,10,18,0.95) 0%, rgba(10,10,18,0.82) 70%, rgba(10,10,18,0) 100%)",
         }}
       >
-        <div className="flex items-center gap-2">
-          {/* Brand mini — visibile solo su mobile (su desktop c'è l'hero grande) */}
-          <div className="flex items-center gap-2 min-w-0 lg:hidden">
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Brand mini — visibile fino a md (su lg c'è l'hero grande) */}
+          <div className="flex items-center gap-2 md:gap-2.5 min-w-0 lg:hidden">
             <motion.div
               animate={{ scale: loading ? [1, 1.08, 1] : [1, 1.02, 1] }}
               transition={{ repeat: Infinity, duration: loading ? 1 : 2.6 }}
-              className="relative w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              className="relative w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0"
               style={{
                 background: "radial-gradient(circle, rgba(167,139,250,0.4), rgba(20,184,166,0.15) 70%)",
                 boxShadow: "0 0 14px rgba(167,139,250,0.45)",
               }}
             >
-              <Target className="w-4 h-4 text-white" />
+              <Target className="w-4 h-4 md:w-5 md:h-5 text-white" />
             </motion.div>
             <div className="min-w-0">
-              <p className="text-[12px] font-extrabold text-white leading-tight truncate">LeadEngine Scout</p>
-              <p className="text-[9px] font-bold tracking-[0.18em] uppercase text-violet-300/80 leading-tight">
+              <p className="text-[13px] md:text-sm font-extrabold text-white leading-tight truncate">LeadEngine Scout</p>
+              <p className="text-[9px] md:text-[10px] font-bold tracking-[0.18em] uppercase text-violet-300/80 leading-tight truncate">
                 {loading ? "◉ scansione" : "AI · real-time"}
               </p>
             </div>
@@ -1340,21 +1340,21 @@ export default function LeadsPage() {
           {/* Spacer flessibile */}
           <div className="flex-1" />
 
-          {/* Azioni rapide — ordine: CRM (azione primaria pipeline) · Crediti · Guida */}
+          {/* Azioni rapide — touch target 36-40px, gap consistente */}
           <button
             onClick={() => setCrmOpen(true)}
             aria-label="Apri CRM pipeline"
-            className="relative flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition-all active:scale-95"
+            className="relative flex items-center gap-1.5 px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl text-[11px] md:text-xs font-bold transition-all active:scale-95 shrink-0 min-h-[36px] md:min-h-[40px]"
             style={{
               background: "linear-gradient(135deg, rgba(167,139,250,0.18), rgba(20,184,166,0.12))",
               border: "1px solid rgba(167,139,250,0.35)",
               color: "#c4b5fd",
             }}
           >
-            <Briefcase className="w-3 h-3" />
+            <Briefcase className="w-3.5 h-3.5 md:w-4 md:h-4" />
             <span>CRM</span>
             {pipeline.leads.length > 0 && (
-              <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.3)", color: "#fff", minWidth: 14, textAlign: "center" }}>
+              <span className="text-[9px] md:text-[10px] font-black px-1.5 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.3)", color: "#fff", minWidth: 16, textAlign: "center" }}>
                 {pipeline.leads.length}
               </span>
             )}
@@ -1362,7 +1362,7 @@ export default function LeadsPage() {
               <motion.span
                 animate={{ scale: [1, 1.25, 1] }}
                 transition={{ repeat: Infinity, duration: 1.4 }}
-                className="absolute -top-1 -right-1 text-[8px] font-black px-1 py-0.5 rounded-full"
+                className="absolute -top-1 -right-1 text-[9px] font-black px-1 py-0.5 rounded-full"
                 style={{ background: "#ef4444", color: "#fff", minWidth: 14, textAlign: "center", boxShadow: "0 0 8px rgba(239,68,68,0.6)" }}
               >
                 {overdueFollowups.length}
@@ -1377,9 +1377,9 @@ export default function LeadsPage() {
               <button
                 type="button"
                 aria-label="Guida best practice e deliverability"
-                className="flex items-center justify-center w-8 h-8 rounded-lg border border-violet-400/30 bg-violet-500/10 text-violet-200 active:scale-95 transition-transform"
+                className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-xl border border-violet-400/30 bg-violet-500/10 text-violet-200 active:scale-95 transition-transform shrink-0"
               >
-                <ShieldCheck className="w-3.5 h-3.5" />
+                <ShieldCheck className="w-4 h-4 md:w-[18px] md:h-[18px]" />
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto bg-zinc-950 border-l border-violet-500/20">
@@ -1683,20 +1683,20 @@ export default function LeadsPage() {
       <SellerOnboardingWizard />
 
 
-      {/* ═══ SEARCH BAR ═══ */}
-      <div className="rounded-2xl p-4 space-y-3" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
-        
-        {/* Row 1: Country + City */}
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🌍 Paese</label>
+      {/* ═══ SEARCH BAR — responsive: 1-2 col mobile, 4 col desktop ═══ */}
+      <div className="rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
+
+        {/* Row principale: Paese · Città · Settore · Cerca (responsive) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+          <div className="md:col-span-1">
+            <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🌍 Paese</label>
             <select value={country} onChange={e => setCountry(e.target.value)}
-              className="w-full px-3 py-3 rounded-xl text-[11px] text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
+              className="w-full px-3 py-3 md:py-3.5 rounded-xl text-[12px] md:text-[13px] text-white outline-none appearance-none cursor-pointer min-h-[44px]" style={inputStyle}>
               {COUNTRIES.map(c => <option key={c.code} value={c.code} style={{ background: "#1a1a2e" }}>{c.label}</option>)}
             </select>
           </div>
-          <div>
-            <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>📍 Città</label>
+          <div className="md:col-span-1">
+            <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>📍 Città</label>
             <SmartCityAutocomplete
               value={city}
               onChange={(v) => setCity(v)}
@@ -1710,49 +1710,50 @@ export default function LeadsPage() {
               onCountryDetected={(cc) => setCountry(cc)}
             />
           </div>
-        </div>
 
-        {/* Row 2: Sector + Sub-sector intelligent picker */}
-        <div>
-          <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🏢 Settore / Specializzazione</label>
-          <SmartSectorAutocomplete
-            sectorValue={sector}
-            onSectorChange={setSector}
-            subQueryValue={selectedSpecialization?.query || ""}
-            subLabelValue={selectedSpecialization?.label || ""}
-            onSubsectorChange={setSelectedSpecialization}
-            inputStyle={inputStyle}
-            onEnter={() => handleSearch()}
-          />
-        </div>
-
-        {/* Row 3: Query + Search button */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="col-span-2 relative">
-            <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🔎 Zona / Nome (opzionale)</label>
-            <Search className="absolute left-3 bottom-3 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
-            <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Es: Trastevere, Brera..." className="w-full pl-9 pr-3 py-3 rounded-xl text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+          {/* Settore — col-span-2 su mobile, col-span-1 desktop */}
+          <div className="col-span-2 md:col-span-1">
+            <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🏢 Settore / Specializzazione</label>
+            <SmartSectorAutocomplete
+              sectorValue={sector}
+              onSectorChange={setSector}
+              subQueryValue={selectedSpecialization?.query || ""}
+              subLabelValue={selectedSpecialization?.label || ""}
+              onSubsectorChange={setSelectedSpecialization}
+              inputStyle={inputStyle}
+              onEnter={() => handleSearch()}
+            />
           </div>
-          <div className="flex items-end">
+
+          {/* CTA Cerca — full width mobile, 1 col desktop */}
+          <div className="col-span-2 md:col-span-1 flex items-end">
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleSearch()} disabled={loading}
-              className="w-full py-3 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5"
-              style={{ background: loading ? "rgba(20,184,166,0.3)" : "linear-gradient(135deg, #14b8a6, #10b981)", color: "#fff" }}>
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-              {loading ? "..." : "Cerca"}
+              className="w-full py-3 md:py-3.5 rounded-xl text-[13px] md:text-sm font-bold flex items-center justify-center gap-2 min-h-[44px] md:min-h-[48px] shadow-lg"
+              style={{ background: loading ? "rgba(20,184,166,0.3)" : "linear-gradient(135deg, #14b8a6, #10b981)", color: "#fff", boxShadow: loading ? "none" : "0 4px 16px rgba(20,184,166,0.3)" }}>
+              {loading ? <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <Search className="w-4 h-4 md:w-5 md:h-5" />}
+              {loading ? "Ricerca..." : "Cerca lead"}
             </motion.button>
           </div>
         </div>
 
-        {/* Quick actions */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* 📍 PRIMARY CTA: Trova lead vicino a me (posizione attuale venditore) */}
+        {/* Riga ottimizzazione zona/nome — full width sotto */}
+        <div className="relative">
+          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🔎 Zona / Nome (opzionale, affina la ricerca)</label>
+          <Search className="absolute left-3 bottom-3 md:bottom-3.5 w-4 h-4" style={{ color: "#6b7280" }} />
+          <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
+            placeholder="Es: Trastevere, Brera, nome attività..." className="w-full pl-10 pr-3 py-3 md:py-3.5 rounded-xl text-[12px] md:text-[13px] text-white placeholder:text-gray-500 outline-none min-h-[44px]" style={inputStyle} />
+        </div>
+
+
+        {/* Quick actions — touch-friendly, professional sizing */}
+        <div className="flex items-center gap-2 md:gap-2.5 flex-wrap">
+          {/* 📍 PRIMARY CTA: Trova lead vicino a me */}
           <motion.button
             whileTap={{ scale: 0.95 }}
             animate={!gpsOpen ? { boxShadow: ["0 0 0 0 rgba(6,182,212,0.4)", "0 0 0 8px rgba(6,182,212,0)", "0 0 0 0 rgba(6,182,212,0)"] } : {}}
             transition={{ repeat: Infinity, duration: 2.2 }}
             onClick={() => setGpsOpen(true)}
-            className="flex items-center gap-1.5 text-[10px] font-black px-3 py-1.5 rounded-lg relative overflow-hidden"
+            className="flex items-center gap-1.5 text-[11px] md:text-xs font-black px-3.5 py-2 md:px-4 md:py-2.5 rounded-xl relative overflow-hidden min-h-[36px] md:min-h-[40px]"
             style={{
               background: "linear-gradient(135deg, #06b6d4, #14b8a6, #10b981)",
               border: "1px solid rgba(6,182,212,0.6)",
@@ -1760,15 +1761,15 @@ export default function LeadsPage() {
             }}
             title="Cerca lead reali nel raggio della tua posizione GPS attuale"
           >
-            <Crosshair className="w-3 h-3" />
+            <Crosshair className="w-3.5 h-3.5 md:w-4 md:h-4" />
             Trova vicino a me
-            <span className="text-[7px] px-1 rounded font-black" style={{ background: "rgba(255,255,255,0.25)", color: "#fff" }}>GPS</span>
+            <span className="text-[8px] md:text-[9px] px-1.5 py-0.5 rounded font-black" style={{ background: "rgba(255,255,255,0.25)", color: "#fff" }}>GPS</span>
           </motion.button>
 
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setGpsOpen(!gpsOpen)}
-            className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-lg relative overflow-hidden"
+            className="flex items-center gap-1.5 text-[11px] md:text-xs font-bold px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl relative overflow-hidden min-h-[36px] md:min-h-[40px]"
             style={{
               background: gpsOpen
                 ? "linear-gradient(135deg, rgba(6,182,212,0.25), rgba(20,184,166,0.15))"
@@ -1778,40 +1779,40 @@ export default function LeadsPage() {
             }}
           >
             <motion.span animate={{ rotate: gpsOpen ? 360 : 0 }} transition={{ duration: 1.5, repeat: gpsOpen ? Infinity : 0, ease: "linear" }}>
-              <Radar className="w-3 h-3" />
+              <Radar className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </motion.span>
             GPS Radar
-            <span className="text-[7px] px-1 rounded font-black" style={{ background: "rgba(34,197,94,0.2)", color: "#86efac" }}>FREE</span>
+            <span className="text-[8px] md:text-[9px] px-1.5 py-0.5 rounded font-black" style={{ background: "rgba(34,197,94,0.2)", color: "#86efac" }}>FREE</span>
           </motion.button>
           {results.length > 0 && (
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setSpeedDialOpen(true)}
-              className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-lg"
+              className="flex items-center gap-1.5 text-[11px] md:text-xs font-bold px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl min-h-[36px] md:min-h-[40px]"
               style={{
                 background: "linear-gradient(135deg, rgba(20,184,166,0.18), rgba(16,185,129,0.10))",
                 border: "1px solid rgba(20,184,166,0.4)",
                 color: "#5eead4",
               }}
             >
-              <ListChecks className="w-3 h-3" />
+              <ListChecks className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Lista nomi
-              <span className="text-[8px] font-black px-1 rounded" style={{ background: "rgba(20,184,166,0.3)", color: "#fff" }}>
+              <span className="text-[9px] md:text-[10px] font-black px-1.5 py-0.5 rounded" style={{ background: "rgba(20,184,166,0.3)", color: "#fff" }}>
                 {results.length}
               </span>
             </motion.button>
           )}
-          <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: showFilters ? "#14b8a6" : "#9ca3af" }}>
-            <Filter className="w-3 h-3" /> Filtri avanzati <ChevronDown className={`w-3 h-3 transition-transform ${showFilters ? "rotate-180" : ""}`} />
+          <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-1.5 text-[11px] md:text-xs font-semibold px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl min-h-[36px] md:min-h-[40px]" style={{ ...inputStyle, color: showFilters ? "#14b8a6" : "#9ca3af" }}>
+            <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" /> Filtri avanzati <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showFilters ? "rotate-180" : ""}`} />
           </button>
-          <button onClick={() => setShowManual(!showManual)} className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg" style={{ ...inputStyle, color: "#a78bfa" }}>
-            <UserPlus className="w-3 h-3" /> Lead esterno
+          <button onClick={() => setShowManual(!showManual)} className="flex items-center gap-1.5 text-[11px] md:text-xs font-semibold px-3 py-2 md:px-3.5 md:py-2.5 rounded-xl min-h-[36px] md:min-h-[40px]" style={{ ...inputStyle, color: "#a78bfa" }}>
+            <UserPlus className="w-3.5 h-3.5 md:w-4 md:h-4" /> Lead esterno
           </button>
           {/* Source badges */}
           {results.length > 0 && Object.entries(sourceStats).map(([src, count]) => {
             const info = SOURCE_LABELS[src] || { label: src, color: "#9ca3af" };
             return (
-              <span key={src} className="text-[8px] font-bold px-2 py-1 rounded-lg" style={{ background: `${info.color}12`, color: info.color }}>
+              <span key={src} className="text-[9px] md:text-[10px] font-bold px-2 py-1 rounded-lg" style={{ background: `${info.color}12`, color: info.color }}>
                 {info.label}: {count}
               </span>
             );
@@ -2190,7 +2191,7 @@ export default function LeadsPage() {
               </div>
             )}
 
-            <div className="space-y-1.5 max-h-[380px] overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-[420px] md:max-h-[560px] lg:max-h-[640px] overflow-y-auto pr-1">
               {sorted.length === 0 && resultsQuery && (
                 <div className="text-center text-[11px] text-muted-foreground py-6">
                   Nessun lead corrisponde a “{resultsQuery}”.
