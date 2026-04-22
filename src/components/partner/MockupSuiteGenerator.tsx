@@ -373,6 +373,18 @@ export function MockupSuiteGenerator({
         safe_area_px: safeAreaPx,
         type_scale: typeScale,
         boost_contrast: boostContrast,
+        // Branding kit del template — coerenza palette + tipografia per AI prompt
+        branding: {
+          template: brandingKit.variant,
+          locked: lockToTemplate,
+          primary: brandingKit.primary,
+          accent: brandingKit.accent,
+          palette: brandingKit.palette.map(p => p.hex),
+          typography_pair: brandingKit.typography.pairLabel,
+          heading_font: brandingKit.typography.headingFont,
+          body_font: brandingKit.typography.bodyFont,
+          rule: brandingKit.rule,
+        },
       };
 
       if (isAIEngine) setPreviewPhase("upgrading");
