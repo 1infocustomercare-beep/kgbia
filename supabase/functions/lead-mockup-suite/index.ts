@@ -11,7 +11,10 @@ const corsHeaders = {
 const AI_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
 type Engine = "react" | "nano_banana" | "nano_banana_pro";
-type ScreenType = "home" | "menu" | "booking" | "profile" | "gallery" | "checkout";
+type ScreenType =
+  | "home" | "menu" | "booking" | "profile" | "gallery" | "checkout"
+  | "catalog" | "listing" | "dashboard" | "chat" | "map" | "stats"
+  | "services" | "portfolio" | "contact";
 
 interface ScreenConfig {
   type: ScreenType;
@@ -20,22 +23,42 @@ interface ScreenConfig {
 }
 
 const DEFAULT_SCREENS: ScreenConfig[] = [
-  { type: "home",    title: "Home",         prompt_hint: "schermata principale con hero foto, logo, CTA Prenota Ora, recensioni 5 stelle" },
-  { type: "menu",    title: "Menu/Servizi", prompt_hint: "lista menù o servizi con foto piatti/prodotti, prezzi chiari, badge popolare" },
-  { type: "booking", title: "Prenotazione", prompt_hint: "form prenotazione con calendario, selezione orario, numero persone, conferma" },
-  { type: "profile", title: "Profilo",      prompt_hint: "profilo cliente con punti fedeltà, ordini passati, recensioni, badge VIP" },
+  { type: "home",    title: "Home",         prompt_hint: "hero immagine luxury full-bleed, logo brand in alto, claim italiano breve, CTA primario evidenziato, social proof (★ 4.9 - 247 recensioni), sezione 'in evidenza' con 2-3 card" },
+  { type: "menu",    title: "Menu",         prompt_hint: "lista categorie scrollabile orizzontale in alto, lista item con foto a destra, nome+descrizione+prezzo, badge 'popolare'/'novità', filtro veloce (vegan/gluten-free)" },
+  { type: "booking", title: "Prenota",      prompt_hint: "calendario mensile con giorni disponibili evidenziati, fascia oraria a chip, stepper numero persone, campo note, CTA 'Conferma Prenotazione' grande in basso" },
+  { type: "profile", title: "Profilo",      prompt_hint: "avatar utente cerchio, nome+livello fedeltà (Gold), barra punti, lista ordini recenti con stato, sezione preferiti, impostazioni" },
 ];
 
-// Mappa settore -> template variante consigliata
+// Mappa settore -> template variante consigliata (esteso 15+ settori)
 function suggestTemplate(sector: string | null | undefined): string {
   if (!sector) return "modern_dark";
   const s = sector.toLowerCase();
-  if (/sushi|giapp|nikkei|asiatic/.test(s)) return "paperfish";
+  // Food
+  if (/sushi|giapp|nikkei|asiatic|ramen/.test(s)) return "paperfish";
   if (/pizza|pizzer/.test(s)) return "strapizzami";
-  if (/spiagg|beach|bagn|stabilim|lido/.test(s)) return "batey";
-  if (/lusso|luxury|gourmet|stellato/.test(s)) return "luxury_gold";
-  if (/casual|trattor|osteri|bistr/.test(s)) return "casual_warm";
-  if (/zen|mindful|yoga|spa/.test(s)) return "minimal_zen";
+  if (/lusso|luxury|gourmet|stellato|michelin/.test(s)) return "luxury_gold";
+  if (/casual|trattor|osteri|bistr|tavern/.test(s)) return "casual_warm";
+  if (/bar|cocktail|pub|enotec|wine/.test(s)) return "noir_gold";
+  // Wellness/Beauty
+  if (/spa|wellness|yoga|mindful|medita/.test(s)) return "minimal_zen";
+  if (/parruc|hair|barber|salone|estet|nail|beauty/.test(s)) return "blush_lavender";
+  if (/palestr|gym|fitness|crossfit|personal/.test(s)) return "fitness_energy";
+  // Hospitality / Beach
+  if (/spiagg|beach|bagn|stabilim|lido|mare/.test(s)) return "batey";
+  if (/hotel|b&b|resort|villa|relais/.test(s)) return "ocean_deep";
+  // Real Estate / Trust services
+  if (/immobil|real estate|agenz.*immo|agency/.test(s)) return "real_estate_trust";
+  if (/legal|avvoc|notar|consulent|commercial/.test(s)) return "navy_trust";
+  if (/medic|dentist|clinic|stud.*medic|fisioter/.test(s)) return "clinical_clean";
+  // Auto / Mobility
+  if (/ncc|noleggio|limous|chauffeur|taxi/.test(s)) return "luxury_chrome";
+  if (/yacht|barca|charter|nautic/.test(s)) return "ocean_deep";
+  // Retail / E-commerce
+  if (/ecommerce|shop|negozio|boutique|fashion|moda/.test(s)) return "editorial_clean";
+  if (/gioiel|orolog|jewel|lux.*ret/.test(s)) return "noir_gold";
+  // Tech / Pro
+  if (/saas|software|tech|fintech|startup|ai/.test(s)) return "glass_aurora";
+  if (/agenz|market|comuni|adv|pubbl/.test(s)) return "neon_vibrant";
   return "modern_dark";
 }
 
@@ -84,40 +107,91 @@ function buildScreenPrompt(
   screen: ScreenConfig,
   business: { name: string; sector: string; city: string },
   templateVariant: string,
+  primaryColor: string,
   pro: boolean,
 ): string {
   const styleMap: Record<string, string> = {
-    paperfish: "DARK SAKURA LUXURY: nero obsidian #0E0B0F + sakura pink #E89BAE + oro caldo #C9A86A, font Cormorant Garamond serif elegante, atmosfera giapponese raffinata",
-    strapizzami: "WARM CREAM TERRACOTTA: crema #F5EBD8 + terracotta #C84A2A + oro #B8893E, font handwritten + sans bold, atmosfera artigianale italiana calda",
-    batey: "AZURE CARIBBEAN: deep ocean #08131F + azure #5CC8D9 + sand #E8D5A8 + coral #FF8966, font modern sans, atmosfera tropicale premium fresca",
-    luxury_gold: "LUXURY GOLD: nero #1A1410 + oro #D4AF37 + bianco caldo, font serif premium, atmosfera Michelin star",
-    modern_dark: "MODERN DARK 2026: slate #0F172A + accent #C8963E + ghiaccio bianco, font Inter pulito, atmosfera tech premium",
-    casual_warm: "CASUAL WARM: panna #FAF6F0 + corallo #E07856 + verde salvia, font friendly rounded, atmosfera accogliente",
-    minimal_zen: "MINIMAL ZEN: bianco #F8F8F8 + nero #222 + accenti grigi, font Helvetica essenziale, atmosfera giapponese minimalista",
+    paperfish:        "DARK SAKURA LUXURY giapponese: nero obsidian #0E0B0F, sakura pink #E89BAE, oro caldo #C9A86A. Font Cormorant Garamond serif elegante per heading, Inter per body. Texture carta giapponese sottile, ideogrammi kanji decorativi minimali",
+    strapizzami:      "WARM CREAM TERRACOTTA artigianale italiano: crema #F5EBD8, terracotta #C84A2A, oro #B8893E. Font handwritten Caveat per accenti + Manrope sans bold. Texture forno a legna, atmosfera napoletana autentica",
+    batey:            "AZURE CARIBBEAN tropical-luxury: deep ocean #08131F, azure #5CC8D9, sand #E8D5A8, coral #FF8966. Font Outfit modern sans. Atmosfera Tulum/Maldive premium",
+    luxury_gold:      "LUXURY GOLD Michelin: nero #1A1410, oro #D4AF37, bianco caldo #F5F0E0. Font Playfair Display serif + Cormorant. Stelle Michelin sottili decorative",
+    modern_dark:      "MODERN DARK 2026: slate #0F172A, accent oro #C8963E, ghiaccio #F8FAFC. Font Inter + Space Grotesk. Estetica Linear/Vercel premium tech",
+    casual_warm:      "CASUAL WARM accogliente: panna #FAF6F0, corallo #E07856, salvia #87A878. Font Nunito rounded + DM Sans. Vibes bistrot familiare",
+    minimal_zen:      "MINIMAL ZEN giapponese: bianco #F8F8F8, nero #222, accenti grigio caldo. Font Helvetica Neue Light. Spazi vuoti meditativi, linee sottili",
+    noir_gold:        "NOIR GOLD speakeasy: nero assoluto #0D0D0D, oro brillante #C9A84C, bordeaux #6B1F2C. Font DM Serif Display + Inter. Atmosfera bar di lusso anni '20",
+    blush_lavender:   "BLUSH LAVENDER beauty: rosa cipria #F8E8EE, lavanda #C9A0DC, oro rosa #E8B4B8. Font Cormorant + Karla. Estetica beauty editorial Vogue",
+    fitness_energy:   "FITNESS ENERGY: nero matte #1B1B1B, lime acceso #C7FF3A, grigio antracite. Font Bebas Neue + Barlow. Vibes Nike/Whoop performance",
+    ocean_deep:       "OCEAN DEEP hospitality: navy #0C2340, teal #2D8A9E, mint #5CBDB9, sabbia. Font Sora + Manrope. Atmosfera resort 5 stelle",
+    real_estate_trust:"REAL ESTATE TRUST: navy fondo #0F1B3D, oro #C9A84C, bianco perla, beige caldo. Font Libre Baskerville + IBM Plex Sans. Stile agenzia immobiliare di prestigio",
+    navy_trust:       "NAVY TRUST law/finance: navy profondo #0F1B3D, bianco #E8EDF3, oro #C9A84C. Font Libre Baskerville + Inter. Stile studio legale top tier",
+    clinical_clean:   "CLINICAL CLEAN medical: bianco #FAFBFC, blu medico #2563EB, verde menta #5CC8B7. Font Outfit + Inter. Estetica clinica premium",
+    luxury_chrome:    "LUXURY CHROME automotive: nero piano #0A0A0A, argento cromato #C0C0C0, accent rosso ferrari opzionale. Font Archivo Black + Inter. Stile Mercedes/Bentley",
+    editorial_clean:  "EDITORIAL CLEAN fashion: bianco #FAFBFC, nero #0D0D0D, accent unico (mint o coral). Font Instrument Serif + Work Sans. Stile Aesop/COS minimal magazine",
+    glass_aurora:     "GLASS AURORA fintech: dark navy #1A1A2E, glass purple #A78BFA, mint glow #4ADE80, iridescente. Font Space Grotesk + Inter. Glassmorphism premium",
+    neon_vibrant:     "NEON VIBRANT agency: nero #0A0A0A, magenta #FF006E, ciano #00F5D4, giallo #FEE440. Font Archivo Black + Space Mono. Energia creativa esplosiva",
   };
   const style = styleMap[templateVariant] || styleMap.modern_dark;
-  const quality = pro ? "ULTRA-CINEMATOGRAFICO 8K, dettagli ossessivi, illuminazione studio, riflessi vetro perfetti" : "fotorealistico premium 4K, illuminazione naturale";
 
-  return `Mockup smartphone iPhone 16 Pro fotorealistico mostrando schermata "${screen.title}" di app premium per ${business.sector} chiamato "${business.name}" a ${business.city}.
+  // Bottom nav adattivo per tipo di app
+  const navMap: Record<string, string> = {
+    real_estate_trust: "Home, Annunci, Mappa, Agenti, Profilo",
+    navy_trust: "Home, Servizi, Appuntamenti, Documenti, Profilo",
+    clinical_clean: "Home, Visite, Cartella, Chat Dottore, Profilo",
+    luxury_chrome: "Home, Flotta, Prenota, Tracking, Profilo",
+    editorial_clean: "Shop, Categorie, Carrello, Wishlist, Account",
+    glass_aurora: "Dashboard, Analytics, Workflow, Team, Profilo",
+    fitness_energy: "Home, Workout, Schedule, Progressi, Profilo",
+    blush_lavender: "Home, Servizi, Prenota, Galleria, Profilo",
+    paperfish: "Home, Menu, Prenota, Profilo, AI Sushi",
+    strapizzami: "Home, Menu, Ordina, Galleria, Profilo",
+  };
+  const bottomNav = navMap[templateVariant] || "Home, Esplora, Prenota, Profilo, Chat AI";
 
-CONTENUTO SCHERMATA: ${screen.prompt_hint || screen.title}
+  const quality = pro
+    ? "ULTRA-CINEMATOGRAFICO 8K, qualità Apple Store keynote, illuminazione studio professionale a 3 punti, riflessi vetro perfetti del display, anti-aliasing perfetto, grana sottile cinematica, color grading premium"
+    : "fotorealistico premium 4K, illuminazione studio soft, dettagli UI nitidi e leggibili, color grading professionale";
 
-STILE GRAFICO: ${style}
+  return `Mockup professionale iPhone 16 Pro Max FOTOREALISTICO PERFETTAMENTE CENTRATO E FRONTALE mostrando la schermata "${screen.title}" di un'app mobile premium per "${business.name}" — ${business.sector} a ${business.city}.
 
-DETTAGLI UI:
-- Status bar iPhone realistica (ora 9:41, batteria piena, segnale 5G)
-- Dynamic Island visibile
-- Bottom nav con 4-5 icone (Home, Menu, Prenota, Profilo, AI Chat)
-- Bottone CTA principale grande, ben visibile
-- Tipografia gerarchica chiara, leggibile
-- Spaziature ariose, padding generoso
-- Componenti card con angoli arrotondati 16px
-- Ombre soft, depth visibile
-- Microcopy in italiano
+═══ CONTENUTO SCHERMATA ═══
+${screen.prompt_hint || screen.title}
+Il contenuto deve essere REALISTICO e PERTINENTE al settore "${business.sector}" — usa dati credibili italiani (nomi piatti/servizi tipici, prezzi in € realistici, indirizzi italiani plausibili, orari italiani 12h/24h).
 
-COMPOSIZIONE: vista frontale leggermente angolata 5° destra, sfondo gradiente neutro morbido in tinta col tema, ombra realistica sotto il telefono. ${quality}.
+═══ STILE GRAFICO ═══
+${style}
+Colore primario brand del cliente: ${primaryColor} — usalo come accent CTA principale.
 
-NESSUN TESTO INVENTATO IN INGLESE — solo italiano. NESSUN logo brand esterni (no Apple/Google).`;
+═══ UI COMPONENTS OBBLIGATORI (DEVONO APPARIRE) ═══
+- Status bar iOS perfetta in alto (ora 9:41, indicatore segnale 5G, WiFi pieno, batteria 100% piena)
+- Dynamic Island nera centrata in alto, dimensioni iPhone 16 Pro reali
+- Header app con titolo schermata + eventuale icona profilo/back
+- Contenuto principale ben spaziato, gerarchia tipografica chiara (h1 24-28pt, body 15-17pt, label 11-13pt)
+- Componenti card con border-radius 16-20px, ombre soft naturali
+- Bottom navigation bar fissa: 5 icone (${bottomNav}), icona attiva colorata col primary, altre grigie
+- Home indicator iOS sottile in basso (barra orizzontale)
+- Bottoni CTA grandi (52px altezza), full-width, ombra sottile, testo bianco/contrasto perfetto
+- Microcopy 100% in italiano professionale, ZERO inglese (eccetto status bar)
+
+═══ COMPOSIZIONE FOTOGRAFICA (CRITICA) ═══
+- iPhone in posizione PERFETTAMENTE FRONTALE, ZERO PROSPETTIVA, ZERO INCLINAZIONE, ZERO ANGOLAZIONE
+- iPhone CENTRATO orizzontalmente E verticalmente nel frame
+- Aspect ratio iPhone reale 9:19.5, proporzioni dispositivo accurate
+- Cornice titanio iPhone visibile sottile, finitura matte
+- Sfondo: gradiente morbido neutro premium in tinta col tema (${style.split(":")[1]?.split(",")[0] || "neutro"})
+- Ombra naturale sotto il dispositivo, soft floating
+- NESSUN testo o decorazione fuori dallo schermo iPhone
+- Display interamente visibile e leggibile, nessun cropping
+
+═══ QUALITÀ ═══
+${quality}
+
+═══ DIVIETI ASSOLUTI ═══
+- VIETATO scrivere "Empire", "Empire AI", "Lovable", o qualsiasi branding piattaforma
+- VIETATO logo Apple, Google, Meta o brand esterni (eccetto status bar iOS standard)
+- VIETATO testo in inglese nei contenuti app (solo italiano)
+- VIETATO prospettive isometriche/3D rotation/tilt
+- VIETATO testo distorto, illeggibile o lorem ipsum
+- VIETATO mockup wireframe, low-fi, sketch — solo render fotografici premium fedeli`;
 }
 
 Deno.serve(async (req) => {
@@ -258,7 +332,7 @@ Deno.serve(async (req) => {
 
     try {
       // Genera 4 immagini in parallelo
-      const imagePromises = screens.map(s => generateAIImage(LOVABLE_KEY, buildScreenPrompt(s, business, templateVariant, pro), pro));
+      const imagePromises = screens.map(s => generateAIImage(LOVABLE_KEY, buildScreenPrompt(s, business, templateVariant, primary_color, pro), pro));
       const dataUrls = await Promise.all(imagePromises);
 
       // Upload su storage
