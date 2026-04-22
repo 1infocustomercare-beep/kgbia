@@ -6,7 +6,7 @@ import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   LayoutDashboard, Target, DollarSign, FolderOpen, User, LogOut, ArrowLeft,
-  Eye, Presentation, Zap, Palette, MoreHorizontal, Wand2,
+  Eye, Presentation, Zap, Palette, MoreHorizontal, Wand2, Sparkles,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
@@ -76,6 +76,12 @@ export default function PartnerLayout() {
   const { theme: currentTheme } = useTheme();
   const isDark = currentTheme === "dark";
   const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
+  // Wow Mode: "full" | "soft" | "off" — persistente tra sessioni
+  type WowLevel = "full" | "soft" | "off";
+  const [wowLevel, setWowLevel] = useState<WowLevel>(() => {
+    const saved = localStorage.getItem("partner_wow_mode") as WowLevel | null;
+    return saved === "soft" || saved === "off" ? saved : "full";
+  });
   const [showSplash, setShowSplash] = useState(() => {
     const lastTs = sessionStorage.getItem("partner_splash_ts");
     if (!lastTs) return true;
@@ -108,6 +114,25 @@ export default function PartnerLayout() {
   useEffect(() => {
     sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false");
   }, [demoMode]);
+
+  useEffect(() => {
+    localStorage.setItem("partner_wow_mode", wowLevel);
+  }, [wowLevel]);
+
+  const cycleWow = () => {
+    const next: WowLevel = wowLevel === "full" ? "soft" : wowLevel === "soft" ? "off" : "full";
+    setWowLevel(next);
+    toast({
+      title: next === "full" ? "✨ Wow Mode: Pieno" : next === "soft" ? "🌙 Wow Mode: Soft" : "🔇 Wow Mode: Off",
+      description:
+        next === "full"
+          ? "Sfondo cinematico, aurora e grain a piena intensità."
+          : next === "soft"
+          ? "Animazioni rallentate, grain ridotto. Massima concentrazione."
+          : "Sfondo statico, zero animazioni di sfondo.",
+    });
+  };
+  const wowIntensity = wowLevel === "full" ? 1 : wowLevel === "soft" ? 0.55 : 0;
 
   // Close "more" sheet on route change
   useEffect(() => {
