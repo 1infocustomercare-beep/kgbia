@@ -227,7 +227,10 @@ export function MockupSuiteGenerator({
   const isLeadMode = Boolean((businessNameProp || "").trim());
   const [mode, setMode] = useState<"lead" | "standalone">(isLeadMode ? "lead" : "standalone");
 
-  // Form standalone
+  // Override manuale dei dati lead (sblocca i campi per modificarli senza cambiare modalità)
+  const [leadOverride, setLeadOverride] = useState(false);
+
+  // Form standalone / override
   const [standalone, setStandalone] = useState({
     name: "",
     sector: "",
@@ -240,11 +243,24 @@ export function MockupSuiteGenerator({
     if (isLeadMode) setMode("lead");
   }, [isLeadMode, businessNameProp]);
 
-  // Valori effettivi
-  const businessName = mode === "standalone" ? standalone.name : (businessNameProp || "");
-  const businessSector = mode === "standalone" ? standalone.sector : businessSectorProp;
-  const businessCity = mode === "standalone" ? standalone.city : businessCityProp;
-  const primaryColor = mode === "standalone" ? standalone.primaryColor : primaryColorProp;
+  // Quando attivo l'override in lead mode, pre-compilo lo standalone con i dati del lead
+  useEffect(() => {
+    if (leadOverride && mode === "lead") {
+      setStandalone({
+        name: businessNameProp || "",
+        sector: businessSectorProp || "",
+        city: businessCityProp || "",
+        primaryColor: primaryColorProp || "#C8963E",
+      });
+    }
+  }, [leadOverride, mode, businessNameProp, businessSectorProp, businessCityProp, primaryColorProp]);
+
+  // Valori effettivi: standalone se modalità standalone OPPURE se override attivo in lead mode
+  const useStandaloneValues = mode === "standalone" || (mode === "lead" && leadOverride);
+  const businessName = useStandaloneValues ? standalone.name : (businessNameProp || "");
+  const businessSector = useStandaloneValues ? standalone.sector : businessSectorProp;
+  const businessCity = useStandaloneValues ? standalone.city : businessCityProp;
+  const primaryColor = useStandaloneValues ? standalone.primaryColor : primaryColorProp;
 
   const [engine, setEngine] = useState<MockupEngine>("react");
   const [templateVariant, setTemplateVariant] = useState<string>(initialTemplate || "auto");
@@ -485,9 +501,19 @@ export function MockupSuiteGenerator({
           </button>
         </div>
 
-        {/* Form standalone */}
-        {mode === "standalone" && (
-          <div className="space-y-3 p-4 rounded-xl border bg-muted/20">
+        {/* Form standalone (mostrato anche in lead-mode quando override è attivo) */}
+        {(mode === "standalone" || (mode === "lead" && leadOverride)) && (
+          <div className={`space-y-3 p-4 rounded-xl border ${
+            mode === "lead" && leadOverride
+              ? "bg-amber-500/[0.04] border-amber-500/30"
+              : "bg-muted/20"
+          }`}>
+            {mode === "lead" && leadOverride && (
+              <div className="flex items-center gap-2 text-[11px] text-amber-700 dark:text-amber-300 font-semibold">
+                <Pencil className="h-3 w-3" />
+                Override manuale attivo · stai modificando i dati precompilati dal lead
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <Label htmlFor="sa-name" className="text-xs">Nome attività / brand *</Label>
@@ -549,9 +575,30 @@ export function MockupSuiteGenerator({
           </div>
         )}
 
-        {/* Riepilogo target */}
+        {/* Riepilogo target — con indicatori sorgente (lead vs override vs standalone) */}
         {businessName && businessSector && (
-          <div className="flex flex-wrap items-center gap-2 px-3 py-2 rounded-lg bg-primary/5 border border-primary/20">
+          <div className={`flex flex-wrap items-center gap-2 px-3 py-2 rounded-lg border ${
+            mode === "lead" && !leadOverride
+              ? "bg-primary/5 border-primary/20"
+              : mode === "lead" && leadOverride
+              ? "bg-amber-500/[0.06] border-amber-500/30"
+              : "bg-muted/40 border-border"
+          }`}>
+            {mode === "lead" && !leadOverride && (
+              <Badge variant="secondary" className="text-[10px] gap-1">
+                <User className="h-2.5 w-2.5" /> Precompilato dal lead
+              </Badge>
+            )}
+            {mode === "lead" && leadOverride && (
+              <Badge variant="default" className="text-[10px] gap-1 bg-amber-500/90 hover:bg-amber-500">
+                <Pencil className="h-2.5 w-2.5" /> Override manuale
+              </Badge>
+            )}
+            {mode === "standalone" && (
+              <Badge variant="outline" className="text-[10px] gap-1">
+                <Wand2 className="h-2.5 w-2.5" /> Mockup libero
+              </Badge>
+            )}
             <Badge variant="default" className="text-xs">{businessName}</Badge>
             <Badge variant="outline" className="text-xs">{businessSector}</Badge>
             {businessCity && <Badge variant="outline" className="text-xs">{businessCity}</Badge>}
@@ -560,6 +607,25 @@ export function MockupSuiteGenerator({
               style={{ background: primaryColor }}
               title={primaryColor}
             />
+
+            {/* Toggle override (solo in lead mode) */}
+            {mode === "lead" && (
+              <button
+                type="button"
+                onClick={() => setLeadOverride(v => !v)}
+                className={`ml-auto text-[10px] px-2 py-1 rounded-full border font-semibold transition-all flex items-center gap-1 ${
+                  leadOverride
+                    ? "border-amber-500/60 bg-amber-500/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20"
+                    : "border-border hover:border-primary hover:bg-primary/5"
+                }`}
+                title={leadOverride
+                  ? "Disattiva override e ripristina i dati del lead"
+                  : "Sblocca i campi per modificare manualmente i dati del lead"}
+              >
+                <Pencil className="h-2.5 w-2.5" />
+                {leadOverride ? "Annulla override · usa lead" : "Sovrascrivi manualmente"}
+              </button>
+            )}
           </div>
         )}
 
