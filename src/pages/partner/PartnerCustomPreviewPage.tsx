@@ -342,6 +342,14 @@ export default function PartnerCustomPreviewPage() {
       });
       setSelectedLeadId("");
 
+      // Bozza completata: rimuovi dal localStorage
+      if (DRAFT_KEY) {
+        try { localStorage.removeItem(DRAFT_KEY); } catch {}
+        setDraftSavedAt(null);
+        setDraftStatus("idle");
+        setDraftRestored(false);
+      }
+
       const url = (data as any).public_url;
       if (url) window.open(url, "_blank");
     } catch (e: any) {
