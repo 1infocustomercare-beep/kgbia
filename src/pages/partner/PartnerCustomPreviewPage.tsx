@@ -111,6 +111,88 @@ export default function PartnerCustomPreviewPage() {
   const toggleSection = (s: "data" | "brand" | "style") =>
     setOpenSection(prev => (prev === s ? null : s));
 
+  // ═══ DRAFT AUTOSAVE (localStorage, per-utente) ═══
+  const DRAFT_KEY = user?.id ? `partner-custom-preview-draft:${user.id}` : null;
+  const [draftStatus, setDraftStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const [draftSavedAt, setDraftSavedAt] = useState<number | null>(null);
+  const [draftHydrated, setDraftHydrated] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
+
+  // Restore bozza al mount (una volta sola, quando l'utente è disponibile)
+  useEffect(() => {
+    if (!DRAFT_KEY || draftHydrated) return;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.form) {
+          setForm(prev => ({ ...prev, ...parsed.form }));
+          if (parsed.mode) setMode(parsed.mode);
+          if (parsed.selectedLeadId) setSelectedLeadId(parsed.selectedLeadId);
+          if (parsed.savedAt) setDraftSavedAt(parsed.savedAt);
+          setDraftRestored(true);
+        }
+      }
+    } catch (err) {
+      console.warn("[draft] restore failed", err);
+    } finally {
+      setDraftHydrated(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [DRAFT_KEY]);
+
+  // Auto-save bozza con debounce 600ms
+  useEffect(() => {
+    if (!DRAFT_KEY || !draftHydrated) return;
+    const hasContent =
+      form.lead_name || form.lead_city || form.lead_sector || form.lead_phone ||
+      form.lead_website || form.lead_address || form.lead_email ||
+      form.logo_url || form.gallery_images.length > 0 ||
+      form.template_style !== "modern_dark" || form.primary_color !== "#C8963E";
+    if (!hasContent) return;
+
+    setDraftStatus("saving");
+    const t = setTimeout(() => {
+      try {
+        const savedAt = Date.now();
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ form, mode, selectedLeadId, savedAt }));
+        setDraftSavedAt(savedAt);
+        setDraftStatus("saved");
+      } catch (err) {
+        console.warn("[draft] save failed", err);
+        setDraftStatus("idle");
+      }
+    }, 600);
+    return () => clearTimeout(t);
+  }, [form, mode, selectedLeadId, DRAFT_KEY, draftHydrated]);
+
+  const clearDraft = () => {
+    if (!DRAFT_KEY) return;
+    if (!confirm("Cancellare la bozza salvata e ricominciare da zero?")) return;
+    localStorage.removeItem(DRAFT_KEY);
+    setForm({
+      lead_name: "", lead_city: "", lead_sector: "", lead_phone: "", lead_website: "",
+      lead_address: "", lead_email: "",
+      template_style: "modern_dark", primary_color: "#C8963E",
+      logo_url: "", gallery_images: [],
+    });
+    setSelectedLeadId("");
+    setDraftSavedAt(null);
+    setDraftStatus("idle");
+    setDraftRestored(false);
+    toast.success("Bozza cancellata");
+  };
+
+  const formatDraftTime = (ts: number | null) => {
+    if (!ts) return "";
+    const diff = Math.floor((Date.now() - ts) / 1000);
+    if (diff < 5) return "ora";
+    if (diff < 60) return `${diff}s fa`;
+    if (diff < 3600) return `${Math.floor(diff / 60)} min fa`;
+    const d = new Date(ts);
+    return d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+  };
+
   // Load previews + intelligence + scout leads
   useEffect(() => {
     if (!user?.id) return;
