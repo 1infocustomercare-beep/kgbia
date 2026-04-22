@@ -240,14 +240,90 @@ export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Prop
                     Aggiorna
                   </button>
                 </div>
-              ) : (
-                <button
-                  onClick={requestBrowserGps}
-                  className="w-full py-3 rounded-xl text-[11px] font-bold flex items-center justify-center gap-2"
-                  style={{ background: "linear-gradient(135deg, #06b6d4, #14b8a6)", color: "#fff" }}
+              ) : permState === "denied" || permState === "unsupported" ? (
+                <div
+                  className="p-3 rounded-xl space-y-2"
+                  style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.25)" }}
                 >
-                  <Crosshair className="w-4 h-4" /> Attiva GPS
-                </button>
+                  <div className="flex items-start gap-2">
+                    <X className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "#ef4444" }} />
+                    <div className="space-y-0.5">
+                      <p className="text-[11px] font-bold" style={{ color: "#fca5a5" }}>
+                        {permState === "denied" ? "Permesso GPS negato" : "GPS non supportato"}
+                      </p>
+                      <p className="text-[9px] leading-relaxed" style={{ color: "#9ca3af" }}>
+                        {permState === "denied"
+                          ? "Per usare “vicino a me” riabilita la geolocalizzazione: clicca sul lucchetto 🔒 nella barra indirizzi → Posizione → Consenti, poi ricarica."
+                          : "Il browser non supporta il GPS. Continua inserendo manualmente un indirizzo qui sotto."}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    {permState === "denied" && (
+                      <button
+                        onClick={requestBrowserGps}
+                        className="flex-1 py-2 rounded-lg text-[10px] font-bold"
+                        style={{ background: "rgba(6,182,212,0.15)", color: "#22d3ee", border: "1px solid rgba(6,182,212,0.3)" }}
+                      >
+                        Riprova GPS
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setMode("address")}
+                      className="flex-1 py-2 rounded-lg text-[10px] font-bold"
+                      style={{ background: "linear-gradient(135deg, #06b6d4, #14b8a6)", color: "#fff" }}
+                    >
+                      🏠 Usa indirizzo
+                    </button>
+                  </div>
+                </div>
+              ) : permState === "unavailable" || permState === "timeout" ? (
+                <div
+                  className="p-3 rounded-xl space-y-2"
+                  style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.25)" }}
+                >
+                  <p className="text-[11px] font-bold" style={{ color: "#fbbf24" }}>
+                    {permState === "timeout" ? "Timeout rilevamento" : "Posizione non disponibile"}
+                  </p>
+                  <p className="text-[9px]" style={{ color: "#9ca3af" }}>
+                    Il dispositivo non ha fornito coordinate valide. Riprova all'aperto o passa a indirizzo manuale.
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={requestBrowserGps}
+                      className="flex-1 py-2 rounded-lg text-[10px] font-bold"
+                      style={{ background: "rgba(6,182,212,0.15)", color: "#22d3ee", border: "1px solid rgba(6,182,212,0.3)" }}
+                    >
+                      Riprova
+                    </button>
+                    <button
+                      onClick={() => setMode("address")}
+                      className="flex-1 py-2 rounded-lg text-[10px] font-bold"
+                      style={{ background: "linear-gradient(135deg, #06b6d4, #14b8a6)", color: "#fff" }}
+                    >
+                      🏠 Indirizzo
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div
+                    className="p-2.5 rounded-xl flex items-start gap-2"
+                    style={{ background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.2)" }}
+                  >
+                    <Crosshair className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "#22d3ee" }} />
+                    <p className="text-[9px] leading-relaxed" style={{ color: "#94a3b8" }}>
+                      Empire userà il tuo GPS <strong className="text-white">solo per scansionare lead reali nel raggio scelto</strong>. La posizione non viene salvata né condivisa.
+                    </p>
+                  </div>
+                  <button
+                    onClick={requestBrowserGps}
+                    className="w-full py-3 rounded-xl text-[11px] font-bold flex items-center justify-center gap-2"
+                    style={{ background: "linear-gradient(135deg, #06b6d4, #14b8a6)", color: "#fff" }}
+                  >
+                    <Crosshair className="w-4 h-4" /> Consenti e attiva GPS
+                  </button>
+                </div>
               )}
             </div>
           )}
