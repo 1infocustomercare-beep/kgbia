@@ -40,7 +40,7 @@ const EmpireParticleOrb = memo(() => {
   const modeRef = useRef<Mode>("orb");
   const morphRef = useRef(0);
   // Orb position offset (drag), rotation, and scale (pinch)
-  const offsetRef = useRef({ x: 0, y: 0 });
+  const offsetRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   const rotRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   const scaleRef = useRef(1);
   const dragRef = useRef({
@@ -134,8 +134,10 @@ const EmpireParticleOrb = memo(() => {
       const inside = isInsideOrb(e.clientX, e.clientY);
       pointerRef.current.inside = inside;
 
-      // Cursor feedback: grab quando sopra l'orb, default altrove
+      // Toggle canvas pointer-events so the background underneath stays interactive
+      // when the cursor/finger is OUTSIDE the orb hit-area. Keep events captured while dragging.
       if (!dragRef.current.active && !gestureRef.current.active) {
+        canvas.style.pointerEvents = inside ? "auto" : "none";
         canvas.style.cursor = inside ? "grab" : "default";
       }
 
@@ -176,23 +178,24 @@ const EmpireParticleOrb = memo(() => {
         const totalDx = e.clientX - drag.startX;
         const totalDy = e.clientY - drag.startY;
         const totalDist = Math.hypot(totalDx, totalDy);
-        // Soglia minima — parte quasi subito (2px)
-        if (!drag.mode && totalDist > 2) {
+        if (!drag.mode && totalDist > 6) {
           drag.moved = true;
-          // Touch device: swipe = rotate (più naturale). Mouse: shift = rotate, default = drag.
+          // Touch device: swipe = rotate (more natural). Mouse: shift = rotate, default = drag.
           const isTouch = e.pointerType === "touch" || e.pointerType === "pen";
           drag.mode = isTouch ? "rotate" : (e.shiftKey ? "rotate" : "drag");
-          if (canvas) canvas.style.cursor = drag.mode === "rotate" ? "grabbing" : "grabbing";
         }
 
         if (drag.mode === "drag") {
+          // 1:1 follow finger/mouse + build throw velocity
           offsetRef.current.x += dx;
           offsetRef.current.y += dy;
+          offsetRef.current.vx = dx;
+          offsetRef.current.vy = dy;
         } else if (drag.mode === "rotate") {
-          // Rotazione DIRETTA per reattività immediata (no momentum builder)
+          // Direct rotation for snappy 1:1 response
           rotRef.current.y += dx * 0.012;
           rotRef.current.x -= dy * 0.012;
-          rotRef.current.vy = dx * 0.004; // momentum residuo per inerzia al rilascio
+          rotRef.current.vy = dx * 0.004;
           rotRef.current.vx = -dy * 0.004;
         }
         e.preventDefault();
@@ -201,6 +204,7 @@ const EmpireParticleOrb = memo(() => {
 
     const handlePointerDown = (e: PointerEvent) => {
       if (!isInsideOrb(e.clientX, e.clientY)) return;
+      canvas.style.cursor = "grabbing";
       pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
       // Two pointers down → start pinch/twist gesture
@@ -251,8 +255,10 @@ const EmpireParticleOrb = memo(() => {
       const dt = performance.now() - drag.startTime;
       drag.active = false;
       drag.mode = null;
-      // Reset cursore al rilascio
-      canvas.style.cursor = isInsideOrb(e.clientX, e.clientY) ? "grab" : "default";
+      // Restore cursor + pointer-events based on whether we're still over the orb
+      const stillInside = isInsideOrb(e.clientX, e.clientY);
+      canvas.style.cursor = stillInside ? "grab" : "default";
+      canvas.style.pointerEvents = stillInside ? "auto" : "none";
 
       // Tap (no significant move) inside orb → toggle mode
       if (
@@ -309,12 +315,22 @@ const EmpireParticleOrb = memo(() => {
       rotRef.current.x += rotRef.current.vx;
       rotRef.current.y += rotRef.current.vy;
 
-      // Spring offset back toward 0 when not dragging (gentle elastic anchor)
+      // Throw momentum + spring offset back toward 0 when not dragging
       if (!dragRef.current.active && !gestureRef.current.active) {
-        offsetRef.current.x *= 0.94;
-        offsetRef.current.y *= 0.94;
+        // Apply velocity (throw) then decay
+        offsetRef.current.x += offsetRef.current.vx;
+        offsetRef.current.y += offsetRef.current.vy;
+        offsetRef.current.vx *= 0.92;
+        offsetRef.current.vy *= 0.92;
+        // Elastic pull back to centre
+        offsetRef.current.x *= 0.93;
+        offsetRef.current.y *= 0.93;
         // Scale eases back to 1 when not pinching
         scaleRef.current += (1 - scaleRef.current) * 0.08;
+      } else {
+        // Reset throw velocity while actively dragging
+        offsetRef.current.vx = 0;
+        offsetRef.current.vy = 0;
       }
 
       const ox = offsetRef.current.x;
@@ -358,24 +374,24 @@ const EmpireParticleOrb = memo(() => {
         const tgtX = orbX * (1 - m) + ringX * m;
         const tgtY = orbY * (1 - m) + ringY * m;
 
-        // Spring (più reattivo)
-        p.vx += (tgtX - p.x) * 0.08;
-        p.vy += (tgtY - p.y) * 0.08;
+        // Spring
+        p.vx += (tgtX - p.x) * 0.05;
+        p.vy += (tgtY - p.y) * 0.05;
 
-        // Pointer repel — più forte e reattivo
+        // Pointer repel (only when pointer is near the orb area)
         if (pointerActive) {
           const dx = p.x - px;
           const dy = p.y - py;
           const dist = Math.hypot(dx, dy);
-          const reach = isMobile ? 90 : 140;
+          const reach = isMobile ? 70 : 110;
           if (dist < reach && dist > 0.01) {
-            const force = (1 - dist / reach) * 3.5;
+            const force = (1 - dist / reach) * 1.8;
             p.vx += (dx / dist) * force;
             p.vy += (dy / dist) * force;
           }
         }
 
-        p.vx *= 0.82;
+        p.vx *= 0.84;
         p.vy *= 0.84;
         p.x += p.vx;
         p.y += p.vy;
@@ -459,15 +475,15 @@ const EmpireParticleOrb = memo(() => {
   return (
     <div
       ref={wrapRef}
-      className="relative w-full h-[280px] sm:h-[340px] md:h-[400px] lg:h-[440px] select-none touch-none"
-      style={{ pointerEvents: "none" }}
+      className="relative w-full h-[280px] sm:h-[340px] md:h-[400px] lg:h-[440px] select-none"
+      style={{ pointerEvents: "none", background: "transparent" }}
       aria-label={mode === "orb" ? "Empire Core — trascina o tocca per esplorare" : "Empire Stack constellation"}
     >
       {/* Canvas: pointer events enabled, but transparent. Pointer hit-testing is done in JS to only react to orb area. */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
-        style={{ pointerEvents: "auto", cursor: "default", background: "transparent", touchAction: "none" }}
+        style={{ pointerEvents: "none", cursor: "default", background: "transparent", touchAction: "none" }}
       />
 
       {/* Centre label */}
