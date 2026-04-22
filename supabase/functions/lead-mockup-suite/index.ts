@@ -66,25 +66,58 @@ async function generateAIImage(
   lovableKey: string,
   prompt: string,
   pro: boolean,
+  modelOverride?: string,
 ): Promise<string | null> {
-  const model = pro ? "google/gemini-3-pro-image-preview" : "google/gemini-3.1-flash-image-preview";
-  const r = await fetch(AI_GATEWAY, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model,
-      messages: [{ role: "user", content: prompt }],
-      modalities: ["image", "text"],
-    }),
-  });
-  if (!r.ok) {
-    const txt = await r.text();
-    if (r.status === 429) throw new Error("rate_limited");
-    if (r.status === 402) throw new Error("payment_required");
-    throw new Error(`image_gen_error: ${r.status} ${txt}`);
+  const model = modelOverride || (pro ? "google/gemini-3-pro-image-preview" : "google/gemini-3.1-flash-image-preview");
+  // Retry con backoff esponenziale + jitter per superare rate-limit transitori
+  const maxNetworkRetries = 3;
+  let lastErr: Error | null = null;
+  for (let attempt = 1; attempt <= maxNetworkRetries; attempt++) {
+    try {
+      const r = await fetch(AI_GATEWAY, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: "user", content: prompt }],
+          modalities: ["image", "text"],
+        }),
+      });
+      if (r.status === 429) {
+        const wait = 1500 * attempt + Math.floor(Math.random() * 800);
+        console.warn(`[ai-image] 429 attempt ${attempt}/${maxNetworkRetries} model=${model} — retry in ${wait}ms`);
+        if (attempt === maxNetworkRetries) throw new Error("rate_limited");
+        await new Promise(res => setTimeout(res, wait));
+        continue;
+      }
+      if (r.status === 402) throw new Error("payment_required");
+      if (!r.ok) {
+        const txt = await r.text();
+        // Retry su errori 5xx, fail su 4xx (eccetto 429 sopra)
+        if (r.status >= 500 && attempt < maxNetworkRetries) {
+          const wait = 1000 * attempt + Math.floor(Math.random() * 500);
+          console.warn(`[ai-image] ${r.status} attempt ${attempt} — retry in ${wait}ms`);
+          await new Promise(res => setTimeout(res, wait));
+          continue;
+        }
+        throw new Error(`image_gen_error: ${r.status} ${txt.slice(0, 200)}`);
+      }
+      const data = await r.json();
+      const url = data?.choices?.[0]?.message?.images?.[0]?.image_url?.url ?? null;
+      if (!url && attempt < maxNetworkRetries) {
+        console.warn(`[ai-image] empty response attempt ${attempt} — retry`);
+        await new Promise(res => setTimeout(res, 800));
+        continue;
+      }
+      return url;
+    } catch (e: any) {
+      lastErr = e;
+      if (e.message === "rate_limited" || e.message === "payment_required") throw e;
+      if (attempt === maxNetworkRetries) throw e;
+      await new Promise(res => setTimeout(res, 1000 * attempt));
+    }
   }
-  const data = await r.json();
-  return data?.choices?.[0]?.message?.images?.[0]?.image_url?.url ?? null;
+  throw lastErr || new Error("image_gen_failed");
 }
 
 async function uploadDataUrl(client: any, dataUrl: string, path: string): Promise<string | null> {
