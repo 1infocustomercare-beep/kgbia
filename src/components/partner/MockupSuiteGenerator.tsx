@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
@@ -69,6 +69,80 @@ const QUICK_PALETTES: { label: string; color: string }[] = [
   { label: "Bordeaux",       color: "#6B1F2C" },
   { label: "Mono Black",     color: "#0A0A0A" },
   { label: "Pure White",     color: "#FAFAFA" },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BRANDING KIT — coppie font heading/body curate (Google Fonts)
+// Quando l'utente seleziona un preset, viene applicato live alla preview React
+// (override di theme.fontHead/fontBody) e iniettato il <link> Google Fonts.
+// ─────────────────────────────────────────────────────────────────────────────
+export interface BrandFontPair {
+  key: string;
+  label: string;
+  description: string;
+  fontHead: string;          // CSS font-family stack
+  fontBody: string;
+  googleFontsHref: string;   // URL stylesheet Google Fonts
+}
+export const BRAND_FONT_PAIRS: BrandFontPair[] = [
+  {
+    key: "template", label: "Default template", description: "Usa i font del template selezionato",
+    fontHead: "", fontBody: "", googleFontsHref: "",
+  },
+  {
+    key: "playfair-inter", label: "Playfair × Inter", description: "Editoriale luxury — magazine, fashion, ristoranti",
+    fontHead: "'Playfair Display', Georgia, serif",
+    fontBody: "'Inter', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "cormorant-inter", label: "Cormorant × Inter", description: "Boutique elegante — sushi, beauty, hotel",
+    fontHead: "'Cormorant Garamond', Georgia, serif",
+    fontBody: "'Inter', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "space-dm", label: "Space Grotesk × DM Sans", description: "Tech moderno — startup, SaaS, fintech",
+    fontHead: "'Space Grotesk', sans-serif",
+    fontBody: "'DM Sans', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "syne-jakarta", label: "Syne × Jakarta", description: "Creativo audace — design studio, agenzie",
+    fontHead: "'Syne', sans-serif",
+    fontBody: "'Plus Jakarta Sans', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "outfit-figtree", label: "Outfit × Figtree", description: "Lifestyle friendly — wellness, food casual",
+    fontHead: "'Outfit', sans-serif",
+    fontBody: "'Figtree', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "dmserif-worksans", label: "DM Serif × Work Sans", description: "Brand storytelling — premium service",
+    fontHead: "'DM Serif Display', serif",
+    fontBody: "'Work Sans', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Work+Sans:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "bebas-barlow", label: "Bebas Neue × Barlow", description: "Sport energy — palestre, eventi",
+    fontHead: "'Bebas Neue', Impact, sans-serif",
+    fontBody: "'Barlow', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "archivo-hind", label: "Archivo Black × Hind", description: "Bold statement — news, attivismo, monochrome",
+    fontHead: "'Archivo Black', Impact, sans-serif",
+    fontBody: "'Hind', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hind:wght@300;400;500;600;700&display=swap",
+  },
+  {
+    key: "abril-cabin", label: "Abril Fatface × Cabin", description: "Portfolio creativo — fotografi, illustratori",
+    fontHead: "'Abril Fatface', serif",
+    fontBody: "'Cabin', system-ui, sans-serif",
+    googleFontsHref: "https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Cabin:wght@400;500;600;700&display=swap",
+  },
 ];
 
 
