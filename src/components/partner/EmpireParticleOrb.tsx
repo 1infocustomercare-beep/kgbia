@@ -239,26 +239,59 @@ const EmpireParticleOrb = memo(() => {
       try { (e.target as Element)?.setPointerCapture?.(e.pointerId); } catch {}
     };
 
-    const handlePointerUp = (e: PointerEvent) => {
+    const endPointer = (e: PointerEvent, cancelled: boolean) => {
       pointersRef.current.delete(e.pointerId);
 
-      // End gesture when fewer than 2 pointers remain
+      // ─── Multi-touch transition: 2 → 1 finger ───
+      // When one finger lifts during a pinch/twist, hand off cleanly to single-finger drag
+      // using the REMAINING pointer instead of leaving the orb in a stale gesture state.
       if (gestureRef.current.active && pointersRef.current.size < 2) {
         gestureRef.current.active = false;
-        // Carry slight rotation momentum from last twist
         rotRef.current.vy = 0;
+
+        if (pointersRef.current.size === 1 && !cancelled) {
+          const [remaining] = Array.from(pointersRef.current.values());
+          dragRef.current = {
+            active: true,
+            moved: true, // never treat as tap after a multi-touch gesture
+            mode: null,
+            lastX: remaining.x,
+            lastY: remaining.y,
+            startX: remaining.x,
+            startY: remaining.y,
+            startTime: performance.now(),
+          };
+          canvas.style.cursor = "grabbing";
+          canvas.style.pointerEvents = "auto";
+        }
       }
 
       const drag = dragRef.current;
       const wasActive = drag.active;
       const moved = drag.moved;
       const dt = performance.now() - drag.startTime;
-      drag.active = false;
-      drag.mode = null;
+
+      // On cancel, never register taps and force-release drag
+      if (cancelled) {
+        drag.active = false;
+        drag.mode = null;
+        canvas.style.cursor = "default";
+        if (pointersRef.current.size === 0) canvas.style.pointerEvents = "none";
+        return;
+      }
+
+      // Only release single-finger drag when the LAST pointer goes up
+      if (pointersRef.current.size === 0) {
+        drag.active = false;
+        drag.mode = null;
+      }
+
       // Restore cursor + pointer-events based on whether we're still over the orb
       const stillInside = isInsideOrb(e.clientX, e.clientY);
-      canvas.style.cursor = stillInside ? "grab" : "default";
-      canvas.style.pointerEvents = stillInside ? "auto" : "none";
+      canvas.style.cursor = pointersRef.current.size > 0 ? "grabbing" : (stillInside ? "grab" : "default");
+      if (pointersRef.current.size === 0) {
+        canvas.style.pointerEvents = stillInside ? "auto" : "none";
+      }
 
       // Tap (no significant move) inside orb → toggle mode
       if (
@@ -274,6 +307,9 @@ const EmpireParticleOrb = memo(() => {
         setHint(false);
       }
     };
+
+    const handlePointerUp = (e: PointerEvent) => endPointer(e, false);
+    const handlePointerCancel = (e: PointerEvent) => endPointer(e, true);
 
     const handlePointerLeave = () => {
       pointerRef.current.active = false;
@@ -292,7 +328,7 @@ const EmpireParticleOrb = memo(() => {
     window.addEventListener("pointermove", handlePointerMove, { passive: false });
     window.addEventListener("pointerdown", handlePointerDown);
     window.addEventListener("pointerup", handlePointerUp);
-    window.addEventListener("pointercancel", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerCancel);
     canvas.addEventListener("pointerleave", handlePointerLeave);
     canvas.addEventListener("touchmove", handleTouchPrevent, { passive: false });
     canvas.addEventListener("gesturestart", (e) => e.preventDefault() as never);
@@ -465,7 +501,7 @@ const EmpireParticleOrb = memo(() => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerdown", handlePointerDown);
       window.removeEventListener("pointerup", handlePointerUp);
-      window.removeEventListener("pointercancel", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerCancel);
       canvas.removeEventListener("pointerleave", handlePointerLeave);
       canvas.removeEventListener("touchmove", handleTouchPrevent);
       pointersRef.current.clear();
