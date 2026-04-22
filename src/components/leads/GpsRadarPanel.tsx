@@ -23,6 +23,8 @@ const inputStyle = {
   border: "1px solid rgba(255,255,255,0.10)",
 };
 
+type PermState = "idle" | "prompt" | "granted" | "denied" | "unsupported" | "unavailable" | "timeout";
+
 export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Props) {
   const RADIUS_STORAGE_KEY = "empire:gps-radar:radius-km";
   const [mode, setMode] = useState<"browser" | "address">("browser");
@@ -35,6 +37,7 @@ export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Prop
   });
   const [geoLoading, setGeoLoading] = useState(false);
   const [geocodeLoading, setGeocodeLoading] = useState(false);
+  const [permState, setPermState] = useState<PermState>("idle");
 
   // Persist radius preference for next access
   useEffect(() => {
@@ -43,20 +46,40 @@ export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Prop
     } catch {}
   }, [radius]);
 
-  // Auto-request browser GPS when opening in browser mode
+  // Auto-request browser GPS when opening in browser mode (only if not previously denied)
   useEffect(() => {
-    if (open && mode === "browser" && !coords) requestBrowserGps();
+    if (!open || mode !== "browser" || coords) return;
+    // Check existing permission first to avoid re-prompting silently
+    if (navigator.permissions?.query) {
+      navigator.permissions
+        .query({ name: "geolocation" as PermissionName })
+        .then((res) => {
+          setPermState(res.state as PermState);
+          if (res.state === "granted" || res.state === "prompt") {
+            requestBrowserGps();
+          }
+        })
+        .catch(() => requestBrowserGps());
+    } else {
+      requestBrowserGps();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, mode]);
 
   const requestBrowserGps = useCallback(() => {
     if (!navigator.geolocation) {
-      toast.error("Geolocalizzazione non supportata dal browser");
+      setPermState("unsupported");
+      toast.error("Geolocalizzazione non supportata", {
+        description: "Il tuo browser non supporta il GPS. Usa la modalità Indirizzo qui sotto.",
+      });
+      setMode("address");
       return;
     }
     setGeoLoading(true);
+    setPermState("prompt");
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
+        setPermState("granted");
         const { latitude, longitude } = pos.coords;
         // Reverse geocode for friendly label
         try {
@@ -73,11 +96,29 @@ export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Prop
           setCoords({ lat: latitude, lon: longitude, label: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`, source: "browser" });
         }
         setGeoLoading(false);
-        toast.success("Posizione rilevata");
+        toast.success("📍 Posizione rilevata con precisione");
       },
       (err) => {
         setGeoLoading(false);
-        toast.error(err.code === err.PERMISSION_DENIED ? "Permesso GPS negato" : "Impossibile ottenere la posizione");
+        if (err.code === err.PERMISSION_DENIED) {
+          setPermState("denied");
+          toast.error("Permesso GPS negato", {
+            description: "Riabilita la geolocalizzazione nelle impostazioni del browser, oppure usa la modalità Indirizzo.",
+          });
+        } else if (err.code === err.POSITION_UNAVAILABLE) {
+          setPermState("unavailable");
+          toast.error("Posizione non disponibile", {
+            description: "Il dispositivo non riesce a ottenere coordinate GPS valide. Prova con un indirizzo.",
+          });
+        } else if (err.code === err.TIMEOUT) {
+          setPermState("timeout");
+          toast.error("Timeout GPS", {
+            description: "Il rilevamento sta impiegando troppo. Riprova o inserisci un indirizzo.",
+          });
+        } else {
+          setPermState("idle");
+          toast.error("Impossibile ottenere la posizione");
+        }
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
