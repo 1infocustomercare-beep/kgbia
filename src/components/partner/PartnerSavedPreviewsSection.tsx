@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {
   Bookmark, Star, ExternalLink, MessageCircle, Trash2, Search,
   Wand2, Sparkles, Eye, Pencil, Save, X as XIcon, ChevronDown,
+  Cpu, LayoutTemplate, Blend, Calendar,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
