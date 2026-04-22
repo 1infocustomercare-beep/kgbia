@@ -286,6 +286,9 @@ export function MockupSuiteGenerator({
     setGenerating(true);
     setResult(null);
     try {
+      // Nuovo seed ad ogni click → garantisce che le 4 schermate siano sempre diverse
+      // tra loro e che run successivi sullo stesso lead/template producano varianti nuove.
+      const variationSeed = Math.floor(Math.random() * 1_000_000);
       const payload = {
         business_name: businessName,
         business_sector: businessSector,
@@ -296,6 +299,7 @@ export function MockupSuiteGenerator({
         lead_id: leadId,
         preview_id: previewId,
         screens,
+        variation_seed: variationSeed,
       };
 
       const { data, error } = await supabase.functions.invoke("lead-mockup-suite", { body: payload });
@@ -312,12 +316,19 @@ export function MockupSuiteGenerator({
         return;
       }
 
+      // Garantisce variation_seed/variant_index su ogni screen anche se l'edge non li propaga
+      const enrichedScreens: SuiteScreen[] = (d.screens || []).map((s: any, i: number) => ({
+        ...s,
+        variation_seed: s.variation_seed ?? d.variation_seed ?? variationSeed,
+        variant_index: s.variant_index ?? i,
+      }));
+
       setResult({
         suite_id: d.suite_id,
         share_slug: d.share_slug,
         template_variant: d.template_variant,
         engine: d.engine,
-        screens: d.screens,
+        screens: enrichedScreens,
       });
       toast.success(`Suite generata! ${d.credits_spent} crediti usati.`);
       onGenerated?.(d.suite_id, d.share_slug);
