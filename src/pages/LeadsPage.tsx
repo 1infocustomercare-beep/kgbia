@@ -1683,20 +1683,20 @@ export default function LeadsPage() {
       <SellerOnboardingWizard />
 
 
-      {/* ═══ SEARCH BAR ═══ */}
-      <div className="rounded-2xl p-4 space-y-3" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
-        
-        {/* Row 1: Country + City */}
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🌍 Paese</label>
+      {/* ═══ SEARCH BAR — responsive: 1-2 col mobile, 4 col desktop ═══ */}
+      <div className="rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
+
+        {/* Row principale: Paese · Città · Settore · Cerca (responsive) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+          <div className="md:col-span-1">
+            <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🌍 Paese</label>
             <select value={country} onChange={e => setCountry(e.target.value)}
-              className="w-full px-3 py-3 rounded-xl text-[11px] text-white outline-none appearance-none cursor-pointer" style={inputStyle}>
+              className="w-full px-3 py-3 md:py-3.5 rounded-xl text-[12px] md:text-[13px] text-white outline-none appearance-none cursor-pointer min-h-[44px]" style={inputStyle}>
               {COUNTRIES.map(c => <option key={c.code} value={c.code} style={{ background: "#1a1a2e" }}>{c.label}</option>)}
             </select>
           </div>
-          <div>
-            <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>📍 Città</label>
+          <div className="md:col-span-1">
+            <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>📍 Città</label>
             <SmartCityAutocomplete
               value={city}
               onChange={(v) => setCity(v)}
@@ -1710,39 +1710,40 @@ export default function LeadsPage() {
               onCountryDetected={(cc) => setCountry(cc)}
             />
           </div>
-        </div>
 
-        {/* Row 2: Sector + Sub-sector intelligent picker */}
-        <div>
-          <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🏢 Settore / Specializzazione</label>
-          <SmartSectorAutocomplete
-            sectorValue={sector}
-            onSectorChange={setSector}
-            subQueryValue={selectedSpecialization?.query || ""}
-            subLabelValue={selectedSpecialization?.label || ""}
-            onSubsectorChange={setSelectedSpecialization}
-            inputStyle={inputStyle}
-            onEnter={() => handleSearch()}
-          />
-        </div>
-
-        {/* Row 3: Query + Search button */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="col-span-2 relative">
-            <label className="text-[8px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🔎 Zona / Nome (opzionale)</label>
-            <Search className="absolute left-3 bottom-3 w-3.5 h-3.5" style={{ color: "#6b7280" }} />
-            <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Es: Trastevere, Brera..." className="w-full pl-9 pr-3 py-3 rounded-xl text-[11px] text-white placeholder:text-gray-500 outline-none" style={inputStyle} />
+          {/* Settore — col-span-2 su mobile, col-span-1 desktop */}
+          <div className="col-span-2 md:col-span-1">
+            <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🏢 Settore / Specializzazione</label>
+            <SmartSectorAutocomplete
+              sectorValue={sector}
+              onSectorChange={setSector}
+              subQueryValue={selectedSpecialization?.query || ""}
+              subLabelValue={selectedSpecialization?.label || ""}
+              onSubsectorChange={setSelectedSpecialization}
+              inputStyle={inputStyle}
+              onEnter={() => handleSearch()}
+            />
           </div>
-          <div className="flex items-end">
+
+          {/* CTA Cerca — full width mobile, 1 col desktop */}
+          <div className="col-span-2 md:col-span-1 flex items-end">
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleSearch()} disabled={loading}
-              className="w-full py-3 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5"
-              style={{ background: loading ? "rgba(20,184,166,0.3)" : "linear-gradient(135deg, #14b8a6, #10b981)", color: "#fff" }}>
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-              {loading ? "..." : "Cerca"}
+              className="w-full py-3 md:py-3.5 rounded-xl text-[13px] md:text-sm font-bold flex items-center justify-center gap-2 min-h-[44px] md:min-h-[48px] shadow-lg"
+              style={{ background: loading ? "rgba(20,184,166,0.3)" : "linear-gradient(135deg, #14b8a6, #10b981)", color: "#fff", boxShadow: loading ? "none" : "0 4px 16px rgba(20,184,166,0.3)" }}>
+              {loading ? <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <Search className="w-4 h-4 md:w-5 md:h-5" />}
+              {loading ? "Ricerca..." : "Cerca lead"}
             </motion.button>
           </div>
         </div>
+
+        {/* Riga ottimizzazione zona/nome — full width sotto */}
+        <div className="relative">
+          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider block mb-1 pl-1" style={{ color: "#6b7280" }}>🔎 Zona / Nome (opzionale, affina la ricerca)</label>
+          <Search className="absolute left-3 bottom-3 md:bottom-3.5 w-4 h-4" style={{ color: "#6b7280" }} />
+          <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
+            placeholder="Es: Trastevere, Brera, nome attività..." className="w-full pl-10 pr-3 py-3 md:py-3.5 rounded-xl text-[12px] md:text-[13px] text-white placeholder:text-gray-500 outline-none min-h-[44px]" style={inputStyle} />
+        </div>
+
 
         {/* Quick actions */}
         <div className="flex items-center gap-2 flex-wrap">
