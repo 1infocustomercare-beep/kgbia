@@ -320,13 +320,33 @@ export function MockupSuiteVaultList() {
                 primaryColor={openSuite.primary_color || "#C8963E"}
                 suiteId={openSuite.id}
               />
+              <div className="mt-5 rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-4">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
+                    <Rocket className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">Trasforma in sito demo completo</p>
+                    <p className="text-xs text-muted-foreground">
+                      Replica 1:1 di questo design con tutti gli agenti AI, automazioni e moduli del settore. Pronto da mostrare al cliente.
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  size="lg"
+                  className="w-full"
+                  onClick={() => { if (openSuite) { setGenerateSiteSuite(openSuite); setOpenSuite(null); } }}
+                >
+                  <Rocket className="h-4 w-4 mr-2" /> Genera Sito Demo Completo (25 crediti)
+                </Button>
+              </div>
               {openSuite.share_slug && (
-                <div className="mt-4 flex gap-2 justify-center">
-                  <Button variant="outline" onClick={(e) => openShare(e, openSuite.share_slug)}>
+                <div className="mt-3 flex gap-2 justify-center">
+                  <Button variant="outline" size="sm" onClick={(e) => openShare(e, openSuite.share_slug)}>
                     <ExternalLink className="h-4 w-4 mr-2" /> Apri pagina pubblica
                   </Button>
-                  <Button variant="ghost" onClick={(e) => copyShare(e, openSuite.share_slug)}>
-                    <Copy className="h-4 w-4 mr-2" /> Copia link condivisibile
+                  <Button variant="ghost" size="sm" onClick={(e) => copyShare(e, openSuite.share_slug)}>
+                    <Copy className="h-4 w-4 mr-2" /> Copia link
                   </Button>
                 </div>
               )}
@@ -334,6 +354,13 @@ export function MockupSuiteVaultList() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Dialog generazione sito demo completo dal mockup */}
+      <GenerateSiteFromMockupDialog
+        open={!!generateSiteSuite}
+        onOpenChange={(o) => !o && setGenerateSiteSuite(null)}
+        suite={generateSiteSuite}
+      />
     </div>
   );
 }
