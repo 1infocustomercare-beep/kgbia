@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import {
   X, Copy, MessageCircle, Loader2, Trophy, MousePointerClick,
   CheckCircle2, RefreshCw, Sparkles, FlaskConical, Send, Trash2,
-  Link2,
+  Link2, Smartphone,
 } from "lucide-react";
 import { getSectorCTA, buildCTADemoUrl } from "@/lib/sector-cta";
 import {
