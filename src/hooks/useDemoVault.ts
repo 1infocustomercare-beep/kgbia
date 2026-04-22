@@ -142,6 +142,33 @@ export function useDemoVault() {
     if (userId) fetchAll();
   }, [userId, fetchAll]);
 
+  // 🔄 Realtime sync: ascolta INSERT/UPDATE/DELETE sulla vault del seller corrente
+  useEffect(() => {
+    if (!userId) return;
+    const channel = supabase
+      .channel(`demo-vault-${userId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "seller_demo_vault", filter: `owner_id=eq.${userId}` },
+        () => { fetchAll(); }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [userId, fetchAll]);
+
+  // 🔄 Refresh on tab focus / visibility change (sync cross-tab)
+  useEffect(() => {
+    if (!userId) return;
+    const onFocus = () => fetchAll();
+    const onVisibility = () => { if (document.visibilityState === "visible") fetchAll(); };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [userId, fetchAll]);
+
   /** Salva una demo nella vault (chiamato dopo runDemoFactory con successo). Idempotente per (owner, tenant_slug, template_variant). */
   const saveDemo = useCallback(async (input: SaveDemoInput): Promise<VaultDemo | null> => {
     if (!userId) return null;

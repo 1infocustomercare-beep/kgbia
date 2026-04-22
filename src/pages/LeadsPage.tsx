@@ -1180,10 +1180,24 @@ export default function LeadsPage() {
     ? previewMatch.screens
     : (selected ? getPreviewScreens(selected._sector) : []);
   const previewDetails = getPreviewDetailsForMatch(previewMatch);
+  // 💾 Trova la demo PERSONALIZZATA già generata per questo lead nel vault (sync live)
+  const savedDemoForSelected = selected
+    ? demoVault.demos.find(d =>
+        !d.is_archived &&
+        (d.original_lead_name?.toLowerCase() === selected.name?.toLowerCase() ||
+         d.lead_snapshot?.name?.toLowerCase() === selected.name?.toLowerCase())
+      )
+    : null;
   const selectedPreviewPath = selected
-    ? (previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector))
+    ? (savedDemoForSelected?.preview_url
+        ? savedDemoForSelected.preview_url
+        : (previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector)))
     : "";
-  const selectedPreviewUrl = selected ? `${window.location.origin}${selectedPreviewPath}` : "";
+  const selectedPreviewUrl = selected
+    ? (savedDemoForSelected?.preview_url?.startsWith("http")
+        ? savedDemoForSelected.preview_url
+        : `${window.location.origin}${selectedPreviewPath}`)
+    : "";
   const auroraPick = selected
     ? pickRecommendedAuroraTemplate({
         sector: selected._sector,
@@ -2653,20 +2667,33 @@ export default function LeadsPage() {
                       )}
                       <div className="flex items-center gap-2 mt-2">
                         <a
-                          href={previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector)}
+                          href={selectedPreviewPath}
                           target="_blank" rel="noopener noreferrer"
                           className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-[10px] font-bold"
-                          style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(16,185,129,0.1))", border: "1px solid rgba(124,58,237,0.2)", color: "#c4b5fd" }}>
-                          <ExternalLink className="w-3 h-3" /> {sectorFeats.cta}
+                          style={{
+                            background: savedDemoForSelected
+                              ? "linear-gradient(135deg, rgba(16,185,129,0.22), rgba(59,130,246,0.18))"
+                              : "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(16,185,129,0.1))",
+                            border: savedDemoForSelected ? "1px solid rgba(16,185,129,0.45)" : "1px solid rgba(124,58,237,0.2)",
+                            color: savedDemoForSelected ? "#6ee7b7" : "#c4b5fd",
+                          }}>
+                          <ExternalLink className="w-3 h-3" />
+                          {savedDemoForSelected
+                            ? `✓ Demo personalizzata di ${selected.name}`
+                            : sectorFeats.cta}
                         </a>
                         <button onClick={() => {
-                          const url = previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector);
-                          navigator.clipboard.writeText(`${window.location.origin}${url}`);
-                          toast.success("Link demo copiato!");
+                          navigator.clipboard.writeText(selectedPreviewUrl);
+                          toast.success(savedDemoForSelected ? "Link demo personalizzata copiato!" : "Link demo copiato!");
                         }} className="px-4 py-2 rounded-xl text-[10px] font-bold" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)", color: "#34d399" }}>
                           <Copy className="w-3 h-3" />
                         </button>
                       </div>
+                      {savedDemoForSelected && (
+                        <p className="text-[9px] mt-2 text-center" style={{ color: "#6ee7b7" }}>
+                          🔄 Sincronizzata dal Portfolio · ultimo aggiornamento {new Date(savedDemoForSelected.updated_at).toLocaleString("it-IT", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                        </p>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
