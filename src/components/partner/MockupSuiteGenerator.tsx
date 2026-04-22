@@ -5,7 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type, Lock, Unlock, Cloud, CloudOff } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type, Lock, Unlock, Cloud, CloudOff, BookmarkCheck, FolderOpen } from "lucide-react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
@@ -1550,6 +1551,21 @@ export function MockupSuiteGenerator({
                     ? "Le 4 schermate si aggiornano una a una appena pronte (fade-in progressivo)"
                     : "4 mockup pronti da mostrare al cliente"}
                 </p>
+                {previewPhase !== "upgrading" && (
+                  <div className="flex flex-wrap items-center gap-2 mt-2">
+                    <span className="inline-flex items-center gap-1 text-[0.6rem] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">
+                      <BookmarkCheck className="w-2.5 h-2.5" />
+                      Salvata nel Portfolio
+                    </span>
+                    <Link
+                      to="/partner/portfolio"
+                      className="inline-flex items-center gap-1 text-[0.6rem] px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30 hover:bg-primary/25 transition-colors"
+                    >
+                      <FolderOpen className="w-2.5 h-2.5" />
+                      Apri Portfolio
+                    </Link>
+                  </div>
+                )}
               </div>
               {previewPhase === "upgrading" ? (
                 <Badge variant="outline" className="gap-1.5 animate-pulse">
