@@ -1857,6 +1857,19 @@ export default function LeadsPage() {
                     {s === "score" ? "Score" : s === "rating" ? "Rating" : s === "reviews" ? "Recensioni" : "Nome"}
                   </button>
                 ))}
+                <button
+                  onClick={() => exportLeadsToCsv(sorted, city, sector)}
+                  disabled={sorted.length === 0}
+                  title="Esporta i lead filtrati in CSV (apribile in Excel)"
+                  className="ml-1 px-2 py-1 rounded text-[9px] font-bold transition-all min-h-[28px] flex items-center gap-1 disabled:opacity-40"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(124,58,237,0.18), rgba(167,139,250,0.18))",
+                    color: "#c4b5fd",
+                    border: "1px solid rgba(167,139,250,0.35)"
+                  }}
+                >
+                  <Download className="w-3 h-3" /> Export CSV
+                </button>
               </div>
             </div>
 
