@@ -139,12 +139,15 @@ export default function PartnerPortfolioPage() {
   const [filterSector, setFilterSector] = useState<string>(() => localStorage.getItem("partner_portfolio_f_sector") || "all");
   const [filterVariant, setFilterVariant] = useState<string>(() => localStorage.getItem("partner_portfolio_f_variant") || "all");
   const [filterStatus, setFilterStatus] = useState<string>(() => localStorage.getItem("partner_portfolio_f_status") || "all");
+  // Engine = come è stato generato (AI vs template preset). Persistente.
+  const [filterEngine, setFilterEngine] = useState<string>(() => localStorage.getItem("partner_portfolio_f_engine") || "all");
   const [mockupSort, setMockupSort] = useState<MockupSort>(() => (localStorage.getItem("partner_portfolio_sort_mockup") as MockupSort) || "recent");
   const [siteSort, setSiteSort] = useState<SiteSort>(() => (localStorage.getItem("partner_portfolio_sort_site") as SiteSort) || "recent");
 
   useEffect(() => { localStorage.setItem("partner_portfolio_f_sector", filterSector); }, [filterSector]);
   useEffect(() => { localStorage.setItem("partner_portfolio_f_variant", filterVariant); }, [filterVariant]);
   useEffect(() => { localStorage.setItem("partner_portfolio_f_status", filterStatus); }, [filterStatus]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_f_engine", filterEngine); }, [filterEngine]);
   useEffect(() => { localStorage.setItem("partner_portfolio_sort_mockup", mockupSort); }, [mockupSort]);
   useEffect(() => { localStorage.setItem("partner_portfolio_sort_site", siteSort); }, [siteSort]);
 
