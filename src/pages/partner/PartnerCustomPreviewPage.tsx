@@ -14,7 +14,7 @@ import {
 import {
   Loader2, Sparkles, Trash2, ExternalLink, Palette, Eye, Copy, MessageCircle,
   Image as ImageIcon, Smartphone, Star, Bookmark, Search, ChevronDown,
-  User as UserIcon, Building2, Brush, Upload,
+  User as UserIcon, Building2, Brush, Upload, Save, RotateCcw, Check,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
@@ -110,6 +110,88 @@ export default function PartnerCustomPreviewPage() {
   const [openSection, setOpenSection] = useState<"data" | "brand" | "style" | null>("data");
   const toggleSection = (s: "data" | "brand" | "style") =>
     setOpenSection(prev => (prev === s ? null : s));
+
+  // ═══ DRAFT AUTOSAVE (localStorage, per-utente) ═══
+  const DRAFT_KEY = user?.id ? `partner-custom-preview-draft:${user.id}` : null;
+  const [draftStatus, setDraftStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const [draftSavedAt, setDraftSavedAt] = useState<number | null>(null);
+  const [draftHydrated, setDraftHydrated] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
+
+  // Restore bozza al mount (una volta sola, quando l'utente è disponibile)
+  useEffect(() => {
+    if (!DRAFT_KEY || draftHydrated) return;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.form) {
+          setForm(prev => ({ ...prev, ...parsed.form }));
+          if (parsed.mode) setMode(parsed.mode);
+          if (parsed.selectedLeadId) setSelectedLeadId(parsed.selectedLeadId);
+          if (parsed.savedAt) setDraftSavedAt(parsed.savedAt);
+          setDraftRestored(true);
+        }
+      }
+    } catch (err) {
+      console.warn("[draft] restore failed", err);
+    } finally {
+      setDraftHydrated(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [DRAFT_KEY]);
+
+  // Auto-save bozza con debounce 600ms
+  useEffect(() => {
+    if (!DRAFT_KEY || !draftHydrated) return;
+    const hasContent =
+      form.lead_name || form.lead_city || form.lead_sector || form.lead_phone ||
+      form.lead_website || form.lead_address || form.lead_email ||
+      form.logo_url || form.gallery_images.length > 0 ||
+      form.template_style !== "modern_dark" || form.primary_color !== "#C8963E";
+    if (!hasContent) return;
+
+    setDraftStatus("saving");
+    const t = setTimeout(() => {
+      try {
+        const savedAt = Date.now();
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ form, mode, selectedLeadId, savedAt }));
+        setDraftSavedAt(savedAt);
+        setDraftStatus("saved");
+      } catch (err) {
+        console.warn("[draft] save failed", err);
+        setDraftStatus("idle");
+      }
+    }, 600);
+    return () => clearTimeout(t);
+  }, [form, mode, selectedLeadId, DRAFT_KEY, draftHydrated]);
+
+  const clearDraft = () => {
+    if (!DRAFT_KEY) return;
+    if (!confirm("Cancellare la bozza salvata e ricominciare da zero?")) return;
+    localStorage.removeItem(DRAFT_KEY);
+    setForm({
+      lead_name: "", lead_city: "", lead_sector: "", lead_phone: "", lead_website: "",
+      lead_address: "", lead_email: "",
+      template_style: "modern_dark", primary_color: "#C8963E",
+      logo_url: "", gallery_images: [],
+    });
+    setSelectedLeadId("");
+    setDraftSavedAt(null);
+    setDraftStatus("idle");
+    setDraftRestored(false);
+    toast.success("Bozza cancellata");
+  };
+
+  const formatDraftTime = (ts: number | null) => {
+    if (!ts) return "";
+    const diff = Math.floor((Date.now() - ts) / 1000);
+    if (diff < 5) return "ora";
+    if (diff < 60) return `${diff}s fa`;
+    if (diff < 3600) return `${Math.floor(diff / 60)} min fa`;
+    const d = new Date(ts);
+    return d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+  };
 
   // Load previews + intelligence + scout leads
   useEffect(() => {
@@ -260,6 +342,14 @@ export default function PartnerCustomPreviewPage() {
       });
       setSelectedLeadId("");
 
+      // Bozza completata: rimuovi dal localStorage
+      if (DRAFT_KEY) {
+        try { localStorage.removeItem(DRAFT_KEY); } catch {}
+        setDraftSavedAt(null);
+        setDraftStatus("idle");
+        setDraftRestored(false);
+      }
+
       const url = (data as any).public_url;
       if (url) window.open(url, "_blank");
     } catch (e: any) {
@@ -390,13 +480,63 @@ export default function PartnerCustomPreviewPage() {
         {/* ═══════════ COLONNA SX: FORM ad ACCORDION ═══════════ */}
         <Card className="border-primary/30 overflow-hidden xl:sticky xl:top-4">
           <CardHeader className="pb-3 px-4 sm:px-6">
-            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-              <Sparkles className="h-5 w-5 text-primary" />
-              Genera nuova preview
-            </CardTitle>
-            <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">
-              3 passi rapidi · totale ~30 sec
-            </p>
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  Genera nuova preview
+                </CardTitle>
+                <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">
+                  3 passi rapidi · totale ~30 sec
+                </p>
+              </div>
+
+              {/* Indicatore autosave bozza */}
+              {draftHydrated && (draftStatus !== "idle" || draftSavedAt) && (
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <div
+                    className="flex items-center gap-1 px-2 py-1 rounded-md bg-muted/60 border border-border/50 text-[10px] sm:text-[11px] text-muted-foreground"
+                    title={draftSavedAt ? `Bozza salvata ${formatDraftTime(draftSavedAt)}` : "Salvataggio…"}
+                  >
+                    {draftStatus === "saving" ? (
+                      <>
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        <span className="hidden sm:inline">Salvo…</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check className="h-3 w-3 text-emerald-500" />
+                        <span>Bozza · {formatDraftTime(draftSavedAt)}</span>
+                      </>
+                    )}
+                  </div>
+                  {draftSavedAt && (
+                    <button
+                      type="button"
+                      onClick={clearDraft}
+                      title="Cancella bozza"
+                      className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition"
+                    >
+                      <RotateCcw className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {draftRestored && (
+              <div className="mt-2 flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-primary/10 border border-primary/20 text-[11px] text-foreground">
+                <Save className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span className="flex-1">Bozza precedente ripristinata — continua da dove avevi lasciato.</span>
+                <button
+                  type="button"
+                  onClick={() => setDraftRestored(false)}
+                  className="text-muted-foreground hover:text-foreground text-[10px] uppercase tracking-wide"
+                >
+                  ok
+                </button>
+              </div>
+            )}
           </CardHeader>
 
           <CardContent className="space-y-3 px-3 sm:px-5 pb-4">
