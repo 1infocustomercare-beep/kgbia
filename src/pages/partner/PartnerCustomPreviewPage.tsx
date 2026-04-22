@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
 import { MockupSuiteVaultList } from "@/components/partner/MockupSuiteVaultList";
 import PartnerHeroMascot from "@/components/partner/PartnerHeroMascot";
+import alienDesigner from "@/assets/empire-alien-designer.png";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 
 const STYLES = [
