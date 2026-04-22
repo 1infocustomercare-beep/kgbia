@@ -30,8 +30,7 @@ import {
   Wand2,
 } from "lucide-react";
 import { useDemoVault, type VaultDemo } from "@/hooks/useDemoVault";
-import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSuiteVault";
-import { GenerateSiteFromMockupDialog } from "@/components/partner/GenerateSiteFromMockupDialog";
+import { useMockupSuiteVault } from "@/hooks/useMockupSuiteVault";
 import { DemoStudioPresentationMode } from "@/components/partner/DemoStudioPresentationMode";
 import { toast } from "sonner";
 import { Play } from "lucide-react";
@@ -39,7 +38,6 @@ import { Play } from "lucide-react";
 export default function DemoStudioPage() {
   const vault = useDemoVault();
   const mockupVault = useMockupSuiteVault();
-  const [generateSuite, setGenerateSuite] = useState<VaultMockupSuite | null>(null);
   const [presentationOpen, setPresentationOpen] = useState(false);
   const [presentationInitialId, setPresentationInitialId] = useState<string | undefined>();
   const [search, setSearch] = useState("");
@@ -113,7 +111,7 @@ export default function DemoStudioPage() {
               <Rocket className="w-7 h-7 text-amber-400" /> Demo Studio Full Power
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Ogni sito demo nasce da un <span className="text-amber-300 font-semibold">mockup approvato</span> e ne è la replica 1:1 — zero template generici.
+              Vetrina dei tuoi <span className="text-amber-300 font-semibold">mockup approvati</span> e dei <span className="text-emerald-300 font-semibold">siti demo già generati</span>. Per generare un nuovo sito, vai in <Link to="/partner/leads" className="underline text-amber-300">Leads</Link>.
             </p>
           </div>
           <button
@@ -162,7 +160,7 @@ export default function DemoStudioPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-base font-display font-bold flex items-center gap-2">
               <Smartphone className="w-4 h-4 text-violet-400" />
-              Mockup pronti per generare ({readyMockups.length})
+              Mockup pronti da mostrare ({readyMockups.length})
             </h2>
             <Link
               to="/partner/preview"
@@ -283,14 +281,7 @@ export default function DemoStudioPage() {
         </section>
       </div>
 
-      {/* Dialog generazione 1:1 dal mockup (replica esatta) */}
-      <GenerateSiteFromMockupDialog
-        open={!!generateSuite}
-        onOpenChange={(o) => !o && setGenerateSuite(null)}
-        suite={generateSuite}
-      />
-
-      {/* Modalità Pronta da Mostrare — flusso vendita 60s */}
+      {/* Modalità Pronta da Mostrare — flusso vendita 60s (preview-only, nasconde dati sensibili) */}
       <DemoStudioPresentationMode
         open={presentationOpen}
         onClose={() => setPresentationOpen(false)}
