@@ -926,13 +926,28 @@ export function MockupReactScreen({
 
   const renderContent = () => {
     switch (type) {
-      case "menu":     return <MenuScreen theme={theme} sector={businessSector} />;
-      case "booking":  return <BookingScreen theme={theme} sector={businessSector} />;
-      case "profile":  return <ProfileScreen theme={theme} name={businessName} />;
-      case "gallery":  return <GalleryScreen theme={theme} name={businessName} />;
-      case "checkout": return <CheckoutScreen theme={theme} sector={businessSector} />;
+      case "menu":
+      case "catalog":
+      case "listing":
+      case "services":
+      case "portfolio":
+        return <MenuScreen theme={theme} sector={businessSector} />;
+      case "booking":
+      case "contact":
+        return <BookingScreen theme={theme} sector={businessSector} />;
+      case "profile":
+      case "dashboard":
+      case "stats":
+        return <ProfileScreen theme={theme} name={businessName} />;
+      case "gallery":
+      case "map":
+      case "chat":
+        return <GalleryScreen theme={theme} name={businessName} />;
+      case "checkout":
+        return <CheckoutScreen theme={theme} sector={businessSector} />;
       case "home":
-      default:         return <HomeScreen theme={theme} name={businessName} sector={businessSector} city={businessCity} />;
+      default:
+        return <HomeScreen theme={theme} name={businessName} sector={businessSector} city={businessCity} />;
     }
   };
 
