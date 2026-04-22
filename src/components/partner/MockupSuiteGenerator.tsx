@@ -1008,8 +1008,10 @@ export function MockupSuiteGenerator({
             <Label>Schermate da generare (4 mockup)</Label>
             <button
               type="button"
+              disabled={controlsLocked}
               onClick={() => setAutoScreens(v => !v)}
-              className={`text-[10px] px-2 py-1 rounded-full font-semibold transition-colors ${
+              title={lockTitle}
+              className={`text-[10px] px-2 py-1 rounded-full font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 autoScreens ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
             >
