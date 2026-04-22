@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, ExternalLink, Copy, Trash2, Smartphone, Eye, Loader2, X, Maximize2 } from "lucide-react";
+import { Search, ExternalLink, Copy, Trash2, Smartphone, Eye, Loader2, X, Maximize2, Rocket } from "lucide-react";
 import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSuiteVault";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
+import { GenerateSiteFromMockupDialog } from "./GenerateSiteFromMockupDialog";
 import { toast } from "sonner";
 
 type SortKey = "recent" | "most_viewed" | "az";
@@ -44,6 +45,7 @@ export function MockupSuiteVaultList() {
   const [filterTemplate, setFilterTemplate] = useState("all");
   const [sortBy, setSortBy] = useState<SortKey>("recent");
   const [openSuite, setOpenSuite] = useState<VaultMockupSuite | null>(null);
+  const [generateSiteSuite, setGenerateSiteSuite] = useState<VaultMockupSuite | null>(null);
 
   const sectors = useMemo(() => {
     const s = new Set<string>();
