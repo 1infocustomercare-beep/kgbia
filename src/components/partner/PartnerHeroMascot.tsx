@@ -21,12 +21,16 @@ export default function PartnerHeroMascot({
   icon: Icon = Palette,
   active = false,
   size = 120,
+  mascotSrc,
+  mascotAlt = "Empire AI",
 }: {
   title: string;
   subtitle?: string;
   icon?: LucideIcon;
   active?: boolean;
   size?: number;
+  mascotSrc?: string;
+  mascotAlt?: string;
 }) {
   const [hover, setHover] = useState(false);
   const energized = hover || active;
