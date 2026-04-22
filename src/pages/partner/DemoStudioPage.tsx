@@ -288,6 +288,14 @@ export default function DemoStudioPage() {
         onOpenChange={(o) => !o && setGenerateSuite(null)}
         suite={generateSuite}
       />
+
+      {/* Modalità Pronta da Mostrare — flusso vendita 60s */}
+      <DemoStudioPresentationMode
+        open={presentationOpen}
+        onClose={() => setPresentationOpen(false)}
+        suites={mockupVault.suites}
+        initialSuiteId={presentationInitialId}
+      />
     </div>
   );
 }
