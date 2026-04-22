@@ -1667,124 +1667,21 @@ export default function LeadsPage() {
         </div>
       </motion.div>
 
-      {/* Lead count badges + CRM access */}
-      <div className="flex justify-center items-center gap-2 flex-wrap">
-        {results.length > 0 && (
-          <>
-            <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.1)", color: "#34d399" }}>
-              🟢 {results.length} lead
-            </span>
-            <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(239,68,68,0.1)", color: "#f87171" }}>
-              🔥 {hotLeads} caldi
-            </span>
-          </>
-        )}
-        {/* CRM button — always visible, with badges */}
-        <button
-          onClick={() => setCrmOpen(true)}
-          className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all hover:scale-[1.03]"
-          style={{
-            background: "linear-gradient(135deg, rgba(167,139,250,0.18), rgba(20,184,166,0.12))",
-            border: "1px solid rgba(167,139,250,0.35)",
-            color: "#c4b5fd",
-            boxShadow: pipeline.leads.length > 0 ? "0 0 18px rgba(167,139,250,0.25)" : "none",
-          }}
-        >
-          <Briefcase className="w-3 h-3" />
-          CRM
-          {pipeline.leads.length > 0 && (
-            <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.3)", color: "#fff", minWidth: 14, textAlign: "center" }}>
-              {pipeline.leads.length}
-            </span>
-          )}
-          {overdueFollowups.length > 0 && (
-            <motion.span
-              animate={{ scale: [1, 1.25, 1], opacity: [1, 0.7, 1] }}
-              transition={{ repeat: Infinity, duration: 1.4 }}
-              className="absolute -top-1 -right-1 text-[8px] font-black px-1 py-0.5 rounded-full"
-              style={{ background: "#ef4444", color: "#fff", minWidth: 16, textAlign: "center", boxShadow: "0 0 8px rgba(239,68,68,0.6)" }}
-            >
-              {overdueFollowups.length}
-            </motion.span>
-          )}
-        </button>
-      </div>
+      {/* Lead count badges — solo se ci sono risultati (CRM è già nella top-bar) */}
+      {results.length > 0 && (
+        <div className="flex justify-center items-center gap-2 flex-wrap">
+          <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.1)", color: "#34d399" }}>
+            🟢 {results.length} lead
+          </span>
+          <span className="px-2 py-1 rounded-lg text-[9px] font-bold" style={{ background: "rgba(239,68,68,0.1)", color: "#f87171" }}>
+            🔥 {hotLeads} caldi
+          </span>
+        </div>
+      )}
 
-      {/* ═══ TIPS — dismissable ═══ */}
-      <AnimatePresence>
-        {showTips && results.length === 0 && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-            className="rounded-xl p-3 flex items-start gap-2.5" style={{ background: "rgba(20,184,166,0.04)", border: "1px solid rgba(20,184,166,0.12)" }}>
-            <Sparkles className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#14b8a6" }} />
-            <div className="flex-1">
-              <p className="text-[10px] font-bold mb-1" style={{ color: "#5eead4" }}>Come funziona in 3 step:</p>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { step: "1", title: "Cerca", desc: "Inserisci città e settore — la ricerca parte in automatico su 4+ fonti" },
-                  { step: "2", title: "Analizza", desc: "Ogni lead ha uno score di opportunità, dati social e contatti reali" },
-                  { step: "3", title: "Contatta", desc: "Messaggio AI personalizzato per WhatsApp, Instagram o Email" },
-                ].map((s, i) => (
-                  <div key={i} className="text-center">
-                    <span className="inline-flex w-5 h-5 rounded-full items-center justify-center text-[9px] font-bold mb-1" style={{ background: "rgba(20,184,166,0.15)", color: "#14b8a6" }}>{s.step}</span>
-                    <p className="text-[9px] font-bold text-white">{s.title}</p>
-                    <p className="text-[8px]" style={{ color: "#6b7280" }}>{s.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <button onClick={() => { setShowTips(false); sessionStorage.setItem("leads_tips_hidden", "1"); }}
-              className="p-1 rounded shrink-0" style={{ color: "#6b7280" }}>
-              <XIcon className="w-3 h-3" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ═══ ARIANNA — SALES AGENT PANEL ═══ */}
-      <AriannaLeadScoutPanel
-        defaultTarget={{ city: city || "Roma", sector: sector || "food" }}
-        pilot={{
-          setSearchInputs: (c, s) => { setCity(c); setSector(s); },
-          triggerSearch: async () => { await handleSearch(); },
-          triggerDemoFactoryOnTopLead: async () => {
-            const top = sorted[0];
-            if (top) await runDemoFactory(top, null);
-          },
-          getResultsCount: () => results.length,
-          getTopLead: () => {
-            const top = sorted[0];
-            if (!top) return null;
-            return { name: top.name, phone: top.phone, email: top.email, sector: top._sector };
-          },
-        }}
-      />
-
-      {/* ═══ INSIGHTS — "COSA HO IMPARATO" ═══ */}
-      <AriannaInsightsDashboard />
-
-      {/* ═══ INTELLIGENCE INBOX — report dei lead analizzati con script vendita + mockup ═══ */}
-      <div className="mt-4">
-        <LeadIntelligenceInbox />
-      </div>
-
-      {/* ═══ ONBOARDING WIZARD (one-time) ═══ */}
+      {/* ═══ ONBOARDING WIZARD (one-time) — leggero, sempre montato ═══ */}
       <SellerOnboardingWizard />
 
-      {/* ═══ VOICE ORCHESTRATOR TRIGGER ═══ */}
-      <button
-        type="button"
-        onClick={() => (window as any).__empireVoiceStart?.()}
-        className="w-full rounded-2xl px-4 py-3 flex items-center justify-center gap-2 font-bold text-sm text-white transition-all hover:scale-[1.01]"
-        style={{
-          background: "linear-gradient(135deg, #f59e0b, #f97316)",
-          boxShadow: "0 6px 24px rgba(245,158,11,0.35)",
-        }}
-      >
-        🎙 Comanda con la voce — "Trova lead a Milano", "Lancia demo sul primo lead"
-      </button>
-
-      {/* ═══ FLUSSO 3 STEP (sei al passo 2: caccia lead + AI genera demo) ═══ */}
-      <PartnerFlowStepper currentStep="leads" />
 
       {/* ═══ SEARCH BAR ═══ */}
       <div className="rounded-2xl p-4 space-y-3" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
