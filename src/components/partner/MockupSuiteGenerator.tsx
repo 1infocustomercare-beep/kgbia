@@ -398,6 +398,17 @@ export function MockupSuiteGenerator({
     });
   }, [brandFontKey, brandFont, branding]);
 
+  // Se il brand è bloccato, sincronizza qualsiasi cambio di colore primario
+  // (l'utente ha esplicitamente scelto "preserva tra sessioni")
+  useEffect(() => {
+    if (branding.loading || !hydratedRef.current) return;
+    if (!branding.settings.brandLocked) return;
+    const current = mode === "standalone" ? standalone.primaryColor : primaryColor;
+    if (current && current !== branding.settings.primaryColor) {
+      branding.update({ primaryColor: current });
+    }
+  }, [standalone.primaryColor, primaryColor, mode, branding]);
+
 
   // Quando cambia il settore e autoScreens=on, aggiorna screens automaticamente
   useEffect(() => {
