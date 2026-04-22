@@ -19,6 +19,10 @@ import {
   Link2,
 } from "lucide-react";
 import { getSectorCTA, buildCTADemoUrl } from "@/lib/sector-cta";
+import {
+  detectWALang, localizeCTA, buildTemplateA, buildTemplateB,
+  WA_LANGS, UI_LABELS, type WALang,
+} from "@/lib/wa-i18n";
 
 export interface ABLeadInput {
   id?: string;
@@ -26,6 +30,8 @@ export interface ABLeadInput {
   phone?: string | null;
   city?: string | null;
   sector?: string | null;
+  /** Lingua preferita del lead (it/en/es/fr/de o stringa libera) */
+  language?: string | null;
 }
 
 interface ABTest {
@@ -63,49 +69,44 @@ function buildTrackUrl(shortId: string): string {
   return `https://${projectRef}.supabase.co/functions/v1/wa-track?s=${shortId}`;
 }
 
-/* Template default — A: diretto, B: storytelling.
- * Entrambi includono ora un CTA cliccabile diretto alla sezione di conversione
- * della preview (#prenota / #menu / #preventivo …) in base al settore del lead.
- */
-function defaultMessageA(lead: ABLeadInput, ctaUrl: string, ctaLabel: string, emoji: string): string {
-  const sectorLabel = lead.sector || "la tua attività";
-  return [
-    `Ciao ${lead.name} 👋`,
-    ``,
-    `Sono di Empire AI Group. Vi ho preparato una preview personalizzata di come potrebbe diventare ${sectorLabel}.`,
-    ``,
-    `${emoji} ${ctaLabel}:`,
-    `${ctaUrl}`,
-    ``,
-    `2 minuti per dare un'occhiata?`,
-  ].join("\n");
-}
-
-function defaultMessageB(lead: ABLeadInput, ctaUrl: string, ctaLabel: string, emoji: string): string {
-  const sectorLabel = lead.sector || "la tua attività";
-  return [
-    `Ciao ${lead.name},`,
-    ``,
-    `Ho visto ${sectorLabel} e mi è venuta un'idea: con un sistema di prenotazioni + CRM + AI potreste recuperare ore di lavoro a settimana.`,
-    ``,
-    `Ho preparato una demo su misura — ${emoji} ${ctaLabel}:`,
-    `${ctaUrl}`,
-    ``,
-    `Quando hai 2 minuti per vederla insieme?`,
-  ].join("\n");
-}
-
 export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLinkProp }: Props) {
   const baseDemoLink = demoLinkProp || `${window.location.origin}/demo`;
   const sectorCTA = useMemo(() => getSectorCTA(lead.sector), [lead.sector]);
   const ctaDemoUrl = useMemo(() => buildCTADemoUrl(baseDemoLink, lead.sector), [baseDemoLink, lead.sector]);
 
+  /* ── Auto-detect lingua del messaggio (lead → city → browser → IT) ── */
+  const detected = useMemo(
+    () => detectWALang({ preferredLang: lead.language, city: lead.city }),
+    [lead.language, lead.city]
+  );
+  const [lang, setLang] = useState<WALang>(detected.lang);
+  const [langSource, setLangSource] = useState<typeof detected.source>(detected.source);
+  const localizedCTA = useMemo(() => localizeCTA(sectorCTA, lang), [sectorCTA, lang]);
+
+  // Helper per costruire i template nella lingua corrente
+  const buildA = (l: WALang = lang) => buildTemplateA(l, {
+    name: lead.name, sector: lead.sector, ctaUrl: ctaDemoUrl,
+    ctaLabel: localizeCTA(sectorCTA, l).label, emoji: sectorCTA.emoji,
+  });
+  const buildB = (l: WALang = lang) => buildTemplateB(l, {
+    name: lead.name, sector: lead.sector, ctaUrl: ctaDemoUrl,
+    ctaLabel: localizeCTA(sectorCTA, l).label, emoji: sectorCTA.emoji,
+  });
+
   const [test, setTest] = useState<ABTest | null>(null);
-  const [msgA, setMsgA] = useState(() => defaultMessageA(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
-  const [msgB, setMsgB] = useState(() => defaultMessageB(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
+  const [msgA, setMsgA] = useState(() => buildA(detected.lang));
+  const [msgB, setMsgB] = useState(() => buildB(detected.lang));
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  /* Quando l'utente cambia lingua dal selector → rigenera i template */
+  const changeLang = (next: WALang) => {
+    setLang(next);
+    setLangSource("lead");
+    setMsgA(buildA(next));
+    setMsgB(buildB(next));
+  };
 
   /* Cerca test esistente per questo lead */
   useEffect(() => {
@@ -339,6 +340,42 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                   Quando il lead risponde, segnala quale variante ha funzionato. Il vincitore viene scelto automaticamente.
                 </div>
 
+                {/* ── Selettore lingua con auto-detect ── */}
+                <div className="rounded-xl p-3"
+                  style={{ background: "rgba(59,130,246,0.10)", border: "1px solid rgba(59,130,246,0.3)" }}>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base leading-none">{WA_LANGS.find(l => l.code === lang)?.flag}</span>
+                      <div>
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-blue-200">
+                          {UI_LABELS[lang].detected}
+                        </div>
+                        <div className="text-[10px] text-white/70">
+                          {WA_LANGS.find(l => l.code === lang)?.label} · <span className="italic">{UI_LABELS[lang].from[langSource]}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {WA_LANGS.map(({ code, label, flag }) => (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={() => changeLang(code)}
+                        className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold transition ${
+                          lang === code ? "text-white" : "text-white/60 hover:text-white/90"
+                        }`}
+                        style={{
+                          background: lang === code ? "rgba(59,130,246,0.35)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${lang === code ? "rgba(59,130,246,0.7)" : "rgba(255,255,255,0.08)"}`,
+                        }}
+                      >
+                        <span>{flag}</span> {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* CTA settoriale rilevato — link diretto alla sezione di conversione */}
                 <div className="rounded-xl p-3 flex items-start gap-3"
                   style={{ background: "rgba(37,211,102,0.10)", border: "1px solid rgba(37,211,102,0.35)" }}>
@@ -354,7 +391,7 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                       </span>
                     </div>
                     <div className="text-[11px] text-white font-semibold mb-1">
-                      {sectorCTA.label} · sezione <code className="text-emerald-300">#{sectorCTA.anchor}</code>
+                      {localizedCTA.label} · sezione <code className="text-emerald-300">#{sectorCTA.anchor}</code>
                     </div>
                     <div className="text-[10px] text-white/60 truncate" title={ctaDemoUrl}>
                       {ctaDemoUrl}
@@ -374,9 +411,9 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                       <button
                         type="button"
                         onClick={() => {
-                          setMsgA(defaultMessageA(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
-                          setMsgB(defaultMessageB(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
-                          toast.success("Template aggiornati con il CTA");
+                          setMsgA(buildA());
+                          setMsgB(buildB());
+                          toast.success("Template aggiornati");
                         }}
                         className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold text-white/80 hover:bg-white/10"
                         style={{ border: "1px solid rgba(255,255,255,0.15)" }}
