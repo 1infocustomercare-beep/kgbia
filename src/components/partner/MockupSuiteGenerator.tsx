@@ -50,8 +50,26 @@ const TEMPLATE_VARIANTS = [
   { key: "luxury_gold",       label: "Luxury Gold — alta cucina/Michelin", group: "Hospitality" },
   { key: "batey",             label: "Batey Pacifico — mare/lido/yacht", group: "Hospitality" },
   { key: "minimal_zen",       label: "Minimal Zen — spa/wellness", group: "Wellness" },
-  { key: "modern_dark",       label: "Modern Dark — universale", group: "Universale" },
 ];
+
+// Palette rapide per swap veloce del colore brand prima della generazione
+const QUICK_PALETTES: { label: string; color: string }[] = [
+  { label: "Oro Imperiale",  color: "#C8963E" },
+  { label: "Oro Champagne",  color: "#D4AF37" },
+  { label: "Sakura Pink",    color: "#E89BAE" },
+  { label: "Coral Vibrant",  color: "#FF6B5C" },
+  { label: "Terracotta",     color: "#C84A2A" },
+  { label: "Ocean Azure",    color: "#5CC8D9" },
+  { label: "Navy Trust",     color: "#1B2A3A" },
+  { label: "Emerald",        color: "#10B981" },
+  { label: "Lime Energy",    color: "#C8FF00" },
+  { label: "Royal Indigo",   color: "#6366F1" },
+  { label: "Magenta Neon",   color: "#FF2E9A" },
+  { label: "Bordeaux",       color: "#6B1F2C" },
+  { label: "Mono Black",     color: "#0A0A0A" },
+  { label: "Pure White",     color: "#FAFAFA" },
+];
+
 
 const SCREEN_TYPES: { key: ScreenType; label: string }[] = [
   { key: "home",      label: "Home" },
