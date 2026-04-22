@@ -648,8 +648,9 @@ const EmpireParticleOrb = memo(() => {
           FEATURES.map((f, i) => {
             const Icon = f.icon;
             const angRad = (f.angle * Math.PI) / 180;
-            const dx = Math.cos(angRad) * 38;
-            const dy = Math.sin(angRad) * 38;
+            // Push cards further out so they sit on the constellation ring (which is now at 1.55× radius)
+            const dx = Math.cos(angRad) * 48;
+            const dy = Math.sin(angRad) * 48;
             return (
               <motion.div
                 key={f.label}
