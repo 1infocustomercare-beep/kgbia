@@ -822,3 +822,31 @@ function DemoSiteRow({
     </div>
   );
 }
+
+/* ─── Select compatto per i filtri vault ─── */
+function FilterSelect({
+  label, value, onChange, options,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  return (
+    <label className="block space-y-1">
+      <span className="text-[9px] uppercase tracking-wider text-muted-foreground">{label}</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-2.5 py-1.5 rounded-lg text-xs text-foreground appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-400/30"
+        style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value} className="bg-[#0f0f1a] text-foreground">
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
