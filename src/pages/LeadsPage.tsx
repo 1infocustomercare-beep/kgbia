@@ -1846,24 +1846,57 @@ export default function LeadsPage() {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
             <div className="flex items-center justify-between px-1">
               <p className="text-[10px] font-semibold" style={{ color: "#9ca3af" }}>
-                {results.length} lead {city && `a ${city}`} {searchPage > 0 && `(${searchPage + 1} ricerche)`}
+                {sorted.length}{sorted.length !== results.length ? `/${results.length}` : ""} lead{" "}
+                {city && `a ${city}`} {searchPage > 0 && `(${searchPage + 1} ricerche)`}
               </p>
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-0.5 flex-wrap justify-end">
                 <ArrowUpDown className="w-3 h-3 mr-1" style={{ color: "#6b7280" }} />
-                {(["score", "rating", "name"] as const).map(s => (
-                  <button key={s} onClick={() => setSortBy(s)} className="px-2 py-1 rounded text-[9px] font-semibold transition-all"
+                {(["score", "rating", "reviews", "name"] as const).map(s => (
+                  <button key={s} onClick={() => setSortBy(s)} className="px-2 py-1 rounded text-[9px] font-semibold transition-all min-h-[28px]"
                     style={{ background: sortBy === s ? "rgba(255,255,255,0.08)" : "transparent", color: sortBy === s ? "#e5e7eb" : "#6b7280" }}>
-                    {s === "score" ? "Score" : s === "rating" ? "Rating" : "Nome"}
+                    {s === "score" ? "Score" : s === "rating" ? "Rating" : s === "reviews" ? "Recensioni" : "Nome"}
                   </button>
                 ))}
               </div>
             </div>
 
+            {/* 🔎 Ricerca testuale interna ai risultati (no chiamate API) */}
+            {results.length > 4 && (
+              <div className="relative px-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3" style={{ color: "#6b7280" }} />
+                <input
+                  value={resultsQuery}
+                  onChange={(e) => setResultsQuery(e.target.value)}
+                  placeholder="Filtra per nome, città, zona, telefono…"
+                  className="w-full pl-7 pr-8 py-2 rounded-lg text-[11px] text-foreground placeholder:text-muted-foreground"
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+                />
+                {resultsQuery && (
+                  <button
+                    onClick={() => setResultsQuery("")}
+                    aria-label="Cancella ricerca"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+                    style={{ color: "#9ca3af" }}
+                  >
+                    <XIcon className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+            )}
+
             <div className="space-y-1.5 max-h-[380px] overflow-y-auto pr-1">
+              {sorted.length === 0 && resultsQuery && (
+                <div className="text-center text-[11px] text-muted-foreground py-6">
+                  Nessun lead corrisponde a “{resultsQuery}”.
+                  <button onClick={() => setResultsQuery("")} className="ml-2 underline text-violet-300">Pulisci</button>
+                </div>
+              )}
               {sorted.map((lead, i) => {
                 const isSelected = selected?.name === lead.name && selected?.full_address === lead.full_address;
                 const scoreColor = lead._score >= 70 ? "#ef4444" : lead._score >= 45 ? "#f59e0b" : "#10b981";
                 const srcInfo = SOURCE_LABELS[lead.source] || { label: lead.source, color: "#9ca3af" };
+                const rowKey = `${lead.name}|${lead.full_address}`;
+                const isQuickOpen = quickPreviewKey === rowKey;
                 return (
                   <motion.button key={`${lead.name}-${i}`}
                     initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(i * 0.01, 0.5) }}
