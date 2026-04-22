@@ -793,6 +793,28 @@ export function MockupSuiteGenerator({
         </div>
 
         {/* ────────────────────────────────────────────────────────────────── */}
+        {/* PRESET LOOK — salva/carica combinazioni di template+glass+color   */}
+        {/* ────────────────────────────────────────────────────────────────── */}
+        <MockupLookPresets
+          current={{
+            templateVariant,
+            glassIntensity,
+            colorStyle,
+            safeAreaPx,
+            typeScale,
+            boostContrast,
+          }}
+          onApply={(p: MockupLookPreset) => {
+            setTemplateVariant(p.templateVariant);
+            setGlassIntensity(p.glassIntensity);
+            setColorStyle(p.colorStyle);
+            setSafeAreaPx(p.safeAreaPx);
+            setTypeScale(p.typeScale);
+            setBoostContrast(p.boostContrast);
+          }}
+        />
+
+        {/* ────────────────────────────────────────────────────────────────── */}
         {/* SAFE AREA & LEGGIBILITÀ — margini, tipografia, contrasto AA       */}
         {/* Garantiscono che testo e UI restino dentro il frame iPhone        */}
         {/* su qualsiasi template selezionato (auto + manuali).               */}
