@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, ExternalLink, Copy, Trash2, Smartphone, Eye, Loader2, X, Maximize2 } from "lucide-react";
+import { Search, ExternalLink, Copy, Trash2, Smartphone, Eye, Loader2, X, Maximize2, Rocket } from "lucide-react";
 import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSuiteVault";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
+import { GenerateSiteFromMockupDialog } from "./GenerateSiteFromMockupDialog";
 import { toast } from "sonner";
 
 type SortKey = "recent" | "most_viewed" | "az";
@@ -44,6 +45,7 @@ export function MockupSuiteVaultList() {
   const [filterTemplate, setFilterTemplate] = useState("all");
   const [sortBy, setSortBy] = useState<SortKey>("recent");
   const [openSuite, setOpenSuite] = useState<VaultMockupSuite | null>(null);
+  const [generateSiteSuite, setGenerateSiteSuite] = useState<VaultMockupSuite | null>(null);
 
   const sectors = useMemo(() => {
     const s = new Set<string>();
@@ -265,19 +267,29 @@ export function MockupSuiteVaultList() {
                   </div>
                   <div className="flex gap-1 pt-0.5">
                     {s.share_slug && (
-                      <>
-                        <Button variant="outline" size="sm" onClick={(e) => openShare(e, s.share_slug)} className="flex-1 h-8 text-xs">
-                          <ExternalLink className="h-3 w-3 mr-1" /> Link
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={(e) => copyShare(e, s.share_slug)} title="Copia link" className="h-8 w-8 p-0">
-                          <Copy className="h-3 w-3" />
-                        </Button>
-                      </>
+                      <Button variant="outline" size="sm" onClick={(e) => openShare(e, s.share_slug)} className="flex-1 h-8 text-xs">
+                        <ExternalLink className="h-3 w-3 mr-1" /> Link
+                      </Button>
+                    )}
+                    {s.share_slug && (
+                      <Button variant="ghost" size="sm" onClick={(e) => copyShare(e, s.share_slug)} title="Copia link" className="h-8 w-8 p-0">
+                        <Copy className="h-3 w-3" />
+                      </Button>
                     )}
                     <Button variant="ghost" size="sm" onClick={(e) => handleDelete(e, s.id)} className="text-destructive h-8 w-8 p-0" title="Elimina">
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
+                  {s.status === "complete" && (
+                    <Button
+                      size="sm"
+                      onClick={(e) => { e.stopPropagation(); setGenerateSiteSuite(s); }}
+                      className="w-full h-8 text-xs bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground"
+                      title="Genera sito demo completo replica 1:1 di questo mockup"
+                    >
+                      <Rocket className="h-3 w-3 mr-1" /> Genera sito demo completo
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             );
@@ -308,13 +320,33 @@ export function MockupSuiteVaultList() {
                 primaryColor={openSuite.primary_color || "#C8963E"}
                 suiteId={openSuite.id}
               />
+              <div className="mt-5 rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-4">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
+                    <Rocket className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">Trasforma in sito demo completo</p>
+                    <p className="text-xs text-muted-foreground">
+                      Replica 1:1 di questo design con tutti gli agenti AI, automazioni e moduli del settore. Pronto da mostrare al cliente.
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  size="lg"
+                  className="w-full"
+                  onClick={() => { if (openSuite) { setGenerateSiteSuite(openSuite); setOpenSuite(null); } }}
+                >
+                  <Rocket className="h-4 w-4 mr-2" /> Genera Sito Demo Completo (25 crediti)
+                </Button>
+              </div>
               {openSuite.share_slug && (
-                <div className="mt-4 flex gap-2 justify-center">
-                  <Button variant="outline" onClick={(e) => openShare(e, openSuite.share_slug)}>
+                <div className="mt-3 flex gap-2 justify-center">
+                  <Button variant="outline" size="sm" onClick={(e) => openShare(e, openSuite.share_slug)}>
                     <ExternalLink className="h-4 w-4 mr-2" /> Apri pagina pubblica
                   </Button>
-                  <Button variant="ghost" onClick={(e) => copyShare(e, openSuite.share_slug)}>
-                    <Copy className="h-4 w-4 mr-2" /> Copia link condivisibile
+                  <Button variant="ghost" size="sm" onClick={(e) => copyShare(e, openSuite.share_slug)}>
+                    <Copy className="h-4 w-4 mr-2" /> Copia link
                   </Button>
                 </div>
               )}
@@ -322,6 +354,13 @@ export function MockupSuiteVaultList() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Dialog generazione sito demo completo dal mockup */}
+      <GenerateSiteFromMockupDialog
+        open={!!generateSiteSuite}
+        onOpenChange={(o) => !o && setGenerateSiteSuite(null)}
+        suite={generateSiteSuite}
+      />
     </div>
   );
 }
