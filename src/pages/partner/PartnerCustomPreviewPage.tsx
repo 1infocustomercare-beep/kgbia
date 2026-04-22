@@ -438,14 +438,36 @@ export default function PartnerCustomPreviewPage() {
         </CardContent>
       </Card>
 
-      {/* MOCKUP IPHONE SUITE — 4 schermate app del business */}
-      <MockupSuiteGenerator
-        businessName={form.lead_name}
-        businessSector={form.lead_sector}
-        businessCity={form.lead_city}
-        primaryColor={form.primary_color}
-        templateVariant={form.template_style}
-      />
+      {/* MOCKUP IPHONE SUITE — collegato al lead/form sopra */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <Smartphone className="h-5 w-5 text-primary" />
+          <h2 className="text-xl font-semibold">Mockup iPhone — collegato al lead</h2>
+        </div>
+        <p className="text-sm text-muted-foreground mb-3">
+          Usa i dati del lead/form qui sopra per generare 4 schermate iPhone dedicate.
+        </p>
+        <MockupSuiteGenerator
+          businessName={form.lead_name}
+          businessSector={form.lead_sector}
+          businessCity={form.lead_city}
+          primaryColor={form.primary_color}
+          templateVariant={form.template_style}
+        />
+      </div>
+
+      {/* MOCKUP IPHONE LIBERO — generazione standalone senza lead */}
+      <div className="border-t pt-8">
+        <div className="flex items-center gap-2 mb-3">
+          <Sparkles className="h-5 w-5 text-primary" />
+          <h2 className="text-xl font-semibold">Mockup Libero — senza lead</h2>
+          <Badge variant="secondary">Standalone</Badge>
+        </div>
+        <p className="text-sm text-muted-foreground mb-3">
+          Scegli settore, template e colore primario, poi genera 4 schermate iPhone su richiesta — senza bisogno di un lead.
+        </p>
+        <MockupSuiteGenerator />
+      </div>
 
       {/* Lista Mockup iPhone Generati — con ricerca e filtri */}
       <MockupSuiteVaultList />
