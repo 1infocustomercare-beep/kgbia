@@ -295,7 +295,7 @@ const EmpireParticleOrb = memo(() => {
         canvas.style.pointerEvents = stillInside ? "auto" : "none";
       }
 
-      // Tap (no significant move) inside orb → toggle mode
+      // Tap (no significant move) inside orb → toggle mode + emit ripple
       if (
         wasActive &&
         !moved &&
@@ -307,6 +307,14 @@ const EmpireParticleOrb = memo(() => {
         modeRef.current = next;
         setMode(next);
         setHint(false);
+        // Emit a ripple from the tap point (canvas-local coords)
+        const rect = canvas.getBoundingClientRect();
+        ripplesRef.current.push({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          t: 0,
+          max: Math.max(160, radius * 1.8),
+        });
       }
     };
 
