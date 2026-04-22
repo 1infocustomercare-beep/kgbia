@@ -344,6 +344,12 @@ export default function LeadsPage() {
   const [sortBy, setSortBy] = useState<"score" | "rating" | "name" | "reviews">("score");
   // 🔎 Ricerca testuale interna ai risultati (filtra senza nuove chiamate API)
   const [resultsQuery, setResultsQuery] = useState("");
+  // 🎯 Quick filters "più convertibili" (operano sui risultati locali, no API)
+  const [qfHot, setQfHot] = useState(false);              // score ≥ 70
+  const [qfHasPhone, setQfHasPhone] = useState(false);    // ha telefono → contattabile subito
+  const [qfOpenNow, setQfOpenNow] = useState(false);      // aperto adesso (parsing opening_hours)
+  const [qfNoWebsite, setQfNoWebsite] = useState(false);  // no sito → bisogno digitale immediato
+  const [qfPriorityCat, setQfPriorityCat] = useState(false); // categorie top-conversion
   // 👁 Anteprima rapida inline (id riga espansa)
   const [quickPreviewKey, setQuickPreviewKey] = useState<string | null>(null);
   const [searchPage, setSearchPage] = useState(0);
@@ -1093,6 +1099,42 @@ export default function LeadsPage() {
     }
   };
 
+  // 🎯 Categorie prioritarie con storico conversione alta
+  const PRIORITY_SECTORS = new Set(["food", "beauty", "ncc", "fitness", "healthcare", "hotel", "tattoo"]);
+
+  // 🕐 Parser leggero "Mo-Fr 09:00-19:00; Sa 10:00-14:00" (formato OSM/Nominatim)
+  const isOpenNow = (oh?: string | null): boolean => {
+    if (!oh || typeof oh !== "string") return false;
+    if (/24\s*\/\s*7/i.test(oh)) return true;
+    const now = new Date();
+    const dayMap = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    const today = dayMap[now.getDay()];
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    const blocks = oh.split(";").map(s => s.trim()).filter(Boolean);
+    for (const blk of blocks) {
+      const m = blk.match(/^([A-Za-z,\-]+)?\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
+      if (!m) continue;
+      const dayPart = m[1] || "";
+      const dayOk = !dayPart
+        || dayPart.split(",").some(seg => {
+          const r = seg.trim().split("-");
+          if (r.length === 1) return r[0].startsWith(today);
+          const i1 = dayMap.findIndex(d => r[0].startsWith(d));
+          const i2 = dayMap.findIndex(d => r[1].startsWith(d));
+          const ti = dayMap.indexOf(today);
+          if (i1 < 0 || i2 < 0 || ti < 0) return false;
+          return i1 <= i2 ? (ti >= i1 && ti <= i2) : (ti >= i1 || ti <= i2);
+        });
+      if (!dayOk) continue;
+      const start = parseInt(m[2]) * 60 + parseInt(m[3]);
+      const end = parseInt(m[4]) * 60 + parseInt(m[5]);
+      if (nowMin >= start && nowMin <= end) return true;
+    }
+    return false;
+  };
+
+  const quickFiltersActive = qfHot || qfHasPhone || qfOpenNow || qfNoWebsite || qfPriorityCat;
+
   const sorted = [...results]
     .filter((r) => {
       if (!resultsQuery.trim()) return true;
@@ -1100,6 +1142,14 @@ export default function LeadsPage() {
       return [r.name, r.city, r.zone, r.full_address, r.phone, r.email, r.website]
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(q));
+    })
+    .filter((r) => {
+      if (qfHot && r._score < 70) return false;
+      if (qfHasPhone && !r.phone) return false;
+      if (qfNoWebsite && r.website) return false;
+      if (qfPriorityCat && !PRIORITY_SECTORS.has(r._sector)) return false;
+      if (qfOpenNow && !isOpenNow(r.opening_hours)) return false;
+      return true;
     })
     .sort((a, b) =>
       sortBy === "score" ? b._score - a._score :
@@ -1948,6 +1998,46 @@ export default function LeadsPage() {
                   <Download className="w-3 h-3" /> Export CSV
                 </button>
               </div>
+            </div>
+
+            {/* 🎯 Quick filters "più convertibili" — operano sui risultati locali (anche dopo GPS search) */}
+            <div className="px-1 flex items-center gap-1.5 flex-wrap">
+              <span className="text-[8px] font-bold uppercase tracking-wider" style={{ color: "#6b7280" }}>
+                🎯 Più convertibili:
+              </span>
+              {([
+                { key: "hot", label: "🔥 Hot", desc: "Score ≥ 70", state: qfHot, set: setQfHot, color: "#ef4444" },
+                { key: "phone", label: "📞 Telefono", desc: "Contattabile subito", state: qfHasPhone, set: setQfHasPhone, color: "#10b981" },
+                { key: "open", label: "🟢 Aperto ora", desc: "In orario di apertura", state: qfOpenNow, set: setQfOpenNow, color: "#22c55e" },
+                { key: "nosite", label: "🌐 Senza sito", desc: "Bisogno digitale immediato", state: qfNoWebsite, set: setQfNoWebsite, color: "#f59e0b" },
+                { key: "prio", label: "⭐ Top categorie", desc: "Settori a conversione alta", state: qfPriorityCat, set: setQfPriorityCat, color: "#a78bfa" },
+              ] as const).map(f => (
+                <button
+                  key={f.key}
+                  onClick={() => f.set(!f.state)}
+                  title={f.desc}
+                  className="text-[9px] font-bold px-2 py-1 rounded-md transition-all"
+                  style={{
+                    background: f.state ? `${f.color}28` : "rgba(255,255,255,0.03)",
+                    color: f.state ? f.color : "#9ca3af",
+                    border: `1px solid ${f.state ? `${f.color}80` : "rgba(255,255,255,0.06)"}`,
+                  }}
+                >
+                  {f.label}
+                </button>
+              ))}
+              {quickFiltersActive && (
+                <button
+                  onClick={() => {
+                    setQfHot(false); setQfHasPhone(false); setQfOpenNow(false);
+                    setQfNoWebsite(false); setQfPriorityCat(false);
+                  }}
+                  className="text-[9px] font-bold px-2 py-1 rounded-md ml-1"
+                  style={{ background: "rgba(255,255,255,0.05)", color: "#9ca3af" }}
+                >
+                  ✕ Pulisci
+                </button>
+              )}
             </div>
 
             {/* 🔎 Ricerca testuale interna ai risultati (no chiamate API) */}
