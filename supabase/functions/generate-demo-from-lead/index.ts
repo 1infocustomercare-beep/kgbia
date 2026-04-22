@@ -1438,6 +1438,29 @@ serve(async (req) => {
       });
     }
 
+    // ⭐ HARD GUARD: niente generazioni "standard". Ogni demo DEVE partire da un mockup
+    // (manuale dal vault o auto-match dal preview-matcher). Se il client non passa un
+    // preview con almeno templateVariant o brandName/styleName/imageUrl, blocchiamo.
+    const hasPreviewSignal = !!(
+      preview &&
+      (preview.templateVariant ||
+        preview.brandName ||
+        preview.styleName ||
+        preview.imageUrl ||
+        (Array.isArray((preview as any).screens) && (preview as any).screens.length > 0))
+    );
+    if (!hasPreviewSignal) {
+      console.warn("[guardian] preview missing — refusing generic generation");
+      return new Response(
+        JSON.stringify({
+          error: "preview_required",
+          message:
+            "Generazione bloccata: ogni sito demo deve replicare 1:1 un mockup approvato. Scegli un mockup dalla cassaforte o lascia che l'auto-match individui quello giusto prima di generare.",
+        }),
+        { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     const lead = { ...rawLead };
 
     // ─── PRE-FLIGHT: lead data quality check (blocker su dati finti) ───
