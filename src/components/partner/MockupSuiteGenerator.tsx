@@ -717,16 +717,16 @@ export function MockupSuiteGenerator({
                       <button
                         key={p.color}
                         type="button"
+                        disabled={controlsLocked}
                         onClick={() => {
                           if (mode === "standalone") {
                             setStandalone(prev => ({ ...prev, primaryColor: p.color }));
                           } else {
-                            // Lead mode: forziamo override locale via standalone state come "preview color"
                             setStandalone(prev => ({ ...prev, primaryColor: p.color }));
                           }
                         }}
-                        title={p.label}
-                        className={`relative w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
+                        title={lockTitle ?? p.label}
+                        className={`relative w-7 h-7 rounded-full border-2 transition-all hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 ${
                           active ? "border-foreground shadow-md scale-110" : "border-border"
                         }`}
                         style={{ background: p.color }}
