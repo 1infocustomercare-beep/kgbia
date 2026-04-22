@@ -79,6 +79,7 @@ import { useMockupSuiteVault } from "@/hooks/useMockupSuiteVault";
 import { DemoStudioPresentationMode } from "@/components/partner/DemoStudioPresentationMode";
 import ProjectDetailOverlay from "@/components/partner/ProjectDetailOverlay";
 import { PartnerCardSkeleton } from "@/components/partner/PartnerSkeleton";
+import PartnerSavedPreviewsSection from "@/components/partner/PartnerSavedPreviewsSection";
 import { toast } from "sonner";
 
 const getDemoSiteUrl = (sectorId: string) => {
