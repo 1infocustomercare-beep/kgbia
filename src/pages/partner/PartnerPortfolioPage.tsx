@@ -785,6 +785,9 @@ export default function PartnerPortfolioPage() {
         </div>
       </section>
 
+      {/* ═══ CATALOGO PREVIEW SALVATE (Custom Preview → 🔖 Portfolio) ═══ */}
+      <PartnerSavedPreviewsSection />
+
       {/* ═══ SEARCH ═══ */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
