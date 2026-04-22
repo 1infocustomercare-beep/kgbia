@@ -574,9 +574,9 @@ export default function PartnerPortfolioPage() {
                     </div>
                     {activeFiltersCount > 0 && (
                       <button
-                        onClick={() => {
-                          setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all");
-                        }}
+                  onClick={() => {
+                    setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all"); setFilterEngine("all");
+                  }}
                         className="text-[10px] text-violet-300 hover:text-violet-200 flex items-center gap-1"
                       >
                         <XIcon className="w-3 h-3" /> Pulisci filtri
