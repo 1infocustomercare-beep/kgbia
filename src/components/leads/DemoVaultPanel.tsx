@@ -53,7 +53,6 @@ const VARIANT_LABEL: Record<string, string> = {
   "miami-watersports": "Miami Watersports",
   "default": "Standard",
   "paperfish": "Paperfish",
-  "strapizzami": "Strapizzami",
   "batey": "Batey",
   "luxury_gold": "Luxury Gold",
   "modern_dark": "Modern Dark",
