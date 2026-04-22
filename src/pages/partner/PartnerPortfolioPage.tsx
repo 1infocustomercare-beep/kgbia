@@ -4,8 +4,69 @@ import { Link, useSearchParams } from "react-router-dom";
 import {
   Search, X as XIcon, Globe, LayoutDashboard, Pencil, Upload, Save,
   RefreshCw, ChevronRight, Smartphone, Sparkles, Layers, Star, Trash2,
-  Play, ExternalLink, MessageCircle, Rocket, Wand2,
+  Play, ExternalLink, MessageCircle, Rocket, Wand2, SlidersHorizontal,
 } from "lucide-react";
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Mockup helpers — descrizione smart + estrazione screens
+ * ─────────────────────────────────────────────────────────────────────── */
+
+// Ordine logico delle sezioni di un mockup iPhone (stesso del template ufficiale)
+const SCREEN_TYPE_ORDER = [
+  "home", "menu", "gallery", "rooms", "services", "fleet",
+  "booking", "reservation", "order", "checkout",
+  "profile", "loyalty", "account", "contact", "about",
+];
+
+function sortScreens(screensArr: any[]): any[] {
+  return [...screensArr].sort((a, b) => {
+    const ai = SCREEN_TYPE_ORDER.indexOf((a?.type || "").toLowerCase());
+    const bi = SCREEN_TYPE_ORDER.indexOf((b?.type || "").toLowerCase());
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+}
+
+function buildSmartMockupDescription(suite: {
+  business_name: string;
+  business_sector: string | null;
+  business_city: string | null;
+  template_variant: string | null;
+  screens: any;
+}): string {
+  const arr: any[] = Array.isArray(suite.screens)
+    ? suite.screens
+    : suite.screens && typeof suite.screens === "object"
+      ? Object.values(suite.screens)
+      : [];
+  const sorted = sortScreens(arr);
+  const titles = sorted
+    .map((s: any) => (s?.title || s?.type || "").toString().trim())
+    .filter(Boolean);
+
+  // 1) Se ci sono titoli → "Home · Menu · Galleria · Prenota" (max 5)
+  if (titles.length > 0) {
+    const sample = titles.slice(0, 5).map((t) =>
+      t.charAt(0).toUpperCase() + t.slice(1).toLowerCase(),
+    );
+    const more = titles.length > sample.length ? "…" : "";
+    return `Suite mockup iPhone${suite.business_sector ? ` · ${suite.business_sector}` : ""} — ${sample.join(" · ")}${more}`;
+  }
+
+  // 2) Fallback: settore + città + variante
+  const parts: string[] = [];
+  if (suite.business_sector) parts.push(suite.business_sector);
+  if (suite.business_city) parts.push(suite.business_city);
+  if (suite.template_variant) parts.push(`stile ${suite.template_variant}`);
+  if (parts.length > 0) {
+    return `Mockup iPhone su misura per ${suite.business_name} — ${parts.join(" · ")}.`;
+  }
+
+  // 3) Fallback finale
+  return `Mockup iPhone su misura generato dal venditore per ${suite.business_name}.`;
+}
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
@@ -71,6 +132,22 @@ export default function PartnerPortfolioPage() {
   const [presentationInitialId, setPresentationInitialId] = useState<string | undefined>();
   const [vaultSearch, setVaultSearch] = useState("");
 
+  // ── Filtri avanzati + ordinamento PERSISTENTE (localStorage) ──
+  type MockupSort = "recent" | "az" | "screens" | "views";
+  type SiteSort = "recent" | "az" | "favorites";
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filterSector, setFilterSector] = useState<string>(() => localStorage.getItem("partner_portfolio_f_sector") || "all");
+  const [filterVariant, setFilterVariant] = useState<string>(() => localStorage.getItem("partner_portfolio_f_variant") || "all");
+  const [filterStatus, setFilterStatus] = useState<string>(() => localStorage.getItem("partner_portfolio_f_status") || "all");
+  const [mockupSort, setMockupSort] = useState<MockupSort>(() => (localStorage.getItem("partner_portfolio_sort_mockup") as MockupSort) || "recent");
+  const [siteSort, setSiteSort] = useState<SiteSort>(() => (localStorage.getItem("partner_portfolio_sort_site") as SiteSort) || "recent");
+
+  useEffect(() => { localStorage.setItem("partner_portfolio_f_sector", filterSector); }, [filterSector]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_f_variant", filterVariant); }, [filterVariant]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_f_status", filterStatus); }, [filterStatus]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_sort_mockup", mockupSort); }, [mockupSort]);
+  useEffect(() => { localStorage.setItem("partner_portfolio_sort_site", siteSort); }, [siteSort]);
+
   // Apertura automatica della modalità "Pronta da Mostrare" via ?present=1 (es. da Home Partner)
   useEffect(() => {
     if (searchParams.get("present") === "1") {
@@ -81,35 +158,86 @@ export default function PartnerPortfolioPage() {
     }
   }, [searchParams, setSearchParams]);
 
-  const readyMockups = useMemo(
-    () =>
-      mockupVault.suites
-        .filter((s) => s.status === "complete")
-        .filter(
-          (s) =>
-            !vaultSearch.trim() ||
-            s.business_name.toLowerCase().includes(vaultSearch.toLowerCase()) ||
-            (s.business_sector || "").toLowerCase().includes(vaultSearch.toLowerCase()),
-        )
-        .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()),
-    [mockupVault.suites, vaultSearch],
-  );
+  // Opzioni filtro derivate dai dati reali
+  const sectorOptions = useMemo(() => {
+    const set = new Set<string>();
+    mockupVault.suites.forEach((s) => s.business_sector && set.add(s.business_sector));
+    demoVault.demos.forEach((d) => d.sector && set.add(d.sector));
+    return Array.from(set).sort();
+  }, [mockupVault.suites, demoVault.demos]);
 
-  const generatedSites = useMemo(
-    () =>
-      demoVault.demos
-        .filter(
-          (d) =>
-            !vaultSearch.trim() ||
-            d.display_name.toLowerCase().includes(vaultSearch.toLowerCase()) ||
-            d.original_lead_name.toLowerCase().includes(vaultSearch.toLowerCase()),
-        )
-        .sort((a, b) => {
+  const variantOptions = useMemo(() => {
+    const set = new Set<string>();
+    mockupVault.suites.forEach((s) => s.template_variant && set.add(s.template_variant));
+    demoVault.demos.forEach((d: any) => d.template_variant && set.add(d.template_variant));
+    return Array.from(set).sort();
+  }, [mockupVault.suites, demoVault.demos]);
+
+  const statusOptions = useMemo(() => {
+    const set = new Set<string>();
+    mockupVault.suites.forEach((s) => s.status && set.add(s.status));
+    return Array.from(set).sort();
+  }, [mockupVault.suites]);
+
+  const activeFiltersCount =
+    (filterSector !== "all" ? 1 : 0) +
+    (filterVariant !== "all" ? 1 : 0) +
+    (filterStatus !== "all" ? 1 : 0);
+
+  const readyMockups = useMemo(() => {
+    const list = mockupVault.suites
+      .filter((s) => (filterStatus === "all" ? s.status === "complete" : s.status === filterStatus))
+      .filter((s) => filterSector === "all" || s.business_sector === filterSector)
+      .filter((s) => filterVariant === "all" || s.template_variant === filterVariant)
+      .filter((s) => {
+        if (!vaultSearch.trim()) return true;
+        const q = vaultSearch.toLowerCase();
+        return (
+          s.business_name.toLowerCase().includes(q) ||
+          (s.business_sector || "").toLowerCase().includes(q) ||
+          (s.business_city || "").toLowerCase().includes(q)
+        );
+      });
+
+    const screensCount = (s: any) =>
+      Array.isArray(s.screens) ? s.screens.length :
+        s.screens && typeof s.screens === "object" ? Object.keys(s.screens).length : 0;
+
+    return list.sort((a, b) => {
+      switch (mockupSort) {
+        case "az": return a.business_name.localeCompare(b.business_name);
+        case "screens": return screensCount(b) - screensCount(a);
+        case "views": return (b.view_count || 0) - (a.view_count || 0);
+        case "recent":
+        default: return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      }
+    });
+  }, [mockupVault.suites, vaultSearch, filterStatus, filterSector, filterVariant, mockupSort]);
+
+  const generatedSites = useMemo(() => {
+    const list = demoVault.demos
+      .filter((d: any) => filterSector === "all" || d.sector === filterSector)
+      .filter((d: any) => filterVariant === "all" || d.template_variant === filterVariant)
+      .filter((d) => {
+        if (!vaultSearch.trim()) return true;
+        const q = vaultSearch.toLowerCase();
+        return (
+          d.display_name.toLowerCase().includes(q) ||
+          d.original_lead_name.toLowerCase().includes(q)
+        );
+      });
+
+    return list.sort((a, b) => {
+      switch (siteSort) {
+        case "az": return a.display_name.localeCompare(b.display_name);
+        case "favorites":
           if (a.is_favorite !== b.is_favorite) return a.is_favorite ? -1 : 1;
           return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
-        }),
-    [demoVault.demos, vaultSearch],
-  );
+        case "recent":
+        default: return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      }
+    });
+  }, [demoVault.demos, vaultSearch, filterSector, filterVariant, siteSort]);
 
   const vaultStats = {
     mockupsReady: mockupVault.suites.filter((s) => s.status === "complete").length,
@@ -340,15 +468,84 @@ export default function PartnerPortfolioPage() {
           })}
         </div>
 
-        {/* Search vault */}
-        {(readyMockups.length > 0 || generatedSites.length > 0) && (
-          <input
-            value={vaultSearch}
-            onChange={(e) => setVaultSearch(e.target.value)}
-            placeholder="Cerca per nome attività, settore o lead..."
-            className="w-full px-3 py-2 rounded-lg text-xs text-foreground placeholder:text-muted-foreground"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-          />
+        {/* Search + filtri avanzati + ordinamento (persistenti) */}
+        {(mockupVault.suites.length > 0 || demoVault.demos.length > 0) && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                value={vaultSearch}
+                onChange={(e) => setVaultSearch(e.target.value)}
+                placeholder="Cerca per nome attività, settore o città..."
+                className="flex-1 px-3 py-2 rounded-lg text-xs text-foreground placeholder:text-muted-foreground"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+              />
+              <button
+                onClick={() => setFiltersOpen((v) => !v)}
+                className="relative px-3 py-2 rounded-lg text-xs flex items-center gap-1.5 transition-colors"
+                style={{
+                  background: filtersOpen ? "rgba(167,139,250,0.18)" : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${filtersOpen ? "rgba(167,139,250,0.4)" : "rgba(255,255,255,0.08)"}`,
+                  color: filtersOpen ? "#c4b5fd" : "#9ca3af",
+                }}
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Filtri</span>
+                {activeFiltersCount > 0 && (
+                  <span className="px-1.5 py-0.5 rounded-full bg-violet-500 text-white text-[9px] font-bold leading-none">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {filtersOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="p-3 rounded-xl space-y-3"
+                    style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <FilterSelect label="Settore" value={filterSector} onChange={setFilterSector}
+                        options={[{ value: "all", label: "Tutti i settori" }, ...sectorOptions.map((s) => ({ value: s, label: s }))]} />
+                      <FilterSelect label="Template" value={filterVariant} onChange={setFilterVariant}
+                        options={[{ value: "all", label: "Tutti i template" }, ...variantOptions.map((v) => ({ value: v, label: v }))]} />
+                      <FilterSelect label="Stato mockup" value={filterStatus} onChange={setFilterStatus}
+                        options={[{ value: "all", label: "Tutti gli stati" }, ...statusOptions.map((s) => ({ value: s, label: s }))]} />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-white/5">
+                      <FilterSelect label="Ordina mockup" value={mockupSort} onChange={(v) => setMockupSort(v as any)}
+                        options={[
+                          { value: "recent", label: "Più recenti" },
+                          { value: "az", label: "A → Z" },
+                          { value: "screens", label: "Più schermate" },
+                          { value: "views", label: "Più visualizzati" },
+                        ]} />
+                      <FilterSelect label="Ordina siti demo" value={siteSort} onChange={(v) => setSiteSort(v as any)}
+                        options={[
+                          { value: "recent", label: "Più recenti" },
+                          { value: "az", label: "A → Z" },
+                          { value: "favorites", label: "Preferiti prima" },
+                        ]} />
+                    </div>
+                    {activeFiltersCount > 0 && (
+                      <button
+                        onClick={() => {
+                          setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all");
+                        }}
+                        className="text-[10px] text-violet-300 hover:text-violet-200 flex items-center gap-1"
+                      >
+                        <XIcon className="w-3 h-3" /> Pulisci filtri
+                      </button>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
 
         {/* Mockup generati */}
@@ -372,11 +569,12 @@ export default function PartnerPortfolioPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {readyMockups.map((suite, i) => {
                 const accent = suite.primary_color || "#a78bfa";
-                const screensArr: any[] = Array.isArray(suite.screens)
+                const rawScreens: any[] = Array.isArray(suite.screens)
                   ? suite.screens
                   : suite.screens && typeof suite.screens === "object"
                     ? Object.values(suite.screens)
                     : [];
+                const screensArr = sortScreens(rawScreens);
                 const screenImgs = screensArr
                   .map((s: any) => s?.image_url || s?.url || s?.src)
                   .filter(Boolean) as string[];
@@ -391,9 +589,7 @@ export default function PartnerPortfolioPage() {
                   variantTag,
                   `${screenImgs.length} screen`,
                 ].filter(Boolean) as string[];
-                const description = screenTitles.length
-                  ? `${screenTitles.slice(0, 4).join(" · ")}${screenTitles.length > 4 ? "…" : ""}`
-                  : "Mockup iPhone su misura generato dal venditore.";
+                const description = buildSmartMockupDescription(suite);
                 return (
                   <motion.div
                     key={suite.id}
@@ -624,5 +820,33 @@ function DemoSiteRow({
         )}
       </div>
     </div>
+  );
+}
+
+/* ─── Select compatto per i filtri vault ─── */
+function FilterSelect({
+  label, value, onChange, options,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  return (
+    <label className="block space-y-1">
+      <span className="text-[9px] uppercase tracking-wider text-muted-foreground">{label}</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-2.5 py-1.5 rounded-lg text-xs text-foreground appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-400/30"
+        style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value} className="bg-[#0f0f1a] text-foreground">
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
