@@ -3,35 +3,24 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Bot, Zap, Target, TrendingUp, Rocket } from "lucide-react";
 
 /**
- * Empire Particle Orb — interactive WOW hero element.
+ * Empire Particle Orb — fully interactive WOW element.
  *
- * Inspired by horacle.ai: a sphere of glowing particles that reacts to
- * pointer movement (gravity/repulsion) and morphs on click into a
- * structured "feature constellation" with cards.
- *
- * Empire-themed in violet/purple, fully responsive (desktop + mobile),
- * touch + mouse interactive, GPU-friendly canvas rendering.
+ * • Trasparente: nessuno sfondo proprio, si fonde con la home page.
+ * • Interattivo: drag per spostare l'orb, swipe per ruotarlo,
+ *   click per morphare in costellazione, particelle reagiscono al puntatore.
+ * • Pointer events passano attraverso le aree vuote (pointer-events: none sul wrap),
+ *   solo l'area dell'orb cattura input.
  */
 
 type Mode = "orb" | "constellation";
 
 interface Particle {
-  // home position (normalised 0..1 in canvas space)
-  hx: number;
-  hy: number;
-  // current position (px)
-  x: number;
-  y: number;
-  // velocity
-  vx: number;
-  vy: number;
-  // visual
-  r: number;
-  hue: number;
-  alpha: number;
-  // target (for morph)
-  tx: number;
-  ty: number;
+  hx: number; hy: number;
+  x: number; y: number;
+  vx: number; vy: number;
+  r: number; hue: number; alpha: number;
+  // 3D coords for rotation
+  sx: number; sy: number; sz: number;
 }
 
 const FEATURES = [
@@ -47,9 +36,20 @@ const EmpireParticleOrb = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
-  const pointerRef = useRef({ x: -9999, y: -9999, active: false });
+  const pointerRef = useRef({ x: -9999, y: -9999, active: false, inside: false });
   const modeRef = useRef<Mode>("orb");
-  const morphRef = useRef(0); // 0 = orb, 1 = constellation
+  const morphRef = useRef(0);
+  // Orb position offset (drag) and rotation
+  const offsetRef = useRef({ x: 0, y: 0 });
+  const rotRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
+  const dragRef = useRef({
+    active: false,
+    moved: false,
+    mode: null as null | "drag" | "rotate",
+    lastX: 0, lastY: 0,
+    startX: 0, startY: 0,
+    startTime: 0,
+  });
   const [mode, setMode] = useState<Mode>("orb");
   const [hint, setHint] = useState(true);
 
@@ -71,44 +71,32 @@ const EmpireParticleOrb = memo(() => {
       const rect = wrap.getBoundingClientRect();
       w = rect.width; h = rect.height;
       cx = w / 2; cy = h / 2;
-      radius = Math.min(w, h) * 0.36;
+      radius = Math.min(w, h) * 0.32;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.max(1, Math.floor(w * dpr));
       canvas.height = Math.max(1, Math.floor(h * dpr));
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
-      // recompute home positions on resize so particles stay within sphere
-      for (const p of particlesRef.current) {
-        const ang = Math.atan2(p.hy - 0.5, p.hx - 0.5);
-        const dist = Math.hypot(p.hx - 0.5, p.hy - 0.5);
-        p.hx = 0.5 + Math.cos(ang) * dist;
-        p.hy = 0.5 + Math.sin(ang) * dist;
-      }
     };
 
-    // Init particles in spherical projection
+    // Init particles on a true 3D sphere (for rotation)
     const init = () => {
       const arr: Particle[] = [];
       for (let i = 0; i < COUNT; i++) {
-        // golden-spiral distribution on sphere → projected to 2D disc
         const phi = Math.acos(1 - (2 * (i + 0.5)) / COUNT);
         const theta = Math.PI * (1 + Math.sqrt(5)) * i;
         const sx = Math.sin(phi) * Math.cos(theta);
         const sy = Math.sin(phi) * Math.sin(theta);
-        // depth-based jitter for volumetric feel
         const sz = Math.cos(phi);
-        const px = 0.5 + sx * 0.42;
-        const py = 0.5 + sy * 0.42;
         arr.push({
-          hx: px,
-          hy: py,
-          x: px,
-          y: py,
+          hx: 0.5 + sx * 0.42,
+          hy: 0.5 + sy * 0.42,
+          x: 0, y: 0,
           vx: 0, vy: 0,
-          r: 0.6 + (sz + 1) * 0.9,
-          hue: 260 + Math.random() * 30, // violet → indigo
-          alpha: 0.35 + (sz + 1) * 0.25,
-          tx: px, ty: py,
+          r: 1,
+          hue: 260 + Math.random() * 30,
+          alpha: 0.5,
+          sx, sy, sz,
         });
       }
       particlesRef.current = arr;
@@ -119,120 +107,204 @@ const EmpireParticleOrb = memo(() => {
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
 
-    // ─── Pointer ───
-    const handlePointer = (e: PointerEvent) => {
+    // ─── Pointer tracking (window-level for proper hit-testing) ───
+    const isInsideOrb = (clientX: number, clientY: number) => {
+      const rect = canvas.getBoundingClientRect();
+      const px = clientX - rect.left - cx - offsetRef.current.x;
+      const py = clientY - rect.top - cy - offsetRef.current.y;
+      return Math.hypot(px, py) < radius * 1.4;
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
       pointerRef.current.x = e.clientX - rect.left;
       pointerRef.current.y = e.clientY - rect.top;
       pointerRef.current.active = true;
+      pointerRef.current.inside = isInsideOrb(e.clientX, e.clientY);
+
+      const drag = dragRef.current;
+      if (drag.active) {
+        const dx = e.clientX - drag.lastX;
+        const dy = e.clientY - drag.lastY;
+        drag.lastX = e.clientX;
+        drag.lastY = e.clientY;
+
+        // Determine mode after small threshold
+        const totalDx = e.clientX - drag.startX;
+        const totalDy = e.clientY - drag.startY;
+        const totalDist = Math.hypot(totalDx, totalDy);
+        if (!drag.mode && totalDist > 6) {
+          drag.moved = true;
+          // Two-finger or shift for rotate; default = drag move; right area = rotate
+          // Simpler heuristic: if shift held → rotate, else drag
+          drag.mode = e.shiftKey ? "rotate" : "drag";
+        }
+
+        if (drag.mode === "drag") {
+          offsetRef.current.x += dx;
+          offsetRef.current.y += dy;
+        } else if (drag.mode === "rotate") {
+          rotRef.current.vy += dx * 0.005;
+          rotRef.current.vx -= dy * 0.005;
+        }
+        e.preventDefault();
+      }
     };
-    const handleLeave = () => {
+
+    const handlePointerDown = (e: PointerEvent) => {
+      if (!isInsideOrb(e.clientX, e.clientY)) return;
+      dragRef.current = {
+        active: true,
+        moved: false,
+        mode: null,
+        lastX: e.clientX,
+        lastY: e.clientY,
+        startX: e.clientX,
+        startY: e.clientY,
+        startTime: performance.now(),
+      };
+      try { (e.target as Element)?.setPointerCapture?.(e.pointerId); } catch {}
+    };
+
+    const handlePointerUp = (e: PointerEvent) => {
+      const drag = dragRef.current;
+      const wasActive = drag.active;
+      const moved = drag.moved;
+      const dt = performance.now() - drag.startTime;
+      drag.active = false;
+      drag.mode = null;
+
+      // Tap (no significant move) inside orb → toggle mode
+      if (wasActive && !moved && dt < 400 && isInsideOrb(e.clientX, e.clientY)) {
+        const next: Mode = modeRef.current === "orb" ? "constellation" : "orb";
+        modeRef.current = next;
+        setMode(next);
+        setHint(false);
+      }
+    };
+
+    const handlePointerLeave = () => {
       pointerRef.current.active = false;
+      pointerRef.current.inside = false;
       pointerRef.current.x = -9999;
       pointerRef.current.y = -9999;
     };
-    canvas.addEventListener("pointermove", handlePointer);
-    canvas.addEventListener("pointerleave", handleLeave);
-    canvas.addEventListener("pointercancel", handleLeave);
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: false });
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
+    canvas.addEventListener("pointerleave", handlePointerLeave);
 
     // ─── Animate ───
     const draw = () => {
       t += 0.008;
       ctx.clearRect(0, 0, w, h);
 
-      // Recompute targets when mode changes
       const targetMorph = modeRef.current === "constellation" ? 1 : 0;
       morphRef.current += (targetMorph - morphRef.current) * 0.06;
       const m = morphRef.current;
 
-      // Background ambient glow
-      const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 2.4);
-      bgGrad.addColorStop(0, `hsla(265, 80%, 55%, ${0.18 - m * 0.08})`);
-      bgGrad.addColorStop(0.55, `hsla(265, 70%, 40%, ${0.06})`);
-      bgGrad.addColorStop(1, "hsla(265, 70%, 30%, 0)");
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, w, h);
+      // Rotation: auto-spin + user-driven momentum
+      if (!dragRef.current.active) {
+        rotRef.current.vy += (0.003 - rotRef.current.vy) * 0.02; // drift back to gentle auto-spin
+        rotRef.current.vx *= 0.94;
+      }
+      rotRef.current.x += rotRef.current.vx;
+      rotRef.current.y += rotRef.current.vy;
+
+      // Spring offset back toward 0 when not dragging (gentle elastic anchor)
+      if (!dragRef.current.active) {
+        offsetRef.current.x *= 0.94;
+        offsetRef.current.y *= 0.94;
+      }
+
+      const ox = offsetRef.current.x;
+      const oy = offsetRef.current.y;
+      const rotX = rotRef.current.x;
+      const rotY = rotRef.current.y;
+      const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
 
       const px = pointerRef.current.x;
       const py = pointerRef.current.y;
       const pointerActive = pointerRef.current.active;
 
-      // Compute constellation targets (ring around centre)
       const ringR = radius * 1.05;
-
       const arr = particlesRef.current;
+
       for (let i = 0; i < arr.length; i++) {
         const p = arr[i];
 
-        // Home position in px (orb mode)
-        const homeX = p.hx * w;
-        const homeY = p.hy * h;
+        // Apply 3D rotation to sphere coords
+        // Y rotation
+        let x1 = p.sx * cosY + p.sz * sinY;
+        let z1 = -p.sx * sinY + p.sz * cosY;
+        // X rotation
+        let y1 = p.sy * cosX - z1 * sinX;
+        let z2 = p.sy * sinX + z1 * cosX;
 
-        // Constellation: assign each particle to one of 6 ring nodes
+        // Project to 2D (orb mode position)
+        const orbX = cx + ox + x1 * radius;
+        const orbY = cy + oy + y1 * radius;
+
+        // Constellation target (ring around orb centre)
         const nodeIdx = i % FEATURES.length;
         const ringAng = (FEATURES[nodeIdx].angle * Math.PI) / 180 + t * 0.3;
         const jitter = ((i * 1.3) % 30) - 15;
-        const ringX = cx + Math.cos(ringAng) * (ringR + jitter * 0.6);
-        const ringY = cy + Math.sin(ringAng) * (ringR + jitter * 0.6);
+        const ringX = cx + ox + Math.cos(ringAng) * (ringR + jitter * 0.6);
+        const ringY = cy + oy + Math.sin(ringAng) * (ringR + jitter * 0.6);
 
-        // Blended target between orb and constellation
-        const tgtX = homeX * (1 - m) + ringX * m;
-        const tgtY = homeY * (1 - m) + ringY * m;
+        const tgtX = orbX * (1 - m) + ringX * m;
+        const tgtY = orbY * (1 - m) + ringY * m;
 
-        // Gentle orbital drift in orb mode (breathing rotation)
-        const breathe = Math.sin(t * 1.6 + i * 0.05) * (1 - m) * 1.4;
-        const driftAng = t * 0.35 + i * 0.011;
-        const driftR = breathe;
-        const finalTgtX = tgtX + Math.cos(driftAng) * driftR;
-        const finalTgtY = tgtY + Math.sin(driftAng) * driftR;
+        // Spring
+        p.vx += (tgtX - p.x) * 0.05;
+        p.vy += (tgtY - p.y) * 0.05;
 
-        // Spring towards target
-        p.vx += (finalTgtX - p.x) * 0.045;
-        p.vy += (finalTgtY - p.y) * 0.045;
-
-        // Pointer interaction (repel + slight attract on edge)
+        // Pointer repel (only when pointer is near the orb area)
         if (pointerActive) {
           const dx = p.x - px;
           const dy = p.y - py;
           const dist = Math.hypot(dx, dy);
-          const reach = isMobile ? 80 : 120;
+          const reach = isMobile ? 70 : 110;
           if (dist < reach && dist > 0.01) {
-            const force = (1 - dist / reach) * 2.2;
+            const force = (1 - dist / reach) * 1.8;
             p.vx += (dx / dist) * force;
             p.vy += (dy / dist) * force;
           }
         }
 
-        // Damping
-        p.vx *= 0.86;
-        p.vy *= 0.86;
-
+        p.vx *= 0.84;
+        p.vy *= 0.84;
         p.x += p.vx;
         p.y += p.vy;
 
-        // Render particle with depth-based glow
-        const pulse = 0.7 + Math.sin(t * 2 + i * 0.3) * 0.3;
-        const alpha = p.alpha * pulse * (1 - m * 0.25);
+        // Depth-based render (z2 is the rotated z)
+        const depth = (z2 + 1) * 0.5; // 0 (back) → 1 (front)
+        const baseR = 0.5 + depth * 1.4;
+        const baseAlpha = 0.25 + depth * 0.6;
+        const pulse = 0.75 + Math.sin(t * 2 + i * 0.3) * 0.25;
+        const alpha = baseAlpha * pulse * (1 - m * 0.2);
+
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 80%, 70%, ${alpha})`;
+        ctx.arc(p.x, p.y, baseR, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 85%, ${55 + depth * 20}%, ${alpha})`;
         ctx.fill();
 
-        // Bright core sparkle on bigger particles
-        if (p.r > 1.4) {
+        if (depth > 0.65) {
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r * 0.4, 0, Math.PI * 2);
-          ctx.fillStyle = `hsla(0, 0%, 100%, ${alpha * 0.6})`;
+          ctx.arc(p.x, p.y, baseR * 0.4, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(0, 0%, 100%, ${alpha * 0.7})`;
           ctx.fill();
         }
       }
 
-      // Connecting lines between nearby particles (only orb mode)
+      // Connecting lines (orb mode only, front-facing particles)
       if (m < 0.6) {
         const maxDist = isMobile ? 28 : 36;
         const lineAlphaBase = (1 - m) * 0.18;
         ctx.lineWidth = 0.5;
-        // Sample a subset for perf
         const step = isMobile ? 5 : 3;
         for (let i = 0; i < arr.length; i += step) {
           for (let j = i + step; j < Math.min(i + step * 8, arr.length); j += step) {
@@ -251,16 +323,18 @@ const EmpireParticleOrb = memo(() => {
         }
       }
 
-      // Central core glow when in orb mode
+      // Soft core glow (additive, no hard background)
       if (m < 0.85) {
-        const coreAlpha = (1 - m) * (0.35 + Math.sin(t * 2) * 0.08);
-        const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 0.6);
-        coreGrad.addColorStop(0, `hsla(280, 90%, 75%, ${coreAlpha})`);
-        coreGrad.addColorStop(0.5, `hsla(265, 80%, 55%, ${coreAlpha * 0.4})`);
+        const ccx = cx + ox;
+        const ccy = cy + oy;
+        const coreAlpha = (1 - m) * (0.28 + Math.sin(t * 2) * 0.06);
+        const coreGrad = ctx.createRadialGradient(ccx, ccy, 0, ccx, ccy, radius * 0.8);
+        coreGrad.addColorStop(0, `hsla(280, 95%, 75%, ${coreAlpha})`);
+        coreGrad.addColorStop(0.45, `hsla(265, 85%, 55%, ${coreAlpha * 0.35})`);
         coreGrad.addColorStop(1, "hsla(265, 70%, 40%, 0)");
         ctx.fillStyle = coreGrad;
         ctx.beginPath();
-        ctx.arc(cx, cy, radius * 0.6, 0, Math.PI * 2);
+        ctx.arc(ccx, ccy, radius * 0.8, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -271,38 +345,33 @@ const EmpireParticleOrb = memo(() => {
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      canvas.removeEventListener("pointermove", handlePointer);
-      canvas.removeEventListener("pointerleave", handleLeave);
-      canvas.removeEventListener("pointercancel", handleLeave);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
+      canvas.removeEventListener("pointerleave", handlePointerLeave);
     };
   }, []);
-
-  const toggle = () => {
-    const next: Mode = mode === "orb" ? "constellation" : "orb";
-    modeRef.current = next;
-    setMode(next);
-    setHint(false);
-  };
 
   return (
     <div
       ref={wrapRef}
-      className="relative w-full h-[280px] sm:h-[340px] md:h-[400px] lg:h-[440px] overflow-hidden rounded-3xl select-none cursor-pointer touch-none"
-      style={{
-        background:
-          "radial-gradient(ellipse at center, hsla(265,40%,12%,0.6) 0%, hsla(265,30%,8%,0.85) 60%, hsla(0,0%,4%,0.95) 100%)",
-        border: "1px solid hsla(265,60%,40%,0.18)",
-        boxShadow:
-          "0 20px 60px -20px hsla(265,70%,30%,0.5), inset 0 1px 0 hsla(265,80%,70%,0.08)",
-      }}
-      onClick={toggle}
-      role="button"
-      aria-label={mode === "orb" ? "Espandi costellazione Empire" : "Comprimi orb"}
+      className="relative w-full h-[280px] sm:h-[340px] md:h-[400px] lg:h-[440px] select-none touch-none"
+      style={{ pointerEvents: "none" }}
+      aria-label={mode === "orb" ? "Empire Core — trascina o tocca per esplorare" : "Empire Stack constellation"}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+      {/* Canvas: pointer events enabled, but transparent. Pointer hit-testing is done in JS to only react to orb area. */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ pointerEvents: "auto", cursor: "grab", background: "transparent" }}
+      />
 
-      {/* Centre label / hint */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
+      {/* Centre label */}
+      <div
+        className="absolute inset-0 flex flex-col items-center justify-center z-10"
+        style={{ pointerEvents: "none" }}
+      >
         <AnimatePresence mode="wait">
           {mode === "orb" ? (
             <motion.div
@@ -316,8 +385,10 @@ const EmpireParticleOrb = memo(() => {
               <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-violet-300/80 mb-2">
                 Empire Core
               </p>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white"
-                style={{ textShadow: "0 0 24px hsla(265,80%,60%,0.6)" }}>
+              <h3
+                className="text-xl sm:text-2xl md:text-3xl font-bold text-white"
+                style={{ textShadow: "0 0 24px hsla(265,80%,60%,0.6)" }}
+              >
                 Il tuo Universo AI
               </h3>
               <AnimatePresence>
@@ -329,7 +400,7 @@ const EmpireParticleOrb = memo(() => {
                     transition={{ duration: 2.2, repeat: Infinity }}
                     className="text-[10px] sm:text-xs text-violet-300/70 mt-3 font-medium"
                   >
-                    Tocca per esplorare
+                    Trascina · ruota · tocca per esplorare
                   </motion.p>
                 )}
               </AnimatePresence>
@@ -357,15 +428,14 @@ const EmpireParticleOrb = memo(() => {
         </AnimatePresence>
       </div>
 
-      {/* Feature cards (constellation mode) — positioned around the ring */}
+      {/* Feature cards (constellation mode) */}
       <AnimatePresence>
         {mode === "constellation" &&
           FEATURES.map((f, i) => {
             const Icon = f.icon;
             const angRad = (f.angle * Math.PI) / 180;
-            // distance as % of container — responsive
-            const dx = Math.cos(angRad) * 42;
-            const dy = Math.sin(angRad) * 42;
+            const dx = Math.cos(angRad) * 38;
+            const dy = Math.sin(angRad) * 38;
             return (
               <motion.div
                 key={f.label}
@@ -373,11 +443,12 @@ const EmpireParticleOrb = memo(() => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 transition={{ duration: 0.4, delay: 0.3 + i * 0.05 }}
-                className="absolute z-20 pointer-events-none"
+                className="absolute z-20"
                 style={{
                   left: `calc(50% + ${dx}% )`,
                   top: `calc(50% + ${dy}% )`,
                   transform: "translate(-50%, -50%)",
+                  pointerEvents: "none",
                 }}
               >
                 <div
@@ -397,10 +468,6 @@ const EmpireParticleOrb = memo(() => {
             );
           })}
       </AnimatePresence>
-
-      {/* Top gradient haze */}
-      <div className="absolute inset-x-0 top-0 h-16 pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, hsla(265,40%,8%,0.4), transparent)" }} />
     </div>
   );
 });
