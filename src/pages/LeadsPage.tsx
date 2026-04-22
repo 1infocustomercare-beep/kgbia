@@ -1395,11 +1395,11 @@ export default function LeadsPage() {
       </div>
 
 
-      {/* HERO — UNIFIED LIVING MASCOT (desktop-only: su mobile basta la top-bar) */}
+      {/* HERO — UNIFIED LIVING MASCOT (single central organism with embedded data-core) */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="hidden lg:flex flex-col items-center justify-center pt-4 pb-3 gap-3"
+        className="flex flex-col items-center justify-center pt-4 pb-3 gap-3"
         onHoverStart={() => setSphereHover(true)}
         onHoverEnd={() => setSphereHover(false)}
         onTapStart={() => setSphereHover(true)}
