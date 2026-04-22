@@ -105,7 +105,25 @@ export function localizeCTA(cta: SectorCTA, lang: WALang): { label: string; verb
   return { label, verb };
 }
 
-/* ───────── Template messaggi A/B per lingua ───────── */
+/* ───────── Tono del messaggio ───────── */
+
+export type WATone = "premium" | "direct" | "friendly";
+
+export const WA_TONES: { code: WATone; label: string; emoji: string; description: string }[] = [
+  { code: "premium",  label: "Premium",   emoji: "💎", description: "Elegante, esclusivo, su misura" },
+  { code: "direct",   label: "Diretto",   emoji: "🎯", description: "Chiaro, conciso, action-first" },
+  { code: "friendly", label: "Amichevole", emoji: "😊", description: "Caldo, informale, vicino" },
+];
+
+export const TONE_UI_LABELS: Record<WALang, { title: string; hint: string }> = {
+  it: { title: "Tono del messaggio", hint: "Cambia stile e rigenera entrambe le varianti" },
+  en: { title: "Message tone",       hint: "Switch style and regenerate both variants" },
+  es: { title: "Tono del mensaje",   hint: "Cambia el estilo y regenera ambas variantes" },
+  fr: { title: "Ton du message",     hint: "Changez de style et régénérez les deux variantes" },
+  de: { title: "Tonfall der Nachricht", hint: "Stil wechseln und beide Varianten neu generieren" },
+};
+
+/* ───────── Template messaggi A/B per lingua + tono ───────── */
 
 interface TemplateInput {
   name: string;
