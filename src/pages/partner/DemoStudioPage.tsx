@@ -12,7 +12,7 @@
  */
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Rocket,
   Eye,
@@ -41,6 +41,18 @@ export default function DemoStudioPage() {
   const [presentationOpen, setPresentationOpen] = useState(false);
   const [presentationInitialId, setPresentationInitialId] = useState<string | undefined>();
   const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Auto-open presentation mode quando si arriva con ?present=1 (es. da Home Partner)
+  useEffect(() => {
+    if (searchParams.get("present") === "1") {
+      setPresentationOpen(true);
+      // pulisco il param per evitare riapertura su refresh
+      const next = new URLSearchParams(searchParams);
+      next.delete("present");
+      setSearchParams(next, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const refresh = async () => {
     await Promise.all([vault.fetchAll(), mockupVault.fetchAll?.() ?? Promise.resolve()]);
