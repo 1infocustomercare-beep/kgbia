@@ -498,6 +498,34 @@ export default function PartnerPortfolioPage() {
               </button>
             </div>
 
+            {/* ─── Chip filtri attivi (sempre visibili, con dismiss singolo) ─── */}
+            {activeFiltersCount > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-1.5 flex-wrap"
+              >
+                {filterSector !== "all" && (
+                  <FilterChip label="Settore" value={filterSector} onClear={() => setFilterSector("all")} />
+                )}
+                {filterVariant !== "all" && (
+                  <FilterChip label="Template" value={filterVariant} onClear={() => setFilterVariant("all")} />
+                )}
+                {filterStatus !== "all" && (
+                  <FilterChip label="Stato" value={filterStatus} onClear={() => setFilterStatus("all")} />
+                )}
+                <button
+                  onClick={() => {
+                    setFilterSector("all"); setFilterVariant("all"); setFilterStatus("all");
+                  }}
+                  className="ml-0.5 px-2 py-1 rounded-full text-[10px] font-semibold flex items-center gap-1 hover:bg-white/8 transition-colors"
+                  style={{ color: "#c4b5fd", border: "1px dashed rgba(167,139,250,0.4)" }}
+                >
+                  <RefreshCw className="w-2.5 h-2.5" /> Reset rapido
+                </button>
+              </motion.div>
+            )}
+
             <AnimatePresence>
               {filtersOpen && (
                 <motion.div
@@ -848,5 +876,34 @@ function FilterSelect({
         ))}
       </select>
     </label>
+  );
+}
+
+/* ─── Chip filtro attivo (rimovibile con un tap) ─── */
+function FilterChip({
+  label, value, onClear,
+}: { label: string; value: string; onClear: () => void }) {
+  return (
+    <motion.span
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.9, opacity: 0 }}
+      className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold"
+      style={{
+        background: "rgba(167,139,250,0.14)",
+        border: "1px solid rgba(167,139,250,0.34)",
+        color: "#c4b5fd",
+      }}
+    >
+      <span className="opacity-70">{label}:</span>
+      <span className="truncate max-w-[120px]">{value}</span>
+      <button
+        onClick={onClear}
+        aria-label={`Rimuovi filtro ${label}`}
+        className="ml-0.5 -mr-0.5 w-4 h-4 rounded-full flex items-center justify-center hover:bg-white/15 transition-colors"
+      >
+        <XIcon className="w-2.5 h-2.5" />
+      </button>
+    </motion.span>
   );
 }

@@ -6,7 +6,7 @@ import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   LayoutDashboard, Target, DollarSign, FolderOpen, User, LogOut, ArrowLeft,
-  Eye, Presentation, Zap, Palette, MoreHorizontal, Wand2,
+  Eye, Presentation, Zap, Palette, MoreHorizontal, Wand2, Sparkles,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
@@ -76,6 +76,12 @@ export default function PartnerLayout() {
   const { theme: currentTheme } = useTheme();
   const isDark = currentTheme === "dark";
   const [demoMode, setDemoMode] = useState(() => sessionStorage.getItem("partner_demo_mode") === "true");
+  // Wow Mode: "full" | "soft" | "off" — persistente tra sessioni
+  type WowLevel = "full" | "soft" | "off";
+  const [wowLevel, setWowLevel] = useState<WowLevel>(() => {
+    const saved = localStorage.getItem("partner_wow_mode") as WowLevel | null;
+    return saved === "soft" || saved === "off" ? saved : "full";
+  });
   const [showSplash, setShowSplash] = useState(() => {
     const lastTs = sessionStorage.getItem("partner_splash_ts");
     if (!lastTs) return true;
@@ -108,6 +114,25 @@ export default function PartnerLayout() {
   useEffect(() => {
     sessionStorage.setItem("partner_demo_mode", demoMode ? "true" : "false");
   }, [demoMode]);
+
+  useEffect(() => {
+    localStorage.setItem("partner_wow_mode", wowLevel);
+  }, [wowLevel]);
+
+  const cycleWow = () => {
+    const next: WowLevel = wowLevel === "full" ? "soft" : wowLevel === "soft" ? "off" : "full";
+    setWowLevel(next);
+    toast({
+      title: next === "full" ? "✨ Wow Mode: Pieno" : next === "soft" ? "🌙 Wow Mode: Soft" : "🔇 Wow Mode: Off",
+      description:
+        next === "full"
+          ? "Sfondo cinematico, aurora e grain a piena intensità."
+          : next === "soft"
+          ? "Animazioni rallentate, grain ridotto. Massima concentrazione."
+          : "Sfondo statico, zero animazioni di sfondo.",
+    });
+  };
+  const wowIntensity = wowLevel === "full" ? 1 : wowLevel === "soft" ? 0.55 : 0;
 
   // Close "more" sheet on route change
   useEffect(() => {
@@ -153,7 +178,11 @@ export default function PartnerLayout() {
         style={isDark ? { background: "#0a0a14" } : undefined}
       >
         {isDark && (
-          <div className="fixed inset-0 z-0 pointer-events-none partner-bg-stage" style={{ opacity: 1 }}>
+          <div
+            className="fixed inset-0 z-0 pointer-events-none partner-bg-stage"
+            data-wow={wowLevel}
+            style={{ opacity: wowIntensity }}
+          >
             <EmpireDNABackground />
             {/* Aurora wash — più visibile fra le card, più viva ai bordi */}
             <div
@@ -313,6 +342,31 @@ export default function PartnerLayout() {
               </motion.span>
 
               <div className="flex items-center gap-1 ml-1">
+                {/* Wow Mode toggle: cicla full → soft → off */}
+                {isDark && (
+                  <button
+                    onClick={cycleWow}
+                    aria-label={`Wow Mode: ${wowLevel}`}
+                    title={`Wow Mode: ${wowLevel === "full" ? "Pieno" : wowLevel === "soft" ? "Soft" : "Off"} — tocca per cambiare`}
+                    className="flex items-center justify-center w-9 h-9 rounded-xl transition-all hover:scale-105 active:scale-95 relative"
+                    style={{
+                      background: "rgba(16,18,36,0.96)",
+                      color: wowLevel === "off" ? "#6b7280" : accentColor,
+                      border: `1px solid ${wowLevel === "off" ? "rgba(255,255,255,0.08)" : accentColor + "33"}`,
+                      boxShadow: wowLevel === "full" ? `0 0 14px ${accentColor}33` : "0 6px 18px rgba(0,0,0,0.22)",
+                    }}
+                  >
+                    <Sparkles className="w-3.5 h-3.5" style={{ opacity: wowLevel === "off" ? 0.45 : 1 }} />
+                    {/* indicatore livello */}
+                    <span
+                      className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 flex gap-[2px]"
+                      aria-hidden
+                    >
+                      <span className="w-1 h-1 rounded-full" style={{ background: wowLevel !== "off" ? accentColor : "rgba(255,255,255,0.18)" }} />
+                      <span className="w-1 h-1 rounded-full" style={{ background: wowLevel === "full" ? accentColor : "rgba(255,255,255,0.18)" }} />
+                    </span>
+                  </button>
+                )}
                 <DarkModeToggle />
                 <button
                   onClick={async () => {
@@ -354,7 +408,7 @@ export default function PartnerLayout() {
 
         {/* ═══ MOBILE BOTTOM NAV — adaptive (4–5 primary + More drawer) ═══ */}
         <nav
-          className="fixed bottom-0 left-0 right-0 z-50 safe-bottom lg:hidden"
+          className="fixed bottom-0 left-0 right-0 z-50 lg:hidden partner-dock-safe"
           style={{
             background: isDark ? "rgba(9,10,24,0.98)" : "rgba(255,255,255,0.96)",
             backdropFilter: "blur(28px) saturate(2)",
@@ -370,7 +424,7 @@ export default function PartnerLayout() {
             style={{ background: `linear-gradient(90deg, transparent 10%, ${accentColor}60 50%, transparent 90%)` }}
           />
           <div
-            className="grid h-16 items-center gap-1 max-w-md mx-auto px-2"
+            className="grid items-center gap-1 max-w-md mx-auto px-2 partner-dock-touch"
             style={{
               gridTemplateColumns: `repeat(${primaryItems.length + (secondaryItems.length > 0 ? 1 : 0)}, minmax(0, 1fr))`,
             }}
