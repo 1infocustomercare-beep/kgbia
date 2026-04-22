@@ -999,22 +999,79 @@ export function MockupSuiteGenerator({
             </div>
           </div>
 
-          {/* Branding Kit — coppia font heading/body */}
+          {/* Branding Kit — coppia font heading/body + lock + sync cloud */}
           <div className="space-y-1.5 pt-2 border-t border-border/50">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <Label className="text-xs flex items-center gap-1.5 m-0">
                 <Type className="h-3 w-3 text-primary" /> Branding Kit · Tipografia
+                {/* Indicatore sincronizzazione */}
+                <span
+                  className="inline-flex items-center gap-0.5 text-[9px] font-normal text-muted-foreground"
+                  title={
+                    branding.syncing
+                      ? "Salvataggio in corso…"
+                      : branding.lastSyncedAt
+                      ? `Sincronizzato ${branding.lastSyncedAt.toLocaleTimeString()}`
+                      : "Salvato solo in locale (login per sincronizzare cross-device)"
+                  }
+                >
+                  {branding.syncing ? (
+                    <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                  ) : branding.lastSyncedAt ? (
+                    <Cloud className="h-2.5 w-2.5 text-emerald-500" />
+                  ) : (
+                    <CloudOff className="h-2.5 w-2.5" />
+                  )}
+                </span>
               </Label>
-              <Badge variant="outline" className="text-[9px] font-mono max-w-[180px] truncate">
-                {brandFont.key === "template" ? "Default template" : brandFont.label}
-              </Badge>
+              <div className="flex items-center gap-1.5">
+                {/* Lock toggle — blocca le modifiche del Branding Kit per evitare cambi accidentali */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    branding.update({
+                      brandLocked: !branding.settings.brandLocked,
+                      primaryColor:
+                        mode === "standalone" ? standalone.primaryColor : primaryColor,
+                    })
+                  }
+                  disabled={controlsLocked}
+                  title={
+                    branding.settings.brandLocked
+                      ? "Branding Kit bloccato — clicca per sbloccare"
+                      : "Blocca Branding Kit (preserva colore + font tra sessioni)"
+                  }
+                  className={`text-[9px] px-2 py-0.5 rounded-full border transition-all flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    branding.settings.brandLocked
+                      ? "border-amber-500/60 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                      : "border-border/60 hover:border-primary hover:bg-primary/10"
+                  }`}
+                >
+                  {branding.settings.brandLocked ? (
+                    <Lock className="h-2.5 w-2.5" />
+                  ) : (
+                    <Unlock className="h-2.5 w-2.5" />
+                  )}
+                  {branding.settings.brandLocked ? "Bloccato" : "Sblocca"}
+                </button>
+                <Badge variant="outline" className="text-[9px] font-mono max-w-[140px] truncate">
+                  {brandFont.key === "template" ? "Default template" : brandFont.label}
+                </Badge>
+              </div>
             </div>
             <Select
               value={brandFontKey}
               onValueChange={setBrandFontKey}
-              disabled={controlsLocked}
+              disabled={controlsLocked || branding.settings.brandLocked}
             >
-              <SelectTrigger className="h-9 text-xs" title={lockTitle}>
+              <SelectTrigger
+                className="h-9 text-xs"
+                title={
+                  branding.settings.brandLocked
+                    ? "Branding Kit bloccato — sblocca per cambiare font"
+                    : lockTitle
+                }
+              >
                 <SelectValue placeholder="Seleziona coppia font" />
               </SelectTrigger>
               <SelectContent className="max-h-[300px]">
@@ -1058,9 +1115,12 @@ export function MockupSuiteGenerator({
               </div>
             )}
             <p className="text-[9px] text-muted-foreground italic">
-              I font del Branding Kit sostituiscono quelli del template e si aggiornano live nella preview React.
+              {branding.settings.brandLocked
+                ? "🔒 Branding Kit bloccato — colore e font vengono ripristinati tra sessioni."
+                : "I font del Branding Kit sostituiscono quelli del template e si aggiornano live nella preview React. Salvati su cloud + cache locale."}
             </p>
           </div>
+
 
           <p className="text-[10px] text-muted-foreground italic">
             🎨 Clicca <span className="font-semibold not-italic">Genera Suite</span> per applicare queste impostazioni alle 4 schermate. L'anteprima live in alto si aggiorna istantaneamente.
