@@ -11,6 +11,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-route
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import SetupPaidGuard from "@/components/SetupPaidGuard";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
 
 // Detect mobile for tighter safety timeouts
@@ -194,6 +195,8 @@ const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => importWithRetry(() => import("./pages/OnboardingPage")));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AuthPage = lazy(() => importWithRetry(() => import("./pages/AuthPage")));
+const SetupCheckoutPage = lazy(() => import("./pages/SetupCheckoutPage"));
+const SetupSuccessPage = lazy(() => import("./pages/SetupSuccessPage"));
 const TenantLogin = lazy(() => import("./pages/TenantLogin"));
 const TenantLoginUnlock = lazy(() => import("./pages/TenantLoginUnlock"));
 const TenantGuard = lazy(() => import("./components/TenantGuard"));
