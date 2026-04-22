@@ -566,17 +566,28 @@ Deno.serve(async (req) => {
     const business = { name: business_name, sector: business_sector || "attività commerciale", city: business_city || "Italia" };
 
     try {
-      // Genera 4 immagini in parallelo CON validazione + retry mirato (max 3 tentativi per screen)
-      const imageResults = await Promise.all(
-        screens.map((s, i) =>
-          generateValidatedAIImage(
-            LOVABLE_KEY,
-            buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i),
-            pro,
-            3,
+      // Genera 4 immagini con paralelismo limitato a 2 (riduce rate-limit) + validazione + retry/upgrade
+      // Ogni screen ha fino a 5 tentativi e auto-upgrade a Nano Banana Pro nelle ultime iterazioni.
+      const imageResults: Awaited<ReturnType<typeof generateValidatedAIImage>>[] = [];
+      const concurrency = 2;
+      for (let i = 0; i < screens.length; i += concurrency) {
+        const batch = screens.slice(i, i + concurrency);
+        const batchResults = await Promise.all(
+          batch.map((s, k) =>
+            generateValidatedAIImage(
+              LOVABLE_KEY,
+              buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i + k),
+              pro,
+              5,
+            )
           )
-        )
-      );
+        );
+        imageResults.push(...batchResults);
+        // Piccola pausa tra batch per non saturare il gateway
+        if (i + concurrency < screens.length) {
+          await new Promise(r => setTimeout(r, 400));
+        }
+      }
 
       // Upload su storage
       const uploadPromises = imageResults.map((res, i) =>
@@ -596,6 +607,9 @@ Deno.serve(async (req) => {
           validated: imageResults[i].validated,
           attempts: imageResults[i].attempts,
           issues: imageResults[i].lastIssues,
+          engine_used: imageResults[i].engine_used,
+          // Soft-fail: l'immagine c'è anche se validazione non passa — il client decide come mostrarla
+          has_image: !!publicUrls[i],
         },
       }));
 
