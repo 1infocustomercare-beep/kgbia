@@ -138,7 +138,7 @@ const EmpireParticleOrb = memo(() => {
       // when the cursor/finger is OUTSIDE the orb hit-area. Keep events captured while dragging.
       if (!dragRef.current.active && !gestureRef.current.active) {
         canvas.style.pointerEvents = inside ? "auto" : "none";
-        canvas.style.cursor = inside ? (grabbingRef.current ? "grabbing" : "grab") : "default";
+        canvas.style.cursor = inside ? "grab" : "default";
       }
 
       // Update tracked pointer position
