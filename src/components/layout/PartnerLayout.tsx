@@ -408,7 +408,7 @@ export default function PartnerLayout() {
 
         {/* ═══ MOBILE BOTTOM NAV — adaptive (4–5 primary + More drawer) ═══ */}
         <nav
-          className="fixed bottom-0 left-0 right-0 z-50 safe-bottom lg:hidden"
+          className="fixed bottom-0 left-0 right-0 z-50 lg:hidden partner-dock-safe"
           style={{
             background: isDark ? "rgba(9,10,24,0.98)" : "rgba(255,255,255,0.96)",
             backdropFilter: "blur(28px) saturate(2)",
@@ -424,7 +424,7 @@ export default function PartnerLayout() {
             style={{ background: `linear-gradient(90deg, transparent 10%, ${accentColor}60 50%, transparent 90%)` }}
           />
           <div
-            className="grid h-16 items-center gap-1 max-w-md mx-auto px-2"
+            className="grid items-center gap-1 max-w-md mx-auto px-2 partner-dock-touch"
             style={{
               gridTemplateColumns: `repeat(${primaryItems.length + (secondaryItems.length > 0 ? 1 : 0)}, minmax(0, 1fr))`,
             }}
