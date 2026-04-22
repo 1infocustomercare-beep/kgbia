@@ -131,7 +131,15 @@ const EmpireParticleOrb = memo(() => {
       pointerRef.current.x = e.clientX - rect.left;
       pointerRef.current.y = e.clientY - rect.top;
       pointerRef.current.active = true;
-      pointerRef.current.inside = isInsideOrb(e.clientX, e.clientY);
+      const inside = isInsideOrb(e.clientX, e.clientY);
+      pointerRef.current.inside = inside;
+
+      // Toggle canvas pointer-events so the background underneath stays interactive
+      // when the cursor/finger is OUTSIDE the orb hit-area. Keep events captured while dragging.
+      if (!dragRef.current.active && !gestureRef.current.active) {
+        canvas.style.pointerEvents = inside ? "auto" : "none";
+        canvas.style.cursor = inside ? (grabbingRef.current ? "grabbing" : "grab") : "default";
+      }
 
       // Update tracked pointer position
       if (pointersRef.current.has(e.pointerId)) {
