@@ -970,6 +970,69 @@ export function MockupSuiteGenerator({
             </div>
           </div>
 
+          {/* Branding Kit — coppia font heading/body */}
+          <div className="space-y-1.5 pt-2 border-t border-border/50">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <Label className="text-xs flex items-center gap-1.5 m-0">
+                <Type className="h-3 w-3 text-primary" /> Branding Kit · Tipografia
+              </Label>
+              <Badge variant="outline" className="text-[9px] font-mono max-w-[180px] truncate">
+                {brandFont.key === "template" ? "Default template" : brandFont.label}
+              </Badge>
+            </div>
+            <Select
+              value={brandFontKey}
+              onValueChange={setBrandFontKey}
+              disabled={controlsLocked}
+            >
+              <SelectTrigger className="h-9 text-xs" title={lockTitle}>
+                <SelectValue placeholder="Seleziona coppia font" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {BRAND_FONT_PAIRS.map(p => (
+                  <SelectItem key={p.key} value={p.key} className="text-xs">
+                    <div className="flex flex-col gap-0.5 py-0.5">
+                      <span
+                        className="font-semibold leading-tight"
+                        style={p.fontHead ? { fontFamily: p.fontHead } : undefined}
+                      >
+                        {p.label}
+                      </span>
+                      <span
+                        className="text-[10px] text-muted-foreground leading-tight"
+                        style={p.fontBody ? { fontFamily: p.fontBody } : undefined}
+                      >
+                        {p.description}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {brandFont.key !== "template" && (
+              <div
+                className="rounded-md border border-border/50 bg-background/40 px-2.5 py-1.5 flex items-baseline gap-2 overflow-hidden"
+                title="Anteprima coppia font"
+              >
+                <span
+                  className="text-[14px] leading-none truncate"
+                  style={{ fontFamily: brandFont.fontHead, fontWeight: 700 }}
+                >
+                  {businessName || "Brand Demo"}
+                </span>
+                <span
+                  className="text-[10px] text-muted-foreground truncate"
+                  style={{ fontFamily: brandFont.fontBody }}
+                >
+                  body · esperienza moderna
+                </span>
+              </div>
+            )}
+            <p className="text-[9px] text-muted-foreground italic">
+              I font del Branding Kit sostituiscono quelli del template e si aggiornano live nella preview React.
+            </p>
+          </div>
+
           <p className="text-[10px] text-muted-foreground italic">
             🎨 Clicca <span className="font-semibold not-italic">Genera Suite</span> per applicare queste impostazioni alle 4 schermate. L'anteprima live in alto si aggiorna istantaneamente.
           </p>
