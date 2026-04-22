@@ -13,6 +13,10 @@ export interface SuiteScreen {
   render_mode?: "react" | "ai";
   template_variant?: string;
   engine?: string;
+  /** True quando lo screen è una preview React temporanea in attesa dell'upgrade AI 4K/8K */
+  is_preview?: boolean;
+  variation_seed?: number;
+  variant_index?: number;
 }
 
 interface Props {
