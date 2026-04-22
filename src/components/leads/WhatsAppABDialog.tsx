@@ -21,7 +21,8 @@ import {
 import { getSectorCTA, buildCTADemoUrl } from "@/lib/sector-cta";
 import {
   detectWALang, localizeCTA, buildTemplateA, buildTemplateB,
-  WA_LANGS, UI_LABELS, type WALang,
+  WA_LANGS, UI_LABELS, WA_TONES, TONE_UI_LABELS,
+  type WALang, type WATone,
 } from "@/lib/wa-i18n";
 
 export interface ABLeadInput {
@@ -81,21 +82,22 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
   );
   const [lang, setLang] = useState<WALang>(detected.lang);
   const [langSource, setLangSource] = useState<typeof detected.source>(detected.source);
+  const [tone, setTone] = useState<WATone>("direct");
   const localizedCTA = useMemo(() => localizeCTA(sectorCTA, lang), [sectorCTA, lang]);
 
-  // Helper per costruire i template nella lingua corrente
-  const buildA = (l: WALang = lang) => buildTemplateA(l, {
+  // Helper per costruire i template nella lingua + tono corrente
+  const buildA = (l: WALang = lang, t: WATone = tone) => buildTemplateA(l, {
     name: lead.name, sector: lead.sector, ctaUrl: ctaDemoUrl,
     ctaLabel: localizeCTA(sectorCTA, l).label, emoji: sectorCTA.emoji,
-  });
-  const buildB = (l: WALang = lang) => buildTemplateB(l, {
+  }, t);
+  const buildB = (l: WALang = lang, t: WATone = tone) => buildTemplateB(l, {
     name: lead.name, sector: lead.sector, ctaUrl: ctaDemoUrl,
     ctaLabel: localizeCTA(sectorCTA, l).label, emoji: sectorCTA.emoji,
-  });
+  }, t);
 
   const [test, setTest] = useState<ABTest | null>(null);
-  const [msgA, setMsgA] = useState(() => buildA(detected.lang));
-  const [msgB, setMsgB] = useState(() => buildB(detected.lang));
+  const [msgA, setMsgA] = useState(() => buildA(detected.lang, "direct"));
+  const [msgB, setMsgB] = useState(() => buildB(detected.lang, "direct"));
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -104,8 +106,17 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
   const changeLang = (next: WALang) => {
     setLang(next);
     setLangSource("lead");
-    setMsgA(buildA(next));
-    setMsgB(buildB(next));
+    setMsgA(buildA(next, tone));
+    setMsgB(buildB(next, tone));
+  };
+
+  /* Quando l'utente cambia tono dal selector → rigenera entrambe le varianti */
+  const changeTone = (next: WATone) => {
+    setTone(next);
+    setMsgA(buildA(lang, next));
+    setMsgB(buildB(lang, next));
+    const meta = WA_TONES.find((tn) => tn.code === next);
+    if (meta) toast.success(`Tono ${meta.label} ${meta.emoji} — testi rigenerati`);
   };
 
   /* Cerca test esistente per questo lead */
@@ -371,6 +382,44 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                         }}
                       >
                         <span>{flag}</span> {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ── Selettore tono del messaggio ── */}
+                <div className="rounded-xl p-3"
+                  style={{ background: "rgba(168,85,247,0.10)", border: "1px solid rgba(168,85,247,0.3)" }}>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base leading-none">{WA_TONES.find(t => t.code === tone)?.emoji}</span>
+                      <div>
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-fuchsia-200">
+                          {TONE_UI_LABELS[lang].title}
+                        </div>
+                        <div className="text-[10px] text-white/70">
+                          {WA_TONES.find(t => t.code === tone)?.label} · <span className="italic">{TONE_UI_LABELS[lang].hint}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {WA_TONES.map(({ code, label, emoji, description }) => (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={() => changeTone(code)}
+                        title={description}
+                        className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-md text-[10px] font-bold transition ${
+                          tone === code ? "text-white" : "text-white/60 hover:text-white/90"
+                        }`}
+                        style={{
+                          background: tone === code ? "rgba(168,85,247,0.35)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${tone === code ? "rgba(168,85,247,0.7)" : "rgba(255,255,255,0.08)"}`,
+                        }}
+                      >
+                        <span className="text-sm leading-none">{emoji}</span>
+                        <span>{label}</span>
                       </button>
                     ))}
                   </div>
