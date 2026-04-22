@@ -581,6 +581,99 @@ export function MockupSuiteGenerator({
                 />
               </div>
             </div>
+
+            {/* ────────────────────────────────────────────────────────── */}
+            {/* BRANDING KIT — coerenza palette + tipografia col template  */}
+            {/* Solo in Mockup Libero (standalone): collega il colore brand */}
+            {/* e i font alle regole del template selezionato.              */}
+            {/* ────────────────────────────────────────────────────────── */}
+            <div className="rounded-xl border border-primary/25 bg-gradient-to-br from-primary/[0.05] to-transparent p-3 space-y-3">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Palette className="h-3.5 w-3.5 text-primary shrink-0" />
+                  <Label className="text-xs font-semibold m-0 truncate">
+                    Branding Kit · {brandingKit.label}
+                  </Label>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setLockToTemplate(v => !v)}
+                  role="switch"
+                  aria-checked={lockToTemplate}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-bold transition-colors border ${
+                    lockToTemplate
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-muted text-muted-foreground border-border hover:border-primary/40"
+                  }`}
+                >
+                  {lockToTemplate ? "🔒 Sincronizzato" : "🔓 Manuale"}
+                </button>
+              </div>
+
+              {/* Palette swatches del template */}
+              <div className="space-y-1">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Palette consigliata</p>
+                <div className="flex gap-1.5 flex-wrap">
+                  {brandingKit.palette.map(swatch => {
+                    const active = standalone.primaryColor.toLowerCase() === swatch.hex.toLowerCase();
+                    return (
+                      <button
+                        key={swatch.hex}
+                        type="button"
+                        onClick={() => {
+                          setLockToTemplate(false); // override esplicito = unlock
+                          setStandalone(prev => ({ ...prev, primaryColor: swatch.hex }));
+                        }}
+                        title={`${swatch.name} · ${swatch.hex}`}
+                        className={`group relative h-9 w-9 rounded-lg border-2 transition-all hover:scale-110 ${
+                          active ? "border-foreground shadow-md scale-110" : "border-border"
+                        }`}
+                        style={{ background: swatch.hex }}
+                      >
+                        {active && (
+                          <span
+                            className="absolute inset-0 flex items-center justify-center text-[12px] font-black drop-shadow"
+                            style={{ color: brandingKit.primary === swatch.hex ? "#fff" : "#000" }}
+                          >
+                            ✓
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Typography pair preview */}
+              <div className="grid grid-cols-[auto_1fr] gap-3 items-center p-2 rounded-lg bg-muted/40 border border-border/40">
+                <div className="text-center px-2">
+                  <p
+                    className="text-lg leading-none"
+                    style={{ fontFamily: brandingKit.typography.headingFont }}
+                  >
+                    Aa
+                  </p>
+                  <p className="text-[8px] text-muted-foreground mt-0.5">Heading</p>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold leading-tight truncate">
+                    {brandingKit.typography.pairLabel}
+                  </p>
+                  <p
+                    className="text-[10px] text-muted-foreground leading-snug truncate"
+                    style={{ fontFamily: brandingKit.typography.bodyFont }}
+                  >
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-[10px] text-muted-foreground italic leading-snug">
+                💡 {brandingKit.rule} {lockToTemplate
+                  ? "Cambia template → palette e colore brand si aggiornano."
+                  : "Sblocca-lock attivo: stai usando un colore custom fuori dalle regole."}
+              </p>
+            </div>
           </div>
         )}
 
