@@ -106,52 +106,143 @@ export default function PartnerHomePage() {
 
   return (
     <div className="space-y-5 pb-6 max-w-2xl lg:max-w-6xl mx-auto">
-      {/* ═══ HERO ═══ */}
-      <section className="relative px-4 pt-7 pb-3 overflow-hidden">
+      {/* ═══ HERO — Professional Partner Header ═══ */}
+      <section className="relative px-3 sm:px-4 pt-5 sm:pt-7 pb-2 overflow-hidden">
         {/* Ambient glow */}
-        <div className="absolute top-0 right-0 w-[350px] h-[350px] rounded-full opacity-[0.06] pointer-events-none"
+        <div className="absolute top-0 right-0 w-[280px] sm:w-[350px] h-[280px] sm:h-[350px] rounded-full opacity-[0.06] pointer-events-none"
           style={{ background: `radial-gradient(circle, ${demoMode ? "#f59e0b" : "#a78bfa"}, transparent 65%)`, filter: "blur(100px)" }} />
-        <div className="absolute bottom-0 left-0 w-[250px] h-[250px] rounded-full opacity-[0.04] pointer-events-none"
+        <div className="absolute bottom-0 left-0 w-[200px] sm:w-[250px] h-[200px] sm:h-[250px] rounded-full opacity-[0.04] pointer-events-none"
           style={{ background: `radial-gradient(circle, ${demoMode ? "#d97706" : "#7c3aed"}, transparent 65%)`, filter: "blur(80px)" }} />
 
-        <div className="relative flex items-center gap-4">
-          <motion.div
-            className="w-[68px] h-[68px] rounded-[20px] flex items-center justify-center overflow-hidden shrink-0"
-            style={{
-              background: demoMode
-                ? "linear-gradient(135deg, rgba(245,158,11,0.15), rgba(217,119,6,0.08))"
-                : "linear-gradient(135deg, rgba(167,139,250,0.15), rgba(124,58,237,0.08))",
-              border: `1.5px solid ${demoMode ? "rgba(245,158,11,0.25)" : "rgba(167,139,250,0.2)"}`,
-              boxShadow: demoMode ? "0 8px 32px rgba(245,158,11,0.1)" : "0 8px 32px rgba(167,139,250,0.1)",
-            }}
-            initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-            {partnerAvatar ? (
-              <img src={partnerAvatar} alt="Avatar" className="w-full h-full object-cover" />
-            ) : (
-              <img src={empireMonkeyMascot} alt="Empire" className="w-12 h-12 object-contain" />
-            )}
-          </motion.div>
-          <div className="flex-1 min-w-0">
-            <p className="partner-eyebrow">
-              {demoMode ? "Presentazione per" : "Bentornato"}
-            </p>
-            <h1 className="partner-h1 truncate mt-1.5">
-              {demoMode ? "Il Tuo Business" : userName}
-            </h1>
-            <div className="flex items-center gap-2 mt-1.5">
-              {!demoMode && isTeamLeader && (
-                <span className="partner-badge-pro" data-tone="primary">
-                  <Crown className="w-3 h-3" /> Team Leader
-                </span>
+        <motion.div
+          className="relative rounded-3xl p-4 sm:p-5 lg:p-6"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{
+            background: demoMode
+              ? "linear-gradient(135deg, rgba(26,21,16,0.85), rgba(26,21,16,0.6))"
+              : "linear-gradient(135deg, rgba(18,18,42,0.85), rgba(18,18,42,0.6))",
+            border: `1px solid ${demoMode ? "rgba(245,158,11,0.18)" : "rgba(167,139,250,0.18)"}`,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
+            backdropFilter: "blur(16px)",
+          }}
+        >
+          {/* Top row: Avatar + Identity + Status badges */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            <motion.div
+              className="relative w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] lg:w-[80px] lg:h-[80px] rounded-2xl flex items-center justify-center overflow-hidden shrink-0"
+              style={{
+                background: demoMode
+                  ? "linear-gradient(135deg, rgba(245,158,11,0.18), rgba(217,119,6,0.08))"
+                  : "linear-gradient(135deg, rgba(167,139,250,0.18), rgba(124,58,237,0.08))",
+                border: `1.5px solid ${demoMode ? "rgba(245,158,11,0.3)" : "rgba(167,139,250,0.25)"}`,
+                boxShadow: demoMode ? "0 8px 24px rgba(245,158,11,0.15)" : "0 8px 24px rgba(167,139,250,0.15)",
+              }}
+              initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+              {partnerAvatar ? (
+                <img src={partnerAvatar} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <img src={empireMonkeyMascot} alt="Empire" className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
               )}
-              {demoMode && (
-                <span className="partner-badge-pro" data-tone="warning">
-                  <Presentation className="w-3 h-3" /> Presentazione Live
-                </span>
+              {!demoMode && (
+                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 flex items-center justify-center"
+                  style={{ background: "#10b981", borderColor: "#12122a" }}>
+                  <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                </div>
               )}
+            </motion.div>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+                <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-foreground/70">
+                  {demoMode ? "Presentazione per" : "Bentornato"}
+                </p>
+                {!demoMode && (
+                  <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded-full"
+                    style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }}>
+                    <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                    Online
+                  </span>
+                )}
+              </div>
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground truncate leading-tight">
+                {demoMode ? "Il Tuo Business" : userName}
+              </h1>
+              <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                {!demoMode && isTeamLeader && (
+                  <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                    style={{ background: "rgba(167,139,250,0.12)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.25)" }}>
+                    <Crown className="w-3 h-3" /> Team Leader
+                  </span>
+                )}
+                {!demoMode && !isTeamLeader && (
+                  <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                    style={{ background: "rgba(167,139,250,0.10)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.20)" }}>
+                    <Award className="w-3 h-3" /> Partner Empire
+                  </span>
+                )}
+                {demoMode && (
+                  <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                    style={{ background: "rgba(245,158,11,0.12)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.25)" }}>
+                    <Presentation className="w-3 h-3" /> Presentazione Live
+                  </span>
+                )}
+                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded-full text-muted-foreground"
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <ShieldCheck className="w-3 h-3" /> Verificato
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+
+          {/* Bottom row: Quick stats — only in LIVE mode */}
+          {!demoMode && (
+            <motion.div
+              className="grid grid-cols-3 gap-1.5 sm:gap-3 mt-4 pt-4 border-t border-white/[0.06]"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
+            >
+              <button
+                onClick={() => navigate("/partner/leads")}
+                className="flex flex-col items-center justify-center text-center px-1 py-2 sm:py-2.5 rounded-xl transition-all hover:bg-white/[0.04] active:scale-95"
+              >
+                <div className="flex items-center gap-1 mb-0.5">
+                  <Target className="w-3 h-3 text-violet-400/80" />
+                  <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">Vendite</p>
+                </div>
+                <AnimatedCounter value={salesCount} color="#a78bfa" />
+              </button>
+              <button
+                onClick={() => navigate("/partner/earnings")}
+                className="flex flex-col items-center justify-center text-center px-1 py-2 sm:py-2.5 rounded-xl transition-all hover:bg-white/[0.04] active:scale-95 border-x border-white/[0.05]"
+              >
+                <div className="flex items-center gap-1 mb-0.5">
+                  <DollarSign className="w-3 h-3 text-emerald-400/80" />
+                  <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">Commissioni</p>
+                </div>
+                <AnimatedCounter value={Math.round(totalCommissions)} prefix="€" color="#34d399" />
+              </button>
+              <button
+                onClick={() => navigate(isTeamLeader ? "/partner/earnings" : "/partner/profile")}
+                className="flex flex-col items-center justify-center text-center px-1 py-2 sm:py-2.5 rounded-xl transition-all hover:bg-white/[0.04] active:scale-95"
+              >
+                <div className="flex items-center gap-1 mb-0.5">
+                  {isTeamLeader ? <Users className="w-3 h-3 text-amber-400/80" /> : <Trophy className="w-3 h-3 text-amber-400/80" />}
+                  <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                    {isTeamLeader ? "Team" : "Livello"}
+                  </p>
+                </div>
+                {isTeamLeader ? (
+                  <AnimatedCounter value={teamCount} color="#fbbf24" />
+                ) : (
+                  <p className="text-xl font-bold text-foreground" style={{ textShadow: "0 0 20px #fbbf2430" }}>Pro</p>
+                )}
+              </button>
+            </motion.div>
+          )}
+        </motion.div>
       </section>
 
       {/* ═══ EMPIRE PARTICLE ORB — interactive WOW hero ═══ */}
