@@ -24,12 +24,24 @@ const inputStyle = {
 };
 
 export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Props) {
+  const RADIUS_STORAGE_KEY = "empire:gps-radar:radius-km";
   const [mode, setMode] = useState<"browser" | "address">("browser");
   const [coords, setCoords] = useState<GpsLocation | null>(null);
   const [address, setAddress] = useState("");
-  const [radius, setRadius] = useState(2);
+  const [radius, setRadius] = useState<number>(() => {
+    if (typeof window === "undefined") return 2;
+    const saved = parseFloat(localStorage.getItem(RADIUS_STORAGE_KEY) || "");
+    return Number.isFinite(saved) && saved >= 0.5 && saved <= 50 ? saved : 2;
+  });
   const [geoLoading, setGeoLoading] = useState(false);
   const [geocodeLoading, setGeocodeLoading] = useState(false);
+
+  // Persist radius preference for next access
+  useEffect(() => {
+    try {
+      localStorage.setItem(RADIUS_STORAGE_KEY, String(radius));
+    } catch {}
+  }, [radius]);
 
   // Auto-request browser GPS when opening in browser mode
   useEffect(() => {
