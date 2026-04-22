@@ -264,7 +264,61 @@ const RADIUS_OPTIONS = [
   { value: 100, label: "100 km — Regione" },
 ];
 
-/* ─── COMPONENT ─── */
+/* ─── CSV Export (Excel-compatible, UTF-8 BOM, semicolon for IT locale) ─── */
+function exportLeadsToCsv(
+  leads: (Lead & { _score: number; _sector: string })[],
+  city: string,
+  sector: string
+) {
+  if (!leads.length) {
+    toast.error("Nessun lead da esportare");
+    return;
+  }
+  const headers = [
+    "Nome", "Settore", "Città", "Zona", "Indirizzo",
+    "Telefono", "Email", "Sito", "Instagram", "Facebook",
+    "Rating Google", "Recensioni Google", "Score AI",
+    "Google Maps", "Note"
+  ];
+  const esc = (val: any): string => {
+    if (val === null || val === undefined) return "";
+    const s = String(val).replace(/\r?\n/g, " ").replace(/"/g, '""');
+    return `"${s}"`;
+  };
+  const rows = leads.map(l => [
+    l.name,
+    l._sector || sector || "",
+    l.city || "",
+    l.zone || "",
+    l.full_address || "",
+    l.phone || "",
+    l.email || "",
+    l.website || "",
+    l.instagram || "",
+    l.facebook || "",
+    typeof l.google_rating === "number" ? l.google_rating.toFixed(1).replace(".", ",") : "",
+    l.google_reviews ?? "",
+    typeof l._score === "number" ? Math.round(l._score) : "",
+    l.google_maps_url || "",
+    "" // Note vuote (le note vivono sul pipeline salvato)
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(esc).join(";")).join("\r\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const ts = new Date().toISOString().slice(0, 10);
+  const safeCity = (city || "leads").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "leads";
+  const safeSector = (sector || "all").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `leads-${safeSector}-${safeCity}-${ts}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast.success(`📥 Esportati ${leads.length} lead in CSV`);
+}
+
+
 export default function LeadsPage() {
   // 💰 Sistema crediti venditore — gating su azioni AI costose
   const { balance: creditBalance, getCost, consume: consumeSellerCredits, totalSpent30d } = useSellerCredits();
