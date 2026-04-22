@@ -23,6 +23,7 @@ interface SavedPreview {
   public_slug: string | null;
   lead_name: string | null;
   lead_city: string | null;
+  lead_id: string | null;
   whatsapp_message: string | null;
   view_count: number | null;
   is_favorite: boolean | null;
@@ -30,10 +31,36 @@ interface SavedPreview {
   saved_to_portfolio_at: string | null;
   portfolio_label: string | null;
   portfolio_notes: string | null;
+  ai_generated_content: any | null;
+  scraped_data: any | null;
+  generated_at: string | null;
   created_at: string;
 }
 
-type SortKey = "recent" | "az" | "favorites" | "views";
+type SortKey = "recent" | "oldest" | "az" | "favorites" | "views";
+type EngineKey = "all" | "ai" | "template" | "hybrid";
+type DateRangeKey = "any" | "today" | "7d" | "30d" | "90d";
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Engine inference: i Custom Preview non hanno una colonna dedicata
+ * ─ AI         → contiene ai_generated_content (testi/seo generati da AI)
+ * ─ Hybrid     → ha scraped_data o lead_id (parte da dati reali del lead)
+ * ─ Template   → tutto il resto (template puro, scelto manualmente)
+ * ─────────────────────────────────────────────────────────────────────── */
+function inferEngine(p: SavedPreview): Exclude<EngineKey, "all"> {
+  const hasAI = !!p.ai_generated_content && Object.keys(p.ai_generated_content || {}).length > 0;
+  const hasLeadData = !!p.lead_id || (!!p.scraped_data && Object.keys(p.scraped_data || {}).length > 0);
+  if (hasAI && hasLeadData) return "hybrid";
+  if (hasAI) return "ai";
+  if (hasLeadData) return "hybrid";
+  return "template";
+}
+
+const ENGINE_META: Record<Exclude<EngineKey, "all">, { label: string; color: string; Icon: any }> = {
+  ai:       { label: "AI",       color: "#a78bfa", Icon: Cpu },
+  template: { label: "Template", color: "#fb7185", Icon: LayoutTemplate },
+  hybrid:   { label: "Ibrido",   color: "#34d399", Icon: Blend },
+};
 
 /* ─────────────────────────────────────────────────────────────────────────
  * Sezione "Le tue Preview salvate" — integra le custom preview taggate
