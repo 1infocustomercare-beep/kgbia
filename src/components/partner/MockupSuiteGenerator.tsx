@@ -275,6 +275,27 @@ export function MockupSuiteGenerator({
     return TEMPLATE_VARIANTS.find(t => t.key === detected)?.label || detected;
   }, [templateVariant, businessSector]);
 
+  // Risolvi il template effettivo (anche quando "auto") per derivare il branding kit corretto
+  const resolvedTemplateKey = useMemo(() => {
+    return templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant;
+  }, [templateVariant, businessSector]);
+
+  const brandingKit: TemplateBrandingKit = useMemo(
+    () => getBrandingKit(resolvedTemplateKey),
+    [resolvedTemplateKey]
+  );
+
+  // Quando il template cambia e il lock è attivo, sincronizza il colore brand standalone
+  // sul primary del template scelto. Funziona sia in standalone che lead-mode (preview color).
+  useEffect(() => {
+    if (!lockToTemplate) return;
+    setStandalone(prev =>
+      prev.primaryColor.toLowerCase() === brandingKit.primary.toLowerCase()
+        ? prev
+        : { ...prev, primaryColor: brandingKit.primary }
+    );
+  }, [brandingKit.primary, lockToTemplate]);
+
   const [generating, setGenerating] = useState(false);
   // Stato per preview progressiva: "preview" = mostra subito React render, "upgrading" = AI in arrivo, "complete" = finita
   const [previewPhase, setPreviewPhase] = useState<"idle" | "preview" | "upgrading" | "complete">("idle");
