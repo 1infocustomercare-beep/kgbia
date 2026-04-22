@@ -1407,6 +1407,16 @@
     padding-top: max(env(safe-area-inset-top, 0px), 0.5rem);
   }
 
+  /* iOS-safe bottom dock: rispetta home indicator senza sovrapposizioni */
+  .partner-dock-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  /* Touch target Apple HIG (≥44px) per i bottoni della bottom nav */
+  .partner-dock-touch {
+    min-height: 56px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   /* ════════════════════════════════════════════════════════════════
      PARTNER OVERLAY SYSTEM — Unified z-index scale (avoids overlap)
      ────────────────────────────────────────────────────────────────
@@ -1793,6 +1803,11 @@
      ════════════════════════════════════════════════════════════════ */
   .partner-bg-stage {
     will-change: transform, opacity;
+    /* "Wow Mode": intensità globale dello sfondo (DNA + aurora + grain).
+       Pilotata via stile inline su .partner-bg-stage (1 = pieno, 0.55 = soft, 0 = off). */
+    --partner-bg-intensity: 1;
+    opacity: var(--partner-bg-intensity);
+    transition: opacity 480ms cubic-bezier(0.22, 1, 0.36, 1);
   }
   .partner-aurora-a {
     animation: partner-aurora-a 24s ease-in-out infinite alternate;
@@ -1801,6 +1816,21 @@
   .partner-aurora-b {
     animation: partner-aurora-b 32s ease-in-out infinite alternate;
     filter: blur(4px);
+  }
+  /* Wow Mode OFF: stop animazioni dispendiose, mantieni solo la base */
+  .partner-bg-stage[data-wow="off"] .partner-aurora-a,
+  .partner-bg-stage[data-wow="off"] .partner-aurora-b,
+  .partner-bg-stage[data-wow="off"] .partner-bg-grain {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+  .partner-bg-stage[data-wow="soft"] .partner-aurora-a,
+  .partner-bg-stage[data-wow="soft"] .partner-aurora-b {
+    animation-duration: 48s, 60s;
+    filter: blur(6px);
+  }
+  .partner-bg-stage[data-wow="soft"] .partner-bg-grain {
+    opacity: 0.022 !important;
   }
   @keyframes partner-aurora-a {
     0%   { transform: translate3d(-2%, -1%, 0) scale(1.02); opacity: 0.85; }
