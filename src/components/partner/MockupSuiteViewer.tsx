@@ -48,6 +48,81 @@ interface Props {
 // ──────────────────────────────────────────────────────────────────────────────
 const IPHONE_RATIO = 19.5 / 9; // height / width
 
+// ──────────────────────────────────────────────────────────────────────────────
+// AIScreenImage — img con retry esponenziale (1s/2s/4s + jitter) sui fallimenti
+// di caricamento. Mentre i tentativi sono in corso (o se tutti falliscono) viene
+// mostrata la preview React sotto come fallback definitivo, così l'utente non
+// vede mai uno schermo vuoto.
+// ──────────────────────────────────────────────────────────────────────────────
+const MAX_RETRIES = 3;
+const BASE_DELAY_MS = 1000;
+
+interface AIScreenImageProps {
+  src: string;
+  alt: string;
+  priority: boolean;
+  fallback: React.ReactNode;
+}
+
+function AIScreenImage({ src, alt, priority, fallback }: AIScreenImageProps) {
+  const [attempt, setAttempt] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [exhausted, setExhausted] = useState(false);
+  const timerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    setAttempt(0);
+    setLoaded(false);
+    setExhausted(false);
+    return () => { if (timerRef.current) window.clearTimeout(timerRef.current); };
+  }, [src]);
+
+  // Cache-buster per evitare di reincappare in risposte cached fallite (es. 502 da CDN)
+  const versionedSrc = attempt === 0 ? src : `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`;
+
+  const handleError = () => {
+    if (attempt >= MAX_RETRIES) {
+      setExhausted(true);
+      return;
+    }
+    const delay = BASE_DELAY_MS * Math.pow(2, attempt) + Math.random() * 300;
+    timerRef.current = window.setTimeout(() => setAttempt(a => a + 1), delay);
+  };
+
+  return (
+    <>
+      {(!loaded || exhausted) && (
+        <div className="absolute inset-0">{fallback}</div>
+      )}
+      {!exhausted && (
+        <img
+          key={attempt}
+          src={versionedSrc}
+          alt={alt}
+          className="w-full h-full animate-in fade-in duration-700 relative z-10"
+          draggable={false}
+          loading={priority ? "eager" : "lazy"}
+          decoding={priority ? "sync" : "async"}
+          // @ts-expect-error - fetchPriority è supportato dai browser moderni
+          fetchpriority={priority ? "high" : "low"}
+          onLoad={() => setLoaded(true)}
+          onError={handleError}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center top",
+            display: "block",
+            contentVisibility: priority ? "visible" : "auto",
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 400ms ease-out",
+          }}
+        />
+      )}
+    </>
+  );
+}
+
 export function MockupSuiteViewer({
   screens,
   templateVariant,
@@ -203,28 +278,27 @@ export function MockupSuiteViewer({
                   }}
                 >
                   {screen.render_mode === "ai" && screen.image_url ? (
-                    <img
+                    <AIScreenImage
                       src={screen.image_url}
                       alt={screen.title}
-                      className="w-full h-full animate-in fade-in duration-700"
-                      draggable={false}
-                      // Preloading/priority: le prime 2 schermate (sopra la piega su mobile e
-                      // visibili senza scroll su desktop) vengono caricate con priorità alta e
-                      // decodificate sincronamente per evitare flicker durante la transizione
-                      // dalla preview React all'asset AI 4K. Le altre restano lazy per non
-                      // rubare banda al rendering iniziale.
-                      loading={idx < 2 ? "eager" : "lazy"}
-                      decoding={idx < 2 ? "sync" : "async"}
-                      // @ts-expect-error - fetchPriority è supportato dai browser moderni
-                      fetchpriority={idx < 2 ? "high" : "low"}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        objectPosition: "center top",
-                        display: "block",
-                        contentVisibility: idx < 2 ? "visible" : "auto",
-                      }}
+                      priority={idx < 2}
+                      fallback={
+                        <MockupReactScreen
+                          type={screen.type}
+                          templateVariant={templateVariant}
+                          businessName={businessName}
+                          businessSector={businessSector}
+                          businessCity={businessCity}
+                          primaryColor={primaryColor}
+                          width={screenWidth}
+                          height={screenHeight}
+                          glassIntensity={glassIntensity}
+                          colorStyle={colorStyle}
+                          safeAreaPx={safeAreaPx}
+                          typeScale={typeScale}
+                          boostContrast={boostContrast}
+                        />
+                      }
                     />
                   ) : (
                     <MockupReactScreen
