@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
@@ -1001,7 +1001,17 @@ export function MockupSuiteGenerator({
                   Upgrade AI…
                 </Badge>
               ) : (
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={handleGenerate}
+                    disabled={generating}
+                    title="Ri-genera le 4 schermate con le impostazioni attuali (nuovo seed)"
+                  >
+                    <RefreshCw className={`h-3 w-3 mr-1 ${generating ? "animate-spin" : ""}`} />
+                    Rigenera
+                  </Button>
                   <Button variant="outline" size="sm" onClick={copyShareLink} disabled={!result.share_slug}>
                     <Copy className="h-3 w-3 mr-1" />Link
                   </Button>
