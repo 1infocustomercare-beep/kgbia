@@ -65,6 +65,26 @@ export function MockupSuiteViewer({
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
 
+  // Preload aggressivo delle prime 2 schermate AI: appena le URL sono note,
+  // iniettiamo <link rel="preload" as="image" fetchpriority="high"> nel <head>
+  // così il browser inizia a scaricarle in parallelo al rendering della preview
+  // React, eliminando il "lampo" durante l'upgrade preview→AI sopra la piega.
+  useEffect(() => {
+    const links: HTMLLinkElement[] = [];
+    screens.slice(0, 2).forEach(s => {
+      if (s.render_mode === "ai" && s.image_url) {
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.href = s.image_url;
+        (link as any).fetchPriority = "high";
+        document.head.appendChild(link);
+        links.push(link);
+      }
+    });
+    return () => { links.forEach(l => l.remove()); };
+  }, [screens]);
+
   const downloadScreen = async (idx: number) => {
     const el = containerRefs.current[idx];
     if (!el) return;
