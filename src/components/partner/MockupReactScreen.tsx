@@ -259,18 +259,27 @@ function brandInitials(name: string) {
 }
 
 function sectorLabel(sector: string) {
-  const s = sector.toLowerCase();
+  const s = (sector || "").toLowerCase();
   if (/sushi|giappon/.test(s)) return "Sushi & Ramen";
   if (/pizz/.test(s)) return "Pizzeria";
   if (/ristor|trattor|oster/.test(s)) return "Ristorante";
   if (/bar|cafe|caff/.test(s)) return "Caffetteria";
   if (/spa|wellness|benesser/.test(s)) return "Spa & Wellness";
   if (/beauty|estetic|parruc|hair|nail/.test(s)) return "Beauty";
-  if (/hotel|albergh/.test(s)) return "Hospitality";
+  if (/hotel|albergh|b&b|bnb/.test(s)) return "Hospitality";
   if (/lido|spiagg|beach/.test(s)) return "Beach Club";
-  if (/yacht|charter|boat/.test(s)) return "Charter";
-  if (/fitness|palestra|gym/.test(s)) return "Fitness";
-  if (/medic|dent|cliniche/.test(s)) return "Healthcare";
+  if (/yacht|charter|boat|vela/.test(s)) return "Charter";
+  if (/fitness|palestra|gym|crossfit/.test(s)) return "Fitness Club";
+  if (/medic|dent|cliniche|salute/.test(s)) return "Healthcare";
+  if (/immobil|real ?estate|agenzi/.test(s)) return "Immobiliare";
+  if (/ncc|taxi|transfer|noleggi/.test(s)) return "Transfer Premium";
+  if (/avvocat|legal|notai|commercia/.test(s)) return "Studio Legale";
+  if (/ecommerce|shop|store|fashion|moda|boutique/.test(s)) return "Boutique";
+  if (/turism|tour|viagg|escursion/.test(s)) return "Travel";
+  if (/event|wedding|cerimoni/.test(s)) return "Eventi";
+  if (/edili|costruz|impresa|impiant|ristruttur/.test(s)) return "Trades";
+  if (/scuola|academy|corso|format/.test(s)) return "Academy";
+  if (/auto|moto|conces/.test(s)) return "Automotive";
   return sector || "Premium";
 }
 
@@ -326,7 +335,7 @@ function getMenuItems(sector: string) {
       { name: "Make-Up Evento", desc: "Trucco professionale · Prova inclusa", price: 90 },
     ];
   }
-  if (/hotel|lido|beach|yacht/.test(s)) {
+  if (/hotel|albergh|lido|beach|yacht|b&b|bnb/.test(s)) {
     return [
       { name: "Suite Vista Mare", desc: "Camera deluxe · Terrazza privata", price: 280, badge: "Top" },
       { name: "Cabana Premium", desc: "Lettini, ombrellone, servizio bar", price: 95 },
@@ -334,6 +343,106 @@ function getMenuItems(sector: string) {
       { name: "Cena in Spiaggia", desc: "Tavolo sul mare · Menu degustazione", price: 120 },
       { name: "SPA & Mare Package", desc: "Day spa + lettini + pranzo", price: 165, badge: "Hot" },
       { name: "Aperitivo al Tramonto", desc: "Calice champagne + tagliere", price: 35 },
+    ];
+  }
+  if (/immobil|real ?estate|agenzi/.test(s)) {
+    return [
+      { name: "Attico Panoramico", desc: "120 mq · 3 camere · Terrazzo 40 mq", price: 890, badge: "Top" },
+      { name: "Villa con Piscina", desc: "350 mq · Giardino · Garage doppio", price: 1450, badge: "Chef" },
+      { name: "Bilocale in Centro", desc: "55 mq · Ristrutturato · Balcone", price: 320 },
+      { name: "Loft Industrial", desc: "85 mq · Open space · Travi a vista", price: 540, badge: "Hot" },
+      { name: "Casale di Campagna", desc: "210 mq · 8.000 mq di terreno", price: 720 },
+      { name: "Trilocale Vista Mare", desc: "95 mq · 2 bagni · Vista aperta", price: 480 },
+    ];
+  }
+  if (/ncc|taxi|transfer|noleggi/.test(s)) {
+    return [
+      { name: "Transfer Aeroporto", desc: "Mercedes E-Class · 1-3 pax", price: 65, badge: "Top" },
+      { name: "Tour Costiera 8h", desc: "Van premium · Autista · Acqua", price: 380, badge: "Chef" },
+      { name: "Disposizione Oraria", desc: "Min 3h · Veicolo executive", price: 55 },
+      { name: "Wedding Package", desc: "Auto fiori · Decorazioni · Foto", price: 480, badge: "Hot" },
+      { name: "Shuttle Eventi", desc: "Bus 16 posti · Climatizzato", price: 120 },
+      { name: "Charter Limousine", desc: "Maybach · Champagne · Red carpet", price: 650 },
+    ];
+  }
+  if (/fitness|palestra|gym|crossfit/.test(s)) {
+    return [
+      { name: "Personal Training 1:1", desc: "60 min · Coach certificato", price: 65, badge: "Top" },
+      { name: "Abbonamento Mensile", desc: "Accesso illimitato · Sauna inclusa", price: 79 },
+      { name: "Pacchetto 10 PT", desc: "10 sessioni · Piano nutrizionale", price: 550, badge: "Chef" },
+      { name: "Crossfit · Open WOD", desc: "Lezione di gruppo · 60 min", price: 18 },
+      { name: "Functional · Bootcamp", desc: "Allenamento outdoor 90 min", price: 25, badge: "Hot" },
+      { name: "Body Composition Scan", desc: "Analisi InBody + consulenza", price: 40 },
+    ];
+  }
+  if (/ecommerce|shop|store|fashion|moda|boutique/.test(s)) {
+    return [
+      { name: "Sneakers Premium", desc: "Edizione limitata · Pelle italiana", price: 280, badge: "Top" },
+      { name: "Giacca Sartoriale", desc: "100% lana vergine · Made in Italy", price: 540, badge: "Chef" },
+      { name: "Borsa Iconica", desc: "Pelle saffiano · Hardware oro", price: 690, badge: "Hot" },
+      { name: "Camicia Lino", desc: "Slim fit · Bottone perlato", price: 95 },
+      { name: "Occhiali Aviator", desc: "Lenti polarizzate · Custodia", price: 165 },
+      { name: "Fragranza Signature", desc: "Eau de parfum · 100ml", price: 130 },
+    ];
+  }
+  if (/avvocat|legal|notai|commercia/.test(s)) {
+    return [
+      { name: "Consulenza Legale", desc: "Prima visita · 60 min · Riservato", price: 150, badge: "Top" },
+      { name: "Pratica Successione", desc: "Gestione completa · Atto incluso", price: 1200, badge: "Chef" },
+      { name: "Contratto Commerciale", desc: "Redazione + revisione · 5 gg", price: 480 },
+      { name: "Costituzione SRL", desc: "Atto, statuto, registrazione", price: 1800, badge: "Hot" },
+      { name: "Recupero Crediti", desc: "Fee successo · No win no fee", price: 0 },
+      { name: "Abbonamento Imprese", desc: "Consulenza mensile illimitata", price: 390 },
+    ];
+  }
+  if (/turism|tour|viagg|escursion/.test(s)) {
+    return [
+      { name: "Tour Roma Classica", desc: "Colosseo · Vaticano · Skip line", price: 89, badge: "Top" },
+      { name: "Wine Experience", desc: "Cantina + degustazione + pranzo", price: 145, badge: "Chef" },
+      { name: "Costiera in Barca", desc: "Giornata intera · Pranzo a bordo", price: 220 },
+      { name: "Cooking Class", desc: "3h con chef · Mercato + cucina", price: 95, badge: "Hot" },
+      { name: "Trekking Etna", desc: "Guida alpina · Pranzo al sacco", price: 75 },
+      { name: "Tour Gastronomico", desc: "5 tappe street food · 3h", price: 60 },
+    ];
+  }
+  if (/event|wedding|cerimoni/.test(s)) {
+    return [
+      { name: "Wedding Planner Full", desc: "Pacchetto completo · 250 ospiti", price: 8900, badge: "Top" },
+      { name: "Allestimento Floreale", desc: "Cerimonia + ricevimento", price: 2400, badge: "Chef" },
+      { name: "DJ + Service Audio", desc: "8h · Luci · Tecnico dedicato", price: 1200 },
+      { name: "Catering Gourmet", desc: "5 portate · Servizio al tavolo", price: 95 },
+      { name: "Foto + Video Wedding", desc: "Pacchetto completo · Album", price: 2800, badge: "Hot" },
+      { name: "Open Bar Cocktail", desc: "Mixology pro · 4h illimitato", price: 35 },
+    ];
+  }
+  if (/edili|costruz|impresa|impiant|ristruttur/.test(s)) {
+    return [
+      { name: "Sopralluogo Gratuito", desc: "Tecnico in 24h · Preventivo dettagliato", price: 0, badge: "Top" },
+      { name: "Ristrutturazione Bagno", desc: "Chiavi in mano · 2 settimane", price: 6500, badge: "Chef" },
+      { name: "Cappotto Termico", desc: "Bonus 65% · Pratica inclusa", price: 12000 },
+      { name: "Impianto Fotovoltaico", desc: "6 kW · Accumulo · Detrazione", price: 9800, badge: "Hot" },
+      { name: "Tinteggiatura Casa", desc: "Trilocale · Materiali premium", price: 1400 },
+      { name: "Manutenzione Annuale", desc: "Caldaia + impianti · 12 mesi", price: 280 },
+    ];
+  }
+  if (/auto|moto|conces/.test(s)) {
+    return [
+      { name: "Test Drive Gratuito", desc: "Modello a scelta · 30 min", price: 0, badge: "Top" },
+      { name: "Tagliando Premium", desc: "Olio · Filtri · Check 30 punti", price: 220 },
+      { name: "Cambio Gomme + Bilanc.", desc: "4 pneumatici premium installati", price: 480, badge: "Hot" },
+      { name: "Detailing Completo", desc: "Lavaggio + lucidatura + interni", price: 180 },
+      { name: "Diagnosi Elettronica", desc: "OBD2 · Lettura centralina", price: 45 },
+      { name: "Noleggio LT 36 mesi", desc: "All inclusive · Da 290€/mese", price: 290, badge: "Chef" },
+    ];
+  }
+  if (/scuola|academy|corso|format/.test(s)) {
+    return [
+      { name: "Corso Base 8 Settimane", desc: "16 lezioni · Materiale incluso", price: 480, badge: "Top" },
+      { name: "Masterclass Avanzata", desc: "Weekend intensivo · Certificato", price: 290, badge: "Chef" },
+      { name: "Lezione Privata 1:1", desc: "60 min · Online o in sede", price: 55 },
+      { name: "Pacchetto 10 Lezioni", desc: "Sconto 15% · Validità 6 mesi", price: 470 },
+      { name: "Workshop Open Day", desc: "3h gratuita · Iscrizione richiesta", price: 0, badge: "Hot" },
+      { name: "Certificazione Pro", desc: "Esame + diploma riconosciuto", price: 350 },
     ];
   }
   return [
