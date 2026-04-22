@@ -661,6 +661,31 @@ export default function PartnerHomePage() {
               </motion.div>
             </section>
 
+            {/* ═══ SCORCIATOIA: Modalità Presentazione Cliente ═══ */}
+            <section className="px-4">
+              <motion.button
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => navigate("/partner/demo-studio?present=1")}
+                className="w-full p-4 rounded-2xl flex items-center gap-3 text-left bg-gradient-to-r from-violet-600/15 to-fuchsia-600/15 border border-violet-500/25 hover:border-violet-400/40 transition-colors"
+              >
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-lg shadow-violet-500/30">
+                  <Presentation className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-foreground">Pronta da Mostrare</h4>
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 font-semibold uppercase tracking-wider">60s</span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Apri la modalità presentazione cliente — solo preview, dati nascosti</p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-violet-300/60" />
+              </motion.button>
+            </section>
+
             {/* ═══ QUICK NAV — Interactive Cards ═══ */}
             <section className="px-4 space-y-3">
               <h3 className="text-[9px] font-bold uppercase tracking-[0.25em] text-muted-foreground/60 px-1 flex items-center gap-2">

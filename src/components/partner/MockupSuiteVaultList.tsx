@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Search, ExternalLink, Copy, Trash2, Smartphone, Eye, Loader2, X, Maximize2, Rocket } from "lucide-react";
 import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSuiteVault";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
-import { GenerateSiteFromMockupDialog } from "./GenerateSiteFromMockupDialog";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 type SortKey = "recent" | "most_viewed" | "az";
@@ -45,7 +45,6 @@ export function MockupSuiteVaultList() {
   const [filterTemplate, setFilterTemplate] = useState("all");
   const [sortBy, setSortBy] = useState<SortKey>("recent");
   const [openSuite, setOpenSuite] = useState<VaultMockupSuite | null>(null);
-  const [generateSiteSuite, setGenerateSiteSuite] = useState<VaultMockupSuite | null>(null);
 
   const sectors = useMemo(() => {
     const s = new Set<string>();
@@ -281,14 +280,14 @@ export function MockupSuiteVaultList() {
                     </Button>
                   </div>
                   {s.status === "complete" && (
-                    <Button
-                      size="sm"
-                      onClick={(e) => { e.stopPropagation(); setGenerateSiteSuite(s); }}
-                      className="w-full h-8 text-xs bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground"
-                      title="Genera sito demo completo replica 1:1 di questo mockup"
+                    <Link
+                      to="/partner/leads"
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-full h-8 text-xs bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground rounded-md flex items-center justify-center gap-1"
+                      title="Apri Leads → seleziona un lead → genera sito 1:1 da questo mockup"
                     >
-                      <Rocket className="h-3 w-3 mr-1" /> Genera sito demo completo
-                    </Button>
+                      <Rocket className="h-3 w-3" /> Usa in Leads per generare sito
+                    </Link>
                   )}
                 </CardContent>
               </Card>
@@ -328,17 +327,17 @@ export function MockupSuiteVaultList() {
                   <div>
                     <p className="font-semibold text-sm">Trasforma in sito demo completo</p>
                     <p className="text-xs text-muted-foreground">
-                      Replica 1:1 di questo design con tutti gli agenti AI, automazioni e moduli del settore. Pronto da mostrare al cliente.
+                      La generazione del sito demo 1:1 avviene <strong>in Leads</strong>: scegli il lead, seleziona questo mockup come preview, e parte la replica con tutti gli agenti AI del settore.
                     </p>
                   </div>
                 </div>
-                <Button
-                  size="lg"
-                  className="w-full"
-                  onClick={() => { if (openSuite) { setGenerateSiteSuite(openSuite); setOpenSuite(null); } }}
+                <Link
+                  to="/partner/leads"
+                  onClick={() => setOpenSuite(null)}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground h-11 text-sm font-semibold hover:bg-primary/90"
                 >
-                  <Rocket className="h-4 w-4 mr-2" /> Genera Sito Demo Completo (25 crediti)
-                </Button>
+                  <Rocket className="h-4 w-4" /> Apri Leads e genera (25 crediti)
+                </Link>
               </div>
               {openSuite.share_slug && (
                 <div className="mt-3 flex gap-2 justify-center">
@@ -355,12 +354,6 @@ export function MockupSuiteVaultList() {
         </DialogContent>
       </Dialog>
 
-      {/* Dialog generazione sito demo completo dal mockup */}
-      <GenerateSiteFromMockupDialog
-        open={!!generateSiteSuite}
-        onOpenChange={(o) => !o && setGenerateSiteSuite(null)}
-        suite={generateSiteSuite}
-      />
     </div>
   );
 }
