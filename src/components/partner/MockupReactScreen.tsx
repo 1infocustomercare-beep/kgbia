@@ -300,7 +300,7 @@ function BottomNav({ theme, active = "home", glassIntensity }: { theme: ThemeTok
     { key: "profile", icon: "M12 12a4 4 0 100-8 4 4 0 000 8zm-7 9a7 7 0 0114 0z", label: "Profilo" },
   ];
   // Glass intensity: 0 = nessun blur, opacità 100%; 100 = blur massimo, opacità ridotta
-  const clamped = Math.max(0, Math.min(100, glassIntensity));
+  const clamped = Math.max(0, Math.min(100, intensity));
   const blurPx = Math.round((clamped / 100) * 24); // 0–24px
   // Alpha del pannello (più alto = più opaco): 100% glass → bg trasparente con blur, 0% → opaco
   const alphaHex = Math.round(255 - (clamped * 1.4)).toString(16).padStart(2, "0"); // 100→ ~7d, 0→ ff
