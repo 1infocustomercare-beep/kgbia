@@ -36,7 +36,16 @@ const ENGINE_OPTIONS: { key: MockupEngine; label: string; cost: number; icon: Re
 
 const TEMPLATE_VARIANTS = [
   { key: "auto",              label: "Auto (rilevato dal settore)", group: "Smart" },
-  // Premium nuovi
+  // ── MODERN 2026 — Apple Liquid Glass, glacial, spatial, holo ──
+  { key: "apple_liquid_glass",label: "Apple Liquid Glass — vetro vivido iOS 26 / visionOS", group: "Modern 2026" },
+  { key: "glacial_frost",     label: "Glacial Frost — bianco-azzurro ghiaccio, vetro chiaro", group: "Modern 2026" },
+  { key: "spatial_visionos",  label: "Spatial visionOS — depth, halo bianchi, deep space", group: "Modern 2026" },
+  { key: "midnight_aurora",   label: "Midnight Aurora — navy + smeraldo / viola", group: "Modern 2026" },
+  { key: "cyber_holo",        label: "Cyber Holo — iridescenza viola/ciano, gaming/tech", group: "Modern 2026" },
+  { key: "y2k_chrome",        label: "Y2K Chrome — metallo lucido, retro-futuro", group: "Modern 2026" },
+  { key: "sunset_gradient",   label: "Sunset Gradient — coral/magenta caldo, social-grade", group: "Modern 2026" },
+  { key: "swiss_grid",        label: "Swiss Grid — tipografia editoriale pulita, accenti rossi", group: "Modern 2026" },
+  // Premium 2026
   { key: "neon_vibrant",      label: "Neon Vibrant — energia, gaming, eventi", group: "Premium 2026" },
   { key: "editorial_clean",   label: "Editorial Clean — magazine, fashion, lifestyle", group: "Premium 2026" },
   { key: "boutique_pastel",   label: "Boutique Pastel — beauty, kids, wellness", group: "Premium 2026" },
@@ -44,13 +53,14 @@ const TEMPLATE_VARIANTS = [
   { key: "glass_aurora",      label: "Glass Aurora — fintech, AI, SaaS", group: "Premium 2026" },
   { key: "real_estate_trust", label: "Real Estate Trust — immobiliare, legale, finanza", group: "Premium 2026" },
   { key: "fitness_energy",    label: "Fitness Energy — palestre, sport, supplements", group: "Premium 2026" },
-  // Esistenti
+  // Esistenti (replica 1:1 dei mockup forniti)
   { key: "paperfish",         label: "Paperfish Sakura — sushi/giapponese", group: "Food" },
   { key: "strapizzami",       label: "Strapizzami — pizzeria/italiano", group: "Food" },
   { key: "casual_warm",       label: "Casual Warm — trattoria/bistrot", group: "Food" },
   { key: "luxury_gold",       label: "Luxury Gold — alta cucina/Michelin", group: "Hospitality" },
   { key: "batey",             label: "Batey Pacifico — mare/lido/yacht", group: "Hospitality" },
   { key: "minimal_zen",       label: "Minimal Zen — spa/wellness", group: "Wellness" },
+  { key: "modern_dark",       label: "Modern Dark — multi-settore base", group: "Classic" },
 ];
 
 // Palette rapide per swap veloce del colore brand prima della generazione
@@ -61,12 +71,19 @@ const QUICK_PALETTES: { label: string; color: string }[] = [
   { label: "Coral Vibrant",  color: "#FF6B5C" },
   { label: "Terracotta",     color: "#C84A2A" },
   { label: "Ocean Azure",    color: "#5CC8D9" },
+  { label: "Glacial Sky",    color: "#5BB8FF" },
+  { label: "Aurora Mint",    color: "#5EEAD4" },
+  { label: "Liquid Lilac",   color: "#A78BFA" },
+  { label: "Holo Cyan",      color: "#22F1D6" },
+  { label: "Chrome Silver",  color: "#C0C7D6" },
+  { label: "Sunset Pink",    color: "#FF6B9C" },
   { label: "Navy Trust",     color: "#1B2A3A" },
   { label: "Emerald",        color: "#10B981" },
   { label: "Lime Energy",    color: "#C8FF00" },
   { label: "Royal Indigo",   color: "#6366F1" },
   { label: "Magenta Neon",   color: "#FF2E9A" },
   { label: "Bordeaux",       color: "#6B1F2C" },
+  { label: "Swiss Red",      color: "#E4002B" },
   { label: "Mono Black",     color: "#0A0A0A" },
   { label: "Pure White",     color: "#FAFAFA" },
 ];
