@@ -510,6 +510,30 @@ const EmpireParticleOrb = memo(() => {
         ctx.fill();
       }
 
+      // ─── Click ripples — render expanding rings + advance lifetime ───
+      const rips = ripplesRef.current;
+      for (let r = rips.length - 1; r >= 0; r--) {
+        const rip = rips[r];
+        rip.t += 0.02;
+        if (rip.t >= 1) {
+          rips.splice(r, 1);
+          continue;
+        }
+        const rad = rip.t * rip.max;
+        const a = (1 - rip.t) * 0.55;
+        ctx.lineWidth = 1.4 + (1 - rip.t) * 1.6;
+        ctx.strokeStyle = `hsla(280, 90%, 75%, ${a})`;
+        ctx.beginPath();
+        ctx.arc(rip.x, rip.y, rad, 0, Math.PI * 2);
+        ctx.stroke();
+        // soft inner halo
+        ctx.strokeStyle = `hsla(265, 85%, 65%, ${a * 0.5})`;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.arc(rip.x, rip.y, rad * 0.85, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
       raf = requestAnimationFrame(draw);
     };
     raf = requestAnimationFrame(draw);
