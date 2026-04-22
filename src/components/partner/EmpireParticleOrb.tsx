@@ -302,12 +302,22 @@ const EmpireParticleOrb = memo(() => {
       rotRef.current.x += rotRef.current.vx;
       rotRef.current.y += rotRef.current.vy;
 
-      // Spring offset back toward 0 when not dragging (gentle elastic anchor)
+      // Throw momentum + spring offset back toward 0 when not dragging
       if (!dragRef.current.active && !gestureRef.current.active) {
-        offsetRef.current.x *= 0.94;
-        offsetRef.current.y *= 0.94;
+        // Apply velocity (throw) then decay
+        offsetRef.current.x += offsetRef.current.vx;
+        offsetRef.current.y += offsetRef.current.vy;
+        offsetRef.current.vx *= 0.92;
+        offsetRef.current.vy *= 0.92;
+        // Elastic pull back to centre
+        offsetRef.current.x *= 0.93;
+        offsetRef.current.y *= 0.93;
         // Scale eases back to 1 when not pinching
         scaleRef.current += (1 - scaleRef.current) * 0.08;
+      } else {
+        // Reset throw velocity while actively dragging
+        offsetRef.current.vx = 0;
+        offsetRef.current.vy = 0;
       }
 
       const ox = offsetRef.current.x;
