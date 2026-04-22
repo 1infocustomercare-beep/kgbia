@@ -902,6 +902,27 @@ function FilterSelect({
 }
 
 /* ─── Chip filtro attivo (rimovibile con un tap) ─── */
+/** Badge per distinguere a colpo d'occhio l'engine di generazione (AI / Template / Hybrid). */
+function EngineBadge({ engine }: { engine?: string | null }) {
+  if (!engine) return null;
+  const cfg =
+    engine === "ai"
+      ? { label: "AI", bg: "rgba(34,211,238,0.18)", border: "rgba(34,211,238,0.45)", color: "#67e8f9", icon: "🤖" }
+      : engine === "hybrid"
+      ? { label: "Hybrid", bg: "rgba(244,114,182,0.18)", border: "rgba(244,114,182,0.45)", color: "#f9a8d4", icon: "🔀" }
+      : { label: "Template", bg: "rgba(167,139,250,0.18)", border: "rgba(167,139,250,0.45)", color: "#c4b5fd", icon: "🎨" };
+  return (
+    <span
+      title={`Generato con engine: ${cfg.label}`}
+      className="inline-flex items-center gap-0.5 text-[8px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide shrink-0"
+      style={{ background: cfg.bg, border: `1px solid ${cfg.border}`, color: cfg.color }}
+    >
+      <span className="text-[9px] leading-none">{cfg.icon}</span>
+      {cfg.label}
+    </span>
+  );
+}
+
 function FilterChip({
   label, value, onClear,
 }: { label: string; value: string; onClear: () => void }) {
