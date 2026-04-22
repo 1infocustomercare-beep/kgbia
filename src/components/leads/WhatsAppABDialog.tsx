@@ -340,6 +340,42 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                   Quando il lead risponde, segnala quale variante ha funzionato. Il vincitore viene scelto automaticamente.
                 </div>
 
+                {/* ── Selettore lingua con auto-detect ── */}
+                <div className="rounded-xl p-3"
+                  style={{ background: "rgba(59,130,246,0.10)", border: "1px solid rgba(59,130,246,0.3)" }}>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base leading-none">{WA_LANGS.find(l => l.code === lang)?.flag}</span>
+                      <div>
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-blue-200">
+                          {UI_LABELS[lang].detected}
+                        </div>
+                        <div className="text-[10px] text-white/70">
+                          {WA_LANGS.find(l => l.code === lang)?.label} · <span className="italic">{UI_LABELS[lang].from[langSource]}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {WA_LANGS.map(({ code, label, flag }) => (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={() => changeLang(code)}
+                        className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold transition ${
+                          lang === code ? "text-white" : "text-white/60 hover:text-white/90"
+                        }`}
+                        style={{
+                          background: lang === code ? "rgba(59,130,246,0.35)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${lang === code ? "rgba(59,130,246,0.7)" : "rgba(255,255,255,0.08)"}`,
+                        }}
+                      >
+                        <span>{flag}</span> {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* CTA settoriale rilevato — link diretto alla sezione di conversione */}
                 <div className="rounded-xl p-3 flex items-start gap-3"
                   style={{ background: "rgba(37,211,102,0.10)", border: "1px solid rgba(37,211,102,0.35)" }}>
@@ -355,7 +391,7 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                       </span>
                     </div>
                     <div className="text-[11px] text-white font-semibold mb-1">
-                      {sectorCTA.label} · sezione <code className="text-emerald-300">#{sectorCTA.anchor}</code>
+                      {localizedCTA.label} · sezione <code className="text-emerald-300">#{sectorCTA.anchor}</code>
                     </div>
                     <div className="text-[10px] text-white/60 truncate" title={ctaDemoUrl}>
                       {ctaDemoUrl}
