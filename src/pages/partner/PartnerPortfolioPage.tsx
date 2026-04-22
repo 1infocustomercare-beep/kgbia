@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Search, X as XIcon, Globe, LayoutDashboard, Pencil, Upload, Save,
-  RefreshCw, ChevronRight,
+  RefreshCw, ChevronRight, Smartphone, Sparkles, Layers, Star, Trash2,
+  Play, ExternalLink, MessageCircle, Rocket, Wand2,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +13,9 @@ import { PORTFOLIO_PROJECTS } from "@/data/portfolio-showcase-data";
 import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
+import { useDemoVault, type VaultDemo } from "@/hooks/useDemoVault";
+import { useMockupSuiteVault } from "@/hooks/useMockupSuiteVault";
+import { DemoStudioPresentationMode } from "@/components/partner/DemoStudioPresentationMode";
 import ProjectDetailOverlay from "@/components/partner/ProjectDetailOverlay";
 import { PartnerCardSkeleton } from "@/components/partner/PartnerSkeleton";
 import { toast } from "sonner";
