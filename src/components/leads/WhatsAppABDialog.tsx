@@ -69,12 +69,6 @@ function buildTrackUrl(shortId: string): string {
   return `https://${projectRef}.supabase.co/functions/v1/wa-track?s=${shortId}`;
 }
 
-/* Funzione URL tracker pubblico — usa lo stesso project ref del client */
-function buildTrackUrl(shortId: string): string {
-  const projectRef = (import.meta as any).env?.VITE_SUPABASE_PROJECT_ID || "gypnxirzmhpapmhjguaj";
-  return `https://${projectRef}.supabase.co/functions/v1/wa-track?s=${shortId}`;
-}
-
 export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLinkProp }: Props) {
   const baseDemoLink = demoLinkProp || `${window.location.origin}/demo`;
   const sectorCTA = useMemo(() => getSectorCTA(lead.sector), [lead.sector]);
@@ -106,20 +100,13 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
   const [creating, setCreating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  /* Quando l'utente cambia lingua dal selector → rigenera i template (solo se non modificati a mano) */
+  /* Quando l'utente cambia lingua dal selector → rigenera i template */
   const changeLang = (next: WALang) => {
     setLang(next);
-    setLangSource("lead"); // override manuale dell'utente: trattiamo come scelta esplicita
+    setLangSource("lead");
     setMsgA(buildA(next));
     setMsgB(buildB(next));
   };
-
-  const [test, setTest] = useState<ABTest | null>(null);
-  const [msgA, setMsgA] = useState(() => defaultMessageA(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
-  const [msgB, setMsgB] = useState(() => defaultMessageB(lead, ctaDemoUrl, sectorCTA.label, sectorCTA.emoji));
-  const [loading, setLoading] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
 
   /* Cerca test esistente per questo lead */
   useEffect(() => {
