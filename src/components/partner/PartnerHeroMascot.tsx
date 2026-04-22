@@ -121,8 +121,8 @@ export default function PartnerHeroMascot({
 
         {/* Mascot viola al centro */}
         <motion.img
-          src={empireMonkeyLaptop}
-          alt="Empire AI"
+          src={mascotSrc ?? empireMonkeyLaptop}
+          alt={mascotAlt}
           className="w-full h-full object-contain relative z-10"
           loading="eager"
           animate={{
