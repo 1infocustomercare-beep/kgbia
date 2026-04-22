@@ -1099,7 +1099,6 @@ export default function LeadsPage() {
     }
   };
 
-  const sorted = [...results]
   // 🎯 Categorie prioritarie con storico conversione alta
   const PRIORITY_SECTORS = new Set(["food", "beauty", "ncc", "fitness", "healthcare", "hotel", "tattoo"]);
 
