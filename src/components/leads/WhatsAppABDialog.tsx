@@ -568,3 +568,121 @@ function VariantPanel({
     </div>
   );
 }
+
+/* ─────────────────────────────────────────────────────────────
+ * WhatsAppPhonePreview — anteprima realistica del messaggio finale
+ * dentro un mockup di chat WhatsApp (bubble verde, header, contesto lead).
+ * Toggle A/B per confrontare le due varianti prima di creare il test.
+ * URL nel testo viene reso come link cliccabile evidenziato.
+ * ───────────────────────────────────────────────────────────── */
+function WhatsAppPhonePreview({
+  msgA, msgB, lead, ctaUrl, langFlag,
+}: {
+  msgA: string; msgB: string; lead: ABLeadInput; ctaUrl: string; langFlag: string;
+}) {
+  const [active, setActive] = useState<"A" | "B">("A");
+  const message = active === "A" ? msgA : msgB;
+  const accent = active === "A" ? "#7c3aed" : "#ec4899";
+
+  // Spezza il messaggio in righe e trasforma URL in <a>
+  const renderMessage = (text: string) => {
+    return text.split("\n").map((line, i) => {
+      const urlMatch = line.match(/(https?:\/\/[^\s]+)/);
+      if (!urlMatch) return <div key={i} className="min-h-[1em]">{line || "\u00A0"}</div>;
+      const before = line.slice(0, urlMatch.index!);
+      const url = urlMatch[0];
+      const after = line.slice(urlMatch.index! + url.length);
+      return (
+        <div key={i}>
+          {before}
+          <a href={url} target="_blank" rel="noreferrer"
+            className="underline break-all" style={{ color: "#0891b2" }}>{url}</a>
+          {after}
+        </div>
+      );
+    });
+  };
+
+  const initial = (lead.name || "?").trim().charAt(0).toUpperCase();
+  const subtitle = [lead.sector, lead.city].filter(Boolean).join(" · ") || "Lead WhatsApp";
+  const now = new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+
+  return (
+    <div className="rounded-xl overflow-hidden"
+      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
+      {/* Header anteprima + toggle A/B */}
+      <div className="flex items-center justify-between px-3 py-2"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+        <div className="flex items-center gap-1.5">
+          <Smartphone className="w-3 h-3 text-white/60" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-white/70">
+            Anteprima messaggio
+          </span>
+          <span className="text-[10px]">{langFlag}</span>
+        </div>
+        <div className="flex gap-1">
+          {(["A", "B"] as const).map((v) => (
+            <button key={v} type="button" onClick={() => setActive(v)}
+              className={`w-6 h-6 rounded-md text-[10px] font-black ${active === v ? "text-white" : "text-white/50 hover:text-white/80"}`}
+              style={{
+                background: active === v ? (v === "A" ? "#7c3aed" : "#ec4899") : "rgba(255,255,255,0.05)",
+                border: `1px solid ${active === v ? "transparent" : "rgba(255,255,255,0.1)"}`,
+              }}>
+              {v}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Contesto lead */}
+      <div className="px-3 py-1.5 text-[9px] text-white/55"
+        style={{ background: "rgba(0,0,0,0.2)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+        Destinatario: <span className="text-white/80 font-semibold">{lead.name}</span>
+        {lead.phone && <> · <span className="font-mono">{lead.phone}</span></>}
+        <> · settore <span className="text-white/80">{lead.sector || "—"}</span></>
+        <> · <span className="text-white/80">{lead.city || "—"}</span></>
+      </div>
+
+      {/* Mockup chat WhatsApp */}
+      <div className="px-3 py-3" style={{
+        background: "#0b141a",
+        backgroundImage: "radial-gradient(circle at 20% 30%, rgba(255,255,255,0.02) 0%, transparent 60%)",
+      }}>
+        <div className="flex items-center gap-2 mb-3 pb-2"
+          style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white"
+            style={{ background: `linear-gradient(135deg, ${accent}, #25D366)` }}>
+            {initial}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[11px] font-bold text-white truncate">{lead.name}</div>
+            <div className="text-[9px] text-white/50 truncate">{subtitle}</div>
+          </div>
+          <div className="text-[9px] text-white/40">online</div>
+        </div>
+
+        <div className="flex justify-end">
+          <div className="relative max-w-[85%] rounded-lg px-2.5 py-2 text-[11px] leading-relaxed whitespace-pre-wrap"
+            style={{
+              background: "#005c4b",
+              color: "#e9edef",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.4)",
+              borderTopRightRadius: 2,
+            }}>
+            <div>{renderMessage(message)}</div>
+            <div className="flex items-center justify-end gap-1 mt-1 text-[9px]" style={{ color: "rgba(255,255,255,0.55)" }}>
+              <span>{now}</span>
+              <CheckCircle2 className="w-2.5 h-2.5" />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-3 pt-2 flex items-center justify-between text-[9px] text-white/50"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <span>{message.length} caratteri · {message.split("\n").length} righe</span>
+          <span className="truncate max-w-[55%]" title={ctaUrl}>🔗 {ctaUrl.replace(/^https?:\/\//, "")}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
