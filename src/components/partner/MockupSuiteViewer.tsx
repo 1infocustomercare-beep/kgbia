@@ -208,6 +208,9 @@ export function MockupSuiteViewer({
                       height={screenHeight}
                       glassIntensity={glassIntensity}
                       colorStyle={colorStyle}
+                      safeAreaPx={safeAreaPx}
+                      typeScale={typeScale}
+                      boostContrast={boostContrast}
                     />
                   )}
 
