@@ -1180,10 +1180,24 @@ export default function LeadsPage() {
     ? previewMatch.screens
     : (selected ? getPreviewScreens(selected._sector) : []);
   const previewDetails = getPreviewDetailsForMatch(previewMatch);
+  // 💾 Trova la demo PERSONALIZZATA già generata per questo lead nel vault (sync live)
+  const savedDemoForSelected = selected
+    ? demoVault.demos.find(d =>
+        !d.is_archived &&
+        (d.original_lead_name?.toLowerCase() === selected.name?.toLowerCase() ||
+         d.lead_snapshot?.name?.toLowerCase() === selected.name?.toLowerCase())
+      )
+    : null;
   const selectedPreviewPath = selected
-    ? (previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector))
+    ? (savedDemoForSelected?.preview_url
+        ? savedDemoForSelected.preview_url
+        : (previewMatch?.demoSlug ? `/r/${previewMatch.demoSlug}` : getDemoSiteUrl(selected._sector)))
     : "";
-  const selectedPreviewUrl = selected ? `${window.location.origin}${selectedPreviewPath}` : "";
+  const selectedPreviewUrl = selected
+    ? (savedDemoForSelected?.preview_url?.startsWith("http")
+        ? savedDemoForSelected.preview_url
+        : `${window.location.origin}${selectedPreviewPath}`)
+    : "";
   const auroraPick = selected
     ? pickRecommendedAuroraTemplate({
         sector: selected._sector,
