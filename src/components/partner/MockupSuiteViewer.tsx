@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Download, Loader2, Smartphone } from "lucide-react";
@@ -64,6 +64,26 @@ export function MockupSuiteViewer({
 }: Props) {
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
+
+  // Preload aggressivo delle prime 2 schermate AI: appena le URL sono note,
+  // iniettiamo <link rel="preload" as="image" fetchpriority="high"> nel <head>
+  // così il browser inizia a scaricarle in parallelo al rendering della preview
+  // React, eliminando il "lampo" durante l'upgrade preview→AI sopra la piega.
+  useEffect(() => {
+    const links: HTMLLinkElement[] = [];
+    screens.slice(0, 2).forEach(s => {
+      if (s.render_mode === "ai" && s.image_url) {
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.href = s.image_url;
+        (link as any).fetchPriority = "high";
+        document.head.appendChild(link);
+        links.push(link);
+      }
+    });
+    return () => { links.forEach(l => l.remove()); };
+  }, [screens]);
 
   const downloadScreen = async (idx: number) => {
     const el = containerRefs.current[idx];
@@ -188,12 +208,22 @@ export function MockupSuiteViewer({
                       alt={screen.title}
                       className="w-full h-full animate-in fade-in duration-700"
                       draggable={false}
+                      // Preloading/priority: le prime 2 schermate (sopra la piega su mobile e
+                      // visibili senza scroll su desktop) vengono caricate con priorità alta e
+                      // decodificate sincronamente per evitare flicker durante la transizione
+                      // dalla preview React all'asset AI 4K. Le altre restano lazy per non
+                      // rubare banda al rendering iniziale.
+                      loading={idx < 2 ? "eager" : "lazy"}
+                      decoding={idx < 2 ? "sync" : "async"}
+                      // @ts-expect-error - fetchPriority è supportato dai browser moderni
+                      fetchpriority={idx < 2 ? "high" : "low"}
                       style={{
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
                         objectPosition: "center top",
                         display: "block",
+                        contentVisibility: idx < 2 ? "visible" : "auto",
                       }}
                     />
                   ) : (
