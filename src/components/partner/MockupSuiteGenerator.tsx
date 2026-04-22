@@ -12,6 +12,7 @@ import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 import { MockupLookPresets, type MockupLookPreset } from "./MockupLookPresets";
 import { useBrandingKitSettings } from "@/hooks/useBrandingKitSettings";
+import { BrandContrastCheck } from "./BrandContrastCheck";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -879,6 +880,15 @@ export function MockupSuiteGenerator({
                   </span>
                 </p>
               </div>
+
+              {/* WCAG contrast check + auto-suggest */}
+              <BrandContrastCheck
+                brandHex={mode === "standalone" ? standalone.primaryColor : primaryColor}
+                onApplySuggestion={(hex) => {
+                  if (controlsLocked) return;
+                  setStandalone(prev => ({ ...prev, primaryColor: hex }));
+                }}
+              />
             </div>
 
             {/* Anteprima live mini iPhone */}
