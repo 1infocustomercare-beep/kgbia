@@ -463,6 +463,18 @@ export function MockupSuiteGenerator({
 
   const selectedEngineCfg = ENGINE_OPTIONS.find(e => e.key === engine)!;
 
+  // ──────────────────────────────────────────────────────────────────────────
+  // CONTROLS LOCK — durante la generazione e l'upgrade 4K/8K blocchiamo tutti
+  // i parametri (engine, template, palette, glass/color style, safe-area,
+  // type-scale, contrast, screens, presets, CTA) per evitare che l'utente
+  // cambi qualcosa a metà pipeline e ottenga risultati incoerenti tra
+  // preview React e immagine AI finale.
+  // ──────────────────────────────────────────────────────────────────────────
+  const controlsLocked = generating || previewPhase === "upgrading";
+  const lockTitle = controlsLocked
+    ? "Impostazioni bloccate durante la generazione/upgrade 4K — attendi il completamento"
+    : undefined;
+
   // Raggruppa template per categoria
   const groupedTemplates = TEMPLATE_VARIANTS.reduce((acc, t) => {
     (acc[t.group] ||= []).push(t);
@@ -641,7 +653,9 @@ export function MockupSuiteGenerator({
                   key={opt.key}
                   type="button"
                   onClick={() => setEngine(opt.key)}
-                  className={`relative p-4 rounded-xl border-2 text-left transition-all overflow-hidden group ${
+                  disabled={controlsLocked}
+                  title={lockTitle}
+                  className={`relative p-4 rounded-xl border-2 text-left transition-all overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed ${
                     selected ? "border-primary scale-[1.02] shadow-lg" : "border-border hover:border-primary/50"
                   }`}
                 >
@@ -672,8 +686,8 @@ export function MockupSuiteGenerator({
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 items-start">
             <div className="space-y-3">
-              <Select value={templateVariant} onValueChange={setTemplateVariant}>
-                <SelectTrigger id="template-variant">
+              <Select value={templateVariant} onValueChange={setTemplateVariant} disabled={controlsLocked}>
+                <SelectTrigger id="template-variant" title={lockTitle}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="max-h-[360px]">
@@ -703,16 +717,16 @@ export function MockupSuiteGenerator({
                       <button
                         key={p.color}
                         type="button"
+                        disabled={controlsLocked}
                         onClick={() => {
                           if (mode === "standalone") {
                             setStandalone(prev => ({ ...prev, primaryColor: p.color }));
                           } else {
-                            // Lead mode: forziamo override locale via standalone state come "preview color"
                             setStandalone(prev => ({ ...prev, primaryColor: p.color }));
                           }
                         }}
-                        title={p.label}
-                        className={`relative w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
+                        title={lockTitle ?? p.label}
+                        className={`relative w-7 h-7 rounded-full border-2 transition-all hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 ${
                           active ? "border-foreground shadow-md scale-110" : "border-border"
                         }`}
                         style={{ background: p.color }}
@@ -788,11 +802,13 @@ export function MockupSuiteGenerator({
             </Label>
             <button
               type="button"
+              disabled={controlsLocked}
               onClick={() => {
                 setGlassIntensity(60); setColorStyle("vivid");
                 setSafeAreaPx(8); setTypeScale(1); setBoostContrast(true);
               }}
-              className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors"
+              title={lockTitle}
+              className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Reset default
             </button>
@@ -813,8 +829,10 @@ export function MockupSuiteGenerator({
               max={100}
               step={5}
               value={glassIntensity}
+              disabled={controlsLocked}
               onChange={(e) => setGlassIntensity(Number(e.target.value))}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
+              title={lockTitle}
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <div className="flex justify-between text-[9px] text-muted-foreground">
               <span>Solido</span>
@@ -838,8 +856,10 @@ export function MockupSuiteGenerator({
                   <button
                     key={opt.key}
                     type="button"
+                    disabled={controlsLocked}
                     onClick={() => setColorStyle(opt.key)}
-                    className={`px-2 py-2 rounded-lg border text-center transition-all ${
+                    title={lockTitle}
+                    className={`px-2 py-2 rounded-lg border text-center transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                       active
                         ? "border-primary bg-primary/10 shadow-sm scale-[1.02]"
                         : "border-border hover:border-primary/40"
@@ -871,6 +891,7 @@ export function MockupSuiteGenerator({
             boostContrast,
           }}
           onApply={(p: MockupLookPreset) => {
+            if (controlsLocked) return;
             setTemplateVariant(p.templateVariant);
             setGlassIntensity(p.glassIntensity);
             setColorStyle(p.colorStyle);
@@ -910,8 +931,10 @@ export function MockupSuiteGenerator({
               max={24}
               step={2}
               value={safeAreaPx}
+              disabled={controlsLocked}
               onChange={(e) => setSafeAreaPx(Number(e.target.value))}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
+              title={lockTitle}
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <div className="flex justify-between text-[9px] text-muted-foreground">
               <span>Edge-to-edge</span>
@@ -935,8 +958,10 @@ export function MockupSuiteGenerator({
               max={1.20}
               step={0.05}
               value={typeScale}
+              disabled={controlsLocked}
               onChange={(e) => setTypeScale(Number(e.target.value))}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
+              title={lockTitle}
+              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <div className="flex justify-between text-[9px] text-muted-foreground">
               <span>Compatta (0.85×)</span>
@@ -955,10 +980,12 @@ export function MockupSuiteGenerator({
             </div>
             <button
               type="button"
+              disabled={controlsLocked}
               onClick={() => setBoostContrast(v => !v)}
               role="switch"
               aria-checked={boostContrast}
-              className={`shrink-0 relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+              title={lockTitle}
+              className={`shrink-0 relative inline-flex h-5 w-9 items-center rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 boostContrast ? "bg-primary" : "bg-muted-foreground/30"
               }`}
             >
@@ -981,8 +1008,10 @@ export function MockupSuiteGenerator({
             <Label>Schermate da generare (4 mockup)</Label>
             <button
               type="button"
+              disabled={controlsLocked}
               onClick={() => setAutoScreens(v => !v)}
-              className={`text-[10px] px-2 py-1 rounded-full font-semibold transition-colors ${
+              title={lockTitle}
+              className={`text-[10px] px-2 py-1 rounded-full font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 autoScreens ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
             >
@@ -995,12 +1024,13 @@ export function MockupSuiteGenerator({
                 <Badge variant="outline" className="text-xs shrink-0">#{i + 1}</Badge>
                 <Select
                   value={s.type}
+                  disabled={controlsLocked}
                   onValueChange={(v) => {
                     setAutoScreens(false);
                     setScreens(prev => prev.map((x, j) => j === i ? { ...x, type: v as ScreenType, title: SCREEN_TYPES.find(t => t.key === v)?.label || x.title } : x));
                   }}
                 >
-                  <SelectTrigger className="h-8 text-xs flex-1">
+                  <SelectTrigger className="h-8 text-xs flex-1" title={lockTitle}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1012,11 +1042,13 @@ export function MockupSuiteGenerator({
                 <Input
                   className="h-8 text-xs w-32"
                   value={s.title}
+                  disabled={controlsLocked}
                   onChange={e => {
                     setAutoScreens(false);
                     setScreens(prev => prev.map((x, j) => j === i ? { ...x, title: e.target.value } : x));
                   }}
                   placeholder="Titolo"
+                  title={lockTitle}
                 />
               </div>
             ))}
@@ -1111,15 +1143,34 @@ export function MockupSuiteGenerator({
           </p>
         </div>
 
+        {/* Banner di lock durante upgrade 4K/8K */}
+        {controlsLocked && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/[0.06] px-3 py-2 text-xs text-foreground"
+          >
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-primary shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold leading-tight">
+                {previewPhase === "upgrading" ? "Upgrade 4K/8K in corso · impostazioni bloccate" : "Generazione in corso · impostazioni bloccate"}
+              </p>
+              <p className="text-[10px] text-muted-foreground leading-snug">
+                Engine, template, palette, glassmorphism, color style, safe-area, tipografia e schermate sono bloccati per garantire risultati coerenti. Attendi il completamento.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* CTA */}
         <Button
           onClick={handleGenerate}
-          disabled={generating || !businessName?.trim() || !businessSector?.trim()}
+          disabled={controlsLocked || !businessName?.trim() || !businessSector?.trim()}
           size="lg"
           className="w-full"
         >
-          {generating ? (
-            <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generazione 4 mockup in corso…</>
+          {controlsLocked ? (
+            <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> {previewPhase === "upgrading" ? "Upgrade 4K/8K in corso…" : "Generazione 4 mockup in corso…"}</>
           ) : (
             <><Sparkles className="h-4 w-4 mr-2" /> Genera Suite ({selectedEngineCfg.cost === 0 ? "GRATIS" : `${selectedEngineCfg.cost} crediti`})</>
           )}
