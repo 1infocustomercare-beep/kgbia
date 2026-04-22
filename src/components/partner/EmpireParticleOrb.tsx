@@ -251,6 +251,8 @@ const EmpireParticleOrb = memo(() => {
       const dt = performance.now() - drag.startTime;
       drag.active = false;
       drag.mode = null;
+      // Reset cursore al rilascio
+      canvas.style.cursor = isInsideOrb(e.clientX, e.clientY) ? "grab" : "default";
 
       // Tap (no significant move) inside orb → toggle mode
       if (
