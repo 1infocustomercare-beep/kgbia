@@ -5,12 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type, Lock, Unlock, Cloud, CloudOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 import { MockupLookPresets, type MockupLookPreset } from "./MockupLookPresets";
+import { useBrandingKitSettings } from "@/hooks/useBrandingKitSettings";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -350,12 +351,27 @@ export function MockupSuiteGenerator({
     suggestScreensForSector(businessSector)
   );
 
-  // Branding Kit — coppia font heading/body (override del template)
+  // Branding Kit — coppia font heading/body (override del template) + persistenza cloud+locale
+  const branding = useBrandingKitSettings();
   const [brandFontKey, setBrandFontKey] = useState<string>("template");
   const brandFont = useMemo(
     () => BRAND_FONT_PAIRS.find(p => p.key === brandFontKey) || BRAND_FONT_PAIRS[0],
     [brandFontKey]
   );
+
+  // Idratazione iniziale dalle impostazioni salvate (cloud o cache locale)
+  // — applica brandFontKey + primaryColor (se brand_locked=true ha priorità sul prop)
+  const hydratedRef = useRef(false);
+  useEffect(() => {
+    if (branding.loading || hydratedRef.current) return;
+    hydratedRef.current = true;
+    if (branding.settings.fontPairKey && branding.settings.fontPairKey !== brandFontKey) {
+      setBrandFontKey(branding.settings.fontPairKey);
+    }
+    if (branding.settings.brandLocked && branding.settings.primaryColor) {
+      setStandalone(s => ({ ...s, primaryColor: branding.settings.primaryColor! }));
+    }
+  }, [branding.loading, branding.settings, brandFontKey]);
 
   // Inietta dinamicamente il <link> Google Fonts del brand selezionato
   useEffect(() => {
@@ -369,6 +385,19 @@ export function MockupSuiteGenerator({
     document.head.appendChild(link);
     // Nessun cleanup: i font restano caricati per le preview successive
   }, [brandFont]);
+
+  // Persiste il font pair scelto (cloud + cache locale) — niente flicker, debounced cloud
+  useEffect(() => {
+    if (branding.loading || !hydratedRef.current) return;
+    if (branding.settings.fontPairKey === brandFontKey) return;
+    branding.update({
+      fontPairKey: brandFontKey,
+      fontHead: brandFont.fontHead || null,
+      fontBody: brandFont.fontBody || null,
+      googleFontsHref: brandFont.googleFontsHref || null,
+    });
+  }, [brandFontKey, brandFont, branding]);
+
 
   // Quando cambia il settore e autoScreens=on, aggiorna screens automaticamente
   useEffect(() => {
