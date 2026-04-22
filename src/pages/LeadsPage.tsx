@@ -1898,48 +1898,112 @@ export default function LeadsPage() {
                 const rowKey = `${lead.name}|${lead.full_address}`;
                 const isQuickOpen = quickPreviewKey === rowKey;
                 return (
-                  <motion.button key={`${lead.name}-${i}`}
+                  <motion.div key={`${lead.name}-${i}`}
                     initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(i * 0.01, 0.5) }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleSelect(lead)}
-                    className="w-full text-left p-3 rounded-xl transition-all flex items-start gap-3"
+                    className="rounded-xl transition-all overflow-hidden"
                     style={{
                       background: isSelected ? "rgba(20,184,166,0.1)" : "rgba(255,255,255,0.02)",
                       border: `1px solid ${isSelected ? "rgba(20,184,166,0.3)" : "rgba(255,255,255,0.05)"}`,
                     }}>
-                    {/* Score circle */}
-                    <div className="w-10 h-10 rounded-xl flex flex-col items-center justify-center shrink-0" style={{ background: `${scoreColor}15`, border: `1px solid ${scoreColor}30` }}>
-                      <span className="text-xs font-black" style={{ color: scoreColor }}>{lead._score}</span>
-                      <span className="text-[6px] font-bold uppercase" style={{ color: scoreColor }}>score</span>
-                    </div>
+                    <div className="flex items-start gap-3 p-3">
+                      <button
+                        onClick={() => handleSelect(lead)}
+                        className="flex-1 text-left flex items-start gap-3 min-w-0"
+                      >
+                        {/* Score circle */}
+                        <div className="w-10 h-10 rounded-xl flex flex-col items-center justify-center shrink-0" style={{ background: `${scoreColor}15`, border: `1px solid ${scoreColor}30` }}>
+                          <span className="text-xs font-black" style={{ color: scoreColor }}>{lead._score}</span>
+                          <span className="text-[6px] font-bold uppercase" style={{ color: scoreColor }}>score</span>
+                        </div>
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-xs font-bold text-white truncate">{lead.name}</p>
-                        {lead.isManual && (
-                          <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.12)", color: "#c4b5fd" }}>Esterno</span>
-                        )}
-                        <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{
-                          background: `${srcInfo.color}12`, color: srcInfo.color,
-                        }}>
-                          {srcInfo.label}
-                        </span>
-                        {lead.google_rating > 0 && (
-                          <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.12)", color: "#fbbf24" }}>
-                            ⭐ {lead.google_rating}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[10px] truncate mt-0.5" style={{ color: "#6b7280" }}>{lead.full_address || lead.city}</p>
-                      <div className="flex items-center gap-2.5 mt-1 flex-wrap">
-                        {lead.phone && <span className="text-[9px] flex items-center gap-1" style={{ color: "#34d399" }}><Phone className="w-2.5 h-2.5" /> {lead.phone}</span>}
-                        {lead.website && <span className="text-[9px] flex items-center gap-1" style={{ color: "#60a5fa" }}><Globe className="w-2.5 h-2.5" /> Sito</span>}
-                        {lead.instagram && <span className="text-[9px] flex items-center gap-1" style={{ color: "#E4405F" }}><Instagram className="w-2.5 h-2.5" /> IG</span>}
-                        {lead.opening_hours && <span className="text-[9px] flex items-center gap-1" style={{ color: "#a78bfa" }}>🕐 Orari</span>}
-                        {!lead.website && <span className="text-[9px] flex items-center gap-1" style={{ color: "#ef4444" }}><AlertTriangle className="w-2.5 h-2.5" /> No sito</span>}
-                      </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="text-xs font-bold text-white truncate">{lead.name}</p>
+                            {lead.isManual && (
+                              <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.12)", color: "#c4b5fd" }}>Esterno</span>
+                            )}
+                            <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{
+                              background: `${srcInfo.color}12`, color: srcInfo.color,
+                            }}>
+                              {srcInfo.label}
+                            </span>
+                            {lead.google_rating > 0 && (
+                              <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.12)", color: "#fbbf24" }}>
+                                ⭐ {lead.google_rating}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[10px] truncate mt-0.5" style={{ color: "#6b7280" }}>{lead.full_address || lead.city}</p>
+                          <div className="flex items-center gap-2.5 mt-1 flex-wrap">
+                            {lead.phone && <span className="text-[9px] flex items-center gap-1" style={{ color: "#34d399" }}><Phone className="w-2.5 h-2.5" /> {lead.phone}</span>}
+                            {lead.website && <span className="text-[9px] flex items-center gap-1" style={{ color: "#60a5fa" }}><Globe className="w-2.5 h-2.5" /> Sito</span>}
+                            {lead.instagram && <span className="text-[9px] flex items-center gap-1" style={{ color: "#E4405F" }}><Instagram className="w-2.5 h-2.5" /> IG</span>}
+                            {lead.opening_hours && <span className="text-[9px] flex items-center gap-1" style={{ color: "#a78bfa" }}>🕐 Orari</span>}
+                            {!lead.website && <span className="text-[9px] flex items-center gap-1" style={{ color: "#ef4444" }}><AlertTriangle className="w-2.5 h-2.5" /> No sito</span>}
+                          </div>
+                        </div>
+                      </button>
+                      {/* 👁 Anteprima rapida (no consumo crediti) */}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setQuickPreviewKey(isQuickOpen ? null : rowKey); }}
+                        aria-label="Anteprima rapida"
+                        className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-colors"
+                        style={{
+                          background: isQuickOpen ? "rgba(167,139,250,0.18)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${isQuickOpen ? "rgba(167,139,250,0.4)" : "rgba(255,255,255,0.08)"}`,
+                          color: isQuickOpen ? "#c4b5fd" : "#9ca3af",
+                        }}
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                      </button>
                     </div>
-                  </motion.button>
+                    <AnimatePresence>
+                      {isQuickOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-3 pb-3 pt-0 grid grid-cols-2 gap-2 text-[10px]">
+                            <QuickStat label="Settore" value={lead._sector || "—"} />
+                            <QuickStat label="Recensioni Google" value={lead.google_reviews ? `${lead.google_reviews}` : "—"} />
+                            <QuickStat label="Email" value={lead.email || "non trovata"} mono />
+                            <QuickStat label="Zona" value={lead.zone || lead.city || "—"} />
+                            <div className="col-span-2 flex flex-wrap gap-1.5 pt-1">
+                              {lead.phone && (
+                                <a href={`tel:${lead.phone}`} onClick={(e) => e.stopPropagation()}
+                                  className="px-2.5 py-1 rounded-md text-[10px] font-bold flex items-center gap-1"
+                                  style={{ background: "rgba(52,211,153,0.14)", color: "#34d399", border: "1px solid rgba(52,211,153,0.3)" }}>
+                                  <Phone className="w-2.5 h-2.5" /> Chiama
+                                </a>
+                              )}
+                              {lead.website && (
+                                <a href={lead.website} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}
+                                  className="px-2.5 py-1 rounded-md text-[10px] font-bold flex items-center gap-1"
+                                  style={{ background: "rgba(96,165,250,0.14)", color: "#60a5fa", border: "1px solid rgba(96,165,250,0.3)" }}>
+                                  <ExternalLink className="w-2.5 h-2.5" /> Sito
+                                </a>
+                              )}
+                              {lead.google_maps_url && (
+                                <a href={lead.google_maps_url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}
+                                  className="px-2.5 py-1 rounded-md text-[10px] font-bold flex items-center gap-1"
+                                  style={{ background: "rgba(244,114,182,0.14)", color: "#f472b6", border: "1px solid rgba(244,114,182,0.3)" }}>
+                                  <MapPin className="w-2.5 h-2.5" /> Maps
+                                </a>
+                              )}
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleSelect(lead); }}
+                                className="px-2.5 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 ml-auto"
+                                style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.25), rgba(20,184,166,0.18))", color: "#fff", border: "1px solid rgba(167,139,250,0.4)" }}>
+                                <Sparkles className="w-2.5 h-2.5" /> Analizza
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
                 );
               })}
             </div>
