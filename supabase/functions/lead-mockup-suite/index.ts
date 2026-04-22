@@ -104,6 +104,130 @@ async function uploadDataUrl(client: any, dataUrl: string, path: string): Promis
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// VALIDAZIONE AUTOMATICA — verifica via vision-AI che il mockup NON contenga:
+//   • branding vietato (Empire / Empire AI / Empireia / Lovable)
+//   • testo in inglese nei contenuti dell'app (status bar iOS esclusa)
+//   • loghi di terze parti (Apple/Google/Meta brand visibili)
+//   • iPhone non centrato / tiltato
+// In caso di violazioni ritorna issues[] dettagliati per il retry mirato.
+// ──────────────────────────────────────────────────────────────────────────────
+async function validateMockupImage(
+  lovableKey: string,
+  dataUrl: string,
+): Promise<{ ok: boolean; issues: string[]; raw?: string }> {
+  try {
+    const r = await fetch(AI_GATEWAY, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          {
+            role: "system",
+            content: "Sei un validatore qualità mockup iPhone. Ispeziona TUTTO il testo visibile nel display. Rispondi SOLO con JSON valido nello schema richiesto.",
+          },
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: `Ispeziona questo mockup iPhone e rispondi SOLO con JSON in questo formato esatto:
+{
+  "has_forbidden_branding": boolean,
+  "forbidden_branding_found": string[],
+  "has_english_content": boolean,
+  "english_phrases_found": string[],
+  "has_third_party_logos": boolean,
+  "third_party_logos_found": string[],
+  "iphone_centered_no_tilt": boolean,
+  "overall_ok": boolean,
+  "notes": string
+}
+
+REGOLE:
+- "has_forbidden_branding" = true se vedi "Empire", "Empire AI", "Empire AI Group", "Empireia" o "Lovable" in qualsiasi punto del display.
+- "has_english_content" = true se vedi frasi/parole inglesi nei CONTENUTI dell'app (titoli sezioni, nomi servizi, CTA, descrizioni). IGNORA la status bar iOS (orario, %, 5G, WiFi).
+- "has_third_party_logos" = true se vedi loghi Apple, Google, Meta, Instagram, Facebook, WhatsApp ecc.
+- "iphone_centered_no_tilt" = true SOLO se l'iPhone è perfettamente frontale, centrato, senza prospettiva 3D.
+- "overall_ok" = true SOLO se has_forbidden_branding=false E has_english_content=false E has_third_party_logos=false E iphone_centered_no_tilt=true.
+- Rispondi SOLO il JSON, niente altro testo.`,
+              },
+              { type: "image_url", image_url: { url: dataUrl } },
+            ],
+          },
+        ],
+        response_format: { type: "json_object" },
+      }),
+    });
+    if (!r.ok) {
+      console.warn("[validate] http error", r.status);
+      return { ok: true, issues: [], raw: `validator_http_${r.status}` }; // fail-open
+    }
+    const data = await r.json();
+    const raw = data?.choices?.[0]?.message?.content ?? "{}";
+    const parsed = JSON.parse(raw);
+    const issues: string[] = [];
+    if (parsed.has_forbidden_branding) {
+      issues.push(`branding_forbidden:${(parsed.forbidden_branding_found || []).join("|")}`);
+    }
+    if (parsed.has_english_content) {
+      issues.push(`english_content:${(parsed.english_phrases_found || []).slice(0, 3).join("|")}`);
+    }
+    if (parsed.has_third_party_logos) {
+      issues.push(`third_party_logos:${(parsed.third_party_logos_found || []).join("|")}`);
+    }
+    if (parsed.iphone_centered_no_tilt === false) {
+      issues.push("iphone_not_centered_or_tilted");
+    }
+    return { ok: parsed.overall_ok === true && issues.length === 0, issues, raw };
+  } catch (e) {
+    console.warn("[validate] exception", e);
+    return { ok: true, issues: [], raw: `validator_exception` }; // fail-open
+  }
+}
+
+function buildCorrectionSuffix(issues: string[]): string {
+  const lines: string[] = [];
+  if (issues.some(i => i.startsWith("branding_forbidden"))) {
+    lines.push("⛔ CORREZIONE OBBLIGATORIA: il render PRECEDENTE conteneva il brand 'Empire/Empire AI/Empireia/Lovable'. RIMUOVI COMPLETAMENTE qualsiasi occorrenza di queste parole. Usa SOLO il nome dell'attività del cliente.");
+  }
+  if (issues.some(i => i.startsWith("english_content"))) {
+    lines.push("⛔ CORREZIONE OBBLIGATORIA: il render PRECEDENTE conteneva testo in INGLESE nei contenuti dell'app. Ogni titolo, CTA, descrizione e label DEVE essere in italiano professionale. Niente 'Sign in', 'Book now', 'Add to cart', 'Welcome', ecc.");
+  }
+  if (issues.some(i => i.startsWith("third_party_logos"))) {
+    lines.push("⛔ CORREZIONE OBBLIGATORIA: il render PRECEDENTE conteneva loghi di terze parti (Apple/Google/Meta). RIMUOVI tutti i loghi di brand esterni.");
+  }
+  if (issues.some(i => i.startsWith("iphone_not_centered"))) {
+    lines.push("⛔ CORREZIONE OBBLIGATORIA: l'iPhone DEVE essere perfettamente centrato, frontale ortogonale, ZERO prospettiva 3D, ZERO tilt.");
+  }
+  return lines.length === 0 ? "" : `\n\n═══ CORREZIONE RICHIESTA (TENTATIVO PRECEDENTE FALLITO) ═══\n${lines.join("\n")}\n`;
+}
+
+async function generateValidatedAIImage(
+  lovableKey: string,
+  basePrompt: string,
+  pro: boolean,
+  maxAttempts = 3,
+): Promise<{ dataUrl: string | null; attempts: number; lastIssues: string[]; validated: boolean }> {
+  let lastIssues: string[] = [];
+  let lastDataUrl: string | null = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const prompt = attempt === 1 ? basePrompt : basePrompt + buildCorrectionSuffix(lastIssues);
+    const dataUrl = await generateAIImage(lovableKey, prompt, pro);
+    lastDataUrl = dataUrl;
+    if (!dataUrl) {
+      lastIssues = ["no_image_returned"];
+      continue;
+    }
+    const v = await validateMockupImage(lovableKey, dataUrl);
+    console.log(`[validate] attempt ${attempt} ok=${v.ok} issues=${JSON.stringify(v.issues)}`);
+    if (v.ok) return { dataUrl, attempts: attempt, lastIssues: [], validated: true };
+    lastIssues = v.issues;
+  }
+  return { dataUrl: lastDataUrl, attempts: maxAttempts, lastIssues, validated: false };
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // VARIATION SYSTEM — fa sì che le 4 schermate siano sempre diverse tra loro
 // (layout, densità, ordine sezioni, componenti) anche con stesso lead+template.
 // ──────────────────────────────────────────────────────────────────────────────
@@ -384,13 +508,21 @@ Deno.serve(async (req) => {
     const business = { name: business_name, sector: business_sector || "attività commerciale", city: business_city || "Italia" };
 
     try {
-      // Genera 4 immagini in parallelo
-      const imagePromises = screens.map((s, i) => generateAIImage(LOVABLE_KEY, buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i), pro));
-      const dataUrls = await Promise.all(imagePromises);
+      // Genera 4 immagini in parallelo CON validazione + retry mirato (max 3 tentativi per screen)
+      const imageResults = await Promise.all(
+        screens.map((s, i) =>
+          generateValidatedAIImage(
+            LOVABLE_KEY,
+            buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i),
+            pro,
+            3,
+          )
+        )
+      );
 
       // Upload su storage
-      const uploadPromises = dataUrls.map((du, i) =>
-        du ? uploadDataUrl(adminClient, du, `mockup-suites/${userId}/${suite.id}/${i}-${screens[i].type}-v${variationSeed}.png`) : Promise.resolve(null)
+      const uploadPromises = imageResults.map((res, i) =>
+        res.dataUrl ? uploadDataUrl(adminClient, res.dataUrl, `mockup-suites/${userId}/${suite.id}/${i}-${screens[i].type}-v${variationSeed}.png`) : Promise.resolve(null)
       );
       const publicUrls = await Promise.all(uploadPromises);
 
@@ -402,11 +534,19 @@ Deno.serve(async (req) => {
         engine,
         variation_seed: variationSeed,
         variant_index: i,
+        validation: {
+          validated: imageResults[i].validated,
+          attempts: imageResults[i].attempts,
+          issues: imageResults[i].lastIssues,
+        },
       }));
+
+      const allValidated = finalScreens.every(s => s.validation.validated);
+      const totalAttempts = finalScreens.reduce((acc, s) => acc + s.validation.attempts, 0);
 
       await adminClient
         .from("seller_mockup_suites")
-        .update({ screens: finalScreens, status: "complete", generated_at: new Date().toISOString() })
+        .update({ screens: finalScreens, status: allValidated ? "complete" : "complete_with_warnings", generated_at: new Date().toISOString() })
         .eq("id", suite.id);
 
       return new Response(JSON.stringify({
@@ -418,6 +558,11 @@ Deno.serve(async (req) => {
         screens: finalScreens,
         credits_spent: creditsSpent,
         variation_seed: variationSeed,
+        validation_summary: {
+          all_validated: allValidated,
+          total_attempts: totalAttempts,
+          per_screen: finalScreens.map(s => ({ type: s.type, validated: s.validation.validated, attempts: s.validation.attempts, issues: s.validation.issues })),
+        },
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     } catch (e: any) {
       await adminClient.from("seller_mockup_suites").update({ status: "error", error_message: e.message }).eq("id", suite.id);
