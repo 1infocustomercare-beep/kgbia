@@ -6748,6 +6748,48 @@ export type Database = {
           },
         ]
       }
+      user_branding_kit_settings: {
+        Row: {
+          brand_locked: boolean
+          created_at: string
+          extra: Json
+          font_body: string | null
+          font_head: string | null
+          font_pair_key: string
+          google_fonts_href: string | null
+          id: string
+          primary_color: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          brand_locked?: boolean
+          created_at?: string
+          extra?: Json
+          font_body?: string | null
+          font_head?: string | null
+          font_pair_key?: string
+          google_fonts_href?: string | null
+          id?: string
+          primary_color?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          brand_locked?: boolean
+          created_at?: string
+          extra?: Json
+          font_body?: string | null
+          font_head?: string | null
+          font_pair_key?: string
+          google_fonts_href?: string | null
+          id?: string
+          primary_color?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
