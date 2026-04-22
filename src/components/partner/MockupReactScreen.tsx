@@ -218,7 +218,9 @@ function getTheme(variant: string, primaryOverride?: string, colorStyle?: ColorS
   };
   const resolved = aliases[variant] || variant;
   const base = themes[resolved] || themes.modern_dark;
-  return primaryOverride ? { ...base, primary: primaryOverride } : base;
+  const styledPrimary = applyColorStyle(primaryOverride || base.primary, colorStyle) || base.primary;
+  const styledAccent = applyColorStyle(base.accent, colorStyle) || base.accent;
+  return { ...base, primary: styledPrimary, accent: styledAccent };
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -287,17 +289,27 @@ function StatusBar({ theme }: { theme: ThemeTokens }) {
   );
 }
 
-function BottomNav({ theme, active = "home" }: { theme: ThemeTokens; active?: string }) {
+function BottomNav({ theme, active = "home", glassIntensity = 60 }: { theme: ThemeTokens; active?: string; glassIntensity?: number }) {
   const items = [
     { key: "home",    icon: "M3 9l9-7 9 7v11a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2z", label: "Home" },
     { key: "menu",    icon: "M4 6h16M4 12h16M4 18h16", label: "Menu", stroke: true },
     { key: "booking", icon: "M3 5h18v16H3zM3 10h18M8 3v4M16 3v4", label: "Prenota", stroke: true },
     { key: "profile", icon: "M12 12a4 4 0 100-8 4 4 0 000 8zm-7 9a7 7 0 0114 0z", label: "Profilo" },
   ];
+  // Glass intensity: 0 = nessun blur, opacità 100%; 100 = blur massimo, opacità ridotta
+  const clamped = Math.max(0, Math.min(100, glassIntensity));
+  const blurPx = Math.round((clamped / 100) * 24); // 0–24px
+  // Alpha del pannello (più alto = più opaco): 100% glass → bg trasparente con blur, 0% → opaco
+  const alphaHex = Math.round(255 - (clamped * 1.4)).toString(16).padStart(2, "0"); // 100→ ~7d, 0→ ff
   return (
     <div
       className="absolute bottom-0 left-0 right-0 flex justify-around items-center pb-3 pt-2 px-2 z-10"
-      style={{ background: `${theme.bgPanel}f0`, backdropFilter: "blur(12px)", borderTop: `1px solid ${theme.primary}25` }}
+      style={{
+        background: `${theme.bgPanel}${alphaHex}`,
+        backdropFilter: blurPx > 0 ? `blur(${blurPx}px) saturate(160%)` : undefined,
+        WebkitBackdropFilter: blurPx > 0 ? `blur(${blurPx}px) saturate(160%)` : undefined,
+        borderTop: `1px solid ${theme.primary}${clamped > 30 ? "40" : "25"}`,
+      }}
     >
       {items.map((it) => {
         const isActive = it.key === active;
@@ -1163,8 +1175,9 @@ function MapScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: st
 // ════════════════════════════════════════════════════════════════════════════
 export function MockupReactScreen({
   type, templateVariant, businessName, businessSector = "", businessCity = "", primaryColor, width, height,
+  glassIntensity = 60, colorStyle = "vivid",
 }: Props) {
-  const theme = getTheme(templateVariant, primaryColor);
+  const theme = getTheme(templateVariant, primaryColor, colorStyle);
 
   const renderContent = () => {
     switch (type) {
