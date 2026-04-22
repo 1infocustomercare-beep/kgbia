@@ -188,12 +188,22 @@ export function MockupSuiteViewer({
                       alt={screen.title}
                       className="w-full h-full animate-in fade-in duration-700"
                       draggable={false}
+                      // Preloading/priority: le prime 2 schermate (sopra la piega su mobile e
+                      // visibili senza scroll su desktop) vengono caricate con priorità alta e
+                      // decodificate sincronamente per evitare flicker durante la transizione
+                      // dalla preview React all'asset AI 4K. Le altre restano lazy per non
+                      // rubare banda al rendering iniziale.
+                      loading={idx < 2 ? "eager" : "lazy"}
+                      decoding={idx < 2 ? "sync" : "async"}
+                      // @ts-expect-error - fetchPriority è supportato dai browser moderni
+                      fetchpriority={idx < 2 ? "high" : "low"}
                       style={{
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
                         objectPosition: "center top",
                         display: "block",
+                        contentVisibility: idx < 2 ? "visible" : "auto",
                       }}
                     />
                   ) : (
