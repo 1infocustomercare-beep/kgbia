@@ -297,6 +297,9 @@ export function MockupSuiteGenerator({
   }, [brandingKit.primary, lockToTemplate]);
 
   const [generating, setGenerating] = useState(false);
+  // Mockup Libero — preview on-demand: l'utente clicca "Carica anteprima" per renderizzarla
+  const [standalonePreviewLoaded, setStandalonePreviewLoaded] = useState(false);
+  const [standalonePreviewLoading, setStandalonePreviewLoading] = useState(false);
   // Stato per preview progressiva: "preview" = mostra subito React render, "upgrading" = AI in arrivo, "complete" = finita
   const [previewPhase, setPreviewPhase] = useState<"idle" | "preview" | "upgrading" | "complete">("idle");
   const [result, setResult] = useState<{
