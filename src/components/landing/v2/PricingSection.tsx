@@ -88,7 +88,16 @@ export default function PricingSection() {
                   ))}
                 </ul>
 
-                <button onClick={() => navigate("/onboarding")} className={`${plan.featured ? "landing-button-primary" : "landing-button-secondary"} w-full px-6 py-3.5 text-sm font-semibold`}>
+                <button
+                  onClick={() => {
+                    const planParam =
+                      plan.name === "Digital Start" ? "essential"
+                      : plan.name === "Empire Pro" ? "smart_ia"
+                      : "empire_pro";
+                    navigate(`/auth?plan=${planParam}&mode=register`);
+                  }}
+                  className={`${plan.featured ? "landing-button-primary" : "landing-button-secondary"} w-full px-6 py-3.5 text-sm font-semibold`}
+                >
                   Scegli {plan.name}
                 </button>
               </div>
