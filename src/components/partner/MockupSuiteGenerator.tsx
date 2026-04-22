@@ -874,6 +874,8 @@ export function MockupSuiteGenerator({
                       safeAreaPx={Math.round(safeAreaPx * 0.4)}
                       typeScale={typeScale}
                       boostContrast={boostContrast}
+                      fontHeadOverride={brandFont.fontHead || undefined}
+                      fontBodyOverride={brandFont.fontBody || undefined}
                     />
                   </div>
                   <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
@@ -900,6 +902,7 @@ export function MockupSuiteGenerator({
               onClick={() => {
                 setGlassIntensity(60); setColorStyle("vivid");
                 setSafeAreaPx(8); setTypeScale(1); setBoostContrast(true);
+                setBrandFontKey("template");
               }}
               title={lockTitle}
               className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1220,6 +1223,8 @@ export function MockupSuiteGenerator({
                           safeAreaPx={Math.round(safeAreaPx * 0.3)}
                           typeScale={typeScale}
                           boostContrast={boostContrast}
+                          fontHeadOverride={brandFont.fontHead || undefined}
+                          fontBodyOverride={brandFont.fontBody || undefined}
                         />
                       </div>
                       <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-[24px] h-[1.5px] bg-foreground/30 rounded-full z-20" />
