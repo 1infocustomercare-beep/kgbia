@@ -448,6 +448,15 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                   />
                 </div>
 
+                {/* ═══ Anteprima realistica WhatsApp prima dell'invio ═══ */}
+                <WhatsAppPhonePreview
+                  msgA={msgA}
+                  msgB={msgB}
+                  lead={lead}
+                  ctaUrl={ctaDemoUrl}
+                  langFlag={WA_LANGS.find(l => l.code === lang)?.flag || "🌐"}
+                />
+
                 <button onClick={createTest} disabled={creating}
                   className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold text-white hover:opacity-90 disabled:opacity-50"
                   style={{ background: "linear-gradient(135deg, #25D366, #7c3aed)" }}>
