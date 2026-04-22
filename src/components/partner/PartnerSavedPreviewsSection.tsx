@@ -75,15 +75,21 @@ export default function PartnerSavedPreviewsSection() {
   const [sort, setSort] = useState<SortKey>(
     () => (localStorage.getItem("partner_saved_previews_sort") as SortKey) || "recent"
   );
+  const [engineFilter, setEngineFilter] = useState<EngineKey>(
+    () => (localStorage.getItem("partner_saved_previews_engine") as EngineKey) || "all"
+  );
+  const [dateRange, setDateRange] = useState<DateRangeKey>(
+    () => (localStorage.getItem("partner_saved_previews_range") as DateRangeKey) || "any"
+  );
   const [editing, setEditing] = useState<SavedPreview | null>(null);
   const [editLabel, setEditLabel] = useState("");
   const [editNotes, setEditNotes] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
-  useEffect(() => {
-    localStorage.setItem("partner_saved_previews_sort", sort);
-  }, [sort]);
+  useEffect(() => { localStorage.setItem("partner_saved_previews_sort", sort); }, [sort]);
+  useEffect(() => { localStorage.setItem("partner_saved_previews_engine", engineFilter); }, [engineFilter]);
+  useEffect(() => { localStorage.setItem("partner_saved_previews_range", dateRange); }, [dateRange]);
 
   /* ── Fetch ── */
   useEffect(() => {
