@@ -387,6 +387,44 @@ export default function WhatsAppABDialog({ open, onClose, lead, demoLink: demoLi
                   </div>
                 </div>
 
+                {/* ── Selettore tono del messaggio ── */}
+                <div className="rounded-xl p-3"
+                  style={{ background: "rgba(168,85,247,0.10)", border: "1px solid rgba(168,85,247,0.3)" }}>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base leading-none">{WA_TONES.find(t => t.code === tone)?.emoji}</span>
+                      <div>
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-fuchsia-200">
+                          {TONE_UI_LABELS[lang].title}
+                        </div>
+                        <div className="text-[10px] text-white/70">
+                          {WA_TONES.find(t => t.code === tone)?.label} · <span className="italic">{TONE_UI_LABELS[lang].hint}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {WA_TONES.map(({ code, label, emoji, description }) => (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={() => changeTone(code)}
+                        title={description}
+                        className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-md text-[10px] font-bold transition ${
+                          tone === code ? "text-white" : "text-white/60 hover:text-white/90"
+                        }`}
+                        style={{
+                          background: tone === code ? "rgba(168,85,247,0.35)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${tone === code ? "rgba(168,85,247,0.7)" : "rgba(255,255,255,0.08)"}`,
+                        }}
+                      >
+                        <span className="text-sm leading-none">{emoji}</span>
+                        <span>{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* CTA settoriale rilevato — link diretto alla sezione di conversione */}
                 <div className="rounded-xl p-3 flex items-start gap-3"
                   style={{ background: "rgba(37,211,102,0.10)", border: "1px solid rgba(37,211,102,0.35)" }}>
