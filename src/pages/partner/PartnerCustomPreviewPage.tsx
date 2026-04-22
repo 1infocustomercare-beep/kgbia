@@ -480,13 +480,63 @@ export default function PartnerCustomPreviewPage() {
         {/* ═══════════ COLONNA SX: FORM ad ACCORDION ═══════════ */}
         <Card className="border-primary/30 overflow-hidden xl:sticky xl:top-4">
           <CardHeader className="pb-3 px-4 sm:px-6">
-            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-              <Sparkles className="h-5 w-5 text-primary" />
-              Genera nuova preview
-            </CardTitle>
-            <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">
-              3 passi rapidi · totale ~30 sec
-            </p>
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  Genera nuova preview
+                </CardTitle>
+                <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">
+                  3 passi rapidi · totale ~30 sec
+                </p>
+              </div>
+
+              {/* Indicatore autosave bozza */}
+              {draftHydrated && (draftStatus !== "idle" || draftSavedAt) && (
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <div
+                    className="flex items-center gap-1 px-2 py-1 rounded-md bg-muted/60 border border-border/50 text-[10px] sm:text-[11px] text-muted-foreground"
+                    title={draftSavedAt ? `Bozza salvata ${formatDraftTime(draftSavedAt)}` : "Salvataggio…"}
+                  >
+                    {draftStatus === "saving" ? (
+                      <>
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        <span className="hidden sm:inline">Salvo…</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check className="h-3 w-3 text-emerald-500" />
+                        <span>Bozza · {formatDraftTime(draftSavedAt)}</span>
+                      </>
+                    )}
+                  </div>
+                  {draftSavedAt && (
+                    <button
+                      type="button"
+                      onClick={clearDraft}
+                      title="Cancella bozza"
+                      className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition"
+                    >
+                      <RotateCcw className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {draftRestored && (
+              <div className="mt-2 flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-primary/10 border border-primary/20 text-[11px] text-foreground">
+                <Save className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span className="flex-1">Bozza precedente ripristinata — continua da dove avevi lasciato.</span>
+                <button
+                  type="button"
+                  onClick={() => setDraftRestored(false)}
+                  className="text-muted-foreground hover:text-foreground text-[10px] uppercase tracking-wide"
+                >
+                  ok
+                </button>
+              </div>
+            )}
           </CardHeader>
 
           <CardContent className="space-y-3 px-3 sm:px-5 pb-4">
