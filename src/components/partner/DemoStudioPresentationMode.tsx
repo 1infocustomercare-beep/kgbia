@@ -34,13 +34,14 @@ interface Props {
 type Stage = "hero" | "preview" | "wow" | "cta";
 
 const STAGE_DURATION_MS: Record<Stage, number> = {
-  hero: 3000,
-  preview: 45000,
+  hero: 0,        // skip intro: apri direttamente sulla preview a tutto schermo
+  preview: 60000, // 60s di preview prima del wow
   wow: 7000,
   cta: 5000,
 };
 
-const STAGE_ORDER: Stage[] = ["hero", "preview", "wow", "cta"];
+// Hero rimosso dall'ordine: l'utente vuole vedere subito la preview grande
+const STAGE_ORDER: Stage[] = ["preview", "wow", "cta"];
 
 function extractScreenImages(suite: VaultMockupSuite): string[] {
   const screens = suite.screens;
@@ -69,13 +70,13 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
   const [stage, setStage] = useState<Stage>("hero");
   const [paused, setPaused] = useState(false);
 
-  // Init quando si apre
+  // Init quando si apre — apri DIRETTAMENTE sulla preview a tutto schermo
   useEffect(() => {
     if (!open) return;
     const idx = initialSuiteId ? Math.max(0, ready.findIndex((s) => s.id === initialSuiteId)) : 0;
     setSuiteIdx(idx >= 0 ? idx : 0);
     setScreenIdx(0);
-    setStage("hero");
+    setStage("preview");
     setPaused(false);
   }, [open, initialSuiteId, ready]);
 
@@ -99,15 +100,16 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
   const currentSuite = ready[suiteIdx];
   const screens = currentSuite ? extractScreenImages(currentSuite) : [];
 
-  // Auto-advance stage
+  // Auto-advance stage (skip "hero" — non più nel flusso)
   useEffect(() => {
     if (!open || paused || !currentSuite) return;
     const duration = STAGE_DURATION_MS[stage];
+    if (duration <= 0) return;
     const t = setTimeout(() => {
       const i = STAGE_ORDER.indexOf(stage);
       const next = STAGE_ORDER[(i + 1) % STAGE_ORDER.length];
       setStage(next);
-      if (next === "hero") setScreenIdx(0);
+      if (next === "preview") setScreenIdx(0);
     }, duration);
     return () => clearTimeout(t);
   }, [stage, open, paused, currentSuite]);
@@ -141,13 +143,13 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
     if (ready.length <= 1) return;
     setSuiteIdx((i) => (i + 1) % ready.length);
     setScreenIdx(0);
-    setStage("hero");
+    setStage("preview");
   };
   const prevSuite = () => {
     if (ready.length <= 1) return;
     setSuiteIdx((i) => (i - 1 + ready.length) % ready.length);
     setScreenIdx(0);
-    setStage("hero");
+    setStage("preview");
   };
 
   const businessName = currentSuite?.business_name || "Il tuo brand";
@@ -260,18 +262,32 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.4 }}
-                  className="relative z-10 flex flex-col items-center justify-center w-full h-full px-4"
+                  className="relative z-10 flex flex-col items-center justify-center w-full h-full px-2 sm:px-4 py-16 sm:py-20"
                 >
-                  {/* iPhone-style frame */}
-                  <div className="relative" style={{ width: "min(280px, 70vw)" }}>
+                  {/*
+                    iPhone-style frame — DIMENSIONI MASSIME RESPONSIVE
+                    L'altezza del telefono = altezza disponibile (viewport - barre).
+                    La larghezza si calcola dal ratio 9:19 ed è limitata dalla viewport.
+                    Risultato: telefono ENORME e centrato su qualsiasi device.
+                  */}
+                  <div
+                    className="relative"
+                    style={{
+                      // h: 78% dell'altezza viewport (lascia spazio per top bar + dot)
+                      // w: derivata dal ratio (9/19) * h, ma mai > 92vw
+                      height: "min(78vh, calc(92vw * 19 / 9))",
+                      width: "min(92vw, calc(78vh * 9 / 19))",
+                      maxHeight: "820px",
+                    }}
+                  >
                     <div
-                      className="relative rounded-[2.5rem] p-2 shadow-2xl"
+                      className="relative w-full h-full rounded-[2.5rem] sm:rounded-[3rem] p-2 sm:p-2.5 shadow-2xl"
                       style={{
                         background: "linear-gradient(135deg, #1a1a1a, #000)",
                         boxShadow: `0 30px 80px ${accent}40, 0 0 0 1px rgba(255,255,255,0.05)`,
                       }}
                     >
-                      <div className="rounded-[2rem] overflow-hidden bg-black aspect-[9/19]">
+                      <div className="rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden bg-black w-full h-full">
                         {screens[screenIdx] ? (
                           <img
                             src={screens[screenIdx]}
@@ -286,25 +302,28 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
                         )}
                       </div>
                       {/* Notch */}
-                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-black rounded-b-2xl" />
+                      <div className="absolute top-2 sm:top-2.5 left-1/2 -translate-x-1/2 w-20 sm:w-24 h-5 sm:h-6 bg-black rounded-b-2xl z-10" />
                     </div>
                   </div>
 
-                  <p className="text-white/80 text-sm mt-6 text-center font-display">
-                    {businessName}
-                  </p>
-                  {screens.length > 1 && (
-                    <div className="flex gap-1.5 mt-3">
-                      {screens.map((_, i) => (
-                        <div
-                          key={i}
-                          className={`h-1 rounded-full transition-all ${
-                            i === screenIdx ? "w-6 bg-white" : "w-1.5 bg-white/30"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  )}
+                  {/* Info compatta sotto: brand + dot indicator (assoluta per non rubare spazio) */}
+                  <div className="absolute bottom-16 sm:bottom-20 inset-x-0 z-10 flex flex-col items-center gap-2 pointer-events-none">
+                    <p className="text-white/85 text-xs sm:text-sm font-display drop-shadow-lg">
+                      {businessName}
+                    </p>
+                    {screens.length > 1 && (
+                      <div className="flex gap-1.5">
+                        {screens.map((_, i) => (
+                          <div
+                            key={i}
+                            className={`h-1 rounded-full transition-all ${
+                              i === screenIdx ? "w-6 bg-white" : "w-1.5 bg-white/30"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               )}
 
