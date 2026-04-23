@@ -145,12 +145,103 @@ function resolveThresholds(input: any): MatchThresholds {
   const t = { ...DEFAULT_THRESHOLDS };
   if (!input || typeof input !== "object") return t;
   for (const k of Object.keys(t) as (keyof MatchThresholds)[]) {
-    const v = input[k];
-    if (typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1000) {
-      t[k] = v;
+    const v = (input as any)[k];
+    if (k === "fallback_enabled") {
+      if (typeof v === "boolean") (t as any)[k] = v;
+    } else if (typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1000) {
+      (t as any)[k] = v;
     }
   }
   return t;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Fallback: genera username candidati derivati dal brand (e dalla città)
+// quando lo scoring iniziale non trova nulla, prova a colpirli direttamente.
+// ────────────────────────────────────────────────────────────────────────────
+function buildHandleCandidates(brandName: string, city: string | null | undefined): string[] {
+  const slug = slugify(brandName);
+  const tokens = tokenize(brandName);
+  const citySlug = slugify(city || "");
+  const set = new Set<string>();
+  if (slug && slug.length >= 3) set.add(slug);
+  if (slug && citySlug) {
+    set.add(`${slug}${citySlug}`);
+    set.add(`${slug}.${citySlug}`);
+    set.add(`${slug}_${citySlug}`);
+    set.add(`${citySlug}${slug}`);
+  }
+  if (tokens.length >= 2) {
+    set.add(tokens.join(""));
+    set.add(tokens.join("."));
+    set.add(tokens.join("_"));
+  }
+  if (tokens[0] && tokens[0].length >= 4) set.add(tokens[0]);
+  // varianti con suffisso "official"
+  if (slug) {
+    set.add(`${slug}official`);
+    set.add(`${slug}.official`);
+    set.add(`${slug}_official`);
+  }
+  return Array.from(set).filter((h) => h.length >= 3 && h.length <= 30);
+}
+
+// Fallback social: prova ricerche alternative + valida con soglia ridotta
+async function fallbackSocialPick(
+  apiKey: string,
+  platform: "instagram" | "facebook",
+  brandName: string,
+  city: string | null | undefined,
+  th: MatchThresholds,
+): Promise<{ url: string; handle: string; score: number; via: string } | null> {
+  const domain = platform === "instagram" ? "instagram.com" : "facebook.com";
+  const candidates = buildHandleCandidates(brandName, city);
+
+  // 1. ricerca per handle derivato
+  for (const handle of candidates.slice(0, 4)) {
+    const results = await firecrawlSearch(apiKey, `site:${domain} "${handle}"`, 4);
+    const looseTh = { ...th, social_min_score: th.fallback_min_score };
+    const pick = pickBestSocialResult(results, platform, brandName, looseTh);
+    if (pick) return { ...pick, via: `handle:${handle}` };
+  }
+
+  // 2. ricerca con varianti city+brand (no virgolette per essere più permissivi)
+  if (city) {
+    const altQueries = [
+      `site:${domain} ${brandName} ${city}`,
+      `site:${domain} ${brandName.split(/\s+/)[0]} ${city}`,
+    ];
+    for (const q of altQueries) {
+      const results = await firecrawlSearch(apiKey, q, 6);
+      const looseTh = { ...th, social_min_score: th.fallback_min_score };
+      const pick = pickBestSocialResult(results, platform, brandName, looseTh);
+      if (pick) return { ...pick, via: "alt-query" };
+    }
+  }
+  return null;
+}
+
+// Fallback listing: query alternative su Yelp/TA/PG con soglia ridotta
+async function fallbackListingPick(
+  apiKey: string,
+  platform: "yelp" | "tripadvisor" | "paginegialle",
+  brandName: string,
+  city: string | null | undefined,
+  th: MatchThresholds,
+): Promise<{ url: string; score: number; via: string } | null> {
+  const domain = platform === "yelp" ? "yelp.it" : platform === "tripadvisor" ? "tripadvisor.it" : "paginegialle.it";
+  const firstToken = brandName.split(/\s+/)[0];
+  const queries = [
+    `site:${domain} "${brandName}"`,
+    `site:${domain} ${firstToken} ${city || ""}`.trim(),
+  ];
+  for (const q of queries) {
+    const results = await firecrawlSearch(apiKey, q, 5);
+    const looseTh = { ...th, listing_min_score: th.fallback_min_score };
+    const pick = pickBestListingResult(results, platform, brandName, looseTh);
+    if (pick) return { ...pick, via: q.includes('"') ? "exact" : "loose" };
+  }
+  return null;
 }
 
 function scoreProfileMatch(
