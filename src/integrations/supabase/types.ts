@@ -3243,6 +3243,7 @@ export type Database = {
           brand_fonts: Json | null
           brand_logo_url: string | null
           brand_photos: Json | null
+          brand_video_frames: Json | null
           brand_videos: Json | null
           cache_key: string
           category: string
@@ -3289,6 +3290,7 @@ export type Database = {
           brand_fonts?: Json | null
           brand_logo_url?: string | null
           brand_photos?: Json | null
+          brand_video_frames?: Json | null
           brand_videos?: Json | null
           cache_key: string
           category?: string
@@ -3335,6 +3337,7 @@ export type Database = {
           brand_fonts?: Json | null
           brand_logo_url?: string | null
           brand_photos?: Json | null
+          brand_video_frames?: Json | null
           brand_videos?: Json | null
           cache_key?: string
           category?: string
