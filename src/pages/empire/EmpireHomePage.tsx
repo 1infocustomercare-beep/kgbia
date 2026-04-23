@@ -1,144 +1,45 @@
 import { useEffect, useState } from "react";
 import "./empire-home.css";
-import CinematicHero from "./sections/CinematicHero";
-import PortfolioCoverflow from "./sections/PortfolioCoverflow";
+import { PORTFOLIO_ITEMS, HERO_PHONES, SECTOR_SHOWCASE } from "./data/portfolio";
 import { useReveal, useCountUp } from "./hooks/useReveal";
 
-/* ────────────────────────────────────────────────────────────────
-   CONTENT — single source of truth for the homepage copy.
-   Tutti i prezzi/copy seguono i piani ufficiali Empire AI Group.
-   ──────────────────────────────────────────────────────────────── */
-
 const NAV_LINKS = [
-  { label: "Chi Siamo", href: "#about" },
-  { label: "Sistema", href: "#features" },
+  { label: "Settori", href: "#sectors" },
+  { label: "Come funziona", href: "#how" },
   { label: "Portfolio", href: "#portfolio" },
-  { label: "Piani", href: "#pricing" },
+  { label: "Pacchetti", href: "#pricing" },
+  { label: "Team", href: "#team" },
   { label: "FAQ", href: "#faq" },
 ];
 
-const MARQUEE_KEYWORDS = [
-  "Automazione WhatsApp", "AI Conversazionale", "Acquisizione Clienti",
-  "Notifiche Proattive", "Prenotazioni Autonome", "Lead Qualification",
-  "Gestione Recensioni", "Smart Follow-Up", "Fidelizzazione Automatica",
-  "Protezione Fiscale 2026", "Multi-Settore", "ROI Misurabile",
+const MARQUEE = [
+  "Ristoranti", "Pizzerie", "Dentisti", "Spa & Wellness", "Palestre", "Immobiliari",
+  "Hotel & B&B", "Noleggio auto", "Charter & Yacht", "Pet Care", "Asili nido",
+  "Parrucchieri", "Estetiste", "Studi medici", "E-commerce", "Consulenti",
+  "Padel & Sport", "Idraulici", "Beach Club", "Cevicherie",
 ];
 
-const IMPACT_NUMBERS = [
-  { num: 340, suffix: "%+", label: "Aumento Lead Qualificati" },
-  { num: 89, suffix: "%", label: "Tasso Risposta Automatica" },
-  { num: 67, suffix: "%", label: "Riduzione Costi Operativi" },
-  { num: 24, suffix: "/7", label: "Operatività Senza Pausa" },
-];
-
-const PROBLEM_LIST = [
-  "Rispondi ai clienti dopo ore, quando ormai hanno scelto un competitor",
-  "Il tuo staff perde tempo con richieste ripetitive invece di generare valore",
-  "Le prenotazioni si perdono tra messaggi WhatsApp e telefonate mancate",
-  "Non hai visibilità sui dati: non sai chi sono i tuoi migliori clienti",
-  "Le recensioni negative restano senza risposta, danneggiando la reputazione",
-  "Rischio sanzioni fiscali 2026 per mancata digitalizzazione",
-];
-
-const SOLUTION_LIST = [
-  "Risposta automatica in meno di 3 secondi, 24 ore su 24, 365 giorni l'anno",
-  "AI conversazionale che qualifica, prenota e converte in autonomia",
-  "Sistema centralizzato: WhatsApp, Instagram, sito web — tutto sincronizzato",
-  "Dashboard analitica con dati in tempo reale su clienti e performance",
-  "Gestione automatica delle recensioni con risposte personalizzate AI",
-  "Piena conformità alle normative fiscali 2026 integrata nel sistema",
-];
-
-const FEATURES = [
-  {
-    icon: "01",
-    title: "WhatsApp Orchestrator",
-    desc: "Il cuore pulsante del sistema. Un agente AI conversazionale che gestisce ogni interazione su WhatsApp: risponde a domande, prende prenotazioni, invia conferme, fa upselling e cross-selling, tutto in linguaggio naturale.",
-  },
-  {
-    icon: "02",
-    title: "Notifiche Proattive",
-    desc: "Non aspettare che i clienti vengano da te. Il sistema invia messaggi mirati basati sul comportamento: promemoria, offerte personalizzate, follow-up post-visita. Massimizza il tasso di ritorno e il lifetime value.",
-  },
-  {
-    icon: "03",
-    title: "Protezione Fisco 2026",
-    desc: "Empire AI integra nativamente fatturazione elettronica, registri digitali e compliance automatizzata. Non è un modulo aggiunto: è parte dell'architettura del sistema. Nessun rischio di sanzione.",
-  },
-  {
-    icon: "04",
-    title: "Apex Acquisition Engine",
-    desc: "Il motore proprietario che unisce campagne automatizzate, lead scoring AI e funnel di conversione dinamici. Trasforma prospect freddi in clienti paganti con tassi di conversione superiori del 340% rispetto ai metodi tradizionali.",
-  },
+const STATS = [
+  { num: 1997, prefix: "€", suffix: "", label: "Setup Digital Start (3x €699 disponibili)" },
+  { num: 79, prefix: "€", suffix: "/mese", label: "Canone mensile da · ottimizzazione continua inclusa" },
+  { num: 25, prefix: "", suffix: "+", label: "Settori coperti · framework verticalizzato" },
+  { num: 14, prefix: "", suffix: "gg", label: "Tempo medio go-live dal contratto firmato" },
 ];
 
 const STEPS = [
-  { n: "01", t: "Analisi Strategica", d: "Studiamo il tuo business, il mercato, i competitor e le opportunità nascoste. Progettiamo l'architettura del sistema su misura per il tuo settore." },
-  { n: "02", t: "Setup e Integrazione", d: "Configuriamo l'intero ecosistema: WhatsApp Business API, agenti AI, automazioni, CRM e dashboard analitica. Tutto collegato al tuo brand." },
-  { n: "03", t: "Training e Lancio", d: "L'AI viene addestrata con i dati del tuo business: menu, servizi, pricing, FAQ, tone of voice. Testiamo ogni scenario prima del go-live." },
-  { n: "04", t: "Ottimizzazione Continua", d: "Monitoriamo le performance in tempo reale. Ottimizziamo conversazioni, funnel e campagne. Il sistema migliora ogni settimana." },
+  { n: "01", t: "Analisi Strategica", d: "Studiamo business, mercato, competitor e opportunità nascoste. Progettiamo l'architettura del sistema su misura per il tuo settore." },
+  { n: "02", t: "Setup & Integrazione", d: "Configuriamo webapp, agenti AI, automazioni, CRM e dashboard. Tutto collegato al tuo brand e ai tuoi gestionali." },
+  { n: "03", t: "Training & Lancio", d: "L'AI viene addestrata sui tuoi dati: menu, servizi, pricing, FAQ, tone of voice. Testiamo ogni scenario prima del go-live." },
+  { n: "04", t: "Ottimizzazione 24/7", d: "Monitoriamo le performance in tempo reale. Ottimizziamo conversazioni, funnel e campagne. Il sistema migliora ogni settimana." },
 ];
 
-const PERSONALIZATION = [
-  { t: "Design Su Misura", d: "Interfacce, webapp e touchpoint digitali progettati con il tuo brand DNA: colori, font, tone of voice, tutto allineato alla tua identità." },
-  { t: "AI Addestrata sul Tuo Business", d: "L'agente AI conosce ogni dettaglio: il tuo menu, i tuoi servizi, i tuoi orari, le tue promozioni. Risponde come il tuo miglior dipendente." },
-  { t: "Funnel Personalizzati", d: "Percorsi di conversione unici per ogni segmento di clientela: nuovi clienti, ricorrenti, VIP, prospect da riconquistare." },
-  { t: "Integrazioni Native", d: "Collegamento diretto con i tuoi strumenti: POS, gestionale, software prenotazioni, calendari, sistemi di pagamento, tutto sincronizzato." },
-  { t: "Multi-Lingua", d: "Supporto automatico in oltre 30 lingue per catturare clientela internazionale. L'AI rileva la lingua del cliente e risponde di conseguenza." },
-  { t: "Report Settimanali", d: "Dashboard in tempo reale più report settimanali automatici con KPI, insights e raccomandazioni strategiche generate dall'AI." },
-];
-
-const SECTORS = [
-  "Ristorazione", "Wellness e Spa", "Sport e Padel", "Beauty e Nail",
-  "Real Estate", "Food Delivery", "Hospitality", "Charter e Nautica",
-  "Hair Salon", "Ecommerce", "Studi Medici", "Fitness e Palestre",
-  "Consulenza", "Automotive", "Eventi", "Pet Care", "Formazione", "Arredamento",
-];
-
-const AGENTS = [
-  { initials: "CN", name: "Concierge AI", desc: "Il primo punto di contatto. Accoglie i clienti, risponde alle FAQ, guida la conversazione verso prenotazione o acquisto. Gestisce fino a 500 conversazioni simultanee." },
-  { initials: "BK", name: "Booking Agent", desc: "Gestisce prenotazioni, modifiche e cancellazioni in tempo reale. Sincronizzato con il tuo calendario, evita doppie prenotazioni e ottimizza la capacità." },
-  { initials: "SL", name: "Sales Agent", desc: "Identifica opportunità di upselling e cross-selling durante ogni conversazione. Propone offerte personalizzate basate sullo storico del cliente." },
-  { initials: "RT", name: "Retention Agent", desc: "Monitora il comportamento dei clienti e interviene proattivamente per prevenire l'abbandono. Invia messaggi di riattivazione e offerte speciali." },
-  { initials: "RV", name: "Review Agent", desc: "Gestisce la reputazione online: sollecita recensioni positive, risponde alle negative con empatia e professionalità, monitora i sentiment." },
-  { initials: "AN", name: "Analytics Agent", desc: "Raccoglie e analizza ogni interazione per generare insights actionable. Identifica pattern, suggerisce ottimizzazioni e produce report settimanali." },
-];
-
-const TEAM = [
-  { initials: "S", name: "Sebastiano", role: "Founder & CEO", bio: "Visionario dell'automazione AI per il business italiano. Creatore del Metodo Sebastiano, framework proprietario adottato da oltre 150 aziende." },
-  { initials: "K", name: "Kevin", role: "CTO — AI Architecture", bio: "Architetto dei sistemi AI di Empire. Progetta l'infrastruttura multi-tenant e gli agenti specializzati che operano per ogni cliente." },
-  { initials: "A", name: "Alessia", role: "Head of Strategy", bio: "Specialista in growth marketing e funnel di conversione. Trasforma i dati in strategie che massimizzano il ROI di ogni cliente Empire." },
-];
-
-const TESTIMONIALS = [
-  { text: "In 60 giorni abbiamo triplicato le prenotazioni WhatsApp. Il sistema risponde ai clienti meglio del nostro miglior receptionist.", author: "Giuseppe M., Ristorante, Milano" },
-  { text: "Il ROI è stato positivo dal primo mese. L'AI gestisce l'80% delle richieste in autonomia e i clienti sono più soddisfatti.", author: "Francesca L., Spa, Roma" },
-  { text: "Avevamo 3 persone al telefono. Ora ne abbiamo 1 che supervisiona Empire AI. I costi sono crollati del 60%.", author: "Luca T., Centro Sportivo, Torino" },
-  { text: "Le notifiche proattive hanno aumentato il tasso di ritorno dei clienti del 45%. Mai visto un sistema così efficace.", author: "Maria R., Salone Beauty, Napoli" },
-  { text: "Gestisco 3 ristoranti e prima era il caos. Ora Empire AI coordina prenotazioni, ordini e recensioni per tutti da un'unica dashboard.", author: "Andrea B., F&B, Firenze" },
-  { text: "La conformità fiscale 2026 mi preoccupava. Con Empire AI è tutto integrato e aggiornato automaticamente.", author: "Paolo V., Commercialista, Bologna" },
-];
-
-const COMPARE_ROWS = [
-  ["AI Conversazionale su WhatsApp", "yes", "no", "no"],
-  ["Operatività 24/7 Autonoma", "yes", "no", "no"],
-  ["Setup e Training AI Personalizzato", "yes", "no", "no"],
-  ["Notifiche Proattive Intelligenti", "yes", "no", "no"],
-  ["Dashboard Analitica Real-Time", "yes", "partial", "no"],
-  ["Conformità Fiscale 2026", "yes", "no", "no"],
-  ["Multi-Lingua Automatico", "yes", "no", "no"],
-  ["Ottimizzazione Continua AI", "yes", "no", "no"],
-  ["ROI Misurabile dal Giorno 1", "yes", "no", "no"],
-] as const;
-
-/* PIANI UFFICIALI EMPIRE AI GROUP — fonte: memoria progetto.
-   Setup una tantum + canone mensile, scelti per settore in onboarding. */
 const PRICING = [
   {
+    tier: "Starter",
     name: "Digital Start",
-    setup: "1.997€",
+    setup: "€1.997",
     period: "una tantum (3x €699)",
-    monthly: "79€/mese",
+    monthly: "+ €79/mese ottimizzazione",
     desc: "Per chi vuole digitalizzare il proprio business con un sistema solido.",
     features: [
       "Webapp brandizzata responsive",
@@ -147,112 +48,94 @@ const PRICING = [
       "Dashboard analitica essenziale",
       "Conformità fiscale 2026 integrata",
       "Onboarding personalizzato per settore",
-      "Supporto email prioritario",
     ],
-    cta: "Prenota una Call",
-    ctaClass: "empire-btn--ghost",
+    cta: "Parla con noi",
     featured: false,
   },
   {
+    tier: "Più scelto · 68%",
     name: "Digital Scale",
-    setup: "3.997€",
+    setup: "€3.997",
     period: "una tantum (3x o 6x)",
-    monthly: "149€/mese",
+    monthly: "+ €149/mese ottimizzazione",
     desc: "Il piano più scelto. Sistema completo con agenti AI specializzati.",
     features: [
       "Tutto di Digital Start",
-      "3 Agenti AI (Concierge, Booking, Sales)",
+      "3 Agenti AI: Concierge, Booking, Sales",
       "Notifiche proattive intelligenti",
       "Apex Acquisition Engine incluso",
       "Multi-lingua automatico (30+ lingue)",
       "Gestione recensioni automatizzata",
       "Report settimanali con AI insights",
       "Integrazioni POS e gestionale",
-      "Supporto WhatsApp dedicato",
     ],
-    cta: "Prenota una Call",
-    ctaClass: "empire-btn--gold",
+    cta: "Scegli Empire",
     featured: true,
   },
   {
+    tier: "Enterprise",
     name: "Digital Empire",
     setup: "Custom",
     period: "preventivo dedicato",
-    monthly: "su misura",
+    monthly: "canone su misura",
     desc: "Per chi vuole l'ecosistema completo multi-sede con account manager dedicato.",
     features: [
       "Tutti i 6 Agenti AI del sistema",
       "Architettura multi-sede e multi-brand",
-      "AI training avanzato con dati proprietari",
       "Integrazioni enterprise personalizzate",
-      "Account manager dedicato",
-      "SLA con uptime garantito 99.9%",
-      "Ottimizzazione continua con consulente AI",
-      "Accesso anticipato a nuove funzionalità",
+      "Account manager dedicato + SLA 99,9%",
+      "AI training avanzato con dati proprietari",
+      "App iOS & Android native sugli store",
       "Formazione team on-site",
     ],
-    cta: "Contattaci",
-    ctaClass: "empire-btn--ghost",
+    cta: "Parla con un Empire Agent",
     featured: false,
   },
 ];
 
-const FAQS = [
-  {
-    q: "Quanto tempo serve per attivare il sistema?",
-    a: "Il setup completo richiede in media 7–14 giorni lavorativi. Include l'analisi del tuo business, la configurazione tecnica, il training dell'AI e il testing prima del go-live. Per Digital Empire con integrazioni enterprise, i tempi possono arrivare a 21 giorni.",
-  },
-  {
-    q: "Funziona davvero per il mio settore?",
-    a: "Empire AI è stato progettato per essere settore-agnostico. Operiamo con successo in ristorazione, wellness, sport, beauty, real estate, food delivery, hospitality, charter nautico, hair salon, ecommerce, studi medici e molti altri. L'AI viene addestrata specificamente sui dati e le dinamiche del tuo settore.",
-  },
-  {
-    q: "I clienti si accorgono che parlano con un'AI?",
-    a: "No. L'AI conversazionale di Empire AI utilizza linguaggio naturale avanzato, adattato al tone of voice del tuo brand. Il 94% dei clienti nei nostri test non distingue l'AI da un operatore umano. In caso di domande complesse, il sistema trasferisce la conversazione al tuo team in modo trasparente.",
-  },
-  {
-    q: "Cosa succede se l'AI non sa rispondere?",
-    a: "Il sistema ha un protocollo di escalation intelligente. Se la domanda esce dal perimetro di competenza dell'AI, la conversazione viene trasferita al tuo team con tutto il contesto. Inoltre, ogni interazione viene registrata per migliorare continuamente le risposte.",
-  },
-  {
-    q: "Posso monitorare le conversazioni in tempo reale?",
-    a: "Assolutamente. La dashboard ti permette di visualizzare tutte le conversazioni in corso, lo storico delle interazioni, i KPI in tempo reale e i report analitici. Puoi intervenire in qualsiasi momento per prendere il controllo di una conversazione specifica.",
-  },
-  {
-    q: "Come funziona la conformità fiscale 2026?",
-    a: "Il sistema integra nativamente i requisiti della normativa fiscale 2026: fatturazione elettronica automatica, registri digitali, tracciabilità delle transazioni e reportistica conforme. Gli aggiornamenti normativi vengono applicati automaticamente.",
-  },
-  {
-    q: "Quali integrazioni sono disponibili?",
-    a: "Empire AI si integra con WhatsApp Business API, Instagram DM, Facebook Messenger, Google Business, POS (SumUp, iZettle, Square), gestionali (Treatwell, Mindbody, Booksy), calendari (Google Calendar, Calendly), sistemi di pagamento (Stripe, PayPal) e molto altro.",
-  },
+const TEAM = [
+  { initials: "S", name: "Sebastiano", role: "Founder & CEO", bio: "Visionario dell'automazione AI per il business italiano. Creatore del Metodo Sebastiano." },
+  { initials: "K", name: "Kevin", role: "CTO — AI Architecture", bio: "Architetto dei sistemi AI di Empire. Progetta l'infrastruttura multi-tenant e gli agenti specializzati." },
+  { initials: "A", name: "Alessia", role: "Head of Strategy", bio: "Specialista in growth marketing e funnel di conversione. Trasforma i dati in strategie ROI-driven." },
 ];
 
-/* ──────────────────── COMPONENTS ──────────────────── */
+const OBJECTIONS = [
+  { q: '"Troppo caro."', a: "Un addetto alle prenotazioni costa €28–35K lordi/anno. Empire AI lavora 24/7 al costo di 1/10 di un dipendente. ROI in 4–8 mesi." },
+  { q: '"La mia attività è diversa."', a: "Abbiamo lavorato con kebab, pizzerie gourmet, charter yacht, asili nido, dentistici, spa, padel club, noleggi. Se hai clienti, prenotazioni o ordini, Empire funziona." },
+  { q: '"I miei clienti sono anziani."', a: "Il Voice Agent risponde al telefono: il cliente chiama come sempre. Sente solo una voce umana naturale che gli prende l'ordine." },
+  { q: '"Ho paura di perdere il controllo."', a: "Ogni chiamata, prenotazione e ordine è tracciato su dashboard. Puoi intervenire, modificare, bloccare l'AI. Tu resti il capo: l'AI esegue." },
+  { q: '"Ho già un gestionale."', a: "Empire si integra con TheFork, Booking, Stripe, Shopify, Teamsystem, Wix. Non rifacciamo quello che funziona, aggiungiamo gli agenti AI sopra." },
+  { q: '"E se l\'AI sbaglia?"', a: "Nei primi 90 giorni un Empire Agent supervisiona ogni interazione. Addestriamo sui tuoi casi reali. Error rate medio dopo 60 giorni: 1,4%." },
+];
 
-function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+const FAQS = [
+  { q: "In quanto tempo va live la mia webapp + agenti AI?", a: "14 giorni lavorativi dal contratto firmato. Giorni 1–3: strategia + wireframe. Giorni 4–9: design, build, integrazioni. Giorni 10–12: training AI. Giorni 13–14: QA e lancio." },
+  { q: "Chi possiede il codice, i dati e le app?", a: "Tu. Consegniamo repository, credenziali hosting, export completi. Empire non è una gabbia: se vuoi portare via tutto, lo fai in 48 ore." },
+  { q: "Funziona davvero per il mio settore?", a: "Empire AI è settore-agnostico. Operiamo in ristorazione, wellness, sport, beauty, real estate, hospitality, charter, ecommerce e altri 25+ settori. L'AI viene addestrata sulle dinamiche del tuo." },
+  { q: "I clienti si accorgono che parlano con un'AI?", a: "Il 94% dei clienti nei test non distingue l'AI da un operatore umano. Per domande complesse, il sistema trasferisce la conversazione al tuo team in modo trasparente." },
+  { q: "Quali integrazioni sono disponibili?", a: "WhatsApp Business API, Instagram, Facebook, Google Business, POS (SumUp, Stripe), gestionali (Treatwell, Mindbody), calendari, sistemi di pagamento. Se non c'è, lo integriamo." },
+  { q: "Quanto costa mantenere il sistema attivo?", a: "Da €79/mese (Digital Start) a €149/mese (Digital Scale) per ottimizzazione continua, hosting e API AI. Custom per Digital Empire. Nessuna sorpresa." },
+  { q: "Come inizio?", a: "Prenoti una call di 20 minuti. Un Empire Agent ti fa 8 domande, ti mostra 2 casi simili al tuo e ti manda preventivo dettagliato entro 48 ore. Gratis, senza vincoli." },
+];
+
+/* ─────────── COMPONENTS ─────────── */
+
+function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
   const { ref, visible } = useReveal<HTMLDivElement>();
   return (
-    <div
-      ref={ref}
-      className={`empire-reveal ${visible ? "is-visible" : ""}`}
-      style={{ transitionDelay: visible ? `${delay}ms` : "0ms" }}
-    >
+    <div ref={ref} className={`empire-reveal ${visible ? "is-visible" : ""} ${className}`} style={{ transitionDelay: visible ? `${delay}ms` : "0ms" }}>
       {children}
     </div>
   );
 }
 
-function ImpactCard({ num, suffix, label }: { num: number; suffix: string; label: string }) {
+function Stat({ num, prefix, suffix, label }: { num: number; prefix: string; suffix: string; label: string }) {
   const { ref, visible } = useReveal<HTMLDivElement>();
   const value = useCountUp(num, visible);
   return (
-    <div ref={ref} className="empire-impact-card">
-      <span className="empire-impact-num">
-        {Math.round(value)}
-        {suffix}
-      </span>
-      <p className="empire-impact-label">{label}</p>
+    <div ref={ref} className="empire-stat">
+      <b>{prefix}{Math.round(value).toLocaleString("it-IT")}{suffix}</b>
+      <span>{label}</span>
     </div>
   );
 }
@@ -261,7 +144,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
     <div className={`empire-faq-item ${open ? "is-open" : ""}`}>
-      <button className="empire-faq-q" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+      <button className="empire-faq-q" onClick={() => setOpen(o => !o)} aria-expanded={open}>
         <span>{q}</span>
         <span className="empire-faq-icon">▾</span>
       </button>
@@ -270,220 +153,201 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   );
 }
 
-/* ──────────────────── PAGE ──────────────────── */
+/* ─────────── PAGE ─────────── */
 
 export default function EmpireHomePage() {
-  const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSector, setActiveSector] = useState(0);
+  const [heroShown, setHeroShown] = useState(false);
 
-  // SEO
   useEffect(() => {
-    const prevTitle = document.title;
-    document.title = "Empire AI — Automazione Autonoma per il Business Italiano";
-    const meta = document.querySelector('meta[name="description"]');
-    const prevDesc = meta?.getAttribute("content") ?? "";
-    if (meta) {
-      meta.setAttribute(
-        "content",
-        "Empire AI: il sistema di automazione autonoma che trasforma il tuo business in una macchina di acquisizione clienti operativa 24/7. Metodo Sebastiano.",
-      );
-    }
-    return () => {
-      document.title = prevTitle;
-      if (meta && prevDesc) meta.setAttribute("content", prevDesc);
-    };
-  }, []);
-
-  // Navbar scroll state + body scroll lock when mobile menu is open
-  useEffect(() => {
+    document.title = "Empire AI — Sostituisci i tuoi dipendenti con agenti AI 24/7";
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    const t = window.setTimeout(() => setHeroShown(true), 200);
+    return () => { window.removeEventListener("scroll", onScroll); window.clearTimeout(t); };
   }, []);
-  useEffect(() => {
-    document.body.style.overflow = navOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [navOpen]);
 
-  // Duplicate marquee for seamless loop
-  const marqueeKeywords = [...MARQUEE_KEYWORDS, ...MARQUEE_KEYWORDS];
-  const marqueeSectors = [...SECTORS, ...SECTORS];
-  const marqueeTestimonials = [...TESTIMONIALS, ...TESTIMONIALS];
+  const marquee = [...MARQUEE, ...MARQUEE];
 
   return (
     <div className="empire-home">
-      {/* ─── 1. NAVBAR ─── */}
-      <nav className={`empire-nav ${scrolled ? "is-scrolled" : ""}`}>
-        <a href="#top" className="empire-nav-logo">
-          EMPIRE <span className="ai">AI</span>
-        </a>
-        <div className={`empire-nav-links ${navOpen ? "is-open" : ""}`}>
-          {NAV_LINKS.map((l) => (
-            <a key={l.href} href={l.href} onClick={() => setNavOpen(false)}>
-              {l.label}
-            </a>
-          ))}
-          <a href="#pricing" className="empire-btn empire-btn--gold empire-nav-cta" onClick={() => setNavOpen(false)}>
-            Prenota una Call
+      {/* NAV */}
+      <nav className="empire-nav" style={{ opacity: scrolled ? 1 : 0.98 }}>
+        <div className="empire-nav-inner">
+          <a href="#top" className="empire-brand">
+            <span className="empire-brand-mark">E</span>
+            <span>Empire.AI</span>
           </a>
+          <div className="empire-nav-links">
+            {NAV_LINKS.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
+          </div>
+          <a href="#pricing" className="empire-btn empire-btn--gold">Prenota call →</a>
         </div>
-        <button className="empire-nav-burger" onClick={() => setNavOpen((o) => !o)} aria-label="Menu">
-          <span /><span /><span />
-        </button>
       </nav>
 
       <div id="top" />
 
-      {/* ─── 2. HERO ─── */}
-      <CinematicHero />
+      {/* HERO */}
+      <section className="empire-hero">
+        <div className="empire-hero-grain" />
+        <div className="empire-wrap empire-hero-inner">
+          <div>
+            <span className="empire-eyebrow"><span className="dot" />Empire.AI · Webapp + 4 Agenti AI</span>
+            <h1 style={{ marginTop: 28 }}>
+              <span className="line"><span className={`word ${heroShown ? "shown" : ""}`} style={{ transitionDelay: "0.05s" }}>Sostituisci&nbsp;</span><span className={`word ${heroShown ? "shown" : ""}`} style={{ transitionDelay: "0.15s" }}>i&nbsp;</span><span className={`word ${heroShown ? "shown" : ""}`} style={{ transitionDelay: "0.22s" }}>dipendenti.</span></span>
+              <span className="line"><span className={`word empire-italic-gold ${heroShown ? "shown" : ""}`} style={{ transitionDelay: "0.38s" }}>La&nbsp;tua&nbsp;azienda</span></span>
+              <span className="line"><span className={`word ${heroShown ? "shown" : ""}`} style={{ transitionDelay: "0.55s" }}>lavora&nbsp;</span><span className={`word ${heroShown ? "shown" : ""}`} style={{ transitionDelay: "0.62s" }}>mentre&nbsp;</span><span className={`word ${heroShown ? "shown" : ""}`} style={{ transitionDelay: "0.7s" }}>dormi.</span></span>
+            </h1>
+            <p className="empire-hero-sub">
+              Webapp su misura + 4 agenti AI che rispondono alle chiamate, vendono, riservano e chiedono recensioni — 24/7, in tutte le lingue. Setup in 14 giorni. Oltre 25 settori coperti.
+            </p>
+            <div className="empire-hero-ctas">
+              <a href="#pricing" className="empire-btn empire-btn--gold">Parla con un Empire Agent →</a>
+              <a href="#portfolio" className="empire-btn empire-btn--ghost">Vedi i progetti live</a>
+            </div>
+            <div className="empire-hero-meta">
+              <div className="kpi"><b>14gg</b><span>Go-live medio</span></div>
+              <div className="kpi"><b>25+</b><span>Settori coperti</span></div>
+              <div className="kpi"><b>€79</b><span>/mese ottimizzazione</span></div>
+              <div className="kpi"><b>24/7</b><span>Sempre attivi</span></div>
+            </div>
+          </div>
 
-      {/* ─── 3. MARQUEE KEYWORDS ─── */}
-      <div className="empire-marquee">
+          <div className="empire-phone-stack">
+            <div className="empire-phone p1 empire-floating d1"><img src={HERO_PHONES[1].url} alt={HERO_PHONES[1].name} /><span className="badge">{HERO_PHONES[1].sector}</span></div>
+            <div className="empire-phone p2 empire-floating d2"><img src={HERO_PHONES[0].url} alt={HERO_PHONES[0].name} /><span className="badge">⭐ {HERO_PHONES[0].sector}</span></div>
+            <div className="empire-phone p3 empire-floating d3"><img src={HERO_PHONES[2].url} alt={HERO_PHONES[2].name} /><span className="badge">{HERO_PHONES[2].sector}</span></div>
+            <div className="empire-phone p4 empire-floating"><img src={HERO_PHONES[3].url} alt={HERO_PHONES[3].name} /></div>
+          </div>
+        </div>
+      </section>
+
+      {/* MARQUEE */}
+      <div className="empire-marquee-band">
         <div className="empire-marquee-track">
-          {marqueeKeywords.map((k, i) => (
-            <span key={i} className="empire-marquee-item">{k}</span>
-          ))}
+          {marquee.map((m, i) => <span key={i}>{m}</span>)}
         </div>
       </div>
 
-      {/* ─── 4. ABOUT ─── */}
-      <section id="about" className="empire-section empire-section--light">
-        <div className="empire-container">
-          <div className="empire-about-grid">
-            <Reveal>
-              <div className="empire-about-visual" />
-            </Reveal>
-            <Reveal delay={150}>
+      {/* STATS */}
+      <section className="empire-sec-ink empire-sec-pad" id="numbers">
+        <div className="empire-wrap">
+          <Reveal>
+            <div className="empire-head">
               <div>
-                <span className="empire-eyebrow">Chi Siamo</span>
-                <h2 className="empire-section-title" style={{ marginTop: 20 }}>
-                  Non siamo un'agenzia. <span className="italic">Siamo architetti di sistemi autonomi.</span>
-                </h2>
-                <p style={{ fontSize: 16, lineHeight: 1.75, color: "var(--eh-text-muted-dark)", marginTop: 24 }}>
-                  Empire AI nasce dal Metodo Sebastiano: un framework proprietario che integra intelligenza artificiale,
-                  automazione conversazionale e strategie di acquisizione per trasformare qualsiasi business in un
-                  ecosistema digitale autosufficiente. Ogni sistema che costruiamo non si limita a rispondere ai clienti,
-                  li conquista, li fidelizza e li monetizza in modo autonomo e continuo.
-                </p>
-                <div className="empire-about-stats">
-                  <div className="empire-stat-mini"><span className="num">150+</span><span className="label">Clienti Attivi</span></div>
-                  <div className="empire-stat-mini"><span className="num">97%</span><span className="label">Retention</span></div>
-                  <div className="empire-stat-mini"><span className="num">12+</span><span className="label">Settori</span></div>
-                </div>
+                <span className="empire-eyebrow"><span className="dot" />Numeri</span>
+                <h2 style={{ marginTop: 20 }}>I numeri di Empire AI <span className="empire-italic-gold">nel 2025</span></h2>
               </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 5. IMPACT NUMBERS ─── */}
-      <section className="empire-section empire-section--dark">
-        <div className="empire-container">
-          <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Impatto Misurabile</span>
-              <h2 className="empire-section-title">
-                I numeri parlano. <span className="italic">Noi li facciamo crescere.</span>
-              </h2>
-              <p className="empire-section-sub">
-                Risultati reali dei nostri clienti nei primi 90 giorni di attivazione del sistema Empire AI.
+              <p className="empire-lede">
+                Dietro ogni agente AI c'è un sistema testato su decine di business reali. Pricing trasparente, allineato ai piani ufficiali del nostro listino.
               </p>
             </div>
           </Reveal>
-          <div className="empire-impact-grid">
-            {IMPACT_NUMBERS.map((n) => (
-              <ImpactCard key={n.label} {...n} />
-            ))}
+          <div className="empire-stats">
+            {STATS.map((s, i) => <Stat key={i} {...s} />)}
           </div>
         </div>
       </section>
 
-      {/* ─── 6. PROBLEM / SOLUTION ─── */}
-      <section className="empire-section empire-section--light">
-        <div className="empire-container">
+      {/* SECTORS — sticky */}
+      <section className="empire-sec-ivory empire-sec-pad" id="sectors">
+        <div className="empire-wrap">
           <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Il Problema Reale</span>
-              <h2 className="empire-section-title" style={{ color: "var(--eh-text-dark)" }}>
-                Ogni minuto senza automazione <span className="italic">è fatturato perso.</span>
-              </h2>
-            </div>
-          </Reveal>
-          <div className="empire-ps-grid">
-            <Reveal>
-              <div className="empire-ps-card empire-ps-card--bad">
-                <div className="empire-ps-title">Senza Empire AI</div>
-                <ul className="empire-ps-list">
-                  {PROBLEM_LIST.map((p, i) => (
-                    <li key={i}><span className="ico">×</span><span>{p}</span></li>
-                  ))}
-                </ul>
+            <div className="empire-head">
+              <div>
+                <span className="empire-eyebrow"><span className="dot" />25+ Settori coperti</span>
+                <h2 style={{ marginTop: 20 }}>Il tuo settore <span className="empire-italic-gold">è già pronto.</span></h2>
               </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="empire-ps-card empire-ps-card--good">
-                <div className="empire-ps-title">Con Empire AI</div>
-                <ul className="empire-ps-list">
-                  {SOLUTION_LIST.map((p, i) => (
-                    <li key={i}><span className="ico">✓</span><span>{p}</span></li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 7. FEATURES BENTO ─── */}
-      <section id="features" className="empire-section empire-section--dark">
-        <div className="empire-container">
-          <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Le Armi del Sistema</span>
-              <h2 className="empire-section-title">
-                Quattro pilastri. <span className="italic">Un ecosistema invincibile.</span>
-              </h2>
-              <p className="empire-section-sub">
-                Ogni modulo lavora in sinergia per creare un sistema di acquisizione e fidelizzazione che opera mentre dormi.
+              <p className="empire-lede">
+                Abbiamo mappato i flussi operativi di 25+ settori — dalle pizzerie ai charter di lusso, dagli asili nido ai noleggi yacht. Clicca un settore: a destra vedi la webapp reale di un nostro cliente, live e funzionante.
               </p>
             </div>
           </Reveal>
-          <div className="empire-bento">
-            {FEATURES.map((f, i) => (
-              <Reveal key={f.title} delay={i * 100}>
-                <div className="empire-bento-card">
-                  <div className="empire-bento-icon">{f.icon}</div>
-                  <h3 className="empire-bento-title">{f.title}</h3>
-                  <p className="empire-bento-desc">{f.desc}</p>
+
+          <div className="empire-sector-grid">
+            <div className="empire-sector-list">
+              {SECTOR_SHOWCASE.map((s, i) => (
+                <button key={i} className="empire-sector-card" data-active={activeSector === i} onClick={() => setActiveSector(i)}>
+                  <h4>
+                    <span>{s.title}</span>
+                    <span className="chip">{s.chip}</span>
+                  </h4>
+                  <p>{s.desc}</p>
+                  <div className="biz">→ {s.biz}</div>
+                </button>
+              ))}
+            </div>
+
+            <div className="empire-sector-stage">
+              <div className="empire-stage-canvas">
+                <div className="empire-stage-phone">
+                  <img src={SECTOR_SHOWCASE[activeSector].item.url} alt={SECTOR_SHOWCASE[activeSector].item.name} />
                 </div>
-              </Reveal>
-            ))}
+              </div>
+              <span className="empire-stage-tag">{SECTOR_SHOWCASE[activeSector].chip}</span>
+              <div className="empire-stage-name">{SECTOR_SHOWCASE[activeSector].item.name}</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ─── 8. STEPS ─── */}
-      <section className="empire-section empire-section--light">
-        <div className="empire-container">
+      {/* PORTFOLIO BENTO */}
+      <section className="empire-sec-ink empire-sec-pad" id="portfolio">
+        <div className="empire-wrap">
           <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Come Funziona</span>
-              <h2 className="empire-section-title" style={{ color: "var(--eh-text-dark)" }}>
-                Da zero a sistema operativo <span className="italic">in 4 fasi.</span>
-              </h2>
-              <p className="empire-section-sub">Un processo chirurgico. Ogni fase costruisce le fondamenta della successiva.</p>
+            <div className="empire-head">
+              <div>
+                <span className="empire-eyebrow"><span className="dot" />Portfolio · 12 progetti reali</span>
+                <h2 style={{ marginTop: 20 }}>Non solo promesse. <span className="empire-italic-gold">Progetti già online.</span></h2>
+              </div>
+              <p className="empire-lede">
+                Dalle pizzerie ai resort, dai centri fisioterapici ai beach club: ogni tile è una webapp consegnata, con screenshot reali presi direttamente dai nostri clienti. Niente stock, niente fuffa.
+              </p>
             </div>
           </Reveal>
-          <div className="empire-steps">
+
+          <Reveal>
+            <div className="empire-bento">
+              {PORTFOLIO_ITEMS.map((p, i) => {
+                const sizes = ["c-l", "c-m", "c-s", "c-s", "c-l", "c-m", "c-s", "c-s", "c-m", "c-m", "c-m", "c-m"];
+                return (
+                  <div key={i} className={`card ${sizes[i]}`}>
+                    <img src={p.url} alt={p.name} loading="lazy" />
+                    <div className="meta">
+                      <b>{p.name}</b>
+                      <span>{p.sector}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="empire-sec-ivory empire-sec-pad" id="how">
+        <div className="empire-wrap">
+          <Reveal>
+            <div className="empire-head">
+              <div>
+                <span className="empire-eyebrow"><span className="dot" />4 Agenti AI · 1 Webapp</span>
+                <h2 style={{ marginTop: 20 }}>Come Empire AI <span className="empire-italic-gold">lavora per te.</span></h2>
+              </div>
+              <p className="empire-lede">
+                In 14 giorni costruiamo la tua webapp + agenti AI specializzati. Ti consegniamo un sistema completo che lavora 24/7, in tutte le lingue, senza ferie, senza assenze.
+              </p>
+            </div>
+          </Reveal>
+          <div className="empire-how-grid">
             {STEPS.map((s, i) => (
-              <Reveal key={s.n} delay={i * 100}>
-                <div className="empire-step-card">
-                  <span className="empire-step-num">{s.n}</span>
-                  <h3 className="empire-step-title">{s.t}</h3>
-                  <p className="empire-step-desc">{s.d}</p>
+              <Reveal key={i} delay={i * 80}>
+                <div className="empire-how-card">
+                  <span className="num">{s.n}</span>
+                  <h4>{s.t}</h4>
+                  <p>{s.d}</p>
                 </div>
               </Reveal>
             ))}
@@ -491,120 +355,68 @@ export default function EmpireHomePage() {
         </div>
       </section>
 
-      {/* ─── 9. PERSONALIZATION ─── */}
-      <section className="empire-section empire-section--dark">
-        <div className="empire-container">
+      {/* PRICING */}
+      <section className="empire-sec-ivory empire-sec-pad" id="pricing" style={{ paddingTop: 0 }}>
+        <div className="empire-wrap">
           <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Personalizzazione Totale</span>
-              <h2 className="empire-section-title">
-                Il tuo brand. <span className="italic">La nostra intelligenza.</span>
-              </h2>
-              <p className="empire-section-sub">
-                Ogni sistema Empire AI è unico come il business che rappresenta. Nessun template, nessun copia-incolla.
+            <div className="empire-head">
+              <div>
+                <span className="empire-eyebrow"><span className="dot" />Pacchetti Empire</span>
+                <h2 style={{ marginTop: 20 }}>3 livelli. <span className="empire-italic-gold">Zero rischi.</span></h2>
+              </div>
+              <p className="empire-lede">
+                Ogni pacchetto include webapp su misura, agenti AI pre-addestrati sul tuo settore, onboarding con un Empire Agent dedicato e ottimizzazione continua. Setup una tantum + canone mensile trasparente.
               </p>
             </div>
           </Reveal>
-          <div className="empire-perso">
-            {PERSONALIZATION.map((p, i) => (
-              <Reveal key={p.t} delay={i * 80}>
-                <div className="empire-perso-card">
-                  <h3 className="empire-perso-title">{p.t}</h3>
-                  <p className="empire-perso-desc">{p.d}</p>
+
+          <div className="empire-packs">
+            {PRICING.map((p, i) => (
+              <div key={i} className={`empire-pack ${p.featured ? "featured" : ""}`}>
+                {p.featured && <span className="ribbon">{p.tier}</span>}
+                {!p.featured && <span className="p-tier">{p.tier}</span>}
+                <div className="p-name">{p.name}</div>
+                <div className="p-price">
+                  <b>{p.setup}</b>
+                  <span>{p.period}</span>
                 </div>
-              </Reveal>
+                <span className="p-monthly">{p.monthly}</span>
+                <p style={{ margin: 0, fontSize: 14, color: p.featured ? "rgba(246,243,238,.7)" : "var(--mute-2)" }}>{p.desc}</p>
+                <ul>
+                  {p.features.map((f, j) => <li key={j}>{f}</li>)}
+                </ul>
+                <a href="#contact" className={`empire-btn ${p.featured ? "empire-btn--gold" : "empire-btn--ghost"}`} style={{ marginTop: "auto" }}>{p.cta} →</a>
+              </div>
             ))}
           </div>
+          <p className="empire-pack-note">Tutti i prezzi IVA esclusa. Rateizzazione 3x o 6x disponibile. Cancelli quando vuoi.</p>
         </div>
       </section>
 
-      {/* ─── 10. SECTORS MARQUEE ─── */}
-      <section className="empire-section empire-section--light" style={{ paddingBottom: 60 }}>
-        <div className="empire-container">
+      {/* TEAM */}
+      <section className="empire-sec-ink empire-sec-pad" id="team">
+        <div className="empire-wrap">
           <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Settori</span>
-              <h2 className="empire-section-title" style={{ color: "var(--eh-text-dark)" }}>
-                Un sistema. <span className="italic">Ogni business.</span>
-              </h2>
-              <p className="empire-section-sub">Empire AI si adatta a qualsiasi settore. Ecco dove stiamo già dominando.</p>
-            </div>
-          </Reveal>
-        </div>
-        <div className="empire-marquee empire-marquee--light" style={{ background: "transparent", borderColor: "transparent" }}>
-          <div className="empire-marquee-track" style={{ animationDuration: "55s" }}>
-            {marqueeSectors.map((s, i) => (
-              <span key={i} className="empire-sector-chip">{s}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 11. PORTFOLIO COVERFLOW ─── */}
-      <section id="portfolio" className="empire-section empire-section--dark">
-        <div className="empire-container">
-          <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Portfolio</span>
-              <h2 className="empire-section-title">
-                Non promettiamo. <span className="italic">Dimostriamo.</span>
-              </h2>
-              <p className="empire-section-sub">
-                12 progetti reali. 12 business trasformati. Scorri per esplorare i nostri sistemi in azione.
+            <div className="empire-head">
+              <div>
+                <span className="empire-eyebrow"><span className="dot" />Empire Agents · il team umano</span>
+                <h2 style={{ marginTop: 20 }}>Dietro l'AI, <span className="empire-italic-gold">persone vere.</span></h2>
+              </div>
+              <p className="empire-lede">
+                Il software ti serve, ma la strategia la fanno le persone. Ogni progetto Empire è seguito da specialisti: strategist, AI engineer e project lead. Parli con loro, non con un bot.
               </p>
-            </div>
-          </Reveal>
-          <PortfolioCoverflow />
-        </div>
-      </section>
-
-      {/* ─── 12. AGENTS ─── */}
-      <section className="empire-section empire-section--light">
-        <div className="empire-container">
-          <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Agenti AI</span>
-              <h2 className="empire-section-title" style={{ color: "var(--eh-text-dark)" }}>
-                Il tuo team digitale. <span className="italic">Mai malato, mai in ferie.</span>
-              </h2>
-              <p className="empire-section-sub">
-                Ogni agente AI è specializzato in un compito specifico e lavora in sinergia con gli altri per gestire l'intero ciclo di vita del cliente.
-              </p>
-            </div>
-          </Reveal>
-          <div className="empire-agents">
-            {AGENTS.map((a, i) => (
-              <Reveal key={a.name} delay={i * 80}>
-                <div className="empire-agent-card">
-                  <div className="empire-agent-avatar">{a.initials}</div>
-                  <h3 className="empire-agent-name">{a.name}</h3>
-                  <p className="empire-agent-desc">{a.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 13. TEAM ─── */}
-      <section className="empire-section empire-section--dark">
-        <div className="empire-container">
-          <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Il Team</span>
-              <h2 className="empire-section-title">
-                Le menti dietro <span className="italic">Empire AI.</span>
-              </h2>
             </div>
           </Reveal>
           <div className="empire-team">
-            {TEAM.map((m, i) => (
-              <Reveal key={m.name} delay={i * 100}>
-                <div className="empire-team-card">
-                  <div className="empire-team-photo">{m.initials}</div>
-                  <h3 className="empire-team-name">{m.name}</h3>
-                  <div className="empire-team-role">{m.role}</div>
-                  <p className="empire-team-bio">{m.bio}</p>
+            {TEAM.map((t, i) => (
+              <Reveal key={i} delay={i * 80}>
+                <div className="empire-tm">
+                  <div className="av">{t.initials}</div>
+                  <div>
+                    <b>{t.name}</b>
+                    <span className="role">{t.role}</span>
+                    <p>{t.bio}</p>
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -612,105 +424,26 @@ export default function EmpireHomePage() {
         </div>
       </section>
 
-      {/* ─── 14. TESTIMONIALS MARQUEE ─── */}
-      <section className="empire-section empire-section--light" style={{ paddingBottom: 60 }}>
-        <div className="empire-container">
+      {/* OBJECTIONS */}
+      <section className="empire-sec-ink empire-sec-pad" style={{ paddingTop: 0 }}>
+        <div className="empire-wrap">
           <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Testimonials</span>
-              <h2 className="empire-section-title" style={{ color: "var(--eh-text-dark)" }}>
-                Parlano i risultati. <span className="italic">Non le promesse.</span>
-              </h2>
-            </div>
-          </Reveal>
-        </div>
-        <div className="empire-marquee empire-marquee--light" style={{ background: "transparent", borderColor: "transparent", padding: "8px 0" }}>
-          <div className="empire-marquee-track" style={{ animationDuration: "65s" }}>
-            {marqueeTestimonials.map((t, i) => (
-              <div key={i} className="empire-testimonial-card">
-                <div className="empire-testimonial-stars">★★★★★</div>
-                <p className="empire-testimonial-text">"{t.text}"</p>
-                <div className="empire-testimonial-author">— {t.author}</div>
+            <div className="empire-head">
+              <div>
+                <span className="empire-eyebrow"><span className="dot" />Obiezioni frequenti</span>
+                <h2 style={{ marginTop: 20 }}>Le 6 cose che <span className="empire-italic-gold">pensi adesso.</span></h2>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 15. COMPARE TABLE ─── */}
-      <section className="empire-section empire-section--dark">
-        <div className="empire-container">
-          <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Confronto</span>
-              <h2 className="empire-section-title">
-                Empire AI <span className="italic">vs il resto del mercato.</span>
-              </h2>
-            </div>
-          </Reveal>
-          <Reveal delay={120}>
-            <div className="empire-compare" style={{ overflowX: "auto" }}>
-              <table className="empire-compare-table">
-                <thead>
-                  <tr>
-                    <th>Funzionalità</th>
-                    <th>Empire AI</th>
-                    <th>Agenzia Tradizionale</th>
-                    <th>Fai da Te</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {COMPARE_ROWS.map((row) => (
-                    <tr key={row[0]}>
-                      <td>{row[0]}</td>
-                      {row.slice(1).map((cell, i) => (
-                        <td key={i}>
-                          {cell === "yes" && <span className="empire-compare-yes">✓</span>}
-                          {cell === "no" && <span className="empire-compare-no">×</span>}
-                          {cell === "partial" && <span className="empire-compare-partial">parziale</span>}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ─── 16. PRICING ─── */}
-      <section id="pricing" className="empire-section empire-section--light">
-        <div className="empire-container">
-          <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">Piani</span>
-              <h2 className="empire-section-title" style={{ color: "var(--eh-text-dark)" }}>
-                Investi nel sistema. <span className="italic">Raccogli i risultati.</span>
-              </h2>
-              <p className="empire-section-sub">
-                Ogni piano include setup completo, training AI personalizzato per il tuo settore e supporto dedicato.
-                Setup una tantum rateizzabile in 3x o 6x. Canone mensile ricorrente.
+              <p className="empire-lede">
+                Abbiamo già parlato con centinaia di imprenditori. Le obiezioni sono sempre le stesse sei. Le affrontiamo una per una, senza marketing.
               </p>
             </div>
           </Reveal>
-          <div className="empire-pricing">
-            {PRICING.map((p, i) => (
-              <Reveal key={p.name} delay={i * 100}>
-                <div className={`empire-pricing-card ${p.featured ? "empire-pricing-card--featured" : ""}`}>
-                  {p.featured && <span className="empire-pricing-badge">Consigliato</span>}
-                  <div className="empire-pricing-name">{p.name}</div>
-                  <div className="empire-pricing-price">{p.setup}</div>
-                  <div className="empire-pricing-period">{p.period} · poi {p.monthly}</div>
-                  <p style={{ fontSize: 13, color: p.featured ? "var(--eh-text-muted)" : "var(--eh-text-muted-dark)", marginBottom: 24, lineHeight: 1.6 }}>
-                    {p.desc}
-                  </p>
-                  <ul className="empire-pricing-list">
-                    {p.features.map((f, j) => (
-                      <li key={j}>{f}</li>
-                    ))}
-                  </ul>
-                  <a href="#contact" className={`empire-btn ${p.ctaClass}`}>{p.cta}</a>
+          <div className="empire-objections">
+            {OBJECTIONS.map((o, i) => (
+              <Reveal key={i} delay={i * 60}>
+                <div className="empire-obj">
+                  <div className="q">{o.q}</div>
+                  <div className="a">{o.a}</div>
                 </div>
               </Reveal>
             ))}
@@ -718,82 +451,75 @@ export default function EmpireHomePage() {
         </div>
       </section>
 
-      {/* ─── 17. FAQ ─── */}
-      <section id="faq" className="empire-section empire-section--dark">
-        <div className="empire-container">
+      {/* FAQ */}
+      <section className="empire-sec-ivory empire-sec-pad" id="faq">
+        <div className="empire-wrap">
           <Reveal>
-            <div className="empire-section-header">
-              <span className="empire-eyebrow">FAQ</span>
-              <h2 className="empire-section-title">
-                Domande frequenti. <span className="italic">Risposte concrete.</span>
-              </h2>
+            <div style={{ textAlign: "center", marginBottom: 20 }}>
+              <span className="empire-eyebrow"><span className="dot" />Domande frequenti</span>
+              <h2 style={{ marginTop: 20 }}>Tutto ciò che un imprenditore <span className="empire-italic-gold">ci chiede in call.</span></h2>
+              <p className="empire-lede" style={{ margin: "20px auto 0" }}>
+                Se la domanda non è qui, fissa una call di 20 minuti: un Empire Agent ti risponde personalmente, senza slide e senza obbligo.
+              </p>
             </div>
           </Reveal>
-          <Reveal delay={120}>
-            <div className="empire-faq">
-              {FAQS.map((f) => (
-                <FaqItem key={f.q} q={f.q} a={f.a} />
-              ))}
+          <div className="empire-faq">
+            {FAQS.map((f, i) => <FaqItem key={i} {...f} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA FINAL */}
+      <section className="empire-sec-ink empire-sec-pad" id="contact">
+        <div className="empire-wrap">
+          <Reveal>
+            <div className="empire-cta-final">
+              <span className="empire-eyebrow"><span className="dot" />Inizia oggi</span>
+              <h2 style={{ marginTop: 20 }}>La tua azienda può <span className="empire-italic-gold">lavorare da sola.</span> Bastano 14 giorni.</h2>
+              <p>
+                Prenota una call di 20 minuti con un Empire Agent. Ti facciamo 8 domande, ti mostriamo 2 casi simili al tuo e ti mandiamo un preventivo dettagliato entro 48 ore. Gratis, senza vincoli.
+              </p>
+              <div className="ctas">
+                <a href="https://wa.me/393513806722" target="_blank" rel="noreferrer" className="empire-btn empire-btn--gold">Prenota call WhatsApp →</a>
+                <a href="mailto:info@empireaigroup.com" className="empire-btn empire-btn--ghost">Scrivici via email</a>
+              </div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ─── 18. FINAL CTA ─── */}
-      <section id="contact" className="empire-final-cta">
-        <Reveal>
-          <span className="empire-eyebrow">Il Prossimo Passo</span>
-          <h2 className="empire-section-title" style={{ marginTop: 24, marginBottom: 20 }}>
-            Il tuo business merita un sistema <span className="italic">che lavora per te.</span>
-          </h2>
-          <p className="empire-section-sub" style={{ marginBottom: 36 }}>
-            Prenota una call strategica con il nostro team. Analizzeremo il tuo business e ti mostreremo
-            esattamente come Empire AI può trasformarlo.
-          </p>
-          <a href="https://wa.me/393000000000" className="empire-btn empire-btn--gold empire-btn--lg">
-            Prenota la Tua Call Strategica
-          </a>
-        </Reveal>
-      </section>
-
-      {/* ─── 19. FOOTER ─── */}
+      {/* FOOTER */}
       <footer className="empire-footer">
-        <div className="empire-footer-grid">
-          <div>
-            <div className="empire-footer-brand-name">EMPIRE <span className="ai">AI</span></div>
-            <p className="empire-footer-brand-desc">
-              Automazione autonoma per il business italiano. Metodo Sebastiano — il framework che trasforma
-              qualsiasi attività in un ecosistema digitale autosufficiente.
-            </p>
+        <div className="empire-wrap">
+          <div className="empire-ft">
+            <div>
+              <a href="#top" className="empire-brand" style={{ marginBottom: 16, display: "inline-flex" }}>
+                <span className="empire-brand-mark">E</span>
+                <span>Empire.AI</span>
+              </a>
+              <p style={{ color: "rgba(246,243,238,.6)", fontSize: 14, maxWidth: "40ch", margin: "12px 0 0" }}>
+                Sostituisci i tuoi dipendenti con agenti AI che lavorano 24/7. Webapp + agenti AI in 14 giorni. Per oltre 25 settori.
+              </p>
+            </div>
+            <div>
+              <b>Navigazione</b>
+              {NAV_LINKS.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
+            </div>
+            <div>
+              <b>Contatti</b>
+              <a href="mailto:info@empireaigroup.com">info@empireaigroup.com</a>
+              <a href="https://wa.me/393513806722">WhatsApp</a>
+            </div>
+            <div>
+              <b>Legale</b>
+              <a href="/privacy-policy">Privacy Policy</a>
+              <a href="/cookie-policy">Cookie Policy</a>
+            </div>
           </div>
-          <div>
-            <div className="empire-footer-col-title">Prodotto</div>
-            <ul className="empire-footer-links">
-              <li><a href="#features">Sistema</a></li>
-              <li><a href="#portfolio">Portfolio</a></li>
-              <li><a href="#pricing">Piani</a></li>
-              <li><a href="/auth">Accedi</a></li>
-            </ul>
+          <div className="empire-ft-bottom">
+            <span>© {new Date().getFullYear()} Empire AI Group · Tutti i diritti riservati</span>
+            <span>Made with ✦ in Italy</span>
           </div>
-          <div>
-            <div className="empire-footer-col-title">Azienda</div>
-            <ul className="empire-footer-links">
-              <li><a href="#about">Chi Siamo</a></li>
-              <li><a href="#contact">Contatti</a></li>
-              <li><a href="/join">Diventa Partner</a></li>
-            </ul>
-          </div>
-          <div>
-            <div className="empire-footer-col-title">Risorse</div>
-            <ul className="empire-footer-links">
-              <li><a href="#faq">FAQ</a></li>
-              <li><a href="/privacy">Privacy</a></li>
-              <li><a href="/cookie-policy">Cookie Policy</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="empire-footer-bottom">
-          © 2026 Empire AI Group · Tutti i diritti riservati · Metodo Sebastiano è un marchio registrato
         </div>
       </footer>
     </div>
