@@ -309,24 +309,25 @@ Deno.serve(async (req) => {
     if (FIRECRAWL_KEY) {
       const queryBase = `${lead.name} ${lead.city || ""}`.trim();
       const [igResults, fbResults, yelpResults, taResults, pgResults] = await Promise.all([
-        firecrawlSearch(FIRECRAWL_KEY, `site:instagram.com "${lead.name}" ${lead.city || ""}`, 2),
-        firecrawlSearch(FIRECRAWL_KEY, `site:facebook.com "${lead.name}" ${lead.city || ""}`, 2),
-        firecrawlSearch(FIRECRAWL_KEY, `site:yelp.it ${queryBase}`, 1),
-        firecrawlSearch(FIRECRAWL_KEY, `site:tripadvisor.it ${queryBase}`, 1),
-        firecrawlSearch(FIRECRAWL_KEY, `site:paginegialle.it ${queryBase}`, 1),
+        firecrawlSearch(FIRECRAWL_KEY, `site:instagram.com "${lead.name}" ${lead.city || ""}`, 6),
+        firecrawlSearch(FIRECRAWL_KEY, `site:facebook.com "${lead.name}" ${lead.city || ""}`, 6),
+        firecrawlSearch(FIRECRAWL_KEY, `site:yelp.it ${queryBase}`, 4),
+        firecrawlSearch(FIRECRAWL_KEY, `site:tripadvisor.it ${queryBase}`, 4),
+        firecrawlSearch(FIRECRAWL_KEY, `site:paginegialle.it ${queryBase}`, 4),
       ]);
 
-      // Instagram
-      const igHit = igResults.find((r: any) => r.url?.includes("instagram.com") && !r.url.includes("/p/"));
-      if (igHit) { enrichment.has_instagram = true; enrichment.instagram_url = igHit.url; }
+      // Instagram — solo profili business, no /explore /p /reels …
+      const igPick = pickBestSocialResult(igResults, "instagram", lead.name);
+      if (igPick) { enrichment.has_instagram = true; enrichment.instagram_url = igPick.url; }
 
-      // Facebook
-      const fbHit = fbResults.find((r: any) => r.url?.includes("facebook.com"));
-      if (fbHit) { enrichment.has_facebook = true; enrichment.facebook_url = fbHit.url; }
+      // Facebook — solo pagine business, no /watch /groups /search …
+      const fbPick = pickBestSocialResult(fbResults, "facebook", lead.name);
+      if (fbPick) { enrichment.has_facebook = true; enrichment.facebook_url = fbPick.url; }
 
-      // Yelp scrape per rating
-      if (yelpResults[0]?.url) {
-        const yelpData = await firecrawlScrape(FIRECRAWL_KEY, yelpResults[0].url);
+      // Yelp — solo schede /biz/<slug>
+      const yelpUrl = pickBestListingResult(yelpResults, "yelp", lead.name);
+      if (yelpUrl) {
+        const yelpData = await firecrawlScrape(FIRECRAWL_KEY, yelpUrl);
         if (yelpData?.markdown) {
           const { rating, reviews } = extractRating(yelpData.markdown.slice(0, 3000));
           enrichment.yelp_rating = rating;
@@ -334,9 +335,10 @@ Deno.serve(async (req) => {
         }
       }
 
-      // TripAdvisor scrape
-      if (taResults[0]?.url) {
-        const taData = await firecrawlScrape(FIRECRAWL_KEY, taResults[0].url);
+      // TripAdvisor — solo schede *_Review-*
+      const taUrl = pickBestListingResult(taResults, "tripadvisor", lead.name);
+      if (taUrl) {
+        const taData = await firecrawlScrape(FIRECRAWL_KEY, taUrl);
         if (taData?.markdown) {
           const { rating, reviews } = extractRating(taData.markdown.slice(0, 3000));
           enrichment.tripadvisor_rating = rating;
@@ -344,12 +346,14 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Pagine Gialle = solo presenza
-      enrichment.paginegialle_listing = pgResults.length > 0;
+      // Pagine Gialle — solo schede aziendali, non categorie/ricerca
+      const pgUrl = pickBestListingResult(pgResults, "paginegialle", lead.name);
+      enrichment.paginegialle_listing = !!pgUrl;
 
       enrichment.raw_data = {
         ig_count: igResults.length, fb_count: fbResults.length,
-        yelp_url: yelpResults[0]?.url, ta_url: taResults[0]?.url,
+        ig_handle: igPick?.handle ?? null, fb_handle: fbPick?.handle ?? null,
+        yelp_url: yelpUrl, ta_url: taUrl, pg_url: pgUrl,
         firecrawl_used: true,
       };
     } else {
