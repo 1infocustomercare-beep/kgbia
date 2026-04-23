@@ -1036,11 +1036,14 @@ export function MockupSuiteGenerator({
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* PERSONALIZZAZIONE AVANZATA — glass intensity + color style         */}
         {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] to-transparent p-4 space-y-4">
+        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] to-transparent p-4 sm:p-5 space-y-5">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <Label className="flex items-center gap-1.5 m-0">
-              <Sliders className="h-3.5 w-3.5 text-primary" /> Personalizzazione avanzata
-            </Label>
+            <div>
+              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
+                <Sliders className="h-4 w-4 text-primary" /> Personalizzazione avanzata
+              </Label>
+              <p className="text-xs text-muted-foreground mt-0.5">Glassmorphism · cromia · tipografia</p>
+            </div>
             <button
               type="button"
               disabled={controlsLocked}
@@ -1050,19 +1053,19 @@ export function MockupSuiteGenerator({
                 setBrandFontKey("template");
               }}
               title={lockTitle}
-              className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs px-3 py-1.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               Reset default
             </button>
           </div>
 
           {/* Glassmorphism slider */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="glass-slider" className="text-xs flex items-center gap-1.5 m-0">
-                <Droplets className="h-3 w-3" /> Intensità glassmorphism
+              <Label htmlFor="glass-slider" className="text-sm flex items-center gap-1.5 m-0 font-medium">
+                <Droplets className="h-3.5 w-3.5" /> Intensità glassmorphism
               </Label>
-              <Badge variant="outline" className="text-[10px] font-mono">{glassIntensity}%</Badge>
+              <Badge variant="outline" className="text-xs font-mono">{glassIntensity}%</Badge>
             </div>
             <input
               id="glass-slider"
@@ -1074,9 +1077,9 @@ export function MockupSuiteGenerator({
               disabled={controlsLocked}
               onChange={(e) => setGlassIntensity(Number(e.target.value))}
               title={lockTitle}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-2.5 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
-            <div className="flex justify-between text-[9px] text-muted-foreground">
+            <div className="flex justify-between text-[10px] text-muted-foreground">
               <span>Solido</span>
               <span>Bilanciato</span>
               <span>Vetro intenso</span>
@@ -1084,9 +1087,9 @@ export function MockupSuiteGenerator({
           </div>
 
           {/* Color style segmented */}
-          <div className="space-y-1.5">
-            <Label className="text-xs m-0">Stile cromatico</Label>
-            <div className="grid grid-cols-4 gap-1.5">
+          <div className="space-y-2">
+            <Label className="text-sm m-0 font-medium">Stile cromatico</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {([
                 { key: "vivid",  label: "Vivid",  desc: "Originale" },
                 { key: "muted",  label: "Muted",  desc: "−25% sat." },
@@ -1101,14 +1104,14 @@ export function MockupSuiteGenerator({
                     disabled={controlsLocked}
                     onClick={() => setColorStyle(opt.key)}
                     title={lockTitle}
-                    className={`px-2 py-2 rounded-lg border text-center transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                    className={`px-2 py-2.5 rounded-lg border text-center transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[52px] ${
                       active
-                        ? "border-primary bg-primary/10 shadow-sm scale-[1.02]"
+                        ? "border-primary bg-primary/10 shadow-sm"
                         : "border-border hover:border-primary/40"
                     }`}
                   >
-                    <p className="text-[11px] font-bold leading-tight">{opt.label}</p>
-                    <p className="text-[8px] text-muted-foreground leading-tight mt-0.5">{opt.desc}</p>
+                    <p className="text-sm font-bold leading-tight">{opt.label}</p>
+                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{opt.desc}</p>
                   </button>
                 );
               })}
