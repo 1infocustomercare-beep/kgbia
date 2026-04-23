@@ -4,16 +4,18 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft, DollarSign, Coins, Zap, Server, Building2, Users,
   Pencil, Save, X, Plus, Download, History, AlertTriangle, Wifi, Database,
+  Scale, RefreshCw, TrendingUp, TrendingDown, Receipt, CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useSuperAdminCosts } from "@/hooks/useSuperAdminCosts";
+import { useCostReconciliation } from "@/hooks/useCostReconciliation";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { exportToCSV } from "@/lib/exportCsv";
 
-type Tab = "listino" | "consumi" | "infrastruttura" | "audit";
+type Tab = "listino" | "consumi" | "infrastruttura" | "riconciliazione" | "audit";
 
 const CAT_META: Record<string, { label: string; icon: any; color: string }> = {
   ai_gateway: { label: "AI Gateway", icon: Zap, color: "text-violet-400" },
@@ -29,6 +31,7 @@ export default function SuperAdminCostsPage() {
   const [tab, setTab] = useState<Tab>("listino");
   const [period, setPeriod] = useState<7 | 30 | 90>(30);
   const data = useSuperAdminCosts(period);
+  const recon = useCostReconciliation(period);
 
   // Filtri tab Consumi
   const [filterSector, setFilterSector] = useState("");
@@ -153,6 +156,7 @@ export default function SuperAdminCostsPage() {
           <TabBtn active={tab === "listino"} onClick={() => setTab("listino")} icon={Coins} label="Listino azioni" />
           <TabBtn active={tab === "consumi"} onClick={() => setTab("consumi")} icon={Users} label="Consumi" />
           <TabBtn active={tab === "infrastruttura"} onClick={() => setTab("infrastruttura")} icon={Server} label="Infrastruttura" />
+          <TabBtn active={tab === "riconciliazione"} onClick={() => setTab("riconciliazione")} icon={Scale} label="Riconciliazione" />
           <TabBtn active={tab === "audit"} onClick={() => setTab("audit")} icon={History} label="Audit" />
         </div>
 
