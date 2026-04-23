@@ -35,7 +35,7 @@ export default function SuperAdminCostsPage() {
   const [filterSeller, setFilterSeller] = useState("");
 
   // Inline editing — kind: numeric | text
-  const [editing, setEditing] = useState<{ id: string; field: string; value: string; kind: "num" | "text" } | null>(null);
+  const [editing, setEditing] = useState<{ id: string; field: string; value: string; kind?: "num" | "text" } | null>(null);
 
   const startEdit = (id: string, field: string, value: any, kind: "num" | "text" = "num") =>
     setEditing({ id, field, value: String(value ?? ""), kind });
