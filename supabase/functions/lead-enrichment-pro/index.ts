@@ -61,6 +61,166 @@ function extractRating(text: string): { rating: number | null; reviews: number |
   };
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// Profile matching helpers — scartano URL "explore", tag, post, login, ecc.
+// e preferiscono profili aziendali con username che assomiglia al brand.
+// ────────────────────────────────────────────────────────────────────────────
+function slugify(s: string): string {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // rimuove accenti
+    .replace(/&/g, "e")
+    .replace(/[^a-z0-9]+/g, "")
+    .trim();
+}
+
+function tokenize(s: string): string[] {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .split(/[^a-z0-9]+/)
+    .filter((t) => t.length >= 3 && !["the", "ristorante", "pizzeria", "bar", "hotel", "cafe", "caffe", "trattoria", "osteria", "srl", "snc", "spa", "and"].includes(t));
+}
+
+// Estrae lo "username" / slug dal path Instagram o Facebook
+function extractHandle(url: string, platform: "instagram" | "facebook"): string | null {
+  try {
+    const u = new URL(url);
+    if (platform === "instagram" && !u.hostname.includes("instagram.com")) return null;
+    if (platform === "facebook" && !u.hostname.includes("facebook.com")) return null;
+    const segments = u.pathname.split("/").filter(Boolean);
+    if (!segments.length) return null;
+    const first = segments[0].toLowerCase();
+    // Facebook: a volte è "pages/Nome/12345" o "profile.php"
+    if (platform === "facebook") {
+      if (first === "pages" && segments[1]) return segments[1].toLowerCase();
+      if (first === "profile.php") return null;
+    }
+    return first;
+  } catch {
+    return null;
+  }
+}
+
+// Path/keyword da scartare (esplorazione, tag, post singoli, login, help, ecc.)
+const IG_BLOCKED_PATHS = new Set([
+  "explore", "p", "reel", "reels", "tv", "stories", "accounts", "directory",
+  "about", "developer", "legal", "press", "api", "tags", "locations", "topics",
+  "web", "challenge", "session", "login", "signup",
+]);
+const FB_BLOCKED_PATHS = new Set([
+  "watch", "marketplace", "groups", "events", "gaming", "help", "policies",
+  "login", "recover", "reg", "business", "ads", "search", "sharer", "dialog",
+  "permalink.php", "story.php", "photo.php", "media", "hashtag",
+]);
+
+function scoreProfileMatch(handle: string, brandSlug: string, brandTokens: string[]): number {
+  if (!handle) return 0;
+  const h = handle.toLowerCase();
+  let score = 0;
+  if (h === brandSlug) score += 100;
+  else if (brandSlug && (h.includes(brandSlug) || brandSlug.includes(h))) score += 60;
+  for (const t of brandTokens) {
+    if (h.includes(t)) score += 25;
+  }
+  // Penalità per handle troppo corti/generici
+  if (h.length <= 2) score -= 50;
+  // Bonus se contiene "official" o suffissi italiani comuni
+  if (/official|ufficiale|roma|milano|napoli|torino|firenze|bologna/.test(h)) score += 5;
+  return score;
+}
+
+function pickBestSocialResult(
+  results: any[],
+  platform: "instagram" | "facebook",
+  brandName: string,
+): { url: string; handle: string } | null {
+  if (!results?.length) return null;
+  const brandSlug = slugify(brandName);
+  const brandTokens = tokenize(brandName);
+
+  const candidates = results
+    .map((r: any) => {
+      const url: string = r?.url || "";
+      if (!url) return null;
+      let parsed: URL;
+      try { parsed = new URL(url); } catch { return null; }
+      const segments = parsed.pathname.split("/").filter(Boolean);
+      if (!segments.length) return null;
+      const first = segments[0].toLowerCase();
+
+      if (platform === "instagram") {
+        if (!parsed.hostname.includes("instagram.com")) return null;
+        if (IG_BLOCKED_PATHS.has(first)) return null;
+        // un profilo IG ha esattamente 1 segmento (username) o 2 con trailing
+        if (segments.length > 2) return null;
+      } else {
+        if (!parsed.hostname.includes("facebook.com")) return null;
+        if (FB_BLOCKED_PATHS.has(first)) return null;
+        // accetta "/nome", "/nome/", "/pages/Nome/12345"
+        if (first !== "pages" && segments.length > 2) return null;
+      }
+
+      const handle = extractHandle(url, platform);
+      if (!handle) return null;
+      const score = scoreProfileMatch(handle, brandSlug, brandTokens)
+        + (r?.title?.toLowerCase().includes(brandName.toLowerCase()) ? 15 : 0);
+      return { url, handle, score };
+    })
+    .filter(Boolean) as Array<{ url: string; handle: string; score: number }>;
+
+  if (!candidates.length) return null;
+  candidates.sort((a, b) => b.score - a.score);
+  // Threshold minimo: handle deve avere QUALCHE attinenza col brand
+  if (candidates[0].score < 25) return null;
+  return { url: candidates[0].url, handle: candidates[0].handle };
+}
+
+// Yelp/TripAdvisor/PagineGialle: deve essere una scheda business, non lista/search/city
+function pickBestListingResult(
+  results: any[],
+  platform: "yelp" | "tripadvisor" | "paginegialle",
+  brandName: string,
+): string | null {
+  if (!results?.length) return null;
+  const brandSlug = slugify(brandName);
+  const brandTokens = tokenize(brandName);
+
+  const ok = results
+    .map((r: any) => {
+      const url: string = r?.url || "";
+      if (!url) return null;
+      let u: URL;
+      try { u = new URL(url); } catch { return null; }
+      const path = u.pathname.toLowerCase();
+      const title = (r?.title || "").toLowerCase();
+
+      if (platform === "yelp") {
+        // schede valide: /biz/<slug>; scarta /search, /c/, /collections
+        if (!/^\/biz\//.test(path)) return null;
+      } else if (platform === "tripadvisor") {
+        // schede valide tipiche: /Restaurant_Review-, /Hotel_Review-, /Attraction_Review-
+        if (!/_review-|_review_/i.test(path) && !/restaurant_review|hotel_review|attraction_review/i.test(path)) return null;
+      } else if (platform === "paginegialle") {
+        // schede aziendali: /<citta>/<categoria>/<nome>.html oppure /azienda/
+        if (!/\.html?$/.test(path) && !/\/azienda\//.test(path)) return null;
+        if (/\/categorie\//.test(path) || /\/cerca\b/.test(path)) return null;
+      }
+
+      let score = 0;
+      const haystack = `${path} ${title}`;
+      if (brandSlug && haystack.includes(brandSlug)) score += 60;
+      for (const t of brandTokens) if (haystack.includes(t)) score += 20;
+      return { url, score };
+    })
+    .filter(Boolean) as Array<{ url: string; score: number }>;
+
+  if (!ok.length) return null;
+  ok.sort((a, b) => b.score - a.score);
+  if (ok[0].score < 20) return null;
+  return ok[0].url;
+}
+
 function calcHotScore(data: any): number {
   let score = 50;
   // No website = +20 (lead caldo, ne ha bisogno)
