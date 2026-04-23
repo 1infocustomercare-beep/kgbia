@@ -1,6 +1,13 @@
 // Lead Mockup Suite — genera 4 mockup iPhone (Home/Menu/Booking/Profile) con 3 motori
 // Engine: 'react' (gratis, lato client) | 'nano_banana' (20 crediti) | 'nano_banana_pro' (40 crediti)
 // Ritorna: suite_id + array screens [{type, title, image_url}]
+//
+// QUALITÀ MOCKUP — strategia "fedeltà al catalogo":
+// 1. Per ogni schermata cerchiamo il mockup di catalogo più affine (sector+screen)
+//    e lo passiamo all'AI come REFERENCE IMAGE (image-to-image) → fedeltà visiva massima.
+// 2. Quando esiste una reference forziamo SEMPRE Nano Banana Pro (qualità top).
+// 3. Se l'AI fallisce dopo tutti i retry, NON ritorniamo errore: facciamo
+//    fallback automatico al render React, così l'utente vede SEMPRE 4 mockup.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -9,6 +16,69 @@ const corsHeaders = {
 };
 
 const AI_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
+
+// ──────────────────────────────────────────────────────────────────────────────
+// CATALOG REFERENCE MAP — i 42 mockup di public/mockup-references/ servono come
+// "ground truth" visivo: l'AI riceve l'immagine come reference e la replica
+// fedelmente cambiando solo brand/contenuti del lead.
+// Hostato come asset pubblico statico, accessibile via HTTPS dal gateway AI.
+// ──────────────────────────────────────────────────────────────────────────────
+const PUBLIC_BASE_URL = "https://empireia.lovable.app";
+const CATALOG_REFERENCES: Record<string, Partial<Record<string, string>>> = {
+  // settore → screen-type → file
+  legal:        { home: "legal-home.png",         services: "legal-deadlines.png", listing: "legal-case.png",       portfolio: "legal-case.png" },
+  accounting:   { home: "accounting-home.png",    services: "accounting-deadlines.png", checkout: "accounting-invoice.png" },
+  agriturismo:  { home: "agriturismo-home.png",   gallery: "agriturismo-rooms.png", services: "agriturismo-activities.png" },
+  beach:        { home: "beach-home.png",         booking: "beach-booking.png" },
+  cleaning:     { home: "cleaning-home.png",      booking: "cleaning-booking.png", services: "cleaning-schedule.png" },
+  construction: { home: "construction-home.png",  services: "construction-timeline.png", portfolio: "construction-timeline.png" },
+  education:    { home: "education-home.png",     services: "education-course.png", booking: "education-calendar.png" },
+  electrician:  { home: "electrician-home.png",   services: "electrician-services.png", portfolio: "electrician-detail.png" },
+  events:       { home: "events-home.png",        gallery: "events-detail.png", services: "events-timeline.png" },
+  garage:       { home: "garage-home.png",        services: "garage-repairs.png", portfolio: "garage-detail.png" },
+  gardening:    { home: "gardening-home.png",     services: "gardening-jobs.png", portfolio: "gardening-project.png" },
+  legal_clinic: { home: "legal-home.png",         services: "legal-deadlines.png" },
+  logistics:    { home: "logistics-home.png",     map: "logistics-tracking.png", listing: "logistics-fleet.png" },
+  photography:  { home: "photography-home.png",   gallery: "photography-gallery.png", booking: "photography-calendar.png" },
+  retail:       { home: "retail-home.png",        catalog: "retail-detail.png" },
+  tattoo:       { home: "tattoo-home.png",        portfolio: "tattoo-portfolio.png", services: "tattoo-artist.png" },
+};
+
+// Mappa sector libero → chiave del catalogo
+function resolveCatalogKey(sector: string | null | undefined): string | null {
+  if (!sector) return null;
+  const s = sector.toLowerCase();
+  if (/legal|avvoc|notar|studio.*leg/.test(s)) return "legal";
+  if (/contab|commercial|fiscal|account|consulent.*fisc/.test(s)) return "accounting";
+  if (/agritur|farm|cascin/.test(s)) return "agriturismo";
+  if (/spiagg|beach|bagn|stabilim|lido/.test(s)) return "beach";
+  if (/puliz|clean|sanific|impres.*puliz/.test(s)) return "cleaning";
+  if (/edil|costruz|impres.*edil|construc/.test(s)) return "construction";
+  if (/scuol|corso|formazion|educat|academy/.test(s)) return "education";
+  if (/elettric|electric|impiant.*elett/.test(s)) return "electrician";
+  if (/event|wedding|matrimoni|catering/.test(s)) return "events";
+  if (/officin|garage|carrozz|meccan|auto.*ripar/.test(s)) return "garage";
+  if (/giardin|garden|vivaist|paesag/.test(s)) return "gardening";
+  if (/logistic|trasport|spedizion|courier/.test(s)) return "logistics";
+  if (/fotograf|photograph|wedding.*photo/.test(s)) return "photography";
+  if (/negozi|retail|boutique|shop|abbigliam/.test(s)) return "retail";
+  if (/tatu|tattoo|piercing/.test(s)) return "tattoo";
+  return null;
+}
+
+// Trova reference URL ottimale per (sector, screenType)
+function findCatalogReference(sector: string | null | undefined, screenType: string): string | null {
+  const key = resolveCatalogKey(sector);
+  if (!key) return null;
+  const sectorRefs = CATALOG_REFERENCES[key];
+  if (!sectorRefs) return null;
+  // Match esatto sul tipo di schermata
+  const exact = sectorRefs[screenType];
+  if (exact) return `${PUBLIC_BASE_URL}/mockup-references/${exact}`;
+  // Fallback: usa "home" del settore come reference generica
+  const home = sectorRefs.home;
+  return home ? `${PUBLIC_BASE_URL}/mockup-references/${home}` : null;
+}
 
 type Engine = "react" | "nano_banana" | "nano_banana_pro";
 type ScreenType =
@@ -67,8 +137,17 @@ async function generateAIImage(
   prompt: string,
   pro: boolean,
   modelOverride?: string,
+  referenceImageUrl?: string | null,
 ): Promise<string | null> {
   const model = modelOverride || (pro ? "google/gemini-3-pro-image-preview" : "google/gemini-3.1-flash-image-preview");
+  // Costruisce content multimodale: se c'è una reference image, è IMAGE-TO-IMAGE
+  // (Nano Banana usa la reference come ground truth visivo e replica il layout)
+  const userContent: any[] = referenceImageUrl
+    ? [
+        { type: "text", text: prompt },
+        { type: "image_url", image_url: { url: referenceImageUrl } },
+      ]
+    : [{ type: "text", text: prompt }];
   // Retry con backoff esponenziale + jitter per superare rate-limit transitori
   const maxNetworkRetries = 3;
   let lastErr: Error | null = null;
@@ -79,7 +158,7 @@ async function generateAIImage(
         headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({
           model,
-          messages: [{ role: "user", content: prompt }],
+          messages: [{ role: "user", content: referenceImageUrl ? userContent : prompt }],
           modalities: ["image", "text"],
         }),
       });
@@ -244,23 +323,30 @@ async function generateValidatedAIImage(
   basePrompt: string,
   pro: boolean,
   maxAttempts = 5,
+  referenceImageUrl?: string | null,
 ): Promise<{ dataUrl: string | null; attempts: number; lastIssues: string[]; validated: boolean; engine_used: string }> {
   let lastIssues: string[] = [];
   let lastDataUrl: string | null = null;
-  let engineUsed = pro ? "nano_banana_pro" : "nano_banana_2";
+  // Quando c'è un catalog reference, forziamo SEMPRE Pro (qualità top per replica fedele)
+  const forcePro = pro || !!referenceImageUrl;
+  let engineUsed = forcePro ? "nano_banana_pro" : "nano_banana_2";
+  if (referenceImageUrl) {
+    engineUsed = pro ? "nano_banana_pro_catalog_ref" : "nano_banana_pro_catalog_ref_auto";
+    console.log(`[validate] catalog reference attiva → ${referenceImageUrl} (engine=${engineUsed})`);
+  }
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const prompt = attempt === 1 ? basePrompt : basePrompt + buildCorrectionSuffix(lastIssues);
     // AUTO-UPGRADE: gli ultimi 2 tentativi usano il modello Pro (più affidabile e accurato)
     // per recuperare casi difficili senza richiedere intervento manuale dell'utente.
-    const usePro = pro || attempt >= maxAttempts - 1;
+    const usePro = forcePro || attempt >= maxAttempts - 1;
     const modelOverride = usePro ? "google/gemini-3-pro-image-preview" : undefined;
-    if (!pro && attempt >= maxAttempts - 1) {
+    if (!forcePro && attempt >= maxAttempts - 1) {
       engineUsed = "nano_banana_pro_fallback";
       console.log(`[validate] attempt ${attempt}: AUTO-UPGRADE a Nano Banana Pro per garantire qualità`);
     }
     let dataUrl: string | null = null;
     try {
-      dataUrl = await generateAIImage(lovableKey, prompt, usePro, modelOverride);
+      dataUrl = await generateAIImage(lovableKey, prompt, usePro, modelOverride, referenceImageUrl);
     } catch (e: any) {
       console.warn(`[validate] attempt ${attempt} generation error: ${e.message}`);
       lastIssues = [`gen_error:${e.message?.slice(0, 80) || "unknown"}`];
@@ -319,6 +405,7 @@ function buildScreenPrompt(
   pro: boolean,
   variationSeed: number,
   variantIndex: number,
+  hasCatalogReference: boolean = false,
 ): string {
   const styleMap: Record<string, string> = {
     paperfish:        "DARK SAKURA LUXURY giapponese: nero obsidian #0E0B0F, sakura pink #E89BAE, oro caldo #C9A86A. Font Cormorant Garamond serif elegante per heading, Inter per body. Texture carta giapponese sottile, ideogrammi kanji decorativi minimali",
@@ -365,7 +452,25 @@ function buildScreenPrompt(
   const components = pickByIndex(COMPONENT_VARIATIONS, variationSeed + 3, variantIndex);
   const accentRotation = ["più caldo", "più freddo", "più saturo", "più desaturato"][variantIndex % 4];
 
-  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).
+  const catalogDirective = hasCatalogReference
+    ? `\n\n═══ 📸 IMMAGINE DI RIFERIMENTO (REGOLA #1 — PRIORITÀ MASSIMA) ═══
+🎯 In allegato c'è un'IMMAGINE DI RIFERIMENTO dal nostro catalogo di mockup approvati.
+DEVI replicare FEDELMENTE quella reference per:
+• Layout strutturale (posizione header, hero, card, bottom-nav)
+• Densità e gerarchia delle informazioni
+• Tipologia di componenti UI usati (chip, card, lista, griglia)
+• Proporzioni e spazi
+• Stile fotografico, qualità del render, illuminazione
+SOSTITUISCI SOLO:
+• Brand/logo → con "${business.name}"
+• Contenuti testuali → adattati al settore "${business.sector}"
+• Palette accent → adattata a ${primaryColor} (mantenendo i contrasti)
+• Foto dei prodotti/servizi → coerenti col settore
+NON cambiare la STRUTTURA visiva della reference: la qualità di quella reference è
+ESATTAMENTE il livello che devi raggiungere.\n`
+    : "";
+
+  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}
 
 ═══ COMPOSIZIONE FOTOGRAFICA (REGOLE INDEROGABILI) ═══
 • iPhone PERFETTAMENTE CENTRATO sia orizzontalmente che verticalmente nel frame
@@ -572,20 +677,30 @@ Deno.serve(async (req) => {
     // la tabella seller_mockup_suites finché status diventa "complete"/"error".
     // ═══════════════════════════════════════════════════════════════════════
     const backgroundJob = (async () => {
+      // Pre-calcola le reference catalog per ogni schermata (1 chiamata sola)
+      const screenReferences: (string | null)[] = screens.map(s =>
+        findCatalogReference(business_sector, s.type)
+      );
+      const refCount = screenReferences.filter(Boolean).length;
+      console.log(`[mockup-suite] catalog references: ${refCount}/${screens.length} schermate avranno reference da catalogo`);
+
       try {
         const imageResults: Awaited<ReturnType<typeof generateValidatedAIImage>>[] = [];
         const concurrency = 2;
         for (let i = 0; i < screens.length; i += concurrency) {
           const batch = screens.slice(i, i + concurrency);
           const batchResults = await Promise.all(
-            batch.map((s, k) =>
-              generateValidatedAIImage(
+            batch.map((s, k) => {
+              const screenIdx = i + k;
+              const refUrl = screenReferences[screenIdx];
+              return generateValidatedAIImage(
                 LOVABLE_KEY,
-                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i + k),
+                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl),
                 pro,
                 5,
-              )
-            )
+                refUrl,
+              );
+            })
           );
           imageResults.push(...batchResults);
           if (i + concurrency < screens.length) {
@@ -598,44 +713,104 @@ Deno.serve(async (req) => {
         );
         const publicUrls = await Promise.all(uploadPromises);
 
-        const finalScreens = screens.map((s, i) => ({
-          type: s.type,
-          title: s.title,
-          image_url: publicUrls[i],
-          render_mode: "ai" as const,
-          engine,
-          variation_seed: variationSeed,
-          variant_index: i,
-          validation: {
-            validated: imageResults[i].validated,
-            attempts: imageResults[i].attempts,
-            issues: imageResults[i].lastIssues,
-            engine_used: imageResults[i].engine_used,
-            has_image: !!publicUrls[i],
-          },
-        }));
+        // ─────────────────────────────────────────────────────────────────
+        // FALLBACK: per ogni schermata SENZA immagine AI, attiviamo il
+        // render React come fallback fedele al catalogo (gratis, sempre OK)
+        // ─────────────────────────────────────────────────────────────────
+        const finalScreens = screens.map((s, i) => {
+          const hasImage = !!publicUrls[i];
+          if (hasImage) {
+            return {
+              type: s.type,
+              title: s.title,
+              image_url: publicUrls[i],
+              render_mode: "ai" as const,
+              engine,
+              variation_seed: variationSeed,
+              variant_index: i,
+              catalog_reference: screenReferences[i] || null,
+              validation: {
+                validated: imageResults[i].validated,
+                attempts: imageResults[i].attempts,
+                issues: imageResults[i].lastIssues,
+                engine_used: imageResults[i].engine_used,
+                has_image: true,
+              },
+            };
+          }
+          // Fallback React: il client renderizza il template fedele
+          console.log(`[mockup-suite] schermata ${i} (${s.type}) → fallback React (AI fallita)`);
+          return {
+            type: s.type,
+            title: s.title,
+            image_url: null,
+            render_mode: "react" as const,
+            engine: "react_fallback",
+            template_variant: templateVariant,
+            variation_seed: variationSeed,
+            variant_index: i,
+            catalog_reference: screenReferences[i] || null,
+            validation: {
+              validated: false,
+              attempts: imageResults[i].attempts,
+              issues: imageResults[i].lastIssues,
+              engine_used: "react_fallback_after_ai_fail",
+              has_image: false,
+              fallback_reason: "ai_generation_failed",
+            },
+          };
+        });
 
+        const aiCount = finalScreens.filter(s => s.render_mode === "ai").length;
         const allValidated = finalScreens.every(s => s.validation.validated);
 
         await adminClient
           .from("seller_mockup_suites")
           .update({
             screens: finalScreens,
-            status: allValidated ? "complete" : "complete_with_warnings",
+            // Sempre "complete" se almeno qualcosa è stato generato (AI o React)
+            status: allValidated ? "complete" : (aiCount > 0 ? "complete_with_warnings" : "complete_react_fallback"),
             generated_at: new Date().toISOString(),
           })
           .eq("id", suite.id);
-        console.log(`[mockup-suite] background complete suite=${suite.id} validated=${allValidated}`);
+        console.log(`[mockup-suite] background complete suite=${suite.id} ai=${aiCount}/${screens.length} validated=${allValidated}`);
       } catch (e: any) {
         console.error("[mockup-suite] background error", e);
+        // FALLBACK TOTALE: AI completamente non disponibile → tutto React
+        // Così il vendor riceve sempre 4 mockup, mai un errore vuoto.
         const errMsg = e?.message === "rate_limited"
-          ? "AI temporaneamente sovraccarica. Riprova."
+          ? "AI temporaneamente sovraccarica — passato a render React fedele al catalogo."
           : e?.message === "payment_required"
-            ? "Crediti AI gateway esauriti."
-            : e?.message || "errore generazione";
+            ? "Crediti AI esauriti — passato a render React fedele al catalogo."
+            : `${e?.message || "errore generazione"} — fallback React attivo.`;
+
+        const reactFallbackScreens = screens.map((s, i) => ({
+          type: s.type,
+          title: s.title,
+          image_url: null,
+          render_mode: "react" as const,
+          engine: "react_full_fallback",
+          template_variant: templateVariant,
+          variation_seed: variationSeed,
+          variant_index: i,
+          catalog_reference: findCatalogReference(business_sector, s.type),
+          validation: {
+            validated: false,
+            attempts: 0,
+            issues: [`fatal_ai_error:${e?.message?.slice(0, 80) || "unknown"}`],
+            engine_used: "react_full_fallback",
+            has_image: false,
+            fallback_reason: "ai_fatal_error",
+          },
+        }));
         await adminClient
           .from("seller_mockup_suites")
-          .update({ status: "error", error_message: errMsg })
+          .update({
+            screens: reactFallbackScreens,
+            status: "complete_react_fallback",
+            error_message: errMsg,
+            generated_at: new Date().toISOString(),
+          })
           .eq("id", suite.id);
       }
     })();
