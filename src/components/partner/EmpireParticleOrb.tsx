@@ -579,9 +579,6 @@ const EmpireParticleOrb = memo(() => {
               <h3 className="text-base sm:text-lg md:text-xl font-bold text-white">
                 6 moduli sincronizzati
               </h3>
-              <p className="text-[10px] sm:text-xs text-violet-300/60 mt-2">
-                Tocca di nuovo per ricomporre
-              </p>
             </motion.div>
           )}
         </AnimatePresence>
