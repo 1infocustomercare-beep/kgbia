@@ -6163,6 +6163,7 @@ export type Database = {
       seller_action_costs: {
         Row: {
           action: string
+          category: string
           cost_eur_estimate: number | null
           created_at: string | null
           credit_cost: number
@@ -6174,6 +6175,7 @@ export type Database = {
         }
         Insert: {
           action: string
+          category?: string
           cost_eur_estimate?: number | null
           created_at?: string | null
           credit_cost?: number
@@ -6185,6 +6187,7 @@ export type Database = {
         }
         Update: {
           action?: string
+          category?: string
           cost_eur_estimate?: number | null
           created_at?: string | null
           credit_cost?: number
