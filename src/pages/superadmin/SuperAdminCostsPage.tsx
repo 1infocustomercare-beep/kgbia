@@ -34,37 +34,56 @@ export default function SuperAdminCostsPage() {
   const [filterSector, setFilterSector] = useState("");
   const [filterSeller, setFilterSeller] = useState("");
 
-  // Inline editing
-  const [editing, setEditing] = useState<{ id: string; field: string; value: string } | null>(null);
+  // Inline editing — kind: numeric | text
+  const [editing, setEditing] = useState<{ id: string; field: string; value: string; kind?: "num" | "text" } | null>(null);
 
-  const startEdit = (id: string, field: string, value: any) =>
-    setEditing({ id, field, value: String(value ?? "") });
+  const startEdit = (id: string, field: string, value: any, kind: "num" | "text" = "num") =>
+    setEditing({ id, field, value: String(value ?? ""), kind });
+
+  const NUMERIC_FIELDS = new Set(["credit_cost", "cost_eur_estimate", "unit_cost_eur", "monthly_estimate_eur"]);
 
   const saveSellerCost = async () => {
     if (!editing) return;
-    const num = Number(editing.value);
-    if (Number.isNaN(num)) { toast({ title: "Valore non valido", variant: "destructive" }); return; }
+    const isNum = NUMERIC_FIELDS.has(editing.field);
+    let payload: any;
+    if (isNum) {
+      const num = Number(editing.value);
+      if (Number.isNaN(num)) { toast({ title: "Valore non valido", variant: "destructive" }); return; }
+      payload = { [editing.field]: num };
+    } else {
+      payload = { [editing.field]: editing.value.trim() || null };
+    }
     const { error } = await supabase
       .from("seller_action_costs")
-      .update({ [editing.field]: num })
+      .update(payload)
       .eq("id", editing.id);
     if (error) toast({ title: "Errore", description: error.message, variant: "destructive" });
-    else { toast({ title: "Aggiornato ✓" }); data.refetch(); }
+    else { toast({ title: "Aggiornato ✓", description: "Modifica registrata nell'audit" }); data.refetch(); }
     setEditing(null);
   };
 
   const saveInfraCost = async () => {
     if (!editing) return;
-    const num = Number(editing.value);
-    if (Number.isNaN(num)) { toast({ title: "Valore non valido", variant: "destructive" }); return; }
+    const isNum = NUMERIC_FIELDS.has(editing.field);
+    let payload: any;
+    if (isNum) {
+      const num = Number(editing.value);
+      if (Number.isNaN(num)) { toast({ title: "Valore non valido", variant: "destructive" }); return; }
+      payload = { [editing.field]: num };
+    } else {
+      payload = { [editing.field]: editing.value.trim() || null };
+    }
     const { error } = await supabase
       .from("infrastructure_costs" as any)
-      .update({ [editing.field]: num })
+      .update(payload)
       .eq("id", editing.id);
     if (error) toast({ title: "Errore", description: error.message, variant: "destructive" });
-    else { toast({ title: "Aggiornato ✓" }); data.refetch(); }
+    else { toast({ title: "Aggiornato ✓", description: "Modifica registrata nell'audit" }); data.refetch(); }
     setEditing(null);
   };
+
+  const SELLER_CATEGORIES = ["ai", "scraping", "outreach", "voice", "media", "other"];
+  const INFRA_CATEGORIES = ["ai_gateway", "external_api", "payments", "storage", "infra", "other"];
 
   const toggleSellerActive = async (id: string, current: boolean) => {
     const { error } = await supabase.from("seller_action_costs").update({ is_active: !current }).eq("id", id);
@@ -148,11 +167,16 @@ export default function SuperAdminCostsPage() {
                 <Download className="w-3.5 h-3.5 mr-1.5" /> CSV
               </Button>
             </div>
+            <p className="text-[10px] text-muted-foreground italic">
+              💡 Clicca su qualsiasi campo (etichetta, categoria, descrizione, crediti, costo) per modificarlo. Ogni cambio è registrato nell'audit storico.
+            </p>
             <div className="overflow-x-auto rounded-xl border border-border/50 bg-card">
               <table className="w-full text-xs">
                 <thead className="bg-muted/30 text-[10px] uppercase tracking-wider text-muted-foreground">
                   <tr>
-                    <th className="text-left p-2.5">Azione</th>
+                    <th className="text-left p-2.5 min-w-[200px]">Etichetta · Codice</th>
+                    <th className="text-left p-2.5">Categoria</th>
+                    <th className="text-left p-2.5 min-w-[180px]">Descrizione</th>
                     <th className="text-right p-2.5">Crediti</th>
                     <th className="text-right p-2.5">Costo €</th>
                     <th className="text-center p-2.5">Stato</th>
@@ -160,22 +184,41 @@ export default function SuperAdminCostsPage() {
                 </thead>
                 <tbody>
                   {data.sellerCosts.map((c: any) => (
-                    <tr key={c.id} className="border-t border-border/30 hover:bg-muted/20">
+                    <tr key={c.id} className="border-t border-border/30 hover:bg-muted/20 align-top">
                       <td className="p-2.5">
-                        <div className="font-semibold text-foreground">{c.label}</div>
-                        <div className="text-[10px] text-muted-foreground font-mono">{c.action}</div>
+                        <EditableText editing={editing} id={c.id} field="label" value={c.label}
+                          onStart={() => startEdit(c.id, "label", c.label, "text")}
+                          onChange={v => setEditing({ id: c.id, field: "label", value: v, kind: "text" })}
+                          onSave={saveSellerCost} onCancel={() => setEditing(null)}
+                          className="font-semibold text-foreground" placeholder="Etichetta…" />
+                        <div className="text-[10px] text-muted-foreground font-mono mt-0.5">{c.action}</div>
                       </td>
-                      <td className="p-2.5 text-right">
+                      <td className="p-2.5">
+                        <EditableSelect editing={editing} id={c.id} field="category" value={c.category || "ai"}
+                          options={SELLER_CATEGORIES}
+                          onStart={() => startEdit(c.id, "category", c.category || "ai", "text")}
+                          onChange={v => setEditing({ id: c.id, field: "category", value: v, kind: "text" })}
+                          onSave={saveSellerCost} onCancel={() => setEditing(null)} />
+                      </td>
+                      <td className="p-2.5">
+                        <EditableText editing={editing} id={c.id} field="description" value={c.description || ""}
+                          onStart={() => startEdit(c.id, "description", c.description, "text")}
+                          onChange={v => setEditing({ id: c.id, field: "description", value: v, kind: "text" })}
+                          onSave={saveSellerCost} onCancel={() => setEditing(null)}
+                          className="text-[11px] text-muted-foreground italic"
+                          placeholder="Aggiungi nota…" multiline />
+                      </td>
+                      <td className="p-2.5 text-right whitespace-nowrap">
                         <EditableNumber editing={editing} id={c.id} field="credit_cost" value={c.credit_cost}
                           onStart={() => startEdit(c.id, "credit_cost", c.credit_cost)}
-                          onChange={v => setEditing({ id: c.id, field: "credit_cost", value: v })}
+                          onChange={v => setEditing({ id: c.id, field: "credit_cost", value: v, kind: "num" })}
                           onSave={saveSellerCost} onCancel={() => setEditing(null)}
                           format={v => <span className="font-bold text-amber-400">{v}</span>} step="1" />
                       </td>
-                      <td className="p-2.5 text-right">
+                      <td className="p-2.5 text-right whitespace-nowrap">
                         <EditableNumber editing={editing} id={c.id} field="cost_eur_estimate" value={c.cost_eur_estimate}
                           onStart={() => startEdit(c.id, "cost_eur_estimate", c.cost_eur_estimate)}
-                          onChange={v => setEditing({ id: c.id, field: "cost_eur_estimate", value: v })}
+                          onChange={v => setEditing({ id: c.id, field: "cost_eur_estimate", value: v, kind: "num" })}
                           onSave={saveSellerCost} onCancel={() => setEditing(null)}
                           format={v => <span className="text-emerald-400">€{Number(v).toFixed(4)}</span>} step="0.0001" />
                       </td>
@@ -306,11 +349,33 @@ export default function SuperAdminCostsPage() {
                   </div>
                   <div className="divide-y divide-border/30">
                     {items.map((c: any) => (
-                      <div key={c.id} className="p-3 grid grid-cols-12 gap-2 items-center text-xs">
-                        <div className="col-span-5">
-                          <div className="font-semibold">{c.label}</div>
+                      <div key={c.id} className="p-3 grid grid-cols-12 gap-2 items-start text-xs">
+                        <div className="col-span-5 space-y-1">
+                          <EditableText editing={editing} id={c.id} field="label" value={c.label}
+                            onStart={() => startEdit(c.id, "label", c.label, "text")}
+                            onChange={v => setEditing({ id: c.id, field: "label", value: v, kind: "text" })}
+                            onSave={saveInfraCost} onCancel={() => setEditing(null)}
+                            className="font-semibold text-foreground" placeholder="Etichetta…" />
                           <div className="text-[10px] text-muted-foreground font-mono">{c.code}</div>
-                          {c.notes && <div className="text-[10px] text-muted-foreground italic mt-0.5">{c.notes}</div>}
+                          <div className="flex items-center gap-2 flex-wrap pt-0.5">
+                            <EditableSelect editing={editing} id={c.id} field="category" value={c.category}
+                              options={INFRA_CATEGORIES}
+                              onStart={() => startEdit(c.id, "category", c.category, "text")}
+                              onChange={v => setEditing({ id: c.id, field: "category", value: v, kind: "text" })}
+                              onSave={saveInfraCost} onCancel={() => setEditing(null)} />
+                            {(c.provider !== undefined) && (
+                              <EditableText editing={editing} id={c.id} field="provider" value={c.provider || ""}
+                                onStart={() => startEdit(c.id, "provider", c.provider, "text")}
+                                onChange={v => setEditing({ id: c.id, field: "provider", value: v, kind: "text" })}
+                                onSave={saveInfraCost} onCancel={() => setEditing(null)}
+                                className="text-[10px] text-cyan-400" placeholder="Provider…" />
+                            )}
+                          </div>
+                          <EditableText editing={editing} id={c.id} field="notes" value={c.notes || ""}
+                            onStart={() => startEdit(c.id, "notes", c.notes, "text")}
+                            onChange={v => setEditing({ id: c.id, field: "notes", value: v, kind: "text" })}
+                            onSave={saveInfraCost} onCancel={() => setEditing(null)}
+                            className="text-[10px] text-muted-foreground italic" placeholder="Aggiungi nota…" multiline />
                         </div>
                         <div className="col-span-2 text-center">
                           <div className="text-[9px] text-muted-foreground uppercase">{c.cost_model}</div>
@@ -443,6 +508,65 @@ function EditableNumber({ editing, id, field, value, onStart, onChange, onSave, 
   return (
     <button onClick={onStart} className="inline-flex items-center gap-1 hover:opacity-70 transition group">
       {format(value)}
+      <Pencil className="w-2.5 h-2.5 text-muted-foreground opacity-0 group-hover:opacity-100" />
+    </button>
+  );
+}
+
+function EditableText({ editing, id, field, value, onStart, onChange, onSave, onCancel, className, placeholder, multiline }: any) {
+  const isEditing = editing?.id === id && editing?.field === field;
+  if (isEditing) {
+    const InputEl: any = multiline ? "textarea" : "input";
+    return (
+      <div className="flex items-start gap-1">
+        <InputEl
+          value={editing.value}
+          onChange={(e: any) => onChange(e.target.value)}
+          autoFocus
+          rows={multiline ? 2 : undefined}
+          className="flex-1 min-w-0 px-2 py-1 text-xs rounded-md border border-primary/40 bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          onKeyDown={(e: any) => {
+            if (e.key === "Enter" && !multiline) onSave();
+            if (e.key === "Escape") onCancel();
+          }}
+          placeholder={placeholder}
+        />
+        <button onClick={onSave} className="p-0.5 text-emerald-400 hover:text-emerald-300 mt-0.5"><Save className="w-3 h-3" /></button>
+        <button onClick={onCancel} className="p-0.5 text-rose-400 hover:text-rose-300 mt-0.5"><X className="w-3 h-3" /></button>
+      </div>
+    );
+  }
+  const display = value && String(value).trim() ? value : (placeholder || "—");
+  const isEmpty = !value || !String(value).trim();
+  return (
+    <button onClick={onStart} className={`inline-flex items-start gap-1 text-left hover:opacity-70 transition group ${className || ""} ${isEmpty ? "text-muted-foreground/60 italic" : ""}`}>
+      <span className="break-words">{display}</span>
+      <Pencil className="w-2.5 h-2.5 text-muted-foreground opacity-0 group-hover:opacity-100 flex-shrink-0 mt-0.5" />
+    </button>
+  );
+}
+
+function EditableSelect({ editing, id, field, value, options, onStart, onChange, onSave, onCancel }: any) {
+  const isEditing = editing?.id === id && editing?.field === field;
+  if (isEditing) {
+    return (
+      <div className="inline-flex items-center gap-1">
+        <select
+          value={editing.value}
+          onChange={(e) => onChange(e.target.value)}
+          autoFocus
+          className="px-1.5 py-0.5 text-[10px] rounded-md border border-primary/40 bg-background text-foreground focus:outline-none"
+        >
+          {options.map((o: string) => <option key={o} value={o}>{o}</option>)}
+        </select>
+        <button onClick={onSave} className="p-0.5 text-emerald-400"><Save className="w-3 h-3" /></button>
+        <button onClick={onCancel} className="p-0.5 text-rose-400"><X className="w-3 h-3" /></button>
+      </div>
+    );
+  }
+  return (
+    <button onClick={onStart} className="inline-flex items-center gap-1 hover:opacity-70 transition group">
+      <Badge variant="outline" className="text-[9px] cursor-pointer">{value}</Badge>
       <Pencil className="w-2.5 h-2.5 text-muted-foreground opacity-0 group-hover:opacity-100" />
     </button>
   );
