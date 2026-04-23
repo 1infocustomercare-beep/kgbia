@@ -512,3 +512,62 @@ function EditableNumber({ editing, id, field, value, onStart, onChange, onSave, 
     </button>
   );
 }
+
+function EditableText({ editing, id, field, value, onStart, onChange, onSave, onCancel, className, placeholder, multiline }: any) {
+  const isEditing = editing?.id === id && editing?.field === field;
+  if (isEditing) {
+    const InputEl: any = multiline ? "textarea" : "input";
+    return (
+      <div className="flex items-start gap-1">
+        <InputEl
+          value={editing.value}
+          onChange={(e: any) => onChange(e.target.value)}
+          autoFocus
+          rows={multiline ? 2 : undefined}
+          className="flex-1 min-w-0 px-2 py-1 text-xs rounded-md border border-primary/40 bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          onKeyDown={(e: any) => {
+            if (e.key === "Enter" && !multiline) onSave();
+            if (e.key === "Escape") onCancel();
+          }}
+          placeholder={placeholder}
+        />
+        <button onClick={onSave} className="p-0.5 text-emerald-400 hover:text-emerald-300 mt-0.5"><Save className="w-3 h-3" /></button>
+        <button onClick={onCancel} className="p-0.5 text-rose-400 hover:text-rose-300 mt-0.5"><X className="w-3 h-3" /></button>
+      </div>
+    );
+  }
+  const display = value && String(value).trim() ? value : (placeholder || "—");
+  const isEmpty = !value || !String(value).trim();
+  return (
+    <button onClick={onStart} className={`inline-flex items-start gap-1 text-left hover:opacity-70 transition group ${className || ""} ${isEmpty ? "text-muted-foreground/60 italic" : ""}`}>
+      <span className="break-words">{display}</span>
+      <Pencil className="w-2.5 h-2.5 text-muted-foreground opacity-0 group-hover:opacity-100 flex-shrink-0 mt-0.5" />
+    </button>
+  );
+}
+
+function EditableSelect({ editing, id, field, value, options, onStart, onChange, onSave, onCancel }: any) {
+  const isEditing = editing?.id === id && editing?.field === field;
+  if (isEditing) {
+    return (
+      <div className="inline-flex items-center gap-1">
+        <select
+          value={editing.value}
+          onChange={(e) => onChange(e.target.value)}
+          autoFocus
+          className="px-1.5 py-0.5 text-[10px] rounded-md border border-primary/40 bg-background text-foreground focus:outline-none"
+        >
+          {options.map((o: string) => <option key={o} value={o}>{o}</option>)}
+        </select>
+        <button onClick={onSave} className="p-0.5 text-emerald-400"><Save className="w-3 h-3" /></button>
+        <button onClick={onCancel} className="p-0.5 text-rose-400"><X className="w-3 h-3" /></button>
+      </div>
+    );
+  }
+  return (
+    <button onClick={onStart} className="inline-flex items-center gap-1 hover:opacity-70 transition group">
+      <Badge variant="outline" className="text-[9px] cursor-pointer">{value}</Badge>
+      <Pencil className="w-2.5 h-2.5 text-muted-foreground opacity-0 group-hover:opacity-100" />
+    </button>
+  );
+}
