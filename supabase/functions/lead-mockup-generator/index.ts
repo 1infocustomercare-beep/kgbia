@@ -172,8 +172,12 @@ ${cinematicSpecs}
 
     // Reference images per image-to-image: logo + foto reali + frame video del lead.
     // Il "before" non deve usare il logo originale (è il sito vecchio anonimo),
-    // mentre l'"after" sì → mantiene splash logo identico + foto reali + frame video del cliente.
-    const afterReferences = [brandLogo, ...brandPhotos, ...brandVideoFrames].filter(Boolean) as string[];
+    // mentre l'"after" sì → mantiene splash logo + 2 foto reali + 1 frame video (max 4 reference Nano Banana).
+    const afterReferences = [
+      brandLogo,
+      ...brandPhotos.slice(0, 2),
+      ...brandVideoFrames.slice(0, 1),
+    ].filter(Boolean) as string[];
 
     try {
       const [beforeData, afterData] = await Promise.all([
