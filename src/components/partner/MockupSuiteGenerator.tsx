@@ -865,8 +865,11 @@ export function MockupSuiteGenerator({
         )}
 
         {/* Selettore motore */}
-        <div>
-          <Label className="mb-2 block">Motore di generazione</Label>
+        <div className="space-y-3">
+          <div>
+            <Label className="text-sm font-semibold">Motore di generazione</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">Scegli velocità vs. qualità fotorealistica</p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {ENGINE_OPTIONS.map(opt => {
               const Icon = opt.icon;
@@ -878,20 +881,20 @@ export function MockupSuiteGenerator({
                   onClick={() => setEngine(opt.key)}
                   disabled={controlsLocked}
                   title={lockTitle}
-                  className={`relative p-4 rounded-xl border-2 text-left transition-all overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed ${
-                    selected ? "border-primary scale-[1.02] shadow-lg" : "border-border hover:border-primary/50"
+                  className={`relative p-4 rounded-xl border-2 text-left transition-all overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed min-h-[110px] ${
+                    selected ? "border-primary shadow-lg sm:scale-[1.02]" : "border-border hover:border-primary/50"
                   }`}
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${opt.color} opacity-${selected ? "20" : "5"} transition-opacity`} />
-                  <div className="relative">
-                    <div className="flex items-center justify-between mb-2">
-                      <Icon className="h-5 w-5 text-foreground" />
-                      <Badge variant={opt.cost === 0 ? "secondary" : "default"} className="text-xs">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${opt.color} ${selected ? "opacity-20" : "opacity-5"} transition-opacity`} />
+                  <div className="relative space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <Icon className="h-5 w-5 text-foreground shrink-0" />
+                      <Badge variant={opt.cost === 0 ? "secondary" : "default"} className="text-[11px] whitespace-nowrap">
                         {opt.cost === 0 ? "GRATIS" : `${opt.cost} crediti`}
                       </Badge>
                     </div>
-                    <p className="font-semibold text-sm">{opt.label}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{opt.desc}</p>
+                    <p className="font-semibold text-sm leading-tight">{opt.label}</p>
+                    <p className="text-xs text-muted-foreground leading-snug">{opt.desc}</p>
                   </div>
                 </button>
               );
