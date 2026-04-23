@@ -100,15 +100,16 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
   const currentSuite = ready[suiteIdx];
   const screens = currentSuite ? extractScreenImages(currentSuite) : [];
 
-  // Auto-advance stage
+  // Auto-advance stage (skip "hero" — non più nel flusso)
   useEffect(() => {
     if (!open || paused || !currentSuite) return;
     const duration = STAGE_DURATION_MS[stage];
+    if (duration <= 0) return;
     const t = setTimeout(() => {
       const i = STAGE_ORDER.indexOf(stage);
       const next = STAGE_ORDER[(i + 1) % STAGE_ORDER.length];
       setStage(next);
-      if (next === "hero") setScreenIdx(0);
+      if (next === "preview") setScreenIdx(0);
     }, duration);
     return () => clearTimeout(t);
   }, [stage, open, paused, currentSuite]);
