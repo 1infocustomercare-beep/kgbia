@@ -1,22 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
-/**
- * IntersectionObserver-based reveal hook.
- * Returns ref + boolean "visible" once the element crosses threshold.
- */
-export function useReveal<T extends HTMLElement = HTMLDivElement>(
-  threshold = 0.15,
-  rootMargin = "0px 0px -10% 0px",
-) {
+/** IntersectionObserver-based reveal hook (one-shot). */
+export function useReveal<T extends HTMLElement = HTMLDivElement>(threshold = 0.15) {
   const ref = useRef<T | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || typeof IntersectionObserver === "undefined") {
-      setVisible(true);
-      return;
-    }
+    if (!el) return;
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -26,34 +17,30 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(
           }
         });
       },
-      { threshold, rootMargin },
+      { threshold, rootMargin: "0px 0px -10% 0px" },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [threshold, rootMargin]);
+  }, [threshold]);
 
   return { ref, visible } as const;
 }
 
-/** Animates a number from 0 → target with easeOutQuart when "active". */
-export function useCountUp(target: number, active: boolean, duration = 1600) {
-  const [value, setValue] = useState(0);
-  const startedRef = useRef(false);
-
+/** Animated count-up from 0 → target when `start` is true. */
+export function useCountUp(target: number, start: boolean, duration = 1600) {
+  const [val, setVal] = useState(0);
   useEffect(() => {
-    if (!active || startedRef.current) return;
-    startedRef.current = true;
-    const start = performance.now();
+    if (!start) return;
     let raf = 0;
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 4);
-      setValue(target * eased);
-      if (t < 1) raf = requestAnimationFrame(tick);
+    const t0 = performance.now();
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - t0) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setVal(target * eased);
+      if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [active, target, duration]);
-
-  return value;
+  }, [target, start, duration]);
+  return val;
 }
