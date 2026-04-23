@@ -1429,51 +1429,43 @@ export function MockupSuiteGenerator({
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* PRE-GEN PREVIEW STRIP — 4 mini iPhone con tutte le opzioni live   */}
         {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.03] to-transparent p-4 space-y-3">
+        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.03] to-transparent p-4 sm:p-5 space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <Label className="flex items-center gap-1.5 m-0">
-              <Eye className="h-3.5 w-3.5 text-primary" /> Anteprima pre-generazione
-            </Label>
+            <div>
+              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
+                <Eye className="h-4 w-4 text-primary" /> Anteprima pre-generazione
+              </Label>
+              <p className="text-xs text-muted-foreground mt-0.5">Le 4 schermate prima della generazione finale</p>
+            </div>
             <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className="text-[9px]">
+              <Badge variant="outline" className="text-[10px]">
                 {(templateVariant === "auto"
                   ? `Auto → ${TEMPLATE_VARIANTS.find(t => t.key === suggestTemplateForSector(businessSector))?.label?.split("—")[0]?.trim() || "—"}`
                   : TEMPLATE_VARIANTS.find(t => t.key === templateVariant)?.label?.split("—")[0]?.trim() || templateVariant)}
               </Badge>
-              <Badge variant="outline" className="text-[9px]">
+              <Badge variant="outline" className="text-[10px]">
                 <Droplets className="h-2.5 w-2.5 mr-1" />Glass {glassIntensity}%
               </Badge>
-              <Badge variant="outline" className="text-[9px] capitalize">
+              <Badge variant="outline" className="text-[10px] capitalize">
                 <Palette className="h-2.5 w-2.5 mr-1" />{colorStyle}
-              </Badge>
-              <Badge
-                variant="outline"
-                className="text-[9px] gap-1"
-                style={{ borderColor: (mode === "standalone" ? standalone.primaryColor : primaryColor) }}
-              >
-                <span
-                  className="inline-block w-2 h-2 rounded-full"
-                  style={{ background: mode === "standalone" ? standalone.primaryColor : primaryColor }}
-                />
-                {(mode === "standalone" ? standalone.primaryColor : primaryColor).toUpperCase()}
               </Badge>
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-2 justify-items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-3 justify-items-center">
             {screens.map((s, i) => {
-              const w = 78;
+              const w = 110;
               const h = Math.round(w * 19.5 / 9);
               const resolved = templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant;
               return (
-                <div key={`${s.type}-${i}`} className="flex flex-col items-center gap-1">
+                <div key={`${s.type}-${i}`} className="flex flex-col items-center gap-1.5">
                   <div className="relative" style={{ width: w, height: h }}>
                     <div
-                      className="absolute -inset-1.5 rounded-[20px] opacity-25 blur-md"
+                      className="absolute -inset-1.5 rounded-[24px] opacity-25 blur-md"
                       style={{ background: mode === "standalone" ? standalone.primaryColor : primaryColor }}
                     />
                     <div
-                      className="relative rounded-[16px] border-[1.5px] overflow-hidden shadow-md"
+                      className="relative rounded-[20px] border-[1.5px] overflow-hidden shadow-md"
                       style={{
                         width: w,
                         height: h,
@@ -1481,8 +1473,8 @@ export function MockupSuiteGenerator({
                         boxSizing: "border-box",
                       }}
                     >
-                      <div className="absolute top-[2px] left-1/2 -translate-x-1/2 w-[22px] h-[5px] bg-black rounded-full z-30" />
-                      <div className="absolute inset-[1.5px] overflow-hidden rounded-[14px]">
+                      <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[32px] h-[7px] bg-black rounded-full z-30" />
+                      <div className="absolute inset-[1.5px] overflow-hidden rounded-[18px]">
                         <MockupReactScreen
                           type={s.type}
                           templateVariant={resolved}
@@ -1501,18 +1493,18 @@ export function MockupSuiteGenerator({
                           fontBodyOverride={brandFont.fontBody || undefined}
                         />
                       </div>
-                      <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-[24px] h-[1.5px] bg-foreground/30 rounded-full z-20" />
+                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
                     </div>
                   </div>
-                  <p className="text-[9px] font-semibold text-center leading-tight max-w-[80px] truncate">{s.title}</p>
-                  <p className="text-[8px] text-muted-foreground capitalize leading-none">{s.type}</p>
+                  <p className="text-xs font-semibold text-center leading-tight max-w-[110px] truncate">{s.title}</p>
+                  <p className="text-[10px] text-muted-foreground capitalize leading-none">{s.type}</p>
                 </div>
               );
             })}
           </div>
 
-          <p className="text-[9px] text-muted-foreground italic text-center">
-            Anteprima React istantanea con tutte le opzioni applicate · clicca <span className="font-semibold not-italic">Genera Suite</span> per la versione finale.
+          <p className="text-[11px] text-muted-foreground italic text-center leading-snug">
+            Anteprima React istantanea · clicca <span className="font-semibold not-italic">Genera Suite</span> per la versione finale 4K/8K.
           </p>
         </div>
 
