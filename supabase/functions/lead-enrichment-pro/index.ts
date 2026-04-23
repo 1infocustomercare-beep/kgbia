@@ -447,15 +447,33 @@ Deno.serve(async (req) => {
       ]);
 
       // Instagram — solo profili business, no /explore /p /reels …
-      const igPick = pickBestSocialResult(igResults, "instagram", lead.name, TH);
+      let igPick: { url: string; handle: string; score: number } | null =
+        pickBestSocialResult(igResults, "instagram", lead.name, TH);
+      let igFallbackVia: string | null = null;
+      if (!igPick && TH.fallback_enabled) {
+        const fb = await fallbackSocialPick(FIRECRAWL_KEY, "instagram", lead.name, lead.city, TH);
+        if (fb) { igPick = fb; igFallbackVia = fb.via; }
+      }
       if (igPick) { enrichment.has_instagram = true; enrichment.instagram_url = igPick.url; }
 
       // Facebook — solo pagine business, no /watch /groups /search …
-      const fbPick = pickBestSocialResult(fbResults, "facebook", lead.name, TH);
+      let fbPick: { url: string; handle: string; score: number } | null =
+        pickBestSocialResult(fbResults, "facebook", lead.name, TH);
+      let fbFallbackVia: string | null = null;
+      if (!fbPick && TH.fallback_enabled) {
+        const fb = await fallbackSocialPick(FIRECRAWL_KEY, "facebook", lead.name, lead.city, TH);
+        if (fb) { fbPick = fb; fbFallbackVia = fb.via; }
+      }
       if (fbPick) { enrichment.has_facebook = true; enrichment.facebook_url = fbPick.url; }
 
       // Yelp — solo schede /biz/<slug>
-      const yelpPick = pickBestListingResult(yelpResults, "yelp", lead.name, TH);
+      let yelpPick: { url: string; score: number } | null =
+        pickBestListingResult(yelpResults, "yelp", lead.name, TH);
+      let yelpFallbackVia: string | null = null;
+      if (!yelpPick && TH.fallback_enabled) {
+        const fb = await fallbackListingPick(FIRECRAWL_KEY, "yelp", lead.name, lead.city, TH);
+        if (fb) { yelpPick = fb; yelpFallbackVia = fb.via; }
+      }
       if (yelpPick) {
         const yelpData = await firecrawlScrape(FIRECRAWL_KEY, yelpPick.url);
         if (yelpData?.markdown) {
@@ -466,7 +484,13 @@ Deno.serve(async (req) => {
       }
 
       // TripAdvisor — solo schede *_Review-*
-      const taPick = pickBestListingResult(taResults, "tripadvisor", lead.name, TH);
+      let taPick: { url: string; score: number } | null =
+        pickBestListingResult(taResults, "tripadvisor", lead.name, TH);
+      let taFallbackVia: string | null = null;
+      if (!taPick && TH.fallback_enabled) {
+        const fb = await fallbackListingPick(FIRECRAWL_KEY, "tripadvisor", lead.name, lead.city, TH);
+        if (fb) { taPick = fb; taFallbackVia = fb.via; }
+      }
       if (taPick) {
         const taData = await firecrawlScrape(FIRECRAWL_KEY, taPick.url);
         if (taData?.markdown) {
@@ -477,7 +501,13 @@ Deno.serve(async (req) => {
       }
 
       // Pagine Gialle — solo schede aziendali, non categorie/ricerca
-      const pgPick = pickBestListingResult(pgResults, "paginegialle", lead.name, TH);
+      let pgPick: { url: string; score: number } | null =
+        pickBestListingResult(pgResults, "paginegialle", lead.name, TH);
+      let pgFallbackVia: string | null = null;
+      if (!pgPick && TH.fallback_enabled) {
+        const fb = await fallbackListingPick(FIRECRAWL_KEY, "paginegialle", lead.name, lead.city, TH);
+        if (fb) { pgPick = fb; pgFallbackVia = fb.via; }
+      }
       enrichment.paginegialle_listing = !!pgPick;
 
       enrichment.raw_data = {
@@ -486,6 +516,10 @@ Deno.serve(async (req) => {
         ig_score: igPick?.score ?? null, fb_score: fbPick?.score ?? null,
         yelp_url: yelpPick?.url ?? null, ta_url: taPick?.url ?? null, pg_url: pgPick?.url ?? null,
         yelp_score: yelpPick?.score ?? null, ta_score: taPick?.score ?? null, pg_score: pgPick?.score ?? null,
+        fallback: {
+          ig: igFallbackVia, fb: fbFallbackVia,
+          yelp: yelpFallbackVia, ta: taFallbackVia, pg: pgFallbackVia,
+        },
         thresholds_used: TH,
         firecrawl_used: true,
       };
