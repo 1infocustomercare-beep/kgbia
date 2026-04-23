@@ -137,8 +137,17 @@ async function generateAIImage(
   prompt: string,
   pro: boolean,
   modelOverride?: string,
+  referenceImageUrl?: string | null,
 ): Promise<string | null> {
   const model = modelOverride || (pro ? "google/gemini-3-pro-image-preview" : "google/gemini-3.1-flash-image-preview");
+  // Costruisce content multimodale: se c'è una reference image, è IMAGE-TO-IMAGE
+  // (Nano Banana usa la reference come ground truth visivo e replica il layout)
+  const userContent: any[] = referenceImageUrl
+    ? [
+        { type: "text", text: prompt },
+        { type: "image_url", image_url: { url: referenceImageUrl } },
+      ]
+    : [{ type: "text", text: prompt }];
   // Retry con backoff esponenziale + jitter per superare rate-limit transitori
   const maxNetworkRetries = 3;
   let lastErr: Error | null = null;
@@ -149,7 +158,7 @@ async function generateAIImage(
         headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({
           model,
-          messages: [{ role: "user", content: prompt }],
+          messages: [{ role: "user", content: referenceImageUrl ? userContent : prompt }],
           modalities: ["image", "text"],
         }),
       });
