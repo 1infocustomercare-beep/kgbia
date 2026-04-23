@@ -74,11 +74,43 @@ serve(async (req) => {
   // ─── IDEMPOTENCY GUARD ───────────────────────────────────────────
   // Stripe retries failed webhook deliveries. We must process each event_id only once.
   const eventId = event.id;
+
+  // Build enriched payload_summary so the cost reconciliation engine can
+  // read real Stripe amounts/fees without re-querying the API.
+  const obj: any = event.data?.object ?? {};
+  let stripeFeeCents = 0;
+  let netCents = 0;
+  // Try to read the balance_transaction to extract the processor fee
+  try {
+    const bt = obj.balance_transaction;
+    if (bt && typeof bt === "string") {
+      const tx = await stripe.balanceTransactions.retrieve(bt);
+      stripeFeeCents = tx.fee || 0;
+      netCents = tx.net || 0;
+    } else if (bt && typeof bt === "object") {
+      stripeFeeCents = (bt as any).fee || 0;
+      netCents = (bt as any).net || 0;
+    }
+  } catch (feeErr) {
+    console.warn("[stripe-webhook] balance_transaction lookup failed:", feeErr);
+  }
+
+  const enrichedSummary: Record<string, unknown> = {
+    object: obj.object ?? null,
+    amount: obj.amount ?? obj.amount_total ?? obj.amount_paid ?? 0,
+    currency: obj.currency ?? "eur",
+    application_fee_cents: obj.application_fee_amount ?? 0,
+    stripe_fee_cents: stripeFeeCents,
+    net_cents: netCents,
+    customer: obj.customer ?? null,
+    livemode: !!event.livemode,
+  };
+
   const { data: claimed, error: claimErr } = await supabase.rpc("claim_stripe_event", {
     p_event_id: eventId,
     p_event_type: event.type,
     p_livemode: !!event.livemode,
-    p_summary: { object: (event.data?.object as any)?.object ?? null },
+    p_summary: enrichedSummary,
   });
 
   if (claimErr) {
