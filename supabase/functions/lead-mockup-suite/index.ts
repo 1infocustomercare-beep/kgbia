@@ -405,6 +405,7 @@ function buildScreenPrompt(
   pro: boolean,
   variationSeed: number,
   variantIndex: number,
+  hasCatalogReference: boolean = false,
 ): string {
   const styleMap: Record<string, string> = {
     paperfish:        "DARK SAKURA LUXURY giapponese: nero obsidian #0E0B0F, sakura pink #E89BAE, oro caldo #C9A86A. Font Cormorant Garamond serif elegante per heading, Inter per body. Texture carta giapponese sottile, ideogrammi kanji decorativi minimali",
