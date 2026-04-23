@@ -627,6 +627,15 @@ function TabBtn({ active, onClick, icon: Icon, label }: any) {
   );
 }
 
+function ReconCell({ label, value, color, small }: any) {
+  return (
+    <div className="p-2.5 rounded-xl bg-card border border-border/40">
+      <div className="text-[9px] text-muted-foreground uppercase tracking-wider">{label}</div>
+      <div className={`${small ? "text-sm" : "text-lg"} font-bold mt-0.5 ${color}`}>{value}</div>
+    </div>
+  );
+}
+
 function Section({ title, icon: Icon, extra, children }: any) {
   return (
     <div className="space-y-2">
