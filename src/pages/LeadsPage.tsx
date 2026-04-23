@@ -1884,51 +1884,12 @@ export default function LeadsPage() {
           })}
         </div>
 
-        {/* ═══ CANALI DI RICERCA + MODALITÀ "PER NOME" ═══ */}
-        <div className="rounded-xl p-3 space-y-2.5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest" style={{ color: "#14b8a6" }}>
-              📡 Canali di ricerca · scegli quali interrogare
-            </p>
-            <button
-              onClick={() => setActiveSources(["photon", "nominatim", "overpass", "google"])}
-              className="text-[9px] font-semibold underline opacity-60 hover:opacity-100"
-              style={{ color: "#94a3b8" }}
-            >
-              Tutti
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {[
-              { id: "nominatim", label: "🗺️ OpenStreetMap", desc: "DB pubblico mondiale, gratis" },
-              { id: "photon", label: "🔎 Photon", desc: "Geocoder Komoot, gratis" },
-              { id: "overpass", label: "🏷️ Overpass", desc: "Tag strutturati OSM, gratis" },
-              { id: "google", label: "⭐ Google Places", desc: "Rating + recensioni reali" },
-            ].map(src => {
-              const active = activeSources.includes(src.id);
-              return (
-                <button
-                  key={src.id}
-                  onClick={() => setActiveSources(prev =>
-                    prev.includes(src.id) ? prev.filter(s => s !== src.id) : [...prev, src.id]
-                  )}
-                  title={src.desc}
-                  className="text-[10px] md:text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all"
-                  style={{
-                    background: active
-                      ? "linear-gradient(135deg, rgba(20,184,166,0.25), rgba(16,185,129,0.15))"
-                      : "rgba(255,255,255,0.03)",
-                    border: `1px solid ${active ? "rgba(20,184,166,0.5)" : "rgba(255,255,255,0.08)"}`,
-                    color: active ? "#5eead4" : "#9ca3af",
-                  }}
-                >
-                  {src.label}
-                </button>
-              );
-            })}
-          </div>
+        {/* ═══ CANALI DI RICERCA (multi-categoria + sblocco API) ═══ */}
+        <LeadSearchSourcesPanel activeSources={activeSources} onChange={setActiveSources} />
 
-          <div className="flex items-center justify-between gap-2 pt-2 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        {/* ═══ MODALITÀ "PER NOME" ═══ */}
+        <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="flex items-center justify-between gap-2">
             <div className="flex-1">
               <p className="text-[10px] md:text-[11px] font-bold" style={{ color: nameOnlyMode ? "#a78bfa" : "#e5e7eb" }}>
                 🎯 Modalità "Trova attività per nome"

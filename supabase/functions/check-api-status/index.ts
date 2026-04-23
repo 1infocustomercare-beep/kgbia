@@ -5,16 +5,28 @@ const corsHeaders = {
 };
 
 const KEYS = [
+  // Core
   "FIRECRAWL_API_KEY",
   "LOVABLE_API_KEY",
-  "GOOGLE_PLACES_API",
-  "INSTAGRAM_GRAPH_API",
-  "REGISTRO_IMPRESE_API",
   "ELEVENLABS_API_KEY",
   "RESEND_API_KEY",
   "TWILIO_API_KEY",
-  "META_GRAPH_API_KEY",
   "STRIPE_SECRET_KEY",
+  // Maps & POI
+  "GOOGLE_PLACES_API",
+  "BING_MAPS_API_KEY",
+  "YELP_API_KEY",
+  "TRIPADVISOR_API_KEY",
+  // Web search
+  "SERPAPI_KEY",
+  "BING_SEARCH_API_KEY",
+  // Social
+  "INSTAGRAM_GRAPH_API",
+  "META_GRAPH_API_KEY",
+  "LINKEDIN_API_KEY",
+  "TIKTOK_API_KEY",
+  // Registries
+  "REGISTRO_IMPRESE_API",
 ];
 
 Deno.serve((req) => {
