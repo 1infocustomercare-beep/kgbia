@@ -33,6 +33,7 @@ import AriannaInsightsDashboard from "@/components/leads/AriannaInsightsDashboar
 import LeadIntelligenceInbox from "@/components/leads/LeadIntelligenceInbox";
 import SellerOnboardingWizard from "@/components/leads/SellerOnboardingWizard";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
+import { TutorialPopup } from "@/components/ui/tutorial-popup";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
@@ -2128,6 +2129,20 @@ export default function LeadsPage() {
 
         <PartnerFlowStepper currentStep="leads" />
       </div>
+
+      <TutorialPopup
+        id="leads-caccia-demo-v1"
+        title="Caccia Lead + Demo Auto"
+        accentColor="#a78bfa"
+        position="bottom-right"
+        steps={[
+          { emoji: "🎯", title: "Cosa fa qui l'AI", description: "Trova locali NUOVI (mai contattati) per zona/settore e genera in automatico il loro sito demo 1:1, pronto da inviare via WhatsApp per agganciarli." },
+          { emoji: "🔎", title: "Step 1 · Cerca", description: "Imposta città + settore (ristorante, NCC, beauty…). L'AI Scout cerca locali reali su mappe e directory." },
+          { emoji: "⚡", title: "Step 2 · Lancia la Demo Auto", description: "Tap su un lead → l'AI scrappa sito/social e genera in 60s il sito demo brandizzato col logo e i colori del locale. Si salva nella Vetrina." },
+          { emoji: "💬", title: "Step 3 · Invia su WhatsApp", description: "Copia il link demo + messaggio già pronto e invialo al titolare. Tasso di risposta tipico: 18-25%." },
+          { emoji: "🎨", title: "Vuoi un mockup più curato?", description: "Per clienti già caldi che vuoi chiudere in trattativa, usa 'Mockup su Misura' per costruire a mano un'anteprima ancora più personalizzata." },
+        ]}
+      />
 
       {/* ═══ RESULTS LIST ═══ */}
       <AnimatePresence>
