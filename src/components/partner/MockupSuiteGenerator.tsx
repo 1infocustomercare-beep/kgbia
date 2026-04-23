@@ -699,33 +699,40 @@ export function MockupSuiteGenerator({
 
   return (
     <Card className="border-primary/30">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Smartphone className="h-5 w-5 text-primary" />
-          Mockup iPhone Suite — 4 schermate app del business
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-start gap-2.5 text-base sm:text-lg leading-tight">
+          <Smartphone className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+          <span>
+            Mockup iPhone Suite
+            <span className="block text-xs sm:text-sm font-normal text-muted-foreground mt-0.5">
+              4 schermate app del business
+            </span>
+          </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-5">
+      <CardContent className="space-y-6 sm:space-y-7">
         {/* Toggle modalità lead/standalone */}
-        <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-muted">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-1.5 rounded-xl bg-muted">
           <button
             type="button"
             onClick={() => setMode("lead")}
             disabled={!isLeadMode}
-            className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+            className={`px-3 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 min-h-[44px] ${
               mode === "lead" ? "bg-background shadow-sm" : "opacity-60 hover:opacity-100"
             } ${!isLeadMode ? "opacity-30 cursor-not-allowed" : ""}`}
           >
-            <User className="h-4 w-4" /> Da lead {isLeadMode ? "" : "(seleziona prima un lead)"}
+            <User className="h-4 w-4 shrink-0" />
+            <span className="truncate">Da lead {isLeadMode ? "" : "(seleziona prima un lead)"}</span>
           </button>
           <button
             type="button"
             onClick={() => setMode("standalone")}
-            className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+            className={`px-3 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 min-h-[44px] ${
               mode === "standalone" ? "bg-background shadow-sm" : "opacity-60 hover:opacity-100"
             }`}
           >
-            <Pencil className="h-4 w-4" /> Mockup libero (qualsiasi argomento)
+            <Pencil className="h-4 w-4 shrink-0" />
+            <span className="truncate">Mockup libero</span>
           </button>
         </div>
 
@@ -858,8 +865,11 @@ export function MockupSuiteGenerator({
         )}
 
         {/* Selettore motore */}
-        <div>
-          <Label className="mb-2 block">Motore di generazione</Label>
+        <div className="space-y-3">
+          <div>
+            <Label className="text-sm font-semibold">Motore di generazione</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">Scegli velocità vs. qualità fotorealistica</p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {ENGINE_OPTIONS.map(opt => {
               const Icon = opt.icon;
@@ -871,20 +881,20 @@ export function MockupSuiteGenerator({
                   onClick={() => setEngine(opt.key)}
                   disabled={controlsLocked}
                   title={lockTitle}
-                  className={`relative p-4 rounded-xl border-2 text-left transition-all overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed ${
-                    selected ? "border-primary scale-[1.02] shadow-lg" : "border-border hover:border-primary/50"
+                  className={`relative p-4 rounded-xl border-2 text-left transition-all overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed min-h-[110px] ${
+                    selected ? "border-primary shadow-lg sm:scale-[1.02]" : "border-border hover:border-primary/50"
                   }`}
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${opt.color} opacity-${selected ? "20" : "5"} transition-opacity`} />
-                  <div className="relative">
-                    <div className="flex items-center justify-between mb-2">
-                      <Icon className="h-5 w-5 text-foreground" />
-                      <Badge variant={opt.cost === 0 ? "secondary" : "default"} className="text-xs">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${opt.color} ${selected ? "opacity-20" : "opacity-5"} transition-opacity`} />
+                  <div className="relative space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <Icon className="h-5 w-5 text-foreground shrink-0" />
+                      <Badge variant={opt.cost === 0 ? "secondary" : "default"} className="text-[11px] whitespace-nowrap">
                         {opt.cost === 0 ? "GRATIS" : `${opt.cost} crediti`}
                       </Badge>
                     </div>
-                    <p className="font-semibold text-sm">{opt.label}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{opt.desc}</p>
+                    <p className="font-semibold text-sm leading-tight">{opt.label}</p>
+                    <p className="text-xs text-muted-foreground leading-snug">{opt.desc}</p>
                   </div>
                 </button>
               );
@@ -893,17 +903,20 @@ export function MockupSuiteGenerator({
         </div>
 
         {/* Template variante (raggruppato) + ANTEPRIMA LIVE */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <Label htmlFor="template-variant" className="flex items-center gap-1.5">
-              <Palette className="h-3.5 w-3.5" /> Stile grafico template
-            </Label>
-            <Badge variant="outline" className="text-[10px] gap-1"><Eye className="h-3 w-3" /> Anteprima live</Badge>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <Label htmlFor="template-variant" className="flex items-center gap-1.5 text-sm font-semibold">
+                <Palette className="h-4 w-4 text-primary" /> Stile grafico
+              </Label>
+              <p className="text-xs text-muted-foreground mt-0.5">Template + palette + anteprima live</p>
+            </div>
+            <Badge variant="outline" className="text-[11px] gap-1"><Eye className="h-3 w-3" /> Live</Badge>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 items-start">
-            <div className="space-y-3">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_180px] gap-5 items-start">
+            <div className="space-y-4 min-w-0">
               <Select value={templateVariant} onValueChange={setTemplateVariant} disabled={controlsLocked}>
-                <SelectTrigger id="template-variant" title={lockTitle}>
+                <SelectTrigger id="template-variant" title={lockTitle} className="h-11">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="max-h-[360px]">
@@ -918,15 +931,22 @@ export function MockupSuiteGenerator({
                 </SelectContent>
               </Select>
               {detectedTemplateLabel && (
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-xs text-muted-foreground leading-snug">
                   ✨ Auto-rilevato dal settore: <span className="font-semibold text-foreground">{detectedTemplateLabel}</span>
                 </p>
               )}
 
               {/* Palette swap rapido */}
-              <div>
-                <Label className="text-[11px] text-muted-foreground mb-1.5 block">Palette colore brand</Label>
-                <div className="flex flex-wrap gap-1.5">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <Label className="text-xs font-semibold m-0">Palette colore brand</Label>
+                  <span className="text-[11px] text-muted-foreground">
+                    Attuale: <span className="font-mono font-semibold text-foreground">
+                      {(mode === "standalone" ? standalone.primaryColor : primaryColor).toUpperCase()}
+                    </span>
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
                   {QUICK_PALETTES.map(p => {
                     const active = (mode === "standalone" ? standalone.primaryColor : primaryColor).toLowerCase() === p.color.toLowerCase();
                     return (
@@ -942,24 +962,18 @@ export function MockupSuiteGenerator({
                           }
                         }}
                         title={lockTitle ?? p.label}
-                        className={`relative w-7 h-7 rounded-full border-2 transition-all hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 ${
+                        className={`relative w-9 h-9 rounded-full border-2 transition-all hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 ${
                           active ? "border-foreground shadow-md scale-110" : "border-border"
                         }`}
                         style={{ background: p.color }}
                       >
                         {active && (
-                          <span className="absolute inset-0 flex items-center justify-center text-white text-[10px] font-black drop-shadow">✓</span>
+                          <span className="absolute inset-0 flex items-center justify-center text-white text-xs font-black drop-shadow">✓</span>
                         )}
                       </button>
                     );
                   })}
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-1">
-                  Colore attuale:{" "}
-                  <span className="font-mono font-semibold">
-                    {(mode === "standalone" ? standalone.primaryColor : primaryColor).toUpperCase()}
-                  </span>
-                </p>
               </div>
 
               {/* WCAG contrast check + auto-suggest */}
@@ -973,24 +987,24 @@ export function MockupSuiteGenerator({
             </div>
 
             {/* Anteprima live mini iPhone */}
-            <div className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-muted/30 border">
+            <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-muted/40 border mx-auto lg:mx-0">
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Anteprima tema</p>
-              <div className="relative" style={{ width: 110, height: Math.round(110 * 19.5 / 9) }}>
+              <div className="relative" style={{ width: 130, height: Math.round(130 * 19.5 / 9) }}>
                 <div
-                  className="absolute -inset-2 rounded-[28px] opacity-30 blur-xl"
+                  className="absolute -inset-2 rounded-[32px] opacity-30 blur-xl"
                   style={{ background: mode === "standalone" ? standalone.primaryColor : primaryColor }}
                 />
                 <div
-                  className="relative rounded-[22px] border-[2px] overflow-hidden shadow-xl"
+                  className="relative rounded-[26px] border-[2px] overflow-hidden shadow-xl"
                   style={{
-                    width: 110,
-                    height: Math.round(110 * 19.5 / 9),
+                    width: 130,
+                    height: Math.round(130 * 19.5 / 9),
                     borderColor: "hsl(var(--foreground) / 0.2)",
                     boxSizing: "border-box",
                   }}
                 >
-                  <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[34px] h-[8px] bg-black rounded-full z-30" />
-                  <div className="absolute inset-[2px] overflow-hidden rounded-[20px]">
+                  <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[40px] h-[9px] bg-black rounded-full z-30" />
+                  <div className="absolute inset-[2px] overflow-hidden rounded-[24px]">
                     <MockupReactScreen
                       type="home"
                       templateVariant={templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant}
@@ -998,8 +1012,8 @@ export function MockupSuiteGenerator({
                       businessSector={businessSector || "Servizi"}
                       businessCity={businessCity || ""}
                       primaryColor={mode === "standalone" ? standalone.primaryColor : primaryColor}
-                      width={106}
-                      height={Math.round(110 * 19.5 / 9) - 4}
+                      width={126}
+                      height={Math.round(130 * 19.5 / 9) - 4}
                       glassIntensity={glassIntensity}
                       colorStyle={colorStyle}
                       safeAreaPx={Math.round(safeAreaPx * 0.4)}
@@ -1009,11 +1023,11 @@ export function MockupSuiteGenerator({
                       fontBodyOverride={brandFont.fontBody || undefined}
                     />
                   </div>
-                  <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
+                  <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[42px] h-[2.5px] bg-foreground/30 rounded-full z-20" />
                 </div>
               </div>
-              <p className="text-[9px] text-muted-foreground text-center mt-1 max-w-[120px]">
-                Preview Home · cambia istantaneamente
+              <p className="text-[10px] text-muted-foreground text-center max-w-[140px] leading-snug">
+                Preview Home · aggiornata in tempo reale
               </p>
             </div>
           </div>
@@ -1022,11 +1036,14 @@ export function MockupSuiteGenerator({
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* PERSONALIZZAZIONE AVANZATA — glass intensity + color style         */}
         {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] to-transparent p-4 space-y-4">
+        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] to-transparent p-4 sm:p-5 space-y-5">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <Label className="flex items-center gap-1.5 m-0">
-              <Sliders className="h-3.5 w-3.5 text-primary" /> Personalizzazione avanzata
-            </Label>
+            <div>
+              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
+                <Sliders className="h-4 w-4 text-primary" /> Personalizzazione avanzata
+              </Label>
+              <p className="text-xs text-muted-foreground mt-0.5">Glassmorphism · cromia · tipografia</p>
+            </div>
             <button
               type="button"
               disabled={controlsLocked}
@@ -1036,19 +1053,19 @@ export function MockupSuiteGenerator({
                 setBrandFontKey("template");
               }}
               title={lockTitle}
-              className="text-[10px] px-2 py-0.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs px-3 py-1.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               Reset default
             </button>
           </div>
 
           {/* Glassmorphism slider */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="glass-slider" className="text-xs flex items-center gap-1.5 m-0">
-                <Droplets className="h-3 w-3" /> Intensità glassmorphism
+              <Label htmlFor="glass-slider" className="text-sm flex items-center gap-1.5 m-0 font-medium">
+                <Droplets className="h-3.5 w-3.5" /> Intensità glassmorphism
               </Label>
-              <Badge variant="outline" className="text-[10px] font-mono">{glassIntensity}%</Badge>
+              <Badge variant="outline" className="text-xs font-mono">{glassIntensity}%</Badge>
             </div>
             <input
               id="glass-slider"
@@ -1060,9 +1077,9 @@ export function MockupSuiteGenerator({
               disabled={controlsLocked}
               onChange={(e) => setGlassIntensity(Number(e.target.value))}
               title={lockTitle}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-2.5 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
-            <div className="flex justify-between text-[9px] text-muted-foreground">
+            <div className="flex justify-between text-[10px] text-muted-foreground">
               <span>Solido</span>
               <span>Bilanciato</span>
               <span>Vetro intenso</span>
@@ -1070,9 +1087,9 @@ export function MockupSuiteGenerator({
           </div>
 
           {/* Color style segmented */}
-          <div className="space-y-1.5">
-            <Label className="text-xs m-0">Stile cromatico</Label>
-            <div className="grid grid-cols-4 gap-1.5">
+          <div className="space-y-2">
+            <Label className="text-sm m-0 font-medium">Stile cromatico</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {([
                 { key: "vivid",  label: "Vivid",  desc: "Originale" },
                 { key: "muted",  label: "Muted",  desc: "−25% sat." },
@@ -1087,14 +1104,14 @@ export function MockupSuiteGenerator({
                     disabled={controlsLocked}
                     onClick={() => setColorStyle(opt.key)}
                     title={lockTitle}
-                    className={`px-2 py-2 rounded-lg border text-center transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                    className={`px-2 py-2.5 rounded-lg border text-center transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[52px] ${
                       active
-                        ? "border-primary bg-primary/10 shadow-sm scale-[1.02]"
+                        ? "border-primary bg-primary/10 shadow-sm"
                         : "border-border hover:border-primary/40"
                     }`}
                   >
-                    <p className="text-[11px] font-bold leading-tight">{opt.label}</p>
-                    <p className="text-[8px] text-muted-foreground leading-tight mt-0.5">{opt.desc}</p>
+                    <p className="text-sm font-bold leading-tight">{opt.label}</p>
+                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{opt.desc}</p>
                   </button>
                 );
               })}
@@ -1257,23 +1274,26 @@ export function MockupSuiteGenerator({
         {/* Garantiscono che testo e UI restino dentro il frame iPhone        */}
         {/* su qualsiasi template selezionato (auto + manuali).               */}
         {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent p-4 space-y-4">
+        <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent p-4 sm:p-5 space-y-5">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <Label className="flex items-center gap-1.5 m-0">
-              <Eye className="h-3.5 w-3.5 text-accent-foreground" /> Safe Area & Leggibilità
-            </Label>
-            <Badge variant="outline" className="text-[9px] uppercase tracking-wider">
+            <div>
+              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
+                <Eye className="h-4 w-4 text-accent-foreground" /> Safe Area & Leggibilità
+              </Label>
+              <p className="text-xs text-muted-foreground mt-0.5">Margini, tipografia e contrasto WCAG</p>
+            </div>
+            <Badge variant="outline" className="text-[10px] uppercase tracking-wider">
               {boostContrast ? "AA on" : "AA off"} · {typeScale.toFixed(2)}× · {safeAreaPx}px
             </Badge>
           </div>
 
           {/* Safe Area slider */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="safe-area-slider" className="text-xs flex items-center gap-1.5 m-0">
+              <Label htmlFor="safe-area-slider" className="text-sm flex items-center gap-1.5 m-0 font-medium">
                 Margine interno (safe-area)
               </Label>
-              <Badge variant="outline" className="text-[10px] font-mono">{safeAreaPx}px</Badge>
+              <Badge variant="outline" className="text-xs font-mono">{safeAreaPx}px</Badge>
             </div>
             <input
               id="safe-area-slider"
@@ -1285,9 +1305,9 @@ export function MockupSuiteGenerator({
               disabled={controlsLocked}
               onChange={(e) => setSafeAreaPx(Number(e.target.value))}
               title={lockTitle}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-2.5 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
-            <div className="flex justify-between text-[9px] text-muted-foreground">
+            <div className="flex justify-between text-[10px] text-muted-foreground">
               <span>Edge-to-edge</span>
               <span>Bilanciato</span>
               <span>Massima sicurezza</span>
@@ -1295,12 +1315,12 @@ export function MockupSuiteGenerator({
           </div>
 
           {/* Type scale slider */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="type-scale-slider" className="text-xs flex items-center gap-1.5 m-0">
+              <Label htmlFor="type-scale-slider" className="text-sm flex items-center gap-1.5 m-0 font-medium">
                 Dimensione tipografia
               </Label>
-              <Badge variant="outline" className="text-[10px] font-mono">{typeScale.toFixed(2)}×</Badge>
+              <Badge variant="outline" className="text-xs font-mono">{typeScale.toFixed(2)}×</Badge>
             </div>
             <input
               id="type-scale-slider"
@@ -1312,9 +1332,9 @@ export function MockupSuiteGenerator({
               disabled={controlsLocked}
               onChange={(e) => setTypeScale(Number(e.target.value))}
               title={lockTitle}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-2.5 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
-            <div className="flex justify-between text-[9px] text-muted-foreground">
+            <div className="flex justify-between text-[10px] text-muted-foreground">
               <span>Compatta (0.85×)</span>
               <span>Standard (1.00×)</span>
               <span>Maxi (1.20×)</span>
@@ -1322,11 +1342,11 @@ export function MockupSuiteGenerator({
           </div>
 
           {/* Contrast toggle */}
-          <div className="flex items-start justify-between gap-3 p-2.5 rounded-lg bg-muted/40 border border-border/40">
+          <div className="flex items-center justify-between gap-3 p-3 rounded-lg bg-muted/40 border border-border/40">
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold leading-tight">Boost contrasto AA</p>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                Forza testo e didascalie a contrasto WCAG AA su qualsiasi sfondo del template.
+              <p className="text-sm font-semibold leading-tight">Boost contrasto AA</p>
+              <p className="text-xs text-muted-foreground leading-snug mt-1">
+                Forza testo e didascalie a contrasto WCAG AA su qualsiasi sfondo.
               </p>
             </div>
             <button
@@ -1336,20 +1356,20 @@ export function MockupSuiteGenerator({
               role="switch"
               aria-checked={boostContrast}
               title={lockTitle}
-              className={`shrink-0 relative inline-flex h-5 w-9 items-center rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`shrink-0 relative inline-flex h-7 w-12 items-center rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 boostContrast ? "bg-primary" : "bg-muted-foreground/30"
               }`}
             >
               <span
-                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-background shadow transition-transform ${
-                  boostContrast ? "translate-x-5" : "translate-x-1"
+                className={`inline-block h-5 w-5 transform rounded-full bg-background shadow transition-transform ${
+                  boostContrast ? "translate-x-6" : "translate-x-1"
                 }`}
               />
             </button>
           </div>
 
-          <p className="text-[10px] text-muted-foreground italic">
-            🛡️ Validazione: nessun testo finisce sotto la Dynamic Island o l'Home Indicator. Ottimale per AI-render 4K/8K.
+          <p className="text-[11px] text-muted-foreground italic leading-snug">
+            🛡️ Nessun testo finisce sotto la Dynamic Island o l'Home Indicator. Ottimale per AI-render 4K/8K.
           </p>
         </div>
 
@@ -1409,51 +1429,43 @@ export function MockupSuiteGenerator({
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* PRE-GEN PREVIEW STRIP — 4 mini iPhone con tutte le opzioni live   */}
         {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.03] to-transparent p-4 space-y-3">
+        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.03] to-transparent p-4 sm:p-5 space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <Label className="flex items-center gap-1.5 m-0">
-              <Eye className="h-3.5 w-3.5 text-primary" /> Anteprima pre-generazione
-            </Label>
+            <div>
+              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
+                <Eye className="h-4 w-4 text-primary" /> Anteprima pre-generazione
+              </Label>
+              <p className="text-xs text-muted-foreground mt-0.5">Le 4 schermate prima della generazione finale</p>
+            </div>
             <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className="text-[9px]">
+              <Badge variant="outline" className="text-[10px]">
                 {(templateVariant === "auto"
                   ? `Auto → ${TEMPLATE_VARIANTS.find(t => t.key === suggestTemplateForSector(businessSector))?.label?.split("—")[0]?.trim() || "—"}`
                   : TEMPLATE_VARIANTS.find(t => t.key === templateVariant)?.label?.split("—")[0]?.trim() || templateVariant)}
               </Badge>
-              <Badge variant="outline" className="text-[9px]">
+              <Badge variant="outline" className="text-[10px]">
                 <Droplets className="h-2.5 w-2.5 mr-1" />Glass {glassIntensity}%
               </Badge>
-              <Badge variant="outline" className="text-[9px] capitalize">
+              <Badge variant="outline" className="text-[10px] capitalize">
                 <Palette className="h-2.5 w-2.5 mr-1" />{colorStyle}
-              </Badge>
-              <Badge
-                variant="outline"
-                className="text-[9px] gap-1"
-                style={{ borderColor: (mode === "standalone" ? standalone.primaryColor : primaryColor) }}
-              >
-                <span
-                  className="inline-block w-2 h-2 rounded-full"
-                  style={{ background: mode === "standalone" ? standalone.primaryColor : primaryColor }}
-                />
-                {(mode === "standalone" ? standalone.primaryColor : primaryColor).toUpperCase()}
               </Badge>
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-2 justify-items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-3 justify-items-center">
             {screens.map((s, i) => {
-              const w = 78;
+              const w = 110;
               const h = Math.round(w * 19.5 / 9);
               const resolved = templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant;
               return (
-                <div key={`${s.type}-${i}`} className="flex flex-col items-center gap-1">
+                <div key={`${s.type}-${i}`} className="flex flex-col items-center gap-1.5">
                   <div className="relative" style={{ width: w, height: h }}>
                     <div
-                      className="absolute -inset-1.5 rounded-[20px] opacity-25 blur-md"
+                      className="absolute -inset-1.5 rounded-[24px] opacity-25 blur-md"
                       style={{ background: mode === "standalone" ? standalone.primaryColor : primaryColor }}
                     />
                     <div
-                      className="relative rounded-[16px] border-[1.5px] overflow-hidden shadow-md"
+                      className="relative rounded-[20px] border-[1.5px] overflow-hidden shadow-md"
                       style={{
                         width: w,
                         height: h,
@@ -1461,8 +1473,8 @@ export function MockupSuiteGenerator({
                         boxSizing: "border-box",
                       }}
                     >
-                      <div className="absolute top-[2px] left-1/2 -translate-x-1/2 w-[22px] h-[5px] bg-black rounded-full z-30" />
-                      <div className="absolute inset-[1.5px] overflow-hidden rounded-[14px]">
+                      <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[32px] h-[7px] bg-black rounded-full z-30" />
+                      <div className="absolute inset-[1.5px] overflow-hidden rounded-[18px]">
                         <MockupReactScreen
                           type={s.type}
                           templateVariant={resolved}
@@ -1481,18 +1493,18 @@ export function MockupSuiteGenerator({
                           fontBodyOverride={brandFont.fontBody || undefined}
                         />
                       </div>
-                      <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-[24px] h-[1.5px] bg-foreground/30 rounded-full z-20" />
+                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2px] bg-foreground/30 rounded-full z-20" />
                     </div>
                   </div>
-                  <p className="text-[9px] font-semibold text-center leading-tight max-w-[80px] truncate">{s.title}</p>
-                  <p className="text-[8px] text-muted-foreground capitalize leading-none">{s.type}</p>
+                  <p className="text-xs font-semibold text-center leading-tight max-w-[110px] truncate">{s.title}</p>
+                  <p className="text-[10px] text-muted-foreground capitalize leading-none">{s.type}</p>
                 </div>
               );
             })}
           </div>
 
-          <p className="text-[9px] text-muted-foreground italic text-center">
-            Anteprima React istantanea con tutte le opzioni applicate · clicca <span className="font-semibold not-italic">Genera Suite</span> per la versione finale.
+          <p className="text-[11px] text-muted-foreground italic text-center leading-snug">
+            Anteprima React istantanea · clicca <span className="font-semibold not-italic">Genera Suite</span> per la versione finale 4K/8K.
           </p>
         </div>
 
