@@ -37,11 +37,12 @@ async function firecrawlScrape(apiKey: string, url: string): Promise<any | null>
   } catch { return null; }
 }
 
-// Estrae media (img, video, og:image) dall'HTML grezzo
-function extractMediaFromHtml(html: string, baseUrl: string): { images: string[]; videos: string[]; ogImage?: string } {
-  if (!html) return { images: [], videos: [] };
+// Estrae media (img, video, og:image, video poster) dall'HTML grezzo
+function extractMediaFromHtml(html: string, baseUrl: string): { images: string[]; videos: string[]; videoPosters: string[]; ogImage?: string } {
+  if (!html) return { images: [], videos: [], videoPosters: [] };
   const images = new Set<string>();
   const videos = new Set<string>();
+  const videoPosters = new Set<string>();
   let ogImage: string | undefined;
 
   const absolutize = (src: string): string | null => {
@@ -74,6 +75,13 @@ function extractMediaFromHtml(html: string, baseUrl: string): { images: string[]
     if (u && /\.(jpe?g|png|webp|avif)(\?|$)/i.test(u)) images.add(u);
   }
 
+  // <video poster="..."> — frame "ufficiale" già pronto
+  const posterRe = /<video[^>]+poster=["']([^"']+)["']/gi;
+  while ((m = posterRe.exec(html)) !== null) {
+    const u = absolutize(m[1]);
+    if (u) videoPosters.add(u);
+  }
+
   // <video src> + <source src>
   const videoRe = /<(?:video|source)[^>]+src=["']([^"']+)["']/gi;
   while ((m = videoRe.exec(html)) !== null) {
@@ -90,9 +98,55 @@ function extractMediaFromHtml(html: string, baseUrl: string): { images: string[]
 
   return {
     images: Array.from(images).slice(0, 20),
-    videos: Array.from(videos).slice(0, 6),
+    videos: Array.from(videos).slice(0, 8),
+    videoPosters: Array.from(videoPosters).slice(0, 6),
     ogImage,
   };
+}
+
+// Da una lista di URL video estrae frame/thumbnail utilizzabili come reference image.
+// • YouTube → thumbnail ufficiale maxresdefault (fallback hqdefault)
+// • Vimeo → API pubblica oEmbed per thumbnail_url
+// • mp4/webm diretti → niente (no ffmpeg in edge); useremo i poster <video poster>
+async function extractVideoFrames(videoUrls: string[]): Promise<string[]> {
+  const frames = new Set<string>();
+  const tasks: Promise<void>[] = [];
+
+  for (const raw of videoUrls.slice(0, 6)) {
+    const url = String(raw || "");
+    if (!url) continue;
+
+    // YouTube — vari formati
+    const ytMatch =
+      url.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/i) ||
+      url.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/i) ||
+      url.match(/youtube\.com\/watch\?[^"]*v=([A-Za-z0-9_-]{6,})/i);
+    if (ytMatch) {
+      const id = ytMatch[1];
+      // maxresdefault può non esistere → aggiungo anche hqdefault come fallback
+      frames.add(`https://img.youtube.com/vi/${id}/maxresdefault.jpg`);
+      frames.add(`https://img.youtube.com/vi/${id}/hqdefault.jpg`);
+      continue;
+    }
+
+    // Vimeo
+    const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+    if (vimeoMatch) {
+      const id = vimeoMatch[1];
+      tasks.push((async () => {
+        try {
+          const r = await fetch(`https://vimeo.com/api/v2/video/${id}.json`);
+          if (!r.ok) return;
+          const data = await r.json();
+          const thumb = data?.[0]?.thumbnail_large || data?.[0]?.thumbnail_medium;
+          if (thumb) frames.add(String(thumb));
+        } catch (_e) { /* ignore */ }
+      })());
+    }
+  }
+
+  await Promise.all(tasks);
+  return Array.from(frames).slice(0, 6);
 }
 
 // Cerca un logo: prima da branding Firecrawl, fallback su pattern href/src "logo"
