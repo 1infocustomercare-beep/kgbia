@@ -444,8 +444,18 @@ function buildScreenPrompt(
   const bottomNav = navMap[templateVariant] || "Home, Esplora, Prenota, Profilo, Chat AI";
 
   const quality = pro
-    ? "ULTRA-CINEMATOGRAFICO 8K, qualità Apple Store keynote, illuminazione studio professionale a 3 punti, riflessi vetro perfetti del display, anti-aliasing perfetto, grana sottile cinematica, color grading premium"
-    : "fotorealistico premium 4K, illuminazione studio soft, dettagli UI nitidi e leggibili, color grading professionale";
+    ? `ULTRA-CINEMATOGRAFICO 8K iperrealistico Apple Store keynote:
+       • Illuminazione studio professionale a 3 punti (key + fill + rim light caldo)
+       • Riflessi vetro Ceramic Shield perfetti con micro-highlight a luce radente sui bordi titanio
+       • Cornice titanio naturale con micro-bevel anodizzato uniforme
+       • Ombra naturale soft drop-shadow sotto il dispositivo (penombra fotografica realistica)
+       • Profondità di campo leggera dietro il device (bokeh sottile, sfondo studio sweep)
+       • Anti-aliasing perfetto su ogni testo (zero pixelation), grana cinematica sottile 5%
+       • Color grading filmico premium (curve cinema, contrasto morbido, micro-vignettatura)
+       • Texture sottile vetro display visibile, riflessi UI nitidi e leggibili
+       • Render fotografico, NON CGI plasticoso, NON wireframe`
+    : `Fotorealistico premium 4K studio: illuminazione soft a 2 punti, vetro display nitido,
+       ombre naturali, dettagli UI leggibili, color grading professionale, no CGI plasticoso`;
 
   // VARIATION: layout + componenti diversi per ogni screen
   const layout = pickByIndex(LAYOUT_VARIATIONS, variationSeed, variantIndex);
