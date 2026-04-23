@@ -278,7 +278,8 @@ Deno.serve(async (req) => {
     const FIRECRAWL_KEY = Deno.env.get("FIRECRAWL_API_KEY");
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
-    const { lead, skip_credit_check = false } = await req.json();
+    const { lead, skip_credit_check = false, match_thresholds } = await req.json();
+    const TH = resolveThresholds(match_thresholds);
     if (!lead?.name) {
       return new Response(JSON.stringify({ error: "lead.name required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
