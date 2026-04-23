@@ -4,16 +4,18 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft, DollarSign, Coins, Zap, Server, Building2, Users,
   Pencil, Save, X, Plus, Download, History, AlertTriangle, Wifi, Database,
+  Scale, RefreshCw, TrendingUp, TrendingDown, Receipt, CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useSuperAdminCosts } from "@/hooks/useSuperAdminCosts";
+import { useCostReconciliation } from "@/hooks/useCostReconciliation";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { exportToCSV } from "@/lib/exportCsv";
 
-type Tab = "listino" | "consumi" | "infrastruttura" | "audit";
+type Tab = "listino" | "consumi" | "infrastruttura" | "riconciliazione" | "audit";
 
 const CAT_META: Record<string, { label: string; icon: any; color: string }> = {
   ai_gateway: { label: "AI Gateway", icon: Zap, color: "text-violet-400" },
@@ -29,6 +31,7 @@ export default function SuperAdminCostsPage() {
   const [tab, setTab] = useState<Tab>("listino");
   const [period, setPeriod] = useState<7 | 30 | 90>(30);
   const data = useSuperAdminCosts(period);
+  const recon = useCostReconciliation(period);
 
   // Filtri tab Consumi
   const [filterSector, setFilterSector] = useState("");
@@ -153,6 +156,7 @@ export default function SuperAdminCostsPage() {
           <TabBtn active={tab === "listino"} onClick={() => setTab("listino")} icon={Coins} label="Listino azioni" />
           <TabBtn active={tab === "consumi"} onClick={() => setTab("consumi")} icon={Users} label="Consumi" />
           <TabBtn active={tab === "infrastruttura"} onClick={() => setTab("infrastruttura")} icon={Server} label="Infrastruttura" />
+          <TabBtn active={tab === "riconciliazione"} onClick={() => setTab("riconciliazione")} icon={Scale} label="Riconciliazione" />
           <TabBtn active={tab === "audit"} onClick={() => setTab("audit")} icon={History} label="Audit" />
         </div>
 
@@ -413,6 +417,151 @@ export default function SuperAdminCostsPage() {
           </motion.div>
         )}
 
+        {/* ===== TAB: RICONCILIAZIONE ===== */}
+        {tab === "riconciliazione" && (
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <h3 className="text-sm font-bold flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-violet-400" /> Riconciliazione Stripe + AI + BYOK
+                </h3>
+                <p className="text-[10px] text-muted-foreground italic">
+                  Confronta automaticamente i costi <strong>reali</strong> (commissioni Stripe, token AI Gateway, scontrini) con le <strong>stime</strong> da listino.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline" onClick={() => recon.refetch()} disabled={recon.loading}>
+                  <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${recon.loading ? "animate-spin" : ""}`} /> Aggiorna
+                </Button>
+                <Button size="sm" onClick={() => recon.snapshot()} disabled={recon.snapshotting}>
+                  <Save className="w-3.5 h-3.5 mr-1.5" /> {recon.snapshotting ? "Salvo…" : "Salva snapshot"}
+                </Button>
+              </div>
+            </div>
+
+            {recon.loading && !recon.data && <div className="text-center py-12 text-sm text-muted-foreground">Calcolo riconciliazione…</div>}
+
+            {recon.data && (
+              <>
+                {/* === Sintesi totali === */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  <KpiCard
+                    icon={TrendingDown}
+                    label="Costi reali (€)"
+                    value={`€${recon.data.totals.real_costs_eur.toFixed(2)}`}
+                    sub={`Stripe fee + AI Gateway`}
+                    color="text-rose-400"
+                  />
+                  <KpiCard
+                    icon={Coins}
+                    label="Costi stimati (€)"
+                    value={`€${recon.data.totals.estimated_costs_eur.toFixed(2)}`}
+                    sub={`da listino azioni`}
+                    color="text-amber-400"
+                  />
+                  <KpiCard
+                    icon={TrendingUp}
+                    label="Ricavi periodo (€)"
+                    value={`€${recon.data.totals.revenue_eur.toFixed(2)}`}
+                    sub={`fee app + token + scontrini`}
+                    color="text-emerald-400"
+                    highlight
+                  />
+                </div>
+
+                {/* === Stripe === */}
+                <Section title="Eventi Stripe (Pagamenti & Commissioni)" icon={CreditCard}>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <ReconCell label="Volume transato" value={`€${recon.data.stripe.volume_eur.toFixed(2)}`} color="text-foreground" />
+                    <ReconCell label="Commissione Stripe" value={`€${recon.data.stripe.processor_fee_eur.toFixed(2)}`} color="text-rose-400" />
+                    <ReconCell label="Application fee (nostra)" value={`€${recon.data.stripe.application_fee_eur.toFixed(2)}`} color="text-emerald-400" />
+                    <ReconCell label="Eventi" value={`${recon.data.stripe.events_count}`} color="text-muted-foreground" small />
+                  </div>
+                  {recon.data.stripe.events_count === 0 && (
+                    <p className="text-[10px] text-muted-foreground italic mt-2 flex items-center gap-1">
+                      <AlertTriangle className="w-3 h-3 text-amber-400" /> Nessun evento Stripe registrato nel periodo. I dati arriveranno automaticamente al primo pagamento.
+                    </p>
+                  )}
+                </Section>
+
+                {/* === AI Gateway: REALE vs STIMA === */}
+                <Section title="AI Gateway: Reale vs Stima" icon={Zap}>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <ReconCell label="Costo reale (USD)" value={`$${recon.data.ai_gateway.real_usd.toFixed(2)}`} color="text-violet-400" />
+                    <ReconCell label="Costo reale (EUR)" value={`€${recon.data.ai_gateway.real_eur.toFixed(2)}`} color="text-violet-400" />
+                    <ReconCell label="Stima da listino (EUR)" value={`€${recon.data.ai_gateway.estimated_eur.toFixed(2)}`} color="text-amber-400" />
+                    <ReconCell
+                      label="Delta (reale − stima)"
+                      value={`${recon.data.ai_gateway.delta_eur >= 0 ? "+" : ""}€${recon.data.ai_gateway.delta_eur.toFixed(2)}`}
+                      color={recon.data.ai_gateway.delta_eur > 0 ? "text-rose-400" : "text-emerald-400"}
+                    />
+                  </div>
+                  <div className="text-[10px] text-muted-foreground mt-2">
+                    {recon.data.ai_gateway.calls.toLocaleString("it-IT")} chiamate · {(recon.data.ai_gateway.tokens / 1000).toFixed(1)}K token · {recon.data.ai_gateway.credits.toLocaleString("it-IT")} crediti spesi
+                  </div>
+                  {Math.abs(recon.data.ai_gateway.delta_eur) > 5 && (
+                    <p className="text-[11px] text-amber-400 mt-2 flex items-center gap-1.5">
+                      <AlertTriangle className="w-3.5 h-3.5" />
+                      {recon.data.ai_gateway.delta_eur > 0
+                        ? "I costi reali superano la stima: valuta di alzare il listino crediti."
+                        : "Le stime sono più alte dei costi reali: stai sottostimando il margine."}
+                    </p>
+                  )}
+                </Section>
+
+                {/* === BYOK / Scontrini + Token Top-up === */}
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div className="p-3 rounded-2xl bg-card border border-border/50">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Receipt className="w-4 h-4 text-cyan-400" />
+                      <h4 className="text-xs font-bold uppercase tracking-wider">Scontrini / B2B Invoices</h4>
+                    </div>
+                    <div className="text-2xl font-bold text-cyan-400">€{recon.data.byok_invoices.total_eur.toFixed(2)}</div>
+                    <div className="text-[10px] text-muted-foreground">{recon.data.byok_invoices.count} fatture emesse nel periodo</div>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-card border border-border/50">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Coins className="w-4 h-4 text-amber-400" />
+                      <h4 className="text-xs font-bold uppercase tracking-wider">Ricariche AI Token</h4>
+                    </div>
+                    <div className="text-2xl font-bold text-amber-400">€{recon.data.token_purchases.revenue_eur.toFixed(2)}</div>
+                    <div className="text-[10px] text-muted-foreground">{recon.data.token_purchases.count} ricariche pagate</div>
+                  </div>
+                </div>
+
+                {/* === Storico snapshot === */}
+                <Section
+                  title={`Snapshot storici (${recon.history.length})`}
+                  icon={History}
+                  extra={
+                    recon.history.length > 0 && (
+                      <Button size="sm" variant="outline" onClick={() => exportToCSV(recon.history as any, `riconciliazioni-${period}g`)}>
+                        <Download className="w-3.5 h-3.5" />
+                      </Button>
+                    )
+                  }
+                >
+                  {recon.history.length === 0 ? (
+                    <p className="text-xs text-muted-foreground text-center py-4">Nessuno snapshot salvato — clicca "Salva snapshot" per archiviare la riconciliazione corrente.</p>
+                  ) : (
+                    <div className="space-y-1 max-h-96 overflow-y-auto">
+                      {recon.history.map((s: any) => (
+                        <div key={s.id} className="flex items-center gap-2 p-2 rounded-lg bg-card border border-border/40 text-xs">
+                          <Badge variant="outline" className="text-[9px] flex-shrink-0">{s.source}</Badge>
+                          <div className="flex-1 min-w-0 text-[10px] text-muted-foreground">
+                            {new Date(s.created_at).toLocaleString("it-IT")} · {s.period_days}g · {s.events_count} eventi
+                          </div>
+                          <div className="text-emerald-400 font-bold whitespace-nowrap">€{Number(s.amount_eur).toFixed(2)}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Section>
+              </>
+            )}
+          </motion.div>
+        )}
+
         {/* ===== TAB: AUDIT ===== */}
         {!data.loading && tab === "audit" && (
           <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
@@ -475,6 +624,15 @@ function TabBtn({ active, onClick, icon: Icon, label }: any) {
       }`}>
       <Icon className="w-3.5 h-3.5" /> {label}
     </button>
+  );
+}
+
+function ReconCell({ label, value, color, small }: any) {
+  return (
+    <div className="p-2.5 rounded-xl bg-card border border-border/40">
+      <div className="text-[9px] text-muted-foreground uppercase tracking-wider">{label}</div>
+      <div className={`${small ? "text-sm" : "text-lg"} font-bold mt-0.5 ${color}`}>{value}</div>
+    </div>
   );
 }
 
