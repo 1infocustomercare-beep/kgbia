@@ -34,37 +34,56 @@ export default function SuperAdminCostsPage() {
   const [filterSector, setFilterSector] = useState("");
   const [filterSeller, setFilterSeller] = useState("");
 
-  // Inline editing
-  const [editing, setEditing] = useState<{ id: string; field: string; value: string } | null>(null);
+  // Inline editing — kind: numeric | text
+  const [editing, setEditing] = useState<{ id: string; field: string; value: string; kind: "num" | "text" } | null>(null);
 
-  const startEdit = (id: string, field: string, value: any) =>
-    setEditing({ id, field, value: String(value ?? "") });
+  const startEdit = (id: string, field: string, value: any, kind: "num" | "text" = "num") =>
+    setEditing({ id, field, value: String(value ?? ""), kind });
+
+  const NUMERIC_FIELDS = new Set(["credit_cost", "cost_eur_estimate", "unit_cost_eur", "monthly_estimate_eur"]);
 
   const saveSellerCost = async () => {
     if (!editing) return;
-    const num = Number(editing.value);
-    if (Number.isNaN(num)) { toast({ title: "Valore non valido", variant: "destructive" }); return; }
+    const isNum = NUMERIC_FIELDS.has(editing.field);
+    let payload: any;
+    if (isNum) {
+      const num = Number(editing.value);
+      if (Number.isNaN(num)) { toast({ title: "Valore non valido", variant: "destructive" }); return; }
+      payload = { [editing.field]: num };
+    } else {
+      payload = { [editing.field]: editing.value.trim() || null };
+    }
     const { error } = await supabase
       .from("seller_action_costs")
-      .update({ [editing.field]: num })
+      .update(payload)
       .eq("id", editing.id);
     if (error) toast({ title: "Errore", description: error.message, variant: "destructive" });
-    else { toast({ title: "Aggiornato ✓" }); data.refetch(); }
+    else { toast({ title: "Aggiornato ✓", description: "Modifica registrata nell'audit" }); data.refetch(); }
     setEditing(null);
   };
 
   const saveInfraCost = async () => {
     if (!editing) return;
-    const num = Number(editing.value);
-    if (Number.isNaN(num)) { toast({ title: "Valore non valido", variant: "destructive" }); return; }
+    const isNum = NUMERIC_FIELDS.has(editing.field);
+    let payload: any;
+    if (isNum) {
+      const num = Number(editing.value);
+      if (Number.isNaN(num)) { toast({ title: "Valore non valido", variant: "destructive" }); return; }
+      payload = { [editing.field]: num };
+    } else {
+      payload = { [editing.field]: editing.value.trim() || null };
+    }
     const { error } = await supabase
       .from("infrastructure_costs" as any)
-      .update({ [editing.field]: num })
+      .update(payload)
       .eq("id", editing.id);
     if (error) toast({ title: "Errore", description: error.message, variant: "destructive" });
-    else { toast({ title: "Aggiornato ✓" }); data.refetch(); }
+    else { toast({ title: "Aggiornato ✓", description: "Modifica registrata nell'audit" }); data.refetch(); }
     setEditing(null);
   };
+
+  const SELLER_CATEGORIES = ["ai", "scraping", "outreach", "voice", "media", "other"];
+  const INFRA_CATEGORIES = ["ai_gateway", "external_api", "payments", "storage", "infra", "other"];
 
   const toggleSellerActive = async (id: string, current: boolean) => {
     const { error } = await supabase.from("seller_action_costs").update({ is_active: !current }).eq("id", id);
