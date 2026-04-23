@@ -839,15 +839,29 @@ export default function LeadsPage() {
 
   /* ─── Search ─── */
   const handleSearch = useCallback(async (page = 0, append = false) => {
-    if (!city.trim() && !query.trim()) {
-      toast.error("Inserisci una città o parola chiave");
+    const isNameOnly = nameOnlyMode && query.trim().length >= 2;
+    if (!isNameOnly && !city.trim() && !query.trim()) {
+      toast.error("Inserisci una città, attiva la modalità 'Per nome' o usa il GPS");
+      return;
+    }
+    if (isNameOnly && query.trim().length < 2) {
+      toast.error("In modalità 'Per nome' scrivi almeno 2 caratteri");
+      return;
+    }
+    if (activeSources.length === 0) {
+      toast.error("Seleziona almeno un canale di ricerca (OSM, Photon, Overpass o Google)");
       return;
     }
     if (append) setDeepLoading(true);
     else { setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null); }
 
     // 💰 Gating crediti: ricerca lead = 1 credito (server-side)
-    const creditRes = await consumeSellerCredits("lead_search", { city: city.trim(), sector, mode: "zone" });
+    const creditRes = await consumeSellerCredits("lead_search", {
+      city: city.trim(), sector,
+      mode: isNameOnly ? "name_only" : "zone",
+      sources: activeSources,
+      country: country || null,
+    });
     if (!creditRes.success) {
       setLoading(false); setDeepLoading(false);
       toast.error(creditRes.error === "insufficient_credits"
@@ -860,13 +874,19 @@ export default function LeadsPage() {
 
     try {
       const existingNames = append ? results.map(r => r.name) : [];
-      const searchCity = country ? `${city.trim()}, ${COUNTRIES.find(c => c.code === country)?.label.replace(/^..\s/, '') || country}` : city.trim();
       const { data, error } = await supabase.functions.invoke("lead-search", {
         body: {
-          query: query.trim(), city: searchCity, sector,
+          query: query.trim(),
+          city: city.trim(),
+          country_code: country || null,
+          sector,
           specialization_query: selectedSpecialization?.query || null,
           specialization_label: selectedSpecialization?.label || null,
-          mode: "zone", use_google: true, page,
+          mode: isNameOnly ? "name_only" : "zone",
+          name_only: isNameOnly,
+          sources: activeSources,
+          use_google: activeSources.includes("google"),
+          page,
           existing_names: existingNames,
           radius,
         },
@@ -876,21 +896,27 @@ export default function LeadsPage() {
         const processed = processResults(data.results, append);
         setSearchPage(page);
         setHasMore(data.has_more ?? false);
-        setLastSearchCity(city.trim());
+        setLastSearchCity(city.trim() || query.trim());
         setLastSearchSector(sector);
         const sources = data.sources || {};
-        toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati`, {
-          description: `OSM: ${sources.nominatim || 0} · Overpass: ${sources.overpass || 0} · Photon: ${sources.photon || 0} · Google: ${sources.google || 0}`,
+        const srcSummary = Object.entries(sources)
+          .filter(([k, v]) => k !== "total_merged" && (v as number) > 0)
+          .map(([k, v]) => `${k.charAt(0).toUpperCase() + k.slice(1)}: ${v}`)
+          .join(" · ") || "—";
+        toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati${isNameOnly ? " (per nome)" : ""}`, {
+          description: srcSummary,
         });
         // Auto-batch enrich Instagram in background
         setTimeout(() => batchEnrichInstagram(processed), 1500);
         // 🚀 Auto pre-warm demo factory per i top 3 lead (in background, silenzioso)
         if (!append) setTimeout(() => autoPrewarmDemos(processed), 3500);
       } else if (!append) {
-        toast.error("Nessun risultato — prova un'altra città o settore");
+        toast.error(isNameOnly
+          ? `Nessuna attività trovata con il nome "${query.trim()}" — verifica l'ortografia o cambia paese`
+          : "Nessun risultato — prova un'altra città, settore o canale");
       } else {
         setHasMore(false);
-        toast.info("Nessun nuovo lead trovato in questa zona — prova ad espandere la ricerca");
+        toast.info("Nessun nuovo lead trovato — prova ad espandere la ricerca o cambia canali");
       }
     } catch (e: any) {
       toast.error(e.message || "Errore ricerca");
@@ -898,7 +924,7 @@ export default function LeadsPage() {
       setLoading(false);
       setDeepLoading(false);
     }
-  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos, consumeSellerCredits]);
+  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos, consumeSellerCredits, selectedSpecialization, activeSources, nameOnlyMode]);
 
   /* ─── Deep search ─── */
   const handleDeepSearch = useCallback(() => {
