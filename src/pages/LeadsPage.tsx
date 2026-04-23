@@ -1884,6 +1884,72 @@ export default function LeadsPage() {
           })}
         </div>
 
+        {/* ═══ CANALI DI RICERCA + MODALITÀ "PER NOME" ═══ */}
+        <div className="rounded-xl p-3 space-y-2.5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest" style={{ color: "#14b8a6" }}>
+              📡 Canali di ricerca · scegli quali interrogare
+            </p>
+            <button
+              onClick={() => setActiveSources(["photon", "nominatim", "overpass", "google"])}
+              className="text-[9px] font-semibold underline opacity-60 hover:opacity-100"
+              style={{ color: "#94a3b8" }}
+            >
+              Tutti
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { id: "nominatim", label: "🗺️ OpenStreetMap", desc: "DB pubblico mondiale, gratis" },
+              { id: "photon", label: "🔎 Photon", desc: "Geocoder Komoot, gratis" },
+              { id: "overpass", label: "🏷️ Overpass", desc: "Tag strutturati OSM, gratis" },
+              { id: "google", label: "⭐ Google Places", desc: "Rating + recensioni reali" },
+            ].map(src => {
+              const active = activeSources.includes(src.id);
+              return (
+                <button
+                  key={src.id}
+                  onClick={() => setActiveSources(prev =>
+                    prev.includes(src.id) ? prev.filter(s => s !== src.id) : [...prev, src.id]
+                  )}
+                  title={src.desc}
+                  className="text-[10px] md:text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all"
+                  style={{
+                    background: active
+                      ? "linear-gradient(135deg, rgba(20,184,166,0.25), rgba(16,185,129,0.15))"
+                      : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${active ? "rgba(20,184,166,0.5)" : "rgba(255,255,255,0.08)"}`,
+                    color: active ? "#5eead4" : "#9ca3af",
+                  }}
+                >
+                  {src.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center justify-between gap-2 pt-2 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+            <div className="flex-1">
+              <p className="text-[10px] md:text-[11px] font-bold" style={{ color: nameOnlyMode ? "#a78bfa" : "#e5e7eb" }}>
+                🎯 Modalità "Trova attività per nome"
+              </p>
+              <p className="text-[9px] md:text-[10px]" style={{ color: "#6b7280" }}>
+                {nameOnlyMode
+                  ? `Cerca "${query || "..."}" in tutto il mondo${country ? ` (filtrato su ${COUNTRIES.find(c => c.code === country)?.label})` : ""} ignorando settore e città`
+                  : "Attiva per cercare un nome esatto ovunque (utile per trovare brand specifici)"}
+              </p>
+            </div>
+            <button
+              onClick={() => setNameOnlyMode(!nameOnlyMode)}
+              className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0"
+              style={{ background: nameOnlyMode ? "#a78bfa" : "rgba(255,255,255,0.15)" }}
+            >
+              <span className="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
+                style={{ transform: nameOnlyMode ? "translateX(24px)" : "translateX(4px)" }} />
+            </button>
+          </div>
+        </div>
+
         {/* ═══ GPS RADAR PANEL ═══ */}
         <GpsRadarPanel open={gpsOpen} onClose={() => setGpsOpen(false)} onSearch={handleGpsSearch} loading={loading} />
 
