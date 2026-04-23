@@ -70,13 +70,13 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
   const [stage, setStage] = useState<Stage>("hero");
   const [paused, setPaused] = useState(false);
 
-  // Init quando si apre
+  // Init quando si apre — apri DIRETTAMENTE sulla preview a tutto schermo
   useEffect(() => {
     if (!open) return;
     const idx = initialSuiteId ? Math.max(0, ready.findIndex((s) => s.id === initialSuiteId)) : 0;
     setSuiteIdx(idx >= 0 ? idx : 0);
     setScreenIdx(0);
-    setStage("hero");
+    setStage("preview");
     setPaused(false);
   }, [open, initialSuiteId, ready]);
 
