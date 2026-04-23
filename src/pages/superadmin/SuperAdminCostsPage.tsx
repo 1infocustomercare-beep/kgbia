@@ -167,11 +167,16 @@ export default function SuperAdminCostsPage() {
                 <Download className="w-3.5 h-3.5 mr-1.5" /> CSV
               </Button>
             </div>
+            <p className="text-[10px] text-muted-foreground italic">
+              💡 Clicca su qualsiasi campo (etichetta, categoria, descrizione, crediti, costo) per modificarlo. Ogni cambio è registrato nell'audit storico.
+            </p>
             <div className="overflow-x-auto rounded-xl border border-border/50 bg-card">
               <table className="w-full text-xs">
                 <thead className="bg-muted/30 text-[10px] uppercase tracking-wider text-muted-foreground">
                   <tr>
-                    <th className="text-left p-2.5">Azione</th>
+                    <th className="text-left p-2.5 min-w-[200px]">Etichetta · Codice</th>
+                    <th className="text-left p-2.5">Categoria</th>
+                    <th className="text-left p-2.5 min-w-[180px]">Descrizione</th>
                     <th className="text-right p-2.5">Crediti</th>
                     <th className="text-right p-2.5">Costo €</th>
                     <th className="text-center p-2.5">Stato</th>
@@ -179,22 +184,41 @@ export default function SuperAdminCostsPage() {
                 </thead>
                 <tbody>
                   {data.sellerCosts.map((c: any) => (
-                    <tr key={c.id} className="border-t border-border/30 hover:bg-muted/20">
+                    <tr key={c.id} className="border-t border-border/30 hover:bg-muted/20 align-top">
                       <td className="p-2.5">
-                        <div className="font-semibold text-foreground">{c.label}</div>
-                        <div className="text-[10px] text-muted-foreground font-mono">{c.action}</div>
+                        <EditableText editing={editing} id={c.id} field="label" value={c.label}
+                          onStart={() => startEdit(c.id, "label", c.label, "text")}
+                          onChange={v => setEditing({ id: c.id, field: "label", value: v, kind: "text" })}
+                          onSave={saveSellerCost} onCancel={() => setEditing(null)}
+                          className="font-semibold text-foreground" placeholder="Etichetta…" />
+                        <div className="text-[10px] text-muted-foreground font-mono mt-0.5">{c.action}</div>
                       </td>
-                      <td className="p-2.5 text-right">
+                      <td className="p-2.5">
+                        <EditableSelect editing={editing} id={c.id} field="category" value={c.category || "ai"}
+                          options={SELLER_CATEGORIES}
+                          onStart={() => startEdit(c.id, "category", c.category || "ai", "text")}
+                          onChange={v => setEditing({ id: c.id, field: "category", value: v, kind: "text" })}
+                          onSave={saveSellerCost} onCancel={() => setEditing(null)} />
+                      </td>
+                      <td className="p-2.5">
+                        <EditableText editing={editing} id={c.id} field="description" value={c.description || ""}
+                          onStart={() => startEdit(c.id, "description", c.description, "text")}
+                          onChange={v => setEditing({ id: c.id, field: "description", value: v, kind: "text" })}
+                          onSave={saveSellerCost} onCancel={() => setEditing(null)}
+                          className="text-[11px] text-muted-foreground italic"
+                          placeholder="Aggiungi nota…" multiline />
+                      </td>
+                      <td className="p-2.5 text-right whitespace-nowrap">
                         <EditableNumber editing={editing} id={c.id} field="credit_cost" value={c.credit_cost}
                           onStart={() => startEdit(c.id, "credit_cost", c.credit_cost)}
-                          onChange={v => setEditing({ id: c.id, field: "credit_cost", value: v })}
+                          onChange={v => setEditing({ id: c.id, field: "credit_cost", value: v, kind: "num" })}
                           onSave={saveSellerCost} onCancel={() => setEditing(null)}
                           format={v => <span className="font-bold text-amber-400">{v}</span>} step="1" />
                       </td>
-                      <td className="p-2.5 text-right">
+                      <td className="p-2.5 text-right whitespace-nowrap">
                         <EditableNumber editing={editing} id={c.id} field="cost_eur_estimate" value={c.cost_eur_estimate}
                           onStart={() => startEdit(c.id, "cost_eur_estimate", c.cost_eur_estimate)}
-                          onChange={v => setEditing({ id: c.id, field: "cost_eur_estimate", value: v })}
+                          onChange={v => setEditing({ id: c.id, field: "cost_eur_estimate", value: v, kind: "num" })}
                           onSave={saveSellerCost} onCancel={() => setEditing(null)}
                           format={v => <span className="text-emerald-400">€{Number(v).toFixed(4)}</span>} step="0.0001" />
                       </td>
