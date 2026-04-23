@@ -485,6 +485,7 @@ Deno.serve(async (req) => {
       brand_logo_url: brandLogoUrl,
       brand_photos: brandPhotos,
       brand_videos: brandVideos,
+      brand_video_frames: brandVideoFrames,
       brand_colors: brandColors,
       brand_fonts: brandFonts,
       extracted_business_data: extractedBusinessData,
