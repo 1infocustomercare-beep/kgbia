@@ -1281,7 +1281,7 @@ export default function LeadsPage() {
   });
 
   return (
-    <div className="min-h-screen px-3 sm:px-5 md:px-6 lg:px-8 py-4 md:py-5 lg:py-6 space-y-4 md:space-y-5 lg:space-y-6 pb-24 lg:pb-10 w-full max-w-[680px] md:max-w-[860px] lg:max-w-6xl xl:max-w-7xl mx-auto relative overflow-x-hidden" style={{ background: "linear-gradient(135deg, #0a0a12 0%, #0d1117 50%, #0a0a12 100%)" }}>
+    <div className="min-h-screen px-3 sm:px-5 md:px-6 lg:px-8 py-4 md:py-5 lg:py-6 space-y-4 md:space-y-5 lg:space-y-6 pb-24 lg:pb-10 w-full max-w-[680px] md:max-w-[860px] lg:max-w-6xl xl:max-w-7xl mx-auto relative overflow-x-hidden bg-transparent">
       <SalesPlaybook autoOpen />
       <ManualPreviewPicker
         open={showPicker}
@@ -1329,27 +1329,7 @@ export default function LeadsPage() {
         }}
       />
 
-      {/* ═══ AMBIENT VIOLET BACKGROUND ═══ */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 50% at 30% 20%, rgba(139,92,246,0.08), transparent 60%)" }} />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 60% at 80% 70%, rgba(109,40,217,0.06), transparent 50%)" }} />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, rgba(167,139,250,0.04), transparent 70%)" }} />
-        {/* Animated grid dots */}
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={`bg-dot-${i}`}
-            className="absolute rounded-full"
-            style={{
-              width: 2, height: 2,
-              left: `${10 + (i % 4) * 25}%`,
-              top: `${15 + Math.floor(i / 4) * 30}%`,
-              background: "rgba(167,139,250,0.2)",
-            }}
-            animate={{ opacity: [0.1, 0.4, 0.1], scale: [1, 1.5, 1] }}
-            transition={{ repeat: Infinity, duration: 3 + (i % 3), delay: i * 0.3 }}
-          />
-        ))}
-      </div>
+      {/* Sfondo Empire (DNA + aurora) viene dal PartnerLayout — qui non aggiungiamo overlay che lo coprano */}
 
       <div className="relative z-10 space-y-4">
 
