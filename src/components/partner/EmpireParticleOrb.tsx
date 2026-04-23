@@ -334,6 +334,20 @@ const EmpireParticleOrb = memo(() => {
     canvas.addEventListener("gesturestart", (e) => e.preventDefault() as never);
     canvas.addEventListener("gesturechange", (e) => e.preventDefault() as never);
 
+    // ─── Scroll-driven rotation: l'orb ruota mentre l'utente scrolla la pagina ───
+    let lastScrollY = window.scrollY;
+    const handleScroll = () => {
+      const y = window.scrollY;
+      const dy = y - lastScrollY;
+      lastScrollY = y;
+      // Solo se non si sta interagendo manualmente — evita conflitti col drag
+      if (dragRef.current.active || gestureRef.current.active) return;
+      // Mappa il delta scroll su rotazioni: verticale → asse X, leggera spinta su Y per parallasse
+      rotRef.current.vx += dy * 0.0009;
+      rotRef.current.vy += dy * 0.0004;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     // ─── Animate ───
     const draw = () => {
       t += 0.008;
