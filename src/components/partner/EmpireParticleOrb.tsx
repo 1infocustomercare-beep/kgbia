@@ -42,6 +42,9 @@ const EmpireParticleOrb = memo(() => {
   // Orb position offset (drag), rotation, and scale (pinch)
   const offsetRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   const rotRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
+  // Scroll-driven rotation target: vx/vy puntano allo "spin desiderato",
+  // rotRef.vx/vy ci si avvicinano via lerp → fluido, senza scatti.
+  const scrollTargetRef = useRef({ vx: 0, vy: 0 });
   const scaleRef = useRef(1);
   const dragRef = useRef({
     active: false,
@@ -62,6 +65,7 @@ const EmpireParticleOrb = memo(() => {
   // Tracked active pointers for multi-touch
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const [mode, setMode] = useState<Mode>("orb");
+  const [hint, setHint] = useState(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -303,6 +307,7 @@ const EmpireParticleOrb = memo(() => {
         const next: Mode = modeRef.current === "orb" ? "constellation" : "orb";
         modeRef.current = next;
         setMode(next);
+        setHint(false);
       }
     };
 
@@ -332,17 +337,32 @@ const EmpireParticleOrb = memo(() => {
     canvas.addEventListener("gesturestart", (e) => e.preventDefault() as never);
     canvas.addEventListener("gesturechange", (e) => e.preventDefault() as never);
 
-    // ─── Scroll-driven rotation: l'orb ruota mentre l'utente scrolla la pagina ───
+    // ─── Scroll-driven rotation (smooth, momentum-based, no clicks needed) ───
+    // Strategia: lo scroll alimenta una "velocità target". Il loop interpola
+    // (lerp) la velocità reale verso il target, e il target decade lentamente
+    // a 0 quando lo scroll si ferma. Questo elimina scatti e accelerazioni
+    // improvvise tipiche del legare direttamente vx al delta di scroll.
     let lastScrollY = window.scrollY;
+    let lastScrollTime = performance.now();
+    const SCROLL_TARGET_GAIN = 0.00045;   // quanta rotazione per pixel di scroll
+    const SCROLL_TARGET_MAX = 0.045;      // tetto massimo della velocità target
     const handleScroll = () => {
+      const now = performance.now();
       const y = window.scrollY;
       const dy = y - lastScrollY;
+      const dt = Math.max(16, now - lastScrollTime); // ms
       lastScrollY = y;
-      // Solo se non si sta interagendo manualmente — evita conflitti col drag
+      lastScrollTime = now;
       if (dragRef.current.active || gestureRef.current.active) return;
-      // Mappa il delta scroll su rotazioni: verticale → asse X, leggera spinta su Y per parallasse
-      rotRef.current.vx += dy * 0.0009;
-      rotRef.current.vy += dy * 0.0004;
+      // Velocità in px/ms → moltiplicata per gain dà rotazione "target"
+      const vy = (dy / dt) * 16; // normalizza a ~1 frame
+      // Asse X: scroll verticale fa "rollare" la sfera (più naturale)
+      const tx = Math.max(-SCROLL_TARGET_MAX, Math.min(SCROLL_TARGET_MAX, vy * SCROLL_TARGET_GAIN * 16));
+      // Spinta laterale leggera per parallasse (1/3 dell'asse X)
+      const ty = tx * 0.33;
+      // Additivo ma clampato — lo scroll continuo non esplode
+      scrollTargetRef.current.vx = Math.max(-SCROLL_TARGET_MAX, Math.min(SCROLL_TARGET_MAX, tx));
+      scrollTargetRef.current.vy = Math.max(-SCROLL_TARGET_MAX, Math.min(SCROLL_TARGET_MAX, ty));
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
 
@@ -355,10 +375,26 @@ const EmpireParticleOrb = memo(() => {
       morphRef.current += (targetMorph - morphRef.current) * 0.06;
       const m = morphRef.current;
 
-      // Rotation: auto-spin + user-driven momentum
-      if (!dragRef.current.active) {
-        rotRef.current.vy += (0.003 - rotRef.current.vy) * 0.02; // drift back to gentle auto-spin
-        rotRef.current.vx *= 0.94;
+      // ─── Rotazione fluida (no-click): auto-spin costante + lerp verso target scroll ───
+      // Il target di scroll decade lentamente quando l'utente smette di scrollare,
+      // così il rallentamento è naturale (ease-out), senza jerk.
+      if (!dragRef.current.active && !gestureRef.current.active) {
+        const AUTO_SPIN_Y = 0.0035;     // rotazione idle costante (sempre attiva)
+        const AUTO_SPIN_X = 0.0008;     // micro-tilt verticale per dare vita
+        const SCROLL_LERP = 0.08;       // smussa transizione verso il target (più basso = più morbido)
+        const TARGET_DECAY = 0.92;      // quanto velocemente il target si azzera dopo lo scroll
+
+        // Velocità desiderata = auto-spin + contributo scroll
+        const desiredVx = AUTO_SPIN_X + scrollTargetRef.current.vx;
+        const desiredVy = AUTO_SPIN_Y + scrollTargetRef.current.vy;
+
+        // Lerp morbido (smorzamento esponenziale) → niente scatti
+        rotRef.current.vx += (desiredVx - rotRef.current.vx) * SCROLL_LERP;
+        rotRef.current.vy += (desiredVy - rotRef.current.vy) * SCROLL_LERP;
+
+        // Il target di scroll decade quando lo scroll si ferma
+        scrollTargetRef.current.vx *= TARGET_DECAY;
+        scrollTargetRef.current.vy *= TARGET_DECAY;
       }
       rotRef.current.x += rotRef.current.vx;
       rotRef.current.y += rotRef.current.vy;
@@ -561,6 +597,19 @@ const EmpireParticleOrb = memo(() => {
               >
                 Il tuo Universo AI
               </h3>
+              <AnimatePresence>
+                {hint && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0.4, 0.9, 0.4] }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 2.2, repeat: Infinity }}
+                    className="text-[10px] sm:text-xs text-violet-300/70 mt-3 font-medium"
+                  >
+                    Trascina · ruota · pizzica · tocca
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </motion.div>
           ) : (
             <motion.div
@@ -577,6 +626,9 @@ const EmpireParticleOrb = memo(() => {
               <h3 className="text-base sm:text-lg md:text-xl font-bold text-white">
                 6 moduli sincronizzati
               </h3>
+              <p className="text-[10px] sm:text-xs text-violet-300/60 mt-2">
+                Tocca di nuovo per ricomporre
+              </p>
             </motion.div>
           )}
         </AnimatePresence>
