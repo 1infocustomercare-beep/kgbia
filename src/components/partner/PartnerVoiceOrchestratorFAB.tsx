@@ -120,7 +120,7 @@ export default function PartnerVoiceOrchestratorFAB() {
         )}
       </AnimatePresence>
 
-      <div className="fixed z-[9999] partner-voice-fab items-center justify-center flex flex-row gap-0 border-solid shadow-premium border-white/0 bg-white/0">
+      <div className="fixed z-[9999] partner-voice-fab flex items-center justify-center gap-0">
         <div className="hidden max-w-[170px] rounded-2xl border border-violet-400/20 bg-zinc-950/92 px-3 py-2 shadow-xl backdrop-blur-xl sm:hidden">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-violet-300">Microfono AI</p>
           <p className="mt-0.5 text-[10px] leading-relaxed text-zinc-300">
@@ -135,7 +135,7 @@ export default function PartnerVoiceOrchestratorFAB() {
           whileTap={{ scale: 0.92 }}
           animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
           transition={isActive ? { repeat: Infinity, duration: 1.4 } : {}}
-          className={`z-[9999] w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br ${STATE_COLOR[state]} shadow-premium flex items-center justify-center text-white border-2 border-white/20 text-center flex-row gap-0 mx-[322px] ${!supported && state === "idle" ? "opacity-50 cursor-not-allowed" : ""}`}
+          className={`relative z-[9999] w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br ${STATE_COLOR[state]} shadow-premium flex items-center justify-center text-white border-2 border-white/20 ${!supported && state === "idle" ? "opacity-50 cursor-not-allowed" : ""}`}
           aria-label="Microfono AI per task vocali"
           title={supported ? "Microfono AI — esegue task e risponde con la voce sui tuoi dati" : "Voice non supportato in questo browser"}
           style={{ touchAction: "manipulation" }}
