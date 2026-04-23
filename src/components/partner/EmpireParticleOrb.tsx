@@ -42,6 +42,9 @@ const EmpireParticleOrb = memo(() => {
   // Orb position offset (drag), rotation, and scale (pinch)
   const offsetRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   const rotRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
+  // Scroll-driven rotation target: vx/vy puntano allo "spin desiderato",
+  // rotRef.vx/vy ci si avvicinano via lerp → fluido, senza scatti.
+  const scrollTargetRef = useRef({ vx: 0, vy: 0 });
   const scaleRef = useRef(1);
   const dragRef = useRef({
     active: false,
