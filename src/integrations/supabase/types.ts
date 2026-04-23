@@ -1594,6 +1594,48 @@ export type Database = {
         }
         Relationships: []
       }
+      cost_reconciliation_snapshots: {
+        Row: {
+          amount_eur: number
+          amount_usd: number | null
+          created_at: string
+          created_by: string | null
+          events_count: number
+          id: string
+          metadata: Json
+          period_days: number
+          period_end: string
+          period_start: string
+          source: string
+        }
+        Insert: {
+          amount_eur?: number
+          amount_usd?: number | null
+          created_at?: string
+          created_by?: string | null
+          events_count?: number
+          id?: string
+          metadata?: Json
+          period_days: number
+          period_end?: string
+          period_start: string
+          source: string
+        }
+        Update: {
+          amount_eur?: number
+          amount_usd?: number | null
+          created_at?: string
+          created_by?: string | null
+          events_count?: number
+          id?: string
+          metadata?: Json
+          period_days?: number
+          period_end?: string
+          period_start?: string
+          source?: string
+        }
+        Relationships: []
+      }
       crm_clients: {
         Row: {
           address: string | null
@@ -7582,6 +7624,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      compute_cost_reconciliation: {
+        Args: { p_period_days?: number }
+        Returns: Json
+      }
       consume_seller_credits: {
         Args: { p_action: string; p_metadata?: Json }
         Returns: Json
@@ -7665,6 +7711,10 @@ export type Database = {
       }
       mark_wa_ab_reply: {
         Args: { p_test_id: string; p_variant: string }
+        Returns: Json
+      }
+      snapshot_cost_reconciliation: {
+        Args: { p_period_days?: number }
         Returns: Json
       }
       super_admin_grant_credits: {
