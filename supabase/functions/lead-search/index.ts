@@ -60,10 +60,11 @@ const SECTOR_OSM_TAGS: Record<string, string[]> = {
 };
 
 /* ═══ GEOCODE (city or full address) ═══ */
-async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bbox: number[] } | null> {
+async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[] } | null> {
   try {
+    const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
     const resp = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&addressdetails=1`,
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&addressdetails=1${cc}`,
       { headers: { "User-Agent": "EmpireAI-LeadScout/6.0 (info@empireaigroup.com)" } }
     );
     if (!resp.ok) return null;
@@ -71,6 +72,52 @@ async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bb
     if (!data.length) return null;
     return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), bbox: data[0].boundingbox?.map(Number) || [] };
   } catch { return null; }
+}
+
+/* ═══ GLOBAL NAME SEARCH — find a business by name everywhere (Nominatim, no bbox) ═══ */
+async function searchByNameGlobal(name: string, countryCode?: string): Promise<any[]> {
+  if (!name || name.trim().length < 2) return [];
+  const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
+  try {
+    const resp = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(name)}&format=json&addressdetails=1&extratags=1&limit=30${cc}`,
+      { headers: { "User-Agent": "EmpireAI-LeadScout/6.0 (info@empireaigroup.com)" }, signal: AbortSignal.timeout(9000) }
+    );
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    const results: any[] = [];
+    const seen = new Set<string>();
+    for (const item of data) {
+      if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse", "administrative"].includes(item.class)) continue;
+      const dispName = item.display_name?.split(",")[0]?.trim() || "";
+      if (!dispName || dispName.length < 2) continue;
+      const key = dispName.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const tags = item.extratags || {};
+      const addr = item.address || {};
+      results.push({
+        source: "nominatim", name: dispName,
+        full_address: item.display_name || "",
+        city: addr.city || addr.town || addr.village || addr.municipality || "",
+        zone: addr.suburb || addr.neighbourhood || addr.quarter || "",
+        lat: parseFloat(item.lat), lon: parseFloat(item.lon),
+        phone: tags.phone || tags["contact:phone"] || null,
+        website: tags.website || tags["contact:website"] || tags.url || null,
+        email: tags.email || tags["contact:email"] || null,
+        opening_hours: tags.opening_hours || null,
+        instagram: tags["contact:instagram"] || null,
+        facebook: tags["contact:facebook"] || null,
+        cuisine: tags.cuisine || null,
+        osm_type: item.type || item.class,
+        google_maps_url: `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lon}`,
+        search_google: `https://www.google.com/search?q=${encodeURIComponent(dispName + " " + (addr.city || addr.country || ""))}`,
+        search_instagram: `https://www.instagram.com/explore/tags/${encodeURIComponent(dispName.replace(/\s+/g, "").toLowerCase())}/`,
+        search_facebook: `https://www.facebook.com/search/pages/?q=${encodeURIComponent(dispName)}`,
+      });
+    }
+    return results;
+  } catch { return []; }
 }
 
 /* ═══ REVERSE GEOCODE (coords → city name) ═══ */
