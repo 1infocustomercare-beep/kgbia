@@ -1884,6 +1884,88 @@
     -webkit-backdrop-filter: blur(8px);
   }
 
+  /* ─── Backdrop dedicati per TABELLE e GRIGLIE/PREVIEW ───
+     Bloccano completamente l'effetto Empire DNA dietro contenuti
+     densi (tabelle, liste leads, griglie preview demo, mockup vault).
+     Uso: <div class="partner-table-surface"> <Table /> </div>
+          <div class="partner-preview-surface"> ...grid... </div>
+   */
+  .partner-table-surface {
+    position: relative;
+    isolation: isolate;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow:
+      0 1px 0 hsl(var(--foreground) / 0.02) inset,
+      0 8px 24px -14px hsl(var(--foreground) / 0.12);
+  }
+  .dark .partner-table-surface {
+    background:
+      linear-gradient(180deg, hsl(228 20% 11%), hsl(228 22% 9%));
+    border-color: hsl(0 0% 100% / 0.07);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.04) inset,
+      0 14px 38px -18px hsl(0 0% 0% / 0.6);
+  }
+  /* Header tabella su superficie dedicata */
+  .partner-table-surface thead tr,
+  .partner-table-surface [role="rowheader"],
+  .partner-table-surface .partner-table-head {
+    background: hsl(var(--muted) / 0.6);
+  }
+  .dark .partner-table-surface thead tr,
+  .dark .partner-table-surface [role="rowheader"],
+  .dark .partner-table-surface .partner-table-head {
+    background: hsl(228 22% 13%);
+  }
+  /* Righe zebra per leggibilità su griglia densa */
+  .partner-table-surface tbody tr:nth-child(even) {
+    background: hsl(var(--muted) / 0.25);
+  }
+  .dark .partner-table-surface tbody tr:nth-child(even) {
+    background: hsl(228 18% 12% / 0.6);
+  }
+
+  /* Backdrop per griglie di preview / thumbnail mockup */
+  .partner-preview-surface {
+    position: relative;
+    isolation: isolate;
+    background: hsl(var(--card) / 0.98);
+    border: 1px solid hsl(var(--border) / 0.7);
+    border-radius: 1.25rem;
+    padding: 1rem;
+    box-shadow:
+      0 1px 0 hsl(var(--foreground) / 0.02) inset,
+      0 16px 40px -22px hsl(var(--foreground) / 0.14);
+  }
+  .dark .partner-preview-surface {
+    background:
+      linear-gradient(180deg, hsl(230 22% 10% / 0.97), hsl(232 24% 8% / 0.97));
+    border-color: hsl(248 60% 70% / 0.12);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.03) inset,
+      0 22px 56px -22px hsl(248 70% 50% / 0.28);
+  }
+  @supports (backdrop-filter: blur(6px)) {
+    .partner-preview-surface { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  }
+
+  /* Wrapper dedicato per blocchi di TESTO lunghi sopra al DNA */
+  .partner-text-surface {
+    position: relative;
+    isolation: isolate;
+    background: hsl(var(--card) / 0.95);
+    border: 1px solid hsl(var(--border) / 0.55);
+    border-radius: 0.875rem;
+    padding: 1rem 1.125rem;
+  }
+  .dark .partner-text-surface {
+    background: hsl(228 20% 11% / 0.96);
+    border-color: hsl(0 0% 100% / 0.06);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .partner-page-shell,
     .partner-stagger > *,
