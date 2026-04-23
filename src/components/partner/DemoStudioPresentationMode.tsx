@@ -34,13 +34,14 @@ interface Props {
 type Stage = "hero" | "preview" | "wow" | "cta";
 
 const STAGE_DURATION_MS: Record<Stage, number> = {
-  hero: 3000,
-  preview: 45000,
+  hero: 0,        // skip intro: apri direttamente sulla preview a tutto schermo
+  preview: 60000, // 60s di preview prima del wow
   wow: 7000,
   cta: 5000,
 };
 
-const STAGE_ORDER: Stage[] = ["hero", "preview", "wow", "cta"];
+// Hero rimosso dall'ordine: l'utente vuole vedere subito la preview grande
+const STAGE_ORDER: Stage[] = ["preview", "wow", "cta"];
 
 function extractScreenImages(suite: VaultMockupSuite): string[] {
   const screens = suite.screens;
