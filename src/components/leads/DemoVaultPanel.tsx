@@ -8,6 +8,7 @@ import {
 import { toast } from "sonner";
 import { useDemoVault, type VaultDemo } from "@/hooks/useDemoVault";
 import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSuiteVault";
+import { buildPublicMockupUrl } from "@/lib/public-share-url";
 
 interface Props {
   open: boolean;
