@@ -672,7 +672,7 @@ export function MockupSuiteGenerator({
 
   const copyShareLink = () => {
     if (!result?.share_slug) return;
-    const url = `${window.location.origin}/preview/mockup/${result.share_slug}`;
+    const url = buildPublicMockupUrl(result.share_slug);
     navigator.clipboard.writeText(url);
     toast.success("Link copiato negli appunti");
   };
