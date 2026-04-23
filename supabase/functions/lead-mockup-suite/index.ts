@@ -677,20 +677,30 @@ Deno.serve(async (req) => {
     // la tabella seller_mockup_suites finché status diventa "complete"/"error".
     // ═══════════════════════════════════════════════════════════════════════
     const backgroundJob = (async () => {
+      // Pre-calcola le reference catalog per ogni schermata (1 chiamata sola)
+      const screenReferences: (string | null)[] = screens.map(s =>
+        findCatalogReference(business_sector, s.type)
+      );
+      const refCount = screenReferences.filter(Boolean).length;
+      console.log(`[mockup-suite] catalog references: ${refCount}/${screens.length} schermate avranno reference da catalogo`);
+
       try {
         const imageResults: Awaited<ReturnType<typeof generateValidatedAIImage>>[] = [];
         const concurrency = 2;
         for (let i = 0; i < screens.length; i += concurrency) {
           const batch = screens.slice(i, i + concurrency);
           const batchResults = await Promise.all(
-            batch.map((s, k) =>
-              generateValidatedAIImage(
+            batch.map((s, k) => {
+              const screenIdx = i + k;
+              const refUrl = screenReferences[screenIdx];
+              return generateValidatedAIImage(
                 LOVABLE_KEY,
-                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, i + k),
+                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl),
                 pro,
                 5,
-              )
-            )
+                refUrl,
+              );
+            })
           );
           imageResults.push(...batchResults);
           if (i + concurrency < screens.length) {
@@ -703,44 +713,104 @@ Deno.serve(async (req) => {
         );
         const publicUrls = await Promise.all(uploadPromises);
 
-        const finalScreens = screens.map((s, i) => ({
-          type: s.type,
-          title: s.title,
-          image_url: publicUrls[i],
-          render_mode: "ai" as const,
-          engine,
-          variation_seed: variationSeed,
-          variant_index: i,
-          validation: {
-            validated: imageResults[i].validated,
-            attempts: imageResults[i].attempts,
-            issues: imageResults[i].lastIssues,
-            engine_used: imageResults[i].engine_used,
-            has_image: !!publicUrls[i],
-          },
-        }));
+        // ─────────────────────────────────────────────────────────────────
+        // FALLBACK: per ogni schermata SENZA immagine AI, attiviamo il
+        // render React come fallback fedele al catalogo (gratis, sempre OK)
+        // ─────────────────────────────────────────────────────────────────
+        const finalScreens = screens.map((s, i) => {
+          const hasImage = !!publicUrls[i];
+          if (hasImage) {
+            return {
+              type: s.type,
+              title: s.title,
+              image_url: publicUrls[i],
+              render_mode: "ai" as const,
+              engine,
+              variation_seed: variationSeed,
+              variant_index: i,
+              catalog_reference: screenReferences[i] || null,
+              validation: {
+                validated: imageResults[i].validated,
+                attempts: imageResults[i].attempts,
+                issues: imageResults[i].lastIssues,
+                engine_used: imageResults[i].engine_used,
+                has_image: true,
+              },
+            };
+          }
+          // Fallback React: il client renderizza il template fedele
+          console.log(`[mockup-suite] schermata ${i} (${s.type}) → fallback React (AI fallita)`);
+          return {
+            type: s.type,
+            title: s.title,
+            image_url: null,
+            render_mode: "react" as const,
+            engine: "react_fallback",
+            template_variant: templateVariant,
+            variation_seed: variationSeed,
+            variant_index: i,
+            catalog_reference: screenReferences[i] || null,
+            validation: {
+              validated: false,
+              attempts: imageResults[i].attempts,
+              issues: imageResults[i].lastIssues,
+              engine_used: "react_fallback_after_ai_fail",
+              has_image: false,
+              fallback_reason: "ai_generation_failed",
+            },
+          };
+        });
 
+        const aiCount = finalScreens.filter(s => s.render_mode === "ai").length;
         const allValidated = finalScreens.every(s => s.validation.validated);
 
         await adminClient
           .from("seller_mockup_suites")
           .update({
             screens: finalScreens,
-            status: allValidated ? "complete" : "complete_with_warnings",
+            // Sempre "complete" se almeno qualcosa è stato generato (AI o React)
+            status: allValidated ? "complete" : (aiCount > 0 ? "complete_with_warnings" : "complete_react_fallback"),
             generated_at: new Date().toISOString(),
           })
           .eq("id", suite.id);
-        console.log(`[mockup-suite] background complete suite=${suite.id} validated=${allValidated}`);
+        console.log(`[mockup-suite] background complete suite=${suite.id} ai=${aiCount}/${screens.length} validated=${allValidated}`);
       } catch (e: any) {
         console.error("[mockup-suite] background error", e);
+        // FALLBACK TOTALE: AI completamente non disponibile → tutto React
+        // Così il vendor riceve sempre 4 mockup, mai un errore vuoto.
         const errMsg = e?.message === "rate_limited"
-          ? "AI temporaneamente sovraccarica. Riprova."
+          ? "AI temporaneamente sovraccarica — passato a render React fedele al catalogo."
           : e?.message === "payment_required"
-            ? "Crediti AI gateway esauriti."
-            : e?.message || "errore generazione";
+            ? "Crediti AI esauriti — passato a render React fedele al catalogo."
+            : `${e?.message || "errore generazione"} — fallback React attivo.`;
+
+        const reactFallbackScreens = screens.map((s, i) => ({
+          type: s.type,
+          title: s.title,
+          image_url: null,
+          render_mode: "react" as const,
+          engine: "react_full_fallback",
+          template_variant: templateVariant,
+          variation_seed: variationSeed,
+          variant_index: i,
+          catalog_reference: findCatalogReference(business_sector, s.type),
+          validation: {
+            validated: false,
+            attempts: 0,
+            issues: [`fatal_ai_error:${e?.message?.slice(0, 80) || "unknown"}`],
+            engine_used: "react_full_fallback",
+            has_image: false,
+            fallback_reason: "ai_fatal_error",
+          },
+        }));
         await adminClient
           .from("seller_mockup_suites")
-          .update({ status: "error", error_message: errMsg })
+          .update({
+            screens: reactFallbackScreens,
+            status: "complete_react_fallback",
+            error_message: errMsg,
+            generated_at: new Date().toISOString(),
+          })
           .eq("id", suite.id);
       }
     })();
