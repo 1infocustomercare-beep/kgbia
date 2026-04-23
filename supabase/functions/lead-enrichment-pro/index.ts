@@ -124,6 +124,8 @@ export type MatchThresholds = {
   social_token_bonus: number;
   listing_brand_slug_bonus: number;
   listing_token_bonus: number;
+  fallback_min_score: number;       // soglia ridotta per fallback (più permissiva)
+  fallback_enabled: boolean;        // attiva la pipeline di fallback
 };
 
 const DEFAULT_THRESHOLDS: MatchThresholds = {
@@ -135,18 +137,111 @@ const DEFAULT_THRESHOLDS: MatchThresholds = {
   social_token_bonus: 25,
   listing_brand_slug_bonus: 60,
   listing_token_bonus: 20,
+  fallback_min_score: 15,
+  fallback_enabled: true,
 };
 
 function resolveThresholds(input: any): MatchThresholds {
   const t = { ...DEFAULT_THRESHOLDS };
   if (!input || typeof input !== "object") return t;
   for (const k of Object.keys(t) as (keyof MatchThresholds)[]) {
-    const v = input[k];
-    if (typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1000) {
-      t[k] = v;
+    const v = (input as any)[k];
+    if (k === "fallback_enabled") {
+      if (typeof v === "boolean") (t as any)[k] = v;
+    } else if (typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1000) {
+      (t as any)[k] = v;
     }
   }
   return t;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Fallback: genera username candidati derivati dal brand (e dalla città)
+// quando lo scoring iniziale non trova nulla, prova a colpirli direttamente.
+// ────────────────────────────────────────────────────────────────────────────
+function buildHandleCandidates(brandName: string, city: string | null | undefined): string[] {
+  const slug = slugify(brandName);
+  const tokens = tokenize(brandName);
+  const citySlug = slugify(city || "");
+  const set = new Set<string>();
+  if (slug && slug.length >= 3) set.add(slug);
+  if (slug && citySlug) {
+    set.add(`${slug}${citySlug}`);
+    set.add(`${slug}.${citySlug}`);
+    set.add(`${slug}_${citySlug}`);
+    set.add(`${citySlug}${slug}`);
+  }
+  if (tokens.length >= 2) {
+    set.add(tokens.join(""));
+    set.add(tokens.join("."));
+    set.add(tokens.join("_"));
+  }
+  if (tokens[0] && tokens[0].length >= 4) set.add(tokens[0]);
+  // varianti con suffisso "official"
+  if (slug) {
+    set.add(`${slug}official`);
+    set.add(`${slug}.official`);
+    set.add(`${slug}_official`);
+  }
+  return Array.from(set).filter((h) => h.length >= 3 && h.length <= 30);
+}
+
+// Fallback social: prova ricerche alternative + valida con soglia ridotta
+async function fallbackSocialPick(
+  apiKey: string,
+  platform: "instagram" | "facebook",
+  brandName: string,
+  city: string | null | undefined,
+  th: MatchThresholds,
+): Promise<{ url: string; handle: string; score: number; via: string } | null> {
+  const domain = platform === "instagram" ? "instagram.com" : "facebook.com";
+  const candidates = buildHandleCandidates(brandName, city);
+
+  // 1. ricerca per handle derivato
+  for (const handle of candidates.slice(0, 4)) {
+    const results = await firecrawlSearch(apiKey, `site:${domain} "${handle}"`, 4);
+    const looseTh = { ...th, social_min_score: th.fallback_min_score };
+    const pick = pickBestSocialResult(results, platform, brandName, looseTh);
+    if (pick) return { ...pick, via: `handle:${handle}` };
+  }
+
+  // 2. ricerca con varianti city+brand (no virgolette per essere più permissivi)
+  if (city) {
+    const altQueries = [
+      `site:${domain} ${brandName} ${city}`,
+      `site:${domain} ${brandName.split(/\s+/)[0]} ${city}`,
+    ];
+    for (const q of altQueries) {
+      const results = await firecrawlSearch(apiKey, q, 6);
+      const looseTh = { ...th, social_min_score: th.fallback_min_score };
+      const pick = pickBestSocialResult(results, platform, brandName, looseTh);
+      if (pick) return { ...pick, via: "alt-query" };
+    }
+  }
+  return null;
+}
+
+// Fallback listing: query alternative su Yelp/TA/PG con soglia ridotta
+async function fallbackListingPick(
+  apiKey: string,
+  platform: "yelp" | "tripadvisor" | "paginegialle",
+  brandName: string,
+  city: string | null | undefined,
+  th: MatchThresholds,
+): Promise<{ url: string; score: number; via: string } | null> {
+  const domain = platform === "yelp" ? "yelp.it" : platform === "tripadvisor" ? "tripadvisor.it" : "paginegialle.it";
+  const firstToken = brandName.split(/\s+/)[0];
+  const queries = [
+    `site:${domain} "${brandName}"`,
+    `site:${domain} ${firstToken} ${city || ""}`.trim(),
+  ];
+  for (const q of queries) {
+    const results = await firecrawlSearch(apiKey, q, 5);
+    const looseTh = { ...th, listing_min_score: th.fallback_min_score };
+    const pick = pickBestListingResult(results, platform, brandName, looseTh);
+    if (pick) return { ...pick, via: q.includes('"') ? "exact" : "loose" };
+  }
+  return null;
 }
 
 function scoreProfileMatch(
@@ -352,15 +447,33 @@ Deno.serve(async (req) => {
       ]);
 
       // Instagram — solo profili business, no /explore /p /reels …
-      const igPick = pickBestSocialResult(igResults, "instagram", lead.name, TH);
+      let igPick: { url: string; handle: string; score: number } | null =
+        pickBestSocialResult(igResults, "instagram", lead.name, TH);
+      let igFallbackVia: string | null = null;
+      if (!igPick && TH.fallback_enabled) {
+        const fb = await fallbackSocialPick(FIRECRAWL_KEY, "instagram", lead.name, lead.city, TH);
+        if (fb) { igPick = fb; igFallbackVia = fb.via; }
+      }
       if (igPick) { enrichment.has_instagram = true; enrichment.instagram_url = igPick.url; }
 
       // Facebook — solo pagine business, no /watch /groups /search …
-      const fbPick = pickBestSocialResult(fbResults, "facebook", lead.name, TH);
+      let fbPick: { url: string; handle: string; score: number } | null =
+        pickBestSocialResult(fbResults, "facebook", lead.name, TH);
+      let fbFallbackVia: string | null = null;
+      if (!fbPick && TH.fallback_enabled) {
+        const fb = await fallbackSocialPick(FIRECRAWL_KEY, "facebook", lead.name, lead.city, TH);
+        if (fb) { fbPick = fb; fbFallbackVia = fb.via; }
+      }
       if (fbPick) { enrichment.has_facebook = true; enrichment.facebook_url = fbPick.url; }
 
       // Yelp — solo schede /biz/<slug>
-      const yelpPick = pickBestListingResult(yelpResults, "yelp", lead.name, TH);
+      let yelpPick: { url: string; score: number } | null =
+        pickBestListingResult(yelpResults, "yelp", lead.name, TH);
+      let yelpFallbackVia: string | null = null;
+      if (!yelpPick && TH.fallback_enabled) {
+        const fb = await fallbackListingPick(FIRECRAWL_KEY, "yelp", lead.name, lead.city, TH);
+        if (fb) { yelpPick = fb; yelpFallbackVia = fb.via; }
+      }
       if (yelpPick) {
         const yelpData = await firecrawlScrape(FIRECRAWL_KEY, yelpPick.url);
         if (yelpData?.markdown) {
@@ -371,7 +484,13 @@ Deno.serve(async (req) => {
       }
 
       // TripAdvisor — solo schede *_Review-*
-      const taPick = pickBestListingResult(taResults, "tripadvisor", lead.name, TH);
+      let taPick: { url: string; score: number } | null =
+        pickBestListingResult(taResults, "tripadvisor", lead.name, TH);
+      let taFallbackVia: string | null = null;
+      if (!taPick && TH.fallback_enabled) {
+        const fb = await fallbackListingPick(FIRECRAWL_KEY, "tripadvisor", lead.name, lead.city, TH);
+        if (fb) { taPick = fb; taFallbackVia = fb.via; }
+      }
       if (taPick) {
         const taData = await firecrawlScrape(FIRECRAWL_KEY, taPick.url);
         if (taData?.markdown) {
@@ -382,7 +501,13 @@ Deno.serve(async (req) => {
       }
 
       // Pagine Gialle — solo schede aziendali, non categorie/ricerca
-      const pgPick = pickBestListingResult(pgResults, "paginegialle", lead.name, TH);
+      let pgPick: { url: string; score: number } | null =
+        pickBestListingResult(pgResults, "paginegialle", lead.name, TH);
+      let pgFallbackVia: string | null = null;
+      if (!pgPick && TH.fallback_enabled) {
+        const fb = await fallbackListingPick(FIRECRAWL_KEY, "paginegialle", lead.name, lead.city, TH);
+        if (fb) { pgPick = fb; pgFallbackVia = fb.via; }
+      }
       enrichment.paginegialle_listing = !!pgPick;
 
       enrichment.raw_data = {
@@ -391,6 +516,10 @@ Deno.serve(async (req) => {
         ig_score: igPick?.score ?? null, fb_score: fbPick?.score ?? null,
         yelp_url: yelpPick?.url ?? null, ta_url: taPick?.url ?? null, pg_url: pgPick?.url ?? null,
         yelp_score: yelpPick?.score ?? null, ta_score: taPick?.score ?? null, pg_score: pgPick?.score ?? null,
+        fallback: {
+          ig: igFallbackVia, fb: fbFallbackVia,
+          yelp: yelpFallbackVia, ta: taFallbackVia, pg: pgFallbackVia,
+        },
         thresholds_used: TH,
         firecrawl_used: true,
       };
