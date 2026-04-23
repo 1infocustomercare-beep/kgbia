@@ -114,18 +114,56 @@ const FB_BLOCKED_PATHS = new Set([
   "permalink.php", "story.php", "photo.php", "media", "hashtag",
 ]);
 
-function scoreProfileMatch(handle: string, brandSlug: string, brandTokens: string[]): number {
+// Default thresholds — possono essere sovrascritti dal client via `match_thresholds`
+export type MatchThresholds = {
+  social_min_score: number;        // soglia minima per accettare un profilo IG/FB
+  listing_min_score: number;       // soglia minima per accettare scheda Yelp/TA/PG
+  social_title_match_bonus: number;
+  social_exact_handle_bonus: number;
+  social_partial_handle_bonus: number;
+  social_token_bonus: number;
+  listing_brand_slug_bonus: number;
+  listing_token_bonus: number;
+};
+
+const DEFAULT_THRESHOLDS: MatchThresholds = {
+  social_min_score: 25,
+  listing_min_score: 20,
+  social_title_match_bonus: 15,
+  social_exact_handle_bonus: 100,
+  social_partial_handle_bonus: 60,
+  social_token_bonus: 25,
+  listing_brand_slug_bonus: 60,
+  listing_token_bonus: 20,
+};
+
+function resolveThresholds(input: any): MatchThresholds {
+  const t = { ...DEFAULT_THRESHOLDS };
+  if (!input || typeof input !== "object") return t;
+  for (const k of Object.keys(t) as (keyof MatchThresholds)[]) {
+    const v = input[k];
+    if (typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1000) {
+      t[k] = v;
+    }
+  }
+  return t;
+}
+
+function scoreProfileMatch(
+  handle: string,
+  brandSlug: string,
+  brandTokens: string[],
+  th: MatchThresholds,
+): number {
   if (!handle) return 0;
   const h = handle.toLowerCase();
   let score = 0;
-  if (h === brandSlug) score += 100;
-  else if (brandSlug && (h.includes(brandSlug) || brandSlug.includes(h))) score += 60;
+  if (h === brandSlug) score += th.social_exact_handle_bonus;
+  else if (brandSlug && (h.includes(brandSlug) || brandSlug.includes(h))) score += th.social_partial_handle_bonus;
   for (const t of brandTokens) {
-    if (h.includes(t)) score += 25;
+    if (h.includes(t)) score += th.social_token_bonus;
   }
-  // Penalità per handle troppo corti/generici
   if (h.length <= 2) score -= 50;
-  // Bonus se contiene "official" o suffissi italiani comuni
   if (/official|ufficiale|roma|milano|napoli|torino|firenze|bologna/.test(h)) score += 5;
   return score;
 }
@@ -134,7 +172,8 @@ function pickBestSocialResult(
   results: any[],
   platform: "instagram" | "facebook",
   brandName: string,
-): { url: string; handle: string } | null {
+  th: MatchThresholds,
+): { url: string; handle: string; score: number } | null {
   if (!results?.length) return null;
   const brandSlug = slugify(brandName);
   const brandTokens = tokenize(brandName);
@@ -152,28 +191,25 @@ function pickBestSocialResult(
       if (platform === "instagram") {
         if (!parsed.hostname.includes("instagram.com")) return null;
         if (IG_BLOCKED_PATHS.has(first)) return null;
-        // un profilo IG ha esattamente 1 segmento (username) o 2 con trailing
         if (segments.length > 2) return null;
       } else {
         if (!parsed.hostname.includes("facebook.com")) return null;
         if (FB_BLOCKED_PATHS.has(first)) return null;
-        // accetta "/nome", "/nome/", "/pages/Nome/12345"
         if (first !== "pages" && segments.length > 2) return null;
       }
 
       const handle = extractHandle(url, platform);
       if (!handle) return null;
-      const score = scoreProfileMatch(handle, brandSlug, brandTokens)
-        + (r?.title?.toLowerCase().includes(brandName.toLowerCase()) ? 15 : 0);
+      const score = scoreProfileMatch(handle, brandSlug, brandTokens, th)
+        + (r?.title?.toLowerCase().includes(brandName.toLowerCase()) ? th.social_title_match_bonus : 0);
       return { url, handle, score };
     })
     .filter(Boolean) as Array<{ url: string; handle: string; score: number }>;
 
   if (!candidates.length) return null;
   candidates.sort((a, b) => b.score - a.score);
-  // Threshold minimo: handle deve avere QUALCHE attinenza col brand
-  if (candidates[0].score < 25) return null;
-  return { url: candidates[0].url, handle: candidates[0].handle };
+  if (candidates[0].score < th.social_min_score) return null;
+  return candidates[0];
 }
 
 // Yelp/TripAdvisor/PagineGialle: deve essere una scheda business, non lista/search/city
@@ -181,7 +217,8 @@ function pickBestListingResult(
   results: any[],
   platform: "yelp" | "tripadvisor" | "paginegialle",
   brandName: string,
-): string | null {
+  th: MatchThresholds,
+): { url: string; score: number } | null {
   if (!results?.length) return null;
   const brandSlug = slugify(brandName);
   const brandTokens = tokenize(brandName);
@@ -196,29 +233,26 @@ function pickBestListingResult(
       const title = (r?.title || "").toLowerCase();
 
       if (platform === "yelp") {
-        // schede valide: /biz/<slug>; scarta /search, /c/, /collections
         if (!/^\/biz\//.test(path)) return null;
       } else if (platform === "tripadvisor") {
-        // schede valide tipiche: /Restaurant_Review-, /Hotel_Review-, /Attraction_Review-
         if (!/_review-|_review_/i.test(path) && !/restaurant_review|hotel_review|attraction_review/i.test(path)) return null;
       } else if (platform === "paginegialle") {
-        // schede aziendali: /<citta>/<categoria>/<nome>.html oppure /azienda/
         if (!/\.html?$/.test(path) && !/\/azienda\//.test(path)) return null;
         if (/\/categorie\//.test(path) || /\/cerca\b/.test(path)) return null;
       }
 
       let score = 0;
       const haystack = `${path} ${title}`;
-      if (brandSlug && haystack.includes(brandSlug)) score += 60;
-      for (const t of brandTokens) if (haystack.includes(t)) score += 20;
+      if (brandSlug && haystack.includes(brandSlug)) score += th.listing_brand_slug_bonus;
+      for (const t of brandTokens) if (haystack.includes(t)) score += th.listing_token_bonus;
       return { url, score };
     })
     .filter(Boolean) as Array<{ url: string; score: number }>;
 
   if (!ok.length) return null;
   ok.sort((a, b) => b.score - a.score);
-  if (ok[0].score < 20) return null;
-  return ok[0].url;
+  if (ok[0].score < th.listing_min_score) return null;
+  return ok[0];
 }
 
 function calcHotScore(data: any): number {
