@@ -3197,12 +3197,18 @@ export type Database = {
         Row: {
           ai_model_used: string | null
           approach_strategy: string | null
+          brand_colors: Json | null
+          brand_fonts: Json | null
+          brand_logo_url: string | null
+          brand_photos: Json | null
+          brand_videos: Json | null
           cache_key: string
           category: string
           category_reason: string | null
           created_at: string
           credits_spent: number | null
           expires_at: string
+          extracted_business_data: Json | null
           google_rating: number | null
           google_reviews_count: number | null
           has_facebook: boolean | null
@@ -3226,6 +3232,7 @@ export type Database = {
           reputation_score: number | null
           sales_pitch: string | null
           social_engagement_score: number | null
+          social_handles: Json | null
           social_issues: Json | null
           updated_at: string
           vendibility_score: number
@@ -3236,12 +3243,18 @@ export type Database = {
         Insert: {
           ai_model_used?: string | null
           approach_strategy?: string | null
+          brand_colors?: Json | null
+          brand_fonts?: Json | null
+          brand_logo_url?: string | null
+          brand_photos?: Json | null
+          brand_videos?: Json | null
           cache_key: string
           category?: string
           category_reason?: string | null
           created_at?: string
           credits_spent?: number | null
           expires_at?: string
+          extracted_business_data?: Json | null
           google_rating?: number | null
           google_reviews_count?: number | null
           has_facebook?: boolean | null
@@ -3265,6 +3278,7 @@ export type Database = {
           reputation_score?: number | null
           sales_pitch?: string | null
           social_engagement_score?: number | null
+          social_handles?: Json | null
           social_issues?: Json | null
           updated_at?: string
           vendibility_score?: number
@@ -3275,12 +3289,18 @@ export type Database = {
         Update: {
           ai_model_used?: string | null
           approach_strategy?: string | null
+          brand_colors?: Json | null
+          brand_fonts?: Json | null
+          brand_logo_url?: string | null
+          brand_photos?: Json | null
+          brand_videos?: Json | null
           cache_key?: string
           category?: string
           category_reason?: string | null
           created_at?: string
           credits_spent?: number | null
           expires_at?: string
+          extracted_business_data?: Json | null
           google_rating?: number | null
           google_reviews_count?: number | null
           has_facebook?: boolean | null
@@ -3304,6 +3324,7 @@ export type Database = {
           reputation_score?: number | null
           sales_pitch?: string | null
           social_engagement_score?: number | null
+          social_handles?: Json | null
           social_issues?: Json | null
           updated_at?: string
           vendibility_score?: number
