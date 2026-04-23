@@ -333,6 +333,9 @@ export default function LeadsPage() {
   const [selectedSpecialization, setSelectedSpecialization] = useState<{ label: string; query: string } | null>(null);
   const [country, setCountry] = useState("");
   const [radius, setRadius] = useState(15);
+  // ─── Canali di ricerca attivi (multi-select) + modalità nome-only globale ───
+  const [activeSources, setActiveSources] = useState<string[]>(["photon", "nominatim", "overpass", "google"]);
+  const [nameOnlyMode, setNameOnlyMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deepLoading, setDeepLoading] = useState(false);
   const [results, setResults] = useState<(Lead & { _score: number; _sector: string })[]>([]);
