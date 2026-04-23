@@ -375,10 +375,26 @@ const EmpireParticleOrb = memo(() => {
       morphRef.current += (targetMorph - morphRef.current) * 0.06;
       const m = morphRef.current;
 
-      // Rotation: auto-spin + user-driven momentum
-      if (!dragRef.current.active) {
-        rotRef.current.vy += (0.003 - rotRef.current.vy) * 0.02; // drift back to gentle auto-spin
-        rotRef.current.vx *= 0.94;
+      // ─── Rotazione fluida (no-click): auto-spin costante + lerp verso target scroll ───
+      // Il target di scroll decade lentamente quando l'utente smette di scrollare,
+      // così il rallentamento è naturale (ease-out), senza jerk.
+      if (!dragRef.current.active && !gestureRef.current.active) {
+        const AUTO_SPIN_Y = 0.0035;     // rotazione idle costante (sempre attiva)
+        const AUTO_SPIN_X = 0.0008;     // micro-tilt verticale per dare vita
+        const SCROLL_LERP = 0.08;       // smussa transizione verso il target (più basso = più morbido)
+        const TARGET_DECAY = 0.92;      // quanto velocemente il target si azzera dopo lo scroll
+
+        // Velocità desiderata = auto-spin + contributo scroll
+        const desiredVx = AUTO_SPIN_X + scrollTargetRef.current.vx;
+        const desiredVy = AUTO_SPIN_Y + scrollTargetRef.current.vy;
+
+        // Lerp morbido (smorzamento esponenziale) → niente scatti
+        rotRef.current.vx += (desiredVx - rotRef.current.vx) * SCROLL_LERP;
+        rotRef.current.vy += (desiredVy - rotRef.current.vy) * SCROLL_LERP;
+
+        // Il target di scroll decade quando lo scroll si ferma
+        scrollTargetRef.current.vx *= TARGET_DECAY;
+        scrollTargetRef.current.vy *= TARGET_DECAY;
       }
       rotRef.current.x += rotRef.current.vx;
       rotRef.current.y += rotRef.current.vy;
