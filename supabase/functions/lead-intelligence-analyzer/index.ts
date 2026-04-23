@@ -355,6 +355,7 @@ Deno.serve(async (req) => {
     let brandLogoUrl: string | null = null;
     let brandPhotos: string[] = [];
     let brandVideos: string[] = [];
+    let brandVideoFrames: string[] = [];
     let brandColors: any = {};
     let brandFonts: any[] = [];
     let extractedBusinessData: any = {};
@@ -369,6 +370,9 @@ Deno.serve(async (req) => {
       const media = extractMediaFromHtml(scrape?.html ?? "", lead.website);
       brandPhotos = media.images;
       brandVideos = media.videos;
+      // Estrazione fotogrammi: thumbnail YouTube/Vimeo + poster <video>
+      const ytVimeoFrames = await extractVideoFrames(media.videos);
+      brandVideoFrames = Array.from(new Set([...media.videoPosters, ...ytVimeoFrames])).slice(0, 6);
       // og:image come logo-fallback se non trovato
       if (!brandLogoUrl && media.ogImage) brandLogoUrl = media.ogImage;
       extractedBusinessData = {
