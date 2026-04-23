@@ -124,9 +124,10 @@ Deno.serve(async (req) => {
     const businessDesc = sectorMap[report.lead_sector || ""] || "attività commerciale";
     const issues = (report.website_issues as string[] || []).slice(0, 3).join(", ") || "design obsoleto, no mobile";
 
-    // Brand assets reali (logo + foto) estratti durante l'analisi
+    // Brand assets reali (logo + foto + frame video) estratti durante l'analisi
     const brandLogo: string | null = report.brand_logo_url || null;
     const brandPhotos: string[] = Array.isArray(report.brand_photos) ? report.brand_photos.slice(0, 3) : [];
+    const brandVideoFrames: string[] = Array.isArray(report.brand_video_frames) ? report.brand_video_frames.slice(0, 3) : [];
     const brandColors: any = report.brand_colors || {};
     const primaryColor = brandColors.primary || "#C8963E";
     const accentColor = brandColors.accent || brandColors.secondary || "#0F172A";
@@ -159,6 +160,7 @@ ${cinematicSpecs}`;
     const afterPrompt = `Mockup smartphone iPhone 16 Pro Max con APP NATIVA PREMIUM 2026 per ${businessDesc} chiamato "${report.lead_name}"${report.lead_city ? ` (${report.lead_city})` : ""}.
 ${brandLogo ? `🎯 USA IL LOGO ORIGINALE dell'attività (vedi reference image #1) come SPLASH HERO nell'header dell'app — grande, centrato, con glow soft. Mantieni il logo IDENTICO all'originale, non reinventarlo.` : ""}
 ${brandPhotos.length > 0 ? `📸 USA le foto reali dell'attività (reference images successive) per riempire le card hero/galleria/menu. Mantieni soggetti e mood originali, ricomponile in card moderne.` : ""}
+${brandVideoFrames.length > 0 ? `🎬 USA i fotogrammi estratti dai video dell'attività (reference images finali) come BACKGROUND HERO cinematografico, cover sezione "Storia/Chi siamo" e immagini ambient nella galleria. Mantieni atmosfera, luci e soggetti originali — sono frame reali del cliente.` : ""}
 Design 2026 ultra-moderno: dark luxury mode, palette brand del cliente (primary: ${primaryColor}, accent: ${accentColor}), tipografia Inter + Playfair Display per heading, hero immagine full-bleed in alto con glow del logo, CTA grande "Prenota Ora" full-width, menu/listino con foto reali e prezzi chiari, badge ★ recensioni, sezione "in evidenza" con 3 card, bottom navigation 5 icone (Home, Menu, Prenota, Chat AI, Profilo), micro-animazioni e gradient overlay sottili.
 Microcopy 100% in italiano professionale.
 ${cinematicSpecs}
@@ -168,10 +170,14 @@ ${cinematicSpecs}
     let beforeUrl: string | null = null;
     let afterUrl: string | null = null;
 
-    // Reference images per image-to-image: logo + foto reali del lead.
+    // Reference images per image-to-image: logo + foto reali + frame video del lead.
     // Il "before" non deve usare il logo originale (è il sito vecchio anonimo),
-    // mentre l'"after" sì → mantiene splash logo identico + foto reali del cliente.
-    const afterReferences = [brandLogo, ...brandPhotos].filter(Boolean) as string[];
+    // mentre l'"after" sì → mantiene splash logo + 2 foto reali + 1 frame video (max 4 reference Nano Banana).
+    const afterReferences = [
+      brandLogo,
+      ...brandPhotos.slice(0, 2),
+      ...brandVideoFrames.slice(0, 1),
+    ].filter(Boolean) as string[];
 
     try {
       const [beforeData, afterData] = await Promise.all([
