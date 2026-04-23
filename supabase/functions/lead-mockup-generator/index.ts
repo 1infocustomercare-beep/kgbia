@@ -10,13 +10,28 @@ const corsHeaders = {
 
 const AI_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
-async function generateImage(lovableKey: string, prompt: string): Promise<string | null> {
+async function generateImage(
+  lovableKey: string,
+  prompt: string,
+  pro: boolean = true,
+  referenceImageUrls: string[] = [],
+): Promise<string | null> {
+  // Upgrade automatico a Nano Banana Pro per qualità catalogo (default).
+  const model = pro ? "google/gemini-3-pro-image-preview" : "google/gemini-3.1-flash-image-preview";
+  // Se abbiamo logo/foto reali del lead, usiamo image-to-image (multi-reference)
+  // così Nano Banana mantiene il logo splash originale e replica le foto reali.
+  const userContent: any[] = referenceImageUrls.length > 0
+    ? [
+        { type: "text", text: prompt },
+        ...referenceImageUrls.slice(0, 4).map(url => ({ type: "image_url", image_url: { url } })),
+      ]
+    : prompt;
   const r = await fetch(AI_GATEWAY, {
     method: "POST",
     headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "google/gemini-3.1-flash-image-preview",
-      messages: [{ role: "user", content: prompt }],
+      model,
+      messages: [{ role: "user", content: userContent }],
       modalities: ["image", "text"],
     }),
   });
