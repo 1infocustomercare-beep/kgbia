@@ -555,9 +555,10 @@ function App() {
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
                       {/* Public routes */}
-                      <Route path="/" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
-                      <Route path="/index" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
-                      <Route path="/home" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
+                      <Route path="/" element={<EmpireHomePage />} />
+                      <Route path="/index" element={<EmpireHomePage />} />
+                      <Route path="/home" element={<EmpireHomePage />} />
+                      <Route path="/home-v5" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
                       <Route path="/landing-legacy" element={<LandingPage />} />
                       <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/home#pricing" replace />} />
