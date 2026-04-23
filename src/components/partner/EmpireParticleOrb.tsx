@@ -337,6 +337,35 @@ const EmpireParticleOrb = memo(() => {
     canvas.addEventListener("gesturestart", (e) => e.preventDefault() as never);
     canvas.addEventListener("gesturechange", (e) => e.preventDefault() as never);
 
+    // ─── Scroll-driven rotation (smooth, momentum-based, no clicks needed) ───
+    // Strategia: lo scroll alimenta una "velocità target". Il loop interpola
+    // (lerp) la velocità reale verso il target, e il target decade lentamente
+    // a 0 quando lo scroll si ferma. Questo elimina scatti e accelerazioni
+    // improvvise tipiche del legare direttamente vx al delta di scroll.
+    let lastScrollY = window.scrollY;
+    let lastScrollTime = performance.now();
+    const SCROLL_TARGET_GAIN = 0.00045;   // quanta rotazione per pixel di scroll
+    const SCROLL_TARGET_MAX = 0.045;      // tetto massimo della velocità target
+    const handleScroll = () => {
+      const now = performance.now();
+      const y = window.scrollY;
+      const dy = y - lastScrollY;
+      const dt = Math.max(16, now - lastScrollTime); // ms
+      lastScrollY = y;
+      lastScrollTime = now;
+      if (dragRef.current.active || gestureRef.current.active) return;
+      // Velocità in px/ms → moltiplicata per gain dà rotazione "target"
+      const vy = (dy / dt) * 16; // normalizza a ~1 frame
+      // Asse X: scroll verticale fa "rollare" la sfera (più naturale)
+      const tx = Math.max(-SCROLL_TARGET_MAX, Math.min(SCROLL_TARGET_MAX, vy * SCROLL_TARGET_GAIN * 16));
+      // Spinta laterale leggera per parallasse (1/3 dell'asse X)
+      const ty = tx * 0.33;
+      // Additivo ma clampato — lo scroll continuo non esplode
+      scrollTargetRef.current.vx = Math.max(-SCROLL_TARGET_MAX, Math.min(SCROLL_TARGET_MAX, tx));
+      scrollTargetRef.current.vy = Math.max(-SCROLL_TARGET_MAX, Math.min(SCROLL_TARGET_MAX, ty));
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     // ─── Animate ───
     const draw = () => {
       t += 0.008;
