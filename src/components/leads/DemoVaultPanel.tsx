@@ -632,7 +632,7 @@ function MockupCard({ suite, onDelete, onCopy, onToggleFavorite }: { suite: Vaul
   const engineCfg = ENGINE_LABEL[suite.engine] || { label: suite.engine, color: "#9ca3af", icon: Smartphone };
   const EngineIcon = engineCfg.icon;
   const screens = Array.isArray(suite.screens) ? suite.screens : [];
-  const shareUrl = suite.share_slug ? `${window.location.origin}/preview/mockup/${suite.share_slug}` : null;
+  const shareUrl = suite.share_slug ? buildPublicMockupUrl(suite.share_slug) : null;
   const isFav = !!suite.is_favorite;
 
   return (
