@@ -124,6 +124,8 @@ export type MatchThresholds = {
   social_token_bonus: number;
   listing_brand_slug_bonus: number;
   listing_token_bonus: number;
+  fallback_min_score: number;       // soglia ridotta per fallback (più permissiva)
+  fallback_enabled: boolean;        // attiva la pipeline di fallback
 };
 
 const DEFAULT_THRESHOLDS: MatchThresholds = {
@@ -135,6 +137,8 @@ const DEFAULT_THRESHOLDS: MatchThresholds = {
   social_token_bonus: 25,
   listing_brand_slug_bonus: 60,
   listing_token_bonus: 20,
+  fallback_min_score: 15,
+  fallback_enabled: true,
 };
 
 function resolveThresholds(input: any): MatchThresholds {
