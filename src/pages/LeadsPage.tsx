@@ -1335,7 +1335,7 @@ export default function LeadsPage() {
 
       {/* ═══ TOP-BAR PROFESSIONALE — sticky, mobile-first, app-grade ═══ */}
       <div
-        className="sticky top-0 z-30 -mx-3 sm:-mx-5 md:-mx-6 lg:-mx-8 px-3 sm:px-5 md:px-6 lg:px-8 py-2 sm:py-2.5 md:py-3 backdrop-blur-xl"
+        className="sticky top-0 z-30 -mx-3 sm:-mx-5 md:-mx-6 lg:-mx-8 px-3 sm:px-5 md:px-6 lg:px-8 py-2 sm:py-2.5 md:py-3 backdrop-blur-xl border-double rounded-2xl shadow-premium bg-[empire-violet-surface] bg-accent-foreground"
         style={{
           background: "linear-gradient(180deg, rgba(10,10,18,0.96) 0%, rgba(10,10,18,0.86) 65%, rgba(10,10,18,0.55) 100%)",
           borderBottom: "1px solid rgba(167,139,250,0.10)",
@@ -1672,7 +1672,7 @@ export default function LeadsPage() {
         </motion.div>
 
         {/* Title under the unified mascot */}
-        <div className="flex flex-col items-center leading-none gap-1">
+        <div className="flex-col leading-none gap-1 flex items-center justify-start rounded-none border-none shadow-sm">
           <motion.h1
             className="text-lg font-extrabold tracking-tight text-white flex items-center gap-1.5"
             animate={{
@@ -1730,7 +1730,7 @@ export default function LeadsPage() {
 
 
       {/* ═══ SEARCH BAR — responsive: 1-2 col mobile, 4 col desktop ═══ */}
-      <div className="rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
+      <div className="rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4 bg-[empire-violet-surface] bg-slate-900" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
 
         {/* Row principale: Paese · Città · Settore · Cerca (responsive) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
@@ -3176,10 +3176,10 @@ export default function LeadsPage() {
       {/* Empty state */}
       {results.length === 0 && !loading && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          className="text-center py-10">
+          className="text-center py-10 font-mono font-normal text-primary-foreground rounded-2xl shadow-premium border-accent bg-[empire-violet-glow] bg-destructive-foreground">
           
           {/* Animated scanning icon */}
-          <div className="relative w-16 h-16 mx-auto mb-4">
+          <div className="relative w-16 h-16 mx-auto mb-4 rounded-md shadow-premium">
             <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
               className="absolute inset-0 rounded-full" style={{ border: "2px dashed rgba(20,184,166,0.2)" }} />
             <div className="absolute inset-1 rounded-full flex items-center justify-center" style={{ background: "rgba(20,184,166,0.06)" }}>
@@ -3236,7 +3236,7 @@ export default function LeadsPage() {
               <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.3), transparent)" }} />
             </div>
 
-            <div className="rounded-2xl p-4 space-y-3 text-left" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.08), rgba(20,184,166,0.04))", border: "1px solid rgba(124,58,237,0.2)" }}>
+            <div className="rounded-2xl p-4 space-y-3 text-left px-[16px] mx-0 bg-inherit" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.08), rgba(20,184,166,0.04))", border: "1px solid rgba(124,58,237,0.2)" }}>
               {/* Header con score live */}
               <div className="flex items-start gap-2.5">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.3)" }}>
@@ -3478,7 +3478,7 @@ export default function LeadsPage() {
                 </motion.button>
 
                 {/* Pro tips */}
-                <div className="rounded-lg p-2 mt-1" style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
+                <div className="rounded-lg p-2 mt-1 bg-secondary-foreground" style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
                   <p className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: "#f59e0b" }}>💡 Tips PRO per chiudere</p>
                   <ul className="space-y-0.5 text-[8px]" style={{ color: "#d1d5db" }}>
                     <li>• Score &gt; 75 = lead caldo, contatta subito (entro 1h)</li>

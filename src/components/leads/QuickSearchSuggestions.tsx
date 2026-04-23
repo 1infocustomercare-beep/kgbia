@@ -257,7 +257,7 @@ export default function QuickSearchSuggestions({ currentSector, currentSpecializ
 
   /* ── Render ── */
   return (
-    <div className="mt-2 max-w-md mx-auto text-left space-y-4">
+    <div className="mt-2 max-w-md mx-auto space-y-4 text-xs font-mono font-normal text-left bg-destructive-foreground rounded-2xl border-accent border-solid border-0 shadow-premium">
       {/* RECENT */}
       <Section
         title="Le tue ultime ricerche"
