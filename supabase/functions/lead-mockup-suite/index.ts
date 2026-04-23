@@ -323,23 +323,30 @@ async function generateValidatedAIImage(
   basePrompt: string,
   pro: boolean,
   maxAttempts = 5,
+  referenceImageUrl?: string | null,
 ): Promise<{ dataUrl: string | null; attempts: number; lastIssues: string[]; validated: boolean; engine_used: string }> {
   let lastIssues: string[] = [];
   let lastDataUrl: string | null = null;
-  let engineUsed = pro ? "nano_banana_pro" : "nano_banana_2";
+  // Quando c'è un catalog reference, forziamo SEMPRE Pro (qualità top per replica fedele)
+  const forcePro = pro || !!referenceImageUrl;
+  let engineUsed = forcePro ? "nano_banana_pro" : "nano_banana_2";
+  if (referenceImageUrl) {
+    engineUsed = pro ? "nano_banana_pro_catalog_ref" : "nano_banana_pro_catalog_ref_auto";
+    console.log(`[validate] catalog reference attiva → ${referenceImageUrl} (engine=${engineUsed})`);
+  }
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const prompt = attempt === 1 ? basePrompt : basePrompt + buildCorrectionSuffix(lastIssues);
     // AUTO-UPGRADE: gli ultimi 2 tentativi usano il modello Pro (più affidabile e accurato)
     // per recuperare casi difficili senza richiedere intervento manuale dell'utente.
-    const usePro = pro || attempt >= maxAttempts - 1;
+    const usePro = forcePro || attempt >= maxAttempts - 1;
     const modelOverride = usePro ? "google/gemini-3-pro-image-preview" : undefined;
-    if (!pro && attempt >= maxAttempts - 1) {
+    if (!forcePro && attempt >= maxAttempts - 1) {
       engineUsed = "nano_banana_pro_fallback";
       console.log(`[validate] attempt ${attempt}: AUTO-UPGRADE a Nano Banana Pro per garantire qualità`);
     }
     let dataUrl: string | null = null;
     try {
-      dataUrl = await generateAIImage(lovableKey, prompt, usePro, modelOverride);
+      dataUrl = await generateAIImage(lovableKey, prompt, usePro, modelOverride, referenceImageUrl);
     } catch (e: any) {
       console.warn(`[validate] attempt ${attempt} generation error: ${e.message}`);
       lastIssues = [`gen_error:${e.message?.slice(0, 80) || "unknown"}`];
