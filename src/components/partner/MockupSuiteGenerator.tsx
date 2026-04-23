@@ -699,33 +699,40 @@ export function MockupSuiteGenerator({
 
   return (
     <Card className="border-primary/30">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Smartphone className="h-5 w-5 text-primary" />
-          Mockup iPhone Suite — 4 schermate app del business
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-start gap-2.5 text-base sm:text-lg leading-tight">
+          <Smartphone className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+          <span>
+            Mockup iPhone Suite
+            <span className="block text-xs sm:text-sm font-normal text-muted-foreground mt-0.5">
+              4 schermate app del business
+            </span>
+          </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-5">
+      <CardContent className="space-y-6 sm:space-y-7">
         {/* Toggle modalità lead/standalone */}
-        <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-muted">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-1.5 rounded-xl bg-muted">
           <button
             type="button"
             onClick={() => setMode("lead")}
             disabled={!isLeadMode}
-            className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+            className={`px-3 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 min-h-[44px] ${
               mode === "lead" ? "bg-background shadow-sm" : "opacity-60 hover:opacity-100"
             } ${!isLeadMode ? "opacity-30 cursor-not-allowed" : ""}`}
           >
-            <User className="h-4 w-4" /> Da lead {isLeadMode ? "" : "(seleziona prima un lead)"}
+            <User className="h-4 w-4 shrink-0" />
+            <span className="truncate">Da lead {isLeadMode ? "" : "(seleziona prima un lead)"}</span>
           </button>
           <button
             type="button"
             onClick={() => setMode("standalone")}
-            className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+            className={`px-3 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 min-h-[44px] ${
               mode === "standalone" ? "bg-background shadow-sm" : "opacity-60 hover:opacity-100"
             }`}
           >
-            <Pencil className="h-4 w-4" /> Mockup libero (qualsiasi argomento)
+            <Pencil className="h-4 w-4 shrink-0" />
+            <span className="truncate">Mockup libero</span>
           </button>
         </div>
 
