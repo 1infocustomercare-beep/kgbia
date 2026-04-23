@@ -1,6 +1,13 @@
 // Lead Mockup Suite — genera 4 mockup iPhone (Home/Menu/Booking/Profile) con 3 motori
 // Engine: 'react' (gratis, lato client) | 'nano_banana' (20 crediti) | 'nano_banana_pro' (40 crediti)
 // Ritorna: suite_id + array screens [{type, title, image_url}]
+//
+// QUALITÀ MOCKUP — strategia "fedeltà al catalogo":
+// 1. Per ogni schermata cerchiamo il mockup di catalogo più affine (sector+screen)
+//    e lo passiamo all'AI come REFERENCE IMAGE (image-to-image) → fedeltà visiva massima.
+// 2. Quando esiste una reference forziamo SEMPRE Nano Banana Pro (qualità top).
+// 3. Se l'AI fallisce dopo tutti i retry, NON ritorniamo errore: facciamo
+//    fallback automatico al render React, così l'utente vede SEMPRE 4 mockup.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -9,6 +16,69 @@ const corsHeaders = {
 };
 
 const AI_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
+
+// ──────────────────────────────────────────────────────────────────────────────
+// CATALOG REFERENCE MAP — i 42 mockup di public/mockup-references/ servono come
+// "ground truth" visivo: l'AI riceve l'immagine come reference e la replica
+// fedelmente cambiando solo brand/contenuti del lead.
+// Hostato come asset pubblico statico, accessibile via HTTPS dal gateway AI.
+// ──────────────────────────────────────────────────────────────────────────────
+const PUBLIC_BASE_URL = "https://empireia.lovable.app";
+const CATALOG_REFERENCES: Record<string, Partial<Record<string, string>>> = {
+  // settore → screen-type → file
+  legal:        { home: "legal-home.png",         services: "legal-deadlines.png", listing: "legal-case.png",       portfolio: "legal-case.png" },
+  accounting:   { home: "accounting-home.png",    services: "accounting-deadlines.png", checkout: "accounting-invoice.png" },
+  agriturismo:  { home: "agriturismo-home.png",   gallery: "agriturismo-rooms.png", services: "agriturismo-activities.png" },
+  beach:        { home: "beach-home.png",         booking: "beach-booking.png" },
+  cleaning:     { home: "cleaning-home.png",      booking: "cleaning-booking.png", services: "cleaning-schedule.png" },
+  construction: { home: "construction-home.png",  services: "construction-timeline.png", portfolio: "construction-timeline.png" },
+  education:    { home: "education-home.png",     services: "education-course.png", booking: "education-calendar.png" },
+  electrician:  { home: "electrician-home.png",   services: "electrician-services.png", portfolio: "electrician-detail.png" },
+  events:       { home: "events-home.png",        gallery: "events-detail.png", services: "events-timeline.png" },
+  garage:       { home: "garage-home.png",        services: "garage-repairs.png", portfolio: "garage-detail.png" },
+  gardening:    { home: "gardening-home.png",     services: "gardening-jobs.png", portfolio: "gardening-project.png" },
+  legal_clinic: { home: "legal-home.png",         services: "legal-deadlines.png" },
+  logistics:    { home: "logistics-home.png",     map: "logistics-tracking.png", listing: "logistics-fleet.png" },
+  photography:  { home: "photography-home.png",   gallery: "photography-gallery.png", booking: "photography-calendar.png" },
+  retail:       { home: "retail-home.png",        catalog: "retail-detail.png" },
+  tattoo:       { home: "tattoo-home.png",        portfolio: "tattoo-portfolio.png", services: "tattoo-artist.png" },
+};
+
+// Mappa sector libero → chiave del catalogo
+function resolveCatalogKey(sector: string | null | undefined): string | null {
+  if (!sector) return null;
+  const s = sector.toLowerCase();
+  if (/legal|avvoc|notar|studio.*leg/.test(s)) return "legal";
+  if (/contab|commercial|fiscal|account|consulent.*fisc/.test(s)) return "accounting";
+  if (/agritur|farm|cascin/.test(s)) return "agriturismo";
+  if (/spiagg|beach|bagn|stabilim|lido/.test(s)) return "beach";
+  if (/puliz|clean|sanific|impres.*puliz/.test(s)) return "cleaning";
+  if (/edil|costruz|impres.*edil|construc/.test(s)) return "construction";
+  if (/scuol|corso|formazion|educat|academy/.test(s)) return "education";
+  if (/elettric|electric|impiant.*elett/.test(s)) return "electrician";
+  if (/event|wedding|matrimoni|catering/.test(s)) return "events";
+  if (/officin|garage|carrozz|meccan|auto.*ripar/.test(s)) return "garage";
+  if (/giardin|garden|vivaist|paesag/.test(s)) return "gardening";
+  if (/logistic|trasport|spedizion|courier/.test(s)) return "logistics";
+  if (/fotograf|photograph|wedding.*photo/.test(s)) return "photography";
+  if (/negozi|retail|boutique|shop|abbigliam/.test(s)) return "retail";
+  if (/tatu|tattoo|piercing/.test(s)) return "tattoo";
+  return null;
+}
+
+// Trova reference URL ottimale per (sector, screenType)
+function findCatalogReference(sector: string | null | undefined, screenType: string): string | null {
+  const key = resolveCatalogKey(sector);
+  if (!key) return null;
+  const sectorRefs = CATALOG_REFERENCES[key];
+  if (!sectorRefs) return null;
+  // Match esatto sul tipo di schermata
+  const exact = sectorRefs[screenType];
+  if (exact) return `${PUBLIC_BASE_URL}/mockup-references/${exact}`;
+  // Fallback: usa "home" del settore come reference generica
+  const home = sectorRefs.home;
+  return home ? `${PUBLIC_BASE_URL}/mockup-references/${home}` : null;
+}
 
 type Engine = "react" | "nano_banana" | "nano_banana_pro";
 type ScreenType =
