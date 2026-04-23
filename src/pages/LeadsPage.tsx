@@ -32,6 +32,7 @@ import AriannaLeadScoutPanel, { AriannaPilot } from "@/components/leads/AriannaL
 import AriannaInsightsDashboard from "@/components/leads/AriannaInsightsDashboard";
 import LeadIntelligenceInbox from "@/components/leads/LeadIntelligenceInbox";
 import SellerOnboardingWizard from "@/components/leads/SellerOnboardingWizard";
+import { LeadSearchSourcesPanel } from "@/components/leads/LeadSearchSourcesPanel";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
 import { useDemoVault } from "@/hooks/useDemoVault";
