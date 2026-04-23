@@ -10,6 +10,7 @@ import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSui
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { buildPublicMockupUrl } from "@/lib/public-share-url";
 
 type SortKey = "recent" | "most_viewed" | "az";
 
@@ -90,13 +91,13 @@ export function MockupSuiteVaultList() {
   const copyShare = (e: React.MouseEvent, slug: string | null) => {
     e.stopPropagation();
     if (!slug) return toast.error("Link non disponibile");
-    navigator.clipboard.writeText(`${window.location.origin}/preview/mockup/${slug}`);
+    navigator.clipboard.writeText(buildPublicMockupUrl(slug));
     toast.success("Link copiato!");
   };
   const openShare = (e: React.MouseEvent, slug: string | null) => {
     e.stopPropagation();
     if (!slug) return;
-    window.open(`${window.location.origin}/preview/mockup/${slug}`, "_blank");
+    window.open(buildPublicMockupUrl(slug), "_blank");
   };
   const handleDelete = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();

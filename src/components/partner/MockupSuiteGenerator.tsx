@@ -14,6 +14,7 @@ import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 import { MockupLookPresets, type MockupLookPreset } from "./MockupLookPresets";
 import { useBrandingKitSettings } from "@/hooks/useBrandingKitSettings";
 import { BrandContrastCheck } from "./BrandContrastCheck";
+import { buildPublicMockupUrl } from "@/lib/public-share-url";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -671,7 +672,7 @@ export function MockupSuiteGenerator({
 
   const copyShareLink = () => {
     if (!result?.share_slug) return;
-    const url = `${window.location.origin}/preview/mockup/${result.share_slug}`;
+    const url = buildPublicMockupUrl(result.share_slug);
     navigator.clipboard.writeText(url);
     toast.success("Link copiato negli appunti");
   };
@@ -1590,7 +1591,7 @@ export function MockupSuiteGenerator({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => window.open(`${window.location.origin}/preview/mockup/${result.share_slug}`, "_blank")}
+                    onClick={() => result.share_slug && window.open(buildPublicMockupUrl(result.share_slug), "_blank")}
                     disabled={!result.share_slug}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />Apri
