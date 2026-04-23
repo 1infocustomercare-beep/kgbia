@@ -423,6 +423,14 @@ Deno.serve(async (req) => {
       ai_model_used: "google/gemini-2.5-flash",
       credits_spent: skip_credit_check ? 0 : 3,
       expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      // Brand assets reali estratti per generare mockup ultra-personalizzati
+      brand_logo_url: brandLogoUrl,
+      brand_photos: brandPhotos,
+      brand_videos: brandVideos,
+      brand_colors: brandColors,
+      brand_fonts: brandFonts,
+      extracted_business_data: extractedBusinessData,
+      social_handles: socialHandles,
     };
 
     const { data: saved, error: saveErr } = await adminClient
