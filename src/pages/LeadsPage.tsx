@@ -333,6 +333,9 @@ export default function LeadsPage() {
   const [selectedSpecialization, setSelectedSpecialization] = useState<{ label: string; query: string } | null>(null);
   const [country, setCountry] = useState("");
   const [radius, setRadius] = useState(15);
+  // ─── Canali di ricerca attivi (multi-select) + modalità nome-only globale ───
+  const [activeSources, setActiveSources] = useState<string[]>(["photon", "nominatim", "overpass", "google"]);
+  const [nameOnlyMode, setNameOnlyMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deepLoading, setDeepLoading] = useState(false);
   const [results, setResults] = useState<(Lead & { _score: number; _sector: string })[]>([]);
@@ -836,15 +839,29 @@ export default function LeadsPage() {
 
   /* ─── Search ─── */
   const handleSearch = useCallback(async (page = 0, append = false) => {
-    if (!city.trim() && !query.trim()) {
-      toast.error("Inserisci una città o parola chiave");
+    const isNameOnly = nameOnlyMode && query.trim().length >= 2;
+    if (!isNameOnly && !city.trim() && !query.trim()) {
+      toast.error("Inserisci una città, attiva la modalità 'Per nome' o usa il GPS");
+      return;
+    }
+    if (isNameOnly && query.trim().length < 2) {
+      toast.error("In modalità 'Per nome' scrivi almeno 2 caratteri");
+      return;
+    }
+    if (activeSources.length === 0) {
+      toast.error("Seleziona almeno un canale di ricerca (OSM, Photon, Overpass o Google)");
       return;
     }
     if (append) setDeepLoading(true);
     else { setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null); }
 
     // 💰 Gating crediti: ricerca lead = 1 credito (server-side)
-    const creditRes = await consumeSellerCredits("lead_search", { city: city.trim(), sector, mode: "zone" });
+    const creditRes = await consumeSellerCredits("lead_search", {
+      city: city.trim(), sector,
+      mode: isNameOnly ? "name_only" : "zone",
+      sources: activeSources,
+      country: country || null,
+    });
     if (!creditRes.success) {
       setLoading(false); setDeepLoading(false);
       toast.error(creditRes.error === "insufficient_credits"
@@ -857,13 +874,19 @@ export default function LeadsPage() {
 
     try {
       const existingNames = append ? results.map(r => r.name) : [];
-      const searchCity = country ? `${city.trim()}, ${COUNTRIES.find(c => c.code === country)?.label.replace(/^..\s/, '') || country}` : city.trim();
       const { data, error } = await supabase.functions.invoke("lead-search", {
         body: {
-          query: query.trim(), city: searchCity, sector,
+          query: query.trim(),
+          city: city.trim(),
+          country_code: country || null,
+          sector,
           specialization_query: selectedSpecialization?.query || null,
           specialization_label: selectedSpecialization?.label || null,
-          mode: "zone", use_google: true, page,
+          mode: isNameOnly ? "name_only" : "zone",
+          name_only: isNameOnly,
+          sources: activeSources,
+          use_google: activeSources.includes("google"),
+          page,
           existing_names: existingNames,
           radius,
         },
@@ -873,21 +896,27 @@ export default function LeadsPage() {
         const processed = processResults(data.results, append);
         setSearchPage(page);
         setHasMore(data.has_more ?? false);
-        setLastSearchCity(city.trim());
+        setLastSearchCity(city.trim() || query.trim());
         setLastSearchSector(sector);
         const sources = data.sources || {};
-        toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati`, {
-          description: `OSM: ${sources.nominatim || 0} · Overpass: ${sources.overpass || 0} · Photon: ${sources.photon || 0} · Google: ${sources.google || 0}`,
+        const srcSummary = Object.entries(sources)
+          .filter(([k, v]) => k !== "total_merged" && (v as number) > 0)
+          .map(([k, v]) => `${k.charAt(0).toUpperCase() + k.slice(1)}: ${v}`)
+          .join(" · ") || "—";
+        toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati${isNameOnly ? " (per nome)" : ""}`, {
+          description: srcSummary,
         });
         // Auto-batch enrich Instagram in background
         setTimeout(() => batchEnrichInstagram(processed), 1500);
         // 🚀 Auto pre-warm demo factory per i top 3 lead (in background, silenzioso)
         if (!append) setTimeout(() => autoPrewarmDemos(processed), 3500);
       } else if (!append) {
-        toast.error("Nessun risultato — prova un'altra città o settore");
+        toast.error(isNameOnly
+          ? `Nessuna attività trovata con il nome "${query.trim()}" — verifica l'ortografia o cambia paese`
+          : "Nessun risultato — prova un'altra città, settore o canale");
       } else {
         setHasMore(false);
-        toast.info("Nessun nuovo lead trovato in questa zona — prova ad espandere la ricerca");
+        toast.info("Nessun nuovo lead trovato — prova ad espandere la ricerca o cambia canali");
       }
     } catch (e: any) {
       toast.error(e.message || "Errore ricerca");
@@ -895,7 +924,7 @@ export default function LeadsPage() {
       setLoading(false);
       setDeepLoading(false);
     }
-  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos, consumeSellerCredits]);
+  }, [city, query, sector, country, radius, minRating, maxRating, filterNoWebsite, filterNoSocial, filterHasPhone, results, processResults, batchEnrichInstagram, autoPrewarmDemos, consumeSellerCredits, selectedSpecialization, activeSources, nameOnlyMode]);
 
   /* ─── Deep search ─── */
   const handleDeepSearch = useCallback(() => {
@@ -1853,6 +1882,72 @@ export default function LeadsPage() {
               </span>
             );
           })}
+        </div>
+
+        {/* ═══ CANALI DI RICERCA + MODALITÀ "PER NOME" ═══ */}
+        <div className="rounded-xl p-3 space-y-2.5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest" style={{ color: "#14b8a6" }}>
+              📡 Canali di ricerca · scegli quali interrogare
+            </p>
+            <button
+              onClick={() => setActiveSources(["photon", "nominatim", "overpass", "google"])}
+              className="text-[9px] font-semibold underline opacity-60 hover:opacity-100"
+              style={{ color: "#94a3b8" }}
+            >
+              Tutti
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { id: "nominatim", label: "🗺️ OpenStreetMap", desc: "DB pubblico mondiale, gratis" },
+              { id: "photon", label: "🔎 Photon", desc: "Geocoder Komoot, gratis" },
+              { id: "overpass", label: "🏷️ Overpass", desc: "Tag strutturati OSM, gratis" },
+              { id: "google", label: "⭐ Google Places", desc: "Rating + recensioni reali" },
+            ].map(src => {
+              const active = activeSources.includes(src.id);
+              return (
+                <button
+                  key={src.id}
+                  onClick={() => setActiveSources(prev =>
+                    prev.includes(src.id) ? prev.filter(s => s !== src.id) : [...prev, src.id]
+                  )}
+                  title={src.desc}
+                  className="text-[10px] md:text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all"
+                  style={{
+                    background: active
+                      ? "linear-gradient(135deg, rgba(20,184,166,0.25), rgba(16,185,129,0.15))"
+                      : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${active ? "rgba(20,184,166,0.5)" : "rgba(255,255,255,0.08)"}`,
+                    color: active ? "#5eead4" : "#9ca3af",
+                  }}
+                >
+                  {src.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center justify-between gap-2 pt-2 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+            <div className="flex-1">
+              <p className="text-[10px] md:text-[11px] font-bold" style={{ color: nameOnlyMode ? "#a78bfa" : "#e5e7eb" }}>
+                🎯 Modalità "Trova attività per nome"
+              </p>
+              <p className="text-[9px] md:text-[10px]" style={{ color: "#6b7280" }}>
+                {nameOnlyMode
+                  ? `Cerca "${query || "..."}" in tutto il mondo${country ? ` (filtrato su ${COUNTRIES.find(c => c.code === country)?.label})` : ""} ignorando settore e città`
+                  : "Attiva per cercare un nome esatto ovunque (utile per trovare brand specifici)"}
+              </p>
+            </div>
+            <button
+              onClick={() => setNameOnlyMode(!nameOnlyMode)}
+              className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0"
+              style={{ background: nameOnlyMode ? "#a78bfa" : "rgba(255,255,255,0.15)" }}
+            >
+              <span className="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
+                style={{ transform: nameOnlyMode ? "translateX(24px)" : "translateX(4px)" }} />
+            </button>
+          </div>
         </div>
 
         {/* ═══ GPS RADAR PANEL ═══ */}

@@ -60,10 +60,11 @@ const SECTOR_OSM_TAGS: Record<string, string[]> = {
 };
 
 /* ═══ GEOCODE (city or full address) ═══ */
-async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bbox: number[] } | null> {
+async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[] } | null> {
   try {
+    const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
     const resp = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&addressdetails=1`,
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&addressdetails=1${cc}`,
       { headers: { "User-Agent": "EmpireAI-LeadScout/6.0 (info@empireaigroup.com)" } }
     );
     if (!resp.ok) return null;
@@ -71,6 +72,52 @@ async function geocodeCity(city: string): Promise<{ lat: number; lon: number; bb
     if (!data.length) return null;
     return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), bbox: data[0].boundingbox?.map(Number) || [] };
   } catch { return null; }
+}
+
+/* ═══ GLOBAL NAME SEARCH — find a business by name everywhere (Nominatim, no bbox) ═══ */
+async function searchByNameGlobal(name: string, countryCode?: string): Promise<any[]> {
+  if (!name || name.trim().length < 2) return [];
+  const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
+  try {
+    const resp = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(name)}&format=json&addressdetails=1&extratags=1&limit=30${cc}`,
+      { headers: { "User-Agent": "EmpireAI-LeadScout/6.0 (info@empireaigroup.com)" }, signal: AbortSignal.timeout(9000) }
+    );
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    const results: any[] = [];
+    const seen = new Set<string>();
+    for (const item of data) {
+      if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse", "administrative"].includes(item.class)) continue;
+      const dispName = item.display_name?.split(",")[0]?.trim() || "";
+      if (!dispName || dispName.length < 2) continue;
+      const key = dispName.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const tags = item.extratags || {};
+      const addr = item.address || {};
+      results.push({
+        source: "nominatim", name: dispName,
+        full_address: item.display_name || "",
+        city: addr.city || addr.town || addr.village || addr.municipality || "",
+        zone: addr.suburb || addr.neighbourhood || addr.quarter || "",
+        lat: parseFloat(item.lat), lon: parseFloat(item.lon),
+        phone: tags.phone || tags["contact:phone"] || null,
+        website: tags.website || tags["contact:website"] || tags.url || null,
+        email: tags.email || tags["contact:email"] || null,
+        opening_hours: tags.opening_hours || null,
+        instagram: tags["contact:instagram"] || null,
+        facebook: tags["contact:facebook"] || null,
+        cuisine: tags.cuisine || null,
+        osm_type: item.type || item.class,
+        google_maps_url: `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lon}`,
+        search_google: `https://www.google.com/search?q=${encodeURIComponent(dispName + " " + (addr.city || addr.country || ""))}`,
+        search_instagram: `https://www.instagram.com/explore/tags/${encodeURIComponent(dispName.replace(/\s+/g, "").toLowerCase())}/`,
+        search_facebook: `https://www.facebook.com/search/pages/?q=${encodeURIComponent(dispName)}`,
+      });
+    }
+    return results;
+  } catch { return []; }
 }
 
 /* ═══ REVERSE GEOCODE (coords → city name) ═══ */
@@ -153,7 +200,7 @@ async function searchPhoton(city: string, sector: string, geo: { lat: number; lo
 }
 
 /* ═══ SOURCE 2: NOMINATIM ═══ */
-async function searchNominatim(city: string, sector: string, userQuery: string, geo: { lat: number; lon: number; bbox: number[] }, page: number): Promise<any[]> {
+async function searchNominatim(city: string, sector: string, userQuery: string, geo: { lat: number; lon: number; bbox: number[] }, page: number, countryCode?: string): Promise<any[]> {
   const terms = SECTOR_TERMS[sector] || [sector];
   const results: any[] = [];
   const seen = new Set<string>();
@@ -165,6 +212,7 @@ async function searchNominatim(city: string, sector: string, userQuery: string, 
   // Expand search area on deeper pages
   const expansion = page * 0.03;
   const viewbox = `${Number(west) - expansion},${Number(north) + expansion},${Number(east) + expansion},${Number(south) - expansion}`;
+  const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
 
   const startIdx = page * 6;
   const searches: string[] = [];
@@ -175,7 +223,7 @@ async function searchNominatim(city: string, sector: string, userQuery: string, 
   const fetchOne = async (term: string) => {
     try {
       const resp = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(term)}&format=json&addressdetails=1&extratags=1&limit=50&viewbox=${viewbox}&bounded=1`,
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(term)}&format=json&addressdetails=1&extratags=1&limit=50&viewbox=${viewbox}&bounded=1${cc}`,
         { headers: { "User-Agent": "EmpireAI-LeadScout/6.0 (info@empireaigroup.com)" }, signal: AbortSignal.timeout(8000) }
       );
       if (!resp.ok) return [];
@@ -422,7 +470,11 @@ serve(async (req) => {
       }
     }
 
-    const { query, city, sector, use_google, page = 0, existing_names = [], lat, lon, radius_km, specialization_query } = await req.json();
+    const {
+      query, city, sector, use_google, page = 0, existing_names = [],
+      lat, lon, radius_km, specialization_query,
+      sources: requestedSources, name_only, country_code,
+    } = await req.json();
     const hasCoords = typeof lat === "number" && typeof lon === "number";
     if (!city && !query && !hasCoords) {
       return new Response(JSON.stringify({ success: false, error: "Inserisci una città, una query o coordinate GPS" }),
@@ -436,11 +488,29 @@ serve(async (req) => {
     const searchSector = sector || "food";
     const searchPage = Math.max(0, Math.min(page, 10)); // max 10 pages
     const searchRadius = typeof radius_km === "number" ? Math.max(0.5, Math.min(radius_km, 100)) : null;
+    const allowedSources: string[] = Array.isArray(requestedSources) && requestedSources.length > 0
+      ? requestedSources.map((s: string) => String(s).toLowerCase())
+      : ["photon", "nominatim", "overpass", "google"];
+    const useSrc = (s: string) => allowedSources.includes(s);
+    const isNameOnly = !!name_only && searchQuery.length >= 2;
+    const ccFilter = typeof country_code === "string" && country_code.length === 2 ? country_code : "";
 
     // Build existing names set for dedup
     const existingForDedup = (existing_names || []).map((n: string) => ({ name: n }));
 
-    // 1. Resolve geo: GPS coords → use directly, else geocode city/query
+    // ── BRANCH 1: NAME-ONLY GLOBAL SEARCH (no sector terms, no bbox required) ──
+    if (isNameOnly) {
+      const nameResults = await searchByNameGlobal(searchQuery, ccFilter);
+      const merged = mergeAndDeduplicate([], nameResults, [], [], existingForDedup.length > 0 ? existingForDedup : undefined);
+      console.log(`Name-only search "${searchQuery}" cc=${ccFilter || "*"} → ${merged.length} results`);
+      return new Response(JSON.stringify({
+        success: true, results: merged, page: 0, has_more: false,
+        sources: { photon: 0, nominatim: nameResults.length, overpass: 0, google: 0, total_merged: merged.length },
+        mode: "name_only",
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // ── BRANCH 2: NORMAL GEO SEARCH ──
     let geo: { lat: number; lon: number; bbox: number[] } | null;
     let resolvedCity = searchCity;
     if (hasCoords) {
@@ -449,7 +519,7 @@ serve(async (req) => {
       const rev = await reverseGeocode(lat, lon);
       if (rev?.city) resolvedCity = rev.city;
     } else {
-      geo = await geocodeCity(searchCity || searchQuery);
+      geo = await geocodeCity(searchCity || searchQuery, ccFilter);
       if (geo && searchRadius) {
         geo.bbox = bboxFromRadius(geo.lat, geo.lon, searchRadius);
       }
@@ -459,15 +529,15 @@ serve(async (req) => {
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // 2. Run ALL sources in parallel
+    // 2. Run SELECTED sources in parallel
     const [photonResults, nominatimResults, overpassResults, googleResults] = await Promise.all([
-      searchPhoton(resolvedCity || combinedQuery || searchQuery, searchSector, geo, searchPage, specializationQuery),
-      searchNominatim(resolvedCity || combinedQuery || searchQuery, searchSector, combinedQuery, geo, searchPage),
-      searchOverpass(searchSector, geo, searchPage),
-      use_google ? searchGooglePlaces(combinedQuery, resolvedCity || searchCity, searchSector, searchPage) : Promise.resolve([]),
+      useSrc("photon") ? searchPhoton(resolvedCity || combinedQuery || searchQuery, searchSector, geo, searchPage, specializationQuery) : Promise.resolve([]),
+      useSrc("nominatim") ? searchNominatim(resolvedCity || combinedQuery || searchQuery, searchSector, combinedQuery, geo, searchPage, ccFilter) : Promise.resolve([]),
+      useSrc("overpass") ? searchOverpass(searchSector, geo, searchPage) : Promise.resolve([]),
+      (useSrc("google") && use_google) ? searchGooglePlaces(combinedQuery, resolvedCity || searchCity, searchSector, searchPage) : Promise.resolve([]),
     ]);
 
-    console.log(`Sources [page=${searchPage}, gps=${hasCoords}, r=${searchRadius}km]: Photon=${photonResults.length} Nominatim=${nominatimResults.length} Overpass=${overpassResults.length} Google=${googleResults.length}`);
+    console.log(`Sources [page=${searchPage}, gps=${hasCoords}, r=${searchRadius}km, cc=${ccFilter || "*"}, srcs=${allowedSources.join(",")}]: Photon=${photonResults.length} Nominatim=${nominatimResults.length} Overpass=${overpassResults.length} Google=${googleResults.length}`);
 
     // 3. Merge + deduplicate (excluding existing)
     const merged = mergeAndDeduplicate(googleResults, nominatimResults, photonResults, overpassResults, existingForDedup.length > 0 ? existingForDedup : undefined);
@@ -490,6 +560,7 @@ serve(async (req) => {
         total_merged: merged.length,
       },
       has_google_key: hasGoogleKey,
+      mode: "geo",
       tip: !hasGoogleKey && merged.length < 10
         ? "Aggiungi GOOGLE_PLACES_API_KEY per rating, recensioni e telefoni verificati da Google."
         : undefined,
