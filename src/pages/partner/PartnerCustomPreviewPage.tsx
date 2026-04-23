@@ -24,6 +24,7 @@ import { MockupSuiteVaultList } from "@/components/partner/MockupSuiteVaultList"
 import PartnerHeroMascot from "@/components/partner/PartnerHeroMascot";
 import alienDesigner from "@/assets/empire-alien-designer.png";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
+import { TutorialPopup } from "@/components/ui/tutorial-popup";
 
 const STYLES = [
   { key: "modern_dark", label: "Modern Dark", color: "#0F172A", accent: "#C8963E" },
@@ -473,6 +474,19 @@ export default function PartnerCustomPreviewPage() {
 
       {/* ═══ FLUSSO 3 STEP ═══ */}
       <PartnerFlowStepper currentStep="mockup" />
+
+      <TutorialPopup
+        id="custom-preview-mockup-v1"
+        title="Mockup su Misura · 3 step"
+        accentColor="#fb7185"
+        position="bottom-right"
+        steps={[
+          { emoji: "🎯", title: "Quando usare questo strumento", description: "Hai un cliente specifico (lo conosci già) e vuoi mostrargli un'anteprima brandizzata col SUO logo, SUOI colori, SUOI contenuti. Diverso da 'Caccia Lead' che genera demo automatici per locali sconosciuti." },
+          { emoji: "📝", title: "Step 1 · Inserisci i dati", description: "Nome cliente, città, settore, logo e colore primario. Più info dai, più il mockup sarà credibile." },
+          { emoji: "🎨", title: "Step 2 · Scegli stile e genera", description: "Scegli uno dei 4 stili (Modern Dark, Luxury Gold, Casual Warm, Minimal Zen). Costo: 15 crediti. L'AI genera in 60 secondi." },
+          { emoji: "📱", title: "Step 3 · Mostra al cliente", description: "Il mockup finisce nella Vetrina. Da lì lo apri in modalità Presentazione fullscreen davanti al cliente." },
+        ]}
+      />
 
       {/* ═══ LAYOUT PRINCIPALE: 1 col mobile/tablet, 2 col da lg+ per desktop+iPad landscape ═══ */}
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 lg:gap-6 xl:gap-8 items-start">

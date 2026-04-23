@@ -13,6 +13,9 @@ import empireMonkeyMascot from "@/assets/empire-monkey.png";
 import { usePartnerDemoMode } from "@/components/layout/PartnerLayout";
 import { SectorPhoneCarousel } from "@/components/partner/SectorPhoneCarousel";
 import EmpireParticleOrb from "@/components/partner/EmpireParticleOrb";
+import VendorWorkflowWizard from "@/components/partner/VendorWorkflowWizard";
+import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
+import { TutorialPopup } from "@/components/ui/tutorial-popup";
 
 /* Animated counter component — forwardRef so it can sit inside motion children that pass refs */
 const AnimatedCounter = forwardRef<HTMLParagraphElement, { value: number; prefix?: string; color: string }>(
@@ -244,6 +247,16 @@ export default function PartnerHomePage() {
       {!demoMode && (
         <section className="px-4">
           <EmpireParticleOrb />
+        </section>
+      )}
+
+      {/* ═══ WIZARD "Cosa vuoi fare ora?" — guida operativa al flusso vendita ═══ */}
+      {!demoMode && <VendorWorkflowWizard />}
+
+      {/* ═══ FLOWCHART 3 STEP — riepilogo flusso end-to-end ═══ */}
+      {!demoMode && (
+        <section className="px-4">
+          <PartnerFlowStepper currentStep="mockup" />
         </section>
       )}
 

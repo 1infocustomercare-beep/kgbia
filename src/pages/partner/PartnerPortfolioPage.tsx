@@ -6,6 +6,8 @@ import {
   RefreshCw, ChevronRight, Smartphone, Sparkles, Layers, Star, Trash2,
   Play, ExternalLink, MessageCircle, Rocket, Wand2, SlidersHorizontal,
 } from "lucide-react";
+import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
+import { TutorialPopup } from "@/components/ui/tutorial-popup";
 
 /* ─────────────────────────────────────────────────────────────────────────
  * Mockup helpers — descrizione smart + estrazione screens
@@ -355,6 +357,22 @@ export default function PartnerPortfolioPage() {
         <p className="partner-subtle">Catalogo di tutto ciò che è già pronto da mostrare — siti demo per settore, mockup approvati e preview salvate.</p>
         <div className="partner-divider mt-3" />
       </header>
+
+      {/* ═══ FLUSSO 3 STEP ═══ */}
+      <PartnerFlowStepper currentStep="showcase" />
+
+      <TutorialPopup
+        id="portfolio-vetrina-v1"
+        title="Vetrina · Pronta da Mostrare"
+        accentColor="#34d399"
+        position="bottom-right"
+        steps={[
+          { emoji: "📁", title: "Cosa trovi qui", description: "Tutto quello che hai già generato: demo automatici dai lead + mockup su misura. Catalogo unico, pronto da aprire davanti al cliente." },
+          { emoji: "🔍", title: "Cerca e filtra", description: "Usa la ricerca per nome cliente o settore. Ordina per più recenti, più visti o A-Z." },
+          { emoji: "📱", title: "Modalità Presentazione", description: "Tap sul mockup → 'Presenta'. Si apre fullscreen senza menu, perfetto per mostrare al cliente in trattativa." },
+          { emoji: "✨", title: "Manca qualcosa?", description: "Se serve un mockup nuovo per UN cliente specifico, vai su 'Mockup su Misura'. Per scoprire NUOVI lead, vai su 'Caccia Lead'." },
+        ]}
+      />
 
       {/* ═══ DEMO CUSTOMIZATION ═══ */}
       {demoSectionEnabled && demoLoading && !demoRestaurant && (
