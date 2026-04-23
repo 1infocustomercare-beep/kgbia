@@ -130,28 +130,70 @@ export default function PartnerHomePage() {
         >
           {/* Top row: Avatar + Identity + Status badges */}
           <div className="flex items-center gap-3 sm:gap-4">
-            <motion.div
-              className="relative w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] lg:w-[80px] lg:h-[80px] rounded-2xl flex items-center justify-center overflow-hidden shrink-0"
-              style={{
-                background: demoMode
-                  ? "linear-gradient(135deg, rgba(245,158,11,0.18), rgba(217,119,6,0.08))"
-                  : "linear-gradient(135deg, rgba(167,139,250,0.18), rgba(124,58,237,0.08))",
-                border: `1.5px solid ${demoMode ? "rgba(245,158,11,0.3)" : "rgba(167,139,250,0.25)"}`,
-                boxShadow: demoMode ? "0 8px 24px rgba(245,158,11,0.15)" : "0 8px 24px rgba(167,139,250,0.15)",
-              }}
-              initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-              {partnerAvatar ? (
-                <img src={partnerAvatar} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <img src={empireMonkeyMascot} alt="Empire" className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
-              )}
-              {!demoMode && (
-                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 flex items-center justify-center"
-                  style={{ background: "#10b981", borderColor: "#12122a" }}>
-                  <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                </div>
-              )}
-            </motion.div>
+            <div className="relative shrink-0">
+              {/* Orbiting glow ring */}
+              <motion.div
+                className="absolute inset-[-8px] rounded-full pointer-events-none"
+                style={{
+                  background: demoMode
+                    ? "conic-gradient(from 0deg, rgba(245,158,11,0.0), rgba(245,158,11,0.45), rgba(245,158,11,0.0) 60%)"
+                    : "conic-gradient(from 0deg, rgba(167,139,250,0.0), rgba(167,139,250,0.5), rgba(124,58,237,0.0) 60%)",
+                  filter: "blur(6px)",
+                }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              />
+              {/* Pulsing halo */}
+              <motion.div
+                className="absolute inset-[-4px] rounded-2xl pointer-events-none"
+                style={{
+                  border: `1px solid ${demoMode ? "rgba(245,158,11,0.35)" : "rgba(167,139,250,0.35)"}`,
+                }}
+                animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.05, 1] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+              />
+              {/* Floating particles */}
+              {!demoMode && [0, 1, 2].map((i) => (
+                <motion.span
+                  key={i}
+                  className="absolute w-1 h-1 rounded-full pointer-events-none"
+                  style={{
+                    background: "#a78bfa",
+                    boxShadow: "0 0 6px #a78bfa",
+                    left: "50%",
+                    top: "50%",
+                  }}
+                  animate={{
+                    x: [Math.cos((i * 120) * Math.PI / 180) * 42, Math.cos((i * 120 + 360) * Math.PI / 180) * 42],
+                    y: [Math.sin((i * 120) * Math.PI / 180) * 42, Math.sin((i * 120 + 360) * Math.PI / 180) * 42],
+                    opacity: [0.4, 1, 0.4],
+                  }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "linear", delay: i * 0.5 }}
+                />
+              ))}
+              <motion.div
+                className="relative w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] lg:w-[80px] lg:h-[80px] rounded-2xl flex items-center justify-center overflow-hidden"
+                style={{
+                  background: demoMode
+                    ? "linear-gradient(135deg, rgba(245,158,11,0.18), rgba(217,119,6,0.08))"
+                    : "linear-gradient(135deg, rgba(167,139,250,0.18), rgba(124,58,237,0.08))",
+                  border: `1.5px solid ${demoMode ? "rgba(245,158,11,0.3)" : "rgba(167,139,250,0.25)"}`,
+                  boxShadow: demoMode ? "0 8px 24px rgba(245,158,11,0.15)" : "0 8px 24px rgba(167,139,250,0.15)",
+                }}
+                initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+                {partnerAvatar ? (
+                  <img src={partnerAvatar} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <img src={empireMonkeyMascot} alt="Empire" className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
+                )}
+                {!demoMode && (
+                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 flex items-center justify-center"
+                    style={{ background: "#10b981", borderColor: "#12122a" }}>
+                    <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                  </div>
+                )}
+              </motion.div>
+            </div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
