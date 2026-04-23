@@ -1558,6 +1558,42 @@ export type Database = {
           },
         ]
       }
+      cost_catalog_audit: {
+        Row: {
+          action_code: string | null
+          changed_at: string
+          changed_by: string | null
+          field_changed: string
+          id: string
+          new_value: string | null
+          old_value: string | null
+          row_id: string
+          table_name: string
+        }
+        Insert: {
+          action_code?: string | null
+          changed_at?: string
+          changed_by?: string | null
+          field_changed: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          row_id: string
+          table_name: string
+        }
+        Update: {
+          action_code?: string | null
+          changed_at?: string
+          changed_by?: string | null
+          field_changed?: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          row_id?: string
+          table_name?: string
+        }
+        Relationships: []
+      }
       crm_clients: {
         Row: {
           address: string | null
@@ -2794,6 +2830,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      infrastructure_costs: {
+        Row: {
+          category: string
+          code: string
+          cost_model: string
+          created_at: string
+          id: string
+          is_active: boolean
+          label: string
+          monthly_estimate_eur: number | null
+          notes: string | null
+          provider: string | null
+          unit: string | null
+          unit_cost_eur: number
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          code: string
+          cost_model?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label: string
+          monthly_estimate_eur?: number | null
+          notes?: string | null
+          provider?: string | null
+          unit?: string | null
+          unit_cost_eur?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          code?: string
+          cost_model?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          monthly_estimate_eur?: number | null
+          notes?: string | null
+          provider?: string | null
+          unit?: string | null
+          unit_cost_eur?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       interventions: {
         Row: {
