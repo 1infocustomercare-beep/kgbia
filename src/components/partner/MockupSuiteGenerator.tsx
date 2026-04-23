@@ -1591,7 +1591,7 @@ export function MockupSuiteGenerator({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => window.open(`${window.location.origin}/preview/mockup/${result.share_slug}`, "_blank")}
+                    onClick={() => result.share_slug && window.open(buildPublicMockupUrl(result.share_slug), "_blank")}
                     disabled={!result.share_slug}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />Apri
