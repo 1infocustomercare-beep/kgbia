@@ -124,9 +124,46 @@ Deno.serve(async (req) => {
     const businessDesc = sectorMap[report.lead_sector || ""] || "attività commerciale";
     const issues = (report.website_issues as string[] || []).slice(0, 3).join(", ") || "design obsoleto, no mobile";
 
-    const beforePrompt = `Mockup smartphone iPhone con sito web vecchio anni 2010 per ${businessDesc} chiamato "${report.lead_name}". Design obsoleto: ${issues}. Caratteri serif, foto compresse pixelate, layout disordinato, testi accatastati, palette colori datata (marroni, beige sporco), nessun pulsante prenotazione. Render fotorealistico, sfondo sfocato neutro grigio, vista frontale leggermente angolata. Stile professionale documentale.`;
+    // Brand assets reali (logo + foto) estratti durante l'analisi
+    const brandLogo: string | null = report.brand_logo_url || null;
+    const brandPhotos: string[] = Array.isArray(report.brand_photos) ? report.brand_photos.slice(0, 3) : [];
+    const brandColors: any = report.brand_colors || {};
+    const primaryColor = brandColors.primary || "#C8963E";
+    const accentColor = brandColors.accent || brandColors.secondary || "#0F172A";
 
-    const afterPrompt = `Mockup smartphone iPhone con app premium Empire per ${businessDesc} chiamato "${report.lead_name}". Design 2026 ultra-moderno: dark mode lusso (oro #C8963E + nero), tipografia Inter moderna, foto piatti/servizi alta qualità, bottone grande "Prenota Ora", menu con prezzi chiari, badge recensioni 5 stelle, chat AI, mappa tavoli, push notifiche. Render fotorealistico, sfondo gradiente viola-oro elegante, vista frontale leggermente angolata. Stile cinematografico premium.`;
+    // PROMPT CINEMATOGRAFICO PREMIUM — qualità catalogo (luci, texture, ombre, angoli)
+    const cinematicSpecs = `
+═══ SPECIFICHE FOTOGRAFICHE INDEROGABILI ═══
+• Render fotorealistico 8K iperrealistico stile Apple Store keynote
+• Illuminazione studio professionale a 3 punti (key + fill + rim light)
+• Riflessi vetro display perfetti con micro-highlight sui bordi del titanio
+• Ombra naturale soft drop-shadow sotto il dispositivo (penombra realistica)
+• Texture vetro Ceramic Shield del display visibile a luce radente
+• Cornice titanio naturale con micro-bevel anodizzato uniforme
+• Anti-aliasing perfetto su ogni testo, ZERO pixelation, ZERO motion blur
+• Color grading cinematografico premium (curve filmiche, contrasto morbido)
+• Grana cinematica sottile (5%) per realismo fotografico
+• Sfondo: gradiente neutro studio fotografico (Apple-style backdrop sweep)
+• Profondità di campo leggera dietro il dispositivo (bokeh sottile)
+• Vista frontale ortogonale 0° tilt, iPhone 16 Pro Max centrato perfettamente
+• Aspect ratio 9:19.5 reale del dispositivo
+• Dynamic Island nera centrata in alto, status bar 9:41 + 5G + WiFi + 100%
+• Home indicator iOS sottile in basso`;
+
+    const beforePrompt = `Mockup smartphone iPhone 16 Pro Max con sito web OBSOLETO ANNI 2010 per ${businessDesc} chiamato "${report.lead_name}"${report.lead_city ? ` (${report.lead_city})` : ""}.
+${brandLogo ? "USA il logo originale dell'attività mostrato nella reference image (mantienilo identico ma piccolo e mal posizionato come tipico dei siti vecchi)." : ""}
+Design obsoleto: ${issues}. Caratteri serif Times New Roman, foto compresse pixelate JPEG basso, layout disordinato a tabella HTML, testi accatastati, palette colori datata (marroni #6B4423, beige sporco #C9B89A, sfondo bianco crudo #FFFFFF), nessun pulsante prenotazione, menu testo piatto, footer kilometrico con link grigi sottolineati.
+Lo schermo deve mostrare un BROWSER mobile (Safari iOS) con barra URL visibile in alto che mostra "${report.lead_website || `${report.lead_name.toLowerCase().replace(/\s+/g, '')}.it`}".
+${cinematicSpecs}`;
+
+    const afterPrompt = `Mockup smartphone iPhone 16 Pro Max con APP NATIVA PREMIUM 2026 per ${businessDesc} chiamato "${report.lead_name}"${report.lead_city ? ` (${report.lead_city})` : ""}.
+${brandLogo ? `🎯 USA IL LOGO ORIGINALE dell'attività (vedi reference image #1) come SPLASH HERO nell'header dell'app — grande, centrato, con glow soft. Mantieni il logo IDENTICO all'originale, non reinventarlo.` : ""}
+${brandPhotos.length > 0 ? `📸 USA le foto reali dell'attività (reference images successive) per riempire le card hero/galleria/menu. Mantieni soggetti e mood originali, ricomponile in card moderne.` : ""}
+Design 2026 ultra-moderno: dark luxury mode, palette brand del cliente (primary: ${primaryColor}, accent: ${accentColor}), tipografia Inter + Playfair Display per heading, hero immagine full-bleed in alto con glow del logo, CTA grande "Prenota Ora" full-width, menu/listino con foto reali e prezzi chiari, badge ★ recensioni, sezione "in evidenza" con 3 card, bottom navigation 5 icone (Home, Menu, Prenota, Chat AI, Profilo), micro-animazioni e gradient overlay sottili.
+Microcopy 100% in italiano professionale.
+${cinematicSpecs}
+
+⛔ DIVIETI: NO testo "Empire/Lovable/Empireia", NO loghi Apple/Google/Meta, NO testo inglese nei contenuti app, NO wireframe, NO sketch — SOLO render fotografico premium.`;
 
     let beforeUrl: string | null = null;
     let afterUrl: string | null = null;
