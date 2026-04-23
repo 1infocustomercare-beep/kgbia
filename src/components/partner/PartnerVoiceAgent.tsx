@@ -512,12 +512,12 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
           >
             <div className="relative">
               <motion.div
-                className="absolute -inset-1.5 rounded-full bg-primary/25 blur-md"
+                className="absolute -inset-1.5 rounded-full bg-primary/25 blur-md mx-0"
                 animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
                 transition={{ duration: 2.5, repeat: Infinity }}
               />
-              <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-xl border-2 border-primary/30 bg-background">
-                <img src={voiceAgentAvatar} alt="Arianna" className="w-full h-full object-cover" />
+              <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-xl border-2 border-primary/30 bg-background mx-[322px] px-0 py-0 my-[10px]">
+                <img src={voiceAgentAvatar} alt="Arianna" className="w-full h-full object-cover mx-0" />
                 {(isSpeaking && !isPaused) && (
                   <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
                 )}
