@@ -349,11 +349,33 @@ export default function SuperAdminCostsPage() {
                   </div>
                   <div className="divide-y divide-border/30">
                     {items.map((c: any) => (
-                      <div key={c.id} className="p-3 grid grid-cols-12 gap-2 items-center text-xs">
-                        <div className="col-span-5">
-                          <div className="font-semibold">{c.label}</div>
+                      <div key={c.id} className="p-3 grid grid-cols-12 gap-2 items-start text-xs">
+                        <div className="col-span-5 space-y-1">
+                          <EditableText editing={editing} id={c.id} field="label" value={c.label}
+                            onStart={() => startEdit(c.id, "label", c.label, "text")}
+                            onChange={v => setEditing({ id: c.id, field: "label", value: v, kind: "text" })}
+                            onSave={saveInfraCost} onCancel={() => setEditing(null)}
+                            className="font-semibold text-foreground" placeholder="Etichetta…" />
                           <div className="text-[10px] text-muted-foreground font-mono">{c.code}</div>
-                          {c.notes && <div className="text-[10px] text-muted-foreground italic mt-0.5">{c.notes}</div>}
+                          <div className="flex items-center gap-2 flex-wrap pt-0.5">
+                            <EditableSelect editing={editing} id={c.id} field="category" value={c.category}
+                              options={INFRA_CATEGORIES}
+                              onStart={() => startEdit(c.id, "category", c.category, "text")}
+                              onChange={v => setEditing({ id: c.id, field: "category", value: v, kind: "text" })}
+                              onSave={saveInfraCost} onCancel={() => setEditing(null)} />
+                            {(c.provider !== undefined) && (
+                              <EditableText editing={editing} id={c.id} field="provider" value={c.provider || ""}
+                                onStart={() => startEdit(c.id, "provider", c.provider, "text")}
+                                onChange={v => setEditing({ id: c.id, field: "provider", value: v, kind: "text" })}
+                                onSave={saveInfraCost} onCancel={() => setEditing(null)}
+                                className="text-[10px] text-cyan-400" placeholder="Provider…" />
+                            )}
+                          </div>
+                          <EditableText editing={editing} id={c.id} field="notes" value={c.notes || ""}
+                            onStart={() => startEdit(c.id, "notes", c.notes, "text")}
+                            onChange={v => setEditing({ id: c.id, field: "notes", value: v, kind: "text" })}
+                            onSave={saveInfraCost} onCancel={() => setEditing(null)}
+                            className="text-[10px] text-muted-foreground italic" placeholder="Aggiungi nota…" multiline />
                         </div>
                         <div className="col-span-2 text-center">
                           <div className="text-[9px] text-muted-foreground uppercase">{c.cost_model}</div>
