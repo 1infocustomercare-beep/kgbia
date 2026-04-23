@@ -143,13 +143,13 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
     if (ready.length <= 1) return;
     setSuiteIdx((i) => (i + 1) % ready.length);
     setScreenIdx(0);
-    setStage("hero");
+    setStage("preview");
   };
   const prevSuite = () => {
     if (ready.length <= 1) return;
     setSuiteIdx((i) => (i - 1 + ready.length) % ready.length);
     setScreenIdx(0);
-    setStage("hero");
+    setStage("preview");
   };
 
   const businessName = currentSuite?.business_name || "Il tuo brand";
