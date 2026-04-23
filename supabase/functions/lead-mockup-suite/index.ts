@@ -452,7 +452,25 @@ function buildScreenPrompt(
   const components = pickByIndex(COMPONENT_VARIATIONS, variationSeed + 3, variantIndex);
   const accentRotation = ["più caldo", "più freddo", "più saturo", "più desaturato"][variantIndex % 4];
 
-  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).
+  const catalogDirective = hasCatalogReference
+    ? `\n\n═══ 📸 IMMAGINE DI RIFERIMENTO (REGOLA #1 — PRIORITÀ MASSIMA) ═══
+🎯 In allegato c'è un'IMMAGINE DI RIFERIMENTO dal nostro catalogo di mockup approvati.
+DEVI replicare FEDELMENTE quella reference per:
+• Layout strutturale (posizione header, hero, card, bottom-nav)
+• Densità e gerarchia delle informazioni
+• Tipologia di componenti UI usati (chip, card, lista, griglia)
+• Proporzioni e spazi
+• Stile fotografico, qualità del render, illuminazione
+SOSTITUISCI SOLO:
+• Brand/logo → con "${business.name}"
+• Contenuti testuali → adattati al settore "${business.sector}"
+• Palette accent → adattata a ${primaryColor} (mantenendo i contrasti)
+• Foto dei prodotti/servizi → coerenti col settore
+NON cambiare la STRUTTURA visiva della reference: la qualità di quella reference è
+ESATTAMENTE il livello che devi raggiungere.\n`
+    : "";
+
+  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}
 
 ═══ COMPOSIZIONE FOTOGRAFICA (REGOLE INDEROGABILI) ═══
 • iPhone PERFETTAMENTE CENTRATO sia orizzontalmente che verticalmente nel frame
