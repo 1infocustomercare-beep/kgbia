@@ -352,17 +352,17 @@ Deno.serve(async (req) => {
       ]);
 
       // Instagram — solo profili business, no /explore /p /reels …
-      const igPick = pickBestSocialResult(igResults, "instagram", lead.name);
+      const igPick = pickBestSocialResult(igResults, "instagram", lead.name, TH);
       if (igPick) { enrichment.has_instagram = true; enrichment.instagram_url = igPick.url; }
 
       // Facebook — solo pagine business, no /watch /groups /search …
-      const fbPick = pickBestSocialResult(fbResults, "facebook", lead.name);
+      const fbPick = pickBestSocialResult(fbResults, "facebook", lead.name, TH);
       if (fbPick) { enrichment.has_facebook = true; enrichment.facebook_url = fbPick.url; }
 
       // Yelp — solo schede /biz/<slug>
-      const yelpUrl = pickBestListingResult(yelpResults, "yelp", lead.name);
-      if (yelpUrl) {
-        const yelpData = await firecrawlScrape(FIRECRAWL_KEY, yelpUrl);
+      const yelpPick = pickBestListingResult(yelpResults, "yelp", lead.name, TH);
+      if (yelpPick) {
+        const yelpData = await firecrawlScrape(FIRECRAWL_KEY, yelpPick.url);
         if (yelpData?.markdown) {
           const { rating, reviews } = extractRating(yelpData.markdown.slice(0, 3000));
           enrichment.yelp_rating = rating;
@@ -371,9 +371,9 @@ Deno.serve(async (req) => {
       }
 
       // TripAdvisor — solo schede *_Review-*
-      const taUrl = pickBestListingResult(taResults, "tripadvisor", lead.name);
-      if (taUrl) {
-        const taData = await firecrawlScrape(FIRECRAWL_KEY, taUrl);
+      const taPick = pickBestListingResult(taResults, "tripadvisor", lead.name, TH);
+      if (taPick) {
+        const taData = await firecrawlScrape(FIRECRAWL_KEY, taPick.url);
         if (taData?.markdown) {
           const { rating, reviews } = extractRating(taData.markdown.slice(0, 3000));
           enrichment.tripadvisor_rating = rating;
@@ -382,17 +382,20 @@ Deno.serve(async (req) => {
       }
 
       // Pagine Gialle — solo schede aziendali, non categorie/ricerca
-      const pgUrl = pickBestListingResult(pgResults, "paginegialle", lead.name);
-      enrichment.paginegialle_listing = !!pgUrl;
+      const pgPick = pickBestListingResult(pgResults, "paginegialle", lead.name, TH);
+      enrichment.paginegialle_listing = !!pgPick;
 
       enrichment.raw_data = {
         ig_count: igResults.length, fb_count: fbResults.length,
         ig_handle: igPick?.handle ?? null, fb_handle: fbPick?.handle ?? null,
-        yelp_url: yelpUrl, ta_url: taUrl, pg_url: pgUrl,
+        ig_score: igPick?.score ?? null, fb_score: fbPick?.score ?? null,
+        yelp_url: yelpPick?.url ?? null, ta_url: taPick?.url ?? null, pg_url: pgPick?.url ?? null,
+        yelp_score: yelpPick?.score ?? null, ta_score: taPick?.score ?? null, pg_score: pgPick?.score ?? null,
+        thresholds_used: TH,
         firecrawl_used: true,
       };
     } else {
-      enrichment.raw_data = { firecrawl_used: false, reason: "FIRECRAWL_API_KEY non configurata" };
+      enrichment.raw_data = { firecrawl_used: false, thresholds_used: TH, reason: "FIRECRAWL_API_KEY non configurata" };
     }
 
     enrichment.hot_score = calcHotScore(enrichment);
