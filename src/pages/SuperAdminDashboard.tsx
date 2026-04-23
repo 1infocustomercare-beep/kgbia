@@ -76,7 +76,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout" | "empire_brain" | "sales_agent" | "voice_orch";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout" | "empire_brain" | "sales_agent" | "voice_orch" | "costs";
 
 interface SubscriptionRecord {
   id: string;
@@ -638,6 +638,7 @@ const SuperAdminDashboard = () => {
       { id: "subscriptions" as SuperTab, label: "Abbonamenti", icon: <Calendar className="w-4 h-4" /> },
       { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-4 h-4" /> },
       { id: "billing", label: "Fatture", icon: <DollarSign className="w-4 h-4" /> },
+      { id: "costs" as SuperTab, label: "Costi Empire", icon: <DollarSign className="w-4 h-4" /> },
     ]},
     { label: "🤖 AI & Agenti", tabs: [
       { id: "mary", label: "AI-Mary", icon: <Bot className="w-4 h-4" /> },
@@ -824,7 +825,7 @@ const SuperAdminDashboard = () => {
             <div className="grid grid-cols-4 sm:grid-cols-5 gap-1">
               {group.tabs.map((tab) => (
                 <button key={tab.id}
-                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : setActiveTab(tab.id)}
+                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
                   className="flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[38px]"
                   style={activeTab === tab.id ? {
                     background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",
