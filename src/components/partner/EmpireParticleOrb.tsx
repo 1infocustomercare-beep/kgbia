@@ -303,7 +303,6 @@ const EmpireParticleOrb = memo(() => {
         const next: Mode = modeRef.current === "orb" ? "constellation" : "orb";
         modeRef.current = next;
         setMode(next);
-        setHint(false);
       }
     };
 
