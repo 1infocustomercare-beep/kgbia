@@ -62,7 +62,6 @@ const EmpireParticleOrb = memo(() => {
   // Tracked active pointers for multi-touch
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const [mode, setMode] = useState<Mode>("orb");
-  const [hint, setHint] = useState(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -304,7 +303,6 @@ const EmpireParticleOrb = memo(() => {
         const next: Mode = modeRef.current === "orb" ? "constellation" : "orb";
         modeRef.current = next;
         setMode(next);
-        setHint(false);
       }
     };
 
@@ -333,6 +331,20 @@ const EmpireParticleOrb = memo(() => {
     canvas.addEventListener("touchmove", handleTouchPrevent, { passive: false });
     canvas.addEventListener("gesturestart", (e) => e.preventDefault() as never);
     canvas.addEventListener("gesturechange", (e) => e.preventDefault() as never);
+
+    // ─── Scroll-driven rotation: l'orb ruota mentre l'utente scrolla la pagina ───
+    let lastScrollY = window.scrollY;
+    const handleScroll = () => {
+      const y = window.scrollY;
+      const dy = y - lastScrollY;
+      lastScrollY = y;
+      // Solo se non si sta interagendo manualmente — evita conflitti col drag
+      if (dragRef.current.active || gestureRef.current.active) return;
+      // Mappa il delta scroll su rotazioni: verticale → asse X, leggera spinta su Y per parallasse
+      rotRef.current.vx += dy * 0.0009;
+      rotRef.current.vy += dy * 0.0004;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     // ─── Animate ───
     const draw = () => {
@@ -504,6 +516,7 @@ const EmpireParticleOrb = memo(() => {
       window.removeEventListener("pointerdown", handlePointerDown);
       window.removeEventListener("pointerup", handlePointerUp);
       window.removeEventListener("pointercancel", handlePointerCancel);
+      window.removeEventListener("scroll", handleScroll);
       canvas.removeEventListener("pointerleave", handlePointerLeave);
       canvas.removeEventListener("touchmove", handleTouchPrevent);
       pointersRef.current.clear();
@@ -548,19 +561,6 @@ const EmpireParticleOrb = memo(() => {
               >
                 Il tuo Universo AI
               </h3>
-              <AnimatePresence>
-                {hint && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0.4, 0.9, 0.4] }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 2.2, repeat: Infinity }}
-                    className="text-[10px] sm:text-xs text-violet-300/70 mt-3 font-medium"
-                  >
-                    Trascina · ruota · pizzica · tocca
-                  </motion.p>
-                )}
-              </AnimatePresence>
             </motion.div>
           ) : (
             <motion.div
@@ -577,9 +577,6 @@ const EmpireParticleOrb = memo(() => {
               <h3 className="text-base sm:text-lg md:text-xl font-bold text-white">
                 6 moduli sincronizzati
               </h3>
-              <p className="text-[10px] sm:text-xs text-violet-300/60 mt-2">
-                Tocca di nuovo per ricomporre
-              </p>
             </motion.div>
           )}
         </AnimatePresence>
