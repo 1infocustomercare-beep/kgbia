@@ -168,10 +168,17 @@ ${cinematicSpecs}
     let beforeUrl: string | null = null;
     let afterUrl: string | null = null;
 
+    // Reference images per image-to-image: logo + foto reali del lead.
+    // Il "before" non deve usare il logo originale (è il sito vecchio anonimo),
+    // mentre l'"after" sì → mantiene splash logo identico + foto reali del cliente.
+    const afterReferences = [brandLogo, ...brandPhotos].filter(Boolean) as string[];
+
     try {
       const [beforeData, afterData] = await Promise.all([
-        generateImage(LOVABLE_KEY, beforePrompt),
-        generateImage(LOVABLE_KEY, afterPrompt),
+        // BEFORE: Pro per fedeltà render fotografico, no reference (sito anonimo)
+        generateImage(LOVABLE_KEY, beforePrompt, true, []),
+        // AFTER: Pro + multi-reference (logo + foto reali) per personalizzazione massima
+        generateImage(LOVABLE_KEY, afterPrompt, true, afterReferences),
       ]);
 
       if (beforeData) beforeUrl = await uploadDataUrlToStorage(adminClient, beforeData, `intelligence-mockups/${userId}/${report_id}-before.png`);
