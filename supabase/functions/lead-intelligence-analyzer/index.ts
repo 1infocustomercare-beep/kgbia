@@ -18,15 +18,95 @@ function normalizeKey(name: string, city: string | null | undefined): string {
 
 async function firecrawlScrape(apiKey: string, url: string): Promise<any | null> {
   try {
+    // Estraiamo TUTTO ciò che serve per generare un mockup ultra-personalizzato:
+    // markdown completo, links, branding (logo+palette+font), html grezzo per parsing media.
     const r = await fetch(`${FIRECRAWL_BASE}/scrape`, {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ url, formats: ["markdown", "links"], onlyMainContent: true, waitFor: 2000 }),
+      body: JSON.stringify({
+        url,
+        formats: ["markdown", "links", "html", "branding", "summary"],
+        onlyMainContent: false,
+        waitFor: 3000,
+        location: { country: "IT", languages: ["it"] },
+      }),
     });
     if (!r.ok) return null;
     const data = await r.json();
     return data?.data ?? data;
   } catch { return null; }
+}
+
+// Estrae media (img, video, og:image) dall'HTML grezzo
+function extractMediaFromHtml(html: string, baseUrl: string): { images: string[]; videos: string[]; ogImage?: string } {
+  if (!html) return { images: [], videos: [] };
+  const images = new Set<string>();
+  const videos = new Set<string>();
+  let ogImage: string | undefined;
+
+  const absolutize = (src: string): string | null => {
+    if (!src) return null;
+    if (src.startsWith("data:")) return null;
+    try {
+      return new URL(src, baseUrl).toString();
+    } catch { return null; }
+  };
+
+  // og:image
+  const ogMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i);
+  if (ogMatch) {
+    const u = absolutize(ogMatch[1]);
+    if (u) { ogImage = u; images.add(u); }
+  }
+
+  // <img src="..."> e srcset
+  const imgRe = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = imgRe.exec(html)) !== null) {
+    const u = absolutize(m[1]);
+    if (u && /\.(jpe?g|png|webp|avif)(\?|$)/i.test(u)) images.add(u);
+  }
+
+  // background-image: url(...)
+  const bgRe = /background-image:\s*url\(["']?([^"')]+)["']?\)/gi;
+  while ((m = bgRe.exec(html)) !== null) {
+    const u = absolutize(m[1]);
+    if (u && /\.(jpe?g|png|webp|avif)(\?|$)/i.test(u)) images.add(u);
+  }
+
+  // <video src> + <source src>
+  const videoRe = /<(?:video|source)[^>]+src=["']([^"']+)["']/gi;
+  while ((m = videoRe.exec(html)) !== null) {
+    const u = absolutize(m[1]);
+    if (u && /\.(mp4|webm|mov)(\?|$)/i.test(u)) videos.add(u);
+  }
+
+  // YouTube/Vimeo iframe
+  const iframeRe = /<iframe[^>]+src=["']([^"']+)["']/gi;
+  while ((m = iframeRe.exec(html)) !== null) {
+    const u = m[1];
+    if (/youtube\.com\/embed|youtu\.be|vimeo\.com\/(?:video\/)?\d+/.test(u)) videos.add(u);
+  }
+
+  return {
+    images: Array.from(images).slice(0, 20),
+    videos: Array.from(videos).slice(0, 6),
+    ogImage,
+  };
+}
+
+// Cerca un logo: prima da branding Firecrawl, fallback su pattern href/src "logo"
+function findLogoUrl(branding: any, html: string, baseUrl: string): string | null {
+  const fromBranding = branding?.logo || branding?.images?.logo;
+  if (fromBranding) return fromBranding;
+  if (!html) return null;
+  const absolutize = (src: string): string | null => {
+    try { return new URL(src, baseUrl).toString(); } catch { return null; }
+  };
+  // <img alt="logo"> o src/href contenente "logo"
+  const re = /<(?:img|link|source)[^>]+(?:src|href)=["']([^"']*logo[^"']*\.(?:svg|png|jpe?g|webp))["']/i;
+  const m = html.match(re);
+  return m ? absolutize(m[1]) : null;
 }
 
 async function firecrawlSearch(apiKey: string, query: string, limit = 2): Promise<any[]> {
@@ -215,25 +295,64 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 1. Scrape sito (se presente)
+    // 1. Scrape sito (se presente) — estrae markdown + html + branding (logo, palette, font)
     let websiteMarkdown: string | undefined;
     let websiteLinks: string[] | undefined;
+    let brandLogoUrl: string | null = null;
+    let brandPhotos: string[] = [];
+    let brandVideos: string[] = [];
+    let brandColors: any = {};
+    let brandFonts: any[] = [];
+    let extractedBusinessData: any = {};
     if (lead.website && FIRECRAWL_KEY) {
       const scrape = await firecrawlScrape(FIRECRAWL_KEY, lead.website);
       websiteMarkdown = scrape?.markdown;
       websiteLinks = scrape?.links;
+      const branding = scrape?.branding ?? {};
+      brandColors = branding?.colors ?? {};
+      brandFonts = (branding?.fonts ?? []).map((f: any) => f?.family).filter(Boolean);
+      brandLogoUrl = findLogoUrl(branding, scrape?.html ?? "", lead.website);
+      const media = extractMediaFromHtml(scrape?.html ?? "", lead.website);
+      brandPhotos = media.images;
+      brandVideos = media.videos;
+      // og:image come logo-fallback se non trovato
+      if (!brandLogoUrl && media.ogImage) brandLogoUrl = media.ogImage;
+      extractedBusinessData = {
+        summary: scrape?.summary || null,
+        meta_title: scrape?.metadata?.title || null,
+        meta_description: scrape?.metadata?.description || null,
+        scraped_at: new Date().toISOString(),
+      };
     }
 
-    // 2. Verifica social (lookup veloce)
+    // 2. Verifica social — cerchiamo handle Instagram/Facebook/TikTok/YouTube reali
     let hasInstagram = !!lead.has_instagram;
     let hasFacebook = !!lead.has_facebook;
-    if (FIRECRAWL_KEY && !hasInstagram && !hasFacebook) {
-      const [igR, fbR] = await Promise.all([
-        firecrawlSearch(FIRECRAWL_KEY, `site:instagram.com "${lead.name}" ${lead.city || ""}`, 1),
-        firecrawlSearch(FIRECRAWL_KEY, `site:facebook.com "${lead.name}" ${lead.city || ""}`, 1),
-      ]);
-      hasInstagram = igR.some((r: any) => r.url?.includes("instagram.com"));
-      hasFacebook = fbR.some((r: any) => r.url?.includes("facebook.com"));
+    const socialHandles: Record<string, string> = {};
+
+    // Prima dai link interni del sito
+    for (const link of websiteLinks || []) {
+      if (!link) continue;
+      const u = String(link);
+      if (!socialHandles.instagram && /instagram\.com\/[^\/?#]+/i.test(u)) { socialHandles.instagram = u; hasInstagram = true; }
+      if (!socialHandles.facebook  && /facebook\.com\/[^\/?#]+/i.test(u))  { socialHandles.facebook  = u; hasFacebook  = true; }
+      if (!socialHandles.tiktok    && /tiktok\.com\/@[^\/?#]+/i.test(u))   { socialHandles.tiktok    = u; }
+      if (!socialHandles.youtube   && /(?:youtube\.com\/(?:c\/|channel\/|@)|youtu\.be\/)/i.test(u)) { socialHandles.youtube = u; }
+      if (!socialHandles.linkedin  && /linkedin\.com\/(?:company|in)\//i.test(u)) { socialHandles.linkedin = u; }
+    }
+
+    // Fallback search se non trovati nei link
+    if (FIRECRAWL_KEY && (!socialHandles.instagram || !socialHandles.facebook)) {
+      const queries: Promise<any[]>[] = [];
+      if (!socialHandles.instagram) queries.push(firecrawlSearch(FIRECRAWL_KEY, `site:instagram.com "${lead.name}" ${lead.city || ""}`, 1));
+      if (!socialHandles.facebook)  queries.push(firecrawlSearch(FIRECRAWL_KEY, `site:facebook.com "${lead.name}" ${lead.city || ""}`, 1));
+      const results = await Promise.all(queries);
+      for (const r of results) {
+        for (const item of r) {
+          if (!socialHandles.instagram && item.url?.includes("instagram.com")) { socialHandles.instagram = item.url; hasInstagram = true; }
+          if (!socialHandles.facebook  && item.url?.includes("facebook.com"))  { socialHandles.facebook  = item.url; hasFacebook  = true; }
+        }
+      }
     }
 
     // 3. AI analyze
