@@ -10,6 +10,7 @@ import { useMockupSuiteVault, type VaultMockupSuite } from "@/hooks/useMockupSui
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { buildPublicMockupUrl } from "@/lib/public-share-url";
 
 type SortKey = "recent" | "most_viewed" | "az";
 
