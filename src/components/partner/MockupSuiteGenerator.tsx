@@ -1274,23 +1274,26 @@ export function MockupSuiteGenerator({
         {/* Garantiscono che testo e UI restino dentro il frame iPhone        */}
         {/* su qualsiasi template selezionato (auto + manuali).               */}
         {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent p-4 space-y-4">
+        <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent p-4 sm:p-5 space-y-5">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <Label className="flex items-center gap-1.5 m-0">
-              <Eye className="h-3.5 w-3.5 text-accent-foreground" /> Safe Area & Leggibilità
-            </Label>
-            <Badge variant="outline" className="text-[9px] uppercase tracking-wider">
+            <div>
+              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
+                <Eye className="h-4 w-4 text-accent-foreground" /> Safe Area & Leggibilità
+              </Label>
+              <p className="text-xs text-muted-foreground mt-0.5">Margini, tipografia e contrasto WCAG</p>
+            </div>
+            <Badge variant="outline" className="text-[10px] uppercase tracking-wider">
               {boostContrast ? "AA on" : "AA off"} · {typeScale.toFixed(2)}× · {safeAreaPx}px
             </Badge>
           </div>
 
           {/* Safe Area slider */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="safe-area-slider" className="text-xs flex items-center gap-1.5 m-0">
+              <Label htmlFor="safe-area-slider" className="text-sm flex items-center gap-1.5 m-0 font-medium">
                 Margine interno (safe-area)
               </Label>
-              <Badge variant="outline" className="text-[10px] font-mono">{safeAreaPx}px</Badge>
+              <Badge variant="outline" className="text-xs font-mono">{safeAreaPx}px</Badge>
             </div>
             <input
               id="safe-area-slider"
@@ -1302,9 +1305,9 @@ export function MockupSuiteGenerator({
               disabled={controlsLocked}
               onChange={(e) => setSafeAreaPx(Number(e.target.value))}
               title={lockTitle}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-2.5 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
-            <div className="flex justify-between text-[9px] text-muted-foreground">
+            <div className="flex justify-between text-[10px] text-muted-foreground">
               <span>Edge-to-edge</span>
               <span>Bilanciato</span>
               <span>Massima sicurezza</span>
@@ -1312,12 +1315,12 @@ export function MockupSuiteGenerator({
           </div>
 
           {/* Type scale slider */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="type-scale-slider" className="text-xs flex items-center gap-1.5 m-0">
+              <Label htmlFor="type-scale-slider" className="text-sm flex items-center gap-1.5 m-0 font-medium">
                 Dimensione tipografia
               </Label>
-              <Badge variant="outline" className="text-[10px] font-mono">{typeScale.toFixed(2)}×</Badge>
+              <Badge variant="outline" className="text-xs font-mono">{typeScale.toFixed(2)}×</Badge>
             </div>
             <input
               id="type-scale-slider"
@@ -1329,9 +1332,9 @@ export function MockupSuiteGenerator({
               disabled={controlsLocked}
               onChange={(e) => setTypeScale(Number(e.target.value))}
               title={lockTitle}
-              className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-2.5 bg-muted rounded-full appearance-none cursor-pointer accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
             />
-            <div className="flex justify-between text-[9px] text-muted-foreground">
+            <div className="flex justify-between text-[10px] text-muted-foreground">
               <span>Compatta (0.85×)</span>
               <span>Standard (1.00×)</span>
               <span>Maxi (1.20×)</span>
@@ -1339,11 +1342,11 @@ export function MockupSuiteGenerator({
           </div>
 
           {/* Contrast toggle */}
-          <div className="flex items-start justify-between gap-3 p-2.5 rounded-lg bg-muted/40 border border-border/40">
+          <div className="flex items-center justify-between gap-3 p-3 rounded-lg bg-muted/40 border border-border/40">
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold leading-tight">Boost contrasto AA</p>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                Forza testo e didascalie a contrasto WCAG AA su qualsiasi sfondo del template.
+              <p className="text-sm font-semibold leading-tight">Boost contrasto AA</p>
+              <p className="text-xs text-muted-foreground leading-snug mt-1">
+                Forza testo e didascalie a contrasto WCAG AA su qualsiasi sfondo.
               </p>
             </div>
             <button
@@ -1353,20 +1356,20 @@ export function MockupSuiteGenerator({
               role="switch"
               aria-checked={boostContrast}
               title={lockTitle}
-              className={`shrink-0 relative inline-flex h-5 w-9 items-center rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`shrink-0 relative inline-flex h-7 w-12 items-center rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 boostContrast ? "bg-primary" : "bg-muted-foreground/30"
               }`}
             >
               <span
-                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-background shadow transition-transform ${
-                  boostContrast ? "translate-x-5" : "translate-x-1"
+                className={`inline-block h-5 w-5 transform rounded-full bg-background shadow transition-transform ${
+                  boostContrast ? "translate-x-6" : "translate-x-1"
                 }`}
               />
             </button>
           </div>
 
-          <p className="text-[10px] text-muted-foreground italic">
-            🛡️ Validazione: nessun testo finisce sotto la Dynamic Island o l'Home Indicator. Ottimale per AI-render 4K/8K.
+          <p className="text-[11px] text-muted-foreground italic leading-snug">
+            🛡️ Nessun testo finisce sotto la Dynamic Island o l'Home Indicator. Ottimale per AI-render 4K/8K.
           </p>
         </div>
 
