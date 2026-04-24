@@ -169,6 +169,11 @@ export default function AutopilotConfigDialog({ open, onOpenChange }: Props) {
     setHoursStart(c.operating_hours?.start || "09:00");
     setHoursEnd(c.operating_hours?.end || "19:00");
     setInstructions(c.custom_instructions || "");
+    if (c.priority_rules && typeof c.priority_rules === "object") {
+      setPriorityRules({ ...DEFAULT_RULES, ...c.priority_rules });
+    }
+    setMaxConcurrent(c.max_concurrent_conversations ?? 5);
+    setMaxNewPerRun(c.max_new_conversations_per_run ?? 3);
   }, [cfg, open]);
 
   const used = (cfg as any)?.daily_scans_used || 0;
