@@ -190,18 +190,34 @@ serve(async (req) => {
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    const userClient = createClient(
-      SUPABASE_URL,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } },
-    );
-    const { data: userData } = await userClient.auth.getUser();
-    const user = userData?.user;
-    if (!user) {
-      return new Response(JSON.stringify({ error: "User not found" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    const authHeader = req.headers.get("Authorization") || "";
+    const impersonate = req.headers.get("x-autopilot-impersonate");
+    const isServiceCall = authHeader.includes(SUPABASE_SERVICE_ROLE_KEY);
+
+    let user: { id: string } | null = null;
+    if (isServiceCall && impersonate) {
+      // Chiamata server-to-server dallo scheduler/retry-processor
+      user = { id: impersonate };
+    } else {
+      if (!authHeader) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const userClient = createClient(
+        SUPABASE_URL,
+        Deno.env.get("SUPABASE_ANON_KEY")!,
+        { global: { headers: { Authorization: authHeader } } },
+      );
+      const { data: userData } = await userClient.auth.getUser();
+      user = userData?.user ?? null;
+      if (!user) {
+        return new Response(JSON.stringify({ error: "User not found" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     const body = await req.json();
