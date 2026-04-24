@@ -358,6 +358,28 @@ export function useTriggerScheduler() {
   });
 }
 
+// ── Toggle pausa di un settore (RPC) ──
+export function useToggleSectorPause() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (sector: string) => {
+      const { data, error } = await (supabase as any).rpc(
+        "toggle_autopilot_sector_pause",
+        { _sector: sector },
+      );
+      if (error) throw error;
+      return data as {
+        success: boolean;
+        sector: string;
+        is_paused: boolean;
+        paused_sectors: string[];
+        error?: string;
+      };
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["autopilot-config"] }),
+  });
+}
+
 // ── Toggle pausa di un singolo canale ──
 export function useToggleChannelPause() {
   const { user } = useAuth();
