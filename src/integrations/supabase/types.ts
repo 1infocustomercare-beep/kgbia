@@ -816,6 +816,7 @@ export type Database = {
           operating_hours: Json
           owner_id: string
           paused_channels: Json | null
+          paused_sectors: Json
           priority_rules: Json
           run_interval_minutes: number
           scans_reset_at: string
@@ -842,6 +843,7 @@ export type Database = {
           operating_hours?: Json
           owner_id: string
           paused_channels?: Json | null
+          paused_sectors?: Json
           priority_rules?: Json
           run_interval_minutes?: number
           scans_reset_at?: string
@@ -868,6 +870,7 @@ export type Database = {
           operating_hours?: Json
           owner_id?: string
           paused_channels?: Json | null
+          paused_sectors?: Json
           priority_rules?: Json
           run_interval_minutes?: number
           scans_reset_at?: string
@@ -8326,6 +8329,10 @@ export type Database = {
         Args: { p_slug: string }
         Returns: undefined
       }
+      is_autopilot_sector_paused: {
+        Args: { _owner_id: string; _sector: string }
+        Returns: boolean
+      }
       is_autopilot_super_admin: { Args: { _user_id: string }; Returns: boolean }
       is_company_member: {
         Args: { _company_id: string; _user_id?: string }
@@ -8405,6 +8412,10 @@ export type Database = {
         Returns: Json
       }
       tick_arianna_continuous: { Args: never; Returns: undefined }
+      toggle_autopilot_sector_pause: {
+        Args: { _sector: string }
+        Returns: Json
+      }
       touch_demo_vault_reuse: {
         Args: { p_lead_name: string; p_vault_id: string }
         Returns: undefined
