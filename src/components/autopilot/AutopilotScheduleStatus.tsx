@@ -29,6 +29,7 @@ import {
   useToggleChannelPause,
 } from "@/hooks/useAutopilot";
 import { toast } from "sonner";
+import { OutreachChannelsLiveMonitor } from "./OutreachChannelsLiveMonitor";
 
 // ── Helpers ──
 function formatRelative(iso: string | null | undefined): string {
@@ -314,6 +315,11 @@ export default function AutopilotScheduleStatus() {
         <p className="text-[9px] text-muted-foreground mt-1.5">
           Attivi: {activeChannels.length}/{enabledChannels.length} · Click per togglare la pausa
         </p>
+
+        {/* Monitor live attività canali (timeline + calendario + edit pre-invio) */}
+        <div className="mt-3">
+          <OutreachChannelsLiveMonitor />
+        </div>
       </div>
 
       {/* Storico ultime esecuzioni */}
