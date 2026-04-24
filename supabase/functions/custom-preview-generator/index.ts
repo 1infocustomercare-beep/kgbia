@@ -36,12 +36,8 @@ interface LeadData {
 
 // ----- AI helpers -----
 async function generateCopy(lovableKey: string, lead: LeadData, scraped: any, style: string): Promise<any> {
-  const styleHints: Record<string, string> = {
-    modern_dark: "tono premium tech, dark mode, pulito",
-    luxury_gold: "tono lussuoso ed elegante, oro su nero",
-    casual_warm: "tono accogliente caldo familiare",
-    minimal_zen: "tono minimal essenziale, molto whitespace",
-  };
+  const preset = getStylePreset(style);
+  const styleHint = preset.copyTone;
   const prompt = `Sei un copywriter senior specializzato in landing page italiane premium per piccole/medie attività.
 Genera contenuti in italiano per la landing page del business "${lead.lead_name}" (settore: ${lead.lead_sector || 'attività'}, città: ${lead.lead_city || 'Italia'}).
 Stile: ${styleHints[style] || 'professionale moderno'}.
