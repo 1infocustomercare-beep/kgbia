@@ -2,7 +2,7 @@
 // Arianna sceglie da sola zone+settori, scansiona, filtra solo lead "caldi"
 // (no sito + no social + rating ≥4.0/20+ rec + settori premium) e impara dai risultati.
 // ZERO selettori manuali: il venditore accende l'interruttore e basta.
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
