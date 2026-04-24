@@ -226,6 +226,8 @@ async function processOwner(
       channels_used: Array.from(channelsUsed),
       errors: errors.slice(0, 5),
       remaining_cap: remaining - advanced,
+      skipped_by_sector: skippedBySector,
+      blocked_sectors: Array.from(blockedSectors),
       duration_ms: Date.now() - startedAt,
     },
   };
