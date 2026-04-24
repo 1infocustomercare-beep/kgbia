@@ -251,11 +251,12 @@ function buildHtml(lead: LeadData, content: any, style: string, color: string, l
 <title>${escapeHtml(lead.lead_name)} — ${escapeHtml(lead.lead_sector || "")}</title>
 <meta name="description" content="${escapeHtml(content.hero_subtitle || lead.lead_name)}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?${preset.fonts.googleFontsQuery}&display=swap" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{font-family:'Inter',sans-serif;background:${t.bg};color:${t.text};line-height:1.6;overflow-x:hidden}
+  body{font-family:'${bodyFont}',sans-serif;background:${t.bg};color:${t.text};line-height:1.6;overflow-x:hidden}
   img{max-width:100%;display:block}
   .container{max-width:1200px;margin:0 auto;padding:0 24px}
 
