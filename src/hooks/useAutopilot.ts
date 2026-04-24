@@ -249,6 +249,17 @@ export function useAutopilotConfig() {
   });
 }
 
+export type LeadPriorityRules = {
+  pain_score_weight: number;
+  roi_potential_weight: number;
+  sector_match_weight: number;
+  recency_weight: number;
+  min_pain_score: number;
+  min_roi_eur_month: number;
+  preferred_sectors: string[];
+  excluded_sectors: string[];
+};
+
 export type AutopilotConfigPatch = {
   is_enabled?: boolean;
   ai_model?: string;
@@ -260,6 +271,9 @@ export type AutopilotConfigPatch = {
   custom_instructions?: string | null;
   operating_hours?: { start: string; end: string; timezone?: string };
   run_interval_minutes?: number;
+  priority_rules?: LeadPriorityRules;
+  max_concurrent_conversations?: number;
+  max_new_conversations_per_run?: number;
 };
 
 export function useUpdateAutopilotConfig() {

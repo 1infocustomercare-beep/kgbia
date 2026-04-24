@@ -810,10 +810,13 @@ export type Database = {
           last_run_at: string | null
           last_run_status: string | null
           last_run_summary: Json | null
+          max_concurrent_conversations: number
+          max_new_conversations_per_run: number
           next_run_at: string | null
           operating_hours: Json
           owner_id: string
           paused_channels: Json | null
+          priority_rules: Json
           run_interval_minutes: number
           scans_reset_at: string
           target_sectors: Json
@@ -833,10 +836,13 @@ export type Database = {
           last_run_at?: string | null
           last_run_status?: string | null
           last_run_summary?: Json | null
+          max_concurrent_conversations?: number
+          max_new_conversations_per_run?: number
           next_run_at?: string | null
           operating_hours?: Json
           owner_id: string
           paused_channels?: Json | null
+          priority_rules?: Json
           run_interval_minutes?: number
           scans_reset_at?: string
           target_sectors?: Json
@@ -856,10 +862,13 @@ export type Database = {
           last_run_at?: string | null
           last_run_status?: string | null
           last_run_summary?: Json | null
+          max_concurrent_conversations?: number
+          max_new_conversations_per_run?: number
           next_run_at?: string | null
           operating_hours?: Json
           owner_id?: string
           paused_channels?: Json | null
+          priority_rules?: Json
           run_interval_minutes?: number
           scans_reset_at?: string
           target_sectors?: Json
