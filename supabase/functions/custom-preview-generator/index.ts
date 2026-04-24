@@ -188,13 +188,22 @@ function escapeHtml(s: string): string {
 }
 
 function buildHtml(lead: LeadData, content: any, style: string, color: string, logoUrl: string | null, heroUrl: string | null, gallery: string[], whatsappMsg: string): string {
-  const themes: Record<string, { bg: string; surface: string; text: string; muted: string; accent: string; cardBg: string }> = {
-    modern_dark: { bg: "#0F172A", surface: "#1E293B", text: "#F8FAFC", muted: "#94A3B8", accent: color, cardBg: "rgba(255,255,255,0.04)" },
-    luxury_gold: { bg: "#0D0A06", surface: "#1A1410", text: "#F5E6C8", muted: "#A89070", accent: color, cardBg: "rgba(212,175,55,0.06)" },
-    casual_warm: { bg: "#FAF6F0", surface: "#FFFFFF", text: "#3D2C1E", muted: "#8B7355", accent: color, cardBg: "#FFF8EE" },
-    minimal_zen: { bg: "#F8F8F8", surface: "#FFFFFF", text: "#1A1A1A", muted: "#666666", accent: color, cardBg: "#FAFAFA" },
+  // Mappa legacy keys → nuovi preset Lowengeld-inspired
+  const legacyMap: Record<string, string> = {
+    modern_dark: "cote_obsidian",
+    luxury_gold: "noir_saigon",
+    casual_warm: "maple_gold",
+    minimal_zen: "eleganza_milanese",
   };
-  const t = themes[style] || themes.modern_dark;
+  const presetKey = legacyMap[style] || style;
+  const preset = getStylePreset(presetKey);
+  // Accent color override (l'utente può ancora personalizzare il colore primario)
+  const accent = color && /^#[0-9A-Fa-f]{6}$/.test(color) ? color : preset.palette.accent;
+  const t = { ...preset.palette, accent };
+  const headingFont = preset.fonts.heading;
+  const bodyFont = preset.fonts.body;
+  const radius = preset.radius;
+  const heroShadow = shadowCss(preset.shadow);
 
   const waNumber = (lead.lead_phone || "").replace(/\D/g, "");
   const waLink = waNumber ? `https://wa.me/${waNumber.startsWith("39") ? waNumber : "39" + waNumber}?text=${encodeURIComponent(whatsappMsg)}` : "#";
