@@ -1014,6 +1014,78 @@ export type Database = {
           },
         ]
       }
+      autopilot_retry_queue: {
+        Row: {
+          abandoned_at: string | null
+          attempt_count: number
+          backoff_seconds: number
+          created_at: string
+          id: string
+          last_attempt_at: string | null
+          last_error: string | null
+          last_error_code: string | null
+          max_attempts: number
+          metadata: Json
+          next_retry_at: string
+          owner_id: string
+          payload: Json
+          priority: number
+          source_function: string | null
+          status: string
+          step_type: string
+          succeeded_at: string | null
+          target_id: string | null
+          target_table: string | null
+          updated_at: string
+        }
+        Insert: {
+          abandoned_at?: string | null
+          attempt_count?: number
+          backoff_seconds?: number
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          last_error?: string | null
+          last_error_code?: string | null
+          max_attempts?: number
+          metadata?: Json
+          next_retry_at?: string
+          owner_id: string
+          payload?: Json
+          priority?: number
+          source_function?: string | null
+          status?: string
+          step_type: string
+          succeeded_at?: string | null
+          target_id?: string | null
+          target_table?: string | null
+          updated_at?: string
+        }
+        Update: {
+          abandoned_at?: string | null
+          attempt_count?: number
+          backoff_seconds?: number
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          last_error?: string | null
+          last_error_code?: string | null
+          max_attempts?: number
+          metadata?: Json
+          next_retry_at?: string
+          owner_id?: string
+          payload?: Json
+          priority?: number
+          source_function?: string | null
+          status?: string
+          step_type?: string
+          succeeded_at?: string | null
+          target_id?: string | null
+          target_table?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       autopilot_scheduler_runs: {
         Row: {
           channels_used: Json
@@ -8177,6 +8249,21 @@ export type Database = {
         Args: { p_action: string; p_metadata?: Json; p_user_id: string }
         Returns: Json
       }
+      enqueue_autopilot_retry: {
+        Args: {
+          p_error?: string
+          p_error_code?: string
+          p_max_attempts?: number
+          p_owner_id: string
+          p_payload?: Json
+          p_priority?: number
+          p_source?: string
+          p_step_type: string
+          p_target_id: string
+          p_target_table: string
+        }
+        Returns: string
+      }
       get_pain_scan_cached: {
         Args: { _domain_hash: string; _owner_id: string }
         Returns: {
@@ -8281,6 +8368,10 @@ export type Database = {
           p_touch_id?: string
         }
         Returns: string
+      }
+      mark_autopilot_retry_success: {
+        Args: { p_id: string }
+        Returns: undefined
       }
       mark_stripe_event_processed: {
         Args: { p_error?: string; p_event_id: string; p_status?: string }
