@@ -13,6 +13,7 @@
 // Output: { success, preview_id, public_url, ai_content, hero_image_url }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { getStylePreset, shadowCss, type MockupStylePreset } from "../_shared/mockup-style-presets.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
