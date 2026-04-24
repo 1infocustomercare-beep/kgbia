@@ -44,6 +44,7 @@ import {
   useUpdateAutopilotConfig,
   useResetDailyScanCounter,
   type AutopilotConfigPatch,
+  type LeadPriorityRules,
 } from "@/hooks/useAutopilot";
 
 // ── Costanti UI ──
