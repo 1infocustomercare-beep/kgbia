@@ -248,3 +248,58 @@ export function useAutopilotConfig() {
     },
   });
 }
+
+export type AutopilotConfigPatch = {
+  is_enabled?: boolean;
+  ai_model?: string;
+  autonomy_level?: "conservative" | "balanced" | "aggressive" | "full_auto";
+  daily_scan_cap?: number;
+  enabled_channels?: string[];
+  target_sectors?: string[];
+  custom_instructions?: string | null;
+  operating_hours?: { start: string; end: string; timezone?: string };
+};
+
+export function useUpdateAutopilotConfig() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (patch: AutopilotConfigPatch) => {
+      if (!user) throw new Error("not_authenticated");
+      // Upsert: garantisce la riga anche al primo salvataggio
+      const { data, error } = await from("autopilot_config")
+        .upsert(
+          { owner_id: user.id, ...patch, updated_at: new Date().toISOString() },
+          { onConflict: "owner_id" },
+        )
+        .select()
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["autopilot-config"] });
+    },
+  });
+}
+
+export function useResetDailyScanCounter() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("not_authenticated");
+      const { error } = await from("autopilot_config")
+        .update({
+          daily_scans_used: 0,
+          scans_reset_at: new Date(
+            new Date().setHours(24, 0, 0, 0),
+          ).toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("owner_id", user.id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["autopilot-config"] }),
+  });
+}
