@@ -131,6 +131,27 @@ export default function AutopilotConfigDialog({ open, onOpenChange }: Props) {
   const [hoursEnd, setHoursEnd] = useState("19:00");
   const [instructions, setInstructions] = useState("");
 
+  // Regole priorità lead + concorrenza conversazioni
+  const DEFAULT_RULES: LeadPriorityRules = {
+    pain_score_weight: 40,
+    roi_potential_weight: 35,
+    sector_match_weight: 15,
+    recency_weight: 10,
+    min_pain_score: 50,
+    min_roi_eur_month: 0,
+    preferred_sectors: [],
+    excluded_sectors: [],
+  };
+  const [priorityRules, setPriorityRules] = useState<LeadPriorityRules>(DEFAULT_RULES);
+  const [maxConcurrent, setMaxConcurrent] = useState(5);
+  const [maxNewPerRun, setMaxNewPerRun] = useState(3);
+
+  const totalWeight =
+    priorityRules.pain_score_weight +
+    priorityRules.roi_potential_weight +
+    priorityRules.sector_match_weight +
+    priorityRules.recency_weight;
+
   // Hydrate form quando arrivano i dati
   useEffect(() => {
     if (!cfg) return;
