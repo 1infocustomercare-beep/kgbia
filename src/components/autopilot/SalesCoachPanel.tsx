@@ -13,7 +13,8 @@ import {
 
 export default function SalesCoachPanel() {
   const { data: insights = [], isLoading } = useSalesCoachInsights();
-  const { data: me } = useMyLeaderboardRow();
+  const { data: meRaw } = useMyLeaderboardRow();
+  const me = meRaw as any;
   const refreshStats = useRefreshSalesStats();
   const genInsight = useGenerateCoachInsight();
 

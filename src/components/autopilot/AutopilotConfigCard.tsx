@@ -5,7 +5,8 @@ import { Settings, Zap, Shield } from "lucide-react";
 import { useAutopilotConfig } from "@/hooks/useAutopilot";
 
 export default function AutopilotConfigCard() {
-  const { data: cfg } = useAutopilotConfig();
+  const { data } = useAutopilotConfig();
+  const cfg = data as any;
 
   const used = cfg?.daily_scans_used || 0;
   const cap = cfg?.daily_scan_cap || 100;

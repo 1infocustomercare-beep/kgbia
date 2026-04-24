@@ -8,8 +8,10 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function AutopilotLeaderboard() {
   const { user } = useAuth();
-  const { data: rows = [], isLoading } = useGlobalLeaderboard();
-  const { data: me } = useMyLeaderboardRow();
+  const { data: rowsRaw = [], isLoading } = useGlobalLeaderboard();
+  const { data: meRaw } = useMyLeaderboardRow();
+  const rows = rowsRaw as any[];
+  const me = meRaw as any;
 
   const podium = (i: number) =>
     i === 0 ? <Crown className="w-4 h-4 text-amber-400" /> :
