@@ -104,12 +104,7 @@ Restituisci SOLO un JSON valido con questa struttura ESATTA:
 }
 
 async function generateHeroImage(lovableKey: string, lead: LeadData, style: string, color: string): Promise<string | null> {
-  const styleDesc: Record<string, string> = {
-    modern_dark: "fotografia cinematografica dark moody, illuminazione cinematica, dettagli premium",
-    luxury_gold: "fotografia luxury editoriale, oro caldo, atmosfera elegante alta qualità",
-    casual_warm: "fotografia naturale calda accogliente, luce dorata morbida, stile lifestyle",
-    minimal_zen: "fotografia minimal pulita, sfondo bianco/beige, composizione zen",
-  };
+  const preset = getStylePreset(style);
   const sectorScene: Record<string, string> = {
     tatuatore: "studio di tatuaggi professionale con poltrona moderna e attrezzatura sterile",
     fiorista: "negozio di fiori elegante con composizioni floreali eleganti",
@@ -120,9 +115,16 @@ async function generateHeroImage(lovableKey: string, lead: LeadData, style: stri
     ristorante: "interno ristorante elegante apparecchiato",
     bar: "bancone bar premium illuminazione calda bottiglie premium",
     pizzeria: "forno pizza a legna acceso con pizza appena sfornata",
+    sushi: "bancone sushi con itamae al lavoro, pesce premium su ghiaccio",
+    nails: "salone nail premium con tavoli marmo, dettagli ottone, luce diffusa",
+    immobiliare: "interno appartamento di pregio con luce naturale e design d'autore",
+    yacht: "yacht luxury ormeggiato in marina mediterranea, golden hour",
+    medico: "studio medico premium pulito, luce brillante, fiducia",
+    asilo: "ambiente kids accogliente con elementi naturali warm",
   };
   const sector = (lead.lead_sector || "").toLowerCase();
-  const scene = Object.keys(sectorScene).find(k => sector.includes(k)) ? sectorScene[Object.keys(sectorScene).find(k => sector.includes(k))!] : `attività ${lead.lead_sector || 'commerciale'} interno premium professionale`;
+  const matchedKey = Object.keys(sectorScene).find(k => sector.includes(k));
+  const scene = matchedKey ? sectorScene[matchedKey] : `attività ${lead.lead_sector || 'commerciale'} interno premium professionale`;
 
   const prompt = `Hero image fotorealistica per landing page premium di "${lead.lead_name}" a ${lead.lead_city || 'Italia'}. Scena: ${scene}. ${styleDesc[style] || ''}. Accent color ${color}. Composizione orizzontale 16:9, alta qualità editoriale, NO testo nell'immagine, NO loghi, NO watermark. Fotografia professionale.`;
 
