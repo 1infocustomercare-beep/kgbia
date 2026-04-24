@@ -268,7 +268,7 @@ export type AutopilotConfigPatch = {
   enabled_channels?: string[];
   paused_channels?: string[];
   target_sectors?: string[];
-  custom_instructions?: string | null;
+  paused_sectors?: string[];
   operating_hours?: { start: string; end: string; timezone?: string };
   run_interval_minutes?: number;
   priority_rules?: LeadPriorityRules;
