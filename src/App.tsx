@@ -183,6 +183,7 @@ const PartnerPortfolioPage = lazy(() => import("./pages/partner/PartnerPortfolio
 const PartnerProfilePage = lazy(() => import("./pages/partner/PartnerProfilePage"));
 const PartnerApiConnectionsPage = lazy(() => import("./pages/partner/PartnerApiConnectionsPage"));
 const PartnerCustomPreviewPage = lazy(() => import("./pages/partner/PartnerCustomPreviewPage"));
+const PartnerAutopilotPage = lazy(() => import("./pages/partner/PartnerAutopilotPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const JoinPartnerPage = lazy(() => import("./pages/JoinPartnerPage"));
 const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
@@ -708,6 +709,7 @@ function App() {
                         <Route path="demo-studio" element={<Navigate to="/partner/portfolio" replace />} />
                         <Route path="api-connections" element={<PartnerApiConnectionsPage />} />
                         <Route path="custom-preview" element={<PartnerCustomPreviewPage />} />
+                        <Route path="autopilot" element={<PartnerAutopilotPage />} />
                         <Route path="earnings" element={<PartnerEarningsPage />} />
                         <Route path="portfolio" element={<PartnerPortfolioPage />} />
                         <Route path="profile" element={<PartnerProfilePage />} />

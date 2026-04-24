@@ -6,7 +6,7 @@ import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   LayoutDashboard, Target, DollarSign, FolderOpen, User, LogOut, ArrowLeft,
-  Eye, Presentation, Zap, Palette, MoreHorizontal, Wand2, Sparkles,
+  Eye, Presentation, Zap, Palette, MoreHorizontal, Wand2, Sparkles, Bot,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import PartnerSplashScreen from "@/components/partner/PartnerSplashScreen";
@@ -52,7 +52,8 @@ type NavItem = {
 const NAV_ITEMS_FULL: NavItem[] = [
   { path: "/partner",                icon: LayoutDashboard, label: "Home",        exact: true, showInDemo: true,  primary: true  },
   { path: "/partner/leads",          icon: Target,          label: "Lead+Demo",                showInDemo: false, primary: true  },
-  { path: "/partner/custom-preview", icon: Palette,         label: "Mockup",                   showInDemo: false, primary: true  },
+  { path: "/partner/autopilot",      icon: Bot,             label: "Autopilot",                showInDemo: false, primary: true  },
+  { path: "/partner/custom-preview", icon: Palette,         label: "Mockup",                   showInDemo: false, primary: false },
   { path: "/partner/earnings",       icon: DollarSign,      label: "Guadagni",                 showInDemo: false, primary: true  },
   { path: "/partner/portfolio",      icon: FolderOpen,      label: "Vetrina",                  showInDemo: true,  primary: false },
   { path: "/partner/profile",        icon: User,            label: "Profilo",                  showInDemo: false, primary: false },
