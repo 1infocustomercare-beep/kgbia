@@ -382,7 +382,45 @@ ISTRUZIONI:
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Unknown error";
     console.error("autopilot-pain-detector error:", msg);
-    return new Response(JSON.stringify({ error: msg }), {
+
+    // Enqueue retry on failure (best-effort, non-blocking)
+    try {
+      const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+      const authHeader = req.headers.get("Authorization");
+      let ownerId: string | null = null;
+      let payload: Record<string, unknown> = {};
+      try {
+        const userClient = createClient(
+          SUPABASE_URL,
+          Deno.env.get("SUPABASE_ANON_KEY")!,
+          { global: { headers: { Authorization: authHeader || "" } } },
+        );
+        const { data: u } = await userClient.auth.getUser();
+        ownerId = u?.user?.id ?? null;
+      } catch (_) { /* ignore */ }
+      try {
+        payload = await req.clone().json();
+      } catch (_) { /* ignore */ }
+
+      if (ownerId) {
+        await supabaseAdmin.rpc("enqueue_autopilot_retry", {
+          p_owner_id: ownerId,
+          p_step_type: "pain_scan",
+          p_target_id: (payload as any)?.lead_id ?? null,
+          p_target_table: "leads",
+          p_payload: payload,
+          p_error: msg,
+          p_error_code: "pain_detector_failure",
+          p_source: "autopilot-pain-detector",
+          p_priority: 5,
+          p_max_attempts: 5,
+        });
+      }
+    } catch (enqueueErr) {
+      console.error("[pain-detector] enqueue retry failed:", enqueueErr);
+    }
+
+    return new Response(JSON.stringify({ error: msg, retry_scheduled: true }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
