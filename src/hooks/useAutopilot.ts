@@ -305,3 +305,68 @@ export function useResetDailyScanCounter() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["autopilot-config"] }),
   });
 }
+
+// ── Scheduler runs (storico esecuzioni) ──
+export function useAutopilotSchedulerRuns(limit = 10) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["autopilot-scheduler-runs", user?.id, limit],
+    enabled: !!user,
+    refetchInterval: 30_000, // refresh ogni 30s
+    queryFn: async () => {
+      const { data, error } = await from("autopilot_scheduler_runs")
+        .select("*")
+        .eq("owner_id", user!.id)
+        .order("triggered_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data || [];
+    },
+  });
+}
+
+// ── Trigger manuale dello scheduler (forza una run) ──
+export function useTriggerScheduler() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke(
+        "autopilot-scheduler",
+        { body: { triggered_at: new Date().toISOString(), manual: true } },
+      );
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["autopilot-config"] });
+      qc.invalidateQueries({ queryKey: ["autopilot-scheduler-runs"] });
+    },
+  });
+}
+
+// ── Toggle pausa di un singolo canale ──
+export function useToggleChannelPause() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (channel: string) => {
+      if (!user) throw new Error("not_authenticated");
+      const { data: cfg } = await from("autopilot_config")
+        .select("paused_channels")
+        .eq("owner_id", user.id)
+        .maybeSingle();
+      const current: string[] = Array.isArray((cfg as any)?.paused_channels)
+        ? (cfg as any).paused_channels
+        : [];
+      const next = current.includes(channel)
+        ? current.filter((c) => c !== channel)
+        : [...current, channel];
+      const { error } = await from("autopilot_config")
+        .update({ paused_channels: next, updated_at: new Date().toISOString() })
+        .eq("owner_id", user.id);
+      if (error) throw error;
+      return next;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["autopilot-config"] }),
+  });
+}
