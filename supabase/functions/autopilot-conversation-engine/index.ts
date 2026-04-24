@@ -183,6 +183,28 @@ serve(async (req) => {
         sector,
       } = body;
 
+      // ── Guard: blocca outreach su settori in pausa o esclusi ──
+      if (sector) {
+        const { data: paused } = await supabase.rpc(
+          "is_autopilot_sector_paused",
+          { _owner_id: user.id, _sector: sector },
+        );
+        if (paused === true) {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: "sector_paused",
+              message: `Settore "${sector}" attualmente in pausa o escluso dall'autopilot`,
+              sector,
+            }),
+            {
+              status: 409,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            },
+          );
+        }
+      }
+
       const { data: scan } = pain_scan_id
         ? await supabase.from("pain_scans").select("*").eq(
           "id",
