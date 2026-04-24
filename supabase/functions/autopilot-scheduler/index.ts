@@ -152,45 +152,31 @@ async function processOwner(
     };
   }
 
-  // 6) ESECUZIONE — Trova fino a 3 conversazioni "hot" da far avanzare
-  // (limita per non saturare il cap in una run)
-  const batchSize = Math.min(3, remaining);
+  // 6) ESECUZIONE — orchestrazione completa
+  // 6a) Avanza conversazioni "hot"  6b) Avvia nuove conversazioni dai lead nuovi (Pain → ROI → start)
   const blockedSectors = buildBlockedSectorSet(cfg);
+  const batchSize = Math.min(3, remaining);
+  const maxConcurrent = Number((cfg as any).max_concurrent_conversations ?? 25);
+  const maxNewPerRun = Number((cfg as any).max_new_conversations_per_run ?? 2);
 
-  // Carichiamo qualche convo in più per poi filtrare i settori bloccati
+  // ── 6a) Conversazioni hot ──
   const fetchSize = Math.min(batchSize * 4, 20);
   const { data: hotConvosRaw } = await supa
     .from("autopilot_conversations")
     .select("id, channel, funnel_stage, last_ai_message_at, shared_context")
     .eq("owner_id", owner_id)
     .eq("status", "active")
-    .in("funnel_stage", ["pain_validated", "roi_pitched", "negotiating"])
+    .in("funnel_stage", ["pain_validated", "roi_pitched", "negotiating", "discovery", "qualification", "presentation", "negotiation"])
     .in("channel", activeChannels)
     .order("updated_at", { ascending: true })
     .limit(fetchSize);
 
-  // Filtra i settori in pausa o esclusi
   let skippedBySector = 0;
   const hotConvos = (hotConvosRaw || []).filter((c: any) => {
     const sec = normalizeSector(c?.shared_context?.sector);
-    if (sec && blockedSectors.has(sec)) {
-      skippedBySector++;
-      return false;
-    }
+    if (sec && blockedSectors.has(sec)) { skippedBySector++; return false; }
     return true;
   }).slice(0, batchSize);
-
-  if ((hotConvosRaw?.length ?? 0) > 0 && hotConvos.length === 0) {
-    return {
-      status: "skipped",
-      skip_reason: "all_sectors_paused",
-      metadata: {
-        candidates: hotConvosRaw?.length ?? 0,
-        blocked_sectors: Array.from(blockedSectors),
-        skipped_by_sector: skippedBySector,
-      },
-    };
-  }
 
   let advanced = 0;
   const channelsUsed = new Set<string>();
@@ -202,32 +188,205 @@ async function processOwner(
         "autopilot-conversation-engine",
         {
           body: {
-            action: "advance_conversation",
+            action: "generate_followup",
             conversation_id: convo.id,
             triggered_by: "scheduler",
           },
         },
       );
-      if (error) {
-        errors.push(`${convo.id}: ${error.message}`);
-      } else {
-        advanced++;
-        channelsUsed.add(convo.channel);
-      }
+      if (error) errors.push(`adv ${convo.id}: ${error.message}`);
+      else { advanced++; channelsUsed.add(convo.channel); }
     } catch (e) {
-      errors.push(`${convo.id}: ${(e as Error).message}`);
+      errors.push(`adv ${convo.id}: ${(e as Error).message}`);
+    }
+  }
+
+  // ── 6b) Intake nuovi lead (Pain Scan → ROI → start_conversation) ──
+  // Conta conversazioni attive per non superare max_concurrent
+  const { count: activeCount } = await supa
+    .from("autopilot_conversations")
+    .select("id", { count: "exact", head: true })
+    .eq("owner_id", owner_id)
+    .eq("status", "active");
+
+  const concurrencySlots = Math.max(0, maxConcurrent - (activeCount ?? 0));
+  const newSlots = Math.min(maxNewPerRun, concurrencySlots, Math.max(0, remaining - advanced));
+
+  let newConversationsStarted = 0;
+  let painScansRun = 0;
+  let leadsConsidered = 0;
+  let leadsSkippedBlocked = 0;
+  let leadsSkippedNoSite = 0;
+  let leadsSkippedAlreadyConv = 0;
+
+  if (newSlots > 0) {
+    // Prendi lead "new" o "contacted" senza conversazione, ordinati per ai_score
+    const { data: candidateLeads } = await supa
+      .from("leads")
+      .select("id, name, sector, website, email, phone, ai_score, status")
+      .eq("owner_id", owner_id)
+      .in("status", ["new", "contacted"])
+      .not("website", "is", null)
+      .order("ai_score", { ascending: false, nullsFirst: false })
+      .limit(newSlots * 6);
+
+    for (const lead of candidateLeads || []) {
+      if (newConversationsStarted >= newSlots) break;
+      leadsConsidered++;
+
+      // Filtra settori bloccati
+      const sec = normalizeSector(lead.sector);
+      if (sec && blockedSectors.has(sec)) { leadsSkippedBlocked++; continue; }
+      if (!lead.website || String(lead.website).trim() === "") { leadsSkippedNoSite++; continue; }
+
+      // Skip se ha già una conversazione attiva
+      const { count: existingConv } = await supa
+        .from("autopilot_conversations")
+        .select("id", { count: "exact", head: true })
+        .eq("owner_id", owner_id)
+        .eq("lead_id", lead.id)
+        .eq("status", "active");
+      if ((existingConv ?? 0) > 0) { leadsSkippedAlreadyConv++; continue; }
+
+      try {
+        // 1) Pain Scan (usa cache se disponibile)
+        let scanData: any = null;
+        let roiData: any = null;
+
+        const { data: existingScan } = await supa
+          .from("pain_scans")
+          .select("*")
+          .eq("owner_id", owner_id)
+          .eq("lead_id", lead.id)
+          .eq("status", "completed")
+          .gt("expires_at", new Date().toISOString())
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (existingScan) {
+          scanData = existingScan;
+          const { data: existingRoi } = await supa
+            .from("roi_calculations")
+            .select("*")
+            .eq("pain_scan_id", existingScan.id)
+            .maybeSingle();
+          roiData = existingRoi;
+        } else {
+          // Invoca Pain Detector con header service-role per bypass auth
+          const painResp = await fetch(
+            `${SUPABASE_URL}/functions/v1/autopilot-pain-detector`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${SERVICE_KEY}`,
+                "x-autopilot-impersonate": owner_id,
+              },
+              body: JSON.stringify({
+                url: lead.website,
+                lead_id: lead.id,
+                sector: lead.sector,
+              }),
+            },
+          );
+          if (!painResp.ok) {
+            const txt = await painResp.text();
+            errors.push(`pain ${lead.id}: ${painResp.status} ${txt.slice(0, 120)}`);
+            // enqueue retry
+            await supa.rpc("enqueue_autopilot_retry", {
+              p_owner_id: owner_id,
+              p_step_type: "pain_scan",
+              p_target_id: lead.id,
+              p_target_table: "leads",
+              p_payload: { url: lead.website, sector: lead.sector },
+              p_error: `${painResp.status} ${txt.slice(0, 200)}`,
+              p_error_code: String(painResp.status),
+              p_source: "autopilot-scheduler",
+            }).then(() => {}, () => {});
+            continue;
+          }
+          const painJson = await painResp.json();
+          scanData = painJson.scan;
+          roiData = painJson.roi;
+          painScansRun++;
+        }
+
+        // 2) Start conversation (channel preferito tra quelli attivi)
+        const channel = activeChannels.includes("chat")
+          ? "chat"
+          : activeChannels.includes("email")
+            ? "email"
+            : activeChannels[0];
+
+        const startResp = await fetch(
+          `${SUPABASE_URL}/functions/v1/autopilot-conversation-engine`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${SERVICE_KEY}`,
+              "x-autopilot-impersonate": owner_id,
+            },
+            body: JSON.stringify({
+              action: "start_conversation",
+              lead_id: lead.id,
+              pain_scan_id: scanData?.id,
+              roi_calculation_id: roiData?.id,
+              channel,
+              contact_name: lead.name,
+              contact_phone: lead.phone,
+              contact_email: lead.email,
+              sector: lead.sector,
+              owner_id_override: owner_id,
+            }),
+          },
+        );
+        if (!startResp.ok) {
+          const txt = await startResp.text();
+          errors.push(`start ${lead.id}: ${startResp.status} ${txt.slice(0, 120)}`);
+          await supa.rpc("enqueue_autopilot_retry", {
+            p_owner_id: owner_id,
+            p_step_type: "start_conversation",
+            p_target_id: lead.id,
+            p_target_table: "leads",
+            p_payload: { pain_scan_id: scanData?.id, roi_calculation_id: roiData?.id, channel },
+            p_error: `${startResp.status} ${txt.slice(0, 200)}`,
+            p_error_code: String(startResp.status),
+            p_source: "autopilot-scheduler",
+          }).then(() => {}, () => {});
+          continue;
+        }
+        await startResp.json().catch(() => null);
+        newConversationsStarted++;
+        channelsUsed.add(channel);
+
+        // marca lead come "contacted"
+        await supa.from("leads").update({ status: "contacted" }).eq("id", lead.id);
+      } catch (e) {
+        errors.push(`intake ${lead.id}: ${(e as Error).message}`);
+      }
     }
   }
 
   return {
-    status: errors.length > 0 && advanced === 0 ? "failed" : "completed",
+    status: errors.length > 0 && advanced === 0 && newConversationsStarted === 0 ? "failed" : "completed",
     metadata: {
       conversations_advanced: advanced,
+      new_conversations_started: newConversationsStarted,
+      pain_scans_run: painScansRun,
       channels_used: Array.from(channelsUsed),
-      errors: errors.slice(0, 5),
-      remaining_cap: remaining - advanced,
+      errors: errors.slice(0, 8),
+      remaining_cap: remaining - advanced - painScansRun,
       skipped_by_sector: skippedBySector,
       blocked_sectors: Array.from(blockedSectors),
+      intake: {
+        slots: newSlots,
+        considered: leadsConsidered,
+        skipped_blocked_sector: leadsSkippedBlocked,
+        skipped_no_site: leadsSkippedNoSite,
+        skipped_existing_conv: leadsSkippedAlreadyConv,
+      },
       duration_ms: Date.now() - startedAt,
     },
   };
