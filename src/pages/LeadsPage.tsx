@@ -3176,7 +3176,7 @@ export default function LeadsPage() {
       {/* Empty state */}
       {results.length === 0 && !loading && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          className="text-center py-10 font-mono font-normal text-primary-foreground rounded-2xl shadow-premium border-accent bg-[empire-violet-glow] bg-destructive-foreground">
+          className="text-center py-10">
           
           {/* Animated scanning icon */}
           <div className="relative w-16 h-16 mx-auto mb-4 rounded-md shadow-premium">
