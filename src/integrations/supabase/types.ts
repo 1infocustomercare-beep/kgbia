@@ -807,10 +807,17 @@ export type Database = {
           enabled_channels: Json
           id: string
           is_enabled: boolean
+          last_run_at: string | null
+          last_run_status: string | null
+          last_run_summary: Json | null
+          next_run_at: string | null
           operating_hours: Json
           owner_id: string
+          paused_channels: Json | null
+          run_interval_minutes: number
           scans_reset_at: string
           target_sectors: Json
+          total_runs: number
           updated_at: string
         }
         Insert: {
@@ -823,10 +830,17 @@ export type Database = {
           enabled_channels?: Json
           id?: string
           is_enabled?: boolean
+          last_run_at?: string | null
+          last_run_status?: string | null
+          last_run_summary?: Json | null
+          next_run_at?: string | null
           operating_hours?: Json
           owner_id: string
+          paused_channels?: Json | null
+          run_interval_minutes?: number
           scans_reset_at?: string
           target_sectors?: Json
+          total_runs?: number
           updated_at?: string
         }
         Update: {
@@ -839,10 +853,17 @@ export type Database = {
           enabled_channels?: Json
           id?: string
           is_enabled?: boolean
+          last_run_at?: string | null
+          last_run_status?: string | null
+          last_run_summary?: Json | null
+          next_run_at?: string | null
           operating_hours?: Json
           owner_id?: string
+          paused_channels?: Json | null
+          run_interval_minutes?: number
           scans_reset_at?: string
           target_sectors?: Json
+          total_runs?: number
           updated_at?: string
         }
         Relationships: []
@@ -983,6 +1004,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      autopilot_scheduler_runs: {
+        Row: {
+          channels_used: Json
+          conversations_advanced: number
+          duration_ms: number | null
+          error_message: string | null
+          finished_at: string | null
+          id: string
+          metadata: Json
+          owner_id: string
+          scans_executed: number
+          skip_reason: string | null
+          status: string
+          triggered_at: string
+        }
+        Insert: {
+          channels_used?: Json
+          conversations_advanced?: number
+          duration_ms?: number | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          metadata?: Json
+          owner_id: string
+          scans_executed?: number
+          skip_reason?: string | null
+          status?: string
+          triggered_at?: string
+        }
+        Update: {
+          channels_used?: Json
+          conversations_advanced?: number
+          duration_ms?: number | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          metadata?: Json
+          owner_id?: string
+          scans_executed?: number
+          skip_reason?: string | null
+          status?: string
+          triggered_at?: string
+        }
+        Relationships: []
       }
       b2b_invoices: {
         Row: {
