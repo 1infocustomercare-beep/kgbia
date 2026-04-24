@@ -462,6 +462,192 @@ export default function AutopilotConfigDialog({ open, onOpenChange }: Props) {
                 {instructions.length}/1000
               </p>
             </section>
+
+            {/* ── Regole di priorità lead ── */}
+            <section className="space-y-3 p-4 rounded-xl border border-border bg-card">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <Target className="w-4 h-4 text-primary" /> Regole di priorità lead
+                </Label>
+                <Badge
+                  variant={totalWeight === 100 ? "outline" : "destructive"}
+                  className="font-mono text-[10px]"
+                >
+                  Pesi: {totalWeight} / 100
+                </Badge>
+              </div>
+              <p className="text-[11px] text-muted-foreground -mt-1">
+                Arianna ordina i lead in base a un punteggio composto. I pesi vengono normalizzati automaticamente.
+              </p>
+
+              {/* Pesi */}
+              <div className="space-y-3">
+                {[
+                  { key: "pain_score_weight" as const, label: "🔥 Pain score (problemi rilevati)", color: "text-rose-500" },
+                  { key: "roi_potential_weight" as const, label: "💰 ROI potenziale stimato", color: "text-emerald-500" },
+                  { key: "sector_match_weight" as const, label: "🎯 Match settore preferito", color: "text-blue-500" },
+                  { key: "recency_weight" as const, label: "⚡ Lead recenti (ultimi 7 giorni)", color: "text-amber-500" },
+                ].map((row) => (
+                  <div key={row.key} className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <Label className={`text-xs ${row.color}`}>{row.label}</Label>
+                      <span className="text-xs font-bold tabular-nums text-foreground">
+                        {priorityRules[row.key]}%
+                      </span>
+                    </div>
+                    <Slider
+                      value={[priorityRules[row.key]]}
+                      min={0}
+                      max={100}
+                      step={5}
+                      onValueChange={(v) =>
+                        setPriorityRules({ ...priorityRules, [row.key]: v[0] })
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Soglie minime */}
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border/50">
+                <div className="space-y-1">
+                  <Label className="text-[11px] text-muted-foreground">Pain score minimo</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    value={priorityRules.min_pain_score}
+                    onChange={(e) =>
+                      setPriorityRules({
+                        ...priorityRules,
+                        min_pain_score: Math.max(0, Math.min(100, Number(e.target.value) || 0)),
+                      })
+                    }
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-[11px] text-muted-foreground">ROI mensile min (€)</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    value={priorityRules.min_roi_eur_month}
+                    onChange={(e) =>
+                      setPriorityRules({
+                        ...priorityRules,
+                        min_roi_eur_month: Math.max(0, Number(e.target.value) || 0),
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Settori preferiti / esclusi */}
+              <div className="space-y-2 pt-2 border-t border-border/50">
+                <Label className="text-[11px] text-muted-foreground">
+                  ⭐ Settori preferiti (boost score)
+                </Label>
+                <div className="flex flex-wrap gap-1.5">
+                  {SECTORS.map((s) => {
+                    const active = priorityRules.preferred_sectors.includes(s);
+                    return (
+                      <button
+                        key={`pref-${s}`}
+                        type="button"
+                        onClick={() => {
+                          const next = active
+                            ? priorityRules.preferred_sectors.filter((x) => x !== s)
+                            : [...priorityRules.preferred_sectors, s];
+                          setPriorityRules({ ...priorityRules, preferred_sectors: next });
+                        }}
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-all ${
+                          active
+                            ? "border-emerald-500 bg-emerald-500/10 text-emerald-500"
+                            : "border-border bg-card text-muted-foreground hover:border-emerald-500/40"
+                        }`}
+                      >
+                        {s.replace(/_/g, " ")}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <Label className="text-[11px] text-muted-foreground pt-1 block">
+                  🚫 Settori esclusi (mai contattati)
+                </Label>
+                <div className="flex flex-wrap gap-1.5">
+                  {SECTORS.map((s) => {
+                    const active = priorityRules.excluded_sectors.includes(s);
+                    return (
+                      <button
+                        key={`excl-${s}`}
+                        type="button"
+                        onClick={() => {
+                          const next = active
+                            ? priorityRules.excluded_sectors.filter((x) => x !== s)
+                            : [...priorityRules.excluded_sectors, s];
+                          setPriorityRules({ ...priorityRules, excluded_sectors: next });
+                        }}
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-all ${
+                          active
+                            ? "border-destructive bg-destructive/10 text-destructive"
+                            : "border-border bg-card text-muted-foreground hover:border-destructive/40"
+                        }`}
+                      >
+                        {s.replace(/_/g, " ")}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+
+            {/* ── Concorrenza conversazioni ── */}
+            <section className="space-y-3 p-4 rounded-xl border border-border bg-card">
+              <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <Users className="w-4 h-4 text-primary" /> Concorrenza conversazioni
+              </Label>
+              <p className="text-[11px] text-muted-foreground -mt-1">
+                Quanti lead Arianna può seguire in parallelo e quanti nuovi ne può aprire ad ogni ciclo.
+              </p>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs">Conversazioni attive max</Label>
+                  <span className="text-xs font-bold tabular-nums text-foreground">
+                    {maxConcurrent}
+                  </span>
+                </div>
+                <Slider
+                  value={[maxConcurrent]}
+                  min={1}
+                  max={50}
+                  step={1}
+                  onValueChange={(v) => setMaxConcurrent(v[0])}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Se raggiunto, Arianna mette in coda i nuovi lead invece di aprirli.
+                </p>
+              </div>
+
+              <div className="space-y-2 pt-2 border-t border-border/50">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs">Nuove conversazioni per ciclo</Label>
+                  <span className="text-xs font-bold tabular-nums text-foreground">
+                    {maxNewPerRun}
+                  </span>
+                </div>
+                <Slider
+                  value={[maxNewPerRun]}
+                  min={1}
+                  max={20}
+                  step={1}
+                  onValueChange={(v) => setMaxNewPerRun(v[0])}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Limita il burst per non saturare i canali e rispettare il tono umano.
+                </p>
+              </div>
+            </section>
           </div>
         )}
 
