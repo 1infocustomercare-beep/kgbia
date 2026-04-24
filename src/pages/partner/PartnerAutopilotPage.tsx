@@ -11,6 +11,7 @@ import AutopilotConversations from "@/components/autopilot/AutopilotConversation
 import SalesCoachPanel from "@/components/autopilot/SalesCoachPanel";
 import AutopilotLeaderboard from "@/components/autopilot/AutopilotLeaderboard";
 import AutopilotConfigCard from "@/components/autopilot/AutopilotConfigCard";
+import AutopilotScheduleStatus from "@/components/autopilot/AutopilotScheduleStatus";
 
 export default function PartnerAutopilotPage() {
   return (
