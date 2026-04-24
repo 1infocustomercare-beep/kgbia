@@ -29,10 +29,25 @@ interface AutopilotConfig {
   run_interval_minutes: number;
   enabled_channels: string[];
   paused_channels: string[];
+  paused_sectors: string[];
+  priority_rules: { excluded_sectors?: string[] } | null;
   operating_hours: { start: string; end: string; timezone?: string };
   last_run_at: string | null;
   next_run_at: string | null;
   total_runs: number;
+}
+
+function normalizeSector(s: unknown): string {
+  return String(s ?? "").trim().toLowerCase();
+}
+
+function buildBlockedSectorSet(cfg: AutopilotConfig): Set<string> {
+  const blocked = new Set<string>();
+  for (const s of cfg.paused_sectors || []) blocked.add(normalizeSector(s));
+  for (const s of cfg.priority_rules?.excluded_sectors || [])
+    blocked.add(normalizeSector(s));
+  blocked.delete("");
+  return blocked;
 }
 
 // Ritorna [hh, mm] in Europe/Rome
