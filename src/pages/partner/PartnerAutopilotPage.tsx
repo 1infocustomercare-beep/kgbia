@@ -19,6 +19,7 @@ import SalesCoachPanel from "@/components/autopilot/SalesCoachPanel";
 import AutopilotLeaderboard from "@/components/autopilot/AutopilotLeaderboard";
 import AutopilotConfigCard from "@/components/autopilot/AutopilotConfigCard";
 import AutopilotScheduleStatus from "@/components/autopilot/AutopilotScheduleStatus";
+import AutopilotSectorPausePanel from "@/components/autopilot/AutopilotSectorPausePanel";
 
 // ── Mini-step indicator del flusso end-to-end ─────────────────
 const FLOW_STEPS = [
@@ -159,6 +160,7 @@ export default function PartnerAutopilotPage() {
           <AutopilotConfigCard />
           <AutopilotScheduleStatus />
         </div>
+        <AutopilotSectorPausePanel />
       </PhaseSection>
 
       {/* ── FASE 1: Caccia Lead Arianna (autopilot adattivo) ── */}

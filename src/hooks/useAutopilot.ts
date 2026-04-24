@@ -268,6 +268,7 @@ export type AutopilotConfigPatch = {
   enabled_channels?: string[];
   paused_channels?: string[];
   target_sectors?: string[];
+  paused_sectors?: string[];
   custom_instructions?: string | null;
   operating_hours?: { start: string; end: string; timezone?: string };
   run_interval_minutes?: number;
@@ -355,6 +356,28 @@ export function useTriggerScheduler() {
       qc.invalidateQueries({ queryKey: ["autopilot-config"] });
       qc.invalidateQueries({ queryKey: ["autopilot-scheduler-runs"] });
     },
+  });
+}
+
+// ── Toggle pausa di un settore (RPC) ──
+export function useToggleSectorPause() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (sector: string) => {
+      const { data, error } = await (supabase as any).rpc(
+        "toggle_autopilot_sector_pause",
+        { _sector: sector },
+      );
+      if (error) throw error;
+      return data as {
+        success: boolean;
+        sector: string;
+        is_paused: boolean;
+        paused_sectors: string[];
+        error?: string;
+      };
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["autopilot-config"] }),
   });
 }
 

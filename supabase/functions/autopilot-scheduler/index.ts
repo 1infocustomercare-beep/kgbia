@@ -29,10 +29,25 @@ interface AutopilotConfig {
   run_interval_minutes: number;
   enabled_channels: string[];
   paused_channels: string[];
+  paused_sectors: string[];
+  priority_rules: { excluded_sectors?: string[] } | null;
   operating_hours: { start: string; end: string; timezone?: string };
   last_run_at: string | null;
   next_run_at: string | null;
   total_runs: number;
+}
+
+function normalizeSector(s: unknown): string {
+  return String(s ?? "").trim().toLowerCase();
+}
+
+function buildBlockedSectorSet(cfg: AutopilotConfig): Set<string> {
+  const blocked = new Set<string>();
+  for (const s of cfg.paused_sectors || []) blocked.add(normalizeSector(s));
+  for (const s of cfg.priority_rules?.excluded_sectors || [])
+    blocked.add(normalizeSector(s));
+  blocked.delete("");
+  return blocked;
 }
 
 // Ritorna [hh, mm] in Europe/Rome
@@ -140,15 +155,42 @@ async function processOwner(
   // 6) ESECUZIONE — Trova fino a 3 conversazioni "hot" da far avanzare
   // (limita per non saturare il cap in una run)
   const batchSize = Math.min(3, remaining);
-  const { data: hotConvos } = await supa
+  const blockedSectors = buildBlockedSectorSet(cfg);
+
+  // Carichiamo qualche convo in più per poi filtrare i settori bloccati
+  const fetchSize = Math.min(batchSize * 4, 20);
+  const { data: hotConvosRaw } = await supa
     .from("autopilot_conversations")
-    .select("id, channel, funnel_stage, last_ai_message_at")
+    .select("id, channel, funnel_stage, last_ai_message_at, shared_context")
     .eq("owner_id", owner_id)
     .eq("status", "active")
     .in("funnel_stage", ["pain_validated", "roi_pitched", "negotiating"])
     .in("channel", activeChannels)
     .order("updated_at", { ascending: true })
-    .limit(batchSize);
+    .limit(fetchSize);
+
+  // Filtra i settori in pausa o esclusi
+  let skippedBySector = 0;
+  const hotConvos = (hotConvosRaw || []).filter((c: any) => {
+    const sec = normalizeSector(c?.shared_context?.sector);
+    if (sec && blockedSectors.has(sec)) {
+      skippedBySector++;
+      return false;
+    }
+    return true;
+  }).slice(0, batchSize);
+
+  if ((hotConvosRaw?.length ?? 0) > 0 && hotConvos.length === 0) {
+    return {
+      status: "skipped",
+      skip_reason: "all_sectors_paused",
+      metadata: {
+        candidates: hotConvosRaw?.length ?? 0,
+        blocked_sectors: Array.from(blockedSectors),
+        skipped_by_sector: skippedBySector,
+      },
+    };
+  }
 
   let advanced = 0;
   const channelsUsed = new Set<string>();
@@ -184,6 +226,8 @@ async function processOwner(
       channels_used: Array.from(channelsUsed),
       errors: errors.slice(0, 5),
       remaining_cap: remaining - advanced,
+      skipped_by_sector: skippedBySector,
+      blocked_sectors: Array.from(blockedSectors),
       duration_ms: Date.now() - startedAt,
     },
   };
