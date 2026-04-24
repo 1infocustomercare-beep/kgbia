@@ -38,6 +38,8 @@ import {
   Phone,
   Loader2,
   AlertTriangle,
+  Target,
+  Users,
 } from "lucide-react";
 import {
   useAutopilotConfig,
