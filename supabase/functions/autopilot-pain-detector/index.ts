@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// EMPIRE AUTOPILOT — Pain Detector AI
+// EMPIRE AUTOPILOT — Pain Detector AI v1.0.1
 // Scrape sito + Google profile, AI analysis, ROI calc, cache 30gg
 // ═══════════════════════════════════════════════════════════════
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
