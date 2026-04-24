@@ -71,3 +71,12 @@ verify_jwt = false
 
 [functions.tenant-login-unlock-verify]
 verify_jwt = false
+
+[functions.autopilot-pain-detector]
+verify_jwt = false
+
+[functions.autopilot-conversation-engine]
+verify_jwt = false
+
+[functions.autopilot-sales-coach]
+verify_jwt = false

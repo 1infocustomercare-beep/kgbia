@@ -796,6 +796,194 @@ export type Database = {
           },
         ]
       }
+      autopilot_config: {
+        Row: {
+          ai_model: string
+          autonomy_level: string
+          created_at: string
+          custom_instructions: string | null
+          daily_scan_cap: number
+          daily_scans_used: number
+          enabled_channels: Json
+          id: string
+          is_enabled: boolean
+          operating_hours: Json
+          owner_id: string
+          scans_reset_at: string
+          target_sectors: Json
+          updated_at: string
+        }
+        Insert: {
+          ai_model?: string
+          autonomy_level?: string
+          created_at?: string
+          custom_instructions?: string | null
+          daily_scan_cap?: number
+          daily_scans_used?: number
+          enabled_channels?: Json
+          id?: string
+          is_enabled?: boolean
+          operating_hours?: Json
+          owner_id: string
+          scans_reset_at?: string
+          target_sectors?: Json
+          updated_at?: string
+        }
+        Update: {
+          ai_model?: string
+          autonomy_level?: string
+          created_at?: string
+          custom_instructions?: string | null
+          daily_scan_cap?: number
+          daily_scans_used?: number
+          enabled_channels?: Json
+          id?: string
+          is_enabled?: boolean
+          operating_hours?: Json
+          owner_id?: string
+          scans_reset_at?: string
+          target_sectors?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      autopilot_conversations: {
+        Row: {
+          ai_confidence: number | null
+          channel: string
+          closed_at: string | null
+          closed_reason: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          funnel_stage: string
+          id: string
+          last_ai_message_at: string | null
+          last_lead_message_at: string | null
+          lead_id: string | null
+          next_action: string | null
+          next_action_at: string | null
+          owner_id: string
+          pain_scan_id: string | null
+          roi_calculation_id: string | null
+          sentiment: string | null
+          shared_context: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          ai_confidence?: number | null
+          channel?: string
+          closed_at?: string | null
+          closed_reason?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          funnel_stage?: string
+          id?: string
+          last_ai_message_at?: string | null
+          last_lead_message_at?: string | null
+          lead_id?: string | null
+          next_action?: string | null
+          next_action_at?: string | null
+          owner_id: string
+          pain_scan_id?: string | null
+          roi_calculation_id?: string | null
+          sentiment?: string | null
+          shared_context?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          ai_confidence?: number | null
+          channel?: string
+          closed_at?: string | null
+          closed_reason?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          funnel_stage?: string
+          id?: string
+          last_ai_message_at?: string | null
+          last_lead_message_at?: string | null
+          lead_id?: string | null
+          next_action?: string | null
+          next_action_at?: string | null
+          owner_id?: string
+          pain_scan_id?: string | null
+          roi_calculation_id?: string | null
+          sentiment?: string | null
+          shared_context?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autopilot_conversations_pain_scan_id_fkey"
+            columns: ["pain_scan_id"]
+            isOneToOne: false
+            referencedRelation: "pain_scans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autopilot_conversations_roi_calculation_id_fkey"
+            columns: ["roi_calculation_id"]
+            isOneToOne: false
+            referencedRelation: "roi_calculations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autopilot_messages: {
+        Row: {
+          ai_metadata: Json | null
+          channel: string
+          content: string
+          conversation_id: string
+          created_at: string
+          delivered_at: string | null
+          id: string
+          owner_id: string
+          read_at: string | null
+          sender: string
+        }
+        Insert: {
+          ai_metadata?: Json | null
+          channel?: string
+          content: string
+          conversation_id: string
+          created_at?: string
+          delivered_at?: string | null
+          id?: string
+          owner_id: string
+          read_at?: string | null
+          sender: string
+        }
+        Update: {
+          ai_metadata?: Json | null
+          channel?: string
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          delivered_at?: string | null
+          id?: string
+          owner_id?: string
+          read_at?: string | null
+          sender?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autopilot_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "autopilot_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       b2b_invoices: {
         Row: {
           codice_univoco: string | null
@@ -4479,6 +4667,75 @@ export type Database = {
           },
         ]
       }
+      pain_scans: {
+        Row: {
+          ai_model: string
+          ai_summary: string | null
+          competitive_signals: Json
+          cost_cents: number | null
+          created_at: string
+          domain: string
+          domain_hash: string
+          duration_ms: number | null
+          error_message: string | null
+          expires_at: string
+          id: string
+          lead_id: string | null
+          owner_id: string
+          pain_points: Json
+          pain_score: number
+          sector: string | null
+          source_url: string
+          status: string
+          technical_metrics: Json
+          updated_at: string
+        }
+        Insert: {
+          ai_model?: string
+          ai_summary?: string | null
+          competitive_signals?: Json
+          cost_cents?: number | null
+          created_at?: string
+          domain: string
+          domain_hash: string
+          duration_ms?: number | null
+          error_message?: string | null
+          expires_at?: string
+          id?: string
+          lead_id?: string | null
+          owner_id: string
+          pain_points?: Json
+          pain_score?: number
+          sector?: string | null
+          source_url: string
+          status?: string
+          technical_metrics?: Json
+          updated_at?: string
+        }
+        Update: {
+          ai_model?: string
+          ai_summary?: string | null
+          competitive_signals?: Json
+          cost_cents?: number | null
+          created_at?: string
+          domain?: string
+          domain_hash?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          expires_at?: string
+          id?: string
+          lead_id?: string | null
+          owner_id?: string
+          pain_points?: Json
+          pain_score?: number
+          sector?: string | null
+          source_url?: string
+          status?: string
+          technical_metrics?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       partner_commission_notes: {
         Row: {
           created_at: string
@@ -5668,6 +5925,68 @@ export type Database = {
           },
         ]
       }
+      roi_calculations: {
+        Row: {
+          ai_narrative: string | null
+          assumptions: Json
+          category_breakdown: Json
+          created_at: string
+          empire_monthly_value_eur: number
+          id: string
+          lead_id: string | null
+          monthly_loss_eur: number
+          owner_id: string
+          pain_scan_id: string | null
+          payback_months: number | null
+          roi_percentage: number
+          scenario: string
+          updated_at: string
+          yearly_loss_eur: number
+        }
+        Insert: {
+          ai_narrative?: string | null
+          assumptions?: Json
+          category_breakdown?: Json
+          created_at?: string
+          empire_monthly_value_eur?: number
+          id?: string
+          lead_id?: string | null
+          monthly_loss_eur?: number
+          owner_id: string
+          pain_scan_id?: string | null
+          payback_months?: number | null
+          roi_percentage?: number
+          scenario?: string
+          updated_at?: string
+          yearly_loss_eur?: number
+        }
+        Update: {
+          ai_narrative?: string | null
+          assumptions?: Json
+          category_breakdown?: Json
+          created_at?: string
+          empire_monthly_value_eur?: number
+          id?: string
+          lead_id?: string | null
+          monthly_loss_eur?: number
+          owner_id?: string
+          pain_scan_id?: string | null
+          payback_months?: number | null
+          roi_percentage?: number
+          scenario?: string
+          updated_at?: string
+          yearly_loss_eur?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roi_calculations_pain_scan_id_fkey"
+            columns: ["pain_scan_id"]
+            isOneToOne: false
+            referencedRelation: "pain_scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rooms: {
         Row: {
           company_id: string
@@ -6124,6 +6443,117 @@ export type Database = {
           owner_id?: string
           title?: string
           used_count?: number
+        }
+        Relationships: []
+      }
+      sales_coach_insights: {
+        Row: {
+          action_label: string | null
+          action_url: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          insight_type: string
+          is_dismissed: boolean
+          is_read: boolean
+          message: string
+          priority: string
+          supporting_data: Json | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          action_label?: string | null
+          action_url?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          insight_type?: string
+          is_dismissed?: boolean
+          is_read?: boolean
+          message: string
+          priority?: string
+          supporting_data?: Json | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          action_label?: string | null
+          action_url?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          insight_type?: string
+          is_dismissed?: boolean
+          is_read?: boolean
+          message?: string
+          priority?: string
+          supporting_data?: Json | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sales_leaderboard: {
+        Row: {
+          avatar_url: string | null
+          badges: Json
+          created_at: string
+          deals_closed_month: number
+          deals_closed_total: number
+          display_name: string | null
+          global_rank: number | null
+          id: string
+          last_activity_at: string | null
+          level: number
+          revenue_month_eur: number
+          revenue_total_eur: number
+          sector: string | null
+          sector_rank: number | null
+          streak_days: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          badges?: Json
+          created_at?: string
+          deals_closed_month?: number
+          deals_closed_total?: number
+          display_name?: string | null
+          global_rank?: number | null
+          id?: string
+          last_activity_at?: string | null
+          level?: number
+          revenue_month_eur?: number
+          revenue_total_eur?: number
+          sector?: string | null
+          sector_rank?: number | null
+          streak_days?: number
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          badges?: Json
+          created_at?: string
+          deals_closed_month?: number
+          deals_closed_total?: number
+          display_name?: string | null
+          global_rank?: number | null
+          id?: string
+          last_activity_at?: string | null
+          level?: number
+          revenue_month_eur?: number
+          revenue_total_eur?: number
+          sector?: string | null
+          sector_rank?: number | null
+          streak_days?: number
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -7599,9 +8029,42 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_xp: {
+        Args: { _amount: number; _reason?: string; _user_id: string }
+        Returns: {
+          avatar_url: string | null
+          badges: Json
+          created_at: string
+          deals_closed_month: number
+          deals_closed_total: number
+          display_name: string | null
+          global_rank: number | null
+          id: string
+          last_activity_at: string | null
+          level: number
+          revenue_month_eur: number
+          revenue_total_eur: number
+          sector: string | null
+          sector_rank: number | null
+          streak_days: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "sales_leaderboard"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       calculate_monthly_bonus: {
         Args: { p_month: string; p_partner_id: string }
         Returns: number
+      }
+      check_autopilot_daily_cap: {
+        Args: { _owner_id: string }
+        Returns: boolean
       }
       check_outreach_health: {
         Args: {
@@ -7639,6 +8102,37 @@ export type Database = {
         Args: { p_action: string; p_metadata?: Json; p_user_id: string }
         Returns: Json
       }
+      get_pain_scan_cached: {
+        Args: { _domain_hash: string; _owner_id: string }
+        Returns: {
+          ai_model: string
+          ai_summary: string | null
+          competitive_signals: Json
+          cost_cents: number | null
+          created_at: string
+          domain: string
+          domain_hash: string
+          duration_ms: number | null
+          error_message: string | null
+          expires_at: string
+          id: string
+          lead_id: string | null
+          owner_id: string
+          pain_points: Json
+          pain_score: number
+          sector: string | null
+          source_url: string
+          status: string
+          technical_metrics: Json
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "pain_scans"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_partner_stripe_account: {
         Args: { partner_user_id: string }
         Returns: {
@@ -7662,10 +8156,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_autopilot_scan: {
+        Args: { _owner_id: string }
+        Returns: undefined
+      }
       increment_custom_preview_view: {
         Args: { p_slug: string }
         Returns: undefined
       }
+      is_autopilot_super_admin: { Args: { _user_id: string }; Returns: boolean }
       is_company_member: {
         Args: { _company_id: string; _user_id?: string }
         Returns: boolean
