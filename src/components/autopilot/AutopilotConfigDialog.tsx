@@ -201,6 +201,10 @@ export default function AutopilotConfigDialog({ open, onOpenChange }: Props) {
       toast.error("Il cap giornaliero deve essere tra 1 e 5000");
       return;
     }
+    if (totalWeight === 0) {
+      toast.error("Almeno un peso di priorità deve essere > 0");
+      return;
+    }
     try {
       await update.mutateAsync({
         is_enabled: isEnabled,
@@ -215,9 +219,12 @@ export default function AutopilotConfigDialog({ open, onOpenChange }: Props) {
           end: hoursEnd,
           timezone: "Europe/Rome",
         },
+        priority_rules: priorityRules,
+        max_concurrent_conversations: maxConcurrent,
+        max_new_conversations_per_run: maxNewPerRun,
       });
       toast.success("Configurazione Autopilot salvata", {
-        description: `Modello ${aiModel.split("/")[1]} · ${autonomy} · cap ${dailyCap}/giorno`,
+        description: `Modello ${aiModel.split("/")[1]} · ${autonomy} · cap ${dailyCap}/giorno · max ${maxConcurrent} conv parallele`,
       });
       onOpenChange(false);
     } catch (e: any) {
