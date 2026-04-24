@@ -255,9 +255,11 @@ export type AutopilotConfigPatch = {
   autonomy_level?: "conservative" | "balanced" | "aggressive" | "full_auto";
   daily_scan_cap?: number;
   enabled_channels?: string[];
+  paused_channels?: string[];
   target_sectors?: string[];
   custom_instructions?: string | null;
   operating_hours?: { start: string; end: string; timezone?: string };
+  run_interval_minutes?: number;
 };
 
 export function useUpdateAutopilotConfig() {
