@@ -14,6 +14,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { getStylePreset, shadowCss, type MockupStylePreset } from "../_shared/mockup-style-presets.ts";
+import { renderLayout } from "../_shared/mockup-layout-templates.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -367,104 +368,27 @@ function buildHtml(lead: LeadData, content: any, style: string, color: string, l
     .nav-cta{padding:8px 16px;font-size:13px}
   }
 </style>
+${(() => {
+  // Costruisco i frammenti riusabili (nav, footer, contact, fab) e delego al dispatcher di layout
+  const navHtml = `<nav class="nav"><div class="container nav-inner"><div class="nav-brand"><div class="nav-logo">${logoUrl ? `<img src="${escapeHtml(logoUrl)}" alt="logo">` : escapeHtml((lead.lead_name || "?").charAt(0).toUpperCase())}</div><span>${escapeHtml(lead.lead_name)}</span></div><a href="${waLink}" class="nav-cta">${escapeHtml(content.hero_cta || "Contattaci")}</a></div></nav>`;
+  const footerHtml = `<footer><div class="container"><p class="footer-tagline">${escapeHtml(lead.lead_name)}</p><p>${escapeHtml(content.footer_tagline || "")}</p><p class="footer-empire">Anteprima generata con Empire AI Group · empireia.lovable.app</p></div></footer>`;
+  const waFabHtml = `<a href="${waLink}" class="wa-fab" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>`;
+  const contactHtml = `<section class="cta-section" id="contact"><div class="container"><h2>Pronto a iniziare?</h2><p>${escapeHtml(content.footer_tagline || "Contattaci subito per saperne di più")}</p><a href="${waLink}" class="btn-primary">💬 Scrivici su WhatsApp</a><div class="contact-info">${lead.lead_phone ? `<div class="contact-item"><div class="contact-item-icon">📞</div><div class="contact-item-label">Telefono</div><div class="contact-item-value"><a href="tel:${escapeHtml(lead.lead_phone)}">${escapeHtml(lead.lead_phone)}</a></div></div>` : ""}${lead.lead_address ? `<div class="contact-item"><div class="contact-item-icon">📍</div><div class="contact-item-label">Indirizzo</div><div class="contact-item-value">${escapeHtml(lead.lead_address)}</div></div>` : ""}${lead.lead_email ? `<div class="contact-item"><div class="contact-item-icon">✉️</div><div class="contact-item-label">Email</div><div class="contact-item-value"><a href="mailto:${escapeHtml(lead.lead_email)}">${escapeHtml(lead.lead_email)}</a></div></div>` : ""}</div></div></section>`;
+
+  const bundle = renderLayout(preset.layout, {
+    preset, t, lead, content, heroUrl, logoUrl, gallery,
+    waLink, waMsg: whatsappMsg, esc: escapeHtml,
+    featuresHtml, servicesHtml, testimonialsHtml, faqHtml, galleryHtml,
+    navHtml, footerHtml, waFabHtml, contactHtml,
+  });
+  return `${bundle.css}
+</style>
 </head>
 <body>
-
-<nav class="nav">
-  <div class="container nav-inner">
-    <div class="nav-brand">
-      <div class="nav-logo">${logoUrl ? `<img src="${escapeHtml(logoUrl)}" alt="logo">` : escapeHtml((lead.lead_name || "?").charAt(0).toUpperCase())}</div>
-      <span>${escapeHtml(lead.lead_name)}</span>
-    </div>
-    <a href="${waLink}" class="nav-cta">${escapeHtml(content.hero_cta || "Contattaci")}</a>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="container hero-content">
-    <div class="hero-badge">${escapeHtml(lead.lead_sector || "Premium")} ${lead.lead_city ? `• ${escapeHtml(lead.lead_city)}` : ""}</div>
-    <h1>${escapeHtml(content.hero_title || lead.lead_name)}</h1>
-    <p class="sub">${escapeHtml(content.hero_subtitle || "")}</p>
-    <div class="hero-actions">
-      <a href="${waLink}" class="btn-primary">${escapeHtml(content.hero_cta || "Prenota Ora")}</a>
-      <a href="#services" class="btn-secondary">Scopri di più</a>
-    </div>
-    ${lead.lead_rating ? `<div class="hero-rating"><span class="stars">${"★".repeat(Math.round(lead.lead_rating))}</span><span>${lead.lead_rating}/5 su Google · ${lead.lead_reviews_count || 0} recensioni</span></div>` : ""}
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">Perché sceglierci</h2>
-    <p class="section-subtitle">Quello che rende ${escapeHtml(lead.lead_name)} la scelta giusta</p>
-    <div class="features-grid">${featuresHtml}</div>
-  </div>
-</section>
-
-<section class="section about" id="about">
-  <div class="container">
-    <div class="about-grid">
-      <div>
-        <h2 class="section-title" style="text-align:left">${escapeHtml(content.about_title || "La nostra storia")}</h2>
-        <div class="about-text">${escapeHtml(content.about_text || "").split("\n").map((p: string) => `<p style="margin-bottom:14px">${p}</p>`).join("")}</div>
-      </div>
-      <div class="about-image"></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="services">
-  <div class="container">
-    <h2 class="section-title">Servizi</h2>
-    <p class="section-subtitle">Tutto quello che possiamo fare per te</p>
-    <div class="services-grid">${servicesHtml}</div>
-  </div>
-</section>
-
-${galleryHtml}
-
-<section class="section testimonials">
-  <div class="container">
-    <h2 class="section-title">Cosa dicono i clienti</h2>
-    <p class="section-subtitle">Recensioni vere di chi ci ha già scelto</p>
-    <div class="testimonials-grid">${testimonialsHtml}</div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">Domande Frequenti</h2>
-    <div class="faq-list">${faqHtml}</div>
-  </div>
-</section>
-
-<section class="cta-section" id="contact">
-  <div class="container">
-    <h2>Pronto a iniziare?</h2>
-    <p>${escapeHtml(content.footer_tagline || "Contattaci subito per saperne di più")}</p>
-    <a href="${waLink}" class="btn-primary">💬 Scrivici su WhatsApp</a>
-    <div class="contact-info">
-      ${lead.lead_phone ? `<div class="contact-item"><div class="contact-item-icon">📞</div><div class="contact-item-label">Telefono</div><div class="contact-item-value"><a href="tel:${escapeHtml(lead.lead_phone)}">${escapeHtml(lead.lead_phone)}</a></div></div>` : ""}
-      ${lead.lead_address ? `<div class="contact-item"><div class="contact-item-icon">📍</div><div class="contact-item-label">Indirizzo</div><div class="contact-item-value">${escapeHtml(lead.lead_address)}</div></div>` : ""}
-      ${lead.lead_email ? `<div class="contact-item"><div class="contact-item-icon">✉️</div><div class="contact-item-label">Email</div><div class="contact-item-value"><a href="mailto:${escapeHtml(lead.lead_email)}">${escapeHtml(lead.lead_email)}</a></div></div>` : ""}
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="container">
-    <p class="footer-tagline">${escapeHtml(lead.lead_name)}</p>
-    <p>${escapeHtml(content.footer_tagline || "")}</p>
-    <p class="footer-empire">Anteprima generata con Empire AI Group · empireia.lovable.app</p>
-  </div>
-</footer>
-
-<a href="${waLink}" class="wa-fab" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-</a>
-
+${bundle.body}
 </body>
 </html>`;
+})()}`;
 }
 
 // ----- MAIN -----
