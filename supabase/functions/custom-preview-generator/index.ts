@@ -40,7 +40,7 @@ async function generateCopy(lovableKey: string, lead: LeadData, scraped: any, st
   const styleHint = preset.copyTone;
   const prompt = `Sei un copywriter senior specializzato in landing page italiane premium per piccole/medie attività.
 Genera contenuti in italiano per la landing page del business "${lead.lead_name}" (settore: ${lead.lead_sector || 'attività'}, città: ${lead.lead_city || 'Italia'}).
-Stile: ${styleHints[style] || 'professionale moderno'}.
+Stile: ${styleHint}. Preset visivo: "${preset.label}" (${preset.description}).
 Dati extra dal sito attuale (se presenti): ${JSON.stringify(scraped).slice(0, 1500)}.
 Contatti reali: tel ${lead.lead_phone || '—'}, sito ${lead.lead_website || '—'}, indirizzo ${lead.lead_address || '—'}.
 ${lead.lead_rating ? `Rating Google: ${lead.lead_rating}/5 con ${lead.lead_reviews_count} recensioni.` : ''}
