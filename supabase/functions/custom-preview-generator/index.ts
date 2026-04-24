@@ -126,7 +126,7 @@ async function generateHeroImage(lovableKey: string, lead: LeadData, style: stri
   const matchedKey = Object.keys(sectorScene).find(k => sector.includes(k));
   const scene = matchedKey ? sectorScene[matchedKey] : `attività ${lead.lead_sector || 'commerciale'} interno premium professionale`;
 
-  const prompt = `Hero image fotorealistica per landing page premium di "${lead.lead_name}" a ${lead.lead_city || 'Italia'}. Scena: ${scene}. ${styleDesc[style] || ''}. Accent color ${color}. Composizione orizzontale 16:9, alta qualità editoriale, NO testo nell'immagine, NO loghi, NO watermark. Fotografia professionale.`;
+  const prompt = `Hero image fotorealistica per landing page premium di "${lead.lead_name}" a ${lead.lead_city || 'Italia'}. Scena: ${scene}. Stile: ${preset.heroImagePrompt}. Accent color ${color}. Composizione orizzontale 16:9, alta qualità editoriale, NO testo nell'immagine, NO loghi, NO watermark. Fotografia professionale.`;
 
   const r = await fetch(AI_GATEWAY, {
     method: "POST",
