@@ -155,15 +155,42 @@ async function processOwner(
   // 6) ESECUZIONE — Trova fino a 3 conversazioni "hot" da far avanzare
   // (limita per non saturare il cap in una run)
   const batchSize = Math.min(3, remaining);
-  const { data: hotConvos } = await supa
+  const blockedSectors = buildBlockedSectorSet(cfg);
+
+  // Carichiamo qualche convo in più per poi filtrare i settori bloccati
+  const fetchSize = Math.min(batchSize * 4, 20);
+  const { data: hotConvosRaw } = await supa
     .from("autopilot_conversations")
-    .select("id, channel, funnel_stage, last_ai_message_at")
+    .select("id, channel, funnel_stage, last_ai_message_at, shared_context")
     .eq("owner_id", owner_id)
     .eq("status", "active")
     .in("funnel_stage", ["pain_validated", "roi_pitched", "negotiating"])
     .in("channel", activeChannels)
     .order("updated_at", { ascending: true })
-    .limit(batchSize);
+    .limit(fetchSize);
+
+  // Filtra i settori in pausa o esclusi
+  let skippedBySector = 0;
+  const hotConvos = (hotConvosRaw || []).filter((c: any) => {
+    const sec = normalizeSector(c?.shared_context?.sector);
+    if (sec && blockedSectors.has(sec)) {
+      skippedBySector++;
+      return false;
+    }
+    return true;
+  }).slice(0, batchSize);
+
+  if ((hotConvosRaw?.length ?? 0) > 0 && hotConvos.length === 0) {
+    return {
+      status: "skipped",
+      skip_reason: "all_sectors_paused",
+      metadata: {
+        candidates: hotConvosRaw?.length ?? 0,
+        blocked_sectors: Array.from(blockedSectors),
+        skipped_by_sector: skippedBySector,
+      },
+    };
+  }
 
   let advanced = 0;
   const channelsUsed = new Set<string>();
