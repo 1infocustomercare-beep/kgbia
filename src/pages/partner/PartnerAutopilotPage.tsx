@@ -19,6 +19,8 @@ import SalesCoachPanel from "@/components/autopilot/SalesCoachPanel";
 import AutopilotLeaderboard from "@/components/autopilot/AutopilotLeaderboard";
 import AutopilotConfigCard from "@/components/autopilot/AutopilotConfigCard";
 import AutopilotScheduleStatus from "@/components/autopilot/AutopilotScheduleStatus";
+import AutopilotRetryPanel from "@/components/autopilot/AutopilotRetryPanel";
+import { RefreshCw } from "lucide-react";
 
 // ── Mini-step indicator del flusso end-to-end ─────────────────
 const FLOW_STEPS = [
@@ -197,9 +199,20 @@ export default function PartnerAutopilotPage() {
         </div>
       </PhaseSection>
 
-      {/* ── FASE 5: Coach + Leaderboard ── */}
+      {/* ── FASE 3.5: Coda Riprove (resilienza) ── */}
       <PhaseSection
         step={4}
+        title="Coda Riprove — Resilienza autonoma"
+        subtitle="Ogni passaggio fallito (Pain, ROI, Conversazione) viene riprovato con backoff esponenziale"
+        icon={RefreshCw}
+        accent="bg-amber-500/15 text-amber-500 border border-amber-500/30"
+      >
+        <AutopilotRetryPanel />
+      </PhaseSection>
+
+      {/* ── FASE 5: Coach + Leaderboard ── */}
+      <PhaseSection
+        step={5}
         title="Chiusura — Sales Coach & Leaderboard"
         subtitle="Suggerimenti next-best-action, XP, livelli e classifica venditori"
         icon={Trophy}
