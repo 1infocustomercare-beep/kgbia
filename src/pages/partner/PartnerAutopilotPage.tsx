@@ -66,6 +66,9 @@ export default function PartnerAutopilotPage() {
         <PainScanCard />
       </div>
 
+      {/* ── ROW 1.5: Pianificazione server-side ── */}
+      <AutopilotScheduleStatus />
+
       {/* ── ROW 2: ROI + Conversations ── */}
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.5fr] gap-4">
         <ROIDossier />
