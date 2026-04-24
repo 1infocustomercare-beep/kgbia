@@ -11,6 +11,7 @@ import AutopilotConversations from "@/components/autopilot/AutopilotConversation
 import SalesCoachPanel from "@/components/autopilot/SalesCoachPanel";
 import AutopilotLeaderboard from "@/components/autopilot/AutopilotLeaderboard";
 import AutopilotConfigCard from "@/components/autopilot/AutopilotConfigCard";
+import AutopilotScheduleStatus from "@/components/autopilot/AutopilotScheduleStatus";
 
 export default function PartnerAutopilotPage() {
   return (
@@ -64,6 +65,9 @@ export default function PartnerAutopilotPage() {
         <AutopilotConfigCard />
         <PainScanCard />
       </div>
+
+      {/* ── ROW 1.5: Pianificazione server-side ── */}
+      <AutopilotScheduleStatus />
 
       {/* ── ROW 2: ROI + Conversations ── */}
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.5fr] gap-4">
