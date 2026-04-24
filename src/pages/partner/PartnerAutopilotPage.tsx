@@ -160,6 +160,7 @@ export default function PartnerAutopilotPage() {
           <AutopilotConfigCard />
           <AutopilotScheduleStatus />
         </div>
+        <AutopilotSectorPausePanel />
       </PhaseSection>
 
       {/* ── FASE 1: Caccia Lead Arianna (autopilot adattivo) ── */}
