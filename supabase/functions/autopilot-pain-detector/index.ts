@@ -181,14 +181,6 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY non configurata");
     }
 
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     const authHeader = req.headers.get("Authorization") || "";
     const impersonate = req.headers.get("x-autopilot-impersonate");
