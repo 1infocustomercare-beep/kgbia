@@ -13,6 +13,7 @@
 // Output: { success, preview_id, public_url, ai_content, hero_image_url }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { getStylePreset, shadowCss, type MockupStylePreset } from "../_shared/mockup-style-presets.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -35,15 +36,11 @@ interface LeadData {
 
 // ----- AI helpers -----
 async function generateCopy(lovableKey: string, lead: LeadData, scraped: any, style: string): Promise<any> {
-  const styleHints: Record<string, string> = {
-    modern_dark: "tono premium tech, dark mode, pulito",
-    luxury_gold: "tono lussuoso ed elegante, oro su nero",
-    casual_warm: "tono accogliente caldo familiare",
-    minimal_zen: "tono minimal essenziale, molto whitespace",
-  };
+  const preset = getStylePreset(style);
+  const styleHint = preset.copyTone;
   const prompt = `Sei un copywriter senior specializzato in landing page italiane premium per piccole/medie attività.
 Genera contenuti in italiano per la landing page del business "${lead.lead_name}" (settore: ${lead.lead_sector || 'attività'}, città: ${lead.lead_city || 'Italia'}).
-Stile: ${styleHints[style] || 'professionale moderno'}.
+Stile: ${styleHint}. Preset visivo: "${preset.label}" (${preset.description}).
 Dati extra dal sito attuale (se presenti): ${JSON.stringify(scraped).slice(0, 1500)}.
 Contatti reali: tel ${lead.lead_phone || '—'}, sito ${lead.lead_website || '—'}, indirizzo ${lead.lead_address || '—'}.
 ${lead.lead_rating ? `Rating Google: ${lead.lead_rating}/5 con ${lead.lead_reviews_count} recensioni.` : ''}
@@ -107,12 +104,7 @@ Restituisci SOLO un JSON valido con questa struttura ESATTA:
 }
 
 async function generateHeroImage(lovableKey: string, lead: LeadData, style: string, color: string): Promise<string | null> {
-  const styleDesc: Record<string, string> = {
-    modern_dark: "fotografia cinematografica dark moody, illuminazione cinematica, dettagli premium",
-    luxury_gold: "fotografia luxury editoriale, oro caldo, atmosfera elegante alta qualità",
-    casual_warm: "fotografia naturale calda accogliente, luce dorata morbida, stile lifestyle",
-    minimal_zen: "fotografia minimal pulita, sfondo bianco/beige, composizione zen",
-  };
+  const preset = getStylePreset(style);
   const sectorScene: Record<string, string> = {
     tatuatore: "studio di tatuaggi professionale con poltrona moderna e attrezzatura sterile",
     fiorista: "negozio di fiori elegante con composizioni floreali eleganti",
@@ -123,11 +115,18 @@ async function generateHeroImage(lovableKey: string, lead: LeadData, style: stri
     ristorante: "interno ristorante elegante apparecchiato",
     bar: "bancone bar premium illuminazione calda bottiglie premium",
     pizzeria: "forno pizza a legna acceso con pizza appena sfornata",
+    sushi: "bancone sushi con itamae al lavoro, pesce premium su ghiaccio",
+    nails: "salone nail premium con tavoli marmo, dettagli ottone, luce diffusa",
+    immobiliare: "interno appartamento di pregio con luce naturale e design d'autore",
+    yacht: "yacht luxury ormeggiato in marina mediterranea, golden hour",
+    medico: "studio medico premium pulito, luce brillante, fiducia",
+    asilo: "ambiente kids accogliente con elementi naturali warm",
   };
   const sector = (lead.lead_sector || "").toLowerCase();
-  const scene = Object.keys(sectorScene).find(k => sector.includes(k)) ? sectorScene[Object.keys(sectorScene).find(k => sector.includes(k))!] : `attività ${lead.lead_sector || 'commerciale'} interno premium professionale`;
+  const matchedKey = Object.keys(sectorScene).find(k => sector.includes(k));
+  const scene = matchedKey ? sectorScene[matchedKey] : `attività ${lead.lead_sector || 'commerciale'} interno premium professionale`;
 
-  const prompt = `Hero image fotorealistica per landing page premium di "${lead.lead_name}" a ${lead.lead_city || 'Italia'}. Scena: ${scene}. ${styleDesc[style] || ''}. Accent color ${color}. Composizione orizzontale 16:9, alta qualità editoriale, NO testo nell'immagine, NO loghi, NO watermark. Fotografia professionale.`;
+  const prompt = `Hero image fotorealistica per landing page premium di "${lead.lead_name}" a ${lead.lead_city || 'Italia'}. Scena: ${scene}. Stile: ${preset.heroImagePrompt}. Accent color ${color}. Composizione orizzontale 16:9, alta qualità editoriale, NO testo nell'immagine, NO loghi, NO watermark. Fotografia professionale.`;
 
   const r = await fetch(AI_GATEWAY, {
     method: "POST",
@@ -189,13 +188,22 @@ function escapeHtml(s: string): string {
 }
 
 function buildHtml(lead: LeadData, content: any, style: string, color: string, logoUrl: string | null, heroUrl: string | null, gallery: string[], whatsappMsg: string): string {
-  const themes: Record<string, { bg: string; surface: string; text: string; muted: string; accent: string; cardBg: string }> = {
-    modern_dark: { bg: "#0F172A", surface: "#1E293B", text: "#F8FAFC", muted: "#94A3B8", accent: color, cardBg: "rgba(255,255,255,0.04)" },
-    luxury_gold: { bg: "#0D0A06", surface: "#1A1410", text: "#F5E6C8", muted: "#A89070", accent: color, cardBg: "rgba(212,175,55,0.06)" },
-    casual_warm: { bg: "#FAF6F0", surface: "#FFFFFF", text: "#3D2C1E", muted: "#8B7355", accent: color, cardBg: "#FFF8EE" },
-    minimal_zen: { bg: "#F8F8F8", surface: "#FFFFFF", text: "#1A1A1A", muted: "#666666", accent: color, cardBg: "#FAFAFA" },
+  // Mappa legacy keys → nuovi preset Lowengeld-inspired
+  const legacyMap: Record<string, string> = {
+    modern_dark: "cote_obsidian",
+    luxury_gold: "noir_saigon",
+    casual_warm: "maple_gold",
+    minimal_zen: "eleganza_milanese",
   };
-  const t = themes[style] || themes.modern_dark;
+  const presetKey = legacyMap[style] || style;
+  const preset = getStylePreset(presetKey);
+  // Accent color override (l'utente può ancora personalizzare il colore primario)
+  const accent = color && /^#[0-9A-Fa-f]{6}$/.test(color) ? color : preset.palette.accent;
+  const t = { ...preset.palette, accent };
+  const headingFont = preset.fonts.heading;
+  const bodyFont = preset.fonts.body;
+  const radius = preset.radius;
+  const heroShadow = shadowCss(preset.shadow);
 
   const waNumber = (lead.lead_phone || "").replace(/\D/g, "");
   const waLink = waNumber ? `https://wa.me/${waNumber.startsWith("39") ? waNumber : "39" + waNumber}?text=${encodeURIComponent(whatsappMsg)}` : "#";
@@ -243,11 +251,12 @@ function buildHtml(lead: LeadData, content: any, style: string, color: string, l
 <title>${escapeHtml(lead.lead_name)} — ${escapeHtml(lead.lead_sector || "")}</title>
 <meta name="description" content="${escapeHtml(content.hero_subtitle || lead.lead_name)}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?${preset.fonts.googleFontsQuery}&display=swap" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{font-family:'Inter',sans-serif;background:${t.bg};color:${t.text};line-height:1.6;overflow-x:hidden}
+  body{font-family:'${bodyFont}',sans-serif;background:${t.bg};color:${t.text};line-height:1.6;overflow-x:hidden}
   img{max-width:100%;display:block}
   .container{max-width:1200px;margin:0 auto;padding:0 24px}
 
