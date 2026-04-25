@@ -299,6 +299,7 @@ const EmpireParticleOrb = memo(() => {
       canvas.style.cursor = pointersRef.current.size > 0 ? "grabbing" : (stillInside ? "grab" : "default");
       if (pointersRef.current.size === 0) {
         canvas.style.pointerEvents = stillInside ? "auto" : "none";
+        canvas.style.touchAction = stillInside ? "none" : "pan-y";
       }
 
       // Tap (no significant move) inside orb → toggle mode
