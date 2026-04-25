@@ -13,7 +13,7 @@ import {
   ChevronRight, Filter, Plus, ArrowUpRight, ArrowDownRight,
   Building2, MapPin, Zap, Activity, Lightbulb,
   ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info, ImageIcon, ArrowLeft,
-  MessageCircle, Phone, Shield, X, Key, Handshake, Copy, Brain, Target, Mic
+  MessageCircle, Phone, Shield, X, Key, Handshake, Copy, Brain, Target, Mic, User, Camera, Loader2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
