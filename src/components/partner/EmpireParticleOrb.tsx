@@ -573,7 +573,7 @@ const EmpireParticleOrb = memo(() => {
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
-        style={{ pointerEvents: "none", cursor: "default", background: "transparent", touchAction: "none" }}
+        style={{ pointerEvents: "none", cursor: "default", background: "transparent", touchAction: "pan-y" }}
       />
 
       {/* Centre label */}
