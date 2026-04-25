@@ -278,6 +278,15 @@ const EmpireParticleOrb = memo(() => {
       // Mentre interagiamo con l'orb blocchiamo lo scroll nativo per permettere drag/rotate.
       canvas.style.touchAction = "none";
       pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      // Mini ripple sul touch-down (più sottile del tap)
+      const rect = canvas.getBoundingClientRect();
+      shockwavesRef.current.push({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        r: 2, maxR: radius * 1.1,
+        alpha: 0.45, hue: 270,
+      });
+      energyRef.current = Math.min(1, energyRef.current + 0.25);
 
       // Two pointers down → start pinch/twist gesture
       if (pointersRef.current.size === 2) {
