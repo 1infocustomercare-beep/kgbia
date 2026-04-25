@@ -3862,6 +3862,48 @@ export type Database = {
           },
         ]
       }
+      lead_search_cache: {
+        Row: {
+          action: string
+          created_at: string
+          expires_at: string
+          fingerprint: string
+          hit_count: number
+          id: string
+          last_hit_at: string | null
+          meta: Json
+          result_count: number
+          results: Json
+          user_id: string
+        }
+        Insert: {
+          action?: string
+          created_at?: string
+          expires_at?: string
+          fingerprint: string
+          hit_count?: number
+          id?: string
+          last_hit_at?: string | null
+          meta?: Json
+          result_count?: number
+          results?: Json
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          expires_at?: string
+          fingerprint?: string
+          hit_count?: number
+          id?: string
+          last_hit_at?: string | null
+          meta?: Json
+          result_count?: number
+          results?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       lead_whatsapp_ab_tests: {
         Row: {
           created_at: string
@@ -8257,6 +8299,16 @@ export type Database = {
         Args: { p_action: string; p_metadata?: Json }
         Returns: Json
       }
+      consume_seller_credits_dedup: {
+        Args: {
+          p_action: string
+          p_fingerprint: string
+          p_metadata?: Json
+          p_ttl_minutes?: number
+          p_user_id: string
+        }
+        Returns: Json
+      }
       consume_seller_credits_for: {
         Args: { p_action: string; p_metadata?: Json; p_user_id: string }
         Returns: Json
@@ -8366,6 +8418,21 @@ export type Database = {
       is_setup_paid: { Args: { _user_id?: string }; Returns: boolean }
       is_staff: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      lead_search_cache_get: {
+        Args: { p_action?: string; p_fingerprint: string; p_user_id: string }
+        Returns: Json
+      }
+      lead_search_cache_put: {
+        Args: {
+          p_action: string
+          p_fingerprint: string
+          p_meta?: Json
+          p_results: Json
+          p_ttl_minutes?: number
+          p_user_id: string
+        }
+        Returns: string
+      }
       log_outreach_failure: {
         Args: {
           p_channel: string
