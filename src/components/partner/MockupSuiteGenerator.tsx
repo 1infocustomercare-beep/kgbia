@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 import { MockupLookPresets, type MockupLookPreset } from "./MockupLookPresets";
+import { MockupPresetSelector } from "./MockupPresetSelector";
 import { useBrandingKitSettings } from "@/hooks/useBrandingKitSettings";
 import { BrandContrastCheck } from "./BrandContrastCheck";
 import { buildPublicMockupUrl } from "@/lib/public-share-url";
@@ -1244,6 +1245,24 @@ export function MockupSuiteGenerator({
           <p className="text-[10px] text-muted-foreground italic">
             🎨 Clicca <span className="font-semibold not-italic">Genera Suite</span> per applicare queste impostazioni alle 4 schermate. L'anteprima live in alto si aggiorna istantaneamente.
           </p>
+        </div>
+
+        {/* ────────────────────────────────────────────────────────────────── */}
+        {/* PRESET PREMIUM (palette + tipografia + layout architetturale)     */}
+        {/* ────────────────────────────────────────────────────────────────── */}
+        <div className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/[0.06] to-transparent p-4 sm:p-5">
+          <MockupPresetSelector
+            value={templateVariant}
+            sectorHint={businessSector}
+            compact
+            onChange={(key, preset) => {
+              if (controlsLocked) return;
+              setTemplateVariant(key);
+              if (mode === "standalone") {
+                setStandalone(s => ({ ...s, primaryColor: preset.palette.accent }));
+              }
+            }}
+          />
         </div>
 
         {/* ────────────────────────────────────────────────────────────────── */}

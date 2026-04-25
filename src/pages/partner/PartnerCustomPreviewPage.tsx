@@ -25,13 +25,8 @@ import PartnerHeroMascot from "@/components/partner/PartnerHeroMascot";
 import alienDesigner from "@/assets/empire-alien-designer.png";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
-
-const STYLES = [
-  { key: "modern_dark", label: "Modern Dark", color: "#0F172A", accent: "#C8963E" },
-  { key: "luxury_gold", label: "Luxury Gold", color: "#1A1410", accent: "#D4AF37" },
-  { key: "casual_warm", label: "Casual Warm", color: "#FAF6F0", accent: "#E07856" },
-  { key: "minimal_zen", label: "Minimal Zen", color: "#F8F8F8", accent: "#222222" },
-];
+import { MockupPresetSelector } from "@/components/partner/MockupPresetSelector";
+import { MOCKUP_STYLE_PRESETS } from "@/lib/mockup-style-presets";
 
 const COST = 15;
 
@@ -739,22 +734,20 @@ export default function PartnerCustomPreviewPage() {
                     className="overflow-hidden"
                   >
                     <div className="space-y-3 px-3 sm:px-4 pb-4 pt-1">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                        {STYLES.map(s => (
-                          <button
-                            key={s.key}
-                            type="button"
-                            onClick={() => setForm({ ...form, template_style: s.key, primary_color: s.accent })}
-                            className={`p-2.5 rounded-xl border-2 transition-all active:scale-95 ${form.template_style === s.key ? "border-primary scale-[1.02] shadow-sm" : "border-border hover:border-primary/50"}`}
-                            style={{ background: s.color }}
-                          >
-                            <div className="h-5 w-full rounded mb-1.5" style={{ background: s.accent }} />
-                            <p className="text-[10px] font-medium" style={{ color: s.color === "#F8F8F8" || s.color === "#FAF6F0" ? "#222" : "#fff" }}>{s.label}</p>
-                          </button>
-                        ))}
-                      </div>
+                      <MockupPresetSelector
+                        value={form.template_style}
+                        sectorHint={form.lead_sector}
+                        onChange={(key, preset) =>
+                          setForm({
+                            ...form,
+                            template_style: key,
+                            primary_color: preset.palette.accent,
+                          })
+                        }
+                        compact
+                      />
                       <div className="space-y-1.5">
-                        <Label htmlFor="color" className="text-xs">Colore accento</Label>
+                        <Label htmlFor="color" className="text-xs">Colore accento (override)</Label>
                         <div className="flex gap-2">
                           <Input id="color" type="color" value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="w-14 h-11 p-1 shrink-0 cursor-pointer" />
                           <Input value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="flex-1 font-mono h-11 text-sm uppercase" />
