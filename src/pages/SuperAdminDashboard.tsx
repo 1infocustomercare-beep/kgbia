@@ -155,6 +155,22 @@ const SuperAdminDashboard = () => {
   const [maryChips] = useState(["Revenue oggi", "Tenant attivi?", "Vault non configurati?", "Churn rate", "Report mensile"]);
   const [profileAvatar, setProfileAvatar] = useState<string | null>(null);
   const [profileName, setProfileName] = useState<string>("");
+  const [tabBarOpen, setTabBarOpen] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    const saved = window.localStorage.getItem("superadmin_tabbar_open");
+    return saved === null ? true : saved === "1";
+  });
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    if (typeof window === "undefined") return {};
+    try { return JSON.parse(window.localStorage.getItem("superadmin_tab_groups") || "{}"); } catch { return {}; }
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("superadmin_tabbar_open", tabBarOpen ? "1" : "0");
+  }, [tabBarOpen]);
+  useEffect(() => {
+    window.localStorage.setItem("superadmin_tab_groups", JSON.stringify(openGroups));
+  }, [openGroups]);
 
   useEffect(() => { fetchData(); }, []);
 
