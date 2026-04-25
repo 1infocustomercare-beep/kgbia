@@ -884,6 +884,27 @@ const SuperAdminDashboard = () => {
 
           {/* RIGHT — quick actions */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
+            <button
+              onClick={() => setTabBarOpen((v) => !v)}
+              className="p-2 rounded-xl transition-colors hidden sm:flex items-center gap-1.5 text-[10px] font-bold tracking-wider uppercase"
+              style={{
+                background: tabBarOpen ? "rgba(167,139,250,0.12)" : "rgba(167,139,250,0.04)",
+                border: "1px solid rgba(167,139,250,0.25)",
+                color: "#a78bfa",
+              }}
+              title={tabBarOpen ? "Nascondi menu" : "Mostra menu"}
+            >
+              {tabBarOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              <span>{tabBarOpen ? "Nascondi menu" : "Menu"}</span>
+            </button>
+            <button
+              onClick={() => setTabBarOpen((v) => !v)}
+              className="p-2 rounded-xl transition-colors sm:hidden"
+              style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.2)" }}
+              title={tabBarOpen ? "Nascondi menu" : "Mostra menu"}
+            >
+              {tabBarOpen ? <ChevronUp className="w-4 h-4 text-purple-300" /> : <ChevronDown className="w-4 h-4 text-purple-300" />}
+            </button>
             <button onClick={() => navigate("/home")} className="p-2 rounded-xl hover:bg-secondary transition-colors" title="Home">
               <ArrowLeft className="w-4 h-4 text-muted-foreground" />
             </button>
