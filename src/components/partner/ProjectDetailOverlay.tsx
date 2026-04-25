@@ -392,10 +392,18 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                                     iPhone ({style.screens.length})
                                   </p>
                                 </div>
-                                <div className="flex gap-2 overflow-x-auto snap-x pb-1">
+                                <div className="flex gap-3 overflow-x-auto snap-x pb-2">
                                   {style.screens.map((screen, i) => (
-                                    <MobileFrame key={`m-${i}`} src={screen} alt={`${brand.name} ${style.name} iPhone ${i + 1}`} size="sm"
-                                      onClick={() => setLightbox({ screens: allScreens, index: i })} />
+                                    <div key={`m-${i}`} className="flex flex-col items-center shrink-0 snap-start">
+                                      <MobileFrame src={screen} alt={`${brand.name} ${style.name} iPhone ${i + 1}`} size="sm"
+                                        onClick={() => setLightbox({ screens: allScreens, index: i })} />
+                                      <p className="text-[8px] font-bold uppercase tracking-widest mt-2 text-center" style={{ color: project.accent }}>
+                                        {getScreenCode(brand.name, i)}
+                                      </p>
+                                      <p className="text-[10px] font-semibold text-white text-center mt-0.5 max-w-[100px] leading-tight">
+                                        {getScreenLabel(screen, brand.name, i)}
+                                      </p>
+                                    </div>
                                   ))}
                                 </div>
                               </div>
@@ -410,10 +418,18 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                                     iPad ({tabletScreens.length})
                                   </p>
                                 </div>
-                                <div className="flex gap-3 overflow-x-auto snap-x pb-1">
+                                <div className="flex gap-3 overflow-x-auto snap-x pb-2">
                                   {tabletScreens.map((screen, i) => (
-                                    <TabletFrame key={`t-${i}`} src={screen} alt={`${brand.name} ${style.name} iPad ${i + 1}`}
-                                      onClick={() => setLightbox({ screens: allScreens, index: style.screens.length + i })} />
+                                    <div key={`t-${i}`} className="flex flex-col items-center shrink-0 snap-start">
+                                      <TabletFrame src={screen} alt={`${brand.name} ${style.name} iPad ${i + 1}`}
+                                        onClick={() => setLightbox({ screens: allScreens, index: style.screens.length + i })} />
+                                      <p className="text-[8px] font-bold uppercase tracking-widest mt-2 text-center" style={{ color: project.accent }}>
+                                        {getScreenCode(brand.name, i)} · iPad
+                                      </p>
+                                      <p className="text-[10px] font-semibold text-white text-center mt-0.5 max-w-[140px] leading-tight">
+                                        {getScreenLabel(screen, brand.name, i)}
+                                      </p>
+                                    </div>
                                   ))}
                                 </div>
                               </div>
@@ -428,10 +444,18 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                                     Desktop ({desktopScreens.length})
                                   </p>
                                 </div>
-                                <div className="flex gap-3 overflow-x-auto snap-x pb-1">
+                                <div className="flex gap-3 overflow-x-auto snap-x pb-2">
                                   {desktopScreens.map((screen, i) => (
-                                    <DesktopFrame key={`d-${i}`} src={screen} alt={`${brand.name} ${style.name} Desktop ${i + 1}`}
-                                      onClick={() => setLightbox({ screens: allScreens, index: style.screens.length + tabletScreens.length + i })} />
+                                    <div key={`d-${i}`} className="flex flex-col items-center shrink-0 snap-start">
+                                      <DesktopFrame src={screen} alt={`${brand.name} ${style.name} Desktop ${i + 1}`}
+                                        onClick={() => setLightbox({ screens: allScreens, index: style.screens.length + tabletScreens.length + i })} />
+                                      <p className="text-[8px] font-bold uppercase tracking-widest mt-2 text-center" style={{ color: project.accent }}>
+                                        {getScreenCode(brand.name, i)} · Desktop
+                                      </p>
+                                      <p className="text-[10px] font-semibold text-white text-center mt-0.5 max-w-[200px] leading-tight">
+                                        {getScreenLabel(screen, brand.name, i)}
+                                      </p>
+                                    </div>
                                   ))}
                                 </div>
                               </div>
