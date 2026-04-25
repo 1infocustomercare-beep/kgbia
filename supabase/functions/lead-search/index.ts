@@ -59,19 +59,47 @@ const SECTOR_OSM_TAGS: Record<string, string[]> = {
   garage: ['shop=car_repair', 'shop=car', 'amenity=car_wash', 'shop=tyres'],
 };
 
-/* ═══ GEOCODE (city or full address) ═══ */
-async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[] } | null> {
+/* ═══ GEOCODE (city or full address) — picks best match in country ═══ */
+async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[]; country_code?: string; matched_name?: string } | null> {
   try {
     const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
     const resp = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&addressdetails=1${cc}`,
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=8&addressdetails=1${cc}`,
       { headers: { "User-Agent": "EmpireAI-LeadScout/6.0 (info@empireaigroup.com)" } }
     );
     if (!resp.ok) return null;
     const data = await resp.json();
     if (!data.length) return null;
-    return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), bbox: data[0].boundingbox?.map(Number) || [] };
+    // Prefer admin places (city/town/village/hamlet/municipality/suburb) over POIs
+    const placeRanks: Record<string, number> = {
+      city: 0, town: 1, municipality: 1, village: 2, hamlet: 3, suburb: 4, neighbourhood: 5,
+      administrative: 6, county: 7, state: 8,
+    };
+    const sorted = [...data].sort((a, b) => {
+      const ra = placeRanks[a.type] ?? placeRanks[a.class] ?? 99;
+      const rb = placeRanks[b.type] ?? placeRanks[b.class] ?? 99;
+      if (ra !== rb) return ra - rb;
+      return (parseFloat(b.importance ?? "0")) - (parseFloat(a.importance ?? "0"));
+    });
+    const best = sorted[0];
+    const addr = best.address || {};
+    return {
+      lat: parseFloat(best.lat),
+      lon: parseFloat(best.lon),
+      bbox: best.boundingbox?.map(Number) || [],
+      country_code: (addr.country_code || "").toLowerCase(),
+      matched_name: best.display_name,
+    };
   } catch { return null; }
+}
+
+/* ═══ HAVERSINE distance (km) ═══ */
+function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 /* ═══ GLOBAL NAME SEARCH — find a business by name everywhere (Nominatim, no bbox) ═══ */
