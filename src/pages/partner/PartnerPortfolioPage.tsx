@@ -351,16 +351,19 @@ export default function PartnerPortfolioPage() {
   };
 
   return (
-    <div className="space-y-6 px-4 pt-6 pb-8 max-w-2xl lg:max-w-7xl mx-auto">
-      <header className="space-y-1.5">
-        <p className="partner-eyebrow">Vetrina Empire</p>
-        <h2 className="partner-h2">Vetrina Demo &amp; Mockup</h2>
-        <p className="partner-subtle">Catalogo di tutto ciò che è già pronto da mostrare — siti demo per settore, mockup approvati e preview salvate.</p>
-        <div className="partner-divider mt-3" />
-      </header>
-
+    <div className="space-y-7 px-4 pt-6 pb-8 max-w-2xl lg:max-w-7xl mx-auto">
       {/* ═══ FLUSSO 3 STEP ═══ */}
       <PartnerFlowStepper currentStep="showcase" />
+
+      {/* ═══ VETRINA PUBBLICA (stile Lowengeld) ═══
+           Hero "Our Work / Portfolio" + chip categorie + grid card 2-iPhone.
+           Tap su una card → apre l'overlay dettagli con tutte le schermate. */}
+      <PortfolioPublicShowcase
+        onSelect={(sectorId) => {
+          setSelectedProject(sectorId);
+          setDetailProject(sectorId);
+        }}
+      />
 
       <TutorialPopup
         id="portfolio-vetrina-v1"
