@@ -562,167 +562,330 @@ export default function SmartCityAutocomplete({
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.12 }}
-            className="absolute left-0 right-0 mt-1 rounded-xl overflow-hidden z-50 max-h-[60vh] overflow-y-auto"
+            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -4, scale: 0.98 }}
+            transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute left-0 right-0 mt-1.5 rounded-2xl overflow-hidden z-50 flex flex-col"
             style={{
-              background: "rgba(10, 14, 24, 0.98)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(20,184,166,0.25)",
-              boxShadow: "0 12px 40px rgba(0,0,0,0.6)",
+              maxHeight: "min(70vh, 520px)",
+              background: "linear-gradient(180deg, rgba(12,16,28,0.98) 0%, rgba(8,11,20,0.98) 100%)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              border: "1px solid rgba(20,184,166,0.28)",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03) inset",
             }}
           >
-            {showTop && (
-              <div className="px-3 py-2 flex items-center gap-1.5 border-b border-white/5">
-                <Sparkles className="w-3 h-3" style={{ color: "#14b8a6" }} />
-                <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#5eead4" }}>
-                  {countryCode ? `Top città ${countryCode}` : "Città più popolari"}
-                </span>
-                <span className="ml-auto text-[8px]" style={{ color: "#6b7280" }}>
-                  inizia a scrivere per cercare ovunque
+            {/* ─── Header sticky con titolo + filtri ─── */}
+            <div
+              className="shrink-0 px-3 pt-2.5 pb-2 border-b"
+              style={{
+                background: "linear-gradient(180deg, rgba(20,184,166,0.06) 0%, transparent 100%)",
+                borderColor: "rgba(255,255,255,0.06)",
+              }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <div
+                  className="w-5 h-5 rounded-md flex items-center justify-center shrink-0"
+                  style={{ background: "rgba(20,184,166,0.15)", border: "1px solid rgba(20,184,166,0.3)" }}
+                >
+                  {showTop ? (
+                    <Sparkles className="w-2.5 h-2.5" style={{ color: "#5eead4" }} />
+                  ) : loading ? (
+                    <Loader2 className="w-2.5 h-2.5 animate-spin" style={{ color: "#5eead4" }} />
+                  ) : (
+                    <Search className="w-2.5 h-2.5" style={{ color: "#5eead4" }} />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#5eead4" }}>
+                    {showTop
+                      ? countryCode
+                        ? `Top località ${countryCode}`
+                        : "Località più popolari"
+                      : loading
+                      ? "Ricerca live in corso…"
+                      : `Risultati per "${sanitize(value)}"`}
+                  </div>
+                  <div className="text-[8px] truncate" style={{ color: "#6b7280" }}>
+                    {showTop ? "Inizia a scrivere per cercare ovunque nel mondo" : "Dati reali da OpenStreetMap"}
+                  </div>
+                </div>
+                <span
+                  className="text-[8px] font-bold px-1.5 py-0.5 rounded shrink-0"
+                  style={{ background: "rgba(255,255,255,0.06)", color: "#9ca3af" }}
+                >
+                  {baseList.length}
                 </span>
               </div>
-            )}
 
-            {showResults && loading && (
-              <div className="px-3 py-3 flex items-center gap-2">
-                <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: "#14b8a6" }} />
-                <span className="text-[10px]" style={{ color: "#9ca3af" }}>
-                  Ricerca live su OpenStreetMap…
-                </span>
-              </div>
-            )}
+              {/* Chip filtri tipo */}
+              {baseList.length > 0 && (
+                <div className="flex items-center gap-1 overflow-x-auto scrollbar-none -mx-1 px-1 pb-0.5">
+                  {FILTERS.map((f) => {
+                    const active = kindFilter === f.id;
+                    const disabled = f.count === 0 && f.id !== "all";
+                    return (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => !disabled && setKindFilter(f.id)}
+                        disabled={disabled}
+                        className="text-[9px] font-bold px-2 py-1 rounded-md whitespace-nowrap transition-all shrink-0"
+                        style={{
+                          background: active ? "rgba(20,184,166,0.22)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${active ? "rgba(20,184,166,0.5)" : "rgba(255,255,255,0.06)"}`,
+                          color: active ? "#5eead4" : disabled ? "#4b5563" : "#9ca3af",
+                          opacity: disabled ? 0.4 : 1,
+                          cursor: disabled ? "not-allowed" : "pointer",
+                        }}
+                      >
+                        {f.label}
+                        <span className="ml-1 opacity-70">{f.count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
 
-            {showResults && !loading && suggestions.length === 0 && sanitize(value).length >= 2 && (
-              <div className="px-3 py-4 text-center">
-                <Search className="w-4 h-4 mx-auto mb-1" style={{ color: "#6b7280" }} />
-                <p className="text-[10px]" style={{ color: "#9ca3af" }}>
-                  Nessuna località trovata per "{sanitize(value)}"
-                </p>
-                <p className="text-[8px] mt-1" style={{ color: "#6b7280" }}>
-                  Prova un nome diverso, rimuovi accenti o cambia paese
-                </p>
-                {countryCode && (
-                  <button
-                    onClick={() => {
-                      // Re-trigger search senza countryCode
-                      cache.clear();
-                      fetchSuggestions(value);
-                    }}
-                    className="mt-2 text-[9px] font-bold px-2 py-1 rounded-md"
-                    style={{ background: "rgba(20,184,166,0.15)", color: "#5eead4" }}
+            {/* ─── Body scrollabile ─── */}
+            <div className="flex-1 overflow-y-auto overscroll-contain">
+              {/* Loading state */}
+              {showResults && loading && list.length === 0 && (
+                <div className="px-3 py-6 flex flex-col items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" style={{ color: "#14b8a6" }} />
+                  <span className="text-[10px]" style={{ color: "#9ca3af" }}>
+                    Interrogazione OpenStreetMap…
+                  </span>
+                </div>
+              )}
+
+              {/* Empty state */}
+              {showResults && !loading && suggestions.length === 0 && sanitize(value).length >= 2 && (
+                <div className="px-4 py-6 text-center">
+                  <div
+                    className="w-10 h-10 mx-auto mb-2 rounded-full flex items-center justify-center"
+                    style={{ background: "rgba(255,255,255,0.04)" }}
                   >
-                    🌍 Cerca in tutto il mondo
-                  </button>
-                )}
-              </div>
-            )}
-
-            {list.length > 0 && (
-              <div>
-                {list.map((s, i) => {
-                  const KindIcon = getKindIcon(s.kind);
-                  return (
+                    <Search className="w-4 h-4" style={{ color: "#6b7280" }} />
+                  </div>
+                  <p className="text-[11px] font-bold text-white mb-0.5">Nessun risultato</p>
+                  <p className="text-[9px] mb-2" style={{ color: "#9ca3af" }}>
+                    Nessuna località per "{sanitize(value)}"
+                  </p>
+                  <p className="text-[8px] mb-3" style={{ color: "#6b7280" }}>
+                    Prova un nome diverso, rimuovi accenti o cambia paese
+                  </p>
+                  {countryCode && (
                     <button
-                      key={`${s.name}-${s.region}-${s.kind}-${i}`}
-                      type="button"
-                      onClick={() => handlePick(s)}
-                      onMouseEnter={() => setHighlight(i)}
-                      className="w-full text-left px-3 py-2.5 flex items-start gap-2 transition-colors"
+                      onClick={() => {
+                        cache.clear();
+                        fetchSuggestions(value);
+                      }}
+                      className="inline-flex items-center gap-1.5 text-[9px] font-bold px-2.5 py-1.5 rounded-md transition-all hover:scale-[1.02]"
                       style={{
-                        background: highlight === i ? "rgba(20,184,166,0.10)" : "transparent",
-                        borderLeft: `2px solid ${highlight === i ? "#14b8a6" : "transparent"}`,
+                        background: "rgba(20,184,166,0.15)",
+                        border: "1px solid rgba(20,184,166,0.3)",
+                        color: "#5eead4",
                       }}
                     >
-                      <div className="mt-0.5 shrink-0">
-                        {showTop ? (
-                          <TrendingUp className="w-3.5 h-3.5" style={{ color: "#14b8a6" }} />
-                        ) : (
-                          <KindIcon className="w-3.5 h-3.5" style={{ color: "#06b6d4" }} />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[11px] font-bold text-white truncate">{s.name}</span>
-                          <span
-                            className="text-[7px] font-bold px-1 py-0.5 rounded uppercase tracking-wider"
-                            style={{
-                              background: "rgba(6,182,212,0.10)",
-                              color: "#67e8f9",
-                            }}
-                          >
-                            {getKindLabel(s.kind)}
-                          </span>
+                      <Globe2 className="w-3 h-3" />
+                      Cerca in tutto il mondo
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Filtro vuoto ma ci sono risultati */}
+              {!loading && baseList.length > 0 && list.length === 0 && (
+                <div className="px-3 py-4 text-center">
+                  <p className="text-[10px]" style={{ color: "#9ca3af" }}>
+                    Nessun risultato in <span className="font-bold text-white">{FILTERS.find((f) => f.id === kindFilter)?.label}</span>
+                  </p>
+                  <button
+                    onClick={() => setKindFilter("all")}
+                    className="mt-1.5 text-[9px] font-bold px-2 py-0.5 rounded"
+                    style={{ background: "rgba(20,184,166,0.15)", color: "#5eead4" }}
+                  >
+                    Mostra tutte
+                  </button>
+                </div>
+              )}
+
+              {/* Lista risultati */}
+              {list.length > 0 && (
+                <div className="py-1">
+                  {list.map((s, i) => {
+                    const KindIcon = getKindIcon(s.kind);
+                    const active = highlight === i;
+                    return (
+                      <motion.button
+                        key={`${s.name}-${s.region}-${s.kind}-${i}`}
+                        initial={{ opacity: 0, x: -4 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.15, delay: Math.min(i * 0.012, 0.18) }}
+                        type="button"
+                        onClick={() => handlePick(s)}
+                        onMouseEnter={() => setHighlight(i)}
+                        className="w-full text-left px-3 py-2 flex items-center gap-2.5 transition-all relative group"
+                        style={{
+                          background: active ? "rgba(20,184,166,0.10)" : "transparent",
+                        }}
+                      >
+                        {/* indicator left */}
+                        <span
+                          className="absolute left-0 top-0 bottom-0 w-[2px] transition-all"
+                          style={{ background: active ? "#14b8a6" : "transparent" }}
+                        />
+                        {/* Icona tipo */}
+                        <div
+                          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all"
+                          style={{
+                            background: active ? "rgba(20,184,166,0.18)" : "rgba(255,255,255,0.04)",
+                            border: `1px solid ${active ? "rgba(20,184,166,0.35)" : "rgba(255,255,255,0.06)"}`,
+                          }}
+                        >
+                          {showTop ? (
+                            <TrendingUp className="w-3 h-3" style={{ color: active ? "#5eead4" : "#14b8a6" }} />
+                          ) : (
+                            <KindIcon className="w-3 h-3" style={{ color: active ? "#5eead4" : "#06b6d4" }} />
+                          )}
+                        </div>
+
+                        {/* Info principale */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[11px] font-bold text-white truncate leading-tight">{s.name}</span>
+                            <span
+                              className="text-[7px] font-bold px-1 py-0.5 rounded uppercase tracking-wider shrink-0"
+                              style={{ background: "rgba(6,182,212,0.12)", color: "#67e8f9" }}
+                            >
+                              {getKindLabel(s.kind)}
+                            </span>
+                          </div>
+                          <p className="text-[9px] truncate mt-0.5" style={{ color: "#9ca3af" }}>
+                            {[s.region, s.country].filter(Boolean).join(" · ") || "—"}
+                          </p>
+                        </div>
+
+                        {/* Meta destra */}
+                        <div className="flex flex-col items-end gap-0.5 shrink-0">
                           {s.countryCode && (
                             <span
                               className="text-[8px] font-bold px-1 py-0.5 rounded"
-                              style={{ background: "rgba(255,255,255,0.06)", color: "#9ca3af" }}
+                              style={{ background: "rgba(255,255,255,0.06)", color: "#cbd5e1" }}
                             >
                               {s.countryCode}
                             </span>
                           )}
+                          {s.population && s.population > 50000 && (
+                            <span
+                              className="text-[8px] font-bold px-1.5 py-0.5 rounded inline-flex items-center gap-0.5"
+                              style={{ background: "rgba(20,184,166,0.12)", color: "#5eead4" }}
+                              title={`Popolazione: ${s.population.toLocaleString("it-IT")}`}
+                            >
+                              {s.population >= 1000000
+                                ? `${(s.population / 1000000).toFixed(1)}M`
+                                : `${Math.round(s.population / 1000)}k`}
+                            </span>
+                          )}
                         </div>
-                        <p className="text-[9px] truncate" style={{ color: "#9ca3af" }}>
-                          {s.region ? `${s.region}` : ""}
-                          {s.region && s.country ? " · " : ""}
-                          {s.country || ""}
-                        </p>
-                      </div>
-                      {s.population && s.population > 50000 && (
-                        <span
-                          className="text-[8px] font-bold shrink-0 px-1.5 py-0.5 rounded"
-                          style={{ background: "rgba(20,184,166,0.12)", color: "#5eead4" }}
-                        >
-                          {s.population >= 1000000 ? `${(s.population / 1000000).toFixed(1)}M` : `${Math.round(s.population / 1000)}k`}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Quartieri popolari per la città validata */}
-            {areasForCity.length > 0 && (showResults || isValidated) && (
-              <div className="border-t border-white/5">
-                <div className="px-3 py-1.5 flex items-center gap-1.5">
-                  <Globe2 className="w-3 h-3" style={{ color: "#a78bfa" }} />
-                  <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#c4b5fd" }}>
-                    Zone popolari di {validated?.name || value.split(",")[0].trim()}
-                  </span>
-                  <span className="ml-auto text-[8px]" style={{ color: "#6b7280" }}>
-                    facoltativo
-                  </span>
+                      </motion.button>
+                    );
+                  })}
                 </div>
-                <div className="px-2 pb-2 flex flex-wrap gap-1">
-                  {areasForCity.map((area) => (
-                    <button
-                      key={area}
-                      type="button"
-                      onClick={() => handleAreaPick(area)}
-                      className="text-[9px] font-bold px-2 py-1 rounded-md transition-all"
-                      style={{
-                        background: selectedArea === area ? "rgba(167,139,250,0.30)" : "rgba(167,139,250,0.10)",
-                        border: `1px solid ${selectedArea === area ? "rgba(167,139,250,0.6)" : "rgba(167,139,250,0.25)"}`,
-                        color: "#c4b5fd",
-                      }}
+              )}
+
+              {/* Quartieri / zone popolari */}
+              {areasForCity.length > 0 && (showResults || isValidated) && (
+                <div
+                  className="border-t"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.06)",
+                    background: "linear-gradient(180deg, rgba(167,139,250,0.04) 0%, transparent 100%)",
+                  }}
+                >
+                  <div className="px-3 py-2 flex items-center gap-1.5">
+                    <div
+                      className="w-4 h-4 rounded flex items-center justify-center shrink-0"
+                      style={{ background: "rgba(167,139,250,0.18)", border: "1px solid rgba(167,139,250,0.3)" }}
                     >
-                      {area}
-                    </button>
-                  ))}
+                      <Globe2 className="w-2.5 h-2.5" style={{ color: "#c4b5fd" }} />
+                    </div>
+                    <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#c4b5fd" }}>
+                      Zone di {validated?.name || value.split(",")[0].trim()}
+                    </span>
+                    <span className="ml-auto text-[8px] font-medium" style={{ color: "#6b7280" }}>
+                      facoltativo · {areasForCity.length}
+                    </span>
+                  </div>
+                  <div className="px-2 pb-2.5 grid grid-cols-2 sm:grid-cols-3 gap-1">
+                    {areasForCity.map((area) => {
+                      const sel = selectedArea === area;
+                      return (
+                        <button
+                          key={area}
+                          type="button"
+                          onClick={() => handleAreaPick(area)}
+                          className="text-[9px] font-bold px-2 py-1.5 rounded-md transition-all hover:scale-[1.02] truncate text-left flex items-center gap-1"
+                          style={{
+                            background: sel ? "rgba(167,139,250,0.30)" : "rgba(167,139,250,0.08)",
+                            border: `1px solid ${sel ? "rgba(167,139,250,0.6)" : "rgba(167,139,250,0.20)"}`,
+                            color: sel ? "#ffffff" : "#c4b5fd",
+                          }}
+                          title={area}
+                        >
+                          {sel && <Check className="w-2.5 h-2.5 shrink-0" />}
+                          <span className="truncate">{area}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
-            <div className="px-3 py-1.5 border-t border-white/5 flex items-center justify-between">
-              <span className="text-[8px]" style={{ color: "#6b7280" }}>
-                ↑↓ naviga · Enter seleziona · Esc chiudi
-              </span>
-              <span className="text-[8px] font-bold" style={{ color: "#14b8a6" }}>
-                🌍 OpenStreetMap · Real data
-              </span>
+            {/* ─── Footer sticky ─── */}
+            <div
+              className="shrink-0 px-3 py-1.5 border-t flex items-center justify-between gap-2"
+              style={{
+                borderColor: "rgba(255,255,255,0.06)",
+                background: "rgba(0,0,0,0.3)",
+              }}
+            >
+              <div className="flex items-center gap-1.5 overflow-hidden">
+                <kbd
+                  className="text-[7px] font-bold px-1 py-0.5 rounded"
+                  style={{ background: "rgba(255,255,255,0.06)", color: "#9ca3af", border: "1px solid rgba(255,255,255,0.08)" }}
+                >
+                  ↑↓
+                </kbd>
+                <span className="text-[8px]" style={{ color: "#6b7280" }}>naviga</span>
+                <kbd
+                  className="text-[7px] font-bold px-1 py-0.5 rounded ml-1"
+                  style={{ background: "rgba(255,255,255,0.06)", color: "#9ca3af", border: "1px solid rgba(255,255,255,0.08)" }}
+                >
+                  ↵
+                </kbd>
+                <span className="text-[8px]" style={{ color: "#6b7280" }}>seleziona</span>
+                <kbd
+                  className="text-[7px] font-bold px-1 py-0.5 rounded ml-1 hidden sm:inline-block"
+                  style={{ background: "rgba(255,255,255,0.06)", color: "#9ca3af", border: "1px solid rgba(255,255,255,0.08)" }}
+                >
+                  esc
+                </kbd>
+                <span className="text-[8px] hidden sm:inline" style={{ color: "#6b7280" }}>chiudi</span>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <span
+                  className="w-1.5 h-1.5 rounded-full animate-pulse"
+                  style={{ background: "#10b981", boxShadow: "0 0 6px #10b981" }}
+                />
+                <span className="text-[8px] font-bold" style={{ color: "#5eead4" }}>
+                  OpenStreetMap · Real-time
+                </span>
+              </div>
             </div>
           </motion.div>
         )}
