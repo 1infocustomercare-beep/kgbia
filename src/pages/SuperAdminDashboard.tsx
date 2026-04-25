@@ -26,6 +26,7 @@ import AccountManagerPanel from "@/components/superadmin/AccountManagerPanel";
 import SuperAdminCreditsCenter from "@/components/superadmin/SuperAdminCreditsCenter";
 import EmpireBrainPanel from "@/components/superadmin/EmpireBrainPanel";
 import SalesAgentCockpit from "@/components/superadmin/SalesAgentCockpit";
+import EmpireParticleOrb from "@/components/partner/EmpireParticleOrb";
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 
@@ -856,6 +857,10 @@ const SuperAdminDashboard = () => {
         {/* ===== OVERVIEW ===== */}
         {!loading && activeTab === "overview" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {/* ═══ EMPIRE PARTICLE ORB — interactive WOW hero (anche per Super Admin) ═══ */}
+            <section className="-mx-4">
+              <EmpireParticleOrb />
+            </section>
             {/* Critical Alerts */}
             {criticalAlerts.length > 0 && (
               <div className="space-y-2">

@@ -88,7 +88,7 @@ const EmpireParticleOrb = memo(() => {
   // Tracked active pointers for multi-touch
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const [mode, setMode] = useState<Mode>("orb");
-  const [hint, setHint] = useState(true);
+  // hint testuale rimosso (richiesta utente)
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -389,7 +389,7 @@ const EmpireParticleOrb = memo(() => {
         const next: Mode = modeRef.current === "orb" ? "constellation" : "orb";
         modeRef.current = next;
         setMode(next);
-        setHint(false);
+        
         // Onda d'urto + supernova nel punto del tap
         const rect = canvas.getBoundingClientRect();
         const tapX = e.clientX - rect.left;
@@ -792,19 +792,7 @@ const EmpireParticleOrb = memo(() => {
               >
                 Il tuo Universo AI
               </h3>
-              <AnimatePresence>
-                {hint && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0.4, 0.9, 0.4] }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 2.2, repeat: Infinity }}
-                    className="text-[10px] sm:text-xs text-violet-300/70 mt-3 font-medium"
-                  >
-                    Trascina · ruota · pizzica · tocca
-                  </motion.p>
-                )}
-              </AnimatePresence>
+              {/* Hint testuale rimosso in tutti gli account: l'interazione si scopre naturalmente */}
             </motion.div>
           ) : (
             <motion.div
