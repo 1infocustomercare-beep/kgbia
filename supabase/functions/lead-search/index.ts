@@ -60,7 +60,7 @@ const SECTOR_OSM_TAGS: Record<string, string[]> = {
 };
 
 /* ═══ GEOCODE (city or full address) — picks best match in country ═══ */
-async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[]; country_code?: string; matched_name?: string } | null> {
+async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[]; country_code?: string; matched_name?: string; place_type?: string; parent_name?: string } | null> {
   try {
     const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
     const resp = await fetch(
@@ -83,12 +83,16 @@ async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: n
     });
     const best = sorted[0];
     const addr = best.address || {};
+    // Detect parent municipality (for fallback when small villages have no POIs)
+    const parentName = addr.municipality || addr.town || addr.city || addr.county || null;
     return {
       lat: parseFloat(best.lat),
       lon: parseFloat(best.lon),
       bbox: best.boundingbox?.map(Number) || [],
       country_code: (addr.country_code || "").toLowerCase(),
       matched_name: best.display_name,
+      place_type: best.type || best.class,
+      parent_name: parentName && parentName.toLowerCase() !== city.toLowerCase().trim() ? parentName : undefined,
     };
   } catch { return null; }
 }
