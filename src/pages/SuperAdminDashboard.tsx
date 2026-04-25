@@ -26,6 +26,7 @@ import AccountManagerPanel from "@/components/superadmin/AccountManagerPanel";
 import SuperAdminCreditsCenter from "@/components/superadmin/SuperAdminCreditsCenter";
 import EmpireBrainPanel from "@/components/superadmin/EmpireBrainPanel";
 import SalesAgentCockpit from "@/components/superadmin/SalesAgentCockpit";
+import EmpireParticleOrb from "@/components/partner/EmpireParticleOrb";
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 
