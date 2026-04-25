@@ -147,14 +147,14 @@ serve(async (req) => {
             .eq("stripe_session_id", session.id);
 
           // Reflect on the actual order row, but only flip pending → paid (no override of finalized states).
-          await supabase
-            .from("orders")
+          const ordersTable: any = supabase.from("orders");
+          await ordersTable
             .update({
               payment_status: "paid",
               status: "confirmed",
-            } as any)
+            })
             .eq("id", orderId)
-            .in("payment_status" as any, ["pending", null as any]);
+            .in("payment_status", ["pending", null]);
         }
         await supabase.rpc("mark_stripe_event_processed", { p_event_id: eventId, p_status: "processed", p_error: null });
         return ok({ type: "pwa_order", orderId });

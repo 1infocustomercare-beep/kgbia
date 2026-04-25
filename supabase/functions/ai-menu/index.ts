@@ -110,8 +110,8 @@ Rispondi SOLO con un JSON valido (senza markdown):
   "allergens": ["lista SOLO degli allergeni EU reali presenti: ${EU_ALLERGENS_LIST.join(", ")}"],
   "diet_tags": ["tag dietetici corretti: vegetarian, vegan, gluten_free, spicy - SOLO se vero"],
   "image_prompt_dish": "descrizione ULTRA dettagliata del piatto ESATTO per generare una foto realistica - includi colore, consistenza, guarnizione, ingredienti visibili, tipo di impiattamento"${langNames.length > 0 ? `,
-  "name_translations": {${langNames.map(l => `"${langs[langNames.indexOf(l)]}": "traduzione nome in ${l}"`).join(", ")}},
-  "description_translations": {${langNames.map(l => `"${langs[langNames.indexOf(l)]}": "traduzione descrizione in ${l}"`).join(", ")}}` : ""}
+  "name_translations": {${langNames.map((l: string) => `"${langs[langNames.indexOf(l)]}": "traduzione nome in ${l}"`).join(", ")}},
+  "description_translations": {${langNames.map((l: string) => `"${langs[langNames.indexOf(l)]}": "traduzione descrizione in ${l}"`).join(", ")}}` : ""}
 }`;
 
       const metaResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {

@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "npm:resend@2.0.0";
+import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -43,7 +43,6 @@ serve(async (req) => {
       .lte("next_due_date", threeDaysStr)
       .gt("next_due_date", todayStr)
       .is("warning_sent_at", null)
-      .lt("installments_paid", supabase.rpc ? undefined : 999) // fallback
       .eq("is_overdue", false);
 
     // Filter where installments_paid < installments_total

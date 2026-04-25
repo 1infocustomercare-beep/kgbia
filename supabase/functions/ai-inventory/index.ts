@@ -52,10 +52,9 @@ serve(async (req) => {
       const userClient = createClient(supabaseUrl, anonKey, {
         global: { headers: { Authorization: authHeader } },
       });
-      const token = authHeader.replace("Bearer ", "");
-      const { data: claimsData } = await userClient.auth.getClaims(token);
-      if (claimsData?.claims) {
-        const userId = claimsData.claims.sub as string;
+      const { data: userData } = await userClient.auth.getUser();
+      if (userData?.user) {
+        const userId = userData.user.id;
         const sb = createClient(supabaseUrl, serviceKey);
         const { data: ownership } = await sb.from("restaurants").select("id")
           .eq("id", restaurantId).eq("owner_id", userId).maybeSingle();
