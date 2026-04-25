@@ -450,8 +450,26 @@ export default function SmartCityAutocomplete({
 
   const showTop = open && sanitize(value).length < 2;
   const showResults = open && sanitize(value).length >= 2;
-  const list = showTop ? allTop : suggestions;
   const isValidated = !!validated && validated.name === value;
+
+  /* Filtro tipo località (Tutte / Città / Comuni / Zone) */
+  const [kindFilter, setKindFilter] = useState<"all" | "city" | "town" | "area">("all");
+  const filterList = (arr: CitySuggestion[]) => {
+    if (kindFilter === "all") return arr;
+    if (kindFilter === "city") return arr.filter((s) => s.kind === "city");
+    if (kindFilter === "town") return arr.filter((s) => s.kind === "town" || s.kind === "village" || s.kind === "hamlet");
+    if (kindFilter === "area") return arr.filter((s) => s.kind === "suburb" || s.kind === "neighbourhood");
+    return arr;
+  };
+  const baseList = showTop ? allTop : suggestions;
+  const list = filterList(baseList);
+
+  const FILTERS: { id: typeof kindFilter; label: string; count: number }[] = [
+    { id: "all", label: "Tutte", count: baseList.length },
+    { id: "city", label: "Città", count: baseList.filter((s) => s.kind === "city").length },
+    { id: "town", label: "Comuni", count: baseList.filter((s) => s.kind === "town" || s.kind === "village" || s.kind === "hamlet").length },
+    { id: "area", label: "Zone", count: baseList.filter((s) => s.kind === "suburb" || s.kind === "neighbourhood").length },
+  ];
 
   return (
     <div ref={containerRef} className="relative">
