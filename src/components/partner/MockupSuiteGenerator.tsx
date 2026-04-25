@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 import { MockupLookPresets, type MockupLookPreset } from "./MockupLookPresets";
+import { MockupPresetSelector } from "./MockupPresetSelector";
 import { useBrandingKitSettings } from "@/hooks/useBrandingKitSettings";
 import { BrandContrastCheck } from "./BrandContrastCheck";
 import { buildPublicMockupUrl } from "@/lib/public-share-url";
