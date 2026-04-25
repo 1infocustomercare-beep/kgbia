@@ -116,7 +116,8 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 z-[60] backdrop-blur-md"
+            style={{ background: "radial-gradient(ellipse at top, rgba(76,29,149,0.55), rgba(10,8,20,0.92))" }}
             onClick={!loading ? onClose : undefined}
           />
 
