@@ -122,18 +122,23 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
   const [sectorFilter, setSectorFilter] = useState<string>(ALL_SECTORS);
   const [search, setSearch] = useState("");
 
-  // Init quando si apre
+  // Init SOLO quando si apre (non quando presentables cambia, altrimenti resetta in loop)
   useEffect(() => {
     if (!open) return;
-    let idx = 0;
-    if (initialSuiteId) {
-      const found = presentables.findIndex((p) => p.id === `suite-${initialSuiteId}`);
-      if (found >= 0) idx = found;
-    }
-    setActiveIdx(idx);
     setScreenIdx(0);
     setPaused(false);
     setSwitcherOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // Quando le suite caricano e c'è un initialSuiteId, salta a quella suite
+  useEffect(() => {
+    if (!open || !initialSuiteId) return;
+    const found = presentables.findIndex((p) => p.id === `suite-${initialSuiteId}`);
+    if (found >= 0) {
+      setActiveIdx(found);
+      setScreenIdx(0);
+    }
   }, [open, initialSuiteId, presentables]);
 
   // Lock scroll body + true fullscreen
