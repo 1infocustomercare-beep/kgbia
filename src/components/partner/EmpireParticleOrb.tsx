@@ -792,19 +792,7 @@ const EmpireParticleOrb = memo(() => {
               >
                 Il tuo Universo AI
               </h3>
-              <AnimatePresence>
-                {hint && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0.4, 0.9, 0.4] }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 2.2, repeat: Infinity }}
-                    className="text-[10px] sm:text-xs text-violet-300/70 mt-3 font-medium"
-                  >
-                    Trascina · ruota · pizzica · tocca
-                  </motion.p>
-                )}
-              </AnimatePresence>
+              {/* Hint testuale rimosso in tutti gli account: l'interazione si scopre naturalmente */}
             </motion.div>
           ) : (
             <motion.div
