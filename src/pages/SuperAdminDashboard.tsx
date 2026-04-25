@@ -153,8 +153,24 @@ const SuperAdminDashboard = () => {
   ]);
   const [maryInput, setMaryInput] = useState("");
   const [maryChips] = useState(["Revenue oggi", "Tenant attivi?", "Vault non configurati?", "Churn rate", "Report mensile"]);
+  const [profileAvatar, setProfileAvatar] = useState<string | null>(null);
+  const [profileName, setProfileName] = useState<string>("");
 
   useEffect(() => { fetchData(); }, []);
+
+  // Load avatar / name for the header
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase
+      .from("profiles")
+      .select("avatar_url, full_name")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.avatar_url) setProfileAvatar(data.avatar_url);
+        if (data?.full_name) setProfileName(data.full_name);
+      });
+  }, [user?.id]);
 
   const fetchData = async () => {
     setLoading(true);
