@@ -155,6 +155,22 @@ const SuperAdminDashboard = () => {
   const [maryChips] = useState(["Revenue oggi", "Tenant attivi?", "Vault non configurati?", "Churn rate", "Report mensile"]);
   const [profileAvatar, setProfileAvatar] = useState<string | null>(null);
   const [profileName, setProfileName] = useState<string>("");
+  const [tabBarOpen, setTabBarOpen] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    const saved = window.localStorage.getItem("superadmin_tabbar_open");
+    return saved === null ? true : saved === "1";
+  });
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    if (typeof window === "undefined") return {};
+    try { return JSON.parse(window.localStorage.getItem("superadmin_tab_groups") || "{}"); } catch { return {}; }
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("superadmin_tabbar_open", tabBarOpen ? "1" : "0");
+  }, [tabBarOpen]);
+  useEffect(() => {
+    window.localStorage.setItem("superadmin_tab_groups", JSON.stringify(openGroups));
+  }, [openGroups]);
 
   useEffect(() => { fetchData(); }, []);
 
@@ -868,6 +884,27 @@ const SuperAdminDashboard = () => {
 
           {/* RIGHT — quick actions */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
+            <button
+              onClick={() => setTabBarOpen((v) => !v)}
+              className="p-2 rounded-xl transition-colors hidden sm:flex items-center gap-1.5 text-[10px] font-bold tracking-wider uppercase"
+              style={{
+                background: tabBarOpen ? "rgba(167,139,250,0.12)" : "rgba(167,139,250,0.04)",
+                border: "1px solid rgba(167,139,250,0.25)",
+                color: "#a78bfa",
+              }}
+              title={tabBarOpen ? "Nascondi menu" : "Mostra menu"}
+            >
+              {tabBarOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              <span>{tabBarOpen ? "Nascondi menu" : "Menu"}</span>
+            </button>
+            <button
+              onClick={() => setTabBarOpen((v) => !v)}
+              className="p-2 rounded-xl transition-colors sm:hidden"
+              style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.2)" }}
+              title={tabBarOpen ? "Nascondi menu" : "Mostra menu"}
+            >
+              {tabBarOpen ? <ChevronUp className="w-4 h-4 text-purple-300" /> : <ChevronDown className="w-4 h-4 text-purple-300" />}
+            </button>
             <button onClick={() => navigate("/home")} className="p-2 rounded-xl hover:bg-secondary transition-colors" title="Home">
               <ArrowLeft className="w-4 h-4 text-muted-foreground" />
             </button>
@@ -897,50 +934,149 @@ const SuperAdminDashboard = () => {
         </div>
       </div>
 
-      {/* ═══════════ TAB BAR — modern futuristic ═══════════ */}
-      <div className="px-3 py-2.5 relative z-10 space-y-2.5 max-h-[42vh] overflow-y-auto scrollbar-thin">
-        {tabGroups.map((group) => (
-          <div key={group.label}>
-            <div className="text-[0.55rem] font-bold uppercase tracking-[0.15em] mb-1.5 px-1 flex items-center gap-1.5"
-              style={{ color: "hsl(250 60% 75%)" }}>
-              <span>{group.label}</span>
-              <div className="flex-1 h-px bg-gradient-to-r from-empire-violet/25 to-transparent" />
+      {/* ═══════════ CURRENT TAB BREADCRUMB — sempre visibile quando menu chiuso ═══════════ */}
+      {!tabBarOpen && (() => {
+        const current = allTabs.find(t => t.id === activeTab);
+        const currentGroup = tabGroups.find(g => g.tabs.some(t => t.id === activeTab));
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="px-3 sm:px-4 py-2 relative z-10 border-b border-border/20"
+            style={{ background: "linear-gradient(180deg, rgba(124,58,237,0.05), transparent)" }}
+          >
+            <div className="max-w-5xl mx-auto flex items-center gap-2 text-[11px]">
+              <span className="text-purple-300/60 font-semibold">{currentGroup?.label}</span>
+              <ChevronRight className="w-3 h-3 text-purple-300/40" />
+              <span className="text-white font-bold flex items-center gap-1.5">
+                <span className="[&_svg]:w-3.5 [&_svg]:h-3.5 text-empire-violet">{current?.icon}</span>
+                {current?.label}
+              </span>
+              <button
+                onClick={() => setTabBarOpen(true)}
+                className="ml-auto text-[10px] font-bold uppercase tracking-wider text-purple-300/80 hover:text-white transition-colors flex items-center gap-1"
+              >
+                <ChevronDown className="w-3 h-3" /> Apri menu
+              </button>
             </div>
-            <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-1.5">
-              {group.tabs.map((tab) => {
-                const isActive = activeTab === tab.id;
+          </motion.div>
+        );
+      })()}
+
+      {/* ═══════════ TAB BAR — collapsible, professionale ═══════════ */}
+      <AnimatePresence initial={false}>
+        {tabBarOpen && (
+          <motion.div
+            key="tabbar"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="relative z-10 overflow-hidden border-b border-border/20"
+            style={{ background: "linear-gradient(180deg, rgba(15,12,30,0.4), transparent)" }}
+          >
+            <div className="px-3 sm:px-4 py-3 space-y-2 max-w-7xl mx-auto">
+              {tabGroups.map((group) => {
+                const isOpen = openGroups[group.label] ?? true;
+                const hasActive = group.tabs.some(t => t.id === activeTab);
                 return (
-                  <motion.button
-                    key={tab.id}
-                    whileHover={{ scale: 1.04, y: -1 }}
-                    whileTap={{ scale: 0.96 }}
-                    onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
-                    className="relative flex flex-col items-center justify-center gap-1 px-1 py-2 rounded-xl text-[0.55rem] font-bold transition-all min-h-[48px] overflow-hidden"
-                    style={isActive ? {
-                      background: "linear-gradient(160deg, hsl(265 75% 55%), hsl(250 65% 42%))",
-                      color: "white",
-                      boxShadow: "0 8px 24px hsl(265 85% 60% / 0.45), inset 0 1px 0 hsl(265 60% 75% / 0.35), 0 0 0 1px hsl(265 60% 60% / 0.5)"
-                    } : {
-                      background: "linear-gradient(160deg, hsl(230 20% 13%), hsl(232 22% 10%))",
-                      color: "hsl(220 15% 78%)",
-                      border: "1px solid hsl(250 30% 25% / 0.4)"
-                    }}>
-                    {isActive && (
-                      <motion.div
-                        layoutId="active-tab-glow"
-                        className="absolute inset-0 rounded-xl pointer-events-none"
-                        style={{ background: "radial-gradient(circle at 50% 0%, hsl(265 90% 70% / 0.35), transparent 70%)" }}
+                  <div
+                    key={group.label}
+                    className="rounded-xl overflow-hidden"
+                    style={{
+                      background: "linear-gradient(160deg, rgba(167,139,250,0.04), rgba(15,12,30,0.3))",
+                      border: hasActive ? "1px solid rgba(167,139,250,0.35)" : "1px solid rgba(167,139,250,0.1)",
+                    }}
+                  >
+                    {/* Group header — clickable */}
+                    <button
+                      onClick={() => setOpenGroups(s => ({ ...s, [group.label]: !isOpen }))}
+                      className="w-full px-3 py-2 flex items-center justify-between gap-2 transition-colors hover:bg-white/[0.02]"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.15em]" style={{ color: hasActive ? "#a78bfa" : "hsl(250 60% 70%)" }}>
+                          {group.label}
+                        </span>
+                        <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(167,139,250,0.1)", color: "#a78bfa" }}>
+                          {group.tabs.length}
+                        </span>
+                        {hasActive && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        )}
+                      </div>
+                      <ChevronDown
+                        className="w-3.5 h-3.5 text-purple-300/60 transition-transform"
+                        style={{ transform: isOpen ? "rotate(0deg)" : "rotate(-90deg)" }}
                       />
-                    )}
-                    <span className="[&_svg]:w-3.5 [&_svg]:h-3.5 relative z-10">{tab.icon}</span>
-                    <span className="leading-tight truncate w-full text-center relative z-10">{tab.label}</span>
-                  </motion.button>
+                    </button>
+
+                    {/* Group tabs */}
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-7 gap-1.5 px-2.5 pb-2.5 pt-0.5">
+                            {group.tabs.map((tab) => {
+                              const isActive = activeTab === tab.id;
+                              return (
+                                <motion.button
+                                  key={tab.id}
+                                  whileHover={{ y: -1 }}
+                                  whileTap={{ scale: 0.96 }}
+                                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
+                                  className="relative flex flex-col items-center justify-center gap-1 px-1.5 py-2 rounded-lg text-[0.6rem] font-semibold transition-all min-h-[52px] overflow-hidden"
+                                  style={isActive ? {
+                                    background: "linear-gradient(160deg, hsl(265 75% 55%), hsl(250 65% 42%))",
+                                    color: "white",
+                                    boxShadow: "0 6px 18px hsl(265 85% 60% / 0.45), inset 0 1px 0 hsl(265 60% 75% / 0.3)"
+                                  } : {
+                                    background: "linear-gradient(160deg, hsl(230 20% 11%), hsl(232 22% 8%))",
+                                    color: "hsl(220 15% 80%)",
+                                    border: "1px solid hsl(250 30% 22% / 0.5)"
+                                  }}>
+                                  <span className="[&_svg]:w-3.5 [&_svg]:h-3.5 relative z-10">{tab.icon}</span>
+                                  <span className="leading-tight truncate w-full text-center relative z-10">{tab.label}</span>
+                                </motion.button>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 );
               })}
+
+              {/* Footer mini-actions */}
+              <div className="flex items-center justify-between gap-2 pt-1 px-1">
+                <button
+                  onClick={() => {
+                    const allOpen = Object.fromEntries(tabGroups.map(g => [g.label, true]));
+                    setOpenGroups(allOpen);
+                  }}
+                  className="text-[9px] font-bold uppercase tracking-wider text-purple-300/60 hover:text-purple-200 transition-colors"
+                >
+                  Espandi tutto
+                </button>
+                <button
+                  onClick={() => {
+                    const allClosed = Object.fromEntries(tabGroups.map(g => [g.label, false]));
+                    setOpenGroups(allClosed);
+                  }}
+                  className="text-[9px] font-bold uppercase tracking-wider text-purple-300/60 hover:text-purple-200 transition-colors"
+                >
+                  Comprimi tutto
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Content */}
       <div className="relative z-10 px-4 pb-8">
