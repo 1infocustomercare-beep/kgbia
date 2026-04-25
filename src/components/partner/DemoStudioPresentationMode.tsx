@@ -516,7 +516,6 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
           )}
         </AnimatePresence>
       </motion.div>
-    </AnimatePresence>
   );
 
   return typeof document !== "undefined" ? createPortal(content, document.body) : content;
