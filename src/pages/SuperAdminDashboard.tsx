@@ -941,10 +941,6 @@ const SuperAdminDashboard = () => {
           </div>
         ))}
       </div>
-            </div>
-          </div>
-        ))}
-      </div>
 
       {/* Content */}
       <div className="relative z-10 px-4 pb-8">
