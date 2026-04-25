@@ -523,7 +523,7 @@ export default function PartnerHomePage() {
                 ))}
               </motion.div>
 
-              {/* ─── 8. SOCIAL PROOF — Glowing card ─── */}
+              {/* ─── 8. PROMESSA — Glowing card (no fake reviews) ─── */}
               <motion.div {...fadeUp(0.35)} className="rounded-3xl p-6 text-center relative overflow-hidden group cursor-default"
                 whileHover={{ scale: 1.01 }}
                 style={{
@@ -541,11 +541,10 @@ export default function PartnerHomePage() {
                       </motion.div>
                     ))}
                   </div>
-                  <p className="text-sm font-bold text-foreground mb-2">Oltre 500 attività già attive</p>
-                  <p className="text-[10px] text-muted-foreground leading-relaxed max-w-[280px] mx-auto italic">
-                    "Gli ordini online sono aumentati del 40% e risparmiamo 15 ore a settimana. Non torneremmo mai indietro."
+                  <p className="text-sm font-bold text-foreground mb-2">Costruito per durare</p>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed max-w-[280px] mx-auto">
+                    Sistema completo, supporto diretto e aggiornamenti continui. Niente costi nascosti, nessuna sorpresa: paghi quello che vedi.
                   </p>
-                  <p className="text-[9px] font-semibold mt-2.5" style={{ color: "#d4a052" }}>— Marco R., Ristoratore, Roma</p>
                 </div>
               </motion.div>
 
