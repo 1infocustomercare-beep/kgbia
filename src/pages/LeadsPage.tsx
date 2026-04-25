@@ -856,22 +856,9 @@ export default function LeadsPage() {
     if (append) setDeepLoading(true);
     else { setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null); }
 
-    // 💰 Gating crediti: ricerca lead = 1 credito (server-side)
-    const creditRes = await consumeSellerCredits("lead_search", {
-      city: city.trim(), sector,
-      mode: isNameOnly ? "name_only" : "zone",
-      sources: activeSources,
-      country: country || null,
-    });
-    if (!creditRes.success) {
-      setLoading(false); setDeepLoading(false);
-      toast.error(creditRes.error === "insufficient_credits"
-        ? `Servono ${creditRes.required} crediti (saldo: ${creditRes.balance})`
-        : creditRes.error === "monthly_cap_reached"
-        ? `Tetto mensile raggiunto (${creditRes.used}/${creditRes.cap})`
-        : "Crediti non disponibili");
-      return;
-    }
+    // 💰 Gating crediti server-side: lead-search addebita 1 credito SOLO se la stessa
+    // ricerca (fingerprint città+settore+canali+pagina) non è già stata pagata negli
+    // ultimi 15 minuti. Cache hit = 0 crediti, risultati identici riusati.
 
     try {
       const existingNames = append ? results.map(r => r.name) : [];
