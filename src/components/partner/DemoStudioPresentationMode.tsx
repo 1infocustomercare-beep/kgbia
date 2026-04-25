@@ -120,6 +120,7 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
   const [paused, setPaused] = useState(false);
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const [sectorFilter, setSectorFilter] = useState<string>(ALL_SECTORS);
+  const [sourceFilter, setSourceFilter] = useState<"all" | "suite" | "catalog">("all");
   const [search, setSearch] = useState("");
 
   // Init SOLO quando si apre (non quando presentables cambia, altrimenti resetta in loop)
