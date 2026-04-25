@@ -709,6 +709,17 @@ function mergeAndDeduplicate(buckets: any[][], existing?: any[]): any[] {
   return results;
 }
 
+/* ═══ Fingerprint helper for credit dedup ═══ */
+async function makeFingerprint(payload: Record<string, unknown>): Promise<string> {
+  const json = JSON.stringify(payload, Object.keys(payload).sort());
+  const buf = new TextEncoder().encode(json);
+  const hash = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 32);
+}
+
 /* ═══ MAIN HANDLER ═══ */
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -719,6 +730,7 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     const isInternalServiceCall = !!serviceRoleKey && authHeader === `Bearer ${serviceRoleKey}`;
 
+    let authedUserId: string | null = null;
     if (!isInternalServiceCall) {
       if (!authHeader?.startsWith("Bearer ")) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -728,12 +740,14 @@ serve(async (req) => {
       if (_authErr || !_authUser) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
+      authedUserId = _authUser.id;
     }
 
     const {
       query, city, sector, use_google, page = 0, existing_names = [],
       lat, lon, radius_km, specialization_query,
       sources: requestedSources, name_only, country_code,
+      skip_credit_charge,
     } = await req.json();
     const hasCoords = typeof lat === "number" && typeof lon === "number";
     if (!city && !query && !hasCoords) {
