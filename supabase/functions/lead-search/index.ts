@@ -761,7 +761,7 @@ serve(async (req) => {
     // ── BRANCH 1: NAME-ONLY GLOBAL SEARCH (no sector terms, no bbox required) ──
     if (isNameOnly) {
       const nameResults = await searchByNameGlobal(searchQuery, ccFilter);
-      const merged = mergeAndDeduplicate([], nameResults, [], [], existingForDedup.length > 0 ? existingForDedup : undefined);
+      const merged = mergeAndDeduplicate([nameResults], existingForDedup.length > 0 ? existingForDedup : undefined);
       console.log(`Name-only search "${searchQuery}" cc=${ccFilter || "*"} → ${merged.length} results`);
       return new Response(JSON.stringify({
         success: true, results: merged, page: 0, has_more: false,
