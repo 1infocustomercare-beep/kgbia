@@ -489,7 +489,7 @@ export default function SmartCityAutocomplete({
         ref={ref}
         value={value}
         onChange={(e) => handleInputChange(e.target.value)}
-        onFocus={() => setOpen(true)}
+        onClick={() => setOpen(true)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className={inputClassName ?? "w-full pl-9 pr-9 py-3 rounded-xl text-[11px] text-white placeholder:text-gray-500 outline-none"}
