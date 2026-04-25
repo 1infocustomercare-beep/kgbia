@@ -211,6 +211,8 @@ const EmpireParticleOrb = memo(() => {
     const handlePointerDown = (e: PointerEvent) => {
       if (!isInsideOrb(e.clientX, e.clientY)) return;
       canvas.style.cursor = "grabbing";
+      // Mentre interagiamo con l'orb blocchiamo lo scroll nativo per permettere drag/rotate.
+      canvas.style.touchAction = "none";
       pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
       // Two pointers down → start pinch/twist gesture
