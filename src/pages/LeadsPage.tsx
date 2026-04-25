@@ -879,6 +879,17 @@ export default function LeadsPage() {
           radius,
         },
       });
+      // Errore di credito → tipicamente 402 dal server
+      if (!error && data && data.success === false) {
+        setLoading(false); setDeepLoading(false);
+        const err = data.error || "Errore";
+        toast.error(err === "insufficient_credits"
+          ? `Servono ${data.required} crediti (saldo: ${data.balance})`
+          : err === "monthly_cap_reached"
+          ? `Tetto mensile raggiunto (${data.used}/${data.cap})`
+          : err);
+        return;
+      }
       if (error) throw error;
       if (data?.success && data.results?.length > 0) {
         const processed = processResults(data.results, append);
@@ -891,10 +902,15 @@ export default function LeadsPage() {
           .filter(([k, v]) => k !== "total_merged" && (v as number) > 0)
           .map(([k, v]) => `${k.charAt(0).toUpperCase() + k.slice(1)}: ${v}`)
           .join(" · ") || "—";
+        const cachedHit = !!data.cached;
+        const creditsUsed = data?.credit?.credits_used ?? 0;
+        const creditTag = cachedHit
+          ? "♻️ Risultati cached · 0 crediti"
+          : creditsUsed > 0 ? `💳 -${creditsUsed} cr` : "Gratis";
         toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati${isNameOnly ? " (per nome)" : ""}`, {
-          description: data.fallback_used
-            ? `📍 "${city.trim()}" è una piccola località — risultati estesi a "${data.fallback_used}" · ${srcSummary}`
-            : srcSummary,
+          description: `${creditTag} · ${data.fallback_used
+            ? `📍 esteso a "${data.fallback_used}" · `
+            : ""}${srcSummary}`,
         });
         // Auto-batch enrich Instagram in background
         setTimeout(() => batchEnrichInstagram(processed), 1500);
