@@ -23,6 +23,7 @@ import empireMonkeyMascot from "@/assets/empire-monkey.png";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import AccountManagerPanel from "@/components/superadmin/AccountManagerPanel";
+import SuperAdminProfileSection from "@/components/superadmin/SuperAdminProfileSection";
 import SuperAdminCreditsCenter from "@/components/superadmin/SuperAdminCreditsCenter";
 import EmpireBrainPanel from "@/components/superadmin/EmpireBrainPanel";
 import SalesAgentCockpit from "@/components/superadmin/SalesAgentCockpit";
