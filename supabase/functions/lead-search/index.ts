@@ -587,6 +587,10 @@ serve(async (req) => {
         geo.bbox = bboxFromRadius(geo.lat, geo.lon, searchRadius);
       }
     }
+    if (!geo) {
+      return new Response(JSON.stringify({ success: false, error: `Località "${searchCity || searchQuery}" non trovata.`, results: [] }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
     // Effective country code: prefer explicit filter, else infer from geocode result
     const effectiveCC = ccFilter || (geo as any).country_code || "";
 
