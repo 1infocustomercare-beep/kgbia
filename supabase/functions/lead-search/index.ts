@@ -199,25 +199,71 @@ async function searchPhoton(city: string, sector: string, geo: { lat: number; lo
     for (const f of features) {
       const props = f.properties || {};
       const name = props.name;
+/* ═══ SOURCE 1: PHOTON ═══ */
+async function searchPhoton(city: string, sector: string, geo: { lat: number; lon: number; bbox: number[] }, page: number, specializationQuery = "", maxDistanceKm = 25, countryCode = ""): Promise<any[]> {
+  const baseTerms = SECTOR_TERMS[sector] || [sector];
+  const terms = specializationQuery ? [specializationQuery, ...baseTerms.filter(t => t !== specializationQuery)] : baseTerms;
+  const results: any[] = [];
+  const seen = new Set<string>();
+
+  // Different terms per page for deeper results
+  const startIdx = page * 5;
+  const searchTerms = terms.slice(startIdx, startIdx + 6);
+  if (searchTerms.length === 0) return [];
+
+  // Photon supports bbox: minLon,minLat,maxLon,maxLat
+  // Use slightly enlarged bbox around center for accuracy
+  const dLat = maxDistanceKm / 111;
+  const dLon = maxDistanceKm / (111 * Math.cos((geo.lat * Math.PI) / 180));
+  const bboxParam = `&bbox=${(geo.lon - dLon).toFixed(5)},${(geo.lat - dLat).toFixed(5)},${(geo.lon + dLon).toFixed(5)},${(geo.lat + dLat).toFixed(5)}`;
+  const langParam = countryCode === "it" ? "&lang=it" : "";
+
+  const fetchPhoton = async (q: string) => {
+    try {
+      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lat=${geo.lat}&lon=${geo.lon}&limit=40${bboxParam}${langParam}`;
+      const resp = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      if (!resp.ok) return [];
+      const data = await resp.json();
+      return data.features || [];
+    } catch { return []; }
+  };
+
+  const searches = searchTerms.map(term => `${term} ${city}`);
+  const allData = await Promise.all(searches.map(s => fetchPhoton(s)));
+
+  for (const features of allData) {
+    for (const f of features) {
+      const props = f.properties || {};
+      const name = props.name;
       if (!name || name.length < 3) continue;
       if (["city", "district", "state", "country", "street", "locality", "county"].includes(props.osm_value)) continue;
       if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse"].includes(props.osm_key)) continue;
+
+      // Country filter
+      if (countryCode && props.countrycode && props.countrycode.toLowerCase() !== countryCode.toLowerCase()) continue;
+
+      const coords = f.geometry?.coordinates || [];
+      const lat = coords[1], lon = coords[0];
+      // Distance filter — drop results too far from search center
+      if (typeof lat === "number" && typeof lon === "number") {
+        const dist = distanceKm(geo.lat, geo.lon, lat, lon);
+        if (dist > maxDistanceKm) continue;
+      }
 
       const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 25);
       if (seen.has(key)) continue;
       seen.add(key);
 
-      const coords = f.geometry?.coordinates || [];
       results.push({
         source: "photon", name,
         full_address: [props.street, props.housenumber, props.postcode, props.city || props.county].filter(Boolean).join(", "),
         city: props.city || props.county || city,
         zone: props.district || props.locality || "",
-        lat: coords[1], lon: coords[0],
+        lat, lon,
         phone: null, website: null, email: null, opening_hours: null,
         instagram: null, facebook: null, cuisine: null,
         osm_type: props.osm_value || props.osm_key || "",
-        google_maps_url: coords[1] && coords[0] ? `https://www.google.com/maps/search/?api=1&query=${coords[1]},${coords[0]}` : null,
+        google_maps_url: lat && lon ? `https://www.google.com/maps/search/?api=1&query=${lat},${lon}` : null,
         search_google: `https://www.google.com/search?q=${encodeURIComponent(name + " " + (props.city || city))}`,
         search_instagram: `https://www.instagram.com/explore/tags/${encodeURIComponent(name.replace(/\s+/g, "").toLowerCase())}/`,
         search_facebook: `https://www.facebook.com/search/pages/?q=${encodeURIComponent(name)}`,
@@ -228,18 +274,24 @@ async function searchPhoton(city: string, sector: string, geo: { lat: number; lo
 }
 
 /* ═══ SOURCE 2: NOMINATIM ═══ */
-async function searchNominatim(city: string, sector: string, userQuery: string, geo: { lat: number; lon: number; bbox: number[] }, page: number, countryCode?: string): Promise<any[]> {
+async function searchNominatim(city: string, sector: string, userQuery: string, geo: { lat: number; lon: number; bbox: number[] }, page: number, countryCode?: string, maxDistanceKm = 25): Promise<any[]> {
   const terms = SECTOR_TERMS[sector] || [sector];
   const results: any[] = [];
   const seen = new Set<string>();
 
+  // bbox from geocode is [south, north, west, east] (Nominatim boundingbox order)
   const [south, north, west, east] = geo.bbox.length >= 4
     ? geo.bbox
     : [geo.lat - 0.08, geo.lat + 0.08, geo.lon - 0.08, geo.lon + 0.08];
-  
-  // Expand search area on deeper pages
+
+  // Expand search area on deeper pages — keep bbox VALID (south<north, west<east)
   const expansion = page * 0.03;
-  const viewbox = `${Number(west) - expansion},${Number(north) + expansion},${Number(east) + expansion},${Number(south) - expansion}`;
+  const sExp = Number(south) - expansion;
+  const nExp = Number(north) + expansion;
+  const wExp = Number(west) - expansion;
+  const eExp = Number(east) + expansion;
+  // Nominatim viewbox format: lon_min,lat_max,lon_max,lat_min  (= west,north,east,south)
+  const viewbox = `${wExp},${nExp},${eExp},${sExp}`;
   const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
 
   const startIdx = page * 6;
@@ -258,6 +310,7 @@ async function searchNominatim(city: string, sector: string, userQuery: string, 
       return await resp.json();
     } catch { return []; }
   };
+
 
   for (let i = 0; i < searches.length; i += 2) {
     const batch = searches.slice(i, i + 2);
