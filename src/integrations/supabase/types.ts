@@ -6887,6 +6887,9 @@ export type Database = {
           lead_reviews_count: number | null
           lead_website: string | null
           logo_url: string | null
+          mockup_engine: string | null
+          mockup_generated_at: string | null
+          mockup_screens: Json
           owner_id: string
           portfolio_label: string | null
           portfolio_notes: string | null
@@ -6931,6 +6934,9 @@ export type Database = {
           lead_reviews_count?: number | null
           lead_website?: string | null
           logo_url?: string | null
+          mockup_engine?: string | null
+          mockup_generated_at?: string | null
+          mockup_screens?: Json
           owner_id: string
           portfolio_label?: string | null
           portfolio_notes?: string | null
@@ -6975,6 +6981,9 @@ export type Database = {
           lead_reviews_count?: number | null
           lead_website?: string | null
           logo_url?: string | null
+          mockup_engine?: string | null
+          mockup_generated_at?: string | null
+          mockup_screens?: Json
           owner_id?: string
           portfolio_label?: string | null
           portfolio_notes?: string | null
