@@ -886,10 +886,14 @@ serve(async (req) => {
       const nameResults = await searchByNameGlobal(searchQuery, ccFilter);
       const merged = mergeAndDeduplicate([nameResults], existingForDedup.length > 0 ? existingForDedup : undefined);
       console.log(`Name-only search "${searchQuery}" cc=${ccFilter || "*"} → ${merged.length} results`);
+      const sourcesObj = { photon: 0, nominatim: nameResults.length, overpass: 0, google: 0, total_merged: merged.length };
+      await saveCache(merged, { mode: "name_only", has_more: false, sources: sourcesObj });
       return new Response(JSON.stringify({
         success: true, results: merged, page: 0, has_more: false,
-        sources: { photon: 0, nominatim: nameResults.length, overpass: 0, google: 0, total_merged: merged.length },
+        sources: sourcesObj,
         mode: "name_only",
+        cached: false,
+        credit: creditInfo,
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
