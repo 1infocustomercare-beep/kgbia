@@ -366,7 +366,7 @@ const EmpireParticleOrb = memo(() => {
         canvas.style.touchAction = stillInside ? "none" : "pan-y";
       }
 
-      // Tap (no significant move) inside orb → toggle mode
+      // Tap (no significant move) inside orb → toggle mode + shockwave
       if (
         wasActive &&
         !moved &&
@@ -378,6 +378,11 @@ const EmpireParticleOrb = memo(() => {
         modeRef.current = next;
         setMode(next);
         setHint(false);
+        // Onda d'urto + supernova nel punto del tap
+        const rect = canvas.getBoundingClientRect();
+        const tapX = e.clientX - rect.left;
+        const tapY = e.clientY - rect.top;
+        spawnShockwave(tapX, tapY, next === "constellation" ? 285 : 200);
       }
     };
 
