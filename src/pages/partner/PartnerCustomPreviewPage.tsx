@@ -26,7 +26,8 @@ import alienDesigner from "@/assets/empire-alien-designer.png";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
 import { MockupPresetSelector } from "@/components/partner/MockupPresetSelector";
-import { MOCKUP_STYLE_PRESETS } from "@/lib/mockup-style-presets";
+import { MOCKUP_STYLE_PRESETS, getStylePreset } from "@/lib/mockup-style-presets";
+import { PresetThemeScope } from "@/components/partner/PresetThemeScope";
 
 const COST = 15;
 
@@ -733,7 +734,11 @@ export default function PartnerCustomPreviewPage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="space-y-3 px-3 sm:px-4 pb-4 pt-1">
+                    <PresetThemeScope
+                      preset={getStylePreset(form.template_style)}
+                      applyTypography={false}
+                      className="space-y-3 px-3 sm:px-4 pb-4 pt-1 rounded-lg"
+                    >
                       <MockupPresetSelector
                         value={form.template_style}
                         sectorHint={form.lead_sector}
@@ -752,8 +757,17 @@ export default function PartnerCustomPreviewPage() {
                           <Input id="color" type="color" value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="w-14 h-11 p-1 shrink-0 cursor-pointer" />
                           <Input value={form.primary_color} onChange={e => setForm({ ...form, primary_color: e.target.value })} className="flex-1 font-mono h-11 text-sm uppercase" />
                         </div>
+                        <p className="text-[10px] text-muted-foreground italic">
+                          Bottoni, badge e card qui sotto si tingono col preset selezionato — coerenza brand garantita.
+                        </p>
                       </div>
-                    </div>
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        <Button size="sm" className="h-8">Anteprima CTA</Button>
+                        <Button size="sm" variant="secondary" className="h-8">Secondario</Button>
+                        <Button size="sm" variant="outline" className="h-8">Outline</Button>
+                        <Badge>Badge brand</Badge>
+                      </div>
+                    </PresetThemeScope>
                   </motion.div>
                 )}
               </AnimatePresence>
