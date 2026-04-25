@@ -631,7 +631,7 @@ const EmpireParticleOrb = memo(() => {
         const ccx = cx + ox;
         const ccy = cy + oy;
         const coreR = effRadius * 0.8;
-        const coreAlpha = (1 - m) * (0.28 + Math.sin(t * 2) * 0.06);
+        const coreAlpha = (1 - m) * (0.28 + Math.sin(t * 2) * 0.06 + energy * 0.18);
         const coreGrad = ctx.createRadialGradient(ccx, ccy, 0, ccx, ccy, coreR);
         coreGrad.addColorStop(0, `hsla(280, 95%, 75%, ${coreAlpha})`);
         coreGrad.addColorStop(0.45, `hsla(265, 85%, 55%, ${coreAlpha * 0.35})`);
@@ -639,6 +639,97 @@ const EmpireParticleOrb = memo(() => {
         ctx.fillStyle = coreGrad;
         ctx.beginPath();
         ctx.arc(ccx, ccy, coreR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // ─── Aura pulse esterna (anelli concentrici che respirano) ───
+        // Più intensi quando energia alta (post-tap)
+        const auraBase = 0.08 + energy * 0.22;
+        for (let k = 0; k < 3; k++) {
+          const phase = (t * 0.6 + k * 0.7) % 1;
+          const ringR = effRadius * (1 + phase * 0.9);
+          const ringA = auraBase * (1 - phase) * (1 - m * 0.6);
+          if (ringA <= 0.01) continue;
+          ctx.strokeStyle = `hsla(${275 + k * 8}, 85%, 70%, ${ringA})`;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(ccx, ccy, ringR, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // ─── Anello orbitante (luce che gira attorno all'orb) ───
+        const orbitR = effRadius * 1.05;
+        const orbitSegments = 60;
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < orbitSegments; i++) {
+          const a0 = (i / orbitSegments) * Math.PI * 2 + t * 0.8;
+          const a1 = ((i + 1) / orbitSegments) * Math.PI * 2 + t * 0.8;
+          // Luminosità "head" ruotante
+          const head = (Math.sin(a0 - t * 0.8) + 1) * 0.5;
+          const segA = Math.pow(head, 4) * (0.55 + energy * 0.4) * (1 - m * 0.7);
+          if (segA < 0.02) continue;
+          ctx.strokeStyle = `hsla(${265 + head * 30}, 90%, ${65 + head * 20}%, ${segA})`;
+          ctx.beginPath();
+          ctx.arc(ccx, ccy, orbitR, a0, a1);
+          ctx.stroke();
+        }
+      }
+
+      // ─── Shockwaves (onde d'urto al tap) ───
+      const sw = shockwavesRef.current;
+      for (let i = sw.length - 1; i >= 0; i--) {
+        const s = sw[i];
+        s.r += (s.maxR - s.r) * 0.06;
+        s.alpha *= 0.94;
+        if (s.alpha < 0.02 || s.r >= s.maxR * 0.98) {
+          sw.splice(i, 1);
+          continue;
+        }
+        // Anello sottile + glow
+        const grad = ctx.createRadialGradient(s.x, s.y, s.r * 0.85, s.x, s.y, s.r);
+        grad.addColorStop(0, `hsla(${s.hue}, 90%, 75%, 0)`);
+        grad.addColorStop(0.7, `hsla(${s.hue}, 90%, 70%, ${s.alpha * 0.7})`);
+        grad.addColorStop(1, `hsla(${s.hue}, 90%, 65%, 0)`);
+        ctx.strokeStyle = grad as unknown as string;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.stroke();
+        // Inner ring
+        ctx.strokeStyle = `hsla(${s.hue}, 95%, 85%, ${s.alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 0.96, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // ─── Sparks (scintille radiali post-tap) ───
+      const sp = sparksRef.current;
+      for (let i = sp.length - 1; i >= 0; i--) {
+        const k = sp[i];
+        k.life++;
+        k.x += k.vx;
+        k.y += k.vy;
+        k.vx *= 0.94;
+        k.vy *= 0.94;
+        // Gravità leggera verso il basso (più "fuoco d'artificio")
+        k.vy += 0.05;
+        const lifeRatio = k.life / k.maxLife;
+        if (lifeRatio >= 1) {
+          sp.splice(i, 1);
+          continue;
+        }
+        const a = (1 - lifeRatio) * 0.9;
+        // Trail
+        ctx.strokeStyle = `hsla(${k.hue}, 95%, 75%, ${a * 0.5})`;
+        ctx.lineWidth = k.size * 0.6;
+        ctx.beginPath();
+        ctx.moveTo(k.x - k.vx * 2, k.y - k.vy * 2);
+        ctx.lineTo(k.x, k.y);
+        ctx.stroke();
+        // Head
+        ctx.fillStyle = `hsla(${k.hue}, 95%, 85%, ${a})`;
+        ctx.beginPath();
+        ctx.arc(k.x, k.y, k.size, 0, Math.PI * 2);
         ctx.fill();
       }
 
