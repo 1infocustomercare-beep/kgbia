@@ -268,6 +268,9 @@ const EmpireParticleOrb = memo(() => {
           rotRef.current.vy = dx * 0.004;
           rotRef.current.vx = -dy * 0.004;
         }
+        // Carica energia in base alla velocità del gesto
+        const speed = Math.hypot(dx, dy);
+        energyRef.current = Math.min(1, energyRef.current + speed * 0.008);
         e.preventDefault();
       }
     };
