@@ -80,6 +80,7 @@ import { useDemoVault, type VaultDemo } from "@/hooks/useDemoVault";
 import { useMockupSuiteVault } from "@/hooks/useMockupSuiteVault";
 import { DemoStudioPresentationMode } from "@/components/partner/DemoStudioPresentationMode";
 import ProjectDetailOverlay from "@/components/partner/ProjectDetailOverlay";
+import PortfolioPublicShowcase from "@/components/partner/PortfolioPublicShowcase";
 import { PartnerCardSkeleton } from "@/components/partner/PartnerSkeleton";
 import PartnerSavedPreviewsSection from "@/components/partner/PartnerSavedPreviewsSection";
 import { toast } from "sonner";
