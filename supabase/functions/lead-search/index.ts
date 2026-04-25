@@ -479,9 +479,208 @@ async function searchGooglePlaces(query: string, city: string, sector: string, p
   return results;
 }
 
-/* ═══ MERGE + DEDUPLICATE ═══ */
-function mergeAndDeduplicate(google: any[], nominatim: any[], photon: any[], overpass: any[], existing?: any[]): any[] {
-  const all = [...google, ...nominatim, ...photon, ...overpass];
+/* ═══ HTML cleanup helpers ═══ */
+function decodeEntities(s: string): string {
+  return s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)));
+}
+function stripTags(s: string): string {
+  return decodeEntities(s.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
+}
+
+/* ═══ SOURCE 5: DUCKDUCKGO HTML (free, no key) ═══
+   Cerca aziende sul web tramite il rendering HTML di DuckDuckGo.
+   Estrae title + URL del sito, poi prova a riconciliare con il geo center via dominio. */
+async function searchDuckDuckGo(query: string, sector: string, city: string, countryCode = ""): Promise<any[]> {
+  const baseTerms = SECTOR_TERMS[sector] || [sector];
+  const term = baseTerms[0] || sector;
+  const q = `${term} ${city || query}`.trim();
+  if (!q) return [];
+  const ccParam = countryCode ? `&kl=${countryCode.toLowerCase()}-${countryCode.toLowerCase()}` : "";
+  try {
+    const resp = await fetch(`https://html.duckduckgo.com/html/?q=${encodeURIComponent(q)}${ccParam}`, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; EmpireAI-LeadScout/6.0; +https://empireaigroup.com)" },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!resp.ok) return [];
+    const html = await resp.text();
+    const out: any[] = [];
+    const seen = new Set<string>();
+    // Match: <a class="result__a" href="...">Title</a>
+    const re = /<a[^>]+class="result__a"[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(html)) && out.length < 25) {
+      let href = m[1];
+      // DuckDuckGo wraps real URL in /l/?uddg=
+      const uddg = href.match(/uddg=([^&]+)/);
+      if (uddg) { try { href = decodeURIComponent(uddg[1]); } catch {} }
+      const title = stripTags(m[2]);
+      if (!title || title.length < 3) continue;
+      // Skip directory aggregator domains (we want real businesses)
+      const skipDomains = ["wikipedia.org", "tripadvisor.", "facebook.com", "instagram.com", "yelp.", "youtube.com", "linkedin.com", "google.", "duckduckgo."];
+      if (skipDomains.some(d => href.includes(d))) continue;
+      const key = title.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
+      if (key.length < 3 || seen.has(key)) continue;
+      seen.add(key);
+      out.push({
+        source: "duckduckgo",
+        name: title.split(/[·\-|]/)[0].trim().slice(0, 80),
+        full_address: city,
+        city, zone: "",
+        lat: null, lon: null,
+        phone: null, website: href, email: null, instagram: null, facebook: null,
+        google_maps_url: null,
+        search_google: `https://www.google.com/search?q=${encodeURIComponent(title + " " + city)}`,
+      });
+    }
+    return out;
+  } catch (e) { console.error("DuckDuckGo error:", e); return []; }
+}
+
+/* ═══ SOURCE 6: PAGINE GIALLE (IT directory, scraping) ═══ */
+async function searchPagineGialle(sector: string, city: string): Promise<any[]> {
+  if (!city) return [];
+  const baseTerms = SECTOR_TERMS[sector] || [sector];
+  const term = baseTerms[0] || sector;
+  try {
+    const url = `https://www.paginegialle.it/ricerca/${encodeURIComponent(term)}/${encodeURIComponent(city)}`;
+    const resp = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        "Accept-Language": "it-IT,it;q=0.9",
+      },
+      signal: AbortSignal.timeout(9000),
+    });
+    if (!resp.ok) return [];
+    const html = await resp.text();
+    const out: any[] = [];
+    const seen = new Set<string>();
+    // Estrai blocchi <h2 ...>Nome</h2> e telefoni vicini
+    const itemRe = /<h2[^>]*class="[^"]*search-itm__rag[^"]*"[^>]*>([\s\S]*?)<\/h2>([\s\S]{0,1200}?)(?=<h2|$)/g;
+    let m: RegExpExecArray | null;
+    while ((m = itemRe.exec(html)) && out.length < 25) {
+      const name = stripTags(m[1]);
+      const block = m[2];
+      if (!name || name.length < 3) continue;
+      const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
+      if (key.length < 3 || seen.has(key)) continue;
+      seen.add(key);
+      const phoneM = block.match(/(?:tel:|telefono[^0-9]{0,15})((?:\+?39\s*)?(?:0\d{1,3}[\s\-./]?\d{5,9}|3\d{2}[\s\-./]?\d{6,7}))/i);
+      const addrM = block.match(/<span[^>]*class="[^"]*search-itm__adr[^"]*"[^>]*>([\s\S]*?)<\/span>/i);
+      const websiteM = block.match(/href="(https?:\/\/(?!www\.paginegialle\.it)[^"]+)"[^>]*[^>]*class="[^"]*(?:lnk-sito|website)[^"]*"/i);
+      out.push({
+        source: "pagine_gialle",
+        name,
+        full_address: addrM ? stripTags(addrM[1]) : city,
+        city, zone: "",
+        lat: null, lon: null,
+        phone: phoneM ? phoneM[1].replace(/\s+/g, " ").trim() : null,
+        website: websiteM ? websiteM[1] : null,
+        email: null, instagram: null, facebook: null,
+        google_maps_url: null,
+        search_google: `https://www.google.com/search?q=${encodeURIComponent(name + " " + city)}`,
+      });
+    }
+    return out;
+  } catch (e) { console.error("PagineGialle error:", e); return []; }
+}
+
+/* ═══ SOURCE 7: EUROPAGES B2B (scraping) ═══ */
+async function searchEuropages(sector: string, city: string, countryCode = ""): Promise<any[]> {
+  if (!city && !countryCode) return [];
+  const baseTerms = SECTOR_TERMS[sector] || [sector];
+  const term = baseTerms[0] || sector;
+  try {
+    const cc = countryCode || "it";
+    const url = `https://www.europages.${cc}/aziende/${encodeURIComponent(term)}/${encodeURIComponent(city || "")}.html`;
+    const resp = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        "Accept-Language": `${cc}-${cc.toUpperCase()},${cc};q=0.9,en;q=0.5`,
+      },
+      signal: AbortSignal.timeout(9000),
+    });
+    if (!resp.ok) return [];
+    const html = await resp.text();
+    const out: any[] = [];
+    const seen = new Set<string>();
+    // Generic title extraction
+    const titleRe = /<a[^>]+(?:data-test="company-name"|class="[^"]*company-name[^"]*")[^>]*>([\s\S]*?)<\/a>/g;
+    let m: RegExpExecArray | null;
+    while ((m = titleRe.exec(html)) && out.length < 25) {
+      const name = stripTags(m[1]);
+      if (!name || name.length < 3) continue;
+      const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
+      if (key.length < 3 || seen.has(key)) continue;
+      seen.add(key);
+      out.push({
+        source: "europages",
+        name,
+        full_address: city,
+        city, zone: "",
+        lat: null, lon: null,
+        phone: null, website: null, email: null, instagram: null, facebook: null,
+        google_maps_url: null,
+        search_google: `https://www.google.com/search?q=${encodeURIComponent(name + " " + city)}`,
+      });
+    }
+    return out;
+  } catch (e) { console.error("Europages error:", e); return []; }
+}
+
+/* ═══ SOURCE 8: FIRECRAWL search (AI scraping, requires key) ═══ */
+async function searchFirecrawl(sector: string, city: string, query = ""): Promise<any[]> {
+  const apiKey = Deno.env.get("FIRECRAWL_API_KEY");
+  if (!apiKey) return [];
+  const baseTerms = SECTOR_TERMS[sector] || [sector];
+  const term = baseTerms[0] || sector;
+  const q = (query || `${term} ${city}`).trim();
+  if (!q) return [];
+  try {
+    const resp = await fetch("https://api.firecrawl.dev/v2/search", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ query: q, limit: 20 }),
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    const items: any[] = data?.data || data?.results || [];
+    const out: any[] = [];
+    const seen = new Set<string>();
+    const skipDomains = ["wikipedia.org", "facebook.com", "instagram.com", "youtube.com", "linkedin.com", "google."];
+    for (const it of items) {
+      const url = it.url || it.link;
+      const title = (it.title || "").toString();
+      if (!url || !title) continue;
+      if (skipDomains.some(d => url.includes(d))) continue;
+      const name = title.split(/[·\-|]/)[0].trim().slice(0, 80);
+      const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
+      if (key.length < 3 || seen.has(key)) continue;
+      seen.add(key);
+      out.push({
+        source: "firecrawl",
+        name,
+        full_address: city,
+        city, zone: "",
+        lat: null, lon: null,
+        phone: null, website: url, email: null, instagram: null, facebook: null,
+        google_maps_url: null,
+        search_google: `https://www.google.com/search?q=${encodeURIComponent(name + " " + city)}`,
+      });
+    }
+    return out;
+  } catch (e) { console.error("Firecrawl error:", e); return []; }
+}
+
+/* ═══ MERGE + DEDUPLICATE (variadic) ═══ */
+function mergeAndDeduplicate(...buckets: any[][]): any[] {
+  // Last bucket may be the "existing" set used only for dedup seeding
+  const existing = buckets.length > 0 && Array.isArray(buckets[buckets.length - 1]) && buckets[buckets.length - 1].every(r => r && typeof r === "object" && "name" in r && Object.keys(r).length === 1)
+    ? buckets.pop()
+    : null;
+  const all = buckets.flat();
   const seen = new Map<string, any>();
 
   // If existing results provided, seed the seen map to avoid duplicates
