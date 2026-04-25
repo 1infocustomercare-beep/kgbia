@@ -209,11 +209,28 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return presentables.filter((p) => {
+      if (sourceFilter !== "all" && p.source !== sourceFilter) return false;
       if (sectorFilter !== ALL_SECTORS && p.sectorId !== sectorFilter) return false;
       if (q && !`${p.title} ${p.subtitle} ${p.sectorLabel}`.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [presentables, sectorFilter, search]);
+  }, [presentables, sectorFilter, sourceFilter, search]);
+
+  // Raggruppamento sorgenti per la vista divisa
+  const grouped = useMemo(() => {
+    const suiteItems = filtered.filter((p) => p.source === "suite");
+    const catalogItems = filtered.filter((p) => p.source === "catalog");
+    return { suiteItems, catalogItems };
+  }, [filtered]);
+
+  const totalSuites = useMemo(
+    () => presentables.filter((p) => p.source === "suite").length,
+    [presentables]
+  );
+  const totalCatalog = useMemo(
+    () => presentables.filter((p) => p.source === "catalog").length,
+    [presentables]
+  );
 
   if (!open) return null;
 
