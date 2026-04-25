@@ -139,9 +139,12 @@ const EmpireParticleOrb = memo(() => {
 
       // Toggle canvas pointer-events so the background underneath stays interactive
       // when the cursor/finger is OUTSIDE the orb hit-area. Keep events captured while dragging.
+      // touchAction: solo dentro l'orb blocchiamo lo scroll nativo. Fuori → "pan-y"
+      // così l'utente può scorrere la pagina anche col dito sopra il canvas.
       if (!dragRef.current.active && !gestureRef.current.active) {
         canvas.style.pointerEvents = inside ? "auto" : "none";
         canvas.style.cursor = inside ? "grab" : "default";
+        canvas.style.touchAction = inside ? "none" : "pan-y";
       }
 
       // Update tracked pointer position
@@ -208,6 +211,8 @@ const EmpireParticleOrb = memo(() => {
     const handlePointerDown = (e: PointerEvent) => {
       if (!isInsideOrb(e.clientX, e.clientY)) return;
       canvas.style.cursor = "grabbing";
+      // Mentre interagiamo con l'orb blocchiamo lo scroll nativo per permettere drag/rotate.
+      canvas.style.touchAction = "none";
       pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
       // Two pointers down → start pinch/twist gesture
@@ -294,6 +299,7 @@ const EmpireParticleOrb = memo(() => {
       canvas.style.cursor = pointersRef.current.size > 0 ? "grabbing" : (stillInside ? "grab" : "default");
       if (pointersRef.current.size === 0) {
         canvas.style.pointerEvents = stillInside ? "auto" : "none";
+        canvas.style.touchAction = stillInside ? "none" : "pan-y";
       }
 
       // Tap (no significant move) inside orb → toggle mode
@@ -570,7 +576,7 @@ const EmpireParticleOrb = memo(() => {
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
-        style={{ pointerEvents: "none", cursor: "default", background: "transparent", touchAction: "none" }}
+        style={{ pointerEvents: "none", cursor: "default", background: "transparent", touchAction: "pan-y" }}
       />
 
       {/* Centre label */}
