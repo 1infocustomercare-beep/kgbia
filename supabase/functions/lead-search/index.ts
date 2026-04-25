@@ -674,37 +674,31 @@ async function searchFirecrawl(sector: string, city: string, query = ""): Promis
   } catch (e) { console.error("Firecrawl error:", e); return []; }
 }
 
-/* ═══ MERGE + DEDUPLICATE (variadic) ═══ */
-function mergeAndDeduplicate(...buckets: any[][]): any[] {
-  // Last bucket may be the "existing" set used only for dedup seeding
-  const existing = buckets.length > 0 && Array.isArray(buckets[buckets.length - 1]) && buckets[buckets.length - 1].every(r => r && typeof r === "object" && "name" in r && Object.keys(r).length === 1)
-    ? buckets.pop()
-    : null;
+/* ═══ MERGE + DEDUPLICATE ═══ */
+function mergeAndDeduplicate(buckets: any[][], existing?: any[]): any[] {
   const all = buckets.flat();
   const seen = new Map<string, any>();
 
-  // If existing results provided, seed the seen map to avoid duplicates
   if (existing) {
     for (const r of existing) {
       const key = r.name?.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
-      if (key && key.length >= 3) seen.set(key, null); // mark as seen but don't include
+      if (key && key.length >= 3) seen.set(key, null);
     }
   }
 
   const results: any[] = [];
   for (const r of all) {
-    const key = r.name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
+    const key = r.name?.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
     if (!key || key.length < 3) continue;
 
     if (seen.has(key)) {
-      const existing = seen.get(key);
-      if (existing) {
-        // Cross-source enrichment
-        for (const field of ["phone", "website", "email", "instagram", "facebook", "opening_hours", "cuisine", "full_address", "zone"]) {
-          if (!existing[field] && r[field]) existing[field] = r[field];
+      const ex = seen.get(key);
+      if (ex) {
+        for (const field of ["phone", "website", "email", "instagram", "facebook", "opening_hours", "cuisine", "full_address", "zone", "lat", "lon"]) {
+          if (!ex[field] && r[field]) ex[field] = r[field];
         }
-        if (!existing.google_rating && r.google_rating) existing.google_rating = r.google_rating;
-        if (!existing.google_reviews && r.google_reviews) existing.google_reviews = r.google_reviews;
+        if (!ex.google_rating && r.google_rating) ex.google_rating = r.google_rating;
+        if (!ex.google_reviews && r.google_reviews) ex.google_reviews = r.google_reviews;
       }
       continue;
     }
