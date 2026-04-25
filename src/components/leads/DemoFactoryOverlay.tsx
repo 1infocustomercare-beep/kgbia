@@ -134,8 +134,8 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
               >
                 {/* ============ HEADER (sticky) ============ */}
                 <div
-                  className="px-3 sm:px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0 sticky top-0 z-10"
-                  style={{ background: "linear-gradient(90deg, rgba(167,139,250,0.18), rgba(20,184,166,0.12)), #0a0a14" }}
+                  className="px-3 sm:px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0 sticky top-0 z-10 backdrop-blur-xl"
+                  style={{ background: "linear-gradient(90deg, rgba(167,139,250,0.22), rgba(20,184,166,0.15)), rgba(15,10,31,0.95)" }}
                 >
                   <div className="flex items-center gap-2.5 min-w-0 flex-1">
                     <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-purple-500 to-teal-500 flex items-center justify-center shadow-lg shrink-0">
