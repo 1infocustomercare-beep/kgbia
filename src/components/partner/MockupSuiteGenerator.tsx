@@ -1248,6 +1248,24 @@ export function MockupSuiteGenerator({
         </div>
 
         {/* ────────────────────────────────────────────────────────────────── */}
+        {/* PRESET PREMIUM (palette + tipografia + layout architetturale)     */}
+        {/* ────────────────────────────────────────────────────────────────── */}
+        <div className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/[0.06] to-transparent p-4 sm:p-5">
+          <MockupPresetSelector
+            value={templateVariant}
+            sectorHint={businessSector}
+            compact
+            onChange={(key, preset) => {
+              if (controlsLocked) return;
+              setTemplateVariant(key);
+              if (mode === "standalone") {
+                setStandalone(s => ({ ...s, primaryColor: preset.palette.accent }));
+              }
+            }}
+          />
+        </div>
+
+        {/* ────────────────────────────────────────────────────────────────── */}
         {/* PRESET LOOK — salva/carica combinazioni di template+glass+color   */}
         {/* ────────────────────────────────────────────────────────────────── */}
         <MockupLookPresets
