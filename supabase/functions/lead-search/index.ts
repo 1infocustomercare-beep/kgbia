@@ -772,6 +772,115 @@ serve(async (req) => {
     // Build existing names set for dedup
     const existingForDedup = (existing_names || []).map((n: string) => ({ name: n }));
 
+    /* ═══ FINGERPRINT + CREDIT DEDUP (server-side single source of truth) ═══
+       Stessa ricerca dello stesso venditore entro 15 minuti = NESSUN addebito,
+       riusiamo i risultati cached. `page` viene incluso nel fingerprint
+       quindi "Carica altri" è una nuova ricerca legittima. */
+    const fingerprintPayload: Record<string, unknown> = {
+      mode: isNameOnly ? "name_only" : (hasCoords ? "gps" : "zone"),
+      city: searchCity.toLowerCase(),
+      query: searchQuery.toLowerCase(),
+      sector: searchSector,
+      cc: ccFilter,
+      sources: [...allowedSources].sort(),
+      page: searchPage,
+      // GPS arrotondato a 3 decimali (~110m) per non addebitare 2 volte spostamenti minimi
+      lat: hasCoords ? Math.round((lat as number) * 1000) / 1000 : null,
+      lon: hasCoords ? Math.round((lon as number) * 1000) / 1000 : null,
+      r: searchRadius,
+      spec: specializationQuery.toLowerCase(),
+    };
+    const fingerprint = await makeFingerprint(fingerprintPayload);
+
+    const adminClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_ANON_KEY")!,
+    );
+
+    let creditInfo: Record<string, unknown> = { cached: false, credits_used: 0, charged: false, fingerprint };
+
+    if (authedUserId && !skip_credit_charge) {
+      // 1. Cache lookup: hit → restituisco subito i risultati salvati senza addebito
+      const { data: cacheData } = await adminClient.rpc("lead_search_cache_get" as any, {
+        p_user_id: authedUserId,
+        p_fingerprint: fingerprint,
+        p_action: "lead_search",
+      });
+
+      if (cacheData && (cacheData as any).hit === true) {
+        const cachedResults = (cacheData as any).results || [];
+        const cachedMeta = (cacheData as any).meta || {};
+        await adminClient.rpc("consume_seller_credits_dedup" as any, {
+          p_user_id: authedUserId,
+          p_action: "lead_search",
+          p_fingerprint: fingerprint,
+          p_ttl_minutes: 15,
+          p_metadata: { source: "lead-search", reason: "cache_hit" },
+        });
+        console.log(`[lead-search] CACHE HIT user=${authedUserId.slice(0,8)} fp=${fingerprint.slice(0,8)} count=${cachedResults.length}`);
+        return new Response(JSON.stringify({
+          success: true,
+          results: cachedResults,
+          page: searchPage,
+          has_more: cachedMeta.has_more ?? false,
+          sources: cachedMeta.sources || { total_merged: cachedResults.length },
+          mode: cachedMeta.mode || fingerprintPayload.mode,
+          cached: true,
+          cache_expires_at: (cacheData as any).expires_at,
+          cache_hit_count: (cacheData as any).hit_count,
+          credit: { credits_used: 0, charged: false, cached: true, fingerprint },
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
+      // 2. Nessun cache hit → addebita crediti server-side
+      const { data: chargeData, error: chargeErr } = await adminClient.rpc("consume_seller_credits_dedup" as any, {
+        p_user_id: authedUserId,
+        p_action: "lead_search",
+        p_fingerprint: fingerprint,
+        p_ttl_minutes: 15,
+        p_metadata: fingerprintPayload as any,
+      });
+
+      if (chargeErr || !chargeData || (chargeData as any).success === false) {
+        const err = (chargeData as any) || { error: chargeErr?.message || "credit_charge_failed" };
+        console.warn(`[lead-search] credit charge failed: ${JSON.stringify(err)}`);
+        return new Response(JSON.stringify({
+          success: false,
+          error: err.error || "credit_charge_failed",
+          required: err.required,
+          balance: err.balance,
+          cap: err.cap,
+          used: err.used,
+        }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      creditInfo = {
+        cached: !!(chargeData as any).cached,
+        credits_used: (chargeData as any).credits_used ?? 0,
+        remaining_balance: (chargeData as any).remaining_balance,
+        cost_eur: (chargeData as any).cost_eur,
+        owner_bypass: !!(chargeData as any).owner_bypass,
+        fingerprint,
+        charged: ((chargeData as any).credits_used ?? 0) > 0,
+      };
+    }
+
+    // helper: salva i risultati in cache per evitare doppi addebiti
+    const saveCache = async (results: any[], meta: Record<string, unknown>) => {
+      if (!authedUserId || skip_credit_charge) return;
+      try {
+        await adminClient.rpc("lead_search_cache_put" as any, {
+          p_user_id: authedUserId,
+          p_fingerprint: fingerprint,
+          p_action: "lead_search",
+          p_results: results as any,
+          p_meta: meta as any,
+          p_ttl_minutes: 15,
+        });
+      } catch (e) {
+        console.warn(`[lead-search] cache save failed: ${e instanceof Error ? e.message : e}`);
+      }
+    };
+
     // ── BRANCH 1: NAME-ONLY GLOBAL SEARCH (no sector terms, no bbox required) ──
     if (isNameOnly) {
       const nameResults = await searchByNameGlobal(searchQuery, ccFilter);
