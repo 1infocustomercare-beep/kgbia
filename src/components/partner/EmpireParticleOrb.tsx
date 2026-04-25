@@ -23,6 +23,25 @@ interface Particle {
   sx: number; sy: number; sz: number;
 }
 
+interface Shockwave {
+  x: number; y: number;
+  r: number; maxR: number;
+  alpha: number; hue: number;
+}
+
+interface Spark {
+  x: number; y: number;
+  vx: number; vy: number;
+  life: number; maxLife: number;
+  hue: number; size: number;
+}
+
+interface Star {
+  x: number; y: number;
+  r: number; baseAlpha: number;
+  twinkle: number;
+}
+
 const FEATURES = [
   { icon: Bot, label: "AI Agents", angle: -90 },
   { icon: Target, label: "Lead Engine", angle: -30 },
@@ -36,6 +55,10 @@ const EmpireParticleOrb = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
+  const shockwavesRef = useRef<Shockwave[]>([]);
+  const sparksRef = useRef<Spark[]>([]);
+  const starsRef = useRef<Star[]>([]);
+  const energyRef = useRef(0); // 0→1, sale durante interazione
   const pointerRef = useRef({ x: -9999, y: -9999, active: false, inside: false });
   const modeRef = useRef<Mode>("orb");
   const morphRef = useRef(0);
@@ -116,7 +139,48 @@ const EmpireParticleOrb = memo(() => {
       particlesRef.current = arr;
     };
 
+    // Init background "stars" — micro punti luminosi che riempiono il vuoto
+    const initStars = () => {
+      const stars: Star[] = [];
+      const STAR_COUNT = isMobile ? 60 : 110;
+      for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push({
+          x: Math.random(), // normalizzato 0-1
+          y: Math.random(),
+          r: 0.4 + Math.random() * 1.2,
+          baseAlpha: 0.15 + Math.random() * 0.45,
+          twinkle: Math.random() * Math.PI * 2,
+        });
+      }
+      starsRef.current = stars;
+    };
+
+    // Spawn shockwave (onda d'urto al click/tap dentro l'orb)
+    const spawnShockwave = (x: number, y: number, hue = 280) => {
+      shockwavesRef.current.push({
+        x, y, r: 4, maxR: radius * 2.2,
+        alpha: 0.7, hue,
+      });
+      // Mini supernova: spruzza scintille radiali
+      const SPARK_COUNT = isMobile ? 18 : 28;
+      for (let i = 0; i < SPARK_COUNT; i++) {
+        const ang = (Math.PI * 2 * i) / SPARK_COUNT + Math.random() * 0.3;
+        const speed = 2.5 + Math.random() * 4.5;
+        sparksRef.current.push({
+          x, y,
+          vx: Math.cos(ang) * speed,
+          vy: Math.sin(ang) * speed,
+          life: 0,
+          maxLife: 40 + Math.random() * 30,
+          hue: 260 + Math.random() * 50,
+          size: 1 + Math.random() * 1.8,
+        });
+      }
+      energyRef.current = Math.min(1, energyRef.current + 0.6);
+    };
+
     init();
+    initStars();
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
@@ -204,6 +268,9 @@ const EmpireParticleOrb = memo(() => {
           rotRef.current.vy = dx * 0.004;
           rotRef.current.vx = -dy * 0.004;
         }
+        // Carica energia in base alla velocità del gesto
+        const speed = Math.hypot(dx, dy);
+        energyRef.current = Math.min(1, energyRef.current + speed * 0.008);
         e.preventDefault();
       }
     };
@@ -214,6 +281,15 @@ const EmpireParticleOrb = memo(() => {
       // Mentre interagiamo con l'orb blocchiamo lo scroll nativo per permettere drag/rotate.
       canvas.style.touchAction = "none";
       pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      // Mini ripple sul touch-down (più sottile del tap)
+      const rect = canvas.getBoundingClientRect();
+      shockwavesRef.current.push({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        r: 2, maxR: radius * 1.1,
+        alpha: 0.45, hue: 270,
+      });
+      energyRef.current = Math.min(1, energyRef.current + 0.25);
 
       // Two pointers down → start pinch/twist gesture
       if (pointersRef.current.size === 2) {
@@ -302,7 +378,7 @@ const EmpireParticleOrb = memo(() => {
         canvas.style.touchAction = stillInside ? "none" : "pan-y";
       }
 
-      // Tap (no significant move) inside orb → toggle mode
+      // Tap (no significant move) inside orb → toggle mode + shockwave
       if (
         wasActive &&
         !moved &&
@@ -314,6 +390,11 @@ const EmpireParticleOrb = memo(() => {
         modeRef.current = next;
         setMode(next);
         setHint(false);
+        // Onda d'urto + supernova nel punto del tap
+        const rect = canvas.getBoundingClientRect();
+        const tapX = e.clientX - rect.left;
+        const tapY = e.clientY - rect.top;
+        spawnShockwave(tapX, tapY, next === "constellation" ? 285 : 200);
       }
     };
 
@@ -376,6 +457,23 @@ const EmpireParticleOrb = memo(() => {
     const draw = () => {
       t += 0.008;
       ctx.clearRect(0, 0, w, h);
+
+      // Energia decade nel tempo (riposo) — aumenta con interazione
+      energyRef.current *= 0.985;
+      const energy = energyRef.current;
+
+      // ─── Layer 0: micro-stelle di sfondo (twinkle) ───
+      // Aggiunge profondità senza pesare visivamente sul resto.
+      const stars = starsRef.current;
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        const tw = 0.5 + Math.sin(t * 1.3 + s.twinkle) * 0.5;
+        const a = s.baseAlpha * tw * (0.7 + energy * 0.3);
+        ctx.beginPath();
+        ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(265, 70%, 85%, ${a})`;
+        ctx.fill();
+      }
 
       const targetMorph = modeRef.current === "constellation" ? 1 : 0;
       morphRef.current += (targetMorph - morphRef.current) * 0.06;
@@ -536,7 +634,7 @@ const EmpireParticleOrb = memo(() => {
         const ccx = cx + ox;
         const ccy = cy + oy;
         const coreR = effRadius * 0.8;
-        const coreAlpha = (1 - m) * (0.28 + Math.sin(t * 2) * 0.06);
+        const coreAlpha = (1 - m) * (0.28 + Math.sin(t * 2) * 0.06 + energy * 0.18);
         const coreGrad = ctx.createRadialGradient(ccx, ccy, 0, ccx, ccy, coreR);
         coreGrad.addColorStop(0, `hsla(280, 95%, 75%, ${coreAlpha})`);
         coreGrad.addColorStop(0.45, `hsla(265, 85%, 55%, ${coreAlpha * 0.35})`);
@@ -544,6 +642,97 @@ const EmpireParticleOrb = memo(() => {
         ctx.fillStyle = coreGrad;
         ctx.beginPath();
         ctx.arc(ccx, ccy, coreR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // ─── Aura pulse esterna (anelli concentrici che respirano) ───
+        // Più intensi quando energia alta (post-tap)
+        const auraBase = 0.08 + energy * 0.22;
+        for (let k = 0; k < 3; k++) {
+          const phase = (t * 0.6 + k * 0.7) % 1;
+          const ringR = effRadius * (1 + phase * 0.9);
+          const ringA = auraBase * (1 - phase) * (1 - m * 0.6);
+          if (ringA <= 0.01) continue;
+          ctx.strokeStyle = `hsla(${275 + k * 8}, 85%, 70%, ${ringA})`;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(ccx, ccy, ringR, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // ─── Anello orbitante (luce che gira attorno all'orb) ───
+        const orbitR = effRadius * 1.05;
+        const orbitSegments = 60;
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < orbitSegments; i++) {
+          const a0 = (i / orbitSegments) * Math.PI * 2 + t * 0.8;
+          const a1 = ((i + 1) / orbitSegments) * Math.PI * 2 + t * 0.8;
+          // Luminosità "head" ruotante
+          const head = (Math.sin(a0 - t * 0.8) + 1) * 0.5;
+          const segA = Math.pow(head, 4) * (0.55 + energy * 0.4) * (1 - m * 0.7);
+          if (segA < 0.02) continue;
+          ctx.strokeStyle = `hsla(${265 + head * 30}, 90%, ${65 + head * 20}%, ${segA})`;
+          ctx.beginPath();
+          ctx.arc(ccx, ccy, orbitR, a0, a1);
+          ctx.stroke();
+        }
+      }
+
+      // ─── Shockwaves (onde d'urto al tap) ───
+      const sw = shockwavesRef.current;
+      for (let i = sw.length - 1; i >= 0; i--) {
+        const s = sw[i];
+        s.r += (s.maxR - s.r) * 0.06;
+        s.alpha *= 0.94;
+        if (s.alpha < 0.02 || s.r >= s.maxR * 0.98) {
+          sw.splice(i, 1);
+          continue;
+        }
+        // Anello sottile + glow
+        const grad = ctx.createRadialGradient(s.x, s.y, s.r * 0.85, s.x, s.y, s.r);
+        grad.addColorStop(0, `hsla(${s.hue}, 90%, 75%, 0)`);
+        grad.addColorStop(0.7, `hsla(${s.hue}, 90%, 70%, ${s.alpha * 0.7})`);
+        grad.addColorStop(1, `hsla(${s.hue}, 90%, 65%, 0)`);
+        ctx.strokeStyle = grad as unknown as string;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.stroke();
+        // Inner ring
+        ctx.strokeStyle = `hsla(${s.hue}, 95%, 85%, ${s.alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 0.96, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // ─── Sparks (scintille radiali post-tap) ───
+      const sp = sparksRef.current;
+      for (let i = sp.length - 1; i >= 0; i--) {
+        const k = sp[i];
+        k.life++;
+        k.x += k.vx;
+        k.y += k.vy;
+        k.vx *= 0.94;
+        k.vy *= 0.94;
+        // Gravità leggera verso il basso (più "fuoco d'artificio")
+        k.vy += 0.05;
+        const lifeRatio = k.life / k.maxLife;
+        if (lifeRatio >= 1) {
+          sp.splice(i, 1);
+          continue;
+        }
+        const a = (1 - lifeRatio) * 0.9;
+        // Trail
+        ctx.strokeStyle = `hsla(${k.hue}, 95%, 75%, ${a * 0.5})`;
+        ctx.lineWidth = k.size * 0.6;
+        ctx.beginPath();
+        ctx.moveTo(k.x - k.vx * 2, k.y - k.vy * 2);
+        ctx.lineTo(k.x, k.y);
+        ctx.stroke();
+        // Head
+        ctx.fillStyle = `hsla(${k.hue}, 95%, 85%, ${a})`;
+        ctx.beginPath();
+        ctx.arc(k.x, k.y, k.size, 0, Math.PI * 2);
         ctx.fill();
       }
 
