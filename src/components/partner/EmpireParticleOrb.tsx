@@ -139,9 +139,12 @@ const EmpireParticleOrb = memo(() => {
 
       // Toggle canvas pointer-events so the background underneath stays interactive
       // when the cursor/finger is OUTSIDE the orb hit-area. Keep events captured while dragging.
+      // touchAction: solo dentro l'orb blocchiamo lo scroll nativo. Fuori → "pan-y"
+      // così l'utente può scorrere la pagina anche col dito sopra il canvas.
       if (!dragRef.current.active && !gestureRef.current.active) {
         canvas.style.pointerEvents = inside ? "auto" : "none";
         canvas.style.cursor = inside ? "grab" : "default";
+        canvas.style.touchAction = inside ? "none" : "pan-y";
       }
 
       // Update tracked pointer position
