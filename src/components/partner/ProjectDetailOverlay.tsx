@@ -265,7 +265,7 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
 
-          {/* Project description */}
+          {/* Project description + metadata cliente */}
           <div className="max-w-3xl mx-auto">
             <div className="flex flex-wrap gap-1.5 mb-3">
               {project.tags.map(tag => (
@@ -273,7 +273,24 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                   style={{ background: `${project.accent}20`, color: project.accent }}>{tag}</span>
               ))}
             </div>
-            <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>{project.description}</p>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: "#d1d5db" }}>{project.description}</p>
+
+            {/* Metadata grid (CLIENT / YEAR / PLATFORM) — stile Lowengeld */}
+            <div className="grid grid-cols-3 gap-2 mt-4">
+              {[
+                { label: "Client", value: project.client },
+                { label: "Year", value: project.year },
+                { label: "Platform", value: project.platform },
+              ].map((m) => (
+                <div key={m.label} className="p-3 rounded-xl"
+                  style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <p className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: project.accent }}>
+                    {m.label}
+                  </p>
+                  <p className="text-[11px] font-semibold text-white leading-tight">{m.value}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {activeTab === "preview" ? (
