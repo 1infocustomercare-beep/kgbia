@@ -6,6 +6,7 @@ import SectorsCarousel from "@/components/landing/v2/SectorsCarousel";
 import HorizontalPortfolio from "@/components/landing/v2/HorizontalPortfolio";
 import Orbital3DShowcase from "@/components/landing/v2/Orbital3DShowcase";
 import AgentsBento from "@/components/landing/v2/AgentsBento";
+import AgentsAlaCarte from "@/components/landing/v2/AgentsAlaCarte";
 import ProcessSection from "@/components/landing/v2/ProcessSection";
 import CustomizationSection from "@/components/landing/v2/CustomizationSection";
 import AboutSection from "@/components/landing/v2/AboutSection";
@@ -43,6 +44,7 @@ export default function LandingPage() {
         <HorizontalPortfolio />
         <Orbital3DShowcase />
         <AgentsBento />
+        <AgentsAlaCarte />
         <ProcessSection />
         <CustomizationSection />
         <AboutSection />
