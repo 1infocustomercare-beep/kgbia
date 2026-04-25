@@ -455,6 +455,23 @@ const EmpireParticleOrb = memo(() => {
       t += 0.008;
       ctx.clearRect(0, 0, w, h);
 
+      // Energia decade nel tempo (riposo) — aumenta con interazione
+      energyRef.current *= 0.985;
+      const energy = energyRef.current;
+
+      // ─── Layer 0: micro-stelle di sfondo (twinkle) ───
+      // Aggiunge profondità senza pesare visivamente sul resto.
+      const stars = starsRef.current;
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        const tw = 0.5 + Math.sin(t * 1.3 + s.twinkle) * 0.5;
+        const a = s.baseAlpha * tw * (0.7 + energy * 0.3);
+        ctx.beginPath();
+        ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(265, 70%, 85%, ${a})`;
+        ctx.fill();
+      }
+
       const targetMorph = modeRef.current === "constellation" ? 1 : 0;
       morphRef.current += (targetMorph - morphRef.current) * 0.06;
       const m = morphRef.current;
