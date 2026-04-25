@@ -139,7 +139,48 @@ const EmpireParticleOrb = memo(() => {
       particlesRef.current = arr;
     };
 
+    // Init background "stars" — micro punti luminosi che riempiono il vuoto
+    const initStars = () => {
+      const stars: Star[] = [];
+      const STAR_COUNT = isMobile ? 60 : 110;
+      for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push({
+          x: Math.random(), // normalizzato 0-1
+          y: Math.random(),
+          r: 0.4 + Math.random() * 1.2,
+          baseAlpha: 0.15 + Math.random() * 0.45,
+          twinkle: Math.random() * Math.PI * 2,
+        });
+      }
+      starsRef.current = stars;
+    };
+
+    // Spawn shockwave (onda d'urto al click/tap dentro l'orb)
+    const spawnShockwave = (x: number, y: number, hue = 280) => {
+      shockwavesRef.current.push({
+        x, y, r: 4, maxR: radius * 2.2,
+        alpha: 0.7, hue,
+      });
+      // Mini supernova: spruzza scintille radiali
+      const SPARK_COUNT = isMobile ? 18 : 28;
+      for (let i = 0; i < SPARK_COUNT; i++) {
+        const ang = (Math.PI * 2 * i) / SPARK_COUNT + Math.random() * 0.3;
+        const speed = 2.5 + Math.random() * 4.5;
+        sparksRef.current.push({
+          x, y,
+          vx: Math.cos(ang) * speed,
+          vy: Math.sin(ang) * speed,
+          life: 0,
+          maxLife: 40 + Math.random() * 30,
+          hue: 260 + Math.random() * 50,
+          size: 1 + Math.random() * 1.8,
+        });
+      }
+      energyRef.current = Math.min(1, energyRef.current + 0.6);
+    };
+
     init();
+    initStars();
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
