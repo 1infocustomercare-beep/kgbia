@@ -1,5 +1,5 @@
 /**
- * End-to-end tests per `lead-search` edge function.
+ * End-to-end tests per la edge function `lead-search`.
  *
  * Copre tutte le modalità che il client può triggerare:
  *  1. name_only           → ricerca globale per nome attività
@@ -10,9 +10,19 @@
  *  6. website             → nome estratto dal sito → branch name_only
  *
  * Verifica inoltre:
+ *  - guardia di autenticazione (401 senza Bearer utente valido)
+ *  - validazione payload (400 senza city/query/coords)
  *  - sincronizzazione `country_code` (filter ISO-2)
  *  - deduplica via `existing_names`
  *  - struttura risposta (success, results[], mode, sources, has_more)
+ *
+ * NOTA AUTH:
+ *  La edge function valida il Bearer token via `auth.getUser()`. L'anon key
+ *  da sola NON è sufficiente: serve un JWT utente reale.
+ *  - Senza JWT: vengono eseguiti solo i test di security guard (401/CORS).
+ *  - Con `TEST_USER_JWT` impostato nell'env: viene eseguita l'intera suite.
+ *  Per ottenere un JWT di test puoi loggarti in preview e copiarlo da
+ *  localStorage `sb-<ref>-auth-token`, oppure usare un account dedicato.
  */
 import "https://deno.land/std@0.224.0/dotenv/load.ts";
 import { assert, assertEquals, assertExists } from "https://deno.land/std@0.224.0/assert/mod.ts";
@@ -20,7 +30,10 @@ import { assert, assertEquals, assertExists } from "https://deno.land/std@0.224.
 const SUPABASE_URL = Deno.env.get("VITE_SUPABASE_URL") ?? Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY =
   Deno.env.get("VITE_SUPABASE_PUBLISHABLE_KEY") ?? Deno.env.get("SUPABASE_PUBLISHABLE_KEY")!;
+const TEST_USER_JWT = Deno.env.get("TEST_USER_JWT") ?? "";
 const FN_URL = `${SUPABASE_URL}/functions/v1/lead-search`;
+
+const HAS_AUTH = TEST_USER_JWT.length > 20;
 
 interface LeadSearchResponse {
   success: boolean;
@@ -32,7 +45,23 @@ interface LeadSearchResponse {
   page?: number;
 }
 
-async function callLeadSearch(body: Record<string, unknown>): Promise<{ status: number; data: LeadSearchResponse }> {
+/** Chiamata autenticata (richiede TEST_USER_JWT). */
+async function callAuthed(body: Record<string, unknown>): Promise<{ status: number; data: LeadSearchResponse }> {
+  const res = await fetch(FN_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${TEST_USER_JWT}`,
+      apikey: SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify(body),
+  });
+  const data = (await res.json()) as LeadSearchResponse;
+  return { status: res.status, data };
+}
+
+/** Chiamata anonima (anon key, senza utente). */
+async function callAnon(body: Record<string, unknown>): Promise<{ status: number; data: LeadSearchResponse }> {
   const res = await fetch(FN_URL, {
     method: "POST",
     headers: {
@@ -47,10 +76,10 @@ async function callLeadSearch(body: Record<string, unknown>): Promise<{ status: 
 }
 
 /* ─────────────────────────────────────────────────────────── */
-/*  AUTH / VALIDAZIONE                                          */
+/*  SECURITY GUARDS — sempre eseguiti                           */
 /* ─────────────────────────────────────────────────────────── */
 
-Deno.test("rejects request without Authorization header", async () => {
+Deno.test("security: rifiuta richieste senza Authorization header", async () => {
   const res = await fetch(FN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -60,19 +89,45 @@ Deno.test("rejects request without Authorization header", async () => {
   assert(res.status === 401 || res.status === 403, `expected 401/403, got ${res.status}`);
 });
 
-Deno.test("rejects empty payload (no city, query or coords)", async () => {
-  const { status, data } = await callLeadSearch({ sector: "food" });
+Deno.test("security: rifiuta richieste con solo anon key (no user JWT)", async () => {
+  const { status, data } = await callAnon({ city: "Roma", sector: "food" });
+  assertEquals(status, 401);
+  assertExists(data.error);
+});
+
+Deno.test("CORS: la richiesta OPTIONS risponde correttamente", async () => {
+  const res = await fetch(FN_URL, { method: "OPTIONS" });
+  await res.text();
+  assertEquals(res.status, 200);
+  assertExists(res.headers.get("access-control-allow-origin"));
+});
+
+/* ─────────────────────────────────────────────────────────── */
+/*  TEST AUTENTICATI — richiedono TEST_USER_JWT nell'env        */
+/* ─────────────────────────────────────────────────────────── */
+
+const authedTest = HAS_AUTH ? Deno.test : Deno.test.ignore;
+
+if (!HAS_AUTH) {
+  console.warn(
+    "\n[lead-search tests] TEST_USER_JWT non impostato → saltati i test E2E completi.\n" +
+      "  Per eseguire l'intera suite: aggiungi TEST_USER_JWT=<jwt> al .env e ri-esegui.\n",
+  );
+}
+
+/* ── VALIDAZIONE PAYLOAD ── */
+
+authedTest("validazione: payload vuoto (no city/query/coords) → 400", async () => {
+  const { status, data } = await callAuthed({ sector: "food" });
   assertEquals(status, 400);
   assertEquals(data.success, false);
   assertExists(data.error);
 });
 
-/* ─────────────────────────────────────────────────────────── */
-/*  MODE 1 — NAME-ONLY (ricerca globale per nome attività)      */
-/* ─────────────────────────────────────────────────────────── */
+/* ── MODE 1: NAME-ONLY ── */
 
-Deno.test("mode=name_only → ricerca globale ritorna mode='name_only'", async () => {
-  const { status, data } = await callLeadSearch({
+authedTest("mode=name_only → ricerca globale ritorna mode='name_only'", async () => {
+  const { status, data } = await callAuthed({
     query: "Starbucks",
     sector: "food",
     name_only: true,
@@ -83,14 +138,11 @@ Deno.test("mode=name_only → ricerca globale ritorna mode='name_only'", async (
   assertEquals(data.mode, "name_only");
   assert(Array.isArray(data.results));
   assertExists(data.sources);
-  // has_more deve esistere ed essere boolean
   assertEquals(typeof data.has_more, "boolean");
 });
 
-Deno.test("mode=name_only ignora la query troppo corta (<2)", async () => {
-  // Con name_only attivo ma query <2 il branch name_only non viene preso
-  // → cade nel branch geo → richiede city o coords, quindi 400 senza city
-  const { status, data } = await callLeadSearch({
+authedTest("mode=name_only: query troppo corta (<2) cade in branch geo → 400 senza city", async () => {
+  const { status, data } = await callAuthed({
     query: "a",
     sector: "food",
     name_only: true,
@@ -99,12 +151,10 @@ Deno.test("mode=name_only ignora la query troppo corta (<2)", async () => {
   assertEquals(data.success, false);
 });
 
-/* ─────────────────────────────────────────────────────────── */
-/*  MODE 2 — KEYWORD + CITY                                     */
-/* ─────────────────────────────────────────────────────────── */
+/* ── MODE 2: KEYWORD + CITY ── */
 
-Deno.test("mode=keyword+city → ricerca con parola chiave e città", async () => {
-  const { status, data } = await callLeadSearch({
+authedTest("mode=keyword+city → ricerca con parola chiave e città", async () => {
+  const { status, data } = await callAuthed({
     query: "pizzeria",
     city: "Roma",
     sector: "food",
@@ -117,12 +167,10 @@ Deno.test("mode=keyword+city → ricerca con parola chiave e città", async () =
   assert(Array.isArray(data.results));
 });
 
-/* ─────────────────────────────────────────────────────────── */
-/*  MODE 3 — ZONE (city only, settore generico)                 */
-/* ─────────────────────────────────────────────────────────── */
+/* ── MODE 3: ZONE (city only) ── */
 
-Deno.test("mode=zone → city only ritorna risultati settoriali", async () => {
-  const { status, data } = await callLeadSearch({
+authedTest("mode=zone → city only ritorna risultati settoriali", async () => {
+  const { status, data } = await callAuthed({
     city: "Milano",
     sector: "beauty",
     country_code: "IT",
@@ -134,8 +182,8 @@ Deno.test("mode=zone → city only ritorna risultati settoriali", async () => {
   assertExists(data.sources);
 });
 
-Deno.test("mode=zone → località inesistente ritorna success=false con messaggio", async () => {
-  const { status, data } = await callLeadSearch({
+authedTest("mode=zone: località inesistente → success=false con messaggio", async () => {
+  const { status, data } = await callAuthed({
     city: "Xyznonexistent12345",
     sector: "food",
     country_code: "IT",
@@ -147,12 +195,10 @@ Deno.test("mode=zone → località inesistente ritorna success=false con messagg
   assertEquals(data.results!.length, 0);
 });
 
-/* ─────────────────────────────────────────────────────────── */
-/*  MODE 4 — GPS (lat/lon + radius)                             */
-/* ─────────────────────────────────────────────────────────── */
+/* ── MODE 4: GPS ── */
 
-Deno.test("mode=gps → ricerca attorno a coordinate (Colosseo, Roma)", async () => {
-  const { status, data } = await callLeadSearch({
+authedTest("mode=gps → ricerca attorno a coordinate (Colosseo, Roma)", async () => {
+  const { status, data } = await callAuthed({
     lat: 41.8902,
     lon: 12.4922,
     radius_km: 2,
@@ -165,11 +211,11 @@ Deno.test("mode=gps → ricerca attorno a coordinate (Colosseo, Roma)", async ()
   assert(Array.isArray(data.results));
 });
 
-Deno.test("mode=gps → radius oltre 100km viene clampato senza errore", async () => {
-  const { status, data } = await callLeadSearch({
+authedTest("mode=gps: radius oltre 100km viene clampato senza errore", async () => {
+  const { status, data } = await callAuthed({
     lat: 45.4642,
     lon: 9.19,
-    radius_km: 999, // verrà clampato a 100
+    radius_km: 999,
     sector: "food",
     sources: ["nominatim"],
   });
@@ -177,17 +223,14 @@ Deno.test("mode=gps → radius oltre 100km viene clampato senza errore", async (
   assertEquals(data.success, true);
 });
 
-/* ─────────────────────────────────────────────────────────── */
-/*  MODE 5 — MAPS_URL (client estrae coords → branch GPS)       */
-/* ─────────────────────────────────────────────────────────── */
+/* ── MODE 5: MAPS_URL (client estrae coords) ── */
 
-Deno.test("mode=maps_url → simula coords estratte dal client", async () => {
-  // URL maps tipo: https://www.google.com/maps/@45.4642,9.19,15z
-  // Il client estrae lat/lon e li passa come parametri GPS.
-  const extracted = { lat: 45.4642, lon: 9.19 };
-  const { status, data } = await callLeadSearch({
-    lat: extracted.lat,
-    lon: extracted.lon,
+authedTest("mode=maps_url → simula coords estratte dal client (branch GPS)", async () => {
+  // Il client parsifica "https://www.google.com/maps/@45.4642,9.19,15z"
+  // in lat/lon e li passa come parametri GPS standard.
+  const { status, data } = await callAuthed({
+    lat: 45.4642,
+    lon: 9.19,
     radius_km: 1,
     sector: "food",
     sources: ["nominatim"],
@@ -197,15 +240,12 @@ Deno.test("mode=maps_url → simula coords estratte dal client", async () => {
   assertEquals(data.mode, "geo");
 });
 
-/* ─────────────────────────────────────────────────────────── */
-/*  MODE 6 — WEBSITE (client estrae nome → branch name_only)    */
-/* ─────────────────────────────────────────────────────────── */
+/* ── MODE 6: WEBSITE (client estrae nome) ── */
 
-Deno.test("mode=website → simula nome estratto dal dominio", async () => {
-  // Il client riceve "https://acme-pizza.it" → estrae "acme pizza" → name_only.
-  const extractedName = "Mcdonalds";
-  const { status, data } = await callLeadSearch({
-    query: extractedName,
+authedTest("mode=website → simula nome estratto dal dominio (branch name_only)", async () => {
+  // Il client riceve "https://mcdonalds.it" → estrae "mcdonalds" → name_only.
+  const { status, data } = await callAuthed({
+    query: "Mcdonalds",
     sector: "food",
     name_only: true,
     country_code: "IT",
@@ -215,13 +255,10 @@ Deno.test("mode=website → simula nome estratto dal dominio", async () => {
   assertEquals(data.mode, "name_only");
 });
 
-/* ─────────────────────────────────────────────────────────── */
-/*  COUNTRY_CODE — sincronizzazione e filtro                    */
-/* ─────────────────────────────────────────────────────────── */
+/* ── COUNTRY_CODE: sincronizzazione ── */
 
-Deno.test("country_code='IT' filtra correttamente la geocodifica città", async () => {
-  // "Milano" esiste in più nazioni → con cc=IT deve risolvere alla Milano italiana
-  const { status, data } = await callLeadSearch({
+authedTest("country_code='IT' filtra correttamente la geocodifica città", async () => {
+  const { status, data } = await callAuthed({
     city: "Milano",
     sector: "food",
     country_code: "IT",
@@ -231,9 +268,8 @@ Deno.test("country_code='IT' filtra correttamente la geocodifica città", async 
   assertEquals(data.success, true);
 });
 
-Deno.test("country_code invalido (non ISO-2) viene ignorato silenziosamente", async () => {
-  // "ITALIA" non è ISO-2 → ccFilter diventa "" → ricerca globale via geocode
-  const { status, data } = await callLeadSearch({
+authedTest("country_code invalido (non ISO-2) viene ignorato silenziosamente", async () => {
+  const { status, data } = await callAuthed({
     city: "Roma",
     sector: "food",
     country_code: "ITALIA",
@@ -243,8 +279,8 @@ Deno.test("country_code invalido (non ISO-2) viene ignorato silenziosamente", as
   assertEquals(data.success, true);
 });
 
-Deno.test("country_code passato in name_only filtra Nominatim per paese", async () => {
-  const { status, data } = await callLeadSearch({
+authedTest("country_code passato in name_only filtra Nominatim per paese", async () => {
+  const { status, data } = await callAuthed({
     query: "Lidl",
     sector: "food",
     name_only: true,
@@ -255,13 +291,10 @@ Deno.test("country_code passato in name_only filtra Nominatim per paese", async 
   assertEquals(data.mode, "name_only");
 });
 
-/* ─────────────────────────────────────────────────────────── */
-/*  DEDUP — existing_names esclude duplicati                    */
-/* ─────────────────────────────────────────────────────────── */
+/* ── DEDUP ── */
 
-Deno.test("existing_names esclude i nomi già presenti nel client", async () => {
-  // Prima chiamata per ottenere alcuni nomi reali
-  const first = await callLeadSearch({
+authedTest("existing_names esclude i nomi già presenti nel client", async () => {
+  const first = await callAuthed({
     city: "Roma",
     sector: "food",
     country_code: "IT",
@@ -275,13 +308,11 @@ Deno.test("existing_names esclude i nomi già presenti nel client", async () => 
     .slice(0, 5);
 
   if (firstNames.length === 0) {
-    // Se non abbiamo risultati (es. throttle Nominatim), saltiamo l'assertion forte
-    console.warn("[dedup test] nessun risultato base, skip assertion forte");
+    console.warn("[dedup] nessun risultato base, skip assertion forte");
     return;
   }
 
-  // Seconda chiamata escludendo i nomi raccolti
-  const second = await callLeadSearch({
+  const second = await callAuthed({
     city: "Roma",
     sector: "food",
     country_code: "IT",
@@ -291,17 +322,19 @@ Deno.test("existing_names esclude i nomi già presenti nel client", async () => 
   assertEquals(second.status, 200);
   assertEquals(second.data.success, true);
 
-  const returnedNames = new Set(
-    (second.data.results ?? []).map((r: any) => r.name?.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30)),
+  const returnedKeys = new Set(
+    (second.data.results ?? []).map((r: any) =>
+      r.name?.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30),
+    ),
   );
   for (const n of firstNames) {
     const key = n.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 30);
-    assert(!returnedNames.has(key), `dedup fallito: "${n}" presente anche dopo existing_names`);
+    assert(!returnedKeys.has(key), `dedup fallito: "${n}" presente anche dopo existing_names`);
   }
 });
 
-Deno.test("dedup interno: nessun nome duplicato nello stesso payload", async () => {
-  const { data } = await callLeadSearch({
+authedTest("dedup interno: nessun nome duplicato nello stesso payload", async () => {
+  const { data } = await callAuthed({
     city: "Firenze",
     sector: "food",
     country_code: "IT",
@@ -318,12 +351,10 @@ Deno.test("dedup interno: nessun nome duplicato nello stesso payload", async () 
   assertEquals(keys.length, set.size, "trovati nomi duplicati nel payload deduplicato");
 });
 
-/* ─────────────────────────────────────────────────────────── */
-/*  STRUTTURA RISPOSTA                                          */
-/* ─────────────────────────────────────────────────────────── */
+/* ── STRUTTURA RISPOSTA ── */
 
-Deno.test("risposta contiene sempre i campi: success, results, mode, sources", async () => {
-  const { data } = await callLeadSearch({
+authedTest("risposta: contiene sempre success, results, mode, sources, has_more", async () => {
+  const { data } = await callAuthed({
     city: "Bologna",
     sector: "food",
     country_code: "IT",
@@ -334,7 +365,7 @@ Deno.test("risposta contiene sempre i campi: success, results, mode, sources", a
   if (data.success) {
     assertExists(data.mode);
     assertExists(data.sources);
-    // sources deve avere total_merged
     assert("total_merged" in (data.sources as any));
+    assertEquals(typeof data.has_more, "boolean");
   }
 });
