@@ -48,9 +48,8 @@ export function PresetThemeScope({
     if (preset) ensurePresetGoogleFonts(preset);
   }, [preset]);
 
-  const Component = Tag as keyof JSX.IntrinsicElements;
+  const Component = Tag as any;
   return (
-    // @ts-expect-error dynamic tag
     <Component
       data-preset-scope={preset?.key || "none"}
       style={style}
