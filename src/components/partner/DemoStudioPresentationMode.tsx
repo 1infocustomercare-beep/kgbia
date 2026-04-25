@@ -236,6 +236,64 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
 
   const accent = current?.accent || "#a78bfa";
 
+  const renderPresentableCard = (p: Presentable) => {
+    const active = p.id === current?.id;
+    const realIdx = presentables.findIndex((x) => x.id === p.id);
+    return (
+      <button
+        key={p.id}
+        onClick={() => {
+          setActiveIdx(realIdx);
+          setScreenIdx(0);
+          setSwitcherOpen(false);
+        }}
+        className={`relative rounded-xl overflow-hidden bg-black/60 border-2 transition-all text-left ${
+          active
+            ? "border-white scale-[1.02] shadow-xl"
+            : "border-white/10 hover:border-white/40"
+        }`}
+        style={{ aspectRatio: "9/19" }}
+      >
+        {p.cover ? (
+          <img
+            src={p.cover}
+            alt={`${p.title} ${p.subtitle}`}
+            className="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-white/30 text-xs">
+            —
+          </div>
+        )}
+        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+          <p className="text-white text-[11px] font-semibold truncate">{p.title}</p>
+          <p className="text-white/60 text-[9px] truncate">{p.subtitle}</p>
+          <p className="text-white/40 text-[9px] mt-0.5">
+            {p.screens.length} screen{p.screens.length === 1 ? "" : "s"}
+          </p>
+        </div>
+        <div
+          className={`absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${
+            p.source === "suite"
+              ? "bg-amber-400 text-black"
+              : "bg-white/20 text-white backdrop-blur"
+          }`}
+        >
+          {p.source === "suite" ? "Tuo" : "Catalogo"}
+        </div>
+        {active && (
+          <div
+            className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-black"
+            style={{ background: p.accent }}
+          >
+            ✓
+          </div>
+        )}
+      </button>
+    );
+  };
+
   const content = (
     <motion.div
       key="presentation"
