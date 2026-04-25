@@ -23,6 +23,25 @@ interface Particle {
   sx: number; sy: number; sz: number;
 }
 
+interface Shockwave {
+  x: number; y: number;
+  r: number; maxR: number;
+  alpha: number; hue: number;
+}
+
+interface Spark {
+  x: number; y: number;
+  vx: number; vy: number;
+  life: number; maxLife: number;
+  hue: number; size: number;
+}
+
+interface Star {
+  x: number; y: number;
+  r: number; baseAlpha: number;
+  twinkle: number;
+}
+
 const FEATURES = [
   { icon: Bot, label: "AI Agents", angle: -90 },
   { icon: Target, label: "Lead Engine", angle: -30 },
