@@ -116,25 +116,26 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 z-[60] backdrop-blur-md"
+            style={{ background: "radial-gradient(ellipse at top, rgba(76,29,149,0.55), rgba(10,8,20,0.92))" }}
             onClick={!loading ? onClose : undefined}
           />
 
           {/* Centered scroll container — handles centering on all viewports */}
-          <div className="fixed inset-0 z-[61] overflow-y-auto overflow-x-hidden overscroll-contain">
-            <div className="min-h-full w-full flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-6">
+          <div className="fixed inset-0 z-[61] overflow-y-auto overflow-x-hidden overscroll-contain flex justify-center">
+            <div className="w-full max-w-[680px] px-2 sm:px-4 md:px-6 py-3 sm:py-6 flex flex-col items-stretch">
               <motion.div
                 initial={{ opacity: 0, y: 20, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.97 }}
                 transition={{ type: "spring", damping: 25 }}
-                className="w-full max-w-[680px] mx-auto rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col my-auto"
-                style={{ background: "linear-gradient(160deg, #0a0a14, #0d0a1f 50%, #14091a)" }}
+                className="w-full rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
+                style={{ background: "linear-gradient(160deg, #0f0a1f, #15102e 45%, #1a0f2a)" }}
               >
                 {/* ============ HEADER (sticky) ============ */}
                 <div
-                  className="px-3 sm:px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0 sticky top-0 z-10"
-                  style={{ background: "linear-gradient(90deg, rgba(167,139,250,0.18), rgba(20,184,166,0.12)), #0a0a14" }}
+                  className="px-3 sm:px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0 sticky top-0 z-10 backdrop-blur-xl"
+                  style={{ background: "linear-gradient(90deg, rgba(167,139,250,0.22), rgba(20,184,166,0.15)), rgba(15,10,31,0.95)" }}
                 >
                   <div className="flex items-center gap-2.5 min-w-0 flex-1">
                     <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-purple-500 to-teal-500 flex items-center justify-center shadow-lg shrink-0">
