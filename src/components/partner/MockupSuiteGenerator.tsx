@@ -13,6 +13,8 @@ import { MockupSuiteViewer, type SuiteScreen } from "./MockupSuiteViewer";
 import { MockupReactScreen, type ColorStyle } from "./MockupReactScreen";
 import { MockupLookPresets, type MockupLookPreset } from "./MockupLookPresets";
 import { MockupPresetSelector } from "./MockupPresetSelector";
+import { PresetThemeScope } from "./PresetThemeScope";
+import { getStylePreset } from "@/lib/mockup-style-presets";
 import { useBrandingKitSettings } from "@/hooks/useBrandingKitSettings";
 import { BrandContrastCheck } from "./BrandContrastCheck";
 import { buildPublicMockupUrl } from "@/lib/public-share-url";
@@ -1250,7 +1252,11 @@ export function MockupSuiteGenerator({
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* PRESET PREMIUM (palette + tipografia + layout architetturale)     */}
         {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/[0.06] to-transparent p-4 sm:p-5">
+        <PresetThemeScope
+          preset={getStylePreset(templateVariant)}
+          applyTypography={false}
+          className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/[0.06] to-transparent p-4 sm:p-5 space-y-3"
+        >
           <MockupPresetSelector
             value={templateVariant}
             sectorHint={businessSector}
@@ -1263,7 +1269,16 @@ export function MockupSuiteGenerator({
               }
             }}
           />
-        </div>
+          <div className="flex flex-wrap gap-2 pt-1 items-center">
+            <Button size="sm" className="h-8">CTA brand</Button>
+            <Button size="sm" variant="secondary" className="h-8">Secondario</Button>
+            <Button size="sm" variant="outline" className="h-8">Outline</Button>
+            <Badge>Badge</Badge>
+            <span className="text-[10px] text-muted-foreground italic ml-auto">
+              UI applicata live al preset selezionato
+            </span>
+          </div>
+        </PresetThemeScope>
 
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* PRESET LOOK — salva/carica combinazioni di template+glass+color   */}
