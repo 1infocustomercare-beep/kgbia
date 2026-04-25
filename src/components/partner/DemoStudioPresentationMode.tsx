@@ -428,6 +428,31 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
                   />
                 </div>
 
+                {/* Filtro sorgente */}
+                <div className="flex gap-1.5 mb-2">
+                  {([
+                    { id: "all", label: `Tutti (${presentables.length})` },
+                    { id: "suite", label: `✨ Tuoi (${totalSuites})` },
+                    { id: "catalog", label: `📚 Catalogo (${totalCatalog})` },
+                  ] as const).map((opt) => (
+                    <button
+                      key={opt.id}
+                      onClick={() => setSourceFilter(opt.id)}
+                      className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition whitespace-nowrap ${
+                        sourceFilter === opt.id
+                          ? opt.id === "suite"
+                            ? "bg-amber-400 text-black"
+                            : opt.id === "catalog"
+                            ? "bg-white text-black"
+                            : "bg-gradient-to-r from-amber-400 to-white text-black"
+                          : "bg-white/10 text-white hover:bg-white/20"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+
                 {/* Filtro settori */}
                 <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
                   <button
@@ -438,7 +463,7 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
                         : "bg-white/10 text-white hover:bg-white/20"
                     }`}
                   >
-                    Tutti ({presentables.length})
+                    Tutti settori
                   </button>
                   {sectorOptions.map((s) => {
                     const count = presentables.filter((p) => p.sectorId === s.id).length;
