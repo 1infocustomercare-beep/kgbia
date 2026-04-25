@@ -88,7 +88,7 @@ const EmpireParticleOrb = memo(() => {
   // Tracked active pointers for multi-touch
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const [mode, setMode] = useState<Mode>("orb");
-  const [hint, setHint] = useState(true);
+  // hint testuale rimosso (richiesta utente)
 
   useEffect(() => {
     const canvas = canvasRef.current;
