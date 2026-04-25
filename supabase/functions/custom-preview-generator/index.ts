@@ -15,6 +15,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { getStylePreset, shadowCss, type MockupStylePreset } from "../_shared/mockup-style-presets.ts";
 import { renderLayout } from "../_shared/mockup-layout-templates.ts";
+import { findCatalogReference, suggestScreensForSector } from "../_shared/catalog-references.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -33,6 +34,170 @@ interface LeadData {
   lead_email?: string;
   lead_rating?: number;
   lead_reviews_count?: number;
+  brand_logo_url?: string | null;
+  brand_photos?: string[];
+  brand_video_frames?: string[];
+  brand_colors?: { primary?: string; accent?: string; secondary?: string } | null;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// MOCKUP iPhone catalog-faithful — riusa la stessa pipeline di lead-mockup-suite:
+// reference image dal catalogo PNG settoriale + foto/video reali del lead come
+// secondary references → Nano Banana Pro replica fedelmente il layout catalogo
+// sostituendo brand+contenuti.
+// ──────────────────────────────────────────────────────────────────────────────
+async function generateMockupScreen(
+  lovableKey: string,
+  lead: LeadData,
+  screenType: string,
+  screenTitle: string,
+  preset: MockupStylePreset,
+  accentColor: string,
+  variantIndex: number,
+): Promise<{ dataUrl: string | null; catalogRef: string | null }> {
+  const catalogRef = findCatalogReference(lead.lead_sector, screenType);
+  const sector = lead.lead_sector || "attività commerciale";
+  const city = lead.lead_city ? ` · ${lead.lead_city}` : "";
+
+  // Reference multimodale: catalog reference (priorità #1) + logo lead + 1-2 foto reali
+  const refs: string[] = [];
+  if (catalogRef) refs.push(catalogRef);
+  if (lead.brand_logo_url) refs.push(lead.brand_logo_url);
+  if (lead.brand_photos && lead.brand_photos.length > 0) {
+    refs.push(...lead.brand_photos.slice(0, 2));
+  }
+  if (lead.brand_video_frames && lead.brand_video_frames.length > 0 && refs.length < 4) {
+    refs.push(lead.brand_video_frames[0]);
+  }
+  const finalRefs = refs.slice(0, 4); // Nano Banana max 4 reference
+
+  const screenHints: Record<string, string> = {
+    home: "hero immagine luxury full-bleed, logo brand in alto, claim italiano breve, CTA primario evidenziato, social proof (★ rating + recensioni), sezione 'in evidenza' con 2-3 card",
+    services: "lista servizi con icone, titolo+descrizione+prezzo da € realistico, badge 'popolare', filtro categorie chip in alto",
+    booking: "calendario mensile con giorni disponibili, fascia oraria a chip, stepper persone, CTA 'Conferma Prenotazione' grande in basso",
+    gallery: "griglia foto 2-3 colonne piene-bordo, titoli sezioni, lightbox preview, navigazione swipe",
+    portfolio: "case study layout magazine con foto large + caption + dettaglio progetto, navigazione orizzontale",
+    catalog: "card prodotto con foto, nome, prezzo €, badge sconto, CTA aggiungi al carrello",
+    map: "mappa interattiva con pin, lista veicoli/spedizioni sotto con stato real-time",
+  };
+  const hint = screenHints[screenType] || screenHints.home;
+
+  const catalogDirective = catalogRef
+    ? `\n\n═══ 📸 IMMAGINE DI RIFERIMENTO CATALOGO (REGOLA #1 — PRIORITÀ MASSIMA) ═══
+🎯 La PRIMA immagine allegata è la REFERENCE CATALOGO approvata per il settore "${sector}".
+DEVI replicare FEDELMENTE quella reference per:
+• Layout strutturale (posizione header, hero, card, bottom-nav)
+• Densità e gerarchia delle informazioni
+• Tipologia di componenti UI (chip, card, lista, griglia)
+• Proporzioni, spazi, qualità del render fotografico
+SOSTITUISCI SOLO:
+• Brand/logo → con il logo "${lead.lead_name}" (vedi reference image #2 se presente)
+• Contenuti testuali → adattati al settore "${sector}"
+• Palette accent → adattata a ${accentColor} mantenendo i contrasti del catalogo
+• Foto prodotti/servizi → usa le foto reali del lead (reference images successive)
+NON cambiare la STRUTTURA visiva: la qualità di quella reference è ESATTAMENTE
+il livello che devi raggiungere.`
+    : "";
+
+  const brandRefDirective = (lead.brand_logo_url || (lead.brand_photos?.length ?? 0) > 0)
+    ? `\n\n═══ 🎨 BRAND REALI DEL CLIENTE ═══
+${lead.brand_logo_url ? `• Logo splash header: usa IDENTICO il logo originale del lead (reference allegata).` : ""}
+${(lead.brand_photos?.length ?? 0) > 0 ? `• Foto hero/galleria/card: usa le foto reali del lead allegate, ricomposte in card moderne.` : ""}
+${(lead.brand_video_frames?.length ?? 0) > 0 ? `• Background hero / sezione storia: usa i fotogrammi video reali del lead allegati.` : ""}`
+    : "";
+
+  const prompt = `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screenTitle}" di un'app mobile reale per "${lead.lead_name}" (${sector}${city}).${catalogDirective}${brandRefDirective}
+
+═══ COMPOSIZIONE FOTOGRAFICA (REGOLE INDEROGABILI) ═══
+• iPhone PERFETTAMENTE CENTRATO orizzontalmente e verticalmente
+• Vista FRONTALE ortogonale: ZERO prospettiva, ZERO inclinazione, ZERO 3D, ZERO tilt
+• Aspect ratio reale 9:19.5, proporzioni iPhone 16 Pro Max accurate
+• Cornice titanio naturale sottile uniforme su tutti i lati
+• Display interamente visibile, NESSUN cropping
+• Sfondo: gradiente neutro morbido in tinta col tema (studio fotografico Apple)
+• Ombra naturale soft sotto il dispositivo
+• NESSUN testo o decorazione FUORI dallo schermo iPhone
+
+═══ CONTENUTO SCHERMATA (PERTINENTE AL SETTORE) ═══
+${hint}
+Il contenuto deve essere AUTENTICO per "${sector}":
+• Nomi servizi/prodotti realistici tipici del settore italiano
+• Prezzi in € credibili (es. "da €25", "€45")
+• Microcopy 100% in italiano professionale (zero inglese eccetto status bar iOS)
+• ZERO testo placeholder/lorem ipsum
+
+═══ STILE GRAFICO ═══
+${preset.copyTone}. Preset "${preset.label}": ${preset.description}.
+Palette: bg ${preset.palette.bg}, surface ${preset.palette.surface}, accent ${accentColor}, text ${preset.palette.text}.
+Font heading: ${preset.fonts.heading}. Font body: ${preset.fonts.body}.
+
+═══ UI COMPONENTS OBBLIGATORI ═══
+• Status bar iOS: ora 9:41, segnale 5G, WiFi, batteria 100%
+• Dynamic Island nera centrata in alto
+• Header app con titolo schermata coerente
+• Card border-radius 16-20px, ombre soft
+• Bottom navigation bar fissa con 5 icone, attiva colorata col primary
+• Home indicator iOS sottile in basso
+• CTA primari grandi (52px), full-width
+
+═══ QUALITÀ ULTRA-CINEMATOGRAFICA 8K ═══
+Render fotorealistico Apple Store keynote:
+• Illuminazione studio 3 punti (key + fill + rim caldo)
+• Riflessi vetro Ceramic Shield perfetti, micro-highlight bordi titanio
+• Anti-aliasing perfetto, ZERO pixelation, grana cinematica 5%
+• Color grading filmico premium
+
+═══ DIVIETI ASSOLUTI ═══
+🚫 VIETATO scrivere "Empire", "Empire AI", "Empireia", "Lovable"
+🚫 VIETATO loghi Apple, Google, Meta, Instagram, WhatsApp visibili
+🚫 VIETATO testo in inglese nei contenuti app
+🚫 VIETATO prospettive 3D, tilt, dispositivo inclinato
+🚫 VIETATO wireframe o sketch — SOLO render fotografico premium`;
+
+  // Usiamo SEMPRE Nano Banana Pro quando c'è una reference catalogo (qualità top)
+  const model = catalogRef
+    ? "google/gemini-3-pro-image-preview"
+    : "google/gemini-3.1-flash-image-preview";
+
+  const userContent: any[] = finalRefs.length > 0
+    ? [
+        { type: "text", text: prompt },
+        ...finalRefs.map(url => ({ type: "image_url", image_url: { url } })),
+      ]
+    : prompt;
+
+  // 2 tentativi con backoff per resilienza
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const r = await fetch(AI_GATEWAY, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: "user", content: userContent }],
+          modalities: ["image", "text"],
+        }),
+      });
+      if (r.status === 429) {
+        if (attempt < 2) { await new Promise(res => setTimeout(res, 2000 * attempt)); continue; }
+        console.warn(`[mockup-screen] rate_limited screen=${screenType}`);
+        return { dataUrl: null, catalogRef };
+      }
+      if (!r.ok) {
+        console.warn(`[mockup-screen] error ${r.status} screen=${screenType}`);
+        if (attempt < 2) { await new Promise(res => setTimeout(res, 1500)); continue; }
+        return { dataUrl: null, catalogRef };
+      }
+      const data = await r.json();
+      const url = data?.choices?.[0]?.message?.images?.[0]?.image_url?.url ?? null;
+      console.log(`[mockup-screen] ok screen=${screenType} catalogRef=${!!catalogRef} refs=${finalRefs.length} attempt=${attempt}`);
+      return { dataUrl: url, catalogRef };
+    } catch (e: any) {
+      console.warn(`[mockup-screen] exception screen=${screenType} attempt=${attempt}: ${e?.message}`);
+      if (attempt < 2) await new Promise(res => setTimeout(res, 1500));
+    }
+  }
+  return { dataUrl: null, catalogRef };
 }
 
 // ----- AI helpers -----
