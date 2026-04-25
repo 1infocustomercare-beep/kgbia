@@ -2889,7 +2889,70 @@ const SuperAdminDashboard = () => {
             </div>
           </motion.div>
         )}
+
+        {/* ===== ACCOUNT — Gestione profilo Super Admin ===== */}
+        {!loading && activeTab === "account" && user && (
+          <motion.div className="mt-2 pb-24" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+            <SuperAdminProfileSection
+              userId={user.id}
+              userName={profileName || user.user_metadata?.full_name || user.email?.split("@")[0] || "Owner"}
+              userEmail={user.email || ""}
+              onAvatarChange={(url) => setProfileAvatar(url)}
+            />
+          </motion.div>
+        )}
       </div>
+
+      {/* ═══════════ BOTTOM QUICK NAV — sticky, mobile + desktop ═══════════ */}
+      <motion.div
+        initial={{ y: 80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 25 }}
+        className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-xl border-t"
+        style={{
+          background: "linear-gradient(180deg, rgba(15,12,30,0.85), rgba(8,6,18,0.95))",
+          borderColor: "rgba(167,139,250,0.18)",
+          boxShadow: "0 -12px 40px rgba(124,58,237,0.25)",
+          paddingBottom: "env(safe-area-inset-bottom, 0)",
+        }}
+      >
+        <div className="max-w-3xl mx-auto grid grid-cols-5 gap-1 px-2 py-1.5">
+          {quickNav.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <motion.button
+                key={item.id}
+                whileTap={{ scale: 0.92 }}
+                onClick={() => setActiveTab(item.id)}
+                className="relative flex flex-col items-center justify-center gap-0.5 py-1.5 rounded-xl transition-all"
+                style={isActive ? {
+                  background: "linear-gradient(160deg, rgba(124,58,237,0.25), rgba(167,139,250,0.12))",
+                  border: "1px solid rgba(167,139,250,0.4)",
+                } : { background: "transparent" }}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="bottom-nav-indicator"
+                    className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full"
+                    style={{ background: "linear-gradient(90deg, #7c3aed, #a78bfa)", boxShadow: "0 0 12px rgba(167,139,250,0.7)" }}
+                  />
+                )}
+                <span
+                  className={`[&_svg]:w-4 [&_svg]:h-4 transition-colors ${isActive ? "text-white" : "text-purple-300/60"}`}
+                >
+                  {item.icon}
+                </span>
+                <span className={`text-[9px] font-bold tracking-wide ${isActive ? "text-white" : "text-purple-300/60"}`}>
+                  {item.label}
+                </span>
+              </motion.button>
+            );
+          })}
+        </div>
+      </motion.div>
+
+      {/* Spacer per evitare overlap del contenuto con bottom nav */}
+      <div className="h-20" aria-hidden />
     </div>
   );
 };
