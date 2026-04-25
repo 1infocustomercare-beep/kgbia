@@ -389,7 +389,7 @@ const EmpireParticleOrb = memo(() => {
         const next: Mode = modeRef.current === "orb" ? "constellation" : "orb";
         modeRef.current = next;
         setMode(next);
-        setHint(false);
+        
         // Onda d'urto + supernova nel punto del tap
         const rect = canvas.getBoundingClientRect();
         const tapX = e.clientX - rect.left;
