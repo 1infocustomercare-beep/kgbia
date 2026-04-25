@@ -580,7 +580,7 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
         {lightbox && (
           <DeviceLightbox
             src={lightbox.screens[lightbox.index].src}
-            alt={`Screen ${lightbox.index + 1} di ${lightbox.screens.length}`}
+            alt={`${getScreenLabel(lightbox.screens[lightbox.index].src, project.name, lightbox.index)} · ${lightbox.index + 1} / ${lightbox.screens.length}`}
             deviceType={lightbox.screens[lightbox.index].device}
             onClose={() => setLightbox(null)}
             onPrev={() => setLightbox(prev => prev ? { ...prev, index: prev.index - 1 } : null)}
