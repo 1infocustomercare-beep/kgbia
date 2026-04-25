@@ -2,25 +2,21 @@
  * Demo Studio — Modalità "Pronta da Mostrare"
  *
  * Vista cinematografica fullscreen pensata per il venditore davanti al cliente.
- * Mostra SOLO le preview dei mockup approvati in un flusso guidato di 60 secondi:
- *   1. Hero (3s)  — "Ecco il TUO sito"
- *   2. Preview (45s) — swipe orizzontale tra screens del mockup
- *   3. Wow (7s)   — "Tutto questo è già pronto, oggi"
- *   4. CTA (5s)   — "Lo attiviamo insieme adesso?"
- *
- * Nasconde: dati sensibili, bottoni admin, costi, crediti, lead, URL tecnici.
+ * Mostra tutte le preview disponibili (anche bozze) in fullscreen reale, con
+ * switcher rapido per cambiare suite/screen al volo.
  */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
   ChevronLeft,
   ChevronRight,
   Sparkles,
-  Rocket,
   Pause,
   Play,
   Smartphone,
+  LayoutGrid,
 } from "lucide-react";
 import type { VaultMockupSuite } from "@/hooks/useMockupSuiteVault";
 
@@ -30,18 +26,6 @@ interface Props {
   suites: VaultMockupSuite[];
   initialSuiteId?: string;
 }
-
-type Stage = "hero" | "preview" | "wow" | "cta";
-
-const STAGE_DURATION_MS: Record<Stage, number> = {
-  hero: 0,        // skip intro: apri direttamente sulla preview a tutto schermo
-  preview: 60000, // 60s di preview prima del wow
-  wow: 7000,
-  cta: 5000,
-};
-
-// Hero rimosso dall'ordine: l'utente vuole vedere subito la preview grande
-const STAGE_ORDER: Stage[] = ["preview", "wow", "cta"];
 
 function extractScreenImages(suite: VaultMockupSuite): string[] {
   const screens = suite.screens;
@@ -59,34 +43,77 @@ function extractScreenImages(suite: VaultMockupSuite): string[] {
   return [];
 }
 
+const AUTO_ADVANCE_MS = 6000;
+
 export function DemoStudioPresentationMode({ open, onClose, suites, initialSuiteId }: Props) {
+  // Mostra TUTTE le suite con almeno uno screen (non solo "complete")
   const ready = useMemo(
-    () => suites.filter((s) => s.status === "complete" && extractScreenImages(s).length > 0),
+    () => suites.filter((s) => extractScreenImages(s).length > 0),
     [suites],
   );
 
   const [suiteIdx, setSuiteIdx] = useState(0);
   const [screenIdx, setScreenIdx] = useState(0);
-  const [stage, setStage] = useState<Stage>("hero");
   const [paused, setPaused] = useState(false);
+  const [switcherOpen, setSwitcherOpen] = useState(false);
 
-  // Init quando si apre — apri DIRETTAMENTE sulla preview a tutto schermo
+  // Init quando si apre
   useEffect(() => {
     if (!open) return;
     const idx = initialSuiteId ? Math.max(0, ready.findIndex((s) => s.id === initialSuiteId)) : 0;
     setSuiteIdx(idx >= 0 ? idx : 0);
     setScreenIdx(0);
-    setStage("preview");
     setPaused(false);
+    setSwitcherOpen(false);
   }, [open, initialSuiteId, ready]);
 
-  // ESC chiude
+  // Lock scroll del body quando aperto + true fullscreen
+  useEffect(() => {
+    if (!open) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open]);
+
+  const currentSuite = ready[suiteIdx];
+  const screens = currentSuite ? extractScreenImages(currentSuite) : [];
+
+  const nextScreen = useCallback(() => {
+    if (!currentSuite || screens.length === 0) return;
+    setScreenIdx((i) => (i + 1) % screens.length);
+  }, [currentSuite, screens.length]);
+
+  const prevScreen = useCallback(() => {
+    if (!currentSuite || screens.length === 0) return;
+    setScreenIdx((i) => (i - 1 + screens.length) % screens.length);
+  }, [currentSuite, screens.length]);
+
+  const nextSuite = useCallback(() => {
+    if (ready.length <= 1) return;
+    setSuiteIdx((i) => (i + 1) % ready.length);
+    setScreenIdx(0);
+  }, [ready.length]);
+
+  const prevSuite = useCallback(() => {
+    if (ready.length <= 1) return;
+    setSuiteIdx((i) => (i - 1 + ready.length) % ready.length);
+    setScreenIdx(0);
+  }, [ready.length]);
+
+  // Tastiera
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        if (switcherOpen) setSwitcherOpen(false);
+        else onClose();
+      }
       if (e.key === "ArrowRight") nextScreen();
       if (e.key === "ArrowLeft") prevScreen();
+      if (e.key === "ArrowUp") prevSuite();
+      if (e.key === "ArrowDown") nextSuite();
       if (e.key === " ") {
         e.preventDefault();
         setPaused((p) => !p);
@@ -94,84 +121,61 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, onClose, nextScreen, prevScreen, nextSuite, prevSuite, switcherOpen]);
 
-  const currentSuite = ready[suiteIdx];
-  const screens = currentSuite ? extractScreenImages(currentSuite) : [];
-
-  // Auto-advance stage (skip "hero" — non più nel flusso)
+  // Auto-advance
   useEffect(() => {
-    if (!open || paused || !currentSuite) return;
-    const duration = STAGE_DURATION_MS[stage];
-    if (duration <= 0) return;
-    const t = setTimeout(() => {
-      const i = STAGE_ORDER.indexOf(stage);
-      const next = STAGE_ORDER[(i + 1) % STAGE_ORDER.length];
-      setStage(next);
-      if (next === "preview") setScreenIdx(0);
-    }, duration);
+    if (!open || paused || screens.length <= 1 || switcherOpen) return;
+    const t = setTimeout(nextScreen, AUTO_ADVANCE_MS);
     return () => clearTimeout(t);
-  }, [stage, open, paused, currentSuite]);
-
-  // Auto-advance screen durante stage "preview"
-  useEffect(() => {
-    if (!open || paused || stage !== "preview" || screens.length <= 1) return;
-    const perScreen = Math.max(2000, Math.floor(STAGE_DURATION_MS.preview / screens.length));
-    const t = setTimeout(() => {
-      setScreenIdx((i) => (i + 1) % screens.length);
-    }, perScreen);
-    return () => clearTimeout(t);
-  }, [screenIdx, stage, open, paused, screens.length]);
+  }, [open, paused, screens.length, screenIdx, suiteIdx, nextScreen, switcherOpen]);
 
   if (!open) return null;
-
-  const nextScreen = () => {
-    if (!currentSuite) return;
-    if (screens.length === 0) return;
-    setScreenIdx((i) => (i + 1) % screens.length);
-    setStage("preview");
-  };
-  const prevScreen = () => {
-    if (!currentSuite) return;
-    if (screens.length === 0) return;
-    setScreenIdx((i) => (i - 1 + screens.length) % screens.length);
-    setStage("preview");
-  };
-
-  const nextSuite = () => {
-    if (ready.length <= 1) return;
-    setSuiteIdx((i) => (i + 1) % ready.length);
-    setScreenIdx(0);
-    setStage("preview");
-  };
-  const prevSuite = () => {
-    if (ready.length <= 1) return;
-    setSuiteIdx((i) => (i - 1 + ready.length) % ready.length);
-    setScreenIdx(0);
-    setStage("preview");
-  };
 
   const businessName = currentSuite?.business_name || "Il tuo brand";
   const sector = currentSuite?.business_sector || "";
   const accent = currentSuite?.primary_color || "#a78bfa";
 
-  return (
+  const content = (
     <AnimatePresence>
       <motion.div
         key="presentation"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[200] bg-black overflow-hidden"
+        className="fixed inset-0 z-[9999] bg-black"
+        style={{
+          width: "100vw",
+          height: "100vh",
+          height: "100dvh" as any,
+          overflow: "hidden",
+          padding: 0,
+          margin: 0,
+        }}
       >
-        {/* Top bar minimal — solo per il venditore */}
-        <div className="absolute top-0 inset-x-0 z-30 flex items-center justify-between p-3 bg-gradient-to-b from-black/80 to-transparent">
+        {/* Top bar minimal */}
+        <div className="absolute top-0 inset-x-0 z-30 flex items-center justify-between px-3 py-2 bg-gradient-to-b from-black/80 to-transparent">
           <div className="flex items-center gap-2 text-white/80 text-[11px] uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            Pronta da mostrare
+            <span className="hidden sm:inline">Pronta da mostrare</span>
+            {ready.length > 0 && (
+              <span className="text-white/40 normal-case tracking-normal">
+                · {suiteIdx + 1}/{ready.length}
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-1">
+            {ready.length > 0 && (
+              <button
+                onClick={() => setSwitcherOpen((v) => !v)}
+                className={`p-2 rounded-full text-white transition ${
+                  switcherOpen ? "bg-white/30" : "bg-white/10 hover:bg-white/20"
+                }`}
+                aria-label="Cambia mockup"
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+            )}
             <button
               onClick={() => setPaused((p) => !p)}
               className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white"
@@ -189,21 +193,9 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
           </div>
         </div>
 
-        {/* Stage progress dots */}
-        <div className="absolute top-12 inset-x-0 z-30 flex justify-center gap-1.5 px-4">
-          {STAGE_ORDER.map((s) => (
-            <div
-              key={s}
-              className={`h-0.5 rounded-full transition-all ${
-                s === stage ? "w-8 bg-white" : "w-4 bg-white/30"
-              }`}
-            />
-          ))}
-        </div>
-
         {/* Empty state */}
         {!currentSuite ? (
-          <div className="h-full flex items-center justify-center text-center px-8">
+          <div className="absolute inset-0 flex items-center justify-center text-center px-8">
             <div>
               <Smartphone className="w-16 h-16 mx-auto text-white/40 mb-4" />
               <p className="text-white text-lg font-display font-bold">
@@ -221,184 +213,77 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
             </div>
           </div>
         ) : (
-          <div className="relative h-full w-full flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center">
             {/* Background gradient cinematografico */}
             <div
-              className="absolute inset-0 opacity-30"
+              className="absolute inset-0 opacity-30 pointer-events-none"
               style={{
                 background: `radial-gradient(circle at 50% 40%, ${accent}55, transparent 70%)`,
               }}
             />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)] pointer-events-none" />
 
-            {/* Stage content */}
-            <AnimatePresence mode="wait">
-              {stage === "hero" && (
-                <motion.div
-                  key="hero"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.5 }}
-                  className="relative z-10 text-center px-8"
-                >
-                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/60 mb-3">
-                    Anteprima esclusiva
-                  </div>
-                  <h1 className="text-4xl md:text-5xl font-display font-bold text-white leading-tight">
-                    Ecco il <span style={{ color: accent }}>tuo</span> nuovo sito
-                  </h1>
-                  <p className="text-white/70 text-base mt-3">
-                    {businessName}
-                    {sector && <span className="text-white/40"> · {sector}</span>}
-                  </p>
-                </motion.div>
-              )}
-
-              {stage === "preview" && (
-                <motion.div
-                  key={`preview-${screenIdx}`}
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.4 }}
-                  className="relative z-10 flex flex-col items-center justify-center w-full h-full px-2 sm:px-4 py-16 sm:py-20"
-                >
-                  {/*
-                    iPhone-style frame — DIMENSIONI MASSIME RESPONSIVE
-                    L'altezza del telefono = altezza disponibile (viewport - barre).
-                    La larghezza si calcola dal ratio 9:19 ed è limitata dalla viewport.
-                    Risultato: telefono ENORME e centrato su qualsiasi device.
-                  */}
-                  <div
-                    className="relative"
-                    style={{
-                      // h: 78% dell'altezza viewport (lascia spazio per top bar + dot)
-                      // w: derivata dal ratio (9/19) * h, ma mai > 92vw
-                      height: "min(78vh, calc(92vw * 19 / 9))",
-                      width: "min(92vw, calc(78vh * 9 / 19))",
-                      maxHeight: "820px",
-                    }}
-                  >
-                    <div
-                      className="relative w-full h-full rounded-[2.5rem] sm:rounded-[3rem] p-2 sm:p-2.5 shadow-2xl"
-                      style={{
-                        background: "linear-gradient(135deg, #1a1a1a, #000)",
-                        boxShadow: `0 30px 80px ${accent}40, 0 0 0 1px rgba(255,255,255,0.05)`,
-                      }}
-                    >
-                      <div className="rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden bg-black w-full h-full">
-                        {screens[screenIdx] ? (
-                          <img
-                            src={screens[screenIdx]}
-                            alt={`${businessName} preview ${screenIdx + 1}`}
-                            className="w-full h-full object-cover object-top"
-                            loading="eager"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-white/30 text-xs">
-                            Caricamento...
-                          </div>
-                        )}
-                      </div>
-                      {/* Notch */}
-                      <div className="absolute top-2 sm:top-2.5 left-1/2 -translate-x-1/2 w-20 sm:w-24 h-5 sm:h-6 bg-black rounded-b-2xl z-10" />
+            {/* iPhone frame — DIMENSIONI MASSIME, perfettamente centrato */}
+            <motion.div
+              key={`${currentSuite.id}-${screenIdx}`}
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.35 }}
+              className="relative z-10"
+              style={{
+                height: "min(86dvh, calc(96vw * 19 / 9))",
+                width: "min(96vw, calc(86dvh * 9 / 19))",
+                maxHeight: "900px",
+              }}
+            >
+              <div
+                className="relative w-full h-full rounded-[2.5rem] sm:rounded-[3rem] p-2 sm:p-2.5 shadow-2xl"
+                style={{
+                  background: "linear-gradient(135deg, #1a1a1a, #000)",
+                  boxShadow: `0 30px 80px ${accent}40, 0 0 0 1px rgba(255,255,255,0.05)`,
+                }}
+              >
+                <div className="rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden bg-black w-full h-full">
+                  {screens[screenIdx] ? (
+                    <img
+                      src={screens[screenIdx]}
+                      alt={`${businessName} preview ${screenIdx + 1}`}
+                      className="w-full h-full object-cover object-top"
+                      loading="eager"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white/30 text-xs">
+                      Caricamento...
                     </div>
-                  </div>
+                  )}
+                </div>
+                {/* Notch */}
+                <div className="absolute top-2 sm:top-2.5 left-1/2 -translate-x-1/2 w-20 sm:w-24 h-5 sm:h-6 bg-black rounded-b-2xl z-10" />
+              </div>
+            </motion.div>
 
-                  {/* Info compatta sotto: brand + dot indicator (assoluta per non rubare spazio) */}
-                  <div className="absolute bottom-16 sm:bottom-20 inset-x-0 z-10 flex flex-col items-center gap-2 pointer-events-none">
-                    <p className="text-white/85 text-xs sm:text-sm font-display drop-shadow-lg">
-                      {businessName}
-                    </p>
-                    {screens.length > 1 && (
-                      <div className="flex gap-1.5">
-                        {screens.map((_, i) => (
-                          <div
-                            key={i}
-                            className={`h-1 rounded-full transition-all ${
-                              i === screenIdx ? "w-6 bg-white" : "w-1.5 bg-white/30"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
+            {/* Brand label + dot indicator (overlay basso) */}
+            <div className="absolute bottom-3 inset-x-0 z-10 flex flex-col items-center gap-1.5 pointer-events-none">
+              <p className="text-white/85 text-xs sm:text-sm font-display drop-shadow-lg">
+                {businessName}
+                {sector && <span className="text-white/40"> · {sector}</span>}
+              </p>
+              {screens.length > 1 && (
+                <div className="flex gap-1.5">
+                  {screens.map((_, i) => (
+                    <div
+                      key={i}
+                      className={`h-1 rounded-full transition-all ${
+                        i === screenIdx ? "w-6 bg-white" : "w-1.5 bg-white/30"
+                      }`}
+                    />
+                  ))}
+                </div>
               )}
+            </div>
 
-              {stage === "wow" && (
-                <motion.div
-                  key="wow"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5 }}
-                  className="relative z-10 text-center px-8 max-w-md"
-                >
-                  <Sparkles
-                    className="w-12 h-12 mx-auto mb-4"
-                    style={{ color: accent }}
-                  />
-                  <h2 className="text-3xl md:text-4xl font-display font-bold text-white leading-tight">
-                    Tutto questo è <span style={{ color: accent }}>già pronto</span>, oggi.
-                  </h2>
-                  <div className="grid grid-cols-3 gap-3 mt-6">
-                    {[
-                      { v: "100%", l: "su misura" },
-                      { v: "0", l: "template" },
-                      { v: "24h", l: "attivazione" },
-                    ].map((s) => (
-                      <div
-                        key={s.l}
-                        className="p-3 rounded-xl bg-white/5 border border-white/10"
-                      >
-                        <div
-                          className="text-xl font-bold font-display"
-                          style={{ color: accent }}
-                        >
-                          {s.v}
-                        </div>
-                        <div className="text-[10px] uppercase text-white/60 mt-1">
-                          {s.l}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {stage === "cta" && (
-                <motion.div
-                  key="cta"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.5 }}
-                  className="relative z-10 text-center px-8 max-w-md"
-                >
-                  <Rocket
-                    className="w-14 h-14 mx-auto mb-4"
-                    style={{ color: accent }}
-                  />
-                  <h2 className="text-3xl md:text-4xl font-display font-bold text-white leading-tight">
-                    Lo attiviamo <span style={{ color: accent }}>insieme</span> adesso?
-                  </h2>
-                  <p className="text-white/70 text-sm mt-3">
-                    {businessName} online entro 24 ore. Zero impegni a lungo termine.
-                  </p>
-                  <div
-                    className="mt-6 inline-block px-8 py-3 rounded-2xl font-bold text-black"
-                    style={{ background: accent }}
-                  >
-                    Iniziamo →
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Navigation arrows (visibili solo durante preview) */}
-            {stage === "preview" && screens.length > 1 && (
+            {/* Frecce screen */}
+            {screens.length > 1 && (
               <>
                 <button
                   onClick={prevScreen}
@@ -416,30 +301,106 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
                 </button>
               </>
             )}
-
-            {/* Bottom: navigazione tra mockup */}
-            {ready.length > 1 && (
-              <div className="absolute bottom-6 inset-x-0 z-20 flex items-center justify-center gap-3">
-                <button
-                  onClick={prevSuite}
-                  className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs backdrop-blur"
-                >
-                  ← Brand
-                </button>
-                <span className="text-white/50 text-[11px]">
-                  {suiteIdx + 1} / {ready.length}
-                </span>
-                <button
-                  onClick={nextSuite}
-                  className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs backdrop-blur"
-                >
-                  Brand →
-                </button>
-              </div>
-            )}
           </div>
         )}
+
+        {/* SWITCHER RAPIDO — overlay con tutte le suite */}
+        <AnimatePresence>
+          {switcherOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 z-40 bg-black/85 backdrop-blur-md flex flex-col"
+              onClick={() => setSwitcherOpen(false)}
+            >
+              <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0">
+                <div>
+                  <p className="text-white text-sm font-bold">Scegli mockup</p>
+                  <p className="text-white/50 text-[11px]">{ready.length} disponibili</p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSwitcherOpen(false);
+                  }}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                  aria-label="Chiudi switcher"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-4 pb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {ready.map((s, i) => {
+                    const imgs = extractScreenImages(s);
+                    const cover = imgs[0];
+                    const active = i === suiteIdx;
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSuiteIdx(i);
+                          setScreenIdx(0);
+                          setSwitcherOpen(false);
+                        }}
+                        className={`relative rounded-xl overflow-hidden bg-black/60 border-2 transition-all text-left ${
+                          active
+                            ? "border-white scale-[1.02] shadow-xl"
+                            : "border-white/10 hover:border-white/40"
+                        }`}
+                        style={{ aspectRatio: "9/19" }}
+                      >
+                        {cover ? (
+                          <img
+                            src={cover}
+                            alt={s.business_name}
+                            className="w-full h-full object-cover object-top"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-white/30 text-xs">
+                            —
+                          </div>
+                        )}
+                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+                          <p className="text-white text-[11px] font-semibold truncate">
+                            {s.business_name}
+                          </p>
+                          {s.business_sector && (
+                            <p className="text-white/60 text-[9px] truncate">
+                              {s.business_sector}
+                            </p>
+                          )}
+                          <p className="text-white/40 text-[9px] mt-0.5">
+                            {imgs.length} screen{imgs.length === 1 ? "" : "s"}
+                          </p>
+                        </div>
+                        {active && (
+                          <div
+                            className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-black"
+                            style={{ background: s.primary_color || "#a78bfa" }}
+                          >
+                            ✓
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </AnimatePresence>
   );
+
+  // Render via portal direttamente nel body per evitare padding/overflow di layout genitori
+  return typeof document !== "undefined"
+    ? createPortal(content, document.body)
+    : content;
 }
