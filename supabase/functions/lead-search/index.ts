@@ -59,19 +59,47 @@ const SECTOR_OSM_TAGS: Record<string, string[]> = {
   garage: ['shop=car_repair', 'shop=car', 'amenity=car_wash', 'shop=tyres'],
 };
 
-/* ═══ GEOCODE (city or full address) ═══ */
-async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[] } | null> {
+/* ═══ GEOCODE (city or full address) — picks best match in country ═══ */
+async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[]; country_code?: string; matched_name?: string } | null> {
   try {
     const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
     const resp = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&addressdetails=1${cc}`,
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=8&addressdetails=1${cc}`,
       { headers: { "User-Agent": "EmpireAI-LeadScout/6.0 (info@empireaigroup.com)" } }
     );
     if (!resp.ok) return null;
     const data = await resp.json();
     if (!data.length) return null;
-    return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), bbox: data[0].boundingbox?.map(Number) || [] };
+    // Prefer admin places (city/town/village/hamlet/municipality/suburb) over POIs
+    const placeRanks: Record<string, number> = {
+      city: 0, town: 1, municipality: 1, village: 2, hamlet: 3, suburb: 4, neighbourhood: 5,
+      administrative: 6, county: 7, state: 8,
+    };
+    const sorted = [...data].sort((a, b) => {
+      const ra = placeRanks[a.type] ?? placeRanks[a.class] ?? 99;
+      const rb = placeRanks[b.type] ?? placeRanks[b.class] ?? 99;
+      if (ra !== rb) return ra - rb;
+      return (parseFloat(b.importance ?? "0")) - (parseFloat(a.importance ?? "0"));
+    });
+    const best = sorted[0];
+    const addr = best.address || {};
+    return {
+      lat: parseFloat(best.lat),
+      lon: parseFloat(best.lon),
+      bbox: best.boundingbox?.map(Number) || [],
+      country_code: (addr.country_code || "").toLowerCase(),
+      matched_name: best.display_name,
+    };
   } catch { return null; }
+}
+
+/* ═══ HAVERSINE distance (km) ═══ */
+function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 /* ═══ GLOBAL NAME SEARCH — find a business by name everywhere (Nominatim, no bbox) ═══ */
@@ -142,8 +170,7 @@ function bboxFromRadius(lat: number, lon: number, radiusKm: number): number[] {
   return [lat - dLat, lat + dLat, lon - dLon, lon + dLon]; // [south, north, west, east]
 }
 
-/* ═══ SOURCE 1: PHOTON ═══ */
-async function searchPhoton(city: string, sector: string, geo: { lat: number; lon: number }, page: number, specializationQuery = ""): Promise<any[]> {
+async function searchPhoton(city: string, sector: string, geo: { lat: number; lon: number; bbox: number[] }, page: number, specializationQuery = "", maxDistanceKm = 25, countryCode = ""): Promise<any[]> {
   const baseTerms = SECTOR_TERMS[sector] || [sector];
   const terms = specializationQuery ? [specializationQuery, ...baseTerms.filter(t => t !== specializationQuery)] : baseTerms;
   const results: any[] = [];
@@ -154,9 +181,16 @@ async function searchPhoton(city: string, sector: string, geo: { lat: number; lo
   const searchTerms = terms.slice(startIdx, startIdx + 6);
   if (searchTerms.length === 0) return [];
 
+  // Photon supports bbox: minLon,minLat,maxLon,maxLat
+  // Use slightly enlarged bbox around center for accuracy
+  const dLat = maxDistanceKm / 111;
+  const dLon = maxDistanceKm / (111 * Math.cos((geo.lat * Math.PI) / 180));
+  const bboxParam = `&bbox=${(geo.lon - dLon).toFixed(5)},${(geo.lat - dLat).toFixed(5)},${(geo.lon + dLon).toFixed(5)},${(geo.lat + dLat).toFixed(5)}`;
+  const langParam = countryCode === "it" ? "&lang=it" : "";
+
   const fetchPhoton = async (q: string) => {
     try {
-      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lat=${geo.lat}&lon=${geo.lon}&limit=40`;
+      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lat=${geo.lat}&lon=${geo.lon}&limit=40${bboxParam}${langParam}`;
       const resp = await fetch(url, { signal: AbortSignal.timeout(6000) });
       if (!resp.ok) return [];
       const data = await resp.json();
@@ -175,21 +209,31 @@ async function searchPhoton(city: string, sector: string, geo: { lat: number; lo
       if (["city", "district", "state", "country", "street", "locality", "county"].includes(props.osm_value)) continue;
       if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse"].includes(props.osm_key)) continue;
 
+      // Country filter
+      if (countryCode && props.countrycode && props.countrycode.toLowerCase() !== countryCode.toLowerCase()) continue;
+
+      const coords = f.geometry?.coordinates || [];
+      const lat = coords[1], lon = coords[0];
+      // Distance filter — drop results too far from search center
+      if (typeof lat === "number" && typeof lon === "number") {
+        const dist = distanceKm(geo.lat, geo.lon, lat, lon);
+        if (dist > maxDistanceKm) continue;
+      }
+
       const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 25);
       if (seen.has(key)) continue;
       seen.add(key);
 
-      const coords = f.geometry?.coordinates || [];
       results.push({
         source: "photon", name,
         full_address: [props.street, props.housenumber, props.postcode, props.city || props.county].filter(Boolean).join(", "),
         city: props.city || props.county || city,
         zone: props.district || props.locality || "",
-        lat: coords[1], lon: coords[0],
+        lat, lon,
         phone: null, website: null, email: null, opening_hours: null,
         instagram: null, facebook: null, cuisine: null,
         osm_type: props.osm_value || props.osm_key || "",
-        google_maps_url: coords[1] && coords[0] ? `https://www.google.com/maps/search/?api=1&query=${coords[1]},${coords[0]}` : null,
+        google_maps_url: lat && lon ? `https://www.google.com/maps/search/?api=1&query=${lat},${lon}` : null,
         search_google: `https://www.google.com/search?q=${encodeURIComponent(name + " " + (props.city || city))}`,
         search_instagram: `https://www.instagram.com/explore/tags/${encodeURIComponent(name.replace(/\s+/g, "").toLowerCase())}/`,
         search_facebook: `https://www.facebook.com/search/pages/?q=${encodeURIComponent(name)}`,
@@ -200,18 +244,24 @@ async function searchPhoton(city: string, sector: string, geo: { lat: number; lo
 }
 
 /* ═══ SOURCE 2: NOMINATIM ═══ */
-async function searchNominatim(city: string, sector: string, userQuery: string, geo: { lat: number; lon: number; bbox: number[] }, page: number, countryCode?: string): Promise<any[]> {
+async function searchNominatim(city: string, sector: string, userQuery: string, geo: { lat: number; lon: number; bbox: number[] }, page: number, countryCode?: string, maxDistanceKm = 25): Promise<any[]> {
   const terms = SECTOR_TERMS[sector] || [sector];
   const results: any[] = [];
   const seen = new Set<string>();
 
+  // bbox from geocode is [south, north, west, east] (Nominatim boundingbox order)
   const [south, north, west, east] = geo.bbox.length >= 4
     ? geo.bbox
     : [geo.lat - 0.08, geo.lat + 0.08, geo.lon - 0.08, geo.lon + 0.08];
-  
-  // Expand search area on deeper pages
+
+  // Expand search area on deeper pages — keep bbox VALID (south<north, west<east)
   const expansion = page * 0.03;
-  const viewbox = `${Number(west) - expansion},${Number(north) + expansion},${Number(east) + expansion},${Number(south) - expansion}`;
+  const sExp = Number(south) - expansion;
+  const nExp = Number(north) + expansion;
+  const wExp = Number(west) - expansion;
+  const eExp = Number(east) + expansion;
+  // Nominatim viewbox format: lon_min,lat_max,lon_max,lat_min  (= west,north,east,south)
+  const viewbox = `${wExp},${nExp},${eExp},${sExp}`;
   const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
 
   const startIdx = page * 6;
@@ -231,6 +281,7 @@ async function searchNominatim(city: string, sector: string, userQuery: string, 
     } catch { return []; }
   };
 
+
   for (let i = 0; i < searches.length; i += 2) {
     const batch = searches.slice(i, i + 2);
     const allData = await Promise.all(batch.map(s => fetchOne(s)));
@@ -239,18 +290,30 @@ async function searchNominatim(city: string, sector: string, userQuery: string, 
         if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse", "residential", "administrative"].includes(item.class)) continue;
         const name = item.display_name?.split(",")[0]?.trim() || "";
         if (!name || name.length < 3) continue;
+
+        const tags = item.extratags || {};
+        const addr = item.address || {};
+
+        // Country filter — drop results outside expected country
+        if (countryCode && addr.country_code && addr.country_code.toLowerCase() !== countryCode.toLowerCase()) continue;
+
+        // Distance filter — drop results too far from search center
+        const itemLat = parseFloat(item.lat), itemLon = parseFloat(item.lon);
+        if (!isNaN(itemLat) && !isNaN(itemLon)) {
+          const dist = distanceKm(geo.lat, geo.lon, itemLat, itemLon);
+          if (dist > maxDistanceKm) continue;
+        }
+
         const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 25);
         if (seen.has(key)) continue;
         seen.add(key);
 
-        const tags = item.extratags || {};
-        const addr = item.address || {};
         results.push({
           source: "nominatim", name,
           full_address: item.display_name || "",
           city: addr.city || addr.town || addr.village || addr.municipality || city,
           zone: addr.suburb || addr.neighbourhood || addr.quarter || "",
-          lat: parseFloat(item.lat), lon: parseFloat(item.lon),
+          lat: itemLat, lon: itemLon,
           phone: tags.phone || tags["contact:phone"] || tags["phone:mobile"] || null,
           website: tags.website || tags["contact:website"] || tags.url || null,
           email: tags.email || tags["contact:email"] || null,
@@ -528,11 +591,23 @@ serve(async (req) => {
       return new Response(JSON.stringify({ success: false, error: `Località "${searchCity || searchQuery}" non trovata.`, results: [] }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
+    // Effective country code: prefer explicit filter, else infer from geocode result
+    const effectiveCC = ccFilter || (geo as any).country_code || "";
+
+    // Distance budget: explicit radius wins; otherwise estimate from bbox; default 25km
+    let maxDistanceKm = 25;
+    if (searchRadius && searchRadius > 0) {
+      maxDistanceKm = searchRadius;
+    } else if (geo.bbox && geo.bbox.length >= 4) {
+      const [s, n, w, e] = geo.bbox;
+      const diagKm = distanceKm(Number(s), Number(w), Number(n), Number(e));
+      maxDistanceKm = Math.max(8, Math.min(60, diagKm * 0.6));
+    }
 
     // 2. Run SELECTED sources in parallel
     const [photonResults, nominatimResults, overpassResults, googleResults] = await Promise.all([
-      useSrc("photon") ? searchPhoton(resolvedCity || combinedQuery || searchQuery, searchSector, geo, searchPage, specializationQuery) : Promise.resolve([]),
-      useSrc("nominatim") ? searchNominatim(resolvedCity || combinedQuery || searchQuery, searchSector, combinedQuery, geo, searchPage, ccFilter) : Promise.resolve([]),
+      useSrc("photon") ? searchPhoton(resolvedCity || combinedQuery || searchQuery, searchSector, geo, searchPage, specializationQuery, maxDistanceKm, effectiveCC) : Promise.resolve([]),
+      useSrc("nominatim") ? searchNominatim(resolvedCity || combinedQuery || searchQuery, searchSector, combinedQuery, geo, searchPage, effectiveCC, maxDistanceKm) : Promise.resolve([]),
       useSrc("overpass") ? searchOverpass(searchSector, geo, searchPage) : Promise.resolve([]),
       (useSrc("google") && use_google) ? searchGooglePlaces(combinedQuery, resolvedCity || searchCity, searchSector, searchPage) : Promise.resolve([]),
     ]);
