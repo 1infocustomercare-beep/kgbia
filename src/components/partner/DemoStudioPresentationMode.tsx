@@ -219,13 +219,11 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
   const accent = current?.accent || "#a78bfa";
 
   const content = (
-    <AnimatePresence>
-      <motion.div
-        key="presentation"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[9999] bg-black"
+    <motion.div
+      key="presentation"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="fixed inset-0 z-[9999] bg-black"
         style={{ width: "100vw", height: "100dvh", overflow: "hidden", padding: 0, margin: 0 }}
       >
         {/* Top bar */}
