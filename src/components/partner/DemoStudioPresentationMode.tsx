@@ -484,75 +484,50 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
                 </div>
               </div>
 
-              {/* Griglia */}
-              <div className="flex-1 overflow-y-auto px-4 py-4">
-                {filtered.length === 0 ? (
+              {/* Griglia divisa per sorgente */}
+              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
+                {filtered.length === 0 && (
                   <p className="text-white/50 text-sm text-center py-12">
                     Nessun mockup trovato.
                   </p>
-                ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                    {filtered.map((p) => {
-                      const active = p.id === current?.id;
-                      const realIdx = presentables.findIndex((x) => x.id === p.id);
-                      return (
-                        <button
-                          key={p.id}
-                          onClick={() => {
-                            setActiveIdx(realIdx);
-                            setScreenIdx(0);
-                            setSwitcherOpen(false);
-                          }}
-                          className={`relative rounded-xl overflow-hidden bg-black/60 border-2 transition-all text-left ${
-                            active
-                              ? "border-white scale-[1.02] shadow-xl"
-                              : "border-white/10 hover:border-white/40"
-                          }`}
-                          style={{ aspectRatio: "9/19" }}
-                        >
-                          {p.cover ? (
-                            <img
-                              src={p.cover}
-                              alt={`${p.title} ${p.subtitle}`}
-                              className="w-full h-full object-cover object-top"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-white/30 text-xs">
-                              —
-                            </div>
-                          )}
-                          <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
-                            <p className="text-white text-[11px] font-semibold truncate">
-                              {p.title}
-                            </p>
-                            <p className="text-white/60 text-[9px] truncate">{p.subtitle}</p>
-                            <p className="text-white/40 text-[9px] mt-0.5">
-                              {p.screens.length} screen{p.screens.length === 1 ? "" : "s"}
-                            </p>
-                          </div>
-                          {/* Badge sorgente */}
-                          <div
-                            className={`absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${
-                              p.source === "suite"
-                                ? "bg-amber-400 text-black"
-                                : "bg-white/20 text-white backdrop-blur"
-                            }`}
-                          >
-                            {p.source === "suite" ? "Tuo" : "Catalogo"}
-                          </div>
-                          {active && (
-                            <div
-                              className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-black"
-                              style={{ background: p.accent }}
-                            >
-                              ✓
-                            </div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
+                )}
+
+                {/* SEZIONE: Tuoi mockup generati */}
+                {grouped.suiteItems.length > 0 && (
+                  <section>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-amber-400 text-black text-[12px]">✨</span>
+                      <h3 className="text-white text-[13px] font-bold uppercase tracking-wider">
+                        Tuoi mockup generati
+                      </h3>
+                      <span className="text-white/40 text-[11px]">
+                        {grouped.suiteItems.length}
+                      </span>
+                      <div className="flex-1 h-px bg-gradient-to-r from-amber-400/40 to-transparent ml-2" />
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                      {grouped.suiteItems.map((p) => renderPresentableCard(p))}
+                    </div>
+                  </section>
+                )}
+
+                {/* SEZIONE: Catalogo stock */}
+                {grouped.catalogItems.length > 0 && (
+                  <section>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-white/15 text-white text-[12px]">📚</span>
+                      <h3 className="text-white text-[13px] font-bold uppercase tracking-wider">
+                        Catalogo stock
+                      </h3>
+                      <span className="text-white/40 text-[11px]">
+                        {grouped.catalogItems.length}
+                      </span>
+                      <div className="flex-1 h-px bg-gradient-to-r from-white/30 to-transparent ml-2" />
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                      {grouped.catalogItems.map((p) => renderPresentableCard(p))}
+                    </div>
+                  </section>
                 )}
               </div>
             </motion.div>
