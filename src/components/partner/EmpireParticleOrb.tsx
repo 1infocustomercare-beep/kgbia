@@ -55,6 +55,10 @@ const EmpireParticleOrb = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
+  const shockwavesRef = useRef<Shockwave[]>([]);
+  const sparksRef = useRef<Spark[]>([]);
+  const starsRef = useRef<Star[]>([]);
+  const energyRef = useRef(0); // 0→1, sale durante interazione
   const pointerRef = useRef({ x: -9999, y: -9999, active: false, inside: false });
   const modeRef = useRef<Mode>("orb");
   const morphRef = useRef(0);
