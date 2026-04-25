@@ -1,330 +1,382 @@
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring, useTransform, MotionValue } from "framer-motion";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
 
 const PROJECTS = [
-  { brand: "COTE Miami", sector: "Steakhouse premium", img: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`, tone: "gold", result: "+34%", metric: "scontrino medio", quote: "Esperienza obsidian che alza il perceived value." },
-  { brand: "Aura Spa", sector: "Wellness boutique", img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, tone: "violet", result: "+218%", metric: "prenotazioni online", quote: "Funnel zen, conversione massima." },
-  { brand: "Neo Nails", sector: "Beauty studio", img: `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, tone: "blue", result: "3.2×", metric: "retention clienti", quote: "Frosted glass UI, retention da boutique." },
-  { brand: "City Padel", sector: "Sport club", img: `${S}/City%20Padel%20Milano/mobile-fresh-azzurro-home.png`, tone: "emerald", result: "94%", metric: "occupazione campi", quote: "Booking smart, campi sempre pieni." },
-  { brand: "DIMORA", sector: "Real estate luxury", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, tone: "gold", result: "+187%", metric: "lead qualificati", quote: "Eleganza milanese, lead alto-spendenti." },
-  { brand: "Paperfish", sector: "Sushi omakase", img: `${S}/Paperfish%20Sushi/a-sakura-home.png`, tone: "violet", result: "Sold-out", metric: "3 mesi in anticipo", quote: "Omakase digitale che vende il rito." },
-  { brand: "FAR Medical", sector: "Healthcare premium", img: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, tone: "blue", result: "GDPR", metric: "compliance totale", quote: "Estetica ethereal con compliance totale." },
+  { brand: "COTE Miami", sector: "Steakhouse premium", img: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`, accent: "215 90% 62%", tone: "gold", result: "+34%", metric: "scontrino medio", quote: "Esperienza obsidian che alza il perceived value." },
+  { brand: "Aura Spa", sector: "Wellness boutique", img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, accent: "248 80% 70%", tone: "violet", result: "+218%", metric: "prenotazioni online", quote: "Funnel zen, conversione massima." },
+  { brand: "Neo Nails", sector: "Beauty studio", img: `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, accent: "325 75% 66%", tone: "blue", result: "3.2×", metric: "retention clienti", quote: "Frosted glass UI, retention da boutique." },
+  { brand: "City Padel", sector: "Sport club", img: `${S}/City%20Padel%20Milano/mobile-fresh-azzurro-home.png`, accent: "172 80% 58%", tone: "emerald", result: "94%", metric: "occupazione campi", quote: "Booking smart, campi sempre pieni." },
+  { brand: "DIMORA", sector: "Real estate luxury", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, accent: "38 80% 62%", tone: "gold", result: "+187%", metric: "lead qualificati", quote: "Eleganza milanese, lead alto-spendenti." },
+  { brand: "Paperfish", sector: "Sushi omakase", img: `${S}/Paperfish%20Sushi/a-sakura-home.png`, accent: "330 70% 64%", tone: "violet", result: "Sold-out", metric: "3 mesi in anticipo", quote: "Omakase digitale che vende il rito." },
+  { brand: "FAR Medical", sector: "Healthcare premium", img: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%", tone: "blue", result: "GDPR", metric: "compliance totale", quote: "Estetica ethereal con compliance totale." },
 ];
+
+const AUTOPLAY_MS = 4200;
 
 export default function HorizontalPortfolio() {
   const navigate = useNavigate();
-  const ref = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [maxX, setMaxX] = useState(0);
-  const [edgeInset, setEdgeInset] = useState(24);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const smooth = useSpring(scrollYProgress, { stiffness: 90, damping: 28, mass: 0.7 });
+  const [index, setIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const intervalRef = useRef<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
 
+  const total = PROJECTS.length;
+  const active = PROJECTS[index];
+
+  const goTo = useCallback((next: number, dir: 1 | -1 = 1) => {
+    setDirection(dir);
+    setIndex(((next % total) + total) % total);
+  }, [total]);
+
+  const next = useCallback(() => goTo(index + 1, 1), [index, goTo]);
+  const prev = useCallback(() => goTo(index - 1, -1), [index, goTo]);
+
+  // Autoplay (pauses on hover/touch/inactive tab)
   useEffect(() => {
-    const measure = () => {
-      const track = trackRef.current;
-      if (!track) return;
-      const viewport = window.innerWidth;
-      const firstCard = track.querySelector("article");
-      const cardWidth = firstCard instanceof HTMLElement ? firstCard.offsetWidth : 304;
-      const inset = Math.max((viewport - cardWidth) / 2, 16);
-      setEdgeInset(inset);
-      setMaxX(Math.max(track.scrollWidth - viewport, 0));
+    if (isPaused) return;
+    intervalRef.current = window.setInterval(() => {
+      setDirection(1);
+      setIndex((i) => (i + 1) % total);
+    }, AUTOPLAY_MS);
+    return () => {
+      if (intervalRef.current) window.clearInterval(intervalRef.current);
     };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (trackRef.current) ro.observe(trackRef.current);
-    window.addEventListener("resize", measure);
-    return () => { window.removeEventListener("resize", measure); ro.disconnect(); };
+  }, [isPaused, total]);
+
+  // Pause when tab not visible
+  useEffect(() => {
+    const onVis = () => setIsPaused(document.hidden);
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
+  // Keyboard arrows
   useEffect(() => {
-    const unsub = smooth.on("change", (v) => {
-      const idx = Math.min(PROJECTS.length - 1, Math.max(0, Math.round(v * (PROJECTS.length - 1))));
-      setActiveIndex(idx);
-    });
-    return () => unsub();
-  }, [smooth]);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [next, prev]);
 
-  const x = useTransform(smooth, [0, 1], [0, -maxX]);
-  const widthPct = useTransform(smooth, [0, 1], ["0%", "100%"]);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    setIsPaused(true);
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 40) {
+      if (dx < 0) next();
+      else prev();
+    }
+    touchStartX.current = null;
+    // resume after a beat
+    window.setTimeout(() => setIsPaused(false), 800);
+  };
 
-  const active = PROJECTS[activeIndex];
+  // Side previews (prev/next) for cinematic feel on tablet+
+  const prevIdx = (index - 1 + total) % total;
+  const nextIdx = (index + 1) % total;
+
+  // Pre-warm next image
+  useEffect(() => {
+    const img = new Image();
+    img.src = PROJECTS[nextIdx].img;
+  }, [nextIdx]);
+
+  const variants = useMemo(() => ({
+    enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0, scale: 0.94 }),
+    center: { x: 0, opacity: 1, scale: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0, scale: 0.94 }),
+  }), []);
 
   return (
     <section
-      ref={ref}
       id="portfolio"
       className="landing-section relative overflow-hidden"
       data-theme="dark"
-      style={{ height: `${PROJECTS.length * 26 + 90}vh` }}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="sticky top-0 flex h-[100svh] overflow-hidden">
-        <div className="absolute inset-0 landing-section-glow" data-tone="gold" />
-        {/* Editorial film grain */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-overlay"
+      {/* Ambient cinematic glow that follows the active scene */}
+      <div className="pointer-events-none absolute inset-0">
+        <motion.div
+          key={`glow-${active.brand}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2 }}
+          className="absolute inset-0"
           style={{
-            backgroundImage:
-              "radial-gradient(circle at 25% 30%, hsl(43 70% 60% / 0.6), transparent 40%), radial-gradient(circle at 80% 70%, hsl(43 50% 45% / 0.4), transparent 45%)",
+            background: `
+              radial-gradient(ellipse 70% 55% at 50% 25%, hsl(${active.accent} / 0.32), transparent 65%),
+              radial-gradient(ellipse 50% 40% at 15% 80%, hsl(${active.accent} / 0.18), transparent 70%),
+              radial-gradient(ellipse 50% 40% at 85% 80%, hsl(248 80% 64% / 0.16), transparent 70%)
+            `,
           }}
         />
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(var(--foreground)/0.5) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)/0.5) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+            maskImage: "radial-gradient(ellipse 60% 60% at 50% 40%, black, transparent)",
+          }}
+        />
+      </div>
 
-        <div className="relative mx-auto flex h-full w-full max-w-[1600px] flex-col justify-between gap-3 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-5 sm:gap-4 sm:px-5 sm:pb-5 sm:pt-6 lg:px-6 lg:pb-6 lg:pt-6">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="mb-2 flex flex-shrink-0 flex-col items-center gap-2 text-center sm:mb-3 lg:flex-row lg:items-end lg:justify-between lg:text-left"
+      <div className="relative mx-auto w-full max-w-[1400px] px-4 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
+        {/* Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="mx-auto mb-8 max-w-[820px] text-center sm:mb-10 lg:mb-14"
+          data-tone="gold"
+        >
+          <span className="landing-pill mb-3 inline-flex items-center gap-2 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.26em]">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
+            Cinematic Reel · {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+          </span>
+          <h2 className="font-heading text-[clamp(1.75rem,5vw,3.4rem)] font-extrabold leading-[1.02] tracking-[-0.035em] text-foreground">
+            Preview reali che <span className="landing-heading-gradient">comunicano valore</span> in 3 secondi.
+          </h2>
+          <p className="mx-auto mt-3 max-w-[560px] text-[13px] leading-[1.6] text-foreground/65 sm:mt-4 sm:text-[15px]">
+            Ogni brand parte da zero e atterra con un'esperienza che vende. Scorri o lascia partire l'autoplay.
+          </p>
+        </motion.div>
+
+        {/* Stage */}
+        <div
+          className="relative mx-auto flex w-full items-center justify-center"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          {/* Side previews (desktop only) */}
+          <button
+            aria-label={`Vai a ${PROJECTS[prevIdx].brand}`}
+            onClick={prev}
+            className="hidden lg:block absolute left-0 z-10 h-full w-[22%] cursor-pointer"
           >
-            <div className="max-w-[760px] lg:mx-0" data-tone="gold">
-              <span className="landing-pill mb-1.5 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.26em] sm:mb-2 sm:px-3.5 sm:py-1.5 sm:text-[10px]">
-                Cinematic Reel · {String(activeIndex + 1).padStart(2, "0")} / {String(PROJECTS.length).padStart(2, "0")}
-              </span>
-              <h2 className="mx-auto max-w-[20ch] font-heading text-[clamp(1.15rem,3.2vw,2.4rem)] font-extrabold leading-[1] tracking-[-0.03em] text-foreground lg:mx-0">
-                Preview reali che <span className="landing-heading-gradient">comunicano valore</span> in 3 secondi.
-              </h2>
+            <SidePhone project={PROJECTS[prevIdx]} side="left" />
+          </button>
+
+          {/* Main phone */}
+          <div className="relative z-20 flex w-full max-w-[420px] flex-col items-center px-2 sm:max-w-[460px] lg:max-w-[420px]">
+            <div className="relative w-full">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={active.brand}
+                  custom={direction}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative mx-auto w-full"
+                >
+                  <PhoneCard project={active} />
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            {/* Live caption della scena attiva */}
-            <motion.div
-              key={active.brand}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="hidden max-w-[340px] items-center gap-3 lg:flex"
-            >
-              <div className="h-10 w-px bg-gradient-to-b from-transparent via-primary/60 to-transparent" />
-              <div className="text-left">
-                <div className="text-[10px] font-bold uppercase tracking-[0.28em] text-primary/90">{active.brand}</div>
-                <div className="mt-1 text-[12px] italic leading-[1.4] text-foreground/72">"{active.quote}"</div>
-              </div>
-            </motion.div>
-          </motion.div>
+            {/* Brand caption (animated) */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`cap-${active.brand}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.45 }}
+                className="mt-6 w-full text-center"
+              >
+                <div
+                  className="text-[10px] font-bold uppercase tracking-[0.28em]"
+                  style={{ color: `hsl(${active.accent})` }}
+                >
+                  {active.sector}
+                </div>
+                <h3 className="mt-1.5 font-heading text-[clamp(1.4rem,4vw,2rem)] font-extrabold tracking-[-0.03em] text-foreground">
+                  {active.brand}
+                </h3>
+                <p className="mx-auto mt-2 max-w-[420px] text-[13px] italic leading-[1.55] text-foreground/68 sm:text-[14px]">
+                  "{active.quote}"
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {/* Track wrapper */}
-          <div className="relative flex min-h-0 flex-1 items-center overflow-hidden py-1 sm:py-2">
+          <button
+            aria-label={`Vai a ${PROJECTS[nextIdx].brand}`}
+            onClick={next}
+            className="hidden lg:block absolute right-0 z-10 h-full w-[22%] cursor-pointer"
+          >
+            <SidePhone project={PROJECTS[nextIdx]} side="right" />
+          </button>
+        </div>
+
+        {/* Controls + progress */}
+        <div className="mx-auto mt-8 flex w-full max-w-[680px] flex-col items-center gap-4 sm:mt-10">
+          {/* Progress bar */}
+          <div className="relative h-[3px] w-full overflow-hidden rounded-full bg-foreground/10">
             <motion.div
-              ref={trackRef}
-              style={{ x, paddingLeft: edgeInset, paddingRight: edgeInset }}
-              className="flex h-full max-h-[64svh] w-max items-stretch gap-3 will-change-transform sm:max-h-[68svh] sm:gap-4 lg:gap-5"
+              key={`bar-${index}-${isPaused ? "p" : "r"}`}
+              initial={{ width: "0%" }}
+              animate={{ width: isPaused ? "0%" : "100%" }}
+              transition={{ duration: isPaused ? 0 : AUTOPLAY_MS / 1000, ease: "linear" }}
+              className="absolute inset-y-0 left-0 rounded-full"
+              style={{
+                background: `linear-gradient(90deg, hsl(${active.accent}/0.5), hsl(${active.accent}), hsl(${active.accent}/0.5))`,
+                boxShadow: `0 0 18px hsl(${active.accent}/0.55)`,
+              }}
+            />
+          </div>
+
+          {/* Dots + arrows */}
+          <div className="flex w-full items-center justify-between gap-3">
+            <button
+              onClick={prev}
+              aria-label="Progetto precedente"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-card/40 text-foreground/80 backdrop-blur-md transition-all hover:scale-105 hover:border-primary/60 hover:text-primary sm:h-10 sm:w-10"
             >
-              {PROJECTS.map((project, idx) => (
-                <ProjectCard
-                  key={project.brand}
-                  project={project}
-                  index={idx}
-                  isActive={idx === activeIndex}
-                  scroll={smooth}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+
+            <div className="flex flex-1 items-center justify-center gap-1.5">
+              {PROJECTS.map((p, i) => (
+                <button
+                  key={p.brand}
+                  aria-label={`Vai a ${p.brand}`}
+                  onClick={() => goTo(i, i > index ? 1 : -1)}
+                  className={`h-1.5 rounded-full transition-all duration-500 ${
+                    i === index
+                      ? "w-7 sm:w-8"
+                      : "w-1.5 bg-foreground/22 hover:bg-foreground/45"
+                  }`}
+                  style={
+                    i === index
+                      ? {
+                          background: `hsl(${p.accent})`,
+                          boxShadow: `0 0 12px hsl(${p.accent}/0.7)`,
+                        }
+                      : undefined
+                  }
                 />
               ))}
-            </motion.div>
-          </div>
-
-          {/* Cinematic progress + scene index */}
-          <div className="flex flex-shrink-0 flex-col gap-2.5 sm:gap-3">
-            <div className="relative h-[3px] w-full overflow-hidden rounded-full bg-foreground/8">
-              <motion.div
-                style={{ width: widthPct }}
-                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary/70 via-primary to-primary/70 shadow-[0_0_20px_hsl(var(--primary)/0.5)]"
-              />
             </div>
 
-            <div className="flex items-center justify-between gap-3">
-              {/* Scene dots */}
-              <div className="flex items-center gap-1.5">
-                {PROJECTS.map((p, i) => (
-                  <button
-                    key={p.brand}
-                    aria-label={`Vai a ${p.brand}`}
-                    onClick={() => {
-                      const el = ref.current;
-                      if (!el) return;
-                      const rect = el.getBoundingClientRect();
-                      const total = el.offsetHeight - window.innerHeight;
-                      const target = window.scrollY + rect.top + (total * i) / Math.max(1, PROJECTS.length - 1);
-                      window.scrollTo({ top: target, behavior: "smooth" });
-                    }}
-                    className={`h-1.5 rounded-full transition-all duration-500 ${
-                      i === activeIndex ? "w-7 bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.7)]" : "w-1.5 bg-foreground/22 hover:bg-foreground/45"
-                    }`}
-                  />
-                ))}
-              </div>
-
-              <button
-                onClick={() => navigate("/demo")}
-                className="landing-button-secondary px-4 py-2 text-[11px] font-semibold sm:px-5 sm:py-2.5 sm:text-[12px]"
-              >
-                Esplora tutti i progetti →
-              </button>
-            </div>
+            <button
+              onClick={next}
+              aria-label="Progetto successivo"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-card/40 text-foreground/80 backdrop-blur-md transition-all hover:scale-105 hover:border-primary/60 hover:text-primary sm:h-10 sm:w-10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
           </div>
+
+          <button
+            onClick={() => navigate("/demo")}
+            className="landing-button-secondary mt-2 px-5 py-2.5 text-[12px] font-semibold sm:text-[13px]"
+          >
+            Esplora tutti i {total}+ progetti live →
+          </button>
         </div>
       </div>
     </section>
   );
 }
 
-function ProjectCard({
-  project,
-  index,
-  isActive,
-  scroll,
-}: {
-  project: (typeof PROJECTS)[number];
-  index: number;
-  isActive: boolean;
-  scroll: MotionValue<number>;
-}) {
-  // Parallax sottile dell'immagine in base allo scroll globale della sezione
-  const imgY = useTransform(scroll, [0, 1], [`-${4 + index}%`, `${4 + index}%`]);
-  const chipY = useTransform(scroll, [0, 1], ["-6px", "6px"]);
-
+function PhoneCard({ project }: { project: (typeof PROJECTS)[number] }) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 30, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      animate={{
-        scale: isActive ? 1.02 : 0.97,
-        opacity: isActive ? 1 : 0.72,
-      }}
-      whileHover={{ y: -10, rotateY: 4, rotateX: -2 }}
-      style={{ transformStyle: "preserve-3d", perspective: "1400px" }}
-      className={`landing-surface group relative my-1 flex h-full w-[calc(100vw-5.5rem)] min-w-[268px] max-w-[304px] flex-col overflow-hidden rounded-[22px] p-2.5 transition-shadow duration-500 sm:w-[48vw] sm:max-w-[360px] sm:rounded-[26px] sm:p-3.5 lg:w-[30vw] lg:max-w-[400px] lg:p-4 ${
-        isActive ? "ring-1 ring-primary/40" : ""
-      }`}
-      data-tone={project.tone}
-    >
-      {/* Header */}
-      <div className="mb-2 flex items-start justify-between gap-2 px-1 sm:mb-2.5">
-        <div className="min-w-0">
-          <div className="text-[8px] font-semibold uppercase tracking-[0.22em] text-foreground/65 sm:text-[9px]">{project.sector}</div>
-          <h3 className="mt-0.5 truncate font-heading text-[clamp(1rem,2vw,1.5rem)] font-extrabold leading-[1] tracking-[-0.04em] text-foreground">
-            {project.brand}
-          </h3>
+    <div className="relative mx-auto flex w-full justify-center">
+      {/* Floating sector chip */}
+      <motion.div
+        initial={{ opacity: 0, x: -16, y: -6 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        transition={{ delay: 0.15, duration: 0.55 }}
+        className="absolute -left-1 top-4 z-30 max-w-[55%] rounded-2xl border border-border/70 bg-card/85 px-3 py-2 backdrop-blur-xl sm:-left-3 sm:px-3.5"
+        style={{ boxShadow: `0 18px 40px hsl(${project.accent}/0.32)` }}
+      >
+        <div className="text-[8px] font-bold uppercase tracking-[0.2em] sm:text-[9px]" style={{ color: `hsl(${project.accent})` }}>
+          {project.sector}
         </div>
-        <span
-          className={`landing-pill shrink-0 px-2 py-0.5 text-[7px] font-bold uppercase tracking-[0.18em] transition-all sm:text-[8px] ${
-            isActive ? "border-primary/60 text-primary" : ""
-          }`}
-        >
-          {isActive ? "● live" : "case"}
-        </span>
-      </div>
+        <div className="mt-0.5 text-xs font-semibold text-foreground sm:text-sm">{project.brand}</div>
+      </motion.div>
 
-      {/* Mockup stage */}
+      {/* Floating result chip */}
+      <motion.div
+        initial={{ opacity: 0, x: 16, y: 6 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        transition={{ delay: 0.28, duration: 0.55 }}
+        className="absolute -right-1 bottom-6 z-30 rounded-2xl border border-border/70 bg-card/85 px-3 py-2 backdrop-blur-xl sm:-right-3 sm:px-3.5"
+        style={{ boxShadow: `0 18px 40px hsl(${project.accent}/0.32)` }}
+      >
+        <div className="text-[8px] font-bold uppercase tracking-[0.2em] text-foreground/55 sm:text-[9px]">Risultato</div>
+        <div className="mt-0.5 flex items-end gap-1.5">
+          <span className="font-heading text-base font-extrabold leading-none text-foreground sm:text-lg">{project.result}</span>
+          <span className="pb-0.5 text-[9px] text-foreground/60 sm:text-[10px]">{project.metric}</span>
+        </div>
+      </motion.div>
+
+      {/* Phone */}
       <div
-        className="relative mx-auto flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden rounded-[20px] px-1 py-2 sm:rounded-[24px] sm:px-0 sm:py-0"
+        className="relative aspect-[9/19.5] w-[230px] rounded-[2.4rem] border border-border/80 bg-card/70 sm:w-[270px] lg:w-[290px]"
         style={{
-          background: `radial-gradient(ellipse 70% 60% at 50% 30%, hsl(var(--landing-accent, var(--primary)) / 0.22), transparent 70%), linear-gradient(160deg, hsl(228 22% 8% / 0.4), hsl(228 22% 5% / 0.7))`,
+          boxShadow: `0 60px 130px -30px hsl(${project.accent}/0.6), 0 0 0 1px hsl(var(--foreground)/0.05)`,
         }}
       >
-        {/* Glow halo */}
-        <div
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl opacity-60 transition-opacity duration-500 group-hover:opacity-90"
-          style={{ background: "radial-gradient(circle, hsl(var(--landing-accent, var(--primary)) / 0.4), transparent 65%)" }}
-        />
-
-        {/* Cinematic letterbox bars (only when active) */}
-        <div
-          className={`pointer-events-none absolute inset-x-0 top-0 h-3 bg-gradient-to-b from-black/70 to-transparent transition-opacity duration-500 ${
-            isActive ? "opacity-100" : "opacity-0"
-          }`}
-        />
-        <div
-          className={`pointer-events-none absolute inset-x-0 bottom-0 h-3 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-500 ${
-            isActive ? "opacity-100" : "opacity-0"
-          }`}
-        />
-
-        {/* iPhone frame */}
-        <motion.div
-          whileHover={{ scale: 1.03, y: -2 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 flex h-full max-h-full items-center justify-center py-2 sm:py-3"
-          style={{ transformStyle: "preserve-3d" }}
-        >
-          <div
-            className="relative aspect-[9/19.5] h-full max-h-full rounded-[1.7rem] border border-border/70 bg-card/80 sm:rounded-[2rem] lg:rounded-[2.2rem]"
-            style={{
-              boxShadow:
-                "0 40px 100px -28px hsl(var(--landing-accent, var(--primary)) / 0.55), 0 0 0 1px hsl(var(--foreground) / 0.06)",
-            }}
-          >
-            {/* Notch */}
-            <div className="absolute left-1/2 top-[1.5%] z-20 h-[2.2%] w-[28%] -translate-x-1/2 rounded-full bg-black" />
-            {/* Screen with parallax */}
-            <div className="absolute inset-[5px] overflow-hidden rounded-[1.5rem] bg-background sm:rounded-[1.7rem] lg:rounded-[1.9rem]">
-              <motion.img
-                src={project.img}
-                alt={`Preview premium ${project.brand}`}
-                loading="lazy"
-                decoding="async"
-                style={{ y: imgY }}
-                className="absolute inset-x-0 top-0 h-[112%] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
-              />
-              {/* Screen sheen */}
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10),transparent_30%,transparent_72%,hsl(var(--landing-accent,var(--primary))/0.18))]" />
-            </div>
-            {/* Outer reflection */}
-            <div className="pointer-events-none absolute inset-0 rounded-[1.8rem] bg-[linear-gradient(150deg,hsl(0_0%_100%/0.16),transparent_30%,transparent_70%,hsl(0_0%_100%/0.06))] sm:rounded-[2rem] lg:rounded-[2.2rem]" />
-          </div>
-
-          {/* Floating result chip top-right with parallax */}
-          <motion.div
-            initial={{ opacity: 0, y: -6, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 + index * 0.05, duration: 0.55 }}
-            style={{ y: chipY }}
-            className="absolute right-1 top-[8%] z-20 max-w-[34%] rounded-2xl border border-border/70 bg-card/90 px-2 py-1.5 backdrop-blur-xl sm:right-2 sm:max-w-none sm:px-3 sm:py-2"
-          >
-            <div className="text-[7px] font-bold uppercase tracking-[0.18em] text-foreground/65 sm:text-[8px]">Risultato</div>
-            <div className="mt-0.5 font-heading text-sm font-extrabold leading-none text-foreground sm:text-base">{project.result}</div>
-          </motion.div>
-
-          {/* Floating tag chip bottom-left */}
-          <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.45 + index * 0.05, duration: 0.55 }}
-            className="absolute bottom-[8%] left-1 z-20 max-w-[42%] rounded-2xl border border-border/70 bg-card/90 px-2 py-1.5 backdrop-blur-xl sm:left-2 sm:max-w-none sm:px-3 sm:py-2"
-          >
-            <div className="text-[7px] font-bold uppercase tracking-[0.18em] text-foreground/65 sm:text-[8px]">Live</div>
-            <div className="mt-0.5 flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
-              <span className="text-[9px] font-semibold text-foreground sm:text-[10px]">{project.metric}</span>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Reflection under phone */}
-        <div className="pointer-events-none absolute bottom-1 left-1/2 h-[16px] w-[55%] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,hsl(var(--landing-accent,var(--primary))/0.5),transparent_70%)] blur-2xl" />
-      </div>
-
-      {/* Footer */}
-      <div className="mt-2 flex items-center justify-between gap-2 px-1 sm:mt-2.5">
-        <div className="min-w-0">
-          <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-foreground/65">Stack completo</div>
-          <div className="mt-0.5 truncate text-[11px] text-foreground/85 sm:text-[12px]">Sito · Dashboard · AI · WhatsApp</div>
+        <div className="absolute left-1/2 top-[1.6%] z-20 h-[2.2%] w-[28%] -translate-x-1/2 rounded-full bg-black" />
+        <div className="absolute inset-[4px] overflow-hidden rounded-[2.1rem] bg-background">
+          <img
+            src={project.img}
+            alt={`Preview ${project.brand}`}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10),transparent_28%,transparent_72%,hsl(var(--primary)/0.12))]" />
         </div>
-        <span
-          className={`shrink-0 rounded-full border bg-background/40 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md transition-colors ${
-            isActive ? "border-primary/70 text-primary" : "border-border/70 text-foreground/85 group-hover:border-primary/60 group-hover:text-foreground"
-          }`}
-        >
-          0{index + 1}
-        </span>
+        <div className="pointer-events-none absolute inset-0 rounded-[2.4rem] bg-[linear-gradient(150deg,hsl(0_0%_100%/0.16),transparent_30%,transparent_70%,hsl(var(--gold)/0.1))]" />
       </div>
-    </motion.article>
+
+      {/* Reflection */}
+      <div
+        className="pointer-events-none absolute -bottom-2 left-1/2 h-[44px] w-[78%] -translate-x-1/2 rounded-full blur-3xl"
+        style={{ background: `radial-gradient(ellipse, hsl(${project.accent}/0.55), transparent 70%)` }}
+      />
+    </div>
+  );
+}
+
+function SidePhone({ project, side }: { project: (typeof PROJECTS)[number]; side: "left" | "right" }) {
+  return (
+    <div className={`relative flex h-full w-full items-center ${side === "left" ? "justify-start pl-2" : "justify-end pr-2"}`}>
+      <div
+        className={`relative aspect-[9/19.5] w-[160px] rounded-[1.8rem] border border-border/60 bg-card/50 opacity-40 transition-all duration-500 hover:opacity-70 ${
+          side === "left" ? "-rotate-6" : "rotate-6"
+        }`}
+        style={{
+          boxShadow: `0 30px 80px -24px hsl(${project.accent}/0.4)`,
+        }}
+      >
+        <div className="absolute inset-[3px] overflow-hidden rounded-[1.6rem] bg-background">
+          <img
+            src={project.img}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-background/30" />
+        </div>
+      </div>
+    </div>
   );
 }
