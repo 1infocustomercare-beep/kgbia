@@ -676,9 +676,15 @@ serve(async (req) => {
       },
       has_google_key: hasGoogleKey,
       mode: "geo",
-      tip: !hasGoogleKey && merged.length < 10
-        ? "Aggiungi GOOGLE_PLACES_API_KEY per rating, recensioni e telefoni verificati da Google."
-        : undefined,
+      matched_place: (geo as any).matched_name || null,
+      place_type: (geo as any).place_type || null,
+      fallback_used: fallbackUsed,
+      effective_radius_km: maxDistanceKm,
+      tip: fallbackUsed
+        ? `"${searchCity}" è una piccola località senza attività mappate — risultati estesi al comune di "${fallbackUsed}".`
+        : (!hasGoogleKey && merged.length < 10
+          ? "Aggiungi GOOGLE_PLACES_API_KEY per rating, recensioni e telefoni verificati da Google."
+          : undefined),
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e) {
     console.error("lead-search error:", e);
