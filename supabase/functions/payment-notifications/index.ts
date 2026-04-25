@@ -43,7 +43,6 @@ serve(async (req) => {
       .lte("next_due_date", threeDaysStr)
       .gt("next_due_date", todayStr)
       .is("warning_sent_at", null)
-      .lt("installments_paid", supabase.rpc ? undefined : 999) // fallback
       .eq("is_overdue", false);
 
     // Filter where installments_paid < installments_total
