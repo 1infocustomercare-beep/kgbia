@@ -998,28 +998,41 @@ serve(async (req) => {
 
     console.log(`Lead search: "${searchCity}" "${searchSector}" page=${searchPage} → ${merged.length} new unique results${fallbackUsed ? ` (via fallback ${fallbackUsed})` : ""}`);
 
+    const responseSources = {
+      photon: photonResults.length,
+      nominatim: nominatimResults.length,
+      overpass: overpassResults.length,
+      google: googleResults.length,
+      duckduckgo: ddgResults.length,
+      pagine_gialle: pgResults.length,
+      europages: epResults.length,
+      firecrawl: fcResults.length,
+      total_merged: merged.length,
+    };
+
+    await saveCache(merged, {
+      mode: "geo",
+      has_more: hasMorePages,
+      sources: responseSources,
+      matched_place: (geo as any).matched_name || null,
+      fallback_used: fallbackUsed,
+      effective_radius_km: maxDistanceKm,
+    });
+
     return new Response(JSON.stringify({
       success: true,
       results: merged,
       page: searchPage,
       has_more: hasMorePages,
-      sources: {
-        photon: photonResults.length,
-        nominatim: nominatimResults.length,
-        overpass: overpassResults.length,
-        google: googleResults.length,
-        duckduckgo: ddgResults.length,
-        pagine_gialle: pgResults.length,
-        europages: epResults.length,
-        firecrawl: fcResults.length,
-        total_merged: merged.length,
-      },
+      sources: responseSources,
       has_google_key: hasGoogleKey,
       mode: "geo",
       matched_place: (geo as any).matched_name || null,
       place_type: (geo as any).place_type || null,
       fallback_used: fallbackUsed,
       effective_radius_km: maxDistanceKm,
+      cached: false,
+      credit: creditInfo,
       tip: fallbackUsed
         ? `"${searchCity}" è una piccola località senza attività mappate — risultati estesi al comune di "${fallbackUsed}".`
         : (!hasGoogleKey && merged.length < 10
