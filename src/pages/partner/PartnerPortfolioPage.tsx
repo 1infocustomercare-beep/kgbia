@@ -116,7 +116,7 @@ const SECTOR_CARDS = ALL_INDUSTRY_IDS.map(key => {
 export default function PartnerPortfolioPage() {
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [sectorSearch, setSectorSearch] = useState("");
+  // sectorSearch è gestito ora dentro PortfolioPublicShowcase (chips categoria + search interna)
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [detailProject, setDetailProject] = useState<string | null>(null);
   const [demoSectionEnabled, setDemoSectionEnabled] = useState(false);
@@ -344,11 +344,7 @@ export default function PartnerPortfolioPage() {
     try { await task; } catch {} finally { setResettingDemo(false); }
   };
 
-  const matchesSectorSearch = (card: typeof SECTOR_CARDS[0], q: string): boolean => {
-    if (!q.trim()) return true;
-    const haystack = [card.name, card.id, card.description || "", ...(card.tags || [])].join(" ").toLowerCase();
-    return q.toLowerCase().split(/\s+/).every(t => haystack.includes(t));
-  };
+  // (matchesSectorSearch rimosso — la vetrina pubblica gestisce i propri filtri categoria)
 
   return (
     <div className="space-y-7 px-4 pt-6 pb-8 max-w-2xl lg:max-w-7xl mx-auto">
