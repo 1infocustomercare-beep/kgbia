@@ -5,6 +5,55 @@ import { SECTOR_PORTFOLIO, type SectorPortfolio, type MockupStyle } from "@/data
 import { PORTFOLIO_PROJECTS } from "@/data/portfolio-showcase-data";
 import { UNIVERSAL_FEATURES, SECTOR_SPECIFIC_FEATURES, UNIVERSAL_AGENTS } from "@/config/sectorFeatures";
 
+/* ─────────────────────────────────────────────────────────────────────
+ * Screen label helper — estrae un'etichetta umana coerente dal filename
+ * dello screenshot (es. "a-obsidian-mobile-menu.png" → "Menu").
+ * Usato per mostrare sotto ogni mockup una descrizione di che schermata si tratta.
+ * ─────────────────────────────────────────────────────────────────── */
+const SCREEN_KEYWORDS: { kw: string[]; label: string }[] = [
+  { kw: ["home", "homepage", "landing", "start", "splash"], label: "Home" },
+  { kw: ["menu", "menù", "catalogue", "catalog"], label: "Menu" },
+  { kw: ["detail", "product", "item", "dish", "single"], label: "Dettaglio" },
+  { kw: ["cart", "checkout", "pay", "order"], label: "Checkout" },
+  { kw: ["booking", "book", "reserve", "reservation", "preno"], label: "Prenotazione" },
+  { kw: ["fleet", "cars", "vehicle", "boat", "yacht"], label: "Flotta" },
+  { kw: ["service", "services", "treatments"], label: "Servizi" },
+  { kw: ["gallery", "photos", "images", "portfolio-grid"], label: "Galleria" },
+  { kw: ["profile", "account", "user", "member"], label: "Account" },
+  { kw: ["loyalty", "rewards", "points"], label: "Loyalty" },
+  { kw: ["map", "location", "where"], label: "Mappa" },
+  { kw: ["contact", "contatti", "support"], label: "Contatti" },
+  { kw: ["about", "chi-siamo", "story"], label: "Chi siamo" },
+  { kw: ["shop", "store", "ecommerce"], label: "Shop" },
+  { kw: ["program", "programs", "course", "courses"], label: "Programmi" },
+  { kw: ["team", "staff", "stylist", "artist", "chef"], label: "Team" },
+  { kw: ["activities", "tours", "experiences"], label: "Esperienze" },
+  { kw: ["dashboard", "admin", "manage"], label: "Dashboard" },
+  { kw: ["case", "invoice", "timeline", "tracking"], label: "Operativo" },
+];
+
+function getScreenLabel(src: string, brandName: string, fallbackIndex: number): string {
+  try {
+    const lower = decodeURIComponent(src).toLowerCase();
+    for (const entry of SCREEN_KEYWORDS) {
+      if (entry.kw.some((k) => lower.includes(k))) return entry.label;
+    }
+  } catch { /* ignore decode errors */ }
+  return `Screen ${String(fallbackIndex + 1).padStart(2, "0")}`;
+}
+
+function getScreenCode(brandName: string, index: number): string {
+  // Es. "FLAME 001" — mostrato come overline sotto la frame, in stile Lowengeld
+  const code = brandName
+    .toUpperCase()
+    .replace(/[^A-Z0-9 ]/g, "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 1)
+    .join("");
+  return `${code || "DEMO"} ${String(index + 1).padStart(3, "0")}`;
+}
+
 /* ═══════════════════════════════════════════
    Demo slug mapping
    ═══════════════════════════════════════════ */
@@ -265,7 +314,7 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
 
-          {/* Project description */}
+          {/* Project description + metadata cliente */}
           <div className="max-w-3xl mx-auto">
             <div className="flex flex-wrap gap-1.5 mb-3">
               {project.tags.map(tag => (
@@ -273,7 +322,24 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                   style={{ background: `${project.accent}20`, color: project.accent }}>{tag}</span>
               ))}
             </div>
-            <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>{project.description}</p>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: "#d1d5db" }}>{project.description}</p>
+
+            {/* Metadata grid (CLIENT / YEAR / PLATFORM) — stile Lowengeld */}
+            <div className="grid grid-cols-3 gap-2 mt-4">
+              {[
+                { label: "Client", value: project.client },
+                { label: "Year", value: project.year },
+                { label: "Platform", value: project.platform },
+              ].map((m) => (
+                <div key={m.label} className="p-3 rounded-xl"
+                  style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <p className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: project.accent }}>
+                    {m.label}
+                  </p>
+                  <p className="text-[11px] font-semibold text-white leading-tight">{m.value}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {activeTab === "preview" ? (
@@ -326,10 +392,18 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                                     iPhone ({style.screens.length})
                                   </p>
                                 </div>
-                                <div className="flex gap-2 overflow-x-auto snap-x pb-1">
+                                <div className="flex gap-3 overflow-x-auto snap-x pb-2">
                                   {style.screens.map((screen, i) => (
-                                    <MobileFrame key={`m-${i}`} src={screen} alt={`${brand.name} ${style.name} iPhone ${i + 1}`} size="sm"
-                                      onClick={() => setLightbox({ screens: allScreens, index: i })} />
+                                    <div key={`m-${i}`} className="flex flex-col items-center shrink-0 snap-start">
+                                      <MobileFrame src={screen} alt={`${brand.name} ${style.name} iPhone ${i + 1}`} size="sm"
+                                        onClick={() => setLightbox({ screens: allScreens, index: i })} />
+                                      <p className="text-[8px] font-bold uppercase tracking-widest mt-2 text-center" style={{ color: project.accent }}>
+                                        {getScreenCode(brand.name, i)}
+                                      </p>
+                                      <p className="text-[10px] font-semibold text-white text-center mt-0.5 max-w-[100px] leading-tight">
+                                        {getScreenLabel(screen, brand.name, i)}
+                                      </p>
+                                    </div>
                                   ))}
                                 </div>
                               </div>
@@ -344,10 +418,18 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                                     iPad ({tabletScreens.length})
                                   </p>
                                 </div>
-                                <div className="flex gap-3 overflow-x-auto snap-x pb-1">
+                                <div className="flex gap-3 overflow-x-auto snap-x pb-2">
                                   {tabletScreens.map((screen, i) => (
-                                    <TabletFrame key={`t-${i}`} src={screen} alt={`${brand.name} ${style.name} iPad ${i + 1}`}
-                                      onClick={() => setLightbox({ screens: allScreens, index: style.screens.length + i })} />
+                                    <div key={`t-${i}`} className="flex flex-col items-center shrink-0 snap-start">
+                                      <TabletFrame src={screen} alt={`${brand.name} ${style.name} iPad ${i + 1}`}
+                                        onClick={() => setLightbox({ screens: allScreens, index: style.screens.length + i })} />
+                                      <p className="text-[8px] font-bold uppercase tracking-widest mt-2 text-center" style={{ color: project.accent }}>
+                                        {getScreenCode(brand.name, i)} · iPad
+                                      </p>
+                                      <p className="text-[10px] font-semibold text-white text-center mt-0.5 max-w-[140px] leading-tight">
+                                        {getScreenLabel(screen, brand.name, i)}
+                                      </p>
+                                    </div>
                                   ))}
                                 </div>
                               </div>
@@ -362,10 +444,18 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
                                     Desktop ({desktopScreens.length})
                                   </p>
                                 </div>
-                                <div className="flex gap-3 overflow-x-auto snap-x pb-1">
+                                <div className="flex gap-3 overflow-x-auto snap-x pb-2">
                                   {desktopScreens.map((screen, i) => (
-                                    <DesktopFrame key={`d-${i}`} src={screen} alt={`${brand.name} ${style.name} Desktop ${i + 1}`}
-                                      onClick={() => setLightbox({ screens: allScreens, index: style.screens.length + tabletScreens.length + i })} />
+                                    <div key={`d-${i}`} className="flex flex-col items-center shrink-0 snap-start">
+                                      <DesktopFrame src={screen} alt={`${brand.name} ${style.name} Desktop ${i + 1}`}
+                                        onClick={() => setLightbox({ screens: allScreens, index: style.screens.length + tabletScreens.length + i })} />
+                                      <p className="text-[8px] font-bold uppercase tracking-widest mt-2 text-center" style={{ color: project.accent }}>
+                                        {getScreenCode(brand.name, i)} · Desktop
+                                      </p>
+                                      <p className="text-[10px] font-semibold text-white text-center mt-0.5 max-w-[200px] leading-tight">
+                                        {getScreenLabel(screen, brand.name, i)}
+                                      </p>
+                                    </div>
                                   ))}
                                 </div>
                               </div>
@@ -490,7 +580,7 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
         {lightbox && (
           <DeviceLightbox
             src={lightbox.screens[lightbox.index].src}
-            alt={`Screen ${lightbox.index + 1} di ${lightbox.screens.length}`}
+            alt={`${getScreenLabel(lightbox.screens[lightbox.index].src, project.name, lightbox.index)} · ${lightbox.index + 1} / ${lightbox.screens.length}`}
             deviceType={lightbox.screens[lightbox.index].device}
             onClose={() => setLightbox(null)}
             onPrev={() => setLightbox(prev => prev ? { ...prev, index: prev.index - 1 } : null)}
