@@ -121,15 +121,16 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
             onClick={!loading ? onClose : undefined}
           />
 
-          {/* Centered scroll container — handles centering on all viewports */}
-          <div className="fixed inset-0 z-[61] overflow-y-auto overflow-x-hidden overscroll-contain flex justify-center">
-            <div className="w-full max-w-[680px] px-2 sm:px-4 md:px-6 py-3 sm:py-6 flex flex-col items-stretch">
+          {/* Mobile-first centering: block-level scroll, mx-auto centers without flex squeeze.
+              On large screens we add vertical centering via min-h + flex (only when content fits). */}
+          <div className="fixed inset-0 z-[61] overflow-y-auto overflow-x-hidden overscroll-contain">
+            <div className="min-h-full w-full px-3 sm:px-4 md:px-6 py-3 sm:py-6 mx-auto max-w-[680px] flex flex-col md:justify-center">
               <motion.div
                 initial={{ opacity: 0, y: 20, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.97 }}
                 transition={{ type: "spring", damping: 25 }}
-                className="w-full rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
+                className="w-full mx-auto rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
                 style={{ background: "linear-gradient(160deg, #0f0a1f, #15102e 45%, #1a0f2a)" }}
               >
                 {/* ============ HEADER (sticky) ============ */}
