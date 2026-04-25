@@ -905,7 +905,9 @@ export default function LeadsPage() {
           .map(([k, v]) => `${k.charAt(0).toUpperCase() + k.slice(1)}: ${v}`)
           .join(" · ") || "—";
         toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati${isNameOnly ? " (per nome)" : ""}`, {
-          description: srcSummary,
+          description: data.fallback_used
+            ? `📍 "${city.trim()}" è una piccola località — risultati estesi a "${data.fallback_used}" · ${srcSummary}`
+            : srcSummary,
         });
         // Auto-batch enrich Instagram in background
         setTimeout(() => batchEnrichInstagram(processed), 1500);

@@ -60,7 +60,7 @@ const SECTOR_OSM_TAGS: Record<string, string[]> = {
 };
 
 /* ═══ GEOCODE (city or full address) — picks best match in country ═══ */
-async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[]; country_code?: string; matched_name?: string } | null> {
+async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: number; lon: number; bbox: number[]; country_code?: string; matched_name?: string; place_type?: string; parent_name?: string } | null> {
   try {
     const cc = countryCode ? `&countrycodes=${countryCode.toLowerCase()}` : "";
     const resp = await fetch(
@@ -83,12 +83,16 @@ async function geocodeCity(city: string, countryCode?: string): Promise<{ lat: n
     });
     const best = sorted[0];
     const addr = best.address || {};
+    // Detect parent municipality (for fallback when small villages have no POIs)
+    const parentName = addr.municipality || addr.town || addr.city || addr.county || null;
     return {
       lat: parseFloat(best.lat),
       lon: parseFloat(best.lon),
       bbox: best.boundingbox?.map(Number) || [],
       country_code: (addr.country_code || "").toLowerCase(),
       matched_name: best.display_name,
+      place_type: best.type || best.class,
+      parent_name: parentName && parentName.toLowerCase() !== city.toLowerCase().trim() ? parentName : undefined,
     };
   } catch { return null; }
 }
@@ -594,7 +598,12 @@ serve(async (req) => {
     // Effective country code: prefer explicit filter, else infer from geocode result
     const effectiveCC = ccFilter || (geo as any).country_code || "";
 
-    // Distance budget: explicit radius wins; otherwise estimate from bbox; default 25km
+    // Distance budget: explicit radius wins; otherwise estimate from bbox; default 25km.
+    // For small admin places (village/hamlet/suburb) without explicit radius, force min 15km
+    // because OSM POI coverage in tiny villages is sparse and bbox is microscopic.
+    const smallPlaceTypes = new Set(["village", "hamlet", "suburb", "neighbourhood", "locality", "isolated_dwelling"]);
+    const isSmallPlace = !hasCoords && !!(geo as any).place_type && smallPlaceTypes.has((geo as any).place_type);
+
     let maxDistanceKm = 25;
     if (searchRadius && searchRadius > 0) {
       maxDistanceKm = searchRadius;
@@ -603,24 +612,55 @@ serve(async (req) => {
       const diagKm = distanceKm(Number(s), Number(w), Number(n), Number(e));
       maxDistanceKm = Math.max(8, Math.min(60, diagKm * 0.6));
     }
+    if (isSmallPlace && (!searchRadius || searchRadius <= 0)) {
+      maxDistanceKm = Math.max(maxDistanceKm, 15);
+      // expand bbox so the source-specific queries cover the wider area too
+      geo.bbox = bboxFromRadius(geo.lat, geo.lon, maxDistanceKm);
+    }
 
     // 2. Run SELECTED sources in parallel
-    const [photonResults, nominatimResults, overpassResults, googleResults] = await Promise.all([
+    let [photonResults, nominatimResults, overpassResults, googleResults] = await Promise.all([
       useSrc("photon") ? searchPhoton(resolvedCity || combinedQuery || searchQuery, searchSector, geo, searchPage, specializationQuery, maxDistanceKm, effectiveCC) : Promise.resolve([]),
       useSrc("nominatim") ? searchNominatim(resolvedCity || combinedQuery || searchQuery, searchSector, combinedQuery, geo, searchPage, effectiveCC, maxDistanceKm) : Promise.resolve([]),
       useSrc("overpass") ? searchOverpass(searchSector, geo, searchPage) : Promise.resolve([]),
       (useSrc("google") && use_google) ? searchGooglePlaces(combinedQuery, resolvedCity || searchCity, searchSector, searchPage) : Promise.resolve([]),
     ]);
 
-    console.log(`Sources [page=${searchPage}, gps=${hasCoords}, r=${searchRadius}km, cc=${ccFilter || "*"}, srcs=${allowedSources.join(",")}]: Photon=${photonResults.length} Nominatim=${nominatimResults.length} Overpass=${overpassResults.length} Google=${googleResults.length}`);
+    console.log(`Sources [page=${searchPage}, gps=${hasCoords}, r=${searchRadius}km, cc=${ccFilter || "*"}, srcs=${allowedSources.join(",")}, small=${isSmallPlace}]: Photon=${photonResults.length} Nominatim=${nominatimResults.length} Overpass=${overpassResults.length} Google=${googleResults.length}`);
 
     // 3. Merge + deduplicate (excluding existing)
-    const merged = mergeAndDeduplicate(googleResults, nominatimResults, photonResults, overpassResults, existingForDedup.length > 0 ? existingForDedup : undefined);
+    let merged = mergeAndDeduplicate(googleResults, nominatimResults, photonResults, overpassResults, existingForDedup.length > 0 ? existingForDedup : undefined);
+
+    // 4. AUTO-FALLBACK: if 0 results and we matched a small village with a parent municipality,
+    // retry the search at the parent administrative level (e.g. Arcille → Campagnatico).
+    let fallbackUsed: string | null = null;
+    if (merged.length === 0 && !hasCoords && (geo as any).parent_name && searchPage === 0) {
+      const parent = (geo as any).parent_name as string;
+      const parentGeo = await geocodeCity(parent, effectiveCC);
+      if (parentGeo) {
+        const parentRadius = searchRadius && searchRadius > 0 ? searchRadius : 20;
+        if (!parentGeo.bbox || parentGeo.bbox.length < 4) parentGeo.bbox = bboxFromRadius(parentGeo.lat, parentGeo.lon, parentRadius);
+        const [fbPhoton, fbNom, fbOver] = await Promise.all([
+          useSrc("photon") ? searchPhoton(parent, searchSector, parentGeo, 0, specializationQuery, parentRadius, effectiveCC) : Promise.resolve([]),
+          useSrc("nominatim") ? searchNominatim(parent, searchSector, combinedQuery, parentGeo, 0, effectiveCC, parentRadius) : Promise.resolve([]),
+          useSrc("overpass") ? searchOverpass(searchSector, parentGeo, 0) : Promise.resolve([]),
+        ]);
+        const fbMerged = mergeAndDeduplicate([], fbNom, fbPhoton, fbOver, existingForDedup.length > 0 ? existingForDedup : undefined);
+        if (fbMerged.length > 0) {
+          merged = fbMerged;
+          fallbackUsed = parent;
+          photonResults = fbPhoton;
+          nominatimResults = fbNom;
+          overpassResults = fbOver;
+          console.log(`Auto-fallback: "${searchCity}" → "${parent}" produced ${fbMerged.length} results`);
+        }
+      }
+    }
 
     const hasGoogleKey = !!Deno.env.get("GOOGLE_PLACES_API_KEY");
     const hasMorePages = (SECTOR_TERMS[searchSector]?.length || 0) > (searchPage + 1) * 6;
 
-    console.log(`Lead search: "${searchCity}" "${searchSector}" page=${searchPage} → ${merged.length} new unique results`);
+    console.log(`Lead search: "${searchCity}" "${searchSector}" page=${searchPage} → ${merged.length} new unique results${fallbackUsed ? ` (via fallback ${fallbackUsed})` : ""}`);
 
     return new Response(JSON.stringify({
       success: true,
@@ -636,9 +676,15 @@ serve(async (req) => {
       },
       has_google_key: hasGoogleKey,
       mode: "geo",
-      tip: !hasGoogleKey && merged.length < 10
-        ? "Aggiungi GOOGLE_PLACES_API_KEY per rating, recensioni e telefoni verificati da Google."
-        : undefined,
+      matched_place: (geo as any).matched_name || null,
+      place_type: (geo as any).place_type || null,
+      fallback_used: fallbackUsed,
+      effective_radius_km: maxDistanceKm,
+      tip: fallbackUsed
+        ? `"${searchCity}" è una piccola località senza attività mappate — risultati estesi al comune di "${fallbackUsed}".`
+        : (!hasGoogleKey && merged.length < 10
+          ? "Aggiungi GOOGLE_PLACES_API_KEY per rating, recensioni e telefoni verificati da Google."
+          : undefined),
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e) {
     console.error("lead-search error:", e);
