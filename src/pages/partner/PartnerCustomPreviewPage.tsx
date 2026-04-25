@@ -25,13 +25,8 @@ import PartnerHeroMascot from "@/components/partner/PartnerHeroMascot";
 import alienDesigner from "@/assets/empire-alien-designer.png";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
-
-const STYLES = [
-  { key: "modern_dark", label: "Modern Dark", color: "#0F172A", accent: "#C8963E" },
-  { key: "luxury_gold", label: "Luxury Gold", color: "#1A1410", accent: "#D4AF37" },
-  { key: "casual_warm", label: "Casual Warm", color: "#FAF6F0", accent: "#E07856" },
-  { key: "minimal_zen", label: "Minimal Zen", color: "#F8F8F8", accent: "#222222" },
-];
+import { MockupPresetSelector } from "@/components/partner/MockupPresetSelector";
+import { MOCKUP_STYLE_PRESETS } from "@/lib/mockup-style-presets";
 
 const COST = 15;
 
