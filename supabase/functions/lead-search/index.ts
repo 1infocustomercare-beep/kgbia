@@ -170,36 +170,6 @@ function bboxFromRadius(lat: number, lon: number, radiusKm: number): number[] {
   return [lat - dLat, lat + dLat, lon - dLon, lon + dLon]; // [south, north, west, east]
 }
 
-/* ═══ SOURCE 1: PHOTON ═══ */
-async function searchPhoton(city: string, sector: string, geo: { lat: number; lon: number }, page: number, specializationQuery = ""): Promise<any[]> {
-  const baseTerms = SECTOR_TERMS[sector] || [sector];
-  const terms = specializationQuery ? [specializationQuery, ...baseTerms.filter(t => t !== specializationQuery)] : baseTerms;
-  const results: any[] = [];
-  const seen = new Set<string>();
-
-  // Different terms per page for deeper results
-  const startIdx = page * 5;
-  const searchTerms = terms.slice(startIdx, startIdx + 6);
-  if (searchTerms.length === 0) return [];
-
-  const fetchPhoton = async (q: string) => {
-    try {
-      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lat=${geo.lat}&lon=${geo.lon}&limit=40`;
-      const resp = await fetch(url, { signal: AbortSignal.timeout(6000) });
-      if (!resp.ok) return [];
-      const data = await resp.json();
-      return data.features || [];
-    } catch { return []; }
-  };
-
-  const searches = searchTerms.map(term => `${term} ${city}`);
-  const allData = await Promise.all(searches.map(s => fetchPhoton(s)));
-
-  for (const features of allData) {
-    for (const f of features) {
-      const props = f.properties || {};
-      const name = props.name;
-/* ═══ SOURCE 1: PHOTON ═══ */
 async function searchPhoton(city: string, sector: string, geo: { lat: number; lon: number; bbox: number[] }, page: number, specializationQuery = "", maxDistanceKm = 25, countryCode = ""): Promise<any[]> {
   const baseTerms = SECTOR_TERMS[sector] || [sector];
   const terms = specializationQuery ? [specializationQuery, ...baseTerms.filter(t => t !== specializationQuery)] : baseTerms;
