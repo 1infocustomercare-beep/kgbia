@@ -718,14 +718,14 @@ const SuperAdminDashboard = () => {
         </div>
       )}
       
-      {/* Header */}
-      <div className="relative overflow-hidden border-b border-border/30 bg-background/95 backdrop-blur-xl">
-        {/* HUD grid — DNA violet */}
-        <div className="absolute inset-0 opacity-[0.04]" style={{
+      {/* ═══════════ HEADER FUTURISTIC ═══════════ */}
+      <div className="relative overflow-hidden border-b border-border/30 bg-background/95 backdrop-blur-xl sticky top-0 z-30">
+        {/* HUD grid violet */}
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
           backgroundImage: `linear-gradient(hsl(var(--empire-violet)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--empire-violet)) 1px, transparent 1px)`,
           backgroundSize: '20px 20px'
         }} />
-        {/* Top scan line — violet */}
+        {/* Top scan line */}
         <motion.div
           className="absolute top-0 left-0 w-full h-[2px]"
           style={{ background: 'var(--gradient-dna)' }}
@@ -735,139 +735,212 @@ const SuperAdminDashboard = () => {
         {/* Bottom DNA glow */}
         <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-empire-violet/40 to-transparent" />
 
-        <div className="flex items-center justify-between px-4 pt-4 pb-3 relative z-10">
-          <div className="flex items-center gap-3">
-            {/* ─── DNA-to-Mascot Animated Agent ─── */}
+        <div className="flex items-center justify-between gap-3 px-3 sm:px-4 pt-3 pb-3 relative z-10">
+          {/* LEFT — Avatar profilo (cliccabile) + Mascot DNA + Titolo */}
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            {/* ─── Avatar profilo cliccabile ─── */}
+            <motion.button
+              type="button"
+              onClick={() => setActiveTab("account")}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden flex-shrink-0 group"
+              style={{
+                border: "2px solid rgba(167,139,250,0.45)",
+                background: "linear-gradient(135deg, rgba(124,58,237,0.18), rgba(38,30,80,0.6))",
+                boxShadow: "0 8px 24px rgba(124,58,237,0.35), inset 0 1px 0 rgba(167,139,250,0.3)",
+              }}
+              title="Gestisci account"
+            >
+              {profileAvatar ? (
+                <img src={profileAvatar} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Camera className="w-5 h-5 text-empire-violet-glow/80" />
+                </div>
+              )}
+              {/* Hover overlay */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Camera className="w-4 h-4 text-white" />
+              </div>
+              {/* Live ring */}
+              <motion.div
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{ border: "1px solid rgba(167,139,250,0.6)" }}
+                animate={{ opacity: [0.3, 0.8, 0.3] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+              />
+            </motion.button>
+
+            {/* ─── DNA-to-Mascot Animated Agent (vicino all'avatar) ─── */}
             <motion.div
-              className="relative w-[68px] h-[68px] flex-shrink-0"
-              animate={{ y: [0, -5, 0] }}
+              className="relative w-[52px] h-[52px] sm:w-[60px] sm:h-[60px] flex-shrink-0"
+              animate={{ y: [0, -4, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
-              {/* Outer orbital ring 1 */}
               <motion.div
-               className="absolute -inset-1 rounded-full border border-empire-violet/30"
+                className="absolute -inset-1 rounded-full border border-empire-violet/30"
                 animate={{ rotateZ: 360 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                 style={{ transformStyle: 'preserve-3d', transform: 'rotateX(70deg)' }}
               />
-              {/* Outer orbital ring 2 - counter */}
               <motion.div
-               className="absolute -inset-2 rounded-full border border-empire-violet/15"
+                className="absolute -inset-2 rounded-full border border-empire-violet/15"
                 animate={{ rotateZ: -360 }}
                 transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
                 style={{ transformStyle: 'preserve-3d', transform: 'rotateX(55deg) rotateY(20deg)' }}
               />
-
-              {/* DNA helix particles around mascot */}
-              {[...Array(6)].map((_, i) => (
+              {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-1.5 h-1.5 rounded-full bg-empire-violet/70"
-                  style={{
-                    left: '50%', top: '50%',
-                    marginLeft: -3, marginTop: -3,
-                  }}
+                  className="absolute w-1 h-1 rounded-full bg-empire-violet/70"
+                  style={{ left: '50%', top: '50%', marginLeft: -2, marginTop: -2 }}
                   animate={{
-                    x: [Math.cos(i * 60 * Math.PI / 180) * 28, Math.cos((i * 60 + 180) * Math.PI / 180) * 28, Math.cos(i * 60 * Math.PI / 180) * 28],
-                    y: [Math.sin(i * 60 * Math.PI / 180) * 28, Math.sin((i * 60 + 180) * Math.PI / 180) * 28, Math.sin(i * 60 * Math.PI / 180) * 28],
+                    x: [Math.cos(i * 72 * Math.PI / 180) * 24, Math.cos((i * 72 + 180) * Math.PI / 180) * 24, Math.cos(i * 72 * Math.PI / 180) * 24],
+                    y: [Math.sin(i * 72 * Math.PI / 180) * 24, Math.sin((i * 72 + 180) * Math.PI / 180) * 24, Math.sin(i * 72 * Math.PI / 180) * 24],
                     scale: [0.6, 1.2, 0.6],
                     opacity: [0.3, 0.8, 0.3],
                   }}
-                  transition={{
-                    duration: 4,
-                    delay: i * 0.3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                  transition={{ duration: 4, delay: i * 0.3, repeat: Infinity, ease: "easeInOut" }}
                 />
               ))}
-
-              {/* Core glow behind mascot */}
               <motion.div
-               className="absolute inset-2 rounded-full bg-gradient-to-br from-empire-violet/25 via-empire-violet-deep/15 to-primary/15 blur-sm"
+                className="absolute inset-2 rounded-full bg-gradient-to-br from-empire-violet/25 via-empire-violet-deep/15 to-primary/15 blur-sm"
                 animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
-
-              {/* Scanning conic beam */}
               <motion.div
                 className="absolute inset-1 rounded-full"
-               style={{ background: 'conic-gradient(from 0deg, transparent 0%, hsl(var(--empire-violet) / 0.15) 8%, transparent 16%)' }}
+                style={{ background: 'conic-gradient(from 0deg, transparent 0%, hsl(var(--empire-violet) / 0.15) 8%, transparent 16%)' }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
               />
-
-              {/* Mascot image */}
               <motion.img
                 src={empireMonkeyMascot}
                 alt="Empire Agent"
-               className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-contain drop-shadow-[0_0_12px_hsl(265_85%_65%/0.5)] z-10"
+                className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-contain drop-shadow-[0_0_12px_hsl(265_85%_65%/0.5)] z-10"
                 animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
-
-              {/* Live status dot */}
               <motion.div
-                className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-background z-20"
+                className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-background z-20"
                 animate={{ scale: [1, 1.3, 1], opacity: [1, 0.6, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               />
             </motion.div>
 
-            <div>
+            {/* ─── Titolo + KPI live ─── */}
+            <div className="min-w-0 flex-1">
               <motion.h1
-                className="text-base font-display font-bold text-gold-gradient"
+                className="text-sm sm:text-base font-display font-bold text-gold-gradient truncate"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
               >
                 Empire Central
               </motion.h1>
-              <div className="flex items-center gap-1.5">
-                <motion.div
-                 className="w-1.5 h-1.5 rounded-full bg-empire-violet"
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <p className="text-[10px] text-empire-violet-glow/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-1">
+                  <motion.div
+                    className="w-1.5 h-1.5 rounded-full bg-empire-violet"
+                    animate={{ opacity: [0.4, 1, 0.4] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                  <p className="text-[9px] text-empire-violet-glow/70 font-bold tracking-wider uppercase">👑 Super Admin</p>
+                </div>
+                {/* Mini KPI inline su desktop */}
+                <div className="hidden sm:flex items-center gap-2 text-[9px] font-semibold">
+                  <span className="px-1.5 py-0.5 rounded-md" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}>
+                    {activeTenants} attivi
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded-md" style={{ background: "rgba(200,150,62,0.12)", color: "#E2B567", border: "1px solid rgba(200,150,62,0.25)" }}>
+                    €{mrr.toLocaleString()} MRR
+                  </span>
+                  {criticalAlerts.length > 0 && (
+                    <span className="px-1.5 py-0.5 rounded-md flex items-center gap-1" style={{ background: "rgba(239,68,68,0.12)", color: "#f87171", border: "1px solid rgba(239,68,68,0.3)" }}>
+                      <AlertCircle className="w-2.5 h-2.5" /> {criticalAlerts.length}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Home">
+
+          {/* RIGHT — quick actions */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <button onClick={() => navigate("/home")} className="p-2 rounded-xl hover:bg-secondary transition-colors" title="Home">
               <ArrowLeft className="w-4 h-4 text-muted-foreground" />
             </button>
             <DarkModeToggle />
-            <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Esci">
+            <button onClick={handleLogout} className="p-2 rounded-xl hover:bg-destructive/15 hover:text-destructive transition-colors" title="Esci">
               <LogOut className="w-4 h-4 text-muted-foreground" />
             </button>
           </div>
         </div>
+
+        {/* Mini KPI strip — solo mobile */}
+        <div className="sm:hidden flex items-center gap-1.5 px-3 pb-2 overflow-x-auto scrollbar-none">
+          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold flex-shrink-0" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}>
+            ✓ {activeTenants} attivi
+          </span>
+          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold flex-shrink-0" style={{ background: "rgba(200,150,62,0.12)", color: "#E2B567", border: "1px solid rgba(200,150,62,0.25)" }}>
+            €{mrr.toLocaleString()} MRR
+          </span>
+          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold flex-shrink-0" style={{ background: "rgba(124,58,237,0.12)", color: "#a78bfa", border: "1px solid rgba(124,58,237,0.25)" }}>
+            {tenants.length} tenant
+          </span>
+          {criticalAlerts.length > 0 && (
+            <span className="px-2 py-0.5 rounded-md text-[9px] font-bold flex items-center gap-1 flex-shrink-0" style={{ background: "rgba(239,68,68,0.12)", color: "#f87171", border: "1px solid rgba(239,68,68,0.3)" }}>
+              <AlertCircle className="w-2.5 h-2.5" /> {criticalAlerts.length} alert
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Tab bar — categorized groups */}
-      <div className="px-3 py-2 relative z-10 space-y-2 max-h-[40vh] overflow-y-auto scrollbar-thin">
+      {/* ═══════════ TAB BAR — modern futuristic ═══════════ */}
+      <div className="px-3 py-2.5 relative z-10 space-y-2.5 max-h-[42vh] overflow-y-auto scrollbar-thin">
         {tabGroups.map((group) => (
           <div key={group.label}>
-            <div className="text-[0.55rem] font-bold uppercase tracking-wider mb-1 px-1" style={{ color: "hsl(250 60% 70%)" }}>{group.label}</div>
-            <div className="grid grid-cols-4 sm:grid-cols-5 gap-1">
-              {group.tabs.map((tab) => (
-                <button key={tab.id}
-                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
-                  className="flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[38px]"
-                  style={activeTab === tab.id ? {
-                    background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",
-                    color: "white",
-                    boxShadow: "0 0 20px hsl(250 85% 65% / 0.35), inset 0 1px 0 hsl(250 50% 70% / 0.25)"
-                  } : {
-                    background: "linear-gradient(160deg, hsl(230 20% 16%), hsl(232 22% 13%))",
-                    color: "hsl(220 15% 75%)",
-                    border: "1px solid hsl(250 30% 30% / 0.3)"
-                  }}>
-                  <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
-                  <span className="leading-tight truncate w-full text-center">{tab.label}</span>
-                </button>
-              ))}
+            <div className="text-[0.55rem] font-bold uppercase tracking-[0.15em] mb-1.5 px-1 flex items-center gap-1.5"
+              style={{ color: "hsl(250 60% 75%)" }}>
+              <span>{group.label}</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-empire-violet/25 to-transparent" />
+            </div>
+            <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-1.5">
+              {group.tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <motion.button
+                    key={tab.id}
+                    whileHover={{ scale: 1.04, y: -1 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
+                    className="relative flex flex-col items-center justify-center gap-1 px-1 py-2 rounded-xl text-[0.55rem] font-bold transition-all min-h-[48px] overflow-hidden"
+                    style={isActive ? {
+                      background: "linear-gradient(160deg, hsl(265 75% 55%), hsl(250 65% 42%))",
+                      color: "white",
+                      boxShadow: "0 8px 24px hsl(265 85% 60% / 0.45), inset 0 1px 0 hsl(265 60% 75% / 0.35), 0 0 0 1px hsl(265 60% 60% / 0.5)"
+                    } : {
+                      background: "linear-gradient(160deg, hsl(230 20% 13%), hsl(232 22% 10%))",
+                      color: "hsl(220 15% 78%)",
+                      border: "1px solid hsl(250 30% 25% / 0.4)"
+                    }}>
+                    {isActive && (
+                      <motion.div
+                        layoutId="active-tab-glow"
+                        className="absolute inset-0 rounded-xl pointer-events-none"
+                        style={{ background: "radial-gradient(circle at 50% 0%, hsl(265 90% 70% / 0.35), transparent 70%)" }}
+                      />
+                    )}
+                    <span className="[&_svg]:w-3.5 [&_svg]:h-3.5 relative z-10">{tab.icon}</span>
+                    <span className="leading-tight truncate w-full text-center relative z-10">{tab.label}</span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
             </div>
           </div>
         ))}
