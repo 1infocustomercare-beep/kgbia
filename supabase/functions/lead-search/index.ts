@@ -812,17 +812,24 @@ serve(async (req) => {
     }
 
     // 2. Run SELECTED sources in parallel
-    let [photonResults, nominatimResults, overpassResults, googleResults] = await Promise.all([
+    let [photonResults, nominatimResults, overpassResults, googleResults, ddgResults, pgResults, epResults, fcResults] = await Promise.all([
       useSrc("photon") ? searchPhoton(resolvedCity || combinedQuery || searchQuery, searchSector, geo, searchPage, specializationQuery, maxDistanceKm, effectiveCC) : Promise.resolve([]),
       useSrc("nominatim") ? searchNominatim(resolvedCity || combinedQuery || searchQuery, searchSector, combinedQuery, geo, searchPage, effectiveCC, maxDistanceKm) : Promise.resolve([]),
       useSrc("overpass") ? searchOverpass(searchSector, geo, searchPage) : Promise.resolve([]),
-      (useSrc("google") && use_google) ? searchGooglePlaces(combinedQuery, resolvedCity || searchCity, searchSector, searchPage) : Promise.resolve([]),
+      ((useSrc("google") || useSrc("google_maps")) && use_google) ? searchGooglePlaces(combinedQuery, resolvedCity || searchCity, searchSector, searchPage) : Promise.resolve([]),
+      useSrc("duckduckgo") ? searchDuckDuckGo(combinedQuery || searchQuery, searchSector, resolvedCity || searchCity, effectiveCC) : Promise.resolve([]),
+      useSrc("pagine_gialle") ? searchPagineGialle(searchSector, resolvedCity || searchCity) : Promise.resolve([]),
+      useSrc("europages") ? searchEuropages(searchSector, resolvedCity || searchCity, effectiveCC) : Promise.resolve([]),
+      useSrc("firecrawl") ? searchFirecrawl(searchSector, resolvedCity || searchCity, combinedQuery) : Promise.resolve([]),
     ]);
 
-    console.log(`Sources [page=${searchPage}, gps=${hasCoords}, r=${searchRadius}km, cc=${ccFilter || "*"}, srcs=${allowedSources.join(",")}, small=${isSmallPlace}]: Photon=${photonResults.length} Nominatim=${nominatimResults.length} Overpass=${overpassResults.length} Google=${googleResults.length}`);
+    console.log(`Sources [page=${searchPage}, gps=${hasCoords}, r=${searchRadius}km, cc=${ccFilter || "*"}, srcs=${allowedSources.join(",")}, small=${isSmallPlace}]: Photon=${photonResults.length} Nominatim=${nominatimResults.length} Overpass=${overpassResults.length} Google=${googleResults.length} DDG=${ddgResults.length} PG=${pgResults.length} EP=${epResults.length} FC=${fcResults.length}`);
 
     // 3. Merge + deduplicate (excluding existing)
-    let merged = mergeAndDeduplicate(googleResults, nominatimResults, photonResults, overpassResults, existingForDedup.length > 0 ? existingForDedup : undefined);
+    let merged = mergeAndDeduplicate(
+      [googleResults, nominatimResults, photonResults, overpassResults, ddgResults, pgResults, epResults, fcResults],
+      existingForDedup.length > 0 ? existingForDedup : undefined,
+    );
 
     // 4. AUTO-FALLBACK: if 0 results and we matched a small village with a parent municipality,
     // retry the search at the parent administrative level (e.g. Arcille → Campagnatico).
@@ -833,18 +840,27 @@ serve(async (req) => {
       if (parentGeo) {
         const parentRadius = searchRadius && searchRadius > 0 ? searchRadius : 20;
         if (!parentGeo.bbox || parentGeo.bbox.length < 4) parentGeo.bbox = bboxFromRadius(parentGeo.lat, parentGeo.lon, parentRadius);
-        const [fbPhoton, fbNom, fbOver] = await Promise.all([
+        const [fbPhoton, fbNom, fbOver, fbDdg, fbPg, fbEp] = await Promise.all([
           useSrc("photon") ? searchPhoton(parent, searchSector, parentGeo, 0, specializationQuery, parentRadius, effectiveCC) : Promise.resolve([]),
           useSrc("nominatim") ? searchNominatim(parent, searchSector, combinedQuery, parentGeo, 0, effectiveCC, parentRadius) : Promise.resolve([]),
           useSrc("overpass") ? searchOverpass(searchSector, parentGeo, 0) : Promise.resolve([]),
+          useSrc("duckduckgo") ? searchDuckDuckGo(combinedQuery || searchQuery, searchSector, parent, effectiveCC) : Promise.resolve([]),
+          useSrc("pagine_gialle") ? searchPagineGialle(searchSector, parent) : Promise.resolve([]),
+          useSrc("europages") ? searchEuropages(searchSector, parent, effectiveCC) : Promise.resolve([]),
         ]);
-        const fbMerged = mergeAndDeduplicate([], fbNom, fbPhoton, fbOver, existingForDedup.length > 0 ? existingForDedup : undefined);
+        const fbMerged = mergeAndDeduplicate(
+          [fbNom, fbPhoton, fbOver, fbDdg, fbPg, fbEp],
+          existingForDedup.length > 0 ? existingForDedup : undefined,
+        );
         if (fbMerged.length > 0) {
           merged = fbMerged;
           fallbackUsed = parent;
           photonResults = fbPhoton;
           nominatimResults = fbNom;
           overpassResults = fbOver;
+          ddgResults = fbDdg;
+          pgResults = fbPg;
+          epResults = fbEp;
           console.log(`Auto-fallback: "${searchCity}" → "${parent}" produced ${fbMerged.length} results`);
         }
       }
