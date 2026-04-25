@@ -29,7 +29,6 @@ const CATEGORY_MAP: Record<IndustryId, Exclude<Category, "Tutti">> = {
   food: "Food",
   hospitality: "Hospitality",
   agriturismo: "Hospitality",
-  hotel: "Hospitality" as any,
   beach: "Travel",
   beauty: "Beauty",
   tattoo: "Beauty",
