@@ -857,6 +857,10 @@ const SuperAdminDashboard = () => {
         {/* ===== OVERVIEW ===== */}
         {!loading && activeTab === "overview" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {/* ═══ EMPIRE PARTICLE ORB — interactive WOW hero (anche per Super Admin) ═══ */}
+            <section className="-mx-4">
+              <EmpireParticleOrb />
+            </section>
             {/* Critical Alerts */}
             {criticalAlerts.length > 0 && (
               <div className="space-y-2">
