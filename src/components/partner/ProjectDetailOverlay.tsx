@@ -5,6 +5,55 @@ import { SECTOR_PORTFOLIO, type SectorPortfolio, type MockupStyle } from "@/data
 import { PORTFOLIO_PROJECTS } from "@/data/portfolio-showcase-data";
 import { UNIVERSAL_FEATURES, SECTOR_SPECIFIC_FEATURES, UNIVERSAL_AGENTS } from "@/config/sectorFeatures";
 
+/* ─────────────────────────────────────────────────────────────────────
+ * Screen label helper — estrae un'etichetta umana coerente dal filename
+ * dello screenshot (es. "a-obsidian-mobile-menu.png" → "Menu").
+ * Usato per mostrare sotto ogni mockup una descrizione di che schermata si tratta.
+ * ─────────────────────────────────────────────────────────────────── */
+const SCREEN_KEYWORDS: { kw: string[]; label: string }[] = [
+  { kw: ["home", "homepage", "landing", "start", "splash"], label: "Home" },
+  { kw: ["menu", "menù", "catalogue", "catalog"], label: "Menu" },
+  { kw: ["detail", "product", "item", "dish", "single"], label: "Dettaglio" },
+  { kw: ["cart", "checkout", "pay", "order"], label: "Checkout" },
+  { kw: ["booking", "book", "reserve", "reservation", "preno"], label: "Prenotazione" },
+  { kw: ["fleet", "cars", "vehicle", "boat", "yacht"], label: "Flotta" },
+  { kw: ["service", "services", "treatments"], label: "Servizi" },
+  { kw: ["gallery", "photos", "images", "portfolio-grid"], label: "Galleria" },
+  { kw: ["profile", "account", "user", "member"], label: "Account" },
+  { kw: ["loyalty", "rewards", "points"], label: "Loyalty" },
+  { kw: ["map", "location", "where"], label: "Mappa" },
+  { kw: ["contact", "contatti", "support"], label: "Contatti" },
+  { kw: ["about", "chi-siamo", "story"], label: "Chi siamo" },
+  { kw: ["shop", "store", "ecommerce"], label: "Shop" },
+  { kw: ["program", "programs", "course", "courses"], label: "Programmi" },
+  { kw: ["team", "staff", "stylist", "artist", "chef"], label: "Team" },
+  { kw: ["activities", "tours", "experiences"], label: "Esperienze" },
+  { kw: ["dashboard", "admin", "manage"], label: "Dashboard" },
+  { kw: ["case", "invoice", "timeline", "tracking"], label: "Operativo" },
+];
+
+function getScreenLabel(src: string, brandName: string, fallbackIndex: number): string {
+  try {
+    const lower = decodeURIComponent(src).toLowerCase();
+    for (const entry of SCREEN_KEYWORDS) {
+      if (entry.kw.some((k) => lower.includes(k))) return entry.label;
+    }
+  } catch { /* ignore decode errors */ }
+  return `Screen ${String(fallbackIndex + 1).padStart(2, "0")}`;
+}
+
+function getScreenCode(brandName: string, index: number): string {
+  // Es. "FLAME 001" — mostrato come overline sotto la frame, in stile Lowengeld
+  const code = brandName
+    .toUpperCase()
+    .replace(/[^A-Z0-9 ]/g, "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 1)
+    .join("");
+  return `${code || "DEMO"} ${String(index + 1).padStart(3, "0")}`;
+}
+
 /* ═══════════════════════════════════════════
    Demo slug mapping
    ═══════════════════════════════════════════ */
