@@ -856,22 +856,9 @@ export default function LeadsPage() {
     if (append) setDeepLoading(true);
     else { setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null); }
 
-    // 💰 Gating crediti: ricerca lead = 1 credito (server-side)
-    const creditRes = await consumeSellerCredits("lead_search", {
-      city: city.trim(), sector,
-      mode: isNameOnly ? "name_only" : "zone",
-      sources: activeSources,
-      country: country || null,
-    });
-    if (!creditRes.success) {
-      setLoading(false); setDeepLoading(false);
-      toast.error(creditRes.error === "insufficient_credits"
-        ? `Servono ${creditRes.required} crediti (saldo: ${creditRes.balance})`
-        : creditRes.error === "monthly_cap_reached"
-        ? `Tetto mensile raggiunto (${creditRes.used}/${creditRes.cap})`
-        : "Crediti non disponibili");
-      return;
-    }
+    // 💰 Gating crediti server-side: lead-search addebita 1 credito SOLO se la stessa
+    // ricerca (fingerprint città+settore+canali+pagina) non è già stata pagata negli
+    // ultimi 15 minuti. Cache hit = 0 crediti, risultati identici riusati.
 
     try {
       const existingNames = append ? results.map(r => r.name) : [];
@@ -892,6 +879,17 @@ export default function LeadsPage() {
           radius,
         },
       });
+      // Errore di credito → tipicamente 402 dal server
+      if (!error && data && data.success === false) {
+        setLoading(false); setDeepLoading(false);
+        const err = data.error || "Errore";
+        toast.error(err === "insufficient_credits"
+          ? `Servono ${data.required} crediti (saldo: ${data.balance})`
+          : err === "monthly_cap_reached"
+          ? `Tetto mensile raggiunto (${data.used}/${data.cap})`
+          : err);
+        return;
+      }
       if (error) throw error;
       if (data?.success && data.results?.length > 0) {
         const processed = processResults(data.results, append);
@@ -904,10 +902,15 @@ export default function LeadsPage() {
           .filter(([k, v]) => k !== "total_merged" && (v as number) > 0)
           .map(([k, v]) => `${k.charAt(0).toUpperCase() + k.slice(1)}: ${v}`)
           .join(" · ") || "—";
+        const cachedHit = !!data.cached;
+        const creditsUsed = data?.credit?.credits_used ?? 0;
+        const creditTag = cachedHit
+          ? "♻️ Risultati cached · 0 crediti"
+          : creditsUsed > 0 ? `💳 -${creditsUsed} cr` : "Gratis";
         toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati${isNameOnly ? " (per nome)" : ""}`, {
-          description: data.fallback_used
-            ? `📍 "${city.trim()}" è una piccola località — risultati estesi a "${data.fallback_used}" · ${srcSummary}`
-            : srcSummary,
+          description: `${creditTag} · ${data.fallback_used
+            ? `📍 esteso a "${data.fallback_used}" · `
+            : ""}${srcSummary}`,
         });
         // Auto-batch enrich Instagram in background
         setTimeout(() => batchEnrichInstagram(processed), 1500);
@@ -938,15 +941,7 @@ export default function LeadsPage() {
   const handleGpsSearch = useCallback(async (loc: GpsLocation, radiusKm: number) => {
     setLoading(true); setResults([]); setSelected(null); setGeneratedMessage(null);
     setGpsOrigin({ lat: loc.lat, lon: loc.lon, label: loc.label });
-    // 💰 Gating crediti: GPS search = 1 credito (lead_search)
-    const creditRes = await consumeSellerCredits("lead_search", { mode: "gps", lat: loc.lat, lon: loc.lon, radius_km: radiusKm });
-    if (!creditRes.success) {
-      setLoading(false);
-      toast.error(creditRes.error === "insufficient_credits"
-        ? `Servono ${creditRes.required} crediti (saldo: ${creditRes.balance})`
-        : "Crediti non disponibili");
-      return;
-    }
+    // 💰 Gating crediti server-side: lead-search dedup automatico per coordinate identiche entro 15min
     try {
       const { data, error } = await supabase.functions.invoke("lead-search", {
         body: {
@@ -964,6 +959,15 @@ export default function LeadsPage() {
           city: loc.label,
         },
       });
+      if (!error && data && data.success === false) {
+        setLoading(false);
+        toast.error(data.error === "insufficient_credits"
+          ? `Servono ${data.required} crediti (saldo: ${data.balance})`
+          : data.error === "monthly_cap_reached"
+          ? `Tetto mensile raggiunto (${data.used}/${data.cap})`
+          : data.error || "Crediti non disponibili");
+        return;
+      }
       if (error) throw error;
       if (data?.success && data.results?.length > 0) {
         const processed = processResults(data.results, false);
@@ -973,8 +977,11 @@ export default function LeadsPage() {
         setLastSearchSector(sector);
         setCity(loc.label);
         const sources = data.sources || {};
+        const cachedHit = !!data.cached;
+        const creditsUsed = data?.credit?.credits_used ?? 0;
+        const creditTag = cachedHit ? "♻️ Cached · 0 cr" : creditsUsed > 0 ? `💳 -${creditsUsed} cr` : "Gratis";
         toast.success(`📡 ${processed.length} lead reali nel raggio di ${radiusKm < 1 ? `${radiusKm * 1000}m` : `${radiusKm}km`}`, {
-          description: `OSM: ${sources.nominatim || 0} · Overpass: ${sources.overpass || 0} · Google: ${sources.google || 0}`,
+          description: `${creditTag} · OSM: ${sources.nominatim || 0} · Overpass: ${sources.overpass || 0} · Google: ${sources.google || 0}`,
         });
         setGpsOpen(false);
         setTimeout(() => batchEnrichInstagram(processed), 1500);
@@ -990,7 +997,7 @@ export default function LeadsPage() {
     } finally {
       setLoading(false);
     }
-  }, [sector, processResults, batchEnrichInstagram, autoPrewarmDemos, consumeSellerCredits, selectedSpecialization]);
+  }, [sector, country, activeSources, processResults, batchEnrichInstagram, autoPrewarmDemos, selectedSpecialization]);
 
   /* ─── Add manual lead ─── */
   const addManualLead = () => {
