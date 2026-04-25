@@ -678,7 +678,17 @@ const SuperAdminDashboard = () => {
       { id: "connections" as SuperTab, label: "Connessioni", icon: <Link2 className="w-4 h-4" /> },
       { id: "demo_accounts" as SuperTab, label: "Demo", icon: <Key className="w-4 h-4" /> },
       { id: "feature_requests", label: "Richieste", icon: <Lightbulb className="w-4 h-4" /> },
+      { id: "account" as SuperTab, label: "Account", icon: <User className="w-4 h-4" /> },
     ]},
+  ];
+
+  // Quick-access bottom navigation
+  const quickNav: { id: SuperTab; label: string; icon: React.ReactNode }[] = [
+    { id: "overview", label: "Home", icon: <BarChart3 className="w-4 h-4" /> },
+    { id: "tenants", label: "Tenant", icon: <Store className="w-4 h-4" /> },
+    { id: "payments", label: "Pagamenti", icon: <CreditCard className="w-4 h-4" /> },
+    { id: "mary", label: "Mary", icon: <Bot className="w-4 h-4" /> },
+    { id: "account", label: "Account", icon: <User className="w-4 h-4" /> },
   ];
 
   const allTabs = tabGroups.flatMap(g => g.tabs);
