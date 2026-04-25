@@ -320,18 +320,30 @@ async function searchNominatim(city: string, sector: string, userQuery: string, 
         if (["boundary", "place", "highway", "railway", "waterway", "natural", "landuse", "residential", "administrative"].includes(item.class)) continue;
         const name = item.display_name?.split(",")[0]?.trim() || "";
         if (!name || name.length < 3) continue;
+
+        const tags = item.extratags || {};
+        const addr = item.address || {};
+
+        // Country filter — drop results outside expected country
+        if (countryCode && addr.country_code && addr.country_code.toLowerCase() !== countryCode.toLowerCase()) continue;
+
+        // Distance filter — drop results too far from search center
+        const itemLat = parseFloat(item.lat), itemLon = parseFloat(item.lon);
+        if (!isNaN(itemLat) && !isNaN(itemLon)) {
+          const dist = distanceKm(geo.lat, geo.lon, itemLat, itemLon);
+          if (dist > maxDistanceKm) continue;
+        }
+
         const key = name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 25);
         if (seen.has(key)) continue;
         seen.add(key);
 
-        const tags = item.extratags || {};
-        const addr = item.address || {};
         results.push({
           source: "nominatim", name,
           full_address: item.display_name || "",
           city: addr.city || addr.town || addr.village || addr.municipality || city,
           zone: addr.suburb || addr.neighbourhood || addr.quarter || "",
-          lat: parseFloat(item.lat), lon: parseFloat(item.lon),
+          lat: itemLat, lon: itemLon,
           phone: tags.phone || tags["contact:phone"] || tags["phone:mobile"] || null,
           website: tags.website || tags["contact:website"] || tags.url || null,
           email: tags.email || tags["contact:email"] || null,
