@@ -146,8 +146,7 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
         className="fixed inset-0 z-[9999] bg-black"
         style={{
           width: "100vw",
-          height: "100vh",
-          height: "100dvh" as any,
+          height: "100dvh",
           overflow: "hidden",
           padding: 0,
           margin: 0,
