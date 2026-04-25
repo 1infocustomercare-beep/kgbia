@@ -587,15 +587,23 @@ serve(async (req) => {
         geo.bbox = bboxFromRadius(geo.lat, geo.lon, searchRadius);
       }
     }
-    if (!geo) {
-      return new Response(JSON.stringify({ success: false, error: `Località "${searchCity || searchQuery}" non trovata.`, results: [] }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    // Effective country code: prefer explicit filter, else infer from geocode result
+    const effectiveCC = ccFilter || (geo as any).country_code || "";
+
+    // Distance budget: explicit radius wins; otherwise estimate from bbox; default 25km
+    let maxDistanceKm = 25;
+    if (searchRadius && searchRadius > 0) {
+      maxDistanceKm = searchRadius;
+    } else if (geo.bbox && geo.bbox.length >= 4) {
+      const [s, n, w, e] = geo.bbox;
+      const diagKm = distanceKm(Number(s), Number(w), Number(n), Number(e));
+      maxDistanceKm = Math.max(8, Math.min(60, diagKm * 0.6));
     }
 
     // 2. Run SELECTED sources in parallel
     const [photonResults, nominatimResults, overpassResults, googleResults] = await Promise.all([
-      useSrc("photon") ? searchPhoton(resolvedCity || combinedQuery || searchQuery, searchSector, geo, searchPage, specializationQuery) : Promise.resolve([]),
-      useSrc("nominatim") ? searchNominatim(resolvedCity || combinedQuery || searchQuery, searchSector, combinedQuery, geo, searchPage, ccFilter) : Promise.resolve([]),
+      useSrc("photon") ? searchPhoton(resolvedCity || combinedQuery || searchQuery, searchSector, geo, searchPage, specializationQuery, maxDistanceKm, effectiveCC) : Promise.resolve([]),
+      useSrc("nominatim") ? searchNominatim(resolvedCity || combinedQuery || searchQuery, searchSector, combinedQuery, geo, searchPage, effectiveCC, maxDistanceKm) : Promise.resolve([]),
       useSrc("overpass") ? searchOverpass(searchSector, geo, searchPage) : Promise.resolve([]),
       (useSrc("google") && use_google) ? searchGooglePlaces(combinedQuery, resolvedCity || searchCity, searchSector, searchPage) : Promise.resolve([]),
     ]);
