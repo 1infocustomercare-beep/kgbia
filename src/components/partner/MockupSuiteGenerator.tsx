@@ -1148,12 +1148,20 @@ export function MockupSuiteGenerator({
           </div>
         )}
 
-        {/* Selettore motore */}
-        <div className="space-y-3">
-          <div>
-            <Label className="text-sm font-semibold">Motore di generazione</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">Scegli velocità vs. qualità fotorealistica</p>
-          </div>
+        {/* 01 · Motore di generazione */}
+        <ConfigSection
+          step={1}
+          icon={Sparkles}
+          title="Motore di generazione"
+          subtitle="Scegli velocità vs. qualità fotorealistica"
+          badge={
+            <Badge variant={selectedEngineCfg.cost === 0 ? "secondary" : "default"} className="text-[10px]">
+              {selectedEngineCfg.cost === 0 ? "GRATIS" : `${selectedEngineCfg.cost} cr`}
+            </Badge>
+          }
+          defaultOpen={true}
+          tone="primary"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {ENGINE_OPTIONS.map(opt => {
               const Icon = opt.icon;
@@ -1184,7 +1192,7 @@ export function MockupSuiteGenerator({
               );
             })}
           </div>
-        </div>
+        </ConfigSection>
 
         {/* Template variante (raggruppato) + ANTEPRIMA LIVE */}
         <div className="space-y-4">
