@@ -574,6 +574,11 @@ export function MockupSuiteGenerator({
         safe_area_px: safeAreaPx,
         type_scale: typeScale,
         boost_contrast: boostContrast,
+        // Brand asset reali del lead (logo + foto) — usati come reference image per AI
+        brand_logo_url: brandLogoUrl || undefined,
+        brand_photos: Array.isArray(brandPhotos) && brandPhotos.length > 0 ? brandPhotos.slice(0, 4) : undefined,
+        // Deep analysis del lead (weak points, settore, pitch) per personalizzare i contenuti
+        deep_report: deepReportSummary || undefined,
       };
 
       if (isAIEngine) setPreviewPhase("upgrading");
