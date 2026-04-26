@@ -155,8 +155,8 @@ export default function CinematicHero() {
     <section
       ref={ref}
       id="hero"
-      className="relative min-h-[100svh] overflow-hidden"
-      style={{ perspective: "1800px" }}
+      className="relative overflow-hidden lg:min-h-[100svh]"
+      style={{ perspective: lite ? "none" : "1800px" }}
     >
       {/* Cinematic depth background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
