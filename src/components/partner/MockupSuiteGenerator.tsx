@@ -462,6 +462,13 @@ export function MockupSuiteGenerator({
     screens: SuiteScreen[];
   } | null>(null);
 
+  // Guard sincrono contro doppi click ravvicinati (setGenerating è async, non protegge il primo frame)
+  const inFlightRef = useRef(false);
+  // Lock cross-reload: se la stessa combo lead+template è già in generazione in un'altra tab/reload,
+  // blocchiamo per ~2 minuti (TTL). Usiamo sessionStorage così il lock muore con la sessione del browser.
+  const buildLockKey = () => `mockup_gen_lock::${leadId || "no-lead"}::${previewId || "no-preview"}::${businessName?.trim().toLowerCase() || ""}::${templateVariant}::${engine}`;
+  const LOCK_TTL_MS = 2 * 60 * 1000;
+
   const handleGenerate = async () => {
     if (!businessName?.trim()) {
       toast.error("Inserisci il nome dell'attività");
@@ -471,6 +478,28 @@ export function MockupSuiteGenerator({
       toast.error("Inserisci il settore o argomento");
       return;
     }
+    // 1) Guard in-memory: blocca click multipli nella stessa istanza
+    if (inFlightRef.current || generating) {
+      toast.info("⏳ Generazione in corso…", { description: "Attendi il completamento prima di rilanciare." });
+      return;
+    }
+    // 2) Guard cross-reload via sessionStorage
+    try {
+      const key = buildLockKey();
+      const raw = sessionStorage.getItem(key);
+      if (raw) {
+        const ts = parseInt(raw, 10);
+        if (!Number.isNaN(ts) && Date.now() - ts < LOCK_TTL_MS) {
+          toast.info("⏳ Generazione già in corso", {
+            description: "Una generazione per questo lead è partita pochi secondi fa. Attendi il completamento.",
+          });
+          return;
+        }
+      }
+      sessionStorage.setItem(key, String(Date.now()));
+    } catch { /* sessionStorage non disponibile, ignoriamo */ }
+
+    inFlightRef.current = true;
     setGenerating(true);
     setResult(null);
     setPreviewPhase("idle");
@@ -673,6 +702,8 @@ export function MockupSuiteGenerator({
       setPreviewPhase("idle");
     } finally {
       setGenerating(false);
+      inFlightRef.current = false;
+      try { sessionStorage.removeItem(buildLockKey()); } catch { /* noop */ }
     }
   };
 
