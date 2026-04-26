@@ -1324,31 +1324,31 @@ export function MockupSuiteGenerator({
           </div>
         </ConfigSection>
 
-        {/* ────────────────────────────────────────────────────────────────── */}
-        {/* PERSONALIZZAZIONE AVANZATA — glass intensity + color style         */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] to-transparent p-4 sm:p-5 space-y-5">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
-                <Sliders className="h-4 w-4 text-primary" /> Personalizzazione avanzata
-              </Label>
-              <p className="text-xs text-muted-foreground mt-0.5">Glassmorphism · cromia · tipografia</p>
-            </div>
+        {/* 03 · Personalizzazione avanzata — glass + cromia + tipografia */}
+        <ConfigSection
+          step={3}
+          icon={Sliders}
+          title="Personalizzazione avanzata"
+          subtitle="Glassmorphism · cromia · tipografia"
+          defaultOpen={false}
+          tone="primary"
+          badge={
             <button
               type="button"
               disabled={controlsLocked}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setGlassIntensity(60); setColorStyle("vivid");
                 setSafeAreaPx(8); setTypeScale(1); setBoostContrast(true);
                 setBrandFontKey("template");
               }}
               title={lockTitle}
-              className="text-xs px-3 py-1.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="text-[10px] px-2.5 py-1 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
-              Reset default
+              Reset
             </button>
-          </div>
+          }
+        >
 
           {/* Glassmorphism slider */}
           <div className="space-y-2">
