@@ -595,6 +595,11 @@ export function MockupSuiteGenerator({
         description: `${data.previewUrl} · login: ${data.credentials?.email || "—"}`,
         duration: 10000,
       });
+      onSiteBuilt?.({
+        previewUrl: data.previewUrl,
+        adminUrl: data.adminUrl,
+        credentials: data.credentials,
+      });
     } catch (e: any) {
       toast.dismiss("build-site");
       toast.error(e?.message || "Errore generazione sito");
