@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
 
