@@ -20,8 +20,7 @@ const QUOTES = [
 ];
 
 /**
- * PROOF & DOMINIO — horizontal scroll cinematografico.
- * Scrubbed pin-section con numeri + testimonial in scorrimento orizzontale.
+ * PROOF & DOMINIO — pinned section con horizontal scroll cinematografico.
  */
 export default function ProofHorizontal() {
   const root = useRef<HTMLDivElement>(null);
@@ -30,48 +29,72 @@ export default function ProofHorizontal() {
   useEffect(() => {
     const el = root.current; const tr = track.current;
     if (!el || !tr) return;
+
     const ctx = gsap.context(() => {
-      const distance = () => tr.scrollWidth - window.innerWidth;
-      gsap.to(tr, {
-        x: () => -distance(),
+      const getDist = () => Math.max(0, tr.scrollWidth - window.innerWidth);
+
+      const horizontalTween = gsap.to(tr, {
+        x: () => -getDist(),
         ease: "none",
         scrollTrigger: {
           trigger: el,
           start: "top top",
-          end: () => `+=${distance() + 200}`,
+          end: () => `+=${getDist() + window.innerHeight}`,
           pin: true,
           scrub: 1,
           invalidateOnRefresh: true,
+          anticipatePin: 1,
         },
       });
 
-      gsap.utils.toArray<HTMLElement>("[data-proof-num]").forEach((el) => {
-        gsap.from(el, {
-          y: 80, opacity: 0, scale: 0.85, duration: 1, ease: "expo.out",
-          scrollTrigger: { trigger: el, start: "left 90%", containerAnimation: ScrollTrigger.getAll().find(s => s.pin === tr.parentElement) as any },
+      // Reveal cards as they enter viewport horizontally — usa il tween come container
+      const cards = tr.querySelectorAll<HTMLElement>("[data-proof-card]");
+      cards.forEach((card) => {
+        gsap.from(card, {
+          y: 80,
+          opacity: 0,
+          scale: 0.88,
+          duration: 1,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: card,
+            containerAnimation: horizontalTween,
+            start: "left 95%",
+            toggleActions: "play none none reverse",
+          },
         });
       });
     }, root);
+
     return () => ctx.revert();
   }, []);
 
   return (
     <section ref={root} className="relative h-screen overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 z-0" style={{
+        background: "radial-gradient(ellipse 60% 100% at 100% 50%, rgba(167,139,250,0.18), transparent 70%), linear-gradient(180deg, #050505, #08081a)",
+      }} />
+
       <div className="absolute left-5 top-8 z-20 sm:left-10 sm:top-12">
         <div className="text-[11px] font-bold uppercase tracking-[3px] text-[#7eb7be]">Proof · Dominio del mercato</div>
         <div className="mt-2 font-heading text-2xl font-black uppercase tracking-tight text-white sm:text-4xl">Numeri non discutibili.</div>
       </div>
 
-      <div ref={track} className="flex h-full items-center gap-8 pl-5 pr-[10vw] sm:gap-12 sm:pl-10">
+      <div className="absolute right-5 top-8 z-20 hidden text-right sm:right-10 sm:top-12 sm:block">
+        <div className="text-[10px] font-mono tracking-[3px] text-white/40">SCROLL →</div>
+      </div>
+
+      <div ref={track} className="absolute inset-0 flex h-full items-center gap-6 pl-5 pr-[10vw] will-change-transform sm:gap-10 sm:pl-10">
         {PROOF.map((p, i) => (
           <div
             key={i}
-            data-proof-num
-            className="relative flex h-[60vh] min-w-[70vw] flex-col justify-end overflow-hidden rounded-[2rem] border border-white/10 p-8 sm:min-w-[44vw]"
+            data-proof-card
+            className="relative flex h-[60vh] min-w-[78vw] flex-col justify-end overflow-hidden rounded-[2rem] border border-white/10 p-7 sm:min-w-[44vw] sm:p-10"
             style={{ background: `linear-gradient(160deg, ${p.c}1a 0%, transparent 60%), rgba(255,255,255,0.02)` }}
           >
             <div className="absolute right-6 top-6 h-3 w-3 rounded-full" style={{ background: p.c, boxShadow: `0 0 24px ${p.c}` }} />
-            <div className="font-heading font-black leading-none tracking-[-0.05em] text-white" style={{ fontSize: "clamp(5rem, 14vw, 12rem)" }}>
+            <div className="font-mono text-[10px] tracking-[3px] text-white/30">{String(i + 1).padStart(2, "0")} / {PROOF.length}</div>
+            <div className="mt-2 font-heading font-black leading-none tracking-[-0.05em] text-white" style={{ fontSize: "clamp(4.5rem, 14vw, 12rem)" }}>
               {p.k}
             </div>
             <div className="mt-3 text-sm font-semibold uppercase tracking-[3px] text-white/65">{p.l}</div>
@@ -81,17 +104,16 @@ export default function ProofHorizontal() {
         {QUOTES.map((q, i) => (
           <blockquote
             key={`q${i}`}
-            data-proof-num
-            className="relative flex h-[55vh] min-w-[80vw] flex-col justify-center rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-10 backdrop-blur-md sm:min-w-[44vw]"
+            data-proof-card
+            className="relative flex h-[55vh] min-w-[82vw] flex-col justify-center rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-8 backdrop-blur-md sm:min-w-[44vw] sm:p-12"
           >
-            <div className="font-heading text-5xl text-[#7eb7be]/40">"</div>
+            <div className="font-heading text-6xl text-[#7eb7be]/40">"</div>
             <p className="font-heading text-xl leading-snug text-white sm:text-3xl">{q.q}</p>
             <footer className="mt-6 text-xs uppercase tracking-[3px] text-white/50">— {q.a}</footer>
           </blockquote>
         ))}
 
-        {/* Spacer for end */}
-        <div className="min-w-[10vw]" />
+        <div className="min-w-[15vw]" />
       </div>
     </section>
   );
