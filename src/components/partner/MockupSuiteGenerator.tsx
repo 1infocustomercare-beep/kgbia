@@ -40,6 +40,9 @@ interface Props {
   deepReportSummary?: any;
   /** Quando true e businessName è valorizzato, lancia automaticamente handleGenerate al mount. */
   autoStart?: boolean;
+  /** Quando true, dopo che i 4 mockup AI sono completati lancia automaticamente
+   *  handleBuildFullSite per generare il sito webapp 1:1 col mockup scelto. */
+  autoBuildSite?: boolean;
   /** Dati estesi del lead per generazione sito completo (generate-demo-from-lead) */
   leadFullData?: {
     phone?: string;
@@ -60,6 +63,8 @@ interface Props {
     sectorId?: string; // es. "food", "ncc", "beauty"
   };
   onGenerated?: (suiteId: string, shareSlug: string) => void;
+  /** Callback al termine completo del flusso (mockup + sito 1:1) */
+  onSiteBuilt?: (siteData: { previewUrl: string; adminUrl: string; credentials: any }) => void;
 }
 
 const ENGINE_OPTIONS: { key: MockupEngine; label: string; cost: number; icon: React.ElementType; desc: string; color: string }[] = [
@@ -333,8 +338,10 @@ export function MockupSuiteGenerator({
   brandPhotos,
   deepReportSummary,
   autoStart = false,
+  autoBuildSite = false,
   leadFullData,
   onGenerated,
+  onSiteBuilt,
 }: Props) {
   // Modalità: lead (usa props del lead) | standalone (form libero)
   const isLeadMode = Boolean((businessNameProp || "").trim());
@@ -588,6 +595,11 @@ export function MockupSuiteGenerator({
         description: `${data.previewUrl} · login: ${data.credentials?.email || "—"}`,
         duration: 10000,
       });
+      onSiteBuilt?.({
+        previewUrl: data.previewUrl,
+        adminUrl: data.adminUrl,
+        credentials: data.credentials,
+      });
     } catch (e: any) {
       toast.dismiss("build-site");
       toast.error(e?.message || "Errore generazione sito");
@@ -836,6 +848,16 @@ export function MockupSuiteGenerator({
         toast.success(`Suite generata! ${d.credits_spent} crediti usati.`);
       }
       onGenerated?.(d.suite_id, d.share_slug);
+
+      // ─── AUTO-BUILD SITO 1:1 ─── se richiesto, dopo i 4 mockup AI completati
+      // lancio automaticamente la generazione del sito webapp con quegli stessi mockup
+      // come reference visiva (template + screens). Così "Genera nuova preview"
+      // produce in un colpo solo: 4 mockup iPhone + sito + admin + credenziali.
+      if (autoBuildSite && d.suite_id && d.suite_id !== "preview-pending") {
+        setTimeout(() => {
+          handleBuildFullSite();
+        }, 600);
+      }
     } catch (e: any) {
       toast.error(e.message || "Errore generazione");
       setPreviewPhase("idle");

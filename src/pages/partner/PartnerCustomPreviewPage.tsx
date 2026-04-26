@@ -86,6 +86,8 @@ export default function PartnerCustomPreviewPage() {
   // Quando il venditore preme "Genera" su un lead, viene portato qui con tutti i dati pre-caricati
   // e (se autostart=1) il MockupSuiteGenerator parte da solo.
   const [autoStartSuite, setAutoStartSuite] = useState(false);
+  // Quando true, dopo i 4 mockup AI lancia anche la generazione del sito 1:1
+  const [autoBuildSite, setAutoBuildSite] = useState(false);
   const mockupSectionRef = useRef<HTMLDivElement | null>(null);
   const deepLinkAppliedRef = useRef(false);
 
@@ -557,27 +559,27 @@ export default function PartnerCustomPreviewPage() {
     <div className="w-full max-w-[720px] md:max-w-[920px] lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] mx-auto px-3 sm:px-5 md:px-6 lg:px-8 pt-2 pb-32 sm:pb-12 space-y-5 sm:space-y-6 lg:space-y-8">
       {/* ═══ HERO MASCOT ═══ */}
       <PartnerHeroMascot
-        title="Mockup su Misura"
-        subtitle={`Costruisci a mano un mockup iPhone per UN cliente specifico — tu inserisci dati e brand, l'AI genera l'anteprima. Costo: ${COST} crediti.`}
+        title="Mockup + Sito 1:1"
+        subtitle={`Inserisci i dati del cliente, scegli stile e premi 'Genera': ottieni 4 mockup iPhone AI + sito webapp 1:1 + admin pronto, tutto coerente al brand.`}
         icon={Palette}
-        active={generating}
+        active={generating || autoStartSuite}
         mascotSrc={alienDesigner}
-        mascotAlt="Alien Designer — Mockup su Misura"
+        mascotAlt="Alien Designer — Mockup + Sito 1:1"
       />
 
       {/* ═══ FLUSSO 3 STEP ═══ */}
       <PartnerFlowStepper currentStep="mockup" />
 
       <TutorialPopup
-        id="custom-preview-mockup-v1"
-        title="Mockup su Misura · 3 step"
+        id="custom-preview-mockup-v2"
+        title="Mockup + Sito 1:1 · 3 step"
         accentColor="#fb7185"
         position="bottom-right"
         steps={[
-          { emoji: "🎯", title: "Quando usare questo strumento", description: "Hai un cliente specifico (lo conosci già) e vuoi mostrargli un'anteprima brandizzata col SUO logo, SUOI colori, SUOI contenuti. Diverso da 'Caccia Lead' che genera demo automatici per locali sconosciuti." },
-          { emoji: "📝", title: "Step 1 · Inserisci i dati", description: "Nome cliente, città, settore, logo e colore primario. Più info dai, più il mockup sarà credibile." },
-          { emoji: "🎨", title: "Step 2 · Scegli stile e genera", description: "Scegli uno dei 4 stili (Modern Dark, Luxury Gold, Casual Warm, Minimal Zen). Costo: 15 crediti. L'AI genera in 60 secondi." },
-          { emoji: "📱", title: "Step 3 · Mostra al cliente", description: "Il mockup finisce nella Vetrina. Da lì lo apri in modalità Presentazione fullscreen davanti al cliente." },
+          { emoji: "🎯", title: "Quando usare questo strumento", description: "Hai un cliente specifico (lo conosci già) e vuoi generargli SUBITO 4 mockup iPhone AI + il sito webapp 1:1 col SUO brand. Diverso da 'Caccia Lead' che parte da zero." },
+          { emoji: "📝", title: "Step 1 · Inserisci i dati", description: "Nome cliente, città, settore, logo e colore. Più info dai, più mockup e sito sono credibili e personalizzati." },
+          { emoji: "🎨", title: "Step 2 · Scegli stile e genera", description: "Scegli uno dei template premium (Modern Dark, Luxury Gold, Neon Vibrant, ecc). Premi 'Genera Mockup AI + Sito 1:1'. L'AI lavora 1-3 minuti." },
+          { emoji: "🚀", title: "Step 3 · Mostra il risultato", description: "Ottieni 4 mockup iPhone (Vetrina) + sito webapp pubblico + admin con credenziali. Tutto coerente al mockup scelto, pronto per la presentazione cliente." },
         ]}
       />
 
@@ -591,10 +593,10 @@ export default function PartnerCustomPreviewPage() {
               <div className="min-w-0">
                 <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                   <Sparkles className="h-5 w-5 text-primary" />
-                  Genera nuova preview
+                  Genera Mockup + Sito 1:1
                 </CardTitle>
                 <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">
-                  3 passi rapidi · totale ~30 sec
+                  3 passi rapidi · 4 mockup iPhone + sito webapp coerente
                 </p>
               </div>
 
@@ -870,22 +872,38 @@ export default function PartnerCustomPreviewPage() {
               </AnimatePresence>
             </div>
 
-            {/* ── CTA Genera (sticky su mobile) ── */}
-            <div className="sticky bottom-2 z-10 pt-2">
+            {/* ── CTA UNICA: genera mockup AI 1:1 + sito webapp 1:1 ── */}
+            <div className="sticky bottom-2 z-10 pt-2 space-y-2">
               <Button
-                onClick={handleGenerate}
-                disabled={generating || !form.lead_name.trim()}
+                onClick={() => {
+                  if (!form.lead_name.trim()) {
+                    toast.error("Nome attività obbligatorio");
+                    return;
+                  }
+                  if (!form.lead_sector.trim()) {
+                    toast.error("Settore obbligatorio per generare il sito 1:1");
+                    return;
+                  }
+                  // Lancia il flusso unificato: 4 mockup AI + sito webapp 1:1
+                  setAutoBuildSite(true);
+                  setAutoStartSuite(true);
+                  // Scrolla alla sezione mockup per dare feedback visivo immediato
+                  setTimeout(() => {
+                    mockupSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }, 200);
+                }}
+                disabled={autoStartSuite || !form.lead_name.trim()}
                 className="w-full h-12 sm:h-12 text-sm sm:text-base font-semibold shadow-lg shadow-primary/20"
                 size="lg"
               >
-                {generating ? (
-                  <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> AI sta generando (15-30s)…</>
+                {autoStartSuite ? (
+                  <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generazione in corso (mockup + sito)…</>
                 ) : (
-                  <><Sparkles className="h-4 w-4 mr-2" /> Genera preview AI ({COST} crediti)</>
+                  <><Sparkles className="h-4 w-4 mr-2" /> Genera Mockup AI + Sito 1:1</>
                 )}
               </Button>
-              <p className="text-[10px] sm:text-xs text-muted-foreground text-center leading-relaxed mt-2">
-                ✓ Testi AI · ✓ Hero generato · ✓ Sito scrapato · ✓ HTML responsive · ✓ Link condivisibile
+              <p className="text-[10px] sm:text-xs text-muted-foreground text-center leading-relaxed">
+                ✓ 4 mockup iPhone AI · ✓ Sito webapp 1:1 col mockup · ✓ Admin completo · ✓ Credenziali pronte
               </p>
             </div>
           </CardContent>
@@ -904,6 +922,11 @@ export default function PartnerCustomPreviewPage() {
                   Avvio automatico…
                 </Badge>
               )}
+              {autoBuildSite && (
+                <Badge className="text-[10px] bg-emerald-500/15 text-emerald-600 border border-emerald-500/30">
+                  Sito 1:1 in coda
+                </Badge>
+              )}
             </div>
             <p className="text-[11px] sm:text-sm text-muted-foreground">
               Genera 4 schermate iPhone professionali. Se hai compilato il form (o sei arrivato da un lead), i dati sono già pre-caricati.
@@ -918,6 +941,7 @@ export default function PartnerCustomPreviewPage() {
               brandPhotos={leadBrandPhotos.length > 0 ? leadBrandPhotos : form.gallery_images}
               deepReportSummary={leadDeepReport}
               autoStart={autoStartSuite}
+              autoBuildSite={autoBuildSite}
               leadFullData={{
                 phone: form.lead_phone,
                 email: form.lead_email,
@@ -932,6 +956,10 @@ export default function PartnerCustomPreviewPage() {
                 sectorId: leadDeepReport?.lead?.sector || form.lead_sector,
               }}
               onGenerated={() => setAutoStartSuite(false)}
+              onSiteBuilt={() => {
+                setAutoBuildSite(false);
+                toast.success("🎉 Mockup + Sito generati con successo!", { duration: 6000 });
+              }}
             />
           </section>
 
