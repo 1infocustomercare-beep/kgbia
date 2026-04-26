@@ -32,6 +32,12 @@ interface Props {
   templateVariant?: string;
   leadId?: string;
   previewId?: string;
+  /** Logo brand del lead (URL pubblico) — usato come reference image dall'AI */
+  brandLogoUrl?: string;
+  /** Foto reali del lead (URL pubblici) — usate come reference per AI mockup */
+  brandPhotos?: string[];
+  /** Report deep-analysis con weak points / pitch / settore — usato per personalizzare i contenuti */
+  deepReportSummary?: any;
   /** Quando true e businessName è valorizzato, lancia automaticamente handleGenerate al mount. */
   autoStart?: boolean;
   onGenerated?: (suiteId: string, shareSlug: string) => void;
@@ -304,6 +310,9 @@ export function MockupSuiteGenerator({
   templateVariant: initialTemplate,
   leadId,
   previewId,
+  brandLogoUrl,
+  brandPhotos,
+  deepReportSummary,
   autoStart = false,
   onGenerated,
 }: Props) {
@@ -348,6 +357,14 @@ export function MockupSuiteGenerator({
 
   const [engine, setEngine] = useState<MockupEngine>("react");
   const [templateVariant, setTemplateVariant] = useState<string>(initialTemplate || "auto");
+  // Risincronizza il template quando arriva da deep-link / cambio prop esterno
+  // (es. il venditore cambia stile dal form della pagina contenitore).
+  useEffect(() => {
+    if (initialTemplate && initialTemplate !== templateVariant) {
+      setTemplateVariant(initialTemplate);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialTemplate]);
   // Personalizzazione avanzata
   const [glassIntensity, setGlassIntensity] = useState<number>(60);
   const [colorStyle, setColorStyle] = useState<ColorStyle>("vivid");
@@ -557,6 +574,11 @@ export function MockupSuiteGenerator({
         safe_area_px: safeAreaPx,
         type_scale: typeScale,
         boost_contrast: boostContrast,
+        // Brand asset reali del lead (logo + foto) — usati come reference image per AI
+        brand_logo_url: brandLogoUrl || undefined,
+        brand_photos: Array.isArray(brandPhotos) && brandPhotos.length > 0 ? brandPhotos.slice(0, 4) : undefined,
+        // Deep analysis del lead (weak points, settore, pitch) per personalizzare i contenuti
+        deep_report: deepReportSummary || undefined,
       };
 
       if (isAIEngine) setPreviewPhase("upgrading");

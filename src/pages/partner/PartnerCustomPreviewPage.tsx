@@ -148,8 +148,15 @@ export default function PartnerCustomPreviewPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [DRAFT_KEY]);
 
-  // ─── Deep-link prefill: legge i query params dopo l'idratazione del draft
-  // così i dati del lead arrivano sempre più freschi della bozza locale.
+  // Stato extra per i brand asset estratti dal lead (logo, foto, deep report) —
+  // letti dal sessionStorage `mockup_lead_prefill:<id>` salvato dalla LeadsPage.
+  const [leadBrandLogoUrl, setLeadBrandLogoUrl] = useState<string>("");
+  const [leadBrandPhotos, setLeadBrandPhotos] = useState<string[]>([]);
+  const [leadDeepReport, setLeadDeepReport] = useState<any>(null);
+
+  // ─── Deep-link prefill: legge i query params + il payload ricco salvato in sessionStorage
+  // (logo brand, foto, colori, deep report, preview match) così la Mockup Suite parte
+  // con TUTTI i dati del lead già caricati e lo stile suggerito già selezionato.
   useEffect(() => {
     if (!draftHydrated) return;
     if (deepLinkAppliedRef.current) return;
@@ -161,25 +168,60 @@ export default function PartnerCustomPreviewPage() {
     }
     deepLinkAppliedRef.current = true;
 
+    // Tenta di leggere il payload ricco dal sessionStorage
+    let prefill: any = null;
+    try {
+      const key = `mockup_lead_prefill:${qpLeadId || qpName}`;
+      const raw = sessionStorage.getItem(key);
+      if (raw) prefill = JSON.parse(raw);
+    } catch (err) {
+      console.warn("[deep-link] prefill parse failed", err);
+    }
+
+    const qpTemplate = searchParams.get("template");
+    const prefillTemplate = prefill?.preview?.templateVariant;
+    const prefillColor =
+      prefill?.brand?.colors?.primary ||
+      prefill?.brand?.colors?.accent ||
+      prefill?.brand?.colors?.secondary ||
+      null;
+    const prefillLogo = prefill?.brand?.logoUrl || "";
+    const prefillPhotos: string[] = Array.isArray(prefill?.brand?.photos) ? prefill.brand.photos : [];
+
     setForm(prev => ({
       ...prev,
-      lead_name: qpName || prev.lead_name,
-      lead_sector: searchParams.get("sector") || prev.lead_sector,
-      lead_city: searchParams.get("city") || prev.lead_city,
-      lead_phone: searchParams.get("phone") || prev.lead_phone,
-      lead_email: searchParams.get("email") || prev.lead_email,
-      lead_website: searchParams.get("website") || prev.lead_website,
-      lead_address: searchParams.get("address") || prev.lead_address,
-      primary_color: searchParams.get("color") || prev.primary_color,
+      lead_name: qpName || prefill?.lead?.name || prev.lead_name,
+      lead_sector: searchParams.get("sector") || prefill?.lead?.sectorLabel || prefill?.lead?.sector || prev.lead_sector,
+      lead_city: searchParams.get("city") || prefill?.lead?.city || prev.lead_city,
+      lead_phone: searchParams.get("phone") || prefill?.lead?.phone || prev.lead_phone,
+      lead_email: searchParams.get("email") || prefill?.lead?.email || prev.lead_email,
+      lead_website: searchParams.get("website") || prefill?.lead?.website || prev.lead_website,
+      lead_address: searchParams.get("address") || prefill?.lead?.address || prev.lead_address,
+      primary_color: searchParams.get("color") || prefillColor || prev.primary_color,
+      template_style: qpTemplate || prefillTemplate || prev.template_style,
+      logo_url: prefillLogo || prev.logo_url,
+      gallery_images: prefillPhotos.length > 0 ? prefillPhotos.slice(0, 6) : prev.gallery_images,
     }));
     setMode("lead");
     if (qpLeadId) setSelectedLeadId(`lead:${qpLeadId}`);
+
+    // Brand asset ricchi → propagati al MockupSuiteGenerator come reference per l'AI
+    if (prefillLogo) setLeadBrandLogoUrl(prefillLogo);
+    if (prefillPhotos.length > 0) setLeadBrandPhotos(prefillPhotos);
+    if (prefill?.deepReport) setLeadDeepReport(prefill.deepReport);
 
     if (searchParams.get("autostart") === "1") {
       setAutoStartSuite(true);
     }
 
-    toast.success(`Dati di "${qpName || "lead"}" caricati · Mockup Suite pronta`);
+    // Apri la sezione "Stile" così l'utente vede subito che può cambiare template
+    setOpenSection("style");
+
+    const styleHint = prefillTemplate || qpTemplate;
+    toast.success(
+      `Dati di "${qpName || prefill?.lead?.name || "lead"}" caricati${styleHint ? ` · stile ${styleHint}` : ""}`,
+      { description: "Puoi cambiare stile/colore prima di generare." },
+    );
 
     // Scroll alla sezione Mockup Suite + ripulisci i query params (così un refresh non rilancia)
     setTimeout(() => {
@@ -187,7 +229,7 @@ export default function PartnerCustomPreviewPage() {
     }, 250);
     setTimeout(() => {
       const next = new URLSearchParams(searchParams);
-      ["leadId","name","sector","city","phone","email","website","address","color","autostart"].forEach(k => next.delete(k));
+      ["leadId","name","sector","city","phone","email","website","address","color","template","autostart"].forEach(k => next.delete(k));
       setSearchParams(next, { replace: true });
     }, 1500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -872,6 +914,9 @@ export default function PartnerCustomPreviewPage() {
               businessCity={form.lead_city}
               primaryColor={form.primary_color}
               templateVariant={form.template_style}
+              brandLogoUrl={leadBrandLogoUrl || form.logo_url}
+              brandPhotos={leadBrandPhotos.length > 0 ? leadBrandPhotos : form.gallery_images}
+              deepReportSummary={leadDeepReport}
               autoStart={autoStartSuite}
               onGenerated={() => setAutoStartSuite(false)}
             />
