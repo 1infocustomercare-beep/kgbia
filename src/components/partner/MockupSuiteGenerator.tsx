@@ -304,6 +304,7 @@ export function MockupSuiteGenerator({
   templateVariant: initialTemplate,
   leadId,
   previewId,
+  autoStart = false,
   onGenerated,
 }: Props) {
   // Modalità: lead (usa props del lead) | standalone (form libero)
