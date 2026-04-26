@@ -1187,41 +1187,8 @@ export default function LeadsPage() {
         initialSector={selected?._sector}
       />
 
-      {/* 💰 Dialog conferma consumo crediti prima della Demo Factory */}
-      <CreditConfirmDialog
-        open={!!pendingDemoFactory}
-        cost={getCost("generate_demo_from_lead")}
-        balance={creditBalance}
-        contextLabel={pendingDemoFactory ? `Demo per ${pendingDemoFactory.lead.name}` : undefined}
-        onCancel={() => setPendingDemoFactory(null)}
-        onConfirm={() => {
-          const p = pendingDemoFactory;
-          setPendingDemoFactory(null);
-          if (p) runDemoFactory(p.lead, p.preview);
-        }}
-      />
-
-      <DemoFactoryOverlay
-        open={demoFactoryOpen}
-        loading={demoFactoryLoading}
-        progress={demoFactoryProgress}
-        result={demoFactoryResult}
-        leadName={selected?.name || ""}
-        leadEmail={selected?.email || ""}
-        leadCity={selected?.city || ""}
-        leadSector={(selected as any)?._sector || ""}
-        leadRating={(selected as any)?.google_rating ?? null}
-        leadScore={(selected as any)?._score ?? null}
-        onClose={() => { setDemoFactoryOpen(false); setDemoFactoryResult(null); }}
-        onSendWhatsApp={() => {
-          if (!demoFactoryResult || !selected) return;
-          const text = encodeURIComponent(
-            `Ciao! Ho preparato una demo personalizzata per ${selected.name}: ${demoFactoryResult.previewUrl}\n\nPuoi accedere all'admin con questo link sicuro (valido 7gg): ${demoFactoryResult.magicLink || demoFactoryResult.adminUrl}`
-          );
-          const phone = (selected.phone || "").replace(/[^0-9]/g, "");
-          window.open(phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`, "_blank");
-        }}
-      />
+      {/* Vecchio CreditConfirmDialog + DemoFactoryOverlay rimossi:
+          il flusso unico è Lead → Mockup Suite (con prefill) → "Genera Sito 1:1" interno. */}
 
       {/* Sfondo Empire (DNA + aurora) viene dal PartnerLayout — qui non aggiungiamo overlay che lo coprano */}
 
