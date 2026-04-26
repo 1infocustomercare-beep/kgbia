@@ -32,6 +32,12 @@ interface Props {
   templateVariant?: string;
   leadId?: string;
   previewId?: string;
+  /** Logo brand del lead (URL pubblico) — usato come reference image dall'AI */
+  brandLogoUrl?: string;
+  /** Foto reali del lead (URL pubblici) — usate come reference per AI mockup */
+  brandPhotos?: string[];
+  /** Report deep-analysis con weak points / pitch / settore — usato per personalizzare i contenuti */
+  deepReportSummary?: any;
   /** Quando true e businessName è valorizzato, lancia automaticamente handleGenerate al mount. */
   autoStart?: boolean;
   onGenerated?: (suiteId: string, shareSlug: string) => void;
