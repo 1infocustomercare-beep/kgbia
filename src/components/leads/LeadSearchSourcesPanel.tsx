@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Lock, Sparkles, ExternalLink, X, Check, RefreshCw, Info, AlertTriangle, Zap, ShieldCheck } from "lucide-react";
+import { Lock, Sparkles, ExternalLink, X, Check, RefreshCw, Info, AlertTriangle, Zap, ShieldCheck, ChevronDown, Radio } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 
