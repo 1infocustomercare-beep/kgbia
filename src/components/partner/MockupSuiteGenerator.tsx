@@ -338,8 +338,10 @@ export function MockupSuiteGenerator({
   brandPhotos,
   deepReportSummary,
   autoStart = false,
+  autoBuildSite = false,
   leadFullData,
   onGenerated,
+  onSiteBuilt,
 }: Props) {
   // Modalità: lead (usa props del lead) | standalone (form libero)
   const isLeadMode = Boolean((businessNameProp || "").trim());
