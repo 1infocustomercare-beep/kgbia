@@ -406,6 +406,17 @@ function buildScreenPrompt(
   variationSeed: number,
   variantIndex: number,
   hasCatalogReference: boolean = false,
+  brandContext?: {
+    hasLogo?: boolean;
+    hasBrandPhotos?: boolean;
+    brandPhotosCount?: number;
+    deepReport?: string;
+    glassIntensity?: number;
+    colorStyle?: string;
+    safeAreaPx?: number;
+    typeScale?: number;
+    boostContrast?: boolean;
+  },
 ): string {
   const styleMap: Record<string, string> = {
     paperfish:        "DARK SAKURA LUXURY giapponese: nero obsidian #0E0B0F, sakura pink #E89BAE, oro caldo #C9A86A. Font Cormorant Garamond serif elegante per heading, Inter per body. Texture carta giapponese sottile, ideogrammi kanji decorativi minimali",
@@ -464,7 +475,7 @@ function buildScreenPrompt(
 
   const catalogDirective = hasCatalogReference
     ? `\n\n═══ 📸 IMMAGINE DI RIFERIMENTO (REGOLA #1 — PRIORITÀ MASSIMA) ═══
-🎯 In allegato c'è un'IMMAGINE DI RIFERIMENTO dal nostro catalogo di mockup approvati.
+🎯 In allegato c'è un'IMMAGINE DI RIFERIMENTO dal nostro catalogo di mockup approvati + (se presenti) il LOGO REALE del cliente "${business.name}" e foto reali del suo brand estratte dal sito ufficiale.
 DEVI replicare FEDELMENTE quella reference per:
 • Layout strutturale (posizione header, hero, card, bottom-nav)
 • Densità e gerarchia delle informazioni
@@ -472,15 +483,53 @@ DEVI replicare FEDELMENTE quella reference per:
 • Proporzioni e spazi
 • Stile fotografico, qualità del render, illuminazione
 SOSTITUISCI SOLO:
-• Brand/logo → con "${business.name}"
-• Contenuti testuali → adattati al settore "${business.sector}"
+• Brand/logo → con il LOGO REALE del cliente (se in allegato) oppure il nome "${business.name}" in tipografia coerente
+• Contenuti testuali → adattati al settore "${business.sector}" e al brand reale del cliente
 • Palette accent → adattata a ${primaryColor} (mantenendo i contrasti)
-• Foto dei prodotti/servizi → coerenti col settore
+• Foto dei prodotti/servizi → usare le FOTO REALI del cliente in allegato quando coerenti, altrimenti foto fotorealistiche pertinenti
 NON cambiare la STRUTTURA visiva della reference: la qualità di quella reference è
 ESATTAMENTE il livello che devi raggiungere.\n`
     : "";
 
-  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}
+  // ═══ BRAND CONTEXT REALE (Lead) — usato per personalizzare contenuti
+  const brand = brandContext || {};
+  const brandLines: string[] = [];
+  if (brand.hasLogo) {
+    brandLines.push(`• 🪪 LOGO REALE ALLEGATO: integralo nell'header dell'app (in alto a sinistra o centrato secondo layout) MANTENENDONE forma, proporzioni e colori originali. NON ridisegnarlo, NON sostituirlo con testo.`);
+  }
+  if (brand.hasBrandPhotos && (brand.brandPhotosCount || 0) > 0) {
+    brandLines.push(`• 📷 FOTO BRAND ALLEGATE (${brand.brandPhotosCount}): usale come immagini reali nei card/hero/galleria della schermata. Sono foto autentiche del cliente: NON sostituirle con stock.`);
+  }
+  if (brand.deepReport && brand.deepReport.length > 20) {
+    const summary = brand.deepReport.slice(0, 600);
+    brandLines.push(`• 📊 ANALISI DEL BRAND (sintesi reale): ${summary}\n  → Usa questi dettagli per personalizzare claim, descrizioni servizi, microcopy. NIENTE testo generico.`);
+  }
+  if (typeof brand.glassIntensity === "number") {
+    const lvl = brand.glassIntensity;
+    const glassDesc = lvl >= 0.7 ? "vetro intenso (glassmorphism marcato, blur 24px, trasparenze evidenti)"
+                    : lvl >= 0.4 ? "vetro bilanciato (glassmorphism moderato, blur 12px)"
+                    : "solido (zero glassmorphism, superfici opache)";
+    brandLines.push(`• 🪟 Intensità superfici: ${glassDesc}`);
+  }
+  if (brand.colorStyle && brand.colorStyle !== "vivid") {
+    const csMap: Record<string, string> = {
+      muted: "palette desaturata −25% (mood elegante e sottotono)",
+      pastel: "palette pastello soft (luminosità alta, saturazione bassa)",
+      mono: "palette monocromatica B/N con UN SOLO accento colorato",
+    };
+    brandLines.push(`• 🎨 Stile cromatico: ${csMap[brand.colorStyle] || brand.colorStyle}`);
+  }
+  if (brand.boostContrast) {
+    brandLines.push(`• ♿ Contrasto boost ON: testi sempre WCAG AAA, CTA con contrasto massimo sul bg`);
+  }
+  if (typeof brand.typeScale === "number" && brand.typeScale !== 1) {
+    brandLines.push(`• 🔠 Scala tipografica: ×${brand.typeScale.toFixed(2)} (titoli e body proporzionati)`);
+  }
+  const brandDirective = brandLines.length
+    ? `\n═══ 🏷️ BRAND REALE DEL CLIENTE (REGOLA PRIORITARIA) ═══\n${brandLines.join("\n")}\n`
+    : "";
+
+  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}${brandDirective}
 
 ═══ COMPOSIZIONE FOTOGRAFICA (REGOLE INDEROGABILI) ═══
 • iPhone PERFETTAMENTE CENTRATO sia orizzontalmente che verticalmente nel frame
@@ -573,7 +622,32 @@ Deno.serve(async (req) => {
       preview_id,
       screens: screensInput,
       variation_seed: variationSeedInput,
+      // ── Brand reali del lead (usati per personalizzare prompt + reference image) ──
+      brand_logo_url: brandLogoUrlInput,
+      brand_photos: brandPhotosInput,
+      deep_report: deepReportInput,
+      glass_intensity: glassIntensityInput,
+      color_style: colorStyleInput,
+      safe_area_px: safeAreaInput,
+      type_scale: typeScaleInput,
+      boost_contrast: boostContrastInput,
     } = body;
+    const brandLogoUrl: string | null = typeof brandLogoUrlInput === "string" && brandLogoUrlInput.startsWith("http") ? brandLogoUrlInput : null;
+    const brandPhotos: string[] = Array.isArray(brandPhotosInput)
+      ? brandPhotosInput.filter((u: any) => typeof u === "string" && u.startsWith("http")).slice(0, 4)
+      : [];
+    const deepReport: string = typeof deepReportInput === "string" ? deepReportInput : "";
+    const brandContext = {
+      hasLogo: !!brandLogoUrl,
+      hasBrandPhotos: brandPhotos.length > 0,
+      brandPhotosCount: brandPhotos.length,
+      deepReport,
+      glassIntensity: typeof glassIntensityInput === "number" ? glassIntensityInput : undefined,
+      colorStyle: typeof colorStyleInput === "string" ? colorStyleInput : undefined,
+      safeAreaPx: typeof safeAreaInput === "number" ? safeAreaInput : undefined,
+      typeScale: typeof typeScaleInput === "number" ? typeScaleInput : undefined,
+      boostContrast: !!boostContrastInput,
+    };
     const variationSeed: number = Number.isFinite(Number(variationSeedInput))
       ? Number(variationSeedInput)
       : Math.floor(Math.random() * 1_000_000);
@@ -687,12 +761,19 @@ Deno.serve(async (req) => {
     // la tabella seller_mockup_suites finché status diventa "complete"/"error".
     // ═══════════════════════════════════════════════════════════════════════
     const backgroundJob = (async () => {
-      // Pre-calcola le reference catalog per ogni schermata (1 chiamata sola)
-      const screenReferences: (string | null)[] = screens.map(s =>
-        findCatalogReference(business_sector, s.type)
-      );
+      // Reference image priorità:
+      //   1) LOGO REALE del lead (sempre, su tutte le schermate per coerenza brand)
+      //   2) Brand photo del lead (round-robin sulle schermate per varietà visiva)
+      //   3) Catalog reference per il settore/tipo schermata (fallback)
+      const catalogRefs: (string | null)[] = screens.map(s => findCatalogReference(business_sector, s.type));
+      const screenReferences: (string | null)[] = screens.map((s, i) => {
+        if (brandLogoUrl) return brandLogoUrl;
+        if (brandPhotos.length > 0) return brandPhotos[i % brandPhotos.length];
+        return catalogRefs[i];
+      });
+      const refSource = brandLogoUrl ? "brand_logo" : (brandPhotos.length > 0 ? "brand_photos" : "catalog");
       const refCount = screenReferences.filter(Boolean).length;
-      console.log(`[mockup-suite] catalog references: ${refCount}/${screens.length} schermate avranno reference da catalogo`);
+      console.log(`[mockup-suite] reference source=${refSource} → ${refCount}/${screens.length} schermate avranno reference image`);
 
       try {
         const imageResults: Awaited<ReturnType<typeof generateValidatedAIImage>>[] = [];
@@ -705,7 +786,7 @@ Deno.serve(async (req) => {
               const refUrl = screenReferences[screenIdx];
               return generateValidatedAIImage(
                 LOVABLE_KEY,
-                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl),
+                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl, brandContext),
                 pro,
                 5,
                 refUrl,
