@@ -559,27 +559,27 @@ export default function PartnerCustomPreviewPage() {
     <div className="w-full max-w-[720px] md:max-w-[920px] lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] mx-auto px-3 sm:px-5 md:px-6 lg:px-8 pt-2 pb-32 sm:pb-12 space-y-5 sm:space-y-6 lg:space-y-8">
       {/* ═══ HERO MASCOT ═══ */}
       <PartnerHeroMascot
-        title="Mockup su Misura"
-        subtitle={`Costruisci a mano un mockup iPhone per UN cliente specifico — tu inserisci dati e brand, l'AI genera l'anteprima. Costo: ${COST} crediti.`}
+        title="Mockup + Sito 1:1"
+        subtitle={`Inserisci i dati del cliente, scegli stile e premi 'Genera': ottieni 4 mockup iPhone AI + sito webapp 1:1 + admin pronto, tutto coerente al brand.`}
         icon={Palette}
-        active={generating}
+        active={generating || autoStartSuite}
         mascotSrc={alienDesigner}
-        mascotAlt="Alien Designer — Mockup su Misura"
+        mascotAlt="Alien Designer — Mockup + Sito 1:1"
       />
 
       {/* ═══ FLUSSO 3 STEP ═══ */}
       <PartnerFlowStepper currentStep="mockup" />
 
       <TutorialPopup
-        id="custom-preview-mockup-v1"
-        title="Mockup su Misura · 3 step"
+        id="custom-preview-mockup-v2"
+        title="Mockup + Sito 1:1 · 3 step"
         accentColor="#fb7185"
         position="bottom-right"
         steps={[
-          { emoji: "🎯", title: "Quando usare questo strumento", description: "Hai un cliente specifico (lo conosci già) e vuoi mostrargli un'anteprima brandizzata col SUO logo, SUOI colori, SUOI contenuti. Diverso da 'Caccia Lead' che genera demo automatici per locali sconosciuti." },
-          { emoji: "📝", title: "Step 1 · Inserisci i dati", description: "Nome cliente, città, settore, logo e colore primario. Più info dai, più il mockup sarà credibile." },
-          { emoji: "🎨", title: "Step 2 · Scegli stile e genera", description: "Scegli uno dei 4 stili (Modern Dark, Luxury Gold, Casual Warm, Minimal Zen). Costo: 15 crediti. L'AI genera in 60 secondi." },
-          { emoji: "📱", title: "Step 3 · Mostra al cliente", description: "Il mockup finisce nella Vetrina. Da lì lo apri in modalità Presentazione fullscreen davanti al cliente." },
+          { emoji: "🎯", title: "Quando usare questo strumento", description: "Hai un cliente specifico (lo conosci già) e vuoi generargli SUBITO 4 mockup iPhone AI + il sito webapp 1:1 col SUO brand. Diverso da 'Caccia Lead' che parte da zero." },
+          { emoji: "📝", title: "Step 1 · Inserisci i dati", description: "Nome cliente, città, settore, logo e colore. Più info dai, più mockup e sito sono credibili e personalizzati." },
+          { emoji: "🎨", title: "Step 2 · Scegli stile e genera", description: "Scegli uno dei template premium (Modern Dark, Luxury Gold, Neon Vibrant, ecc). Premi 'Genera Mockup AI + Sito 1:1'. L'AI lavora 1-3 minuti." },
+          { emoji: "🚀", title: "Step 3 · Mostra il risultato", description: "Ottieni 4 mockup iPhone (Vetrina) + sito webapp pubblico + admin con credenziali. Tutto coerente al mockup scelto, pronto per la presentazione cliente." },
         ]}
       />
 
