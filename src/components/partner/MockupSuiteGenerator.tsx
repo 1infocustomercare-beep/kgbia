@@ -32,6 +32,8 @@ interface Props {
   templateVariant?: string;
   leadId?: string;
   previewId?: string;
+  /** Quando true e businessName è valorizzato, lancia automaticamente handleGenerate al mount. */
+  autoStart?: boolean;
   onGenerated?: (suiteId: string, shareSlug: string) => void;
 }
 
