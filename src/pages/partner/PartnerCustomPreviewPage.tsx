@@ -21,6 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
+import { GenerationProgress } from "@/components/partner/GenerationProgress";
 import { MockupSuiteVaultList } from "@/components/partner/MockupSuiteVaultList";
 import PartnerHeroMascot from "@/components/partner/PartnerHeroMascot";
 import alienDesigner from "@/assets/empire-alien-designer.png";
