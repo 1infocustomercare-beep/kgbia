@@ -1,4 +1,16 @@
+import { useEffect, useState } from "react";
+
 export default function FilmGrain() {
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(max-width: 767px)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setEnabled(true);
+  }, []);
+
+  if (!enabled) return null;
+
   return (
     <div
       aria-hidden

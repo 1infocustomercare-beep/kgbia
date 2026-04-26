@@ -18,13 +18,32 @@ import CinematicCursor from "@/components/empire-home/CinematicCursor";
 
 export default function EmpireCinematicHome() {
   useEffect(() => {
-    getLenis();
-    // Refresh ScrollTrigger after layout settles
-    const r1 = window.setTimeout(() => ScrollTrigger.refresh(), 400);
-    const r2 = window.setTimeout(() => ScrollTrigger.refresh(), 1500);
-    const r3 = window.setTimeout(() => ScrollTrigger.refresh(), 3500);
+    // Init smooth scroll
+    try { getLenis(); } catch (e) { console.warn("Lenis init failed", e); }
+
+    // Refresh ScrollTrigger after layout/fonts/images settle
+    const refresh = () => {
+      try { ScrollTrigger.refresh(); } catch {}
+    };
+    const timers = [
+      window.setTimeout(refresh, 400),
+      window.setTimeout(refresh, 1500),
+      window.setTimeout(refresh, 3500),
+    ];
+
+    // Refresh on full load
+    if (document.readyState === "complete") {
+      refresh();
+    } else {
+      window.addEventListener("load", refresh, { once: true });
+    }
+
     return () => {
-      clearTimeout(r1); clearTimeout(r2); clearTimeout(r3);
+      timers.forEach(clearTimeout);
+      window.removeEventListener("load", refresh);
+      try {
+        ScrollTrigger.getAll().forEach((t) => t.kill());
+      } catch {}
       destroyLenis();
     };
   }, []);
@@ -56,31 +75,14 @@ export default function EmpireCinematicHome() {
 
         <div className="relative z-[2]">
           <LandingNav />
-
-          {/* 01 — Hero esplosivo */}
           <HeroExplosion />
-
-          {/* 02 — Marquee orizzontale scrubbed */}
           <MarqueeManifesto />
-
-          {/* 03 — Shift pinned (chaos -> empire) */}
           <ShiftSection />
-
-          {/* 04 — Parallax depth con strati */}
           <ParallaxDepth />
-
-          {/* 05 — Griglia servizi con glow magnetico */}
           <EcosystemGrid />
-
-          {/* 06 — Sticky agents (visual fissato + scroll panels) */}
           <StickyAgentsReveal />
-
-          {/* 07 — Proof horizontal scroll */}
           <ProofHorizontal />
-
-          {/* 08 — CTA magnetica */}
           <MagneticCTA />
-
           <LandingFooter />
         </div>
 
