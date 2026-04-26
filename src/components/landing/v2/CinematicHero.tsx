@@ -188,26 +188,26 @@ export default function CinematicHero() {
           }}
         />
 
-        {/* Floating depth orbs */}
+        {/* Floating depth orbs — smaller & lighter on mobile */}
         <motion.div
           style={{ y: layer1Y }}
-          className="absolute left-[10%] top-[18%] h-[280px] w-[280px] rounded-full blur-3xl opacity-50"
-          animate={{ x: [0, 24, 0], y: [0, -16, 0] }}
+          className="absolute left-[6%] top-[14%] h-[180px] w-[180px] rounded-full blur-2xl opacity-40 sm:h-[280px] sm:w-[280px] sm:blur-3xl sm:opacity-50"
+          animate={lite ? undefined : { x: [0, 24, 0], y: [0, -16, 0] }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
         >
           <div className="h-full w-full rounded-full" style={{ background: `hsl(${active.accent} / 0.45)`, transition: "background 1.4s ease" }} />
         </motion.div>
         <motion.div
           style={{ y: layer2Y }}
-          className="absolute right-[8%] top-[42%] h-[340px] w-[340px] rounded-full blur-3xl opacity-40"
-          animate={{ x: [0, -28, 0], y: [0, 22, 0] }}
+          className="absolute right-[6%] top-[40%] h-[200px] w-[200px] rounded-full blur-2xl opacity-30 sm:h-[340px] sm:w-[340px] sm:blur-3xl sm:opacity-40"
+          animate={lite ? undefined : { x: [0, -28, 0], y: [0, 22, 0] }}
           transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
         >
           <div className="h-full w-full rounded-full bg-empire-violet/45" />
         </motion.div>
         <motion.div
           style={{ y: layer3Y }}
-          className="absolute left-[40%] bottom-[10%] h-[260px] w-[260px] rounded-full blur-3xl opacity-30"
+          className="absolute left-[40%] bottom-[10%] hidden h-[260px] w-[260px] rounded-full blur-3xl opacity-30 sm:block"
           animate={{ x: [0, 30, 0] }}
           transition={{ duration: 19, repeat: Infinity, ease: "easeInOut" }}
         >
