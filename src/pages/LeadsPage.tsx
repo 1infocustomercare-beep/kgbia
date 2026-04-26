@@ -2463,6 +2463,23 @@ export default function LeadsPage() {
                           </div>
                         </div>
                       </button>
+                      {/* 🚀 GENERA SITO 1:1 — entry point unico verso Mockup Suite */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          requestDemoFactory(lead, null);
+                        }}
+                        aria-label="Genera sito demo per questo lead"
+                        title="Apre la Mockup Suite con tutti i dati del lead già compilati"
+                        className="shrink-0 h-9 px-2.5 rounded-lg flex items-center gap-1 text-[10px] font-black transition-transform active:scale-95"
+                        style={{
+                          background: "linear-gradient(135deg, #a78bfa, #14b8a6)",
+                          color: "#fff",
+                          boxShadow: "0 4px 14px rgba(167,139,250,0.35)",
+                        }}
+                      >
+                        <WandIcon className="w-3 h-3" /> Genera
+                      </button>
                       {/* 👁 Anteprima rapida (no consumo crediti) */}
                       <button
                         onClick={(e) => { e.stopPropagation(); setQuickPreviewKey(isQuickOpen ? null : rowKey); }}
