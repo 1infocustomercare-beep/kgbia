@@ -1,0 +1,42 @@
+const TEMPLATE_ALIAS: Record<string, string> = {
+  "auto": "auto",
+  "paperfish-sakura": "paperfish",
+  "paperfish-dark": "paperfish",
+  "paperfish": "paperfish",
+  "strapizzami": "strapizzami",
+  "batey-pacifico": "batey",
+  "batey": "batey",
+  "asinara-azure": "batey",
+  "miami-boats": "batey",
+  "miami-watersports": "batey",
+  "city-padel-sage": "fitness_energy",
+  "neo-nails-lavender": "boutique_pastel",
+  "tatush-hair": "editorial_clean",
+  "cote-ivory": "casual_warm",
+  "cote-marble": "luxury_gold",
+  "cote-obsidian": "luxury_gold",
+  "lavang-noir": "noir_gold",
+  "midtown-kosher": "noir_gold",
+  "sakura_editorial": "paperfish",
+  "noir_saigon": "noir_gold",
+  "cote_obsidian": "luxury_gold",
+  "sardinia_azure": "batey",
+  "costa_pacifico": "batey",
+  "glass_aurora": "glass_aurora",
+  "boutique_pastel": "boutique_pastel",
+  "editorial_clean": "editorial_clean",
+  "monochrome_bold": "monochrome_bold",
+  "fitness_energy": "fitness_energy",
+  "real_estate_trust": "real_estate_trust",
+  "minimal_zen": "minimal_zen",
+  "casual_warm": "casual_warm",
+  "luxury_gold": "luxury_gold",
+  "modern_dark": "modern_dark",
+  "neon_vibrant": "neon_vibrant",
+  "noir_gold": "luxury_gold",
+};
+
+export function normalizeMockupTemplateVariant(value?: string | null): string {
+  const key = (value || "").trim().toLowerCase().replace(/\s+/g, "-");
+  return TEMPLATE_ALIAS[key] || value || "auto";
+}

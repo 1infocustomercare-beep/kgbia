@@ -15,6 +15,7 @@ import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { SECTOR_PORTFOLIO, SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import { getPreviewDetailsForMatch, matchPreviewForLead, matchPreviewFromManualSelection, matchPreviewFromRecommendedProject, type PreviewMatch } from "@/lib/preview-matcher";
+import { normalizeMockupTemplateVariant } from "@/lib/mockup-template-normalizer";
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
@@ -344,6 +345,53 @@ export default function LeadsPage() {
     if (lead.email) params.set("email", lead.email);
     if (lead.website) params.set("website", lead.website);
     if (lead.full_address) params.set("address", lead.full_address);
+    const sectorLabel = lead._sector_label || lead.chosen_specialization_label || lead._sector || lead.sector || "";
+    const match = lead._previewMatch || matchPreviewForLead({
+      name: lead.name,
+      sector: lead._sector || lead.sector,
+      sectorLabel,
+      cuisine: lead.cuisine || null,
+      extra: [lead.chosen_specialization_label, lead.chosen_specialization_query, lead.full_address, lead.city, lead.zone, lead.website, lead.instagram, lead.facebook, lead.osm_type].filter(Boolean).join(" · "),
+      website: lead.website,
+      openingHours: lead.opening_hours,
+      types: lead.types || [],
+    });
+    const primaryColor = lead._brandColors?.primary || lead._brandColors?.accent || lead._brandColors?.secondary || "#C8963E";
+    const templateVariant = normalizeMockupTemplateVariant(match?.templateVariant || lead.templateVariant || "auto");
+    params.set("template", templateVariant);
+    params.set("color", primaryColor);
+    try {
+      sessionStorage.setItem(`mockup_lead_prefill:${lead.id || lead.name}`, JSON.stringify({
+        lead: {
+          id: lead.id || null,
+          name: lead.name,
+          sector: lead._sector || lead.sector || sectorLabel,
+          sectorLabel,
+          city: lead.city || "",
+          phone: lead.phone || "",
+          email: lead.email || "",
+          website: lead.website || "",
+          address: lead.full_address || "",
+          instagram: lead.instagram || "",
+          facebook: lead.facebook || "",
+          googleRating: lead.google_rating || null,
+          googleReviews: lead.google_reviews || null,
+          openingHours: lead.opening_hours || null,
+          types: lead.types || [],
+        },
+        brand: {
+          logoUrl: lead._brandLogoUrl || "",
+          photos: lead._brandPhotos || [],
+          colors: lead._brandColors || { primary: primaryColor },
+          extracted: lead._extractedBusinessData || {},
+        },
+        preview: {
+          ...match,
+          templateVariant,
+        },
+        deepReport: lead._deepReport || null,
+      }));
+    } catch {}
     params.set("autostart", "1");
     toast.success(`🚀 Apro Mockup Suite per ${lead.name}…`);
     navigate(`/partner/custom-preview?${params.toString()}`);
