@@ -1,0 +1,93 @@
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useNavigate } from "react-router-dom";
+
+gsap.registerPlugin(ScrollTrigger);
+
+/**
+ * MAGNETIC FOOTER CTA — il bottone si attrae al cursore,
+ * il titolo scala mentre lo scroll arriva.
+ */
+export default function MagneticCTA() {
+  const root = useRef<HTMLDivElement>(null);
+  const btn = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const el = root.current; const b = btn.current;
+    if (!el || !b) return;
+    const ctx = gsap.context(() => {
+      gsap.from("[data-cta-title] .word", {
+        y: 200, opacity: 0, duration: 1.1, stagger: 0.06, ease: "expo.out",
+        scrollTrigger: { trigger: "[data-cta-title]", start: "top 85%" },
+      });
+      gsap.fromTo("[data-cta-bg]",
+        { scale: 0.7, opacity: 0 },
+        { scale: 1.2, opacity: 1, ease: "none",
+          scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 1 } });
+
+      // Magnetic
+      const onMove = (e: MouseEvent) => {
+        const r = b.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 260) {
+          const f = (260 - dist) / 260;
+          gsap.to(b, { x: dx * 0.35 * f, y: dy * 0.35 * f, scale: 1 + 0.08 * f, duration: 0.4, ease: "power3.out" });
+        } else {
+          gsap.to(b, { x: 0, y: 0, scale: 1, duration: 0.6, ease: "elastic.out(1,0.4)" });
+        }
+      };
+      window.addEventListener("mousemove", onMove, { passive: true });
+      return () => window.removeEventListener("mousemove", onMove);
+    }, root);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={root} id="contatti" className="relative min-h-[100svh] overflow-hidden px-5 py-32">
+      <div data-cta-bg className="absolute inset-0 -z-10" style={{
+        background: "radial-gradient(ellipse 60% 60% at 50% 50%, rgba(167,139,250,0.25), transparent 70%), radial-gradient(ellipse 40% 40% at 70% 60%, rgba(236,72,153,0.18), transparent 70%), #050505",
+      }} />
+
+      <div className="mx-auto flex min-h-[80svh] max-w-[1100px] flex-col items-center justify-center text-center">
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-bold tracking-[3px] text-white/80 backdrop-blur-md">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#ec4899]" />
+          ULTIMO PASSO · ATTIVAZIONE 7 GIORNI
+        </div>
+
+        <h2 data-cta-title className="font-heading font-black uppercase leading-[0.88] tracking-[-0.05em]" style={{ fontSize: "clamp(3rem, 11vw, 9rem)" }}>
+          <span className="inline-block overflow-hidden"><span className="word inline-block text-white">Il</span></span>{" "}
+          <span className="inline-block overflow-hidden"><span className="word inline-block text-white">tuo</span></span>{" "}
+          <span className="inline-block overflow-hidden"><span className="word inline-block text-white">impero,</span></span>
+          <br />
+          <span className="inline-block overflow-hidden"><span className="word inline-block bg-gradient-to-r from-[#7eb7be] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">su autopilota.</span></span>
+        </h2>
+
+        <p className="mx-auto mt-8 max-w-[560px] text-[15px] leading-[1.85] text-white/65">
+          Un solo click separa il tuo business dalla scalabilità infinita.
+          847+ imprenditori italiani lo hanno già fatto. Il prossimo sei tu.
+        </p>
+
+        <button
+          ref={btn}
+          onClick={() => navigate("/demo")}
+          className="group relative mt-12 overflow-hidden rounded-full px-14 py-6 text-base font-extrabold uppercase tracking-[2px] text-white"
+          style={{
+            background: "linear-gradient(135deg, #7eb7be, #a78bfa, #ec4899)",
+            boxShadow: "0 40px 100px -20px rgba(167,139,250,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",
+          }}
+        >
+          <span className="relative z-10">Attiva Empire ora →</span>
+          <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+        </button>
+
+        <p className="mt-6 text-[11px] uppercase tracking-[2px] text-white/40">Garanzia 90 giorni · Nessuna carta · Setup in 7 giorni</p>
+      </div>
+    </section>
+  );
+}
