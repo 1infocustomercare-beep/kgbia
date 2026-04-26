@@ -658,9 +658,9 @@ export default function PartnerCustomPreviewPage() {
             <div className="border border-border/60 rounded-xl overflow-hidden bg-card/40">
               <button
                 type="button"
-                onClick={() => toggleSection("source" as any)}
+                onClick={() => toggleSection("source")}
                 className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 h-11 text-left hover:bg-muted/30 transition-colors"
-                aria-expanded={openSection === ("source" as any)}
+                aria-expanded={openSection === "source"}
               >
                 <span className="flex items-center gap-2 text-sm font-semibold">
                   <span className="h-6 w-6 rounded-full bg-primary/15 text-primary text-[11px] flex items-center justify-center font-bold">0</span>
@@ -670,10 +670,10 @@ export default function PartnerCustomPreviewPage() {
                     {mode === "lead" ? "Lead analizzato" : "Manuale"}
                   </Badge>
                 </span>
-                <ChevronDown className={`h-4 w-4 transition-transform ${openSection === ("source" as any) ? "rotate-180" : ""}`} />
+                <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "source" ? "rotate-180" : ""}`} />
               </button>
               <AnimatePresence initial={false}>
-                {openSection === ("source" as any) && (
+                {openSection === "source" && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
