@@ -128,26 +128,26 @@ export default function CinematicHero() {
     return () => el.removeEventListener("pointermove", onMove);
   }, [lite, pointerX, pointerY]);
 
-  // Cinematic scroll choreography
-  const titleY = useTransform(smooth, [0, 1], [0, -130]);
-  const titleOpacity = useTransform(smooth, [0, 0.55, 1], [1, 0.5, 0]);
-  const titleBlur = useTransform(smooth, [0, 1], ["blur(0px)", "blur(8px)"]);
+  // Scroll choreography — disabled/softened on mobile to prevent text/phone overlap & jank
+  const titleY = useTransform(smooth, [0, 1], lite ? [0, 0] : [0, -130]);
+  const titleOpacity = useTransform(smooth, [0, 0.55, 1], lite ? [1, 0.85, 0.45] : [1, 0.5, 0]);
+  const titleBlur = useTransform(smooth, [0, 1], lite ? ["blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(8px)"]);
 
-  const layer1Y = useTransform(smooth, [0, 1], [0, -60]);
-  const layer2Y = useTransform(smooth, [0, 1], [0, -130]);
-  const layer3Y = useTransform(smooth, [0, 1], [0, -200]);
-  const meshScale = useTransform(smooth, [0, 1], [1, 1.3]);
-  const meshRotate = useTransform(smooth, [0, 1], [0, 12]);
+  const layer1Y = useTransform(smooth, [0, 1], lite ? [0, -20] : [0, -60]);
+  const layer2Y = useTransform(smooth, [0, 1], lite ? [0, -40] : [0, -130]);
+  const layer3Y = useTransform(smooth, [0, 1], lite ? [0, -60] : [0, -200]);
+  const meshScale = useTransform(smooth, [0, 1], lite ? [1, 1.08] : [1, 1.3]);
+  const meshRotate = useTransform(smooth, [0, 1], lite ? [0, 0] : [0, 12]);
 
-  const phoneScale = useTransform(smooth, [0, 0.4, 1], [0.9, 1.05, 0.74]);
-  const phoneY = useTransform(smooth, [0, 0.4, 1], [50, 0, -200]);
-  const phoneRotateXScroll = useTransform(smooth, [0, 0.4, 1], [14, 0, -20]);
-  const phoneRotateZ = useTransform(smooth, [0, 0.4, 1], [-3, 0, 5]);
-  const phoneOpacity = useTransform(smooth, [0, 0.15, 0.85, 1], [0, 1, 1, 0.15]);
-  const phoneBlurScroll = useTransform(smooth, [0, 0.85, 1], ["blur(0px)", "blur(0px)", "blur(4px)"]);
+  const phoneScale = useTransform(smooth, [0, 0.4, 1], lite ? [0.96, 1, 0.92] : [0.9, 1.05, 0.74]);
+  const phoneY = useTransform(smooth, [0, 0.4, 1], lite ? [10, 0, -40] : [50, 0, -200]);
+  const phoneRotateXScroll = useTransform(smooth, [0, 0.4, 1], lite ? [0, 0, 0] : [14, 0, -20]);
+  const phoneRotateZ = useTransform(smooth, [0, 0.4, 1], lite ? [0, 0, 0] : [-3, 0, 5]);
+  const phoneOpacity = useTransform(smooth, [0, 0.15, 0.85, 1], lite ? [1, 1, 1, 0.6] : [0, 1, 1, 0.15]);
+  const phoneBlurScroll = useTransform(smooth, [0, 0.85, 1], ["blur(0px)", "blur(0px)", lite ? "blur(0px)" : "blur(4px)"]);
 
-  // Marquee scroll-tied speed
-  const marqueeX = useTransform(smooth, [0, 1], ["0%", "-30%"]);
+  // Marquee scroll-tied speed (desktop only — mobile keeps base loop)
+  const marqueeX = useTransform(smooth, [0, 1], lite ? ["0%", "0%"] : ["0%", "-30%"]);
 
   const active = SCENES[activeScene];
 
