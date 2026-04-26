@@ -19,13 +19,11 @@ import { normalizeMockupTemplateVariant } from "@/lib/mockup-template-normalizer
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
-import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFactoryOverlay";
 import SellerCRM from "@/components/leads/SellerCRM";
 import LeadIntelligenceLauncher from "@/components/leads/LeadIntelligenceLauncher";
 import GpsRadarPanel, { GpsLocation } from "@/components/leads/GpsRadarPanel";
 import SpeedDialList from "@/components/leads/SpeedDialList";
 import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
-import CreditConfirmDialog from "@/components/leads/CreditConfirmDialog";
 import SmartCityAutocomplete from "@/components/leads/SmartCityAutocomplete";
 import SmartSectorAutocomplete from "@/components/leads/SmartSectorAutocomplete";
 import DemoVaultPanel from "@/components/leads/DemoVaultPanel";
