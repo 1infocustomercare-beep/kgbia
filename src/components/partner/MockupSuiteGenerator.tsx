@@ -1322,7 +1322,7 @@ export function MockupSuiteGenerator({
               </p>
             </div>
           </div>
-        </div>
+        </ConfigSection>
 
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* PERSONALIZZAZIONE AVANZATA — glass intensity + color style         */}
