@@ -173,6 +173,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
 const StaticIframePage = lazy(() => import("./pages/StaticIframePage"));
 import EmpireHomePage from "./pages/empire/EmpireHomePage";
+import EmpireCinematicHome from "./pages/EmpireCinematicHome";
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
@@ -557,9 +558,10 @@ function App() {
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
                       {/* Public routes */}
-                      <Route path="/" element={<EmpireHomePage />} />
-                      <Route path="/index" element={<EmpireHomePage />} />
-                      <Route path="/home" element={<EmpireHomePage />} />
+                      <Route path="/" element={<EmpireCinematicHome />} />
+                      <Route path="/index" element={<EmpireCinematicHome />} />
+                      <Route path="/home" element={<EmpireCinematicHome />} />
+                      <Route path="/home-legacy" element={<EmpireHomePage />} />
                       <Route path="/home-v5" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
                       <Route path="/landing-legacy" element={<LandingPage />} />
                       <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
