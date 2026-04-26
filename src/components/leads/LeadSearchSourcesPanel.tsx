@@ -217,11 +217,13 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
 
   return (
     <div
-      className="rounded-xl overflow-hidden"
+      className="rounded-xl overflow-hidden relative"
       style={{
-        background: "linear-gradient(180deg, rgba(15,23,42,0.55), rgba(15,23,42,0.25))",
-        border: "1px solid rgba(255,255,255,0.07)",
-        boxShadow: "0 8px 24px -12px rgba(0,0,0,0.35)",
+        background:
+          "linear-gradient(180deg, rgba(15,23,42,0.92) 0%, rgba(2,6,23,0.92) 100%)",
+        border: "1px solid rgba(20,184,166,0.18)",
+        boxShadow:
+          "0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 32px -16px rgba(0,0,0,0.55)",
       }}
     >
       {/* ─── HEADER COMPATTO (sempre visibile, click → toggle) ─── */}
