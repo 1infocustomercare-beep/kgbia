@@ -357,6 +357,14 @@ export function MockupSuiteGenerator({
 
   const [engine, setEngine] = useState<MockupEngine>("react");
   const [templateVariant, setTemplateVariant] = useState<string>(initialTemplate || "auto");
+  // Risincronizza il template quando arriva da deep-link / cambio prop esterno
+  // (es. il venditore cambia stile dal form della pagina contenitore).
+  useEffect(() => {
+    if (initialTemplate && initialTemplate !== templateVariant) {
+      setTemplateVariant(initialTemplate);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialTemplate]);
   // Personalizzazione avanzata
   const [glassIntensity, setGlassIntensity] = useState<number>(60);
   const [colorStyle, setColorStyle] = useState<ColorStyle>("vivid");
