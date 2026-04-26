@@ -872,22 +872,38 @@ export default function PartnerCustomPreviewPage() {
               </AnimatePresence>
             </div>
 
-            {/* ── CTA Genera (sticky su mobile) ── */}
-            <div className="sticky bottom-2 z-10 pt-2">
+            {/* ── CTA UNICA: genera mockup AI 1:1 + sito webapp 1:1 ── */}
+            <div className="sticky bottom-2 z-10 pt-2 space-y-2">
               <Button
-                onClick={handleGenerate}
-                disabled={generating || !form.lead_name.trim()}
+                onClick={() => {
+                  if (!form.lead_name.trim()) {
+                    toast.error("Nome attività obbligatorio");
+                    return;
+                  }
+                  if (!form.lead_sector.trim()) {
+                    toast.error("Settore obbligatorio per generare il sito 1:1");
+                    return;
+                  }
+                  // Lancia il flusso unificato: 4 mockup AI + sito webapp 1:1
+                  setAutoBuildSite(true);
+                  setAutoStartSuite(true);
+                  // Scrolla alla sezione mockup per dare feedback visivo immediato
+                  setTimeout(() => {
+                    mockupSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }, 200);
+                }}
+                disabled={autoStartSuite || !form.lead_name.trim()}
                 className="w-full h-12 sm:h-12 text-sm sm:text-base font-semibold shadow-lg shadow-primary/20"
                 size="lg"
               >
-                {generating ? (
-                  <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> AI sta generando (15-30s)…</>
+                {autoStartSuite ? (
+                  <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generazione in corso (mockup + sito)…</>
                 ) : (
-                  <><Sparkles className="h-4 w-4 mr-2" /> Genera preview AI ({COST} crediti)</>
+                  <><Sparkles className="h-4 w-4 mr-2" /> Genera Mockup AI + Sito 1:1</>
                 )}
               </Button>
-              <p className="text-[10px] sm:text-xs text-muted-foreground text-center leading-relaxed mt-2">
-                ✓ Testi AI · ✓ Hero generato · ✓ Sito scrapato · ✓ HTML responsive · ✓ Link condivisibile
+              <p className="text-[10px] sm:text-xs text-muted-foreground text-center leading-relaxed">
+                ✓ 4 mockup iPhone AI · ✓ Sito webapp 1:1 col mockup · ✓ Admin completo · ✓ Credenziali pronte
               </p>
             </div>
           </CardContent>
@@ -906,6 +922,11 @@ export default function PartnerCustomPreviewPage() {
                   Avvio automatico…
                 </Badge>
               )}
+              {autoBuildSite && (
+                <Badge className="text-[10px] bg-emerald-500/15 text-emerald-600 border border-emerald-500/30">
+                  Sito 1:1 in coda
+                </Badge>
+              )}
             </div>
             <p className="text-[11px] sm:text-sm text-muted-foreground">
               Genera 4 schermate iPhone professionali. Se hai compilato il form (o sei arrivato da un lead), i dati sono già pre-caricati.
@@ -920,6 +941,7 @@ export default function PartnerCustomPreviewPage() {
               brandPhotos={leadBrandPhotos.length > 0 ? leadBrandPhotos : form.gallery_images}
               deepReportSummary={leadDeepReport}
               autoStart={autoStartSuite}
+              autoBuildSite={autoBuildSite}
               leadFullData={{
                 phone: form.lead_phone,
                 email: form.lead_email,
@@ -934,6 +956,10 @@ export default function PartnerCustomPreviewPage() {
                 sectorId: leadDeepReport?.lead?.sector || form.lead_sector,
               }}
               onGenerated={() => setAutoStartSuite(false)}
+              onSiteBuilt={() => {
+                setAutoBuildSite(false);
+                toast.success("🎉 Mockup + Sito generati con successo!", { duration: 6000 });
+              }}
             />
           </section>
 
