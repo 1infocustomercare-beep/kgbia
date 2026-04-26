@@ -241,9 +241,9 @@ export default function CinematicHero() {
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background/85 to-transparent" />
       </div>
 
-      {/* Hero stage */}
-      <div ref={stageRef} className="relative flex min-h-[100svh] flex-col pt-20 sm:pt-24 lg:pt-28">
-        <div className="mx-auto grid w-full max-w-[1400px] flex-1 grid-cols-1 items-center gap-6 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-10">
+      {/* Hero stage — natural height on mobile, full vh on desktop */}
+      <div ref={stageRef} className="relative flex flex-col pt-16 pb-8 sm:pt-20 lg:min-h-[100svh] lg:pt-28 lg:pb-0">
+        <div className="mx-auto grid w-full max-w-[1400px] flex-1 grid-cols-1 items-center gap-8 px-4 sm:gap-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-10">
           {/* Text column */}
           <motion.div
             style={{ y: titleY, opacity: titleOpacity, filter: titleBlur }}
