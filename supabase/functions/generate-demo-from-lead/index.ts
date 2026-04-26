@@ -1480,9 +1480,9 @@ Genera un kit outreach professionale.`;
 function generateAdminCredentials(lead: LeadInput): { email: string; password: string } {
   const slugBase = slugify(lead.businessName).replace(/-/g, "").slice(0, 12) || "demo";
   const stamp = Date.now().toString(36).slice(-4);
-  const email = lead.email || `demo-${slugBase}-${stamp}@empireaigroup.com`;
-  // Password leggibile ma sicura, da consegnare al lead
-  const password = `Empire${slugBase.charAt(0).toUpperCase()}${slugBase.slice(1, 6)}!${stamp}`;
+  const email = lead.email || `demo-${slugBase}-${stamp}@demo-suite.app`;
+  // Password leggibile ma sicura, da consegnare al lead — niente brand interno
+  const password = `Demo${slugBase.charAt(0).toUpperCase()}${slugBase.slice(1, 6)}!${stamp}`;
   return { email, password };
 }
 
