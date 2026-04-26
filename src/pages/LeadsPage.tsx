@@ -1139,7 +1139,7 @@ export default function LeadsPage() {
         businessName: selected.name || "la vostra attività",
         city: selected.city,
         sectorLabel: sectorConfig?.label || selected._sector,
-        previewLink: demoFactoryResult?.previewUrl || selectedPreviewUrl,
+        previewLink: selectedPreviewUrl,
         senderName: "Arianna",
         senderRole: "Empire AI Group",
       })
