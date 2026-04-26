@@ -739,10 +739,21 @@ export default function LeadsPage() {
     }
   }, [consumeSellerCredits, deepReport]);
 
-  /* Wrapper: apre dialog di conferma crediti prima di lanciare la Demo Factory */
+  /* ─── 🚀 UNIFIED FLOW — Tutto passa dalla Mockup Suite (sistema rafforzato 1:1) ───
+   * Sia "Genera Demo" che "Genera Mockup" portano alla pagina Mockup Suite con i dati
+   * del lead pre-caricati (logo, foto, colori, deep report) e generazione auto-start.
+   * Il vecchio runDemoFactory (Edge Function diretta + DemoFactoryOverlay) è deprecato. */
   const requestDemoFactory = useCallback((lead: Lead & { _sector: string }, preview?: ManualPreviewSelection | null) => {
-    setPendingDemoFactory({ lead, preview: preview || null });
-  }, []);
+    const enrichedLead: any = {
+      ...lead,
+      _sector: lead._sector,
+      _sector_label:
+        INDUSTRY_CONFIGS[lead._sector as keyof typeof INDUSTRY_CONFIGS]?.label || lead._sector,
+      _previewMatch: preview || (lead as any)._previewMatch || null,
+      _deepReport: deepReport || (lead as any)._deepReport || null,
+    };
+    goToMockupSuiteForLead(enrichedLead);
+  }, [deepReport, goToMockupSuiteForLead]);
 
   /* ─── Validate & launch manual analysis ─── */
   const launchManualAnalysis = useCallback(() => {
@@ -2142,7 +2153,7 @@ export default function LeadsPage() {
               triggerSearch: async () => { await handleSearch(); },
               triggerDemoFactoryOnTopLead: async () => {
                 const top = sorted[0];
-                if (top) await runDemoFactory(top, null);
+                if (top) requestDemoFactory(top, null);
               },
               getResultsCount: () => results.length,
               getTopLead: () => {
@@ -2215,7 +2226,7 @@ export default function LeadsPage() {
             triggerSearch: async () => { await handleSearch(); },
             triggerDemoFactoryOnTopLead: async () => {
               const top = sorted[0];
-              if (top) await runDemoFactory(top, null);
+              if (top) requestDemoFactory(top, null);
             },
             getResultsCount: () => results.length,
             getTopLead: () => {
@@ -2451,6 +2462,23 @@ export default function LeadsPage() {
                             {!lead.website && <span className="text-[9px] flex items-center gap-1" style={{ color: "#ef4444" }}><AlertTriangle className="w-2.5 h-2.5" /> No sito</span>}
                           </div>
                         </div>
+                      </button>
+                      {/* 🚀 GENERA SITO 1:1 — entry point unico verso Mockup Suite */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          requestDemoFactory(lead, null);
+                        }}
+                        aria-label="Genera sito demo per questo lead"
+                        title="Apre la Mockup Suite con tutti i dati del lead già compilati"
+                        className="shrink-0 h-9 px-2.5 rounded-lg flex items-center gap-1 text-[10px] font-black transition-transform active:scale-95"
+                        style={{
+                          background: "linear-gradient(135deg, #a78bfa, #14b8a6)",
+                          color: "#fff",
+                          boxShadow: "0 4px 14px rgba(167,139,250,0.35)",
+                        }}
+                      >
+                        <WandIcon className="w-3 h-3" /> Genera
                       </button>
                       {/* 👁 Anteprima rapida (no consumo crediti) */}
                       <button
