@@ -1143,7 +1143,7 @@ async function createFoodTenant(
       phone: lead.phone || "+39 06 0000000",
       address: lead.fullAddress || lead.zone || "—",
       city: lead.city || "Roma",
-      email: lead.email || `demo-${Date.now()}@empireaigroup.com`,
+      email: lead.email || `demo-${Date.now()}@demo-suite.app`,
       is_active: true,
       policy_accepted: true,
       policy_accepted_at: new Date().toISOString(),
@@ -1283,7 +1283,7 @@ async function createCompanyTenant(
       address: lead.fullAddress,
       city: lead.city,
       phone: lead.phone,
-      email: lead.email || `demo-${Date.now()}@empireaigroup.com`,
+      email: lead.email || `demo-${Date.now()}@demo-suite.app`,
       modules_enabled: allModules,
       is_active: true,
       theme_config: themeConfig,
@@ -1388,7 +1388,7 @@ Ti va se ne parliamo 5 minuti questa settimana? Risparmi 8h/settimana e raddoppi
   }
 
   try {
-    const sys = `Sei un senior sales copywriter italiano per Empire AI Group (SaaS gestionale per ${sectorLabel}). Tono: caldo, diretto, professionale, mai venditoriale. Usa "tu", emoji con misura.`;
+    const sys = `Sei un senior sales copywriter italiano specializzato in vendita di software gestionali e siti web 1:1 al settore "${sectorLabel}". Tono: caldo, diretto, professionale, mai venditoriale. Usa "tu", emoji con misura. NON nominare mai brand interni della piattaforma: parla SEMPRE in nome dell'attività del cliente e del valore che riceve.`;
     const userPrompt = `Lead: ${lead.businessName} (${sectorLabel}) a ${lead.city || "Italia"}.
 Tagline brand: "${brand.tagline}"
 Demo personalizzata pronta: ${previewUrl}
