@@ -333,6 +333,7 @@ export function MockupSuiteGenerator({
   brandPhotos,
   deepReportSummary,
   autoStart = false,
+  leadFullData,
   onGenerated,
 }: Props) {
   // Modalità: lead (usa props del lead) | standalone (form libero)
