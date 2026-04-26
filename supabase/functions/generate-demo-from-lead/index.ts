@@ -710,6 +710,67 @@ async function instagramOgImage(url: string): Promise<string[]> {
   } catch { return []; }
 }
 
+/* ─── 3b. SCRAPE FACEBOOK (light: og:image + cover image scrape) ─── */
+async function facebookOgImage(url: string): Promise<string[]> {
+  if (!url) return [];
+  try {
+    const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
+    if (!FIRECRAWL_API_KEY) return [];
+    // Normalizza URL FB (rimuovi parametri tracking)
+    const cleaned = url.split("?")[0].split("#")[0];
+    const res = await fetch("https://api.firecrawl.dev/v2/scrape", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${FIRECRAWL_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ url: cleaned, formats: ["html"], onlyMainContent: false }),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const html = data.html ?? data.data?.html ?? "";
+    const og: string[] = Array.from(html.matchAll(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)/gi)).map((m: any) => m[1]);
+    const imgs: string[] = Array.from(html.matchAll(/<img[^>]+src=["'](https?:[^"']+\.(?:jpe?g|png|webp))/gi)).map((m: any) => m[1]);
+    return uniq([...og, ...imgs]).filter(isHttpUrl).slice(0, 6);
+  } catch { return []; }
+}
+
+/* ─── 3c. INTELLIGENCE REPORT — riusa brand asset estratti dalla deep-analysis (logo+foto+frame video+colori) ─── */
+async function loadIntelligenceAssets(supabase: any, leadId?: string | null, ownerId?: string | null, leadName?: string): Promise<{
+  logo: string | null;
+  photos: string[];
+  videoFrames: string[];
+  colors: any;
+  weakPoints: string[];
+  pitch: string | null;
+} | null> {
+  if (!ownerId) return null;
+  try {
+    let q = supabase.from("lead_intelligence_reports").select(
+      "brand_logo_url, brand_photos, brand_video_frames, brand_videos, brand_colors, brand_fonts, weak_points, sales_pitch, lead_name",
+    ).eq("owner_id", ownerId);
+    if (leadId) {
+      // Cerchiamo prima per cache_key/match con nome lead — usiamo solo lead_name perché non c'è FK lead_id su intelligence
+    }
+    if (leadName) {
+      q = q.ilike("lead_name", leadName);
+    }
+    const { data } = await q.order("created_at", { ascending: false }).limit(1).maybeSingle();
+    if (!data) return null;
+    const photos: string[] = Array.isArray(data.brand_photos) ? data.brand_photos.filter(isHttpUrl) : [];
+    const videoFrames: string[] = Array.isArray(data.brand_video_frames) ? data.brand_video_frames.filter(isHttpUrl) : [];
+    const weak: string[] = Array.isArray(data.weak_points) ? data.weak_points.slice(0, 6) : [];
+    return {
+      logo: isHttpUrl(data.brand_logo_url || "") ? data.brand_logo_url : null,
+      photos,
+      videoFrames,
+      colors: data.brand_colors || {},
+      weakPoints: weak,
+      pitch: data.sales_pitch || null,
+    };
+  } catch (e) {
+    console.warn("[intelligence-load] err", e);
+    return null;
+  }
+}
+
 /* ─── 4. AI BRAND KIT (tool-call) ─── */
 async function aiEnrichBrand(lead: LeadInput, scraped: ScrapedAssets | null): Promise<{
   tagline: string;
