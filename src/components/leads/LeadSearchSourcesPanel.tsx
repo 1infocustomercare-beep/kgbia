@@ -470,59 +470,62 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
               );
             })}
 
-      {/* FALLBACK BANNER — categoria senza fonti attive */}
-      {!loading && fallbackCategories.length > 0 && (
-        <div
-          className="rounded-lg p-3 space-y-2"
-          style={{
-            background: "linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.03))",
-            border: "1px solid rgba(245,158,11,0.3)",
-          }}
-        >
-          <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5" style={{ color: "#fbbf24" }}>
-            <AlertTriangle className="w-3.5 h-3.5" />
-            Per evitare risultati incompleti
-          </p>
-          <p className="text-[10px] md:text-[11px]" style={{ color: "#cbd5e1" }}>
-            Alcune categorie sono vuote. Empire AI userà comunque dei <strong>fallback gratuiti</strong> per
-            mantenere i risultati ricchi e coerenti, ma puoi attivarli manualmente con un click:
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {fallbackCategories.map(cat => {
-              const meta = CATEGORY_META[cat];
-              const hasFallback = meta.fallbackIds.length > 0;
-              return (
-                <div
-                  key={cat}
-                  className="flex items-center gap-1.5 text-[10px] px-2.5 py-1.5 rounded-lg"
-                  style={{
-                    background: "rgba(0,0,0,0.25)",
-                    border: `1px solid ${hasFallback ? `${meta.color}40` : "rgba(248,113,113,0.3)"}`,
-                  }}
-                >
-                  <span style={{ color: meta.color }}>{meta.icon}</span>
-                  <span style={{ color: "#e5e7eb" }}>
-                    <strong>{meta.label}:</strong> {meta.fallbackHint}
-                  </span>
-                  {hasFallback && (
-                    <button
-                      onClick={() => applyFallback(cat)}
-                      className="ml-1 text-[9px] font-bold px-2 py-0.5 rounded"
-                      style={{
-                        background: `${meta.color}25`,
-                        border: `1px solid ${meta.color}60`,
-                        color: meta.color,
-                      }}
-                    >
-                      Attiva fallback
-                    </button>
-                  )}
+            {/* FALLBACK BANNER — categoria senza fonti attive */}
+            {!loading && fallbackCategories.length > 0 && (
+              <div
+                className="rounded-lg p-3 space-y-2"
+                style={{
+                  background: "linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.03))",
+                  border: "1px solid rgba(245,158,11,0.3)",
+                }}
+              >
+                <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5" style={{ color: "#fbbf24" }}>
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  Per evitare risultati incompleti
+                </p>
+                <p className="text-[10px] md:text-[11px]" style={{ color: "#cbd5e1" }}>
+                  Alcune categorie sono vuote. Empire AI userà comunque dei <strong>fallback gratuiti</strong> per
+                  mantenere i risultati ricchi e coerenti, ma puoi attivarli manualmente con un click:
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {fallbackCategories.map(cat => {
+                    const meta = CATEGORY_META[cat];
+                    const hasFallback = meta.fallbackIds.length > 0;
+                    return (
+                      <div
+                        key={cat}
+                        className="flex items-center gap-1.5 text-[10px] px-2.5 py-1.5 rounded-lg"
+                        style={{
+                          background: "rgba(0,0,0,0.25)",
+                          border: `1px solid ${hasFallback ? `${meta.color}40` : "rgba(248,113,113,0.3)"}`,
+                        }}
+                      >
+                        <span style={{ color: meta.color }}>{meta.icon}</span>
+                        <span style={{ color: "#e5e7eb" }}>
+                          <strong>{meta.label}:</strong> {meta.fallbackHint}
+                        </span>
+                        {hasFallback && (
+                          <button
+                            onClick={() => applyFallback(cat)}
+                            className="ml-1 text-[9px] font-bold px-2 py-0.5 rounded"
+                            style={{
+                              background: `${meta.color}25`,
+                              border: `1px solid ${meta.color}60`,
+                              color: meta.color,
+                            }}
+                          >
+                            Attiva fallback
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
+              </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
 
       {/* MODAL "COME SBLOCCARE" */}
       {howToSource && (
