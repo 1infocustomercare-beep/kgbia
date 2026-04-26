@@ -918,6 +918,19 @@ export default function PartnerCustomPreviewPage() {
               brandPhotos={leadBrandPhotos.length > 0 ? leadBrandPhotos : form.gallery_images}
               deepReportSummary={leadDeepReport}
               autoStart={autoStartSuite}
+              leadFullData={{
+                phone: form.lead_phone,
+                email: form.lead_email,
+                website: form.lead_website,
+                fullAddress: form.lead_address,
+                instagram: leadDeepReport?.lead?.instagram || "",
+                facebook: leadDeepReport?.lead?.facebook || "",
+                googleRating: leadDeepReport?.lead?.googleRating || null,
+                googleReviews: leadDeepReport?.lead?.googleReviews || null,
+                openingHours: leadDeepReport?.lead?.openingHours || null,
+                types: leadDeepReport?.lead?.types || [],
+                sectorId: leadDeepReport?.lead?.sector || form.lead_sector,
+              }}
               onGenerated={() => setAutoStartSuite(false)}
             />
           </section>
