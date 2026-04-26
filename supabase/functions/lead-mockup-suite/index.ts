@@ -761,12 +761,19 @@ Deno.serve(async (req) => {
     // la tabella seller_mockup_suites finché status diventa "complete"/"error".
     // ═══════════════════════════════════════════════════════════════════════
     const backgroundJob = (async () => {
-      // Pre-calcola le reference catalog per ogni schermata (1 chiamata sola)
-      const screenReferences: (string | null)[] = screens.map(s =>
-        findCatalogReference(business_sector, s.type)
-      );
+      // Reference image priorità:
+      //   1) LOGO REALE del lead (sempre, su tutte le schermate per coerenza brand)
+      //   2) Brand photo del lead (round-robin sulle schermate per varietà visiva)
+      //   3) Catalog reference per il settore/tipo schermata (fallback)
+      const catalogRefs: (string | null)[] = screens.map(s => findCatalogReference(business_sector, s.type));
+      const screenReferences: (string | null)[] = screens.map((s, i) => {
+        if (brandLogoUrl) return brandLogoUrl;
+        if (brandPhotos.length > 0) return brandPhotos[i % brandPhotos.length];
+        return catalogRefs[i];
+      });
+      const refSource = brandLogoUrl ? "brand_logo" : (brandPhotos.length > 0 ? "brand_photos" : "catalog");
       const refCount = screenReferences.filter(Boolean).length;
-      console.log(`[mockup-suite] catalog references: ${refCount}/${screens.length} schermate avranno reference da catalogo`);
+      console.log(`[mockup-suite] reference source=${refSource} → ${refCount}/${screens.length} schermate avranno reference image`);
 
       try {
         const imageResults: Awaited<ReturnType<typeof generateValidatedAIImage>>[] = [];
@@ -779,7 +786,7 @@ Deno.serve(async (req) => {
               const refUrl = screenReferences[screenIdx];
               return generateValidatedAIImage(
                 LOVABLE_KEY,
-                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl),
+                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl, brandContext),
                 pro,
                 5,
                 refUrl,
