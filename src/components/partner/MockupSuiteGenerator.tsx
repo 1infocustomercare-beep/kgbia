@@ -1194,17 +1194,16 @@ export function MockupSuiteGenerator({
           </div>
         </ConfigSection>
 
-        {/* Template variante (raggruppato) + ANTEPRIMA LIVE */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <Label htmlFor="template-variant" className="flex items-center gap-1.5 text-sm font-semibold">
-                <Palette className="h-4 w-4 text-primary" /> Stile grafico
-              </Label>
-              <p className="text-xs text-muted-foreground mt-0.5">Template + palette + anteprima live</p>
-            </div>
-            <Badge variant="outline" className="text-[11px] gap-1"><Eye className="h-3 w-3" /> Live</Badge>
-          </div>
+        {/* 02 · Stile grafico + anteprima live */}
+        <ConfigSection
+          step={2}
+          icon={Palette}
+          title="Stile grafico"
+          subtitle="Template + palette + anteprima live"
+          badge={<Badge variant="outline" className="text-[10px] gap-1"><Eye className="h-3 w-3" /> Live</Badge>}
+          defaultOpen={true}
+          tone="primary"
+        >
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_180px] gap-5 items-start">
             <div className="space-y-4 min-w-0">
               <Select value={templateVariant} onValueChange={setTemplateVariant} disabled={controlsLocked}>
