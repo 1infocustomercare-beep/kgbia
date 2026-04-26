@@ -19,13 +19,11 @@ import { normalizeMockupTemplateVariant } from "@/lib/mockup-template-normalizer
 import DeepLeadIntel, { DeepReport, DeepAudit } from "@/components/leads/DeepLeadIntel";
 import SalesPlaybook from "@/components/leads/SalesPlaybook";
 import ManualPreviewPicker, { ManualPreviewSelection } from "@/components/leads/ManualPreviewPicker";
-import DemoFactoryOverlay, { DemoFactoryResult } from "@/components/leads/DemoFactoryOverlay";
 import SellerCRM from "@/components/leads/SellerCRM";
 import LeadIntelligenceLauncher from "@/components/leads/LeadIntelligenceLauncher";
 import GpsRadarPanel, { GpsLocation } from "@/components/leads/GpsRadarPanel";
 import SpeedDialList from "@/components/leads/SpeedDialList";
 import SellerCreditsBadge from "@/components/leads/SellerCreditsBadge";
-import CreditConfirmDialog from "@/components/leads/CreditConfirmDialog";
 import SmartCityAutocomplete from "@/components/leads/SmartCityAutocomplete";
 import SmartSectorAutocomplete from "@/components/leads/SmartSectorAutocomplete";
 import DemoVaultPanel from "@/components/leads/DemoVaultPanel";
@@ -328,7 +326,6 @@ export default function LeadsPage() {
   const navigate = useNavigate();
   // 💰 Sistema crediti venditore — gating su azioni AI costose
   const { balance: creditBalance, getCost, consume: consumeSellerCredits, totalSpent30d } = useSellerCredits();
-  const [pendingDemoFactory, setPendingDemoFactory] = useState<{ lead: Lead & { _sector: string }; preview: ManualPreviewSelection | null } | null>(null);
 
   // Helper: porta il venditore alla pagina Mockup Suite con i dati del lead pre-caricati
   // e avvio automatico della generazione delle 4 schermate iPhone.
@@ -453,11 +450,7 @@ export default function LeadsPage() {
   const [showPicker, setShowPicker] = useState(false);
   const [customPreview, setCustomPreview] = useState<ManualPreviewSelection | null>(null);
 
-  // Demo Factory — auto-generate complete tenant + admin from selected preview
-  const [demoFactoryOpen, setDemoFactoryOpen] = useState(false);
-  const [demoFactoryLoading, setDemoFactoryLoading] = useState(false);
-  const [demoFactoryProgress, setDemoFactoryProgress] = useState("Inizializzo…");
-  const [demoFactoryResult, setDemoFactoryResult] = useState<DemoFactoryResult | null>(null);
+  // Demo Factory legacy rimossa: tutto passa dalla Mockup Suite (vedi requestDemoFactory).
 
   // Manual lead input
   const [showManual, setShowManual] = useState(false);
@@ -548,201 +541,11 @@ export default function LeadsPage() {
     }
   }, [manualName, manualCity, manualWebsite]);
 
-  /* ─── 🪄 DEMO FACTORY — generate complete tenant + admin from a lead + preview ─── */
-  const runDemoFactory = useCallback(async (lead: Lead & { _sector: string }, preview?: ManualPreviewSelection | null) => {
-    if (!lead?.name) return;
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      toast.error("Devi essere loggato per generare una demo");
-      return;
-    }
-
-    // ─── 💰 GATING CREDITI: consuma 5 crediti server-side ───
-    const consumeRes = await consumeSellerCredits("generate_demo_from_lead", {
-      lead_name: lead.name, sector: lead._sector, city: lead.city,
-    });
-    if (!consumeRes.success) {
-      if (consumeRes.error === "insufficient_credits") {
-        toast.error(`Crediti insufficienti. Servono ${consumeRes.required}, hai ${consumeRes.balance}.`, {
-          description: "Ricarica dal tuo profilo per continuare.",
-          action: { label: "Ricarica", onClick: () => window.location.assign("/partner/profile?tab=credits") },
-          duration: 7000,
-        });
-      } else {
-        toast.error("Impossibile avviare la Demo Factory", { description: consumeRes.error });
-      }
-      return;
-    }
-
-    setDemoFactoryOpen(true);
-    setDemoFactoryLoading(true);
-    setDemoFactoryResult(null);
-    setDemoFactoryProgress("Avvio scraping del sito web…");
-
-    try {
-      // progress hints
-      const hints = [
-        "Estraggo brand identity reale dal sito…",
-        "Genero menu/listino e palette con AI…",
-        "Creo tenant, account admin e moduli…",
-        "Seed clienti, ordini e recensioni…",
-      ];
-      let i = 0;
-      const interval = setInterval(() => {
-        if (i < hints.length) { setDemoFactoryProgress(hints[i]); i++; }
-      }, 4000);
-
-      // ⭐ GROUND TRUTH: pipeline a 3 livelli per scegliere la preview canonica
-      //   1) Manual override dal ManualPreviewPicker (massima priorità).
-      //   2) Recommended preview dell'AI deep analysis (1:1 con un progetto Empire reale).
-      //   3) Matcher heuristico (sub-sector dal nome/filtri).
-      // Il templateVariant + subSector finali vengono passati come AUTORITÀ al backend
-      // così il sito demo + admin sono identici alla preview iPhone mostrata al venditore.
-      const sectorLabel = SECTOR_OPTIONS.find(s => s.value === lead._sector)?.label || lead._sector;
-      const heuristic = matchPreviewForLead({
-        name: lead.name,
-        sector: lead._sector,
-        sectorLabel,
-        cuisine: (lead as any).cuisine || null,
-        extra: [lead.chosen_specialization_label, lead.chosen_specialization_query, lead.full_address, lead.city, lead.zone, lead.website, lead.instagram, (lead as any).osm_type].filter(Boolean).join(" · "),
-        website: lead.website,
-        openingHours: lead.opening_hours,
-        types: lead.types || [],
-      });
-      const aiRecommended = deepReport?.recommended_preview
-        ? matchPreviewFromRecommendedProject({
-            projectName: deepReport.recommended_preview.project_name,
-            reason: deepReport.recommended_preview.why,
-            sector: lead._sector,
-            sectorLabel,
-          })
-        : null;
-      // Manual override > AI recommendation > heuristic
-      const manualCanonical = preview?.isManualOverride
-        ? matchPreviewFromManualSelection({
-            sectorId: preview.sectorId,
-            brandName: preview.brandName,
-            styleName: preview.styleName,
-            imageUrl: preview.imageUrl,
-          })
-        : null;
-      const canonical: PreviewMatch = manualCanonical || aiRecommended || heuristic;
-
-      const { data, error } = await supabase.functions.invoke("generate-demo-from-lead", {
-        body: {
-          lead: {
-            businessName: lead.name,
-            sector: lead._sector,
-            sectorLabel,
-            city: lead.city,
-            zone: lead.zone,
-            fullAddress: lead.full_address,
-            phone: lead.phone,
-            email: lead.email,
-            website: lead.website,
-            instagram: lead.instagram,
-            facebook: lead.facebook,
-            googleRating: lead.google_rating,
-            googleReviews: lead.google_reviews,
-            googleMapsUrl: lead.google_maps_url,
-            openingHours: lead.opening_hours,
-            cuisine: lead.cuisine,
-            types: lead.types,
-            specializationLabel: lead.chosen_specialization_label,
-            specializationQuery: lead.chosen_specialization_query,
-          },
-          preview: {
-            brandName: preview?.brandName || canonical.brandName,
-            styleName: preview?.styleName || canonical.styleName,
-            imageUrl: preview?.imageUrl || canonical.screens?.[0] || null,
-            sectorId: preview?.sectorId || canonical.sectorId,
-            templateVariant: canonical.templateVariant,
-            subSector: canonical.subSector,
-            demoSlug: canonical.demoSlug,
-            screens: canonical.screens,
-          },
-          partnerId: user.id,
-          originUrl: window.location.origin,
-        },
-      });
-
-      clearInterval(interval);
-
-      // 422 = lead data insufficient → rimborso crediti
-      const errBody: any = (error as any)?.context?.body || data;
-      if (errBody?.error === "lead_data_insufficient") {
-        toast.error("⚠️ Lead con dati insufficienti", {
-          description: (errBody.issues || []).join(" · ") || "Arricchisci il lead prima di generare la demo",
-        });
-        // Non addebitiamo: log refund in cronologia
-        try {
-          await supabase.from("demo_credit_usage").insert({
-            user_id: user.id,
-            action: "refund_demo_factory",
-            credits_used: -(consumeRes?.credits_used || 5),
-            cost_eur_estimate: 0,
-            action_label: "Rimborso: lead insufficiente",
-            metadata: { reason: "lead_data_insufficient", issues: errBody.issues },
-          });
-        } catch {}
-        setDemoFactoryOpen(false);
-        return;
-      }
-
-      if (error || !data?.success) {
-        throw new Error(error?.message || data?.error || "Generazione fallita");
-      }
-
-      setDemoFactoryResult(data);
-
-      // 💾 Auto-save in vault per riutilizzo futuro (zero crediti next time)
-      try {
-        await demoVault.saveDemo({
-          leadName: lead.name,
-          sector: lead._sector,
-          sectorLabel,
-          subSector: data?.autoMatch?.subSector,
-          templateVariant: data?.autoMatch?.templateVariant || canonical.templateVariant,
-          themeHint: data?.autoMatch?.themeHint,
-          tenantId: data?.tenant?.id || null,
-          tenantKind: ["food","bakery","gelateria","wine_bar","catering"].includes(lead._sector) ? "restaurant" : "company",
-          tenantSlug: data?.tenant?.slug || null,
-          previewUrl: data.previewUrl,
-          adminUrl: data.adminUrl,
-          magicLink: data.magicLink,
-          adminEmail: data.credentials?.email,
-          adminPassword: data.credentials?.password,
-          leadSnapshot: {
-            name: lead.name, phone: lead.phone, email: lead.email,
-            website: lead.website, instagram: lead.instagram, city: lead.city,
-            full_address: lead.full_address,
-          },
-          brandPayload: data.brand || {},
-          imagesPayload: data.images || {},
-          outreachPayload: data.outreach || {},
-          fullResult: data,
-        });
-      } catch (e) {
-        console.warn("[vault] auto-save failed", e);
-      }
-
-      const guardWarn = data?.brand?.guardian_warnings?.length;
-      toast.success(`✓ Demo creata · -${consumeRes.credits_used} crediti · 💾 Salvata in Cassaforte`, {
-        description: guardWarn ? `${data.previewUrl} · ${guardWarn} note di qualità` : `Saldo: ${consumeRes.remaining_balance} · riutilizzabile gratis`,
-      });
-    } catch (err: any) {
-      console.error("[runDemoFactory] error", err);
-      toast.error("Errore creazione demo", { description: err?.message || "Riprova" });
-      setDemoFactoryOpen(false);
-    } finally {
-      setDemoFactoryLoading(false);
-    }
-  }, [consumeSellerCredits, deepReport]);
-
   /* ─── 🚀 UNIFIED FLOW — Tutto passa dalla Mockup Suite (sistema rafforzato 1:1) ───
    * Sia "Genera Demo" che "Genera Mockup" portano alla pagina Mockup Suite con i dati
    * del lead pre-caricati (logo, foto, colori, deep report) e generazione auto-start.
-   * Il vecchio runDemoFactory (Edge Function diretta + DemoFactoryOverlay) è deprecato. */
+   * Il sito completo viene poi creato dalla Mockup Suite stessa via handleBuildFullSite,
+   * che invoca generate-demo-from-lead con il template scelto + intelligence asset reali. */
   const requestDemoFactory = useCallback((lead: Lead & { _sector: string }, preview?: ManualPreviewSelection | null) => {
     const enrichedLead: any = {
       ...lead,
@@ -1336,7 +1139,7 @@ export default function LeadsPage() {
         businessName: selected.name || "la vostra attività",
         city: selected.city,
         sectorLabel: sectorConfig?.label || selected._sector,
-        previewLink: demoFactoryResult?.previewUrl || selectedPreviewUrl,
+        previewLink: selectedPreviewUrl,
         senderName: "Arianna",
         senderRole: "Empire AI Group",
       })
@@ -1384,41 +1187,8 @@ export default function LeadsPage() {
         initialSector={selected?._sector}
       />
 
-      {/* 💰 Dialog conferma consumo crediti prima della Demo Factory */}
-      <CreditConfirmDialog
-        open={!!pendingDemoFactory}
-        cost={getCost("generate_demo_from_lead")}
-        balance={creditBalance}
-        contextLabel={pendingDemoFactory ? `Demo per ${pendingDemoFactory.lead.name}` : undefined}
-        onCancel={() => setPendingDemoFactory(null)}
-        onConfirm={() => {
-          const p = pendingDemoFactory;
-          setPendingDemoFactory(null);
-          if (p) runDemoFactory(p.lead, p.preview);
-        }}
-      />
-
-      <DemoFactoryOverlay
-        open={demoFactoryOpen}
-        loading={demoFactoryLoading}
-        progress={demoFactoryProgress}
-        result={demoFactoryResult}
-        leadName={selected?.name || ""}
-        leadEmail={selected?.email || ""}
-        leadCity={selected?.city || ""}
-        leadSector={(selected as any)?._sector || ""}
-        leadRating={(selected as any)?.google_rating ?? null}
-        leadScore={(selected as any)?._score ?? null}
-        onClose={() => { setDemoFactoryOpen(false); setDemoFactoryResult(null); }}
-        onSendWhatsApp={() => {
-          if (!demoFactoryResult || !selected) return;
-          const text = encodeURIComponent(
-            `Ciao! Ho preparato una demo personalizzata per ${selected.name}: ${demoFactoryResult.previewUrl}\n\nPuoi accedere all'admin con questo link sicuro (valido 7gg): ${demoFactoryResult.magicLink || demoFactoryResult.adminUrl}`
-          );
-          const phone = (selected.phone || "").replace(/[^0-9]/g, "");
-          window.open(phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`, "_blank");
-        }}
-      />
+      {/* Vecchio CreditConfirmDialog + DemoFactoryOverlay rimossi:
+          il flusso unico è Lead → Mockup Suite (con prefill) → "Genera Sito 1:1" interno. */}
 
       {/* Sfondo Empire (DNA + aurora) viene dal PartnerLayout — qui non aggiungiamo overlay che lo coprano */}
 
