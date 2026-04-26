@@ -914,6 +914,9 @@ export default function PartnerCustomPreviewPage() {
               businessCity={form.lead_city}
               primaryColor={form.primary_color}
               templateVariant={form.template_style}
+              brandLogoUrl={leadBrandLogoUrl || form.logo_url}
+              brandPhotos={leadBrandPhotos.length > 0 ? leadBrandPhotos : form.gallery_images}
+              deepReportSummary={leadDeepReport}
               autoStart={autoStartSuite}
               onGenerated={() => setAutoStartSuite(false)}
             />
