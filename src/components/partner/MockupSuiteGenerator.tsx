@@ -40,6 +40,9 @@ interface Props {
   deepReportSummary?: any;
   /** Quando true e businessName è valorizzato, lancia automaticamente handleGenerate al mount. */
   autoStart?: boolean;
+  /** Quando true, dopo che i 4 mockup AI sono completati lancia automaticamente
+   *  handleBuildFullSite per generare il sito webapp 1:1 col mockup scelto. */
+  autoBuildSite?: boolean;
   /** Dati estesi del lead per generazione sito completo (generate-demo-from-lead) */
   leadFullData?: {
     phone?: string;
@@ -60,6 +63,8 @@ interface Props {
     sectorId?: string; // es. "food", "ncc", "beauty"
   };
   onGenerated?: (suiteId: string, shareSlug: string) => void;
+  /** Callback al termine completo del flusso (mockup + sito 1:1) */
+  onSiteBuilt?: (siteData: { previewUrl: string; adminUrl: string; credentials: any }) => void;
 }
 
 const ENGINE_OPTIONS: { key: MockupEngine; label: string; cost: number; icon: React.ElementType; desc: string; color: string }[] = [
