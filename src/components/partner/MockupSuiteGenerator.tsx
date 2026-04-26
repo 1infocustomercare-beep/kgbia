@@ -5,8 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type, Lock, Unlock, Cloud, CloudOff, BookmarkCheck, FolderOpen, CheckCircle2, Circle } from "lucide-react";
+import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type, Lock, Unlock, Cloud, CloudOff, BookmarkCheck, FolderOpen, CheckCircle2, Circle, ChevronDown, Layers } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { GenerationProgress } from "./GenerationProgress";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -326,6 +327,72 @@ function suggestTemplateForSector(sector: string): string {
   if (/event|wedding|gaming|nightlife|disco|club/.test(s)) return "neon_vibrant";
   if (/architett|studio|brand/.test(s)) return "monochrome_bold";
   return "modern_dark";
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// ConfigSection — wrapper collassabile, numerato, con header pro
+// Usato per separare le sezioni della config (Motore, Stile, Personalizzazione…)
+// ──────────────────────────────────────────────────────────────────────────
+function ConfigSection({
+  step,
+  icon: Icon,
+  title,
+  subtitle,
+  badge,
+  defaultOpen = true,
+  tone = "default",
+  children,
+}: {
+  step: number;
+  icon: React.ElementType;
+  title: string;
+  subtitle?: string;
+  badge?: React.ReactNode;
+  defaultOpen?: boolean;
+  tone?: "default" | "primary" | "accent";
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  const toneClass =
+    tone === "primary"
+      ? "border-primary/25 bg-gradient-to-br from-primary/[0.04] to-transparent"
+      : tone === "accent"
+      ? "border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent"
+      : "border-border/60 bg-card/40";
+  return (
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <div className={`rounded-xl border ${toneClass} overflow-hidden transition-colors`}>
+        <CollapsibleTrigger asChild>
+          <button
+            type="button"
+            className="w-full flex items-center gap-3 px-4 sm:px-5 py-3.5 text-left hover:bg-muted/40 transition-colors"
+          >
+            <span className="shrink-0 inline-flex items-center justify-center h-7 w-7 rounded-lg bg-primary/10 text-primary text-xs font-bold tabular-nums">
+              {String(step).padStart(2, "0")}
+            </span>
+            <Icon className="h-4 w-4 text-primary shrink-0" />
+            <span className="flex-1 min-w-0">
+              <span className="block text-sm font-semibold leading-tight truncate">{title}</span>
+              {subtitle && (
+                <span className="block text-[11px] text-muted-foreground leading-tight mt-0.5 truncate">
+                  {subtitle}
+                </span>
+              )}
+            </span>
+            {badge && <span className="shrink-0">{badge}</span>}
+            <ChevronDown
+              className={`h-4 w-4 text-muted-foreground shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
+            />
+          </button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="px-4 sm:px-5 pb-5 pt-1 space-y-5 border-t border-border/40">
+            {children}
+          </div>
+        </CollapsibleContent>
+      </div>
+    </Collapsible>
+  );
 }
 
 export function MockupSuiteGenerator({
@@ -1081,12 +1148,20 @@ export function MockupSuiteGenerator({
           </div>
         )}
 
-        {/* Selettore motore */}
-        <div className="space-y-3">
-          <div>
-            <Label className="text-sm font-semibold">Motore di generazione</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">Scegli velocità vs. qualità fotorealistica</p>
-          </div>
+        {/* 01 · Motore di generazione */}
+        <ConfigSection
+          step={1}
+          icon={Sparkles}
+          title="Motore di generazione"
+          subtitle="Scegli velocità vs. qualità fotorealistica"
+          badge={
+            <Badge variant={selectedEngineCfg.cost === 0 ? "secondary" : "default"} className="text-[10px]">
+              {selectedEngineCfg.cost === 0 ? "GRATIS" : `${selectedEngineCfg.cost} cr`}
+            </Badge>
+          }
+          defaultOpen={true}
+          tone="primary"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {ENGINE_OPTIONS.map(opt => {
               const Icon = opt.icon;
@@ -1117,19 +1192,18 @@ export function MockupSuiteGenerator({
               );
             })}
           </div>
-        </div>
+        </ConfigSection>
 
-        {/* Template variante (raggruppato) + ANTEPRIMA LIVE */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <Label htmlFor="template-variant" className="flex items-center gap-1.5 text-sm font-semibold">
-                <Palette className="h-4 w-4 text-primary" /> Stile grafico
-              </Label>
-              <p className="text-xs text-muted-foreground mt-0.5">Template + palette + anteprima live</p>
-            </div>
-            <Badge variant="outline" className="text-[11px] gap-1"><Eye className="h-3 w-3" /> Live</Badge>
-          </div>
+        {/* 02 · Stile grafico + anteprima live */}
+        <ConfigSection
+          step={2}
+          icon={Palette}
+          title="Stile grafico"
+          subtitle="Template + palette + anteprima live"
+          badge={<Badge variant="outline" className="text-[10px] gap-1"><Eye className="h-3 w-3" /> Live</Badge>}
+          defaultOpen={true}
+          tone="primary"
+        >
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_180px] gap-5 items-start">
             <div className="space-y-4 min-w-0">
               <Select value={templateVariant} onValueChange={setTemplateVariant} disabled={controlsLocked}>
@@ -1248,33 +1322,33 @@ export function MockupSuiteGenerator({
               </p>
             </div>
           </div>
-        </div>
+        </ConfigSection>
 
-        {/* ────────────────────────────────────────────────────────────────── */}
-        {/* PERSONALIZZAZIONE AVANZATA — glass intensity + color style         */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] to-transparent p-4 sm:p-5 space-y-5">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
-                <Sliders className="h-4 w-4 text-primary" /> Personalizzazione avanzata
-              </Label>
-              <p className="text-xs text-muted-foreground mt-0.5">Glassmorphism · cromia · tipografia</p>
-            </div>
+        {/* 03 · Personalizzazione avanzata — glass + cromia + tipografia */}
+        <ConfigSection
+          step={3}
+          icon={Sliders}
+          title="Personalizzazione avanzata"
+          subtitle="Glassmorphism · cromia · tipografia"
+          defaultOpen={false}
+          tone="primary"
+          badge={
             <button
               type="button"
               disabled={controlsLocked}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setGlassIntensity(60); setColorStyle("vivid");
                 setSafeAreaPx(8); setTypeScale(1); setBoostContrast(true);
                 setBrandFontKey("template");
               }}
               title={lockTitle}
-              className="text-xs px-3 py-1.5 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="text-[10px] px-2.5 py-1 rounded-full border border-border/60 hover:border-primary hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
-              Reset default
+              Reset
             </button>
-          </div>
+          }
+        >
 
           {/* Glassmorphism slider */}
           <div className="space-y-2">
@@ -1461,79 +1535,89 @@ export function MockupSuiteGenerator({
           <p className="text-[10px] text-muted-foreground italic">
             🎨 Clicca <span className="font-semibold not-italic">Genera Suite</span> per applicare queste impostazioni alle 4 schermate. L'anteprima live in alto si aggiorna istantaneamente.
           </p>
-        </div>
+        </ConfigSection>
 
-        {/* ────────────────────────────────────────────────────────────────── */}
-        {/* PRESET PREMIUM (palette + tipografia + layout architetturale)     */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <PresetThemeScope
-          preset={getStylePreset(templateVariant)}
-          applyTypography={false}
-          className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/[0.06] to-transparent p-4 sm:p-5 space-y-3"
+        {/* 04 · Mockup Style Preset (palette + tipografia + layout) */}
+        <ConfigSection
+          step={4}
+          icon={Layers}
+          title="Stile mockup premium"
+          subtitle="Palette + tipografia + layout architetturale"
+          defaultOpen={false}
+          tone="primary"
         >
-          <MockupPresetSelector
-            value={templateVariant}
-            sectorHint={businessSector}
-            compact
-            onChange={(key, preset) => {
+          <PresetThemeScope
+            preset={getStylePreset(templateVariant)}
+            applyTypography={false}
+            className="space-y-3"
+          >
+            <MockupPresetSelector
+              value={templateVariant}
+              sectorHint={businessSector}
+              compact
+              onChange={(key, preset) => {
+                if (controlsLocked) return;
+                setTemplateVariant(key);
+                if (mode === "standalone") {
+                  setStandalone(s => ({ ...s, primaryColor: preset.palette.accent }));
+                }
+              }}
+            />
+            <div className="flex flex-wrap gap-2 pt-1 items-center">
+              <Button size="sm" className="h-8">CTA brand</Button>
+              <Button size="sm" variant="secondary" className="h-8">Secondario</Button>
+              <Button size="sm" variant="outline" className="h-8">Outline</Button>
+              <Badge>Badge</Badge>
+              <span className="text-[10px] text-muted-foreground italic ml-auto">
+                UI applicata live al preset selezionato
+              </span>
+            </div>
+          </PresetThemeScope>
+        </ConfigSection>
+
+        {/* 05 · Preset Look — salva/carica combinazioni */}
+        <ConfigSection
+          step={5}
+          icon={BookmarkCheck}
+          title="Preset Look salvati"
+          subtitle="Salva e riapplica combinazioni di stile + glass + cromia"
+          defaultOpen={false}
+        >
+          <MockupLookPresets
+            current={{
+              templateVariant,
+              glassIntensity,
+              colorStyle,
+              safeAreaPx,
+              typeScale,
+              boostContrast,
+            }}
+            onApply={(p: MockupLookPreset) => {
               if (controlsLocked) return;
-              setTemplateVariant(key);
-              if (mode === "standalone") {
-                setStandalone(s => ({ ...s, primaryColor: preset.palette.accent }));
-              }
+              setTemplateVariant(p.templateVariant);
+              setGlassIntensity(p.glassIntensity);
+              setColorStyle(p.colorStyle);
+              setSafeAreaPx(p.safeAreaPx);
+              setTypeScale(p.typeScale);
+              setBoostContrast(p.boostContrast);
             }}
           />
-          <div className="flex flex-wrap gap-2 pt-1 items-center">
-            <Button size="sm" className="h-8">CTA brand</Button>
-            <Button size="sm" variant="secondary" className="h-8">Secondario</Button>
-            <Button size="sm" variant="outline" className="h-8">Outline</Button>
-            <Badge>Badge</Badge>
-            <span className="text-[10px] text-muted-foreground italic ml-auto">
-              UI applicata live al preset selezionato
-            </span>
-          </div>
-        </PresetThemeScope>
+        </ConfigSection>
 
-        {/* ────────────────────────────────────────────────────────────────── */}
-        {/* PRESET LOOK — salva/carica combinazioni di template+glass+color   */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <MockupLookPresets
-          current={{
-            templateVariant,
-            glassIntensity,
-            colorStyle,
-            safeAreaPx,
-            typeScale,
-            boostContrast,
-          }}
-          onApply={(p: MockupLookPreset) => {
-            if (controlsLocked) return;
-            setTemplateVariant(p.templateVariant);
-            setGlassIntensity(p.glassIntensity);
-            setColorStyle(p.colorStyle);
-            setSafeAreaPx(p.safeAreaPx);
-            setTypeScale(p.typeScale);
-            setBoostContrast(p.boostContrast);
-          }}
-        />
-
-        {/* ────────────────────────────────────────────────────────────────── */}
-        {/* SAFE AREA & LEGGIBILITÀ — margini, tipografia, contrasto AA       */}
-        {/* Garantiscono che testo e UI restino dentro il frame iPhone        */}
-        {/* su qualsiasi template selezionato (auto + manuali).               */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent p-4 sm:p-5 space-y-5">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
-                <Eye className="h-4 w-4 text-accent-foreground" /> Safe Area & Leggibilità
-              </Label>
-              <p className="text-xs text-muted-foreground mt-0.5">Margini, tipografia e contrasto WCAG</p>
-            </div>
+        {/* 06 · Safe Area & Leggibilità — margini, tipografia, contrasto AA */}
+        <ConfigSection
+          step={6}
+          icon={Eye}
+          title="Safe Area & Leggibilità"
+          subtitle="Margini, tipografia e contrasto WCAG"
+          defaultOpen={false}
+          tone="accent"
+          badge={
             <Badge variant="outline" className="text-[10px] uppercase tracking-wider">
               {boostContrast ? "AA on" : "AA off"} · {typeScale.toFixed(2)}× · {safeAreaPx}px
             </Badge>
-          </div>
+          }
+        >
 
           {/* Safe Area slider */}
           <div className="space-y-2">
@@ -1619,7 +1703,7 @@ export function MockupSuiteGenerator({
           <p className="text-[11px] text-muted-foreground italic leading-snug">
             🛡️ Nessun testo finisce sotto la Dynamic Island o l'Home Indicator. Ottimale per AI-render 4K/8K.
           </p>
-        </div>
+        </ConfigSection>
 
         {/* 4 schermate configurabili */}
         <div>
