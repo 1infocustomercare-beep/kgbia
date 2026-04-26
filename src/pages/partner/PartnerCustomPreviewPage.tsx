@@ -117,8 +117,8 @@ export default function PartnerCustomPreviewPage() {
   });
 
   // Sezioni collassabili form (UX professionale: 1 step alla volta su mobile)
-  const [openSection, setOpenSection] = useState<"data" | "brand" | "style" | null>("data");
-  const toggleSection = (s: "data" | "brand" | "style") =>
+  const [openSection, setOpenSection] = useState<"source" | "data" | "brand" | "style" | null>("data");
+  const toggleSection = (s: "source" | "data" | "brand" | "style") =>
     setOpenSection(prev => (prev === s ? null : s));
 
   // ═══ DRAFT AUTOSAVE (localStorage, per-utente) ═══
