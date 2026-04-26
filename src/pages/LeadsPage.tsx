@@ -2153,7 +2153,7 @@ export default function LeadsPage() {
               triggerSearch: async () => { await handleSearch(); },
               triggerDemoFactoryOnTopLead: async () => {
                 const top = sorted[0];
-                if (top) await runDemoFactory(top, null);
+                if (top) requestDemoFactory(top, null);
               },
               getResultsCount: () => results.length,
               getTopLead: () => {
@@ -2226,7 +2226,7 @@ export default function LeadsPage() {
             triggerSearch: async () => { await handleSearch(); },
             triggerDemoFactoryOnTopLead: async () => {
               const top = sorted[0];
-              if (top) await runDemoFactory(top, null);
+              if (top) requestDemoFactory(top, null);
             },
             getResultsCount: () => results.length,
             getTopLead: () => {
