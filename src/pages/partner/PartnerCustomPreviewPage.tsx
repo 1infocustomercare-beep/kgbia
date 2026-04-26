@@ -86,6 +86,8 @@ export default function PartnerCustomPreviewPage() {
   // Quando il venditore preme "Genera" su un lead, viene portato qui con tutti i dati pre-caricati
   // e (se autostart=1) il MockupSuiteGenerator parte da solo.
   const [autoStartSuite, setAutoStartSuite] = useState(false);
+  // Quando true, dopo i 4 mockup AI lancia anche la generazione del sito 1:1
+  const [autoBuildSite, setAutoBuildSite] = useState(false);
   const mockupSectionRef = useRef<HTMLDivElement | null>(null);
   const deepLinkAppliedRef = useRef(false);
 
