@@ -148,6 +148,51 @@ export default function PartnerCustomPreviewPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [DRAFT_KEY]);
 
+  // ─── Deep-link prefill: legge i query params dopo l'idratazione del draft
+  // così i dati del lead arrivano sempre più freschi della bozza locale.
+  useEffect(() => {
+    if (!draftHydrated) return;
+    if (deepLinkAppliedRef.current) return;
+    const qpName = searchParams.get("name");
+    const qpLeadId = searchParams.get("leadId");
+    if (!qpName && !qpLeadId) {
+      deepLinkAppliedRef.current = true;
+      return;
+    }
+    deepLinkAppliedRef.current = true;
+
+    setForm(prev => ({
+      ...prev,
+      lead_name: qpName || prev.lead_name,
+      lead_sector: searchParams.get("sector") || prev.lead_sector,
+      lead_city: searchParams.get("city") || prev.lead_city,
+      lead_phone: searchParams.get("phone") || prev.lead_phone,
+      lead_email: searchParams.get("email") || prev.lead_email,
+      lead_website: searchParams.get("website") || prev.lead_website,
+      lead_address: searchParams.get("address") || prev.lead_address,
+      primary_color: searchParams.get("color") || prev.primary_color,
+    }));
+    setMode("lead");
+    if (qpLeadId) setSelectedLeadId(`lead:${qpLeadId}`);
+
+    if (searchParams.get("autostart") === "1") {
+      setAutoStartSuite(true);
+    }
+
+    toast.success(`Dati di "${qpName || "lead"}" caricati · Mockup Suite pronta`);
+
+    // Scroll alla sezione Mockup Suite + ripulisci i query params (così un refresh non rilancia)
+    setTimeout(() => {
+      mockupSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 250);
+    setTimeout(() => {
+      const next = new URLSearchParams(searchParams);
+      ["leadId","name","sector","city","phone","email","website","address","color","autostart"].forEach(k => next.delete(k));
+      setSearchParams(next, { replace: true });
+    }, 1500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftHydrated]);
+
   // Auto-save bozza con debounce 600ms
   useEffect(() => {
     if (!DRAFT_KEY || !draftHydrated) return;
