@@ -588,17 +588,21 @@ export default function PartnerCustomPreviewPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 lg:gap-6 xl:gap-8 items-start">
 
         {/* ═══════════ COLONNA SX: FORM ad ACCORDION ═══════════ */}
-        <Card className="border-primary/30 overflow-hidden lg:sticky lg:top-4 shadow-sm">
-          <CardHeader className="pb-3 px-4 sm:px-6">
+        <Card className="border-primary/30 overflow-hidden lg:sticky lg:top-4 shadow-sm bg-gradient-to-b from-card via-card to-card/80">
+          <CardHeader className="pb-3 px-4 sm:px-6 border-b border-border/40 bg-gradient-to-r from-primary/[0.04] via-transparent to-accent/[0.04]">
             <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  Genera Mockup + Sito 1:1
-                </CardTitle>
-                <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">
-                  3 passi rapidi · 4 mockup iPhone + sito webapp coerente
-                </p>
+              <div className="min-w-0 flex items-start gap-2.5">
+                <span className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 flex items-center justify-center shrink-0">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                </span>
+                <div className="min-w-0">
+                  <CardTitle className="text-base sm:text-lg leading-tight">
+                    Genera Mockup + Sito 1:1
+                  </CardTitle>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">
+                    3 passi guidati · 4 mockup iPhone + sito webapp coerente
+                  </p>
+                </div>
               </div>
 
               {/* Indicatore autosave bozza */}
