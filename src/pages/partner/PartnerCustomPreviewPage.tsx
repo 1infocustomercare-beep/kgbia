@@ -117,8 +117,8 @@ export default function PartnerCustomPreviewPage() {
   });
 
   // Sezioni collassabili form (UX professionale: 1 step alla volta su mobile)
-  const [openSection, setOpenSection] = useState<"data" | "brand" | "style" | null>("data");
-  const toggleSection = (s: "data" | "brand" | "style") =>
+  const [openSection, setOpenSection] = useState<"source" | "data" | "brand" | "style" | null>("data");
+  const toggleSection = (s: "source" | "data" | "brand" | "style") =>
     setOpenSection(prev => (prev === s ? null : s));
 
   // ═══ DRAFT AUTOSAVE (localStorage, per-utente) ═══
@@ -588,17 +588,21 @@ export default function PartnerCustomPreviewPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 lg:gap-6 xl:gap-8 items-start">
 
         {/* ═══════════ COLONNA SX: FORM ad ACCORDION ═══════════ */}
-        <Card className="border-primary/30 overflow-hidden lg:sticky lg:top-4 shadow-sm">
-          <CardHeader className="pb-3 px-4 sm:px-6">
+        <Card className="border-primary/30 overflow-hidden lg:sticky lg:top-4 shadow-sm bg-gradient-to-b from-card via-card to-card/80">
+          <CardHeader className="pb-3 px-4 sm:px-6 border-b border-border/40 bg-gradient-to-r from-primary/[0.04] via-transparent to-accent/[0.04]">
             <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  Genera Mockup + Sito 1:1
-                </CardTitle>
-                <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">
-                  3 passi rapidi · 4 mockup iPhone + sito webapp coerente
-                </p>
+              <div className="min-w-0 flex items-start gap-2.5">
+                <span className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 flex items-center justify-center shrink-0">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                </span>
+                <div className="min-w-0">
+                  <CardTitle className="text-base sm:text-lg leading-tight">
+                    Genera Mockup + Sito 1:1
+                  </CardTitle>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">
+                    3 passi guidati · 4 mockup iPhone + sito webapp coerente
+                  </p>
+                </div>
               </div>
 
               {/* Indicatore autosave bozza */}
@@ -649,42 +653,74 @@ export default function PartnerCustomPreviewPage() {
             )}
           </CardHeader>
 
-          <CardContent className="space-y-3 px-3 sm:px-5 pb-4">
-            {/* Tabs Lead vs Manuale */}
-            <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
-              <TabsList className="grid grid-cols-2 w-full h-10">
-                <TabsTrigger value="lead" className="text-xs sm:text-sm">Da Lead Analizzato</TabsTrigger>
-                <TabsTrigger value="manual" className="text-xs sm:text-sm">Inserimento Manuale</TabsTrigger>
-              </TabsList>
+          <CardContent className="space-y-2.5 px-3 sm:px-5 pb-4 pt-4">
+            {/* ── STEP 0: SORGENTE DATI (collassabile) ── */}
+            <div className="border border-border/60 rounded-xl overflow-hidden bg-card/40">
+              <button
+                type="button"
+                onClick={() => toggleSection("source")}
+                className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 h-11 text-left hover:bg-muted/30 transition-colors"
+                aria-expanded={openSection === "source"}
+              >
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <span className="h-6 w-6 rounded-full bg-primary/15 text-primary text-[11px] flex items-center justify-center font-bold">0</span>
+                  <Sparkles className="h-4 w-4 text-primary/80" />
+                  Sorgente dati
+                  <Badge variant="secondary" className="text-[9px] ml-1">
+                    {mode === "lead" ? "Lead analizzato" : "Manuale"}
+                  </Badge>
+                </span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "source" ? "rotate-180" : ""}`} />
+              </button>
+              <AnimatePresence initial={false}>
+                {openSection === "source" && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-3 sm:px-4 pb-4 pt-1 space-y-3">
+                      <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
+                        <TabsList className="grid grid-cols-2 w-full h-10">
+                          <TabsTrigger value="lead" className="text-xs sm:text-sm">Da Lead Analizzato</TabsTrigger>
+                          <TabsTrigger value="manual" className="text-xs sm:text-sm">Inserimento Manuale</TabsTrigger>
+                        </TabsList>
 
-              <TabsContent value="lead" className="space-y-2 mt-3">
-                <Label className="text-xs">Seleziona lead da Intelligence o Scout</Label>
-                <Select value={selectedLeadId} onValueChange={setSelectedLeadId}>
-                  <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Scegli un lead già scoperto…" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-72">
-                    {availableLeads.length === 0 ? (
-                      <SelectItem value="none" disabled>Nessun lead — usa Scout o Intelligence prima</SelectItem>
-                    ) : availableLeads.map(l => (
-                      <SelectItem key={l.id} value={l.id}>
-                        <span className="font-medium">{l.lead_name}</span>
-                        {l.lead_city ? ` · ${l.lead_city}` : ""}
-                        {l.lead_sector ? ` · ${l.lead_sector}` : ""}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <p className="text-[10px] sm:text-xs text-muted-foreground">
-                  <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence ·{" "}
-                  <strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout
-                </p>
-              </TabsContent>
+                        <TabsContent value="lead" className="space-y-2 mt-3">
+                          <Label className="text-xs">Seleziona lead da Intelligence o Scout</Label>
+                          <Select value={selectedLeadId} onValueChange={setSelectedLeadId}>
+                            <SelectTrigger className="h-11">
+                              <SelectValue placeholder="Scegli un lead già scoperto…" />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-72">
+                              {availableLeads.length === 0 ? (
+                                <SelectItem value="none" disabled>Nessun lead — usa Scout o Intelligence prima</SelectItem>
+                              ) : availableLeads.map(l => (
+                                <SelectItem key={l.id} value={l.id}>
+                                  <span className="font-medium">{l.lead_name}</span>
+                                  {l.lead_city ? ` · ${l.lead_city}` : ""}
+                                  {l.lead_sector ? ` · ${l.lead_sector}` : ""}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground">
+                            <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence ·{" "}
+                            <strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout
+                          </p>
+                        </TabsContent>
 
-              <TabsContent value="manual" className="mt-3">
-                <p className="text-xs text-muted-foreground">Inserisci tutti i dati a mano. Più dati metti, più l'AI personalizza.</p>
-              </TabsContent>
-            </Tabs>
+                        <TabsContent value="manual" className="mt-3">
+                          <p className="text-xs text-muted-foreground">Inserisci tutti i dati a mano. Più dati metti, più l'AI personalizza.</p>
+                        </TabsContent>
+                      </Tabs>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* ── STEP 1: ANAGRAFICA ── */}
             <div className="border border-border/60 rounded-xl overflow-hidden bg-card/40">
