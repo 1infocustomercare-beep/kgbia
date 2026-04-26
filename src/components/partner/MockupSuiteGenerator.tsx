@@ -848,6 +848,16 @@ export function MockupSuiteGenerator({
         toast.success(`Suite generata! ${d.credits_spent} crediti usati.`);
       }
       onGenerated?.(d.suite_id, d.share_slug);
+
+      // ─── AUTO-BUILD SITO 1:1 ─── se richiesto, dopo i 4 mockup AI completati
+      // lancio automaticamente la generazione del sito webapp con quegli stessi mockup
+      // come reference visiva (template + screens). Così "Genera nuova preview"
+      // produce in un colpo solo: 4 mockup iPhone + sito + admin + credenziali.
+      if (autoBuildSite && d.suite_id && d.suite_id !== "preview-pending") {
+        setTimeout(() => {
+          handleBuildFullSite();
+        }, 600);
+      }
     } catch (e: any) {
       toast.error(e.message || "Errore generazione");
       setPreviewPhase("idle");
