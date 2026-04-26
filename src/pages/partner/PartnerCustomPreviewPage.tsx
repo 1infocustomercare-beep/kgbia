@@ -70,6 +70,8 @@ interface SelectableLead {
 
 export default function PartnerCustomPreviewPage() {
   const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [previews, setPreviews] = useState<CustomPreview[]>([]);
   const [availableLeads, setAvailableLeads] = useState<SelectableLead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -79,6 +81,13 @@ export default function PartnerCustomPreviewPage() {
   const [selectedLeadId, setSelectedLeadId] = useState<string>("");
   const [logoUploading, setLogoUploading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
+
+  // ─── Deep-link da Leads: ?leadId=&name=&sector=&city=&phone=&email=&website=&address=&color=&autostart=1
+  // Quando il venditore preme "Genera" su un lead, viene portato qui con tutti i dati pre-caricati
+  // e (se autostart=1) il MockupSuiteGenerator parte da solo.
+  const [autoStartSuite, setAutoStartSuite] = useState(false);
+  const mockupSectionRef = useRef<HTMLDivElement | null>(null);
+  const deepLinkAppliedRef = useRef(false);
 
   // Filtri lista preview
   const [previewSearch, setPreviewSearch] = useState("");
