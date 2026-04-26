@@ -1537,59 +1537,72 @@ export function MockupSuiteGenerator({
           </p>
         </ConfigSection>
 
-        {/* ────────────────────────────────────────────────────────────────── */}
-        {/* PRESET PREMIUM (palette + tipografia + layout architetturale)     */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <PresetThemeScope
-          preset={getStylePreset(templateVariant)}
-          applyTypography={false}
-          className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/[0.06] to-transparent p-4 sm:p-5 space-y-3"
+        {/* 04 · Mockup Style Preset (palette + tipografia + layout) */}
+        <ConfigSection
+          step={4}
+          icon={Layers}
+          title="Stile mockup premium"
+          subtitle="Palette + tipografia + layout architetturale"
+          defaultOpen={false}
+          tone="primary"
         >
-          <MockupPresetSelector
-            value={templateVariant}
-            sectorHint={businessSector}
-            compact
-            onChange={(key, preset) => {
+          <PresetThemeScope
+            preset={getStylePreset(templateVariant)}
+            applyTypography={false}
+            className="space-y-3"
+          >
+            <MockupPresetSelector
+              value={templateVariant}
+              sectorHint={businessSector}
+              compact
+              onChange={(key, preset) => {
+                if (controlsLocked) return;
+                setTemplateVariant(key);
+                if (mode === "standalone") {
+                  setStandalone(s => ({ ...s, primaryColor: preset.palette.accent }));
+                }
+              }}
+            />
+            <div className="flex flex-wrap gap-2 pt-1 items-center">
+              <Button size="sm" className="h-8">CTA brand</Button>
+              <Button size="sm" variant="secondary" className="h-8">Secondario</Button>
+              <Button size="sm" variant="outline" className="h-8">Outline</Button>
+              <Badge>Badge</Badge>
+              <span className="text-[10px] text-muted-foreground italic ml-auto">
+                UI applicata live al preset selezionato
+              </span>
+            </div>
+          </PresetThemeScope>
+        </ConfigSection>
+
+        {/* 05 · Preset Look — salva/carica combinazioni */}
+        <ConfigSection
+          step={5}
+          icon={BookmarkCheck}
+          title="Preset Look salvati"
+          subtitle="Salva e riapplica combinazioni di stile + glass + cromia"
+          defaultOpen={false}
+        >
+          <MockupLookPresets
+            current={{
+              templateVariant,
+              glassIntensity,
+              colorStyle,
+              safeAreaPx,
+              typeScale,
+              boostContrast,
+            }}
+            onApply={(p: MockupLookPreset) => {
               if (controlsLocked) return;
-              setTemplateVariant(key);
-              if (mode === "standalone") {
-                setStandalone(s => ({ ...s, primaryColor: preset.palette.accent }));
-              }
+              setTemplateVariant(p.templateVariant);
+              setGlassIntensity(p.glassIntensity);
+              setColorStyle(p.colorStyle);
+              setSafeAreaPx(p.safeAreaPx);
+              setTypeScale(p.typeScale);
+              setBoostContrast(p.boostContrast);
             }}
           />
-          <div className="flex flex-wrap gap-2 pt-1 items-center">
-            <Button size="sm" className="h-8">CTA brand</Button>
-            <Button size="sm" variant="secondary" className="h-8">Secondario</Button>
-            <Button size="sm" variant="outline" className="h-8">Outline</Button>
-            <Badge>Badge</Badge>
-            <span className="text-[10px] text-muted-foreground italic ml-auto">
-              UI applicata live al preset selezionato
-            </span>
-          </div>
-        </PresetThemeScope>
-
-        {/* ────────────────────────────────────────────────────────────────── */}
-        {/* PRESET LOOK — salva/carica combinazioni di template+glass+color   */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <MockupLookPresets
-          current={{
-            templateVariant,
-            glassIntensity,
-            colorStyle,
-            safeAreaPx,
-            typeScale,
-            boostContrast,
-          }}
-          onApply={(p: MockupLookPreset) => {
-            if (controlsLocked) return;
-            setTemplateVariant(p.templateVariant);
-            setGlassIntensity(p.glassIntensity);
-            setColorStyle(p.colorStyle);
-            setSafeAreaPx(p.safeAreaPx);
-            setTypeScale(p.typeScale);
-            setBoostContrast(p.boostContrast);
-          }}
-        />
+        </ConfigSection>
 
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* SAFE AREA & LEGGIBILITÀ — margini, tipografia, contrasto AA       */}
