@@ -702,6 +702,8 @@ export function MockupSuiteGenerator({
       setPreviewPhase("idle");
     } finally {
       setGenerating(false);
+      inFlightRef.current = false;
+      try { sessionStorage.removeItem(buildLockKey()); } catch { /* noop */ }
     }
   };
 
