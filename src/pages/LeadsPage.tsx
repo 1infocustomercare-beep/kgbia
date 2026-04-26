@@ -450,11 +450,7 @@ export default function LeadsPage() {
   const [showPicker, setShowPicker] = useState(false);
   const [customPreview, setCustomPreview] = useState<ManualPreviewSelection | null>(null);
 
-  // Demo Factory — auto-generate complete tenant + admin from selected preview
-  const [demoFactoryOpen, setDemoFactoryOpen] = useState(false);
-  const [demoFactoryLoading, setDemoFactoryLoading] = useState(false);
-  const [demoFactoryProgress, setDemoFactoryProgress] = useState("Inizializzo…");
-  const [demoFactoryResult, setDemoFactoryResult] = useState<DemoFactoryResult | null>(null);
+  // Demo Factory legacy rimossa: tutto passa dalla Mockup Suite (vedi requestDemoFactory).
 
   // Manual lead input
   const [showManual, setShowManual] = useState(false);
