@@ -19,9 +19,6 @@ const QUOTES = [
   { q: "L'agente vocale chiude appuntamenti mentre dormo. Letteralmente.", a: "Luca B. — Studio Medico" },
 ];
 
-/**
- * PROOF & DOMINIO — pinned section con horizontal scroll cinematografico.
- */
 export default function ProofHorizontal() {
   const root = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -47,13 +44,12 @@ export default function ProofHorizontal() {
         },
       });
 
-      // Reveal cards as they enter viewport horizontally — usa il tween come container
       const cards = tr.querySelectorAll<HTMLElement>("[data-proof-card]");
       cards.forEach((card) => {
         gsap.from(card, {
-          y: 80,
+          y: 60,
           opacity: 0,
-          scale: 0.88,
+          scale: 0.9,
           duration: 1,
           ease: "expo.out",
           scrollTrigger: {
@@ -75,29 +71,29 @@ export default function ProofHorizontal() {
         background: "radial-gradient(ellipse 60% 100% at 100% 50%, rgba(167,139,250,0.18), transparent 70%), linear-gradient(180deg, #050505, #08081a)",
       }} />
 
-      <div className="absolute left-5 top-8 z-20 sm:left-10 sm:top-12">
-        <div className="text-[11px] font-bold uppercase tracking-[3px] text-[#7eb7be]">Proof · Dominio del mercato</div>
-        <div className="mt-2 font-heading text-2xl font-black uppercase tracking-tight text-white sm:text-4xl">Numeri non discutibili.</div>
+      <div className="absolute left-4 top-6 z-20 sm:left-10 sm:top-12">
+        <div className="text-[10px] font-bold uppercase tracking-[3px] text-[#7eb7be] sm:text-[11px]">Proof · Dominio del mercato</div>
+        <div className="mt-2 font-heading text-xl font-black uppercase tracking-tight text-white sm:text-4xl">Numeri non discutibili.</div>
       </div>
 
-      <div className="absolute right-5 top-8 z-20 hidden text-right sm:right-10 sm:top-12 sm:block">
-        <div className="text-[10px] font-mono tracking-[3px] text-white/40">SCROLL →</div>
+      <div className="absolute right-4 top-6 z-20 text-right sm:right-10 sm:top-12">
+        <div className="text-[9px] font-mono tracking-[3px] text-white/40 sm:text-[10px]">SCROLL →</div>
       </div>
 
-      <div ref={track} className="absolute inset-0 flex h-full items-center gap-6 pl-5 pr-[10vw] will-change-transform sm:gap-10 sm:pl-10">
+      <div ref={track} className="absolute inset-0 flex h-full items-center gap-4 pl-4 pr-[10vw] will-change-transform sm:gap-10 sm:pl-10">
         {PROOF.map((p, i) => (
           <div
             key={i}
             data-proof-card
-            className="relative flex h-[60vh] min-w-[78vw] flex-col justify-end overflow-hidden rounded-[2rem] border border-white/10 p-7 sm:min-w-[44vw] sm:p-10"
+            className="relative flex h-[58vh] min-w-[80vw] flex-col justify-end overflow-hidden rounded-[2rem] border border-white/10 p-6 sm:h-[60vh] sm:min-w-[44vw] sm:p-10"
             style={{ background: `linear-gradient(160deg, ${p.c}1a 0%, transparent 60%), rgba(255,255,255,0.02)` }}
           >
-            <div className="absolute right-6 top-6 h-3 w-3 rounded-full" style={{ background: p.c, boxShadow: `0 0 24px ${p.c}` }} />
+            <div className="absolute right-5 top-5 h-3 w-3 rounded-full sm:right-6 sm:top-6" style={{ background: p.c, boxShadow: `0 0 24px ${p.c}` }} />
             <div className="font-mono text-[10px] tracking-[3px] text-white/30">{String(i + 1).padStart(2, "0")} / {PROOF.length}</div>
-            <div className="mt-2 font-heading font-black leading-none tracking-[-0.05em] text-white" style={{ fontSize: "clamp(4.5rem, 14vw, 12rem)" }}>
+            <div className="mt-2 font-heading font-black leading-none tracking-[-0.05em] text-white" style={{ fontSize: "clamp(3.5rem, 14vw, 12rem)" }}>
               {p.k}
             </div>
-            <div className="mt-3 text-sm font-semibold uppercase tracking-[3px] text-white/65">{p.l}</div>
+            <div className="mt-3 text-[11px] font-semibold uppercase tracking-[3px] text-white/65 sm:text-sm">{p.l}</div>
           </div>
         ))}
 
@@ -105,11 +101,11 @@ export default function ProofHorizontal() {
           <blockquote
             key={`q${i}`}
             data-proof-card
-            className="relative flex h-[55vh] min-w-[82vw] flex-col justify-center rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-8 backdrop-blur-md sm:min-w-[44vw] sm:p-12"
+            className="relative flex h-[55vh] min-w-[82vw] flex-col justify-center rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-7 backdrop-blur-md sm:min-w-[44vw] sm:p-12"
           >
-            <div className="font-heading text-6xl text-[#7eb7be]/40">"</div>
-            <p className="font-heading text-xl leading-snug text-white sm:text-3xl">{q.q}</p>
-            <footer className="mt-6 text-xs uppercase tracking-[3px] text-white/50">— {q.a}</footer>
+            <div className="font-heading text-5xl text-[#7eb7be]/40 sm:text-6xl">"</div>
+            <p className="font-heading text-lg leading-snug text-white sm:text-3xl">{q.q}</p>
+            <footer className="mt-5 text-[10px] uppercase tracking-[3px] text-white/50 sm:mt-6 sm:text-xs">— {q.a}</footer>
           </blockquote>
         ))}
 
