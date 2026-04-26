@@ -772,7 +772,12 @@ async function loadIntelligenceAssets(supabase: any, leadId?: string | null, own
 }
 
 /* ─── 4. AI BRAND KIT (tool-call) ─── */
-async function aiEnrichBrand(lead: LeadInput, scraped: ScrapedAssets | null): Promise<{
+async function aiEnrichBrand(
+  lead: LeadInput,
+  scraped: ScrapedAssets | null,
+  intel?: Awaited<ReturnType<typeof loadIntelligenceAssets>> | null,
+  preview?: PreviewSelection | null,
+): Promise<{
   tagline: string;
   description: string;
   palette: BrandPalette;
@@ -784,11 +789,19 @@ async function aiEnrichBrand(lead: LeadInput, scraped: ScrapedAssets | null): Pr
   const sectorLabel = lead.sectorLabel || lead.sector;
   const scrapedSummary = scraped?.markdown ? String(scraped.markdown).slice(0, 4000) : "";
   const scrapedBranding = scraped?.branding ? JSON.stringify(scraped.branding).slice(0, 1500) : "";
+  const intelColors = intel?.colors ? JSON.stringify(intel.colors).slice(0, 600) : "";
+  const intelWeak = Array.isArray(intel?.weakPoints) && intel!.weakPoints!.length
+    ? intel!.weakPoints!.slice(0, 6).map((w: any) => `- ${w.title || w}`).join("\n")
+    : "";
+  const intelPitch = intel?.pitch ? String(intel.pitch).slice(0, 800) : "";
+  const chosenMockup = preview?.brandName || preview?.styleName || preview?.templateVariant || "(auto)";
+  const chosenMood = preview?.styleName || preview?.templateVariant || "luxury editorial";
 
-  const sysPrompt = `Sei un brand strategist senior. Riceverai dati REALI su un'attività italiana e devi produrre un brand kit COMPLETO e PROFESSIONALE per generare la sua demo digitale Empire AI.
-RISPONDI SOLO con la chiamata della tool function "generate_brand_kit". Tutti i campi devono essere realistici, coerenti con il settore "${sectorLabel}" e con i dati forniti. Nessun campo placeholder.
-PALETTE: se nei dati sito vedi colori reali, usali. Altrimenti scegli palette luxury coerente.
-MENU/LISTINO: 14-18 voci specifiche del settore (food=piatti reali, beauty=trattamenti con prezzi, ncc=tratte con città, hotel=tipologie camera, fitness=corsi, healthcare=visite, retail=prodotti).`;
+  const sysPrompt = `Sei un brand strategist senior. Riceverai dati REALI su un'attività italiana e devi produrre un brand kit COMPLETO e PROFESSIONALE per generare la sua demo digitale 1:1 con il mockup scelto dal venditore.
+RISPONDI SOLO con la chiamata della tool function "generate_brand_kit". Tutti i campi devono essere realistici, coerenti con il settore "${sectorLabel}", con il MOCKUP DI RIFERIMENTO ("${chosenMockup}", mood: ${chosenMood}) e con i dati forniti. Nessun campo placeholder, nessun riferimento a brand interni della piattaforma.
+PALETTE: se sono presenti colori brand reali (intelligence o sito), USALI fedelmente. In assenza, usa palette coerente con il mood del mockup.
+MENU/LISTINO: 14-18 voci specifiche del settore (food=piatti reali, beauty=trattamenti con prezzi, ncc=tratte con città, hotel=tipologie camera, fitness=corsi, healthcare=visite, retail=prodotti). I nomi devono riflettere il vero stile dell'attività, non placeholder generici.
+TAGLINE/DESCRIPTION: devono parlare in nome dell'attività e del suo posizionamento reale, mai citare la piattaforma o "demo".`;
 
   const userPrompt = `ATTIVITÀ:
 Nome: ${lead.businessName}
@@ -799,13 +812,25 @@ Telefono: ${lead.phone ?? "—"} · Email: ${lead.email ?? "—"}
 Sito: ${lead.website ?? "—"} · IG: ${lead.instagram ?? "—"}
 Google rating: ${lead.googleRating ?? "—"} (${lead.googleReviews ?? 0} recensioni)
 
+MOCKUP SCELTO DAL VENDITORE: ${chosenMockup}
+MOOD VISIVO TARGET: ${chosenMood}
+
 CONTENUTO SITO REALE:
 ${scrapedSummary || "(nessun sito disponibile, inferisci dal nome e settore — sii creativo ma realistico)"}
 
 BRAND IDENTITY ESTRATTA DAL SITO:
 ${scrapedBranding || "(non disponibile)"}
 
-Genera tutto in italiano, tono professionale ma caldo.`;
+COLORI BRAND DA INTELLIGENCE/DEEP-ANALYSIS:
+${intelColors || "(non disponibili)"}
+
+PUNTI DEBOLI ATTUALI (da risolvere col nuovo sito):
+${intelWeak || "(non disponibili)"}
+
+PITCH/INSIGHT COMMERCIALE GIÀ RACCOLTO:
+${intelPitch || "(non disponibile)"}
+
+Genera tutto in italiano, tono professionale ma caldo, perfettamente coerente col mood del mockup scelto.`;
 
   const tool = {
     type: "function",
@@ -1143,7 +1168,7 @@ async function createFoodTenant(
       phone: lead.phone || "+39 06 0000000",
       address: lead.fullAddress || lead.zone || "—",
       city: lead.city || "Roma",
-      email: lead.email || `demo-${Date.now()}@empireaigroup.com`,
+      email: lead.email || `demo-${Date.now()}@demo-suite.app`,
       is_active: true,
       policy_accepted: true,
       policy_accepted_at: new Date().toISOString(),
@@ -1283,7 +1308,7 @@ async function createCompanyTenant(
       address: lead.fullAddress,
       city: lead.city,
       phone: lead.phone,
-      email: lead.email || `demo-${Date.now()}@empireaigroup.com`,
+      email: lead.email || `demo-${Date.now()}@demo-suite.app`,
       modules_enabled: allModules,
       is_active: true,
       theme_config: themeConfig,
@@ -1388,7 +1413,7 @@ Ti va se ne parliamo 5 minuti questa settimana? Risparmi 8h/settimana e raddoppi
   }
 
   try {
-    const sys = `Sei un senior sales copywriter italiano per Empire AI Group (SaaS gestionale per ${sectorLabel}). Tono: caldo, diretto, professionale, mai venditoriale. Usa "tu", emoji con misura.`;
+    const sys = `Sei un senior sales copywriter italiano specializzato in vendita di software gestionali e siti web 1:1 al settore "${sectorLabel}". Tono: caldo, diretto, professionale, mai venditoriale. Usa "tu", emoji con misura. NON nominare mai brand interni della piattaforma: parla SEMPRE in nome dell'attività del cliente e del valore che riceve.`;
     const userPrompt = `Lead: ${lead.businessName} (${sectorLabel}) a ${lead.city || "Italia"}.
 Tagline brand: "${brand.tagline}"
 Demo personalizzata pronta: ${previewUrl}
@@ -1609,7 +1634,7 @@ serve(async (req) => {
     await updateRun({ agents_status: { scout: "done", analyst: "running", curator: "pending", copywriter: "pending", builder: "pending", closer: "pending" } });
 
     // ─── AGENT 2: ANALYST — AI brand kit + sub-settore detection ───
-    const brand = await aiEnrichBrand(lead, scraped);
+    const brand = await aiEnrichBrand(lead, scraped, intel, preview);
     const isFood = FOOD_SECTORS.has(lead.sector);
     // ⭐ PRIORITY ORDER:
     //   1) preview.templateVariant ESPLICITO dal client (preview-matcher v3) — AUTORITATIVO
