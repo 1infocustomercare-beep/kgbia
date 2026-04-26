@@ -131,6 +131,13 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
   const [loading, setLoading] = useState(true);
   const [howToSource, setHowToSource] = useState<LeadSource | null>(null);
   const [legendOpen, setLegendOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [collapsedCats, setCollapsedCats] = useState<Record<SourceCategory, boolean>>({
+    maps: false,
+    web: false,
+    social: true,
+    registry: true,
+  });
 
   const refreshStatuses = async () => {
     setLoading(true);
