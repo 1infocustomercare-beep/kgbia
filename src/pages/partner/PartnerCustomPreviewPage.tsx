@@ -593,10 +593,10 @@ export default function PartnerCustomPreviewPage() {
               <div className="min-w-0">
                 <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                   <Sparkles className="h-5 w-5 text-primary" />
-                  Genera nuova preview
+                  Genera Mockup + Sito 1:1
                 </CardTitle>
                 <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">
-                  3 passi rapidi · totale ~30 sec
+                  3 passi rapidi · 4 mockup iPhone + sito webapp coerente
                 </p>
               </div>
 
