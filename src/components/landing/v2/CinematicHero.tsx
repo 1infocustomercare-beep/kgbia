@@ -114,8 +114,9 @@ export default function CinematicHero() {
     return () => clearInterval(id);
   }, []);
 
-  // Pointer tracking for spotlight (desktop) + gyroscope (mobile)
+  // Pointer tracking — DESKTOP ONLY (skip on mobile to save perf, drop gyro)
   useEffect(() => {
+    if (lite) return;
     const el = stageRef.current;
     if (!el) return;
     const onMove = (e: PointerEvent) => {
@@ -124,22 +125,8 @@ export default function CinematicHero() {
       pointerY.set(Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)));
     };
     el.addEventListener("pointermove", onMove);
-
-    // Mobile: subtle gyroscope tilt
-    const onOrient = (e: DeviceOrientationEvent) => {
-      if (e.gamma == null || e.beta == null) return;
-      const gx = Math.max(-30, Math.min(30, e.gamma)) / 30; // -1..1
-      const gy = Math.max(-30, Math.min(30, e.beta - 30)) / 30;
-      pointerX.set(0.5 + gx * 0.35);
-      pointerY.set(0.5 + gy * 0.25);
-    };
-    window.addEventListener("deviceorientation", onOrient);
-
-    return () => {
-      el.removeEventListener("pointermove", onMove);
-      window.removeEventListener("deviceorientation", onOrient);
-    };
-  }, [pointerX, pointerY]);
+    return () => el.removeEventListener("pointermove", onMove);
+  }, [lite, pointerX, pointerY]);
 
   // Cinematic scroll choreography
   const titleY = useTransform(smooth, [0, 1], [0, -130]);
