@@ -11,38 +11,28 @@ const AGENTS = [
   { n: "ATLAS", role: "Decision Engine", desc: "Predice churn, vendite e cash-flow con precisione del 94%.", c: "#f59e0b" },
 ];
 
-/**
- * STICKY AGENTS — la colonna sinistra resta pinnata, a destra scorrono i dettagli.
- * Effetto "case study" cinematografico (Apple-like).
- */
 export default function StickyAgentsReveal() {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = root.current;
     if (!el) return;
-    const ctx = gsap.context(() => {
-      const panels = gsap.utils.toArray<HTMLElement>("[data-agent-panel]");
-      const visuals = gsap.utils.toArray<HTMLElement>("[data-agent-visual]");
-      const labels = gsap.utils.toArray<HTMLElement>("[data-agent-label]");
+    const ctx = gsap.context((self) => {
+      const q = self.selector!;
+      const panels = q("[data-agent-panel]") as HTMLElement[];
+      const visuals = q("[data-agent-visual]") as HTMLElement[];
+      const labels = q("[data-agent-label]") as HTMLElement[];
 
-      // Set initial: all visuals hidden except first
+      if (visuals.length === 0) return;
+
       gsap.set(visuals, { opacity: 0, scale: 1.15, filter: "blur(20px)" });
       gsap.set(visuals[0], { opacity: 1, scale: 1, filter: "blur(0px)" });
-      gsap.set(labels, { opacity: 0.25 });
-      gsap.set(labels[0], { opacity: 1 });
+      if (labels.length) {
+        gsap.set(labels, { opacity: 0.25 });
+        gsap.set(labels[0], { opacity: 1 });
+      }
 
-      panels.forEach((panel, i) => {
-        ScrollTrigger.create({
-          trigger: panel,
-          start: "top 60%",
-          end: "bottom 40%",
-          onEnter: () => switchTo(i),
-          onEnterBack: () => switchTo(i),
-        });
-      });
-
-      function switchTo(i: number) {
+      const switchTo = (i: number) => {
         visuals.forEach((v, idx) => {
           gsap.to(v, {
             opacity: idx === i ? 1 : 0,
@@ -55,24 +45,33 @@ export default function StickyAgentsReveal() {
         labels.forEach((l, idx) => {
           gsap.to(l, { opacity: idx === i ? 1 : 0.25, duration: 0.4 });
         });
-      }
+      };
+
+      panels.forEach((panel, i) => {
+        ScrollTrigger.create({
+          trigger: panel,
+          start: "top 60%",
+          end: "bottom 40%",
+          onEnter: () => switchTo(i),
+          onEnterBack: () => switchTo(i),
+        });
+      });
     }, root);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={root} id="agenti" className="relative px-5 py-32">
+    <section ref={root} id="agenti" className="relative px-4 py-24 sm:px-5 sm:py-32">
       <div className="mx-auto max-w-[1280px]">
-        <div className="mb-20 max-w-[760px]">
+        <div className="mb-14 max-w-[760px] sm:mb-20">
           <div className="mb-3 text-[11px] font-bold uppercase tracking-[3px] text-[#a78bfa]">04 · AGENTI NEURALI</div>
-          <h2 className="font-heading text-[clamp(2.4rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-[-0.04em] text-white">
+          <h2 className="font-heading text-[clamp(2.2rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-[-0.04em] text-white">
             Quattro cervelli.<br />
             <span className="bg-gradient-to-r from-[#7eb7be] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">Un solo dominio.</span>
           </h2>
         </div>
 
-        <div className="grid gap-12 lg:grid-cols-[1fr_1fr]">
-          {/* Left: sticky visual */}
+        <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-12">
           <div className="hidden lg:block">
             <div className="sticky top-[15vh] aspect-square w-full overflow-hidden rounded-[2.5rem] border border-white/10 bg-black/40">
               {AGENTS.map((a, i) => (
@@ -102,20 +101,37 @@ export default function StickyAgentsReveal() {
             </div>
           </div>
 
-          {/* Right: scrollable panels */}
-          <div className="space-y-[40vh] lg:space-y-[55vh]">
+          <div className="space-y-16 lg:space-y-[55vh]">
             {AGENTS.map((a, i) => (
               <div key={a.n} data-agent-panel className="lg:min-h-[40vh]">
-                <div className="mb-4 flex items-center gap-3">
+                {/* Mobile compact visual card */}
+                <div
+                  className="mb-5 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-md lg:hidden"
+                  style={{ background: `linear-gradient(135deg, ${a.c}14, transparent 60%)` }}
+                >
+                  <div
+                    className="h-14 w-14 shrink-0 rounded-full"
+                    style={{
+                      background: `radial-gradient(circle, ${a.c} 0%, transparent 70%)`,
+                      boxShadow: `0 0 40px ${a.c}88`,
+                    }}
+                  />
+                  <div className="min-w-0">
+                    <div className="font-mono text-[9px] tracking-[3px] text-white/40">AGENT-{String(i + 1).padStart(2, "0")}</div>
+                    <div className="text-xs font-bold uppercase tracking-[2px]" style={{ color: a.c }}>{a.role}</div>
+                  </div>
+                </div>
+
+                <div className="mb-3 flex items-center gap-3 sm:mb-4">
                   <span className="font-mono text-xs tracking-[3px] text-white/40">{String(i + 1).padStart(2, "0")} / 04</span>
                   <span className="h-px flex-1 bg-white/15" />
-                  <span className="text-xs uppercase tracking-[3px]" style={{ color: a.c }}>{a.role}</span>
+                  <span className="hidden text-xs uppercase tracking-[3px] sm:inline" style={{ color: a.c }}>{a.role}</span>
                 </div>
-                <h3 className="font-heading text-5xl font-black tracking-tight text-white sm:text-6xl">{a.n}</h3>
-                <p className="mt-5 max-w-[460px] text-[15px] leading-[1.85] text-white/65">{a.desc}</p>
-                <div className="mt-6 flex flex-wrap gap-2">
+                <h3 className="font-heading text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">{a.n}</h3>
+                <p className="mt-4 max-w-[460px] text-[14px] leading-[1.85] text-white/65 sm:mt-5 sm:text-[15px]">{a.desc}</p>
+                <div className="mt-5 flex flex-wrap gap-2 sm:mt-6">
                   {["voce naturale", "h24/365", "self-learning", "no-code"].map(t => (
-                    <span key={t} className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[2px] text-white/65">{t}</span>
+                    <span key={t} className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[2px] text-white/65 sm:text-[11px]">{t}</span>
                   ))}
                 </div>
               </div>
