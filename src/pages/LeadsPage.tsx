@@ -2689,12 +2689,12 @@ export default function LeadsPage() {
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <button
-                      onClick={() => requestDemoFactory(selected, customPreview)}
-                      disabled={demoFactoryLoading}
-                      className="text-[9px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1 disabled:opacity-50"
+                      onClick={() => goToMockupSuiteForLead({ ...selected, _sector: selected._sector || sector, _sector_label: sectorConfig?.label })}
+                      className="text-[9px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1"
                       style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", color: "#fff", boxShadow: "0 4px 14px rgba(167,139,250,0.35)" }}
+                      title="Apri la pagina Mockup Suite con i dati del lead già caricati"
                     >
-                      <WandIcon className="w-3 h-3" /> {demoFactoryLoading ? "Genero…" : "🪄 Genera Demo Live"}
+                      <WandIcon className="w-3 h-3" /> 🪄 Genera 4 Mockup
                     </button>
                     <button
                       onClick={() => setShowPicker(true)}
