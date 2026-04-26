@@ -326,7 +326,6 @@ export default function LeadsPage() {
   const navigate = useNavigate();
   // 💰 Sistema crediti venditore — gating su azioni AI costose
   const { balance: creditBalance, getCost, consume: consumeSellerCredits, totalSpent30d } = useSellerCredits();
-  const [pendingDemoFactory, setPendingDemoFactory] = useState<{ lead: Lead & { _sector: string }; preview: ManualPreviewSelection | null } | null>(null);
 
   // Helper: porta il venditore alla pagina Mockup Suite con i dati del lead pre-caricati
   // e avvio automatico della generazione delle 4 schermate iPhone.
