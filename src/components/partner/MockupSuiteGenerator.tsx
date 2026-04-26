@@ -310,6 +310,9 @@ export function MockupSuiteGenerator({
   templateVariant: initialTemplate,
   leadId,
   previewId,
+  brandLogoUrl,
+  brandPhotos,
+  deepReportSummary,
   autoStart = false,
   onGenerated,
 }: Props) {
