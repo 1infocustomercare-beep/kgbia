@@ -217,197 +217,258 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
 
   return (
     <div
-      className="rounded-xl p-3 md:p-4 space-y-3 md:space-y-4"
-      style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+      className="rounded-xl overflow-hidden"
+      style={{
+        background: "linear-gradient(180deg, rgba(15,23,42,0.55), rgba(15,23,42,0.25))",
+        border: "1px solid rgba(255,255,255,0.07)",
+        boxShadow: "0 8px 24px -12px rgba(0,0,0,0.35)",
+      }}
     >
-      {/* HEADER */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="min-w-0">
-          <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest" style={{ color: "#14b8a6" }}>
-            📡 Canali di ricerca · Empire AI cerca ovunque
+      {/* ─── HEADER COMPATTO (sempre visibile, click → toggle) ─── */}
+      <button
+        type="button"
+        onClick={() => setPanelOpen(v => !v)}
+        className="w-full flex items-center gap-3 px-3 md:px-4 py-2.5 md:py-3 text-left transition-colors hover:bg-white/[0.02]"
+      >
+        <span
+          className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+          style={{
+            background: "linear-gradient(135deg, rgba(20,184,166,0.18), rgba(20,184,166,0.06))",
+            border: "1px solid rgba(20,184,166,0.35)",
+          }}
+        >
+          <Radio className="w-4 h-4" style={{ color: "#5eead4" }} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-white/90 truncate">
+            Canali di ricerca
           </p>
-          <p className="text-[10px] md:text-[11px] mt-0.5" style={{ color: "#9ca3af" }}>
-            {loading
-              ? "Verifica chiavi API in corso…"
-              : (
-                <>
-                  <span className="font-bold text-white">{totalActive}</span> attivi ·{" "}
-                  <span style={{ color: "#34d399" }}>{totalAvailable} disponibili</span>
-                  {totalLocked > 0 && (
-                    <> · <span style={{ color: "#fbbf24" }}>{totalLocked} da sbloccare</span></>
-                  )}
-                </>
-              )}
+          <p className="text-[10px] md:text-[11px] mt-0.5 truncate" style={{ color: "#94a3b8" }}>
+            {loading ? (
+              "Verifica chiavi API in corso…"
+            ) : (
+              <>
+                <span className="font-bold text-white">{totalActive}</span> attivi ·{" "}
+                <span style={{ color: "#34d399" }}>{totalAvailable} disponibili</span>
+                {totalLocked > 0 && (
+                  <> · <span style={{ color: "#fbbf24" }}>{totalLocked} da sbloccare</span></>
+                )}
+              </>
+            )}
           </p>
         </div>
-        <div className="flex items-center gap-1.5 flex-wrap justify-end">
-          <button
-            onClick={() => setLegendOpen(v => !v)}
-            title="Mostra legenda stati"
-            className="text-[10px] font-semibold px-2 py-1 rounded-lg flex items-center gap-1"
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span
+            className="hidden md:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md"
             style={{
-              background: legendOpen ? "rgba(20,184,166,0.15)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${legendOpen ? "rgba(20,184,166,0.4)" : "rgba(255,255,255,0.08)"}`,
-              color: legendOpen ? "#5eead4" : "#94a3b8",
-            }}
-          >
-            <Info className="w-3 h-3" /> Legenda
-          </button>
-          <button
-            onClick={refreshStatuses}
-            disabled={loading}
-            title="Ricontrolla stato API"
-            className="p-1.5 rounded-lg opacity-70 hover:opacity-100 transition-opacity"
-            style={{ background: "rgba(255,255,255,0.05)" }}
-          >
-            <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} style={{ color: "#94a3b8" }} />
-          </button>
-          <button
-            onClick={selectFreeOnly}
-            title={`Solo le ${totalFree} fonti senza API key`}
-            className="text-[10px] font-bold px-2.5 py-1 rounded-lg"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "#cbd5e1",
-            }}
-          >
-            <ShieldCheck className="w-3 h-3 inline mr-1" />
-            Solo gratis ({totalFree})
-          </button>
-          <button
-            onClick={selectAllAvailable}
-            className="text-[10px] font-bold px-2.5 py-1 rounded-lg"
-            style={{
-              background: "linear-gradient(135deg, rgba(20,184,166,0.25), rgba(16,185,129,0.12))",
-              border: "1px solid rgba(20,184,166,0.45)",
+              background: "rgba(20,184,166,0.12)",
+              border: "1px solid rgba(20,184,166,0.3)",
               color: "#5eead4",
             }}
           >
-            <Check className="w-3 h-3 inline mr-1" />
-            Tutte disponibili ({totalAvailable})
-          </button>
-          <button
-            onClick={() => onChange([])}
-            className="text-[10px] font-semibold underline opacity-60 hover:opacity-100"
-            style={{ color: "#94a3b8" }}
+            <Zap className="w-3 h-3" /> {totalActive}/{totalAvailable}
+          </span>
+          <ChevronDown
+            className="w-4 h-4 transition-transform"
+            style={{
+              color: "#94a3b8",
+              transform: panelOpen ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          />
+        </div>
+      </button>
+
+      {/* ─── CORPO COLLASSABILE ─── */}
+      <div
+        className="grid transition-[grid-template-rows] duration-300 ease-out"
+        style={{ gridTemplateRows: panelOpen ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden">
+          <div
+            className="px-3 md:px-4 pb-3 md:pb-4 pt-1 space-y-3 md:space-y-4"
+            style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
           >
-            Nessuno
-          </button>
-        </div>
-      </div>
-
-      {/* LEGENDA */}
-      {legendOpen && (
-        <div
-          className="rounded-lg p-2.5 grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px]"
-          style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.06)" }}
-        >
-          <LegendItem
-            color="#14b8a6"
-            icon={<Zap className="w-3 h-3" />}
-            label="Attivo"
-            desc="Selezionato per questa ricerca"
-          />
-          <LegendItem
-            color="#34d399"
-            icon={<Check className="w-3 h-3" />}
-            label="Disponibile"
-            desc="Pronto da attivare (gratis o API ok)"
-          />
-          <LegendItem
-            color="#fbbf24"
-            icon={<Lock className="w-3 h-3" />}
-            label="Da sbloccare"
-            desc="Richiede API key — tap per la guida"
-          />
-          <LegendItem
-            color="#94a3b8"
-            icon={<ShieldCheck className="w-3 h-3" />}
-            label="Gratis"
-            desc="Nessuna chiave necessaria"
-          />
-        </div>
-      )}
-
-      {/* SEZIONI PER CATEGORIA */}
-      {(Object.keys(CATEGORY_META) as SourceCategory[]).map(cat => {
-        const meta = CATEGORY_META[cat];
-        const sources = grouped[cat];
-        const availInCat = sources.filter(isSourceAvailable);
-        const activeInCat = sources.filter(s => activeSources.includes(s.id) && isSourceAvailable(s));
-        const lockedInCat = sources.length - availInCat.length;
-
-        return (
-          <div key={cat} className="space-y-1.5">
-            <div className="flex items-center justify-between flex-wrap gap-1.5">
-              <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider" style={{ color: meta.color }}>
-                {meta.icon} {meta.label}
-              </p>
-              <p className="text-[9px] md:text-[10px] font-semibold" style={{ color: "#6b7280" }}>
-                <span style={{ color: activeInCat.length > 0 ? "#34d399" : "#f87171" }}>
-                  {activeInCat.length}
-                </span>{" "}
-                attive · {availInCat.length} disponibili
-                {lockedInCat > 0 && (
-                  <> · <span style={{ color: "#fbbf24" }}>{lockedInCat} bloccate</span></>
-                )}
-              </p>
+            {/* Toolbar azioni */}
+            <div className="flex items-center gap-1.5 flex-wrap pt-2">
+              <button
+                onClick={() => setLegendOpen(v => !v)}
+                title="Mostra legenda stati"
+                className="text-[10px] font-semibold px-2 py-1 rounded-lg flex items-center gap-1 transition-colors"
+                style={{
+                  background: legendOpen ? "rgba(20,184,166,0.15)" : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${legendOpen ? "rgba(20,184,166,0.4)" : "rgba(255,255,255,0.08)"}`,
+                  color: legendOpen ? "#5eead4" : "#94a3b8",
+                }}
+              >
+                <Info className="w-3 h-3" /> Legenda
+              </button>
+              <button
+                onClick={refreshStatuses}
+                disabled={loading}
+                title="Ricontrolla stato API"
+                className="p-1.5 rounded-lg opacity-70 hover:opacity-100 transition-opacity"
+                style={{ background: "rgba(255,255,255,0.05)" }}
+              >
+                <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} style={{ color: "#94a3b8" }} />
+              </button>
+              <div className="flex-1" />
+              <button
+                onClick={selectFreeOnly}
+                title={`Solo le ${totalFree} fonti senza API key`}
+                className="text-[10px] font-bold px-2.5 py-1 rounded-lg"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#cbd5e1",
+                }}
+              >
+                <ShieldCheck className="w-3 h-3 inline mr-1" />
+                Solo gratis ({totalFree})
+              </button>
+              <button
+                onClick={selectAllAvailable}
+                className="text-[10px] font-bold px-2.5 py-1 rounded-lg"
+                style={{
+                  background: "linear-gradient(135deg, rgba(20,184,166,0.25), rgba(16,185,129,0.12))",
+                  border: "1px solid rgba(20,184,166,0.45)",
+                  color: "#5eead4",
+                }}
+              >
+                <Check className="w-3 h-3 inline mr-1" />
+                Tutte ({totalAvailable})
+              </button>
+              <button
+                onClick={() => onChange([])}
+                className="text-[10px] font-semibold underline opacity-60 hover:opacity-100"
+                style={{ color: "#94a3b8" }}
+              >
+                Nessuno
+              </button>
             </div>
-            <div className="flex flex-wrap gap-1.5">
-              {sources.map(src => {
-                const available = isSourceAvailable(src);
-                const active = available && activeSources.includes(src.id);
-                const locked = !available;
-                const free = isSourceFree(src);
-                return (
+
+            {/* LEGENDA */}
+            <div
+              className="grid transition-[grid-template-rows] duration-300 ease-out"
+              style={{ gridTemplateRows: legendOpen ? "1fr" : "0fr" }}
+            >
+              <div className="overflow-hidden">
+                <div
+                  className="rounded-lg p-2.5 grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px]"
+                  style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
+                  <LegendItem color="#14b8a6" icon={<Zap className="w-3 h-3" />} label="Attivo" desc="Selezionato per questa ricerca" />
+                  <LegendItem color="#34d399" icon={<Check className="w-3 h-3" />} label="Disponibile" desc="Pronto da attivare (gratis o API ok)" />
+                  <LegendItem color="#fbbf24" icon={<Lock className="w-3 h-3" />} label="Da sbloccare" desc="Richiede API key — tap per la guida" />
+                  <LegendItem color="#94a3b8" icon={<ShieldCheck className="w-3 h-3" />} label="Gratis" desc="Nessuna chiave necessaria" />
+                </div>
+              </div>
+            </div>
+
+            {/* SEZIONI PER CATEGORIA */}
+            {(Object.keys(CATEGORY_META) as SourceCategory[]).map(cat => {
+              const meta = CATEGORY_META[cat];
+              const sources = grouped[cat];
+              const availInCat = sources.filter(isSourceAvailable);
+              const activeInCat = sources.filter(s => activeSources.includes(s.id) && isSourceAvailable(s));
+              const lockedInCat = sources.length - availInCat.length;
+              const collapsed = collapsedCats[cat];
+
+              return (
+                <div
+                  key={cat}
+                  className="rounded-lg overflow-hidden"
+                  style={{
+                    background: "rgba(255,255,255,0.015)",
+                    border: "1px solid rgba(255,255,255,0.05)",
+                  }}
+                >
                   <button
-                    key={src.id}
-                    onClick={() => (locked ? setHowToSource(src) : toggle(src.id, available))}
-                    title={locked ? `Richiede ${src.requiresApi}` : `${src.desc}${free ? " · Gratis" : " · API configurata"}`}
-                    className="text-[10px] md:text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5"
-                    style={{
-                      background: locked
-                        ? "rgba(255,255,255,0.02)"
-                        : active
-                        ? `linear-gradient(135deg, ${meta.color}40, ${meta.color}20)`
-                        : "rgba(255,255,255,0.03)",
-                      border: `1px solid ${locked ? "rgba(251,191,36,0.25)" : active ? `${meta.color}90` : "rgba(255,255,255,0.08)"}`,
-                      color: locked ? "#9ca3af" : active ? "#fff" : "#cbd5e1",
-                      opacity: locked ? 0.85 : 1,
-                    }}
+                    type="button"
+                    onClick={() => setCollapsedCats(prev => ({ ...prev, [cat]: !prev[cat] }))}
+                    className="w-full flex items-center justify-between gap-2 px-2.5 py-2 text-left hover:bg-white/[0.02] transition-colors"
                   >
-                    {/* indicatore stato */}
-                    {active && <Zap className="w-2.5 h-2.5" style={{ color: meta.color }} />}
-                    {!active && available && <Check className="w-2.5 h-2.5" style={{ color: "#34d399" }} />}
-                    {locked && <Lock className="w-2.5 h-2.5" style={{ color: "#fbbf24" }} />}
-
-                    {src.label}
-
-                    {/* badge "FREE" sulle gratis non attive (chiarezza) */}
-                    {!active && available && free && (
-                      <span
-                        className="ml-0.5 text-[8px] font-bold px-1 py-0.5 rounded"
-                        style={{ background: "rgba(52,211,153,0.12)", color: "#34d399" }}
-                      >
-                        FREE
-                      </span>
-                    )}
-                    {locked && (
-                      <span
-                        className="ml-1 text-[8px] font-bold px-1.5 py-0.5 rounded"
-                        style={{ background: "rgba(245,158,11,0.18)", color: "#fbbf24" }}
-                      >
-                        🔑 SBLOCCA
-                      </span>
-                    )}
+                    <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5" style={{ color: meta.color }}>
+                      <span>{meta.icon}</span> {meta.label}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] md:text-[10px] font-semibold" style={{ color: "#6b7280" }}>
+                        <span style={{ color: activeInCat.length > 0 ? "#34d399" : "#f87171" }}>
+                          {activeInCat.length}
+                        </span>
+                        /{availInCat.length}
+                        {lockedInCat > 0 && (
+                          <> · <span style={{ color: "#fbbf24" }}>{lockedInCat}🔒</span></>
+                        )}
+                      </p>
+                      <ChevronDown
+                        className="w-3.5 h-3.5 transition-transform"
+                        style={{
+                          color: "#94a3b8",
+                          transform: collapsed ? "rotate(0deg)" : "rotate(180deg)",
+                        }}
+                      />
+                    </div>
                   </button>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
+
+                  <div
+                    className="grid transition-[grid-template-rows] duration-300 ease-out"
+                    style={{ gridTemplateRows: collapsed ? "0fr" : "1fr" }}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="flex flex-wrap gap-1.5 px-2.5 pb-2.5 pt-0.5">
+                        {sources.map(src => {
+                          const available = isSourceAvailable(src);
+                          const active = available && activeSources.includes(src.id);
+                          const locked = !available;
+                          const free = isSourceFree(src);
+                          return (
+                            <button
+                              key={src.id}
+                              onClick={() => (locked ? setHowToSource(src) : toggle(src.id, available))}
+                              title={locked ? `Richiede ${src.requiresApi}` : `${src.desc}${free ? " · Gratis" : " · API configurata"}`}
+                              className="text-[10px] md:text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5"
+                              style={{
+                                background: locked
+                                  ? "rgba(255,255,255,0.02)"
+                                  : active
+                                  ? `linear-gradient(135deg, ${meta.color}40, ${meta.color}20)`
+                                  : "rgba(255,255,255,0.03)",
+                                border: `1px solid ${locked ? "rgba(251,191,36,0.25)" : active ? `${meta.color}90` : "rgba(255,255,255,0.08)"}`,
+                                color: locked ? "#9ca3af" : active ? "#fff" : "#cbd5e1",
+                                opacity: locked ? 0.85 : 1,
+                              }}
+                            >
+                              {active && <Zap className="w-2.5 h-2.5" style={{ color: meta.color }} />}
+                              {!active && available && <Check className="w-2.5 h-2.5" style={{ color: "#34d399" }} />}
+                              {locked && <Lock className="w-2.5 h-2.5" style={{ color: "#fbbf24" }} />}
+
+                              {src.label}
+
+                              {!active && available && free && (
+                                <span
+                                  className="ml-0.5 text-[8px] font-bold px-1 py-0.5 rounded"
+                                  style={{ background: "rgba(52,211,153,0.12)", color: "#34d399" }}
+                                >
+                                  FREE
+                                </span>
+                              )}
+                              {locked && (
+                                <span
+                                  className="ml-1 text-[8px] font-bold px-1.5 py-0.5 rounded"
+                                  style={{ background: "rgba(245,158,11,0.18)", color: "#fbbf24" }}
+                                >
+                                  🔑 SBLOCCA
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
 
       {/* FALLBACK BANNER — categoria senza fonti attive */}
       {!loading && fallbackCategories.length > 0 && (
