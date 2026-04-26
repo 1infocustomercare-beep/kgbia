@@ -499,6 +499,103 @@ export function MockupSuiteGenerator({
     screens: SuiteScreen[];
   } | null>(null);
 
+  // ─── Generazione SITO COMPLETO 1:1 ─── (chiama generate-demo-from-lead con
+  // tutti i dati lead + template scelto → restituisce previewUrl, adminUrl, credenziali)
+  const [siteBuilding, setSiteBuilding] = useState(false);
+  const [siteResult, setSiteResult] = useState<any>(null);
+
+  const handleBuildFullSite = async () => {
+    if (!businessName?.trim() || !businessSector?.trim()) {
+      toast.error("Servono nome attività e settore per generare il sito completo");
+      return;
+    }
+    if (siteBuilding) return;
+    setSiteBuilding(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Devi essere loggato");
+        setSiteBuilding(false);
+        return;
+      }
+      const resolvedTemplate = result?.template_variant
+        || (templateVariant === "auto" ? suggestTemplateForSector(businessSector) : templateVariant);
+
+      const sectorId = leadFullData?.sectorId
+        || (businessSector || "").toLowerCase().trim();
+
+      toast.loading("🏗️ Costruisco sito + admin completo (30-60s)…", { id: "build-site" });
+
+      const { data, error } = await supabase.functions.invoke("generate-demo-from-lead", {
+        body: {
+          lead: {
+            businessName,
+            sector: sectorId,
+            sectorLabel: businessSector,
+            city: businessCity || "",
+            zone: leadFullData?.zone || "",
+            fullAddress: leadFullData?.fullAddress || "",
+            phone: leadFullData?.phone || "",
+            email: leadFullData?.email || "",
+            website: leadFullData?.website || "",
+            instagram: leadFullData?.instagram || "",
+            facebook: leadFullData?.facebook || "",
+            googleRating: leadFullData?.googleRating || null,
+            googleReviews: leadFullData?.googleReviews || null,
+            googleMapsUrl: leadFullData?.googleMapsUrl || "",
+            openingHours: leadFullData?.openingHours || null,
+            cuisine: leadFullData?.cuisine || null,
+            types: leadFullData?.types || [],
+            specializationLabel: leadFullData?.specializationLabel || null,
+            specializationQuery: leadFullData?.specializationQuery || null,
+          },
+          preview: {
+            brandName: businessName,
+            styleName: resolvedTemplate,
+            imageUrl: result?.screens?.[0]?.image_url || brandLogoUrl || null,
+            sectorId,
+            templateVariant: resolvedTemplate,
+            screens: result?.screens?.map(s => s.image_url).filter(Boolean) || [],
+          },
+          partnerId: user.id,
+          leadId: leadId || null,
+          originUrl: window.location.origin,
+          // Asset reali estratti dal lead per personalizzazione 1:1
+          intelligence: {
+            logo: brandLogoUrl || null,
+            photos: brandPhotos || [],
+            deepReport: deepReportSummary || null,
+          },
+        },
+      });
+
+      toast.dismiss("build-site");
+
+      const errBody: any = (error as any)?.context?.body || data;
+      if (errBody?.error === "lead_data_insufficient") {
+        toast.error("⚠️ Lead con dati insufficienti", {
+          description: (errBody.issues || []).join(" · ") || "Arricchisci il lead prima di generare il sito",
+        });
+        return;
+      }
+
+      if (error || !data?.success) {
+        throw new Error(error?.message || data?.error || "Generazione sito fallita");
+      }
+
+      setSiteResult(data);
+      toast.success("✅ Sito + admin generati!", {
+        description: `${data.previewUrl} · login: ${data.credentials?.email || "—"}`,
+        duration: 10000,
+      });
+    } catch (e: any) {
+      toast.dismiss("build-site");
+      toast.error(e?.message || "Errore generazione sito");
+    } finally {
+      setSiteBuilding(false);
+    }
+  };
+
   // Guard sincrono contro doppi click ravvicinati (setGenerating è async, non protegge il primo frame)
   const inFlightRef = useRef(false);
   // Lock cross-reload: se la stessa combo lead+template è già in generazione in un'altra tab/reload,
