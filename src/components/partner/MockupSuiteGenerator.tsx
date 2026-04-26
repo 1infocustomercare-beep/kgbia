@@ -329,6 +329,72 @@ function suggestTemplateForSector(sector: string): string {
   return "modern_dark";
 }
 
+// ──────────────────────────────────────────────────────────────────────────
+// ConfigSection — wrapper collassabile, numerato, con header pro
+// Usato per separare le sezioni della config (Motore, Stile, Personalizzazione…)
+// ──────────────────────────────────────────────────────────────────────────
+function ConfigSection({
+  step,
+  icon: Icon,
+  title,
+  subtitle,
+  badge,
+  defaultOpen = true,
+  tone = "default",
+  children,
+}: {
+  step: number;
+  icon: React.ElementType;
+  title: string;
+  subtitle?: string;
+  badge?: React.ReactNode;
+  defaultOpen?: boolean;
+  tone?: "default" | "primary" | "accent";
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  const toneClass =
+    tone === "primary"
+      ? "border-primary/25 bg-gradient-to-br from-primary/[0.04] to-transparent"
+      : tone === "accent"
+      ? "border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent"
+      : "border-border/60 bg-card/40";
+  return (
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <div className={`rounded-xl border ${toneClass} overflow-hidden transition-colors`}>
+        <CollapsibleTrigger asChild>
+          <button
+            type="button"
+            className="w-full flex items-center gap-3 px-4 sm:px-5 py-3.5 text-left hover:bg-muted/40 transition-colors"
+          >
+            <span className="shrink-0 inline-flex items-center justify-center h-7 w-7 rounded-lg bg-primary/10 text-primary text-xs font-bold tabular-nums">
+              {String(step).padStart(2, "0")}
+            </span>
+            <Icon className="h-4 w-4 text-primary shrink-0" />
+            <span className="flex-1 min-w-0">
+              <span className="block text-sm font-semibold leading-tight truncate">{title}</span>
+              {subtitle && (
+                <span className="block text-[11px] text-muted-foreground leading-tight mt-0.5 truncate">
+                  {subtitle}
+                </span>
+              )}
+            </span>
+            {badge && <span className="shrink-0">{badge}</span>}
+            <ChevronDown
+              className={`h-4 w-4 text-muted-foreground shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
+            />
+          </button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="px-4 sm:px-5 pb-5 pt-1 space-y-5 border-t border-border/40">
+            {children}
+          </div>
+        </CollapsibleContent>
+      </div>
+    </Collapsible>
+  );
+}
+
 export function MockupSuiteGenerator({
   businessName: businessNameProp,
   businessSector: businessSectorProp = "",
