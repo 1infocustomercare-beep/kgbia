@@ -1535,7 +1535,7 @@ export function MockupSuiteGenerator({
           <p className="text-[10px] text-muted-foreground italic">
             🎨 Clicca <span className="font-semibold not-italic">Genera Suite</span> per applicare queste impostazioni alle 4 schermate. L'anteprima live in alto si aggiorna istantaneamente.
           </p>
-        </div>
+        </ConfigSection>
 
         {/* ────────────────────────────────────────────────────────────────── */}
         {/* PRESET PREMIUM (palette + tipografia + layout architetturale)     */}
