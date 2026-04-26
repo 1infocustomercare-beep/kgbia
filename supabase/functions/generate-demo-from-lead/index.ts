@@ -710,6 +710,67 @@ async function instagramOgImage(url: string): Promise<string[]> {
   } catch { return []; }
 }
 
+/* ─── 3b. SCRAPE FACEBOOK (light: og:image + cover image scrape) ─── */
+async function facebookOgImage(url: string): Promise<string[]> {
+  if (!url) return [];
+  try {
+    const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
+    if (!FIRECRAWL_API_KEY) return [];
+    // Normalizza URL FB (rimuovi parametri tracking)
+    const cleaned = url.split("?")[0].split("#")[0];
+    const res = await fetch("https://api.firecrawl.dev/v2/scrape", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${FIRECRAWL_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ url: cleaned, formats: ["html"], onlyMainContent: false }),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const html = data.html ?? data.data?.html ?? "";
+    const og: string[] = Array.from(html.matchAll(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)/gi)).map((m: any) => m[1]);
+    const imgs: string[] = Array.from(html.matchAll(/<img[^>]+src=["'](https?:[^"']+\.(?:jpe?g|png|webp))/gi)).map((m: any) => m[1]);
+    return uniq([...og, ...imgs]).filter(isHttpUrl).slice(0, 6);
+  } catch { return []; }
+}
+
+/* ─── 3c. INTELLIGENCE REPORT — riusa brand asset estratti dalla deep-analysis (logo+foto+frame video+colori) ─── */
+async function loadIntelligenceAssets(supabase: any, leadId?: string | null, ownerId?: string | null, leadName?: string): Promise<{
+  logo: string | null;
+  photos: string[];
+  videoFrames: string[];
+  colors: any;
+  weakPoints: string[];
+  pitch: string | null;
+} | null> {
+  if (!ownerId) return null;
+  try {
+    let q = supabase.from("lead_intelligence_reports").select(
+      "brand_logo_url, brand_photos, brand_video_frames, brand_videos, brand_colors, brand_fonts, weak_points, sales_pitch, lead_name",
+    ).eq("owner_id", ownerId);
+    if (leadId) {
+      // Cerchiamo prima per cache_key/match con nome lead — usiamo solo lead_name perché non c'è FK lead_id su intelligence
+    }
+    if (leadName) {
+      q = q.ilike("lead_name", leadName);
+    }
+    const { data } = await q.order("created_at", { ascending: false }).limit(1).maybeSingle();
+    if (!data) return null;
+    const photos: string[] = Array.isArray(data.brand_photos) ? data.brand_photos.filter(isHttpUrl) : [];
+    const videoFrames: string[] = Array.isArray(data.brand_video_frames) ? data.brand_video_frames.filter(isHttpUrl) : [];
+    const weak: string[] = Array.isArray(data.weak_points) ? data.weak_points.slice(0, 6) : [];
+    return {
+      logo: isHttpUrl(data.brand_logo_url || "") ? data.brand_logo_url : null,
+      photos,
+      videoFrames,
+      colors: data.brand_colors || {},
+      weakPoints: weak,
+      pitch: data.sales_pitch || null,
+    };
+  } catch (e) {
+    console.warn("[intelligence-load] err", e);
+    return null;
+  }
+}
+
 /* ─── 4. AI BRAND KIT (tool-call) ─── */
 async function aiEnrichBrand(lead: LeadInput, scraped: ScrapedAssets | null): Promise<{
   tagline: string;
@@ -957,6 +1018,7 @@ async function resolveSectorImages(
   needHeroAndN: number,
   tenantId: string,
   match?: { sub: string; variant: string },
+  extraSources?: { fb?: string[]; intelligencePhotos?: string[]; intelligenceVideoFrames?: string[]; intelligenceLogo?: string | null },
 ): Promise<{ hero: string | null; gallery: string[]; logo: string | null; aiGenerated: string[] }> {
   const sector = lead.sector;
   const keywords = SECTOR_IMAGE_KEYWORDS[sector] || [];
@@ -980,7 +1042,19 @@ async function resolveSectorImages(
     .sort((a, b) => b.score - a.score)
     .map((x) => x.url);
 
-  const allReal = uniq([...scoredScrape, ...ig]).slice(0, needHeroAndN + 2);
+  // ⭐ PRIORITÀ ASSOLUTA: foto/frame video estratti dalla deep-analysis intelligence
+  // → poi sito (Firecrawl), poi IG og:image, poi FB.
+  // Niente più "stop alla prima fonte": uniamo tutto e priorizziamo per provenienza.
+  const intelPhotos = (extraSources?.intelligencePhotos || []).filter(isHttpUrl);
+  const intelVideoFrames = (extraSources?.intelligenceVideoFrames || []).filter(isHttpUrl);
+  const fb = (extraSources?.fb || []).filter(isHttpUrl);
+  const allReal = uniq([
+    ...intelPhotos,
+    ...intelVideoFrames,
+    ...scoredScrape,
+    ...ig,
+    ...fb,
+  ]).slice(0, needHeroAndN + 4);
   let hero: string | null = allReal[0] || null;
   let gallery: string[] = allReal.slice(1, needHeroAndN + 1);
   const aiGenerated: string[] = [];
@@ -1020,7 +1094,12 @@ async function resolveSectorImages(
     if (img) gallery.push(img);
   }
 
-  return { hero, gallery, logo: scraped?.logo || null, aiGenerated };
+  // Logo: priorità intelligence → scraped → null. Mai prendere logo Empire/icone.
+  const logoFinal = (extraSources?.intelligenceLogo && isHttpUrl(extraSources.intelligenceLogo))
+    ? extraSources.intelligenceLogo
+    : (scraped?.logo || null);
+
+  return { hero, gallery, logo: logoFinal, aiGenerated };
 }
 
 /* ─── 8. PALETTE ENRICHMENT ─── */
@@ -1401,9 +1480,9 @@ Genera un kit outreach professionale.`;
 function generateAdminCredentials(lead: LeadInput): { email: string; password: string } {
   const slugBase = slugify(lead.businessName).replace(/-/g, "").slice(0, 12) || "demo";
   const stamp = Date.now().toString(36).slice(-4);
-  const email = lead.email || `demo-${slugBase}-${stamp}@empireaigroup.com`;
-  // Password leggibile ma sicura, da consegnare al lead
-  const password = `Empire${slugBase.charAt(0).toUpperCase()}${slugBase.slice(1, 6)}!${stamp}`;
+  const email = lead.email || `demo-${slugBase}-${stamp}@demo-suite.app`;
+  // Password leggibile ma sicura, da consegnare al lead — niente brand interno
+  const password = `Demo${slugBase.charAt(0).toUpperCase()}${slugBase.slice(1, 6)}!${stamp}`;
   return { email, password };
 }
 
@@ -1511,11 +1590,16 @@ serve(async (req) => {
       console.warn("[run-create] error", e);
     }
 
-    // ─── AGENT 1: SCOUT — scrape sito + Instagram ───
-    const [scraped, igImages] = await Promise.all([
+    // ─── AGENT 1: SCOUT — multi-source scrape (sito + IG + FB + intelligence-report) ───
+    // ⭐ Non ci fermiamo alla prima fonte: lanciamo TUTTE le fonti in parallelo
+    // e poi le uniamo per massimizzare gli asset reali del lead.
+    const [scraped, igImages, fbImages, intel] = await Promise.all([
       lead.website ? deepScrape(lead.website) : Promise.resolve(null),
       lead.instagram ? instagramOgImage(lead.instagram) : Promise.resolve([]),
+      lead.facebook ? facebookOgImage(lead.facebook) : Promise.resolve([]),
+      loadIntelligenceAssets(supabase, leadId, partnerId, lead.businessName),
     ]);
+    console.log(`[scout] sources → site=${!!scraped} ig=${igImages.length} fb=${fbImages.length} intel=${!!intel} (logo=${!!intel?.logo} photos=${intel?.photos?.length || 0} videoFrames=${intel?.videoFrames?.length || 0})`);
     if (scraped?.detectedSectorHint && (lead.sector === "custom" || !lead.sector || scraped.detectedSectorHint !== lead.sector)) {
       // Il detectedSectorHint è più specifico (es. sito di pizza dichiarato come "food"
       // generico → upgrade a "pizzeria"). Lo applichiamo sempre quando differisce.
@@ -1564,11 +1648,20 @@ serve(async (req) => {
       template_variant: match.variant,
     });
 
-    // ─── AGENT 3: CURATOR — palette + immagini + theme ───
+    // ─── AGENT 3: CURATOR — palette + immagini + theme (intel > scrape > preset) ───
     const aiPalette: BrandPalette = brand.palette;
     const scrapedColors = scraped?.branding?.colors;
+    const intelColors = intel?.colors || {};
     let palette: BrandPalette = aiPalette;
-    if (scrapedColors?.primary) {
+    if (intelColors?.primary) {
+      // ⭐ Priorità massima ai colori brand estratti dalla deep-analysis (validati AI)
+      palette = {
+        primary: intelColors.primary,
+        secondary: intelColors.secondary || intelColors.accent || aiPalette.secondary,
+        bg: intelColors.background || aiPalette.bg,
+        accent: intelColors.accent || intelColors.secondary || aiPalette.accent,
+      };
+    } else if (scrapedColors?.primary) {
       palette = {
         primary: scrapedColors.primary,
         secondary: scrapedColors.secondary || aiPalette.secondary,
@@ -1579,7 +1672,12 @@ serve(async (req) => {
       palette = paletteFromStyleName(preview.styleName, aiPalette);
     }
     const tenantUuid = crypto.randomUUID();
-    const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid, match);
+    const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid, match, {
+      fb: fbImages,
+      intelligencePhotos: intel?.photos || [],
+      intelligenceVideoFrames: intel?.videoFrames || [],
+      intelligenceLogo: intel?.logo || null,
+    });
     const themeConfig: Record<string, any> = {
       template_variant: match.variant,
       sub_sector: match.sub,
