@@ -304,10 +304,13 @@ export default function BusinessPage() {
         </>
       )}
 
-      {/* Arianna Voice Agent — sempre disponibile */}
-      <Suspense fallback={null}>
-        <EmpireVoiceAgent />
-      </Suspense>
+      {/* Arianna Voice Agent — disponibile solo sui siti NON Demo Factory
+        * (sui siti generati per i lead non vogliamo che Arianna venda Empire al cliente finale) */}
+      {!isDemoFactorySite && (
+        <Suspense fallback={null}>
+          <EmpireVoiceAgent />
+        </Suspense>
+      )}
     </Suspense>
   );
 }
