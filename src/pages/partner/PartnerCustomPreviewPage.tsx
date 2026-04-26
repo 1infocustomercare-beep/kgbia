@@ -653,42 +653,74 @@ export default function PartnerCustomPreviewPage() {
             )}
           </CardHeader>
 
-          <CardContent className="space-y-3 px-3 sm:px-5 pb-4">
-            {/* Tabs Lead vs Manuale */}
-            <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
-              <TabsList className="grid grid-cols-2 w-full h-10">
-                <TabsTrigger value="lead" className="text-xs sm:text-sm">Da Lead Analizzato</TabsTrigger>
-                <TabsTrigger value="manual" className="text-xs sm:text-sm">Inserimento Manuale</TabsTrigger>
-              </TabsList>
+          <CardContent className="space-y-2.5 px-3 sm:px-5 pb-4 pt-4">
+            {/* ── STEP 0: SORGENTE DATI (collassabile) ── */}
+            <div className="border border-border/60 rounded-xl overflow-hidden bg-card/40">
+              <button
+                type="button"
+                onClick={() => toggleSection("source" as any)}
+                className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 h-11 text-left hover:bg-muted/30 transition-colors"
+                aria-expanded={openSection === ("source" as any)}
+              >
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <span className="h-6 w-6 rounded-full bg-primary/15 text-primary text-[11px] flex items-center justify-center font-bold">0</span>
+                  <Sparkles className="h-4 w-4 text-primary/80" />
+                  Sorgente dati
+                  <Badge variant="secondary" className="text-[9px] ml-1">
+                    {mode === "lead" ? "Lead analizzato" : "Manuale"}
+                  </Badge>
+                </span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${openSection === ("source" as any) ? "rotate-180" : ""}`} />
+              </button>
+              <AnimatePresence initial={false}>
+                {openSection === ("source" as any) && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-3 sm:px-4 pb-4 pt-1 space-y-3">
+                      <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
+                        <TabsList className="grid grid-cols-2 w-full h-10">
+                          <TabsTrigger value="lead" className="text-xs sm:text-sm">Da Lead Analizzato</TabsTrigger>
+                          <TabsTrigger value="manual" className="text-xs sm:text-sm">Inserimento Manuale</TabsTrigger>
+                        </TabsList>
 
-              <TabsContent value="lead" className="space-y-2 mt-3">
-                <Label className="text-xs">Seleziona lead da Intelligence o Scout</Label>
-                <Select value={selectedLeadId} onValueChange={setSelectedLeadId}>
-                  <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Scegli un lead già scoperto…" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-72">
-                    {availableLeads.length === 0 ? (
-                      <SelectItem value="none" disabled>Nessun lead — usa Scout o Intelligence prima</SelectItem>
-                    ) : availableLeads.map(l => (
-                      <SelectItem key={l.id} value={l.id}>
-                        <span className="font-medium">{l.lead_name}</span>
-                        {l.lead_city ? ` · ${l.lead_city}` : ""}
-                        {l.lead_sector ? ` · ${l.lead_sector}` : ""}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <p className="text-[10px] sm:text-xs text-muted-foreground">
-                  <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence ·{" "}
-                  <strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout
-                </p>
-              </TabsContent>
+                        <TabsContent value="lead" className="space-y-2 mt-3">
+                          <Label className="text-xs">Seleziona lead da Intelligence o Scout</Label>
+                          <Select value={selectedLeadId} onValueChange={setSelectedLeadId}>
+                            <SelectTrigger className="h-11">
+                              <SelectValue placeholder="Scegli un lead già scoperto…" />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-72">
+                              {availableLeads.length === 0 ? (
+                                <SelectItem value="none" disabled>Nessun lead — usa Scout o Intelligence prima</SelectItem>
+                              ) : availableLeads.map(l => (
+                                <SelectItem key={l.id} value={l.id}>
+                                  <span className="font-medium">{l.lead_name}</span>
+                                  {l.lead_city ? ` · ${l.lead_city}` : ""}
+                                  {l.lead_sector ? ` · ${l.lead_sector}` : ""}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground">
+                            <strong>{availableLeads.filter(l => l.source === "intelligence").length}</strong> da Intelligence ·{" "}
+                            <strong>{availableLeads.filter(l => l.source === "scout").length}</strong> da Scout
+                          </p>
+                        </TabsContent>
 
-              <TabsContent value="manual" className="mt-3">
-                <p className="text-xs text-muted-foreground">Inserisci tutti i dati a mano. Più dati metti, più l'AI personalizza.</p>
-              </TabsContent>
-            </Tabs>
+                        <TabsContent value="manual" className="mt-3">
+                          <p className="text-xs text-muted-foreground">Inserisci tutti i dati a mano. Più dati metti, più l'AI personalizza.</p>
+                        </TabsContent>
+                      </Tabs>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* ── STEP 1: ANAGRAFICA ── */}
             <div className="border border-border/60 rounded-xl overflow-hidden bg-card/40">
