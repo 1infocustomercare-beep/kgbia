@@ -1648,11 +1648,20 @@ serve(async (req) => {
       template_variant: match.variant,
     });
 
-    // ─── AGENT 3: CURATOR — palette + immagini + theme ───
+    // ─── AGENT 3: CURATOR — palette + immagini + theme (intel > scrape > preset) ───
     const aiPalette: BrandPalette = brand.palette;
     const scrapedColors = scraped?.branding?.colors;
+    const intelColors = intel?.colors || {};
     let palette: BrandPalette = aiPalette;
-    if (scrapedColors?.primary) {
+    if (intelColors?.primary) {
+      // ⭐ Priorità massima ai colori brand estratti dalla deep-analysis (validati AI)
+      palette = {
+        primary: intelColors.primary,
+        secondary: intelColors.secondary || intelColors.accent || aiPalette.secondary,
+        bg: intelColors.background || aiPalette.bg,
+        accent: intelColors.accent || intelColors.secondary || aiPalette.accent,
+      };
+    } else if (scrapedColors?.primary) {
       palette = {
         primary: scrapedColors.primary,
         secondary: scrapedColors.secondary || aiPalette.secondary,
@@ -1663,7 +1672,12 @@ serve(async (req) => {
       palette = paletteFromStyleName(preview.styleName, aiPalette);
     }
     const tenantUuid = crypto.randomUUID();
-    const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid, match);
+    const images = await resolveSectorImages(supabase, lead, scraped, igImages, 6, tenantUuid, match, {
+      fb: fbImages,
+      intelligencePhotos: intel?.photos || [],
+      intelligenceVideoFrames: intel?.videoFrames || [],
+      intelligenceLogo: intel?.logo || null,
+    });
     const themeConfig: Record<string, any> = {
       template_variant: match.variant,
       sub_sector: match.sub,
