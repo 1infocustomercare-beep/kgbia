@@ -285,9 +285,9 @@ export function MockupSuiteVaultList() {
                       to="/partner/leads"
                       onClick={(e) => e.stopPropagation()}
                       className="w-full h-8 text-xs bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground rounded-md flex items-center justify-center gap-1"
-                      title="Apri Leads → seleziona un lead → genera sito 1:1 da questo mockup"
+                      title="Apri Leads, seleziona un lead e genera il sito 1:1 da questo mockup"
                     >
-                      <Rocket className="h-3 w-3" /> Usa in Leads per generare sito
+                      <Rocket className="h-3 w-3" /> Genera sito dal Lead
                     </Link>
                   )}
                 </CardContent>
