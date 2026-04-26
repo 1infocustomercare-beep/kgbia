@@ -1590,11 +1590,16 @@ serve(async (req) => {
       console.warn("[run-create] error", e);
     }
 
-    // ─── AGENT 1: SCOUT — scrape sito + Instagram ───
-    const [scraped, igImages] = await Promise.all([
+    // ─── AGENT 1: SCOUT — multi-source scrape (sito + IG + FB + intelligence-report) ───
+    // ⭐ Non ci fermiamo alla prima fonte: lanciamo TUTTE le fonti in parallelo
+    // e poi le uniamo per massimizzare gli asset reali del lead.
+    const [scraped, igImages, fbImages, intel] = await Promise.all([
       lead.website ? deepScrape(lead.website) : Promise.resolve(null),
       lead.instagram ? instagramOgImage(lead.instagram) : Promise.resolve([]),
+      lead.facebook ? facebookOgImage(lead.facebook) : Promise.resolve([]),
+      loadIntelligenceAssets(supabase, leadId, partnerId, lead.businessName),
     ]);
+    console.log(`[scout] sources → site=${!!scraped} ig=${igImages.length} fb=${fbImages.length} intel=${!!intel} (logo=${!!intel?.logo} photos=${intel?.photos?.length || 0} videoFrames=${intel?.videoFrames?.length || 0})`);
     if (scraped?.detectedSectorHint && (lead.sector === "custom" || !lead.sector || scraped.detectedSectorHint !== lead.sector)) {
       // Il detectedSectorHint è più specifico (es. sito di pizza dichiarato come "food"
       // generico → upgrade a "pizzeria"). Lo applichiamo sempre quando differisce.
