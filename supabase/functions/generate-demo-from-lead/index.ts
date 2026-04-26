@@ -1634,7 +1634,7 @@ serve(async (req) => {
     await updateRun({ agents_status: { scout: "done", analyst: "running", curator: "pending", copywriter: "pending", builder: "pending", closer: "pending" } });
 
     // ─── AGENT 2: ANALYST — AI brand kit + sub-settore detection ───
-    const brand = await aiEnrichBrand(lead, scraped);
+    const brand = await aiEnrichBrand(lead, scraped, intel, preview);
     const isFood = FOOD_SECTORS.has(lead.sector);
     // ⭐ PRIORITY ORDER:
     //   1) preview.templateVariant ESPLICITO dal client (preview-matcher v3) — AUTORITATIVO
