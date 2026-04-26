@@ -852,14 +852,19 @@ export default function PartnerCustomPreviewPage() {
         {/* ═══════════ COLONNA DX: MOCKUP SUITE + VAULT + LISTA ═══════════ */}
         <div className="space-y-5 lg:space-y-6 min-w-0">
           {/* MOCKUP IPHONE SUITE */}
-          <section className="space-y-3">
+          <section ref={mockupSectionRef} className="space-y-3 scroll-mt-20">
             <div className="flex items-center gap-2 flex-wrap">
               <Smartphone className="h-5 w-5 text-primary shrink-0" />
               <h2 className="text-base sm:text-lg lg:text-xl font-semibold">Mockup iPhone Suite</h2>
               <Badge variant="secondary" className="text-[10px]">4 schermate</Badge>
+              {autoStartSuite && (
+                <Badge className="text-[10px] bg-primary/15 text-primary border border-primary/30">
+                  Avvio automatico…
+                </Badge>
+              )}
             </div>
             <p className="text-[11px] sm:text-sm text-muted-foreground">
-              Genera 4 schermate iPhone professionali. Se hai compilato il form, i dati sono pre-caricati.
+              Genera 4 schermate iPhone professionali. Se hai compilato il form (o sei arrivato da un lead), i dati sono già pre-caricati.
             </p>
             <MockupSuiteGenerator
               businessName={form.lead_name}
@@ -867,6 +872,8 @@ export default function PartnerCustomPreviewPage() {
               businessCity={form.lead_city}
               primaryColor={form.primary_color}
               templateVariant={form.template_style}
+              autoStart={autoStartSuite}
+              onGenerated={() => setAutoStartSuite(false)}
             />
           </section>
 
