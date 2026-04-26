@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Loader2, Sparkles, Smartphone, Wand2, Crown, Zap, Copy, ExternalLink, User, Pencil, Palette, Eye, Sliders, Droplets, RefreshCw, Type, Lock, Unlock, Cloud, CloudOff, BookmarkCheck, FolderOpen, CheckCircle2, Circle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { GenerationProgress } from "./GenerationProgress";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -1755,92 +1756,47 @@ export function MockupSuiteGenerator({
           </p>
         </div>
 
-        {/* ═══ Barra di avanzamento globale (mockup + sito 1:1) ═══ */}
-        {(controlsLocked || siteBuilding) && (() => {
-          // Determina la fase corrente e il progresso (0-100)
-          // Fasi: 1) caricamento → 2) preview → 3) upgrade AI → 4) sito 1:1 → 5) pronto
-          let pct = 5;
-          let label = "Caricamento dati…";
-          let sub = "Preparazione del brand e del template";
-          const steps: { key: string; label: string; done: boolean; active: boolean }[] = [
-            { key: "load", label: "Caricamento dati", done: false, active: false },
-            { key: "preview", label: "Anteprima istantanea", done: false, active: false },
-            { key: "ai", label: "Generazione mockup AI", done: false, active: false },
-            ...(autoBuildSite || siteBuilding ? [{ key: "site", label: "Costruzione sito 1:1", done: false, active: false }] : []),
-            { key: "done", label: "Pronto", done: false, active: false },
+        {/* ═══ Barra di avanzamento globale (mockup + sito 1:1) — componente condiviso ═══ */}
+        {(() => {
+          if (!controlsLocked && !siteBuilding) return null;
+          const phase: import("./GenerationProgress").GenerationPhase = siteBuilding
+            ? "building"
+            : previewPhase === "upgrading"
+              ? "generating"
+              : previewPhase === "preview"
+                ? "preview"
+                : generating
+                  ? "loading"
+                  : "idle";
+          const baseSteps = [
+            { key: "loading", label: "Caricamento dati" },
+            { key: "preview", label: "Anteprima istantanea" },
+            { key: "generating", label: "Mockup AI" },
+            ...((autoBuildSite || siteBuilding) ? [{ key: "building", label: "Sito 1:1" }] : []),
+            { key: "complete", label: "Pronto" },
           ];
-          const setActive = (key: string) => {
-            let reached = false;
-            for (const s of steps) {
-              if (s.key === key) { s.active = true; reached = true; continue; }
-              if (!reached) s.done = true;
-            }
-          };
-          if (siteBuilding) {
-            pct = 85; label = "Costruzione sito 1:1…"; sub = "Genero pagine, admin, credenziali e contenuti dal lead";
-            setActive("site");
-          } else if (previewPhase === "upgrading") {
-            pct = 60; label = "Generazione mockup AI…"; sub = "Modello fotorealistico al lavoro · 1-3 minuti";
-            setActive("ai");
-          } else if (previewPhase === "preview") {
-            pct = 30; label = "Anteprima istantanea pronta"; sub = "Sto avviando l'upgrade AI fotorealistico";
-            setActive("preview");
-          } else if (generating) {
-            pct = 10; label = "Caricamento dati…"; sub = "Estraggo logo, foto e brand del lead";
-            setActive("load");
-          }
-
+          const customSub = siteBuilding
+            ? "Genero pagine, admin, credenziali e contenuti dal lead"
+            : previewPhase === "upgrading"
+              ? "Modello fotorealistico al lavoro · 1-3 minuti"
+              : previewPhase === "preview"
+                ? "Sto avviando l'upgrade AI fotorealistico"
+                : "Estraggo logo, foto e brand del lead";
+          const customLabel = siteBuilding
+            ? "Costruzione sito 1:1…"
+            : previewPhase === "upgrading"
+              ? "Generazione mockup AI…"
+              : previewPhase === "preview"
+                ? "Anteprima istantanea pronta"
+                : "Caricamento dati…";
           return (
-            <div
-              role="status"
-              aria-live="polite"
-              aria-busy="true"
-              className="rounded-xl border border-primary/40 bg-primary/[0.06] p-3 space-y-3"
-            >
-              <div className="flex items-start gap-2">
-                <Loader2 className="h-4 w-4 animate-spin text-primary shrink-0 mt-0.5" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <p className="font-semibold text-xs leading-tight">{label}</p>
-                    <span className="text-[10px] font-mono tabular-nums text-primary">{pct}%</span>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">{sub}</p>
-                </div>
-              </div>
-
-              <Progress value={pct} className="h-1.5" aria-label={`Avanzamento: ${pct}%`} />
-
-              {/* Step list */}
-              <ol className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
-                {steps.map((s) => (
-                  <li
-                    key={s.key}
-                    className={`flex items-center gap-1.5 rounded-md border px-1.5 py-1 text-[10px] leading-tight transition-colors ${
-                      s.active
-                        ? "border-primary/60 bg-primary/10 text-foreground font-medium"
-                        : s.done
-                        ? "border-emerald-500/40 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300"
-                        : "border-border/50 bg-muted/30 text-muted-foreground"
-                    }`}
-                  >
-                    {s.done ? (
-                      <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-500" />
-                    ) : s.active ? (
-                      <Loader2 className="h-3 w-3 shrink-0 animate-spin text-primary" />
-                    ) : (
-                      <Circle className="h-3 w-3 shrink-0" />
-                    )}
-                    <span className="truncate">{s.label}</span>
-                  </li>
-                ))}
-              </ol>
-
-              {controlsLocked && (
-                <p className="text-[9px] text-muted-foreground leading-snug pt-0.5 border-t border-border/40">
-                  🔒 Engine, template, palette e schermate sono bloccati durante la generazione per garantire risultati coerenti.
-                </p>
-              )}
-            </div>
+            <GenerationProgress
+              phase={phase}
+              label={customLabel}
+              sub={customSub}
+              steps={baseSteps}
+              showLockNotice={controlsLocked}
+            />
           );
         })()}
 

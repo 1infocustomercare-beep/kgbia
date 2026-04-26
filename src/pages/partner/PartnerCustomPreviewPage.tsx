@@ -21,6 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { MockupSuiteGenerator } from "@/components/partner/MockupSuiteGenerator";
+import { GenerationProgress } from "@/components/partner/GenerationProgress";
 import { MockupSuiteVaultList } from "@/components/partner/MockupSuiteVaultList";
 import PartnerHeroMascot from "@/components/partner/PartnerHeroMascot";
 import alienDesigner from "@/assets/empire-alien-designer.png";
@@ -905,6 +906,20 @@ export default function PartnerCustomPreviewPage() {
               <p className="text-[10px] sm:text-xs text-muted-foreground text-center leading-relaxed">
                 ✓ 4 mockup iPhone AI · ✓ Sito webapp 1:1 col mockup · ✓ Admin completo · ✓ Credenziali pronte
               </p>
+              {autoStartSuite && (
+                <GenerationProgress
+                  phase="generating"
+                  label="Generazione mockup + sito 1:1 in corso…"
+                  sub="Stato dettagliato e percentuale visibili anche nel pannello a destra"
+                  steps={[
+                    { key: "loading", label: "Caricamento dati" },
+                    { key: "preview", label: "Anteprima" },
+                    { key: "generating", label: "Mockup AI" },
+                    { key: "building", label: "Sito 1:1" },
+                    { key: "complete", label: "Pronto" },
+                  ]}
+                />
+              )}
             </div>
           </CardContent>
         </Card>
