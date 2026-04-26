@@ -1850,6 +1850,77 @@ export function MockupSuiteGenerator({
               typeScale={typeScale}
               boostContrast={boostContrast}
             />
+
+            {/* ═══════════ CTA: GENERA SITO WEBAPP COMPLETO 1:1 ═══════════
+              * Trasforma la suite di mockup nel sito reale + admin completo,
+              * usando lo stesso template e tutti i dati estratti del lead. */}
+            {previewPhase === "complete" && (
+              <div className="mt-6 p-4 sm:p-5 rounded-xl border-2 border-primary/40 bg-gradient-to-br from-primary/[0.06] via-transparent to-fuchsia-500/[0.06] space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="shrink-0 h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-fuchsia-500 flex items-center justify-center shadow-lg shadow-primary/30">
+                    <Sparkles className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm sm:text-base font-bold leading-tight">
+                      Trasforma in Sito Webapp Completo 1:1
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                      Genera il sito pubblico + pannello admin + tutte le pagine + funzioni del settore,
+                      con login dedicato e splash screen brand. Stesso stile dei mockup, dati reali del lead.
+                    </p>
+                  </div>
+                </div>
+
+                {!siteResult ? (
+                  <Button
+                    onClick={handleBuildFullSite}
+                    disabled={siteBuilding}
+                    className="w-full h-11 font-semibold bg-gradient-to-r from-primary to-fuchsia-600 hover:opacity-90 text-white shadow-lg shadow-primary/30"
+                  >
+                    {siteBuilding ? (
+                      <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Costruisco sito + admin (30-60s)…</>
+                    ) : (
+                      <><Wand2 className="h-4 w-4 mr-2" /> Genera Sito Webapp 1:1 (15 crediti)</>
+                    )}
+                  </Button>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <Button
+                        size="sm"
+                        variant="default"
+                        onClick={() => window.open(siteResult.previewUrl, "_blank")}
+                        className="h-10"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Apri Sito Pubblico
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => window.open(siteResult.adminUrl, "_blank")}
+                        className="h-10"
+                      >
+                        <Crown className="h-3.5 w-3.5 mr-1.5" /> Apri Admin
+                      </Button>
+                    </div>
+                    {siteResult.credentials && (
+                      <div className="p-2.5 rounded-lg bg-muted/50 text-[11px] font-mono space-y-0.5">
+                        <div><span className="text-muted-foreground">Email:</span> {siteResult.credentials.email}</div>
+                        <div><span className="text-muted-foreground">Password:</span> {siteResult.credentials.password}</div>
+                      </div>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => { setSiteResult(null); }}
+                      className="w-full h-9 text-xs"
+                    >
+                      <RefreshCw className="h-3 w-3 mr-1" /> Rigenera sito
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </CardContent>
