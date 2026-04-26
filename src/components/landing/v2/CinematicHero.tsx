@@ -347,7 +347,7 @@ export default function CinematicHero() {
               filter: phoneBlurScroll,
               transformStyle: "preserve-3d",
             }}
-            className="relative mx-auto flex h-[44svh] w-full max-w-[420px] items-center justify-center sm:h-[52svh] lg:h-[68svh]"
+            className="relative mx-auto flex aspect-[9/16] w-full max-w-[320px] items-center justify-center px-2 sm:max-w-[380px] lg:aspect-auto lg:h-[68svh] lg:max-w-[420px]"
           >
             {/* Tilt wrapper (mouse + gyro) */}
             <motion.div
