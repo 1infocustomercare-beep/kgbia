@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
 
@@ -86,6 +87,9 @@ export default function CinematicHero() {
   const stageRef = useRef<HTMLDivElement>(null);
   const [activeScene, setActiveScene] = useState(0);
   const [wordIdx, setWordIdx] = useState(0);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
+  const lite = isMobile || prefersReducedMotion;
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 26, mass: 0.7 });
@@ -110,8 +114,9 @@ export default function CinematicHero() {
     return () => clearInterval(id);
   }, []);
 
-  // Pointer tracking for spotlight (desktop) + gyroscope (mobile)
+  // Pointer tracking — DESKTOP ONLY (skip on mobile to save perf, drop gyro)
   useEffect(() => {
+    if (lite) return;
     const el = stageRef.current;
     if (!el) return;
     const onMove = (e: PointerEvent) => {
@@ -120,43 +125,29 @@ export default function CinematicHero() {
       pointerY.set(Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)));
     };
     el.addEventListener("pointermove", onMove);
+    return () => el.removeEventListener("pointermove", onMove);
+  }, [lite, pointerX, pointerY]);
 
-    // Mobile: subtle gyroscope tilt
-    const onOrient = (e: DeviceOrientationEvent) => {
-      if (e.gamma == null || e.beta == null) return;
-      const gx = Math.max(-30, Math.min(30, e.gamma)) / 30; // -1..1
-      const gy = Math.max(-30, Math.min(30, e.beta - 30)) / 30;
-      pointerX.set(0.5 + gx * 0.35);
-      pointerY.set(0.5 + gy * 0.25);
-    };
-    window.addEventListener("deviceorientation", onOrient);
+  // Scroll choreography — disabled/softened on mobile to prevent text/phone overlap & jank
+  const titleY = useTransform(smooth, [0, 1], lite ? [0, 0] : [0, -130]);
+  const titleOpacity = useTransform(smooth, [0, 0.55, 1], lite ? [1, 0.85, 0.45] : [1, 0.5, 0]);
+  const titleBlur = useTransform(smooth, [0, 1], lite ? ["blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(8px)"]);
 
-    return () => {
-      el.removeEventListener("pointermove", onMove);
-      window.removeEventListener("deviceorientation", onOrient);
-    };
-  }, [pointerX, pointerY]);
+  const layer1Y = useTransform(smooth, [0, 1], lite ? [0, -20] : [0, -60]);
+  const layer2Y = useTransform(smooth, [0, 1], lite ? [0, -40] : [0, -130]);
+  const layer3Y = useTransform(smooth, [0, 1], lite ? [0, -60] : [0, -200]);
+  const meshScale = useTransform(smooth, [0, 1], lite ? [1, 1.08] : [1, 1.3]);
+  const meshRotate = useTransform(smooth, [0, 1], lite ? [0, 0] : [0, 12]);
 
-  // Cinematic scroll choreography
-  const titleY = useTransform(smooth, [0, 1], [0, -130]);
-  const titleOpacity = useTransform(smooth, [0, 0.55, 1], [1, 0.5, 0]);
-  const titleBlur = useTransform(smooth, [0, 1], ["blur(0px)", "blur(8px)"]);
+  const phoneScale = useTransform(smooth, [0, 0.4, 1], lite ? [0.96, 1, 0.92] : [0.9, 1.05, 0.74]);
+  const phoneY = useTransform(smooth, [0, 0.4, 1], lite ? [10, 0, -40] : [50, 0, -200]);
+  const phoneRotateXScroll = useTransform(smooth, [0, 0.4, 1], lite ? [0, 0, 0] : [14, 0, -20]);
+  const phoneRotateZ = useTransform(smooth, [0, 0.4, 1], lite ? [0, 0, 0] : [-3, 0, 5]);
+  const phoneOpacity = useTransform(smooth, [0, 0.15, 0.85, 1], lite ? [1, 1, 1, 0.6] : [0, 1, 1, 0.15]);
+  const phoneBlurScroll = useTransform(smooth, [0, 0.85, 1], ["blur(0px)", "blur(0px)", lite ? "blur(0px)" : "blur(4px)"]);
 
-  const layer1Y = useTransform(smooth, [0, 1], [0, -60]);
-  const layer2Y = useTransform(smooth, [0, 1], [0, -130]);
-  const layer3Y = useTransform(smooth, [0, 1], [0, -200]);
-  const meshScale = useTransform(smooth, [0, 1], [1, 1.3]);
-  const meshRotate = useTransform(smooth, [0, 1], [0, 12]);
-
-  const phoneScale = useTransform(smooth, [0, 0.4, 1], [0.9, 1.05, 0.74]);
-  const phoneY = useTransform(smooth, [0, 0.4, 1], [50, 0, -200]);
-  const phoneRotateXScroll = useTransform(smooth, [0, 0.4, 1], [14, 0, -20]);
-  const phoneRotateZ = useTransform(smooth, [0, 0.4, 1], [-3, 0, 5]);
-  const phoneOpacity = useTransform(smooth, [0, 0.15, 0.85, 1], [0, 1, 1, 0.15]);
-  const phoneBlurScroll = useTransform(smooth, [0, 0.85, 1], ["blur(0px)", "blur(0px)", "blur(4px)"]);
-
-  // Marquee scroll-tied speed
-  const marqueeX = useTransform(smooth, [0, 1], ["0%", "-30%"]);
+  // Marquee scroll-tied speed (desktop only — mobile keeps base loop)
+  const marqueeX = useTransform(smooth, [0, 1], lite ? ["0%", "0%"] : ["0%", "-30%"]);
 
   const active = SCENES[activeScene];
 
@@ -164,8 +155,8 @@ export default function CinematicHero() {
     <section
       ref={ref}
       id="hero"
-      className="relative min-h-[100svh] overflow-hidden"
-      style={{ perspective: "1800px" }}
+      className="relative overflow-hidden lg:min-h-[100svh]"
+      style={{ perspective: lite ? "none" : "1800px" }}
     >
       {/* Cinematic depth background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -190,31 +181,33 @@ export default function CinematicHero() {
             background: useTransform(
               [spotlightX, spotlightY] as any,
               ([x, y]: any) =>
-                `radial-gradient(circle 380px at ${x} ${y}, hsl(${active.accent} / 0.22), transparent 70%)`
+                lite
+                  ? "transparent"
+                  : `radial-gradient(circle 380px at ${x} ${y}, hsl(${active.accent} / 0.22), transparent 70%)`
             ),
           }}
         />
 
-        {/* Floating depth orbs */}
+        {/* Floating depth orbs — smaller & lighter on mobile */}
         <motion.div
           style={{ y: layer1Y }}
-          className="absolute left-[10%] top-[18%] h-[280px] w-[280px] rounded-full blur-3xl opacity-50"
-          animate={{ x: [0, 24, 0], y: [0, -16, 0] }}
+          className="absolute left-[6%] top-[14%] h-[180px] w-[180px] rounded-full blur-2xl opacity-40 sm:h-[280px] sm:w-[280px] sm:blur-3xl sm:opacity-50"
+          animate={lite ? undefined : { x: [0, 24, 0], y: [0, -16, 0] }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
         >
           <div className="h-full w-full rounded-full" style={{ background: `hsl(${active.accent} / 0.45)`, transition: "background 1.4s ease" }} />
         </motion.div>
         <motion.div
           style={{ y: layer2Y }}
-          className="absolute right-[8%] top-[42%] h-[340px] w-[340px] rounded-full blur-3xl opacity-40"
-          animate={{ x: [0, -28, 0], y: [0, 22, 0] }}
+          className="absolute right-[6%] top-[40%] h-[200px] w-[200px] rounded-full blur-2xl opacity-30 sm:h-[340px] sm:w-[340px] sm:blur-3xl sm:opacity-40"
+          animate={lite ? undefined : { x: [0, -28, 0], y: [0, 22, 0] }}
           transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
         >
           <div className="h-full w-full rounded-full bg-empire-violet/45" />
         </motion.div>
         <motion.div
           style={{ y: layer3Y }}
-          className="absolute left-[40%] bottom-[10%] h-[260px] w-[260px] rounded-full blur-3xl opacity-30"
+          className="absolute left-[40%] bottom-[10%] hidden h-[260px] w-[260px] rounded-full blur-3xl opacity-30 sm:block"
           animate={{ x: [0, 30, 0] }}
           transition={{ duration: 19, repeat: Infinity, ease: "easeInOut" }}
         >
@@ -232,23 +225,25 @@ export default function CinematicHero() {
           }}
         />
 
-        {/* Film grain overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.05] mix-blend-overlay"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' /></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>\")",
-          }}
-        />
+        {/* Film grain overlay — desktop only */}
+        {!lite && (
+          <div
+            className="absolute inset-0 opacity-[0.05] mix-blend-overlay"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' /></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>\")",
+            }}
+          />
+        )}
 
         {/* Vignette */}
         <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background/60 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background/85 to-transparent" />
       </div>
 
-      {/* Hero stage */}
-      <div ref={stageRef} className="relative flex min-h-[100svh] flex-col pt-20 sm:pt-24 lg:pt-28">
-        <div className="mx-auto grid w-full max-w-[1400px] flex-1 grid-cols-1 items-center gap-6 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-10">
+      {/* Hero stage — natural height on mobile, full vh on desktop */}
+      <div ref={stageRef} className="relative flex flex-col pt-16 pb-8 sm:pt-20 lg:min-h-[100svh] lg:pt-28 lg:pb-0">
+        <div className="mx-auto grid w-full max-w-[1400px] flex-1 grid-cols-1 items-center gap-8 px-4 sm:gap-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-10">
           {/* Text column */}
           <motion.div
             style={{ y: titleY, opacity: titleOpacity, filter: titleBlur }}
@@ -352,7 +347,7 @@ export default function CinematicHero() {
               filter: phoneBlurScroll,
               transformStyle: "preserve-3d",
             }}
-            className="relative mx-auto flex h-[44svh] w-full max-w-[420px] items-center justify-center sm:h-[52svh] lg:h-[68svh]"
+            className="relative mx-auto flex aspect-[9/16] w-full max-w-[320px] items-center justify-center px-2 sm:max-w-[380px] lg:aspect-auto lg:h-[68svh] lg:max-w-[420px]"
           >
             {/* Tilt wrapper (mouse + gyro) */}
             <motion.div
