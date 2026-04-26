@@ -475,7 +475,7 @@ function buildScreenPrompt(
 
   const catalogDirective = hasCatalogReference
     ? `\n\n═══ 📸 IMMAGINE DI RIFERIMENTO (REGOLA #1 — PRIORITÀ MASSIMA) ═══
-🎯 In allegato c'è un'IMMAGINE DI RIFERIMENTO dal nostro catalogo di mockup approvati.
+🎯 In allegato c'è un'IMMAGINE DI RIFERIMENTO dal nostro catalogo di mockup approvati + (se presenti) il LOGO REALE del cliente "${business.name}" e foto reali del suo brand estratte dal sito ufficiale.
 DEVI replicare FEDELMENTE quella reference per:
 • Layout strutturale (posizione header, hero, card, bottom-nav)
 • Densità e gerarchia delle informazioni
@@ -483,15 +483,53 @@ DEVI replicare FEDELMENTE quella reference per:
 • Proporzioni e spazi
 • Stile fotografico, qualità del render, illuminazione
 SOSTITUISCI SOLO:
-• Brand/logo → con "${business.name}"
-• Contenuti testuali → adattati al settore "${business.sector}"
+• Brand/logo → con il LOGO REALE del cliente (se in allegato) oppure il nome "${business.name}" in tipografia coerente
+• Contenuti testuali → adattati al settore "${business.sector}" e al brand reale del cliente
 • Palette accent → adattata a ${primaryColor} (mantenendo i contrasti)
-• Foto dei prodotti/servizi → coerenti col settore
+• Foto dei prodotti/servizi → usare le FOTO REALI del cliente in allegato quando coerenti, altrimenti foto fotorealistiche pertinenti
 NON cambiare la STRUTTURA visiva della reference: la qualità di quella reference è
 ESATTAMENTE il livello che devi raggiungere.\n`
     : "";
 
-  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}
+  // ═══ BRAND CONTEXT REALE (Lead) — usato per personalizzare contenuti
+  const brand = brandContext || {};
+  const brandLines: string[] = [];
+  if (brand.hasLogo) {
+    brandLines.push(`• 🪪 LOGO REALE ALLEGATO: integralo nell'header dell'app (in alto a sinistra o centrato secondo layout) MANTENENDONE forma, proporzioni e colori originali. NON ridisegnarlo, NON sostituirlo con testo.`);
+  }
+  if (brand.hasBrandPhotos && (brand.brandPhotosCount || 0) > 0) {
+    brandLines.push(`• 📷 FOTO BRAND ALLEGATE (${brand.brandPhotosCount}): usale come immagini reali nei card/hero/galleria della schermata. Sono foto autentiche del cliente: NON sostituirle con stock.`);
+  }
+  if (brand.deepReport && brand.deepReport.length > 20) {
+    const summary = brand.deepReport.slice(0, 600);
+    brandLines.push(`• 📊 ANALISI DEL BRAND (sintesi reale): ${summary}\n  → Usa questi dettagli per personalizzare claim, descrizioni servizi, microcopy. NIENTE testo generico.`);
+  }
+  if (typeof brand.glassIntensity === "number") {
+    const lvl = brand.glassIntensity;
+    const glassDesc = lvl >= 0.7 ? "vetro intenso (glassmorphism marcato, blur 24px, trasparenze evidenti)"
+                    : lvl >= 0.4 ? "vetro bilanciato (glassmorphism moderato, blur 12px)"
+                    : "solido (zero glassmorphism, superfici opache)";
+    brandLines.push(`• 🪟 Intensità superfici: ${glassDesc}`);
+  }
+  if (brand.colorStyle && brand.colorStyle !== "vivid") {
+    const csMap: Record<string, string> = {
+      muted: "palette desaturata −25% (mood elegante e sottotono)",
+      pastel: "palette pastello soft (luminosità alta, saturazione bassa)",
+      mono: "palette monocromatica B/N con UN SOLO accento colorato",
+    };
+    brandLines.push(`• 🎨 Stile cromatico: ${csMap[brand.colorStyle] || brand.colorStyle}`);
+  }
+  if (brand.boostContrast) {
+    brandLines.push(`• ♿ Contrasto boost ON: testi sempre WCAG AAA, CTA con contrasto massimo sul bg`);
+  }
+  if (typeof brand.typeScale === "number" && brand.typeScale !== 1) {
+    brandLines.push(`• 🔠 Scala tipografica: ×${brand.typeScale.toFixed(2)} (titoli e body proporzionati)`);
+  }
+  const brandDirective = brandLines.length
+    ? `\n═══ 🏷️ BRAND REALE DEL CLIENTE (REGOLA PRIORITARIA) ═══\n${brandLines.join("\n")}\n`
+    : "";
+
+  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}${brandDirective}
 
 ═══ COMPOSIZIONE FOTOGRAFICA (REGOLE INDEROGABILI) ═══
 • iPhone PERFETTAMENTE CENTRATO sia orizzontalmente che verticalmente nel frame
