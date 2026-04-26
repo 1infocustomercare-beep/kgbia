@@ -175,16 +175,18 @@ export default function CinematicHero() {
         </motion.div>
 
         {/* Pointer-driven spotlight (desktop wow factor) */}
-        <motion.div
-          className="absolute inset-0 hidden md:block"
-          style={{
-            background: useTransform(
-              [spotlightX, spotlightY] as any,
-              ([x, y]: any) =>
-                `radial-gradient(circle 380px at ${x} ${y}, hsl(${active.accent} / 0.22), transparent 70%)`
-            ),
-          }}
-        />
+        {!lite && (
+          <motion.div
+            className="absolute inset-0 hidden md:block"
+            style={{
+              background: useTransform(
+                [spotlightX, spotlightY] as any,
+                ([x, y]: any) =>
+                  `radial-gradient(circle 380px at ${x} ${y}, hsl(${active.accent} / 0.22), transparent 70%)`
+              ),
+            }}
+          />
+        )}
 
         {/* Floating depth orbs */}
         <motion.div
