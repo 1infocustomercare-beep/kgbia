@@ -1018,6 +1018,7 @@ async function resolveSectorImages(
   needHeroAndN: number,
   tenantId: string,
   match?: { sub: string; variant: string },
+  extraSources?: { fb?: string[]; intelligencePhotos?: string[]; intelligenceVideoFrames?: string[]; intelligenceLogo?: string | null },
 ): Promise<{ hero: string | null; gallery: string[]; logo: string | null; aiGenerated: string[] }> {
   const sector = lead.sector;
   const keywords = SECTOR_IMAGE_KEYWORDS[sector] || [];
@@ -1041,7 +1042,19 @@ async function resolveSectorImages(
     .sort((a, b) => b.score - a.score)
     .map((x) => x.url);
 
-  const allReal = uniq([...scoredScrape, ...ig]).slice(0, needHeroAndN + 2);
+  // ⭐ PRIORITÀ ASSOLUTA: foto/frame video estratti dalla deep-analysis intelligence
+  // → poi sito (Firecrawl), poi IG og:image, poi FB.
+  // Niente più "stop alla prima fonte": uniamo tutto e priorizziamo per provenienza.
+  const intelPhotos = (extraSources?.intelligencePhotos || []).filter(isHttpUrl);
+  const intelVideoFrames = (extraSources?.intelligenceVideoFrames || []).filter(isHttpUrl);
+  const fb = (extraSources?.fb || []).filter(isHttpUrl);
+  const allReal = uniq([
+    ...intelPhotos,
+    ...intelVideoFrames,
+    ...scoredScrape,
+    ...ig,
+    ...fb,
+  ]).slice(0, needHeroAndN + 4);
   let hero: string | null = allReal[0] || null;
   let gallery: string[] = allReal.slice(1, needHeroAndN + 1);
   const aiGenerated: string[] = [];
@@ -1081,7 +1094,12 @@ async function resolveSectorImages(
     if (img) gallery.push(img);
   }
 
-  return { hero, gallery, logo: scraped?.logo || null, aiGenerated };
+  // Logo: priorità intelligence → scraped → null. Mai prendere logo Empire/icone.
+  const logoFinal = (extraSources?.intelligenceLogo && isHttpUrl(extraSources.intelligenceLogo))
+    ? extraSources.intelligenceLogo
+    : (scraped?.logo || null);
+
+  return { hero, gallery, logo: logoFinal, aiGenerated };
 }
 
 /* ─── 8. PALETTE ENRICHMENT ─── */
