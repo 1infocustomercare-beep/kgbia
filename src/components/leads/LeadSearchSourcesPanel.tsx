@@ -156,6 +156,18 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
     refreshStatuses();
   }, []);
 
+  // Lock body scroll quando il modal "Sblocca canale" è aperto
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (howToSource) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [howToSource]);
+
   /** Una fonte è "disponibile" se non richiede API o se la sua API è configurata. */
   const isSourceAvailable = (s: LeadSource) =>
     !s.requiresApi || apiStatuses[s.requiresApi] === true;
