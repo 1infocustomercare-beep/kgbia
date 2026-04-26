@@ -622,7 +622,32 @@ Deno.serve(async (req) => {
       preview_id,
       screens: screensInput,
       variation_seed: variationSeedInput,
+      // ── Brand reali del lead (usati per personalizzare prompt + reference image) ──
+      brand_logo_url: brandLogoUrlInput,
+      brand_photos: brandPhotosInput,
+      deep_report: deepReportInput,
+      glass_intensity: glassIntensityInput,
+      color_style: colorStyleInput,
+      safe_area_px: safeAreaInput,
+      type_scale: typeScaleInput,
+      boost_contrast: boostContrastInput,
     } = body;
+    const brandLogoUrl: string | null = typeof brandLogoUrlInput === "string" && brandLogoUrlInput.startsWith("http") ? brandLogoUrlInput : null;
+    const brandPhotos: string[] = Array.isArray(brandPhotosInput)
+      ? brandPhotosInput.filter((u: any) => typeof u === "string" && u.startsWith("http")).slice(0, 4)
+      : [];
+    const deepReport: string = typeof deepReportInput === "string" ? deepReportInput : "";
+    const brandContext = {
+      hasLogo: !!brandLogoUrl,
+      hasBrandPhotos: brandPhotos.length > 0,
+      brandPhotosCount: brandPhotos.length,
+      deepReport,
+      glassIntensity: typeof glassIntensityInput === "number" ? glassIntensityInput : undefined,
+      colorStyle: typeof colorStyleInput === "string" ? colorStyleInput : undefined,
+      safeAreaPx: typeof safeAreaInput === "number" ? safeAreaInput : undefined,
+      typeScale: typeof typeScaleInput === "number" ? typeScaleInput : undefined,
+      boostContrast: !!boostContrastInput,
+    };
     const variationSeed: number = Number.isFinite(Number(variationSeedInput))
       ? Number(variationSeedInput)
       : Math.floor(Math.random() * 1_000_000);
