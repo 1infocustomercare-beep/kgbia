@@ -772,7 +772,12 @@ async function loadIntelligenceAssets(supabase: any, leadId?: string | null, own
 }
 
 /* ─── 4. AI BRAND KIT (tool-call) ─── */
-async function aiEnrichBrand(lead: LeadInput, scraped: ScrapedAssets | null): Promise<{
+async function aiEnrichBrand(
+  lead: LeadInput,
+  scraped: ScrapedAssets | null,
+  intel?: Awaited<ReturnType<typeof loadIntelligenceAssets>> | null,
+  preview?: PreviewSelection | null,
+): Promise<{
   tagline: string;
   description: string;
   palette: BrandPalette;
@@ -784,11 +789,19 @@ async function aiEnrichBrand(lead: LeadInput, scraped: ScrapedAssets | null): Pr
   const sectorLabel = lead.sectorLabel || lead.sector;
   const scrapedSummary = scraped?.markdown ? String(scraped.markdown).slice(0, 4000) : "";
   const scrapedBranding = scraped?.branding ? JSON.stringify(scraped.branding).slice(0, 1500) : "";
+  const intelColors = intel?.colors ? JSON.stringify(intel.colors).slice(0, 600) : "";
+  const intelWeak = Array.isArray(intel?.weakPoints) && intel!.weakPoints!.length
+    ? intel!.weakPoints!.slice(0, 6).map((w: any) => `- ${w.title || w}`).join("\n")
+    : "";
+  const intelPitch = intel?.pitch ? String(intel.pitch).slice(0, 800) : "";
+  const chosenMockup = preview?.brandName || preview?.styleName || preview?.templateVariant || "(auto)";
+  const chosenMood = preview?.styleName || preview?.templateVariant || "luxury editorial";
 
   const sysPrompt = `Sei un brand strategist senior. Riceverai dati REALI su un'attività italiana e devi produrre un brand kit COMPLETO e PROFESSIONALE per generare la sua demo digitale 1:1 con il mockup scelto dal venditore.
-RISPONDI SOLO con la chiamata della tool function "generate_brand_kit". Tutti i campi devono essere realistici, coerenti con il settore "${sectorLabel}", con il tono visivo del mockup e con i dati forniti. Nessun campo placeholder, nessun riferimento a brand interni della piattaforma.
-PALETTE: se nei dati sito/intelligence vedi colori reali del brand, usali fedelmente. Altrimenti scegli palette luxury coerente con il settore.
-MENU/LISTINO: 14-18 voci specifiche del settore (food=piatti reali, beauty=trattamenti con prezzi, ncc=tratte con città, hotel=tipologie camera, fitness=corsi, healthcare=visite, retail=prodotti). I nomi devono riflettere il vero stile dell'attività, non placeholder generici.`;
+RISPONDI SOLO con la chiamata della tool function "generate_brand_kit". Tutti i campi devono essere realistici, coerenti con il settore "${sectorLabel}", con il MOCKUP DI RIFERIMENTO ("${chosenMockup}", mood: ${chosenMood}) e con i dati forniti. Nessun campo placeholder, nessun riferimento a brand interni della piattaforma.
+PALETTE: se sono presenti colori brand reali (intelligence o sito), USALI fedelmente. In assenza, usa palette coerente con il mood del mockup.
+MENU/LISTINO: 14-18 voci specifiche del settore (food=piatti reali, beauty=trattamenti con prezzi, ncc=tratte con città, hotel=tipologie camera, fitness=corsi, healthcare=visite, retail=prodotti). I nomi devono riflettere il vero stile dell'attività, non placeholder generici.
+TAGLINE/DESCRIPTION: devono parlare in nome dell'attività e del suo posizionamento reale, mai citare la piattaforma o "demo".`;
 
   const userPrompt = `ATTIVITÀ:
 Nome: ${lead.businessName}
@@ -799,13 +812,25 @@ Telefono: ${lead.phone ?? "—"} · Email: ${lead.email ?? "—"}
 Sito: ${lead.website ?? "—"} · IG: ${lead.instagram ?? "—"}
 Google rating: ${lead.googleRating ?? "—"} (${lead.googleReviews ?? 0} recensioni)
 
+MOCKUP SCELTO DAL VENDITORE: ${chosenMockup}
+MOOD VISIVO TARGET: ${chosenMood}
+
 CONTENUTO SITO REALE:
 ${scrapedSummary || "(nessun sito disponibile, inferisci dal nome e settore — sii creativo ma realistico)"}
 
 BRAND IDENTITY ESTRATTA DAL SITO:
 ${scrapedBranding || "(non disponibile)"}
 
-Genera tutto in italiano, tono professionale ma caldo.`;
+COLORI BRAND DA INTELLIGENCE/DEEP-ANALYSIS:
+${intelColors || "(non disponibili)"}
+
+PUNTI DEBOLI ATTUALI (da risolvere col nuovo sito):
+${intelWeak || "(non disponibili)"}
+
+PITCH/INSIGHT COMMERCIALE GIÀ RACCOLTO:
+${intelPitch || "(non disponibile)"}
+
+Genera tutto in italiano, tono professionale ma caldo, perfettamente coerente col mood del mockup scelto.`;
 
   const tool = {
     type: "function",
