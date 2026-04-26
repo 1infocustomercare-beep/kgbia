@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { Lock, Sparkles, ExternalLink, X, Check, RefreshCw, Info, AlertTriangle, Zap, ShieldCheck, ChevronDown, Radio } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
@@ -155,6 +156,18 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
     refreshStatuses();
   }, []);
 
+  // Lock body scroll quando il modal "Sblocca canale" è aperto
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (howToSource) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [howToSource]);
+
   /** Una fonte è "disponibile" se non richiede API o se la sua API è configurata. */
   const isSourceAvailable = (s: LeadSource) =>
     !s.requiresApi || apiStatuses[s.requiresApi] === true;
@@ -217,11 +230,13 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
 
   return (
     <div
-      className="rounded-xl overflow-hidden"
+      className="rounded-xl overflow-hidden relative"
       style={{
-        background: "linear-gradient(180deg, rgba(15,23,42,0.55), rgba(15,23,42,0.25))",
-        border: "1px solid rgba(255,255,255,0.07)",
-        boxShadow: "0 8px 24px -12px rgba(0,0,0,0.35)",
+        background:
+          "linear-gradient(180deg, rgba(15,23,42,0.92) 0%, rgba(2,6,23,0.92) 100%)",
+        border: "1px solid rgba(20,184,166,0.18)",
+        boxShadow:
+          "0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 32px -16px rgba(0,0,0,0.55)",
       }}
     >
       {/* ─── HEADER COMPATTO (sempre visibile, click → toggle) ─── */}
@@ -527,119 +542,133 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
         </div>
       </div>
 
-      {/* MODAL "COME SBLOCCARE" */}
-      {howToSource && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)" }}
-          onClick={() => setHowToSource(null)}
-        >
+      {/* MODAL "COME SBLOCCARE" — renderizzato in portal per evitare clipping */}
+      {howToSource && typeof document !== "undefined" &&
+        createPortal(
           <div
-            onClick={e => e.stopPropagation()}
-            className="max-w-md w-full rounded-2xl p-5 space-y-4"
+            className="fixed inset-0 z-[1000] overflow-y-auto overscroll-contain"
             style={{
-              background: "linear-gradient(135deg, #0f172a, #1e293b)",
-              border: "1px solid rgba(20,184,166,0.3)",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+              background: "rgba(0,0,0,0.78)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
             }}
+            onClick={() => setHowToSource(null)}
           >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#14b8a6" }}>
-                  🔑 Sblocca canale
-                </p>
-                <h3 className="text-lg font-black text-white mt-1">{howToSource.label}</h3>
-                <p className="text-xs mt-1" style={{ color: "#94a3b8" }}>
-                  {howToSource.desc}
-                </p>
-              </div>
-              <button
-                onClick={() => setHowToSource(null)}
-                className="p-1 rounded-lg opacity-60 hover:opacity-100"
-                style={{ background: "rgba(255,255,255,0.08)" }}
-              >
-                <X className="w-4 h-4 text-white" />
-              </button>
-            </div>
-
-            {/* Box fallback gratis per la categoria */}
-            {CATEGORY_META[howToSource.category].fallbackIds.length > 0 && (
+            <div
+              className="min-h-full w-full flex items-start sm:items-center justify-center px-3 py-6 sm:p-6"
+              style={{
+                paddingTop: "max(1.5rem, env(safe-area-inset-top))",
+                paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
+              }}
+            >
               <div
-                className="rounded-xl p-3"
-                style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.2)" }}
+                onClick={e => e.stopPropagation()}
+                className="w-full max-w-md rounded-2xl p-4 sm:p-5 space-y-4 my-auto"
+                style={{
+                  background: "linear-gradient(135deg, #0f172a, #1e293b)",
+                  border: "1px solid rgba(20,184,166,0.3)",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+                }}
               >
-                <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: "#34d399" }}>
-                  <ShieldCheck className="w-3 h-3 inline mr-1" /> Nel frattempo
-                </p>
-                <p className="text-[11px]" style={{ color: "#cbd5e1" }}>
-                  Empire AI usa già <strong>{CATEGORY_META[howToSource.category].fallbackHint}</strong> come
-                  fallback gratuito, così i risultati restano coerenti anche senza questa API.
-                </p>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#14b8a6" }}>
+                      🔑 Sblocca canale
+                    </p>
+                    <h3 className="text-lg font-black text-white mt-1 break-words">{howToSource.label}</h3>
+                    <p className="text-xs mt-1" style={{ color: "#94a3b8" }}>
+                      {howToSource.desc}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setHowToSource(null)}
+                    className="p-1.5 rounded-lg opacity-70 hover:opacity-100 shrink-0"
+                    style={{ background: "rgba(255,255,255,0.08)" }}
+                    aria-label="Chiudi"
+                  >
+                    <X className="w-4 h-4 text-white" />
+                  </button>
+                </div>
+
+                {CATEGORY_META[howToSource.category].fallbackIds.length > 0 && (
+                  <div
+                    className="rounded-xl p-3"
+                    style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.2)" }}
+                  >
+                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: "#34d399" }}>
+                      <ShieldCheck className="w-3 h-3 inline mr-1" /> Nel frattempo
+                    </p>
+                    <p className="text-[11px]" style={{ color: "#cbd5e1" }}>
+                      Empire AI usa già <strong>{CATEGORY_META[howToSource.category].fallbackHint}</strong> come
+                      fallback gratuito, così i risultati restano coerenti anche senza questa API.
+                    </p>
+                  </div>
+                )}
+
+                <div className="rounded-xl p-3 space-y-2" style={{ background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.2)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "#5eead4" }}>
+                    <Sparkles className="w-3 h-3 inline mr-1" /> Come collegarlo in 3 step
+                  </p>
+                  <ol className="text-xs space-y-1.5 list-decimal list-inside" style={{ color: "#cbd5e1" }}>
+                    <li>
+                      Vai su <strong>{howToSource.apiProvider}</strong> e crea/copia la tua chiave API.
+                      {howToSource.apiHowTo && (
+                        <a
+                          href={howToSource.apiHowTo}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 ml-1 underline"
+                          style={{ color: "#5eead4" }}
+                        >
+                          Apri guida <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
+                    </li>
+                    <li>
+                      Apri il pannello <strong>API & Connessioni</strong> di Empire AI e incolla la chiave nel campo{" "}
+                      <code className="px-1.5 py-0.5 rounded text-[10px] break-all" style={{ background: "rgba(0,0,0,0.4)", color: "#5eead4" }}>
+                        {howToSource.requiresApi}
+                      </code>
+                      .
+                    </li>
+                    <li>
+                      Torna qui e clicca <strong>"Ricontrolla"</strong> 🔄 — la fonte si attiverà automaticamente.
+                    </li>
+                  </ol>
+                </div>
+
+                <div className="flex gap-2">
+                  <Link
+                    to="/partner/api-connections"
+                    onClick={() => setHowToSource(null)}
+                    className="flex-1 text-center text-xs font-bold py-2.5 rounded-xl"
+                    style={{
+                      background: "linear-gradient(135deg, #14b8a6, #0d9488)",
+                      color: "#0f172a",
+                    }}
+                  >
+                    🔧 Apri pannello API
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setHowToSource(null);
+                      refreshStatuses();
+                    }}
+                    className="text-xs font-bold py-2.5 px-4 rounded-xl"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      color: "#e5e7eb",
+                    }}
+                  >
+                    <RefreshCw className="w-3 h-3 inline mr-1" /> Ricontrolla
+                  </button>
+                </div>
               </div>
-            )}
-
-            <div className="rounded-xl p-3 space-y-2" style={{ background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.2)" }}>
-              <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "#5eead4" }}>
-                <Sparkles className="w-3 h-3 inline mr-1" /> Come collegarlo in 3 step
-              </p>
-              <ol className="text-xs space-y-1.5 list-decimal list-inside" style={{ color: "#cbd5e1" }}>
-                <li>
-                  Vai su <strong>{howToSource.apiProvider}</strong> e crea/copia la tua chiave API.
-                  {howToSource.apiHowTo && (
-                    <a
-                      href={howToSource.apiHowTo}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 ml-1 underline"
-                      style={{ color: "#5eead4" }}
-                    >
-                      Apri guida <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-                </li>
-                <li>
-                  Apri il pannello <strong>API & Connessioni</strong> di Empire AI e incolla la chiave nel campo{" "}
-                  <code className="px-1.5 py-0.5 rounded text-[10px]" style={{ background: "rgba(0,0,0,0.4)", color: "#5eead4" }}>
-                    {howToSource.requiresApi}
-                  </code>
-                  .
-                </li>
-                <li>
-                  Torna qui e clicca <strong>"Ricontrolla"</strong> 🔄 — la fonte si attiverà automaticamente.
-                </li>
-              </ol>
             </div>
-
-            <div className="flex gap-2">
-              <Link
-                to="/partner/api-connections"
-                onClick={() => setHowToSource(null)}
-                className="flex-1 text-center text-xs font-bold py-2.5 rounded-xl"
-                style={{
-                  background: "linear-gradient(135deg, #14b8a6, #0d9488)",
-                  color: "#0f172a",
-                }}
-              >
-                🔧 Apri pannello API
-              </Link>
-              <button
-                onClick={() => {
-                  setHowToSource(null);
-                  refreshStatuses();
-                }}
-                className="text-xs font-bold py-2.5 px-4 rounded-xl"
-                style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  color: "#e5e7eb",
-                }}
-              >
-                <RefreshCw className="w-3 h-3 inline mr-1" /> Ricontrolla
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
