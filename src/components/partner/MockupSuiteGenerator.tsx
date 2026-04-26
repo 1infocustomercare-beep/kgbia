@@ -40,6 +40,25 @@ interface Props {
   deepReportSummary?: any;
   /** Quando true e businessName è valorizzato, lancia automaticamente handleGenerate al mount. */
   autoStart?: boolean;
+  /** Dati estesi del lead per generazione sito completo (generate-demo-from-lead) */
+  leadFullData?: {
+    phone?: string;
+    email?: string;
+    website?: string;
+    fullAddress?: string;
+    instagram?: string;
+    facebook?: string;
+    googleRating?: number | null;
+    googleReviews?: number | null;
+    googleMapsUrl?: string;
+    openingHours?: any;
+    cuisine?: string | null;
+    types?: string[];
+    specializationLabel?: string | null;
+    specializationQuery?: string | null;
+    zone?: string;
+    sectorId?: string; // es. "food", "ncc", "beauty"
+  };
   onGenerated?: (suiteId: string, shareSlug: string) => void;
 }
 
