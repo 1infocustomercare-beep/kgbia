@@ -1604,23 +1604,20 @@ export function MockupSuiteGenerator({
           />
         </ConfigSection>
 
-        {/* ────────────────────────────────────────────────────────────────── */}
-        {/* SAFE AREA & LEGGIBILITÀ — margini, tipografia, contrasto AA       */}
-        {/* Garantiscono che testo e UI restino dentro il frame iPhone        */}
-        {/* su qualsiasi template selezionato (auto + manuali).               */}
-        {/* ────────────────────────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-accent/[0.05] to-transparent p-4 sm:p-5 space-y-5">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <Label className="flex items-center gap-1.5 m-0 text-sm font-semibold">
-                <Eye className="h-4 w-4 text-accent-foreground" /> Safe Area & Leggibilità
-              </Label>
-              <p className="text-xs text-muted-foreground mt-0.5">Margini, tipografia e contrasto WCAG</p>
-            </div>
+        {/* 06 · Safe Area & Leggibilità — margini, tipografia, contrasto AA */}
+        <ConfigSection
+          step={6}
+          icon={Eye}
+          title="Safe Area & Leggibilità"
+          subtitle="Margini, tipografia e contrasto WCAG"
+          defaultOpen={false}
+          tone="accent"
+          badge={
             <Badge variant="outline" className="text-[10px] uppercase tracking-wider">
               {boostContrast ? "AA on" : "AA off"} · {typeScale.toFixed(2)}× · {safeAreaPx}px
             </Badge>
-          </div>
+          }
+        >
 
           {/* Safe Area slider */}
           <div className="space-y-2">
