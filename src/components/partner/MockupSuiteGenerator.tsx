@@ -1703,7 +1703,7 @@ export function MockupSuiteGenerator({
           <p className="text-[11px] text-muted-foreground italic leading-snug">
             🛡️ Nessun testo finisce sotto la Dynamic Island o l'Home Indicator. Ottimale per AI-render 4K/8K.
           </p>
-        </div>
+        </ConfigSection>
 
         {/* 4 schermate configurabili */}
         <div>
