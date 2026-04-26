@@ -785,10 +785,10 @@ async function aiEnrichBrand(lead: LeadInput, scraped: ScrapedAssets | null): Pr
   const scrapedSummary = scraped?.markdown ? String(scraped.markdown).slice(0, 4000) : "";
   const scrapedBranding = scraped?.branding ? JSON.stringify(scraped.branding).slice(0, 1500) : "";
 
-  const sysPrompt = `Sei un brand strategist senior. Riceverai dati REALI su un'attività italiana e devi produrre un brand kit COMPLETO e PROFESSIONALE per generare la sua demo digitale Empire AI.
-RISPONDI SOLO con la chiamata della tool function "generate_brand_kit". Tutti i campi devono essere realistici, coerenti con il settore "${sectorLabel}" e con i dati forniti. Nessun campo placeholder.
-PALETTE: se nei dati sito vedi colori reali, usali. Altrimenti scegli palette luxury coerente.
-MENU/LISTINO: 14-18 voci specifiche del settore (food=piatti reali, beauty=trattamenti con prezzi, ncc=tratte con città, hotel=tipologie camera, fitness=corsi, healthcare=visite, retail=prodotti).`;
+  const sysPrompt = `Sei un brand strategist senior. Riceverai dati REALI su un'attività italiana e devi produrre un brand kit COMPLETO e PROFESSIONALE per generare la sua demo digitale 1:1 con il mockup scelto dal venditore.
+RISPONDI SOLO con la chiamata della tool function "generate_brand_kit". Tutti i campi devono essere realistici, coerenti con il settore "${sectorLabel}", con il tono visivo del mockup e con i dati forniti. Nessun campo placeholder, nessun riferimento a brand interni della piattaforma.
+PALETTE: se nei dati sito/intelligence vedi colori reali del brand, usali fedelmente. Altrimenti scegli palette luxury coerente con il settore.
+MENU/LISTINO: 14-18 voci specifiche del settore (food=piatti reali, beauty=trattamenti con prezzi, ncc=tratte con città, hotel=tipologie camera, fitness=corsi, healthcare=visite, retail=prodotti). I nomi devono riflettere il vero stile dell'attività, non placeholder generici.`;
 
   const userPrompt = `ATTIVITÀ:
 Nome: ${lead.businessName}
