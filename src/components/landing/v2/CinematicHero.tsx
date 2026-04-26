@@ -87,6 +87,9 @@ export default function CinematicHero() {
   const stageRef = useRef<HTMLDivElement>(null);
   const [activeScene, setActiveScene] = useState(0);
   const [wordIdx, setWordIdx] = useState(0);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
+  const lite = isMobile || prefersReducedMotion;
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 26, mass: 0.7 });
