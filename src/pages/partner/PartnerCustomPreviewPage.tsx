@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -69,6 +70,8 @@ interface SelectableLead {
 
 export default function PartnerCustomPreviewPage() {
   const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [previews, setPreviews] = useState<CustomPreview[]>([]);
   const [availableLeads, setAvailableLeads] = useState<SelectableLead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,6 +81,13 @@ export default function PartnerCustomPreviewPage() {
   const [selectedLeadId, setSelectedLeadId] = useState<string>("");
   const [logoUploading, setLogoUploading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
+
+  // ─── Deep-link da Leads: ?leadId=&name=&sector=&city=&phone=&email=&website=&address=&color=&autostart=1
+  // Quando il venditore preme "Genera" su un lead, viene portato qui con tutti i dati pre-caricati
+  // e (se autostart=1) il MockupSuiteGenerator parte da solo.
+  const [autoStartSuite, setAutoStartSuite] = useState(false);
+  const mockupSectionRef = useRef<HTMLDivElement | null>(null);
+  const deepLinkAppliedRef = useRef(false);
 
   // Filtri lista preview
   const [previewSearch, setPreviewSearch] = useState("");
@@ -137,6 +147,51 @@ export default function PartnerCustomPreviewPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [DRAFT_KEY]);
+
+  // ─── Deep-link prefill: legge i query params dopo l'idratazione del draft
+  // così i dati del lead arrivano sempre più freschi della bozza locale.
+  useEffect(() => {
+    if (!draftHydrated) return;
+    if (deepLinkAppliedRef.current) return;
+    const qpName = searchParams.get("name");
+    const qpLeadId = searchParams.get("leadId");
+    if (!qpName && !qpLeadId) {
+      deepLinkAppliedRef.current = true;
+      return;
+    }
+    deepLinkAppliedRef.current = true;
+
+    setForm(prev => ({
+      ...prev,
+      lead_name: qpName || prev.lead_name,
+      lead_sector: searchParams.get("sector") || prev.lead_sector,
+      lead_city: searchParams.get("city") || prev.lead_city,
+      lead_phone: searchParams.get("phone") || prev.lead_phone,
+      lead_email: searchParams.get("email") || prev.lead_email,
+      lead_website: searchParams.get("website") || prev.lead_website,
+      lead_address: searchParams.get("address") || prev.lead_address,
+      primary_color: searchParams.get("color") || prev.primary_color,
+    }));
+    setMode("lead");
+    if (qpLeadId) setSelectedLeadId(`lead:${qpLeadId}`);
+
+    if (searchParams.get("autostart") === "1") {
+      setAutoStartSuite(true);
+    }
+
+    toast.success(`Dati di "${qpName || "lead"}" caricati · Mockup Suite pronta`);
+
+    // Scroll alla sezione Mockup Suite + ripulisci i query params (così un refresh non rilancia)
+    setTimeout(() => {
+      mockupSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 250);
+    setTimeout(() => {
+      const next = new URLSearchParams(searchParams);
+      ["leadId","name","sector","city","phone","email","website","address","color","autostart"].forEach(k => next.delete(k));
+      setSearchParams(next, { replace: true });
+    }, 1500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftHydrated]);
 
   // Auto-save bozza con debounce 600ms
   useEffect(() => {
@@ -797,14 +852,19 @@ export default function PartnerCustomPreviewPage() {
         {/* ═══════════ COLONNA DX: MOCKUP SUITE + VAULT + LISTA ═══════════ */}
         <div className="space-y-5 lg:space-y-6 min-w-0">
           {/* MOCKUP IPHONE SUITE */}
-          <section className="space-y-3">
+          <section ref={mockupSectionRef} className="space-y-3 scroll-mt-20">
             <div className="flex items-center gap-2 flex-wrap">
               <Smartphone className="h-5 w-5 text-primary shrink-0" />
               <h2 className="text-base sm:text-lg lg:text-xl font-semibold">Mockup iPhone Suite</h2>
               <Badge variant="secondary" className="text-[10px]">4 schermate</Badge>
+              {autoStartSuite && (
+                <Badge className="text-[10px] bg-primary/15 text-primary border border-primary/30">
+                  Avvio automatico…
+                </Badge>
+              )}
             </div>
             <p className="text-[11px] sm:text-sm text-muted-foreground">
-              Genera 4 schermate iPhone professionali. Se hai compilato il form, i dati sono pre-caricati.
+              Genera 4 schermate iPhone professionali. Se hai compilato il form (o sei arrivato da un lead), i dati sono già pre-caricati.
             </p>
             <MockupSuiteGenerator
               businessName={form.lead_name}
@@ -812,6 +872,8 @@ export default function PartnerCustomPreviewPage() {
               businessCity={form.lead_city}
               primaryColor={form.primary_color}
               templateVariant={form.template_style}
+              autoStart={autoStartSuite}
+              onGenerated={() => setAutoStartSuite(false)}
             />
           </section>
 

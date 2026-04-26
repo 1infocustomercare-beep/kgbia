@@ -32,6 +32,8 @@ interface Props {
   templateVariant?: string;
   leadId?: string;
   previewId?: string;
+  /** Quando true e businessName è valorizzato, lancia automaticamente handleGenerate al mount. */
+  autoStart?: boolean;
   onGenerated?: (suiteId: string, shareSlug: string) => void;
 }
 
@@ -302,6 +304,7 @@ export function MockupSuiteGenerator({
   templateVariant: initialTemplate,
   leadId,
   previewId,
+  autoStart = false,
   onGenerated,
 }: Props) {
   // Modalità: lead (usa props del lead) | standalone (form libero)
@@ -672,6 +675,23 @@ export function MockupSuiteGenerator({
       setGenerating(false);
     }
   };
+
+  // ─── AUTO-START ─── quando arrivo dalla pagina Leads con ?autostart=1
+  // e il MockupSuiteGenerator riceve businessName/sector valorizzati,
+  // lancio automaticamente handleGenerate una volta sola.
+  const autoStartFiredRef = useRef(false);
+  useEffect(() => {
+    if (!autoStart) return;
+    if (autoStartFiredRef.current) return;
+    if (!businessName?.trim() || !businessSector?.trim()) return;
+    if (generating) return;
+    autoStartFiredRef.current = true;
+    const t = setTimeout(() => {
+      handleGenerate();
+    }, 400);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoStart, businessName, businessSector]);
 
   const copyShareLink = () => {
     if (!result?.share_slug) return;

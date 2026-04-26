@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Target, MapPin, Filter, ChevronDown, Loader2, Phone, Globe, Mail,
@@ -323,9 +324,30 @@ function exportLeadsToCsv(
 
 
 export default function LeadsPage() {
+  const navigate = useNavigate();
   // 💰 Sistema crediti venditore — gating su azioni AI costose
   const { balance: creditBalance, getCost, consume: consumeSellerCredits, totalSpent30d } = useSellerCredits();
   const [pendingDemoFactory, setPendingDemoFactory] = useState<{ lead: Lead & { _sector: string }; preview: ManualPreviewSelection | null } | null>(null);
+
+  // Helper: porta il venditore alla pagina Mockup Suite con i dati del lead pre-caricati
+  // e avvio automatico della generazione delle 4 schermate iPhone.
+  const goToMockupSuiteForLead = useCallback((lead: any) => {
+    if (!lead) return;
+    const params = new URLSearchParams();
+    if (lead.id) params.set("leadId", String(lead.id));
+    if (lead.name) params.set("name", lead.name);
+    const sectorLabel =
+      lead._sector_label || lead.chosen_specialization_label || lead._sector || lead.sector || "";
+    if (sectorLabel) params.set("sector", sectorLabel);
+    if (lead.city) params.set("city", lead.city);
+    if (lead.phone) params.set("phone", lead.phone);
+    if (lead.email) params.set("email", lead.email);
+    if (lead.website) params.set("website", lead.website);
+    if (lead.full_address) params.set("address", lead.full_address);
+    params.set("autostart", "1");
+    toast.success(`🚀 Apro Mockup Suite per ${lead.name}…`);
+    navigate(`/partner/custom-preview?${params.toString()}`);
+  }, [navigate]);
 
   // Search
   const [city, setCity] = useState("");
@@ -2667,12 +2689,12 @@ export default function LeadsPage() {
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <button
-                      onClick={() => requestDemoFactory(selected, customPreview)}
-                      disabled={demoFactoryLoading}
-                      className="text-[9px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1 disabled:opacity-50"
+                      onClick={() => goToMockupSuiteForLead({ ...selected, _sector: selected._sector || sector, _sector_label: sectorConfig?.label })}
+                      className="text-[9px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1"
                       style={{ background: "linear-gradient(135deg, #a78bfa, #14b8a6)", color: "#fff", boxShadow: "0 4px 14px rgba(167,139,250,0.35)" }}
+                      title="Apri la pagina Mockup Suite con i dati del lead già caricati"
                     >
-                      <WandIcon className="w-3 h-3" /> {demoFactoryLoading ? "Genero…" : "🪄 Genera Demo Live"}
+                      <WandIcon className="w-3 h-3" /> 🪄 Genera 4 Mockup
                     </button>
                     <button
                       onClick={() => setShowPicker(true)}
