@@ -345,7 +345,6 @@ export default function LeadsPage() {
     if (lead.email) params.set("email", lead.email);
     if (lead.website) params.set("website", lead.website);
     if (lead.full_address) params.set("address", lead.full_address);
-    const sectorLabel = lead._sector_label || lead.chosen_specialization_label || lead._sector || lead.sector || "";
     const match = lead._previewMatch || matchPreviewForLead({
       name: lead.name,
       sector: lead._sector || lead.sector,
