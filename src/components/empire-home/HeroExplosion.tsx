@@ -41,31 +41,10 @@ export default function HeroExplosion() {
 
       revealAll();
 
-      gsap.from(q("[data-hero-line] .char"), {
-        y: () => gsap.utils.random(isMobile ? -130 : -280, isMobile ? 130 : 280),
-        x: () => gsap.utils.random(isMobile ? -180 : -520, isMobile ? 180 : 520),
-        rotate: () => gsap.utils.random(-110, 110),
-        scale: () => gsap.utils.random(0.35, 2.4),
-        opacity: 0,
-        filter: "blur(18px)",
-        duration: 0.01,
-        immediateRender: false,
-      });
       gsap.set(q("[data-hero-shock]"), { scale: 0, opacity: 0.95 });
       gsap.set(q("[data-hero-shock-2]"), { scale: 0, opacity: 0.78 });
       gsap.set(q("[data-hero-grid]"), { opacity: 0.62, scale: 1 });
       gsap.set(q("[data-hero-flash]"), { opacity: 0 });
-      gsap.from(q("[data-hero-phone]"), {
-        y: () => gsap.utils.random(isMobile ? 120 : 240, isMobile ? 260 : 520),
-        x: () => gsap.utils.random(isMobile ? -70 : -160, isMobile ? 70 : 160),
-        rotate: () => gsap.utils.random(-22, 22),
-        rotateY: () => gsap.utils.random(-42, 42),
-        scale: 0.72,
-        opacity: 0,
-        filter: "blur(16px)",
-        duration: 0.01,
-        immediateRender: false,
-      });
 
       const trigger = () => {
         if (reduceMotion) {
@@ -79,7 +58,14 @@ export default function HeroExplosion() {
           .to(q("[data-hero-shock]"), { scale: isMobile ? 9 : 17, opacity: 0, duration: 1.55 }, 0)
           .to(q("[data-hero-shock-2]"), { scale: isMobile ? 12 : 24, opacity: 0, duration: 2.05 }, 0.12)
           .to(q("[data-hero-grid]"), { opacity: 0.62, scale: 1, duration: 1.15 }, 0.02)
-          .to(q("[data-hero-line] .char"), {
+          .fromTo(q("[data-hero-line] .char"), {
+            y: () => gsap.utils.random(isMobile ? -130 : -280, isMobile ? 130 : 280),
+            x: () => gsap.utils.random(isMobile ? -180 : -520, isMobile ? 180 : 520),
+            rotate: () => gsap.utils.random(-110, 110),
+            scale: () => gsap.utils.random(0.35, 2.4),
+            opacity: 0,
+            filter: "blur(18px)",
+          }, {
             y: 0,
             x: 0,
             rotate: 0,
@@ -89,7 +75,15 @@ export default function HeroExplosion() {
             duration: 1.15,
             stagger: { each: isMobile ? 0.008 : 0.012, from: "random" },
           }, 0.18)
-          .to(q("[data-hero-phone]"), {
+          .fromTo(q("[data-hero-phone]"), {
+            y: () => gsap.utils.random(isMobile ? 120 : 240, isMobile ? 260 : 520),
+            x: () => gsap.utils.random(isMobile ? -70 : -160, isMobile ? 70 : 160),
+            rotate: () => gsap.utils.random(-22, 22),
+            rotateY: () => gsap.utils.random(-42, 42),
+            scale: 0.72,
+            opacity: 0,
+            filter: "blur(16px)",
+          }, {
             y: 0,
             x: 0,
             rotate: (i) => [-8, 7, 0][i] ?? 0,
