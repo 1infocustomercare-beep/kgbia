@@ -10,6 +10,7 @@ import ShiftSection from "@/components/empire-home/ShiftSection";
 import MockupShowcase from "@/components/empire-home/MockupShowcase";
 import AgentsCatalog from "@/components/empire-home/AgentsCatalog";
 import SectorsLive from "@/components/empire-home/SectorsLive";
+import ConversionFunnel from "@/components/empire-home/ConversionFunnel";
 import ProofHorizontal from "@/components/empire-home/ProofHorizontal";
 import MagneticCTA from "@/components/empire-home/MagneticCTA";
 import FilmGrain from "@/components/empire-home/FilmGrain";
@@ -109,6 +110,7 @@ export default function EmpireCinematicHome() {
           <MockupShowcase />
           <AgentsCatalog />
           <SectorsLive />
+          <ConversionFunnel />
           <ProofHorizontal />
           <MagneticCTA />
           <LandingFooter />
