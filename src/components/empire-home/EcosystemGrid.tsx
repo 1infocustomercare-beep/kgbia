@@ -5,7 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const SERVICES = [
-  { tag: "01", title: "Sincronizzazione Operativa", desc: "Ogni reparto allineato in tempo reale. Zero email, zero call inutili.", color: "#7eb7be" },
+  { tag: "01", title: "Sincronizzazione Operativa", desc: "Ogni reparto allineato in tempo reale. Zero email, zero call inutili.", color: "#22d3ee" },
   { tag: "02", title: "Vendita Algoritmica", desc: "Lead caldi qualificati e chiusi h24 dai nostri agenti vocali e testuali.", color: "#a78bfa" },
   { tag: "03", title: "Marketing Predittivo", desc: "Contenuti, campagne e funnel ottimizzati continuamente dall'AI.", color: "#ec4899" },
   { tag: "04", title: "Customer Care Cyborg", desc: "Risposta in 8 secondi, 7/7, in 32 lingue. Mai un cliente perso.", color: "#f59e0b" },
@@ -53,11 +53,11 @@ export default function EcosystemGrid() {
     <section ref={root} id="ecosistema" className="relative px-4 py-24 sm:px-5 sm:py-32">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-14 text-center sm:mb-16">
-          <div className="mb-4 inline-block text-[11px] font-bold uppercase tracking-[3px] text-[#7eb7be]">Ecosistema · 06 protocolli</div>
+          <div className="mb-4 inline-block text-[11px] font-bold uppercase tracking-[3px] text-[#22d3ee]">Ecosistema · 06 protocolli</div>
           <h2 data-eco-title className="font-heading text-[clamp(2.2rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-[-0.04em] text-white">
             <span className="inline-block overflow-hidden"><span className="word inline-block">Domina</span></span>{" "}
             <span className="inline-block overflow-hidden"><span className="word inline-block">ogni</span></span>{" "}
-            <span className="inline-block overflow-hidden"><span className="word inline-block bg-gradient-to-r from-[#7eb7be] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">vettore.</span></span>
+            <span className="inline-block overflow-hidden"><span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">vettore.</span></span>
           </h2>
         </div>
 

@@ -5,7 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const PROOF = [
-  { k: "847+", l: "Imprese automatizzate", c: "#7eb7be" },
+  { k: "847+", l: "Imprese automatizzate", c: "#22d3ee" },
   { k: "98", l: "Agenti IA proprietari", c: "#a78bfa" },
   { k: "25+", l: "Settori dominati", c: "#ec4899" },
   { k: "94%", l: "Riduzione errori", c: "#f59e0b" },
@@ -72,7 +72,7 @@ export default function ProofHorizontal() {
       }} />
 
       <div className="absolute left-4 top-6 z-20 sm:left-10 sm:top-12">
-        <div className="text-[10px] font-bold uppercase tracking-[3px] text-[#7eb7be] sm:text-[11px]">Proof · Dominio del mercato</div>
+        <div className="text-[10px] font-bold uppercase tracking-[3px] text-[#22d3ee] sm:text-[11px]">Proof · Dominio del mercato</div>
         <div className="mt-2 font-heading text-xl font-black uppercase tracking-tight text-white sm:text-4xl">Numeri non discutibili.</div>
       </div>
 
@@ -103,7 +103,7 @@ export default function ProofHorizontal() {
             data-proof-card
             className="relative flex h-[55vh] min-w-[82vw] flex-col justify-center rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-7 backdrop-blur-md sm:min-w-[44vw] sm:p-12"
           >
-            <div className="font-heading text-5xl text-[#7eb7be]/40 sm:text-6xl">"</div>
+            <div className="font-heading text-5xl text-[#22d3ee]/40 sm:text-6xl">"</div>
             <p className="font-heading text-lg leading-snug text-white sm:text-3xl">{q.q}</p>
             <footer className="mt-5 text-[10px] uppercase tracking-[3px] text-white/50 sm:mt-6 sm:text-xs">— {q.a}</footer>
           </blockquote>

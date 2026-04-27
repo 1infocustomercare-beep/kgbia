@@ -7,43 +7,45 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeroExplosion from "@/components/empire-home/HeroExplosion";
 import MarqueeManifesto from "@/components/empire-home/MarqueeManifesto";
 import ShiftSection from "@/components/empire-home/ShiftSection";
-import ParallaxDepth from "@/components/empire-home/ParallaxDepth";
-import EcosystemGrid from "@/components/empire-home/EcosystemGrid";
-import StickyAgentsReveal from "@/components/empire-home/StickyAgentsReveal";
+import MockupShowcase from "@/components/empire-home/MockupShowcase";
+import AgentsCatalog from "@/components/empire-home/AgentsCatalog";
+import SectorsLive from "@/components/empire-home/SectorsLive";
 import ProofHorizontal from "@/components/empire-home/ProofHorizontal";
 import MagneticCTA from "@/components/empire-home/MagneticCTA";
-import ThermalBackground from "@/components/empire-home/ThermalBackground";
 import FilmGrain from "@/components/empire-home/FilmGrain";
 import CinematicCursor from "@/components/empire-home/CinematicCursor";
 
+/**
+ * Empire Cinematic Home — Aurora edition
+ * Ogni sezione ha un'interazione scroll DIVERSA:
+ *  1. HeroExplosion         → esplosione + parallax mouse
+ *  2. MarqueeManifesto      → scrub orizzontale outline
+ *  3. ShiftSection          → pinned scrub Caos→Empire
+ *  4. MockupShowcase        → sticky 3D stack iPhone reali (NUOVO)
+ *  5. AgentsCatalog         → bento masonry + color morph (NUOVO)
+ *  6. SectorsLive           → tabs con iframe live demo (NUOVO)
+ *  7. ProofHorizontal       → pin orizzontale numeri/quotes
+ *  8. MagneticCTA           → magnetic snap finale
+ */
+
 export default function EmpireCinematicHome() {
   useEffect(() => {
-    // Init smooth scroll
     try { getLenis(); } catch (e) { console.warn("Lenis init failed", e); }
 
-    // Refresh ScrollTrigger after layout/fonts/images settle
-    const refresh = () => {
-      try { ScrollTrigger.refresh(); } catch {}
-    };
+    const refresh = () => { try { ScrollTrigger.refresh(); } catch {} };
     const timers = [
       window.setTimeout(refresh, 400),
       window.setTimeout(refresh, 1500),
       window.setTimeout(refresh, 3500),
     ];
 
-    // Refresh on full load
-    if (document.readyState === "complete") {
-      refresh();
-    } else {
-      window.addEventListener("load", refresh, { once: true });
-    }
+    if (document.readyState === "complete") refresh();
+    else window.addEventListener("load", refresh, { once: true });
 
     return () => {
       timers.forEach(clearTimeout);
       window.removeEventListener("load", refresh);
-      try {
-        ScrollTrigger.getAll().forEach((t) => t.kill());
-      } catch {}
+      try { ScrollTrigger.getAll().forEach((t) => t.kill()); } catch {}
       destroyLenis();
     };
   }, []);
@@ -51,13 +53,9 @@ export default function EmpireCinematicHome() {
   return (
     <>
       <style>{`
-        @keyframes grain {
-          0% { transform: translate(0,0); }
-          20% { transform: translate(-3%, 5%); }
-          40% { transform: translate(2%, -4%); }
-          60% { transform: translate(-2%, 3%); }
-          80% { transform: translate(4%, 2%); }
-          100% { transform: translate(0,0); }
+        @keyframes auroraShift {
+          0%, 100% { transform: translate3d(0,0,0) rotate(0deg); opacity: 0.6; }
+          50% { transform: translate3d(2%, -3%, 0) rotate(8deg); opacity: 0.85; }
         }
         @keyframes pulse {
           0%, 100% { transform: scale(1); opacity: 1; }
@@ -67,20 +65,50 @@ export default function EmpireCinematicHome() {
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
       `}</style>
 
-      <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white selection:bg-[#a78bfa] selection:text-black">
-        <ThermalBackground intensity={0.85} />
-        <div className="pointer-events-none fixed inset-0 z-[1]" style={{
-          background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(126,183,190,0.10), transparent 60%), linear-gradient(180deg, rgba(5,5,5,0.4), rgba(5,5,5,0.85))",
-        }} />
+      <div className="relative min-h-screen overflow-x-hidden bg-[#050813] text-white selection:bg-[#22d3ee] selection:text-black">
+        {/* Aurora living background — 3 blob morbidi che si muovono */}
+        <div className="pointer-events-none fixed inset-0 z-[1]">
+          <div
+            className="absolute -left-[20%] -top-[10%] h-[80vh] w-[80vh] rounded-full"
+            style={{
+              background: "radial-gradient(circle, rgba(34,211,238,0.22), transparent 60%)",
+              filter: "blur(80px)",
+              animation: "auroraShift 18s ease-in-out infinite",
+            }}
+          />
+          <div
+            className="absolute right-[-15%] top-[30%] h-[70vh] w-[70vh] rounded-full"
+            style={{
+              background: "radial-gradient(circle, rgba(74,222,128,0.18), transparent 60%)",
+              filter: "blur(90px)",
+              animation: "auroraShift 22s ease-in-out -7s infinite reverse",
+            }}
+          />
+          <div
+            className="absolute bottom-[-10%] left-[20%] h-[60vh] w-[60vh] rounded-full"
+            style={{
+              background: "radial-gradient(circle, rgba(167,139,250,0.20), transparent 60%)",
+              filter: "blur(100px)",
+              animation: "auroraShift 26s ease-in-out -12s infinite",
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(34,211,238,0.08), transparent 60%), linear-gradient(180deg, rgba(8,12,24,0.4), rgba(8,12,24,0.85))",
+            }}
+          />
+        </div>
 
         <div className="relative z-[2]">
           <LandingNav />
           <HeroExplosion />
           <MarqueeManifesto />
           <ShiftSection />
-          <ParallaxDepth />
-          <EcosystemGrid />
-          <StickyAgentsReveal />
+          <MockupShowcase />
+          <AgentsCatalog />
+          <SectorsLive />
           <ProofHorizontal />
           <MagneticCTA />
           <LandingFooter />

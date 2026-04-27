@@ -136,8 +136,8 @@ export default function HeroExplosion() {
         data-hero-shock
         className="pointer-events-none absolute left-1/2 top-1/2 z-[2] h-[40vmin] w-[40vmin] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
-          background: "radial-gradient(circle, rgba(126,183,190,0.45) 0%, rgba(167,139,250,0.22) 40%, transparent 70%)",
-          boxShadow: "0 0 240px 80px rgba(126,183,190,0.3), inset 0 0 100px rgba(255,255,255,0.18)",
+          background: "radial-gradient(circle, rgba(34,211,238,0.45) 0%, rgba(167,139,250,0.22) 40%, transparent 70%)",
+          boxShadow: "0 0 240px 80px rgba(34,211,238,0.3), inset 0 0 100px rgba(255,255,255,0.18)",
         }}
       />
       <div
@@ -151,27 +151,27 @@ export default function HeroExplosion() {
         className="pointer-events-none absolute inset-0 z-[1]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(126,183,190,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(126,183,190,0.08) 1px, transparent 1px)",
+            "linear-gradient(rgba(34,211,238,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.08) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
           maskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%)",
           WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%)",
         }}
       />
 
-      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[6%] top-[15%] z-[1] h-72 w-72 rounded-full" style={{ background: "radial-gradient(circle, rgba(126,183,190,0.45), transparent 60%)", filter: "blur(40px)" }} />
+      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[6%] top-[15%] z-[1] h-72 w-72 rounded-full" style={{ background: "radial-gradient(circle, rgba(34,211,238,0.45), transparent 60%)", filter: "blur(40px)" }} />
       <div data-hero-orb data-hero-parallax="3" className="pointer-events-none absolute right-[5%] bottom-[12%] z-[1] h-96 w-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.38), transparent 60%)", filter: "blur(60px)" }} />
       <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[40%] top-[8%] z-[1] h-48 w-48 rounded-full" style={{ background: "radial-gradient(circle, rgba(167,139,250,0.4), transparent 60%)", filter: "blur(50px)" }} />
 
       <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pt-28 pb-20 text-center">
         <div data-hero-meta className="mb-7 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-semibold tracking-[3px] text-white/80 backdrop-blur-md">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7eb7be]" />
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#22d3ee]" />
           EMPIRE.AI · DOMINIO ALGORITMICO
         </div>
 
         <h1 className="font-heading font-black leading-[0.86] tracking-[-0.05em] text-white" style={{ fontSize: "clamp(2.8rem, 13vw, 12rem)" }}>
           <div data-hero-line className="overflow-visible">{splitChars("Automazione")}</div>
           <div data-hero-line className="overflow-visible">
-            <span className="bg-gradient-to-r from-[#7eb7be] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">
               {splitChars("Assoluta.")}
             </span>
           </div>
@@ -187,7 +187,7 @@ export default function HeroExplosion() {
             onClick={() => navigate("/demo")}
             className="group relative w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-white transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
             style={{
-              background: "linear-gradient(135deg, #7eb7be, #a78bfa, #ec4899)",
+              background: "linear-gradient(135deg, #22d3ee, #a78bfa, #ec4899)",
               boxShadow: "0 24px 60px -20px rgba(167,139,250,0.6)",
             }}
           >
