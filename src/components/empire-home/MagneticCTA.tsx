@@ -70,7 +70,7 @@ export default function MagneticCTA() {
           <span className="inline-block overflow-hidden"><span className="word inline-block text-white">tuo</span></span>{" "}
           <span className="inline-block overflow-hidden"><span className="word inline-block text-white">impero,</span></span>
           <br />
-          <span className="inline-block overflow-hidden"><span className="word inline-block bg-gradient-to-r from-[#7eb7be] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">su autopilota.</span></span>
+          <span className="inline-block overflow-hidden"><span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">su autopilota.</span></span>
         </h2>
 
         <p className="mx-auto mt-7 max-w-[560px] text-[14px] leading-[1.85] text-white/65 sm:mt-8 sm:text-[15px]">
@@ -83,7 +83,7 @@ export default function MagneticCTA() {
           onClick={() => navigate("/demo")}
           className="group relative mt-10 w-full max-w-[420px] overflow-hidden rounded-full px-10 py-5 text-sm font-extrabold uppercase tracking-[2px] text-white sm:mt-12 sm:w-auto sm:max-w-none sm:px-14 sm:py-6 sm:text-base"
           style={{
-            background: "linear-gradient(135deg, #7eb7be, #a78bfa, #ec4899)",
+            background: "linear-gradient(135deg, #22d3ee, #a78bfa, #ec4899)",
             boxShadow: "0 40px 100px -20px rgba(167,139,250,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",
           }}
         >

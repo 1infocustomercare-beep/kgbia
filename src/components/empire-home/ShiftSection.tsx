@@ -57,15 +57,15 @@ export default function ShiftSection() {
           </div>
         </div>
 
-        <div data-shift-line className="absolute left-1/2 top-1/2 z-20 h-[2px] w-[80%] origin-left -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-transparent via-[#7eb7be] to-transparent" />
+        <div data-shift-line className="absolute left-1/2 top-1/2 z-20 h-[2px] w-[80%] origin-left -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-transparent via-[#22d3ee] to-transparent" />
 
         <div data-shift-empire className="absolute inset-0 grid place-items-center px-4">
           <div className="text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#7eb7be]/40 bg-[#7eb7be]/5 px-3 py-1 text-[10px] font-bold tracking-[3px] text-[#7eb7be]">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#22d3ee]/40 bg-[#22d3ee]/5 px-3 py-1 text-[10px] font-bold tracking-[3px] text-[#22d3ee]">
               EMPIRE PROTOCOL
             </div>
             <h2 className="font-heading font-black uppercase tracking-[-0.04em]" style={{ fontSize: "clamp(2rem, 8vw, 7rem)", lineHeight: 0.9 }}>
-              <span className="word inline-block bg-gradient-to-r from-[#7eb7be] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">Sincronizzazione</span>{" "}
+              <span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">Sincronizzazione</span>{" "}
               <span className="word inline-block text-white">neurale.</span>
             </h2>
             <div className="mx-auto mt-8 grid max-w-[820px] grid-cols-3 gap-3 sm:gap-8">
