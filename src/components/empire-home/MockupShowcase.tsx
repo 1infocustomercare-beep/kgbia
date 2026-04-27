@@ -119,7 +119,7 @@ export default function MockupShowcase() {
             y: i % 2 ? 60 : -54,
             rotateY: (i - 3) * 13,
             rotateZ: (i - 3) * -3,
-            scale: i === active ? 1.05 : 0.86,
+            scale: i === 3 ? 1.05 : 0.86,
             duration: 0.8,
             ease: "none",
           }, 0.9 + i * 0.08);
@@ -127,7 +127,7 @@ export default function MockupShowcase() {
     }, root);
 
     return () => ctx.revert();
-  }, [active, featured.length]);
+  }, [featured.length]);
 
   return (
     <section ref={root} id="mockups" className="relative overflow-hidden py-20 sm:py-28" style={{ perspective: "1500px", background: "linear-gradient(180deg, transparent, rgba(8,19,39,0.72) 35%, rgba(19,8,31,0.62) 72%, transparent)" }}>
