@@ -112,9 +112,9 @@ export default function HeroExplosion() {
       };
 
       const alreadyShown = sessionStorage.getItem("empire-splash-shown");
-      const splashDelay = alreadyShown ? 180 : 1850;
+      const splashDelay = alreadyShown ? 40 : 260;
       const t = window.setTimeout(trigger, splashDelay);
-      const emergency = window.setTimeout(revealAll, 4300);
+      const emergency = window.setTimeout(revealAll, 1200);
       sessionStorage.setItem("empire-splash-shown", "1");
 
       let onMove: ((e: MouseEvent) => void) | null = null;
