@@ -256,7 +256,12 @@ const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"))
 const DemoAccountsPage = lazy(() => import("./pages/superadmin/DemoAccountsPage"));
 const ConnectionsPage = lazy(() => import("./pages/superadmin/ConnectionsPage"));
 const VoiceOrchestratorPage = lazy(() => import("./pages/superadmin/VoiceOrchestratorPage"));
-const VoiceOrchestratorFAB = lazy(() => import("./components/superadmin/VoiceOrchestratorFAB"));
+const VoiceOrchestratorFAB = lazy(() =>
+  import("./components/superadmin/VoiceOrchestratorFAB").catch((error) => {
+    console.warn("VoiceOrchestratorFAB unavailable outside admin scope", error);
+    return { default: () => null };
+  })
+);
 const OutreachHealthPage = lazy(() => import("./pages/superadmin/OutreachHealthPage"));
 const SuperAdminCostsPage = lazy(() => import("./pages/superadmin/SuperAdminCostsPage"));
 
