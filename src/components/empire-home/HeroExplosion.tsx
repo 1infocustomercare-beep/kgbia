@@ -203,12 +203,30 @@ export default function HeroExplosion() {
           </div>
         </h1>
 
-        <p data-hero-sub className="mx-auto mt-8 max-w-[640px] text-[14px] leading-[1.85] text-white/65 sm:text-[17px]">
-          Sincronizzazione neurale tra ogni processo del tuo business.
-          Solo <span className="text-white">efficienza algoritmica pura</span> al servizio del tuo dominio del mercato.
+        <p data-hero-sub className="mx-auto mt-8 max-w-[680px] text-[14px] leading-[1.85] text-white/68 sm:text-[17px]">
+          Non software. Un sistema operativo AI che prende ordini, vendite, marketing, staff e clienti — e li fa muovere come un'unica macchina.
         </p>
 
-        <div data-hero-cta className="mt-10 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
+        <div className="pointer-events-none mt-9 hidden items-end justify-center gap-3 sm:flex" style={{ perspective: "1200px" }}>
+          {HERO_MOCKUPS.map((img, i) => (
+            <div
+              key={img}
+              data-hero-preview
+              className="relative overflow-hidden rounded-[1.6rem] border-[7px] border-black bg-black shadow-2xl"
+              style={{
+                width: i === 1 ? 116 : 92,
+                height: i === 1 ? 236 : 188,
+                marginBottom: i === 1 ? 0 : 24,
+                boxShadow: i === 1 ? "0 34px 90px -24px rgba(34,211,238,0.7)" : "0 24px 70px -28px rgba(167,139,250,0.55)",
+              }}
+            >
+              <img src={img} alt="Mockup settore Empire AI" className="h-full w-full object-cover" loading="eager" draggable={false} />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/20" />
+            </div>
+          ))}
+        </div>
+
+        <div data-hero-cta className="mt-9 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
           <button
             onClick={() => navigate("/demo")}
             className="group relative w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-white transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
