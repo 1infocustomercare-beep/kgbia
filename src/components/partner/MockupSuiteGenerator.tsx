@@ -791,7 +791,9 @@ export function MockupSuiteGenerator({
 
       if (isAIEngine) setPreviewPhase("upgrading");
 
+      console.log("[MockupSuiteGenerator] → invoke lead-mockup-suite", { engine, screens: screens.length });
       const { data, error } = await supabase.functions.invoke("lead-mockup-suite", { body: payload });
+      console.log("[MockupSuiteGenerator] ← response", { hasData: !!data, hasError: !!error, error, dataSuccess: data?.success, dataError: data?.error });
       if (error) throw error;
       let d = data as any;
       if (!d?.success) {
