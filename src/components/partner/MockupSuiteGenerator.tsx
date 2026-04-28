@@ -602,6 +602,7 @@ export function MockupSuiteGenerator({
 
       toast.loading("🏗️ Costruisco sito + admin completo (30-60s)…", { id: "build-site" });
 
+      console.log("[BuildFullSite] → invoke generate-demo-from-lead", { businessName, sectorId, resolvedTemplate });
       const { data, error } = await supabase.functions.invoke("generate-demo-from-lead", {
         body: {
           lead: {
