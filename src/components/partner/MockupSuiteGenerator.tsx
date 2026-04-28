@@ -646,12 +646,19 @@ export function MockupSuiteGenerator({
         },
       });
 
+      console.log("[BuildFullSite] ← response", { hasData: !!data, hasError: !!error, error, success: data?.success, dataError: data?.error });
       toast.dismiss("build-site");
 
       const errBody: any = (error as any)?.context?.body || data;
       if (errBody?.error === "lead_data_insufficient") {
         toast.error("⚠️ Lead con dati insufficienti", {
           description: (errBody.issues || []).join(" · ") || "Arricchisci il lead prima di generare il sito",
+        });
+        return;
+      }
+      if (errBody?.error === "preview_required") {
+        toast.error("⚠️ Mockup mancante", {
+          description: "Genera prima i 4 mockup iPhone, poi rilancia la creazione sito.",
         });
         return;
       }
