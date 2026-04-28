@@ -425,6 +425,12 @@ function ConditionalDNABackground() {
   return <EmpireDNABackground />;
 }
 
+function ConditionalVoiceOrchestratorFAB() {
+  const { pathname } = useLocation();
+  if (!pathname.startsWith("/superadmin")) return null;
+  return <VoiceOrchestratorFAB />;
+}
+
 function App() {
   const [introCompleted, setIntroCompleted] = useState(() => SHOULD_SKIP_INTRO_DEFAULT);
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
@@ -808,7 +814,7 @@ function App() {
                   </Suspense>
                 </RouteErrorBoundary>
                 <Suspense fallback={null}>
-                  <VoiceOrchestratorFAB />
+                  <ConditionalVoiceOrchestratorFAB />
                 </Suspense>
               </BrowserRouter>
             </CartProvider>
