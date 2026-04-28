@@ -138,11 +138,11 @@ export default function HeroExplosion() {
 
   return (
     <section ref={root} id="hero" data-hero-armed={armed ? "true" : "false"} className="relative min-h-[100svh] overflow-hidden">
-      <div data-hero-flash className="pointer-events-none absolute inset-0 z-[5] bg-white" />
+      <div data-hero-flash className="pointer-events-none absolute inset-0 z-[5] bg-white opacity-0" />
 
       <div
         data-hero-shock
-        className="pointer-events-none absolute left-1/2 top-1/2 z-[2] h-[40vmin] w-[40vmin] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        className="pointer-events-none absolute left-1/2 top-1/2 z-[2] h-[40vmin] w-[40vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0"
         style={{
           background: "radial-gradient(circle, rgba(34,211,238,0.45) 0%, rgba(167,139,250,0.22) 40%, transparent 70%)",
           boxShadow: "0 0 240px 80px rgba(34,211,238,0.3), inset 0 0 100px rgba(255,255,255,0.18)",
@@ -150,13 +150,13 @@ export default function HeroExplosion() {
       />
       <div
         data-hero-shock-2
-        className="pointer-events-none absolute left-1/2 top-1/2 z-[2] h-[30vmin] w-[30vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#ec4899]/40"
+        className="pointer-events-none absolute left-1/2 top-1/2 z-[2] h-[30vmin] w-[30vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#ec4899]/40 opacity-0"
       />
 
       <div
         data-hero-grid
         data-hero-parallax="1"
-        className="pointer-events-none absolute inset-0 z-[1]"
+        className="pointer-events-none absolute inset-0 z-[1] opacity-40"
         style={{
           backgroundImage:
             "linear-gradient(rgba(34,211,238,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.08) 1px, transparent 1px)",
@@ -166,9 +166,9 @@ export default function HeroExplosion() {
         }}
       />
 
-      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[6%] top-[15%] z-[1] h-72 w-72 rounded-full" style={{ background: "radial-gradient(circle, rgba(34,211,238,0.45), transparent 60%)", filter: "blur(40px)" }} />
-      <div data-hero-orb data-hero-parallax="3" className="pointer-events-none absolute right-[5%] bottom-[12%] z-[1] h-96 w-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.38), transparent 60%)", filter: "blur(60px)" }} />
-      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[40%] top-[8%] z-[1] h-48 w-48 rounded-full" style={{ background: "radial-gradient(circle, rgba(167,139,250,0.4), transparent 60%)", filter: "blur(50px)" }} />
+      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[6%] top-[15%] z-[1] h-72 w-72 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(34,211,238,0.45), transparent 60%)", filter: "blur(40px)" }} />
+      <div data-hero-orb data-hero-parallax="3" className="pointer-events-none absolute right-[5%] bottom-[12%] z-[1] h-96 w-96 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.38), transparent 60%)", filter: "blur(60px)" }} />
+      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[40%] top-[8%] z-[1] h-48 w-48 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(167,139,250,0.4), transparent 60%)", filter: "blur(50px)" }} />
 
       <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pb-20 pt-24 text-center sm:pt-28">
         <div data-hero-meta className="mb-7 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-semibold tracking-[3px] text-white/80 backdrop-blur-md">
