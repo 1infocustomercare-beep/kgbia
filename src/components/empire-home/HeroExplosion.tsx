@@ -49,6 +49,7 @@ export default function HeroExplosion() {
       gsap.set(q("[data-hero-shock-2]"), { scale: 0, opacity: 0.7 });
       gsap.set(q("[data-hero-grid]"), { opacity: 0, scale: 1.18 });
       gsap.set(q("[data-hero-orb]"), { opacity: 0, scale: 0.6 });
+      gsap.set(q("[data-hero-preview]"), { y: 80, opacity: 0, rotateY: -18, rotateX: 10, scale: 0.86 });
       gsap.set(q("[data-hero-flash]"), { opacity: 0 });
 
       const trigger = () => {
@@ -88,7 +89,10 @@ export default function HeroExplosion() {
           }, 0.95)
           .to(q("[data-hero-meta]"), {
             y: 0, opacity: 1, duration: 0.8, ease: "power2.out", stagger: 0.1,
-          }, 1.15);
+          }, 1.15)
+          .to(q("[data-hero-preview]"), {
+            y: 0, opacity: 1, rotateY: 0, rotateX: 0, scale: 1, duration: 1.05, stagger: 0.08, ease: "back.out(1.7)",
+          }, 0.82);
       };
 
       const isHome = window.location.pathname === "/" || window.location.pathname === "/home" || window.location.pathname === "/index";
@@ -114,6 +118,7 @@ export default function HeroExplosion() {
           gsap.to(q("[data-hero-parallax='1']"), { x: rx * 14, y: ry * 14, duration: 0.8, ease: "power2.out" });
           gsap.to(q("[data-hero-parallax='2']"), { x: rx * -28, y: ry * -28, duration: 0.9, ease: "power2.out" });
           gsap.to(q("[data-hero-parallax='3']"), { x: rx * 44, y: ry * 44, duration: 1.0, ease: "power2.out" });
+          gsap.to(q("[data-hero-preview]"), { rotateY: rx * 10, rotateX: ry * -8, duration: 0.8, ease: "power2.out" });
         };
         window.addEventListener("mousemove", onMove, { passive: true });
       }
