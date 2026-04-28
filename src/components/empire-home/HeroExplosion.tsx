@@ -2,8 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate } from "react-router-dom";
+import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const HERO_MOCKUPS = [
+  SECTOR_MOCKUP_IMAGES.food?.[0],
+  SECTOR_MOCKUP_IMAGES.beauty?.[0],
+  SECTOR_MOCKUP_IMAGES.ncc?.[0],
+].filter(Boolean) as string[];
 
 /**
  * HERO — Atterraggio cinematografico esplosivo dopo lo splash.
@@ -88,7 +95,13 @@ export default function HeroExplosion() {
       const alreadyShown = sessionStorage.getItem("empire-splash-shown");
       const introSkippedByApp = isHome;
       const splashDelay = introSkippedByApp || alreadyShown ? 120 : 2550;
-      const fallback = window.setTimeout(() => setArmed(true), 700);
+      const fallback = window.setTimeout(() => {
+        setArmed(true);
+        gsap.set(q("[data-hero-line] .char, [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb], [data-hero-preview]"), {
+          x: 0, y: 0, rotate: 0, rotateY: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)", clearProps: "transform",
+        });
+        gsap.set(q("[data-hero-flash], [data-hero-shock], [data-hero-shock-2]"), { opacity: 0 });
+      }, 900);
       const t = window.setTimeout(trigger, splashDelay);
       sessionStorage.setItem("empire-splash-shown", "1");
 
