@@ -30,6 +30,10 @@ import CinematicCursor from "@/components/empire-home/CinematicCursor";
 
 export default function EmpireCinematicHome() {
   useEffect(() => {
+    if (!window.location.hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+
     try { getLenis(); } catch (e) { console.warn("Lenis init failed", e); }
 
     const refresh = () => { try { ScrollTrigger.refresh(); } catch {} };
