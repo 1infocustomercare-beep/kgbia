@@ -698,21 +698,31 @@ export function MockupSuiteGenerator({
       toast.info("⏳ Generazione in corso…", { description: "Attendi il completamento prima di rilanciare." });
       return;
     }
-    // 2) Guard cross-reload via sessionStorage
+    // 2) Guard cross-reload via sessionStorage (con auto-recovery)
+    // Se la pagina è stata ricaricata mentre era in corso, il lock può rimanere "orfano".
+    // Lo consideriamo valido SOLO per 30s (tempo realistico di una chiamata edge);
+    // oltre, lo riteniamo stale e lo sovrascriviamo invece di bloccare l'utente.
     try {
       const key = buildLockKey();
       const raw = sessionStorage.getItem(key);
+      const STALE_AFTER_MS = 30 * 1000; // 30s: oltre questo è quasi certamente un lock orfano
       if (raw) {
         const ts = parseInt(raw, 10);
-        if (!Number.isNaN(ts) && Date.now() - ts < LOCK_TTL_MS) {
+        const age = Date.now() - ts;
+        if (!Number.isNaN(ts) && age < STALE_AFTER_MS) {
+          console.warn("[MockupSuiteGenerator] lock attivo da", age, "ms — blocco click");
           toast.info("⏳ Generazione già in corso", {
-            description: "Una generazione per questo lead è partita pochi secondi fa. Attendi il completamento.",
+            description: "Attendi il completamento prima di rilanciare.",
           });
           return;
         }
+        // Lock stale (>30s): probabile reload con generazione orfana → puliamo e procediamo
+        console.warn("[MockupSuiteGenerator] lock stale (", age, "ms) — pulisco e procedo");
+        sessionStorage.removeItem(key);
       }
       sessionStorage.setItem(key, String(Date.now()));
     } catch { /* sessionStorage non disponibile, ignoriamo */ }
+    console.log("[MockupSuiteGenerator] 🚀 handleGenerate START", { businessName, businessSector, engine, templateVariant });
 
     inFlightRef.current = true;
     setGenerating(true);
