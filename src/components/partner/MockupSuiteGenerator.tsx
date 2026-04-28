@@ -602,6 +602,7 @@ export function MockupSuiteGenerator({
 
       toast.loading("🏗️ Costruisco sito + admin completo (30-60s)…", { id: "build-site" });
 
+      console.log("[BuildFullSite] → invoke generate-demo-from-lead", { businessName, sectorId, resolvedTemplate });
       const { data, error } = await supabase.functions.invoke("generate-demo-from-lead", {
         body: {
           lead: {
@@ -645,12 +646,19 @@ export function MockupSuiteGenerator({
         },
       });
 
+      console.log("[BuildFullSite] ← response", { hasData: !!data, hasError: !!error, error, success: data?.success, dataError: data?.error });
       toast.dismiss("build-site");
 
       const errBody: any = (error as any)?.context?.body || data;
       if (errBody?.error === "lead_data_insufficient") {
         toast.error("⚠️ Lead con dati insufficienti", {
           description: (errBody.issues || []).join(" · ") || "Arricchisci il lead prima di generare il sito",
+        });
+        return;
+      }
+      if (errBody?.error === "preview_required") {
+        toast.error("⚠️ Mockup mancante", {
+          description: "Genera prima i 4 mockup iPhone, poi rilancia la creazione sito.",
         });
         return;
       }
@@ -698,21 +706,31 @@ export function MockupSuiteGenerator({
       toast.info("⏳ Generazione in corso…", { description: "Attendi il completamento prima di rilanciare." });
       return;
     }
-    // 2) Guard cross-reload via sessionStorage
+    // 2) Guard cross-reload via sessionStorage (con auto-recovery)
+    // Se la pagina è stata ricaricata mentre era in corso, il lock può rimanere "orfano".
+    // Lo consideriamo valido SOLO per 30s (tempo realistico di una chiamata edge);
+    // oltre, lo riteniamo stale e lo sovrascriviamo invece di bloccare l'utente.
     try {
       const key = buildLockKey();
       const raw = sessionStorage.getItem(key);
+      const STALE_AFTER_MS = 30 * 1000; // 30s: oltre questo è quasi certamente un lock orfano
       if (raw) {
         const ts = parseInt(raw, 10);
-        if (!Number.isNaN(ts) && Date.now() - ts < LOCK_TTL_MS) {
+        const age = Date.now() - ts;
+        if (!Number.isNaN(ts) && age < STALE_AFTER_MS) {
+          console.warn("[MockupSuiteGenerator] lock attivo da", age, "ms — blocco click");
           toast.info("⏳ Generazione già in corso", {
-            description: "Una generazione per questo lead è partita pochi secondi fa. Attendi il completamento.",
+            description: "Attendi il completamento prima di rilanciare.",
           });
           return;
         }
+        // Lock stale (>30s): probabile reload con generazione orfana → puliamo e procediamo
+        console.warn("[MockupSuiteGenerator] lock stale (", age, "ms) — pulisco e procedo");
+        sessionStorage.removeItem(key);
       }
       sessionStorage.setItem(key, String(Date.now()));
     } catch { /* sessionStorage non disponibile, ignoriamo */ }
+    console.log("[MockupSuiteGenerator] 🚀 handleGenerate START", { businessName, businessSector, engine, templateVariant });
 
     inFlightRef.current = true;
     setGenerating(true);
@@ -781,7 +799,9 @@ export function MockupSuiteGenerator({
 
       if (isAIEngine) setPreviewPhase("upgrading");
 
+      console.log("[MockupSuiteGenerator] → invoke lead-mockup-suite", { engine, screens: screens.length });
       const { data, error } = await supabase.functions.invoke("lead-mockup-suite", { body: payload });
+      console.log("[MockupSuiteGenerator] ← response", { hasData: !!data, hasError: !!error, error, dataSuccess: data?.success, dataError: data?.error });
       if (error) throw error;
       let d = data as any;
       if (!d?.success) {
