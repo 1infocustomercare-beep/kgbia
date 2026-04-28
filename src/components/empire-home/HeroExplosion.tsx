@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function HeroExplosion() {
   const root = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const [armed, setArmed] = useState(false);
 
   useEffect(() => {
     const el = root.current;
@@ -23,7 +24,9 @@ export default function HeroExplosion() {
     const ctx = gsap.context((self) => {
       const q = self.selector!;
 
-      // Initial state
+      gsap.set(q("[data-hero-line] .char, [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb]"), { clearProps: "all" });
+
+      // Initial state: mai invisibile senza fallback; la classe CSS sotto rende tutto visibile se GSAP non parte.
       gsap.set(q("[data-hero-line] .char"), {
         y: () => gsap.utils.random(isMobile ? -160 : -260, isMobile ? 160 : 260),
         x: () => gsap.utils.random(isMobile ? -220 : -380, isMobile ? 220 : 380),
@@ -42,6 +45,7 @@ export default function HeroExplosion() {
       gsap.set(q("[data-hero-flash]"), { opacity: 0 });
 
       const trigger = () => {
+        setArmed(true);
         if (reduceMotion) {
           gsap.set(q("[data-hero-line] .char, [data-hero-sub], [data-hero-cta], [data-hero-meta]"), { y: 0, x: 0, rotate: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)" });
           gsap.set(q("[data-hero-grid], [data-hero-orb]"), { opacity: 1, scale: 1 });
@@ -80,8 +84,11 @@ export default function HeroExplosion() {
           }, 1.15);
       };
 
+      const isHome = window.location.pathname === "/" || window.location.pathname === "/home" || window.location.pathname === "/index";
       const alreadyShown = sessionStorage.getItem("empire-splash-shown");
-      const splashDelay = alreadyShown ? 200 : 2900;
+      const introSkippedByApp = isHome;
+      const splashDelay = introSkippedByApp || alreadyShown ? 120 : 2550;
+      const fallback = window.setTimeout(() => setArmed(true), 700);
       const t = window.setTimeout(trigger, splashDelay);
       sessionStorage.setItem("empire-splash-shown", "1");
 
@@ -106,14 +113,15 @@ export default function HeroExplosion() {
         scrollTrigger: {
           trigger: el,
           start: "top top",
-          end: "bottom 30%",
-          scrub: 1,
+          end: "bottom 42%",
+          scrub: 0.8,
         },
       });
 
       // Cleanup hook for context
       self.add(() => {
         clearTimeout(t);
+        clearTimeout(fallback);
         if (onMove) window.removeEventListener("mousemove", onMove);
       });
     }, root);
@@ -129,7 +137,7 @@ export default function HeroExplosion() {
     ));
 
   return (
-    <section ref={root} id="hero" className="relative min-h-[100svh] overflow-hidden">
+    <section ref={root} id="hero" data-hero-armed={armed ? "true" : "false"} className="relative min-h-[100svh] overflow-hidden">
       <div data-hero-flash className="pointer-events-none absolute inset-0 z-[5] bg-white" />
 
       <div
@@ -162,7 +170,7 @@ export default function HeroExplosion() {
       <div data-hero-orb data-hero-parallax="3" className="pointer-events-none absolute right-[5%] bottom-[12%] z-[1] h-96 w-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.38), transparent 60%)", filter: "blur(60px)" }} />
       <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[40%] top-[8%] z-[1] h-48 w-48 rounded-full" style={{ background: "radial-gradient(circle, rgba(167,139,250,0.4), transparent 60%)", filter: "blur(50px)" }} />
 
-      <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pt-28 pb-20 text-center">
+      <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pb-20 pt-24 text-center sm:pt-28">
         <div data-hero-meta className="mb-7 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-semibold tracking-[3px] text-white/80 backdrop-blur-md">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#22d3ee]" />
           EMPIRE.AI · DOMINIO ALGORITMICO
