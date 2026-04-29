@@ -6,10 +6,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import HeroExplosion from "@/components/empire-home/HeroExplosion";
 import MarqueeManifesto from "@/components/empire-home/MarqueeManifesto";
+import JungleParallax from "@/components/empire-home/JungleParallax";
 import ShiftSection from "@/components/empire-home/ShiftSection";
 import MockupShowcase from "@/components/empire-home/MockupShowcase";
+import Orbit3D from "@/components/empire-home/Orbit3D";
 import AgentsCatalog from "@/components/empire-home/AgentsCatalog";
 import SectorsLive from "@/components/empire-home/SectorsLive";
+import Web3Carousel from "@/components/empire-home/Web3Carousel";
 import ProofHorizontal from "@/components/empire-home/ProofHorizontal";
 import MagneticCTA from "@/components/empire-home/MagneticCTA";
 import FilmGrain from "@/components/empire-home/FilmGrain";
@@ -107,14 +110,17 @@ export default function EmpireCinematicHome() {
 
         <div className="relative z-[2]">
           <LandingNav />
-          <HeroExplosion />
-          <MarqueeManifesto />
-          <ShiftSection />
-          <MockupShowcase />
-          <AgentsCatalog />
-          <SectorsLive />
-          <ProofHorizontal />
-          <MagneticCTA />
+          <HeroExplosion />              {/* 1. Esplosione cinematografica */}
+          <MarqueeManifesto />           {/* 2. Marquee scrub orizzontale */}
+          <JungleParallax />             {/* 3. Giungla urbana parallax 3D */}
+          <ShiftSection />               {/* 4. Pinned chaos→empire */}
+          <MockupShowcase />             {/* 5. Sticky 3D iPhone stack */}
+          <Orbit3D />                    {/* 6. Portfolio orbitale 3D */}
+          <AgentsCatalog />              {/* 7. Bento + color morph */}
+          <SectorsLive />                {/* 8. Live iframe demo */}
+          <Web3Carousel />               {/* 9. Carousel pinned orizzontale */}
+          <ProofHorizontal />            {/* 10. Numeri pinned */}
+          <MagneticCTA />                {/* 11. CTA magnetica */}
           <LandingFooter />
         </div>
 
