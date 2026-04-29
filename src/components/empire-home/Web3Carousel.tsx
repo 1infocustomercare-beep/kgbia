@@ -58,7 +58,37 @@ export default function Web3Carousel() {
     if (!el || !tr) return;
     const ctx = gsap.context(() => {
       // calcola la distanza in px da scorrere
-      const getDistance = () => tr.scrollWidth - window.innerWidth + 64;
+      const getDistance = () => Math.max(1, tr.scrollWidth - window.innerWidth + 64);
+      const cards = gsap.utils.toArray<HTMLElement>("[data-w3card]", el);
+
+      gsap.set(cards, { opacity: 1, rotateY: 0, transformOrigin: "50% 50%" });
+
+      gsap.from(cards, {
+        y: 54,
+        rotateY: 18,
+        opacity: 0,
+        duration: 0.85,
+        ease: "power3.out",
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: el,
+          start: "top 78%",
+          once: true,
+        },
+      });
+
+      gsap.to(cards, {
+        rotateY: (i) => (i % 2 === 0 ? -8 : 8),
+        z: (i) => (i % 2 === 0 ? 24 : -18),
+        ease: "none",
+        scrollTrigger: {
+          trigger: el,
+          start: "top top",
+          end: () => `+=${getDistance()}`,
+          scrub: 1,
+        },
+      });
+
       gsap.to(tr, {
         x: () => -getDistance(),
         ease: "none",
@@ -72,18 +102,7 @@ export default function Web3Carousel() {
           anticipatePin: 1,
         },
       });
-      // tilt al passaggio
-      gsap.utils.toArray<HTMLElement>("[data-w3card]").forEach((card) => {
-        gsap.from(card, {
-          rotateY: 25, opacity: 0, duration: 0.8, ease: "power2.out",
-          scrollTrigger: {
-            trigger: card,
-            containerAnimation: ScrollTrigger.getAll().find(t => t.pin === el) as any,
-            start: "left 80%",
-          },
-        });
-      });
-    }, root);
+    }, el);
     return () => ctx.revert();
   }, []);
 
