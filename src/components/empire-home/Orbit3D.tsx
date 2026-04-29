@@ -39,7 +39,8 @@ export default function Orbit3D() {
     const el = root.current;
     const orb = orbitRef.current;
     if (!el || !orb) return;
-    const ctx = gsap.context(() => {
+    const ctx = gsap.context((self) => {
+      const q = self.selector!;
       // pin + rotate dell'intera orbita scroll-driven
       gsap.to(orb, {
         rotateZ: 360,
@@ -54,11 +55,11 @@ export default function Orbit3D() {
         },
       });
       // entrata pianeti
-      gsap.from("[data-planet]", {
+      gsap.from(q("[data-planet]"), {
         scale: 0, opacity: 0, duration: 0.9, ease: "back.out(1.6)", stagger: 0.08,
         scrollTrigger: { trigger: el, start: "top 70%" },
       });
-    }, root);
+    }, el);
     return () => ctx.revert();
   }, []);
 
