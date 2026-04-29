@@ -35,21 +35,21 @@ export default function HeroExplosion() {
 
       // Initial state: mai invisibile senza fallback; la classe CSS sotto rende tutto visibile se GSAP non parte.
       gsap.set(q("[data-hero-line] .char"), {
-        y: () => gsap.utils.random(isMobile ? -160 : -260, isMobile ? 160 : 260),
-        x: () => gsap.utils.random(isMobile ? -220 : -380, isMobile ? 220 : 380),
-        rotate: () => gsap.utils.random(-90, 90),
-        scale: () => gsap.utils.random(0.4, 2.2),
-        opacity: 0,
-        filter: "blur(20px)",
+        y: () => gsap.utils.random(isMobile ? -14 : -24, isMobile ? 14 : 24),
+        x: () => gsap.utils.random(isMobile ? -18 : -32, isMobile ? 18 : 32),
+        rotate: () => gsap.utils.random(-5, 5),
+        scale: () => gsap.utils.random(0.96, 1.04),
+        opacity: 1,
+        filter: "blur(0px)",
       });
-      gsap.set(q("[data-hero-sub]"), { y: 30, opacity: 0, clipPath: "inset(0 100% 0 0)" });
-      gsap.set(q("[data-hero-cta]"), { y: 50, opacity: 0, scale: 0.85 });
-      gsap.set(q("[data-hero-meta]"), { y: 20, opacity: 0 });
+      gsap.set(q("[data-hero-sub]"), { y: 0, opacity: 1, clipPath: "inset(0 0% 0 0)" });
+      gsap.set(q("[data-hero-cta]"), { y: 0, opacity: 1, scale: 1 });
+      gsap.set(q("[data-hero-meta]"), { y: 0, opacity: 1 });
       gsap.set(q("[data-hero-shock]"), { scale: 0, opacity: 0.95 });
       gsap.set(q("[data-hero-shock-2]"), { scale: 0, opacity: 0.7 });
       gsap.set(q("[data-hero-grid]"), { opacity: 0, scale: 1.18 });
       gsap.set(q("[data-hero-orb]"), { opacity: 0, scale: 0.6 });
-      gsap.set(q("[data-hero-preview]"), { y: 80, opacity: 0, rotateY: -18, rotateX: 10, scale: 0.86 });
+      gsap.set(q("[data-hero-preview]"), { y: 0, opacity: 1, rotateY: 0, rotateX: 0, scale: 1 });
       gsap.set(q("[data-hero-flash]"), { opacity: 0 });
 
       const trigger = () => {
@@ -69,7 +69,7 @@ export default function HeroExplosion() {
           .to(q("[data-hero-orb]"), { opacity: 1, scale: 1, duration: 1.2, stagger: 0.08 }, 0.2)
           .to(q("[data-hero-line] .char"), {
             y: 0, x: 0, rotate: 0, scale: 1, opacity: 1, filter: "blur(0px)",
-            duration: 1.2,
+            duration: 0.9,
             stagger: { each: 0.014, from: "random" },
             ease: "expo.out",
           }, 0.18)
