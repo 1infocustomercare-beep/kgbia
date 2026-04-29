@@ -124,14 +124,14 @@ export default function HeroExplosion() {
       }
 
       gsap.to(q("[data-hero-content]"), {
-        y: -120,
-        opacity: 0,
-        filter: "blur(8px)",
+        y: -44,
+        opacity: 0.72,
+        filter: "blur(1.5px)",
         ease: "none",
         scrollTrigger: {
           trigger: el,
-          start: "top top",
-          end: "bottom 42%",
+          start: "top -12%",
+          end: "bottom 18%",
           scrub: 0.8,
         },
       });
