@@ -65,7 +65,7 @@ export default function Orbit3D() {
   }, []);
 
   return (
-    <section ref={root} className="relative min-h-screen overflow-hidden py-16 sm:py-24">
+    <section ref={root} className="relative min-h-[100svh] overflow-hidden py-20 sm:py-24">
       {/* core glow */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-1/2 h-[60vh] w-[60vh] -translate-x-1/2 -translate-y-1/2 rounded-full"
@@ -80,7 +80,7 @@ export default function Orbit3D() {
         <div className="mb-3 text-[10px] font-bold uppercase tracking-[4px] text-[#a78bfa] sm:text-[11px]">
           04 · PORTFOLIO ORBITALE
         </div>
-        <h2 className="font-heading font-black uppercase leading-[0.9] tracking-[-0.04em]" style={{ fontSize: "clamp(2rem,7vw,5.5rem)" }}>
+        <h2 className="font-heading font-black uppercase leading-[0.94] tracking-normal" style={{ fontSize: "clamp(2.35rem,8vw,5.5rem)", textShadow: "0 4px 30px rgba(0,0,0,0.68)" }}>
           <span className="text-white">Otto settori,</span>{" "}
           <span className="bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">una sola orbita.</span>
         </h2>
@@ -90,13 +90,13 @@ export default function Orbit3D() {
       </div>
 
       {/* ORBITA */}
-      <div className="relative mt-10 flex h-[80vh] items-center justify-center" style={{ perspective: "1600px" }}>
+      <div className="relative mt-8 flex h-[560px] items-center justify-center sm:mt-10 sm:h-[80vh]" style={{ perspective: "1600px" }}>
         <div
           ref={orbitRef}
           className="relative"
           style={{
-            width: "min(72vh, 90vw)",
-            height: "min(72vh, 90vw)",
+            width: "min(62vh, 92vw)",
+            height: "min(62vh, 92vw)",
             transformStyle: "preserve-3d",
           }}
         >
@@ -134,7 +134,7 @@ export default function Orbit3D() {
                 }}
               >
                 <div
-                  className="relative overflow-hidden rounded-[18px] border border-white/15 bg-black shadow-2xl transition-all duration-500 hover:scale-110"
+                  className="relative overflow-hidden rounded-[14px] border border-white/15 bg-black shadow-2xl transition-all duration-500 hover:scale-110 sm:rounded-[18px]"
                   style={{
                     aspectRatio: "9/19.5",
                     boxShadow: isFocus
