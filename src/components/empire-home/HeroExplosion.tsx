@@ -181,37 +181,40 @@ export default function HeroExplosion() {
       <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[40%] top-[8%] z-[1] h-48 w-48 rounded-full opacity-70" style={{ background: "radial-gradient(circle, hsl(var(--accent) / 0.34), transparent 60%)", filter: "blur(50px)" }} />
 
       <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pb-14 pt-24 text-center sm:pt-28">
-        <div data-hero-meta className="mb-5 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/8 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[3px] text-white/85 shadow-[0_14px_40px_rgba(0,0,0,0.35)] sm:mb-7 sm:text-[11px]" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.75)" }}>
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#22d3ee]" />
-          EMPIRE.AI · DOMINIO ALGORITMICO
+        <div data-hero-meta className="mb-5 inline-flex items-center gap-3 rounded-full border border-foreground/15 bg-background/70 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[3px] text-foreground/85 shadow-[0_14px_40px_hsl(0_0%_0%_/_0.35)] backdrop-blur-xl sm:mb-7 sm:text-[11px]" style={{ textShadow: "0 2px 18px hsl(0 0% 0% / 0.75)" }}>
+          <img src={empireLogo} alt="Empire AI" className="h-5 w-auto object-contain" loading="eager" />
+          AI Agency · Sistemi per aziende
         </div>
 
-        <h1 className="w-full font-heading font-black uppercase leading-[0.94] tracking-normal text-white" style={{ fontSize: "clamp(2.35rem, 12vw, 12rem)", textShadow: "0 4px 34px rgba(0,0,0,0.72)" }}>
-          <span data-hero-word className="block whitespace-nowrap will-change-transform">Automazione</span>
-          <span data-hero-word className="block whitespace-nowrap bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent will-change-transform">
-            Assoluta.
+        <h1 className="w-full font-heading font-black uppercase leading-[0.92] tracking-normal text-foreground" style={{ fontSize: "clamp(2.45rem, 11vw, 10.5rem)", textShadow: "0 4px 34px hsl(0 0% 0% / 0.72)" }}>
+          <span data-hero-word className="block whitespace-nowrap will-change-transform">Empire per</span>
+          <span data-hero-word className="block whitespace-nowrap bg-[linear-gradient(110deg,hsl(var(--gold)),hsl(var(--primary)),hsl(var(--accent)))] bg-clip-text text-transparent will-change-transform">
+            aziende.
           </span>
         </h1>
 
-        <p data-hero-sub className="mx-auto mt-7 max-w-[680px] text-[14px] leading-[1.75] text-white/82 sm:mt-8 sm:text-[17px]" style={{ textShadow: "0 2px 22px rgba(0,0,0,0.8)" }}>
-          Non software. Un sistema operativo AI che prende ordini, vendite, marketing, staff e clienti — e li fa muovere come un'unica macchina.
+        <p data-hero-sub className="mx-auto mt-6 max-w-[720px] text-[14px] leading-[1.75] text-foreground/82 sm:mt-7 sm:text-[17px]" style={{ textShadow: "0 2px 22px hsl(0 0% 0% / 0.8)" }}>
+          Siti, gestionali, agenti AI e automazioni che trasformano lead, prenotazioni, vendite e clienti in un ecosistema premium pronto da mostrare.
         </p>
 
-        <div className="pointer-events-none mt-7 flex items-end justify-center gap-2 sm:mt-9 sm:gap-3" style={{ perspective: "1200px" }}>
-          {HERO_MOCKUPS.map((img, i) => (
+        <div className="pointer-events-none mt-7 flex w-full items-end justify-center gap-2 sm:mt-9 sm:gap-3" style={{ perspective: "1200px" }}>
+          {HERO_MOCKUPS.map((mockup, i) => (
             <div
-              key={img}
+              key={mockup.img}
               data-hero-preview
-              className="relative overflow-hidden rounded-[1.6rem] border-[7px] border-black bg-black shadow-2xl"
+              className="relative overflow-hidden rounded-[1.45rem] border-[6px] border-background bg-background shadow-2xl sm:rounded-[1.8rem] sm:border-[8px]"
               style={{
-                width: i === 1 ? "min(96px, 25vw)" : "min(74px, 19vw)",
-                height: i === 1 ? "min(196px, 50vw)" : "min(150px, 39vw)",
+                width: i === 1 ? "min(132px, 34vw)" : "min(96px, 25vw)",
+                height: i === 1 ? "min(268px, 68vw)" : "min(196px, 50vw)",
                 marginBottom: i === 1 ? 0 : 18,
-                boxShadow: i === 1 ? "0 34px 90px -24px rgba(34,211,238,0.7)" : "0 24px 70px -28px rgba(167,139,250,0.55)",
+                boxShadow: i === 1 ? `0 34px 90px -24px ${mockup.accent}` : "0 24px 70px -28px hsl(var(--empire-violet) / 0.55)",
               }}
             >
-              <img src={img} alt="Mockup settore Empire AI" className="h-full w-full object-cover" loading="eager" draggable={false} />
-              <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/20" />
+              <img src={mockup.img} alt={`Mockup Empire AI ${mockup.label}`} className="h-full w-full object-cover" loading="eager" draggable={false} />
+              <div className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-transparent to-background/20" />
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full border border-foreground/15 bg-background/80 px-2.5 py-0.5 text-[8px] font-bold uppercase tracking-[1.8px] text-foreground/80 backdrop-blur-md">
+                {mockup.label}
+              </div>
             </div>
           ))}
         </div>
@@ -219,10 +222,10 @@ export default function HeroExplosion() {
         <div data-hero-cta className="mt-7 flex w-full flex-col items-center gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:gap-4">
           <button
             onClick={() => navigate("/demo")}
-            className="group relative min-h-12 w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-white transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
+            className="group relative min-h-12 w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-primary-foreground transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
             style={{
-              background: "linear-gradient(135deg, #22d3ee, #a78bfa, #ec4899)",
-              boxShadow: "0 24px 60px -20px rgba(167,139,250,0.6)",
+              background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)), hsl(var(--gold)))",
+              boxShadow: "0 24px 60px -20px hsl(var(--primary) / 0.6)",
             }}
           >
             <span className="relative z-10">ATTIVA L'ESPERIENZA →</span>
