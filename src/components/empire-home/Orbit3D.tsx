@@ -16,14 +16,16 @@ type ShowcaseSector = {
   images: string[];
 };
 
-const SECTORS: ShowcaseSector[] = [
+const SECTOR_SOURCE: ShowcaseSector[] = [
   { id: "food", title: "Food luxury", line: "menu, ordini, loyalty", accent: "hsl(var(--gold))", images: SECTOR_MOCKUP_IMAGES.food?.slice(0, 4) ?? [] },
   { id: "beauty", title: "Beauty & spa", line: "booking, CRM, reminder", accent: "hsl(var(--neon-magenta))", images: SECTOR_MOCKUP_IMAGES.beauty?.slice(0, 4) ?? [] },
   { id: "ncc", title: "NCC & charter", line: "flotta, tratte, preventivi", accent: "hsl(var(--neon-cyan))", images: SECTOR_MOCKUP_IMAGES.ncc?.slice(0, 4) ?? [] },
   { id: "fitness", title: "Fitness", line: "coach, abbonamenti, classi", accent: "hsl(var(--accent))", images: SECTOR_MOCKUP_IMAGES.fitness?.slice(0, 4) ?? [] },
   { id: "healthcare", title: "Medical", line: "agenda, anamnesi, follow-up", accent: "hsl(var(--neon-emerald))", images: SECTOR_MOCKUP_IMAGES.healthcare?.slice(0, 4) ?? [] },
   { id: "hospitality", title: "Hospitality", line: "esperienze, upsell, concierge", accent: "hsl(var(--empire-violet-glow))", images: SECTOR_MOCKUP_IMAGES.hospitality?.slice(0, 4) ?? [] },
-].filter((sector) => sector.images.length > 0);
+];
+
+const SECTORS = SECTOR_SOURCE.filter((sector) => sector.images.length > 0);
 
 export default function Orbit3D() {
   const root = useRef<HTMLDivElement>(null);
