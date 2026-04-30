@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate } from "react-router-dom";
+import { DEMO_SLUGS } from "@/data/demo-industries";
+import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,21 +13,23 @@ gsap.registerPlugin(ScrollTrigger);
  * scroll-in con clip-path reveal.
  */
 
-const SECTORS: { id: string; label: string; subtitle: string; slug: string; color: string; emoji: string }[] = [
-  { id: "food", label: "Ristoranti", subtitle: "Menu QR · Ordini · KDS", slug: "ristorante", color: "#fbbf24", emoji: "🍽️" },
-  { id: "beauty", label: "Beauty & Spa", subtitle: "Booking · CRM · Loyalty", slug: "beauty", color: "#ec4899", emoji: "💅" },
-  { id: "ncc", label: "NCC & Charter", subtitle: "Fleet · GPS · Pricing", slug: "ncc", color: "#22d3ee", emoji: "🛥️" },
-  { id: "healthcare", label: "Cliniche", subtitle: "Cartelle · Anamnesi · Slot", slug: "healthcare", color: "#4ade80", emoji: "🩺" },
-  { id: "retail", label: "Retail", subtitle: "Inventario · Cassa · POS", slug: "retail", color: "#a78bfa", emoji: "🛍️" },
-  { id: "fitness", label: "Fitness", subtitle: "Schede · Coach · Pagamenti", slug: "fitness", color: "#f97316", emoji: "💪" },
+const SECTORS: { id: keyof typeof DEMO_SLUGS; label: string; subtitle: string; color: string; emoji: string }[] = [
+  { id: "food", label: "Ristoranti", subtitle: "Menu QR · Ordini · KDS", color: "hsl(var(--gold))", emoji: "🍽️" },
+  { id: "beauty", label: "Beauty & Spa", subtitle: "Booking · CRM · Loyalty", color: "hsl(var(--neon-magenta))", emoji: "💅" },
+  { id: "ncc", label: "NCC & Charter", subtitle: "Fleet · GPS · Pricing", color: "hsl(var(--neon-cyan))", emoji: "🛥️" },
+  { id: "healthcare", label: "Cliniche", subtitle: "Cartelle · Anamnesi · Slot", color: "hsl(var(--neon-emerald))", emoji: "🩺" },
+  { id: "retail", label: "Retail", subtitle: "Inventario · Cassa · POS", color: "hsl(var(--empire-violet-glow))", emoji: "🛍️" },
+  { id: "fitness", label: "Fitness", subtitle: "Schede · Coach · Pagamenti", color: "hsl(var(--accent))", emoji: "💪" },
 ];
 
 export default function SectorsLive() {
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const [loaded, setLoaded] = useState(false);
   const navigate = useNavigate();
   const current = SECTORS[active];
+  const currentSlug = DEMO_SLUGS[current.id];
+  const desktopImage = SECTOR_PORTFOLIO.find((p) => p.sectorId === current.id)?.brands[0]?.styles[0]?.desktopScreens?.[0]
+    ?? SECTOR_PORTFOLIO.find((p) => p.sectorId === current.id)?.brands[0]?.styles[0]?.thumbnail;
 
   useEffect(() => {
     const el = root.current;
@@ -59,7 +63,6 @@ export default function SectorsLive() {
 
   // Animate frame on tab change
   useEffect(() => {
-    setLoaded(false);
     const frame = root.current?.querySelector("[data-sl-frame]");
     if (frame) {
       gsap.fromTo(
@@ -143,41 +146,29 @@ export default function SectorsLive() {
               <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
               <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
               <div className="ml-3 flex-1 truncate rounded-md border border-white/10 bg-white/5 px-3 py-1 text-[11px] text-white/50">
-                empire.ai/demo/{current.slug}
+                empire.ai/demo/{currentSlug}
               </div>
               <button
-                onClick={() => navigate(`/demo/${current.slug}`)}
+                onClick={() => navigate(`/demo/${currentSlug}`)}
                 className="hidden rounded-md border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[2px] text-white/80 transition-colors hover:bg-white/10 sm:block"
               >
                 Apri ↗
               </button>
             </div>
 
-            {/* Iframe with skeleton */}
-            <div className="relative aspect-[16/10] w-full bg-[#0a0e1a]">
-              {!loaded && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex flex-col items-center gap-3">
-                    <div
-                      className="h-12 w-12 animate-spin rounded-full border-2 border-white/10"
-                      style={{ borderTopColor: current.color }}
-                    />
-                    <div className="text-[10px] font-mono uppercase tracking-[3px] text-white/40">
-                      caricamento {current.label}…
-                    </div>
-                  </div>
-                </div>
+            {/* Stable desktop preview: real screenshots instead of fragile nested iframe */}
+            <div className="relative aspect-[16/10] w-full overflow-hidden bg-background">
+              {desktopImage && (
+                <img
+                  key={desktopImage}
+                  src={desktopImage}
+                  alt={`Preview desktop ${current.label}`}
+                  className="h-full w-full object-cover object-top"
+                  loading="lazy"
+                  draggable={false}
+                />
               )}
-              <iframe
-                key={current.slug}
-                src={`/demo/${current.slug}`}
-                title={`Demo ${current.label}`}
-                className="h-full w-full"
-                onLoad={() => setLoaded(true)}
-                loading="lazy"
-                sandbox="allow-scripts allow-same-origin allow-forms"
-                style={{ opacity: loaded ? 1 : 0, transition: "opacity 600ms ease" }}
-              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-foreground/5" />
             </div>
           </div>
 
@@ -197,7 +188,7 @@ export default function SectorsLive() {
             Stai vedendo <span className="font-bold text-white">{current.label}</span> · {current.subtitle}
           </div>
           <button
-            onClick={() => navigate(`/demo/${current.slug}`)}
+            onClick={() => navigate(`/demo/${currentSlug}`)}
             className="rounded-full px-6 py-3 text-xs font-bold uppercase tracking-[2px] text-[#0a0e1a] transition-transform hover:-translate-y-0.5"
             style={{ background: current.color, boxShadow: `0 18px 44px -14px ${current.color}` }}
           >
