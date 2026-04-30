@@ -91,7 +91,7 @@ export default function MockupShowcase() {
           );
         }
       });
-    }, root);
+    }, el);
 
     return () => ctx.revert();
   }, []);

@@ -53,7 +53,7 @@ export default function SectorsLive() {
         y: 30, opacity: 0, stagger: 0.05, duration: 0.6, ease: "power2.out",
         scrollTrigger: { trigger: q("[data-sl-tabs]")[0], start: "top 85%" },
       });
-    }, root);
+    }, el);
     return () => ctx.revert();
   }, []);
 

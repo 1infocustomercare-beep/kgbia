@@ -134,7 +134,7 @@ export default function HeroExplosion() {
         clearTimeout(fallback);
         if (onMove) window.removeEventListener("mousemove", onMove);
       });
-    }, root);
+    }, el);
 
     return () => ctx.revert();
   }, []);

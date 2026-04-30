@@ -60,7 +60,7 @@ export default function AgentsCatalog() {
         y: 24, opacity: 0, stagger: 0.04, duration: 0.6, ease: "power2.out",
         scrollTrigger: { trigger: q("[data-cat-pills]")[0], start: "top 88%" },
       });
-    }, root);
+    }, el);
     return () => ctx.revert();
   }, []);
 
@@ -85,7 +85,7 @@ export default function AgentsCatalog() {
           }
         );
       });
-    }, root);
+    }, el);
     return () => ctx.revert();
   }, [filter]);
 
