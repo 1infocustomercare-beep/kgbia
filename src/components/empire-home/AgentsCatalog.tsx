@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Bot, BrainCircuit, CalendarClock, ChartNoAxesCombined, Eye, Gem, MailCheck, MessageCircleMore, Palette, Radar, ShieldCheck, Sparkles, Star, Workflow } from "lucide-react";
+import { Bot, BrainCircuit, CalendarClock, ChartNoAxesCombined, Eye, Gem, MailCheck, MessageCircleMore, Palette, Radar, ShieldCheck, Sparkles, Star, Workflow, type LucideIcon } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,7 +22,7 @@ const CATEGORIES: { id: Cat | "all"; label: string; color: string }[] = [
   { id: "intelligence", label: "Intelligence", color: "hsl(var(--gold))" },
 ];
 
-const AGENTS: { name: string; role: string; cat: Cat; icon: typeof Bot; size: "lg" | "md" | "sm" }[] = [
+const AGENTS: { name: string; role: string; cat: Cat; icon: LucideIcon; size: "lg" | "md" | "sm" }[] = [
   { name: "Arianna", role: "Sales closer vocale H24", cat: "vendita", icon: Sparkles, size: "lg" },
   { name: "Marcus", role: "Lead hunter predittivo", cat: "vendita", icon: Radar, size: "md" },
   { name: "Sofia", role: "WhatsApp closer multilingua", cat: "vendita", icon: MessageCircleMore, size: "sm" },
@@ -108,7 +108,7 @@ export default function AgentsCatalog() {
             <span className="h-1.5 w-1.5 rounded-full" style={{ background: accent, boxShadow: `0 0 10px ${accent}` }} />
             Catalogo agenti · 14 di 38 attivi
           </div>
-          <h2 data-cat-title className="font-heading text-[clamp(2.2rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-[-0.04em] text-white">
+          <h2 data-cat-title className="font-heading text-[clamp(2.2rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-normal text-white">
             <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Il tuo</span></span>{" "}
             <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">team</span></span>{" "}
             <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">non dorme mai.</span></span>
@@ -149,6 +149,7 @@ export default function AgentsCatalog() {
                 ? "col-span-2 row-span-1"
                 : "col-span-1 row-span-1";
             const cat = CATEGORIES.find((c) => c.id === a.cat)!;
+            const Icon = a.icon;
             return (
               <article
                 key={a.name}
@@ -163,15 +164,15 @@ export default function AgentsCatalog() {
               >
                 <div
                   className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{ background: `radial-gradient(360px circle at var(--mx,50%) var(--my,50%), ${cat.color}33, transparent 60%)` }}
+                  style={{ background: `radial-gradient(360px circle at var(--mx,50%) var(--my,50%), color-mix(in srgb, ${cat.color} 22%, transparent), transparent 60%)` }}
                 />
                 <div className="relative z-10 flex h-full flex-col justify-between">
                   <div className="flex items-start justify-between">
                     <div
                       className="flex h-10 w-10 items-center justify-center rounded-xl text-lg sm:h-12 sm:w-12 sm:text-xl"
-                      style={{ background: `${cat.color}1a`, border: `1px solid ${cat.color}40` }}
+                      style={{ background: `color-mix(in srgb, ${cat.color} 14%, transparent)`, border: `1px solid color-mix(in srgb, ${cat.color} 32%, transparent)` }}
                     >
-                      {a.icon}
+                      <Icon className="h-5 w-5" style={{ color: cat.color }} />
                     </div>
                     <span
                       className="font-mono text-[9px] uppercase tracking-[2px]"
