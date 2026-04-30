@@ -31,31 +31,21 @@ export default function HeroExplosion() {
     const ctx = gsap.context((self) => {
       const q = self.selector!;
 
-      gsap.set(q("[data-hero-line] .char, [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb]"), { clearProps: "all" });
-
-      // Initial state: mai invisibile senza fallback; la classe CSS sotto rende tutto visibile se GSAP non parte.
-      gsap.set(q("[data-hero-line] .char"), {
-        y: () => gsap.utils.random(isMobile ? -14 : -24, isMobile ? 14 : 24),
-        x: () => gsap.utils.random(isMobile ? -18 : -32, isMobile ? 18 : 32),
-        rotate: () => gsap.utils.random(-5, 5),
-        scale: () => gsap.utils.random(0.96, 1.04),
-        opacity: 1,
-        filter: "blur(0px)",
+      gsap.set(q("[data-hero-word], [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb], [data-hero-preview]"), {
+        x: 0, y: 0, rotate: 0, rotateY: 0, rotateX: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)", clearProps: "transform",
       });
-      gsap.set(q("[data-hero-sub]"), { y: 0, opacity: 1, clipPath: "inset(0 0% 0 0)" });
-      gsap.set(q("[data-hero-cta]"), { y: 0, opacity: 1, scale: 1 });
-      gsap.set(q("[data-hero-meta]"), { y: 0, opacity: 1 });
+
+      // Stato iniziale solido: niente lettere sparse o hero invisibile anche se GSAP/HMR si interrompe.
       gsap.set(q("[data-hero-shock]"), { scale: 0, opacity: 0.95 });
       gsap.set(q("[data-hero-shock-2]"), { scale: 0, opacity: 0.7 });
-      gsap.set(q("[data-hero-grid]"), { opacity: 0, scale: 1.18 });
-      gsap.set(q("[data-hero-orb]"), { opacity: 0, scale: 0.6 });
-      gsap.set(q("[data-hero-preview]"), { y: 0, opacity: 1, rotateY: 0, rotateX: 0, scale: 1 });
+      gsap.set(q("[data-hero-grid]"), { opacity: 0.45, scale: 1 });
+      gsap.set(q("[data-hero-orb]"), { opacity: 0.75, scale: 1 });
       gsap.set(q("[data-hero-flash]"), { opacity: 0 });
 
       const trigger = () => {
         setArmed(true);
         if (reduceMotion) {
-          gsap.set(q("[data-hero-line] .char, [data-hero-sub], [data-hero-cta], [data-hero-meta]"), { y: 0, x: 0, rotate: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)" });
+          gsap.set(q("[data-hero-word], [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-preview]"), { y: 0, x: 0, rotate: 0, rotateY: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)" });
           gsap.set(q("[data-hero-grid], [data-hero-orb]"), { opacity: 1, scale: 1 });
           return;
         }
@@ -67,10 +57,12 @@ export default function HeroExplosion() {
           .to(q("[data-hero-shock-2]"), { scale: 22, opacity: 0, duration: 2.0 }, 0.15)
           .to(q("[data-hero-grid]"), { opacity: 0.6, scale: 1, duration: 1.4 }, 0.05)
           .to(q("[data-hero-orb]"), { opacity: 1, scale: 1, duration: 1.2, stagger: 0.08 }, 0.2)
-          .to(q("[data-hero-line] .char"), {
-            y: 0, x: 0, rotate: 0, scale: 1, opacity: 1, filter: "blur(0px)",
+          .fromTo(q("[data-hero-word]"), {
+            y: isMobile ? 26 : 46, opacity: 0, rotateX: -22, filter: "blur(8px)",
+          }, {
+            y: 0, rotateX: 0, opacity: 1, filter: "blur(0px)",
             duration: 0.9,
-            stagger: { each: 0.014, from: "random" },
+            stagger: { each: 0.08, from: "start" },
             ease: "expo.out",
           }, 0.18)
           .to(el, {
@@ -101,7 +93,7 @@ export default function HeroExplosion() {
       const splashDelay = introSkippedByApp || alreadyShown ? 120 : 2550;
       const fallback = window.setTimeout(() => {
         setArmed(true);
-        gsap.set(q("[data-hero-line] .char, [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb], [data-hero-preview]"), {
+        gsap.set(q("[data-hero-word], [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb], [data-hero-preview]"), {
           x: 0, y: 0, rotate: 0, rotateY: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)", clearProps: "transform",
         });
         gsap.set(q("[data-hero-flash], [data-hero-shock], [data-hero-shock-2]"), { opacity: 0 });
@@ -147,13 +139,6 @@ export default function HeroExplosion() {
     return () => ctx.revert();
   }, []);
 
-  const splitChars = (txt: string) =>
-    Array.from(txt).map((c, i) => (
-      <span key={i} className="char inline-block will-change-transform" style={{ whiteSpace: c === " " ? "pre" : "normal" }}>
-        {c}
-      </span>
-    ));
-
   return (
     <section ref={root} id="hero" data-hero-armed={armed ? "true" : "false"} className="relative min-h-[100svh] overflow-hidden">
       <div data-hero-flash className="pointer-events-none absolute inset-0 z-[5] bg-white opacity-0" />
@@ -188,35 +173,33 @@ export default function HeroExplosion() {
       <div data-hero-orb data-hero-parallax="3" className="pointer-events-none absolute right-[5%] bottom-[12%] z-[1] h-96 w-96 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.38), transparent 60%)", filter: "blur(60px)" }} />
       <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[40%] top-[8%] z-[1] h-48 w-48 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(167,139,250,0.4), transparent 60%)", filter: "blur(50px)" }} />
 
-      <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pb-20 pt-24 text-center sm:pt-28">
-        <div data-hero-meta className="mb-7 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-semibold tracking-[3px] text-white/80 backdrop-blur-md">
+      <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pb-14 pt-24 text-center sm:pt-28">
+        <div data-hero-meta className="mb-5 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/8 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[3px] text-white/85 shadow-[0_14px_40px_rgba(0,0,0,0.35)] sm:mb-7 sm:text-[11px]" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.75)" }}>
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#22d3ee]" />
           EMPIRE.AI · DOMINIO ALGORITMICO
         </div>
 
-        <h1 className="font-heading font-black leading-[0.86] tracking-[-0.05em] text-white" style={{ fontSize: "clamp(2.8rem, 13vw, 12rem)" }}>
-          <div data-hero-line className="overflow-visible">{splitChars("Automazione")}</div>
-          <div data-hero-line className="overflow-visible">
-            <span className="bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">
-              {splitChars("Assoluta.")}
-            </span>
-          </div>
+        <h1 className="w-full font-heading font-black uppercase leading-[0.94] tracking-normal text-white" style={{ fontSize: "clamp(2.35rem, 12vw, 12rem)", textShadow: "0 4px 34px rgba(0,0,0,0.72)" }}>
+          <span data-hero-word className="block whitespace-nowrap will-change-transform">Automazione</span>
+          <span data-hero-word className="block whitespace-nowrap bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent will-change-transform">
+            Assoluta.
+          </span>
         </h1>
 
-        <p data-hero-sub className="mx-auto mt-8 max-w-[680px] text-[14px] leading-[1.85] text-white/68 sm:text-[17px]">
+        <p data-hero-sub className="mx-auto mt-7 max-w-[680px] text-[14px] leading-[1.75] text-white/82 sm:mt-8 sm:text-[17px]" style={{ textShadow: "0 2px 22px rgba(0,0,0,0.8)" }}>
           Non software. Un sistema operativo AI che prende ordini, vendite, marketing, staff e clienti — e li fa muovere come un'unica macchina.
         </p>
 
-        <div className="pointer-events-none mt-9 hidden items-end justify-center gap-3 sm:flex" style={{ perspective: "1200px" }}>
+        <div className="pointer-events-none mt-7 flex items-end justify-center gap-2 sm:mt-9 sm:gap-3" style={{ perspective: "1200px" }}>
           {HERO_MOCKUPS.map((img, i) => (
             <div
               key={img}
               data-hero-preview
               className="relative overflow-hidden rounded-[1.6rem] border-[7px] border-black bg-black shadow-2xl"
               style={{
-                width: i === 1 ? 116 : 92,
-                height: i === 1 ? 236 : 188,
-                marginBottom: i === 1 ? 0 : 24,
+                width: i === 1 ? "min(96px, 25vw)" : "min(74px, 19vw)",
+                height: i === 1 ? "min(196px, 50vw)" : "min(150px, 39vw)",
+                marginBottom: i === 1 ? 0 : 18,
                 boxShadow: i === 1 ? "0 34px 90px -24px rgba(34,211,238,0.7)" : "0 24px 70px -28px rgba(167,139,250,0.55)",
               }}
             >
@@ -226,10 +209,10 @@ export default function HeroExplosion() {
           ))}
         </div>
 
-        <div data-hero-cta className="mt-9 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
+        <div data-hero-cta className="mt-7 flex w-full flex-col items-center gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:gap-4">
           <button
             onClick={() => navigate("/demo")}
-            className="group relative w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-white transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
+            className="group relative min-h-12 w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-white transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
             style={{
               background: "linear-gradient(135deg, #22d3ee, #a78bfa, #ec4899)",
               boxShadow: "0 24px 60px -20px rgba(167,139,250,0.6)",
@@ -240,7 +223,7 @@ export default function HeroExplosion() {
           </button>
           <button
             onClick={() => navigate("/auth")}
-            className="w-full rounded-full border border-white/20 px-8 py-4 text-sm font-semibold text-white/85 backdrop-blur-md transition-all hover:border-white/50 hover:bg-white/5 sm:w-auto sm:px-9"
+            className="min-h-12 w-full rounded-full border border-white/20 bg-white/[0.03] px-8 py-4 text-sm font-semibold text-white/90 shadow-[0_14px_40px_rgba(0,0,0,0.28)] transition-all hover:border-white/50 hover:bg-white/8 sm:w-auto sm:px-9"
           >
             Accedi al Comando
           </button>

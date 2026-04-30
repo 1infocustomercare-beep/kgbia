@@ -26,9 +26,25 @@ export default function ProofHorizontal() {
   useEffect(() => {
     const el = root.current; const tr = track.current;
     if (!el || !tr) return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
     const ctx = gsap.context(() => {
       const getDist = () => Math.max(0, tr.scrollWidth - window.innerWidth);
+
+      if (isMobile) {
+        const cards = tr.querySelectorAll<HTMLElement>("[data-proof-card]");
+        cards.forEach((card) => {
+          gsap.from(card, {
+            y: 44,
+            opacity: 0,
+            scale: 0.94,
+            duration: 0.8,
+            ease: "expo.out",
+            scrollTrigger: { trigger: card, start: "top 88%" },
+          });
+        });
+        return;
+      }
 
       const horizontalTween = gsap.to(tr, {
         x: () => -getDist(),
@@ -66,26 +82,26 @@ export default function ProofHorizontal() {
   }, []);
 
   return (
-    <section ref={root} className="relative h-screen overflow-hidden">
+    <section ref={root} className="relative overflow-hidden py-24 sm:h-screen sm:py-0">
       <div className="pointer-events-none absolute inset-0 z-0" style={{
         background: "radial-gradient(ellipse 60% 100% at 100% 50%, rgba(167,139,250,0.18), transparent 70%), linear-gradient(180deg, #050505, #08081a)",
       }} />
 
-      <div className="absolute left-4 top-6 z-20 sm:left-10 sm:top-12">
+      <div className="relative left-auto top-auto z-20 px-4 sm:absolute sm:left-10 sm:top-12 sm:px-0">
         <div className="text-[10px] font-bold uppercase tracking-[3px] text-[#22d3ee] sm:text-[11px]">Proof · Dominio del mercato</div>
         <div className="mt-2 font-heading text-xl font-black uppercase tracking-tight text-white sm:text-4xl">Numeri non discutibili.</div>
       </div>
 
-      <div className="absolute right-4 top-6 z-20 text-right sm:right-10 sm:top-12">
+      <div className="absolute right-4 top-6 z-20 hidden text-right sm:block sm:right-10 sm:top-12">
         <div className="text-[9px] font-mono tracking-[3px] text-white/40 sm:text-[10px]">SCROLL →</div>
       </div>
 
-      <div ref={track} className="absolute inset-0 flex h-full items-center gap-4 pl-4 pr-[10vw] will-change-transform sm:gap-10 sm:pl-10">
+      <div ref={track} className="relative mt-10 flex h-auto flex-col gap-4 px-4 will-change-transform sm:absolute sm:inset-0 sm:mt-0 sm:h-full sm:flex-row sm:items-center sm:gap-10 sm:pl-10 sm:pr-[10vw]">
         {PROOF.map((p, i) => (
           <div
             key={i}
             data-proof-card
-            className="relative flex h-[58vh] min-w-[80vw] flex-col justify-end overflow-hidden rounded-[2rem] border border-white/10 p-6 sm:h-[60vh] sm:min-w-[44vw] sm:p-10"
+            className="relative flex min-h-[220px] w-full flex-col justify-end overflow-hidden rounded-[1.5rem] border border-white/10 p-6 sm:h-[60vh] sm:min-w-[44vw] sm:rounded-[2rem] sm:p-10"
             style={{ background: `linear-gradient(160deg, ${p.c}1a 0%, transparent 60%), rgba(255,255,255,0.02)` }}
           >
             <div className="absolute right-5 top-5 h-3 w-3 rounded-full sm:right-6 sm:top-6" style={{ background: p.c, boxShadow: `0 0 24px ${p.c}` }} />
@@ -101,7 +117,7 @@ export default function ProofHorizontal() {
           <blockquote
             key={`q${i}`}
             data-proof-card
-            className="relative flex h-[55vh] min-w-[82vw] flex-col justify-center rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-7 backdrop-blur-md sm:min-w-[44vw] sm:p-12"
+            className="relative flex min-h-[240px] w-full flex-col justify-center rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-7 shadow-[0_26px_70px_rgba(0,0,0,0.25)] sm:h-[55vh] sm:min-w-[44vw] sm:rounded-[2rem] sm:p-12"
           >
             <div className="font-heading text-5xl text-[#22d3ee]/40 sm:text-6xl">"</div>
             <p className="font-heading text-lg leading-snug text-white sm:text-3xl">{q.q}</p>
@@ -109,7 +125,7 @@ export default function ProofHorizontal() {
           </blockquote>
         ))}
 
-        <div className="min-w-[15vw]" />
+        <div className="hidden min-w-[15vw] sm:block" />
       </div>
     </section>
   );
