@@ -212,7 +212,7 @@ export default function HeroExplosion() {
         <div data-hero-cta className="mt-7 flex w-full flex-col items-center gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:gap-4">
           <button
             onClick={() => navigate("/demo")}
-            className="group relative w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-white transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
+            className="group relative min-h-12 w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-white transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
             style={{
               background: "linear-gradient(135deg, #22d3ee, #a78bfa, #ec4899)",
               boxShadow: "0 24px 60px -20px rgba(167,139,250,0.6)",
@@ -223,7 +223,7 @@ export default function HeroExplosion() {
           </button>
           <button
             onClick={() => navigate("/auth")}
-            className="w-full rounded-full border border-white/20 px-8 py-4 text-sm font-semibold text-white/85 backdrop-blur-md transition-all hover:border-white/50 hover:bg-white/5 sm:w-auto sm:px-9"
+            className="min-h-12 w-full rounded-full border border-white/20 bg-white/[0.03] px-8 py-4 text-sm font-semibold text-white/90 shadow-[0_14px_40px_rgba(0,0,0,0.28)] transition-all hover:border-white/50 hover:bg-white/8 sm:w-auto sm:px-9"
           >
             Accedi al Comando
           </button>
