@@ -139,13 +139,6 @@ export default function HeroExplosion() {
     return () => ctx.revert();
   }, []);
 
-  const splitChars = (txt: string) =>
-    Array.from(txt).map((c, i) => (
-      <span key={i} className="char inline-block will-change-transform" style={{ whiteSpace: c === " " ? "pre" : "normal" }}>
-        {c}
-      </span>
-    ));
-
   return (
     <section ref={root} id="hero" data-hero-armed={armed ? "true" : "false"} className="relative min-h-[100svh] overflow-hidden">
       <div data-hero-flash className="pointer-events-none absolute inset-0 z-[5] bg-white opacity-0" />
@@ -180,35 +173,33 @@ export default function HeroExplosion() {
       <div data-hero-orb data-hero-parallax="3" className="pointer-events-none absolute right-[5%] bottom-[12%] z-[1] h-96 w-96 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.38), transparent 60%)", filter: "blur(60px)" }} />
       <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[40%] top-[8%] z-[1] h-48 w-48 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(167,139,250,0.4), transparent 60%)", filter: "blur(50px)" }} />
 
-      <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pb-20 pt-24 text-center sm:pt-28">
-        <div data-hero-meta className="mb-7 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-semibold tracking-[3px] text-white/80 backdrop-blur-md">
+      <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pb-14 pt-24 text-center sm:pt-28">
+        <div data-hero-meta className="mb-5 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/8 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[3px] text-white/85 shadow-[0_14px_40px_rgba(0,0,0,0.35)] sm:mb-7 sm:text-[11px]" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.75)" }}>
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#22d3ee]" />
           EMPIRE.AI · DOMINIO ALGORITMICO
         </div>
 
-        <h1 className="font-heading font-black leading-[0.86] tracking-[-0.05em] text-white" style={{ fontSize: "clamp(2.8rem, 13vw, 12rem)" }}>
-          <div data-hero-line className="overflow-visible">{splitChars("Automazione")}</div>
-          <div data-hero-line className="overflow-visible">
-            <span className="bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">
-              {splitChars("Assoluta.")}
-            </span>
-          </div>
+        <h1 className="font-heading font-black uppercase leading-[0.9] tracking-normal text-white" style={{ fontSize: "clamp(3.05rem, 15vw, 12rem)", textShadow: "0 4px 34px rgba(0,0,0,0.72)" }}>
+          <span data-hero-word className="block will-change-transform">Automazione</span>
+          <span data-hero-word className="block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent will-change-transform">
+            Assoluta.
+          </span>
         </h1>
 
-        <p data-hero-sub className="mx-auto mt-8 max-w-[680px] text-[14px] leading-[1.85] text-white/68 sm:text-[17px]">
+        <p data-hero-sub className="mx-auto mt-7 max-w-[680px] text-[14px] leading-[1.75] text-white/82 sm:mt-8 sm:text-[17px]" style={{ textShadow: "0 2px 22px rgba(0,0,0,0.8)" }}>
           Non software. Un sistema operativo AI che prende ordini, vendite, marketing, staff e clienti — e li fa muovere come un'unica macchina.
         </p>
 
-        <div className="pointer-events-none mt-9 hidden items-end justify-center gap-3 sm:flex" style={{ perspective: "1200px" }}>
+        <div className="pointer-events-none mt-7 flex items-end justify-center gap-2 sm:mt-9 sm:gap-3" style={{ perspective: "1200px" }}>
           {HERO_MOCKUPS.map((img, i) => (
             <div
               key={img}
               data-hero-preview
               className="relative overflow-hidden rounded-[1.6rem] border-[7px] border-black bg-black shadow-2xl"
               style={{
-                width: i === 1 ? 116 : 92,
-                height: i === 1 ? 236 : 188,
-                marginBottom: i === 1 ? 0 : 24,
+                width: i === 1 ? "min(96px, 25vw)" : "min(74px, 19vw)",
+                height: i === 1 ? "min(196px, 50vw)" : "min(150px, 39vw)",
+                marginBottom: i === 1 ? 0 : 18,
                 boxShadow: i === 1 ? "0 34px 90px -24px rgba(34,211,238,0.7)" : "0 24px 70px -28px rgba(167,139,250,0.55)",
               }}
             >
@@ -218,7 +209,7 @@ export default function HeroExplosion() {
           ))}
         </div>
 
-        <div data-hero-cta className="mt-9 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
+        <div data-hero-cta className="mt-7 flex w-full flex-col items-center gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:gap-4">
           <button
             onClick={() => navigate("/demo")}
             className="group relative w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-white transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
