@@ -39,18 +39,19 @@ export default function Orbit3D() {
     const el = root.current;
     const orb = orbitRef.current;
     if (!el || !orb) return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const ctx = gsap.context((self) => {
       const q = self.selector!;
       // pin + rotate dell'intera orbita scroll-driven
       gsap.to(orb, {
-        rotateZ: 360,
+        rotateZ: isMobile ? 80 : 360,
         ease: "none",
         scrollTrigger: {
           trigger: el,
-          start: "top top",
-          end: "+=200%",
+          start: isMobile ? "top 82%" : "top top",
+          end: isMobile ? "bottom 20%" : "+=200%",
           scrub: 1,
-          pin: true,
+          pin: !isMobile,
           pinSpacing: true,
         },
       });
