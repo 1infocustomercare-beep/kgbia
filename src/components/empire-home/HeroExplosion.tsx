@@ -3,14 +3,15 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate } from "react-router-dom";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import empireLogo from "@/assets/empire-logo-full.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const HERO_MOCKUPS = [
-  SECTOR_MOCKUP_IMAGES.food?.[0],
-  SECTOR_MOCKUP_IMAGES.beauty?.[0],
-  SECTOR_MOCKUP_IMAGES.ncc?.[0],
-].filter(Boolean) as string[];
+  { img: SECTOR_MOCKUP_IMAGES.food?.[0], label: "Food", accent: "hsl(42 94% 62%)" },
+  { img: SECTOR_MOCKUP_IMAGES.beauty?.[0], label: "Beauty", accent: "hsl(325 85% 58%)" },
+  { img: SECTOR_MOCKUP_IMAGES.ncc?.[0], label: "Luxury", accent: "hsl(195 100% 55%)" },
+].filter((m) => Boolean(m.img)) as { img: string; label: string; accent: string }[];
 
 /**
  * HERO — Atterraggio cinematografico esplosivo dopo lo splash.
@@ -82,8 +83,14 @@ export default function HeroExplosion() {
           .to(q("[data-hero-meta]"), {
             y: 0, opacity: 1, duration: 0.8, ease: "power2.out", stagger: 0.1,
           }, 1.15)
-          .to(q("[data-hero-preview]"), {
-            y: 0, opacity: 1, rotateY: 0, rotateX: 0, scale: 1, duration: 1.05, stagger: 0.08, ease: "back.out(1.7)",
+          .fromTo(q("[data-hero-preview]"), {
+            y: isMobile ? 34 : 80,
+            opacity: 0,
+            rotateY: isMobile ? 0 : (i: number) => [-16, 0, 16][i % 3],
+            scale: 0.9,
+            filter: "blur(10px)",
+          }, {
+            y: 0, opacity: 1, rotateY: 0, rotateX: 0, scale: 1, filter: "blur(0px)", duration: 1.05, stagger: 0.08, ease: "expo.out",
           }, 0.82);
       };
 
@@ -140,20 +147,20 @@ export default function HeroExplosion() {
   }, []);
 
   return (
-    <section ref={root} id="hero" data-hero-armed={armed ? "true" : "false"} className="relative min-h-[100svh] overflow-hidden">
-      <div data-hero-flash className="pointer-events-none absolute inset-0 z-[5] bg-white opacity-0" />
+    <section ref={root} id="hero" data-hero-armed={armed ? "true" : "false"} className="relative min-h-[100svh] overflow-hidden bg-background">
+      <div data-hero-flash className="pointer-events-none absolute inset-0 z-[5] bg-foreground opacity-0" />
 
       <div
         data-hero-shock
         className="pointer-events-none absolute left-1/2 top-1/2 z-[2] h-[40vmin] w-[40vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0"
         style={{
-          background: "radial-gradient(circle, rgba(34,211,238,0.45) 0%, rgba(167,139,250,0.22) 40%, transparent 70%)",
-          boxShadow: "0 0 240px 80px rgba(34,211,238,0.3), inset 0 0 100px rgba(255,255,255,0.18)",
+          background: "radial-gradient(circle, hsl(var(--neon-cyan) / 0.42) 0%, hsl(var(--gold) / 0.22) 38%, transparent 70%)",
+          boxShadow: "0 0 240px 80px hsl(var(--primary) / 0.28), inset 0 0 100px hsl(var(--foreground) / 0.16)",
         }}
       />
       <div
         data-hero-shock-2
-        className="pointer-events-none absolute left-1/2 top-1/2 z-[2] h-[30vmin] w-[30vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#ec4899]/40 opacity-0"
+        className="pointer-events-none absolute left-1/2 top-1/2 z-[2] h-[30vmin] w-[30vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-gold/40 opacity-0"
       />
 
       <div
@@ -162,16 +169,16 @@ export default function HeroExplosion() {
         className="pointer-events-none absolute inset-0 z-[1] opacity-40"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(34,211,238,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.08) 1px, transparent 1px)",
+            "linear-gradient(hsl(var(--primary) / 0.08) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.08) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
           maskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%)",
           WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%)",
         }}
       />
 
-      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[6%] top-[15%] z-[1] h-72 w-72 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(34,211,238,0.45), transparent 60%)", filter: "blur(40px)" }} />
-      <div data-hero-orb data-hero-parallax="3" className="pointer-events-none absolute right-[5%] bottom-[12%] z-[1] h-96 w-96 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.38), transparent 60%)", filter: "blur(60px)" }} />
-      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[40%] top-[8%] z-[1] h-48 w-48 rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(167,139,250,0.4), transparent 60%)", filter: "blur(50px)" }} />
+      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[6%] top-[15%] z-[1] h-72 w-72 rounded-full opacity-70" style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.36), transparent 60%)", filter: "blur(40px)" }} />
+      <div data-hero-orb data-hero-parallax="3" className="pointer-events-none absolute right-[5%] bottom-[12%] z-[1] h-96 w-96 rounded-full opacity-70" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.30), transparent 60%)", filter: "blur(60px)" }} />
+      <div data-hero-orb data-hero-parallax="2" className="pointer-events-none absolute left-[40%] top-[8%] z-[1] h-48 w-48 rounded-full opacity-70" style={{ background: "radial-gradient(circle, hsl(var(--accent) / 0.34), transparent 60%)", filter: "blur(50px)" }} />
 
       <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pb-14 pt-24 text-center sm:pt-28">
         <div data-hero-meta className="mb-5 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/8 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[3px] text-white/85 shadow-[0_14px_40px_rgba(0,0,0,0.35)] sm:mb-7 sm:text-[11px]" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.75)" }}>
