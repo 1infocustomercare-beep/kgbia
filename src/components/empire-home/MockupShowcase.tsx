@@ -26,6 +26,7 @@ export default function MockupShowcase() {
   useEffect(() => {
     const el = root.current;
     if (!el) return;
+    const isMobile = window.matchMedia("(max-width: 899px)").matches;
 
     const ctx = gsap.context((self) => {
       const q = self.selector!;
@@ -38,11 +39,11 @@ export default function MockupShowcase() {
         gsap.set(p, {
           xPercent: -50,
           yPercent: -50,
-          scale: 0.55 + i * 0.02,
+          scale: isMobile ? 1 : 0.72 + i * 0.02,
           opacity: i === 0 ? 1 : 0.0,
-          rotateY: -55,
-          rotateZ: -8,
-          z: -i * 200,
+          rotateY: isMobile ? 0 : -18,
+          rotateZ: 0,
+          z: isMobile ? 0 : -i * 160,
           transformOrigin: "center center",
         });
       });
@@ -51,12 +52,30 @@ export default function MockupShowcase() {
       gsap.from(q("[data-mks-title] .word"), {
         y: 80,
         opacity: 0,
-        rotateX: -60,
+        rotateX: -24,
         stagger: 0.06,
         duration: 1,
         ease: "expo.out",
         scrollTrigger: { trigger: el, start: "top 75%" },
       });
+
+      if (isMobile) {
+        phones.forEach((phone, i) => {
+          gsap.fromTo(phone,
+            { yPercent: -35, opacity: 0, scale: 0.9, filter: "blur(8px)" },
+            {
+              yPercent: -50,
+              opacity: 1,
+              scale: 1,
+              filter: "blur(0px)",
+              duration: 0.8,
+              ease: "expo.out",
+              scrollTrigger: { trigger: phone, start: "top 84%", onEnter: () => setActive(i) },
+            }
+          );
+        });
+        return;
+      }
 
       // Pinned scrub timeline
       const tl = gsap.timeline({
@@ -79,14 +98,14 @@ export default function MockupShowcase() {
         // Phone i arriva al centro
         tl.to(
           phone,
-          { opacity: 1, scale: 1, rotateY: 0, rotateZ: 0, z: 0, duration: 1, ease: "power2.out" },
+          { opacity: 1, scale: 1, rotateY: 0, rotateZ: 0, z: 0, filter: "blur(0px)", duration: 1, ease: "power2.out" },
           i
         );
         if (next) {
           // Phone i esce in avanti, next entra
           tl.to(
             phone,
-            { opacity: 0, scale: 1.4, rotateY: 55, rotateZ: 6, z: 200, duration: 1, ease: "power2.in" },
+            { opacity: 0, scale: 1.18, rotateY: 12, rotateZ: 0, z: 160, filter: "blur(12px)", duration: 1, ease: "power2.in" },
             i + 0.7
           );
         }
@@ -100,21 +119,21 @@ export default function MockupShowcase() {
     <section
       ref={root}
       id="mockups"
-      className="relative bg-gradient-to-b from-transparent via-[#0a0e1a]/80 to-transparent"
+      className="relative bg-gradient-to-b from-transparent via-background/80 to-transparent"
       style={{ perspective: "1400px" }}
     >
-      <div className="relative h-[100svh] w-full overflow-hidden">
+      <div className="relative min-h-[100svh] w-full overflow-hidden lg:h-[100svh]">
         {/* Aurora background */}
         <div className="pointer-events-none absolute inset-0 opacity-60">
           <div className="absolute left-1/2 top-1/2 h-[120vmin] w-[120vmin] -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(34,211,238,0.18), rgba(74,222,128,0.10) 35%, transparent 65%)", filter: "blur(80px)" }}
+            style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.18), hsl(var(--gold) / 0.10) 35%, transparent 65%)", filter: "blur(80px)" }}
           />
         </div>
 
         {/* Grid floor */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2"
           style={{
-            backgroundImage: "linear-gradient(rgba(167,139,250,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,0.10) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(hsl(var(--empire-violet) / 0.10) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--empire-violet) / 0.10) 1px, transparent 1px)",
             backgroundSize: "80px 80px",
             transform: "perspective(800px) rotateX(60deg)",
             transformOrigin: "top",
@@ -139,7 +158,7 @@ export default function MockupShowcase() {
         </div>
 
         {/* Phones stack */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative flex min-h-[760px] items-center justify-center pt-56 lg:absolute lg:inset-0 lg:min-h-0 lg:pt-0">
           {SLIDES.map((slide, i) => (
             <div
               key={i}
