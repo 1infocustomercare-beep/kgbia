@@ -56,6 +56,7 @@ export default function Web3Carousel() {
     const el = root.current;
     const tr = track.current;
     if (!el || !tr) return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const ctx = gsap.context(() => {
       // calcola la distanza in px da scorrere
       const getDistance = () => Math.max(1, tr.scrollWidth - window.innerWidth + 64);
@@ -76,6 +77,8 @@ export default function Web3Carousel() {
           once: true,
         },
       });
+
+      if (isMobile) return;
 
       gsap.to(cards, {
         rotateY: (i) => (i % 2 === 0 ? -8 : 8),
@@ -107,12 +110,12 @@ export default function Web3Carousel() {
   }, []);
 
   return (
-    <section ref={root} className="relative h-screen overflow-hidden bg-[#050813]">
+    <section ref={root} className="relative overflow-hidden bg-[#050813] py-20 sm:h-screen sm:py-0">
       <div className="absolute inset-0 -z-10" style={{
         background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(34,211,238,0.08), transparent 60%)",
       }} />
 
-      <div className="relative z-10 px-4 pt-12 sm:px-8 sm:pt-16">
+      <div className="relative z-10 px-4 sm:px-8 sm:pt-16">
         <div className="text-[10px] font-bold uppercase tracking-[4px] text-[#22d3ee] sm:text-[11px]">
           06 · LA PROMESSA
         </div>
@@ -121,10 +124,10 @@ export default function Web3Carousel() {
         </h2>
       </div>
 
-      <div className="absolute inset-0 flex items-center" style={{ perspective: "1400px" }}>
+      <div className="relative mt-8 flex items-center overflow-x-auto pb-6 [-webkit-overflow-scrolling:touch] sm:absolute sm:inset-0 sm:mt-0 sm:overflow-visible sm:pb-0" style={{ perspective: "1400px" }}>
         <div
           ref={track}
-          className="flex items-center gap-5 pl-4 pr-16 sm:gap-8 sm:pl-8"
+          className="flex items-center gap-4 pl-4 pr-6 sm:gap-8 sm:pl-8 sm:pr-16"
           style={{ transformStyle: "preserve-3d" }}
         >
           {SLIDES.map((s, i) => (
@@ -133,7 +136,7 @@ export default function Web3Carousel() {
               data-w3card
               className="relative shrink-0 overflow-hidden rounded-[28px] border border-white/15 bg-white/[0.04] p-7 backdrop-blur-2xl sm:p-10"
               style={{
-                width: "min(85vw, 460px)",
+                width: "min(82vw, 460px)",
                 aspectRatio: "3/4",
                 boxShadow: "0 30px 80px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)",
               }}
@@ -172,7 +175,7 @@ export default function Web3Carousel() {
         </div>
       </div>
 
-      <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-[10px] uppercase tracking-[3px] text-white/45">
+      <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 text-[10px] uppercase tracking-[3px] text-white/45 sm:block">
         ↓ scroll per scorrere
       </div>
     </section>
