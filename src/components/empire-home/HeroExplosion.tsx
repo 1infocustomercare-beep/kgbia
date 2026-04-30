@@ -179,9 +179,9 @@ export default function HeroExplosion() {
           EMPIRE.AI · DOMINIO ALGORITMICO
         </div>
 
-        <h1 className="font-heading font-black uppercase leading-[0.9] tracking-normal text-white" style={{ fontSize: "clamp(3.05rem, 15vw, 12rem)", textShadow: "0 4px 34px rgba(0,0,0,0.72)" }}>
-          <span data-hero-word className="block will-change-transform">Automazione</span>
-          <span data-hero-word className="block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent will-change-transform">
+        <h1 className="w-full font-heading font-black uppercase leading-[0.94] tracking-normal text-white" style={{ fontSize: "clamp(2.35rem, 12vw, 12rem)", textShadow: "0 4px 34px rgba(0,0,0,0.72)" }}>
+          <span data-hero-word className="block whitespace-nowrap will-change-transform">Automazione</span>
+          <span data-hero-word className="block whitespace-nowrap bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent will-change-transform">
             Assoluta.
           </span>
         </h1>
