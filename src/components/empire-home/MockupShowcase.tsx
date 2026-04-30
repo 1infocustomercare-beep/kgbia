@@ -37,8 +37,8 @@ export default function MockupShowcase() {
       // Init: tutti dietro
       phones.forEach((p, i) => {
         gsap.set(p, {
-          xPercent: -50,
-          yPercent: -50,
+          xPercent: isMobile ? 0 : -50,
+          yPercent: isMobile ? 0 : -50,
           scale: isMobile ? 1 : 0.72 + i * 0.02,
           opacity: i === 0 ? 1 : 0.0,
           rotateY: isMobile ? 0 : -18,
@@ -62,9 +62,9 @@ export default function MockupShowcase() {
       if (isMobile) {
         phones.forEach((phone, i) => {
           gsap.fromTo(phone,
-            { yPercent: -35, opacity: 0, scale: 0.9, filter: "blur(8px)" },
+            { y: 48, opacity: 0, scale: 0.92, filter: "blur(8px)" },
             {
-              yPercent: -50,
+              y: 0,
               opacity: 1,
               scale: 1,
               filter: "blur(0px)",
@@ -158,12 +158,12 @@ export default function MockupShowcase() {
         </div>
 
         {/* Phones stack */}
-        <div className="relative flex min-h-[760px] items-center justify-center pt-56 lg:absolute lg:inset-0 lg:min-h-0 lg:pt-0">
+        <div className="relative flex min-h-[760px] flex-col items-center justify-start gap-6 px-4 pt-56 lg:absolute lg:inset-0 lg:min-h-0 lg:flex-row lg:justify-center lg:gap-0 lg:px-0 lg:pt-0">
           {SLIDES.map((slide, i) => (
             <div
               key={i}
               data-phone
-              className="absolute left-1/2 top-1/2 z-[3]"
+              className="relative z-[3] lg:absolute lg:left-1/2 lg:top-1/2"
               style={{ transformStyle: "preserve-3d" }}
             >
               <div
