@@ -84,7 +84,7 @@ export default function SectorsLive() {
       <div
         className="pointer-events-none absolute inset-0 transition-all duration-700"
         style={{
-          background: `radial-gradient(ellipse 80% 60% at 50% 40%, ${current.color}22, transparent 60%)`,
+          background: `radial-gradient(ellipse 80% 60% at 50% 40%, color-mix(in srgb, ${current.color} 14%, transparent), transparent 60%)`,
         }}
       />
 
@@ -96,10 +96,10 @@ export default function SectorsLive() {
             <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: current.color, boxShadow: `0 0 12px ${current.color}` }} />
             25 settori live · clicca per provare
           </div>
-          <h2 data-sl-title className="font-heading text-[clamp(2.2rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-[-0.04em] text-white">
+          <h2 data-sl-title className="font-heading text-[clamp(2.2rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-normal text-white">
             <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Provala.</span></span>{" "}
             <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Ora.</span></span>{" "}
-            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#4ade80] to-[#a78bfa] bg-clip-text text-transparent">Senza registrazione.</span></span>
+            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-[linear-gradient(110deg,hsl(var(--primary)),hsl(var(--accent)),hsl(var(--gold)))] bg-clip-text text-transparent">Senza registrazione.</span></span>
           </h2>
           <p className="mx-auto mt-4 max-w-[600px] text-sm text-white/60 sm:text-base">
             Le piattaforme reali che consegniamo ai clienti. Naviga dentro al sito del settore — è quello vero, non un mockup.
@@ -176,7 +176,7 @@ export default function SectorsLive() {
           <div
             className="pointer-events-none absolute -bottom-20 left-1/2 h-32 w-[80%] -translate-x-1/2 rounded-full opacity-50"
             style={{
-              background: `radial-gradient(ellipse, ${current.color}55, transparent 70%)`,
+              background: `radial-gradient(ellipse, color-mix(in srgb, ${current.color} 34%, transparent), transparent 70%)`,
               filter: "blur(40px)",
             }}
           />
