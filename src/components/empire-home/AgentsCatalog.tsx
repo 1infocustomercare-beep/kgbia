@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Bot, BrainCircuit, CalendarClock, ChartNoAxesCombined, Eye, Gem, MailCheck, MessageCircleMore, Palette, Radar, ShieldCheck, Sparkles, Star, Workflow } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,29 +14,29 @@ gsap.registerPlugin(ScrollTrigger);
 type Cat = "vendita" | "marketing" | "operazioni" | "supporto" | "intelligence";
 
 const CATEGORIES: { id: Cat | "all"; label: string; color: string }[] = [
-  { id: "all", label: "Tutti", color: "#ffffff" },
-  { id: "vendita", label: "Vendita", color: "#22d3ee" },
-  { id: "marketing", label: "Marketing", color: "#ec4899" },
-  { id: "operazioni", label: "Operazioni", color: "#4ade80" },
-  { id: "supporto", label: "Supporto", color: "#a78bfa" },
-  { id: "intelligence", label: "Intelligence", color: "#fbbf24" },
+  { id: "all", label: "Tutti", color: "hsl(var(--foreground))" },
+  { id: "vendita", label: "Vendita", color: "hsl(var(--primary))" },
+  { id: "marketing", label: "Marketing", color: "hsl(var(--neon-magenta))" },
+  { id: "operazioni", label: "Operazioni", color: "hsl(var(--accent))" },
+  { id: "supporto", label: "Supporto", color: "hsl(var(--empire-violet-glow))" },
+  { id: "intelligence", label: "Intelligence", color: "hsl(var(--gold))" },
 ];
 
-const AGENTS: { name: string; role: string; cat: Cat; icon: string; size: "lg" | "md" | "sm" }[] = [
-  { name: "Arianna", role: "Sales closer vocale H24", cat: "vendita", icon: "🎯", size: "lg" },
-  { name: "Marcus", role: "Lead hunter predittivo", cat: "vendita", icon: "🔭", size: "md" },
-  { name: "Sofia", role: "WhatsApp closer multilingua", cat: "vendita", icon: "💬", size: "sm" },
-  { name: "Lucia", role: "Outreach email iper-personalizzato", cat: "marketing", icon: "✉️", size: "md" },
-  { name: "Dante", role: "Social copywriter neurale", cat: "marketing", icon: "✍️", size: "lg" },
-  { name: "Iris", role: "Visual designer creativa", cat: "marketing", icon: "🎨", size: "sm" },
-  { name: "Elia", role: "Operations orchestrator", cat: "operazioni", icon: "⚙️", size: "md" },
-  { name: "Nora", role: "Calendar & booking sync", cat: "operazioni", icon: "📅", size: "sm" },
-  { name: "Bruno", role: "HACCP & compliance", cat: "operazioni", icon: "🛡️", size: "sm" },
-  { name: "Mia", role: "Customer care 32 lingue", cat: "supporto", icon: "💚", size: "lg" },
-  { name: "Teo", role: "Recensioni & reputazione", cat: "supporto", icon: "⭐", size: "md" },
-  { name: "Aurora", role: "Forecast & analytics", cat: "intelligence", icon: "📊", size: "lg" },
-  { name: "Vega", role: "Pricing dinamico AI", cat: "intelligence", icon: "💎", size: "md" },
-  { name: "Atlas", role: "Brain orchestratore", cat: "intelligence", icon: "🧠", size: "sm" },
+const AGENTS: { name: string; role: string; cat: Cat; icon: typeof Bot; size: "lg" | "md" | "sm" }[] = [
+  { name: "Arianna", role: "Sales closer vocale H24", cat: "vendita", icon: Sparkles, size: "lg" },
+  { name: "Marcus", role: "Lead hunter predittivo", cat: "vendita", icon: Radar, size: "md" },
+  { name: "Sofia", role: "WhatsApp closer multilingua", cat: "vendita", icon: MessageCircleMore, size: "sm" },
+  { name: "Lucia", role: "Outreach email iper-personalizzato", cat: "marketing", icon: MailCheck, size: "md" },
+  { name: "Dante", role: "Social copywriter neurale", cat: "marketing", icon: Bot, size: "lg" },
+  { name: "Iris", role: "Visual designer creativa", cat: "marketing", icon: Palette, size: "sm" },
+  { name: "Elia", role: "Operations orchestrator", cat: "operazioni", icon: Workflow, size: "md" },
+  { name: "Nora", role: "Calendar & booking sync", cat: "operazioni", icon: CalendarClock, size: "sm" },
+  { name: "Bruno", role: "HACCP & compliance", cat: "operazioni", icon: ShieldCheck, size: "sm" },
+  { name: "Mia", role: "Customer care 32 lingue", cat: "supporto", icon: Eye, size: "lg" },
+  { name: "Teo", role: "Recensioni & reputazione", cat: "supporto", icon: Star, size: "md" },
+  { name: "Aurora", role: "Forecast & analytics", cat: "intelligence", icon: ChartNoAxesCombined, size: "lg" },
+  { name: "Vega", role: "Pricing dinamico AI", cat: "intelligence", icon: Gem, size: "md" },
+  { name: "Atlas", role: "Brain orchestratore", cat: "intelligence", icon: BrainCircuit, size: "sm" },
 ];
 
 export default function AgentsCatalog() {
