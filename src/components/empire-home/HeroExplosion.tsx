@@ -31,31 +31,21 @@ export default function HeroExplosion() {
     const ctx = gsap.context((self) => {
       const q = self.selector!;
 
-      gsap.set(q("[data-hero-line] .char, [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb]"), { clearProps: "all" });
-
-      // Initial state: mai invisibile senza fallback; la classe CSS sotto rende tutto visibile se GSAP non parte.
-      gsap.set(q("[data-hero-line] .char"), {
-        y: () => gsap.utils.random(isMobile ? -14 : -24, isMobile ? 14 : 24),
-        x: () => gsap.utils.random(isMobile ? -18 : -32, isMobile ? 18 : 32),
-        rotate: () => gsap.utils.random(-5, 5),
-        scale: () => gsap.utils.random(0.96, 1.04),
-        opacity: 1,
-        filter: "blur(0px)",
+      gsap.set(q("[data-hero-word], [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb], [data-hero-preview]"), {
+        x: 0, y: 0, rotate: 0, rotateY: 0, rotateX: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)", clearProps: "transform",
       });
-      gsap.set(q("[data-hero-sub]"), { y: 0, opacity: 1, clipPath: "inset(0 0% 0 0)" });
-      gsap.set(q("[data-hero-cta]"), { y: 0, opacity: 1, scale: 1 });
-      gsap.set(q("[data-hero-meta]"), { y: 0, opacity: 1 });
+
+      // Stato iniziale solido: niente lettere sparse o hero invisibile anche se GSAP/HMR si interrompe.
       gsap.set(q("[data-hero-shock]"), { scale: 0, opacity: 0.95 });
       gsap.set(q("[data-hero-shock-2]"), { scale: 0, opacity: 0.7 });
-      gsap.set(q("[data-hero-grid]"), { opacity: 0, scale: 1.18 });
-      gsap.set(q("[data-hero-orb]"), { opacity: 0, scale: 0.6 });
-      gsap.set(q("[data-hero-preview]"), { y: 0, opacity: 1, rotateY: 0, rotateX: 0, scale: 1 });
+      gsap.set(q("[data-hero-grid]"), { opacity: 0.45, scale: 1 });
+      gsap.set(q("[data-hero-orb]"), { opacity: 0.75, scale: 1 });
       gsap.set(q("[data-hero-flash]"), { opacity: 0 });
 
       const trigger = () => {
         setArmed(true);
         if (reduceMotion) {
-          gsap.set(q("[data-hero-line] .char, [data-hero-sub], [data-hero-cta], [data-hero-meta]"), { y: 0, x: 0, rotate: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)" });
+          gsap.set(q("[data-hero-word], [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-preview]"), { y: 0, x: 0, rotate: 0, rotateY: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)" });
           gsap.set(q("[data-hero-grid], [data-hero-orb]"), { opacity: 1, scale: 1 });
           return;
         }
@@ -67,10 +57,12 @@ export default function HeroExplosion() {
           .to(q("[data-hero-shock-2]"), { scale: 22, opacity: 0, duration: 2.0 }, 0.15)
           .to(q("[data-hero-grid]"), { opacity: 0.6, scale: 1, duration: 1.4 }, 0.05)
           .to(q("[data-hero-orb]"), { opacity: 1, scale: 1, duration: 1.2, stagger: 0.08 }, 0.2)
-          .to(q("[data-hero-line] .char"), {
-            y: 0, x: 0, rotate: 0, scale: 1, opacity: 1, filter: "blur(0px)",
+          .fromTo(q("[data-hero-word]"), {
+            y: isMobile ? 26 : 46, opacity: 0, rotateX: -22, filter: "blur(8px)",
+          }, {
+            y: 0, rotateX: 0, opacity: 1, filter: "blur(0px)",
             duration: 0.9,
-            stagger: { each: 0.014, from: "random" },
+            stagger: { each: 0.08, from: "start" },
             ease: "expo.out",
           }, 0.18)
           .to(el, {
@@ -101,7 +93,7 @@ export default function HeroExplosion() {
       const splashDelay = introSkippedByApp || alreadyShown ? 120 : 2550;
       const fallback = window.setTimeout(() => {
         setArmed(true);
-        gsap.set(q("[data-hero-line] .char, [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb], [data-hero-preview]"), {
+        gsap.set(q("[data-hero-word], [data-hero-sub], [data-hero-cta], [data-hero-meta], [data-hero-grid], [data-hero-orb], [data-hero-preview]"), {
           x: 0, y: 0, rotate: 0, rotateY: 0, scale: 1, opacity: 1, filter: "none", clipPath: "inset(0 0% 0 0)", clearProps: "transform",
         });
         gsap.set(q("[data-hero-flash], [data-hero-shock], [data-hero-shock-2]"), { opacity: 0 });
