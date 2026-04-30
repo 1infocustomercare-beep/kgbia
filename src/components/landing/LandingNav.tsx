@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import empireLogo from "@/assets/empire-logo-icon.png";
+import empireLogo from "@/assets/empire-logo-full.png";
 
 const NAV_LINKS = [
-  { label: "Settori", href: "#settori" },
-  { label: "Servizi", href: "#servizi" },
+  { label: "Settori", href: "#sectors" },
+  { label: "Mockup", href: "#mockups" },
   { label: "Portfolio", href: "#portfolio" },
-  { label: "Prezzi", href: "#prezzi" },
-  { label: "AI Agents", href: "#agenti" },
+  { label: "AI Agents", href: "#agents" },
   { label: "Contatti", href: "#contatti" },
 ];
 
@@ -52,19 +51,18 @@ export default function LandingNav() {
           <a
             href="#hero"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-            className="flex items-center gap-2.5 font-heading text-base font-extrabold tracking-[-0.03em] text-foreground sm:gap-3 sm:text-xl"
+            className="flex items-center gap-2.5 font-heading text-base font-extrabold tracking-normal text-foreground sm:gap-3 sm:text-xl"
             aria-label="Empire AI — Home"
           >
-            <span className="grid h-9 w-9 place-items-center overflow-hidden rounded-2xl border border-primary/30 bg-[linear-gradient(135deg,hsl(var(--primary)/0.18),hsl(var(--empire-violet)/0.18),hsl(var(--gold)/0.16))] shadow-[0_18px_38px_-20px_hsl(var(--primary)/0.8)] sm:h-10 sm:w-10">
+            <span className="grid h-9 w-[118px] place-items-center overflow-hidden rounded-2xl border border-primary/30 bg-[linear-gradient(135deg,hsl(var(--primary)/0.18),hsl(var(--empire-violet)/0.18),hsl(var(--gold)/0.16))] px-3 shadow-[0_18px_38px_-20px_hsl(var(--primary)/0.8)] sm:h-10 sm:w-[140px]">
               <img
                 src={empireLogo}
                 alt="Empire AI"
-                className="h-7 w-7 object-contain sm:h-8 sm:w-8"
+                className="h-6 w-full object-contain sm:h-7"
                 loading="eager"
                 decoding="async"
               />
             </span>
-            <span className="leading-none">EMPIRE.AI</span>
           </a>
 
           <ul className="hidden lg:flex gap-7">
@@ -77,7 +75,7 @@ export default function LandingNav() {
 
           <div className="hidden lg:flex gap-3 items-center">
             <button onClick={() => navigate("/auth")} className="text-[13px] font-medium text-foreground/60 transition-colors hover:text-foreground">Accedi</button>
-            <button onClick={() => scrollTo("#prezzi")} className="landing-button-primary px-6 py-2.5 text-sm font-semibold">Inizia Ora</button>
+            <button onClick={() => scrollTo("#contatti")} className="landing-button-primary px-6 py-2.5 text-sm font-semibold">Inizia Ora</button>
           </div>
 
           <button className="text-foreground lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>
@@ -92,7 +90,7 @@ export default function LandingNav() {
             {NAV_LINKS.map((l) => (
               <button key={l.href} onClick={() => scrollTo(l.href)} className="text-left text-sm font-medium text-foreground/74 transition-colors hover:text-foreground">{l.label}</button>
             ))}
-            <button onClick={() => { setMenuOpen(false); scrollTo("#prezzi"); }} className="landing-button-primary mt-2 px-6 py-3 text-center text-sm font-semibold">Inizia Ora</button>
+            <button onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }} className="landing-button-primary mt-2 px-6 py-3 text-center text-sm font-semibold">Inizia Ora</button>
           </motion.div>
         )}
       </nav>
