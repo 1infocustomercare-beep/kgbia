@@ -125,7 +125,7 @@ export default function ProofHorizontal() {
           </blockquote>
         ))}
 
-        <div className="min-w-[15vw]" />
+        <div className="hidden min-w-[15vw] sm:block" />
       </div>
     </section>
   );
