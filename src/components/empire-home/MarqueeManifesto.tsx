@@ -18,7 +18,7 @@ export default function MarqueeManifesto() {
         ease: "none",
         scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 1.2 },
       });
-    }, root);
+    }, el);
     return () => ctx.revert();
   }, []);
 

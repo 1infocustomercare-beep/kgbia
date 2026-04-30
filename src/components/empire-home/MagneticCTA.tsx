@@ -49,7 +49,7 @@ export default function MagneticCTA() {
         window.addEventListener("mousemove", onMove, { passive: true });
       }
       self.add(() => { if (onMove) window.removeEventListener("mousemove", onMove); });
-    }, root);
+    }, el);
     return () => ctx.revert();
   }, []);
 

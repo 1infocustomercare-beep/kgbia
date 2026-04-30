@@ -76,7 +76,7 @@ export default function JungleParallax() {
         ease: "power3.out",
         scrollTrigger: { trigger: q("[data-signal-grid]")[0], start: "top 86%" },
       });
-    }, root);
+    }, el);
     return () => ctx.revert();
   }, []);
 

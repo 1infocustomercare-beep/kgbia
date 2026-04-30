@@ -28,7 +28,7 @@ export default function ShiftSection() {
         .fromTo(q("[data-shift-empire]"), { opacity: 0, scale: 1.4, filter: "blur(30px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1 }, 0.6)
         .fromTo(q("[data-shift-empire] .word"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.08, duration: 0.6 }, 0.7)
         .fromTo(q("[data-shift-stat]"), { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.1, duration: 0.5 }, 1.0);
-    }, root);
+    }, el);
     return () => ctx.revert();
   }, []);
 

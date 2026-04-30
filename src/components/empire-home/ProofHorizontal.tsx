@@ -76,7 +76,7 @@ export default function ProofHorizontal() {
           },
         });
       });
-    }, root);
+    }, el);
 
     return () => ctx.revert();
   }, []);
