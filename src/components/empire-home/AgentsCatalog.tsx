@@ -96,7 +96,7 @@ export default function AgentsCatalog() {
       id="agents"
       className="relative px-4 py-24 sm:px-5 sm:py-32"
       style={{
-        background: `radial-gradient(ellipse 90% 70% at 50% 30%, ${accent}1a, transparent 60%)`,
+        background: `radial-gradient(ellipse 90% 70% at 50% 30%, color-mix(in srgb, ${accent} 12%, transparent), transparent 60%)`,
         transition: "background 600ms ease",
       }}
     >
@@ -111,7 +111,7 @@ export default function AgentsCatalog() {
           <h2 data-cat-title className="font-heading text-[clamp(2.2rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-normal text-white">
             <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Il tuo</span></span>{" "}
             <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">team</span></span>{" "}
-            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">non dorme mai.</span></span>
+            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-[linear-gradient(110deg,hsl(var(--primary)),hsl(var(--empire-violet)),hsl(var(--gold)))] bg-clip-text text-transparent">non dorme mai.</span></span>
           </h2>
           <p className="mx-auto mt-4 max-w-[560px] text-sm text-white/60 sm:text-base">
             Agenti specializzati per ogni reparto. Si parlano fra loro, prendono decisioni, eseguono azioni reali.
@@ -129,7 +129,7 @@ export default function AgentsCatalog() {
                 className="group relative overflow-hidden rounded-full border px-4 py-2 text-[11px] font-bold uppercase tracking-[2px] transition-all"
                 style={{
                   borderColor: active ? c.color : "rgba(255,255,255,0.15)",
-                  color: active ? "#0a0e1a" : "rgba(255,255,255,0.7)",
+                  color: active ? "hsl(var(--background))" : "hsl(var(--foreground) / 0.7)",
                   background: active ? c.color : "rgba(255,255,255,0.03)",
                   boxShadow: active ? `0 12px 40px -10px ${c.color}` : "none",
                 }}
