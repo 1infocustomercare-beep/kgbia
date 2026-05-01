@@ -18,6 +18,7 @@ import ProofHorizontal from "@/components/empire-home/ProofHorizontal";
 import MagneticCTA from "@/components/empire-home/MagneticCTA";
 import FilmGrain from "@/components/empire-home/FilmGrain";
 import CinematicCursor from "@/components/empire-home/CinematicCursor";
+import HomeQAGuard from "@/components/empire-home/HomeQAGuard";
 
 /**
  * Empire Cinematic Home — Aurora edition
@@ -128,6 +129,7 @@ export default function EmpireCinematicHome() {
 
         <FilmGrain />
         <CinematicCursor />
+        <HomeQAGuard />
       </div>
     </>
   );
