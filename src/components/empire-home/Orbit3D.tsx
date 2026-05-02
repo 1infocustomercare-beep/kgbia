@@ -129,7 +129,7 @@ export default function Orbit3D() {
         <div className="mb-10 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[3px] text-foreground/75 backdrop-blur-xl">
             <Sparkles className="h-3.5 w-3.5 text-gold" />
-            Portfolio Orbit 3D
+            Casi reali · per settore
           </div>
           <h2
             data-matrix-title
@@ -140,19 +140,19 @@ export default function Orbit3D() {
             }}
           >
             <span className="inline-block overflow-hidden align-bottom">
-              <span className="word inline-block">Sei</span>
+              <span className="word inline-block">Vedi cosa</span>
             </span>{" "}
             <span className="inline-block overflow-hidden align-bottom">
-              <span className="word inline-block">settori,</span>
+              <span className="word inline-block">costruiamo</span>
             </span>{" "}
             <span className="inline-block overflow-hidden align-bottom">
               <span className="word inline-block bg-[linear-gradient(110deg,hsl(var(--gold)),hsl(var(--primary)),hsl(var(--accent)))] bg-clip-text text-transparent">
-                un'orbita.
+                per il tuo settore.
               </span>
             </span>
           </h2>
-          <p className="mx-auto mt-5 max-w-[620px] text-[14px] leading-[1.7] text-foreground/70 sm:text-[16px]">
-            Tap su una preview per zoomarla. Tutto reale, leggibile, pronto da mostrare al cliente.
+          <p className="mx-auto mt-5 max-w-[640px] text-[14px] leading-[1.7] text-foreground/70 sm:text-[16px]">
+            Tocca una preview per ingrandirla. Sono i progetti veri che consegniamo ai clienti — design, contenuti e funzionalità su misura per ogni mercato.
           </p>
         </div>
 

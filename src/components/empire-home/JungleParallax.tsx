@@ -120,13 +120,13 @@ export default function JungleParallax() {
 
       <div className="relative z-10 mx-auto grid max-w-[1240px] gap-12 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
         <div>
-          <div className="mb-5 text-[10px] font-bold uppercase tracking-[4px] text-[#4ade80] sm:text-[11px]">02 · GIUNGLA URBANA AI</div>
+          <div className="mb-5 text-[10px] font-bold uppercase tracking-[4px] text-[#4ade80] sm:text-[11px]">02 · COSA FACCIAMO</div>
           <h2 data-jungle-title className="font-heading font-black uppercase leading-[0.9] tracking-normal text-white" style={{ fontSize: "clamp(2.6rem, 9vw, 7.4rem)", textShadow: "0 4px 34px rgba(0,0,0,0.72)" }}>
-            <span className="block overflow-hidden"><span data-jungle-word className="inline-block">Dal caos</span></span>
-            <span className="block overflow-hidden"><span data-jungle-word className="inline-block bg-gradient-to-r from-[#4ade80] via-[#22d3ee] to-[#a78bfa] bg-clip-text text-transparent">al controllo.</span></span>
+            <span className="block overflow-hidden"><span data-jungle-word className="inline-block">Un unico</span></span>
+            <span className="block overflow-hidden"><span data-jungle-word className="inline-block bg-gradient-to-r from-[#4ade80] via-[#22d3ee] to-[#a78bfa] bg-clip-text text-transparent">sistema vivo.</span></span>
           </h2>
           <p className="mt-7 max-w-[620px] text-[14px] leading-[1.85] text-white/72 sm:text-[16px]" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.75)" }}>
-            Ogni reparto diventa un segnale vivo: prenotazioni, lead, vendite, recensioni e staff si connettono in una regia AI unica, elegante e misurabile.
+            Sostituiamo i 10 strumenti scollegati che usi oggi con una piattaforma sola: sito, gestionale, CRM, WhatsApp, marketing, pagamenti, staff e recensioni — tutto orchestrato dalla nostra AI, tutto misurabile in tempo reale.
           </p>
 
           <div data-signal-grid className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:max-w-[560px]">

@@ -52,8 +52,8 @@ export default function ShiftSection() {
             ))}
           </div>
           <div className="absolute bottom-[14%] text-center">
-            <div className="font-heading text-[clamp(1.6rem,5vw,3.4rem)] font-black uppercase tracking-tight text-white/80">Caos manuale</div>
-            <div className="mt-2 text-[10px] uppercase tracking-[3px] text-red-300/70 sm:text-xs">14 strumenti scollegati · 60% errori umani</div>
+            <div className="font-heading text-[clamp(1.6rem,5vw,3.4rem)] font-black uppercase tracking-tight text-white/80">Prima: caos operativo</div>
+            <div className="mt-2 text-[10px] uppercase tracking-[3px] text-red-300/70 sm:text-xs">10+ tool scollegati · ore perse · clienti che scappano</div>
           </div>
         </div>
 
@@ -62,17 +62,17 @@ export default function ShiftSection() {
         <div data-shift-empire className="absolute inset-0 grid place-items-center px-4">
           <div className="text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#22d3ee]/40 bg-[#22d3ee]/5 px-3 py-1 text-[10px] font-bold tracking-[3px] text-[#22d3ee]">
-              EMPIRE PROTOCOL
+              DOPO · CON EMPIRE
             </div>
             <h2 className="font-heading font-black uppercase tracking-[-0.04em]" style={{ fontSize: "clamp(2rem, 8vw, 7rem)", lineHeight: 0.9 }}>
-              <span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">Sincronizzazione</span>{" "}
-              <span className="word inline-block text-white">neurale.</span>
+              <span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">Tutto sotto</span>{" "}
+              <span className="word inline-block text-white">controllo.</span>
             </h2>
             <div className="mx-auto mt-8 grid max-w-[820px] grid-cols-3 gap-3 sm:gap-8">
               {[
-                { k: "98", l: "Agenti AI" },
-                { k: "0", l: "Errori umani" },
-                { k: "∞", l: "Scalabilità" },
+                { k: "1", l: "Piattaforma unica" },
+                { k: "24/7", l: "AI sempre attiva" },
+                { k: "+38%", l: "Fatturato medio" },
               ].map((s, i) => (
                 <div key={i} data-shift-stat className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md sm:p-6">
                   <div className="font-heading text-2xl font-black text-white sm:text-5xl">{s.k}</div>

@@ -5,18 +5,18 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const PROOF = [
-  { k: "847+", l: "Imprese automatizzate", c: "#22d3ee" },
-  { k: "98", l: "Agenti IA proprietari", c: "#a78bfa" },
-  { k: "25+", l: "Settori dominati", c: "#ec4899" },
-  { k: "94%", l: "Riduzione errori", c: "#f59e0b" },
-  { k: "8s", l: "Risposta media AI", c: "#22d3ee" },
-  { k: "∞", l: "Scalabilità infinita", c: "#84cc16" },
+  { k: "+38%", l: "Fatturato medio cliente", c: "#22d3ee" },
+  { k: "7gg", l: "Setup completo", c: "#a78bfa" },
+  { k: "25+", l: "Settori coperti", c: "#ec4899" },
+  { k: "−70%", l: "Tempo su attività manuali", c: "#f59e0b" },
+  { k: "24/7", l: "Customer care AI", c: "#22d3ee" },
+  { k: "90gg", l: "Garanzia soddisfatto", c: "#84cc16" },
 ];
 
 const QUOTES = [
-  { q: "In 90 giorni abbiamo eliminato 4 figure operative. ROI 380%.", a: "Marco D. — CEO Logistica" },
-  { q: "Empire ha sincronizzato 7 software in 1. Adesso decido, non gestisco.", a: "Sofia R. — Founder Beauty Chain" },
-  { q: "L'agente vocale chiude appuntamenti mentre dormo. Letteralmente.", a: "Luca B. — Studio Medico" },
+  { q: "In 90 giorni abbiamo recuperato 30 ore a settimana e aumentato le prenotazioni del 42%.", a: "Marco D. — Ristorante, Milano" },
+  { q: "Sito, CRM, WhatsApp e cassa: prima erano 6 strumenti, ora uno solo. E funziona meglio.", a: "Sofia R. — Catena Beauty, 4 sedi" },
+  { q: "L'agente vocale risponde di notte e ai weekend: appuntamenti +60% senza assumere nessuno.", a: "Luca B. — Studio Medico, Roma" },
 ];
 
 export default function ProofHorizontal() {
@@ -88,8 +88,8 @@ export default function ProofHorizontal() {
       }} />
 
       <div className="relative left-auto top-auto z-20 px-4 sm:absolute sm:left-10 sm:top-12 sm:px-0">
-        <div className="text-[10px] font-bold uppercase tracking-[3px] text-[#22d3ee] sm:text-[11px]">Proof · Dominio del mercato</div>
-        <div className="mt-2 font-heading text-xl font-black uppercase tracking-tight text-white sm:text-4xl">Numeri non discutibili.</div>
+        <div className="text-[10px] font-bold uppercase tracking-[3px] text-[#22d3ee] sm:text-[11px]">07 · I numeri parlano</div>
+        <div className="mt-2 font-heading text-xl font-black uppercase tracking-tight text-white sm:text-4xl">Risultati reali, clienti reali.</div>
       </div>
 
       <div className="absolute right-4 top-6 z-20 hidden text-right sm:block sm:right-10 sm:top-12">

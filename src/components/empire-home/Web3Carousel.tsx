@@ -12,38 +12,38 @@ gsap.registerPlugin(ScrollTrigger);
 const SLIDES = [
   {
     n: "01",
-    h: "Onboarding in 7 giorni",
-    p: "Setup completo, training agenti, integrazione canali. Sei live in una settimana.",
+    h: "Online in 7 giorni",
+    p: "Setup, design, integrazioni e training degli agenti AI. Vai live in una settimana, non in 6 mesi.",
     grad: "from-[#22d3ee] to-[#3b82f6]",
   },
   {
     n: "02",
-    h: "AI proprietaria",
-    p: "Modelli fine-tuned sul tuo settore, voce e brand. Non un chatbot generico.",
+    h: "AI cucita su di te",
+    p: "Non un chatbot generico: ogni agente impara il tuo settore, il tuo tono e i tuoi processi reali.",
     grad: "from-[#a78bfa] to-[#ec4899]",
   },
   {
     n: "03",
-    h: "Crescita misurata",
-    p: "Ogni euro speso è tracciato. Dashboard real-time con ROI per agente.",
+    h: "Risultati misurabili",
+    p: "Dashboard in tempo reale: lead, prenotazioni, fatturato e ROI per ogni agente. Niente fumo.",
     grad: "from-[#4ade80] to-[#22d3ee]",
   },
   {
     n: "04",
-    h: "Multi-canale unificato",
-    p: "WhatsApp, Instagram, mail, voce, sito — un solo cervello, una sola voce.",
+    h: "Tutti i canali, una voce",
+    p: "Sito, WhatsApp, Instagram, email, telefono: i tuoi clienti ricevono la stessa esperienza ovunque.",
     grad: "from-[#fbbf24] to-[#ec4899]",
   },
   {
     n: "05",
-    h: "Conformità GDPR",
-    p: "Dati in EU, crittografia end-to-end, audit log completo. Enterprise-grade.",
+    h: "Conforme GDPR",
+    p: "Dati ospitati in UE, crittografia end-to-end, audit log completo. Sicurezza enterprise di serie.",
     grad: "from-[#22d3ee] to-[#a78bfa]",
   },
   {
     n: "06",
-    h: "Scala con te",
-    p: "Da 1 sede a 100. Stessa qualità, stesso brand, zero overhead operativo.",
+    h: "Cresci senza freni",
+    p: "Da una sede a cento. Stessa qualità, stesso brand, zero costi extra di gestione.",
     grad: "from-[#ec4899] to-[#a78bfa]",
   },
 ];
@@ -117,10 +117,10 @@ export default function Web3Carousel() {
 
       <div className="relative z-10 px-4 sm:px-8 sm:pt-16">
         <div className="text-[10px] font-bold uppercase tracking-[4px] text-[#22d3ee] sm:text-[11px]">
-          06 · LA PROMESSA
+          06 · PERCHÉ EMPIRE
         </div>
         <h2 className="mt-2 font-heading font-black uppercase leading-[0.9] tracking-[-0.04em] text-white" style={{ fontSize: "clamp(1.8rem,5.5vw,4rem)" }}>
-          Sei garanzie, <span className="bg-gradient-to-r from-[#22d3ee] to-[#a78bfa] bg-clip-text text-transparent">zero compromessi.</span>
+          Sei motivi, <span className="bg-gradient-to-r from-[#22d3ee] to-[#a78bfa] bg-clip-text text-transparent">zero compromessi.</span>
         </h2>
       </div>
 

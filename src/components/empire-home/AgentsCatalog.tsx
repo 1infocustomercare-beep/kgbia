@@ -106,15 +106,15 @@ export default function AgentsCatalog() {
             style={{ color: accent }}
           >
             <span className="h-1.5 w-1.5 rounded-full" style={{ background: accent, boxShadow: `0 0 10px ${accent}` }} />
-            Catalogo agenti · 14 di 38 attivi
+            Catalogo agenti AI · 14 specialisti pronti
           </div>
           <h2 data-cat-title className="font-heading text-[clamp(2.2rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-normal text-white">
-            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Il tuo</span></span>{" "}
-            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">team</span></span>{" "}
-            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-[linear-gradient(110deg,hsl(var(--primary)),hsl(var(--empire-violet)),hsl(var(--gold)))] bg-clip-text text-transparent">non dorme mai.</span></span>
+            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Un team AI</span></span>{" "}
+            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">che lavora</span></span>{" "}
+            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-[linear-gradient(110deg,hsl(var(--primary)),hsl(var(--empire-violet)),hsl(var(--gold)))] bg-clip-text text-transparent">mentre tu dormi.</span></span>
           </h2>
-          <p className="mx-auto mt-4 max-w-[560px] text-sm text-white/60 sm:text-base">
-            Agenti specializzati per ogni reparto. Si parlano fra loro, prendono decisioni, eseguono azioni reali.
+          <p className="mx-auto mt-4 max-w-[620px] text-sm text-white/60 sm:text-base">
+            Ogni agente è uno specialista: vendite, marketing, customer care, operations. Rispondono ai clienti, prenotano appuntamenti, scrivono contenuti e ti riportano i risultati ogni mattina.
           </p>
         </div>
 
