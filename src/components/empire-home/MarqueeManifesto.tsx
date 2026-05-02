@@ -22,7 +22,7 @@ export default function MarqueeManifesto() {
     return () => ctx.revert();
   }, []);
 
-  const text = "DOMINIO ALGORITMICO · SCALABILITÀ INFINITA · AUTOMAZIONE ASSOLUTA · SINCRONIZZAZIONE NEURALE · ";
+  const text = "SITI CHE CONVERTONO · AGENTI AI 24/7 · CRM INTEGRATO · AUTOMAZIONI SU MISURA · ";
 
   return (
     <section ref={root} className="relative overflow-hidden py-20 sm:py-24">

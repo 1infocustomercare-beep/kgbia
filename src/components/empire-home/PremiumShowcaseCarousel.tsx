@@ -145,7 +145,7 @@ export default function PremiumShowcaseCarousel() {
           <div>
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[3px] text-foreground/75 backdrop-blur-xl">
               <Sparkles className="h-3.5 w-3.5 text-gold" />
-              Premium showcase
+              I nostri prodotti
             </div>
             <h2
               data-pheading
@@ -156,19 +156,19 @@ export default function PremiumShowcaseCarousel() {
               }}
             >
               <span className="inline-block overflow-hidden align-bottom">
-                <span className="word inline-block">Scorri</span>
+                <span className="word inline-block">Cosa</span>
               </span>{" "}
               <span className="inline-block overflow-hidden align-bottom">
-                <span className="word inline-block">il</span>
+                <span className="word inline-block">costruiamo</span>
               </span>{" "}
               <span className="inline-block overflow-hidden align-bottom">
                 <span className="word inline-block bg-[linear-gradient(110deg,hsl(var(--gold)),hsl(var(--primary)),hsl(var(--accent)))] bg-clip-text text-transparent">
-                  futuro.
+                  per te.
                 </span>
               </span>
             </h2>
-            <p className="mt-4 max-w-[560px] text-[14px] leading-[1.7] text-foreground/65 sm:text-[16px]">
-              Sei settori, sei storie. Trascina o scorri per vedere l'esperienza che costruiamo per il tuo cliente.
+            <p className="mt-4 max-w-[600px] text-[14px] leading-[1.7] text-foreground/65 sm:text-[16px]">
+              Sei soluzioni complete, una per ogni settore. Scorri il carosello per scoprire l'esperienza che il tuo cliente vivrà ogni giorno.
             </p>
           </div>
 

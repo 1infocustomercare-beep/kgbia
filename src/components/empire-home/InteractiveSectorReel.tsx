@@ -160,7 +160,7 @@ export default function InteractiveSectorReel() {
         <div className="mb-8 sm:mb-12">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[3px] text-foreground/75 backdrop-blur-xl">
             <Sparkles className="h-3.5 w-3.5 text-gold" />
-            Reel settori interattivo
+            Settori che serviamo
           </div>
           <h2
             data-reel-title
@@ -171,19 +171,19 @@ export default function InteractiveSectorReel() {
             }}
           >
             <span className="inline-block overflow-hidden align-bottom">
-              <span className="word inline-block">12</span>
+              <span className="word inline-block">Specialisti</span>
             </span>{" "}
             <span className="inline-block overflow-hidden align-bottom">
-              <span className="word inline-block">settori,</span>
+              <span className="word inline-block">in 12+</span>
             </span>{" "}
             <span className="inline-block overflow-hidden align-bottom">
               <span className="word inline-block bg-[linear-gradient(110deg,hsl(var(--gold)),hsl(var(--primary)),hsl(var(--accent)))] bg-clip-text text-transparent">
-                un colpo d'occhio.
+                mercati verticali.
               </span>
             </span>
           </h2>
-          <p className="mt-3 max-w-[600px] text-[13px] leading-[1.7] text-foreground/65 sm:text-[15px]">
-            Scorri il reel per vedere come trasformiamo ogni settore. Mobile, tablet, desktop: stessa qualità.
+          <p className="mt-3 max-w-[640px] text-[13px] leading-[1.7] text-foreground/65 sm:text-[15px]">
+            Non siamo generalisti: per ogni settore abbiamo template, integrazioni e agenti AI già pronti. Scorri per trovare il tuo e provare la demo dal vivo.
           </p>
         </div>
 

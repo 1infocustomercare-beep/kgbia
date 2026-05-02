@@ -94,15 +94,15 @@ export default function SectorsLive() {
             style={{ color: current.color }}
           >
             <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: current.color, boxShadow: `0 0 12px ${current.color}` }} />
-            25 settori live · clicca per provare
+            25+ settori live · clicca per provare
           </div>
           <h2 data-sl-title className="font-heading text-[clamp(2.2rem,6vw,5rem)] font-black uppercase leading-[0.95] tracking-normal text-white">
-            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Provala.</span></span>{" "}
-            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Ora.</span></span>{" "}
-            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-[linear-gradient(110deg,hsl(var(--primary)),hsl(var(--accent)),hsl(var(--gold)))] bg-clip-text text-transparent">Senza registrazione.</span></span>
+            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Toccalo</span></span>{" "}
+            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">con mano.</span></span>{" "}
+            <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-[linear-gradient(110deg,hsl(var(--primary)),hsl(var(--accent)),hsl(var(--gold)))] bg-clip-text text-transparent">Senza registrarti.</span></span>
           </h2>
-          <p className="mx-auto mt-4 max-w-[600px] text-sm text-white/60 sm:text-base">
-            Le piattaforme reali che consegniamo ai clienti. Naviga dentro al sito del settore — è quello vero, non un mockup.
+          <p className="mx-auto mt-4 max-w-[620px] text-sm text-white/60 sm:text-base">
+            Demo navigabili dei prodotti reali che consegniamo. Scegli il tuo settore e prova ordini, prenotazioni, CRM e dashboard — esattamente come li vedrebbero i tuoi clienti.
           </p>
         </div>
 
@@ -185,14 +185,14 @@ export default function SectorsLive() {
         {/* CTA bar */}
         <div className="mt-14 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-5">
           <div className="text-center text-sm text-white/60 sm:text-left">
-            Stai vedendo <span className="font-bold text-white">{current.label}</span> · {current.subtitle}
+            Demo attiva: <span className="font-bold text-white">{current.label}</span> · {current.subtitle}
           </div>
           <button
             onClick={() => navigate(`/demo/${currentSlug}`)}
             className="rounded-full px-6 py-3 text-xs font-bold uppercase tracking-[2px] text-[#0a0e1a] transition-transform hover:-translate-y-0.5"
             style={{ background: current.color, boxShadow: `0 18px 44px -14px ${current.color}` }}
           >
-            Esplora a tutto schermo →
+            Apri la demo a tutto schermo →
           </button>
         </div>
       </div>

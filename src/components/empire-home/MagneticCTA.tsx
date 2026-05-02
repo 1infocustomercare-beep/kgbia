@@ -62,20 +62,19 @@ export default function MagneticCTA() {
       <div className="mx-auto flex min-h-[80svh] max-w-[1100px] flex-col items-center justify-center text-center">
         <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[10px] font-bold tracking-[3px] text-white/80 backdrop-blur-md sm:mb-6 sm:px-4 sm:text-[11px]">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#ec4899]" />
-          ULTIMO PASSO · ATTIVAZIONE 7 GIORNI
+          INIZIA OGGI · LIVE IN 7 GIORNI
         </div>
 
         <h2 data-cta-title className="font-heading font-black uppercase leading-[0.88] tracking-[-0.05em]" style={{ fontSize: "clamp(2.4rem, 11vw, 9rem)" }}>
-          <span className="inline-block overflow-hidden"><span className="word inline-block text-white">Il</span></span>{" "}
-          <span className="inline-block overflow-hidden"><span className="word inline-block text-white">tuo</span></span>{" "}
-          <span className="inline-block overflow-hidden"><span className="word inline-block text-white">impero,</span></span>
+          <span className="inline-block overflow-hidden"><span className="word inline-block text-white">Il tuo</span></span>{" "}
+          <span className="inline-block overflow-hidden"><span className="word inline-block text-white">business</span></span>{" "}
+          <span className="inline-block overflow-hidden"><span className="word inline-block text-white">merita</span></span>
           <br />
-          <span className="inline-block overflow-hidden"><span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">su autopilota.</span></span>
+          <span className="inline-block overflow-hidden"><span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#a78bfa] to-[#ec4899] bg-clip-text text-transparent">di scalare.</span></span>
         </h2>
 
-        <p className="mx-auto mt-7 max-w-[560px] text-[14px] leading-[1.85] text-white/65 sm:mt-8 sm:text-[15px]">
-          Un solo click separa il tuo business dalla scalabilità infinita.
-          847+ imprenditori italiani lo hanno già fatto. Il prossimo sei tu.
+        <p className="mx-auto mt-7 max-w-[600px] text-[14px] leading-[1.85] text-white/65 sm:mt-8 sm:text-[15px]">
+          Prenota una demo gratuita di 20 minuti: ti mostriamo dal vivo come Empire può trasformare il tuo settore. Senza impegno, senza carta, senza fuffa.
         </p>
 
         <button
@@ -87,11 +86,11 @@ export default function MagneticCTA() {
             boxShadow: "0 40px 100px -20px rgba(167,139,250,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",
           }}
         >
-          <span className="relative z-10">Attiva Empire ora →</span>
+          <span className="relative z-10">Prenota la tua demo gratuita →</span>
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
         </button>
 
-        <p className="mt-5 text-[10px] uppercase tracking-[2px] text-white/40 sm:mt-6 sm:text-[11px]">Garanzia 90 giorni · Nessuna carta · Setup in 7 giorni</p>
+        <p className="mt-5 text-[10px] uppercase tracking-[2px] text-white/40 sm:mt-6 sm:text-[11px]">Garanzia soddisfatti 90 giorni · Nessuna carta richiesta · Live in 7 giorni</p>
       </div>
     </section>
   );

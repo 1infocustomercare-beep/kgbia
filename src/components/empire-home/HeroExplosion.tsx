@@ -183,18 +183,18 @@ export default function HeroExplosion() {
       <div data-hero-content className="relative z-[3] flex min-h-[100svh] flex-col items-center justify-center px-5 pb-14 pt-24 text-center sm:pt-28">
         <div data-hero-meta className="mb-5 inline-flex items-center gap-3 rounded-full border border-foreground/15 bg-background/70 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[3px] text-foreground/85 shadow-[0_14px_40px_hsl(0_0%_0%_/_0.35)] backdrop-blur-xl sm:mb-7 sm:text-[11px]" style={{ textShadow: "0 2px 18px hsl(0 0% 0% / 0.75)" }}>
           <img src={empireLogo} alt="Empire AI" className="h-5 w-auto object-contain" loading="eager" />
-          AI Agency · Sistemi per aziende
+          AI Agency · Sistemi premium per aziende
         </div>
 
         <h1 className="w-full font-heading font-black uppercase leading-[0.92] tracking-normal text-foreground" style={{ fontSize: "clamp(2.45rem, 11vw, 10.5rem)", textShadow: "0 4px 34px hsl(0 0% 0% / 0.72)" }}>
-          <span data-hero-word className="block whitespace-nowrap will-change-transform">Empire per</span>
+          <span data-hero-word className="block whitespace-nowrap will-change-transform">Il tuo business,</span>
           <span data-hero-word className="block whitespace-nowrap bg-[linear-gradient(110deg,hsl(var(--gold)),hsl(var(--primary)),hsl(var(--accent)))] bg-clip-text text-transparent will-change-transform">
-            aziende.
+            potenziato dall'AI.
           </span>
         </h1>
 
         <p data-hero-sub className="mx-auto mt-6 max-w-[720px] text-[14px] leading-[1.75] text-foreground/82 sm:mt-7 sm:text-[17px]" style={{ textShadow: "0 2px 22px hsl(0 0% 0% / 0.8)" }}>
-          Siti, gestionali, agenti AI e automazioni che trasformano lead, prenotazioni, vendite e clienti in un ecosistema premium pronto da mostrare.
+          Costruiamo siti, app e agenti AI che lavorano per te 24/7: portano clienti, gestiscono prenotazioni, chiudono vendite e automatizzano l'operativo. Un ecosistema premium pronto in 7 giorni — senza perdere il tuo brand.
         </p>
 
         <div className="pointer-events-none mt-7 flex w-full items-end justify-center gap-2 sm:mt-9 sm:gap-3" style={{ perspective: "1200px" }}>
@@ -228,14 +228,14 @@ export default function HeroExplosion() {
               boxShadow: "0 24px 60px -20px hsl(var(--primary) / 0.6)",
             }}
           >
-            <span className="relative z-10">ATTIVA L'ESPERIENZA →</span>
+            <span className="relative z-10">PROVA UNA DEMO LIVE →</span>
             <span className="absolute inset-0 -translate-x-full bg-white/25 transition-transform duration-700 group-hover:translate-x-0" />
           </button>
           <button
             onClick={() => navigate("/auth")}
             className="min-h-12 w-full rounded-full border border-white/20 bg-white/[0.03] px-8 py-4 text-sm font-semibold text-white/90 shadow-[0_14px_40px_rgba(0,0,0,0.28)] transition-all hover:border-white/50 hover:bg-white/8 sm:w-auto sm:px-9"
           >
-            Accedi al Comando
+            Accedi alla piattaforma
           </button>
         </div>
 

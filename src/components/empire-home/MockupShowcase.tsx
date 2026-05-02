@@ -147,12 +147,12 @@ export default function MockupShowcase() {
           <div className="mx-auto max-w-[1280px]">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[3px] text-[#22d3ee] backdrop-blur-md">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#22d3ee]" />
-              577 mockup reali · in produzione
+              Progetti reali · già consegnati
             </div>
             <h2 data-mks-title className="font-heading text-[clamp(2rem,5.5vw,4.5rem)] font-black uppercase leading-[0.95] tracking-[-0.04em] text-white">
-              <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Ogni</span></span>{" "}
-              <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">settore.</span></span>{" "}
-              <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#4ade80] to-[#a78bfa] bg-clip-text text-transparent">Stessa precisione.</span></span>
+              <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">Un design</span></span>{" "}
+              <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block">su misura</span></span>{" "}
+              <span className="inline-block overflow-hidden align-bottom"><span className="word inline-block bg-gradient-to-r from-[#22d3ee] via-[#4ade80] to-[#a78bfa] bg-clip-text text-transparent">per il tuo settore.</span></span>
             </h2>
           </div>
         </div>
