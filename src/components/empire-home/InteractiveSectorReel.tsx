@@ -41,17 +41,13 @@ const SECTOR_LIST: Sector[] = [
 
 type ReelCard = Sector & { image: string };
 
-// Indice per settore: prendiamo varianti diverse da hero/showcase per massima varietà visiva
-const SECTOR_IMG_IDX: Partial<Record<keyof typeof DEMO_SLUGS, number>> = {
-  food: 6, beauty: 2, ncc: 4, fitness: 4, healthcare: 2,
-  hospitality: 3, beach: 1, veterinary: 4, retail: 2,
-  construction: 0, events: 0, tattoo: 0,
-};
+import { pickMockup } from "@/lib/mockup-rotation";
 
 const CARDS: ReelCard[] = SECTOR_LIST.map((s) => {
   const list = SECTOR_MOCKUP_IMAGES[s.id] ?? [];
-  const idx = SECTOR_IMG_IDX[s.id] ?? 0;
-  return { ...s, image: list[idx] ?? list[0] ?? "" };
+  // Slot "reel" garantisce immagini diverse da hero/showcase/case
+  const img = pickMockup(s.id, "reel") ?? list[0] ?? "";
+  return { ...s, image: img };
 }).filter((c) => Boolean(c.image));
 
 export default function InteractiveSectorReel() {
