@@ -11,12 +11,13 @@ gsap.registerPlugin(ScrollTrigger);
  * mentre lo scroll avanza. Effect: depth-of-field cinematografico.
  */
 
+// Usiamo indici diversi dal Hero per non ripetere le stesse immagini
 const SLIDES = [
-  { sector: "Food", label: "Ristorazione Premium", img: SECTOR_MOCKUP_IMAGES.food?.[0], color: "#fbbf24" },
-  { sector: "Beauty", label: "Beauty & Wellness", img: SECTOR_MOCKUP_IMAGES.beauty?.[0], color: "#ec4899" },
-  { sector: "NCC", label: "Charter & Yacht", img: SECTOR_MOCKUP_IMAGES.ncc?.[0], color: "#22d3ee" },
-  { sector: "Healthcare", label: "Salute & Cliniche", img: SECTOR_MOCKUP_IMAGES.healthcare?.[0], color: "#4ade80" },
-  { sector: "Hospitality", label: "Hotel & Resort", img: SECTOR_MOCKUP_IMAGES.hospitality?.[0], color: "#a78bfa" },
+  { sector: "Food · Strapizzami", label: "Pizzeria luxury", img: SECTOR_MOCKUP_IMAGES.food?.[1] ?? SECTOR_MOCKUP_IMAGES.food?.[0], color: "#fbbf24" },
+  { sector: "Sushi · Paperfish", label: "Sakura dark", img: SECTOR_MOCKUP_IMAGES.food?.[3] ?? SECTOR_MOCKUP_IMAGES.food?.[0], color: "#ec4899" },
+  { sector: "NCC · Asinara", label: "Charter & Yacht", img: SECTOR_MOCKUP_IMAGES.ncc?.[0], color: "#22d3ee" },
+  { sector: "Beauty · Neo Nails", label: "Lavender luxe", img: SECTOR_MOCKUP_IMAGES.beauty?.[0], color: "#a78bfa" },
+  { sector: "Padel · City Padel", label: "Sage luxe", img: SECTOR_MOCKUP_IMAGES.fitness?.[0], color: "#4ade80" },
 ].filter((s) => !!s.img);
 
 export default function MockupShowcase() {
