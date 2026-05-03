@@ -11,12 +11,13 @@ gsap.registerPlugin(ScrollTrigger);
  * mentre lo scroll avanza. Effect: depth-of-field cinematografico.
  */
 
+// Usiamo indici diversi dal Hero per non ripetere le stesse immagini
 const SLIDES = [
-  { sector: "Food", label: "Ristorazione Premium", img: SECTOR_MOCKUP_IMAGES.food?.[0], color: "#fbbf24" },
-  { sector: "Beauty", label: "Beauty & Wellness", img: SECTOR_MOCKUP_IMAGES.beauty?.[0], color: "#ec4899" },
-  { sector: "NCC", label: "Charter & Yacht", img: SECTOR_MOCKUP_IMAGES.ncc?.[0], color: "#22d3ee" },
-  { sector: "Healthcare", label: "Salute & Cliniche", img: SECTOR_MOCKUP_IMAGES.healthcare?.[0], color: "#4ade80" },
-  { sector: "Hospitality", label: "Hotel & Resort", img: SECTOR_MOCKUP_IMAGES.hospitality?.[0], color: "#a78bfa" },
+  { sector: "Food · Strapizzami", label: "Pizzeria luxury", img: SECTOR_MOCKUP_IMAGES.food?.[1] ?? SECTOR_MOCKUP_IMAGES.food?.[0], color: "#fbbf24" },
+  { sector: "Sushi · Paperfish", label: "Sakura dark", img: SECTOR_MOCKUP_IMAGES.food?.[3] ?? SECTOR_MOCKUP_IMAGES.food?.[0], color: "#ec4899" },
+  { sector: "NCC · Asinara", label: "Charter & Yacht", img: SECTOR_MOCKUP_IMAGES.ncc?.[0], color: "#22d3ee" },
+  { sector: "Beauty · Neo Nails", label: "Lavender luxe", img: SECTOR_MOCKUP_IMAGES.beauty?.[0], color: "#a78bfa" },
+  { sector: "Padel · City Padel", label: "Sage luxe", img: SECTOR_MOCKUP_IMAGES.fitness?.[0], color: "#4ade80" },
 ].filter((s) => !!s.img);
 
 export default function MockupShowcase() {
@@ -158,7 +159,7 @@ export default function MockupShowcase() {
         </div>
 
         {/* Phones stack */}
-        <div className="relative flex min-h-[760px] flex-col items-center justify-start gap-6 px-4 pt-56 lg:absolute lg:inset-0 lg:min-h-0 lg:flex-row lg:justify-center lg:gap-0 lg:px-0 lg:pt-0">
+        <div className="relative flex flex-col items-center justify-start gap-8 px-4 pb-32 pt-44 sm:pt-56 lg:absolute lg:inset-0 lg:flex-row lg:justify-center lg:gap-0 lg:px-0 lg:pb-0 lg:pt-0">
           {SLIDES.map((slide, i) => (
             <div
               key={i}
@@ -167,15 +168,15 @@ export default function MockupShowcase() {
               style={{ transformStyle: "preserve-3d" }}
             >
               <div
-                className="relative overflow-hidden rounded-[42px] border-[10px] border-black bg-black shadow-2xl"
+                className="relative overflow-hidden rounded-[38px] border-[8px] border-black bg-black shadow-2xl sm:rounded-[42px] sm:border-[10px]"
                 style={{
-                  width: "min(280px, 70vw)",
-                  height: "min(580px, 80vh)",
-                  boxShadow: `0 60px 140px -30px ${slide.color}66, 0 0 0 1px rgba(255,255,255,0.05)`,
+                  width: "min(248px, 64vw)",
+                  height: "min(508px, 110vw)",
+                  boxShadow: `0 50px 120px -32px ${slide.color}66, 0 0 0 1px rgba(255,255,255,0.05)`,
                 }}
               >
                 {/* Notch */}
-                <div className="absolute left-1/2 top-0 z-10 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-black" />
+                <div className="absolute left-1/2 top-0 z-10 h-5 w-28 -translate-x-1/2 rounded-b-2xl bg-black" />
                 <img
                   src={slide.img}
                   alt={slide.label}
@@ -186,26 +187,19 @@ export default function MockupShowcase() {
                 <div className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(80% 60% at 50% 0%, ${slide.color}22, transparent 60%)` }} />
               </div>
 
-              {/* Reflection */}
-              <div
-                className="pointer-events-none absolute left-1/2 top-full -translate-x-1/2 opacity-30"
-                style={{
-                  width: "min(280px, 70vw)",
-                  height: "120px",
-                  background: `linear-gradient(180deg, ${slide.color}33, transparent)`,
-                  transform: "scaleY(-0.6) translateY(-6px)",
-                  transformOrigin: "top",
-                  filter: "blur(8px)",
-                  maskImage: "linear-gradient(to bottom, black, transparent)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black, transparent)",
-                }}
-              />
+              {/* Mobile caption inline (no overlap) */}
+              <div className="mt-4 text-center lg:hidden">
+                <div className="font-heading text-sm font-black uppercase tracking-[2px] text-white" style={{ textShadow: `0 0 18px ${slide.color}88` }}>
+                  {slide.sector}
+                </div>
+                <div className="mt-0.5 text-[11px] text-white/55">{slide.label}</div>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Active info */}
-        <div className="absolute bottom-10 left-1/2 z-[5] w-[min(620px,92vw)] -translate-x-1/2 text-center">
+        {/* Active info — desktop only */}
+        <div className="absolute bottom-10 left-1/2 z-[5] hidden w-[min(620px,92vw)] -translate-x-1/2 text-center lg:block">
           <div className="mb-2 font-mono text-[10px] tracking-[4px] text-white/40">
             {String(active + 1).padStart(2, "0")} / {String(SLIDES.length).padStart(2, "0")}
           </div>
@@ -216,7 +210,6 @@ export default function MockupShowcase() {
             {SLIDES[active].sector}
           </div>
           <div className="mt-1 text-xs text-white/55">{SLIDES[active].label}</div>
-          {/* Progress dots */}
           <div className="mt-5 flex items-center justify-center gap-2">
             {SLIDES.map((s, i) => (
               <span

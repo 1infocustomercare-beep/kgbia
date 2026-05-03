@@ -113,20 +113,17 @@ export default function EmpireCinematicHome() {
 
         <div className="relative z-[2]">
           <LandingNav />
-          <HeroExplosion />              {/* 1. Esplosione cinematografica */}
-          <MarqueeManifesto />           {/* 2. Marquee scrub orizzontale */}
-          <JungleParallax />             {/* 3. Giungla urbana parallax 3D */}
-          <ShiftSection />               {/* 4. Pinned chaos→empire */}
-          <MockupShowcase />             {/* 5. Sticky 3D iPhone stack */}
-          <PremiumShowcaseCarousel />    {/* 5b. Premium snap carousel motionsites-style */}
-          <InteractiveSectorReel />      {/* 5c. Reel settori scroll interattivo */}
-          <Orbit3D />                    {/* 6. Portfolio orbitale 3D */}
-          <AgentsCatalog />              {/* 7. Bento + color morph */}
-          <SectorsLive />                {/* 8. Live iframe demo */}
-          <Web3Carousel />               {/* 9. Carousel pinned orizzontale */}
-          <ProofHorizontal />            {/* 10. Numeri pinned */}
-          <MagneticCTA />                {/* 11. CTA magnetica */}
+          <HeroExplosion />              {/* 1. Hero cinematografico */}
+          <ShiftSection />               {/* 2. Prima vs Dopo */}
+          <MockupShowcase />             {/* 3. iPhone stack — mockup reali */}
+          <InteractiveSectorReel />      {/* 4. Reel orizzontale settori */}
+          <AgentsCatalog />              {/* 5. Cosa facciamo */}
+          <ProofHorizontal />            {/* 6. Numeri / proof */}
+          <MagneticCTA />                {/* 7. CTA finale */}
           <LandingFooter />
+          {/* Sezioni disattivate (ridondanti): MarqueeManifesto, JungleParallax,
+              PremiumShowcaseCarousel, Orbit3D, SectorsLive, Web3Carousel.
+              I componenti restano nel codice per riuso futuro. */}
         </div>
 
         <FilmGrain />
