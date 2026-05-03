@@ -197,22 +197,22 @@ export default function HeroExplosion() {
           Costruiamo siti, app e agenti AI che lavorano per te 24/7: portano clienti, gestiscono prenotazioni, chiudono vendite e automatizzano l'operativo. Un ecosistema premium pronto in 7 giorni — senza perdere il tuo brand.
         </p>
 
-        <div className="pointer-events-none mt-7 flex w-full items-end justify-center gap-2 sm:mt-9 sm:gap-3" style={{ perspective: "1200px" }}>
+        <div className="pointer-events-none mt-7 flex w-full items-end justify-center gap-1.5 sm:mt-9 sm:gap-3" style={{ perspective: "1200px" }}>
           {HERO_MOCKUPS.map((mockup, i) => (
             <div
               key={mockup.img}
               data-hero-preview
-              className="relative overflow-hidden rounded-[1.45rem] border-[6px] border-background bg-background shadow-2xl sm:rounded-[1.8rem] sm:border-[8px]"
+              className="relative overflow-hidden rounded-[1.1rem] border-[4px] border-background bg-background shadow-2xl sm:rounded-[1.8rem] sm:border-[8px]"
               style={{
-                width: i === 1 ? "min(132px, 34vw)" : "min(96px, 25vw)",
-                height: i === 1 ? "min(268px, 68vw)" : "min(196px, 50vw)",
-                marginBottom: i === 1 ? 0 : 18,
-                boxShadow: i === 1 ? `0 34px 90px -24px ${mockup.accent}` : "0 24px 70px -28px hsl(var(--empire-violet) / 0.55)",
+                width: i === 1 ? "min(118px, 30vw)" : "min(82px, 22vw)",
+                height: i === 1 ? "min(238px, 60vw)" : "min(168px, 44vw)",
+                marginBottom: i === 1 ? 0 : 14,
+                boxShadow: i === 1 ? `0 30px 70px -22px ${mockup.accent}` : "0 20px 50px -24px hsl(var(--empire-violet) / 0.55)",
               }}
             >
               <img src={mockup.img} alt={`Mockup Empire AI ${mockup.label}`} className="h-full w-full object-cover" loading="eager" draggable={false} />
               <div className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-transparent to-background/20" />
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full border border-foreground/15 bg-background/80 px-2.5 py-0.5 text-[8px] font-bold uppercase tracking-[1.8px] text-foreground/80 backdrop-blur-md">
+              <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 rounded-full border border-foreground/15 bg-background/80 px-2 py-0.5 text-[7px] font-bold uppercase tracking-[1.4px] text-foreground/80 backdrop-blur-md sm:bottom-2 sm:px-2.5 sm:text-[8px] sm:tracking-[1.8px]">
                 {mockup.label}
               </div>
             </div>
