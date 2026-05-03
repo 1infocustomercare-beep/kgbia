@@ -5,6 +5,7 @@ import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import HeroExplosion from "@/components/empire-home/HeroExplosion";
+import CaseStudySliders from "@/components/empire-home/CaseStudySliders";
 import MarqueeManifesto from "@/components/empire-home/MarqueeManifesto";
 import JungleParallax from "@/components/empire-home/JungleParallax";
 import ShiftSection from "@/components/empire-home/ShiftSection";
@@ -117,6 +118,7 @@ export default function EmpireCinematicHome() {
           <ShiftSection />               {/* 2. Prima vs Dopo */}
           <MockupShowcase />             {/* 3. iPhone stack — mockup reali */}
           <InteractiveSectorReel />      {/* 4. Reel orizzontale settori */}
+          <CaseStudySliders />           {/* 4b. Caso studio interattivo */}
           <AgentsCatalog />              {/* 5. Cosa facciamo */}
           <ProofHorizontal />            {/* 6. Numeri / proof */}
           <MagneticCTA />                {/* 7. CTA finale */}
