@@ -2,22 +2,21 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import { pickMockup } from "@/lib/mockup-rotation";
 
 gsap.registerPlugin(ScrollTrigger);
 
 /**
  * MockupShowcase — Sticky 3D scrub.
- * 5 iPhone reali si avvicinano, ruotano in 3D e si fermano sul piano focale
- * mentre lo scroll avanza. Effect: depth-of-field cinematografico.
+ * Mockup ruotati via pickMockup(slot="showcase") per non ripetere mai
+ * le stesse immagini usate in Hero / Reel / Case Study.
  */
-
-// Usiamo indici diversi dal Hero per non ripetere le stesse immagini
 const SLIDES = [
-  { sector: "Food · Strapizzami", label: "Pizzeria luxury", img: SECTOR_MOCKUP_IMAGES.food?.[1] ?? SECTOR_MOCKUP_IMAGES.food?.[0], color: "#fbbf24" },
-  { sector: "Sushi · Paperfish", label: "Sakura dark", img: SECTOR_MOCKUP_IMAGES.food?.[3] ?? SECTOR_MOCKUP_IMAGES.food?.[0], color: "#ec4899" },
-  { sector: "NCC · Asinara", label: "Charter & Yacht", img: SECTOR_MOCKUP_IMAGES.ncc?.[0], color: "#22d3ee" },
-  { sector: "Beauty · Neo Nails", label: "Lavender luxe", img: SECTOR_MOCKUP_IMAGES.beauty?.[0], color: "#a78bfa" },
-  { sector: "Padel · City Padel", label: "Sage luxe", img: SECTOR_MOCKUP_IMAGES.fitness?.[0], color: "#4ade80" },
+  { sector: "Food · Strapizzami", label: "Pizzeria luxury", img: pickMockup("food", "showcase") ?? SECTOR_MOCKUP_IMAGES.food?.[1], color: "#fbbf24" },
+  { sector: "Sushi · Paperfish", label: "Sakura dark", img: pickMockup("food", "showcase", 2) ?? SECTOR_MOCKUP_IMAGES.food?.[3], color: "#ec4899" },
+  { sector: "NCC · Asinara", label: "Charter & Yacht", img: pickMockup("ncc", "showcase") ?? SECTOR_MOCKUP_IMAGES.ncc?.[0], color: "#22d3ee" },
+  { sector: "Beauty · Neo Nails", label: "Lavender luxe", img: pickMockup("beauty", "showcase") ?? SECTOR_MOCKUP_IMAGES.beauty?.[0], color: "#a78bfa" },
+  { sector: "Padel · City Padel", label: "Sage luxe", img: pickMockup("fitness", "showcase") ?? SECTOR_MOCKUP_IMAGES.fitness?.[0], color: "#4ade80" },
 ].filter((s) => !!s.img);
 
 export default function MockupShowcase() {

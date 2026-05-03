@@ -5,6 +5,7 @@ import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import HeroExplosion from "@/components/empire-home/HeroExplosion";
+import CaseStudySliders from "@/components/empire-home/CaseStudySliders";
 import MarqueeManifesto from "@/components/empire-home/MarqueeManifesto";
 import JungleParallax from "@/components/empire-home/JungleParallax";
 import ShiftSection from "@/components/empire-home/ShiftSection";
@@ -73,6 +74,32 @@ export default function EmpireCinematicHome() {
         }
         html.lenis, html.lenis body { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* Micro-interazioni globali home — sottili, no overlap */
+        #hero a, #hero button,
+        #mockups button, #sector-reel button,
+        #case-study button {
+          transition: transform 0.3s cubic-bezier(.22,1,.36,1), box-shadow 0.3s ease, filter 0.3s ease;
+        }
+        #hero a:focus-visible, #hero button:focus-visible,
+        #mockups button:focus-visible, #sector-reel button:focus-visible,
+        #case-study button:focus-visible {
+          outline: 2px solid hsl(var(--primary));
+          outline-offset: 3px;
+          border-radius: 12px;
+        }
+        @media (hover: hover) {
+          #sector-reel [data-reel-card]:hover {
+            transform: translateY(-4px) scale(1.02) !important;
+            filter: brightness(1.08);
+          }
+          #case-study .group:hover svg { transform: scale(1.12) rotate(-4deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          #hero a, #hero button, #sector-reel button, #case-study button {
+            transition: none !important;
+          }
+        }
       `}</style>
 
       <div className="relative min-h-screen overflow-x-hidden bg-[#050813] text-white selection:bg-[#22d3ee] selection:text-black">
@@ -117,6 +144,7 @@ export default function EmpireCinematicHome() {
           <ShiftSection />               {/* 2. Prima vs Dopo */}
           <MockupShowcase />             {/* 3. iPhone stack — mockup reali */}
           <InteractiveSectorReel />      {/* 4. Reel orizzontale settori */}
+          <CaseStudySliders />           {/* 4b. Caso studio interattivo */}
           <AgentsCatalog />              {/* 5. Cosa facciamo */}
           <ProofHorizontal />            {/* 6. Numeri / proof */}
           <MagneticCTA />                {/* 7. CTA finale */}

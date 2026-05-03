@@ -3,14 +3,15 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate } from "react-router-dom";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import { pickMockup } from "@/lib/mockup-rotation";
 import empireLogo from "@/assets/empire-logo-full.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const HERO_MOCKUPS = [
-  { img: SECTOR_MOCKUP_IMAGES.food?.[0], label: "Food", accent: "hsl(42 94% 62%)" },
-  { img: SECTOR_MOCKUP_IMAGES.beauty?.[0], label: "Beauty", accent: "hsl(325 85% 58%)" },
-  { img: SECTOR_MOCKUP_IMAGES.ncc?.[0], label: "Luxury", accent: "hsl(195 100% 55%)" },
+  { img: pickMockup("food", "hero") ?? SECTOR_MOCKUP_IMAGES.food?.[0], label: "Food", accent: "hsl(42 94% 62%)" },
+  { img: pickMockup("beauty", "hero") ?? SECTOR_MOCKUP_IMAGES.beauty?.[0], label: "Beauty", accent: "hsl(325 85% 58%)" },
+  { img: pickMockup("ncc", "hero") ?? SECTOR_MOCKUP_IMAGES.ncc?.[0], label: "Luxury", accent: "hsl(195 100% 55%)" },
 ].filter((m) => Boolean(m.img)) as { img: string; label: string; accent: string }[];
 
 /**
