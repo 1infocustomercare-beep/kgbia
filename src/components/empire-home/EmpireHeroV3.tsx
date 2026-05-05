@@ -29,16 +29,73 @@ const HERO_FLOW = [
   { icon: BrainCircuit, label: "CRM AI", detail: "storico cliente, follow-up, report operativi" },
 ];
 
+// Tempi di rotazione condivisi (vista + transizione coerenti)
+const DWELL_MS = 3600;        // tempo di permanenza di ogni mockup completamente visibile
+const TRANSITION_MS = 700;    // deve combaciare con duration-700 della transizione CSS
+
 export default function EmpireHeroV3() {
   const navigate = useNavigate();
   const stageRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
-  // Auto-rotate del rolodex (mockup tutti diversi, ogni 2.6s)
+  // Rotazione robusta. Pausa automatica quando:
+  //  - hero fuori viewport (IntersectionObserver)
+  //  - tab in background (visibilitychange)
+  //  - hover / focus utente (isPaused)
+  //  - prefers-reduced-motion attivo
+  // Riprogramma SOLO dopo TRANSITION_MS, così ogni mockup resta DWELL_MS reali.
   useEffect(() => {
-    const id = window.setInterval(() => setActive((i) => (i + 1) % HERO_PHONES.length), 3200);
-    return () => window.clearInterval(id);
-  }, []);
+    if (typeof window === "undefined") return;
+    if (HERO_PHONES.length <= 1) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let timeoutId: number | null = null;
+    let inView = true;
+    let tabVisible = !document.hidden;
+
+    const clear = () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+    };
+
+    const schedule = () => {
+      clear();
+      if (!inView || !tabVisible || isPaused) return;
+      timeoutId = window.setTimeout(() => {
+        setActive((i) => (i + 1) % HERO_PHONES.length);
+        timeoutId = window.setTimeout(schedule, TRANSITION_MS);
+      }, DWELL_MS);
+    };
+
+    const onVisibility = () => {
+      tabVisible = !document.hidden;
+      schedule();
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const e = entries[0];
+        if (!e) return;
+        inView = e.isIntersecting && e.intersectionRatio > 0.15;
+        schedule();
+      },
+      { threshold: [0, 0.15, 0.5] }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    document.addEventListener("visibilitychange", onVisibility);
+
+    schedule();
+
+    return () => {
+      clear();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [isPaused]);
 
   // Mouse parallax leggero (solo se desktop e no reduced motion)
   useEffect(() => {
