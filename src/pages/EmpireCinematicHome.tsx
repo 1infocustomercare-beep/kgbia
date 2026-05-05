@@ -124,7 +124,7 @@ export default function EmpireCinematicHome() {
           <LandingNav />
 
           {/* 1. HERO V2 — primo schermo d'impatto, mockup reali */}
-          <EmpireHeroV2 />
+          <EmpireHeroV3 />
 
           {/* 2. GLOWY WAVES HERO (21st) — manifesto onde luminose */}
           <LazyMount minHeight="80vh" id="manifesto-waves">
