@@ -141,8 +141,8 @@ export function FeatureCarousel() {
         </div>
 
         {/* RIGHT: image stack */}
-        <div className="flex-1 min-h-[420px] md:min-h-[520px] relative bg-[#080a0f] flex items-center justify-center py-12 md:py-20 px-6 md:px-12 overflow-hidden border-t lg:border-t-0 lg:border-l border-white/10">
-          <div className="relative w-full max-w-[420px] aspect-[4/5] flex items-center justify-center">
+        <div className="flex-1 min-h-[500px] md:min-h-[560px] relative bg-[#080a0f] flex items-center justify-center py-12 md:py-20 px-6 md:px-12 overflow-hidden border-t lg:border-t-0 lg:border-l border-white/10">
+          <div className="relative w-full max-w-[430px] min-h-[480px] flex items-center justify-center">
             {FEATURES.map((feature, index) => {
               const status = getCardStatus(index);
               const isActive = status === "active";
@@ -162,16 +162,13 @@ export function FeatureCarousel() {
                     pointerEvents: isActive ? "auto" : "none",
                   }}
                   transition={{ type: "spring", stiffness: 260, damping: 25, mass: 0.8 }}
-                  className="absolute inset-0 rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border-4 md:border-[6px] border-[#11141a] bg-[#11141a] origin-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
+                  className="absolute inset-x-0 top-0 flex min-h-[480px] flex-col items-center justify-center rounded-[1.5rem] md:rounded-[2rem] border border-white/10 bg-[#11141a] px-5 py-6 origin-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
                 >
-                  <img
+                  <RealisticIPhonePreview
                     src={feature.image}
                     alt={feature.label}
-                    className={cn(
-                      "w-full h-full object-cover transition-all duration-700",
-                      isActive ? "grayscale-0 blur-0" : "grayscale blur-[2px] brightness-75"
-                    )}
-                    loading="lazy"
+                    size="lg"
+                    className={cn("transition-all duration-700", isActive ? "grayscale-0 blur-0" : "grayscale blur-[2px] brightness-75")}
                   />
 
                   <AnimatePresence>
@@ -180,7 +177,7 @@ export function FeatureCarousel() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
-                        className="absolute inset-x-0 bottom-0 p-6 md:p-8 pt-24 bg-gradient-to-t from-black/95 via-black/55 to-transparent flex flex-col justify-end pointer-events-none"
+                        className="relative mt-5 flex flex-col items-center justify-end text-center pointer-events-none"
                       >
                         <div className="bg-amber-300 text-black px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] w-fit mb-3">
                           {String(index + 1).padStart(2, "0")} · {feature.label}
