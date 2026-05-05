@@ -34,7 +34,6 @@ import { createMockupPool } from "@/lib/mockup-pool";
 // Pool unico per la home: ogni sezione che pesca riceve mockup freschi
 const homePool = createMockupPool();
 const cardStackImages = homePool.images(6);
-const featuredMockups = homePool.images(8);
 
 
 /**
