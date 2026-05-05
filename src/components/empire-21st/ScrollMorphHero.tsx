@@ -116,6 +116,7 @@ const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * 
 export default function IntroAnimation() {
     const [introPhase, setIntroPhase] = useState<AnimationPhase>("scatter");
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+    const rootRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     // --- Container Size ---
@@ -148,42 +149,24 @@ export default function IntroAnimation() {
     const scrollRef = useRef(0); // Keep track of scroll value without re-renders
 
     useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
+        const root = rootRef.current;
+        if (!root) return;
 
-        const handleWheel = (e: WheelEvent) => {
-            // Prevent default to stop browser overscroll/bounce
-            e.preventDefault();
-
-            const newScroll = Math.min(Math.max(scrollRef.current + e.deltaY, 0), MAX_SCROLL);
-            scrollRef.current = newScroll;
-            virtualScroll.set(newScroll);
+        const updateFromPageScroll = () => {
+            const rect = root.getBoundingClientRect();
+            const total = Math.max(1, root.offsetHeight - window.innerHeight);
+            const progress = Math.min(Math.max(-rect.top / total, 0), 1);
+            const next = progress * MAX_SCROLL;
+            scrollRef.current = next;
+            virtualScroll.set(next);
         };
 
-        // Touch support
-        let touchStartY = 0;
-        const handleTouchStart = (e: TouchEvent) => {
-            touchStartY = e.touches[0].clientY;
-        };
-        const handleTouchMove = (e: TouchEvent) => {
-            const touchY = e.touches[0].clientY;
-            const deltaY = touchStartY - touchY;
-            touchStartY = touchY;
-
-            const newScroll = Math.min(Math.max(scrollRef.current + deltaY, 0), MAX_SCROLL);
-            scrollRef.current = newScroll;
-            virtualScroll.set(newScroll);
-        };
-
-        // Attach listeners to container instead of window for portability
-        container.addEventListener("wheel", handleWheel, { passive: false });
-        container.addEventListener("touchstart", handleTouchStart, { passive: false });
-        container.addEventListener("touchmove", handleTouchMove, { passive: false });
-
+        updateFromPageScroll();
+        window.addEventListener("scroll", updateFromPageScroll, { passive: true });
+        window.addEventListener("resize", updateFromPageScroll);
         return () => {
-            container.removeEventListener("wheel", handleWheel);
-            container.removeEventListener("touchstart", handleTouchStart);
-            container.removeEventListener("touchmove", handleTouchMove);
+            window.removeEventListener("scroll", updateFromPageScroll);
+            window.removeEventListener("resize", updateFromPageScroll);
         };
     }, [virtualScroll]);
 
@@ -258,7 +241,8 @@ export default function IntroAnimation() {
     const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
 
     return (
-        <div ref={containerRef} className="relative w-full h-full bg-[#FAFAFA] overflow-hidden">
+        <section ref={rootRef} className="relative min-h-[260svh] bg-[#FAFAFA]">
+        <div ref={containerRef} className="sticky top-0 relative w-full h-[100svh] bg-[#FAFAFA] overflow-hidden">
             {/* Container */}
             <div className="flex h-full w-full flex-col items-center justify-center perspective-1000">
 
@@ -401,5 +385,6 @@ export default function IntroAnimation() {
                 </div>
             </div>
         </div>
+        </section>
     );
 }
