@@ -125,6 +125,7 @@ export default function EmpireHeroV3() {
 
   return (
     <section
+      ref={sectionRef}
       id="hero-v3"
       className="relative isolate w-full overflow-hidden bg-background text-foreground"
     >
