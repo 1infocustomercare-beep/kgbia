@@ -209,11 +209,12 @@ MagneticButton.displayName = "MagneticButton";
 // -------------------------------------------------------------------------
 const MarqueeItem = () => (
   <div className="flex items-center space-x-12 px-6">
-    <span>Accountability Redefined</span> <span className="text-primary/60">✦</span>
-    <span>Transparent Tracking</span> <span className="text-secondary/60">✦</span>
-    <span>12-Step Progress</span> <span className="text-primary/60">✦</span>
-    <span>Sponsor Connection</span> <span className="text-secondary/60">✦</span>
-    <span>Absolute Privacy</span> <span className="text-primary/60">✦</span>
+    <span>Automazione Senza Limiti</span> <span className="text-primary/60">✦</span>
+    <span>WhatsApp AI 24/7</span> <span className="text-secondary/60">✦</span>
+    <span>Voice Agent Multilingua</span> <span className="text-primary/60">✦</span>
+    <span>CRM + Pagamenti Stripe</span> <span className="text-secondary/60">✦</span>
+    <span>Demo Generata in 60 Secondi</span> <span className="text-primary/60">✦</span>
+    <span>Per Ogni Settore Business</span> <span className="text-secondary/60">✦</span>
   </div>
 );
 
