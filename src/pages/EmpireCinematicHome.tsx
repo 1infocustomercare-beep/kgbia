@@ -191,6 +191,18 @@ export default function EmpireCinematicHome() {
             </section>
           </Suspense>
 
+          {/* 6b. INTERLUDIO — Mountain Scene generativa (transizione visiva) */}
+          <Suspense fallback={null}>
+            <section className="relative h-[35vh] w-full overflow-hidden bg-[#020308]">
+              <MountainScene />
+              <div className="pointer-events-none absolute inset-0 flex items-end justify-center pb-10">
+                <p className="text-center text-xs md:text-sm uppercase tracking-[0.4em] text-white/60">
+                  La tua azienda — vista dall'alto
+                </p>
+              </div>
+            </section>
+          </Suspense>
+
           {/* 7. REEL settori orizzontale */}
           <InteractiveSectorReel />
 
