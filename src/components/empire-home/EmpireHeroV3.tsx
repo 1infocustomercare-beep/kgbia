@@ -269,18 +269,19 @@ export default function EmpireHeroV3() {
 
         {/* 4B. FLOW GRID — 2 col mobile, 4 col desktop, padding ridotto su mobile */}
         <div className="mt-6 grid w-full max-w-5xl grid-cols-2 gap-2 sm:mt-7 sm:gap-3 sm:grid-cols-4">
-          {HERO_FLOW.map((item) => {
+          {HERO_FLOW.map((item, index) => {
             const Icon = item.icon;
+            const isLit = index <= effectStep;
             return (
               <div
                 key={item.label}
-                className="rounded-2xl border border-foreground/10 bg-background/72 p-2.5 text-left shadow-[0_18px_55px_-38px_hsl(0_0%_0%)] sm:p-4"
+                className={`rounded-2xl border p-2.5 text-left shadow-[0_18px_55px_-38px_hsl(0_0%_0%)] transition-all duration-500 sm:p-4 ${isLit ? "border-primary/45 bg-primary/10 translate-y-0 opacity-100" : "border-foreground/10 bg-background/72 translate-y-1 opacity-72"}`}
               >
-                <Icon className="mb-1.5 h-4 w-4 text-primary sm:mb-2" />
+                <Icon className={`mb-1.5 h-4 w-4 transition-colors duration-500 sm:mb-2 ${isLit ? "text-primary" : "text-foreground/45"}`} />
                 <div className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground sm:text-[11px] sm:tracking-[0.18em]">
                   {item.label}
                 </div>
-                <p className="mt-1 text-[10.5px] leading-snug text-foreground/55 sm:text-[11px]">
+                <p className={`mt-1 text-[10.5px] leading-snug transition-colors duration-500 sm:text-[11px] ${isLit ? "text-foreground/78" : "text-foreground/55"}`}>
                   {item.detail}
                 </p>
               </div>
@@ -295,6 +296,7 @@ export default function EmpireHeroV3() {
           style={{
             perspective: "1600px",
             minHeight: "clamp(440px, 78vw, 620px)",
+            transform: "perspective(1600px) rotateY(calc(var(--mx) * 3.5deg)) rotateX(calc(var(--my) * -2.5deg)) translateY(calc(var(--hero-scroll) * -18px))",
           }}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
