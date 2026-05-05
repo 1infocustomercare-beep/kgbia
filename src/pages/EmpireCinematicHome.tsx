@@ -243,6 +243,19 @@ export default function EmpireCinematicHome() {
             </section>
           </Suspense>
 
+          {/* 12b. INTERLUDIO — Neon Orbs (background generativo leggero) */}
+          <Suspense fallback={null}>
+            <section className="relative h-[40vh] w-full overflow-hidden bg-black">
+              <NeonOrbs />
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <h3 className="text-center text-3xl md:text-5xl font-black tracking-tight text-white drop-shadow-[0_2px_30px_rgba(34,211,238,0.6)]">
+                  Un solo cervello AI.<br />
+                  <span className="text-[#22d3ee]">Tutta la tua azienda.</span>
+                </h3>
+              </div>
+            </section>
+          </Suspense>
+
           {/* 13. PROOF orizzontale — numeri */}
           <ProofHorizontal />
 
