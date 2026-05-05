@@ -1,6 +1,5 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from "@/lib/utils"; // We'll define this or use inline
 
 // Helper for random colors
@@ -64,10 +63,12 @@ export function TubesBackground({
         
         cleanup = () => {
           window.removeEventListener('resize', handleResize);
-          // If the library has a destroy method, call it
-          // app.destroy?.(); 
-          // Based on typical threejs-components, it might not have an explicit destroy exposed easily
-          // but we should at least nullify the ref
+          try {
+            app?.destroy?.();
+            app?.dispose?.();
+            app?.renderer?.dispose?.();
+          } catch {}
+          tubesRef.current = null;
         };
 
       } catch (error) {
