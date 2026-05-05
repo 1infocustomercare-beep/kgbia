@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import { motion, useSpring } from "framer-motion";
 import { createMockupPool } from "@/lib/mockup-pool";
 
@@ -139,6 +139,35 @@ export default function StackedPanels() {
 
   const rotY = useSpring(-42, SCENE_SPRING);
   const rotX = useSpring(18, SCENE_SPRING);
+
+  useEffect(() => {
+    const updateFromScroll = () => {
+      if (isHovering.current) return;
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const progress = Math.min(Math.max((window.innerHeight * 0.72 - rect.top) / (rect.height + window.innerHeight * 0.6), 0), 1);
+      rotY.set(-56 + progress * 34);
+      rotX.set(24 - progress * 18);
+      const cursorCardPos = progress * (PANEL_COUNT - 1);
+      waveYSprings.forEach((spring, i) => {
+        const dist = Math.abs(i - cursorCardPos);
+        const influence = Math.exp(-(dist * dist) / (2 * SIGMA * SIGMA));
+        spring.set(-influence * 78);
+      });
+      scaleYSprings.forEach((spring, i) => {
+        const dist = Math.abs(i - cursorCardPos);
+        const influence = Math.exp(-(dist * dist) / (2 * SIGMA * SIGMA));
+        spring.set(0.42 + influence * 0.58);
+      });
+    };
+    updateFromScroll();
+    window.addEventListener("scroll", updateFromScroll, { passive: true });
+    window.addEventListener("resize", updateFromScroll);
+    return () => {
+      window.removeEventListener("scroll", updateFromScroll);
+      window.removeEventListener("resize", updateFromScroll);
+    };
+  }, [rotY, rotX, waveYSprings, scaleYSprings]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
