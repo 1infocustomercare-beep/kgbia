@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
@@ -51,8 +51,6 @@ export function FeatureCarousel() {
   const [isPaused, setIsPaused] = useState(false);
 
   const currentIndex = ((step % FEATURES.length) + FEATURES.length) % FEATURES.length;
-
-  const nextStep = useCallback(() => setStep((prev) => prev + 1), []);
 
   const handleChipClick = (index: number) => {
     const diff = (index - currentIndex + FEATURES.length) % FEATURES.length;
