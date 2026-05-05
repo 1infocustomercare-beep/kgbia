@@ -1,6 +1,7 @@
 import { motion, type Variants } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 
@@ -18,15 +19,16 @@ interface WaveConfig {
 }
 
 const highlightPills = [
-  "Immersive visuals",
-  "Responsive motion",
-  "GPU friendly",
+  "Web App AI",
+  "WhatsApp 24/7",
+  "Voice Agent",
+  "CRM 360°",
 ] as const;
 
 const heroStats: { label: string; value: string }[] = [
-  { label: "Live installations", value: "320+" },
-  { label: "Latency", value: "8ms" },
-  { label: "Teams onboarded", value: "120+" },
+  { label: "Aziende attive", value: "320+" },
+  { label: "Setup in", value: "90 sec" },
+  { label: "Settori coperti", value: "25+" },
 ];
 
 const containerVariants: Variants = {
@@ -310,52 +312,56 @@ export function GlowyWavesHero() {
         >
           <motion.div
             variants={itemVariants}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/40 bg-background/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-foreground/70 dark:border-border/60 dark:bg-background/70 dark:text-foreground/80"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-background/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-amber-200/90"
           >
-            <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
-            Reactive canvas hero
+            <Sparkles className="h-4 w-4 text-amber-300" aria-hidden="true" />
+            Una piattaforma. 25 settori.
           </motion.div>
 
           <motion.h1
             variants={itemVariants}
             className="mb-6 text-4xl font-semibold tracking-tight text-foreground md:text-6xl lg:text-7xl"
           >
-            Welcome to immersive{" "}
-            <span className="bg-gradient-to-r from-primary via-primary/60 to-foreground/80 bg-clip-text text-transparent">
-              realtime playgrounds
+            La tua azienda{" "}
+            <span className="bg-gradient-to-r from-amber-300 via-amber-200 to-white bg-clip-text text-transparent">
+              automatizzata in 90 secondi
             </span>
           </motion.h1>
 
           <motion.p
             variants={itemVariants}
-            className="mx-auto mb-10 max-w-3xl text-lg text-foreground/70 md:text-2xl"
+            className="mx-auto mb-10 max-w-3xl text-base text-foreground/70 md:text-xl leading-relaxed"
           >
-            Build living surfaces that respond to every interaction. Craft
-            cinematic hero moments, responsive canvases, and luminous gradients
-            without leaving your design system.
+            Sito ordini-prenotazioni, WhatsApp che vende 24/7, Voice Agent che risponde
+            al telefono, CRM che riconosce ogni cliente. Tutto pronto, già attivo,
+            personalizzato per il tuo settore.
           </motion.p>
 
           <motion.div
             variants={itemVariants}
             className="mb-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <Button
-              size="lg"
-              className="group gap-2 rounded-full px-8 text-base uppercase tracking-[0.2em]"
-            >
-              Launch Studio
-              <ArrowRight
-                className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                aria-hidden="true"
-              />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="rounded-full border-border/40 bg-background/60 px-8 text-base text-foreground/80 backdrop-blur transition-all hover:border-border/60 hover:bg-background/70 dark:border-border/50 dark:bg-background/40 dark:text-foreground/70 dark:hover:border-border/70 dark:hover:bg-background/50"
-            >
-              Explore stories
-            </Button>
+            <Link to="/auth">
+              <Button
+                size="lg"
+                className="group gap-2 rounded-full bg-amber-300 px-8 text-base font-bold uppercase tracking-[0.18em] text-black hover:bg-amber-200 min-h-[48px]"
+              >
+                Prova 90 giorni gratis
+                <ArrowRight
+                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </Button>
+            </Link>
+            <Link to="/join">
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full border-white/20 bg-white/5 px-8 text-base text-white/85 backdrop-blur hover:border-white/40 hover:bg-white/10 min-h-[48px]"
+              >
+                Diventa Partner
+              </Button>
+            </Link>
           </motion.div>
 
           <motion.ul
