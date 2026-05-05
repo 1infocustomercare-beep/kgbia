@@ -3,7 +3,7 @@ import LandingNav from "@/components/landing/LandingNav";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import EmpireHeroV2 from "@/components/empire-home/EmpireHeroV2";
+import EmpireHeroV3 from "@/components/empire-home/EmpireHeroV3";
 import ShiftSection from "@/components/empire-home/ShiftSection";
 import MockupShowcase from "@/components/empire-home/MockupShowcase";
 import InteractiveSectorReel from "@/components/empire-home/InteractiveSectorReel";
@@ -124,7 +124,7 @@ export default function EmpireCinematicHome() {
           <LandingNav />
 
           {/* 1. HERO V2 — primo schermo d'impatto, mockup reali */}
-          <EmpireHeroV2 />
+          <EmpireHeroV3 />
 
           {/* 2. GLOWY WAVES HERO (21st) — manifesto onde luminose */}
           <LazyMount minHeight="80vh" id="manifesto-waves">
