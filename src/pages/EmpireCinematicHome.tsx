@@ -1,26 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import LandingNav from "@/components/landing/LandingNav";
-import LandingFooter from "@/components/landing/LandingFooter";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import HeroExplosion from "@/components/empire-home/HeroExplosion";
 import CaseStudySliders from "@/components/empire-home/CaseStudySliders";
-import MarqueeManifesto from "@/components/empire-home/MarqueeManifesto";
-import JungleParallax from "@/components/empire-home/JungleParallax";
 import ShiftSection from "@/components/empire-home/ShiftSection";
 import MockupShowcase from "@/components/empire-home/MockupShowcase";
-import Orbit3D from "@/components/empire-home/Orbit3D";
-import PremiumShowcaseCarousel from "@/components/empire-home/PremiumShowcaseCarousel";
 import InteractiveSectorReel from "@/components/empire-home/InteractiveSectorReel";
 import AgentsCatalog from "@/components/empire-home/AgentsCatalog";
-import SectorsLive from "@/components/empire-home/SectorsLive";
-import Web3Carousel from "@/components/empire-home/Web3Carousel";
 import ProofHorizontal from "@/components/empire-home/ProofHorizontal";
 import MagneticCTA from "@/components/empire-home/MagneticCTA";
 import FilmGrain from "@/components/empire-home/FilmGrain";
 import CinematicCursor from "@/components/empire-home/CinematicCursor";
 import HomeQAGuard from "@/components/empire-home/HomeQAGuard";
+
+// 12 componenti adattati da 21st.dev — lazy per non bloccare LCP
+const NeonOrbs = lazy(() => import("@/components/empire-21st/NeonOrbs").then(m => ({ default: m.NeonOrbs })));
+const NeonFlow = lazy(() => import("@/components/empire-21st/NeonFlow"));
+const FlowFieldBackground = lazy(() => import("@/components/empire-21st/FlowFieldBackground"));
+const MountainScene = lazy(() => import("@/components/empire-21st/MountainScene"));
+const GlowyWavesHero = lazy(() => import("@/components/empire-21st/GlowyWavesHero").then(m => ({ default: m.GlowyWavesHero })));
+const ScrollMorphHero = lazy(() => import("@/components/empire-21st/ScrollMorphHero"));
+const StackedPanels = lazy(() => import("@/components/empire-21st/StackedPanels"));
+const FeatureCarousel = lazy(() => import("@/components/empire-21st/FeatureCarousel"));
+const CinematicHero21 = lazy(() => import("@/components/empire-21st/CinematicHero21").then(m => ({ default: m.CinematicHero })));
+const CursorParticlesTypo = lazy(() => import("@/components/empire-21st/CursorParticlesTypo").then(m => ({ default: m.CursorDrivenParticleTypography })));
+const CardStack = lazy(() => import("@/components/empire-21st/CardStack").then(m => ({ default: m.CardStack })));
+const MotionFooter = lazy(() => import("@/components/empire-21st/MotionFooter").then(m => ({ default: m.CinematicFooter })));
+
+import { createMockupPool } from "@/lib/mockup-pool";
+
+// Pool unico per la home: ogni sezione che pesca riceve mockup freschi
+const homePool = createMockupPool();
+const cardStackImages = homePool.images(6);
+const featuredMockups = homePool.images(8);
+
 
 /**
  * Empire Cinematic Home — Aurora edition
