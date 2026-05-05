@@ -11,6 +11,7 @@ import CaseStudySliders from "@/components/empire-home/CaseStudySliders";
 import AgentsCatalog from "@/components/empire-home/AgentsCatalog";
 import ProofHorizontal from "@/components/empire-home/ProofHorizontal";
 import MagneticCTA from "@/components/empire-home/MagneticCTA";
+import MockupCatalog from "@/components/empire-home/MockupCatalog";
 import FilmGrain from "@/components/empire-home/FilmGrain";
 import HomeQAGuard from "@/components/empire-home/HomeQAGuard";
 import LazyMount from "@/components/empire-home/LazyMount";
@@ -168,8 +169,11 @@ export default function EmpireCinematicHome() {
           {/* 8. REEL SETTORI orizzontale */}
           <InteractiveSectorReel />
 
+          {/* 8B. CATALOGO MOCKUP completo */}
+          <MockupCatalog />
+
           {/* 9. SCROLL MORPH HERO (21st) — mockup che si compongono */}
-          <LazyMount minHeight="100vh">
+          <LazyMount minHeight="260svh">
             <ScrollMorphHero />
           </LazyMount>
 
@@ -193,7 +197,7 @@ export default function EmpireCinematicHome() {
           </LazyMount>
 
           {/* 12. FEATURE CAROUSEL (21st) — 8 servizi Empire */}
-          <LazyMount minHeight="80vh" id="features">
+          <LazyMount minHeight="260svh" id="features">
             <FeatureCarousel />
           </LazyMount>
 
