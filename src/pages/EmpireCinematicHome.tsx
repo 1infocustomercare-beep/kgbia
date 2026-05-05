@@ -286,6 +286,13 @@ export default function EmpireCinematicHome() {
           {/* 13. PROOF orizzontale — numeri */}
           <ProofHorizontal />
 
+          {/* 13b. INTERLUDIO — Neon Flow tubes (transizione luminosa verso CTA) */}
+          <Suspense fallback={null}>
+            <section className="relative h-[35vh] w-full overflow-hidden bg-black">
+              <NeonFlow />
+            </section>
+          </Suspense>
+
           {/* 14. CINEMATIC HERO 21 — bridge verso CTA */}
           <Suspense fallback={null}>
             <section className="relative">
