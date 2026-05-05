@@ -155,18 +155,125 @@ export default function EmpireCinematicHome() {
 
         <div className="relative z-[2]">
           <LandingNav />
-          <HeroExplosion />              {/* 1. Hero cinematografico */}
-          <ShiftSection />               {/* 2. Prima vs Dopo */}
-          <MockupShowcase />             {/* 3. iPhone stack — mockup reali */}
-          <InteractiveSectorReel />      {/* 4. Reel orizzontale settori */}
-          <CaseStudySliders />           {/* 4b. Caso studio interattivo */}
-          <AgentsCatalog />              {/* 5. Cosa facciamo */}
-          <ProofHorizontal />            {/* 6. Numeri / proof */}
-          <MagneticCTA />                {/* 7. CTA finale */}
-          <LandingFooter />
-          {/* Sezioni disattivate (ridondanti): MarqueeManifesto, JungleParallax,
-              PremiumShowcaseCarousel, Orbit3D, SectorsLive, Web3Carousel.
-              I componenti restano nel codice per riuso futuro. */}
+
+          {/* 1. HERO — explosion cinematografica Empire */}
+          <HeroExplosion />
+
+          {/* 2. WOW BACKGROUND — Glowy Waves Hero (21st) come "manifesto" */}
+          <Suspense fallback={<div className="h-[60vh] bg-[#050813]" />}>
+            <section id="manifesto-waves" className="relative">
+              <GlowyWavesHero />
+            </section>
+          </Suspense>
+
+          {/* 3. PRIMA vs DOPO */}
+          <ShiftSection />
+
+          {/* 4. CURSOR PARTICLES TYPO — manifesto interattivo */}
+          <Suspense fallback={null}>
+            <section className="relative h-[70vh] w-full overflow-hidden bg-[#05070d]">
+              <CursorParticlesTypo
+                text="EMPIRE"
+                subtitle="Sostituisci i dipendenti ripetitivi con AI 24/7"
+              />
+            </section>
+          </Suspense>
+
+          {/* 5. MOCKUP SHOWCASE — iPhone stack reali */}
+          <MockupShowcase />
+
+          {/* 6. STACKED PANELS (21st) — 22 mockup unici scroll-driven */}
+          <Suspense fallback={null}>
+            <section id="stacked-mockups" className="relative">
+              <StackedPanels />
+            </section>
+          </Suspense>
+
+          {/* 7. REEL settori orizzontale */}
+          <InteractiveSectorReel />
+
+          {/* 8. SCROLL MORPH HERO (21st) — mockup che si compongono */}
+          <Suspense fallback={null}>
+            <section className="relative">
+              <ScrollMorphHero />
+            </section>
+          </Suspense>
+
+          {/* 9. CASO STUDIO interattivo (slider risultati) */}
+          <CaseStudySliders />
+
+          {/* 10. FEATURE CAROUSEL (21st) — 8 servizi Empire */}
+          <Suspense fallback={null}>
+            <section id="features-21st" className="relative">
+              <FeatureCarousel />
+            </section>
+          </Suspense>
+
+          {/* 11. AGENTI CATALOG */}
+          <AgentsCatalog />
+
+          {/* 12. CARD STACK (21st) — testimonianze + casi reali */}
+          <Suspense fallback={null}>
+            <section className="relative w-full py-24 px-4 bg-gradient-to-b from-[#05070d] via-[#0a0f1f] to-[#05070d]">
+              <div className="max-w-6xl mx-auto text-center mb-12">
+                <h2 className="text-4xl md:text-6xl font-black text-white mb-4">
+                  Storie che parlano da sole
+                </h2>
+                <p className="text-white/60 text-lg">
+                  Aziende che hanno automatizzato vendite, prenotazioni e supporto.
+                </p>
+              </div>
+              <CardStack
+                items={[
+                  { id: 1, title: "Strapizzami", description: "+38% ordini WhatsApp in 30 giorni", imageSrc: cardStackImages[0], tag: "Pizzeria", ctaLabel: "Vedi demo", href: "/demo/strapizzami" },
+                  { id: 2, title: "Paperfish", description: "Prenotazioni gestite 24/7 dall'AI", imageSrc: cardStackImages[1], tag: "Sushi", ctaLabel: "Vedi demo", href: "/demo/paperfish" },
+                  { id: 3, title: "Batey Pacifico", description: "Yacht charter senza staff telefono", imageSrc: cardStackImages[2], tag: "Boat", ctaLabel: "Vedi demo", href: "/demo/batey" },
+                  { id: 4, title: "NCC Luxury", description: "Voice agent multilingua per booking", imageSrc: cardStackImages[3], tag: "NCC", ctaLabel: "Vedi demo", href: "/demo/ncc" },
+                  { id: 5, title: "Beauty Studio", description: "Agenda piena, zero no-show", imageSrc: cardStackImages[4], tag: "Beauty", ctaLabel: "Vedi demo", href: "/demo/beauty" },
+                  { id: 6, title: "Fitness Club", description: "Onboarding membri automatico", imageSrc: cardStackImages[5], tag: "Fitness", ctaLabel: "Vedi demo", href: "/demo/fitness" },
+                ]}
+                cardWidth={300}
+                cardHeight={420}
+                autoAdvance
+                intervalMs={4000}
+                showDots
+              />
+            </section>
+          </Suspense>
+
+          {/* 13. PROOF orizzontale — numeri */}
+          <ProofHorizontal />
+
+          {/* 14. CINEMATIC HERO 21 — bridge verso CTA */}
+          <Suspense fallback={null}>
+            <section className="relative">
+              <CinematicHero21
+                brandName="Empire"
+                tagline1="Il tuo impero,"
+                tagline2="su pilota automatico."
+                cardHeading="L'AI che lavora mentre dormi."
+                cardDescription={
+                  <>
+                    <span className="text-white font-semibold">Empire</span> automatizza WhatsApp, telefonate, prenotazioni
+                    e pagamenti per ristoranti, NCC, beauty, fitness e altri 25+ settori.
+                    Stripe integrato, demo in 60 secondi.
+                  </>
+                }
+                metricValue={3500}
+                metricLabel="Aziende automatizzate"
+                ctaHeading="Vuoi vedere la tua azienda dentro?"
+                ctaDescription="Genera il tuo sito demo personalizzato in 60 secondi. Gratis, no carta."
+              />
+            </section>
+          </Suspense>
+
+          {/* 15. CTA finale magnetica */}
+          <MagneticCTA />
+
+          {/* 16. FOOTER cinematografico (21st curtain reveal) */}
+          <Suspense fallback={null}>
+            <MotionFooter />
+          </Suspense>
         </div>
 
         <FilmGrain />
