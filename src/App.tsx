@@ -193,6 +193,7 @@ const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const CustomPreviewPublicPage = lazy(() => import("./pages/CustomPreviewPublicPage"));
 const PublicMockupSuitePage = lazy(() => import("./pages/PublicMockupSuitePage"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
+const MockupCatalogPage = lazy(() => import("./pages/MockupCatalogPage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
 const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => importWithRetry(() => import("./pages/OnboardingPage")));
@@ -624,7 +625,7 @@ function App() {
                         </ProtectedRoute>
                       } />
                       <Route path="/landing" element={<StaticIframePage src="/homepage.html" title="Empire.AI" />} />
-                      <Route path="/catalogo" element={<StaticIframePage src="/catalogo-completo.html" title="Catalogo Completo" />} />
+                      <Route path="/catalogo" element={<MockupCatalogPage />} />
 
                       {/* Onboarding (post-payment branding/data completion) */}
                       <Route path="/onboarding" element={
