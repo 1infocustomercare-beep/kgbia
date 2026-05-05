@@ -1,29 +1,20 @@
 import { useRef, useCallback } from "react";
 import { motion, useSpring } from "framer-motion";
-import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import { createMockupPool } from "@/lib/mockup-pool";
 
 const WAVE_SPRING = { stiffness: 160, damping: 22, mass: 0.6 };
 const SCENE_SPRING = { stiffness: 80, damping: 22, mass: 1 };
 const Z_SPREAD = 42;
 const SIGMA = 2.8;
 
-// Mockup Empire reali da tutti i settori (22 panel = 22 mockup unici dove possibile)
+// Pool privato per StackedPanels — interleaved tra settori (no ripetizioni adiacenti).
+const _pool = createMockupPool();
+// salta i primi 8 (usati altrove) per ridurre overlap visivo con altre sezioni
+_pool.images(8);
 const EMPIRE_PANELS: string[] = (() => {
-  const out: string[] = [];
-  const sectors = Object.keys(SECTOR_MOCKUP_IMAGES) as Array<keyof typeof SECTOR_MOCKUP_IMAGES>;
-  // Round-robin: 1 mockup per settore, poi un secondo giro, ecc.
-  let i = 0;
-  while (out.length < 22 && i < 50) {
-    for (const s of sectors) {
-      const list = SECTOR_MOCKUP_IMAGES[s] ?? [];
-      if (list[i]) out.push(list[i]);
-      if (out.length >= 22) break;
-    }
-    i++;
-  }
-  // Fallback se settori vuoti
-  while (out.length < 22) out.push("/placeholder.svg");
-  return out;
+  const arr = _pool.images(22);
+  while (arr.length < 22) arr.push("/placeholder.svg");
+  return arr;
 })();
 
 const PANEL_COUNT = EMPIRE_PANELS.length; // = 22
