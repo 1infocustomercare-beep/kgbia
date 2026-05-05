@@ -6,6 +6,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import RealisticIPhonePreview from "@/components/empire-home/RealisticIPhonePreview";
 
 // 8 Feature reali di Empire (italiano, B2B)
 type Feature = { id: string; label: string; icon: LucideIcon; image: string; description: string };
@@ -20,19 +21,19 @@ const fb = (arr: string[], i: number) => arr[i % Math.max(arr.length, 1)] ?? "/p
 
 const FEATURES: Feature[] = [
   { id: "webapp", label: "Web App su misura",  icon: Sparkles,      image: fb(M_FOOD, 0),
-    description: "Sito + ordini + prenotazioni + pagamenti, generato in 90 secondi a partire dai tuoi dati reali." },
+    description: "Sito operativo, catalogo, booking, pagamenti e area cliente costruiti sui flussi reali della tua attività." },
   { id: "whatsapp", label: "WhatsApp che vende", icon: MessageSquare, image: fb(M_BEAUTY, 1),
-    description: "Risponde 24/7, conferma appuntamenti, recupera carrelli abbandonati. Risposta media 11 secondi." },
+    description: "Risponde alle richieste, qualifica il cliente, conferma appuntamenti e passa allo staff solo i casi importanti." },
   { id: "voice", label: "Voice Agent",          icon: Mic,           image: fb(M_HOSP, 0),
     description: "Risponde alle telefonate con voce naturale, prenota tavoli e camere, salva il cliente nel CRM." },
   { id: "demo", label: "Demo automatica",       icon: Bot,           image: fb(M_FOOD, 2),
-    description: "Trovi un lead, generi sito + admin in 90 secondi e glielo mostri al telefono. Chiusura immediata." },
+    description: "Da un lead si prepara una presentazione realistica con mockup, sito dimostrativo e flusso commerciale chiaro." },
   { id: "crm", label: "CRM 360°",                icon: Users,         image: fb(M_NCC, 0),
     description: "Ogni cliente, ordine, recensione e messaggio in un unico profilo. Riconosce chi torna." },
   { id: "payments", label: "Pagamenti integrati", icon: CreditCard,   image: fb(M_FITNESS, 0),
-    description: "Stripe, abbonamenti, ricariche, fatturazione elettronica IT. Incassi in 2 minuti." },
+    description: "Incassi, acconti, abbonamenti e checkout collegati al processo: meno messaggi manuali, più controllo." },
   { id: "reviews", label: "Scudo recensioni",     icon: Star,          image: fb(M_BEAUTY, 2),
-    description: "Filtra le 1-3 stelle prima che arrivino su Google, redirige le 4-5 al review pubblico." },
+    description: "Raccoglie feedback, intercetta problemi operativi e aiuta a trasformare clienti soddisfatti in prove sociali." },
   { id: "analytics", label: "Analytics in tempo reale", icon: BarChart3, image: fb(M_NCC, 2),
     description: "Margini, ticket medio, top prodotti, churn. Niente fogli Excel: l'AI ti dice cosa fare oggi." },
 ];
