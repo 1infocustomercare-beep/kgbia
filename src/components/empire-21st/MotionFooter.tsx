@@ -207,16 +207,17 @@ MagneticButton.displayName = "MagneticButton";
 // -------------------------------------------------------------------------
 // 3. MAIN COMPONENT
 // -------------------------------------------------------------------------
-const MarqueeItem = () => (
-  <div className="flex items-center space-x-12 px-6">
+const MarqueeItem = React.forwardRef<HTMLDivElement>((_, ref) => (
+  <div ref={ref} className="flex items-center space-x-12 px-6">
     <span>Automazione Senza Limiti</span> <span className="text-primary/60">✦</span>
     <span>WhatsApp AI 24/7</span> <span className="text-secondary/60">✦</span>
     <span>Voice Agent Multilingua</span> <span className="text-primary/60">✦</span>
     <span>CRM + Pagamenti Stripe</span> <span className="text-secondary/60">✦</span>
-    <span>Demo Generata in 60 Secondi</span> <span className="text-primary/60">✦</span>
+    <span>Demo in 60 Secondi</span> <span className="text-primary/60">✦</span>
     <span>Per Ogni Settore Business</span> <span className="text-secondary/60">✦</span>
   </div>
-);
+));
+MarqueeItem.displayName = "MarqueeItem";
 
 export function CinematicFooter() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -326,7 +327,7 @@ export function CinematicFooter() {
               <div className="flex flex-wrap justify-center gap-4 w-full">
                 <MagneticButton as="a" href="/auth" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
                   <span className="text-primary">⚡</span>
-                  Prova Gratis 90 Giorni
+                  Inizia ora
                 </MagneticButton>
 
                 <MagneticButton as="a" href="/join" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">

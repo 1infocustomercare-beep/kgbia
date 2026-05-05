@@ -86,11 +86,11 @@ export default function MagneticCTA() {
             boxShadow: "0 40px 100px -20px rgba(167,139,250,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",
           }}
         >
-          <span className="relative z-10">Prenota la tua demo gratuita →</span>
+          <span className="relative z-10">Inizia ora →</span>
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
         </button>
 
-        <p className="mt-5 text-[10px] uppercase tracking-[2px] text-white/40 sm:mt-6 sm:text-[11px]">Garanzia soddisfatti 90 giorni · Nessuna carta richiesta · Live in 7 giorni</p>
+        <p className="mt-5 text-[10px] uppercase tracking-[2px] text-white/40 sm:mt-6 sm:text-[11px]">Setup guidato · Cancelli quando vuoi · Supporto in italiano</p>
       </div>
     </section>
   );
