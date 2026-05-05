@@ -57,6 +57,7 @@ export type CardStackProps<T extends CardStackItem> = {
 
   /** UI */
   showDots?: boolean;
+  scrollDriven?: boolean;
   className?: string;
 
   /** Hooks */
@@ -109,6 +110,7 @@ export function CardStack<T extends CardStackItem>({
   pauseOnHover = true,
 
   showDots = true,
+  scrollDriven = false,
   className,
 
   onChangeIndex,
@@ -121,6 +123,7 @@ export function CardStack<T extends CardStackItem>({
     wrapIndex(initialIndex, len),
   );
   const [hovering, setHovering] = React.useState(false);
+  const rootRef = React.useRef<HTMLDivElement>(null);
 
   // keep active in bounds if items change
   React.useEffect(() => {
@@ -186,12 +189,30 @@ export function CardStack<T extends CardStackItem>({
     next,
   ]);
 
+  React.useEffect(() => {
+    if (!scrollDriven || !len) return;
+    const updateFromScroll = () => {
+      const rect = rootRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const progress = Math.min(Math.max((window.innerHeight * 0.82 - rect.top) / (rect.height + window.innerHeight * 0.45), 0), 1);
+      setActive(Math.min(len - 1, Math.round(progress * (len - 1))));
+    };
+    updateFromScroll();
+    window.addEventListener("scroll", updateFromScroll, { passive: true });
+    window.addEventListener("resize", updateFromScroll);
+    return () => {
+      window.removeEventListener("scroll", updateFromScroll);
+      window.removeEventListener("resize", updateFromScroll);
+    };
+  }, [scrollDriven, len]);
+
   if (!len) return null;
 
   const activeItem = items[active]!;
 
   return (
     <div
+      ref={rootRef}
       className={cn("w-full", className)}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
