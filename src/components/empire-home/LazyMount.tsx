@@ -62,7 +62,7 @@ export default function LazyMount({
       ref={ref}
       id={id}
       className={className}
-      style={!mounted ? { minHeight } : undefined}
+      style={{ minHeight }}
     >
       {mounted ? children : null}
     </div>
