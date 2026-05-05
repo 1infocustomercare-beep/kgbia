@@ -97,6 +97,14 @@ export default function EmpireHeroV3() {
     };
   }, [isPaused]);
 
+  // Selezione manuale: cambia mockup E resetta il timer in modo pulito,
+  // così il nuovo mockup riceve l'intero DWELL_MS prima del prossimo scatto.
+  const selectMockup = (idx: number) => {
+    setActive(idx);
+    setIsPaused(true);
+    window.setTimeout(() => setIsPaused(false), 60); // toggle → useEffect re-run → schedule pulito
+  };
+
   // Mouse parallax leggero (solo se desktop e no reduced motion)
   useEffect(() => {
     if (typeof window === "undefined") return;
