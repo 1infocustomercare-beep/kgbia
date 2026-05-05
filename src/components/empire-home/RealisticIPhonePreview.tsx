@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 type RealisticIPhonePreviewProps = {
@@ -17,7 +18,7 @@ const sizeClass = {
   xl: "w-[226px] sm:w-[268px] md:w-[304px]",
 };
 
-export default function RealisticIPhonePreview({
+const RealisticIPhonePreview = forwardRef<HTMLElement, RealisticIPhonePreviewProps>(function RealisticIPhonePreview({
   src,
   alt,
   label,
@@ -25,9 +26,9 @@ export default function RealisticIPhonePreview({
   priority = false,
   className,
   screenClassName,
-}: RealisticIPhonePreviewProps) {
+}, ref) {
   return (
-    <figure className={cn("relative flex flex-col items-center", className)}>
+    <figure ref={ref} className={cn("relative flex flex-col items-center", className)}>
       <div className={cn("relative aspect-[9/19.5] shrink-0", sizeClass[size])}>
         <div
           aria-hidden
@@ -109,4 +110,6 @@ export default function RealisticIPhonePreview({
       ) : null}
     </figure>
   );
-}
+});
+
+export default RealisticIPhonePreview;
