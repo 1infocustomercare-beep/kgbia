@@ -1,92 +1,43 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Zap, Sparkles, Target, TrendingUp, Users, Bot, Rocket } from "lucide-react";
-// Change Here
-const FEATURES = [
-  {
-    id: "sustainable",
-    label: "Sustainable Sourcing",
-    icon: Pizza04Icon,
-    image:
-      "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200",
-    description: "Ethically sourced ingredients from local farmers.",
-  },
-  {
-    id: "community",
-    label: "Community Focused",
-    icon: CommandFreeIcons,
-    image:
-      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200",
-    description: "Building stronger bonds through shared experiences.",
-  },
-  {
-    id: "global",
-    label: "Global Reach",
-    icon: GlobalSearchIcon,
-    image:
-      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1200",
-    description: "Connecting visionaries across all continents.",
-  },
-  {
-    id: "award",
-    label: "Award Winning",
-    icon: CheckmarkCircle01Icon,
-    image:
-      "https://images.unsplash.com/photo-1578574577315-3fbeb0cecdc2?q=80&w=1200",
-    description: "Recognized excellence in design and innovation.",
-  },
-  {
-    id: "cloud",
-    label: "Cloud Ready",
-    icon: AiCloudIcon,
-    image:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200",
-    description: "Scale your infrastructure with seamless ease.",
-  },
-  {
-    id: "mobile",
-    label: "Mobile First",
-    icon: SmartPhone01Icon,
-    image:
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1200",
-    description: "A world-class experience on every single device.",
-  },
-  {
-    id: "analytics",
-    label: "Real-time Analytics",
-    icon: DashboardSquare01Icon,
-    image:
-      "https://images.unsplash.com/photo-1551288049-bbda38a10ad5?q=80&w=1200",
-    description: "Insights at your fingertips, updated in real-time.",
-  },
-  {
-    id: "security",
-    label: "Enterprise Security",
-    icon: CheckmarkCircle01Icon,
-    image:
-      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200",
-    description: "Bank-grade security protocols for your data.",
-  },
-  {
-    id: "magic",
-    label: "Magic Automations",
-    icon: MagicWandIcon,
-    image:
-      "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1200",
-    description: "Let AI handle the repetitive tasks for you.",
-  },
-  {
-    id: "local",
-    label: "Locally Owned",
-    icon: CheckmarkCircle01Icon,
-    image:
-      "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1200",
-    description: "Supporting local businesses and creators.",
-  },
+import {
+  Bot, MessageSquare, Mic, Sparkles, Users, CreditCard, Star, BarChart3,
+  type LucideIcon,
+} from "lucide-react";
+import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+
+// 8 Feature reali di Empire (italiano, B2B)
+type Feature = { id: string; label: string; icon: LucideIcon; image: string; description: string };
+
+const M_FOOD = SECTOR_MOCKUP_IMAGES.food ?? [];
+const M_BEAUTY = SECTOR_MOCKUP_IMAGES.beauty ?? [];
+const M_NCC = SECTOR_MOCKUP_IMAGES.ncc ?? [];
+const M_FITNESS = SECTOR_MOCKUP_IMAGES.fitness ?? [];
+const M_HOSP = SECTOR_MOCKUP_IMAGES.hospitality ?? [];
+
+const fb = (arr: string[], i: number) => arr[i % Math.max(arr.length, 1)] ?? "/placeholder.svg";
+
+const FEATURES: Feature[] = [
+  { id: "webapp", label: "Web App su misura",  icon: Sparkles,      image: fb(M_FOOD, 0),
+    description: "Sito + ordini + prenotazioni + pagamenti, generato in 90 secondi a partire dai tuoi dati reali." },
+  { id: "whatsapp", label: "WhatsApp che vende", icon: MessageSquare, image: fb(M_BEAUTY, 1),
+    description: "Risponde 24/7, conferma appuntamenti, recupera carrelli abbandonati. Risposta media 11 secondi." },
+  { id: "voice", label: "Voice Agent",          icon: Mic,           image: fb(M_HOSP, 0),
+    description: "Risponde alle telefonate con voce naturale, prenota tavoli e camere, salva il cliente nel CRM." },
+  { id: "demo", label: "Demo automatica",       icon: Bot,           image: fb(M_FOOD, 2),
+    description: "Trovi un lead, generi sito + admin in 90 secondi e glielo mostri al telefono. Chiusura immediata." },
+  { id: "crm", label: "CRM 360°",                icon: Users,         image: fb(M_NCC, 0),
+    description: "Ogni cliente, ordine, recensione e messaggio in un unico profilo. Riconosce chi torna." },
+  { id: "payments", label: "Pagamenti integrati", icon: CreditCard,   image: fb(M_FITNESS, 0),
+    description: "Stripe, abbonamenti, ricariche, fatturazione elettronica IT. Incassi in 2 minuti." },
+  { id: "reviews", label: "Scudo recensioni",     icon: Star,          image: fb(M_BEAUTY, 2),
+    description: "Filtra le 1-3 stelle prima che arrivino su Google, redirige le 4-5 al review pubblico." },
+  { id: "analytics", label: "Analytics in tempo reale", icon: BarChart3, image: fb(M_NCC, 2),
+    description: "Margini, ticket medio, top prodotti, churn. Niente fogli Excel: l'AI ti dice cosa fare oggi." },
 ];
 
-const AUTO_PLAY_INTERVAL = 3000;
+const AUTO_PLAY_INTERVAL = 4500;
 const ITEM_HEIGHT = 65;
 
 const wrap = (min: number, max: number, v: number) => {
@@ -98,12 +49,9 @@ export function FeatureCarousel() {
   const [step, setStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const currentIndex =
-    ((step % FEATURES.length) + FEATURES.length) % FEATURES.length;
+  const currentIndex = ((step % FEATURES.length) + FEATURES.length) % FEATURES.length;
 
-  const nextStep = useCallback(() => {
-    setStep((prev) => prev + 1);
-  }, []);
+  const nextStep = useCallback(() => setStep((prev) => prev + 1), []);
 
   const handleChipClick = (index: number) => {
     const diff = (index - currentIndex + FEATURES.length) % FEATURES.length;
@@ -119,11 +67,9 @@ export function FeatureCarousel() {
   const getCardStatus = (index: number) => {
     const diff = index - currentIndex;
     const len = FEATURES.length;
-
     let normalizedDiff = diff;
     if (diff > len / 2) normalizedDiff -= len;
     if (diff < -len / 2) normalizedDiff += len;
-
     if (normalizedDiff === 0) return "active";
     if (normalizedDiff === -1) return "prev";
     if (normalizedDiff === 1) return "next";
@@ -132,37 +78,27 @@ export function FeatureCarousel() {
 
   return (
     <div className="w-full max-w-7xl mx-auto md:p-8">
-      <div className="relative overflow-hidden rounded-[2.5rem] lg:rounded-[4rem] flex flex-col lg:flex-row min-h-[600px] lg:aspect-video border border-border/40">
-        <div className="w-full lg:w-[40%] min-h-[350px] md:min-h-[450px] lg:h-full relative z-30 flex flex-col items-start justify-center overflow-hidden px-8 md:px-16 lg:pl-16 bg-[#62B2FE] ">
-          <div className="absolute inset-x-0 top-0 h-12 md:h-20 lg:h-16 bg-gradient-to-b from-[#62B2FE] via-[#62B2FE]/80 to-transparent z-40" />
-          <div className="absolute inset-x-0 bottom-0 h-12 md:h-20 lg:h-16 bg-gradient-to-t from-[#62B2FE] via-[#62B2FE]/80 to-transparent z-40" />
-          <div className="relative w-full h-full flex items-center justify-center lg:justify-start z-20">
+      <div className="relative overflow-hidden rounded-[1.75rem] lg:rounded-[2.5rem] flex flex-col lg:flex-row min-h-[560px] lg:min-h-[520px] border border-white/10 bg-[#0b0d12]">
+        {/* LEFT: chips list */}
+        <div className="w-full lg:w-[42%] min-h-[280px] md:min-h-[340px] lg:h-auto relative z-30 flex flex-col items-start justify-center overflow-hidden px-6 md:px-12 lg:pl-14 bg-gradient-to-br from-[#1a1226] via-[#11141a] to-[#0b0d12]">
+          <div className="absolute inset-x-0 top-0 h-12 md:h-16 bg-gradient-to-b from-[#11141a] via-[#11141a]/80 to-transparent z-40" />
+          <div className="absolute inset-x-0 bottom-0 h-12 md:h-16 bg-gradient-to-t from-[#11141a] via-[#11141a]/80 to-transparent z-40" />
+          <div className="relative w-full h-full flex items-center justify-center lg:justify-start z-20 py-16">
             {FEATURES.map((feature, index) => {
               const isActive = index === currentIndex;
               const distance = index - currentIndex;
-              const wrappedDistance = wrap(
-                -(FEATURES.length / 2),
-                FEATURES.length / 2,
-                distance
-              );
+              const wrappedDistance = wrap(-(FEATURES.length / 2), FEATURES.length / 2, distance);
+              const Icon = feature.icon;
 
               return (
                 <motion.div
                   key={feature.id}
-                  style={{
-                    height: ITEM_HEIGHT,
-                    width: "fit-content",
-                  }}
+                  style={{ height: ITEM_HEIGHT, width: "fit-content" }}
                   animate={{
                     y: wrappedDistance * ITEM_HEIGHT,
-                    opacity: 1 - Math.abs(wrappedDistance) * 0.25,
+                    opacity: 1 - Math.abs(wrappedDistance) * 0.28,
                   }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 90,
-                    damping: 22,
-                    mass: 1,
-                  }}
+                  transition={{ type: "spring", stiffness: 90, damping: 22, mass: 1 }}
                   className="absolute flex items-center justify-start"
                 >
                   <button
@@ -170,25 +106,14 @@ export function FeatureCarousel() {
                     onMouseEnter={() => setIsPaused(true)}
                     onMouseLeave={() => setIsPaused(false)}
                     className={cn(
-                      "relative flex items-center gap-4 px-6 md:px-10 lg:px-8 py-3.5 md:py-5 lg:py-4 rounded-full transition-all duration-700 text-left group border",
+                      "relative flex items-center gap-3 px-5 md:px-7 py-3 md:py-3.5 rounded-full transition-all duration-700 text-left group border min-h-[44px]",
                       isActive
-                        ? "bg-white text-[#62B2FE] border-white z-10"
-                        : "bg-transparent text-white/60 border-white/20 hover:border-white/40 hover:text-white"
+                        ? "bg-gradient-to-r from-amber-300 to-amber-500 text-black border-amber-300 z-10 shadow-[0_0_24px_rgba(245,158,11,0.45)]"
+                        : "bg-white/5 text-white/55 border-white/10 hover:border-white/30 hover:text-white/90"
                     )}
                   >
-                    <div
-                      className={cn(
-                        "flex items-center justify-center transition-colors duration-500",
-                        isActive ? "text-[#62B2FE]" : "text-white/40"
-                      )}
-                    >
-                      <Sparkles
-                        size={18}
-                        strokeWidth={2}
-                      />
-                    </div>
-
-                    <span className="font-normal text-sm md:text-[15px] tracking-tight whitespace-nowrap uppercase">
+                    <Icon size={16} strokeWidth={2.2} className={isActive ? "text-black" : "text-white/50"} />
+                    <span className="font-semibold text-[12px] md:text-[13px] tracking-tight whitespace-nowrap uppercase">
                       {feature.label}
                     </span>
                   </button>
@@ -198,7 +123,8 @@ export function FeatureCarousel() {
           </div>
         </div>
 
-        <div className="flex-1 min-h-[500px] md:min-h-[600px] lg:h-full relative bg-secondary/30 flex items-center justify-center py-16 md:py-24 lg:py-16 px-6 md:px-12 lg:px-10 overflow-hidden border-t lg:border-t-0 lg:border-l border-border/20">
+        {/* RIGHT: image stack */}
+        <div className="flex-1 min-h-[420px] md:min-h-[520px] relative bg-[#080a0f] flex items-center justify-center py-12 md:py-20 px-6 md:px-12 overflow-hidden border-t lg:border-t-0 lg:border-l border-white/10">
           <div className="relative w-full max-w-[420px] aspect-[4/5] flex items-center justify-center">
             {FEATURES.map((feature, index) => {
               const status = getCardStatus(index);
@@ -218,23 +144,17 @@ export function FeatureCarousel() {
                     zIndex: isActive ? 20 : isPrev || isNext ? 10 : 0,
                     pointerEvents: isActive ? "auto" : "none",
                   }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 260,
-                    damping: 25,
-                    mass: 0.8,
-                  }}
-                  className="absolute inset-0 rounded-[2rem] md:rounded-[2.8rem] overflow-hidden border-4 md:border-8 border-background bg-background origin-center"
+                  transition={{ type: "spring", stiffness: 260, damping: 25, mass: 0.8 }}
+                  className="absolute inset-0 rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border-4 md:border-[6px] border-[#11141a] bg-[#11141a] origin-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
                 >
                   <img
                     src={feature.image}
                     alt={feature.label}
                     className={cn(
                       "w-full h-full object-cover transition-all duration-700",
-                      isActive
-                        ? "grayscale-0 blur-0"
-                        : "grayscale blur-[2px] brightness-75"
+                      isActive ? "grayscale-0 blur-0" : "grayscale blur-[2px] brightness-75"
                     )}
+                    loading="lazy"
                   />
 
                   <AnimatePresence>
@@ -243,12 +163,12 @@ export function FeatureCarousel() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
-                        className="absolute inset-x-0 bottom-0 p-10 pt-32 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end pointer-events-none"
+                        className="absolute inset-x-0 bottom-0 p-6 md:p-8 pt-24 bg-gradient-to-t from-black/95 via-black/55 to-transparent flex flex-col justify-end pointer-events-none"
                       >
-                        <div className="bg-background text-foreground px-4 py-1.5 rounded-full text-[11px] font-normal uppercase tracking-[0.2em] w-fit shadow-lg mb-3 border border-border/50">
-                          {index + 1} • {feature.label}
+                        <div className="bg-amber-300 text-black px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] w-fit mb-3">
+                          {String(index + 1).padStart(2, "0")} · {feature.label}
                         </div>
-                        <p className="text-white font-normal text-xl md:text-2xl leading-tight drop-shadow-md tracking-tight">
+                        <p className="text-white font-medium text-base md:text-lg leading-snug drop-shadow-md tracking-tight">
                           {feature.description}
                         </p>
                       </motion.div>
@@ -257,13 +177,13 @@ export function FeatureCarousel() {
 
                   <div
                     className={cn(
-                      "absolute top-8 left-8 flex items-center gap-3 transition-opacity duration-300",
+                      "absolute top-5 left-5 flex items-center gap-2 transition-opacity duration-300",
                       isActive ? "opacity-100" : "opacity-0"
                     )}
                   >
-                    <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" />
-                    <span className="text-white/80 text-[10px] font-normal uppercase tracking-[0.3em] font-mono">
-                      Live Session
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981]" />
+                    <span className="text-white/80 text-[10px] font-semibold uppercase tracking-[0.25em]">
+                      Attivo ora
                     </span>
                   </div>
                 </motion.div>
@@ -276,4 +196,4 @@ export function FeatureCarousel() {
   );
 }
 
-export default FeatureCarousel
+export default FeatureCarousel;
