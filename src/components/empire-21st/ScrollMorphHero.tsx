@@ -241,8 +241,8 @@ export default function IntroAnimation() {
     const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
 
     return (
-        <section ref={rootRef} className="relative min-h-[260svh] bg-[#FAFAFA]">
-        <div ref={containerRef} className="sticky top-0 w-full h-[100svh] bg-[#FAFAFA] overflow-hidden">
+        <section ref={rootRef} className="relative min-h-[320svh] bg-background">
+        <div ref={containerRef} className="sticky top-0 w-full h-[100svh] bg-background overflow-hidden">
             {/* Container */}
             <div className="flex h-full w-full flex-col items-center justify-center perspective-1000">
 
@@ -252,17 +252,17 @@ export default function IntroAnimation() {
                         initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
                         transition={{ duration: 1 }}
-                        className="text-2xl font-medium tracking-tight text-gray-800 md:text-4xl"
+                        className="px-4 text-center text-2xl font-black tracking-normal text-foreground md:text-5xl"
                     >
-                        The future is built on AI.
+                        Tutti i processi, in un unico sistema.
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mt-4 text-xs font-bold tracking-[0.2em] text-gray-500"
+                        className="mt-4 text-xs font-bold uppercase tracking-[0.22em] text-foreground/55"
                     >
-                        SCROLL TO EXPLORE
+                        Scrolla per vedere la composizione
                     </motion.p>
                 </div>
 
@@ -271,12 +271,11 @@ export default function IntroAnimation() {
                     style={{ opacity: contentOpacity, y: contentY }}
                     className="absolute top-[10%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
-                    <h2 className="text-3xl md:text-5xl font-semibold text-gray-900 tracking-tight mb-4">
-                        Explore Our Vision
+                    <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-normal mb-4">
+                        Dal caos operativo al flusso automatico
                     </h2>
-                    <p className="text-sm md:text-base text-gray-600 max-w-lg leading-relaxed">
-                        Discover a world where technology meets creativity. <br className="hidden md:block" />
-                        Scroll through our curated collection of innovations designed to shape the future.
+                    <p className="text-sm md:text-base text-foreground/64 max-w-xl leading-relaxed">
+                        Ogni mockup rappresenta un touchpoint: sito, WhatsApp, prenotazione, pagamento, CRM e follow-up. L'effetto mostra come diventano un ecosistema unico.
                     </p>
                 </motion.div>
 

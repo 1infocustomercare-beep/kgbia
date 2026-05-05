@@ -5,6 +5,7 @@ import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import RealisticIPhonePreview from "@/components/empire-home/RealisticIPhonePreview";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -213,10 +214,10 @@ export default function InteractiveSectorReel() {
                   type="button"
                   data-reel-card
                   onClick={() => navigate(`/demo/${DEMO_SLUGS[card.id]}`)}
-                  className="group relative shrink-0 snap-start overflow-hidden rounded-[1.5rem] border border-foreground/10 bg-background/40 text-left backdrop-blur-md transition-all duration-500 active:scale-[0.98]"
+                  className="group relative flex shrink-0 snap-start flex-col items-center overflow-hidden rounded-[1.5rem] border border-foreground/10 bg-background/85 px-5 pb-5 pt-6 text-left shadow-[0_18px_60px_-34px_hsl(0_0%_0%)] transition-all duration-500 active:scale-[0.98]"
                   style={{
-                    width: "min(72vw, 280px)",
-                    aspectRatio: "9 / 16",
+                    width: "min(78vw, 300px)",
+                    minHeight: "520px",
                     boxShadow: isActive
                       ? `0 30px 80px -24px ${card.accent}, 0 0 0 1px ${card.accent.replace("hsl(", "hsla(").replace(")", " / 0.35)")}`
                       : "0 18px 50px -28px hsl(0 0% 0% / 0.85)",
@@ -225,28 +226,10 @@ export default function InteractiveSectorReel() {
                   }}
                   aria-label={`Apri demo ${card.label}`}
                 >
-                  {/* Mockup */}
-                  <div className="absolute inset-0">
-                    <img
-                      src={card.image}
-                      alt={card.label}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      loading="lazy"
-                      draggable={false}
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(180deg, hsl(0 0% 0% / 0) 30%, hsl(0 0% 0% / 0.55) 75%, hsl(0 0% 0% / 0.95) 100%)",
-                      }}
-                    />
-                  </div>
-
                   {/* Badge top */}
-                  <div className="absolute left-3 top-3">
+                  <div className="absolute left-3 top-3 z-20">
                     <span
-                      className="rounded-full px-2 py-1 text-[8px] font-bold uppercase tracking-[2px] backdrop-blur-md"
+                      className="rounded-full px-2 py-1 text-[8px] font-bold uppercase tracking-[2px]"
                       style={{
                         background: `${card.accent.replace("hsl(", "hsla(").replace(")", " / 0.22)")}`,
                         color: card.accent,
@@ -257,18 +240,25 @@ export default function InteractiveSectorReel() {
                     </span>
                   </div>
 
-                  {/* Copy */}
-                  <div className="absolute inset-x-0 bottom-0 p-4">
+                  <RealisticIPhonePreview
+                    src={card.image}
+                    alt={card.label}
+                    size="lg"
+                    className="mt-2 transition-transform duration-700 group-hover:-translate-y-1"
+                  />
+
+                  {/* Copy separato: non copre mai il mockup */}
+                  <div className="mt-5 w-full text-center">
                     <div
                       className="text-[9px] font-bold uppercase tracking-[2px]"
                       style={{ color: card.accent }}
                     >
                       {card.tag}
                     </div>
-                    <h3 className="mt-1 font-heading text-base font-black uppercase leading-tight text-white sm:text-lg">
+                    <h3 className="mt-1 font-heading text-base font-black uppercase leading-tight text-foreground sm:text-lg">
                       {card.label}
                     </h3>
-                    <div className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[2px] text-white/85">
+                    <div className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[2px] text-foreground/80">
                       Apri demo
                       <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
                     </div>

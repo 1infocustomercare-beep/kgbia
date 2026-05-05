@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { pickMockup } from "@/lib/mockup-rotation";
+import RealisticIPhonePreview from "@/components/empire-home/RealisticIPhonePreview";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -161,30 +162,17 @@ export default function MockupShowcase() {
         <div className="relative flex flex-col items-center justify-start gap-8 px-4 pb-32 pt-44 sm:pt-56 lg:absolute lg:inset-0 lg:flex-row lg:justify-center lg:gap-0 lg:px-0 lg:pb-0 lg:pt-0">
           {SLIDES.map((slide, i) => (
             <div
-              key={i}
+              key={`${slide.sector}-${slide.img}`}
               data-phone
               className="relative z-[3] lg:absolute lg:left-1/2 lg:top-1/2"
               style={{ transformStyle: "preserve-3d" }}
             >
-              <div
-                className="relative overflow-hidden rounded-[38px] border-[8px] border-black bg-black shadow-2xl sm:rounded-[42px] sm:border-[10px]"
-                style={{
-                  width: "min(248px, 64vw)",
-                  height: "min(508px, 110vw)",
-                  boxShadow: `0 50px 120px -32px ${slide.color}66, 0 0 0 1px rgba(255,255,255,0.05)`,
-                }}
-              >
-                {/* Notch */}
-                <div className="absolute left-1/2 top-0 z-10 h-5 w-28 -translate-x-1/2 rounded-b-2xl bg-black" />
-                <img
-                  src={slide.img}
-                  alt={slide.label}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  draggable={false}
-                />
-                <div className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(80% 60% at 50% 0%, ${slide.color}22, transparent 60%)` }} />
-              </div>
+              <RealisticIPhonePreview
+                src={slide.img!}
+                alt={slide.label}
+                size="lg"
+                className="drop-shadow-[0_44px_80px_hsl(0_0%_0%_/_0.55)]"
+              />
 
               {/* Mobile caption inline (no overlap) */}
               <div className="mt-4 text-center lg:hidden">

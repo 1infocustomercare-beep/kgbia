@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, Grid2X2, Monitor, Smartphone, Sparkles } from "lucide-react";
 import { SECTOR_PORTFOLIO, type SectorPortfolio } from "@/data/sector-mockup-images";
 import type { IndustryId } from "@/config/industry-config";
+import RealisticIPhonePreview from "@/components/empire-home/RealisticIPhonePreview";
 
 type CatalogItem = {
   id: string;
@@ -49,8 +51,10 @@ const flattenPortfolio = (portfolio: SectorPortfolio[]): CatalogItem[] =>
     )
   );
 
-export default function MockupCatalog() {
-  const [expanded, setExpanded] = useState(false);
+export default function MockupCatalog({ mode = "section" }: { mode?: "section" | "page" }) {
+  const navigate = useNavigate();
+  const isPage = mode === "page";
+  const [expanded, setExpanded] = useState(isPage);
   const [sector, setSector] = useState<IndustryId | "all">("all");
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -64,7 +68,7 @@ export default function MockupCatalog() {
   const screensCount = allItems.reduce((sum, item) => sum + item.screens.length + (item.desktopScreens?.length ?? 0), 0);
 
   return (
-    <section id="mockup-catalog" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28">
+    <section id="mockup-catalog" className={`relative overflow-hidden px-4 sm:px-6 ${isPage ? "min-h-screen pb-24 pt-28 sm:pt-32" : "py-20 sm:py-28"}`}>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -94,10 +98,10 @@ export default function MockupCatalog() {
 
           <button
             type="button"
-            onClick={() => setExpanded((v) => !v)}
+            onClick={() => (isPage ? navigate("/home#mockup-catalog") : navigate("/catalogo"))}
             className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-primary/30 bg-primary px-5 py-3 text-sm font-black uppercase tracking-[2px] text-primary-foreground shadow-[0_18px_60px_-24px_hsl(var(--primary))] transition-transform active:scale-[0.98]"
           >
-            {expanded ? "Riduci catalogo" : "Apri tutto il catalogo"}
+            {isPage ? "Torna alla home" : "Apri pagina catalogo"}
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>
@@ -131,15 +135,15 @@ export default function MockupCatalog() {
                 key={item.id}
                 className="group relative overflow-hidden rounded-[1.35rem] border border-foreground/10 bg-foreground/[0.035] shadow-[0_24px_80px_-48px_hsl(0_0%_0%)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/40"
               >
-                <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-                  <img
+                <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden bg-muted px-4 pt-8">
+                  <RealisticIPhonePreview
                     src={item.thumbnail}
                     alt={`${item.brand} ${item.style}`}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading={index < 8 ? "eager" : "lazy"}
-                    draggable={false}
+                    size="lg"
+                    priority={index < 8}
+                    className="transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)_/_0)_35%,hsl(var(--background)_/_0.86)_100%)]" />
+                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)_/_0)_45%,hsl(var(--background)_/_0.9)_100%)]" />
                   <div className="absolute left-3 top-3 rounded-full border border-background/40 bg-background/80 px-2 py-1 text-[9px] font-black uppercase tracking-[2px] text-primary">
                     {item.sectorLabel}
                   </div>
@@ -162,10 +166,10 @@ export default function MockupCatalog() {
                         key={`${item.id}-${screen}-${i}`}
                         type="button"
                         onClick={() => setSelected(isSelected ? null : item.id)}
-                        className="relative aspect-[9/16] overflow-hidden rounded-lg border border-foreground/10 bg-muted transition-transform active:scale-[0.98]"
+                        className="relative flex min-h-[118px] items-center justify-center overflow-hidden rounded-lg border border-foreground/10 bg-muted transition-transform active:scale-[0.98]"
                         aria-label={`Mostra schermate ${item.brand}`}
                       >
-                        <img src={screen} alt={`${item.brand} schermata ${i + 1}`} className="h-full w-full object-cover" loading="lazy" draggable={false} />
+                        <RealisticIPhonePreview src={screen} alt={`${item.brand} schermata ${i + 1}`} size="sm" />
                       </button>
                     ))}
                   </div>

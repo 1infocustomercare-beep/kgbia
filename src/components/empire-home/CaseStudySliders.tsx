@@ -37,7 +37,7 @@ const METRICS: Metric[] = [
     baselineLabel: "ordini/mese baseline",
     Icon: TrendingUp,
     accent: "hsl(42 94% 62%)",
-    copy: (d) => `+${Math.round(1200 * (d / 100))} ordini extra al mese grazie ad agenti AI 24/7, upsell automatici e recupero carrelli.`,
+    copy: (d) => `Scenario: fino a ${Math.round(1200 * (d / 100))} ordini o richieste gestibili con agenti AI, upsell guidati e recupero conversazioni.`,
   },
   {
     id: "ops",
@@ -50,7 +50,7 @@ const METRICS: Metric[] = [
     baselineLabel: "ore/settimana team",
     Icon: Timer,
     accent: "hsl(195 100% 55%)",
-    copy: (d) => `${Math.round(32 * (d / 100))} ore/settimana liberate: prenotazioni, FAQ, follow-up e reportistica gestiti dall'AI.`,
+    copy: (d) => `Scenario: circa ${Math.round(32 * (d / 100))} ore/settimana spostabili da attività manuali a processi automatizzati e controllabili.`,
   },
   {
     id: "conv",
@@ -63,7 +63,7 @@ const METRICS: Metric[] = [
     baselineLabel: "lead/mese",
     Icon: Target,
     accent: "hsl(265 80% 65%)",
-    copy: (d) => `+${Math.round(100 * (d / 100))} clienti acquisiti ogni 100 lead grazie a risposta < 60s, qualifica AI e follow-up multi-canale.`,
+    copy: (d) => `Scenario: fino a ${Math.round(100 * (d / 100))} lead ogni 100 lavorati con risposta rapida, qualifica AI e follow-up multi-canale.`,
   },
 ];
 
@@ -131,8 +131,7 @@ export default function CaseStudySliders() {
             </span>
           </h2>
           <p className="mt-3 max-w-[640px] text-[13px] leading-[1.7] text-white/65 sm:text-[15px]">
-            Numeri basati su clienti Empire AI nei primi 90 giorni. Sposta gli
-            slider per simulare il tuo scenario — ogni leva attiva agenti,
+            Simulatore commerciale: sposta gli slider per capire quali leve operative possiamo progettare per il tuo settore — ogni leva attiva agenti,
             automazioni e flussi che costruiamo per te.
           </p>
         </div>
@@ -241,7 +240,7 @@ export default function CaseStudySliders() {
 
             <div className="relative">
               <div className="text-[10px] font-bold uppercase tracking-[3px] text-white/55">
-                Stima impatto a 90 giorni
+                Scenario operativo stimato
               </div>
               <div
                 className="mt-2 font-heading text-4xl font-black uppercase leading-none tracking-[-0.02em] text-white sm:text-5xl"
@@ -256,7 +255,7 @@ export default function CaseStudySliders() {
                 ).toLocaleString("it-IT")}
               </div>
               <div className="mt-1 text-xs text-white/55">
-                ricavi extra stimati / mese
+                valore potenziale da validare in consulenza
               </div>
 
               <div className="mt-6 space-y-2.5">
@@ -285,7 +284,7 @@ export default function CaseStudySliders() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
               </button>
               <p className="mt-3 text-center text-[10px] uppercase tracking-[2px] text-white/40">
-                Demo gratuita · 7 giorni al go-live
+                Analisi guidata · tempi definiti dopo audit
               </p>
             </div>
           </div>
