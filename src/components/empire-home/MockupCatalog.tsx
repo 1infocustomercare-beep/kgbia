@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, Grid2X2, Monitor, Smartphone, Sparkles } from "lucide-react";
 import { SECTOR_PORTFOLIO, type SectorPortfolio } from "@/data/sector-mockup-images";
 import type { IndustryId } from "@/config/industry-config";
@@ -49,8 +50,10 @@ const flattenPortfolio = (portfolio: SectorPortfolio[]): CatalogItem[] =>
     )
   );
 
-export default function MockupCatalog() {
-  const [expanded, setExpanded] = useState(false);
+export default function MockupCatalog({ mode = "section" }: { mode?: "section" | "page" }) {
+  const navigate = useNavigate();
+  const isPage = mode === "page";
+  const [expanded, setExpanded] = useState(isPage);
   const [sector, setSector] = useState<IndustryId | "all">("all");
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -64,7 +67,7 @@ export default function MockupCatalog() {
   const screensCount = allItems.reduce((sum, item) => sum + item.screens.length + (item.desktopScreens?.length ?? 0), 0);
 
   return (
-    <section id="mockup-catalog" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28">
+    <section id="mockup-catalog" className={`relative overflow-hidden px-4 sm:px-6 ${isPage ? "min-h-screen pb-24 pt-28 sm:pt-32" : "py-20 sm:py-28"}`}>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -94,10 +97,10 @@ export default function MockupCatalog() {
 
           <button
             type="button"
-            onClick={() => setExpanded((v) => !v)}
+            onClick={() => (isPage ? navigate("/home#mockup-catalog") : navigate("/catalogo"))}
             className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-primary/30 bg-primary px-5 py-3 text-sm font-black uppercase tracking-[2px] text-primary-foreground shadow-[0_18px_60px_-24px_hsl(var(--primary))] transition-transform active:scale-[0.98]"
           >
-            {expanded ? "Riduci catalogo" : "Apri tutto il catalogo"}
+            {isPage ? "Torna alla home" : "Apri pagina catalogo"}
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>
