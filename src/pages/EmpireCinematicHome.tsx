@@ -216,6 +216,21 @@ export default function EmpireCinematicHome() {
           {/* 9. CASO STUDIO interattivo (slider risultati) */}
           <CaseStudySliders />
 
+          {/* 9b. INTERLUDIO — Flow Field neurale (background sotto titolo) */}
+          <Suspense fallback={null}>
+            <section className="relative h-[40vh] w-full overflow-hidden bg-[#04060c]">
+              <FlowFieldBackground />
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+                <h3 className="text-3xl md:text-5xl font-black text-white">
+                  Una rete neurale che<br /><span className="text-emerald-300">capisce il tuo settore</span>
+                </h3>
+                <p className="mt-3 text-white/60 text-sm md:text-base max-w-xl">
+                  30+ verticali pre-configurate. La tua attività trova subito il proprio posto.
+                </p>
+              </div>
+            </section>
+          </Suspense>
+
           {/* 10. FEATURE CAROUSEL (21st) — 8 servizi Empire */}
           <Suspense fallback={null}>
             <section id="features-21st" className="relative">
