@@ -1,36 +1,33 @@
 import { useRef, useCallback } from "react";
 import { motion, useSpring } from "framer-motion";
+import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 
-const PANEL_COUNT = 22;
 const WAVE_SPRING = { stiffness: 160, damping: 22, mass: 0.6 };
 const SCENE_SPRING = { stiffness: 80, damping: 22, mass: 1 };
 const Z_SPREAD = 42;
 const SIGMA = 2.8;
 
-const PANEL_IMAGES = [
-  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80",
-  "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=400&q=80",
-  "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=80",
-  "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80",
-  "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400&q=80",
-  "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=400&q=80",
-  "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=400&q=80",
-  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80",
-  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80",
-  "https://images.unsplash.com/photo-1510784722466-f2aa240c3c4a?w=400&q=80",
-  "https://images.unsplash.com/photo-1682687220063-4742bd7fd538?w=400&q=80",
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80",
-  "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&q=80",
-  "https://images.unsplash.com/photo-1540390769625-2fc3f8b1d50c?w=400&q=80",
-  "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80",
-  "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&q=80",
-  "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&q=80",
-  "https://images.unsplash.com/photo-1490682143684-14369e18dce8?w=400&q=80",
-  "https://images.unsplash.com/photo-1501696461415-6bd6660c6742?w=400&q=80",
-  "https://images.unsplash.com/photo-1445962125599-30f582ac21f4?w=400&q=80",
-  "https://images.unsplash.com/photo-1455156218388-5e61b526818b?w=400&q=80",
-  "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=400&q=80",
-];
+// Mockup Empire reali da tutti i settori (22 panel = 22 mockup unici dove possibile)
+const EMPIRE_PANELS: string[] = (() => {
+  const out: string[] = [];
+  const sectors = Object.keys(SECTOR_MOCKUP_IMAGES) as Array<keyof typeof SECTOR_MOCKUP_IMAGES>;
+  // Round-robin: 1 mockup per settore, poi un secondo giro, ecc.
+  let i = 0;
+  while (out.length < 22 && i < 50) {
+    for (const s of sectors) {
+      const list = SECTOR_MOCKUP_IMAGES[s] ?? [];
+      if (list[i]) out.push(list[i]);
+      if (out.length >= 22) break;
+    }
+    i++;
+  }
+  // Fallback se settori vuoti
+  while (out.length < 22) out.push("/placeholder.svg");
+  return out;
+})();
+
+const PANEL_COUNT = EMPIRE_PANELS.length; // = 22
+const PANEL_IMAGES = EMPIRE_PANELS;
 
 const GRADIENT_OVERLAYS = [
   "linear-gradient(135deg, rgba(99,55,255,0.55) 0%, rgba(236,72,153,0.45) 100%)",
