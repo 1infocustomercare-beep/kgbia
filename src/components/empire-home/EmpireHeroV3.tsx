@@ -98,90 +98,104 @@ export default function EmpireHeroV3() {
         />
       </div>
 
-      {/* CONTAINER — flex verticale pulito */}
-        <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-7xl flex-col items-center justify-start px-4 pb-14 pt-24 sm:px-6 sm:pt-28 lg:pt-28">
+      {/* CONTAINER — flex verticale pulito, gap garantito tra blocchi (no sovrapposizioni) */}
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-start px-4 pb-16 pt-20 sm:px-6 sm:pb-20 sm:pt-24 lg:min-h-[100svh] lg:pt-28">
         {/* 1. EYEBROW */}
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/70 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-foreground/80 sm:text-[11px]">
-            <Sparkles className="h-3 w-3 text-primary sm:h-3.5 sm:w-3.5" />
-          <span>Empire AI · Sistema Operativo per Aziende</span>
+        <div className="mb-4 inline-flex max-w-[92vw] items-center gap-2 rounded-full border border-foreground/15 bg-background/70 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-foreground/80 sm:mb-5 sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[0.25em]">
+          <Sparkles className="h-3 w-3 shrink-0 text-primary sm:h-3.5 sm:w-3.5" />
+          <span className="truncate">Empire AI · Sistema Operativo per Aziende</span>
         </div>
 
-        {/* 2. HEADLINE */}
-          <h1 className="max-w-5xl text-center font-black leading-[0.92] tracking-normal text-foreground" style={{ fontSize: "clamp(2.7rem, 8vw, 6.2rem)", textShadow: "0 10px 44px hsl(0 0% 0% / 0.72)" }}>
+        {/* 2. HEADLINE — clamp specifico per mobile per evitare overflow su 320-375px */}
+        <h1
+          className="max-w-5xl text-center font-black leading-[0.95] tracking-tight text-foreground sm:leading-[0.92] sm:tracking-normal"
+          style={{ fontSize: "clamp(2rem, 9vw, 6.2rem)", textShadow: "0 10px 44px hsl(0 0% 0% / 0.72)" }}
+        >
           <span
             className="block"
             style={{
-                background: "linear-gradient(180deg, hsl(var(--foreground)) 0%, hsl(var(--foreground) / 0.72) 100%)",
+              background: "linear-gradient(180deg, hsl(var(--foreground)) 0%, hsl(var(--foreground) / 0.72) 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
           >
-              Trasforma l'azienda
+            Trasforma l'azienda
           </span>
           <span
             className="mt-1 block"
             style={{
-                background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--empire-violet-glow)) 52%, hsl(var(--accent)) 100%)",
+              background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--empire-violet-glow)) 52%, hsl(var(--accent)) 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               WebkitTextFillColor: "transparent",
-                filter: "drop-shadow(0 0 26px hsl(var(--primary) / 0.34))",
+              filter: "drop-shadow(0 0 26px hsl(var(--primary) / 0.34))",
             }}
           >
-              in una macchina operativa AI.
+            in una macchina operativa AI.
           </span>
         </h1>
 
-        {/* 3. SUBHEADLINE */}
-          <p
-            className="mx-auto mt-5 max-w-3xl text-center text-foreground/76"
-          style={{ fontSize: "clamp(0.95rem, 1.6vw, 1.15rem)", lineHeight: 1.55 }}
+        {/* 3. SUBHEADLINE — gap fisso da titolo + max-width controllata su mobile */}
+        <p
+          className="mx-auto mt-4 max-w-[34ch] px-1 text-center text-foreground/76 sm:mt-5 sm:max-w-3xl sm:px-0"
+          style={{ fontSize: "clamp(0.9rem, 1.6vw, 1.15rem)", lineHeight: 1.55 }}
         >
-            Costruiamo webapp, agenti vocali, WhatsApp automation, CRM e dashboard che seguono il processo reale del cliente: richiesta, risposta, preventivo, prenotazione, pagamento e follow-up.
-            <span className="mt-1 block text-foreground/55">
-              Ristoranti · NCC · Beauty · Fitness · Hospitality · altri verticali configurabili.
+          Costruiamo webapp, agenti vocali, WhatsApp automation, CRM e dashboard che seguono il processo reale del cliente: richiesta, risposta, preventivo, prenotazione, pagamento e follow-up.
+          <span className="mt-2 block text-[0.85em] text-foreground/55">
+            Ristoranti · NCC · Beauty · Fitness · Hospitality · altri verticali configurabili.
           </span>
         </p>
 
-        {/* 4. CTA */}
-        <div className="mt-7 flex w-full max-w-md flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:justify-center">
+        {/* 4. CTA — full-width stack su mobile, inline su sm+ */}
+        <div className="mt-6 flex w-full max-w-md flex-col items-stretch gap-3 sm:mt-7 sm:max-w-none sm:flex-row sm:justify-center">
           <button
             onClick={() => navigate("/auth")}
-             className="group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-primary px-7 text-sm font-bold text-primary-foreground transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_20px_50px_-10px_hsl(var(--primary)/0.55)] sm:text-base"
+            className="group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-primary px-7 text-sm font-bold text-primary-foreground transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_20px_50px_-10px_hsl(var(--primary)/0.55)] sm:text-base"
           >
             Inizia ora
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </button>
           <button
             onClick={() => navigate("/join")}
-             className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-foreground/20 bg-foreground/[0.06] px-7 text-sm font-semibold text-foreground transition-all duration-300 hover:border-foreground/40 hover:bg-foreground/[0.12] sm:text-base"
+            className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-foreground/20 bg-foreground/[0.06] px-7 text-sm font-semibold text-foreground transition-all duration-300 hover:border-foreground/40 hover:bg-foreground/[0.12] sm:text-base"
           >
             <Play className="h-3.5 w-3.5 fill-current" />
             Diventa Partner
           </button>
         </div>
 
-        <div className="mt-7 grid w-full max-w-5xl grid-cols-2 gap-2 sm:grid-cols-4">
+        {/* 4B. FLOW GRID — 2 col mobile, 4 col desktop, padding ridotto su mobile */}
+        <div className="mt-6 grid w-full max-w-5xl grid-cols-2 gap-2 sm:mt-7 sm:gap-3 sm:grid-cols-4">
           {HERO_FLOW.map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.label} className="rounded-2xl border border-foreground/10 bg-background/72 p-3 text-left shadow-[0_18px_55px_-38px_hsl(0_0%_0%)] sm:p-4">
-                <Icon className="mb-2 h-4 w-4 text-primary" />
-                <div className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground">{item.label}</div>
-                <p className="mt-1 text-[11px] leading-snug text-foreground/55">{item.detail}</p>
+              <div
+                key={item.label}
+                className="rounded-2xl border border-foreground/10 bg-background/72 p-2.5 text-left shadow-[0_18px_55px_-38px_hsl(0_0%_0%)] sm:p-4"
+              >
+                <Icon className="mb-1.5 h-4 w-4 text-primary sm:mb-2" />
+                <div className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground sm:text-[11px] sm:tracking-[0.18em]">
+                  {item.label}
+                </div>
+                <p className="mt-1 text-[10.5px] leading-snug text-foreground/55 sm:text-[11px]">
+                  {item.detail}
+                </p>
               </div>
             );
           })}
         </div>
 
-        {/* 5. iPhone realistici — portfolio hero senza scritte sopra agli schermi */}
+        {/* 5. iPhone — gap GENEROSO sopra, padding-bottom per dots/scroll-hint, nessuna sovrapposizione */}
         <div
           ref={stageRef}
-          className="relative mt-10 flex min-h-[360px] w-full max-w-6xl items-center justify-center transition-transform duration-300 ease-out will-change-transform sm:min-h-[430px] lg:min-h-[520px]"
-          style={{ perspective: "1600px" }}
+          className="relative mt-12 flex w-full max-w-6xl items-center justify-center pb-20 transition-transform duration-300 ease-out will-change-transform sm:mt-14 sm:pb-24 lg:mt-16"
+          style={{
+            perspective: "1600px",
+            minHeight: "clamp(440px, 78vw, 620px)",
+          }}
         >
-          <div aria-hidden className="absolute inset-x-8 bottom-2 h-16 rounded-full bg-primary/20 blur-3xl" />
+          <div aria-hidden className="absolute inset-x-8 bottom-16 h-16 rounded-full bg-primary/20 blur-3xl sm:bottom-20" />
           {HERO_PHONES.map((phone, index) => {
             const isActive = index === active;
             return (
@@ -192,13 +206,19 @@ export default function EmpireHeroV3() {
                 className={`${isActive ? "relative block" : "hidden"} lg:absolute lg:block ${phone.x} ${phone.y} ${phone.rotate} transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${isActive ? "z-30 scale-100 lg:scale-110 opacity-100" : "z-10 scale-90 opacity-72 hover:opacity-100"}`}
                 aria-label={`Mostra mockup ${phone.label}`}
               >
-                <RealisticIPhonePreview src={phone.src} alt={`Mockup iPhone ${phone.label}`} label={phone.label} size={phone.size} priority={index < 2} />
+                <RealisticIPhonePreview
+                  src={phone.src}
+                  alt={`Mockup iPhone ${phone.label}`}
+                  label={phone.label}
+                  size={phone.size}
+                  priority={index < 2}
+                />
               </button>
             );
           })}
 
-          {/* Dots indicator — SOTTO al telefono, mai sovrapposti */}
-          <div className="absolute bottom-0 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-foreground/10 bg-background/80 px-3 py-2">
+          {/* Dots indicator — fissati al fondo del contenitore, MAI sovrapposti al telefono */}
+          <div className="absolute bottom-8 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-foreground/10 bg-background/85 px-3 py-2 backdrop-blur-sm sm:bottom-10">
             {HERO_PHONES.map((_, i) => (
               <button
                 key={i}
@@ -207,16 +227,19 @@ export default function EmpireHeroV3() {
                 className="h-1.5 rounded-full transition-all duration-500"
                 style={{
                   width: i === active ? 24 : 6,
-                  background: i === active ? "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)))" : "hsl(var(--foreground) / 0.25)",
+                  background:
+                    i === active
+                      ? "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)))"
+                      : "hsl(var(--foreground) / 0.25)",
                 }}
               />
             ))}
           </div>
 
-          {/* Scroll hint */}
-          <div className="absolute -bottom-12 flex flex-col items-center gap-1.5 text-[10px] uppercase tracking-[0.4em] text-foreground/40">
+          {/* Scroll hint — sotto i dots, no overlap */}
+          <div className="absolute bottom-0 flex flex-col items-center gap-1 text-[9px] uppercase tracking-[0.35em] text-foreground/40 sm:text-[10px] sm:tracking-[0.4em]">
             <span>Scopri come</span>
-            <span className="h-7 w-px animate-pulse bg-gradient-to-b from-foreground/50 to-transparent" />
+            <span className="h-6 w-px animate-pulse bg-gradient-to-b from-foreground/50 to-transparent sm:h-7" />
           </div>
         </div>
       </div>
