@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
@@ -46,6 +46,7 @@ const wrap = (min: number, max: number, v: number) => {
 };
 
 export function FeatureCarousel() {
+  const rootRef = useRef<HTMLElement>(null);
   const [step, setStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -59,10 +60,25 @@ export function FeatureCarousel() {
   };
 
   useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(nextStep, AUTO_PLAY_INTERVAL);
-    return () => clearInterval(interval);
-  }, [nextStep, isPaused]);
+    const root = rootRef.current;
+    if (!root) return;
+
+    const updateFromScroll = () => {
+      if (isPaused) return;
+      const rect = root.getBoundingClientRect();
+      const total = Math.max(1, root.offsetHeight - window.innerHeight);
+      const progress = Math.min(Math.max(-rect.top / total, 0), 1);
+      setStep(Math.min(FEATURES.length - 1, Math.round(progress * (FEATURES.length - 1))));
+    };
+
+    updateFromScroll();
+    window.addEventListener("scroll", updateFromScroll, { passive: true });
+    window.addEventListener("resize", updateFromScroll);
+    return () => {
+      window.removeEventListener("scroll", updateFromScroll);
+      window.removeEventListener("resize", updateFromScroll);
+    };
+  }, [isPaused]);
 
   const getCardStatus = (index: number) => {
     const diff = index - currentIndex;
@@ -77,7 +93,9 @@ export function FeatureCarousel() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto md:p-8">
+    <section ref={rootRef} className="relative min-h-[260svh] w-full">
+    <div className="sticky top-0 flex min-h-[100svh] w-full items-center justify-center px-4 py-20 sm:px-6 md:p-8">
+    <div className="w-full max-w-7xl mx-auto">
       <div className="relative overflow-hidden rounded-[1.75rem] lg:rounded-[2.5rem] flex flex-col lg:flex-row min-h-[560px] lg:min-h-[520px] border border-white/10 bg-[#0b0d12]">
         {/* LEFT: chips list */}
         <div className="w-full lg:w-[42%] min-h-[280px] md:min-h-[340px] lg:h-auto relative z-30 flex flex-col items-start justify-center overflow-hidden px-6 md:px-12 lg:pl-14 bg-gradient-to-br from-[#1a1226] via-[#11141a] to-[#0b0d12]">
@@ -193,6 +211,8 @@ export function FeatureCarousel() {
         </div>
       </div>
     </div>
+    </div>
+    </section>
   );
 }
 
