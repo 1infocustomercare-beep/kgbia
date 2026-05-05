@@ -1,6 +1,5 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from "@/lib/utils"; // We'll define this or use inline
 
 // Helper for random colors
@@ -16,12 +15,16 @@ interface TubesBackgroundProps {
   enableClickInteraction?: boolean;
 }
 
-export function TubesBackground({ 
+export const TubesBackground = React.forwardRef<HTMLDivElement, TubesBackgroundProps>(function TubesBackground({ 
   children, 
   className,
   enableClickInteraction = true 
-}: TubesBackgroundProps) {
+}: TubesBackgroundProps, forwardedRef) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const setRootRef = (node: HTMLDivElement | null) => {
+    if (typeof forwardedRef === "function") forwardedRef(node);
+    else if (forwardedRef) forwardedRef.current = node;
+  };
   const [isLoaded, setIsLoaded] = useState(false);
   const tubesRef = useRef<any>(null);
 
@@ -64,10 +67,12 @@ export function TubesBackground({
         
         cleanup = () => {
           window.removeEventListener('resize', handleResize);
-          // If the library has a destroy method, call it
-          // app.destroy?.(); 
-          // Based on typical threejs-components, it might not have an explicit destroy exposed easily
-          // but we should at least nullify the ref
+          try {
+            app?.destroy?.();
+            app?.dispose?.();
+            app?.renderer?.dispose?.();
+          } catch {}
+          tubesRef.current = null;
         };
 
       } catch (error) {
@@ -95,6 +100,7 @@ export function TubesBackground({
 
   return (
     <div 
+      ref={setRootRef}
       className={cn("relative w-full h-full min-h-[400px] overflow-hidden bg-background", className)}
       onClick={handleClick}
     >
@@ -110,7 +116,7 @@ export function TubesBackground({
       </div>
     </div>
   );
-}
+});
 
 // Default export
 export default TubesBackground;

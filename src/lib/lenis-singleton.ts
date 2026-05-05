@@ -5,6 +5,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 let lenis: Lenis | null = null;
+let tickerAttached = false;
+
+const lenisTicker = (time: number) => {
+  lenis?.raf(time * 1000);
+};
 
 export function getLenis(): Lenis {
   if (lenis) return lenis;
@@ -18,9 +23,10 @@ export function getLenis(): Lenis {
 
   lenis.on("scroll", ScrollTrigger.update);
 
-  gsap.ticker.add((time) => {
-    lenis?.raf(time * 1000);
-  });
+  if (!tickerAttached) {
+    gsap.ticker.add(lenisTicker);
+    tickerAttached = true;
+  }
   gsap.ticker.lagSmoothing(0);
 
   return lenis;
@@ -29,4 +35,8 @@ export function getLenis(): Lenis {
 export function destroyLenis() {
   lenis?.destroy();
   lenis = null;
+  if (tickerAttached) {
+    gsap.ticker.remove(lenisTicker);
+    tickerAttached = false;
+  }
 }
