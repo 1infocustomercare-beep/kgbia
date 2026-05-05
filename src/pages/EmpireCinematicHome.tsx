@@ -226,7 +226,7 @@ export default function EmpireCinematicHome() {
                 ]}
                 cardWidth={300}
                 cardHeight={420}
-                autoAdvance
+                scrollDriven
                 intervalMs={4000}
                 showDots
               />
