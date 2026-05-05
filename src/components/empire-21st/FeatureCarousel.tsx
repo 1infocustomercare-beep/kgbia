@@ -67,7 +67,7 @@ export function FeatureCarousel() {
       const rect = root.getBoundingClientRect();
       const total = Math.max(1, root.offsetHeight - window.innerHeight);
       const progress = Math.min(Math.max(-rect.top / total, 0), 1);
-      setStep(Math.min(FEATURES.length - 1, Math.round(progress * (FEATURES.length - 1))));
+      setStep(Math.min(FEATURES.length - 1, Math.floor(progress * FEATURES.length)));
     };
 
     updateFromScroll();
@@ -92,10 +92,10 @@ export function FeatureCarousel() {
   };
 
   return (
-    <section ref={rootRef} className="relative min-h-[260svh] w-full">
+    <section ref={rootRef} className="relative min-h-[340svh] w-full">
     <div className="sticky top-0 flex min-h-[100svh] w-full items-center justify-center px-4 py-20 sm:px-6 md:p-8">
     <div className="w-full max-w-7xl mx-auto">
-      <div className="relative overflow-hidden rounded-[1.75rem] lg:rounded-[2.5rem] flex flex-col lg:flex-row min-h-[560px] lg:min-h-[520px] border border-white/10 bg-[#0b0d12]">
+      <div className="relative overflow-hidden rounded-[1.75rem] lg:rounded-[2.5rem] flex flex-col lg:flex-row min-h-[640px] lg:min-h-[560px] border border-foreground/10 bg-background">
         {/* LEFT: chips list */}
         <div className="w-full lg:w-[42%] min-h-[280px] md:min-h-[340px] lg:h-auto relative z-30 flex flex-col items-start justify-center overflow-hidden px-6 md:px-12 lg:pl-14 bg-gradient-to-br from-[#1a1226] via-[#11141a] to-[#0b0d12]">
           <div className="absolute inset-x-0 top-0 h-12 md:h-16 bg-gradient-to-b from-[#11141a] via-[#11141a]/80 to-transparent z-40" />
