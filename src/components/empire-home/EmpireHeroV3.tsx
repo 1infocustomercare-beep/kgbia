@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Blocks, BrainCircuit, MessageCircle, Mic, Play, Sparkles } from "lucide-react";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
@@ -39,6 +39,40 @@ export default function EmpireHeroV3() {
   const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [effectStep, setEffectStep] = useState(0);
+
+  // Effetti scroll sempre attivi anche su mobile: niente pin, niente GSAP fragile.
+  // Aggiorna CSS variables + step operativo evidenziato in modo sincronizzato allo scroll reale.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const section = sectionRef.current;
+    if (!section) return;
+
+    let raf = 0;
+    const update = () => {
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const progress = Math.min(Math.max((vh * 0.82 - rect.top) / (rect.height + vh * 0.24), 0), 1);
+      section.style.setProperty("--hero-scroll", progress.toFixed(3));
+      section.style.setProperty("--hero-glow-y", `${Math.round(progress * -34)}px`);
+      const nextStep = Math.min(HERO_FLOW.length - 1, Math.floor(progress * HERO_FLOW.length));
+      setEffectStep((current) => (current === nextStep ? current : nextStep));
+    };
+
+    const requestUpdate = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   // Rotazione robusta. Pausa automatica quando:
   //  - hero fuori viewport (IntersectionObserver)
@@ -120,7 +154,8 @@ export default function EmpireHeroV3() {
       raf = requestAnimationFrame(() => {
         const xv = (e.clientX / window.innerWidth - 0.5) * 2;
         const yv = (e.clientY / window.innerHeight - 0.5) * 2;
-        stage.style.transform = `perspective(1600px) rotateY(${xv * 3.5}deg) rotateX(${-yv * 2.5}deg) translateZ(0)`;
+        stage.style.setProperty("--mx", xv.toFixed(3));
+        stage.style.setProperty("--my", yv.toFixed(3));
       });
     };
 
