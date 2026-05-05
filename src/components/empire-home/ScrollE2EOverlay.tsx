@@ -82,17 +82,20 @@ export default function ScrollE2EOverlay() {
     window.scrollTo({ top: 0, behavior: "auto" });
     await sleep(500);
 
-    const totalH = document.documentElement.scrollHeight;
-    const steps = 40;
-    const stepPx = (totalH - VH) / steps;
+    const initialH = document.documentElement.scrollHeight;
+    const steps = 50;
+    let lastY = 0;
 
     for (let i = 0; i <= steps; i++) {
       if (abortRef.current) break;
-      const y = Math.min(stepPx * i, totalH - VH);
+      // Ricalcola la pageHeight ad ogni step (i pin GSAP la modificano dinamicamente)
+      const currentH = document.documentElement.scrollHeight;
+      const maxY = Math.max(0, currentH - VH);
+      const y = Math.min((maxY / steps) * i, maxY);
       window.scrollTo({ top: y, behavior: "auto" });
-      // Trigger GSAP/IntersectionObserver
       window.dispatchEvent(new Event("scroll"));
-      await sleep(140);
+      await sleep(160);
+      lastY = y;
 
       tracked.forEach((t) => {
         const r = t.el.getBoundingClientRect();
@@ -110,6 +113,32 @@ export default function ScrollE2EOverlay() {
         t.maxWidth = Math.max(t.maxWidth, r.width);
       });
     }
+
+    // Force-scroll all'ultima possibile posizione per CTA/Footer
+    for (let pass = 0; pass < 6; pass++) {
+      const maxY = Math.max(0, document.documentElement.scrollHeight - VH);
+      if (maxY <= lastY + 4) break;
+      window.scrollTo({ top: maxY, behavior: "auto" });
+      window.dispatchEvent(new Event("scroll"));
+      await sleep(220);
+      lastY = maxY;
+      tracked.forEach((t) => {
+        const r = t.el.getBoundingClientRect();
+        const inView = r.bottom > 0 && r.top < VH && r.width > 0 && r.height > 0;
+        if (!inView) return;
+        const cs = getComputedStyle(t.el);
+        const opacity = parseFloat(cs.opacity || "1");
+        const visible =
+          cs.display !== "none" && cs.visibility !== "hidden" && opacity > 0.05;
+        if (t.firstSeenAtY === null) t.firstSeenAtY = Math.round(maxY);
+        t.everInViewport = true;
+        t.everVisible = t.everVisible || visible;
+        t.maxOpacity = Math.max(t.maxOpacity, opacity);
+        t.maxHeight = Math.max(t.maxHeight, r.height);
+        t.maxWidth = Math.max(t.maxWidth, r.width);
+      });
+    }
+    void initialH;
 
     // ScrollTrigger info
     let stInfo = { available: false, total: 0, active: 0 };
