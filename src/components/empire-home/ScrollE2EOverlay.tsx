@@ -180,7 +180,7 @@ export default function ScrollE2EOverlay() {
     const ok = sections.every((s) => s.everVisible && s.issues.length === 0);
     const fullReport: Report = {
       viewport: { w: VW, h: VH },
-      documentHeight: totalH,
+      documentHeight: document.documentElement.scrollHeight,
       durationMs: Math.round(performance.now() - t0),
       sections,
       scrollTrigger: stInfo,
