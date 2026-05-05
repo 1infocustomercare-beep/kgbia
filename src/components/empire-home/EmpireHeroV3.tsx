@@ -252,6 +252,15 @@ export default function EmpireHeroV3() {
             perspective: "1600px",
             minHeight: "clamp(440px, 78vw, 620px)",
           }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocusCapture={() => setIsPaused(true)}
+          onBlurCapture={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => {
+            // riprendi dopo un breve delay per consentire il tap sui dot
+            window.setTimeout(() => setIsPaused(false), 1200);
+          }}
         >
           <div aria-hidden className="absolute inset-x-8 bottom-16 h-16 rounded-full bg-primary/20 blur-3xl sm:bottom-20" />
           {HERO_PHONES.map((phone, index) => {
