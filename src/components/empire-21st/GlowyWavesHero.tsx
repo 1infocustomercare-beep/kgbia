@@ -346,7 +346,7 @@ export function GlowyWavesHero() {
                 size="lg"
                 className="group gap-2 rounded-full bg-amber-300 px-8 text-base font-bold uppercase tracking-[0.18em] text-black hover:bg-amber-200 min-h-[48px]"
               >
-                Prova 90 giorni gratis
+                Inizia ora
                 <ArrowRight
                   className="h-4 w-4 transition-transform group-hover:translate-x-1"
                   aria-hidden="true"

@@ -326,7 +326,7 @@ export function CinematicFooter() {
               <div className="flex flex-wrap justify-center gap-4 w-full">
                 <MagneticButton as="a" href="/auth" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
                   <span className="text-primary">⚡</span>
-                  Prova Gratis 90 Giorni
+                  Inizia ora
                 </MagneticButton>
 
                 <MagneticButton as="a" href="/join" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
