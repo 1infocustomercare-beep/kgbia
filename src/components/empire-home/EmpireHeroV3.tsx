@@ -29,16 +29,81 @@ const HERO_FLOW = [
   { icon: BrainCircuit, label: "CRM AI", detail: "storico cliente, follow-up, report operativi" },
 ];
 
+// Tempi di rotazione condivisi (vista + transizione coerenti)
+const DWELL_MS = 3600;        // tempo di permanenza di ogni mockup completamente visibile
+const TRANSITION_MS = 700;    // deve combaciare con duration-700 della transizione CSS
+
 export default function EmpireHeroV3() {
   const navigate = useNavigate();
   const stageRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
-  // Auto-rotate del rolodex (mockup tutti diversi, ogni 2.6s)
+  // Rotazione robusta. Pausa automatica quando:
+  //  - hero fuori viewport (IntersectionObserver)
+  //  - tab in background (visibilitychange)
+  //  - hover / focus utente (isPaused)
+  //  - prefers-reduced-motion attivo
+  // Riprogramma SOLO dopo TRANSITION_MS, così ogni mockup resta DWELL_MS reali.
   useEffect(() => {
-    const id = window.setInterval(() => setActive((i) => (i + 1) % HERO_PHONES.length), 3200);
-    return () => window.clearInterval(id);
-  }, []);
+    if (typeof window === "undefined") return;
+    if (HERO_PHONES.length <= 1) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let timeoutId: number | null = null;
+    let inView = true;
+    let tabVisible = !document.hidden;
+
+    const clear = () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+    };
+
+    const schedule = () => {
+      clear();
+      if (!inView || !tabVisible || isPaused) return;
+      timeoutId = window.setTimeout(() => {
+        setActive((i) => (i + 1) % HERO_PHONES.length);
+        timeoutId = window.setTimeout(schedule, TRANSITION_MS);
+      }, DWELL_MS);
+    };
+
+    const onVisibility = () => {
+      tabVisible = !document.hidden;
+      schedule();
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const e = entries[0];
+        if (!e) return;
+        inView = e.isIntersecting && e.intersectionRatio > 0.15;
+        schedule();
+      },
+      { threshold: [0, 0.15, 0.5] }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    document.addEventListener("visibilitychange", onVisibility);
+
+    schedule();
+
+    return () => {
+      clear();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [isPaused]);
+
+  // Selezione manuale: cambia mockup E resetta il timer in modo pulito,
+  // così il nuovo mockup riceve l'intero DWELL_MS prima del prossimo scatto.
+  const selectMockup = (idx: number) => {
+    setActive(idx);
+    setIsPaused(true);
+    window.setTimeout(() => setIsPaused(false), 60); // toggle → useEffect re-run → schedule pulito
+  };
 
   // Mouse parallax leggero (solo se desktop e no reduced motion)
   useEffect(() => {
@@ -68,6 +133,7 @@ export default function EmpireHeroV3() {
 
   return (
     <section
+      ref={sectionRef}
       id="hero-v3"
       className="relative isolate w-full overflow-hidden bg-background text-foreground"
     >
@@ -194,6 +260,15 @@ export default function EmpireHeroV3() {
             perspective: "1600px",
             minHeight: "clamp(440px, 78vw, 620px)",
           }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocusCapture={() => setIsPaused(true)}
+          onBlurCapture={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => {
+            // riprendi dopo un breve delay per consentire il tap sui dot
+            window.setTimeout(() => setIsPaused(false), 1200);
+          }}
         >
           <div aria-hidden className="absolute inset-x-8 bottom-16 h-16 rounded-full bg-primary/20 blur-3xl sm:bottom-20" />
           {HERO_PHONES.map((phone, index) => {
@@ -202,7 +277,7 @@ export default function EmpireHeroV3() {
               <button
                 key={phone.label}
                 type="button"
-                onClick={() => setActive(index)}
+                onClick={() => selectMockup(index)}
                 className={`${isActive ? "relative block" : "hidden"} lg:absolute lg:block ${phone.x} ${phone.y} ${phone.rotate} transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${isActive ? "z-30 scale-100 lg:scale-110 opacity-100" : "z-10 scale-90 opacity-72 hover:opacity-100"}`}
                 aria-label={`Mostra mockup ${phone.label}`}
               >
@@ -222,7 +297,7 @@ export default function EmpireHeroV3() {
             {HERO_PHONES.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setActive(i)}
+                onClick={() => selectMockup(i)}
                 aria-label={`Mostra mockup ${i + 1}`}
                 className="h-1.5 rounded-full transition-all duration-500"
                 style={{
