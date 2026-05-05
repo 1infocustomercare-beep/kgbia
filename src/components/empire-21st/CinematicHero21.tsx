@@ -179,7 +179,7 @@ export interface CinematicHeroProps extends React.HTMLAttributes<HTMLDivElement>
   ctaDescription?: string;
 }
 
-export function CinematicHero({ 
+export const CinematicHero = React.forwardRef<HTMLDivElement, CinematicHeroProps>(function CinematicHero({ 
   brandName = "Sobers",
   tagline1 = "Track the journey,",
   tagline2 = "not just the days.",
@@ -191,12 +191,17 @@ export function CinematicHero({
   ctaDescription = "Join thousands of others in the 12-step program and take control of your timeline today.",
   className, 
   ...props 
-}: CinematicHeroProps) {
+}: CinematicHeroProps, forwardedRef) {
   
   const containerRef = useRef<HTMLDivElement>(null);
   const mainCardRef = useRef<HTMLDivElement>(null);
   const mockupRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>(0);
+  const setContainerRef = (node: HTMLDivElement | null) => {
+    containerRef.current = node;
+    if (typeof forwardedRef === "function") forwardedRef(node);
+    else if (forwardedRef) forwardedRef.current = node;
+  };
 
   // 1. High-Performance Mouse Interaction Logic (Using requestAnimationFrame)
   useEffect(() => {
@@ -300,7 +305,7 @@ export function CinematicHero({
 
   return (
     <div
-      ref={containerRef}
+      ref={setContainerRef}
       className={cn("relative w-screen h-screen overflow-hidden flex items-center justify-center bg-background text-foreground font-sans antialiased", className)}
       style={{ perspective: "1500px" }}
       {...props}
@@ -486,4 +491,4 @@ export function CinematicHero({
       </div>
     </div>
   );
-}
+});
