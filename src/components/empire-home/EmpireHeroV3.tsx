@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Blocks, BrainCircuit, MessageCircle, Mic, Play, Sparkles } from "lucide-react";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
@@ -33,13 +33,19 @@ const HERO_FLOW = [
 const DWELL_MS = 3600;        // tempo di permanenza di ogni mockup completamente visibile
 const TRANSITION_MS = 700;    // deve combaciare con duration-700 della transizione CSS
 
-export default function EmpireHeroV3() {
+const EmpireHeroV3 = forwardRef<HTMLElement, Record<string, never>>(function EmpireHeroV3(_props, forwardedRef) {
   const navigate = useNavigate();
   const stageRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [effectStep, setEffectStep] = useState(0);
+
+  const assignSectionRef = useCallback((node: HTMLElement | null) => {
+    sectionRef.current = node;
+    if (typeof forwardedRef === "function") forwardedRef(node);
+    else if (forwardedRef) forwardedRef.current = node;
+  }, [forwardedRef]);
 
   // Effetti scroll sempre attivi anche su mobile: niente pin, niente GSAP fragile.
   // Aggiorna CSS variables + step operativo evidenziato in modo sincronizzato allo scroll reale.
@@ -168,7 +174,7 @@ export default function EmpireHeroV3() {
 
   return (
     <section
-      ref={sectionRef}
+      ref={assignSectionRef}
       id="hero-v3"
       className="relative isolate w-full overflow-hidden bg-background text-foreground"
       style={{ "--hero-scroll": 0, "--hero-glow-y": "0px", "--mx": 0, "--my": 0 } as CSSProperties}
@@ -358,4 +364,6 @@ export default function EmpireHeroV3() {
       </div>
     </section>
   );
-}
+});
+
+export default EmpireHeroV3;
