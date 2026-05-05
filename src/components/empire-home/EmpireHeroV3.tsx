@@ -171,16 +171,17 @@ export default function EmpireHeroV3() {
       ref={sectionRef}
       id="hero-v3"
       className="relative isolate w-full overflow-hidden bg-background text-foreground"
+      style={{ "--hero-scroll": 0, "--hero-glow-y": "0px", "--mx": 0, "--my": 0 } as CSSProperties}
     >
       {/* Aurora background statico (no WebGL) */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
         <div
-            className="absolute -left-[20%] -top-[10%] h-[70vh] w-[70vh] rounded-full opacity-45"
-            style={{ background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 62%)", filter: "blur(110px)" }}
+            className="absolute -left-[20%] -top-[10%] h-[70vh] w-[70vh] rounded-full opacity-45 transition-transform duration-300"
+            style={{ background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 62%)", filter: "blur(110px)", transform: "translate3d(calc(var(--hero-scroll) * 28px), var(--hero-glow-y), 0) scale(calc(1 + var(--hero-scroll) * 0.08))" }}
         />
         <div
-            className="absolute -right-[20%] top-[30%] h-[70vh] w-[70vh] rounded-full opacity-35"
-            style={{ background: "radial-gradient(circle, hsl(var(--empire-violet-glow)) 0%, transparent 62%)", filter: "blur(110px)" }}
+            className="absolute -right-[20%] top-[30%] h-[70vh] w-[70vh] rounded-full opacity-35 transition-transform duration-300"
+            style={{ background: "radial-gradient(circle, hsl(var(--empire-violet-glow)) 0%, transparent 62%)", filter: "blur(110px)", transform: "translate3d(calc(var(--hero-scroll) * -30px), calc(var(--hero-scroll) * 24px), 0) scale(calc(1 + var(--hero-scroll) * 0.1))" }}
         />
         <div
             className="absolute left-1/2 bottom-0 h-[40vh] w-[60vh] -translate-x-1/2 rounded-full opacity-25"
