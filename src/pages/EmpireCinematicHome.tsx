@@ -15,10 +15,8 @@ import MockupCatalog from "@/components/empire-home/MockupCatalog";
 import FilmGrain from "@/components/empire-home/FilmGrain";
 import HomeQAGuard from "@/components/empire-home/HomeQAGuard";
 import LazyMount from "@/components/empire-home/LazyMount";
+import ScrollE2EOverlay from "@/components/empire-home/ScrollE2EOverlay";
 
-// 12 componenti 21st — import statici (no lazy/Suspense → no crash insertBefore).
-// I WebGL/canvas pesanti vengono comunque "mountati al viewport" via LazyMount
-// così il canvas si inizializza con dimensioni reali e l'effetto parte sempre.
 import StackedPanels from "@/components/empire-21st/StackedPanels";
 import ScrollMorphHero from "@/components/empire-21st/ScrollMorphHero";
 import FeatureCarousel from "@/components/empire-21st/FeatureCarousel";
@@ -37,13 +35,6 @@ import { createMockupPool } from "@/lib/mockup-pool";
 const homePool = createMockupPool();
 const cardStackImages = homePool.images(6);
 
-/**
- * Empire Home v4 — 12 effetti 21st integrati nel funnel completo.
- * - Niente Suspense/lazy → niente crash insertBefore con Lenis/GSAP.
- * - WebGL/canvas avvolti in LazyMount → si inizializzano quando entrano in viewport.
- * - Mockup ruotati col pool globale (zero ripetizioni).
- * - Niente claim falsi (90gg / demo gratuita rimossi a monte).
- */
 export default function EmpireCinematicHome() {
   useEffect(() => {
     if (!window.location.hash) {
@@ -100,7 +91,6 @@ export default function EmpireCinematicHome() {
       `}</style>
 
       <div className="relative min-h-screen overflow-x-hidden bg-[#050813] text-white selection:bg-[#22d3ee] selection:text-black">
-        {/* Aurora background fissa */}
         <div className="pointer-events-none fixed inset-0 z-[1]">
           <div
             className="absolute -left-[20%] -top-[10%] h-[80vh] w-[80vh] rounded-full"
@@ -123,169 +113,171 @@ export default function EmpireCinematicHome() {
         <div className="relative z-[2]">
           <LandingNav />
 
-          {/* 1. HERO V2 — primo schermo d'impatto, mockup reali */}
-          <EmpireHeroV3 />
+          <div data-section="hero-v3" data-section-name="Hero V3"><EmpireHeroV3 /></div>
 
-          {/* 2. GLOWY WAVES HERO (21st) — manifesto onde luminose */}
-          <LazyMount minHeight="80vh" id="manifesto-waves">
-            <GlowyWavesHero />
-          </LazyMount>
+          <div data-section="glowy-waves" data-section-name="Glowy Waves Hero">
+            <LazyMount minHeight="80vh" id="manifesto-waves">
+              <GlowyWavesHero />
+            </LazyMount>
+          </div>
 
-          {/* 3. CAOS → EMPIRE — pinned scrub */}
-          <ShiftSection />
+          <div data-section="shift" data-section-name="Caos → Empire"><ShiftSection /></div>
 
-          {/* 4. CURSOR PARTICLES TYPO (21st canvas) — manifesto interattivo */}
-          <LazyMount minHeight="70vh">
-            <section className="relative h-[70vh] w-full overflow-hidden bg-[#05070d] flex items-center justify-center">
-              <div className="absolute inset-0">
-                <CursorDrivenParticleTypography text="EMPIRE" color="#22d3ee" />
-              </div>
-              <p className="pointer-events-none relative z-10 mt-[40vh] px-6 text-center text-base text-white/70 sm:text-lg max-w-2xl">
-                Sostituisci i dipendenti ripetitivi con AI 24/7. Muovi il dito o il cursore.
-              </p>
-            </section>
-          </LazyMount>
-
-          {/* 5. MOCKUP SHOWCASE — iPhone stack reali */}
-          <MockupShowcase />
-
-          {/* 6. STACKED PANELS (21st) — 22 mockup unici scroll-driven */}
-          <LazyMount minHeight="100vh" id="stacked-mockups">
-            <StackedPanels />
-          </LazyMount>
-
-          {/* 7. MOUNTAIN SCENE (21st canvas) — interludio generativo */}
-          <LazyMount minHeight="35vh">
-            <section className="relative h-[35vh] w-full overflow-hidden bg-[#020308]">
-              <MountainScene />
-              <div className="pointer-events-none absolute inset-0 flex items-end justify-center pb-10">
-                <p className="text-center text-xs uppercase tracking-[0.4em] text-white/60 sm:text-sm">
-                  La tua azienda — vista dall'alto
+          <div data-section="cursor-particles" data-section-name="Cursor Particles">
+            <LazyMount minHeight="70vh">
+              <section className="relative h-[70vh] w-full overflow-hidden bg-[#05070d] flex items-center justify-center">
+                <div className="absolute inset-0">
+                  <CursorDrivenParticleTypography text="EMPIRE" color="#22d3ee" />
+                </div>
+                <p className="pointer-events-none relative z-10 mt-[40vh] px-6 text-center text-base text-white/70 sm:text-lg max-w-2xl">
+                  Sostituisci i dipendenti ripetitivi con AI 24/7. Muovi il dito o il cursore.
                 </p>
-              </div>
-            </section>
-          </LazyMount>
+              </section>
+            </LazyMount>
+          </div>
 
-          {/* 8. REEL SETTORI orizzontale */}
-          <InteractiveSectorReel />
+          <div data-section="mockup-showcase" data-section-name="Mockup Showcase"><MockupShowcase /></div>
 
-          {/* 8B. CATALOGO MOCKUP completo */}
-          <MockupCatalog />
+          <div data-section="stacked-panels" data-section-name="Stacked Panels (22 mockup)">
+            <LazyMount minHeight="100vh" id="stacked-mockups">
+              <StackedPanels />
+            </LazyMount>
+          </div>
 
-          {/* 9. SCROLL MORPH HERO (21st) — mockup che si compongono */}
-          <LazyMount minHeight="260svh">
-            <ScrollMorphHero />
-          </LazyMount>
+          <div data-section="mountain" data-section-name="Mountain Scene">
+            <LazyMount minHeight="35vh">
+              <section className="relative h-[35vh] w-full overflow-hidden bg-[#020308]">
+                <MountainScene />
+                <div className="pointer-events-none absolute inset-0 flex items-end justify-center pb-10">
+                  <p className="text-center text-xs uppercase tracking-[0.4em] text-white/60 sm:text-sm">
+                    La tua azienda — vista dall'alto
+                  </p>
+                </div>
+              </section>
+            </LazyMount>
+          </div>
 
-          {/* 10. CASO STUDIO interattivo (slider risultati) */}
-          <CaseStudySliders />
+          <div data-section="sector-reel" data-section-name="Reel Settori"><InteractiveSectorReel /></div>
 
-          {/* 11. FLOW FIELD (21st canvas) — interludio neurale */}
-          <LazyMount minHeight="40vh">
-            <section className="relative h-[40vh] w-full overflow-hidden bg-[#04060c]">
-              <FlowFieldBackground />
-              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-                <h3 className="text-3xl font-black text-white sm:text-5xl">
-                  Una rete neurale che<br />
-                  <span className="text-emerald-300">capisce il tuo settore</span>
-                </h3>
-                <p className="mt-3 max-w-xl text-sm text-white/60 sm:text-base">
-                  30+ verticali pre-configurate.
-                </p>
-              </div>
-            </section>
-          </LazyMount>
+          <div data-section="mockup-catalog" data-section-name="Catalogo Mockup"><MockupCatalog /></div>
 
-          {/* 12. FEATURE CAROUSEL (21st) — 8 servizi Empire */}
-          <LazyMount minHeight="260svh" id="features">
-            <FeatureCarousel />
-          </LazyMount>
+          <div data-section="scroll-morph" data-section-name="Scroll Morph Hero">
+            <LazyMount minHeight="260svh">
+              <ScrollMorphHero />
+            </LazyMount>
+          </div>
 
-          {/* 13. AGENTI / Cosa fa Empire */}
-          <AgentsCatalog />
+          <div data-section="case-study" data-section-name="Case Study"><CaseStudySliders /></div>
 
-          {/* 14. CARD STACK (21st) — testimonianze con mockup veri */}
-          <LazyMount minHeight="80vh">
-            <section className="relative w-full py-20 px-4 bg-gradient-to-b from-[#05070d] via-[#0a0f1f] to-[#05070d]">
-              <div className="mx-auto mb-10 max-w-4xl text-center">
-                <h2 className="text-4xl md:text-6xl font-black text-white mb-3">
-                  Storie reali, risultati reali
-                </h2>
-                <p className="text-white/60 text-base md:text-lg">
-                  Aziende che hanno automatizzato vendite, prenotazioni e supporto.
-                </p>
-              </div>
-              <CardStack
-                items={[
-                  { id: 1, title: "Strapizzami", description: "Pizzeria · Ordini WhatsApp gestiti dall'AI", imageSrc: cardStackImages[0], tag: "Food", ctaLabel: "Vedi mockup", href: "/demo/strapizzami" },
-                  { id: 2, title: "Paperfish", description: "Sushi · Prenotazioni 24/7 senza staff al telefono", imageSrc: cardStackImages[1], tag: "Sushi", ctaLabel: "Vedi mockup", href: "/demo/paperfish" },
-                  { id: 3, title: "Batey Pacifico", description: "Yacht charter · Booking con voice agent multilingua", imageSrc: cardStackImages[2], tag: "Boat", ctaLabel: "Vedi mockup", href: "/demo/batey" },
-                  { id: 4, title: "NCC Luxury", description: "Trasporti · Centralino AI per preventivi e corse", imageSrc: cardStackImages[3], tag: "NCC", ctaLabel: "Vedi mockup", href: "/demo/ncc" },
-                  { id: 5, title: "Beauty Studio", description: "Estetica · Agenda piena, zero no-show", imageSrc: cardStackImages[4], tag: "Beauty", ctaLabel: "Vedi mockup", href: "/demo/beauty" },
-                  { id: 6, title: "Fitness Club", description: "Palestra · Onboarding membri automatico", imageSrc: cardStackImages[5], tag: "Fitness", ctaLabel: "Vedi mockup", href: "/demo/fitness" },
-                ]}
-                cardWidth={300}
-                cardHeight={420}
-                scrollDriven
-                intervalMs={4000}
-                showDots
+          <div data-section="flow-field" data-section-name="Flow Field">
+            <LazyMount minHeight="40vh">
+              <section className="relative h-[40vh] w-full overflow-hidden bg-[#04060c]">
+                <FlowFieldBackground />
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+                  <h3 className="text-3xl font-black text-white sm:text-5xl">
+                    Una rete neurale che<br />
+                    <span className="text-emerald-300">capisce il tuo settore</span>
+                  </h3>
+                  <p className="mt-3 max-w-xl text-sm text-white/60 sm:text-base">
+                    30+ verticali pre-configurate.
+                  </p>
+                </div>
+              </section>
+            </LazyMount>
+          </div>
+
+          <div data-section="feature-carousel" data-section-name="Feature Carousel">
+            <LazyMount minHeight="260svh" id="features">
+              <FeatureCarousel />
+            </LazyMount>
+          </div>
+
+          <div data-section="agents" data-section-name="Agents Catalog"><AgentsCatalog /></div>
+
+          <div data-section="card-stack" data-section-name="Card Stack Testimonianze">
+            <LazyMount minHeight="80vh">
+              <section className="relative w-full py-20 px-4 bg-gradient-to-b from-[#05070d] via-[#0a0f1f] to-[#05070d]">
+                <div className="mx-auto mb-10 max-w-4xl text-center">
+                  <h2 className="text-4xl md:text-6xl font-black text-white mb-3">
+                    Storie reali, risultati reali
+                  </h2>
+                  <p className="text-white/60 text-base md:text-lg">
+                    Aziende che hanno automatizzato vendite, prenotazioni e supporto.
+                  </p>
+                </div>
+                <CardStack
+                  items={[
+                    { id: 1, title: "Strapizzami", description: "Pizzeria · Ordini WhatsApp gestiti dall'AI", imageSrc: cardStackImages[0], tag: "Food", ctaLabel: "Vedi mockup", href: "/demo/strapizzami" },
+                    { id: 2, title: "Paperfish", description: "Sushi · Prenotazioni 24/7 senza staff al telefono", imageSrc: cardStackImages[1], tag: "Sushi", ctaLabel: "Vedi mockup", href: "/demo/paperfish" },
+                    { id: 3, title: "Batey Pacifico", description: "Yacht charter · Booking con voice agent multilingua", imageSrc: cardStackImages[2], tag: "Boat", ctaLabel: "Vedi mockup", href: "/demo/batey" },
+                    { id: 4, title: "NCC Luxury", description: "Trasporti · Centralino AI per preventivi e corse", imageSrc: cardStackImages[3], tag: "NCC", ctaLabel: "Vedi mockup", href: "/demo/ncc" },
+                    { id: 5, title: "Beauty Studio", description: "Estetica · Agenda piena, zero no-show", imageSrc: cardStackImages[4], tag: "Beauty", ctaLabel: "Vedi mockup", href: "/demo/beauty" },
+                    { id: 6, title: "Fitness Club", description: "Palestra · Onboarding membri automatico", imageSrc: cardStackImages[5], tag: "Fitness", ctaLabel: "Vedi mockup", href: "/demo/fitness" },
+                  ]}
+                  cardWidth={300}
+                  cardHeight={420}
+                  scrollDriven
+                  intervalMs={4000}
+                  showDots
+                />
+              </section>
+            </LazyMount>
+          </div>
+
+          <div data-section="neon-orbs" data-section-name="Neon Orbs">
+            <LazyMount minHeight="40vh">
+              <section className="relative h-[40vh] w-full overflow-hidden bg-black">
+                <NeonOrbs />
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
+                  <h3 className="text-center text-3xl font-black tracking-tight text-white sm:text-5xl drop-shadow-[0_2px_30px_rgba(34,211,238,0.6)]">
+                    Un solo cervello AI.<br />
+                    <span className="text-[#22d3ee]">Tutta la tua azienda.</span>
+                  </h3>
+                </div>
+              </section>
+            </LazyMount>
+          </div>
+
+          <div data-section="proof" data-section-name="Proof Horizontal"><ProofHorizontal /></div>
+
+          <div data-section="neon-flow" data-section-name="Neon Flow">
+            <LazyMount minHeight="35vh">
+              <section className="relative h-[35vh] w-full overflow-hidden bg-black">
+                <NeonFlow />
+              </section>
+            </LazyMount>
+          </div>
+
+          <div data-section="cinematic-21" data-section-name="Cinematic Hero 21">
+            <LazyMount minHeight="100vh">
+              <CinematicHero21
+                brandName="Empire"
+                tagline1="Il tuo impero,"
+                tagline2="su pilota automatico."
+                cardHeading="L'AI che lavora mentre dormi."
+                cardDescription={
+                  <>
+                    <span className="text-white font-semibold">Empire</span> automatizza WhatsApp,
+                    telefonate, prenotazioni e pagamenti per ristoranti, NCC, beauty, fitness e altri
+                    25+ settori. Stripe integrato.
+                  </>
+                }
+                metricValue={3500}
+                metricLabel="Aziende automatizzate"
+                ctaHeading="Vuoi vedere la tua azienda dentro?"
+                ctaDescription="Setup guidato. Cancelli quando vuoi."
               />
-            </section>
-          </LazyMount>
+            </LazyMount>
+          </div>
 
-          {/* 15. NEON ORBS (21st canvas) — interludio "Un solo cervello AI" */}
-          <LazyMount minHeight="40vh">
-            <section className="relative h-[40vh] w-full overflow-hidden bg-black">
-              <NeonOrbs />
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
-                <h3 className="text-center text-3xl font-black tracking-tight text-white sm:text-5xl drop-shadow-[0_2px_30px_rgba(34,211,238,0.6)]">
-                  Un solo cervello AI.<br />
-                  <span className="text-[#22d3ee]">Tutta la tua azienda.</span>
-                </h3>
-              </div>
-            </section>
-          </LazyMount>
+          <div data-section="magnetic-cta" data-section-name="Magnetic CTA"><MagneticCTA /></div>
 
-          {/* 16. PROOF orizzontale */}
-          <ProofHorizontal />
-
-          {/* 17. NEON FLOW (21st canvas) — tubes luminosi */}
-          <LazyMount minHeight="35vh">
-            <section className="relative h-[35vh] w-full overflow-hidden bg-black">
-              <NeonFlow />
-            </section>
-          </LazyMount>
-
-          {/* 18. CINEMATIC HERO 21 — bridge verso CTA */}
-          <LazyMount minHeight="100vh">
-            <CinematicHero21
-              brandName="Empire"
-              tagline1="Il tuo impero,"
-              tagline2="su pilota automatico."
-              cardHeading="L'AI che lavora mentre dormi."
-              cardDescription={
-                <>
-                  <span className="text-white font-semibold">Empire</span> automatizza WhatsApp,
-                  telefonate, prenotazioni e pagamenti per ristoranti, NCC, beauty, fitness e altri
-                  25+ settori. Stripe integrato.
-                </>
-              }
-              metricValue={3500}
-              metricLabel="Aziende automatizzate"
-              ctaHeading="Vuoi vedere la tua azienda dentro?"
-              ctaDescription="Setup guidato. Cancelli quando vuoi."
-            />
-          </LazyMount>
-
-          {/* 19. CTA finale magnetica */}
-          <MagneticCTA />
-
-          {/* 20. FOOTER cinematografico (21st curtain reveal) */}
-          <CinematicFooter />
+          <div data-section="footer" data-section-name="Footer"><CinematicFooter /></div>
         </div>
 
         <FilmGrain />
         <HomeQAGuard />
+        <ScrollE2EOverlay />
       </div>
     </>
   );
