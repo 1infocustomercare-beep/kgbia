@@ -297,7 +297,7 @@ export default function EmpireHeroV3() {
             {HERO_PHONES.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setActive(i)}
+                onClick={() => selectMockup(i)}
                 aria-label={`Mostra mockup ${i + 1}`}
                 className="h-1.5 rounded-full transition-all duration-500"
                 style={{
