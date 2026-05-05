@@ -189,7 +189,7 @@ export default function EmpireHeroV3() {
                 key={phone.label}
                 type="button"
                 onClick={() => setActive(index)}
-                className={`absolute ${phone.x} ${phone.y} ${phone.rotate} transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${isActive ? "z-30 scale-110 opacity-100" : "z-10 scale-90 opacity-72 hover:opacity-100"}`}
+                className={`${isActive ? "relative block" : "hidden"} lg:absolute lg:block ${phone.x} ${phone.y} ${phone.rotate} transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${isActive ? "z-30 scale-100 lg:scale-110 opacity-100" : "z-10 scale-90 opacity-72 hover:opacity-100"}`}
                 aria-label={`Mostra mockup ${phone.label}`}
               >
                 <RealisticIPhonePreview src={phone.src} alt={`Mockup iPhone ${phone.label}`} label={phone.label} size={phone.size} priority={index < 2} />
