@@ -242,7 +242,7 @@ export default function IntroAnimation() {
 
     return (
         <section ref={rootRef} className="relative min-h-[260svh] bg-[#FAFAFA]">
-        <div ref={containerRef} className="sticky top-0 relative w-full h-[100svh] bg-[#FAFAFA] overflow-hidden">
+        <div ref={containerRef} className="sticky top-0 w-full h-[100svh] bg-[#FAFAFA] overflow-hidden">
             {/* Container */}
             <div className="flex h-full w-full flex-col items-center justify-center perspective-1000">
 
