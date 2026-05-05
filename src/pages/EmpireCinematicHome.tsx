@@ -171,11 +171,13 @@ export default function EmpireCinematicHome() {
 
           {/* 4. CURSOR PARTICLES TYPO — manifesto interattivo */}
           <Suspense fallback={null}>
-            <section className="relative h-[70vh] w-full overflow-hidden bg-[#05070d]">
-              <CursorParticlesTypo
-                text="EMPIRE"
-                subtitle="Sostituisci i dipendenti ripetitivi con AI 24/7"
-              />
+            <section className="relative h-[80vh] w-full overflow-hidden bg-[#05070d] flex flex-col items-center justify-center">
+              <div className="absolute inset-0">
+                <CursorParticlesTypo text="EMPIRE" color="#22d3ee" />
+              </div>
+              <p className="relative z-10 mt-[40vh] px-6 text-center text-base md:text-xl text-white/70 max-w-2xl pointer-events-none">
+                Sostituisci i dipendenti ripetitivi con AI che lavora 24/7. Muovi il cursore.
+              </p>
             </section>
           </Suspense>
 
