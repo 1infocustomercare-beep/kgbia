@@ -3,9 +3,13 @@ import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { createMockupPool } from "@/lib/mockup-pool";
+import PrestigePhone, { PHONE_VIEWS, type PhoneView } from "./PrestigePhone";
 
 const pool = createMockupPool();
-const HERO_MOCKS = pool.images(5);
+const HERO_MOCKS = pool.images(4);
+// Hero rotates Home → Admin → App → AI to immediately tell the visitor that
+// Empire is an entire ecosystem, not just a website.
+const HERO_LABELS: PhoneView[] = PHONE_VIEWS;
 
 const ROTATE_MS = 3200;
 
@@ -110,10 +114,12 @@ export default function PrestigeHero() {
         <div className="lg:col-span-5">
           <div
             ref={stageRef}
-            className="relative mx-auto aspect-[9/19] w-[260px] sm:w-[300px] md:w-[340px]"
+            className="relative mx-auto"
             style={{
               perspective: "1400px",
               transform: `translateY(calc(var(--empire-progress, 0) * -24px))`,
+              width: "min(86vw, 320px)",
+              aspectRatio: "9 / 19.5",
             }}
           >
             {HERO_MOCKS.map((src, i) => {
@@ -121,7 +127,7 @@ export default function PrestigeHero() {
               return (
                 <div
                   key={src + i}
-                  className="absolute inset-0 transition-all duration-[1100ms] ease-[cubic-bezier(.22,1,.36,1)]"
+                  className="absolute inset-0 flex items-center justify-center transition-all duration-[1100ms] ease-[cubic-bezier(.22,1,.36,1)]"
                   style={{
                     opacity: isActive ? 1 : 0,
                     transform: isActive
@@ -130,33 +136,19 @@ export default function PrestigeHero() {
                     pointerEvents: isActive ? "auto" : "none",
                   }}
                 >
-                  <div
-                    className="relative h-full w-full overflow-hidden"
-                    style={{
-                      borderRadius: "44px",
-                      padding: "10px",
-                      background: "linear-gradient(145deg, hsl(0 0% 12%), hsl(0 0% 4%))",
-                      boxShadow: "0 40px 80px -20px hsl(var(--pr-emerald-deep) / 0.8), 0 0 0 1.5px hsl(var(--pr-gold) / 0.35)",
-                    }}
-                  >
-                    <div className="h-full w-full overflow-hidden rounded-[36px] bg-black">
-                      <img
-                        src={src}
-                        alt={`Mockup ${i + 1}`}
-                        className="h-full w-full object-cover"
-                        loading="eager"
-                        draggable={false}
-                      />
-                    </div>
-                    {/* Notch */}
-                    <div className="absolute left-1/2 top-3 h-[18px] w-[80px] -translate-x-1/2 rounded-full bg-black" />
-                  </div>
+                  <PrestigePhone
+                    src={src}
+                    alt={`Vista ${HERO_LABELS[i]}`}
+                    label={HERO_LABELS[i]}
+                    width={Math.min(320, typeof window !== "undefined" ? window.innerWidth * 0.78 : 280)}
+                    loading="eager"
+                  />
                 </div>
               );
             })}
 
             {/* Indicators */}
-            <div className="absolute -bottom-8 left-1/2 flex -translate-x-1/2 gap-1.5">
+            <div className="absolute -bottom-12 left-1/2 flex -translate-x-1/2 gap-1.5">
               {HERO_MOCKS.map((_, i) => (
                 <button
                   key={i}
