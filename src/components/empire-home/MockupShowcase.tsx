@@ -70,8 +70,9 @@ export default function MockupShowcase() {
               const distance = index - localProgress;
               const visible = Math.abs(distance) < 1.65;
               const isActive = index === active;
-              const x = distance * (window.innerWidth < 768 ? 36 : 188);
-              const y = Math.abs(distance) * (window.innerWidth < 768 ? 22 : 18);
+              const compact = typeof window !== "undefined" && window.innerWidth < 768;
+              const x = distance * (compact ? 36 : 188);
+              const y = Math.abs(distance) * (compact ? 22 : 18);
               const scale = clamp01(1 - Math.abs(distance) * 0.16);
               const opacity = visible ? clamp01(1 - Math.abs(distance) * 0.5) : 0;
 
