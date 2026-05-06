@@ -912,6 +912,18 @@ Genera tutto in italiano, tono professionale ma caldo, perfettamente coerente co
 
   if (!res.ok) {
     const t = await res.text();
+    if (res.status === 402) {
+      const err: any = new Error("AI_PAYMENT_REQUIRED");
+      err.code = "PAYMENT_REQUIRED";
+      err.upstream = t;
+      throw err;
+    }
+    if (res.status === 429) {
+      const err: any = new Error("AI_RATE_LIMITED");
+      err.code = "RATE_LIMITED";
+      err.upstream = t;
+      throw err;
+    }
     throw new Error(`AI gateway error ${res.status}: ${t}`);
   }
   const data = await res.json();
@@ -1930,10 +1942,38 @@ serve(async (req) => {
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error("[generate-demo-from-lead] error", e);
+    const code = e?.code as string | undefined;
+    const msg = e instanceof Error ? e.message : "Unknown error";
+
+    // Graceful handling of AI gateway billing/rate-limit errors → 200 + fallback flag
+    // so the client doesn't crash with a blank screen.
+    if (code === "PAYMENT_REQUIRED" || /AI gateway error 402|payment_required|Not enough credits/i.test(msg)) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "PAYMENT_REQUIRED",
+          fallback: true,
+          message: "Crediti AI esauriti. Aggiungi crediti in Settings → Workspace → Usage e riprova.",
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+    if (code === "RATE_LIMITED" || /AI gateway error 429|rate.?limit/i.test(msg)) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "RATE_LIMITED",
+          fallback: true,
+          message: "Troppe richieste in poco tempo. Aspetta qualche secondo e riprova.",
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ success: false, error: msg }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
