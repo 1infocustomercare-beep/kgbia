@@ -3,9 +3,13 @@ import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { createMockupPool } from "@/lib/mockup-pool";
+import PrestigePhone, { PHONE_VIEWS, type PhoneView } from "./PrestigePhone";
 
 const pool = createMockupPool();
-const HERO_MOCKS = pool.images(5);
+const HERO_MOCKS = pool.images(4);
+// Hero rotates Home → Admin → App → AI to immediately tell the visitor that
+// Empire is an entire ecosystem, not just a website.
+const HERO_LABELS: PhoneView[] = PHONE_VIEWS;
 
 const ROTATE_MS = 3200;
 
