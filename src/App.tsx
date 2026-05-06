@@ -174,6 +174,7 @@ const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
 const StaticIframePage = lazy(() => import("./pages/StaticIframePage"));
 import EmpireHomePage from "./pages/empire/EmpireHomePage";
 import EmpireCinematicHome from "./pages/EmpireCinematicHome";
+import EmpirePrestigeHome from "./pages/EmpirePrestigeHome";
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
