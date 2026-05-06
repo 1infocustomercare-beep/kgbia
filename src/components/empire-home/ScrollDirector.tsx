@@ -78,6 +78,7 @@ const ensureListeners = () => {
   if (listening || typeof window === "undefined") return;
   listening = true;
   window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("touchmove", requestUpdate, { passive: true });
   window.addEventListener("resize", requestUpdate);
   window.addEventListener("orientationchange", requestUpdate);
   requestUpdate();
@@ -87,6 +88,7 @@ const teardownListeners = () => {
   if (!listening || registry.size > 0 || typeof window === "undefined") return;
   listening = false;
   window.removeEventListener("scroll", requestUpdate);
+  window.removeEventListener("touchmove", requestUpdate);
   window.removeEventListener("resize", requestUpdate);
   window.removeEventListener("orientationchange", requestUpdate);
   if (raf) window.cancelAnimationFrame(raf);
