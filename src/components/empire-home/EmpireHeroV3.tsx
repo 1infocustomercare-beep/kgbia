@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Blocks, BrainCircuit, MessageCircle, Mic, Play, Sparkles } from "lucide-react";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import RealisticIPhonePreview from "@/components/empire-home/RealisticIPhonePreview";
+import { useEmpireScrollDirector } from "@/components/empire-home/ScrollDirector";
 
 /**
  * Empire Hero V3 — hero PULITA, professionale, mobile-first.
@@ -40,45 +41,17 @@ const EmpireHeroV3 = forwardRef<HTMLElement, Record<string, never>>(function Emp
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [effectStep, setEffectStep] = useState(0);
+  const director = useEmpireScrollDirector<HTMLElement>("hero-v3", {
+    steps: HERO_FLOW.length,
+    onUpdate: ({ step }) => setEffectStep((current) => (current === step ? current : step)),
+  });
 
   const assignSectionRef = useCallback((node: HTMLElement | null) => {
     sectionRef.current = node;
     if (typeof forwardedRef === "function") forwardedRef(node);
     else if (forwardedRef) forwardedRef.current = node;
-  }, [forwardedRef]);
-
-  // Effetti scroll sempre attivi anche su mobile: niente pin, niente GSAP fragile.
-  // Aggiorna CSS variables + step operativo evidenziato in modo sincronizzato allo scroll reale.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const section = sectionRef.current;
-    if (!section) return;
-
-    let raf = 0;
-    const update = () => {
-      const rect = section.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
-      const progress = Math.min(Math.max((vh * 0.82 - rect.top) / (rect.height + vh * 0.24), 0), 1);
-      section.style.setProperty("--hero-scroll", progress.toFixed(3));
-      section.style.setProperty("--hero-glow-y", `${Math.round(progress * -34)}px`);
-      const nextStep = Math.min(HERO_FLOW.length - 1, Math.floor(progress * HERO_FLOW.length));
-      setEffectStep((current) => (current === nextStep ? current : nextStep));
-    };
-
-    const requestUpdate = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-    return () => {
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+    director.ref(node);
+  }, [director, forwardedRef]);
 
   // Rotazione robusta. Pausa automatica quando:
   //  - hero fuori viewport (IntersectionObserver)
