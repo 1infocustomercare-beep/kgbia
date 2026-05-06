@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import RealisticIPhonePreview from "@/components/empire-home/RealisticIPhonePreview";
+import { useEmpireScrollDirector } from "@/components/empire-home/ScrollDirector";
 
 // 8 Feature reali di Empire (italiano, B2B)
 type Feature = { id: string; label: string; icon: LucideIcon; image: string; description: string };
@@ -47,9 +48,14 @@ const wrap = (min: number, max: number, v: number) => {
 };
 
 export function FeatureCarousel() {
-  const rootRef = useRef<HTMLElement>(null);
   const [step, setStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const { ref } = useEmpireScrollDirector<HTMLElement>("feature-carousel", {
+    steps: FEATURES.length,
+    onUpdate: ({ step: nextStep }) => {
+      if (!isPaused) setStep(nextStep);
+    },
+  });
 
   const currentIndex = ((step % FEATURES.length) + FEATURES.length) % FEATURES.length;
 
@@ -57,27 +63,6 @@ export function FeatureCarousel() {
     const diff = (index - currentIndex + FEATURES.length) % FEATURES.length;
     if (diff > 0) setStep((s) => s + diff);
   };
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-
-    const updateFromScroll = () => {
-      if (isPaused) return;
-      const rect = root.getBoundingClientRect();
-      const total = Math.max(1, root.offsetHeight - window.innerHeight);
-      const progress = Math.min(Math.max(-rect.top / total, 0), 1);
-      setStep(Math.min(FEATURES.length - 1, Math.floor(progress * FEATURES.length)));
-    };
-
-    updateFromScroll();
-    window.addEventListener("scroll", updateFromScroll, { passive: true });
-    window.addEventListener("resize", updateFromScroll);
-    return () => {
-      window.removeEventListener("scroll", updateFromScroll);
-      window.removeEventListener("resize", updateFromScroll);
-    };
-  }, [isPaused]);
 
   const getCardStatus = (index: number) => {
     const diff = index - currentIndex;
@@ -92,7 +77,7 @@ export function FeatureCarousel() {
   };
 
   return (
-    <section ref={rootRef} className="relative min-h-[340svh] w-full">
+    <section ref={ref} className="relative min-h-[340svh] w-full">
     <div className="sticky top-0 flex min-h-[100svh] w-full items-center justify-center px-4 py-20 sm:px-6 md:p-8">
     <div className="w-full max-w-7xl mx-auto">
       <div className="relative overflow-hidden rounded-[1.75rem] lg:rounded-[2.5rem] flex flex-col lg:flex-row min-h-[640px] lg:min-h-[560px] border border-foreground/10 bg-background">
