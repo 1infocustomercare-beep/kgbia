@@ -1,4 +1,5 @@
 import { useEmpireScrollDirector } from "@/components/empire-home/ScrollDirector";
+import type { CSSProperties } from "react";
 
 const chaos = ["EMAIL", "EXCEL", "WHATSAPP", "FATTURE", "STAFF", "ORDINI", "CRM", "REPORT", "CALL", "DM", "POST", "BOOKING"];
 const stats = [
@@ -18,7 +19,7 @@ export default function ShiftSection() {
       ref={ref}
       id="shift-section"
       className="relative min-h-[185svh] overflow-visible bg-background"
-      style={{ "--shift-progress": progress } as React.CSSProperties}
+      style={{ "--shift-progress": progress } as CSSProperties}
     >
       <div className="sticky top-0 flex h-[100svh] items-center justify-center overflow-hidden px-4 sm:px-5">
         <div
