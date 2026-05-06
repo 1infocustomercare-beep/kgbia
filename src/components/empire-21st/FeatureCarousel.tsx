@@ -82,9 +82,9 @@ export function FeatureCarousel() {
     <div className="w-full max-w-7xl mx-auto">
       <div className="relative overflow-hidden rounded-[1.75rem] lg:rounded-[2.5rem] flex flex-col lg:flex-row min-h-[640px] lg:min-h-[560px] border border-foreground/10 bg-background">
         {/* LEFT: chips list */}
-        <div className="w-full lg:w-[42%] min-h-[280px] md:min-h-[340px] lg:h-auto relative z-30 flex flex-col items-start justify-center overflow-hidden px-6 md:px-12 lg:pl-14 bg-gradient-to-br from-[#1a1226] via-[#11141a] to-[#0b0d12]">
-          <div className="absolute inset-x-0 top-0 h-12 md:h-16 bg-gradient-to-b from-[#11141a] via-[#11141a]/80 to-transparent z-40" />
-          <div className="absolute inset-x-0 bottom-0 h-12 md:h-16 bg-gradient-to-t from-[#11141a] via-[#11141a]/80 to-transparent z-40" />
+        <div className="w-full lg:w-[42%] min-h-[280px] md:min-h-[340px] lg:h-auto relative z-30 flex flex-col items-start justify-center overflow-hidden px-6 md:px-12 lg:pl-14 bg-[linear-gradient(135deg,hsl(var(--secondary)),hsl(var(--background)),hsl(var(--deep-black)))]">
+          <div className="absolute inset-x-0 top-0 h-12 bg-[linear-gradient(180deg,hsl(var(--background)),hsl(var(--background)_/_0.8),transparent)] z-40 md:h-16" />
+          <div className="absolute inset-x-0 bottom-0 h-12 bg-[linear-gradient(0deg,hsl(var(--background)),hsl(var(--background)_/_0.8),transparent)] z-40 md:h-16" />
           <div className="relative w-full h-full flex items-center justify-center lg:justify-start z-20 py-16">
             {FEATURES.map((feature, index) => {
               const isActive = index === currentIndex;
@@ -110,11 +110,11 @@ export function FeatureCarousel() {
                     className={cn(
                       "relative flex items-center gap-3 px-5 md:px-7 py-3 md:py-3.5 rounded-full transition-all duration-700 text-left group border min-h-[44px]",
                       isActive
-                        ? "bg-gradient-to-r from-amber-300 to-amber-500 text-black border-amber-300 z-10 shadow-[0_0_24px_rgba(245,158,11,0.45)]"
-                        : "bg-white/5 text-white/55 border-white/10 hover:border-white/30 hover:text-white/90"
+                        ? "border-gold bg-[linear-gradient(90deg,hsl(var(--gold)),hsl(var(--primary)))] text-primary-foreground z-10 shadow-[0_0_24px_hsl(var(--gold)_/_0.32)]"
+                        : "border-foreground/10 bg-foreground/[0.05] text-foreground/55 hover:border-foreground/30 hover:text-foreground/90"
                     )}
                   >
-                    <Icon size={16} strokeWidth={2.2} className={isActive ? "text-black" : "text-white/50"} />
+                    <Icon size={16} strokeWidth={2.2} className={isActive ? "text-primary-foreground" : "text-foreground/50"} />
                     <span className="font-semibold text-[12px] md:text-[13px] tracking-tight whitespace-nowrap uppercase">
                       {feature.label}
                     </span>
@@ -126,7 +126,7 @@ export function FeatureCarousel() {
         </div>
 
         {/* RIGHT: image stack */}
-        <div className="flex-1 min-h-[500px] md:min-h-[560px] relative bg-[#080a0f] flex items-center justify-center py-12 md:py-20 px-6 md:px-12 overflow-hidden border-t lg:border-t-0 lg:border-l border-white/10">
+        <div className="flex-1 min-h-[500px] md:min-h-[560px] relative bg-deep-black flex items-center justify-center py-12 md:py-20 px-6 md:px-12 overflow-hidden border-t lg:border-t-0 lg:border-l border-foreground/10">
           <div className="relative w-full max-w-[430px] min-h-[480px] flex items-center justify-center">
             {FEATURES.map((feature, index) => {
               const status = getCardStatus(index);
@@ -147,7 +147,7 @@ export function FeatureCarousel() {
                     pointerEvents: isActive ? "auto" : "none",
                   }}
                   transition={{ type: "spring", stiffness: 260, damping: 25, mass: 0.8 }}
-                  className="absolute inset-x-0 top-0 flex min-h-[480px] flex-col items-center justify-center rounded-[1.5rem] md:rounded-[2rem] border border-white/10 bg-[#11141a] px-5 py-6 origin-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
+                  className="absolute inset-x-0 top-0 flex min-h-[480px] flex-col items-center justify-center rounded-[1.5rem] md:rounded-[2rem] border border-foreground/10 bg-background px-5 py-6 origin-center shadow-[0_30px_80px_-20px_hsl(0_0%_0%_/_0.6)]"
                 >
                   <RealisticIPhonePreview
                     src={feature.image}
@@ -164,10 +164,10 @@ export function FeatureCarousel() {
                         exit={{ opacity: 0, y: 10 }}
                         className="relative mt-5 flex flex-col items-center justify-end text-center pointer-events-none"
                       >
-                        <div className="bg-amber-300 text-black px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] w-fit mb-3">
+                        <div className="mb-3 w-fit rounded-full bg-gold px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary-foreground">
                           {String(index + 1).padStart(2, "0")} · {feature.label}
                         </div>
-                        <p className="text-white font-medium text-base md:text-lg leading-snug drop-shadow-md tracking-tight">
+                        <p className="text-foreground font-medium text-base md:text-lg leading-snug drop-shadow-md tracking-tight">
                           {feature.description}
                         </p>
                       </motion.div>
@@ -180,8 +180,8 @@ export function FeatureCarousel() {
                       isActive ? "opacity-100" : "opacity-0"
                     )}
                   >
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981]" />
-                    <span className="text-white/80 text-[10px] font-semibold uppercase tracking-[0.25em]">
+                    <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_hsl(var(--primary))]" />
+                    <span className="text-foreground/80 text-[10px] font-semibold uppercase tracking-[0.25em]">
                       Attivo ora
                     </span>
                   </div>
