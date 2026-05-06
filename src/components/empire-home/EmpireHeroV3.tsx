@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Blocks, BrainCircuit, MessageCircle, Mic, Play, Sparkles } from "lucide-react";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import RealisticIPhonePreview from "@/components/empire-home/RealisticIPhonePreview";
+import { useEmpireScrollDirector } from "@/components/empire-home/ScrollDirector";
 
 /**
  * Empire Hero V3 — hero PULITA, professionale, mobile-first.
@@ -40,45 +41,17 @@ const EmpireHeroV3 = forwardRef<HTMLElement, Record<string, never>>(function Emp
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [effectStep, setEffectStep] = useState(0);
+  const { ref: directorRef } = useEmpireScrollDirector<HTMLElement>("hero-v3", {
+    steps: HERO_FLOW.length,
+    onUpdate: ({ step }) => setEffectStep((current) => (current === step ? current : step)),
+  });
 
   const assignSectionRef = useCallback((node: HTMLElement | null) => {
     sectionRef.current = node;
     if (typeof forwardedRef === "function") forwardedRef(node);
     else if (forwardedRef) forwardedRef.current = node;
-  }, [forwardedRef]);
-
-  // Effetti scroll sempre attivi anche su mobile: niente pin, niente GSAP fragile.
-  // Aggiorna CSS variables + step operativo evidenziato in modo sincronizzato allo scroll reale.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const section = sectionRef.current;
-    if (!section) return;
-
-    let raf = 0;
-    const update = () => {
-      const rect = section.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
-      const progress = Math.min(Math.max((vh * 0.82 - rect.top) / (rect.height + vh * 0.24), 0), 1);
-      section.style.setProperty("--hero-scroll", progress.toFixed(3));
-      section.style.setProperty("--hero-glow-y", `${Math.round(progress * -34)}px`);
-      const nextStep = Math.min(HERO_FLOW.length - 1, Math.floor(progress * HERO_FLOW.length));
-      setEffectStep((current) => (current === nextStep ? current : nextStep));
-    };
-
-    const requestUpdate = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-    return () => {
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+    directorRef(node);
+  }, [directorRef, forwardedRef]);
 
   // Rotazione robusta. Pausa automatica quando:
   //  - hero fuori viewport (IntersectionObserver)
@@ -177,17 +150,17 @@ const EmpireHeroV3 = forwardRef<HTMLElement, Record<string, never>>(function Emp
       ref={assignSectionRef}
       id="hero-v3"
       className="relative isolate w-full overflow-hidden bg-background text-foreground"
-      style={{ "--hero-scroll": 0, "--hero-glow-y": "0px", "--mx": 0, "--my": 0 } as CSSProperties}
+      style={{ "--empire-progress": 0, "--mx": 0, "--my": 0 } as CSSProperties}
     >
       {/* Aurora background statico (no WebGL) */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
         <div
             className="absolute -left-[20%] -top-[10%] h-[70vh] w-[70vh] rounded-full opacity-45 transition-transform duration-300"
-            style={{ background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 62%)", filter: "blur(110px)", transform: "translate3d(calc(var(--hero-scroll) * 28px), var(--hero-glow-y), 0) scale(calc(1 + var(--hero-scroll) * 0.08))" }}
+            style={{ background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 62%)", filter: "blur(110px)", transform: "translate3d(calc(var(--empire-progress) * 28px), calc(var(--empire-progress) * -34px), 0) scale(calc(1 + var(--empire-progress) * 0.08))" }}
         />
         <div
             className="absolute -right-[20%] top-[30%] h-[70vh] w-[70vh] rounded-full opacity-35 transition-transform duration-300"
-            style={{ background: "radial-gradient(circle, hsl(var(--empire-violet-glow)) 0%, transparent 62%)", filter: "blur(110px)", transform: "translate3d(calc(var(--hero-scroll) * -30px), calc(var(--hero-scroll) * 24px), 0) scale(calc(1 + var(--hero-scroll) * 0.1))" }}
+            style={{ background: "radial-gradient(circle, hsl(var(--empire-violet-glow)) 0%, transparent 62%)", filter: "blur(110px)", transform: "translate3d(calc(var(--empire-progress) * -30px), calc(var(--empire-progress) * 24px), 0) scale(calc(1 + var(--empire-progress) * 0.1))" }}
         />
         <div
             className="absolute left-1/2 bottom-0 h-[40vh] w-[60vh] -translate-x-1/2 rounded-full opacity-25"
@@ -302,7 +275,7 @@ const EmpireHeroV3 = forwardRef<HTMLElement, Record<string, never>>(function Emp
           style={{
             perspective: "1600px",
             minHeight: "clamp(440px, 78vw, 620px)",
-            transform: "perspective(1600px) rotateY(calc(var(--mx) * 3.5deg)) rotateX(calc(var(--my) * -2.5deg)) translateY(calc(var(--hero-scroll) * -18px))",
+            transform: "perspective(1600px) rotateY(calc(var(--mx) * 3.5deg)) rotateX(calc(var(--my) * -2.5deg)) translateY(calc(var(--empire-progress) * -18px))",
           }}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}

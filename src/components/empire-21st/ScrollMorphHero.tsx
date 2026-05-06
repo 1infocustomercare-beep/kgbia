@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { motion, useTransform, useSpring, useMotionValue } from "framer-motion";
+import { useEmpireScrollDirector } from "@/components/empire-home/ScrollDirector";
 
 // --- Utility ---
 // function cn(...inputs: ClassValue[]) {
@@ -116,7 +117,6 @@ const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * 
 export default function IntroAnimation() {
     const [introPhase, setIntroPhase] = useState<AnimationPhase>("scatter");
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-    const rootRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     // --- Container Size ---
@@ -147,28 +147,14 @@ export default function IntroAnimation() {
     // --- Virtual Scroll Logic ---
     const virtualScroll = useMotionValue(0);
     const scrollRef = useRef(0); // Keep track of scroll value without re-renders
-
-    useEffect(() => {
-        const root = rootRef.current;
-        if (!root) return;
-
-        const updateFromPageScroll = () => {
-            const rect = root.getBoundingClientRect();
-            const total = Math.max(1, root.offsetHeight - window.innerHeight);
-            const progress = Math.min(Math.max(-rect.top / total, 0), 1);
+    const { ref: rootRef } = useEmpireScrollDirector<HTMLElement>("scroll-morph", {
+        steps: 4,
+        onUpdate: ({ progress }) => {
             const next = progress * MAX_SCROLL;
             scrollRef.current = next;
             virtualScroll.set(next);
-        };
-
-        updateFromPageScroll();
-        window.addEventListener("scroll", updateFromPageScroll, { passive: true });
-        window.addEventListener("resize", updateFromPageScroll);
-        return () => {
-            window.removeEventListener("scroll", updateFromPageScroll);
-            window.removeEventListener("resize", updateFromPageScroll);
-        };
-    }, [virtualScroll]);
+        },
+    });
 
     // 1. Morph Progress: 0 (Circle) -> 1 (Bottom Arc)
     // Happens between scroll 0 and 600
