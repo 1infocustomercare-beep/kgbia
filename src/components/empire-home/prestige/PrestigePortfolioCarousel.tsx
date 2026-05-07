@@ -589,11 +589,39 @@ export default function PrestigePortfolioCarousel() {
                   </div>
                 </div>
                 <p
-                  className="mt-3 line-clamp-2 text-sm"
-                  style={{ color: "hsl(var(--pr-muted-on-light))" }}
+                  className="mt-3 line-clamp-2 text-sm font-medium"
+                  style={{ color: "hsl(var(--pr-text-on-light))" }}
                 >
                   {p.oneLiner}
                 </p>
+                <p
+                  className="mt-1.5 line-clamp-2 text-[12px] leading-snug"
+                  style={{ color: "hsl(var(--pr-muted-on-light))" }}
+                >
+                  {p.story.split(".")[0]}.
+                </p>
+                {/* Mini KPI strip */}
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {p.results.slice(0, 3).map((r) => (
+                    <span
+                      key={r.label}
+                      className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                      style={{
+                        background: "hsl(var(--pr-emerald) / 0.08)",
+                        color: "hsl(var(--pr-emerald))",
+                        border: "1px solid hsl(var(--pr-emerald) / 0.18)",
+                      }}
+                    >
+                      {r.value} {r.label}
+                    </span>
+                  ))}
+                </div>
+                <span
+                  className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider"
+                  style={{ color: "hsl(var(--pr-gold-deep))" }}
+                >
+                  Apri caso studio →
+                </span>
               </button>
             </article>
           ))}
