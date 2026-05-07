@@ -419,6 +419,9 @@ const DELIV_ICONS: Record<Deliverable["icon"], string> = {
   loy: "🎁",
 };
 
+// Use the first (Home) screen as cover
+PROJECTS.forEach((p) => (p.cover = p.screens[0]));
+
 
 export default function PrestigePortfolioCarousel() {
   const navigate = useNavigate();
