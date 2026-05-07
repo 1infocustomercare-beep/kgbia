@@ -80,8 +80,8 @@ function shuffleInPlace<T>(arr: T[], seed = Date.now()): T[] {
   return arr;
 }
 
-export function createMockupPool(opts: { shuffle?: boolean; seed?: number } = {}) {
-  let pool = buildInterleavedPool();
+export function createMockupPool(opts: { shuffle?: boolean; seed?: number; premiumOnly?: boolean } = {}) {
+  let pool = buildInterleavedPool({ premiumOnly: opts.premiumOnly ?? true });
   if (opts.shuffle) pool = shuffleInPlace(pool, opts.seed);
   let cursor = 0;
 
