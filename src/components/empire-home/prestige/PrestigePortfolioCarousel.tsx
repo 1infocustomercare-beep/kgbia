@@ -899,9 +899,93 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   >
                     {r.label}
                   </div>
+                  {r.before && r.after && (
+                    <div
+                      className="mt-2 text-[10px] sm:text-[11px]"
+                      style={{ color: "hsl(var(--pr-muted-on-dark))" }}
+                    >
+                      <span className="line-through opacity-70">{r.before}</span>
+                      <span className="mx-1" style={{ color: "hsl(var(--pr-gold))" }}>→</span>
+                      <span className="font-semibold" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                        {r.after}
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
+            <p
+              className="mt-5 text-center text-sm sm:text-base"
+              style={{ color: "hsl(var(--pr-gold-light))" }}
+            >
+              💰 {project.roiLine}
+            </p>
+          </div>
+
+          {/* Deliverables */}
+          <div className="mt-16">
+            <div className="prestige-eyebrow text-center" style={{ color: "hsl(var(--pr-gold-light))" }}>
+              Cosa abbiamo consegnato
+            </div>
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {project.deliverables.map((d) => (
+                <div
+                  key={d.label}
+                  className="flex items-start gap-3 rounded-2xl p-4"
+                  style={{
+                    background: "hsl(var(--pr-emerald-mid) / 0.4)",
+                    border: "1px solid hsl(var(--pr-gold) / 0.18)",
+                  }}
+                >
+                  <span
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg"
+                    style={{ background: "hsl(var(--pr-gold) / 0.18)" }}
+                  >
+                    {DELIV_ICONS[d.icon]}
+                  </span>
+                  <div>
+                    <div className="text-sm font-semibold" style={{ color: "hsl(var(--pr-text-on-dark))" }}>
+                      {d.label}
+                    </div>
+                    <div className="mt-0.5 text-[12px] leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+                      {d.detail}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Timeline */}
+          <div className="mt-16">
+            <div className="prestige-eyebrow text-center" style={{ color: "hsl(var(--pr-gold-light))" }}>
+              Timeline di consegna
+            </div>
+            <ol className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {project.timeline.map((t, i) => (
+                <li
+                  key={t.day}
+                  className="relative rounded-2xl p-4"
+                  style={{
+                    background: "hsl(var(--pr-emerald-deep) / 0.5)",
+                    border: "1px solid hsl(var(--pr-gold) / 0.2)",
+                  }}
+                >
+                  <div
+                    className="absolute -top-2 left-4 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                    style={{ background: "hsl(var(--pr-gold))", color: "hsl(var(--pr-emerald-deep))" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div className="mt-1 text-xs font-bold uppercase tracking-wider" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                    {t.day}
+                  </div>
+                  <div className="mt-1 text-[13px] leading-snug" style={{ color: "hsl(var(--pr-text-on-dark) / 0.92)" }}>
+                    {t.what}
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
 
           {/* Testimonial */}
