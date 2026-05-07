@@ -5,20 +5,7 @@ import { useEmpireScrollDirector } from "../ScrollDirector";
 import { createMockupPool } from "@/lib/mockup-pool";
 import PrestigePhone, { PHONE_VIEWS, type PhoneView } from "./PrestigePhone";
 
-// Visit-unique seed → mockups change at every reload, but stay coherent within the session
-const VISIT_SEED =
-  typeof window !== "undefined"
-    ? (() => {
-        const k = "empire-home-seed";
-        const cached = sessionStorage.getItem(k);
-        if (cached) return Number(cached);
-        const fresh = Math.floor(Math.random() * 2 ** 31);
-        sessionStorage.setItem(k, String(fresh));
-        return fresh;
-      })()
-    : 1;
-
-const pool = createMockupPool({ shuffle: true, seed: VISIT_SEED });
+const pool = createMockupPool();
 const HERO_MOCKS = pool.images(4);
 // Hero rotates Home → Admin → App → AI to immediately tell the visitor that
 // Empire is an entire ecosystem, not just a website.

@@ -71,86 +71,14 @@ export default function PrestigePhone({
 
           {/* Dynamic island */}
           <div
-            className="absolute left-1/2 z-20 -translate-x-1/2"
+            className="absolute left-1/2 -translate-x-1/2"
             style={{
               top: `${width * 0.04}px`,
               width: `${width * 0.32}px`,
               height: `${width * 0.075}px`,
               background: "#000",
               borderRadius: 9999,
-              boxShadow: "inset 0 0 0 1px hsl(0 0% 14%), 0 0 12px hsl(0 0% 0% / 0.6)",
-            }}
-          >
-            {/* Camera lens dot */}
-            <span
-              className="absolute right-[18%] top-1/2 -translate-y-1/2 rounded-full"
-              style={{
-                width: `${width * 0.022}px`,
-                height: `${width * 0.022}px`,
-                background: "radial-gradient(circle at 30% 30%, hsl(220 60% 30%), #000 70%)",
-                boxShadow: "inset 0 0 0 1px hsl(220 30% 18%)",
-              }}
-            />
-          </div>
-
-          {/* iOS status bar (time + signal + battery) */}
-          <div
-            className="pointer-events-none absolute left-0 right-0 top-0 z-10 flex items-center justify-between"
-            style={{
-              padding: `${width * 0.045}px ${width * 0.075}px ${width * 0.02}px`,
-              fontSize: `${Math.max(9, width * 0.04)}px`,
-              color: "#fff",
-              fontWeight: 600,
-              fontFamily: "-apple-system, 'SF Pro Display', system-ui, sans-serif",
-              textShadow: "0 1px 2px hsl(0 0% 0% / 0.5)",
-              letterSpacing: "-0.01em",
-            }}
-          >
-            <span>9:41</span>
-            <span style={{ width: `${width * 0.32}px` }} />
-            <span className="flex items-center gap-1">
-              {/* signal bars */}
-              <span className="flex items-end gap-[1px]">
-                {[0.3, 0.5, 0.75, 1].map((h, i) => (
-                  <span
-                    key={i}
-                    style={{
-                      width: `${width * 0.008}px`,
-                      height: `${width * 0.025 * h}px`,
-                      background: "#fff",
-                      borderRadius: 1,
-                    }}
-                  />
-                ))}
-              </span>
-              {/* battery */}
-              <span
-                className="relative inline-block"
-                style={{
-                  width: `${width * 0.07}px`,
-                  height: `${width * 0.032}px`,
-                  border: "1px solid #fff",
-                  borderRadius: `${width * 0.008}px`,
-                  padding: `${width * 0.004}px`,
-                }}
-              >
-                <span
-                  className="block h-full rounded-[1px]"
-                  style={{ width: "82%", background: "#fff" }}
-                />
-              </span>
-            </span>
-          </div>
-
-          {/* Home indicator */}
-          <div
-            className="pointer-events-none absolute left-1/2 z-10 -translate-x-1/2 rounded-full"
-            style={{
-              bottom: `${width * 0.025}px`,
-              width: `${width * 0.36}px`,
-              height: `${width * 0.013}px`,
-              background: "hsl(0 0% 100% / 0.85)",
-              boxShadow: "0 0 6px hsl(0 0% 0% / 0.4)",
+              boxShadow: "inset 0 0 0 1px hsl(0 0% 14%)",
             }}
           />
 
