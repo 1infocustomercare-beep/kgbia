@@ -31,8 +31,26 @@ function buildInterleavedPool(): SectorPick[] {
   return out;
 }
 
-export function createMockupPool() {
-  const pool = buildInterleavedPool();
+function shuffleInPlace<T>(arr: T[], seed = Date.now()): T[] {
+  // Mulberry32 PRNG so we can vary shuffle across visits but stay deterministic per session
+  let s = seed >>> 0;
+  const rnd = () => {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+export function createMockupPool(opts: { shuffle?: boolean; seed?: number } = {}) {
+  let pool = buildInterleavedPool();
+  if (opts.shuffle) pool = shuffleInPlace(pool, opts.seed);
   let cursor = 0;
 
   return {
@@ -51,3 +69,4 @@ export function createMockupPool() {
     size: pool.length,
   };
 }
+
