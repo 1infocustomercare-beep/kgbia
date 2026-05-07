@@ -20,142 +20,279 @@ const VISIT_SEED =
     : 1;
 const pool = createMockupPool({ shuffle: true, seed: VISIT_SEED + 7 });
 
+interface ResultMetric {
+  value: string;
+  label: string;
+  /** Optional before → after detail shown in modal */
+  before?: string;
+  after?: string;
+}
+
+interface Deliverable {
+  icon: "site" | "admin" | "app" | "ai" | "wa" | "pay" | "ads" | "loy";
+  label: string;
+  detail: string;
+}
+
 interface Project {
   id: string;
   tag: string;
   title: string;
   city: string;
+  /** 1-line headline used on cards */
   oneLiner: string;
+  /** 2-3 sentences of context for the modal hero */
+  story: string;
+  /** Brand voice / sector positioning */
+  positioning: string;
   problem: string[];
   solution: string[];
-  results: { value: string; label: string }[];
+  /** Concrete deliverables shipped — shown as a checklist */
+  deliverables: Deliverable[];
+  /** Day-by-day rollout timeline */
+  timeline: { day: string; what: string }[];
+  /** Headline KPIs (3 max) */
+  results: ResultMetric[];
+  /** Plain-text ROI sentence: economic impact in € */
+  roiLine: string;
   testimonial: { quote: string; author: string; role: string };
   /** 4 distinct screens — Home / Admin / App / AI */
   screens: string[];
+  /** Per-view caption explaining what's on screen */
+  screenCaptions: [string, string, string, string];
   cover: string;
   accent: string;
+  /** Investment range, kept generic */
+  investment: string;
 }
 
 const PROJECTS: Project[] = [
   {
     id: "strapizzami",
-    tag: "Pizzeria",
+    tag: "Pizzeria · Delivery",
     title: "Strapizzami",
     city: "Milano",
     oneLiner: "Da pizzeria di quartiere a marchio digitale che vende anche di notte.",
+    story:
+      "Pizzeria storica del quartiere Isola, 70 coperti, take-away forte ma telefono perennemente occupato nel weekend. Volevano smettere di rifiutare ordini e trasformare i clienti occasionali in clienti fedeli, senza assumere altro personale al banco.",
+    positioning: "Verace, popolare, contemporanea. Tono diretto, mai snob.",
     problem: [
-      "Telefono sempre occupato durante il rush serale",
-      "Ordini WhatsApp persi tra centinaia di messaggi",
-      "Nessun modo per riconoscere i clienti fedeli",
+      "Telefono occupato 4 ore al giorno nel rush serale, ordini persi quotidianamente.",
+      "Ordini WhatsApp dispersi tra centinaia di messaggi senza tracciamento.",
+      "Nessun modo di riconoscere chi tornava 3 volte alla settimana.",
+      "Recensioni Google ferme a 4.2 senza un sistema per chiederle.",
     ],
     solution: [
-      "Sito menu digitale con ordini diretti in cassa",
-      "AI che risponde a WhatsApp 24/7 in 12 secondi",
-      "Programma fedeltà automatico con punti e premi",
+      "Sito ordini con menu visivo e checkout in 30 secondi (Apple Pay, Google Pay, contanti alla consegna).",
+      "AI WhatsApp che risponde in 12 secondi a prezzi, allergeni, orari, prenotazioni.",
+      "Programma fedeltà a punti automatico con premi e compleanno.",
+      "Stampa diretta in cucina degli ordini → zero errori di trascrizione.",
+      "Richiesta recensione automatica 2 ore dopo la consegna.",
+    ],
+    deliverables: [
+      { icon: "site", label: "Sito menu digitale", detail: "Pagine prodotto fotografiche, allergeni, ordini diretti." },
+      { icon: "admin", label: "Cassa & cucina", detail: "Dashboard ordini, stampa automatica, gestione turni." },
+      { icon: "app", label: "App PWA cliente", detail: "Riordina con un tap, punti fedeltà, push notifiche." },
+      { icon: "ai", label: "AI WhatsApp", detail: "Risponde 24/7, prende ordini e prenotazioni." },
+      { icon: "pay", label: "Pagamenti integrati", detail: "Stripe, Apple Pay, Klarna, contanti alla consegna." },
+      { icon: "loy", label: "Loyalty automatica", detail: "Punti, premi, compleanno, recupero clienti dormienti." },
+    ],
+    timeline: [
+      { day: "Giorno 1", what: "Brief + import menu e foto esistenti." },
+      { day: "Giorno 2-5", what: "Sito + admin live, AI addestrata sul menu reale." },
+      { day: "Giorno 6", what: "Test ordini interni, formazione 30 min al titolare." },
+      { day: "Giorno 7", what: "Go-live, prima campagna SMS al database storico." },
     ],
     results: [
-      { value: "+38%", label: "ordini serali" },
-      { value: "0", label: "chiamate perse" },
-      { value: "12s", label: "tempo risposta" },
+      { value: "+38%", label: "ordini serali", before: "84/sera", after: "116/sera" },
+      { value: "0", label: "chiamate perse", before: "~22/sera", after: "0" },
+      { value: "12s", label: "tempo risposta WhatsApp", before: "8 min medio", after: "12 secondi" },
     ],
+    roiLine: "≈ €4.800 di ricavi extra al mese, recuperati nei primi 21 giorni.",
     testimonial: {
-      quote: "Prima rifiutavamo ordini perché il telefono era sempre occupato. Adesso l'AI risponde a tutti, anche quando chiudiamo.",
+      quote: "Prima rifiutavamo ordini perché il telefono era sempre occupato. Adesso l'AI risponde a tutti, anche quando chiudiamo. È come avere un dipendente in più che non si ammala mai.",
       author: "Marco R.",
       role: "Titolare",
     },
     screens: pool.images(4),
+    screenCaptions: [
+      "Sito ordini: menu fotografico + checkout in 30s",
+      "Admin cucina: ordini live + stampa automatica",
+      "App cliente: riordina, punti fedeltà, notifiche",
+      "AI WhatsApp: risponde in 12 secondi, 24/7",
+    ],
     cover: "",
     accent: "hsl(20 80% 50%)",
+    investment: "Piano Crescita · 90 giorni gratis poi €149/mese",
   },
   {
     id: "paperfish",
-    tag: "Sushi & Omakase",
+    tag: "Sushi · Fine Dining",
     title: "Paperfish",
     city: "Roma",
     oneLiner: "L'esperienza del ristorante stellato, anche prima di entrare.",
+    story:
+      "Sushi omakase di alta gamma, 22 posti, lista d'attesa di 3 settimane ma il 15% degli ospiti non si presentava. Volevano un'immagine digitale all'altezza dell'esperienza in sala, e un sistema che rispettasse il rituale del fine dining.",
+    positioning: "Editoriale, minimal, sussurrato. Nessun bottone aggressivo.",
     problem: [
-      "Prenotazioni gestite a mano da un solo cameriere",
-      "Clienti che non si presentano (15% no-show)",
-      "Nessuna immagine digitale del fine dining",
+      "Prenotazioni gestite a mano da un solo cameriere su quaderno.",
+      "No-show del 15% = ~€2.400 di perdita a settimana.",
+      "Nessuna immagine digitale del fine dining: il sito vecchio rovinava l'esperienza.",
+      "Impossibile gestire la lista d'attesa in modo intelligente.",
     ],
     solution: [
-      "Sito editoriale con storytelling dei piatti",
-      "Prenotazioni con conferma + reminder automatici",
-      "Admin con calendario sale + lista d'attesa intelligente",
+      "Sito editoriale con storytelling dei piatti, fotografia food premium, animazioni cinematografiche.",
+      "Prenotazioni con conferma via mail + 2 reminder WhatsApp (24h e 3h prima).",
+      "Carta di credito a garanzia (charge automatico in caso di no-show).",
+      "Admin con calendario sale, allergie, lista d'attesa intelligente che richiama in automatico.",
+      "Menu degustazione personalizzato in base alle preferenze dichiarate dal cliente.",
+    ],
+    deliverables: [
+      { icon: "site", label: "Sito editoriale premium", detail: "Storytelling piatti, foto chef, prenotazioni." },
+      { icon: "admin", label: "Calendario sala", detail: "Tavoli, allergie, lista d'attesa, no-show tracking." },
+      { icon: "app", label: "PWA ospite", detail: "Conferma, modifica, carta digitale, ricordo serate." },
+      { icon: "ai", label: "AI concierge", detail: "Risponde a richieste speciali in IT/EN/JP." },
+      { icon: "pay", label: "Caparra automatica", detail: "Stripe pre-auth, charge solo su no-show." },
+    ],
+    timeline: [
+      { day: "Settimana 1", what: "Shooting fotografico piatti + brand audit." },
+      { day: "Settimana 2", what: "Sito + sistema prenotazioni live, importazione storico clienti." },
+      { day: "Settimana 3", what: "AI concierge, training staff, soft launch." },
     ],
     results: [
-      { value: "−92%", label: "no-show" },
-      { value: "+24%", label: "scontrino medio" },
-      { value: "4.9★", label: "Google reviews" },
+      { value: "−92%", label: "no-show", before: "15%", after: "1.2%" },
+      { value: "+24%", label: "scontrino medio", before: "€95", after: "€118" },
+      { value: "4.9★", label: "Google reviews", before: "4.6★ (212)", after: "4.9★ (487)" },
     ],
+    roiLine: "≈ €9.600 al mese recuperati tra no-show evitati e upsell sul menu degustazione.",
     testimonial: {
-      quote: "Il sito comunica esattamente l'eleganza che viviamo in sala. I clienti arrivano già preparati all'esperienza.",
+      quote: "Il sito comunica esattamente l'eleganza che viviamo in sala. I clienti arrivano già preparati all'esperienza, sanno cosa aspettarsi. È diventato parte del rituale.",
       author: "Yuki T.",
       role: "Executive Chef",
     },
     screens: pool.images(4),
+    screenCaptions: [
+      "Sito editoriale: storytelling piatti + prenotazione",
+      "Admin sala: calendario, allergie, lista d'attesa",
+      "App ospite: conferma, modifica, carta digitale",
+      "AI concierge: risposte personalizzate IT/EN/JP",
+    ],
     cover: "",
     accent: "hsl(340 50% 55%)",
+    investment: "Piano Premium · 90 giorni gratis poi €249/mese",
   },
   {
     id: "empire-ncc",
-    tag: "NCC Luxury",
+    tag: "NCC · Luxury Transfer",
     title: "Empire NCC",
     city: "Milano · Como · Sankt Moritz",
     oneLiner: "Un centralino AI che parla 4 lingue e non dorme mai.",
+    story:
+      "Flotta NCC luxury con 14 vetture (Mercedes Classe S, V-Class, Bentley) tra Milano, Como e Sankt Moritz. Clientela 70% straniera, richieste a tutte le ore, preventivi calcolati a mano dal titolare. Volevano scalare senza perdere il tono premium.",
+    positioning: "Discreto, lusso silenzioso, oro caldo su nero.",
     problem: [
-      "Richieste internazionali fuori orario",
-      "Preventivi calcolati a mano con errori",
-      "Autisti senza visibilità sulla giornata",
+      "Richieste internazionali fuori orario non gestite (cliente sceglie il primo che risponde).",
+      "Preventivi a mano: 8-12 minuti ciascuno, errori frequenti su tariffe stagionali.",
+      "Autisti senza visibilità sulla giornata, comunicazione via WhatsApp caotica.",
+      "Fatturazione clienti business gestita a fine mese in Excel.",
     ],
     solution: [
-      "Sito multilingua con preventivo istantaneo",
-      "AI vocale che gestisce richieste in IT/EN/FR/RU",
-      "App autisti con corse, pagamenti e fatturazione",
+      "Sito multilingua (IT/EN/FR/RU) con preventivo istantaneo basato su tratta, vettura, orario.",
+      "AI vocale che gestisce chiamate fuori orario in 4 lingue con voce umana naturale.",
+      "App autisti con corse del giorno, navigazione, foto ritiro/consegna, firma digitale.",
+      "Admin con dashboard prenotazioni, gestione flotta, fatturazione automatica B2B.",
+      "Integrazione con Stripe + bonifico SEPA + fattura elettronica SDI.",
+    ],
+    deliverables: [
+      { icon: "site", label: "Sito multilingua premium", detail: "4 lingue, preventivo istantaneo, prenotazione." },
+      { icon: "admin", label: "Centralino flotta", detail: "Corse, autisti, vetture, calendario, KPI." },
+      { icon: "app", label: "App autisti", detail: "Corse, navigazione, firma digitale, pagamenti." },
+      { icon: "ai", label: "AI vocale 4 lingue", detail: "Risponde, qualifica, prenota, conferma." },
+      { icon: "pay", label: "Fatturazione SDI", detail: "Carte, SEPA, fattura elettronica automatica." },
+    ],
+    timeline: [
+      { day: "Settimana 1", what: "Audit tariffe + import clientela storica." },
+      { day: "Settimana 2", what: "Sito 4 lingue + admin live, integrazione Stripe + SDI." },
+      { day: "Settimana 3", what: "AI vocale addestrata, app autisti distribuita." },
+      { day: "Settimana 4", what: "Go-live + monitoraggio chiamate prima settimana." },
     ],
     results: [
-      { value: "×3.2", label: "richieste serali" },
-      { value: "100%", label: "lingue coperte" },
-      { value: "−70%", label: "tempo amministrativo" },
+      { value: "×3.2", label: "richieste serali", before: "12/sera", after: "38/sera" },
+      { value: "100%", label: "lingue coperte", before: "Solo IT", after: "IT/EN/FR/RU" },
+      { value: "−70%", label: "tempo amministrativo", before: "22h/sett", after: "6h/sett" },
     ],
+    roiLine: "≈ €18.000/mese di nuove corse + 16h a settimana liberate per il titolare.",
     testimonial: {
-      quote: "Ricevo prenotazioni da clienti russi alle 3 di notte. Prima era impossibile. Oggi è normale.",
+      quote: "Ricevo prenotazioni da clienti russi alle 3 di notte. Prima era impossibile. Oggi è normale e ne sono felicissimo. La voce dell'AI è così naturale che molti pensano sia una segretaria.",
       author: "Alessandro V.",
       role: "Founder",
     },
     screens: pool.images(4),
+    screenCaptions: [
+      "Sito multilingua: preventivo istantaneo IT/EN/FR/RU",
+      "Centralino: flotta live, corse, KPI, fatturazione",
+      "App autisti: corse, navigazione, firma digitale",
+      "AI vocale: risponde 24/7 nelle 4 lingue",
+    ],
     cover: "",
     accent: "hsl(45 70% 55%)",
+    investment: "Piano Enterprise · 90 giorni gratis poi €399/mese",
   },
   {
     id: "velvet-studio",
-    tag: "Beauty & Spa",
+    tag: "Beauty · Spa",
     title: "Velvet Studio",
     city: "Torino",
     oneLiner: "Agenda piena tutti i giorni, senza alzare mai il telefono.",
+    story:
+      "Centro estetico boutique con 4 cabine e 6 operatrici, agenda gestita a mano dalla receptionist che passava metà della giornata al telefono. Volevano liberare la receptionist per coccolare i clienti in salone, e riempire i buchi lasciati dalle cancellazioni dell'ultimo minuto.",
+    positioning: "Femminile, rassicurante, rosa cipria + oro rosé.",
     problem: [
-      "Receptionist passa metà del tempo al telefono",
-      "Cancellazioni dell'ultimo minuto difficili da riempire",
-      "Nessuna comunicazione post-trattamento",
+      "Receptionist 4 ore al giorno al telefono = clienti in salone trascurati.",
+      "Cancellazioni dell'ultimo minuto difficili da riempire (perdita ~€600/sett).",
+      "Nessuna comunicazione post-trattamento → poca fidelizzazione.",
+      "Buoni regalo cartacei spesso persi o dimenticati.",
     ],
     solution: [
-      "Booking online con scelta operatore + servizio",
-      "AI WhatsApp per spostamenti e liste d'attesa",
-      "App cliente con storico e promemoria home-care",
+      "Booking online con scelta operatrice + servizio + cabina, anche da Instagram.",
+      "AI WhatsApp per spostamenti, conferme, lista d'attesa intelligente che richiama in automatico.",
+      "App cliente con storico trattamenti, promemoria home-care personalizzati, pacchetti.",
+      "Buoni regalo digitali con card animata, condivisibili via WhatsApp.",
+      "Programma fedeltà a livelli con premi crescenti.",
+    ],
+    deliverables: [
+      { icon: "site", label: "Sito booking", detail: "Servizi, operatrici, prenotazione 24/7." },
+      { icon: "admin", label: "Gestionale salone", detail: "Agenda, cabine, operatrici, magazzino prodotti." },
+      { icon: "app", label: "App cliente", detail: "Storico, home-care, pacchetti, fedeltà." },
+      { icon: "ai", label: "AI WhatsApp", detail: "Conferme, spostamenti, recall liste d'attesa." },
+      { icon: "loy", label: "Buoni regalo digitali", detail: "Card animata, condivisione WhatsApp." },
+    ],
+    timeline: [
+      { day: "Giorno 1-3", what: "Import agenda + listino + foto cabine." },
+      { day: "Giorno 4-7", what: "Sito booking + admin live, formazione operatrici." },
+      { day: "Giorno 8-10", what: "AI WhatsApp + app cliente, lancio al database storico." },
     ],
     results: [
-      { value: "+47%", label: "occupazione agenda" },
-      { value: "−60%", label: "no-show" },
-      { value: "8h/sett.", label: "tempo recuperato" },
+      { value: "+47%", label: "occupazione agenda", before: "62%", after: "91%" },
+      { value: "−60%", label: "no-show", before: "11%", after: "4.4%" },
+      { value: "8h/sett", label: "tempo recuperato", before: "20h al telefono", after: "12h al telefono" },
     ],
+    roiLine: "≈ €2.400/mese di trattamenti extra + receptionist finalmente in salone.",
     testimonial: {
-      quote: "La mia receptionist finalmente fa quello per cui l'ho assunta: coccolare i clienti in salone.",
+      quote: "La mia receptionist finalmente fa quello per cui l'ho assunta: coccolare i clienti in salone, offrire un caffè, vendere un pacchetto. Le clienti se ne accorgono e tornano più volentieri.",
       author: "Giulia M.",
       role: "Owner",
     },
     screens: pool.images(4),
+    screenCaptions: [
+      "Sito booking: prenotazione con scelta operatrice",
+      "Gestionale: agenda, cabine, magazzino prodotti",
+      "App cliente: storico, home-care, fedeltà",
+      "AI WhatsApp: conferme + recall liste d'attesa",
+    ],
     cover: "",
     accent: "hsl(320 50% 60%)",
+    investment: "Piano Crescita · 90 giorni gratis poi €149/mese",
   },
   {
     id: "asinara-resort",
@@ -163,64 +300,128 @@ const PROJECTS: Project[] = [
     title: "Asinara Resort",
     city: "Sardegna",
     oneLiner: "Concierge digitale 24/7, in 6 lingue, sempre sul tono giusto.",
+    story:
+      "Boutique resort 5★ sull'isola dell'Asinara, 18 camere, clientela internazionale (DE/UK/FR/IT/US/RU). Pagavano ~22% di commissione a Booking.com e gli ospiti non scoprivano mai i servizi extra (escursioni, spa, charter barca). Volevano spostare la prenotazione sul canale diretto.",
+    positioning: "Mediterraneo elegante, blu profondo + sabbia + corallo.",
     problem: [
-      "Ospiti internazionali con richieste a tutte le ore",
-      "Booking diretti persi a vantaggio degli OTA",
-      "Servizi extra (escursioni, spa) sotto-venduti",
+      "Ospiti internazionali con richieste a tutte le ore in lingue diverse.",
+      "Booking diretti persi a vantaggio degli OTA (22% commissione).",
+      "Servizi extra (escursioni, spa, charter) sotto-venduti per scarsa visibilità.",
+      "Check-in lento, code in reception nei giorni di cambio.",
     ],
     solution: [
-      "Sito direct-booking con mappa esperienze",
-      "Concierge AI multilingua su WhatsApp",
-      "Admin con upselling automatico pre e post check-in",
+      "Sito direct-booking con mappa esperienze interattiva e best-rate guarantee.",
+      "Concierge AI multilingua su WhatsApp che pre-vende esperienze già in fase di booking.",
+      "Check-in online + chiave digitale → ospite va direttamente in camera.",
+      "Admin con upselling automatico: pre-arrivo (escursioni), in-stay (spa), post-stay (recensioni).",
+      "Newsletter automatica stagionale con offerte personalizzate per cluster ospite.",
+    ],
+    deliverables: [
+      { icon: "site", label: "Sito direct-booking", detail: "Best rate, mappa esperienze, motore prenotazioni." },
+      { icon: "admin", label: "PMS leggero", detail: "Camere, ospiti, upselling, revenue management." },
+      { icon: "app", label: "App ospite", detail: "Check-in, chiave digitale, room service, escursioni." },
+      { icon: "ai", label: "Concierge AI 6 lingue", detail: "WhatsApp h24, suggerisce esperienze, prenota." },
+      { icon: "ads", label: "Email marketing", detail: "Newsletter stagionali + recall ospiti." },
+    ],
+    timeline: [
+      { day: "Settimana 1", what: "Import camere, tariffe, foto, esperienze locali." },
+      { day: "Settimana 2-3", what: "Sito + booking engine + integrazione PMS esistente." },
+      { day: "Settimana 4", what: "AI concierge multilingua + check-in digitale." },
     ],
     results: [
-      { value: "+58%", label: "booking diretti" },
-      { value: "+31%", label: "ricavi extra" },
-      { value: "6", label: "lingue native" },
+      { value: "+58%", label: "booking diretti", before: "31%", after: "49%" },
+      { value: "+31%", label: "ricavi extra", before: "€48k/anno", after: "€63k/anno" },
+      { value: "6", label: "lingue native", before: "Solo IT/EN", after: "IT/EN/DE/FR/RU/ES" },
     ],
+    roiLine: "≈ €31.000/anno risparmiati in commissioni OTA + €15k extra da upselling.",
     testimonial: {
-      quote: "Abbiamo dimezzato la commissione Booking.com e gli ospiti dicono che il nostro 'concierge' è il migliore mai avuto.",
+      quote: "Abbiamo dimezzato la commissione Booking.com e gli ospiti dicono che il nostro 'concierge' è il migliore mai avuto. Spesso non si rendono conto che è un'AI, anche perché conosce i sentieri dell'isola meglio di noi.",
       author: "Paolo F.",
       role: "General Manager",
     },
     screens: pool.images(4),
+    screenCaptions: [
+      "Sito direct-booking: best rate + mappa esperienze",
+      "PMS admin: camere, upselling, revenue",
+      "App ospite: check-in, chiave digitale, escursioni",
+      "AI concierge: WhatsApp 6 lingue, h24",
+    ],
     cover: "",
     accent: "hsl(195 60% 50%)",
+    investment: "Piano Enterprise · 90 giorni gratis poi €399/mese",
   },
   {
     id: "iron-club",
-    tag: "Fitness & Wellness",
+    tag: "Fitness · Wellness",
     title: "Iron Club",
     city: "Bologna",
     oneLiner: "Onboarding nuovi membri 100% automatico, in 4 minuti.",
+    story:
+      "Palestra premium con 1.200 iscritti, 8 trainer, area functional + crossfit + sala pesi. I trial gratuiti convertivano poco perché senza follow-up, e l'amministrazione (pagamenti, certificati, scadenze) era un mestiere a sé.",
+    positioning: "Energetico, dark mode, accenti arancio elettrico.",
     problem: [
-      "Trial gratuiti senza follow-up = zero conversioni",
-      "Pagamenti ricorrenti gestiti a mano",
-      "Nessun contatto tra trainer e membri fuori palestra",
+      "Trial gratuiti senza follow-up = conversione 18%.",
+      "Pagamenti ricorrenti gestiti a mano (RID, errori, solleciti).",
+      "Nessun contatto tra trainer e membri fuori palestra.",
+      "Certificati medici scaduti scoperti solo all'ingresso.",
     ],
     solution: [
-      "Landing trial con prenotazione + form medico",
-      "App membri con prenotazione corsi + scheda PT",
-      "AI che fa follow-up post-trial e propone abbonamento",
+      "Landing trial con prenotazione + form medico + checkout in 4 minuti.",
+      "App membri con prenotazione corsi, scheda PT, video esercizi, chat trainer.",
+      "AI che fa follow-up post-trial in 3 step, propone l'abbonamento giusto, gestisce obiezioni.",
+      "Pagamenti ricorrenti automatici con Stripe + alert scadenza certificato medico.",
+      "Programma referral con sconto al membro che porta un amico.",
+    ],
+    deliverables: [
+      { icon: "site", label: "Landing trial", detail: "Prenotazione + form medico + tour virtuale." },
+      { icon: "admin", label: "Gestionale palestra", detail: "Membri, abbonamenti, certificati, ricavi." },
+      { icon: "app", label: "App membri", detail: "Prenotazione corsi, scheda PT, chat trainer." },
+      { icon: "ai", label: "AI sales", detail: "Follow-up trial, conversione, retention." },
+      { icon: "pay", label: "Pagamenti ricorrenti", detail: "Stripe, SEPA, gestione automatica solleciti." },
+    ],
+    timeline: [
+      { day: "Settimana 1", what: "Import database membri + corsi + abbonamenti attivi." },
+      { day: "Settimana 2", what: "Sito + app + admin live, training staff." },
+      { day: "Settimana 3", what: "AI sales attiva su nuovi trial + recall dormienti." },
     ],
     results: [
-      { value: "+72%", label: "trial → abbonati" },
-      { value: "−85%", label: "ore amministrative" },
-      { value: "4.8★", label: "App rating" },
+      { value: "+72%", label: "trial → abbonati", before: "18%", after: "31%" },
+      { value: "−85%", label: "ore amministrative", before: "16h/sett", after: "2.5h/sett" },
+      { value: "4.8★", label: "App rating", before: "n/d", after: "4.8★ (340 rec.)" },
     ],
+    roiLine: "≈ €6.200/mese di nuovi abbonamenti + 13h a settimana liberate dallo staff.",
     testimonial: {
-      quote: "L'AI converte i trial meglio del miglior commerciale che abbia mai avuto. E lavora di domenica.",
+      quote: "L'AI converte i trial meglio del miglior commerciale che abbia mai avuto. E lavora di domenica, non chiede ferie e non si offende mai quando un cliente è scortese.",
       author: "Luca B.",
       role: "Co-Founder",
     },
     screens: pool.images(4),
+    screenCaptions: [
+      "Landing trial: prenotazione + form medico in 4 min",
+      "Gestionale: membri, abbonamenti, certificati",
+      "App membri: corsi, scheda PT, chat trainer",
+      "AI sales: follow-up trial e conversione",
+    ],
     cover: "",
     accent: "hsl(15 75% 55%)",
+    investment: "Piano Premium · 90 giorni gratis poi €249/mese",
   },
 ];
 
+const DELIV_ICONS: Record<Deliverable["icon"], string> = {
+  site: "🌐",
+  admin: "🖥️",
+  app: "📱",
+  ai: "🤖",
+  wa: "💬",
+  pay: "💳",
+  ads: "📣",
+  loy: "🎁",
+};
+
 // Use the first (Home) screen as cover
 PROJECTS.forEach((p) => (p.cover = p.screens[0]));
+
 
 export default function PrestigePortfolioCarousel() {
   const navigate = useNavigate();
@@ -388,11 +589,39 @@ export default function PrestigePortfolioCarousel() {
                   </div>
                 </div>
                 <p
-                  className="mt-3 line-clamp-2 text-sm"
-                  style={{ color: "hsl(var(--pr-muted-on-light))" }}
+                  className="mt-3 line-clamp-2 text-sm font-medium"
+                  style={{ color: "hsl(var(--pr-text-on-light))" }}
                 >
                   {p.oneLiner}
                 </p>
+                <p
+                  className="mt-1.5 line-clamp-2 text-[12px] leading-snug"
+                  style={{ color: "hsl(var(--pr-muted-on-light))" }}
+                >
+                  {p.story.split(".")[0]}.
+                </p>
+                {/* Mini KPI strip */}
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {p.results.slice(0, 3).map((r) => (
+                    <span
+                      key={r.label}
+                      className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                      style={{
+                        background: "hsl(var(--pr-emerald) / 0.08)",
+                        color: "hsl(var(--pr-emerald))",
+                        border: "1px solid hsl(var(--pr-emerald) / 0.18)",
+                      }}
+                    >
+                      {r.value} {r.label}
+                    </span>
+                  ))}
+                </div>
+                <span
+                  className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider"
+                  style={{ color: "hsl(var(--pr-gold-deep))" }}
+                >
+                  Apri caso studio →
+                </span>
               </button>
             </article>
           ))}
@@ -508,8 +737,46 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             className="prestige-display mt-6 max-w-3xl text-xl italic sm:text-2xl"
             style={{ color: "hsl(var(--pr-gold-light))" }}
           >
-            "{project.oneLiner}"
+          "{project.oneLiner}"
           </p>
+
+          {/* Story + positioning + investment */}
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
+            <div className="md:col-span-2">
+              <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                Il contesto
+              </div>
+              <p
+                className="mt-2 text-sm leading-relaxed sm:text-base"
+                style={{ color: "hsl(var(--pr-text-on-dark) / 0.92)" }}
+              >
+                {project.story}
+              </p>
+              <p
+                className="mt-3 text-xs uppercase tracking-wider"
+                style={{ color: "hsl(var(--pr-muted-on-dark))" }}
+              >
+                Tono di brand · {project.positioning}
+              </p>
+            </div>
+            <div
+              className="rounded-2xl p-4 sm:p-5"
+              style={{
+                background: "hsl(var(--pr-emerald-mid) / 0.5)",
+                border: "1px solid hsl(var(--pr-gold) / 0.25)",
+              }}
+            >
+              <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                Investimento
+              </div>
+              <p className="mt-2 text-sm font-semibold" style={{ color: "hsl(var(--pr-text-on-dark))" }}>
+                {project.investment}
+              </p>
+              <p className="mt-2 text-[12px]" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+                Setup, hosting, AI e aggiornamenti inclusi. Nessun costo nascosto.
+              </p>
+            </div>
+          </div>
 
           {/* Phone showcase — 4 views with switcher */}
           <div className="mt-12 grid gap-10 md:grid-cols-2 md:items-center">
@@ -545,6 +812,12 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   </button>
                 ))}
               </div>
+              <p
+                className="mt-5 max-w-xs text-center text-[12px] leading-relaxed"
+                style={{ color: "hsl(var(--pr-muted-on-dark))" }}
+              >
+                {project.screenCaptions[phoneIdx]}
+              </p>
             </div>
 
             {/* Problem / Solution */}
@@ -626,9 +899,93 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   >
                     {r.label}
                   </div>
+                  {r.before && r.after && (
+                    <div
+                      className="mt-2 text-[10px] sm:text-[11px]"
+                      style={{ color: "hsl(var(--pr-muted-on-dark))" }}
+                    >
+                      <span className="line-through opacity-70">{r.before}</span>
+                      <span className="mx-1" style={{ color: "hsl(var(--pr-gold))" }}>→</span>
+                      <span className="font-semibold" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                        {r.after}
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
+            <p
+              className="mt-5 text-center text-sm sm:text-base"
+              style={{ color: "hsl(var(--pr-gold-light))" }}
+            >
+              💰 {project.roiLine}
+            </p>
+          </div>
+
+          {/* Deliverables */}
+          <div className="mt-16">
+            <div className="prestige-eyebrow text-center" style={{ color: "hsl(var(--pr-gold-light))" }}>
+              Cosa abbiamo consegnato
+            </div>
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {project.deliverables.map((d) => (
+                <div
+                  key={d.label}
+                  className="flex items-start gap-3 rounded-2xl p-4"
+                  style={{
+                    background: "hsl(var(--pr-emerald-mid) / 0.4)",
+                    border: "1px solid hsl(var(--pr-gold) / 0.18)",
+                  }}
+                >
+                  <span
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg"
+                    style={{ background: "hsl(var(--pr-gold) / 0.18)" }}
+                  >
+                    {DELIV_ICONS[d.icon]}
+                  </span>
+                  <div>
+                    <div className="text-sm font-semibold" style={{ color: "hsl(var(--pr-text-on-dark))" }}>
+                      {d.label}
+                    </div>
+                    <div className="mt-0.5 text-[12px] leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+                      {d.detail}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Timeline */}
+          <div className="mt-16">
+            <div className="prestige-eyebrow text-center" style={{ color: "hsl(var(--pr-gold-light))" }}>
+              Timeline di consegna
+            </div>
+            <ol className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {project.timeline.map((t, i) => (
+                <li
+                  key={t.day}
+                  className="relative rounded-2xl p-4"
+                  style={{
+                    background: "hsl(var(--pr-emerald-deep) / 0.5)",
+                    border: "1px solid hsl(var(--pr-gold) / 0.2)",
+                  }}
+                >
+                  <div
+                    className="absolute -top-2 left-4 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                    style={{ background: "hsl(var(--pr-gold))", color: "hsl(var(--pr-emerald-deep))" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div className="mt-1 text-xs font-bold uppercase tracking-wider" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                    {t.day}
+                  </div>
+                  <div className="mt-1 text-[13px] leading-snug" style={{ color: "hsl(var(--pr-text-on-dark) / 0.92)" }}>
+                    {t.what}
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
 
           {/* Testimonial */}
