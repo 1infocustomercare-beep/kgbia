@@ -137,21 +137,6 @@ export default function PrestigeTheme() {
         box-shadow: 0 20px 60px -20px hsl(var(--pr-gold) / 0.35);
       }
 
-      .prestige-card-dark {
-        position: relative;
-        border-radius: 24px;
-        padding: 1.75rem;
-        background: linear-gradient(160deg, hsl(var(--pr-emerald-mid) / 0.55), hsl(var(--pr-emerald-deep) / 0.85));
-        border: 1px solid hsl(var(--pr-gold) / 0.18);
-        backdrop-filter: blur(12px);
-        transition: transform .5s cubic-bezier(.22,1,.36,1), border-color .3s ease, box-shadow .3s ease;
-      }
-      .prestige-card-dark:hover {
-        transform: translateY(-4px);
-        border-color: hsl(var(--pr-gold) / 0.4);
-        box-shadow: 0 24px 70px -20px hsl(var(--pr-emerald-glow) / 0.35);
-      }
-
       /* Scroll-driven utilities (uses --empire-progress from ScrollDirector) */
       .prestige-fade-up {
         opacity: calc(var(--empire-progress, 0) * 1.4);
