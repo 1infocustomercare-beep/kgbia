@@ -14,7 +14,11 @@ import PrestigePhone, { PHONE_VIEWS } from "./PrestigePhone";
  * across the homepage thanks to the global mockup pool.
  */
 
-const pool = createMockupPool();
+const VISIT_SEED =
+  typeof window !== "undefined"
+    ? Number(sessionStorage.getItem("empire-home-seed") ?? Date.now())
+    : 1;
+const pool = createMockupPool({ shuffle: true, seed: VISIT_SEED + 7 });
 
 interface Project {
   id: string;
