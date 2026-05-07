@@ -812,6 +812,12 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   </button>
                 ))}
               </div>
+              <p
+                className="mt-5 max-w-xs text-center text-[12px] leading-relaxed"
+                style={{ color: "hsl(var(--pr-muted-on-dark))" }}
+              >
+                {project.screenCaptions[phoneIdx]}
+              </p>
             </div>
 
             {/* Problem / Solution */}
