@@ -737,8 +737,46 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             className="prestige-display mt-6 max-w-3xl text-xl italic sm:text-2xl"
             style={{ color: "hsl(var(--pr-gold-light))" }}
           >
-            "{project.oneLiner}"
+          "{project.oneLiner}"
           </p>
+
+          {/* Story + positioning + investment */}
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
+            <div className="md:col-span-2">
+              <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                Il contesto
+              </div>
+              <p
+                className="mt-2 text-sm leading-relaxed sm:text-base"
+                style={{ color: "hsl(var(--pr-text-on-dark) / 0.92)" }}
+              >
+                {project.story}
+              </p>
+              <p
+                className="mt-3 text-xs uppercase tracking-wider"
+                style={{ color: "hsl(var(--pr-muted-on-dark))" }}
+              >
+                Tono di brand · {project.positioning}
+              </p>
+            </div>
+            <div
+              className="rounded-2xl p-4 sm:p-5"
+              style={{
+                background: "hsl(var(--pr-emerald-mid) / 0.5)",
+                border: "1px solid hsl(var(--pr-gold) / 0.25)",
+              }}
+            >
+              <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                Investimento
+              </div>
+              <p className="mt-2 text-sm font-semibold" style={{ color: "hsl(var(--pr-text-on-dark))" }}>
+                {project.investment}
+              </p>
+              <p className="mt-2 text-[12px]" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+                Setup, hosting, AI e aggiornamenti inclusi. Nessun costo nascosto.
+              </p>
+            </div>
+          </div>
 
           {/* Phone showcase — 4 views with switcher */}
           <div className="mt-12 grid gap-10 md:grid-cols-2 md:items-center">
