@@ -8,10 +8,42 @@ import type { IndustryId } from "@/config/industry-config";
 
 export type SectorPick = { sector: IndustryId; image: string };
 
-function buildInterleavedPool(): SectorPick[] {
-  const sectors = Object.keys(SECTOR_MOCKUP_IMAGES) as IndustryId[];
+/**
+ * Curated allowlist of "premium" sectors only — excludes the weaker
+ * locally generated mockups (electrician, gardening, tattoo, etc.) so the
+ * homepage shows ONLY the polished Lowengeld brand variants.
+ */
+const PREMIUM_SECTORS: IndustryId[] = [
+  "food",
+  "beauty",
+  "ncc",
+  "fitness",
+  "hospitality",
+  "healthcare",
+  "veterinary",
+  "childcare",
+  "construction",
+  "retail",
+];
+
+function isLocalAsset(url: string): boolean {
+  // Locally bundled mockups come through Vite as /src/... or /assets/... after build
+  return !/^https?:\/\//.test(url);
+}
+
+function buildInterleavedPool(opts: { premiumOnly?: boolean } = {}): SectorPick[] {
+  const allSectors = Object.keys(SECTOR_MOCKUP_IMAGES) as IndustryId[];
+  const sectors = opts.premiumOnly
+    ? allSectors.filter((s) => PREMIUM_SECTORS.includes(s))
+    : allSectors;
+
   const lists: { sector: IndustryId; imgs: string[] }[] = sectors
-    .map((s) => ({ sector: s, imgs: (SECTOR_MOCKUP_IMAGES[s] ?? []).slice() }))
+    .map((s) => ({
+      sector: s,
+      imgs: (SECTOR_MOCKUP_IMAGES[s] ?? []).filter(
+        (img) => !opts.premiumOnly || !isLocalAsset(img),
+      ),
+    }))
     .filter((x) => x.imgs.length > 0);
 
   // Round-robin interleave so consecutive picks come from different sectors
@@ -48,8 +80,8 @@ function shuffleInPlace<T>(arr: T[], seed = Date.now()): T[] {
   return arr;
 }
 
-export function createMockupPool(opts: { shuffle?: boolean; seed?: number } = {}) {
-  let pool = buildInterleavedPool();
+export function createMockupPool(opts: { shuffle?: boolean; seed?: number; premiumOnly?: boolean } = {}) {
+  let pool = buildInterleavedPool({ premiumOnly: opts.premiumOnly ?? true });
   if (opts.shuffle) pool = shuffleInPlace(pool, opts.seed);
   let cursor = 0;
 
