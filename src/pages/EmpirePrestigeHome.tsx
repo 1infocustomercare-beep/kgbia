@@ -6,6 +6,7 @@ import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
 import PrestigeStorytelling from "@/components/empire-home/prestige/PrestigeStorytelling";
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
+import PrestigeCapabilities from "@/components/empire-home/prestige/PrestigeCapabilities";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolioCarousel from "@/components/empire-home/prestige/PrestigePortfolioCarousel";
 import PrestigeProcess from "@/components/empire-home/prestige/PrestigeProcess";
@@ -40,6 +41,7 @@ export default function EmpirePrestigeHome() {
         <LandingNav />
         <PrestigeHero />
         <PrestigeStorytelling />
+        <PrestigeCapabilities />
         <PrestigeServices />
         <PrestigeIndustries />
         <PrestigePortfolioCarousel />
