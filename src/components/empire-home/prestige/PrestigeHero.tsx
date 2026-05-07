@@ -137,6 +137,7 @@ export default function PrestigeHero() {
           >
             {HERO_MOCKS.map((src, i) => {
               const isActive = i === active;
+              const offset = i - active;
               return (
                 <div
                   key={src + i}
@@ -144,9 +145,11 @@ export default function PrestigeHero() {
                   style={{
                     opacity: isActive ? 1 : 0,
                     transform: isActive
-                      ? `rotateY(calc(var(--mx, 0) * 12deg)) rotateX(calc(var(--my, 0) * -10deg)) translateZ(0)`
-                      : `rotateY(${i < active ? -25 : 25}deg) translateZ(-80px) scale(.92)`,
+                      ? `rotateY(calc(var(--mx, 0) * 12deg)) rotateX(calc(var(--my, 0) * -10deg)) translateZ(0) scale(1)`
+                      : `rotateY(${offset < 0 ? -28 : 28}deg) translateZ(-90px) scale(.9)`,
+                    filter: isActive ? "blur(0)" : "blur(6px)",
                     pointerEvents: isActive ? "auto" : "none",
+                    zIndex: isActive ? 2 : 1,
                   }}
                 >
                   <PrestigePhone
