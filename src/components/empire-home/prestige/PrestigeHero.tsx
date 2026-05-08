@@ -18,6 +18,15 @@ export default function PrestigeHero() {
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-hero", { steps: 4 });
   const [active, setActive] = useState(0);
   const stageRef = useRef<HTMLDivElement>(null);
+  const [phoneW, setPhoneW] = useState(280);
+
+  // Responsive phone width
+  useEffect(() => {
+    const compute = () => setPhoneW(Math.round(Math.min(320, window.innerWidth * 0.78)));
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
+  }, []);
 
   useEffect(() => {
     const id = window.setInterval(() => {
@@ -156,7 +165,7 @@ export default function PrestigeHero() {
                     src={src}
                     alt={`Vista ${HERO_LABELS[i]}`}
                     label={HERO_LABELS[i]}
-                    width={Math.min(320, typeof window !== "undefined" ? window.innerWidth * 0.78 : 280)}
+                    width={phoneW}
                     loading="eager"
                   />
                 </div>
