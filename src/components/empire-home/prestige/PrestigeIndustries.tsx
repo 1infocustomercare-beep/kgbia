@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
 
@@ -78,8 +78,24 @@ const INDUSTRIES = [
 ];
 
 export default function PrestigeIndustries() {
-  const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-industries", { steps: 3 });
+  const userTouchedRef = useRef(false);
+  const { ref, step } = useEmpireScrollDirector<HTMLDivElement>("prestige-industries", {
+    steps: INDUSTRIES.length,
+  });
   const [active, setActive] = useState("food");
+
+  // Auto-cycle in base allo step di scroll, finché l'utente non clicca un tab.
+  useEffect(() => {
+    if (userTouchedRef.current) return;
+    const id = INDUSTRIES[Math.min(step, INDUSTRIES.length - 1)]?.id;
+    if (id) setActive(id);
+  }, [step]);
+
+  const handleTab = (id: string) => {
+    userTouchedRef.current = true;
+    setActive(id);
+  };
+
   const current = INDUSTRIES.find((i) => i.id === active)!;
   const Icon = current.icon;
 
@@ -113,7 +129,7 @@ export default function PrestigeIndustries() {
             return (
               <button
                 key={i.id}
-                onClick={() => setActive(i.id)}
+                onClick={() => handleTab(i.id)}
                 className="flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-semibold transition-all sm:text-sm"
                 style={{
                   background: isActive
