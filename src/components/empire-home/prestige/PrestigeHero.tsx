@@ -13,6 +13,7 @@ const HERO_LABELS: PhoneView[] = PHONE_VIEWS;
 const ROTATE_MS = 3200;
 
 export default function PrestigeHero() {
+  const t = useT();
   const navigate = useNavigate();
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-hero", { steps: 4 });
   const [active, setActive] = useState(0);
@@ -68,43 +69,59 @@ export default function PrestigeHero() {
       <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 lg:grid-cols-12 lg:gap-12 lg:px-10">
         {/* LEFT — Copy */}
         <div className="lg:col-span-7">
-          <div className="prestige-eyebrow flex items-center gap-3" style={{ color: "hsl(var(--pr-gold-light))" }}>
-            <Sparkles size={14} />
-            <span>Empire · Agency AI per la tua azienda</span>
+          <div className="flex items-center gap-3">
+            <div className="prestige-eyebrow flex items-center gap-3" style={{ color: "hsl(var(--pr-gold-light))" }}>
+              <Sparkles size={14} />
+              <span>{t({ it: "Empire · Agency AI per la tua azienda", en: "Empire · AI Agency for your business" })}</span>
+            </div>
+            <PrestigeLangToggle className="ml-auto lg:ml-0" />
           </div>
 
           <h1 className="prestige-display mt-5 text-4xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
-            Trasformiamo la tua azienda in un{" "}
-            <span className="prestige-gold-text italic">impero digitale</span>{" "}
-            che lavora 24/7.
+            {t({
+              it: "Trasformiamo la tua azienda in un ",
+              en: "We turn your business into a ",
+            })}
+            <span className="prestige-gold-text italic">
+              {t({ it: "impero digitale", en: "digital empire" })}
+            </span>{" "}
+            {t({ it: "che lavora 24/7.", en: "that works 24/7." })}
           </h1>
 
           <p
             className="mt-6 max-w-2xl text-base leading-relaxed sm:text-lg"
             style={{ color: "hsl(var(--pr-muted-on-dark))" }}
           >
-            Sito web, app, prenotazioni, WhatsApp, telefonate e pagamenti — tutto gestito da un'unica
-            <strong className="font-semibold" style={{ color: "hsl(var(--pr-text-on-dark))" }}> AI personalizzata</strong> sul tuo settore.
-            Niente staff al telefono, niente clienti persi. Solo crescita.
+            {t({
+              it: "Sito web, app, prenotazioni, WhatsApp, telefonate e pagamenti — tutto gestito da un'unica ",
+              en: "Website, app, bookings, WhatsApp, calls and payments — all driven by a single ",
+            })}
+            <strong className="font-semibold" style={{ color: "hsl(var(--pr-text-on-dark))" }}>
+              {t({ it: "AI personalizzata", en: "tailored AI" })}
+            </strong>
+            {t({
+              it: " sul tuo settore. Niente staff al telefono, niente clienti persi. Solo crescita.",
+              en: " for your industry. No staff on the phone, no lost customers. Just growth.",
+            })}
           </p>
 
           {/* Trust strip */}
           <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
             <span>★ ★ ★ ★ ★ <span className="ml-1 font-semibold" style={{ color: "hsl(var(--pr-gold-light))" }}>4.9/5</span></span>
-            <span>· 3.500+ aziende attive</span>
-            <span>· Setup in 24h</span>
-            <span>· 90 giorni gratis</span>
+            <span>· {t({ it: "3.500+ aziende attive", en: "3,500+ active businesses" })}</span>
+            <span>· {t({ it: "Setup in 24h", en: "24h setup" })}</span>
+            <span>· {t({ it: "90 giorni gratis", en: "90 days free" })}</span>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <button className="prestige-cta" onClick={() => navigate("/onboarding")}>
-              Inizia la tua trasformazione <ArrowRight size={16} />
+              {t({ it: "Inizia la tua trasformazione", en: "Start your transformation" })} <ArrowRight size={16} />
             </button>
             <button
               className="prestige-cta-ghost"
               onClick={() => document.getElementById("prestige-mockups")?.scrollIntoView({ behavior: "smooth" })}
             >
-              <Play size={14} /> Vedi i casi reali
+              <Play size={14} /> {t({ it: "Vedi i casi reali", en: "See real cases" })}
             </button>
           </div>
         </div>
