@@ -4,19 +4,22 @@ import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
-import PrestigeStorytelling from "@/components/empire-home/prestige/PrestigeStorytelling";
+import PrestigeStoryPinned from "@/components/empire-home/prestige/PrestigeStoryPinned";
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolioCarousel from "@/components/empire-home/prestige/PrestigePortfolioCarousel";
 import PrestigeProcess from "@/components/empire-home/prestige/PrestigeProcess";
 import PrestigeProof from "@/components/empire-home/prestige/PrestigeProof";
 import PrestigeCTA from "@/components/empire-home/prestige/PrestigeCTA";
+import PrestigeProgressBar from "@/components/empire-home/prestige/PrestigeProgressBar";
+import { PrestigeLangProvider } from "@/components/empire-home/prestige/PrestigeLang";
 
 import { CinematicFooter } from "@/components/empire-21st/MotionFooter";
 
 /**
  * Emerald Prestige Home — Lowengeld-style luxury agency homepage.
- * Sezioni alternate dark/light, copy persuasivo, effetti sincronizzati con ScrollDirector.
+ * Sezioni alternate dark/light, copy persuasivo bilingue IT/EN, effetti scroll
+ * sincronizzati via ScrollDirector + storytelling Caos→Empire pinnato.
  */
 export default function EmpirePrestigeHome() {
   useEffect(() => {
@@ -34,12 +37,13 @@ export default function EmpirePrestigeHome() {
   }, []);
 
   return (
-    <>
+    <PrestigeLangProvider>
       <PrestigeTheme />
+      <PrestigeProgressBar />
       <div className="prestige-root min-h-screen overflow-x-hidden">
         <LandingNav />
         <PrestigeHero />
-        <PrestigeStorytelling />
+        <PrestigeStoryPinned />
         <PrestigeServices />
         <PrestigeIndustries />
         <PrestigePortfolioCarousel />
@@ -50,6 +54,6 @@ export default function EmpirePrestigeHome() {
           <CinematicFooter />
         </div>
       </div>
-    </>
+    </PrestigeLangProvider>
   );
 }
