@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Bot, Calendar, CreditCard, Globe, MessageSquare, ShoppingBag, ShieldCheck, Sparkles, Star, Truck, Users, Zap,
+  Bot, Calendar, CreditCard, Globe, MessageSquare, ShoppingBag, ShieldCheck, Sparkles, Star, Truck, Users,
   ChefHat, Scissors, Stethoscope, Wrench, Briefcase, Hammer, Camera, GraduationCap, Building2, Plane, Car,
-  ArrowRight, Check, X as XIcon, Headphones, BarChart3, FileText, Layers
+  ArrowRight, Check, X as XIcon, Headphones, BarChart3,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { createMockupPool } from "@/lib/mockup-pool";
 import PrestigePhone from "../prestige/PrestigePhone";

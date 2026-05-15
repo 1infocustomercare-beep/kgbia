@@ -3,7 +3,8 @@ import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { createMockupPool } from "@/lib/mockup-pool";
-import PrestigePhone, { PHONE_VIEWS, type PhoneView } from "../prestige/PrestigePhone";
+import PrestigePhone, { PHONE_VIEWS } from "../prestige/PrestigePhone";
+import type { PhoneView } from "../prestige/PrestigePhone";
 
 const pool = createMockupPool();
 const HERO_MOCKS = pool.images(4);
