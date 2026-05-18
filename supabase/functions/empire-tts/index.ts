@@ -119,12 +119,16 @@ serve(async (req) => {
     if (!response.ok) {
       const errText = await response.text();
       console.error("ElevenLabs TTS error:", response.status, errText);
-      if (errText.includes("quota_exceeded") || response.status === 401 || response.status === 403) {
-        return new Response(JSON.stringify({ error: "quota_exceeded", fallback: true }), {
-          status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      throw new Error(`TTS error: ${response.status}`);
+      // Always return 200 with fallback flag so client can degrade to browser TTS
+      // instead of crashing on quota/auth/payment/server errors.
+      return new Response(
+        JSON.stringify({
+          error: `tts_failed_${response.status}`,
+          fallback: true,
+          detail: errText.slice(0, 300),
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
     const audioBuffer = await response.arrayBuffer();
