@@ -456,8 +456,9 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
           <TipBubble id="contact-info">
             <div className="p-2.5 rounded-xl bg-card border border-border/30 space-y-1.5">
               <p className="text-[9px] font-bold">📍 Contatti & Orari</p>
-              <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><MapPin className="w-3 h-3 text-primary" /> Via del Corso 42, Roma</div>
-              <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><Phone className="w-3 h-3 text-primary" /> +39 06 1234 5678</div>
+              <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><MapPin className="w-3 h-3 text-primary flex-shrink-0" /> <span className="truncate">{displayAddress}</span></div>
+              <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><Phone className="w-3 h-3 text-primary flex-shrink-0" /> {displayPhone}</div>
+
               <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><Clock className="w-3 h-3 text-primary" /> Lun-Ven 12-15 · 19-23:30</div>
             </div>
           </TipBubble>
