@@ -167,9 +167,10 @@ export default function PrestigeIndustries() {
           </div>
           <div className="min-w-0">
 
-            <h3 className="prestige-display text-2xl sm:text-3xl md:text-4xl">{current.name}</h3>
-            <p className="mt-3 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+            <h3 className="prestige-display text-xl sm:text-3xl md:text-4xl break-words">{current.name}</h3>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed sm:text-base md:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
               {current.pitch}
+
             </p>
             <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {current.wins.map((w) => (
