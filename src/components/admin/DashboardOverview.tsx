@@ -23,7 +23,7 @@ interface DashboardOverviewProps {
 
 const DashboardOverview = ({
   todayRevenue, todayOrderCount, activeOrderCount, menuItemCount, aiTokens, restaurantName,
-  restaurantId, reviews, reservations, menuUrl, onNavigate,
+  restaurantId, restaurantLogo, reviews, reservations, menuUrl, onNavigate,
 }: DashboardOverviewProps) => {
   const [buyingTokens, setBuyingTokens] = useState(false);
   const [showTokenShop, setShowTokenShop] = useState(false);
@@ -42,11 +42,15 @@ const DashboardOverview = ({
       {/* Restaurant header — COTE style */}
       <div className="flex flex-col items-center text-center gap-3 py-4">
         <motion.div
-          className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20"
+          className="w-20 h-20 rounded-2xl bg-background flex items-center justify-center border border-primary/20 overflow-hidden p-2"
           initial={{ scale: 0.8 }} animate={{ scale: 1 }}
           transition={{ type: "spring", damping: 15 }}
         >
-          <Flame className="w-7 h-7 text-primary" />
+          {restaurantLogo ? (
+            <img src={restaurantLogo} alt={restaurantName} className="w-full h-full object-contain" />
+          ) : (
+            <Flame className="w-7 h-7 text-primary" />
+          )}
         </motion.div>
         <div>
           <h2 className="text-xl font-display font-bold text-foreground tracking-wide uppercase">{restaurantName}</h2>
