@@ -63,8 +63,13 @@ export default function PrestigeHero() {
       ref={ref}
       data-section="prestige-hero"
       className="prestige-section prestige-dark relative min-h-[100svh] flex items-center"
-      style={{ paddingTop: "max(92px, 12svh)", paddingBottom: "8svh" }}
+      style={{ paddingTop: "max(110px, 14svh)", paddingBottom: "8svh" }}
     >
+      {/* Lang toggle — absolute top-right of the hero, never overlaps copy */}
+      <div className="absolute right-4 top-[78px] z-20 sm:right-6 sm:top-[92px]">
+        <PrestigeLangToggle />
+      </div>
+
       {/* Aurora gold glow that follows scroll */}
       <div
         className="pointer-events-none absolute -top-32 left-1/2 h-[60vh] w-[60vh] -translate-x-1/2 rounded-full"
@@ -78,13 +83,11 @@ export default function PrestigeHero() {
       <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 lg:grid-cols-12 lg:gap-12 lg:px-10">
         {/* LEFT — Copy */}
         <div className="lg:col-span-7">
-          <div className="flex items-center gap-3">
-            <div className="prestige-eyebrow flex items-center gap-3" style={{ color: "hsl(var(--pr-gold-light))" }}>
-              <Sparkles size={14} />
-              <span>{t({ it: "Empire · Agency AI per la tua azienda", en: "Empire · AI Agency for your business" })}</span>
-            </div>
-            <PrestigeLangToggle className="ml-auto lg:ml-0" />
+          <div className="prestige-eyebrow inline-flex max-w-full items-center gap-2 pr-16 sm:pr-20" style={{ color: "hsl(var(--pr-gold-light))" }}>
+            <Sparkles size={14} className="shrink-0" />
+            <span className="truncate sm:whitespace-normal">{t({ it: "Empire · Agency AI per la tua azienda", en: "Empire · AI Agency for your business" })}</span>
           </div>
+
 
           <h1 className="prestige-display mt-5 text-4xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
             {t({
