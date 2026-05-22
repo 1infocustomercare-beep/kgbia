@@ -81,6 +81,62 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
 
   const previewUrl = `${window.location.origin}/r/${slug}`;
 
+  // ===== LIVE SYNC with real account data (by slug) =====
+  const { data: realData } = useQuery({
+    queryKey: ["live-preview-sync", slug],
+    enabled: !!slug,
+    staleTime: 30_000,
+    queryFn: async () => {
+      const { data: r } = await supabase
+        .from("restaurants")
+        .select("id, name, slug, logo_url, tagline, address, phone, primary_color")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (!r) return { restaurant: null, menu: [] as any[] };
+      const { data: items } = await supabase
+        .from("menu_items")
+        .select("name, price, category, image_url, is_popular, sort_order")
+        .eq("restaurant_id", r.id)
+        .order("is_popular", { ascending: false, nullsFirst: false })
+        .order("sort_order", { ascending: true })
+        .limit(40);
+      return { restaurant: r, menu: items ?? [] };
+    },
+  });
+
+  const restaurant = realData?.restaurant;
+  const realMenu = useMemo(() => {
+    const items = realData?.menu ?? [];
+    if (!items.length) return DEMO_MENU;
+    const fallbackImgs = [dishPizza, dishPasta, dishBruschetta, dishRisotto, dishSteak, dishTiramisu];
+    return items.map((m: any, i: number) => ({
+      name: m.name,
+      price: Number(m.price ?? 0),
+      cat: m.category || "Menu",
+      img: m.image_url || fallbackImgs[i % fallbackImgs.length],
+      popular: !!m.is_popular,
+    }));
+  }, [realData?.menu]);
+  const realCategories = useMemo(() => {
+    const cats = Array.from(new Set(realMenu.map((i: any) => i.cat))).filter(Boolean) as string[];
+    return cats.length ? cats : ["Antipasti", "Primi", "Pizze", "Secondi", "Dolci"];
+  }, [realMenu]);
+
+  // Keep selectedCat valid when real categories load
+  useEffect(() => {
+    if (realCategories.length && !realCategories.includes(selectedCat)) {
+      setSelectedCat(realCategories[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [realCategories.join("|")]);
+
+  const displayName = restaurant?.name || slug?.replace(/-/g, " ") || "Impero Roma";
+  const displayTagline = restaurant?.tagline || "Cucina Italiana d'Eccellenza";
+  const displayLogo = restaurant?.logo_url || restaurantLogo;
+  const displayAddress = restaurant?.address || "Via del Corso 42, Roma";
+  const displayPhone = restaurant?.phone || "+39 06 1234 5678";
+
+
   // Tooltip definitions per view+section
   const tooltips: Record<string, Tooltip> = {
     // Customer
