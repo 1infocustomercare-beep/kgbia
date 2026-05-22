@@ -1021,8 +1021,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
                     <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><Mail className="w-2.5 h-2.5 text-primary flex-shrink-0" /><span className="text-[7px] truncate">info@{slug}.it</span></div>
                     <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><MapPin className="w-2.5 h-2.5 text-primary flex-shrink-0" /><span className="text-[7px] truncate">{displayAddress}</span></div>
 
-                    <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><Mail className="w-2.5 h-2.5 text-primary" /><span className="text-[7px]">info@impero.it</span></div>
-                    <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><MapPin className="w-2.5 h-2.5 text-primary" /><span className="text-[7px]">Via del Corso 42</span></div>
+
                     <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><Clock className="w-2.5 h-2.5 text-primary" /><span className="text-[7px]">Lun-Ven 12-23:30</span></div>
                   </div>
                   <div className="flex items-center gap-1.5 p-1 rounded-lg bg-green-500/5 border border-green-500/20">
