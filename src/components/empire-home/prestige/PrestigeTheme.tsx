@@ -19,8 +19,8 @@ export default function PrestigeTheme() {
         --pr-ink: 162 30% 10%;
         --pr-text-on-dark: 42 30% 94%;
         --pr-text-on-light: 162 35% 12%;
-        --pr-muted-on-dark: 42 18% 78%;
-        --pr-muted-on-light: 162 18% 32%;
+        --pr-muted-on-dark: 42 22% 86%;
+        --pr-muted-on-light: 162 28% 22%;
 
         background: hsl(var(--pr-emerald-deep));
         color: hsl(var(--pr-text-on-dark));
@@ -60,7 +60,7 @@ export default function PrestigeTheme() {
         letter-spacing: 0.32em;
         text-transform: uppercase;
         font-weight: 600;
-        opacity: 0.85;
+        opacity: 0.95;
       }
       @media (min-width: 768px) {
         .prestige-eyebrow { font-size: 12px; }
@@ -111,7 +111,7 @@ export default function PrestigeTheme() {
         background: transparent;
         color: currentColor;
         border: 1px solid currentColor;
-        opacity: 0.85;
+        opacity: 1;
         transition: opacity .3s ease, background .3s ease;
         cursor: pointer;
       }
