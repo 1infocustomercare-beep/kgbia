@@ -70,14 +70,14 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <Badge className="mb-3 text-[0.6rem] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor, border: `1px solid ${accentColor}30` }}>
+          <Badge className="mb-3 text-[11px] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor, border: `1px solid ${accentColor}30` }}>
             {allFeatures.length}+ FUNZIONALITÀ
           </Badge>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
             Tutto quello che Empire può fare per{" "}
             <span style={{ color: accentColor }}>{sectorName}</span>
           </h2>
-          <p className="text-sm text-white/40 max-w-xl mx-auto">
+          <p className="text-sm text-white/80 max-w-xl mx-auto">
             Una piattaforma completa con CRM, booking, marketing, analytics, pagamenti e agenti AI — tutto integrato e pronto all'uso
           </p>
         </motion.div>
@@ -94,7 +94,7 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
               <h3 className="text-sm font-bold text-white/70 uppercase tracking-wider">
                 {CATEGORY_LABELS[cat] || cat}
               </h3>
-              <Badge variant="outline" className="text-[0.5rem] border-white/10 text-white/30 ml-2">{features.length}</Badge>
+              <Badge variant="outline" className="text-[10px] border-white/10 text-white/70 ml-2">{features.length}</Badge>
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -116,7 +116,7 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-bold text-white/90 mb-1">{f.title}</p>
-                            <p className="text-[0.65rem] text-white/40 leading-relaxed">{f.desc}</p>
+                            <p className="text-[11px] text-white/80 leading-relaxed">{f.desc}</p>
                           </div>
                         </div>
                       </CardContent>

@@ -82,8 +82,8 @@ export default function StickyScrollShowcase() {
         <div className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 text-center z-20 px-4 w-full max-w-lg">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-2"
             style={{ background: "hsla(0,0%,100%,0.04)", border: "1px solid hsla(0,0%,100%,0.08)" }}>
-            <Sparkles className="w-3 h-3 text-white/40" />
-            <span className="text-[0.55rem] font-heading font-semibold tracking-[3px] uppercase text-white/40">I nostri settori</span>
+            <Sparkles className="w-3 h-3 text-white/80" />
+            <span className="text-[10px] font-heading font-semibold tracking-[3px] uppercase text-white/80">I nostri settori</span>
           </div>
           <h2 className="text-[clamp(1.2rem,3.5vw,2.5rem)] font-heading font-bold text-white leading-[1.1]">
             Un sistema.{" "}
@@ -215,13 +215,13 @@ export default function StickyScrollShowcase() {
           >
             <div className="w-8 h-1 rounded-full mb-3 mx-auto lg:mx-0"
               style={{ background: activeSector.color, boxShadow: `0 0 20px ${activeSector.color}50` }} />
-            <p className="text-[0.6rem] font-heading font-bold tracking-[3px] uppercase mb-1.5"
+            <p className="text-[11px] font-heading font-bold tracking-[3px] uppercase mb-1.5"
               style={{ color: activeSector.color }}>{activeSector.name}</p>
-            <p className="text-[0.7rem] sm:text-[0.8rem] text-white/40 leading-relaxed mb-2 hidden sm:block">{activeSector.desc}</p>
-            <p className="text-[0.6rem] text-white/25 mb-3">{activeSector.stats}</p>
+            <p className="text-[0.7rem] sm:text-[0.8rem] text-white/80 leading-relaxed mb-2 hidden sm:block">{activeSector.desc}</p>
+            <p className="text-[11px] text-white/25 mb-3">{activeSector.stats}</p>
             <button
               onClick={() => navigate(demoPath)}
-              className="inline-flex items-center gap-1.5 text-[0.6rem] font-heading font-semibold tracking-wider uppercase text-white/40 hover:text-white transition-colors group/btn">
+              className="inline-flex items-center gap-1.5 text-[11px] font-heading font-semibold tracking-wider uppercase text-white/80 hover:text-white transition-colors group/btn">
               Esplora {activeSector.name.split(" ")[0]}
               <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
             </button>

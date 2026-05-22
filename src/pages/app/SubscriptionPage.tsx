@@ -317,9 +317,9 @@ export default function SubscriptionPage() {
                       {f.included ? (
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                       ) : (
-                        <Lock className="w-4 h-4 text-muted-foreground/30 flex-shrink-0 mt-0.5" />
+                        <Lock className="w-4 h-4 text-muted-foreground/70 flex-shrink-0 mt-0.5" />
                       )}
-                      <span className={f.included ? "text-foreground/80" : "text-muted-foreground/40 line-through"}>
+                      <span className={f.included ? "text-foreground/80" : "text-muted-foreground/75 line-through"}>
                         {f.text}
                       </span>
                     </div>
@@ -363,7 +363,7 @@ export default function SubscriptionPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="flex flex-wrap items-center justify-center gap-4 text-muted-foreground/40 text-[11px] pt-4"
+        className="flex flex-wrap items-center justify-center gap-4 text-muted-foreground/75 text-[11px] pt-4"
       >
         {[
           { icon: Shield, text: "Pagamento sicuro SSL" },

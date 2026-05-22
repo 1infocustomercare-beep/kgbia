@@ -55,7 +55,7 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
       {isInactive && (
         <div className="absolute inset-0 z-10 bg-background/60 backdrop-blur-sm flex flex-col items-center justify-center gap-2">
           <Lock className="w-6 h-6 text-red-400" />
-          <span className="text-[0.6rem] text-red-400 font-medium">Disattivato</span>
+          <span className="text-[11px] text-red-400 font-medium">Disattivato</span>
         </div>
       )}
 
@@ -76,16 +76,16 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
         {/* Price + beta badges */}
         <div className="absolute top-1.5 right-1.5 flex flex-col gap-1 items-end">
           {isPaid ? (
-            <span className="text-[0.55rem] font-bold px-1.5 py-0.5 rounded-full bg-violet-500/80 text-white backdrop-blur-sm">
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-violet-500/80 text-white backdrop-blur-sm">
               €{price}/mo
             </span>
           ) : (
-            <span className="text-[0.55rem] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/80 text-white backdrop-blur-sm">
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/80 text-white backdrop-blur-sm">
               Free
             </span>
           )}
           {isBeta && (
-            <span className="text-[0.5rem] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/90 text-white">
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/90 text-white">
               BETA
             </span>
           )}
@@ -108,41 +108,41 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
         <div className="flex items-center gap-1 flex-wrap">
           <Badge
             variant="outline"
-            className="text-[0.5rem] px-1 py-0 h-4 rounded-md"
+            className="text-[10px] px-1 py-0 h-4 rounded-md"
             style={{ borderColor: cat.color, color: cat.color }}
           >
             {cat.icon} {cat.label}
           </Badge>
-          <Badge variant="outline" className="text-[0.5rem] px-1 py-0 h-4 rounded-md border-white/15 text-muted-foreground">
+          <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 rounded-md border-white/15 text-muted-foreground">
             {agent.type === "universal" ? "🌐" : "🎯"}
           </Badge>
         </div>
 
-        <p className="text-[0.6rem] text-muted-foreground line-clamp-2 leading-relaxed">{agent.description_it}</p>
+        <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">{agent.description_it}</p>
 
         {/* Sectors */}
         <div className="flex flex-wrap gap-0.5">
           {(agent.sectors || []).slice(0, 2).map((s) => (
-            <span key={s} className="text-[0.45rem] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
+            <span key={s} className="text-[10px] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
               {SECTOR_LABELS[s] || s}
             </span>
           ))}
           {(agent.sectors || []).length > 2 && (
-            <span className="text-[0.45rem] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
+            <span className="text-[10px] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
               +{agent.sectors.length - 2}
             </span>
           )}
         </div>
 
         {/* Metrics + AI Score */}
-        <div className="flex items-center justify-between text-[0.55rem] text-muted-foreground pt-1">
+        <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-1">
           <span className="flex items-center gap-1">
             <span className={`w-1.5 h-1.5 rounded-full ${installs > 0 ? "bg-blue-400" : "bg-white/20"}`} />
             {installs} utenti
           </span>
           <span className="flex items-center gap-1.5">
             <span>{successRate}%</span>
-            <span className="px-1 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold text-[0.5rem]">
+            <span className="px-1 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold text-[10px]">
               AI {Math.min(100, Math.round((agent.autonomy_level ?? 7) * 8 + Math.min(installs * 5, 20)))}
             </span>
           </span>
@@ -153,7 +153,7 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
           className="flex items-center justify-between pt-1.5 border-t border-white/5"
           onClick={(e) => e.stopPropagation()}
         >
-          <span className={`text-[0.6rem] font-semibold ${isActive ? "text-emerald-400" : isBeta ? "text-amber-400" : "text-red-400"}`}>
+          <span className={`text-[11px] font-semibold ${isActive ? "text-emerald-400" : isBeta ? "text-amber-400" : "text-red-400"}`}>
             {isActive ? "● Attivo" : isBeta ? "◐ Beta" : "○ Off"}
           </span>
           <Switch

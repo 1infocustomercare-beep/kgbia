@@ -556,7 +556,7 @@ export function OutreachChannelsLiveMonitor() {
                                     {n}
                                   </span>
                                 ) : (
-                                  <span className="text-muted-foreground/40">·</span>
+                                  <span className="text-muted-foreground/75">·</span>
                                 )}
                               </td>
                             );

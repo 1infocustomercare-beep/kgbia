@@ -80,12 +80,12 @@ export default function EcosystemGrid() {
               />
               <div className="relative z-10">
                 <div className="mb-5 flex items-center justify-between sm:mb-6">
-                  <span className="font-mono text-xs tracking-[3px] text-white/40">{s.tag}</span>
+                  <span className="font-mono text-xs tracking-[3px] text-white/80">{s.tag}</span>
                   <span className="h-2 w-2 rounded-full" style={{ background: s.color, boxShadow: `0 0 18px ${s.color}` }} />
                 </div>
                 <h3 className="font-heading text-xl font-bold leading-tight text-white sm:text-2xl">{s.title}</h3>
                 <p className="mt-3 text-[13px] leading-[1.7] text-white/60 sm:text-[14px]">{s.desc}</p>
-                <div className="mt-6 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[2px] text-white/40 transition-colors group-hover:text-white sm:mt-8">
+                <div className="mt-6 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[2px] text-white/80 transition-colors group-hover:text-white sm:mt-8">
                   <span>Scopri il protocollo</span>
                   <span className="transition-transform group-hover:translate-x-1">→</span>
                 </div>

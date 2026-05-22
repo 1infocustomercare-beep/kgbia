@@ -579,9 +579,9 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                    Arianna <span className="text-[0.55rem] font-normal text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">AI</span>
+                    Arianna <span className="text-[10px] font-normal text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">AI</span>
                   </h3>
-                  <p className="text-[0.55rem] text-muted-foreground tracking-wider uppercase">
+                  <p className="text-[10px] text-muted-foreground tracking-wider uppercase">
                     {isPaused ? "⏸ In pausa" : isSpeaking ? "🔊 Sta parlando..." : isListening ? "🎙️ Ti ascolta..." : isLoading ? "💭 Sta pensando..." : guideMode ? "🧭 Guida Vocale Attiva" : `📍 ${tabLabel}`}
                   </p>
                 </div>
@@ -589,30 +589,30 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
               <div className="flex items-center gap-1">
                 {isSpeaking && (
                   <button onClick={togglePause}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]">
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground hover:bg-foreground/[0.05]">
                     {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
                   </button>
                 )}
                 {isSpeaking && (
                   <button onClick={stopAll}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-red-400 hover:bg-red-400/10">
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-red-400 hover:bg-red-400/10">
                     <Square className="w-3.5 h-3.5" />
                   </button>
                 )}
                 <button onClick={() => setVoiceEnabled(!voiceEnabled)}
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${voiceEnabled ? "text-primary bg-primary/10" : "text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]"}`}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${voiceEnabled ? "text-primary bg-primary/10" : "text-foreground/80 hover:text-foreground hover:bg-foreground/[0.05]"}`}
                   title={voiceEnabled ? "Disattiva voce" : "Attiva voce"}>
                   {voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
                 </button>
                 {SpeechRecognition && (
                   <button onClick={() => setMode(mode === "voice" ? "chat" : "voice")}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground hover:bg-foreground/[0.05]"
                     title={mode === "voice" ? "Passa a chat" : "Passa a voce"}>
                     {mode === "voice" ? <MessageSquare className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                   </button>
                 )}
                 <button onClick={() => { stopAll(); setIsOpen(false); }}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]">
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground hover:bg-foreground/[0.05]">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -640,7 +640,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                 {currentQuickActions.map((action) => (
                   <motion.button key={action.label}
                     onClick={() => sendMessage(action.prompt)}
-                    className="px-2.5 py-1.5 rounded-full text-[0.6rem] font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-all border border-primary/10"
+                    className="px-2.5 py-1.5 rounded-full text-[11px] font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-all border border-primary/10"
                     whileTap={{ scale: 0.95 }}>
                     {action.label}
                   </motion.button>
@@ -678,7 +678,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
               )}
 
               {liveTranscript && (
-                <motion.div className="text-[0.65rem] text-foreground/30 italic px-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <motion.div className="text-[11px] text-foreground/75 italic px-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   🎙️ {liveTranscript}...
                 </motion.div>
               )}
@@ -711,7 +711,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                     disabled={isLoading}>
                     {isListening ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
                   </motion.button>
-                  <p className="text-[0.6rem] text-muted-foreground max-w-[140px]">
+                  <p className="text-[11px] text-muted-foreground max-w-[140px]">
                     {isListening ? "Sto ascoltando..." : "Tocca per parlare"}
                   </p>
                 </div>

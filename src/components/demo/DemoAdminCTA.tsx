@@ -96,7 +96,7 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
             {loading ? "Accesso..." : "Prova la Dashboard Admin Demo"}
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
-          <p className="text-center text-[0.5rem] text-white/40 mt-1">
+          <p className="text-center text-[10px] text-white/80 mt-1">
             <Lock className="w-2.5 h-2.5 inline mr-0.5" /> Accesso immediato · Nessuna registrazione
           </p>
         </div>
@@ -113,13 +113,13 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <Badge className="mb-4 text-[0.6rem] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor }}>
+          <Badge className="mb-4 text-[11px] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor }}>
             <Sparkles className="w-3 h-3 mr-1 inline" /> ACCESSO IMMEDIATO
           </Badge>
           <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
             Prova la Dashboard in Azione
           </h2>
-          <p className="text-sm text-white/40 mb-6 max-w-md mx-auto">
+          <p className="text-sm text-white/80 mb-6 max-w-md mx-auto">
             Esplora la dashboard completa di <strong style={{ color: accentColor }}>{sectorName}</strong> con dati realistici, tutti i moduli attivi e gli agenti AI operativi.
           </p>
 
@@ -132,13 +132,13 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
                   <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/60" />
                   <div className="w-2.5 h-2.5 rounded-full bg-green-400/60" />
                 </div>
-                <span className="text-[0.5rem] text-white/20 ml-2">empire-ai.app/admin/{slug}</span>
+                <span className="text-[10px] text-white/65 ml-2">empire-ai.app/admin/{slug}</span>
               </div>
               <div className="grid grid-cols-4 gap-2">
                 {["€24.850", "342", "156", "+18%"].map((v, i) => (
                   <div key={i} className="bg-white/[0.04] rounded-lg p-2 text-center">
                     <p className="text-xs font-bold text-white">{v}</p>
-                    <p className="text-[0.45rem] text-white/30">{["Fatturato", "Clienti", "Booking", "Crescita"][i]}</p>
+                    <p className="text-[10px] text-white/70">{["Fatturato", "Clienti", "Booking", "Crescita"][i]}</p>
                   </div>
                 ))}
               </div>
@@ -161,7 +161,7 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
             {loading ? "Accesso..." : "Entra nella Dashboard Demo"}
             <ArrowRight className="w-4 h-4" />
           </Button>
-          <p className="text-[0.6rem] text-white/30 mt-3">
+          <p className="text-[11px] text-white/70 mt-3">
             <Lock className="w-3 h-3 inline mr-1" />
             Nessuna registrazione richiesta · Tutti i moduli attivi · Dati demo realistici
           </p>

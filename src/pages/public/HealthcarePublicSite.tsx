@@ -219,7 +219,7 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
       <div className="overflow-hidden py-5" style={{ background: SAGE }}>
         <MarqueeCarousel speed={40} pauseOnHover items={
           tickerItems.map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap text-white/40" style={{ fontFamily: "'Work Sans', sans-serif" }}>
+            <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap text-white/80" style={{ fontFamily: "'Work Sans', sans-serif" }}>
               <Stethoscope className="w-3 h-3 text-white/25" /> {item}
             </span>
           ))

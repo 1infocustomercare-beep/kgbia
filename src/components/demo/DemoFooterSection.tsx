@@ -56,7 +56,7 @@ export default function DemoFooterSection({ sector, accentColor, sectorName, com
             <Input
               type="email"
               placeholder="La tua email..."
-              className="bg-white/[0.05] border-white/10 text-white placeholder:text-white/20 h-11 w-full sm:w-64"
+              className="bg-white/[0.05] border-white/10 text-white placeholder:text-white/65 h-11 w-full sm:w-64"
             />
             <Button
               className="h-11 px-6 rounded-lg font-semibold text-sm border-0 text-white shrink-0"
@@ -79,17 +79,17 @@ export default function DemoFooterSection({ sector, accentColor, sectorName, com
               </div>
               <div>
                 <p className="text-sm font-bold text-white">{companyName}</p>
-                <p className="text-[0.55rem] text-white/25 uppercase tracking-wider">Powered by Empire.AI</p>
+                <p className="text-[10px] text-white/25 uppercase tracking-wider">Powered by Empire.AI</p>
               </div>
             </div>
-            <p className="text-xs text-white/30 leading-relaxed mb-4">
+            <p className="text-xs text-white/70 leading-relaxed mb-4">
               {tagline || `La piattaforma AI completa per ${sectorName.toLowerCase()}`}
             </p>
             {/* Social icons */}
             <div className="flex gap-2">
               {[Instagram, Facebook, Globe].map((Icon, i) => (
                 <button key={i} className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/[0.06] border border-white/[0.06]">
-                  <Icon className="w-3.5 h-3.5 text-white/30" />
+                  <Icon className="w-3.5 h-3.5 text-white/70" />
                 </button>
               ))}
             </div>
@@ -116,16 +116,16 @@ export default function DemoFooterSection({ sector, accentColor, sectorName, com
       {/* Bottom bar */}
       <div className="border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[0.6rem] text-white/15">
+          <p className="text-[11px] text-white/15">
             © 2026 {companyName} — Powered by{" "}
-            <button onClick={() => navigate("/")} className="text-white/25 hover:text-white/40 transition underline">
+            <button onClick={() => navigate("/")} className="text-white/25 hover:text-white/80 transition underline">
               Empire.AI
             </button>
             {" "}· Tutti i diritti riservati
           </p>
           <div className="flex gap-4">
             {["Privacy", "Cookie", "Termini"].map(l => (
-              <button key={l} className="text-[0.6rem] text-white/15 hover:text-white/30 transition">{l}</button>
+              <button key={l} className="text-[11px] text-white/15 hover:text-white/70 transition">{l}</button>
             ))}
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function DemoFooterSection({ sector, accentColor, sectorName, com
 
       {/* Demo notice */}
       <div className="text-center py-3 border-t border-white/[0.03]" style={{ background: `${accentColor}05` }}>
-        <p className="text-[0.55rem] text-white/15">
+        <p className="text-[10px] text-white/15">
           🏗️ Questo è un sito demo generato automaticamente dalla piattaforma Empire.AI · Nessun dato reale
         </p>
       </div>

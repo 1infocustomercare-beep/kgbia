@@ -36,7 +36,7 @@ export default function DemoTestimonialsSection({ sector, accentColor, sectorNam
   // Layout variant based on sector type
   const isDark = theme.palette.bg.startsWith("#0") || theme.palette.bg.startsWith("rgba");
   const textColor = isDark ? "text-white" : "text-gray-900";
-  const textMuted = isDark ? "text-white/40" : "text-gray-500";
+  const textMuted = isDark ? "text-white/80" : "text-gray-500";
   const cardBg = isDark ? "bg-white/[0.04]" : "bg-white";
   const cardBorder = isDark ? "border-white/[0.08]" : "border-gray-200";
 
@@ -58,7 +58,7 @@ export default function DemoTestimonialsSection({ sector, accentColor, sectorNam
           transition={{ duration: 0.6 }}
         >
           <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.2em] mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] mb-4"
             style={{ background: `${accentColor}15`, color: accentColor, border: `1px solid ${accentColor}25` }}
           >
             ⭐ Recensioni Verificate
@@ -91,7 +91,7 @@ export default function DemoTestimonialsSection({ sector, accentColor, sectorNam
                 {Array.from({ length: 5 }).map((_, j) => (
                   <Star
                     key={j}
-                    className={`w-4 h-4 ${j < t.rating ? "fill-amber-400 text-amber-400" : isDark ? "text-white/10" : "text-gray-200"}`}
+                    className={`w-4 h-4 ${j < t.rating ? "fill-amber-400 text-amber-400" : isDark ? "text-white/10" : "text-foreground"}`}
                   />
                 ))}
               </div>
@@ -111,7 +111,7 @@ export default function DemoTestimonialsSection({ sector, accentColor, sectorNam
                 </div>
                 <div>
                   <p className={`text-sm font-semibold ${textColor}`}>{t.name}</p>
-                  <p className={`text-[0.65rem] ${textMuted}`}>Cliente verificato</p>
+                  <p className={`text-[11px] ${textMuted}`}>Cliente verificato</p>
                 </div>
               </div>
             </motion.div>
@@ -134,7 +134,7 @@ export default function DemoTestimonialsSection({ sector, accentColor, sectorNam
                     {Array.from({ length: 5 }).map((_, j) => (
                       <Star
                         key={j}
-                        className={`w-4 h-4 ${j < testimonials[activeIdx].rating ? "fill-amber-400 text-amber-400" : isDark ? "text-white/10" : "text-gray-200"}`}
+                        className={`w-4 h-4 ${j < testimonials[activeIdx].rating ? "fill-amber-400 text-amber-400" : isDark ? "text-white/10" : "text-foreground"}`}
                       />
                     ))}
                   </div>

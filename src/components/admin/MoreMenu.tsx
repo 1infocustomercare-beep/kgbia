@@ -111,7 +111,7 @@ const AcademySection = () => {
           <GraduationCap className="w-7 h-7 text-primary" />
         </div>
         <h3 className="text-lg font-display font-bold text-foreground">Empire Academy</h3>
-        <p className="text-[0.55rem] uppercase tracking-[3px] text-muted-foreground/50 font-semibold mt-1">Tutorial Completo · {totalGuides} Guide</p>
+        <p className="text-[10px] uppercase tracking-[3px] text-muted-foreground/50 font-semibold mt-1">Tutorial Completo · {totalGuides} Guide</p>
       </div>
 
       {/* Stats bar */}
@@ -124,7 +124,7 @@ const AcademySection = () => {
           <div key={i} className="text-center p-2.5 rounded-xl bg-card border border-border/50">
             <stat.icon className="w-3.5 h-3.5 mx-auto text-primary mb-1" />
             <p className="text-base font-display font-bold text-foreground">{stat.value}</p>
-            <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground/40 font-semibold">{stat.label}</p>
+            <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground/75 font-semibold">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -141,7 +141,7 @@ const AcademySection = () => {
                 <span className="text-base">{catName.slice(0, 2)}</span>
                 <div>
                   <p className="text-sm font-semibold text-foreground">{catName.slice(3)}</p>
-                  <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground/40 font-semibold">{items.length} guide</p>
+                  <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground/75 font-semibold">{items.length} guide</p>
                 </div>
               </div>
               {expandedCategory === catName
@@ -162,15 +162,15 @@ const AcademySection = () => {
                     {items.map((guide) => (
                       <div key={guide.key} className="p-3 rounded-xl bg-secondary/40 space-y-1.5">
                         <p className="text-xs font-semibold text-foreground">{guide.title}</p>
-                        <p className="text-[0.65rem] text-muted-foreground/60 leading-relaxed">{guide.description}</p>
+                        <p className="text-[11px] text-muted-foreground/60 leading-relaxed">{guide.description}</p>
                         {guide.steps && guide.steps.length > 0 && (
                           <div className="pt-1 space-y-1">
                             {guide.steps.map((step, si) => (
                               <div key={si} className="flex items-start gap-2">
                                 <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                  <span className="text-[0.5rem] font-bold text-primary">{si + 1}</span>
+                                  <span className="text-[10px] font-bold text-primary">{si + 1}</span>
                                 </div>
-                                <p className="text-[0.6rem] text-muted-foreground/50">{step}</p>
+                                <p className="text-[11px] text-muted-foreground/50">{step}</p>
                               </div>
                             ))}
                           </div>
@@ -185,7 +185,7 @@ const AcademySection = () => {
         ))}
       </div>
 
-      <p className="text-[0.5rem] text-center text-muted-foreground/30 uppercase tracking-[3px] pt-2">
+      <p className="text-[10px] text-center text-muted-foreground/70 uppercase tracking-[3px] pt-2">
         Auto-aggiornato · Nuove guide appaiono automaticamente
       </p>
     </div>

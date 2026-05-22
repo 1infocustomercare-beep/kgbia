@@ -433,7 +433,7 @@ const CostRow = ({ label, before, after, positive }: { label: string; before: nu
       <span className="text-muted-foreground flex-1">{label}</span>
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground/60 line-through w-16 text-right">{fmt(Math.abs(before))}</span>
-        <ArrowRight className="w-3 h-3 text-muted-foreground/40" />
+        <ArrowRight className="w-3 h-3 text-muted-foreground/75" />
         <span className="text-foreground font-semibold w-16 text-right">{fmt(Math.abs(after))}</span>
         <span className={`w-14 text-right font-bold ${positive || delta > 0 ? "text-emerald-400" : "text-muted-foreground"}`}>
           {sign}{fmt(Math.abs(delta))}

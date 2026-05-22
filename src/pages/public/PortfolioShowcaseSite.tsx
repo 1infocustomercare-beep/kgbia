@@ -203,7 +203,7 @@ export default function PortfolioShowcaseSite({ industry, slug, accentColor }: P
             <div className="flex items-center gap-3 mb-2">
               <Smartphone className="w-4 h-4" style={{ color: currentAccent }} />
               <h2 className="text-lg sm:text-xl font-bold">All Screens</h2>
-              <Badge variant="outline" className="text-[10px] border-white/10 text-white/40">
+              <Badge variant="outline" className="text-[10px] border-white/10 text-white/80">
                 {visibleImages.length} screens
               </Badge>
             </div>

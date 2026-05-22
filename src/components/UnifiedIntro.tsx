@@ -810,7 +810,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
               animate={{ width: 140, opacity: 0.5 }}
               transition={{ duration: 0.5, delay: 0.55, ease: smoothEase }}
             />
-            <p className="text-[0.5rem] sm:text-[0.55rem] md:text-[0.6rem] tracking-[0.5em] uppercase text-foreground/20 font-heading">
+            <p className="text-[10px] sm:text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-foreground/70 font-heading">
               Il Sistema Operativo del Business
             </p>
           </motion.div>
@@ -1250,7 +1250,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                   style={{ background: color, animationDelay: `${i * 300}ms` }}
                 />
                 <span
-                  className="text-[0.4rem] sm:text-[0.42rem] md:text-[0.45rem] tracking-[0.2em] uppercase font-mono"
+                  className="text-[10px] sm:text-[0.42rem] md:text-[10px] tracking-[0.2em] uppercase font-mono"
                   style={{ color: "hsla(265,50%,62%,0.3)" }}
                 >
                   {label}
@@ -1273,7 +1273,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           >
             <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsla(160,55%,48%,0.8)" }} />
             <span
-              className="text-[0.4rem] sm:text-[0.42rem] md:text-[0.48rem] tracking-[0.25em] uppercase font-mono"
+              className="text-[10px] sm:text-[0.42rem] md:text-[0.48rem] tracking-[0.25em] uppercase font-mono"
               style={{ color: "hsla(265,55%,68%,0.35)" }}
             >
               {phase === "collapse" ? "CORE · READY" : phase === "orbit" ? "NEURAL ORBIT · ACTIVE" : "EMPIRE · GENESIS"}
@@ -1289,7 +1289,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
         animate={{ opacity: phase === "assemble" || phase === "pulse" ? 0.35 : 0 }}
         transition={{ delay: 2, duration: 0.4 }}
       >
-        <p className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.3em] uppercase text-foreground/15 font-mono">
+        <p className="text-[10px] sm:text-[10px] tracking-[0.3em] uppercase text-foreground/15 font-mono">
           {IS_MOBILE ? "Tap per continuare" : "Click per continuare"}
         </p>
       </motion.div>

@@ -203,7 +203,7 @@ export default function DemoAdminAccessButton({ sector, accentColor = "#8b5cf6" 
             className="flex justify-center mb-6"
           >
             <span
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.6rem] font-bold uppercase tracking-[0.15em]"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-[0.15em]"
               style={{
                 background: `${accentColor}15`,
                 border: `1px solid ${accentColor}30`,
@@ -265,7 +265,7 @@ export default function DemoAdminAccessButton({ sector, accentColor = "#8b5cf6" 
                   >
                     <Icon className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: accentColor }} />
                   </div>
-                  <span className="text-[0.55rem] sm:text-[0.65rem] text-white/60 font-medium text-center leading-tight">
+                  <span className="text-[10px] sm:text-[11px] text-white/60 font-medium text-center leading-tight">
                     {f.label}
                   </span>
                 </motion.div>
@@ -304,7 +304,7 @@ export default function DemoAdminAccessButton({ sector, accentColor = "#8b5cf6" 
             </motion.button>
           </motion.div>
 
-          <p className="text-center text-[0.6rem] text-white/25 mt-4">
+          <p className="text-center text-[11px] text-white/25 mt-4">
             Nessuna registrazione richiesta · Accesso immediato · Tutti i moduli attivi
           </p>
         </div>

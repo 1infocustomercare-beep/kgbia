@@ -130,7 +130,7 @@ export const ScrollRevealStat: React.FC<{
           {value}
           <span className="text-[0.5em] opacity-70">{suffix}</span>
         </div>
-        <div className="text-foreground/40 text-[0.65rem] sm:text-xs tracking-wide uppercase font-medium">
+        <div className="text-foreground/80 text-[11px] sm:text-xs tracking-wide uppercase font-medium">
           {label}
         </div>
       </div>

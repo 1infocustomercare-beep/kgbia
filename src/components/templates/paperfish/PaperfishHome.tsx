@@ -55,7 +55,7 @@ export function PaperfishHome({
       >
         <div className="flex flex-col items-center gap-1 mb-3">
           <p
-            className="text-[0.6rem] tracking-[0.42em]"
+            className="text-[11px] tracking-[0.42em]"
             style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}
           >
             {subtitle}
@@ -95,7 +95,7 @@ export function PaperfishHome({
           <img src={heroImage} alt={heroTagline} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(14,11,15,0.85) 100%)" }} />
           <div className="absolute inset-x-0 bottom-0 px-4 pb-4 text-center">
-            <p className="text-[0.6rem] tracking-[0.4em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
+            <p className="text-[11px] tracking-[0.4em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
               料理長おすすめ
             </p>
             <h2
@@ -135,7 +135,7 @@ export function PaperfishHome({
       {/* Chef's Recommendation */}
       <section className="mt-4 px-4 py-6" style={{ background: PAPERFISH.bgDeep }}>
         <div className="text-center mb-4">
-          <p className="text-[0.6rem] tracking-[0.4em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
+          <p className="text-[11px] tracking-[0.4em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
             シェフのおすすめ
           </p>
           <h3
@@ -159,7 +159,7 @@ export function PaperfishHome({
               </div>
               <div className="p-3 flex-1 flex flex-col">
                 {item.jp_label && (
-                  <p className="text-[0.55rem] tracking-[0.32em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
+                  <p className="text-[10px] tracking-[0.32em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
                     {item.jp_label}
                   </p>
                 )}
@@ -170,7 +170,7 @@ export function PaperfishHome({
                   {item.name}
                 </h4>
                 <p
-                  className="text-[0.65rem] leading-snug mb-2 line-clamp-2 flex-1"
+                  className="text-[11px] leading-snug mb-2 line-clamp-2 flex-1"
                   style={{ color: PAPERFISH.textMuted }}
                 >
                   {item.description}

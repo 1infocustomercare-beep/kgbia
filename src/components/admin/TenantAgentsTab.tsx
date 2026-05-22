@@ -183,17 +183,17 @@ export default function TenantAgentsTab() {
         <div className="bg-secondary/40 border border-border/40 rounded-xl p-2 text-center">
           <Building2 className="w-3 h-3 mx-auto mb-0.5 text-primary" />
           <p className="text-sm font-bold text-primary">{totalTenants}</p>
-          <p className="text-[0.5rem] text-muted-foreground">Account</p>
+          <p className="text-[10px] text-muted-foreground">Account</p>
         </div>
         <div className="bg-secondary/40 border border-border/40 rounded-xl p-2 text-center">
           <Bot className="w-3 h-3 mx-auto mb-0.5 text-emerald-400" />
           <p className="text-sm font-bold text-emerald-400">{totalActiveInstalls}</p>
-          <p className="text-[0.5rem] text-muted-foreground">Agenti Attivi</p>
+          <p className="text-[10px] text-muted-foreground">Agenti Attivi</p>
         </div>
         <div className="bg-secondary/40 border border-border/40 rounded-xl p-2 text-center">
           <Zap className="w-3 h-3 mx-auto mb-0.5 text-amber-400" />
           <p className="text-sm font-bold text-amber-400">{installations.length}</p>
-          <p className="text-[0.5rem] text-muted-foreground">Installazioni</p>
+          <p className="text-[10px] text-muted-foreground">Installazioni</p>
         </div>
       </div>
 
@@ -210,7 +210,7 @@ export default function TenantAgentsTab() {
         <select
           value={industryFilter}
           onChange={e => setIndustryFilter(e.target.value)}
-          className="h-8 px-2 rounded-lg bg-secondary/40 border border-border/30 text-[0.6rem] text-foreground"
+          className="h-8 px-2 rounded-lg bg-secondary/40 border border-border/30 text-[11px] text-foreground"
         >
           <option value="all">Tutti i settori</option>
           {industries.map(ind => (
@@ -226,7 +226,7 @@ export default function TenantAgentsTab() {
         </div>
       ) : filteredTenants.length === 0 ? (
         <div className="text-center py-12">
-          <Building2 className="w-10 h-10 text-muted-foreground/30 mx-auto mb-2" />
+          <Building2 className="w-10 h-10 text-muted-foreground/70 mx-auto mb-2" />
           <p className="text-muted-foreground text-xs">Nessun account con agenti installati</p>
         </div>
       ) : (
@@ -262,12 +262,12 @@ export default function TenantAgentsTab() {
                     </p>
                     <div className="flex gap-1 mt-0.5">
                       {tenant && (
-                        <Badge variant="outline" className="text-[0.45rem] h-3.5 px-1" style={{ borderColor: color, color }}>
+                        <Badge variant="outline" className="text-[10px] h-3.5 px-1" style={{ borderColor: color, color }}>
                           {tenant.industry}
                         </Badge>
                       )}
                       {tenant && (
-                        <Badge variant="secondary" className="text-[0.45rem] h-3.5 px-1">
+                        <Badge variant="secondary" className="text-[10px] h-3.5 px-1">
                           {PLAN_LABELS[tenant.plan] || tenant.plan}
                         </Badge>
                       )}
@@ -275,12 +275,12 @@ export default function TenantAgentsTab() {
                   </div>
                   <div className="text-right shrink-0 mr-1">
                     <div className="flex items-center gap-1">
-                      <span className="text-[0.55rem] text-emerald-400 font-bold">{activeCount}</span>
+                      <span className="text-[10px] text-emerald-400 font-bold">{activeCount}</span>
                       {inactiveCount > 0 && (
-                        <span className="text-[0.55rem] text-muted-foreground">/ {inactiveCount} off</span>
+                        <span className="text-[10px] text-muted-foreground">/ {inactiveCount} off</span>
                       )}
                     </div>
-                    <p className="text-[0.45rem] text-muted-foreground">agenti</p>
+                    <p className="text-[10px] text-muted-foreground">agenti</p>
                   </div>
                   {isExpanded ? <ChevronUp className="w-3 h-3 text-muted-foreground shrink-0" /> : <ChevronDown className="w-3 h-3 text-muted-foreground shrink-0" />}
                 </button>
@@ -312,16 +312,16 @@ export default function TenantAgentsTab() {
                               >
                                 <span className="text-sm shrink-0">{agent?.icon_emoji || "🤖"}</span>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-[0.65rem] font-semibold text-foreground truncate">
+                                  <p className="text-[11px] font-semibold text-foreground truncate">
                                     {agent?.name || inst.agent_id}
                                   </p>
                                   <div className="flex gap-1 mt-0.5">
                                     {cat && (
-                                      <span className="text-[0.45rem] px-1 py-0.5 rounded-full" style={{ backgroundColor: `${cat.color}15`, color: cat.color }}>
+                                      <span className="text-[10px] px-1 py-0.5 rounded-full" style={{ backgroundColor: `${cat.color}15`, color: cat.color }}>
                                         {cat.label}
                                       </span>
                                     )}
-                                    <span className="text-[0.45rem] text-muted-foreground">
+                                    <span className="text-[10px] text-muted-foreground">
                                       {new Date(inst.created_at).toLocaleDateString("it-IT")}
                                     </span>
                                   </div>

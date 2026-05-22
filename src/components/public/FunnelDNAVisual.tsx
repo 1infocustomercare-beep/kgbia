@@ -208,7 +208,7 @@ const FunnelDNAVisual = memo(() => {
               transition={{ duration: 0.4 }}
             >
               <span className="text-xs">{s.icon}</span>
-              <span className="text-[0.55rem] font-mono text-foreground/70 tracking-wide">{s.label}</span>
+              <span className="text-[10px] font-mono text-foreground/70 tracking-wide">{s.label}</span>
             </motion.div>
           ))}
         </div>
@@ -223,17 +223,17 @@ const FunnelDNAVisual = memo(() => {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.35 }}
           >
-            <div className="text-[0.5rem] font-mono text-primary/50 tracking-[0.2em] uppercase">{step.label}</div>
+            <div className="text-[10px] font-mono text-primary/50 tracking-[0.2em] uppercase">{step.label}</div>
             <div className="text-lg font-bold font-mono text-primary/80 leading-none mt-0.5">{step.metric}</div>
-            <div className="text-[0.5rem] font-mono text-muted-foreground/60 mt-0.5">{step.sub}</div>
+            <div className="text-[10px] font-mono text-muted-foreground/60 mt-0.5">{step.sub}</div>
           </motion.div>
         </AnimatePresence>
 
         {/* Bottom conversion bar */}
         <div className="absolute bottom-5 left-5 right-5">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[0.5rem] font-mono text-primary/40 tracking-widest uppercase">Funnel Conversion</span>
-            <span className="text-[0.55rem] font-mono text-accent/70 font-bold">87.3%</span>
+            <span className="text-[10px] font-mono text-primary/80 tracking-widest uppercase">Funnel Conversion</span>
+            <span className="text-[10px] font-mono text-accent/70 font-bold">87.3%</span>
           </div>
           <div className="h-1 rounded-full bg-primary/10 overflow-hidden">
             <motion.div

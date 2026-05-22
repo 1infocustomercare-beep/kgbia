@@ -95,7 +95,7 @@ function BusinessSplash({ name, logoUrl, accentColor, emoji, onComplete }: {
           )}
 
           {/* Tap to skip */}
-          <motion.p className="absolute bottom-8 text-[10px] text-white/20 tracking-widest uppercase"
+          <motion.p className="absolute bottom-8 text-[10px] text-white/65 tracking-widest uppercase"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
             Tap per continuare
           </motion.p>
@@ -292,7 +292,7 @@ export default function BusinessPage() {
                 <h2 className="text-2xl sm:text-4xl font-bold text-white mt-3" style={{ fontFamily: "'DM Serif Display', serif" }}>
                   Tutto Quello Che Ti Serve, In Un'Unica Piattaforma
                 </h2>
-                <p className="text-sm text-white/40 mt-3 max-w-xl mx-auto">
+                <p className="text-sm text-white/80 mt-3 max-w-xl mx-auto">
                   Gestisci ogni aspetto della tua attività {config.label.toLowerCase()} con 14+ moduli professionali integrati — dalla prenotazione alla fatturazione, dall'AI al marketing.
                 </p>
               </div>

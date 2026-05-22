@@ -51,7 +51,7 @@ export function BateyDetail({ brandName, item, onBack, onAdd }: Props) {
       {/* Title + Price */}
       <div className="px-4 mt-4">
         {item.es_label && (
-          <p className="text-[0.6rem] tracking-[0.42em] mb-1 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
+          <p className="text-[11px] tracking-[0.42em] mb-1 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
             {item.es_label}
           </p>
         )}

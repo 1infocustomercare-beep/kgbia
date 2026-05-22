@@ -144,7 +144,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                     </div>
                     <div className="min-w-0 flex-1">
                       <h2 className="text-xs sm:text-sm md:text-base font-black text-white truncate">Demo Factory · 6 Agenti AI</h2>
-                      <p className="text-[0.6rem] sm:text-[0.65rem] text-white/50 truncate">{leadName}</p>
+                      <p className="text-[11px] sm:text-[11px] text-white/50 truncate">{leadName}</p>
                     </div>
                   </div>
                   {!loading && (
@@ -200,28 +200,28 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                             <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-[0.55rem] sm:text-[0.6rem] uppercase tracking-wider font-black text-white/60 mb-1">
+                            <p className="text-[10px] sm:text-[11px] uppercase tracking-wider font-black text-white/60 mb-1">
                               Demo pronta in {result.durationMs ? `${(result.durationMs / 1000).toFixed(1)}s` : '…'}
                             </p>
                             <h3 className="text-sm sm:text-base font-black text-white break-words">{leadName}</h3>
                             <p className="text-[0.7rem] sm:text-xs text-white/70 mt-1 italic break-words">"{result.brand.tagline}"</p>
                             {result.autoMatch && (
                               <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-                                <span className="text-[0.55rem] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30">
+                                <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30">
                                   {result.autoMatch.subSector}
                                 </span>
-                                <span className="text-[0.55rem] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-200 border border-teal-400/30">
+                                <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-200 border border-teal-400/30">
                                   {result.autoMatch.templateVariant}
                                 </span>
                               </div>
                             )}
                             {/* 💾 Auto-save badge — informa l'utente che la demo è già nel Portfolio */}
                             <div className="mt-2 flex items-center gap-1.5 flex-wrap">
-                              <span className="inline-flex items-center gap-1 text-[0.55rem] uppercase tracking-wider font-black px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-200 border border-emerald-400/30">
+                              <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-black px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-200 border border-emerald-400/30">
                                 <BookmarkCheck className="w-2.5 h-2.5" />
                                 Salvata nel Portfolio
                               </span>
-                              <span className="text-[0.55rem] text-white/40">riusabile gratis</span>
+                              <span className="text-[10px] text-white/80">riusabile gratis</span>
                             </div>
                           </div>
                         </div>
@@ -230,11 +230,11 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                       {/* 2️⃣ LIVE PREVIEW iframe (responsive aspect) */}
                       <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02] w-full">
                         <div className="px-3 py-2 flex items-center justify-between gap-2 border-b border-white/10 bg-white/[0.03]">
-                          <p className="text-[0.6rem] uppercase tracking-wider text-white/60 font-black flex items-center gap-1.5 min-w-0">
+                          <p className="text-[11px] uppercase tracking-wider text-white/60 font-black flex items-center gap-1.5 min-w-0">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                             <span className="truncate">Sito demo live · navigabile</span>
                           </p>
-                          <a href={result.previewUrl} target="_blank" rel="noreferrer" className="text-[0.6rem] font-bold text-purple-300 hover:text-white flex items-center gap-1 shrink-0">
+                          <a href={result.previewUrl} target="_blank" rel="noreferrer" className="text-[11px] font-bold text-purple-300 hover:text-white flex items-center gap-1 shrink-0">
                             Apri <ExternalLink className="w-3 h-3" />
                           </a>
                         </div>
@@ -257,7 +257,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                         ].map((k, i) => (
                           <div key={i} className="rounded-xl p-2.5 sm:p-3 border border-white/10 bg-white/[0.03] min-w-0">
                             <k.icon className="w-3.5 h-3.5 mb-1" style={{ color: k.color }} />
-                            <p className="text-[0.55rem] uppercase tracking-wider text-white/50 font-bold truncate">{k.label}</p>
+                            <p className="text-[10px] uppercase tracking-wider text-white/50 font-bold truncate">{k.label}</p>
                             <p className="text-sm sm:text-base font-black text-white">{k.value}</p>
                           </div>
                         ))}
@@ -299,7 +299,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                             onClick={() => setEmailOpen(o => !o)}
                             className="w-full px-3 py-2.5 flex items-center justify-between text-left gap-2"
                           >
-                            <p className="text-[0.6rem] uppercase tracking-wider font-black text-violet-200 flex items-center gap-1.5 min-w-0 truncate">
+                            <p className="text-[11px] uppercase tracking-wider font-black text-violet-200 flex items-center gap-1.5 min-w-0 truncate">
                               <Mail className="w-3 h-3 shrink-0" />
                               <span className="truncate">Email Aurora · {TEMPLATES.find(t => t.id === selectedTplId)?.name.replace(" — Aurora","")}</span>
                               {deliverability && (
@@ -338,7 +338,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
 
                               {/* Subject */}
                               <div className="rounded-lg border border-white/10 bg-black/30 px-2.5 py-1.5">
-                                <p className="text-[8.5px] uppercase tracking-wider font-bold text-white/40">Oggetto</p>
+                                <p className="text-[8.5px] uppercase tracking-wider font-bold text-white/80">Oggetto</p>
                                 <p className="text-[11px] text-white/95 font-semibold truncate">{renderedEmail.subject}</p>
                               </div>
 
@@ -347,8 +347,8 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                                 <div className="flex items-center justify-between bg-white/[0.03] px-2 py-1 border-b border-white/10">
                                   <span className="text-[9px] uppercase font-bold text-white/50">Anteprima HTML live</span>
                                   <div className="flex gap-0.5">
-                                    <button onClick={() => setEmailDevice("desktop")} className={`p-1 rounded ${emailDevice === "desktop" ? "bg-violet-500/30 text-violet-200" : "text-white/40"}`}><Monitor className="w-3 h-3" /></button>
-                                    <button onClick={() => setEmailDevice("mobile")} className={`p-1 rounded ${emailDevice === "mobile" ? "bg-violet-500/30 text-violet-200" : "text-white/40"}`}><Smartphone className="w-3 h-3" /></button>
+                                    <button onClick={() => setEmailDevice("desktop")} className={`p-1 rounded ${emailDevice === "desktop" ? "bg-violet-500/30 text-violet-200" : "text-white/80"}`}><Monitor className="w-3 h-3" /></button>
+                                    <button onClick={() => setEmailDevice("mobile")} className={`p-1 rounded ${emailDevice === "mobile" ? "bg-violet-500/30 text-violet-200" : "text-white/80"}`}><Smartphone className="w-3 h-3" /></button>
                                   </div>
                                 </div>
                                 <div className="bg-[#f5f3ff] flex justify-center p-2 max-h-[360px] overflow-y-auto">
@@ -401,11 +401,11 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                       {result.outreach?.whatsappMessage && (
                         <div className="rounded-2xl p-3 border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-teal-500/5">
                           <div className="flex items-center justify-between gap-2 mb-2">
-                            <p className="text-[0.6rem] uppercase tracking-wider font-black text-emerald-300 flex items-center gap-1.5 min-w-0 truncate">
+                            <p className="text-[11px] uppercase tracking-wider font-black text-emerald-300 flex items-center gap-1.5 min-w-0 truncate">
                               <MessageCircle className="w-3 h-3 shrink-0" />
                               <span className="truncate">Messaggio WhatsApp</span>
                             </p>
-                            <button onClick={() => copy("WhatsApp", result.outreach!.whatsappMessage)} className="text-[0.6rem] font-bold flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 text-white/70 shrink-0">
+                            <button onClick={() => copy("WhatsApp", result.outreach!.whatsappMessage)} className="text-[11px] font-bold flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 text-white/70 shrink-0">
                               {copied === "WhatsApp" ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                               {copied === "WhatsApp" ? "Copiato" : "Copia"}
                             </button>
@@ -430,7 +430,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                       {result.outreach?.callScript && result.outreach.callScript.length > 0 && (
                         <div className="rounded-2xl p-3 border border-amber-400/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5">
                           <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-                            <p className="text-[0.6rem] uppercase tracking-wider font-black text-amber-300 flex items-center gap-1.5 min-w-0">
+                            <p className="text-[11px] uppercase tracking-wider font-black text-amber-300 flex items-center gap-1.5 min-w-0">
                               <Phone className="w-3 h-3 shrink-0" />
                               <span className="truncate">Script chiamata · {scriptIdx + 1}/{result.outreach.callScript.length}</span>
                             </p>
@@ -439,7 +439,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                                 <button
                                   key={i}
                                   onClick={() => setScriptIdx(i)}
-                                  className={`w-5 h-5 rounded text-[0.6rem] font-bold ${i === scriptIdx ? "bg-amber-500 text-black" : "bg-white/5 text-white/50"}`}
+                                  className={`w-5 h-5 rounded text-[11px] font-bold ${i === scriptIdx ? "bg-amber-500 text-black" : "bg-white/5 text-white/50"}`}
                                 >
                                   {i + 1}
                                 </button>
@@ -450,7 +450,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                             <div className="space-y-1.5 text-xs">
                               {(["hook", "pitch", "close"] as const).map((k) => (
                                 <div key={k} className="bg-black/20 rounded-lg p-2 border border-white/5">
-                                  <p className="text-[0.55rem] uppercase tracking-wider text-amber-300/70 font-bold mb-0.5">{k}</p>
+                                  <p className="text-[10px] uppercase tracking-wider text-amber-300/70 font-bold mb-0.5">{k}</p>
                                   <p className="text-white/85 leading-snug text-[0.7rem] sm:text-xs break-words">
                                     {result.outreach.callScript[scriptIdx][k]}
                                   </p>
@@ -468,7 +468,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                             onClick={() => setObjectionsOpen(o => !o)}
                             className="w-full px-3 py-2.5 flex items-center justify-between text-left gap-2"
                           >
-                            <p className="text-[0.6rem] uppercase tracking-wider font-black text-rose-300 flex items-center gap-1.5 min-w-0 truncate">
+                            <p className="text-[11px] uppercase tracking-wider font-black text-rose-300 flex items-center gap-1.5 min-w-0 truncate">
                               <Shield className="w-3 h-3 shrink-0" />
                               <span className="truncate">{result.outreach.objections.length} obiezioni con risposte</span>
                             </p>
@@ -478,7 +478,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                             <div className="px-3 pb-3 space-y-2">
                               {result.outreach.objections.map((o, i) => (
                                 <div key={i} className="bg-black/20 rounded-lg p-2.5 border border-white/5">
-                                  <p className="text-[0.6rem] font-black text-rose-200 mb-1 break-words">❝ {o.objection}</p>
+                                  <p className="text-[11px] font-black text-rose-200 mb-1 break-words">❝ {o.objection}</p>
                                   <p className="text-[0.7rem] text-white/80 leading-relaxed break-words">{o.reply}</p>
                                 </div>
                               ))}
@@ -490,7 +490,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                       {/* 8️⃣ ADMIN CREDENTIALS */}
                       {result.credentials && (
                         <div className="rounded-2xl p-3 border border-purple-400/30 bg-gradient-to-br from-purple-500/10 to-indigo-500/5">
-                          <p className="text-[0.6rem] uppercase tracking-wider font-black text-purple-300 mb-2 flex items-center gap-1.5">
+                          <p className="text-[11px] uppercase tracking-wider font-black text-purple-300 mb-2 flex items-center gap-1.5">
                             <KeyRound className="w-3 h-3" /> Credenziali admin demo
                           </p>
                           <div className="space-y-1.5">
@@ -503,7 +503,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                       {/* 9️⃣ BRAND IDENTITY (logo, hero, gallery, palette) */}
                       {(result.images?.logo || result.images?.hero) && (
                         <div className="rounded-xl p-3 border border-white/10 bg-white/[0.02]">
-                          <p className="text-[0.6rem] uppercase tracking-wider text-white/50 font-bold mb-2">Brand identity estratta</p>
+                          <p className="text-[11px] uppercase tracking-wider text-white/50 font-bold mb-2">Brand identity estratta</p>
                           <div className="flex gap-2 items-center">
                             {result.images?.logo && (
                               <div className="w-14 h-14 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
@@ -529,7 +529,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                             {Object.entries(result.brand.palette).map(([k, v]) => (
                               <div key={k} className="flex-1 text-center min-w-0">
                                 <div className="w-full h-6 rounded-md border border-white/10" style={{ background: v }} />
-                                <p className="text-[0.5rem] text-white/40 mt-0.5 font-mono truncate">{v.slice(0, 7)}</p>
+                                <p className="text-[10px] text-white/80 mt-0.5 font-mono truncate">{v.slice(0, 7)}</p>
                               </div>
                             ))}
                           </div>
@@ -566,13 +566,13 @@ function LinkRow({ label, url, copied, onCopy, accent, highlight }: { label: str
       }}
     >
       <div className="flex items-center justify-between gap-2 mb-1.5">
-        <p className="text-[0.6rem] uppercase tracking-wider font-black truncate" style={{ color: accent }}>{label}</p>
-        <button onClick={onCopy} className="text-[0.6rem] font-bold flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 text-white/70 shrink-0">
+        <p className="text-[11px] uppercase tracking-wider font-black truncate" style={{ color: accent }}>{label}</p>
+        <button onClick={onCopy} className="text-[11px] font-bold flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 text-white/70 shrink-0">
           {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
           {copied ? "Copiato" : "Copia"}
         </button>
       </div>
-      <p className="text-[0.65rem] text-white/60 font-mono break-all">{url}</p>
+      <p className="text-[11px] text-white/60 font-mono break-all">{url}</p>
     </div>
   );
 }
@@ -581,10 +581,10 @@ function CredRow({ label, value, copied, onCopy, mono }: { label: string; value:
   return (
     <div className="flex items-center justify-between gap-2 bg-black/20 rounded-lg px-2.5 py-1.5 border border-white/5 min-w-0">
       <div className="min-w-0 flex-1">
-        <p className="text-[0.55rem] uppercase tracking-wider text-white/40 font-bold">{label}</p>
+        <p className="text-[10px] uppercase tracking-wider text-white/80 font-bold">{label}</p>
         <p className={`text-[0.7rem] text-white/90 truncate ${mono ? "font-mono" : ""}`}>{value}</p>
       </div>
-      <button onClick={onCopy} className="text-[0.6rem] font-bold flex items-center gap-1 px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 text-white/70 shrink-0">
+      <button onClick={onCopy} className="text-[11px] font-bold flex items-center gap-1 px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 text-white/70 shrink-0">
         {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
       </button>
     </div>

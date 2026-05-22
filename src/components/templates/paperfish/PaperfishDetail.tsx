@@ -51,7 +51,7 @@ export function PaperfishDetail({ brandName, item, onBack, onAdd }: Props) {
       {/* Title + Price */}
       <div className="px-4 mt-4">
         {item.jp_label && (
-          <p className="text-[0.6rem] tracking-[0.42em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
+          <p className="text-[11px] tracking-[0.42em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
             {item.jp_label}
           </p>
         )}

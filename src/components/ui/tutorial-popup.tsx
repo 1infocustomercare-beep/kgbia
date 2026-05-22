@@ -78,7 +78,7 @@ export function TutorialPopup({ id, title, steps, accentColor = "#C8963E", posit
                 </div>
                 <span className="text-xs font-bold text-white/80">{title}</span>
               </div>
-              <button onClick={dismiss} className="w-6 h-6 rounded-lg flex items-center justify-center text-white/30 hover:text-white/60 hover:bg-white/5 transition-all">
+              <button onClick={dismiss} className="w-6 h-6 rounded-lg flex items-center justify-center text-white/70 hover:text-white/60 hover:bg-white/5 transition-all">
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -109,19 +109,19 @@ export function TutorialPopup({ id, title, steps, accentColor = "#C8963E", posit
               <div className="flex items-center gap-2">
                 {step > 0 && (
                   <button onClick={() => setStep(s => s - 1)}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/60 bg-white/[0.04] hover:bg-white/[0.08] transition-all">
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-white/70 hover:text-white/60 bg-white/[0.04] hover:bg-white/[0.08] transition-all">
                     <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
                 )}
                 {step < steps.length - 1 ? (
                   <button onClick={() => setStep(s => s + 1)}
-                    className="px-3 py-1.5 rounded-lg text-[0.65rem] font-bold text-white transition-all"
+                    className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all"
                     style={{ background: accentColor }}>
                     Avanti <ChevronRight className="w-3 h-3 inline ml-0.5" />
                   </button>
                 ) : (
                   <button onClick={dismiss}
-                    className="px-3 py-1.5 rounded-lg text-[0.65rem] font-bold text-white transition-all"
+                    className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all"
                     style={{ background: accentColor }}>
                     Ho capito ✓
                   </button>
@@ -142,14 +142,14 @@ export function HelpTooltip({ text, accentColor = "#C8963E" }: { text: string; a
   return (
     <div className="relative inline-block">
       <button onClick={() => setOpen(o => !o)}
-        className="w-5 h-5 rounded-full flex items-center justify-center text-white/20 hover:text-white/50 transition-all"
+        className="w-5 h-5 rounded-full flex items-center justify-center text-white/65 hover:text-white/50 transition-all"
         style={open ? { background: `${accentColor}20`, color: accentColor } : {}}>
         <HelpCircle className="w-3 h-3" />
       </button>
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
-            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 rounded-xl text-[0.6rem] text-white/70 z-50 shadow-xl border border-white/10"
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 rounded-xl text-[11px] text-white/70 z-50 shadow-xl border border-white/10"
             style={{ background: "rgba(15,15,25,0.98)" }}>
             {text}
             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 border-r border-b border-white/10" style={{ background: "rgba(15,15,25,0.98)" }} />

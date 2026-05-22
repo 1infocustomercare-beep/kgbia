@@ -208,7 +208,7 @@ function DeviceLightbox({ src, alt, deviceType, onClose, onPrev, onNext, hasPrev
                   <div className="w-[8px] h-[8px] rounded-full bg-green-500/60" />
                 </div>
                 <div className="flex-1 mx-4 h-[16px] rounded bg-white/5 flex items-center justify-center">
-                  <span className="text-[8px] text-white/30 font-mono">empireaigroup.com</span>
+                  <span className="text-[8px] text-white/70 font-mono">empireaigroup.com</span>
                 </div>
               </div>
               <div className="absolute inset-[3px] top-[28px] overflow-hidden bg-black rounded-b-xl">
@@ -227,10 +227,10 @@ function DeviceLightbox({ src, alt, deviceType, onClose, onPrev, onNext, hasPrev
 
       {/* Device label */}
       <div className="absolute bottom-4 flex items-center gap-2">
-        {deviceType === "mobile" && <Smartphone className="w-3.5 h-3.5 text-white/40" />}
-        {deviceType === "tablet" && <Tablet className="w-3.5 h-3.5 text-white/40" />}
-        {deviceType === "desktop" && <Monitor className="w-3.5 h-3.5 text-white/40" />}
-        <p className="text-white/40 text-[10px] tracking-widest uppercase">{alt}</p>
+        {deviceType === "mobile" && <Smartphone className="w-3.5 h-3.5 text-white/80" />}
+        {deviceType === "tablet" && <Tablet className="w-3.5 h-3.5 text-white/80" />}
+        {deviceType === "desktop" && <Monitor className="w-3.5 h-3.5 text-white/80" />}
+        <p className="text-white/80 text-[10px] tracking-widest uppercase">{alt}</p>
       </div>
     </motion.div>
   );

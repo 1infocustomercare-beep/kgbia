@@ -324,33 +324,33 @@ export default function TenantIntegrationsSection() {
 
   const statusBadge = (status: PaymentStatus, isBlocked: boolean) => {
     if (isBlocked) return (
-      <span className="inline-flex items-center gap-0.5 text-[0.45rem] font-bold px-1.5 py-0.5 rounded-full bg-destructive/15 text-destructive">
+      <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-destructive/15 text-destructive">
         <Ban className="w-2.5 h-2.5" /> BLOCCATO
       </span>
     );
     switch (status) {
       case "ok": return (
-        <span className="inline-flex items-center gap-0.5 text-[0.45rem] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400">
+        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400">
           <CheckCircle2 className="w-2.5 h-2.5" /> IN REGOLA
         </span>
       );
       case "trial": return (
-        <span className="inline-flex items-center gap-0.5 text-[0.45rem] font-bold px-1.5 py-0.5 rounded-full bg-blue-500/15 text-blue-400">
+        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-500/15 text-blue-400">
           <Clock className="w-2.5 h-2.5" /> TRIAL
         </span>
       );
       case "warning": return (
-        <span className="inline-flex items-center gap-0.5 text-[0.45rem] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400">
+        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400">
           <AlertTriangle className="w-2.5 h-2.5" /> SCADENZA
         </span>
       );
       case "overdue": return (
-        <span className="inline-flex items-center gap-0.5 text-[0.45rem] font-bold px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400">
+        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400">
           <ShieldAlert className="w-2.5 h-2.5" /> SCADUTO
         </span>
       );
       default: return (
-        <span className="inline-flex items-center gap-0.5 text-[0.45rem] font-bold px-1.5 py-0.5 rounded-full bg-muted/30 text-muted-foreground">
+        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-muted/30 text-muted-foreground">
           <Eye className="w-2.5 h-2.5" /> N/D
         </span>
       );
@@ -367,7 +367,7 @@ export default function TenantIntegrationsSection() {
         >
           <CheckCircle2 className="w-4 h-4 mx-auto text-emerald-400 mb-0.5" />
           <p className="text-lg font-bold text-emerald-400">{statusCounts.ok}</p>
-          <p className="text-[0.45rem] text-muted-foreground">In Regola</p>
+          <p className="text-[10px] text-muted-foreground">In Regola</p>
         </button>
         <button
           onClick={() => setStatusFilter(statusFilter === "warning" ? "all" : "warning")}
@@ -375,7 +375,7 @@ export default function TenantIntegrationsSection() {
         >
           <AlertTriangle className="w-4 h-4 mx-auto text-amber-400 mb-0.5" />
           <p className="text-lg font-bold text-amber-400">{statusCounts.warning}</p>
-          <p className="text-[0.45rem] text-muted-foreground">Attenzione</p>
+          <p className="text-[10px] text-muted-foreground">Attenzione</p>
         </button>
         <button
           onClick={() => setStatusFilter(statusFilter === "blocked" ? "all" : "blocked")}
@@ -383,7 +383,7 @@ export default function TenantIntegrationsSection() {
         >
           <Ban className="w-4 h-4 mx-auto text-destructive mb-0.5" />
           <p className="text-lg font-bold text-destructive">{statusCounts.blocked}</p>
-          <p className="text-[0.45rem] text-muted-foreground">Bloccati</p>
+          <p className="text-[10px] text-muted-foreground">Bloccati</p>
         </button>
       </div>
 
@@ -394,13 +394,13 @@ export default function TenantIntegrationsSection() {
           <Input
             value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Cerca account..."
-            className="pl-7 h-7 text-[0.6rem] bg-secondary/40 border-border/30"
+            className="pl-7 h-7 text-[11px] bg-secondary/40 border-border/30"
           />
         </div>
         <select
           value={industryFilter}
           onChange={e => setIndustryFilter(e.target.value)}
-          className="h-7 px-2 rounded-lg bg-secondary/40 border border-border/30 text-[0.55rem] text-foreground"
+          className="h-7 px-2 rounded-lg bg-secondary/40 border border-border/30 text-[10px] text-foreground"
         >
           <option value="all">Tutti</option>
           {industries.map(ind => <option key={ind} value={ind}>{ind}</option>)}
@@ -409,14 +409,14 @@ export default function TenantIntegrationsSection() {
 
       {/* ═══ Summary ═══ */}
       <div className="flex items-center justify-between px-2 py-1.5 rounded-lg bg-secondary/30 border border-border/20">
-        <span className="text-[0.55rem] text-muted-foreground">{filtered.length} account</span>
+        <span className="text-[10px] text-muted-foreground">{filtered.length} account</span>
         <div className="flex items-center gap-2">
           {statusFilter !== "all" && (
-            <button onClick={() => setStatusFilter("all")} className="text-[0.5rem] text-primary underline">
+            <button onClick={() => setStatusFilter("all")} className="text-[10px] text-primary underline">
               Mostra tutti
             </button>
           )}
-          <span className="text-[0.55rem] text-primary font-semibold">{tenants.length} totali</span>
+          <span className="text-[10px] text-primary font-semibold">{tenants.length} totali</span>
         </div>
       </div>
 
@@ -450,7 +450,7 @@ export default function TenantIntegrationsSection() {
                   className="w-full flex items-center gap-2 p-2 hover:bg-secondary/40 transition-colors text-left"
                 >
                   <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-[0.6rem] font-bold shrink-0 relative"
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold shrink-0 relative"
                     style={{ backgroundColor: `${color}20`, color }}
                   >
                     {tenant.name?.charAt(0)?.toUpperCase() || "?"}
@@ -459,11 +459,11 @@ export default function TenantIntegrationsSection() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-[0.65rem] font-semibold truncate ${tenant.isBlocked ? "text-destructive line-through" : "text-foreground"}`}>
+                    <p className={`text-[11px] font-semibold truncate ${tenant.isBlocked ? "text-destructive line-through" : "text-foreground"}`}>
                       {tenant.name}
                     </p>
                     <div className="flex gap-1 mt-0.5 flex-wrap">
-                      <Badge variant="outline" className="text-[0.4rem] h-3 px-1" style={{ borderColor: color, color }}>
+                      <Badge variant="outline" className="text-[10px] h-3 px-1" style={{ borderColor: color, color }}>
                         {tenant.industry}
                       </Badge>
                       {statusBadge(tenant.paymentStatus, tenant.isBlocked)}
@@ -472,17 +472,17 @@ export default function TenantIntegrationsSection() {
                   <div className="text-right shrink-0 mr-1">
                     {payment ? (
                       <>
-                        <span className="text-[0.55rem] font-bold text-foreground">
+                        <span className="text-[10px] font-bold text-foreground">
                           {payment.installments_paid}/{payment.installments_total}
                         </span>
-                        <p className="text-[0.4rem] text-muted-foreground">rate</p>
+                        <p className="text-[10px] text-muted-foreground">rate</p>
                       </>
                     ) : (
                       <>
-                        <span className="text-[0.55rem] font-bold" style={{ color }}>
+                        <span className="text-[10px] font-bold" style={{ color }}>
                           {activeCount}/{integrations.length}
                         </span>
-                        <p className="text-[0.4rem] text-muted-foreground">attive</p>
+                        <p className="text-[10px] text-muted-foreground">attive</p>
                       </>
                     )}
                   </div>
@@ -510,7 +510,7 @@ export default function TenantIntegrationsSection() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1.5">
                               <CreditCard className="w-3.5 h-3.5 text-foreground" />
-                              <span className="text-[0.6rem] font-bold text-foreground">Stato Pagamenti</span>
+                              <span className="text-[11px] font-bold text-foreground">Stato Pagamenti</span>
                             </div>
                             {statusBadge(tenant.paymentStatus, tenant.isBlocked)}
                           </div>
@@ -519,15 +519,15 @@ export default function TenantIntegrationsSection() {
                             <div className="space-y-1.5">
                               <div className="grid grid-cols-3 gap-1">
                                 <div className="rounded-lg bg-background/60 p-1.5 text-center">
-                                  <p className="text-[0.5rem] text-muted-foreground">Pagato</p>
+                                  <p className="text-[10px] text-muted-foreground">Pagato</p>
                                   <p className="text-xs font-bold text-foreground">€{payment.amount_paid?.toLocaleString()}</p>
                                 </div>
                                 <div className="rounded-lg bg-background/60 p-1.5 text-center">
-                                  <p className="text-[0.5rem] text-muted-foreground">Totale</p>
+                                  <p className="text-[10px] text-muted-foreground">Totale</p>
                                   <p className="text-xs font-bold text-foreground">€{payment.total_amount?.toLocaleString()}</p>
                                 </div>
                                 <div className="rounded-lg bg-background/60 p-1.5 text-center">
-                                  <p className="text-[0.5rem] text-muted-foreground">Rate</p>
+                                  <p className="text-[10px] text-muted-foreground">Rate</p>
                                   <p className="text-xs font-bold text-foreground">{payment.installments_paid}/{payment.installments_total}</p>
                                 </div>
                               </div>
@@ -545,12 +545,12 @@ export default function TenantIntegrationsSection() {
 
                               {payment.next_due_date && (
                                 <div className="flex items-center justify-between">
-                                  <span className="text-[0.5rem] text-muted-foreground flex items-center gap-1">
+                                  <span className="text-[10px] text-muted-foreground flex items-center gap-1">
                                     <Clock className="w-2.5 h-2.5" />
                                     Prossima rata: {new Date(payment.next_due_date).toLocaleDateString("it-IT")}
                                   </span>
                                   {tenant.warningDays <= 3 && tenant.warningDays > 0 && (
-                                    <span className="text-[0.45rem] font-bold text-amber-400">
+                                    <span className="text-[10px] font-bold text-amber-400">
                                       ⚠️ Scade tra {tenant.warningDays}g
                                     </span>
                                   )}
@@ -562,7 +562,7 @@ export default function TenantIntegrationsSection() {
                                 <Button
                                   size="sm"
                                   onClick={(e) => { e.stopPropagation(); handleRegisterPayment(tenant); }}
-                                  className="w-full h-7 text-[0.55rem] bg-emerald-600 hover:bg-emerald-700 text-white"
+                                  className="w-full h-7 text-[10px] bg-emerald-600 hover:bg-emerald-700 text-white"
                                   disabled={registerPayment.isPending}
                                 >
                                   <DollarSign className="w-3 h-3 mr-1" />
@@ -571,7 +571,7 @@ export default function TenantIntegrationsSection() {
                               )}
                             </div>
                           ) : tenant.trialEnd ? (
-                            <div className="text-[0.55rem] text-muted-foreground">
+                            <div className="text-[10px] text-muted-foreground">
                               <Clock className="w-3 h-3 inline mr-1" />
                               Trial fino al {new Date(tenant.trialEnd).toLocaleDateString("it-IT")}
                               {new Date(tenant.trialEnd) < new Date() && (
@@ -579,7 +579,7 @@ export default function TenantIntegrationsSection() {
                               )}
                             </div>
                           ) : (
-                            <p className="text-[0.5rem] text-muted-foreground">Nessun piano pagamento attivo</p>
+                            <p className="text-[10px] text-muted-foreground">Nessun piano pagamento attivo</p>
                           )}
                         </div>
 
@@ -589,7 +589,7 @@ export default function TenantIntegrationsSection() {
                             size="sm"
                             variant={tenant.isBlocked ? "default" : "destructive"}
                             onClick={(e) => { e.stopPropagation(); handleToggleBlock(tenant); }}
-                            className="flex-1 h-7 text-[0.55rem]"
+                            className="flex-1 h-7 text-[10px]"
                             disabled={blockRestaurant.isPending || blockCompany.isPending}
                           >
                             {tenant.isBlocked ? (
@@ -601,7 +601,7 @@ export default function TenantIntegrationsSection() {
                         </div>
 
                         {tenant.blockedReason && (
-                          <p className="text-[0.5rem] text-destructive bg-destructive/5 px-2 py-1 rounded-lg">
+                          <p className="text-[10px] text-destructive bg-destructive/5 px-2 py-1 rounded-lg">
                             ⚠️ {tenant.blockedReason}
                           </p>
                         )}
@@ -610,7 +610,7 @@ export default function TenantIntegrationsSection() {
                         <div className="space-y-1">
                           <div className="flex items-center gap-1 mb-1">
                             <Zap className="w-2.5 h-2.5 text-primary" />
-                            <span className="text-[0.5rem] text-muted-foreground">
+                            <span className="text-[10px] text-muted-foreground">
                               Piano: <strong className="text-foreground">{PLAN_LABELS[tenant.plan] || tenant.plan}</strong>
                             </span>
                           </div>
@@ -628,8 +628,8 @@ export default function TenantIntegrationsSection() {
                               >
                                 <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${active ? "bg-emerald-400" : "bg-muted-foreground/30"}`} />
                                 <div className="flex-1 min-w-0">
-                                  <p className={`text-[0.6rem] font-semibold truncate ${active ? "text-foreground" : "text-muted-foreground line-through"}`}>{intName}</p>
-                                  <span className="text-[0.4rem] text-muted-foreground">{isPlanIncluded ? "📦 Nel pacchetto" : "🔧 Add-on settore"}</span>
+                                  <p className={`text-[11px] font-semibold truncate ${active ? "text-foreground" : "text-muted-foreground line-through"}`}>{intName}</p>
+                                  <span className="text-[10px] text-muted-foreground">{isPlanIncluded ? "📦 Nel pacchetto" : "🔧 Add-on settore"}</span>
                                 </div>
                                 <button
                                   onClick={(e) => { e.stopPropagation(); toggleIntegration(tenant.id, intName, active); }}
@@ -656,7 +656,7 @@ export default function TenantIntegrationsSection() {
       {/* ═══ Kill-Switch Info ═══ */}
       <div className="flex items-start gap-2 px-3 py-2 rounded-lg border border-empire-violet/15 bg-empire-violet/[0.03]">
         <ShieldCheck className="w-3.5 h-3.5 text-empire-violet shrink-0 mt-0.5" />
-        <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
+        <p className="text-[10px] text-muted-foreground leading-relaxed">
           <strong className="text-foreground">Kill-Switch Automatico:</strong> Gli account con rate scadute vengono bloccati automaticamente dopo il periodo di grazia. 
           Avviso inviato 3 giorni prima della scadenza. Riattivazione automatica al pagamento.
         </p>

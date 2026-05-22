@@ -258,7 +258,7 @@ export default function NCCFleetPage() {
                         {v.image_url ? (
                           <img src={v.image_url} alt={v.name} className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center"><Car className="w-6 h-6 text-muted-foreground/30" /></div>
+                          <div className="w-full h-full flex items-center justify-center"><Car className="w-6 h-6 text-muted-foreground/70" /></div>
                         )}
                       </div>
 
@@ -316,7 +316,7 @@ export default function NCCFleetPage() {
                     </div>
                   ) : (
                     <div className="aspect-[2/1] bg-secondary/20 flex items-center justify-center relative">
-                      <Car className="w-10 h-10 text-muted-foreground/20" />
+                      <Car className="w-10 h-10 text-muted-foreground/65" />
                       {v.is_popular && <Badge className="absolute top-2 right-2 text-[10px]">⭐</Badge>}
                     </div>
                   )}

@@ -46,7 +46,7 @@ function FlowPipeline() {
             </span>
           </div>
           {i < FLOW_STEPS.length - 1 && (
-            <ArrowRight className="w-3 h-3 text-muted-foreground/40" />
+            <ArrowRight className="w-3 h-3 text-muted-foreground/75" />
           )}
         </div>
       ))}

@@ -191,7 +191,7 @@ const RestaurantPage = () => {
   if (notFound && !isDemoSlug) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
-        <Crown className="w-16 h-16 text-muted-foreground/20 mb-4" />
+        <Crown className="w-16 h-16 text-muted-foreground/65 mb-4" />
         <h1 className="text-2xl font-display font-bold text-foreground">Ristorante non trovato</h1>
         <p className="text-sm text-muted-foreground mt-2">Questo ristorante non esiste o non è attivo.</p>
       </div>
@@ -343,7 +343,7 @@ const RestaurantPage = () => {
 
         <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
           animate={{ y: [0, 8, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-          <ChevronDown className="w-5 h-5 text-foreground/30" />
+          <ChevronDown className="w-5 h-5 text-foreground/75" />
         </motion.div>
       </section>
 
@@ -513,7 +513,7 @@ const RestaurantPage = () => {
                           ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
                           : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
                       {cat}
-                      <span className={`ml-1.5 text-[9px] ${isActive ? "text-primary-foreground/60" : "text-muted-foreground/40"}`}>{catCount}</span>
+                      <span className={`ml-1.5 text-[9px] ${isActive ? "text-primary-foreground/60" : "text-muted-foreground/75"}`}>{catCount}</span>
                     </button>
                   );
                 })}

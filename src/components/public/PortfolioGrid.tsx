@@ -162,10 +162,10 @@ function ProjectDetail({ item, onClose }: { item: PortfolioItem; onClose: () => 
           <X className="w-4 h-4 text-white/50" />
         </button>
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-[0.55rem] px-2.5 py-1 rounded-full font-bold tracking-wider uppercase" style={{ background: `${item.accent}18`, color: item.accent, border: `1px solid ${item.accent}25` }}>
+          <span className="text-[10px] px-2.5 py-1 rounded-full font-bold tracking-wider uppercase" style={{ background: `${item.accent}18`, color: item.accent, border: `1px solid ${item.accent}25` }}>
             {item.subCategory}
           </span>
-          <span className="text-[0.55rem] px-2.5 py-1 rounded-full font-bold tracking-wider uppercase bg-white/5 text-white/40">
+          <span className="text-[10px] px-2.5 py-1 rounded-full font-bold tracking-wider uppercase bg-white/5 text-white/80">
             {item.category}
           </span>
         </div>
@@ -213,8 +213,8 @@ export default function PortfolioGrid() {
           <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5"
             style={{ background: "hsla(0,0%,100%,0.04)", border: "1px solid hsla(0,0%,100%,0.08)" }}
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Eye className="w-3 h-3 text-white/40" />
-            <span className="text-[0.6rem] font-heading font-semibold tracking-[3px] uppercase text-white/40">Our Portfolio</span>
+            <Eye className="w-3 h-3 text-white/80" />
+            <span className="text-[11px] font-heading font-semibold tracking-[3px] uppercase text-white/80">Our Portfolio</span>
           </motion.div>
 
           <motion.h2 className="text-[clamp(1.8rem,5vw,3.5rem)] font-heading font-bold text-white leading-[1.05] mb-4"
@@ -225,7 +225,7 @@ export default function PortfolioGrid() {
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent"
             }}>Development</span>
           </motion.h2>
-          <motion.p className="text-sm text-white/40 max-w-lg mx-auto"
+          <motion.p className="text-sm text-white/80 max-w-lg mx-auto"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
             Progetti reali realizzati per clienti in tutto il mondo. Design premium, funzionalità avanzate.
           </motion.p>
@@ -238,13 +238,13 @@ export default function PortfolioGrid() {
             const count = cat === "All" ? PORTFOLIO.length : PORTFOLIO.filter(p => p.category === cat).length;
             return (
               <button key={cat} onClick={() => { setActiveFilter(cat); setShowAll(false); }}
-                className={`px-4 py-2 rounded-full text-[0.65rem] font-heading font-semibold tracking-wider uppercase transition-all ${
+                className={`px-4 py-2 rounded-full text-[11px] font-heading font-semibold tracking-wider uppercase transition-all ${
                   activeFilter === cat
                     ? "bg-white/10 text-white border border-white/20"
-                    : "text-white/30 hover:text-white/50 border border-transparent"
+                    : "text-white/70 hover:text-white/50 border border-transparent"
                 }`}>
                 {CATEGORY_LABELS[cat] || cat}
-                <span className="ml-1.5 text-[0.5rem] opacity-50">{count}</span>
+                <span className="ml-1.5 text-[10px] opacity-50">{count}</span>
               </button>
             );
           })}
@@ -305,17 +305,17 @@ export default function PortfolioGrid() {
                 {/* Info */}
                 <div className="px-5 pb-5 pt-2">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[0.5rem] px-2 py-0.5 rounded-full font-bold tracking-wider uppercase"
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wider uppercase"
                       style={{ background: `${item.accent}15`, color: item.accent, border: `1px solid ${item.accent}20` }}>
                       {item.category}
                     </span>
-                    <span className="text-[0.5rem] text-white/25">{item.subCategory}</span>
+                    <span className="text-[10px] text-white/25">{item.subCategory}</span>
                   </div>
                   <h3 className="text-sm font-heading font-bold text-white mb-1 group-hover:text-white/90 transition-colors">{item.name}</h3>
-                  <p className="text-[0.65rem] text-white/35 leading-relaxed line-clamp-2">{item.description}</p>
+                  <p className="text-[11px] text-white/35 leading-relaxed line-clamp-2">{item.description}</p>
 
                   {/* View button */}
-                  <div className="mt-3 flex items-center gap-1.5 text-[0.6rem] font-heading font-semibold tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  <div className="mt-3 flex items-center gap-1.5 text-[11px] font-heading font-semibold tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{ color: item.accent }}>
                     VIEW <ChevronRight className="w-3 h-3" />
                   </div>
@@ -350,7 +350,7 @@ export default function PortfolioGrid() {
           ].map((stat, i) => (
             <div key={i} className="text-center">
               <p className="text-2xl sm:text-3xl font-heading font-bold text-white">{stat.value}</p>
-              <p className="text-[0.6rem] text-white/30 tracking-wider uppercase mt-1">{stat.label}</p>
+              <p className="text-[11px] text-white/70 tracking-wider uppercase mt-1">{stat.label}</p>
             </div>
           ))}
         </motion.div>

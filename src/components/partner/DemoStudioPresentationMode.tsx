@@ -262,14 +262,14 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-white/30 text-xs">
+          <div className="w-full h-full flex items-center justify-center text-white/70 text-xs">
             —
           </div>
         )}
         <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
           <p className="text-white text-[11px] font-semibold truncate">{p.title}</p>
           <p className="text-white/60 text-[9px] truncate">{p.subtitle}</p>
-          <p className="text-white/40 text-[9px] mt-0.5">
+          <p className="text-white/80 text-[9px] mt-0.5">
             {p.screens.length} screen{p.screens.length === 1 ? "" : "s"}
           </p>
         </div>
@@ -308,7 +308,7 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
             <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
             <span className="hidden sm:inline">Pronta da mostrare</span>
             {presentables.length > 0 && (
-              <span className="text-white/40 normal-case tracking-normal truncate">
+              <span className="text-white/80 normal-case tracking-normal truncate">
                 · {activeIdx + 1}/{presentables.length}
               </span>
             )}
@@ -347,7 +347,7 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
         {!current ? (
           <div className="absolute inset-0 flex items-center justify-center text-center px-8">
             <div>
-              <Smartphone className="w-16 h-16 mx-auto text-white/40 mb-4" />
+              <Smartphone className="w-16 h-16 mx-auto text-white/80 mb-4" />
               <p className="text-white text-lg font-display font-bold">
                 Nessun mockup disponibile
               </p>
@@ -395,7 +395,7 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
                       loading="eager"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white/30 text-xs">
+                    <div className="w-full h-full flex items-center justify-center text-white/70 text-xs">
                       Caricamento...
                     </div>
                   )}
@@ -408,7 +408,7 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
             <div className="absolute bottom-3 inset-x-0 z-10 flex flex-col items-center gap-1.5 pointer-events-none">
               <p className="text-white/85 text-xs sm:text-sm font-display drop-shadow-lg">
                 {current.title}
-                <span className="text-white/40"> · {current.subtitle}</span>
+                <span className="text-white/80"> · {current.subtitle}</span>
               </p>
               {screens.length > 1 && (
                 <div className="flex gap-1.5">
@@ -476,13 +476,13 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
 
                 {/* Search */}
                 <div className="relative mb-3">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/80" />
                   <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Cerca brand, stile o settore…"
-                    className="w-full bg-white/10 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-[13px] text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
+                    className="w-full bg-white/10 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-[13px] text-white placeholder:text-white/80 focus:outline-none focus:border-white/30"
                   />
                 </div>
 
@@ -558,7 +558,7 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
                       <h3 className="text-white text-[13px] font-bold uppercase tracking-wider">
                         Tuoi mockup generati
                       </h3>
-                      <span className="text-white/40 text-[11px]">
+                      <span className="text-white/80 text-[11px]">
                         {grouped.suiteItems.length}
                       </span>
                       <div className="flex-1 h-px bg-gradient-to-r from-amber-400/40 to-transparent ml-2" />
@@ -577,7 +577,7 @@ export function DemoStudioPresentationMode({ open, onClose, suites, initialSuite
                       <h3 className="text-white text-[13px] font-bold uppercase tracking-wider">
                         Catalogo stock
                       </h3>
-                      <span className="text-white/40 text-[11px]">
+                      <span className="text-white/80 text-[11px]">
                         {grouped.catalogItems.length}
                       </span>
                       <div className="flex-1 h-px bg-gradient-to-r from-white/30 to-transparent ml-2" />

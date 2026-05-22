@@ -136,7 +136,7 @@ const HeroSection = () => {
               <div className="text-3xl md:text-4xl font-bold text-white">
                 <Counter target={s.n} suffix={s.s} />
               </div>
-              <div className="text-xs text-white/40 mt-1 uppercase tracking-wider">{s.label}</div>
+              <div className="text-xs text-white/75 mt-1 uppercase tracking-wider">{s.label}</div>
             </div>
           ))}
         </motion.div>
@@ -163,7 +163,7 @@ const TrustBar = () => (
   <section className="py-10 border-y border-white/5 bg-[hsl(228,18%,7%)]">
     <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-x-12 gap-y-4 px-4">
       {["GDPR Compliant", "Made in Italy", "99.9% Uptime", "AI-Powered", "SOC2 Ready"].map((t) => (
-        <div key={t} className="flex items-center gap-2 text-white/30 text-xs tracking-widest uppercase">
+        <div key={t} className="flex items-center gap-2 text-white/70 text-xs tracking-widest uppercase">
           <Shield className="w-3.5 h-3.5" />
           <span>{t}</span>
         </div>
@@ -190,7 +190,7 @@ const IndustriesSection = () => {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             Un sistema, <span className="bg-gradient-to-r from-[hsl(172,80%,48%)] to-[hsl(210,100%,62%)] bg-clip-text text-transparent">ogni verticale</span>
           </h2>
-          <p className="text-white/40 max-w-lg mx-auto">Configurazione intelligente per Food, NCC, Beauty, Hotel, Retail e oltre.</p>
+          <p className="text-white/75 max-w-lg mx-auto">Configurazione intelligente per Food, NCC, Beauty, Hotel, Retail e oltre.</p>
         </motion.div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -207,7 +207,7 @@ const IndustriesSection = () => {
                   <Icon className="w-5 h-5" style={{ color: `hsl(${ind.color})` }} />
                 </div>
                 <h3 className="text-sm font-semibold text-white/90">{ind.label}</h3>
-                <p className="text-xs text-white/30 mt-1 line-clamp-2">{ind.description}</p>
+                <p className="text-xs text-white/70 mt-1 line-clamp-2">{ind.description}</p>
               </motion.div>
             );
           })}
@@ -259,7 +259,7 @@ const BenefitsSection = () => {
                 <b.icon className="w-5 h-5 text-[hsl(172,80%,48%)]" />
               </div>
               <h3 className="text-base font-semibold text-white mb-2">{b.title}</h3>
-              <p className="text-sm text-white/40 leading-relaxed">{b.desc}</p>
+              <p className="text-sm text-white/75 leading-relaxed">{b.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -290,16 +290,16 @@ const ComparisonSection = () => {
         <motion.div className="text-center mb-14"
           initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}>
           <h2 className="text-3xl md:text-5xl font-bold text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Empire <span className="text-white/30">vs gli altri</span>
+            Empire <span className="text-white/70">vs gli altri</span>
           </h2>
         </motion.div>
 
         <div className="rounded-2xl border border-white/[0.06] overflow-hidden bg-white/[0.01]">
           {/* Header */}
           <div className="grid grid-cols-3 text-xs uppercase tracking-wider border-b border-white/[0.06]">
-            <div className="p-4 text-white/40">Feature</div>
+            <div className="p-4 text-white/75">Feature</div>
             <div className="p-4 text-center text-[hsl(172,80%,48%)] font-semibold">Empire</div>
-            <div className="p-4 text-center text-white/30">Competitor</div>
+            <div className="p-4 text-center text-white/70">Competitor</div>
           </div>
           {rows.map((r, i) => (
             <motion.div key={i} className="grid grid-cols-3 border-b border-white/[0.03] last:border-0"
@@ -345,7 +345,7 @@ const PricingSection = () => {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             Piani <span className="bg-gradient-to-r from-[hsl(42,90%,55%)] to-[hsl(172,80%,48%)] bg-clip-text text-transparent">trasparenti</span>
           </h2>
-          <p className="text-white/40">90 giorni gratis. Nessun vincolo. Disdici quando vuoi.</p>
+          <p className="text-white/75">90 giorni gratis. Nessun vincolo. Disdici quando vuoi.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -365,10 +365,10 @@ const PricingSection = () => {
                 </div>
               )}
               <h3 className="text-lg font-bold text-white mb-1">{p.name}</h3>
-              <p className="text-xs text-white/40 mb-5">{p.desc}</p>
+              <p className="text-xs text-white/75 mb-5">{p.desc}</p>
               <div className="mb-6">
                 <span className="text-4xl font-bold text-white">€{p.price}</span>
-                <span className="text-white/30 text-sm">/mese</span>
+                <span className="text-white/70 text-sm">/mese</span>
               </div>
               <ul className="space-y-3 mb-8">
                 {p.features.map((f, j) => (
@@ -419,7 +419,7 @@ const CTASection = () => {
         <h2 className="text-3xl md:text-5xl font-bold text-white mb-5" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
           Pronto a iniziare?
         </h2>
-        <p className="text-white/40 text-lg mb-10">
+        <p className="text-white/75 text-lg mb-10">
           Unisciti a centinaia di imprenditori. 90 giorni gratis, zero rischi, setup in 5 minuti.
         </p>
         <Button

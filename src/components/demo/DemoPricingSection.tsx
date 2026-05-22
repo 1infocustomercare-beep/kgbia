@@ -75,7 +75,7 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
 
   const isDark = theme.palette.bg.startsWith("#0") || theme.palette.bg.startsWith("rgba");
   const textColor = isDark ? "text-white" : "text-gray-900";
-  const textMuted = isDark ? "text-white/40" : "text-gray-500";
+  const textMuted = isDark ? "text-white/80" : "text-gray-500";
 
   return (
     <section
@@ -93,7 +93,7 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
           transition={{ duration: 0.6 }}
         >
           <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.2em] mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] mb-4"
             style={{ background: `${accentColor}15`, color: accentColor, border: `1px solid ${accentColor}25` }}
           >
             <Zap className="w-3 h-3" /> Prezzi Trasparenti
@@ -127,7 +127,7 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
               {/* Popular badge */}
               {plan.popular && (
                 <div
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-[0.6rem] font-bold uppercase tracking-wider text-white flex items-center gap-1.5"
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider text-white flex items-center gap-1.5"
                   style={{ background: accentColor }}
                 >
                   <Sparkles className="w-3 h-3" /> Più Popolare
@@ -151,9 +151,9 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
                     {f.included ? (
                       <Check className="w-4 h-4 shrink-0" style={{ color: accentColor }} />
                     ) : (
-                      <X className={`w-4 h-4 shrink-0 ${isDark ? "text-white/15" : "text-gray-300"}`} />
+                      <X className={`w-4 h-4 shrink-0 ${isDark ? "text-white/15" : "text-muted-foreground"}`} />
                     )}
-                    <span className={`text-xs ${f.included ? (isDark ? "text-white/70" : "text-gray-700") : (isDark ? "text-white/20" : "text-gray-400")}`}>
+                    <span className={`text-xs ${f.included ? (isDark ? "text-white/70" : "text-gray-700") : (isDark ? "text-white/65" : "text-muted-foreground")}`}>
                       {f.label}
                     </span>
                   </div>
@@ -183,7 +183,7 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
 
         {/* Bottom note */}
         <motion.p
-          className={`text-center text-[0.65rem] ${textMuted} mt-8`}
+          className={`text-center text-[11px] ${textMuted} mt-8`}
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 0.6 }}

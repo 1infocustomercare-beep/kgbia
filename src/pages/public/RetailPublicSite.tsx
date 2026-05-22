@@ -146,7 +146,7 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
               <motion.div variants={fadeUp} custom={0} initial={{ width: 0 }} animate={{ width: "80px" }} transition={{ delay: 0.3, duration: 0.6 }} className="h-[2px] mb-8" style={{ background: CHAMPAGNE }} />
               <motion.span variants={fadeUp} custom={0.5} className="text-[10px] tracking-[0.35em] uppercase block mb-4" style={{ color: CHAMPAGNE, fontFamily: "'Montserrat', sans-serif" }}>Nuova Collezione</motion.span>
               <motion.h1 variants={fadeUp} custom={1} className="text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.05] mb-6 italic">{company.tagline || "Stile Inconfondibile"}</motion.h1>
-              <motion.p variants={fadeUp} custom={2} className="text-sm text-white/40 mb-10 max-w-md" style={{ fontFamily: "'Montserrat', sans-serif" }}>Scopri la nostra selezione curata. Qualità premium, pezzi unici.</motion.p>
+              <motion.p variants={fadeUp} custom={2} className="text-sm text-white/80 mb-10 max-w-md" style={{ fontFamily: "'Montserrat', sans-serif" }}>Scopri la nostra selezione curata. Qualità premium, pezzi unici.</motion.p>
               <motion.div variants={fadeUp} custom={3}>
                 <Button className="px-10 py-6 text-[11px] tracking-[0.25em] uppercase rounded-none text-black shadow-2xl" style={{ background: CHAMPAGNE, fontFamily: "'Montserrat', sans-serif" }} onClick={() => scrollTo("collezioni")}>Esplora <ArrowRight className="ml-2 w-4 h-4" /></Button>
               </motion.div>

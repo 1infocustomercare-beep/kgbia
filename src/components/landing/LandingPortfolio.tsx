@@ -179,7 +179,7 @@ function PortfolioCard({ project, onClick, index }: { project: Project; onClick:
           <span className="text-[8px] sm:text-[10px] text-white/50 uppercase tracking-wider">{project.sub}</span>
         </div>
         <h3 className="text-xs sm:text-sm font-bold text-white mb-0.5 group-hover:text-[#7eb7be] transition-colors leading-tight truncate">{project.name}</h3>
-        <p className="text-[9px] sm:text-[11px] text-white/40 leading-relaxed line-clamp-2">{project.desc}</p>
+        <p className="text-[9px] sm:text-[11px] text-white/80 leading-relaxed line-clamp-2">{project.desc}</p>
         {project.screens.length > 1 && (
           <span className="text-[9px] text-[#7eb7be]/60 mt-1 block">{project.screens.length} screens{project.desktopScreens ? ` + ${project.desktopScreens.length} desktop` : ""}</span>
         )}
@@ -211,8 +211,8 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
         <span className="text-xs sm:text-sm font-bold text-white truncate max-w-[40%]">{project.name}</span>
         {project.desktopScreens && project.desktopScreens.length > 0 ? (
           <div className="flex gap-0.5 bg-white/[0.06] rounded-full p-0.5">
-            <button onClick={() => { setShowDesktop(false); setActiveIdx(0); }} className={`p-1.5 rounded-full transition ${!showDesktop ? "bg-[#7eb7be] text-black" : "text-white/40"}`}><Smartphone className="w-3.5 h-3.5" /></button>
-            <button onClick={() => { setShowDesktop(true); setActiveIdx(0); }} className={`p-1.5 rounded-full transition ${showDesktop ? "bg-[#7eb7be] text-black" : "text-white/40"}`}><Monitor className="w-3.5 h-3.5" /></button>
+            <button onClick={() => { setShowDesktop(false); setActiveIdx(0); }} className={`p-1.5 rounded-full transition ${!showDesktop ? "bg-[#7eb7be] text-black" : "text-white/80"}`}><Smartphone className="w-3.5 h-3.5" /></button>
+            <button onClick={() => { setShowDesktop(true); setActiveIdx(0); }} className={`p-1.5 rounded-full transition ${showDesktop ? "bg-[#7eb7be] text-black" : "text-white/80"}`}><Monitor className="w-3.5 h-3.5" /></button>
           </div>
         ) : (
           <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-white/50 hover:text-white transition">
@@ -233,8 +233,8 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                 <span className="px-2.5 py-0.5 rounded text-[10px] text-white/50 bg-white/[0.06] uppercase tracking-wider">{project.sub}</span>
               </div>
               <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 leading-tight">{project.name}</h1>
-              <p className="text-xs sm:text-sm text-white/40 leading-relaxed mb-4">{project.desc}</p>
-              <div className="flex gap-3 text-[10px] sm:text-xs text-white/30">
+              <p className="text-xs sm:text-sm text-white/80 leading-relaxed mb-4">{project.desc}</p>
+              <div className="flex gap-3 text-[10px] sm:text-xs text-white/70">
                 <span>{project.screens.length} mobile screens</span>
                 {project.desktopScreens && <span>· {project.desktopScreens.length} desktop</span>}
               </div>
@@ -258,7 +258,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
         {screens.length > 1 && (
           <div className="max-w-5xl mx-auto px-4 sm:px-8 pb-8">
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-[10px] font-bold text-white/30 uppercase tracking-[3px]">All Screens — {screens.length}</span>
+              <span className="text-[10px] font-bold text-white/70 uppercase tracking-[3px]">All Screens — {screens.length}</span>
               <div className="flex-1 h-px bg-white/[0.06]" />
             </div>
 
@@ -288,7 +288,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                     <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[26%] h-[1.5%] bg-white/15 rounded-full z-20" />
                   </div>
                   {/* Label */}
-                  <p className="text-[8px] sm:text-[9px] text-white/30 text-center mt-1.5 font-medium">{i + 1}</p>
+                  <p className="text-[8px] sm:text-[9px] text-white/70 text-center mt-1.5 font-medium">{i + 1}</p>
                 </button>
               ))}
             </div>
@@ -343,7 +343,7 @@ export default function LandingPortfolio() {
                   className={`px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all border whitespace-nowrap flex-shrink-0 ${
                     c === filter
                       ? "bg-[#7eb7be]/10 border-[#7eb7be]/50 text-[#7eb7be]"
-                      : "bg-transparent border-white/[0.08] text-white/40 hover:border-white/20 hover:text-white/60"
+                      : "bg-transparent border-white/[0.08] text-white/80 hover:border-white/20 hover:text-white/60"
                   }`}>
                   {c}
                 </button>
@@ -369,7 +369,7 @@ export default function LandingPortfolio() {
             {[[ALL_PROJECTS.length + "+", "Apps"], [totalScreens + "+", "Screens"], ["25+", "Settori"]].map(([v, l]) => (
               <div key={String(l)} className="text-center">
                 <strong className="text-lg sm:text-2xl font-extrabold bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] bg-clip-text text-transparent block">{v}</strong>
-                <span className="text-[9px] sm:text-[11px] text-white/40">{l}</span>
+                <span className="text-[9px] sm:text-[11px] text-white/80">{l}</span>
               </div>
             ))}
           </motion.div>

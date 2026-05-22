@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 
 const LEVELS = [
   { name: "Bronze", min: 0, max: 200, color: "text-amber-700", bg: "bg-amber-700/10" },
-  { name: "Silver", min: 200, max: 500, color: "text-slate-400", bg: "bg-slate-400/10" },
+  { name: "Silver", min: 200, max: 500, color: "text-muted-foreground", bg: "bg-slate-400/10" },
   { name: "Gold", min: 500, max: 1000, color: "text-amber-400", bg: "bg-amber-400/10" },
   { name: "Diamond", min: 1000, max: Infinity, color: "text-violet-400", bg: "bg-violet-400/10" },
 ];

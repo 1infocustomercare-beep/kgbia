@@ -89,10 +89,10 @@ export default function LeadIntelligenceInbox() {
           <Loader2 className="w-4 h-4 animate-spin mr-2" /> Caricamento report…
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-12 text-white/40 text-xs">
+        <div className="text-center py-12 text-white/80 text-xs">
           Nessun lead analizzato in questa categoria.
           <br />
-          <span className="text-[10px] text-white/30">Avvia l'Autopilot di Arianna o analizza manualmente i lead per popolare questa inbox.</span>
+          <span className="text-[10px] text-white/70">Avvia l'Autopilot di Arianna o analizza manualmente i lead per popolare questa inbox.</span>
         </div>
       ) : (
         <div className="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">

@@ -61,7 +61,7 @@ export default function SectorTabs({ sectors, counts, active, onSelect }: Props)
             <button
               key={s}
               onClick={() => onSelect(s)}
-              className={`flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-xl text-[0.55rem] font-medium transition-all min-h-[40px] ${
+              className={`flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-xl text-[10px] font-medium transition-all min-h-[40px] ${
                 isActive
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "bg-secondary/40 text-muted-foreground hover:bg-secondary/60 border border-border/30"
@@ -69,7 +69,7 @@ export default function SectorTabs({ sectors, counts, active, onSelect }: Props)
             >
               <span className="text-xs leading-none">{info.emoji}</span>
               <span className="truncate max-w-full">{info.label}</span>
-              <span className={`text-[0.45rem] px-1 rounded-full leading-tight ${
+              <span className={`text-[10px] px-1 rounded-full leading-tight ${
                 isActive ? "bg-primary-foreground/20" : "bg-foreground/10"
               }`}>
                 {counts[s] || 0}
@@ -83,7 +83,7 @@ export default function SectorTabs({ sectors, counts, active, onSelect }: Props)
       {overflow.length > 0 && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-center gap-1 py-1 rounded-lg text-[0.6rem] font-medium text-muted-foreground hover:text-foreground bg-secondary/20 hover:bg-secondary/40 transition-colors border border-border/20"
+          className="w-full flex items-center justify-center gap-1 py-1 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground bg-secondary/20 hover:bg-secondary/40 transition-colors border border-border/20"
         >
           {expanded ? "Meno settori" : `+${overflow.length} settori`}
           <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? "rotate-180" : ""}`} />
@@ -100,7 +100,7 @@ export default function SectorTabs({ sectors, counts, active, onSelect }: Props)
               <button
                 key={s}
                 onClick={() => { onSelect(s); setExpanded(false); }}
-                className={`flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-xl text-[0.55rem] font-medium transition-all min-h-[40px] ${
+                className={`flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-xl text-[10px] font-medium transition-all min-h-[40px] ${
                   isActive
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "bg-secondary/40 text-muted-foreground hover:bg-secondary/60 border border-border/30"
@@ -108,7 +108,7 @@ export default function SectorTabs({ sectors, counts, active, onSelect }: Props)
               >
                 <span className="text-xs leading-none">{info.emoji}</span>
                 <span className="truncate max-w-full">{info.label}</span>
-                <span className={`text-[0.45rem] px-1 rounded-full leading-tight ${
+                <span className={`text-[10px] px-1 rounded-full leading-tight ${
                   isActive ? "bg-primary-foreground/20" : "bg-foreground/10"
                 }`}>
                   {counts[s] || 0}

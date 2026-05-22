@@ -247,13 +247,13 @@ const MediaVaultPage = () => {
             <img src={item.resolvedUrl} alt={item.name} className="w-full h-full object-cover" />
           )}
           <div className="absolute top-2 left-2 flex gap-1">
-            <span className={`px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold tracking-wider uppercase ${item.type === "video" ? "bg-accent/80 text-accent-foreground" : "bg-primary/80 text-primary-foreground"}`}>
+            <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase ${item.type === "video" ? "bg-accent/80 text-accent-foreground" : "bg-primary/80 text-primary-foreground"}`}>
               {item.type === "video" ? "VIDEO" : "IMG"}
             </span>
-            {item.is_bundled && <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold bg-secondary/80 text-secondary-foreground">BUNDLE</span>}
+            {item.is_bundled && <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-secondary/80 text-secondary-foreground">BUNDLE</span>}
           </div>
           <div className="absolute top-2 right-2">
-            <span className="px-1.5 py-0.5 rounded-full text-[0.45rem] font-medium bg-foreground/60 text-background">#{item.sort_order}</span>
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-foreground/60 text-background">#{item.sort_order}</span>
           </div>
         </div>
 
@@ -277,41 +277,41 @@ const MediaVaultPage = () => {
               <input value={editForm.dimensions} onChange={e => setEditForm(p => ({ ...p, dimensions: e.target.value }))}
                 className="w-full px-2 py-1.5 rounded-lg bg-background border border-border text-xs text-foreground" placeholder="Dimensioni" />
               <div className="flex gap-1.5">
-                <Button variant="default" size="sm" className="h-7 text-[0.6rem] gap-1" onClick={saveEdit}>
+                <Button variant="default" size="sm" className="h-7 text-[11px] gap-1" onClick={saveEdit}>
                   <Save className="w-3 h-3" /> Salva
                 </Button>
-                <Button variant="ghost" size="sm" className="h-7 text-[0.6rem]" onClick={() => setEditingId(null)}>Annulla</Button>
+                <Button variant="ghost" size="sm" className="h-7 text-[11px]" onClick={() => setEditingId(null)}>Annulla</Button>
               </div>
             </div>
           ) : (
             <>
               <h3 className="text-xs font-semibold text-foreground mb-0.5 truncate">{item.name}</h3>
-              <p className="text-[0.55rem] text-muted-foreground mb-1.5">{item.dimensions}</p>
-              <p className="text-[0.5rem] text-foreground/40 line-clamp-2 mb-2">{item.description}</p>
+              <p className="text-[10px] text-muted-foreground mb-1.5">{item.dimensions}</p>
+              <p className="text-[10px] text-foreground/80 line-clamp-2 mb-2">{item.description}</p>
               <div className="flex gap-1 flex-wrap">
-                <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-0.5 px-1.5" onClick={() => setPreview(item)}>
+                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-0.5 px-1.5" onClick={() => setPreview(item)}>
                   <Eye className="w-2.5 h-2.5" />
                 </Button>
-                <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-0.5 px-1.5" onClick={() => copyPath(item)}>
+                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-0.5 px-1.5" onClick={() => copyPath(item)}>
                   {copiedId === item.id ? <Check className="w-2.5 h-2.5 text-green-500" /> : <Copy className="w-2.5 h-2.5" />}
                 </Button>
-                <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-0.5 px-1.5" onClick={() => startEdit(item)}>
+                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-0.5 px-1.5" onClick={() => startEdit(item)}>
                   <Pencil className="w-2.5 h-2.5" />
                 </Button>
-                <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-0.5 px-1.5" onClick={() => { setReplacingId(item.id); replaceFileRef.current?.click(); }}>
+                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-0.5 px-1.5" onClick={() => { setReplacingId(item.id); replaceFileRef.current?.click(); }}>
                   <RefreshCw className="w-2.5 h-2.5" />
                 </Button>
-                <Button variant="ghost" size="sm" className={`h-6 text-[0.55rem] gap-0.5 px-1.5 ${isSwapSource ? "bg-primary/20 text-primary" : ""}`}
+                <Button variant="ghost" size="sm" className={`h-6 text-[10px] gap-0.5 px-1.5 ${isSwapSource ? "bg-primary/20 text-primary" : ""}`}
                   onClick={(e) => { e.stopPropagation(); setSwapFrom(isSwapSource ? null : item.id); }}>
                   <ArrowUpDown className="w-2.5 h-2.5" />
                 </Button>
-                <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-0.5 px-1.5" onClick={() => moveItem(item.id, "up")}>
+                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-0.5 px-1.5" onClick={() => moveItem(item.id, "up")}>
                   <ArrowUp className="w-2.5 h-2.5" />
                 </Button>
-                <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-0.5 px-1.5" onClick={() => moveItem(item.id, "down")}>
+                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-0.5 px-1.5" onClick={() => moveItem(item.id, "down")}>
                   <ArrowDown className="w-2.5 h-2.5" />
                 </Button>
-                <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-0.5 px-1.5 text-destructive hover:text-destructive" onClick={() => handleDelete(item)}>
+                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-0.5 px-1.5 text-destructive hover:text-destructive" onClick={() => handleDelete(item)}>
                   <Trash2 className="w-2.5 h-2.5" />
                 </Button>
               </div>
@@ -341,7 +341,7 @@ const MediaVaultPage = () => {
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${pageTab === "site_assets" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground border border-border"}`}>
           <Palette className="w-4 h-4" /> Site Assets
           {customCount > 0 && (
-            <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold bg-accent/20 text-accent">{customCount}</span>
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-accent/20 text-accent">{customCount}</span>
           )}
         </button>
       </div>
@@ -374,7 +374,7 @@ const MediaVaultPage = () => {
                   <ArrowUpDown className="w-5 h-5 text-primary animate-pulse" />
                   <div className="flex-1">
                     <p className="text-xs font-semibold text-foreground">Modalità Scambio Posizione</p>
-                    <p className="text-[0.6rem] text-muted-foreground">Clicca su un altro media per scambiare le posizioni</p>
+                    <p className="text-[11px] text-muted-foreground">Clicca su un altro media per scambiare le posizioni</p>
                   </div>
                   <Button variant="ghost" size="sm" className="text-xs" onClick={() => setSwapFrom(null)}>Annulla</Button>
                 </div>
@@ -452,7 +452,7 @@ const MediaVaultPage = () => {
             <div className="flex gap-1.5 flex-wrap">
               {(["all", "video", "image"] as const).map(t => (
                 <button key={t} onClick={() => setFilterType(t)}
-                  className={`px-2.5 py-1.5 rounded-lg text-[0.65rem] font-medium transition-colors ${filterType === t ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground border border-border"}`}>
+                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${filterType === t ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground border border-border"}`}>
                   {t === "all" ? "Tutti" : t === "video" ? "🎬 Video" : "🖼️ Img"}
                 </button>
               ))}
@@ -491,9 +491,9 @@ const MediaVaultPage = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="text-sm font-bold text-foreground">{sectionInfo?.label || sectionKey}</h3>
-                          <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-medium bg-secondary text-muted-foreground">{sectionItems.length}</span>
+                          <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-secondary text-muted-foreground">{sectionItems.length}</span>
                         </div>
-                        {sectionInfo && <p className="text-[0.55rem] text-muted-foreground">{sectionInfo.description}</p>}
+                        {sectionInfo && <p className="text-[10px] text-muted-foreground">{sectionInfo.description}</p>}
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -504,7 +504,7 @@ const MediaVaultPage = () => {
               })}
               {sectionKeys.length === 0 && (
                 <div className="text-center py-16">
-                  <Image className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
+                  <Image className="w-12 h-12 text-muted-foreground/65 mx-auto mb-3" />
                   <p className="text-sm text-muted-foreground">Nessun media trovato</p>
                 </div>
               )}
@@ -538,12 +538,12 @@ const MediaVaultPage = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <h3 className="text-xs font-semibold text-foreground truncate">{item.name}</h3>
-                      <span className={`px-1 py-0.5 rounded text-[0.45rem] font-bold ${item.type === "video" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
+                      <span className={`px-1 py-0.5 rounded text-[10px] font-bold ${item.type === "video" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
                         {item.type.toUpperCase()}
                       </span>
-                      <span className="text-[0.45rem] text-muted-foreground">#{item.sort_order}</span>
+                      <span className="text-[10px] text-muted-foreground">#{item.sort_order}</span>
                     </div>
-                    <p className="text-[0.5rem] text-muted-foreground truncate">{item.section}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{item.section}</p>
                   </div>
                   <div className="flex gap-0.5 flex-shrink-0">
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveItem(item.id, "up")}><ArrowUp className="w-3 h-3" /></Button>
@@ -567,7 +567,7 @@ const MediaVaultPage = () => {
 
           {!loading && filtered.length === 0 && viewMode !== "sections" && (
             <div className="text-center py-16">
-              <Image className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
+              <Image className="w-12 h-12 text-muted-foreground/65 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">Nessun media trovato</p>
             </div>
           )}
@@ -601,7 +601,7 @@ const MediaVaultPage = () => {
           <div className="flex gap-1.5 mb-5 overflow-x-auto scrollbar-hide pb-1">
             {[{ key: "all", label: "Tutti", icon: "📋" }, ...Object.entries(SITE_ASSET_SECTIONS).map(([k, v]) => ({ key: k, label: v.label, icon: v.icon }))].map(s => (
               <button key={s.key} onClick={() => setSaSectionFilter(s.key)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[0.6rem] font-semibold whitespace-nowrap transition-all ${
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold whitespace-nowrap transition-all ${
                   saSectionFilter === s.key ? "bg-primary text-primary-foreground shadow-sm" : "bg-secondary/50 text-muted-foreground"
                 }`}>
                 <span>{s.icon}</span>
@@ -629,9 +629,9 @@ const MediaVaultPage = () => {
                       <h2 className="text-sm font-heading font-bold text-foreground">
                         {secInfo?.icon} {secInfo?.label || section}
                       </h2>
-                      <span className="text-[0.55rem] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-mono">{sItems.length}</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-mono">{sItems.length}</span>
                     </div>
-                    {secInfo && <p className="text-[0.5rem] text-muted-foreground">{secInfo.description}</p>}
+                    {secInfo && <p className="text-[10px] text-muted-foreground">{secInfo.description}</p>}
                   </div>
                 </div>
 
@@ -657,11 +657,11 @@ const MediaVaultPage = () => {
                           )}
                           {!previewUrl && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              {isVideo ? <Film className="w-6 h-6 text-muted-foreground/30" /> : <Image className="w-6 h-6 text-muted-foreground/30" />}
+                              {isVideo ? <Film className="w-6 h-6 text-muted-foreground/70" /> : <Image className="w-6 h-6 text-muted-foreground/70" />}
                             </div>
                           )}
                           {hasCustom && (
-                            <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-primary/90 text-primary-foreground text-[0.45rem] font-bold">
+                            <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-primary/90 text-primary-foreground text-[10px] font-bold">
                               CUSTOM
                             </div>
                           )}
@@ -669,13 +669,13 @@ const MediaVaultPage = () => {
 
                         {/* Info */}
                         <div className="p-2">
-                          <p className="text-[0.6rem] font-semibold text-foreground truncate mb-0.5">{asset.label}</p>
-                          <p className="text-[0.45rem] font-mono text-muted-foreground truncate mb-1.5">{asset.slot_key}</p>
+                          <p className="text-[11px] font-semibold text-foreground truncate mb-0.5">{asset.label}</p>
+                          <p className="text-[10px] font-mono text-muted-foreground truncate mb-1.5">{asset.slot_key}</p>
 
                           {isEditing ? (
                             <div className="flex gap-1">
                               <Input value={saEditUrl} onChange={e => setSaEditUrl(e.target.value)} placeholder="https://..."
-                                className="h-7 text-[0.55rem] flex-1 bg-secondary/40 border-border/50 rounded-lg" />
+                                className="h-7 text-[10px] flex-1 bg-secondary/40 border-border/50 rounded-lg" />
                               <button onClick={() => handleSaSetUrl(asset.id)} className="w-7 h-7 rounded-lg bg-primary/15 text-primary flex items-center justify-center">
                                 <Check className="w-3 h-3" />
                               </button>
@@ -685,7 +685,7 @@ const MediaVaultPage = () => {
                             </div>
                           ) : (
                             <div className="flex gap-1">
-                              <label className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[0.5rem] font-semibold cursor-pointer transition-colors ${
+                              <label className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[10px] font-semibold cursor-pointer transition-colors ${
                                 saUploading === asset.id ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary hover:bg-primary/20"
                               }`}>
                                 <Upload className="w-3 h-3" />
@@ -694,7 +694,7 @@ const MediaVaultPage = () => {
                                   onChange={e => { const f = e.target.files?.[0]; if (f) handleSaUpload(asset.id, f); }} />
                               </label>
                               <button onClick={() => { setSaEditingId(asset.id); setSaEditUrl(asset.url || ""); }}
-                                className="flex items-center justify-center gap-0.5 px-2 py-1.5 rounded-lg bg-secondary/60 text-muted-foreground hover:text-foreground text-[0.5rem] font-semibold transition-colors">
+                                className="flex items-center justify-center gap-0.5 px-2 py-1.5 rounded-lg bg-secondary/60 text-muted-foreground hover:text-foreground text-[10px] font-semibold transition-colors">
                                 <ExternalLink className="w-3 h-3" /> URL
                               </button>
                               {hasCustom && (
@@ -716,7 +716,7 @@ const MediaVaultPage = () => {
 
           {!siteAssetsLoading && saFiltered.length === 0 && (
             <div className="text-center py-16">
-              <Palette className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
+              <Palette className="w-12 h-12 text-muted-foreground/65 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">Nessun asset trovato</p>
             </div>
           )}
@@ -739,7 +739,7 @@ const MediaVaultPage = () => {
               <div className="p-4 flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-bold text-foreground">{preview.name}</h3>
-                  <p className="text-[0.6rem] text-muted-foreground">{preview.section} • {preview.dimensions}</p>
+                  <p className="text-[11px] text-muted-foreground">{preview.section} • {preview.dimensions}</p>
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => copyPath(preview)}>

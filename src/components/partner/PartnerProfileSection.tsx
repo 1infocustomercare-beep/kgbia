@@ -208,7 +208,7 @@ export default function PartnerProfileSection({ userId, userName, userEmail, onA
             placeholder="Scrivi una breve descrizione professionale..."
             rows={3}
             maxLength={500}
-            className="w-full px-3 py-2.5 rounded-xl text-xs bg-white !text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400/30 resize-none"
+            className="w-full px-3 py-2.5 rounded-xl text-xs bg-white !text-black placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-400/30 resize-none"
           />
           <p className="text-[8px] text-right" style={{ color: "#4b5563" }}>{profile.bio.length}/500</p>
         </div>
@@ -243,7 +243,7 @@ function Field({ icon: Icon, label, value, onChange, placeholder, type = "text" 
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-3 py-2.5 rounded-xl text-xs bg-white !text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400/30"
+        className="w-full px-3 py-2.5 rounded-xl text-xs bg-white !text-black placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-400/30"
       />
     </div>
   );

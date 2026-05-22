@@ -178,7 +178,7 @@ export default function EmpireHeroV2() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.6 }}
-        className="relative z-10 mt-10 flex flex-col items-center gap-1 text-[10px] uppercase tracking-[0.4em] text-white/40"
+        className="relative z-10 mt-10 flex flex-col items-center gap-1 text-[10px] uppercase tracking-[0.4em] text-white/80"
       >
         <span>Scopri come</span>
         <span className="h-8 w-px animate-pulse bg-gradient-to-b from-white/40 to-transparent" />

@@ -86,7 +86,7 @@ export default function LandingPricing() {
                 <h3 className="text-xl font-heading font-bold mb-3 text-white">{plan.name}</h3>
                 <div className="flex items-baseline gap-2 flex-wrap">
                   <span className="text-[2.4rem] font-extrabold font-heading" style={{ color: plan.accent }}>{plan.price}</span>
-                  <span className="text-sm text-white/40 line-through">{plan.old}</span>
+                  <span className="text-sm text-white/80 line-through">{plan.old}</span>
                   <span className="text-[11px] bg-[rgba(34,197,94,0.12)] text-emerald-400 px-2 py-0.5 rounded-lg font-bold">{plan.disc}</span>
                 </div>
                 <div className="text-xs font-semibold mt-1" style={{ color: plan.accent }}>{plan.rate}</div>

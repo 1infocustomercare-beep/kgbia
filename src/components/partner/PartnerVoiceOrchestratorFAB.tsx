@@ -108,7 +108,7 @@ export default function PartnerVoiceOrchestratorFAB() {
               {currentPlan?.actions && currentPlan.actions.length > 0 && (
                 <div className="mt-2 space-y-1">
                   {currentPlan.actions.map((a, i) => (
-                    <div key={i} className="text-[11px] text-zinc-400 flex items-center gap-1.5">
+                    <div key={i} className="text-[11px] text-muted-foreground flex items-center gap-1.5">
                       <CheckCircle2 className="w-3 h-3 text-emerald-500" />
                       {a.description}
                     </div>
@@ -123,7 +123,7 @@ export default function PartnerVoiceOrchestratorFAB() {
       <div className="fixed z-[9999] partner-voice-fab flex items-center justify-center gap-0">
         <div className="hidden max-w-[170px] rounded-2xl border border-violet-400/20 bg-zinc-950/92 px-3 py-2 shadow-xl backdrop-blur-xl sm:hidden">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-violet-300">Microfono AI</p>
-          <p className="mt-0.5 text-[10px] leading-relaxed text-zinc-300">
+          <p className="mt-0.5 text-[10px] leading-relaxed text-muted-foreground">
             Comandi vocali: esegue task, apre sezioni e risponde sui tuoi dati.
           </p>
         </div>

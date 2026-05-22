@@ -37,7 +37,7 @@ export function BateyMenu({
 
       {/* Title MENU */}
       <div className="text-center mt-5 mb-4">
-        <p className="text-[0.6rem] tracking-[0.42em] mb-1 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
+        <p className="text-[11px] tracking-[0.42em] mb-1 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
           la carta
         </p>
         <h2
@@ -95,7 +95,7 @@ export function BateyMenu({
               <div className="flex items-start justify-between gap-2 mb-1">
                 <div className="flex-1 min-w-0">
                   {item.es_label && (
-                    <p className="text-[0.55rem] tracking-[0.32em] mb-0.5 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
+                    <p className="text-[10px] tracking-[0.32em] mb-0.5 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
                       {item.es_label}
                     </p>
                   )}

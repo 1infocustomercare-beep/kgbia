@@ -283,7 +283,7 @@ export default function CaseStudySliders() {
                 Voglio questi numeri per la mia azienda
                 <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
               </button>
-              <p className="mt-3 text-center text-[10px] uppercase tracking-[2px] text-white/40">
+              <p className="mt-3 text-center text-[10px] uppercase tracking-[2px] text-white/80">
                 Analisi guidata · tempi definiti dopo audit
               </p>
             </div>

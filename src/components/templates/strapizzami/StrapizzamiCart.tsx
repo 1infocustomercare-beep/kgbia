@@ -171,7 +171,7 @@ export function StrapizzamiCart({
           <h3 className="text-base font-bold" style={{ color: STRAPIZZAMI.text }}>Metodo di Pagamento</h3>
           <div className="flex items-center gap-1">
             {["VISA", "MC", "PP"].map(badge => (
-              <div key={badge} className="px-2 py-1 rounded-md text-[0.6rem] font-bold bg-white border" style={{ color: "#1a1f71", borderColor: "#ddd" }}>
+              <div key={badge} className="px-2 py-1 rounded-md text-[11px] font-bold bg-white border" style={{ color: "#1a1f71", borderColor: "#ddd" }}>
                 {badge}
               </div>
             ))}

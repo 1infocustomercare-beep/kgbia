@@ -291,7 +291,7 @@ export function SectorValueProposition({ sectorKey, accentColor, darkMode = true
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5"
               style={{ background: `${accentColor}10`, border: `1px solid ${accentColor}20` }}>
               <Target className="w-3.5 h-3.5" style={{ color: accentColor }} />
-              <span className="text-[0.65rem] font-bold tracking-[2px] uppercase" style={{ color: accentColor }}>Come Ti Miglioriamo</span>
+              <span className="text-[11px] font-bold tracking-[2px] uppercase" style={{ color: accentColor }}>Come Ti Miglioriamo</span>
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-[1.1] mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               I Problemi del Tuo {sectorLabel}?<br />
@@ -313,7 +313,7 @@ export function SectorValueProposition({ sectorKey, accentColor, darkMode = true
                     {pp.icon}
                   </div>
                   <div>
-                    <p className="text-[0.6rem] font-bold tracking-[2px] uppercase mb-1.5" style={{ color: "#ff6b6b" }}>❌ Il Problema</p>
+                    <p className="text-[11px] font-bold tracking-[2px] uppercase mb-1.5" style={{ color: "#ff6b6b" }}>❌ Il Problema</p>
                     <p className="text-sm leading-relaxed" style={{ color: textMuted }}>{pp.problem}</p>
                   </div>
                 </div>
@@ -323,7 +323,7 @@ export function SectorValueProposition({ sectorKey, accentColor, darkMode = true
                     <CheckCircle className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[0.6rem] font-bold tracking-[2px] uppercase mb-1.5" style={{ color: accentColor }}>✅ La Soluzione Empire</p>
+                    <p className="text-[11px] font-bold tracking-[2px] uppercase mb-1.5" style={{ color: accentColor }}>✅ La Soluzione Empire</p>
                     <p className="text-sm leading-relaxed" style={{ color: textMuted }}>{pp.solution}</p>
                   </div>
                 </div>
@@ -341,7 +341,7 @@ export function SectorValueProposition({ sectorKey, accentColor, darkMode = true
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5"
               style={{ background: `${accentColor}10`, border: `1px solid ${accentColor}20` }}>
               <Layers className="w-3.5 h-3.5" style={{ color: accentColor }} />
-              <span className="text-[0.65rem] font-bold tracking-[2px] uppercase" style={{ color: accentColor }}>Funzionalità Complete</span>
+              <span className="text-[11px] font-bold tracking-[2px] uppercase" style={{ color: accentColor }}>Funzionalità Complete</span>
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-[1.1] mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               Tutto Ciò Che Serve per il Tuo <span style={{ color: accentColor }}>{sectorLabel}</span>
@@ -382,7 +382,7 @@ export function SectorValueProposition({ sectorKey, accentColor, darkMode = true
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5"
               style={{ background: `${accentColor}10`, border: `1px solid ${accentColor}20` }}>
               <Brain className="w-3.5 h-3.5" style={{ color: accentColor }} />
-              <span className="text-[0.65rem] font-bold tracking-[2px] uppercase" style={{ color: accentColor }}>Intelligenza Artificiale</span>
+              <span className="text-[11px] font-bold tracking-[2px] uppercase" style={{ color: accentColor }}>Intelligenza Artificiale</span>
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-[1.1] mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               L'IA che Lavora <span style={{ color: accentColor }}>per Te</span>

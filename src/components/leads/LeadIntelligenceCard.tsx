@@ -146,7 +146,7 @@ export default function LeadIntelligenceCard({ report: initialReport, onUpdate, 
             <p className="text-[11px] text-white/50 mt-0.5 line-clamp-2">{report.category_reason}</p>
           )}
         </div>
-        {expanded ? <ChevronUp className="w-4 h-4 text-white/40" /> : <ChevronDown className="w-4 h-4 text-white/40" />}
+        {expanded ? <ChevronUp className="w-4 h-4 text-white/80" /> : <ChevronDown className="w-4 h-4 text-white/80" />}
       </button>
 
       <AnimatePresence>

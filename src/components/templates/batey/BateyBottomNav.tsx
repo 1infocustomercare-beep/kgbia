@@ -32,7 +32,7 @@ export function BateyBottomNav({ active, onChange, showOffers = false }: Props) 
             >
               <Icon className="w-5 h-5" strokeWidth={isActive ? 2.2 : 1.6} />
               <span
-                className="text-[0.6rem] tracking-[0.18em] uppercase"
+                className="text-[11px] tracking-[0.18em] uppercase"
                 style={{ fontFamily: BATEY.fontBody, fontWeight: isActive ? 600 : 400 }}
               >
                 {label}

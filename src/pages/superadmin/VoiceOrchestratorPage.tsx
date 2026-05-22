@@ -168,7 +168,7 @@ export default function VoiceOrchestratorPage() {
                   {currentPlan.actions && currentPlan.actions.length > 0 && (
                     <div className="mt-2 pt-2 border-t border-amber-500/10 space-y-1">
                       {currentPlan.actions.map((a, i) => (
-                        <div key={i} className="text-[11px] text-zinc-400 flex items-center gap-1.5">
+                        <div key={i} className="text-[11px] text-muted-foreground flex items-center gap-1.5">
                           <CheckCircle2 className="w-3 h-3 text-emerald-500 flex-shrink-0" />
                           {a.description}
                         </div>
@@ -210,7 +210,7 @@ export default function VoiceOrchestratorPage() {
                     <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
                       <Icon className="w-3.5 h-3.5 text-amber-400" />
                     </div>
-                    <p className="text-xs text-zinc-300">"{ex.text}"</p>
+                    <p className="text-xs text-muted-foreground">"{ex.text}"</p>
                   </div>
                 );
               })}
@@ -230,7 +230,7 @@ export default function VoiceOrchestratorPage() {
             return (
               <div key={i} className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-3 text-center">
                 <Icon className="w-4 h-4 text-amber-400 mx-auto mb-1" />
-                <p className="text-[11px] text-zinc-300 font-medium">{c.label}</p>
+                <p className="text-[11px] text-muted-foreground font-medium">{c.label}</p>
               </div>
             );
           })}

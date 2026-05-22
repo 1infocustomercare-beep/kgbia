@@ -131,13 +131,13 @@ function InstalledAgentCard({ agent, onDeactivate, deactivating }: { agent: Agen
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-sm text-white truncate">{persona.humanName}</h3>
-              <p className="text-[0.6rem] font-semibold tracking-[2px] uppercase mt-0.5" style={{ color: "hsl(265,60%,65%)" }}>{persona.role}</p>
-              <p className="text-[0.55rem] mt-0.5 truncate" style={{ color: "hsla(230,20%,70%,0.4)" }}>{agent.name}</p>
+              <p className="text-[11px] font-semibold tracking-[2px] uppercase mt-0.5" style={{ color: "hsl(265,60%,65%)" }}>{persona.role}</p>
+              <p className="text-[10px] mt-0.5 truncate" style={{ color: "hsla(230,20%,70%,0.4)" }}>{agent.name}</p>
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-[0.65rem] leading-relaxed line-clamp-2" style={{ color: "hsla(230,20%,75%,0.5)" }}>
+          <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: "hsla(230,20%,75%,0.5)" }}>
             {agent.description_it}
           </p>
 
@@ -145,12 +145,12 @@ function InstalledAgentCard({ agent, onDeactivate, deactivating }: { agent: Agen
           {agent.capabilities && agent.capabilities.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {agent.capabilities.slice(0, 3).map((cap, i) => (
-                <span key={i} className="text-[0.5rem] px-1.5 py-0.5 rounded-full" style={{ background: "hsla(265,50%,55%,0.1)", color: "hsla(265,60%,70%,0.7)" }}>
+                <span key={i} className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: "hsla(265,50%,55%,0.1)", color: "hsla(265,60%,70%,0.7)" }}>
                   {cap}
                 </span>
               ))}
               {agent.capabilities.length > 3 && (
-                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full" style={{ background: "hsla(265,50%,55%,0.05)", color: "hsla(265,60%,70%,0.4)" }}>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: "hsla(265,50%,55%,0.05)", color: "hsla(265,60%,70%,0.4)" }}>
                   +{agent.capabilities.length - 3}
                 </span>
               )}
@@ -160,15 +160,15 @@ function InstalledAgentCard({ agent, onDeactivate, deactivating }: { agent: Agen
           {/* Footer */}
           <div className="flex items-center justify-between pt-2" style={{ borderTop: "1px solid hsla(265,50%,55%,0.08)" }}>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-[0.5rem] h-5 border-0 px-2" style={{ background: `${cat?.color}15`, color: cat?.color }}>
+              <Badge variant="outline" className="text-[10px] h-5 border-0 px-2" style={{ background: `${cat?.color}15`, color: cat?.color }}>
                 {CATEGORY_ICONS[agent.category]} <span className="ml-1">{cat?.label}</span>
               </Badge>
-              <span className="text-[0.55rem] font-bold" style={{ color: "hsl(38,50%,55%)" }}>{pricing.label}</span>
+              <span className="text-[10px] font-bold" style={{ color: "hsl(38,50%,55%)" }}>{pricing.label}</span>
             </div>
             <Button
               size="sm"
               variant="ghost"
-              className="h-6 px-2 text-[0.55rem] gap-1 hover:bg-destructive/10 hover:text-destructive"
+              className="h-6 px-2 text-[10px] gap-1 hover:bg-destructive/10 hover:text-destructive"
               onClick={onDeactivate}
               disabled={deactivating}
             >
@@ -212,25 +212,25 @@ function AvailableAgentCard({ agent, onRequest, requesting }: { agent: Agent; on
             />
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-sm text-white/80 truncate">{persona.humanName}</h3>
-              <p className="text-[0.55rem] tracking-[1px] uppercase" style={{ color: "hsla(230,20%,70%,0.4)" }}>{persona.role}</p>
+              <p className="text-[10px] tracking-[1px] uppercase" style={{ color: "hsla(230,20%,70%,0.4)" }}>{persona.role}</p>
             </div>
             <div className="text-right">
               <p className="text-sm font-bold" style={{ color: "hsl(38,50%,55%)" }}>{pricing.label}</p>
-              <p className="text-[0.5rem]" style={{ color: "hsla(230,20%,70%,0.3)" }}>per agente</p>
+              <p className="text-[10px]" style={{ color: "hsla(230,20%,70%,0.3)" }}>per agente</p>
             </div>
           </div>
 
-          <p className="text-[0.65rem] leading-relaxed line-clamp-2" style={{ color: "hsla(230,20%,75%,0.4)" }}>
+          <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: "hsla(230,20%,75%,0.4)" }}>
             {agent.description_it}
           </p>
 
           <div className="flex items-center justify-between pt-2" style={{ borderTop: "1px solid hsla(230,20%,30%,0.15)" }}>
-            <Badge variant="outline" className="text-[0.5rem] h-5 border-0 px-2" style={{ background: `${cat?.color}10`, color: `${cat?.color}99` }}>
+            <Badge variant="outline" className="text-[10px] h-5 border-0 px-2" style={{ background: `${cat?.color}10`, color: `${cat?.color}99` }}>
               {cat?.label}
             </Badge>
             <Button
               size="sm"
-              className="h-7 text-[0.6rem] gap-1 rounded-lg"
+              className="h-7 text-[11px] gap-1 rounded-lg"
               style={{
                 background: "linear-gradient(135deg, hsl(265,60%,55%), hsl(265,50%,45%))",
                 color: "white",
@@ -271,20 +271,20 @@ function SubscriptionImpact({ installedCount, pendingAdd, pendingRemove }: { ins
 
       <div className="flex items-center gap-2 mb-4">
         <Crown className="w-4 h-4" style={{ color: "hsl(38,50%,55%)" }} />
-        <h3 className="text-[0.65rem] font-bold tracking-[2px] uppercase" style={{ color: "hsl(38,50%,60%)" }}>Riepilogo Abbonamento</h3>
+        <h3 className="text-[11px] font-bold tracking-[2px] uppercase" style={{ color: "hsl(38,50%,60%)" }}>Riepilogo Abbonamento</h3>
       </div>
 
       <div className="grid grid-cols-3 gap-3 text-center">
         <div>
-          <p className="text-[0.5rem] tracking-[1px] uppercase mb-1" style={{ color: "hsla(230,20%,70%,0.4)" }}>Agenti Attivi</p>
+          <p className="text-[10px] tracking-[1px] uppercase mb-1" style={{ color: "hsla(230,20%,70%,0.4)" }}>Agenti Attivi</p>
           <p className="text-2xl font-bold text-white">{installedCount}</p>
         </div>
         <div>
-          <p className="text-[0.5rem] tracking-[1px] uppercase mb-1" style={{ color: "hsla(230,20%,70%,0.4)" }}>Costo Mensile</p>
+          <p className="text-[10px] tracking-[1px] uppercase mb-1" style={{ color: "hsla(230,20%,70%,0.4)" }}>Costo Mensile</p>
           <p className="text-2xl font-bold" style={{ color: "hsl(38,50%,55%)" }}>€{currentCost}</p>
         </div>
         <div>
-          <p className="text-[0.5rem] tracking-[1px] uppercase mb-1" style={{ color: "hsla(230,20%,70%,0.4)" }}>Base + Agenti</p>
+          <p className="text-[10px] tracking-[1px] uppercase mb-1" style={{ color: "hsla(230,20%,70%,0.4)" }}>Base + Agenti</p>
           <p className="text-2xl font-bold text-white">€{currentCost + 49}</p>
         </div>
       </div>
@@ -299,7 +299,7 @@ function SubscriptionImpact({ installedCount, pendingAdd, pendingRemove }: { ins
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-3.5 h-3.5" style={{ color: diff > 0 ? "hsl(38,50%,55%)" : "hsl(150,60%,45%)" }} />
-              <span className="text-[0.6rem]" style={{ color: "hsla(230,20%,75%,0.6)" }}>
+              <span className="text-[11px]" style={{ color: "hsla(230,20%,75%,0.6)" }}>
                 {pendingAdd > 0 && `+${pendingAdd} in attesa`}
                 {pendingAdd > 0 && pendingRemove > 0 && " · "}
                 {pendingRemove > 0 && `-${pendingRemove} da rimuovere`}
@@ -309,7 +309,7 @@ function SubscriptionImpact({ installedCount, pendingAdd, pendingRemove }: { ins
               {diff > 0 ? "+" : ""}€{diff}/mese
             </span>
           </div>
-          <p className="text-[0.5rem] mt-2" style={{ color: "hsla(230,20%,70%,0.35)" }}>
+          <p className="text-[10px] mt-2" style={{ color: "hsla(230,20%,70%,0.35)" }}>
             Il team Empire confermerà le modifiche e aggiornerà il tuo piano.
           </p>
         </motion.div>
@@ -446,7 +446,7 @@ export default function AgentMarketplace() {
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-3">
             <div className="px-3 py-1 rounded-full" style={{ background: "hsla(265,60%,55%,0.1)", border: "1px solid hsla(265,60%,55%,0.15)" }}>
-              <span className="text-[0.5rem] font-bold tracking-[3px] uppercase" style={{ color: "hsl(265,60%,60%)" }}>Team AI</span>
+              <span className="text-[10px] font-bold tracking-[3px] uppercase" style={{ color: "hsl(265,60%,60%)" }}>Team AI</span>
             </div>
           </div>
 
@@ -523,8 +523,8 @@ export default function AgentMarketplace() {
                 <section key={category} className="space-y-3">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-6 rounded-full" style={{ background: catLabel?.color || 'hsl(265,60%,55%)' }} />
-                    <h2 className="text-[0.65rem] font-bold tracking-[2px] uppercase text-white/80">{catLabel?.label || category}</h2>
-                    <Badge variant="outline" className="text-[0.5rem] h-5 border-0 px-2" style={{ background: `${catLabel?.color}15`, color: catLabel?.color }}>
+                    <h2 className="text-[11px] font-bold tracking-[2px] uppercase text-white/80">{catLabel?.label || category}</h2>
+                    <Badge variant="outline" className="text-[10px] h-5 border-0 px-2" style={{ background: `${catLabel?.color}15`, color: catLabel?.color }}>
                       {agents.length}
                     </Badge>
                   </div>
@@ -607,25 +607,25 @@ export default function AgentMarketplace() {
               <Crown className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: "hsl(38,50%,55%)" }} />
               <div>
                 <h4 className="text-sm font-bold text-white/90">Come funziona</h4>
-                <ul className="text-[0.65rem] space-y-1.5 mt-2" style={{ color: "hsla(230,20%,75%,0.5)" }}>
+                <ul className="text-[11px] space-y-1.5 mt-2" style={{ color: "hsla(230,20%,75%,0.5)" }}>
                   <li className="flex items-start gap-2">
-                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[0.5rem] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>1</span>
+                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>1</span>
                     <strong className="text-white/70">Richiedi</strong> l'attivazione dell'agente che ti interessa
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[0.5rem] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>2</span>
+                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>2</span>
                     Il team <strong className="text-white/70">Empire</strong> riceverà una notifica immediata
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[0.5rem] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>3</span>
+                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>3</span>
                     Ti contatteremo per <strong className="text-white/70">confermare</strong> il piano e i costi
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[0.5rem] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>4</span>
+                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>4</span>
                     L'agente verrà <strong className="text-white/70">attivato</strong> nel tuo account entro 24h
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[0.5rem] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>5</span>
+                    <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold" style={{ background: "hsla(265,60%,55%,0.15)", color: "hsl(265,60%,60%)" }}>5</span>
                     Puoi <strong className="text-white/70">disattivare</strong> qualsiasi agente in qualsiasi momento
                   </li>
                 </ul>

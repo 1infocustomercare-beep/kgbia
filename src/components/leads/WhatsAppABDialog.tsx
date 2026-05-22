@@ -582,17 +582,17 @@ function VariantPanel({
         <div className="rounded-lg py-1.5 text-center" style={{ background: "rgba(0,0,0,0.25)" }}>
           <div className="text-[8px] text-white/50 uppercase">Click</div>
           <div className="text-sm font-black" style={{ color: accent }}>{clicks}</div>
-          <div className="text-[8px] text-white/40">{clickPct}%</div>
+          <div className="text-[8px] text-white/80">{clickPct}%</div>
         </div>
         <div className="rounded-lg py-1.5 text-center" style={{ background: "rgba(0,0,0,0.25)" }}>
           <div className="text-[8px] text-white/50 uppercase">Risposte</div>
           <div className="text-sm font-black text-emerald-300">{replies}</div>
-          <div className="text-[8px] text-white/40">tot</div>
+          <div className="text-[8px] text-white/80">tot</div>
         </div>
         <div className="rounded-lg py-1.5 text-center" style={{ background: "rgba(0,0,0,0.25)" }}>
           <div className="text-[8px] text-white/50 uppercase">Reply rate</div>
           <div className="text-sm font-black text-amber-300">{replyRate}%</div>
-          <div className="text-[8px] text-white/40">su click</div>
+          <div className="text-[8px] text-white/80">su click</div>
         </div>
       </div>
 
@@ -707,7 +707,7 @@ function WhatsAppPhonePreview({
             <div className="text-[11px] font-bold text-white truncate">{lead.name}</div>
             <div className="text-[9px] text-white/50 truncate">{subtitle}</div>
           </div>
-          <div className="text-[9px] text-white/40">online</div>
+          <div className="text-[9px] text-white/80">online</div>
         </div>
 
         <div className="flex justify-end">

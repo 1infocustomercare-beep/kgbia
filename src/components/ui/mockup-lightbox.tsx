@@ -140,7 +140,7 @@ export function MockupLightbox({ children, imageSrc, imageAlt = "Preview", disab
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.5 }}
               transition={{ delay: 0.5 }}
-              className="absolute bottom-5 text-white/30 text-[10px] tracking-[2px] uppercase"
+              className="absolute bottom-5 text-white/70 text-[10px] tracking-[2px] uppercase"
             >
               Tocca per chiudere
             </motion.p>

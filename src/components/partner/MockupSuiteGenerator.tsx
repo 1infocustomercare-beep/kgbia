@@ -1943,13 +1943,13 @@ export function MockupSuiteGenerator({
                 </p>
                 {previewPhase !== "upgrading" && (
                   <div className="flex flex-wrap items-center gap-2 mt-2">
-                    <span className="inline-flex items-center gap-1 text-[0.6rem] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">
+                    <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">
                       <BookmarkCheck className="w-2.5 h-2.5" />
                       Salvata nel Portfolio
                     </span>
                     <Link
                       to="/partner/portfolio"
-                      className="inline-flex items-center gap-1 text-[0.6rem] px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30 hover:bg-primary/25 transition-colors"
+                      className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30 hover:bg-primary/25 transition-colors"
                     >
                       <FolderOpen className="w-2.5 h-2.5" />
                       Apri Portfolio

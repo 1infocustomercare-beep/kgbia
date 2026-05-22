@@ -179,7 +179,7 @@ export default function EmpireTeamStory() {
           <motion.div className="inline-flex items-center gap-2.5 mb-5">
             <div className="relative flex items-center gap-2 px-4 py-2 rounded-full overflow-hidden" style={{ background: "hsla(265,70%,60%,0.06)", border: "1px solid hsla(265,70%,60%,0.15)" }}>
               <Dna className="w-3 h-3" style={{ color: "hsl(265,70%,60%)" }} />
-              <span className="text-[0.65rem] font-semibold tracking-[3px] uppercase" style={{ color: "hsl(265,70%,60%)" }}>Evoluzione Digitale</span>
+              <span className="text-[11px] font-semibold tracking-[3px] uppercase" style={{ color: "hsl(265,70%,60%)" }}>Evoluzione Digitale</span>
             </div>
           </motion.div>
           <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-5">
@@ -258,7 +258,7 @@ export default function EmpireTeamStory() {
                     {/* Year badge */}
                     <div className="inline-flex items-center gap-1.5 mb-2">
                       <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: m.color }} />
-                      <span className="text-[0.6rem] font-black tracking-[3px] uppercase" style={{ color: "hsl(265,70%,65%)" }}>{m.year}</span>
+                      <span className="text-[11px] font-black tracking-[3px] uppercase" style={{ color: "hsl(265,70%,65%)" }}>{m.year}</span>
                     </div>
 
                     <h4 className="text-[0.85rem] sm:text-base font-bold text-foreground leading-tight">{m.label}</h4>
@@ -267,7 +267,7 @@ export default function EmpireTeamStory() {
                     {/* Metric badge */}
                     <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: m.color, border: `1px solid ${m.color}` }}>
                       <ShieldCheck className="w-2.5 h-2.5" style={{ color: "hsl(38,50%,65%)" }} />
-                      <span className="text-[0.55rem] font-bold tracking-wider uppercase text-foreground/90">{m.metric}</span>
+                      <span className="text-[10px] font-bold tracking-wider uppercase text-foreground/90">{m.metric}</span>
                     </div>
                   </motion.div>
                 </div>
@@ -300,7 +300,7 @@ export default function EmpireTeamStory() {
           <motion.div className="inline-flex items-center gap-2.5 mb-5">
             <div className="relative flex items-center gap-2 px-4 py-2 rounded-full overflow-hidden" style={{ background: "hsla(265,60%,55%,0.06)", border: "1px solid hsla(265,60%,55%,0.12)" }}>
               <Crown className="w-3 h-3" style={{ color: "hsl(265,60%,55%)" }} />
-              <span className="text-[0.65rem] font-semibold tracking-[3px] uppercase" style={{ color: "hsl(265,60%,55%)" }}>Il Nostro Team</span>
+              <span className="text-[11px] font-semibold tracking-[3px] uppercase" style={{ color: "hsl(265,60%,55%)" }}>Il Nostro Team</span>
             </div>
           </motion.div>
           <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-5">
@@ -371,7 +371,7 @@ export default function EmpireTeamStory() {
                       animate={{ opacity: [0.4, 1, 0.4] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
-                    <p className="text-[0.5rem] sm:text-[0.6rem] font-bold tracking-[3px] uppercase text-foreground/85">{member.role}</p>
+                    <p className="text-[10px] sm:text-[11px] font-bold tracking-[3px] uppercase text-foreground/85">{member.role}</p>
                   </div>
                   <h3 className="text-sm sm:text-lg font-bold text-foreground tracking-tight leading-tight">{member.name}</h3>
                 </div>
@@ -379,7 +379,7 @@ export default function EmpireTeamStory() {
 
               {/* Bio + Links */}
               <div className="p-3 sm:p-5 pt-3 space-y-3">
-                <p className="text-[0.65rem] sm:text-xs leading-relaxed line-clamp-3 text-foreground/75">{member.bio}</p>
+                <p className="text-[11px] sm:text-xs leading-relaxed line-clamp-3 text-foreground/75">{member.bio}</p>
 
                 {/* LinkedIn — always visible with premium style */}
                 <div className="flex items-center gap-2 pt-1">

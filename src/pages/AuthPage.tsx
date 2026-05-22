@@ -453,9 +453,9 @@ export default function AuthPage() {
                         <p className="text-xs font-bold text-foreground flex items-center gap-2">
                           <Handshake className="w-3.5 h-3.5 text-purple-400" /> Stai registrando un account Venditore Empire
                         </p>
-                        <p className="text-[0.6rem] text-foreground/60 mt-1">Dopo la registrazione accederai al pannello partner con strumenti di vendita, demo e gestione team.</p>
+                        <p className="text-[11px] text-foreground/60 mt-1">Dopo la registrazione accederai al pannello partner con strumenti di vendita, demo e gestione team.</p>
                         {referralId && (
-                          <p className="text-[0.55rem] text-purple-400 mt-1">🔗 Registrazione tramite link di reclutamento</p>
+                          <p className="text-[10px] text-purple-400 mt-1">🔗 Registrazione tramite link di reclutamento</p>
                         )}
                       </div>
                     )}

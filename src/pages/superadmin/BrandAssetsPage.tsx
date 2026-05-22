@@ -255,22 +255,22 @@ export default function BrandAssetsPage() {
                     <img src={assetUrl(asset.file)} alt={asset.name} className="w-full h-full object-cover" loading="lazy" />
                   )}
                   <div className="absolute top-1.5 left-1.5 flex gap-1">
-                    <span className={`px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold uppercase ${asset.type === "video" ? "bg-accent/80 text-accent-foreground" : "bg-primary/80 text-primary-foreground"}`}>
+                    <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${asset.type === "video" ? "bg-accent/80 text-accent-foreground" : "bg-primary/80 text-primary-foreground"}`}>
                       {asset.type === "video" ? "VIDEO" : "IMG"}
                     </span>
                   </div>
                 </div>
                 <div className="p-2">
-                  <h3 className="text-[0.65rem] font-semibold text-foreground truncate">{asset.name}</h3>
-                  <p className="text-[0.55rem] text-muted-foreground">{asset.category}</p>
+                  <h3 className="text-[11px] font-semibold text-foreground truncate">{asset.name}</h3>
+                  <p className="text-[10px] text-muted-foreground">{asset.category}</p>
                   <div className="flex gap-1 mt-1.5">
-                    <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-1 px-1.5" onClick={() => downloadAsset(asset)}>
+                    <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1 px-1.5" onClick={() => downloadAsset(asset)}>
                       <Download className="w-3 h-3" />
                     </Button>
-                    <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-1 px-1.5" onClick={() => copyUrl(i, asset.file)}>
+                    <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1 px-1.5" onClick={() => copyUrl(i, asset.file)}>
                       {copiedIdx === i ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
                     </Button>
-                    <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-1 px-1.5" onClick={() => setPreview(asset)}>
+                    <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1 px-1.5" onClick={() => setPreview(asset)}>
                       <Eye className="w-3 h-3" />
                     </Button>
                   </div>
@@ -297,11 +297,11 @@ export default function BrandAssetsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h3 className="text-xs font-semibold text-foreground truncate">{asset.name}</h3>
-                    <span className={`px-1.5 py-0.5 rounded text-[0.5rem] font-bold flex-shrink-0 ${asset.type === "video" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
+                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold flex-shrink-0 ${asset.type === "video" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
                       {asset.type.toUpperCase()}
                     </span>
                   </div>
-                  <p className="text-[0.6rem] text-muted-foreground">{asset.category}</p>
+                  <p className="text-[11px] text-muted-foreground">{asset.category}</p>
                 </div>
                 <div className="flex gap-1 flex-shrink-0">
                   <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => downloadAsset(asset)}>
@@ -318,7 +318,7 @@ export default function BrandAssetsPage() {
 
         {filtered.length === 0 && (
           <div className="text-center py-20">
-            <Image className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
+            <Image className="w-10 h-10 text-muted-foreground/70 mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">Nessun asset trovato</p>
           </div>
         )}

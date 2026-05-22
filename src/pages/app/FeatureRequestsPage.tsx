@@ -262,7 +262,7 @@ export default function FeatureRequestsPage() {
           {filtered.length === 0 && (
             <Card className="border-dashed">
               <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                <Lightbulb className="w-12 h-12 text-muted-foreground/30 mb-3" />
+                <Lightbulb className="w-12 h-12 text-muted-foreground/70 mb-3" />
                 <p className="text-muted-foreground">Nessuna richiesta {filterStatus !== "all" && `con stato "${STATUS_CONFIG[filterStatus]?.label}"`}</p>
                 <Button variant="outline" className="mt-4" onClick={() => setCreateOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" /> Crea la prima

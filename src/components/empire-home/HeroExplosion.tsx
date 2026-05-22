@@ -240,7 +240,7 @@ export default function HeroExplosion() {
           </button>
         </div>
 
-        <div data-hero-meta className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] font-semibold tracking-[4px] text-white/40 sm:flex">
+        <div data-hero-meta className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] font-semibold tracking-[4px] text-white/80 sm:flex">
           SCROLL
           <span className="block h-10 w-[1px] animate-pulse bg-gradient-to-b from-white/60 to-transparent" />
         </div>

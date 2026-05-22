@@ -66,7 +66,7 @@ export function StrapizzamiHeader({ brandName, subtitle, cartCount, onBack, onCa
             <ShoppingCart className="w-5 h-5" strokeWidth={2.2} />
             {cartCount && cartCount > 0 ? (
               <span
-                className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center text-[0.6rem] font-bold"
+                className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center text-[11px] font-bold"
                 style={{ background: STRAPIZZAMI.primary, color: STRAPIZZAMI.card }}
               >
                 {cartCount}

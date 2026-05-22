@@ -96,7 +96,7 @@ export function GlassServiceCard({ icon, title, description, accentColor = "#C9A
           {icon}
         </div>
         <h3 className="font-bold text-sm sm:text-base mb-2 text-white group-hover:text-white transition-colors">{title}</h3>
-        <p className="text-xs sm:text-sm leading-relaxed text-white/40 group-hover:text-white/60 transition-colors">{description}</p>
+        <p className="text-xs sm:text-sm leading-relaxed text-white/80 group-hover:text-white/60 transition-colors">{description}</p>
       </div>
     </motion.div>
   );
@@ -125,7 +125,7 @@ export function PremiumReviewCard({ name, text, rating, photo, city, accentColor
         )}
         <div>
           <p className="text-sm font-bold text-white">{name}</p>
-          {city && <p className="text-[11px] text-white/40">{city}</p>}
+          {city && <p className="text-[11px] text-white/80">{city}</p>}
         </div>
         <div className="ml-auto flex gap-0.5">
           {Array.from({ length: rating }).map((_, i) => (
@@ -164,7 +164,7 @@ export function PremiumStatsBar({ stats, accentColor = "#C9A84C" }: { stats: Sta
           <p className="text-2xl sm:text-3xl font-black" style={{ color: accentColor }}>
             <AnimatedNumber value={s.value} suffix={s.suffix || ""} />
           </p>
-          <p className="text-[11px] sm:text-xs text-white/40 mt-1 uppercase tracking-wider">{s.label}</p>
+          <p className="text-[11px] sm:text-xs text-white/80 mt-1 uppercase tracking-wider">{s.label}</p>
         </div>
       ))}
     </div>
@@ -377,7 +377,7 @@ export function PremiumServiceCard({ name, description, image, icon, accentColor
       </div>
       <div className="p-5">
         <h3 className="font-semibold text-base mb-1 text-white">{name}</h3>
-        <p className="text-sm text-white/40">{description}</p>
+        <p className="text-sm text-white/80">{description}</p>
       </div>
     </motion.div>
   );

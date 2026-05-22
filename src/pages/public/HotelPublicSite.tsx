@@ -336,7 +336,7 @@ export default function HotelPublicSite({ company, afterHero }: Props) {
                   <Icon className="w-5 h-5" style={{ color: H.goldLight }} />
                 </div>
                 <h3 className="font-semibold text-base mb-2 text-white">{label}</h3>
-                <p className="text-xs text-white/40 leading-relaxed" style={{ fontFamily: "'Raleway', sans-serif" }}>{desc}</p>
+                <p className="text-xs text-white/80 leading-relaxed" style={{ fontFamily: "'Raleway', sans-serif" }}>{desc}</p>
               </motion.div>
             ))}
           </div>

@@ -15,7 +15,7 @@ export default function AutopilotLeaderboard() {
 
   const podium = (i: number) =>
     i === 0 ? <Crown className="w-4 h-4 text-amber-400" /> :
-    i === 1 ? <Medal className="w-4 h-4 text-slate-400" /> :
+    i === 1 ? <Medal className="w-4 h-4 text-muted-foreground" /> :
     i === 2 ? <Medal className="w-4 h-4 text-amber-700" /> : null;
 
   return (

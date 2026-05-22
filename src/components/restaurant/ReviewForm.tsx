@@ -112,7 +112,7 @@ const ReviewForm = ({ restaurantId }: ReviewFormProps) => {
                         className="p-1 focus:outline-none transition-transform hover:scale-110"
                       >
                         <Star 
-                          className={`w-10 h-10 ${star <= rating ? "fill-primary text-primary" : "text-muted-foreground/30"}`} 
+                          className={`w-10 h-10 ${star <= rating ? "fill-primary text-primary" : "text-muted-foreground/70"}`} 
                         />
                       </button>
                     ))}

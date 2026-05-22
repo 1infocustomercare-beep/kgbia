@@ -32,7 +32,7 @@ export function IPhoneMockup({ children, accentColor = "#C8963E", className, sca
       >
         {/* Status bar */}
         <div className="flex items-center justify-between px-4 pt-2 pb-1 relative z-10">
-          <span className="text-[7px] text-white/40 font-bold">9:41</span>
+          <span className="text-[7px] text-white/80 font-bold">9:41</span>
           {/* Dynamic Island */}
           <div className="w-16 h-4 rounded-full bg-black border border-white/10" />
           <div className="flex items-center gap-1">
@@ -60,7 +60,7 @@ const Row = ({ label, sub, accent, icon }: { label: string; sub: string; accent:
     {icon && <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm" style={{ background: `${accent}20` }}>{icon}</div>}
     <div className="flex-1 min-w-0">
       <p className="text-[7px] font-bold text-white/80 truncate">{label}</p>
-      <p className="text-[6px] text-white/30">{sub}</p>
+      <p className="text-[6px] text-white/70">{sub}</p>
     </div>
     <div className="w-5 h-5 rounded-full flex items-center justify-center text-[8px]" style={{ background: accent, color: "white" }}>+</div>
   </div>
@@ -78,7 +78,7 @@ const KpiMini = ({ items, accent }: { items: { l: string; v: string }[]; accent:
     {items.map(k => (
       <div key={k.l} className="p-2 rounded-lg text-center" style={{ background: `${accent}08`, border: `1px solid ${accent}10` }}>
         <p className="text-[8px] font-bold text-white/70">{k.v}</p>
-        <p className="text-[5px] text-white/30">{k.l}</p>
+        <p className="text-[5px] text-white/70">{k.l}</p>
       </div>
     ))}
   </div>
@@ -112,7 +112,7 @@ export function SectorPhoneContent({ sector, accentColor = "#C8963E" }: { sector
           { l: "Pizza Margherita DOP", s: "€12 · Pizze", i: "🍕" },
           { l: "Tiramisù Artigianale", s: "€7 · Dolci", i: "🍰" },
         ].map((r, i) => <Row key={i} label={r.l} sub={r.s} accent="#e85d04" icon={r.i} />)}
-        <div className="text-center"><p className="text-[6px] text-white/20">Scorri per altri piatti ↓</p></div>
+        <div className="text-center"><p className="text-[6px] text-white/65">Scorri per altri piatti ↓</p></div>
       </div>
     ),
 
@@ -127,7 +127,7 @@ export function SectorPhoneContent({ sector, accentColor = "#C8963E" }: { sector
         ].map((r, i) => (
           <div key={i} className="p-2 rounded-xl" style={{ background: "#ec489908", border: "1px solid #ec489915" }}>
             <p className="text-[7px] font-bold text-white/80">{r.l}</p>
-            <p className="text-[6px] text-white/30">{r.s}</p>
+            <p className="text-[6px] text-white/70">{r.s}</p>
           </div>
         ))}
         <div className="w-full py-1.5 rounded-lg text-center text-[7px] font-bold text-white" style={{ background: "#ec4899" }}>Prenota Ora</div>
@@ -185,7 +185,7 @@ export function SectorPhoneContent({ sector, accentColor = "#C8963E" }: { sector
         <KpiMini items={[{ l: "Occupazione", v: "82%" }, { l: "Check-in", v: "14" }, { l: "ADR", v: "€185" }, { l: "Rating", v: "4.6" }]} accent="#f59e0b" />
         <div className="p-2 rounded-xl" style={{ background: "#f59e0b08", border: "1px solid #f59e0b15" }}>
           <p className="text-[7px] font-bold text-white/80">Suite 201 — J. Smith</p>
-          <p className="text-[6px] text-white/30">Check-in oggi · 5 notti · €1.250</p>
+          <p className="text-[6px] text-white/70">Check-in oggi · 5 notti · €1.250</p>
         </div>
       </div>
     ),
