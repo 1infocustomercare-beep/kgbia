@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Smartphone, RotateCcw, ExternalLink, ChefHat, LayoutDashboard, Users,
   Star, ShoppingCart, TrendingUp, Bell, Volume2, Printer, Sparkles,
@@ -11,7 +13,7 @@ import {
   XCircle, FileCheck, Ban, Mail, Zap
 } from "lucide-react";
 
-// Demo images
+// Demo images (used as fallback when no real data is available)
 import dishBruschetta from "@/assets/dish-bruschetta.jpg";
 import dishPasta from "@/assets/dish-pasta.jpg";
 import dishTiramisu from "@/assets/dish-tiramisu.jpg";
@@ -21,6 +23,7 @@ import dishSteak from "@/assets/dish-steak.jpg";
 import heroVideo from "@/assets/hero-restaurant.mp4";
 import storyInterior from "@/assets/story-interior.jpg";
 import restaurantLogo from "@/assets/restaurant-logo.png";
+
 
 interface LivePreviewProps {
   slug: string;
