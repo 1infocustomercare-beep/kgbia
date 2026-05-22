@@ -40,8 +40,12 @@ interface Project {
 const PROJECTS: Project[] = [
   {
     id: "strapizzami",
-    tag: "Pizzeria",
+    tag: "Food",
+    subtag: "Pizzeria",
+    pill: { bg: "hsl(20 90% 92%)", text: "hsl(20 80% 38%)" },
+    pill2: { bg: "hsl(20 60% 95%)", text: "hsl(20 50% 35%)" },
     title: "Strapizzami",
+
     city: "Milano",
     oneLiner: "Da pizzeria di quartiere a marchio digitale che vende anche di notte.",
     problem: [
