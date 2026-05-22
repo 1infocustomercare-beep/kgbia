@@ -10,7 +10,7 @@ export default function PrestigeCTA() {
     <section
       ref={ref}
       data-section="prestige-cta"
-      className="prestige-section prestige-light py-24 sm:py-32"
+      className="prestige-section prestige-light pt-32 pb-24 sm:pt-40 sm:pb-32"
     >
       <div className="mx-auto max-w-4xl px-5 text-center lg:px-10">
         <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-deep))" }}>
