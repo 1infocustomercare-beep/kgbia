@@ -399,7 +399,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
             </div>
           </TipBubble>
           <div className="space-y-1.5">
-            {DEMO_MENU.filter(i => i.cat === selectedCat).map((item, idx) => (
+            {realMenu.filter((i: any) => i.cat === selectedCat).map((item: any, idx: number) => (
               <TipBubble key={idx} id={idx === 0 ? "menu-item" : `item-${idx}`}>
                 <div className="flex gap-2 p-2 rounded-xl bg-card">
                   <img src={item.img} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
