@@ -53,8 +53,8 @@ const DashboardOverview = ({
           )}
         </motion.div>
         <div>
-          <h2 className="text-xl font-display font-bold text-foreground tracking-wide uppercase">{restaurantName}</h2>
-          <p className="text-[0.6rem] uppercase tracking-[4px] text-primary/60 font-semibold mt-1">Command Center · Oggi</p>
+          <h2 className="text-xl font-display font-bold text-foreground tracking-wide uppercase break-words max-w-[18rem]">{restaurantName}</h2>
+          <p className="text-[10px] uppercase tracking-[4px] text-primary/80 font-semibold mt-1">Command Center · Oggi</p>
         </div>
         <InfoGuide
           title="Dashboard Principale"
