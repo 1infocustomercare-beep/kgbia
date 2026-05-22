@@ -388,19 +388,26 @@ const RestaurantPage = () => {
             </motion.div>
           </motion.div>
 
-          {/* Photo Grid */}
+          {/* Photo Grid — usa galleria reale dal DB se disponibile */}
           <div className="grid grid-cols-2 gap-3">
-            {[storyInterior, storyWine, storyPasta, storyDish].map((img, i) => (
-              <motion.div key={i} className={`overflow-hidden rounded-2xl ${i === 0 ? "row-span-2" : ""}`}
-                initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.7, delay: 0.15 * i + 0.2, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ scale: 1.03 }}>
-                <img src={img} alt="Restaurant" className={`w-full object-cover ${i === 0 ? "h-full" : "h-48 sm:h-56"} transition-transform duration-700`} loading="lazy" />
-              </motion.div>
-            ))}
+            {(() => {
+              const dbGallery: string[] = (dbRestaurant as any)?.theme_config?.gallery || [];
+              const imgs = dbGallery.length >= 4
+                ? dbGallery.slice(0, 4)
+                : [storyInterior, storyWine, storyPasta, storyDish];
+              return imgs.map((img, i) => (
+                <motion.div key={i} className={`overflow-hidden rounded-2xl ${i === 0 ? "row-span-2" : ""}`}
+                  initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.7, delay: 0.15 * i + 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ scale: 1.03 }}>
+                  <img src={img} alt={`${restaurantName} foto ${i + 1}`} className={`w-full object-cover ${i === 0 ? "h-full" : "h-48 sm:h-56"} transition-transform duration-700`} loading="lazy" />
+                </motion.div>
+              ));
+            })()}
           </div>
+
         </div>
       </section>
 
