@@ -83,10 +83,11 @@ export default function PrestigeHero() {
       <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 lg:grid-cols-12 lg:gap-12 lg:px-10">
         {/* LEFT — Copy */}
         <div className="lg:col-span-7">
-          <div className="prestige-eyebrow inline-flex max-w-full items-center gap-2 pr-16 sm:pr-20" style={{ color: "hsl(var(--pr-gold-light))" }}>
-            <Sparkles size={14} className="shrink-0" />
-            <span className="truncate sm:whitespace-normal">{t({ it: "Empire · Agency AI per la tua azienda", en: "Empire · AI Agency for your business" })}</span>
+          <div className="prestige-eyebrow inline-flex max-w-full items-start gap-2 pr-20 sm:pr-24" style={{ color: "hsl(var(--pr-gold-light))" }}>
+            <Sparkles size={14} className="mt-[2px] shrink-0" />
+            <span className="whitespace-normal leading-snug">{t({ it: "Empire · Agency AI per la tua azienda", en: "Empire · AI Agency for your business" })}</span>
           </div>
+
 
 
           <h1 className="prestige-display mt-5 text-4xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
