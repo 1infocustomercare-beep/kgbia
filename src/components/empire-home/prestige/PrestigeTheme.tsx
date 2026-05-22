@@ -119,12 +119,15 @@ export default function PrestigeTheme() {
 
       .prestige-card {
         position: relative;
-        border-radius: 24px;
-        padding: 1.5rem;
+        border-radius: 20px;
+        padding: 1.15rem;
         background: hsl(var(--pr-emerald-mid) / 0.55);
         border: 1px solid hsl(var(--pr-gold) / 0.18);
         backdrop-filter: blur(10px);
         transition: transform .5s cubic-bezier(.22,1,.36,1), border-color .3s ease, box-shadow .3s ease;
+      }
+      @media (min-width: 640px) {
+        .prestige-card { border-radius: 24px; padding: 1.5rem; }
       }
       .prestige-light .prestige-card {
         background: hsl(0 0% 100% / 0.85);
@@ -135,6 +138,17 @@ export default function PrestigeTheme() {
         transform: translateY(-4px);
         border-color: hsl(var(--pr-gold) / 0.45);
         box-shadow: 0 20px 60px -20px hsl(var(--pr-gold) / 0.35);
+      }
+      .prestige-cta, .prestige-cta-ghost {
+        max-width: 100%;
+        white-space: nowrap;
+      }
+      @media (max-width: 380px) {
+        .prestige-cta, .prestige-cta-ghost {
+          padding: 0.85rem 1.1rem;
+          font-size: 13px;
+          gap: 0.4rem;
+        }
       }
 
       /* Scroll-driven utilities (uses --empire-progress from ScrollDirector) */
