@@ -58,7 +58,7 @@ export default function PrestigeProcess() {
                 }}
               >
                 <div
-                  className="prestige-display text-5xl font-bold"
+                  className="prestige-display text-4xl sm:text-5xl font-bold"
                   style={{
                     color: isActive ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-gold) / 0.3)",
                     transition: "color .6s ease",
@@ -66,10 +66,11 @@ export default function PrestigeProcess() {
                 >
                   {s.n}
                 </div>
-                <h3 className="prestige-display mt-3 text-xl sm:text-2xl">{s.title}</h3>
+                <h3 className="prestige-display mt-3 text-lg sm:text-2xl break-words">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
                   {s.desc}
                 </p>
+
                 {isActive && (
                   <span
                     className="absolute right-3 top-3 h-2 w-2 rounded-full"
