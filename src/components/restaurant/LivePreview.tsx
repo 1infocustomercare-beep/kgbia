@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Smartphone, RotateCcw, ExternalLink, ChefHat, LayoutDashboard, Users,
   Star, ShoppingCart, TrendingUp, Bell, Volume2, Printer, Sparkles,
@@ -11,7 +13,7 @@ import {
   XCircle, FileCheck, Ban, Mail, Zap
 } from "lucide-react";
 
-// Demo images
+// Demo images (used as fallback when no real data is available)
 import dishBruschetta from "@/assets/dish-bruschetta.jpg";
 import dishPasta from "@/assets/dish-pasta.jpg";
 import dishTiramisu from "@/assets/dish-tiramisu.jpg";
@@ -21,6 +23,7 @@ import dishSteak from "@/assets/dish-steak.jpg";
 import heroVideo from "@/assets/hero-restaurant.mp4";
 import storyInterior from "@/assets/story-interior.jpg";
 import restaurantLogo from "@/assets/restaurant-logo.png";
+
 
 interface LivePreviewProps {
   slug: string;
@@ -77,6 +80,62 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
   const [kitchenOrders, setKitchenOrders] = useState(DEMO_ORDERS);
 
   const previewUrl = `${window.location.origin}/r/${slug}`;
+
+  // ===== LIVE SYNC with real account data (by slug) =====
+  const { data: realData } = useQuery({
+    queryKey: ["live-preview-sync", slug],
+    enabled: !!slug,
+    staleTime: 30_000,
+    queryFn: async () => {
+      const { data: r } = await supabase
+        .from("restaurants")
+        .select("id, name, slug, logo_url, tagline, address, phone, primary_color")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (!r) return { restaurant: null, menu: [] as any[] };
+      const { data: items } = await supabase
+        .from("menu_items")
+        .select("name, price, category, image_url, is_popular, sort_order")
+        .eq("restaurant_id", r.id)
+        .order("is_popular", { ascending: false, nullsFirst: false })
+        .order("sort_order", { ascending: true })
+        .limit(40);
+      return { restaurant: r, menu: items ?? [] };
+    },
+  });
+
+  const restaurant = realData?.restaurant;
+  const realMenu = useMemo(() => {
+    const items = realData?.menu ?? [];
+    if (!items.length) return DEMO_MENU;
+    const fallbackImgs = [dishPizza, dishPasta, dishBruschetta, dishRisotto, dishSteak, dishTiramisu];
+    return items.map((m: any, i: number) => ({
+      name: m.name,
+      price: Number(m.price ?? 0),
+      cat: m.category || "Menu",
+      img: m.image_url || fallbackImgs[i % fallbackImgs.length],
+      popular: !!m.is_popular,
+    }));
+  }, [realData?.menu]);
+  const realCategories = useMemo(() => {
+    const cats = Array.from(new Set(realMenu.map((i: any) => i.cat))).filter(Boolean) as string[];
+    return cats.length ? cats : ["Antipasti", "Primi", "Pizze", "Secondi", "Dolci"];
+  }, [realMenu]);
+
+  // Keep selectedCat valid when real categories load
+  useEffect(() => {
+    if (realCategories.length && !realCategories.includes(selectedCat)) {
+      setSelectedCat(realCategories[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [realCategories.join("|")]);
+
+  const displayName = restaurant?.name || slug?.replace(/-/g, " ") || "Impero Roma";
+  const displayTagline = restaurant?.tagline || "Cucina Italiana d'Eccellenza";
+  const displayLogo = restaurant?.logo_url || restaurantLogo;
+  const displayAddress = restaurant?.address || "Via del Corso 42, Roma";
+  const displayPhone = restaurant?.phone || "+39 06 1234 5678";
+
 
   // Tooltip definitions per view+section
   const tooltips: Record<string, Tooltip> = {
@@ -286,11 +345,12 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
               <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <img src={restaurantLogo} alt="" className="w-10 h-10 rounded-xl mb-2" />
+                <img src={displayLogo} alt="" className="w-10 h-10 rounded-xl mb-2 object-contain bg-background/40" />
                 <p className="font-display font-bold text-sm text-foreground tracking-widest uppercase">
-                  {slug?.replace(/-/g, " ") || "Impero Roma"}
+                  {displayName}
                 </p>
-                <p className="text-[8px] text-foreground/60 tracking-[0.2em] uppercase mt-0.5">Cucina Italiana d'Eccellenza</p>
+                <p className="text-[8px] text-foreground/60 tracking-[0.2em] uppercase mt-0.5 px-2 text-center line-clamp-2">{displayTagline}</p>
+
               </div>
             </div>
           </TipBubble>
@@ -304,7 +364,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
           <div className="px-2 py-3">
             <p className="text-[8px] text-primary uppercase tracking-widest font-medium mb-2">⭐ I più amati</p>
             <div className="flex gap-1.5 overflow-x-auto pb-1">
-              {DEMO_MENU.filter(i => i.popular).map((item, idx) => (
+              {realMenu.filter((i: any) => i.popular).slice(0, 8).map((item: any, idx: number) => (
                 <div key={idx} className="flex-shrink-0 w-20">
                   <img src={item.img} alt="" className="w-20 h-16 rounded-lg object-cover" />
                   <p className="text-[8px] font-medium mt-0.5 truncate">{item.name}</p>
@@ -330,7 +390,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
         <div className="px-2 py-2">
           <TipBubble id="menu-categories">
             <div className="flex gap-1 overflow-x-auto pb-2 mb-2">
-              {["Antipasti", "Primi", "Pizze", "Secondi", "Dolci"].map(cat => (
+              {realCategories.map(cat => (
                 <button key={cat} onClick={() => setSelectedCat(cat)}
                   className={`px-2.5 py-1 rounded-lg text-[8px] font-medium whitespace-nowrap ${selectedCat === cat ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
                   {cat}
@@ -339,7 +399,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
             </div>
           </TipBubble>
           <div className="space-y-1.5">
-            {DEMO_MENU.filter(i => i.cat === selectedCat).map((item, idx) => (
+            {realMenu.filter((i: any) => i.cat === selectedCat).map((item: any, idx: number) => (
               <TipBubble key={idx} id={idx === 0 ? "menu-item" : `item-${idx}`}>
                 <div className="flex gap-2 p-2 rounded-xl bg-card">
                   <img src={item.img} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
@@ -359,7 +419,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
                 </div>
               </TipBubble>
             ))}
-            {DEMO_MENU.filter(i => i.cat === selectedCat).length === 0 && (
+            {realMenu.filter((i: any) => i.cat === selectedCat).length === 0 && (
               <div className="text-center py-6 text-muted-foreground text-[9px]">Nessun piatto</div>
             )}
           </div>
@@ -396,8 +456,9 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
           <TipBubble id="contact-info">
             <div className="p-2.5 rounded-xl bg-card border border-border/30 space-y-1.5">
               <p className="text-[9px] font-bold">📍 Contatti & Orari</p>
-              <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><MapPin className="w-3 h-3 text-primary" /> Via del Corso 42, Roma</div>
-              <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><Phone className="w-3 h-3 text-primary" /> +39 06 1234 5678</div>
+              <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><MapPin className="w-3 h-3 text-primary flex-shrink-0" /> <span className="truncate">{displayAddress}</span></div>
+              <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><Phone className="w-3 h-3 text-primary flex-shrink-0" /> {displayPhone}</div>
+
               <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground"><Clock className="w-3 h-3 text-primary" /> Lun-Ven 12-15 · 19-23:30</div>
             </div>
           </TipBubble>
@@ -427,7 +488,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
       {/* Admin header */}
       <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/30 bg-card/50 flex-shrink-0">
         <div className="flex items-center gap-1.5">
-          <img src={restaurantLogo} alt="" className="w-5 h-5 rounded-lg flex-shrink-0" />
+          <img src={displayLogo} alt="" className="w-5 h-5 rounded-lg flex-shrink-0 object-contain" />
           <div className="min-w-0">
             <p className="text-[9px] font-bold truncate">Impero Roma</p>
             <p className="text-[7px] text-primary">{["Home", "Studio", "Ordini", "Profitto", "Altro"][["home", "studio", "orders", "profit", "more"].indexOf(adminTab)]}</p>
@@ -516,7 +577,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
                       <div className="px-1.5 py-0.5 rounded-lg bg-primary text-primary-foreground text-[7px]">+ Nuovo</div>
                     </div>
                   </div>
-                  {DEMO_MENU.slice(0, 4).map((item, i) => (
+                  {realMenu.slice(0, 4).map((item: any, i: number) => (
                     <div key={i} className="flex items-center gap-1.5 py-1 border-b border-border/10 last:border-0">
                       <img src={item.img} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
                       <div className="flex-1 min-w-0">
@@ -956,9 +1017,11 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
                 <div className="p-2 rounded-xl bg-card border border-border/30 space-y-1.5">
                   <p className="text-[8px] font-bold flex items-center gap-1"><Settings className="w-3 h-3 text-muted-foreground" /> Impostazioni</p>
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><Phone className="w-2.5 h-2.5 text-primary" /><span className="text-[7px]">+39 06 1234 5678</span></div>
-                    <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><Mail className="w-2.5 h-2.5 text-primary" /><span className="text-[7px]">info@impero.it</span></div>
-                    <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><MapPin className="w-2.5 h-2.5 text-primary" /><span className="text-[7px]">Via del Corso 42</span></div>
+                    <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><Phone className="w-2.5 h-2.5 text-primary flex-shrink-0" /><span className="text-[7px] truncate">{displayPhone}</span></div>
+                    <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><Mail className="w-2.5 h-2.5 text-primary flex-shrink-0" /><span className="text-[7px] truncate">info@{slug}.it</span></div>
+                    <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><MapPin className="w-2.5 h-2.5 text-primary flex-shrink-0" /><span className="text-[7px] truncate">{displayAddress}</span></div>
+
+
                     <div className="flex items-center gap-1.5 p-1 rounded-lg bg-secondary/50"><Clock className="w-2.5 h-2.5 text-primary" /><span className="text-[7px]">Lun-Ven 12-23:30</span></div>
                   </div>
                   <div className="flex items-center gap-1.5 p-1 rounded-lg bg-green-500/5 border border-green-500/20">
