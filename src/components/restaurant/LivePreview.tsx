@@ -419,7 +419,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
                 </div>
               </TipBubble>
             ))}
-            {DEMO_MENU.filter(i => i.cat === selectedCat).length === 0 && (
+            {realMenu.filter((i: any) => i.cat === selectedCat).length === 0 && (
               <div className="text-center py-6 text-muted-foreground text-[9px]">Nessun piatto</div>
             )}
           </div>
