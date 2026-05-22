@@ -62,7 +62,7 @@ export default function LandingMetrics() {
             >
               <Counter value={m.value} prefix={m.prefix} suffix={m.suffix} color={m.color} />
               <div className="text-[14px] font-bold mt-2 text-white/90">{m.label}</div>
-              <div className="text-[11px] text-white/40 mt-0.5">{m.sub}</div>
+              <div className="text-[11px] text-white/80 mt-0.5">{m.sub}</div>
             </div>
           ))}
         </div>

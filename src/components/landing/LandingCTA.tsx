@@ -51,7 +51,7 @@ export default function LandingCTA() {
           </button>
         </div>
 
-        <p className="text-[12px] text-white/30">
+        <p className="text-[12px] text-white/70">
           Nessuna carta di credito · Setup in 7 giorni · Supporto dedicato 7/7
         </p>
       </div>

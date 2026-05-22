@@ -90,7 +90,7 @@ export default function MagneticCTA() {
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
         </button>
 
-        <p className="mt-5 text-[10px] uppercase tracking-[2px] text-white/40 sm:mt-6 sm:text-[11px]">Setup guidato · Cancelli quando vuoi · Supporto in italiano</p>
+        <p className="mt-5 text-[10px] uppercase tracking-[2px] text-white/80 sm:mt-6 sm:text-[11px]">Setup guidato · Cancelli quando vuoi · Supporto in italiano</p>
       </div>
     </section>
   );

@@ -1247,13 +1247,13 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
           </div>
           {currentViewIndex > 0 && (
             <motion.div animate={{ x: [-2, 2, -2] }} transition={{ repeat: Infinity, duration: 1.5 }}
-              className="absolute left-[-16px] top-1/2 -translate-y-1/2 text-muted-foreground/40">
+              className="absolute left-[-16px] top-1/2 -translate-y-1/2 text-muted-foreground/75">
               <ChevronDown className="w-4 h-4 -rotate-90" />
             </motion.div>
           )}
           {currentViewIndex < VIEWS.length - 1 && (
             <motion.div animate={{ x: [2, -2, 2] }} transition={{ repeat: Infinity, duration: 1.5 }}
-              className="absolute right-[-16px] top-1/2 -translate-y-1/2 text-muted-foreground/40">
+              className="absolute right-[-16px] top-1/2 -translate-y-1/2 text-muted-foreground/75">
               <ChevronDown className="w-4 h-4 rotate-90" />
             </motion.div>
           )}

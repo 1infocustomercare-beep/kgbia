@@ -608,7 +608,7 @@ export default function PartnerHomePage() {
                 style={{ background: "linear-gradient(90deg, transparent 0%, rgba(167,139,250,0.03) 25%, transparent 50%)", backgroundSize: "200% 100%" }} />
               <motion.div className="w-2 h-2 rounded-full shrink-0" animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity }} style={{ background: "#34d399", boxShadow: "0 0 8px rgba(52,211,153,0.5)" }} />
-              <span className="text-[9px] font-mono tracking-[0.2em] uppercase text-foreground/30">
+              <span className="text-[9px] font-mono tracking-[0.2em] uppercase text-foreground/75">
                 EMPIRE PARTNER — SISTEMA ATTIVO
               </span>
               <motion.div className="ml-auto flex items-center gap-1.5" animate={{ opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 3, repeat: Infinity }}>
@@ -838,7 +838,7 @@ export default function PartnerHomePage() {
                     <p className="text-[11px] text-muted-foreground mt-0.5">{item.desc}</p>
                   </div>
                   <motion.div animate={{ x: [0, 3, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                    <ChevronRight className="w-5 h-5 shrink-0 text-muted-foreground/40 group-hover:text-foreground/60 transition-colors" />
+                    <ChevronRight className="w-5 h-5 shrink-0 text-muted-foreground/75 group-hover:text-foreground/60 transition-colors" />
                   </motion.div>
                 </motion.div>
               ))}

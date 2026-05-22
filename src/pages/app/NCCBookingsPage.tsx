@@ -109,7 +109,7 @@ function KanbanColumn({ status, bookings, onStatusChange, onSelect }: {
           ))}
         </AnimatePresence>
         {bookings.length === 0 && (
-          <div className="text-center py-8 text-muted-foreground/40 text-xs">Nessuna</div>
+          <div className="text-center py-8 text-muted-foreground/75 text-xs">Nessuna</div>
         )}
       </div>
     </div>

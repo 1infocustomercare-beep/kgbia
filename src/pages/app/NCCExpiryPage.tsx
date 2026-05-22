@@ -151,7 +151,7 @@ export default function NCCExpiryPage() {
             <div className="space-y-3">{[1,2,3,4].map(i => <Skeleton key={i} className="h-14 w-full rounded-lg" />)}</div>
           ) : filtered.length === 0 ? (
             <div className="py-8 text-center">
-              <Shield className="w-10 h-10 mx-auto text-muted-foreground/30 mb-2" />
+              <Shield className="w-10 h-10 mx-auto text-muted-foreground/70 mb-2" />
               <p className="text-sm text-muted-foreground">Nessun documento trovato</p>
             </div>
           ) : (

@@ -325,7 +325,7 @@ const PartnerDemoProjects = () => {
         </div>
       ) : projects.length === 0 ? (
         <div className="text-center py-10 space-y-3">
-          <Building2 className="w-10 h-10 text-muted-foreground/30 mx-auto" />
+          <Building2 className="w-10 h-10 text-muted-foreground/70 mx-auto" />
           <p className="text-sm text-muted-foreground">Nessuna bozza demo ancora.</p>
           <p className="text-xs text-muted-foreground">Crea la prima per mostrare Empire con il brand del tuo cliente!</p>
         </div>

@@ -295,7 +295,7 @@ export default function SubscriptionSection({ restaurantId }: { restaurantId: st
         })}
       </div>
 
-      <div className="flex items-center justify-center gap-3 text-[10px] text-muted-foreground/40 pt-1">
+      <div className="flex items-center justify-center gap-3 text-[10px] text-muted-foreground/75 pt-1">
         <Shield className="w-3 h-3" />
         <span>Pagamento sicuro con Stripe · Annulla in qualsiasi momento</span>
       </div>

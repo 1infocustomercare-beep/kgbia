@@ -700,7 +700,7 @@ const PartnerSandbox = () => {
         </div>
         {kitchenOrders.length === 0 ? (
           <div className="text-center py-16">
-            <ChefHat className="w-16 h-16 mx-auto mb-4 text-muted-foreground/20" />
+            <ChefHat className="w-16 h-16 mx-auto mb-4 text-muted-foreground/65" />
             <p className="text-sm text-muted-foreground">Nessun ordine — fai un ordine dalla vista Cliente!</p>
           </div>
         ) : (

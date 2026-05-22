@@ -1419,7 +1419,7 @@ const SuperAdminDashboard = () => {
               })}
               {payments.length === 0 && (
                 <div className="text-center py-12">
-                  <CreditCard className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
+                  <CreditCard className="w-12 h-12 mx-auto mb-3 text-muted-foreground/65" />
                   <p className="text-sm text-muted-foreground">Nessun contratto registrato</p>
                 </div>
               )}
@@ -1670,7 +1670,7 @@ const SuperAdminDashboard = () => {
 
                     {subscriptions.length === 0 && (
                       <div className="text-center py-12">
-                        <Calendar className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
+                        <Calendar className="w-12 h-12 mx-auto mb-3 text-muted-foreground/65" />
                         <p className="text-sm text-muted-foreground">Nessun abbonamento registrato</p>
                       </div>
                     )}
@@ -2037,7 +2037,7 @@ const SuperAdminDashboard = () => {
                         {/* Toggle */}
                         <motion.button
                           onClick={() => toggleIntegration(item.name)}
-                          className={`p-0.5 rounded transition-colors ${isDisabled ? "text-muted-foreground/40" : "text-green-400"}`}
+                          className={`p-0.5 rounded transition-colors ${isDisabled ? "text-muted-foreground/75" : "text-green-400"}`}
                           whileTap={{ scale: 0.9 }}
                         >
                           {isDisabled ? <ToggleLeft className="w-4 h-4" /> : <ToggleRight className="w-4 h-4" />}
@@ -2060,7 +2060,7 @@ const SuperAdminDashboard = () => {
                             <p className="text-[10px] text-muted-foreground/70 italic">{item.detail}</p>
                             {item.secretName && (
                               <div className="flex items-center gap-1">
-                                <Lock className="w-2.5 h-2.5 text-muted-foreground/40" />
+                                <Lock className="w-2.5 h-2.5 text-muted-foreground/75" />
                                 <span className="text-[0.45rem] font-mono text-muted-foreground/50">{item.secretName}</span>
                               </div>
                             )}
@@ -2137,7 +2137,7 @@ const SuperAdminDashboard = () => {
                         placeholder="Cerca integrazione..."
                         value={intFilter.search}
                         onChange={(e) => setIntFilter(prev => ({ ...prev, search: e.target.value }))}
-                        className="w-full pl-6 pr-2 py-1.5 rounded-lg bg-secondary/30 border border-border text-[0.65rem] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/30"
+                        className="w-full pl-6 pr-2 py-1.5 rounded-lg bg-secondary/30 border border-border text-[0.65rem] text-foreground placeholder:text-muted-foreground/75 focus:outline-none focus:border-primary/30"
                       />
                     </div>
                     {/* Status chips */}
@@ -2380,7 +2380,7 @@ const SuperAdminDashboard = () => {
                               <div key={f.fn} className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-muted/20 transition-colors">
                                 <div className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
                                 <span className="text-[0.55rem] font-mono text-foreground/70 truncate flex-1">{f.fn}</span>
-                                <span className={`text-[0.4rem] font-mono px-1 rounded ${f.deps === "—" ? "text-muted-foreground/30" : "text-amber-400/60 bg-amber-500/5"}`}>{f.deps}</span>
+                                <span className={`text-[0.4rem] font-mono px-1 rounded ${f.deps === "—" ? "text-muted-foreground/70" : "text-amber-400/60 bg-amber-500/5"}`}>{f.deps}</span>
                               </div>
                             ))}
                           </div>

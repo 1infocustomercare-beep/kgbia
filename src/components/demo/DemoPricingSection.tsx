@@ -75,7 +75,7 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
 
   const isDark = theme.palette.bg.startsWith("#0") || theme.palette.bg.startsWith("rgba");
   const textColor = isDark ? "text-white" : "text-gray-900";
-  const textMuted = isDark ? "text-white/40" : "text-gray-500";
+  const textMuted = isDark ? "text-white/80" : "text-gray-500";
 
   return (
     <section
@@ -153,7 +153,7 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
                     ) : (
                       <X className={`w-4 h-4 shrink-0 ${isDark ? "text-white/15" : "text-gray-300"}`} />
                     )}
-                    <span className={`text-xs ${f.included ? (isDark ? "text-white/70" : "text-gray-700") : (isDark ? "text-white/20" : "text-gray-400")}`}>
+                    <span className={`text-xs ${f.included ? (isDark ? "text-white/70" : "text-gray-700") : (isDark ? "text-white/65" : "text-gray-400")}`}>
                       {f.label}
                     </span>
                   </div>

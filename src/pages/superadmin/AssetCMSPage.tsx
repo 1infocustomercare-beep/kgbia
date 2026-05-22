@@ -144,7 +144,7 @@ export default function AssetCMSPage() {
                     )}
                     {!previewUrl && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        {isVideo ? <Film className="w-6 h-6 text-muted-foreground/30" /> : <Image className="w-6 h-6 text-muted-foreground/30" />}
+                        {isVideo ? <Film className="w-6 h-6 text-muted-foreground/70" /> : <Image className="w-6 h-6 text-muted-foreground/70" />}
                       </div>
                     )}
                     

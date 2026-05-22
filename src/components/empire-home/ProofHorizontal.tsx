@@ -93,7 +93,7 @@ export default function ProofHorizontal() {
       </div>
 
       <div className="absolute right-4 top-6 z-20 hidden text-right sm:block sm:right-10 sm:top-12">
-        <div className="text-[9px] font-mono tracking-[3px] text-white/40 sm:text-[10px]">SCROLL →</div>
+        <div className="text-[9px] font-mono tracking-[3px] text-white/80 sm:text-[10px]">SCROLL →</div>
       </div>
 
       <div ref={track} className="relative mt-10 flex h-auto flex-col gap-4 px-4 will-change-transform sm:absolute sm:inset-0 sm:mt-0 sm:h-full sm:flex-row sm:items-center sm:gap-10 sm:pl-10 sm:pr-[10vw]">
@@ -105,7 +105,7 @@ export default function ProofHorizontal() {
             style={{ background: `linear-gradient(160deg, ${p.c}1a 0%, transparent 60%), rgba(255,255,255,0.02)` }}
           >
             <div className="absolute right-5 top-5 h-3 w-3 rounded-full sm:right-6 sm:top-6" style={{ background: p.c, boxShadow: `0 0 24px ${p.c}` }} />
-            <div className="font-mono text-[10px] tracking-[3px] text-white/30">{String(i + 1).padStart(2, "0")} / {PROOF.length}</div>
+            <div className="font-mono text-[10px] tracking-[3px] text-white/70">{String(i + 1).padStart(2, "0")} / {PROOF.length}</div>
             <div className="mt-2 font-heading font-black leading-none tracking-[-0.05em] text-white" style={{ fontSize: "clamp(3.5rem, 14vw, 12rem)" }}>
               {p.k}
             </div>

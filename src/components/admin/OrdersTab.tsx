@@ -236,7 +236,7 @@ const OrdersTab = ({
           {/* Orders list */}
           {activeOrders.length === 0 && (
             <div className="text-center py-10">
-              <ChefHat className="w-10 h-10 mx-auto mb-2 text-muted-foreground/20" />
+              <ChefHat className="w-10 h-10 mx-auto mb-2 text-muted-foreground/65" />
               <p className="text-sm text-muted-foreground">Nessun ordine in coda</p>
               <p className="text-[10px] text-muted-foreground/50 mt-1">I nuovi ordini appariranno qui</p>
             </div>
@@ -310,7 +310,7 @@ const OrdersTab = ({
           {restaurantTables.length === 0 ? (
             <div className="space-y-3">
               <div className="text-center py-8">
-                <Move className="w-10 h-10 mx-auto mb-2 text-muted-foreground/20" />
+                <Move className="w-10 h-10 mx-auto mb-2 text-muted-foreground/65" />
                 <p className="text-sm text-muted-foreground">Crea i tavoli per la tua sala</p>
               </div>
               <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-secondary/40">
@@ -545,7 +545,7 @@ const OrdersTab = ({
           {/* Empty */}
           {filteredReservations.length === 0 && (
             <div className="text-center py-10">
-              <CalendarDays className="w-10 h-10 mx-auto mb-2 text-muted-foreground/20" />
+              <CalendarDays className="w-10 h-10 mx-auto mb-2 text-muted-foreground/65" />
               <p className="text-sm text-muted-foreground">Nessuna prenotazione</p>
             </div>
           )}

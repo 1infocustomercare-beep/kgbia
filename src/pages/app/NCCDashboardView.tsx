@@ -472,7 +472,7 @@ export default function NCCDashboardView() {
             </div>
           ) : (todayRides?.rides.length ?? 0) === 0 ? (
             <div className="py-6 text-center">
-              <Car className="w-8 h-8 mx-auto text-muted-foreground/20 mb-2" />
+              <Car className="w-8 h-8 mx-auto text-muted-foreground/65 mb-2" />
               <p className="text-xs text-muted-foreground">Nessuna corsa programmata</p>
               <Button size="sm" variant="outline" className="mt-3 text-xs h-8" onClick={() => navigate("/app/bookings")}>
                 <Plus className="w-3 h-3 mr-1" /> Nuova Prenotazione
@@ -545,7 +545,7 @@ export default function NCCDashboardView() {
         <CardContent className="px-3 sm:px-6 pb-3">
           {drivers.length === 0 ? (
             <div className="py-4 text-center">
-              <Users className="w-6 h-6 mx-auto text-muted-foreground/20 mb-1" />
+              <Users className="w-6 h-6 mx-auto text-muted-foreground/65 mb-1" />
               <p className="text-xs text-muted-foreground">Nessun autista registrato</p>
             </div>
           ) : (

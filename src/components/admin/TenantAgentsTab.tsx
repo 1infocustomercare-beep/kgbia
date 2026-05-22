@@ -226,7 +226,7 @@ export default function TenantAgentsTab() {
         </div>
       ) : filteredTenants.length === 0 ? (
         <div className="text-center py-12">
-          <Building2 className="w-10 h-10 text-muted-foreground/30 mx-auto mb-2" />
+          <Building2 className="w-10 h-10 text-muted-foreground/70 mx-auto mb-2" />
           <p className="text-muted-foreground text-xs">Nessun account con agenti installati</p>
         </div>
       ) : (

@@ -78,7 +78,7 @@ export function TutorialPopup({ id, title, steps, accentColor = "#C8963E", posit
                 </div>
                 <span className="text-xs font-bold text-white/80">{title}</span>
               </div>
-              <button onClick={dismiss} className="w-6 h-6 rounded-lg flex items-center justify-center text-white/30 hover:text-white/60 hover:bg-white/5 transition-all">
+              <button onClick={dismiss} className="w-6 h-6 rounded-lg flex items-center justify-center text-white/70 hover:text-white/60 hover:bg-white/5 transition-all">
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -109,7 +109,7 @@ export function TutorialPopup({ id, title, steps, accentColor = "#C8963E", posit
               <div className="flex items-center gap-2">
                 {step > 0 && (
                   <button onClick={() => setStep(s => s - 1)}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/60 bg-white/[0.04] hover:bg-white/[0.08] transition-all">
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-white/70 hover:text-white/60 bg-white/[0.04] hover:bg-white/[0.08] transition-all">
                     <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
                 )}
@@ -142,7 +142,7 @@ export function HelpTooltip({ text, accentColor = "#C8963E" }: { text: string; a
   return (
     <div className="relative inline-block">
       <button onClick={() => setOpen(o => !o)}
-        className="w-5 h-5 rounded-full flex items-center justify-center text-white/20 hover:text-white/50 transition-all"
+        className="w-5 h-5 rounded-full flex items-center justify-center text-white/65 hover:text-white/50 transition-all"
         style={open ? { background: `${accentColor}20`, color: accentColor } : {}}>
         <HelpCircle className="w-3 h-3" />
       </button>

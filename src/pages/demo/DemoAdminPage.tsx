@@ -1180,7 +1180,7 @@ export default function DemoAdminPage() {
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: `${accentColor}50` }}>AD</div>
           <div className="min-w-0">
             <p className="text-[0.65rem] font-bold text-white/80 truncate">Admin Demo</p>
-            <p className="text-[10px] text-white/30">admin@demo.empire.ai</p>
+            <p className="text-[10px] text-white/70">admin@demo.empire.ai</p>
           </div>
         </div>
         <Button onClick={() => navigate(`/demo/${slug}`)} variant="outline" size="sm"
@@ -1206,7 +1206,7 @@ export default function DemoAdminPage() {
             </Button>
           );
         })}
-        <Button size="sm" variant="outline" className="text-xs h-9 gap-1.5 border-white/10 text-white/40 ml-auto">
+        <Button size="sm" variant="outline" className="text-xs h-9 gap-1.5 border-white/10 text-white/80 ml-auto">
           <Send className="w-3.5 h-3.5" /> Invia Messaggio
         </Button>
       </div>
@@ -1325,7 +1325,7 @@ export default function DemoAdminPage() {
               {PIE_DATA.map((d, i) => (
                 <div key={d.name} className="flex items-center gap-1">
                   <div className="w-2 h-2 rounded-full" style={{ background: PIE_COLORS[i] }} />
-                  <span className="text-[10px] text-white/40">{d.name} {d.value}%</span>
+                  <span className="text-[10px] text-white/80">{d.name} {d.value}%</span>
                 </div>
               ))}
             </div>
@@ -1367,7 +1367,7 @@ export default function DemoAdminPage() {
                   <PersonalizableBadge variant="dark" size="sm" />
                 )}
               </div>
-              <Button size="sm" variant="outline" className="text-[0.55rem] border-white/10 text-white/40 h-7">Vedi tutti</Button>
+              <Button size="sm" variant="outline" className="text-[0.55rem] border-white/10 text-white/80 h-7">Vedi tutti</Button>
             </div>
           </CardHeader>
           <CardContent className="p-0">
@@ -1391,7 +1391,7 @@ export default function DemoAdminPage() {
                               color: cell.startsWith("✅") ? "#22c55e" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f6" : cell.startsWith("📦") ? "#8b5cf6" : "#f59e0b",
                             }}>{cell}</Badge>
                           ) : j === 0 ? (
-                            <span className="font-mono text-white/40">{cell}</span>
+                            <span className="font-mono text-white/80">{cell}</span>
                           ) : cell.startsWith("€") ? (
                             <span className="font-bold text-white/80">{cell}</span>
                           ) : (
@@ -1438,12 +1438,12 @@ export default function DemoAdminPage() {
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-[0.55rem] font-bold text-white/50">{120 + i * 18}</p>
-                  <p className="text-[0.4rem] text-white/20">task oggi</p>
+                  <p className="text-[0.4rem] text-white/65">task oggi</p>
                 </div>
               </motion.div>
             ))}
             {allAgents.length > 8 && (
-              <button onClick={() => setActiveModule("agents")} className="w-full text-center text-[0.55rem] text-white/30 hover:text-white/50 py-1.5 transition-colors">
+              <button onClick={() => setActiveModule("agents")} className="w-full text-center text-[0.55rem] text-white/70 hover:text-white/50 py-1.5 transition-colors">
                 +{allAgents.length - 8} altri agenti →
               </button>
             )}
@@ -1497,9 +1497,9 @@ export default function DemoAdminPage() {
         <div className="flex gap-2">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25" />
-            <input className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl pl-9 pr-3 py-2.5 text-xs text-white placeholder:text-white/20 outline-none focus:border-white/15 transition-colors" placeholder="Cerca clienti..." />
+            <input className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl pl-9 pr-3 py-2.5 text-xs text-white placeholder:text-white/65 outline-none focus:border-white/15 transition-colors" placeholder="Cerca clienti..." />
           </div>
-          <Button variant="outline" size="sm" className="border-white/10 text-white/40 h-10"><Filter className="w-3.5 h-3.5" /></Button>
+          <Button variant="outline" size="sm" className="border-white/10 text-white/80 h-10"><Filter className="w-3.5 h-3.5" /></Button>
         </div>
         <Card className="bg-white/[0.03] border-white/[0.06] overflow-hidden">
           <div className="overflow-x-auto">
@@ -1539,10 +1539,10 @@ export default function DemoAdminPage() {
           </div>
           {/* Pagination */}
           <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.04]">
-            <span className="text-[0.6rem] text-white/30">{allClients.length} clienti totali</span>
+            <span className="text-[0.6rem] text-white/70">{allClients.length} clienti totali</span>
             <div className="flex gap-1">
               {[1, 2, 3].map(p => (
-                <button key={p} className={`w-7 h-7 rounded-lg text-[0.6rem] font-bold transition-all ${p === 1 ? "text-white" : "text-white/30 hover:text-white/50"}`}
+                <button key={p} className={`w-7 h-7 rounded-lg text-[0.6rem] font-bold transition-all ${p === 1 ? "text-white" : "text-white/70 hover:text-white/50"}`}
                   style={p === 1 ? { background: `${accentColor}20`, color: accentColor } : { background: "rgba(255,255,255,0.03)" }}>{p}</button>
               ))}
             </div>
@@ -1564,9 +1564,9 @@ export default function DemoAdminPage() {
       <Card className="bg-white/[0.03] border-white/[0.06]">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <button className="text-white/40 hover:text-white/60 transition-colors"><ChevronLeft className="w-4 h-4" /></button>
+            <button className="text-white/80 hover:text-white/60 transition-colors"><ChevronLeft className="w-4 h-4" /></button>
             <CardTitle className="text-sm text-white/80 capitalize">{calendarData.monthName}</CardTitle>
-            <button className="text-white/40 hover:text-white/60 transition-colors"><ChevronRight className="w-4 h-4" /></button>
+            <button className="text-white/80 hover:text-white/60 transition-colors"><ChevronRight className="w-4 h-4" /></button>
           </div>
         </CardHeader>
         <CardContent>
@@ -1643,7 +1643,7 @@ export default function DemoAdminPage() {
         </div>
         <div className="flex gap-2">
           {["Tutti", "In corso", "Completati"].map(f => (
-            <Button key={f} variant="outline" size="sm" className="text-[0.6rem] border-white/10 text-white/40 h-7">{f}</Button>
+            <Button key={f} variant="outline" size="sm" className="text-[0.6rem] border-white/10 text-white/80 h-7">{f}</Button>
           ))}
         </div>
       </div>
@@ -1668,7 +1668,7 @@ export default function DemoAdminPage() {
                             background: cell.startsWith("✅") ? "#22c55e18" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f618" : "#f59e0b18",
                             color: cell.startsWith("✅") ? "#22c55e" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f6" : "#f59e0b",
                           }}>{cell}</Badge>
-                        ) : j === 0 ? <span className="font-mono text-white/40">{cell}</span>
+                        ) : j === 0 ? <span className="font-mono text-white/80">{cell}</span>
                           : cell.startsWith("€") ? <span className="font-bold text-white/80">{cell}</span>
                             : cell}
                       </td>
@@ -1680,11 +1680,11 @@ export default function DemoAdminPage() {
           </div>
           {/* Pagination */}
           <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.04]">
-            <span className="text-[0.6rem] text-white/30">{tableData.rows.length} righe · Pagina {ordersPage}/{totalPages}</span>
+            <span className="text-[0.6rem] text-white/70">{tableData.rows.length} righe · Pagina {ordersPage}/{totalPages}</span>
             <div className="flex gap-1">
               {Array.from({ length: totalPages }).map((_, p) => (
                 <button key={p} onClick={() => setOrdersPage(p + 1)}
-                  className={`w-7 h-7 rounded-lg text-[0.6rem] font-bold transition-all ${ordersPage === p + 1 ? "text-white" : "text-white/30 hover:text-white/50"}`}
+                  className={`w-7 h-7 rounded-lg text-[0.6rem] font-bold transition-all ${ordersPage === p + 1 ? "text-white" : "text-white/70 hover:text-white/50"}`}
                   style={ordersPage === p + 1 ? { background: `${accentColor}20`, color: accentColor } : { background: "rgba(255,255,255,0.03)" }}>{p + 1}</button>
               ))}
             </div>
@@ -1720,13 +1720,13 @@ export default function DemoAdminPage() {
       <div className="space-y-5">
         <div>
           <h2 className="text-base font-bold text-white mb-1">Agenti AI Attivi</h2>
-          <p className="text-xs text-white/40">{allAgents.length} agenti operativi per {config.name}</p>
+          <p className="text-xs text-white/80">{allAgents.length} agenti operativi per {config.name}</p>
         </div>
 
         <div className="flex gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/[0.06]">
           {([["overview", "Panoramica"], ["activity", "Attività"], ["detail", "Dettaglio"]] as const).map(([key, label]) => (
             <button key={key} onClick={() => setAgentsTab(key)}
-              className={`flex-1 py-2 rounded-lg text-[0.6rem] font-bold transition-all ${agentsTab === key ? "text-white" : "text-white/40 hover:text-white/60"}`}
+              className={`flex-1 py-2 rounded-lg text-[0.6rem] font-bold transition-all ${agentsTab === key ? "text-white" : "text-white/80 hover:text-white/60"}`}
               style={agentsTab === key ? { background: `${accentColor}20`, color: accentColor } : {}}>
               {label}
             </button>
@@ -1745,7 +1745,7 @@ export default function DemoAdminPage() {
                   <CardContent className="p-3 text-center">
                     <s.icon className="w-4 h-4 mx-auto mb-1" style={{ color: accentColor }} />
                     <p className="text-sm font-bold text-white">{s.value}</p>
-                    <p className="text-[10px] text-white/30">{s.label}</p>
+                    <p className="text-[10px] text-white/70">{s.label}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -1766,7 +1766,7 @@ export default function DemoAdminPage() {
                             {agent.isUniversal && <Badge className="text-[0.4rem] px-1 py-0 bg-purple-500/20 text-purple-300 ml-1">Universal</Badge>}
                           </div>
                         </div>
-                        <MoreHorizontal className="w-3.5 h-3.5 text-white/20" />
+                        <MoreHorizontal className="w-3.5 h-3.5 text-white/65" />
                       </div>
                       <div className="flex items-center justify-between text-center">
                         <div><p className="text-[0.6rem] font-bold text-white">{agent.accuracy || 95}%</p><p className="text-[0.4rem] text-white/25">Accuracy</p></div>
@@ -1803,7 +1803,7 @@ export default function DemoAdminPage() {
             <div className="flex gap-1.5 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
               {allAgents.map(a => (
                 <button key={a.name} onClick={() => setSelectedAgent(a.name)}
-                  className={`shrink-0 px-2.5 py-1.5 rounded-lg text-[0.55rem] font-medium transition-all whitespace-nowrap ${selectedAgent === a.name || (!selectedAgent && a === allAgents[0]) ? "text-white" : "text-white/40 hover:text-white/60"}`}
+                  className={`shrink-0 px-2.5 py-1.5 rounded-lg text-[0.55rem] font-medium transition-all whitespace-nowrap ${selectedAgent === a.name || (!selectedAgent && a === allAgents[0]) ? "text-white" : "text-white/80 hover:text-white/60"}`}
                   style={(selectedAgent === a.name || (!selectedAgent && a === allAgents[0])) ? { background: `${accentColor}20`, color: accentColor } : { background: "rgba(255,255,255,0.03)" }}>
                   {a.emoji} {a.name.split(" — ")[0].split(" ").slice(0, 2).join(" ")}
                 </button>
@@ -1832,7 +1832,7 @@ export default function DemoAdminPage() {
                   ].map((m, i) => (
                     <div key={i} className="text-center p-2.5 rounded-lg bg-white/[0.03]">
                       <p className="text-base font-bold text-white">{m.v}</p>
-                      <p className="text-[10px] text-white/30">{m.l}</p>
+                      <p className="text-[10px] text-white/70">{m.l}</p>
                     </div>
                   ))}
                 </div>
@@ -1857,7 +1857,7 @@ export default function DemoAdminPage() {
                           </div>
                           <div className="pt-0.5">
                             <p className="text-[0.65rem] font-bold text-white/80">{step.label}</p>
-                            <p className="text-[0.55rem] text-white/40">{step.detail}</p>
+                            <p className="text-[0.55rem] text-white/80">{step.detail}</p>
                           </div>
                         </div>
                       ))}
@@ -1914,7 +1914,7 @@ export default function DemoAdminPage() {
               <CardContent className="p-3 text-center">
                 <k.i className="w-4 h-4 mx-auto mb-1" style={{ color: accentColor }} />
                 <p className="text-sm font-bold text-white">{k.v}</p>
-                <p className="text-[10px] text-white/30">{k.l}</p>
+                <p className="text-[10px] text-white/70">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -1953,9 +1953,9 @@ export default function DemoAdminPage() {
               <CardContent className="p-4">
                 <p className="text-xs font-bold text-white/80 mb-2">{s.platform}</p>
                 <div className="space-y-1">
-                  {"followers" in s && <div className="flex justify-between text-[0.6rem]"><span className="text-white/40">Follower</span><span className="text-white/70 font-bold">{s.followers}</span></div>}
-                  {"reviews" in s && <div className="flex justify-between text-[0.6rem]"><span className="text-white/40">Rating</span><span className="text-white/70 font-bold">{s.reviews}</span></div>}
-                  <div className="flex justify-between text-[0.6rem]"><span className="text-white/40">Crescita</span><span className="text-emerald-400 font-bold">{s.growth}</span></div>
+                  {"followers" in s && <div className="flex justify-between text-[0.6rem]"><span className="text-white/80">Follower</span><span className="text-white/70 font-bold">{s.followers}</span></div>}
+                  {"reviews" in s && <div className="flex justify-between text-[0.6rem]"><span className="text-white/80">Rating</span><span className="text-white/70 font-bold">{s.reviews}</span></div>}
+                  <div className="flex justify-between text-[0.6rem]"><span className="text-white/80">Crescita</span><span className="text-emerald-400 font-bold">{s.growth}</span></div>
                 </div>
               </CardContent>
             </Card>
@@ -1989,7 +1989,7 @@ export default function DemoAdminPage() {
             <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
               <CardContent className="p-3 text-center">
                 <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
-                <p className="text-[10px] text-white/30 mt-0.5">{k.l}</p>
+                <p className="text-[10px] text-white/70 mt-0.5">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -2006,7 +2006,7 @@ export default function DemoAdminPage() {
                 <tbody>
                   {invoices.map((inv, i) => (
                     <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
-                      <td className="p-3 text-xs font-mono text-white/40">{inv.num}</td>
+                      <td className="p-3 text-xs font-mono text-white/80">{inv.num}</td>
                       <td className="p-3 text-xs text-white/70">{inv.client}</td>
                       <td className="p-3 text-xs text-white/50">{inv.date}</td>
                       <td className="p-3 text-xs text-white/80 font-bold">€{inv.amount.toLocaleString("it-IT")}</td>
@@ -2018,10 +2018,10 @@ export default function DemoAdminPage() {
               </table>
             </div>
             <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.04]">
-              <span className="text-[0.6rem] text-white/30">{invoices.length} fatture</span>
+              <span className="text-[0.6rem] text-white/70">{invoices.length} fatture</span>
               <div className="flex gap-1">
                 {[1, 2].map(p => (
-                  <button key={p} className={`w-7 h-7 rounded-lg text-[0.6rem] font-bold ${p === 1 ? "text-white" : "text-white/30"}`}
+                  <button key={p} className={`w-7 h-7 rounded-lg text-[0.6rem] font-bold ${p === 1 ? "text-white" : "text-white/70"}`}
                     style={p === 1 ? { background: `${accentColor}20`, color: accentColor } : { background: "rgba(255,255,255,0.03)" }}>{p}</button>
                 ))}
               </div>
@@ -2046,7 +2046,7 @@ export default function DemoAdminPage() {
             <CardContent className="space-y-3">
               {[{ l: "Nome Attività", v: config.name }, { l: "Email", v: `info@${config.slug}.empire.ai` }, { l: "Telefono", v: "+39 06 1234 5678" }, { l: "Indirizzo", v: "Via Roma 42, Italia" }].map((f, i) => (
                 <div key={i}>
-                  <label className="text-[0.6rem] text-white/40 mb-1 block">{f.l}</label>
+                  <label className="text-[0.6rem] text-white/80 mb-1 block">{f.l}</label>
                   <input className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white/70 outline-none focus:border-white/20 transition-colors" defaultValue={f.v} />
                 </div>
               ))}
@@ -2059,7 +2059,7 @@ export default function DemoAdminPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-white/70">Mostra Tutorial</p>
-                  <p className="text-[0.55rem] text-white/30">Popup di aiuto contestuali nelle sezioni</p>
+                  <p className="text-[0.55rem] text-white/70">Popup di aiuto contestuali nelle sezioni</p>
                 </div>
                 <button onClick={() => setTutorialsOn(o => !o)}
                   className={`w-10 h-6 rounded-full transition-all relative ${tutorialsOn ? "" : "bg-white/10"}`}
@@ -2070,7 +2070,7 @@ export default function DemoAdminPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-white/70">Notifiche Push</p>
-                  <p className="text-[0.55rem] text-white/30">Ricevi aggiornamenti in tempo reale</p>
+                  <p className="text-[0.55rem] text-white/70">Ricevi aggiornamenti in tempo reale</p>
                 </div>
                 <button className="w-10 h-6 rounded-full transition-all relative" style={{ background: accentColor }}>
                   <div className="absolute top-1 left-5 w-4 h-4 rounded-full bg-white" />
@@ -2079,7 +2079,7 @@ export default function DemoAdminPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-white/70">Tema Scuro</p>
-                  <p className="text-[0.55rem] text-white/30">Sempre attivo su Empire</p>
+                  <p className="text-[0.55rem] text-white/70">Sempre attivo su Empire</p>
                 </div>
                 <button className="w-10 h-6 rounded-full transition-all relative" style={{ background: accentColor }}>
                   <div className="absolute top-1 left-5 w-4 h-4 rounded-full bg-white" />
@@ -2092,14 +2092,14 @@ export default function DemoAdminPage() {
             <CardHeader className="pb-2"><CardTitle className="text-sm text-white/80">Branding</CardTitle></CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <label className="text-[0.6rem] text-white/40 mb-1 block">Colore Primario</label>
+                <label className="text-[0.6rem] text-white/80 mb-1 block">Colore Primario</label>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg border border-white/10" style={{ background: accentColor }} />
                   <input className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white/70 outline-none" defaultValue={accentColor} />
                 </div>
               </div>
               <div>
-                <label className="text-[0.6rem] text-white/40 mb-1 block">Logo</label>
+                <label className="text-[0.6rem] text-white/80 mb-1 block">Logo</label>
                 <div className="w-full h-20 rounded-xl border border-dashed border-white/10 flex items-center justify-center">
                   <p className="text-[0.6rem] text-white/25">Trascina qui il tuo logo</p>
                 </div>
@@ -2184,7 +2184,7 @@ export default function DemoAdminPage() {
             <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
               <CardContent className="p-3 text-center">
                 <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
-                <p className="text-[10px] text-white/30">{k.l}</p>
+                <p className="text-[10px] text-white/70">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -2251,7 +2251,7 @@ export default function DemoAdminPage() {
             <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
               <CardContent className="p-3 text-center">
                 <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
-                <p className="text-[10px] text-white/30">{k.l}</p>
+                <p className="text-[10px] text-white/70">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -2268,7 +2268,7 @@ export default function DemoAdminPage() {
                       </div>
                       <div>
                         <p className="text-xs font-bold text-white/80">{r.name}</p>
-                        <p className="text-[10px] text-white/30">{r.date} · {r.platform}</p>
+                        <p className="text-[10px] text-white/70">{r.date} · {r.platform}</p>
                       </div>
                     </div>
                     <div className="flex gap-0.5">
@@ -2316,7 +2316,7 @@ export default function DemoAdminPage() {
             <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
               <CardContent className="p-3 text-center">
                 <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
-                <p className="text-[10px] text-white/30">{k.l}</p>
+                <p className="text-[10px] text-white/70">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -2335,7 +2335,7 @@ export default function DemoAdminPage() {
                     <td className="p-3 text-xs text-white/80 font-medium">{item.name}</td>
                     <td className="p-3 text-xs text-white/70 font-bold">{item.qty}</td>
                     <td className="p-3 text-xs text-white/50">{item.unit}</td>
-                    <td className="p-3 text-xs text-white/40">{item.min}</td>
+                    <td className="p-3 text-xs text-white/80">{item.min}</td>
                     <td className="p-3"><Badge className="text-[10px]" style={{
                       background: item.status === "ok" ? "#22c55e18" : item.status === "low" ? "#f59e0b18" : "#ef444418",
                       color: item.status === "ok" ? "#22c55e" : item.status === "low" ? "#f59e0b" : "#ef4444",
@@ -2362,7 +2362,7 @@ export default function DemoAdminPage() {
               {(() => { const Icon = resolveIcon(mod?.icon || "Star"); return <Icon className="w-7 h-7" style={{ color: accentColor }} />; })()}
             </div>
             <p className="text-sm text-white/60 mb-2">Modulo <strong className="text-white">{mod?.label}</strong> attivo</p>
-            <p className="text-xs text-white/30 max-w-sm mx-auto">Questa sezione è completamente funzionale nel tuo account Empire. Nella demo puoi esplorare l'interfaccia e scoprire tutte le funzionalità.</p>
+            <p className="text-xs text-white/70 max-w-sm mx-auto">Questa sezione è completamente funzionale nel tuo account Empire. Nella demo puoi esplorare l'interfaccia e scoprire tutte le funzionalità.</p>
             <Button className="mt-4 text-xs" style={{ background: accentColor }}>
               Attiva per il tuo business <ArrowRight className="w-3.5 h-3.5 ml-1" />
             </Button>
@@ -2469,10 +2469,10 @@ export default function DemoAdminPage() {
           </div>
           <div className="flex items-center gap-2">
             <div className="relative hidden sm:block">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20" />
-              <input className="bg-white/[0.04] border border-white/[0.06] rounded-lg pl-8 pr-3 py-1.5 text-[0.65rem] text-white placeholder:text-white/20 outline-none w-48 focus:border-white/15 transition-colors" placeholder="Cerca..." />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/65" />
+              <input className="bg-white/[0.04] border border-white/[0.06] rounded-lg pl-8 pr-3 py-1.5 text-[0.65rem] text-white placeholder:text-white/65 outline-none w-48 focus:border-white/15 transition-colors" placeholder="Cerca..." />
             </div>
-            <button className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center text-white/30 relative hover:bg-white/[0.06] transition-colors">
+            <button className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center text-white/70 relative hover:bg-white/[0.06] transition-colors">
               <Bell className="w-4 h-4" />
               <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-red-500 text-[6px] text-white font-bold flex items-center justify-center">3</span>
             </button>
@@ -2495,7 +2495,7 @@ export default function DemoAdminPage() {
           const isActive = activeModule === mod.route;
           return (
             <button key={mod.route} onClick={() => setActiveModule(mod.route)}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all ${isActive ? "" : "text-white/30"}`}
+              className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all ${isActive ? "" : "text-white/70"}`}
               style={isActive ? { color: accentColor } : {}}>
               <Icon className="w-4 h-4" />
               <span className="text-[10px]">{mod.label}</span>

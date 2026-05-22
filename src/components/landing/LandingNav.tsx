@@ -61,7 +61,7 @@ export default function LandingNav() {
             >
               EMPIRE
             </span>
-            <span className="hidden text-foreground/40 sm:inline">·</span>
+            <span className="hidden text-foreground/80 sm:inline">·</span>
             <span className="hidden text-foreground/70 sm:inline text-sm font-medium">AI</span>
           </a>
 

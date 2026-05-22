@@ -124,7 +124,7 @@ const AcademySection = () => {
           <div key={i} className="text-center p-2.5 rounded-xl bg-card border border-border/50">
             <stat.icon className="w-3.5 h-3.5 mx-auto text-primary mb-1" />
             <p className="text-base font-display font-bold text-foreground">{stat.value}</p>
-            <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground/40 font-semibold">{stat.label}</p>
+            <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground/75 font-semibold">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -141,7 +141,7 @@ const AcademySection = () => {
                 <span className="text-base">{catName.slice(0, 2)}</span>
                 <div>
                   <p className="text-sm font-semibold text-foreground">{catName.slice(3)}</p>
-                  <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground/40 font-semibold">{items.length} guide</p>
+                  <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground/75 font-semibold">{items.length} guide</p>
                 </div>
               </div>
               {expandedCategory === catName
@@ -185,7 +185,7 @@ const AcademySection = () => {
         ))}
       </div>
 
-      <p className="text-[10px] text-center text-muted-foreground/30 uppercase tracking-[3px] pt-2">
+      <p className="text-[10px] text-center text-muted-foreground/70 uppercase tracking-[3px] pt-2">
         Auto-aggiornato · Nuove guide appaiono automaticamente
       </p>
     </div>

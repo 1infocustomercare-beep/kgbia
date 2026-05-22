@@ -810,7 +810,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
               animate={{ width: 140, opacity: 0.5 }}
               transition={{ duration: 0.5, delay: 0.55, ease: smoothEase }}
             />
-            <p className="text-[10px] sm:text-[0.55rem] md:text-[0.6rem] tracking-[0.5em] uppercase text-foreground/20 font-heading">
+            <p className="text-[10px] sm:text-[0.55rem] md:text-[0.6rem] tracking-[0.5em] uppercase text-foreground/70 font-heading">
               Il Sistema Operativo del Business
             </p>
           </motion.div>

@@ -164,11 +164,11 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
             {company.logo_url && <img src={company.logo_url} alt={name} className="h-9 w-9 rounded-lg object-cover" />}
             <div>
               <span className="text-xl tracking-[0.15em]" style={{ color: VOLT }}>{name.toUpperCase()}</span>
-              <span className="text-[8px] tracking-[0.3em] uppercase block font-medium text-white/30" style={{ fontFamily: "'Barlow', sans-serif" }}>PERFORMANCE CLUB</span>
+              <span className="text-[8px] tracking-[0.3em] uppercase block font-medium text-white/70" style={{ fontFamily: "'Barlow', sans-serif" }}>PERFORMANCE CLUB</span>
             </div>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map(l => <a key={l.href} href={l.href} className="text-[11px] tracking-[0.25em] uppercase font-medium text-white/30 hover:text-white transition" style={{ fontFamily: "'Barlow', sans-serif" }}>{l.label}</a>)}
+            {navLinks.map(l => <a key={l.href} href={l.href} className="text-[11px] tracking-[0.25em] uppercase font-medium text-white/70 hover:text-white transition" style={{ fontFamily: "'Barlow', sans-serif" }}>{l.label}</a>)}
           </div>
           <div className="flex items-center gap-3">
             <Button className="px-6 text-sm tracking-[0.15em] hidden sm:flex border-0 rounded-none" style={{ background: VOLT, color: CARBON, fontFamily: "'Bebas Neue', sans-serif", fontSize: "15px" }} onClick={() => scrollTo("iscriviti")}>ISCRIVITI</Button>
@@ -179,7 +179,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
           {mobileMenuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden" style={{ background: CARBON, borderTop: `1px solid ${VOLT}15` }}>
               <div className="px-5 py-4 space-y-1">
-                {navLinks.map(l => <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/40 border-b border-white/5" style={{ fontFamily: "'Barlow', sans-serif" }}>{l.label}</a>)}
+                {navLinks.map(l => <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/80 border-b border-white/5" style={{ fontFamily: "'Barlow', sans-serif" }}>{l.label}</a>)}
               </div>
             </motion.div>
           )}
@@ -200,7 +200,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
               <span className="block text-white/90">TRAIN</span>
               <span className="block" style={{ color: VOLT, textShadow: `0 0 60px ${VOLT}33` }}>HARDER</span>
             </h1>
-            <p className="text-sm sm:text-base text-white/40 max-w-md mb-10 leading-relaxed" style={{ fontFamily: "'Barlow', sans-serif" }}>{tagline}</p>
+            <p className="text-sm sm:text-base text-white/80 max-w-md mb-10 leading-relaxed" style={{ fontFamily: "'Barlow', sans-serif" }}>{tagline}</p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button className="px-10 py-6 text-lg tracking-[0.2em] rounded-none border-0 shadow-2xl" style={{ background: VOLT, color: CARBON, fontFamily: "'Bebas Neue', sans-serif", boxShadow: `0 20px 60px -15px ${VOLT}44` }} onClick={() => scrollTo("iscriviti")}>PROVA GRATUITA</Button>
               <Button variant="outline" className="px-10 py-6 text-lg tracking-[0.2em] rounded-none text-white" style={{ borderColor: "#fff2", fontFamily: "'Bebas Neue', sans-serif" }} onClick={() => scrollTo("classi")}>LE CLASSI</Button>
@@ -213,7 +213,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
             {[{ v: "500+", l: "ATLETI" }, { v: "20+", l: "CLASSI/SETT" }, { v: "15", l: "COACH" }, { v: "1500m²", l: "STRUTTURA" }].map((s, i) => (
               <div key={i} className="border-l-2 pl-4" style={{ borderColor: `${VOLT}40` }}>
                 <p className="text-2xl sm:text-3xl" style={{ color: VOLT }}>{s.v}</p>
-                <p className="text-[9px] tracking-[0.2em] text-white/30 mt-1" style={{ fontFamily: "'Barlow', sans-serif" }}>{s.l}</p>
+                <p className="text-[9px] tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Barlow', sans-serif" }}>{s.l}</p>
               </div>
             ))}
           </motion.div>
@@ -237,17 +237,17 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
       <Section className="py-20 px-4" style={{ background: STEEL }}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <p className="text-[10px] tracking-[0.3em] text-white/30 mb-3" style={{ fontFamily: "'Barlow', sans-serif" }}>RISULTATI MEDI DEI NOSTRI ATLETI</p>
+            <p className="text-[10px] tracking-[0.3em] text-white/70 mb-3" style={{ fontFamily: "'Barlow', sans-serif" }}>RISULTATI MEDI DEI NOSTRI ATLETI</p>
             <h2 className="text-4xl sm:text-5xl tracking-[0.05em]">TRASFORMAZIONE <span style={{ color: VOLT }}>REALE</span></h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {transformations.map((t, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="p-6 rounded-none border" style={{ borderColor: `${VOLT}15`, background: `${VOLT}05` }}>
-                <p className="text-[10px] tracking-[0.25em] text-white/30 mb-4" style={{ fontFamily: "'Barlow', sans-serif" }}>{t.label.toUpperCase()}</p>
+                <p className="text-[10px] tracking-[0.25em] text-white/70 mb-4" style={{ fontFamily: "'Barlow', sans-serif" }}>{t.label.toUpperCase()}</p>
                 <div className="flex items-end gap-3 mb-3">
                   <span className="text-4xl" style={{ color: VOLT }}>{t.after}%</span>
-                  <span className="text-sm text-white/20 line-through mb-1" style={{ fontFamily: "'Barlow', sans-serif" }}>{t.before}%</span>
+                  <span className="text-sm text-white/65 line-through mb-1" style={{ fontFamily: "'Barlow', sans-serif" }}>{t.before}%</span>
                 </div>
                 <div className="h-1 rounded-full bg-white/5 overflow-hidden">
                   <motion.div initial={{ width: 0 }} whileInView={{ width: `${t.after}%` }} viewport={{ once: true }} transition={{ delay: 0.5 + i * 0.15, duration: 1.2, ease: "easeOut" }}
@@ -265,7 +265,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
           <motion.div className="md:col-span-3" initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
             <motion.div initial={{ width: 0 }} whileInView={{ width: "60px" }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="h-[2px] mb-6" style={{ background: VOLT }} />
             <h2 className="text-4xl sm:text-5xl tracking-[0.03em] mb-6">PIÙ DI UNA <span style={{ color: VOLT }}>PALESTRA</span></h2>
-            <p className="text-base text-white/40 mb-8 leading-relaxed max-w-lg" style={{ fontFamily: "'Barlow', sans-serif" }}>
+            <p className="text-base text-white/80 mb-8 leading-relaxed max-w-lg" style={{ fontFamily: "'Barlow', sans-serif" }}>
               Non siamo solo una palestra — siamo un laboratorio di trasformazione. Attrezzature Technogym di ultima generazione, coach certificati NSCA e programmi basati sulla scienza dello sport.
             </p>
             <div className="grid grid-cols-2 gap-4">
@@ -300,7 +300,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
         <div className="max-w-7xl mx-auto px-5">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="text-[10px] tracking-[0.3em] text-white/30 mb-3" style={{ fontFamily: "'Barlow', sans-serif" }}>SCHEDULE</p>
+              <p className="text-[10px] tracking-[0.3em] text-white/70 mb-3" style={{ fontFamily: "'Barlow', sans-serif" }}>SCHEDULE</p>
               <h2 className="text-4xl sm:text-5xl tracking-[0.05em]">LE NOSTRE <span style={{ color: VOLT }}>CLASSI</span></h2>
             </div>
             <div className="hidden sm:flex gap-2">
@@ -330,10 +330,10 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
                     </div>
                     <div>
                       <h3 className="text-lg tracking-[0.1em]">{cls.name.toUpperCase()}</h3>
-                      <p className="text-[10px] text-white/30 tracking-[0.1em]" style={{ fontFamily: "'Barlow', sans-serif" }}>{cls.trainer}</p>
+                      <p className="text-[10px] text-white/70 tracking-[0.1em]" style={{ fontFamily: "'Barlow', sans-serif" }}>{cls.trainer}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-white/30" style={{ fontFamily: "'Barlow', sans-serif" }}>
+                  <div className="flex items-center gap-2 text-sm text-white/70" style={{ fontFamily: "'Barlow', sans-serif" }}>
                     <Timer className="w-3.5 h-3.5" /> {cls.time}
                   </div>
                 </div>
@@ -376,7 +376,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
                   {plan.popular && <div className="absolute -top-px left-0 right-0 h-[3px]" style={{ background: VOLT }} />}
                   {plan.popular && <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] tracking-[0.15em] px-4 rounded-none" style={{ background: VOLT, color: CARBON }}>PIÙ SCELTO</Badge>}
                   <h3 className="text-2xl tracking-[0.15em] mt-3 mb-1">{plan.name}</h3>
-                  <p className="text-5xl mb-6" style={{ color: VOLT }}>€{plan.price}<span className="text-sm text-white/20">/mese</span></p>
+                  <p className="text-5xl mb-6" style={{ color: VOLT }}>€{plan.price}<span className="text-sm text-white/65">/mese</span></p>
                   <ul className="space-y-3 mb-8" style={{ fontFamily: "'Barlow', sans-serif" }}>
                     {plan.features.map(f => <li key={f} className="text-sm text-white/50 flex items-center gap-2 justify-center"><CheckCircle className="w-3.5 h-3.5" style={{ color: VOLT }} />{f}</li>)}
                   </ul>
@@ -423,7 +423,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
         <div className="relative z-10 max-w-lg mx-auto px-5 text-center">
           <Dumbbell className="w-12 h-12 mx-auto mb-4" style={{ color: VOLT }} />
           <h2 className="text-4xl sm:text-5xl tracking-[0.05em] mb-3">INIZIA <span style={{ color: VOLT }}>OGGI</span></h2>
-          <p className="text-white/30 mb-8 text-sm" style={{ fontFamily: "'Barlow', sans-serif" }}>Compila il form per una prova gratuita</p>
+          <p className="text-white/70 mb-8 text-sm" style={{ fontFamily: "'Barlow', sans-serif" }}>Compila il form per una prova gratuita</p>
           <Card className="p-6 text-left rounded-none border-0" style={{ background: `${CARBON}`, border: `1px solid ${VOLT}20` }}>
             <div className="space-y-3" style={{ fontFamily: "'Barlow', sans-serif" }}>
               <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Il tuo nome *" className="bg-transparent border-white/10 text-white h-12 rounded-none" />

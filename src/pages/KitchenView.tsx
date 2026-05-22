@@ -300,7 +300,7 @@ const KitchenView = () => {
       <div className="px-5 py-2 space-y-4 pb-8">
         {orders.length === 0 && (
           <div className="text-center py-16">
-            <ChefHat className="w-16 h-16 mx-auto mb-4 text-muted-foreground/20" />
+            <ChefHat className="w-16 h-16 mx-auto mb-4 text-muted-foreground/65" />
             <p className="text-lg font-display font-bold text-muted-foreground">Nessun ordine attivo</p>
             <p className="text-sm text-muted-foreground/60 mt-1">I nuovi ordini appariranno qui in tempo reale</p>
           </div>

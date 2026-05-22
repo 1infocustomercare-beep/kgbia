@@ -589,30 +589,30 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
               <div className="flex items-center gap-1">
                 {isSpeaking && (
                   <button onClick={togglePause}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]">
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground hover:bg-foreground/[0.05]">
                     {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
                   </button>
                 )}
                 {isSpeaking && (
                   <button onClick={stopAll}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-red-400 hover:bg-red-400/10">
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-red-400 hover:bg-red-400/10">
                     <Square className="w-3.5 h-3.5" />
                   </button>
                 )}
                 <button onClick={() => setVoiceEnabled(!voiceEnabled)}
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${voiceEnabled ? "text-primary bg-primary/10" : "text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]"}`}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${voiceEnabled ? "text-primary bg-primary/10" : "text-foreground/80 hover:text-foreground hover:bg-foreground/[0.05]"}`}
                   title={voiceEnabled ? "Disattiva voce" : "Attiva voce"}>
                   {voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
                 </button>
                 {SpeechRecognition && (
                   <button onClick={() => setMode(mode === "voice" ? "chat" : "voice")}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground hover:bg-foreground/[0.05]"
                     title={mode === "voice" ? "Passa a chat" : "Passa a voce"}>
                     {mode === "voice" ? <MessageSquare className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                   </button>
                 )}
                 <button onClick={() => { stopAll(); setIsOpen(false); }}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]">
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground hover:bg-foreground/[0.05]">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -678,7 +678,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
               )}
 
               {liveTranscript && (
-                <motion.div className="text-[0.65rem] text-foreground/30 italic px-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <motion.div className="text-[0.65rem] text-foreground/75 italic px-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   🎙️ {liveTranscript}...
                 </motion.div>
               )}

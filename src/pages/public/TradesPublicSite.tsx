@@ -506,7 +506,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
             {company.logo_url ? <img src={company.logo_url} alt="" className="h-9 w-9 rounded-xl object-cover" /> : <HeroIcon className="w-6 h-6" style={{ color: A }} />}
             <div className="min-w-0">
               <span className="font-bold truncate block text-sm" style={{ fontFamily: palette.fontDisplay }}>{company.name}</span>
-              <span className="text-[8px] tracking-[0.25em] uppercase block font-medium text-white/30" style={{ fontFamily: palette.fontBody }}>{config.label.toUpperCase()}</span>
+              <span className="text-[8px] tracking-[0.25em] uppercase block font-medium text-white/70" style={{ fontFamily: palette.fontBody }}>{config.label.toUpperCase()}</span>
             </div>
           </div>
           <div className="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-white/35" style={{ fontFamily: palette.fontBody }}>
@@ -525,7 +525,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           {mobileMenuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden" style={{ background: D, borderTop: `1px solid ${A}10` }}>
               <div className="px-5 py-4 space-y-1">
-                {navLinks.map(l => <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/40 border-b border-white/5" style={{ fontFamily: palette.fontBody }}>{l.label}</a>)}
+                {navLinks.map(l => <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/80 border-b border-white/5" style={{ fontFamily: palette.fontBody }}>{l.label}</a>)}
               </div>
             </motion.div>
           )}
@@ -555,7 +555,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
             {company.tagline || `${config.label}: Qualità e Affidabilità`}
           </motion.h1>
 
-          <motion.p variants={fadeUp} custom={2} className="text-base text-white/40 mb-10 max-w-2xl mx-auto" style={{ fontFamily: palette.fontBody }}>
+          <motion.p variants={fadeUp} custom={2} className="text-base text-white/80 mb-10 max-w-2xl mx-auto" style={{ fontFamily: palette.fontBody }}>
             <strong className="text-white/70">{company.name}</strong> — {
               industry === "photography" ? "Fotografia professionale che racconta la tua storia." :
               industry === "veterinary" ? "Il benessere del tuo animale è la nostra priorità." :
@@ -620,7 +620,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
               {config.emoji} {config.label}
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold mb-3">I Nostri Servizi</h2>
-            <p className="text-white/30 text-sm" style={{ fontFamily: palette.fontBody }}>Soluzioni professionali per ogni esigenza</p>
+            <p className="text-white/70 text-sm" style={{ fontFamily: palette.fontBody }}>Soluzioni professionali per ogni esigenza</p>
           </div>
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}
             className={`grid gap-4 ${
@@ -691,7 +691,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                       <div className="relative pl-3">
                         <span className="text-3xl mb-3 block">{s.emoji}</span>
                         <h3 className="font-extrabold text-white text-base mb-1.5">{s.name}</h3>
-                        <p className="text-xs text-white/40" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                        <p className="text-xs text-white/80" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -723,7 +723,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                         </div>
                         <div>
                           <h3 className="font-semibold text-white text-sm mb-0.5">{s.name}</h3>
-                          <p className="text-[11px] text-white/30" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                          <p className="text-[11px] text-white/70" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
                         </div>
                       </div>
                     </CardContent>
@@ -757,7 +757,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         <div className="max-w-4xl mx-auto relative">
           <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold mb-3">Come Funziona</h2>
-            <p className="text-white/30 text-sm">3 semplici passaggi</p>
+            <p className="text-white/70 text-sm">3 semplici passaggi</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
@@ -829,22 +829,22 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         <div className="max-w-lg mx-auto relative z-10">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-2">{cta.formTitle}</h2>
-            <p className="text-white/30 text-sm" style={{ fontFamily: palette.fontBody }}>{cta.formSubtitle}</p>
+            <p className="text-white/70 text-sm" style={{ fontFamily: palette.fontBody }}>{cta.formSubtitle}</p>
           </div>
           <Card className="border-0 rounded-xl backdrop-blur-xl" style={{ background: `${A}06`, border: `1px solid ${A}15` }}>
             <CardContent className="p-6 space-y-4" style={{ fontFamily: palette.fontBody }}>
               <div className="grid grid-cols-2 gap-3">
-                <div><Label className="text-white/40 text-xs">Nome *</Label><Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="Nome" /></div>
-                <div><Label className="text-white/40 text-xs">Telefono *</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="+39..." /></div>
+                <div><Label className="text-white/80 text-xs">Nome *</Label><Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="Nome" /></div>
+                <div><Label className="text-white/80 text-xs">Telefono *</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="+39..." /></div>
               </div>
-              <div><Label className="text-white/40 text-xs">{industry === "education" ? "Corso" : industry === "events" ? "Tipo Evento" : "Tipo Servizio"} *</Label>
+              <div><Label className="text-white/80 text-xs">{industry === "education" ? "Corso" : industry === "events" ? "Tipo Evento" : "Tipo Servizio"} *</Label>
                 <Select value={form.type} onValueChange={v => setForm(p => ({ ...p, type: v }))}>
                   <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg"><SelectValue placeholder="Seleziona tipo" /></SelectTrigger>
                   <SelectContent>{interventionTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               {["plumber", "electrician", "construction", "garage", "gardening"].includes(industry) && (
-                <div><Label className="text-white/40 text-xs">Urgenza</Label>
+                <div><Label className="text-white/80 text-xs">Urgenza</Label>
                   <Select value={form.urgency} onValueChange={v => setForm(p => ({ ...p, urgency: v }))}>
                     <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -856,12 +856,12 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                   </Select>
                 </div>
               )}
-              <div><Label className="text-white/40 text-xs">{industry === "logistics" ? "Indirizzo Ritiro" : "Indirizzo"}</Label><Input value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="Via, civico, città..." /></div>
-              <div><Label className="text-white/40 text-xs">{industry === "tattoo" ? "Descrivi il tatuaggio" : industry === "events" ? "Descrivi l'evento" : "Note aggiuntive"}</Label><Textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 min-h-[100px] rounded-lg" placeholder="Dettagli..." /></div>
+              <div><Label className="text-white/80 text-xs">{industry === "logistics" ? "Indirizzo Ritiro" : "Indirizzo"}</Label><Input value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="Via, civico, città..." /></div>
+              <div><Label className="text-white/80 text-xs">{industry === "tattoo" ? "Descrivi il tatuaggio" : industry === "events" ? "Descrivi l'evento" : "Note aggiuntive"}</Label><Textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 min-h-[100px] rounded-lg" placeholder="Dettagli..." /></div>
               <Button onClick={handleSubmit} disabled={submitting} className="w-full h-13 text-base font-bold rounded-lg shadow-2xl" style={{ background: A, color: D, boxShadow: `0 15px 40px -10px ${A}44` }}>
                 {submitting ? "Invio..." : "Invia Richiesta"} <Send className="w-4 h-4 ml-2" />
               </Button>
-              <p className="text-[11px] text-white/20 text-center">
+              <p className="text-[11px] text-white/65 text-center">
                 {industry === "legal" || industry === "accounting" ? "Prima consulenza gratuita." :
                  industry === "childcare" ? "Ti ricontattiamo entro 24 ore." :
                  "Rispondiamo in meno di 1 ora."}

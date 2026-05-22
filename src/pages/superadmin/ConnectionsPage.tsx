@@ -78,13 +78,13 @@ const SecretField = ({
             onChange={(e) => onChange(field.key, e.target.value)}
             placeholder={field.placeholder || `Inserisci ${field.label}`}
             readOnly={field.readOnly}
-            className="bg-white/5 border-white/10 text-white/90 placeholder:text-white/30 pr-10 text-xs h-9"
+            className="bg-white/5 border-white/10 text-white/90 placeholder:text-white/70 pr-10 text-xs h-9"
           />
           {field.secret && (
             <button
               type="button"
               onClick={() => setVisible(!visible)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-white/80 hover:text-white/70 transition-colors"
             >
               {visible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
             </button>
@@ -362,7 +362,7 @@ const ConnectionsPage = () => {
 
         {/* Footer info */}
         <div className="rounded-xl p-4 border border-white/[0.06] text-center" style={{ background: "hsla(230, 18%, 14%, 0.6)" }}>
-          <p className="text-xs text-white/40">
+          <p className="text-xs text-white/80">
             <Shield className="w-3 h-3 inline mr-1" />
             Tutti i segreti sono criptati e accessibili solo dal Super Admin. Le chiavi non vengono mai esposte al frontend.
           </p>

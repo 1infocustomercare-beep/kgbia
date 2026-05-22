@@ -632,7 +632,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                   <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1 }}
                     className="p-3 sm:p-4 rounded-xl" style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}>
                     <item.icon className="w-4 h-4 sm:w-5 sm:h-5 mb-1.5 sm:mb-2" style={{ color: gold }} />
-                    <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-white/30 mb-0.5">{item.label}</p>
+                    <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-white/70 mb-0.5">{item.label}</p>
                     <p className="text-xs sm:text-sm font-bold text-white">{item.value}</p>
                   </motion.div>
                 ))}
@@ -741,7 +741,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                   <span className="absolute -bottom-2 left-0 w-full h-[2px] animate-shimmer-gold" style={{ background: `linear-gradient(90deg, transparent, ${NCC.gold}, transparent)`, backgroundSize: "200% 100%" }} />
                 </span>
               </h2>
-              <p className="mt-5 max-w-xl mx-auto text-sm sm:text-base text-white/40 leading-relaxed">
+              <p className="mt-5 max-w-xl mx-auto text-sm sm:text-base text-white/80 leading-relaxed">
                 Esperienza di viaggio senza paragoni, personalizzata per ogni esigenza.
               </p>
             </motion.div>
@@ -816,7 +816,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
               <span className="text-white">VEICOLI DI </span>
               <span style={{ color: gold }}>Lusso</span>
             </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-base text-white/40">
+            <p className="mt-4 max-w-2xl mx-auto text-base text-white/80">
               Scegli il veicolo più adatto alle tue esigenze. Tutti i nostri mezzi sono di ultima generazione e perfettamente mantenuti.
             </p>
           </div>
@@ -868,7 +868,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                           ))}
                         </div>
                         <div className="pt-3 border-t" style={{ borderColor: "rgba(201,168,76,0.2)" }}>
-                          <p className="text-[10px] text-white/30 uppercase">A partire da</p>
+                          <p className="text-[10px] text-white/70 uppercase">A partire da</p>
                           <p className="text-2xl font-bold" style={{ color: gold }}>€{Number(v.base_price || 80).toFixed(0)}</p>
                         </div>
                         <Button className="w-full mt-4 rounded-full font-bold text-sm uppercase hover:scale-[1.02] transition-transform" style={{ background: gold, color: "#000" }} asChild>
@@ -940,7 +940,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
                 <span className="text-white">TOUR PRIVATI </span><span className="text-white/50"> in </span><span style={{ color: gold }}>Barca</span>
               </h2>
-              <p className="mt-4 max-w-2xl mx-auto text-base text-white/40">
+              <p className="mt-4 max-w-2xl mx-auto text-base text-white/80">
                 Scopri le meraviglie del Golfo di Napoli e della Costiera Amalfitana con i nostri tour esclusivi in barca privata.
               </p>
             </div>
@@ -963,9 +963,9 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                           </div>
                         </div>
                         <div className="p-5">
-                          <p className="text-[10px] uppercase tracking-wider text-white/20 mb-1">Destinazione</p>
+                          <p className="text-[10px] uppercase tracking-wider text-white/65 mb-1">Destinazione</p>
                           <h3 className="font-bold text-xl text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>{d.name}</h3>
-                          <p className="text-sm text-white/40 line-clamp-2 mb-3">{description}</p>
+                          <p className="text-sm text-white/80 line-clamp-2 mb-3">{description}</p>
                           <div className="flex flex-wrap gap-1.5 mb-4">
                             {highlights.map((h, hi) => (
                               <span key={hi} className="px-2 py-0.5 rounded-md text-[10px] font-medium" style={{ background: `${gold}10`, color: `${gold}BB` }}>{h}</span>
@@ -975,7 +975,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                             <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: NCC.cardBorder }}>
                               <div>
                                 <span className="text-xl font-black" style={{ color: gold }}>€{Number(price.standard_price).toFixed(0)}</span>
-                                <span className="text-xs text-white/20 ml-1">/ persona</span>
+                                <span className="text-xs text-white/65 ml-1">/ persona</span>
                               </div>
                               <Button size="sm" className="rounded-full text-xs font-bold h-9 px-5" style={{ background: gold, color: "#000" }} asChild>
                                 <a href="#prenota">Prenota</a>
@@ -1037,7 +1037,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
               <span className="text-white">COSA DICONO I </span><span style={{ color: gold }}>Clienti</span>
             </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-base text-white/40">
+            <p className="mt-4 max-w-2xl mx-auto text-base text-white/80">
               La soddisfazione dei nostri clienti è la nostra priorità. Ecco alcune delle loro esperienze.
             </p>
           </div>
@@ -1089,7 +1089,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                       <p className="text-base text-white font-semibold">
                         {(displayReviews[reviewIndex % displayReviews.length] as any)?.customer_name || "Ospite"}
                       </p>
-                      <p className="text-sm text-white/30">
+                      <p className="text-sm text-white/70">
                         {(displayReviews[reviewIndex % displayReviews.length] as any)?.city || reviewCities[reviewIndex % reviewCities.length]} · {(displayReviews[reviewIndex % displayReviews.length] as any)?.date || REVIEW_DATES[reviewIndex % REVIEW_DATES.length]}
                       </p>
                     </div>
@@ -1181,7 +1181,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                 <motion.div key={faq.id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
                   <div className="rounded-2xl p-5" style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}>
                     <h3 className="font-bold text-white mb-2">{faq.question}</h3>
-                    <p className="text-sm text-white/40 leading-relaxed">{faq.answer}</p>
+                    <p className="text-sm text-white/80 leading-relaxed">{faq.answer}</p>
                   </div>
                 </motion.div>
               ))}
@@ -1305,7 +1305,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
             <h2 className="text-3xl sm:text-4xl font-black" style={{ fontFamily: "'Playfair Display', serif" }}>
               <span className="text-white">Prenota il Tuo </span><span style={{ color: gold }}>Viaggio</span>
             </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-base text-white/40">
+            <p className="mt-4 max-w-2xl mx-auto text-base text-white/80">
               Siamo disponibili 24 ore su 24, 7 giorni su 7. Contattaci per un preventivo gratuito o per prenotare il tuo prossimo transfer.
             </p>
           </div>
@@ -1321,7 +1321,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: `${gold}15` }}>
                     <c.icon className="w-5 h-5" style={{ color: gold }} />
                   </div>
-                  <p className="text-xs text-white/30 mb-2 uppercase tracking-wider">{c.label}</p>
+                  <p className="text-xs text-white/70 mb-2 uppercase tracking-wider">{c.label}</p>
                   {c.href ? (
                     <a href={c.href} className="text-sm font-semibold text-white hover:underline">{c.value}</a>
                   ) : (
@@ -1364,10 +1364,10 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                   <span className="text-[9px] tracking-[0.2em] uppercase font-semibold" style={{ color: gold }}>Premium Transfer</span>
                 </div>
               </div>
-              <p className="text-sm text-white/20 leading-relaxed">{company.tagline || "Servizio NCC premium nel Sud Italia"}</p>
+              <p className="text-sm text-white/65 leading-relaxed">{company.tagline || "Servizio NCC premium nel Sud Italia"}</p>
             </div>
             <div>
-              <h4 className="text-[11px] font-semibold mb-4 text-white/40 uppercase tracking-wider">Link</h4>
+              <h4 className="text-[11px] font-semibold mb-4 text-white/80 uppercase tracking-wider">Link</h4>
               <div className="space-y-2 text-sm text-white/25">
                 <a href="#servizi" className="block hover:text-white/50 transition-colors">Servizi</a>
                 <a href="#flotta" className="block hover:text-white/50 transition-colors">Flotta</a>
@@ -1376,7 +1376,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
               </div>
             </div>
             <div>
-              <h4 className="text-[11px] font-semibold mb-4 text-white/40 uppercase tracking-wider">Contatti</h4>
+              <h4 className="text-[11px] font-semibold mb-4 text-white/80 uppercase tracking-wider">Contatti</h4>
               <div className="space-y-3 text-sm text-white/25">
                 {company.phone && <a href={`tel:${company.phone}`} className="flex items-center gap-2 hover:text-white/50 transition-colors"><Phone className="w-3.5 h-3.5" /> {company.phone}</a>}
                 {company.email && <a href={`mailto:${company.email}`} className="flex items-center gap-2 hover:text-white/50 transition-colors"><Mail className="w-3.5 h-3.5" /> {company.email}</a>}
@@ -1386,12 +1386,12 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                 <div className="flex gap-3 mt-4">
                   {socialLinks?.instagram && (
                     <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all" style={{ background: "rgba(255,255,255,0.04)" }}>
-                      <Instagram className="w-4 h-4 text-white/40" />
+                      <Instagram className="w-4 h-4 text-white/80" />
                     </a>
                   )}
                   {settings?.whatsapp && (
                     <a href={`https://wa.me/${(settings.whatsapp as string).replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all" style={{ background: "rgba(255,255,255,0.04)" }}>
-                      <MessageCircle className="w-4 h-4 text-white/40" />
+                      <MessageCircle className="w-4 h-4 text-white/80" />
                     </a>
                   )}
                 </div>

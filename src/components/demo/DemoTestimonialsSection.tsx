@@ -36,7 +36,7 @@ export default function DemoTestimonialsSection({ sector, accentColor, sectorNam
   // Layout variant based on sector type
   const isDark = theme.palette.bg.startsWith("#0") || theme.palette.bg.startsWith("rgba");
   const textColor = isDark ? "text-white" : "text-gray-900";
-  const textMuted = isDark ? "text-white/40" : "text-gray-500";
+  const textMuted = isDark ? "text-white/80" : "text-gray-500";
   const cardBg = isDark ? "bg-white/[0.04]" : "bg-white";
   const cardBorder = isDark ? "border-white/[0.08]" : "border-gray-200";
 

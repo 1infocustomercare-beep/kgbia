@@ -163,7 +163,7 @@ const TrustBar = () => (
   <section className="py-10 border-y border-white/5 bg-[hsl(228,18%,7%)]">
     <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-x-12 gap-y-4 px-4">
       {["GDPR Compliant", "Made in Italy", "99.9% Uptime", "AI-Powered", "SOC2 Ready"].map((t) => (
-        <div key={t} className="flex items-center gap-2 text-white/30 text-xs tracking-widest uppercase">
+        <div key={t} className="flex items-center gap-2 text-white/70 text-xs tracking-widest uppercase">
           <Shield className="w-3.5 h-3.5" />
           <span>{t}</span>
         </div>
@@ -207,7 +207,7 @@ const IndustriesSection = () => {
                   <Icon className="w-5 h-5" style={{ color: `hsl(${ind.color})` }} />
                 </div>
                 <h3 className="text-sm font-semibold text-white/90">{ind.label}</h3>
-                <p className="text-xs text-white/30 mt-1 line-clamp-2">{ind.description}</p>
+                <p className="text-xs text-white/70 mt-1 line-clamp-2">{ind.description}</p>
               </motion.div>
             );
           })}
@@ -290,7 +290,7 @@ const ComparisonSection = () => {
         <motion.div className="text-center mb-14"
           initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}>
           <h2 className="text-3xl md:text-5xl font-bold text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Empire <span className="text-white/30">vs gli altri</span>
+            Empire <span className="text-white/70">vs gli altri</span>
           </h2>
         </motion.div>
 
@@ -299,7 +299,7 @@ const ComparisonSection = () => {
           <div className="grid grid-cols-3 text-xs uppercase tracking-wider border-b border-white/[0.06]">
             <div className="p-4 text-white/75">Feature</div>
             <div className="p-4 text-center text-[hsl(172,80%,48%)] font-semibold">Empire</div>
-            <div className="p-4 text-center text-white/30">Competitor</div>
+            <div className="p-4 text-center text-white/70">Competitor</div>
           </div>
           {rows.map((r, i) => (
             <motion.div key={i} className="grid grid-cols-3 border-b border-white/[0.03] last:border-0"
@@ -368,7 +368,7 @@ const PricingSection = () => {
               <p className="text-xs text-white/75 mb-5">{p.desc}</p>
               <div className="mb-6">
                 <span className="text-4xl font-bold text-white">€{p.price}</span>
-                <span className="text-white/30 text-sm">/mese</span>
+                <span className="text-white/70 text-sm">/mese</span>
               </div>
               <ul className="space-y-3 mb-8">
                 {p.features.map((f, j) => (

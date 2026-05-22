@@ -221,7 +221,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                                 <BookmarkCheck className="w-2.5 h-2.5" />
                                 Salvata nel Portfolio
                               </span>
-                              <span className="text-[0.55rem] text-white/40">riusabile gratis</span>
+                              <span className="text-[0.55rem] text-white/80">riusabile gratis</span>
                             </div>
                           </div>
                         </div>
@@ -338,7 +338,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
 
                               {/* Subject */}
                               <div className="rounded-lg border border-white/10 bg-black/30 px-2.5 py-1.5">
-                                <p className="text-[8.5px] uppercase tracking-wider font-bold text-white/40">Oggetto</p>
+                                <p className="text-[8.5px] uppercase tracking-wider font-bold text-white/80">Oggetto</p>
                                 <p className="text-[11px] text-white/95 font-semibold truncate">{renderedEmail.subject}</p>
                               </div>
 
@@ -347,8 +347,8 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                                 <div className="flex items-center justify-between bg-white/[0.03] px-2 py-1 border-b border-white/10">
                                   <span className="text-[9px] uppercase font-bold text-white/50">Anteprima HTML live</span>
                                   <div className="flex gap-0.5">
-                                    <button onClick={() => setEmailDevice("desktop")} className={`p-1 rounded ${emailDevice === "desktop" ? "bg-violet-500/30 text-violet-200" : "text-white/40"}`}><Monitor className="w-3 h-3" /></button>
-                                    <button onClick={() => setEmailDevice("mobile")} className={`p-1 rounded ${emailDevice === "mobile" ? "bg-violet-500/30 text-violet-200" : "text-white/40"}`}><Smartphone className="w-3 h-3" /></button>
+                                    <button onClick={() => setEmailDevice("desktop")} className={`p-1 rounded ${emailDevice === "desktop" ? "bg-violet-500/30 text-violet-200" : "text-white/80"}`}><Monitor className="w-3 h-3" /></button>
+                                    <button onClick={() => setEmailDevice("mobile")} className={`p-1 rounded ${emailDevice === "mobile" ? "bg-violet-500/30 text-violet-200" : "text-white/80"}`}><Smartphone className="w-3 h-3" /></button>
                                   </div>
                                 </div>
                                 <div className="bg-[#f5f3ff] flex justify-center p-2 max-h-[360px] overflow-y-auto">
@@ -529,7 +529,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                             {Object.entries(result.brand.palette).map(([k, v]) => (
                               <div key={k} className="flex-1 text-center min-w-0">
                                 <div className="w-full h-6 rounded-md border border-white/10" style={{ background: v }} />
-                                <p className="text-[10px] text-white/40 mt-0.5 font-mono truncate">{v.slice(0, 7)}</p>
+                                <p className="text-[10px] text-white/80 mt-0.5 font-mono truncate">{v.slice(0, 7)}</p>
                               </div>
                             ))}
                           </div>
@@ -581,7 +581,7 @@ function CredRow({ label, value, copied, onCopy, mono }: { label: string; value:
   return (
     <div className="flex items-center justify-between gap-2 bg-black/20 rounded-lg px-2.5 py-1.5 border border-white/5 min-w-0">
       <div className="min-w-0 flex-1">
-        <p className="text-[0.55rem] uppercase tracking-wider text-white/40 font-bold">{label}</p>
+        <p className="text-[0.55rem] uppercase tracking-wider text-white/80 font-bold">{label}</p>
         <p className={`text-[0.7rem] text-white/90 truncate ${mono ? "font-mono" : ""}`}>{value}</p>
       </div>
       <button onClick={onCopy} className="text-[0.6rem] font-bold flex items-center gap-1 px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 text-white/70 shrink-0">

@@ -177,7 +177,7 @@ const ProfitTab = ({ restaurant, menuItems, setMenuItems, reviews }: ProfitTabPr
           {/* Reviews list */}
           {reviews.length === 0 ? (
             <div className="text-center py-8">
-              <Star className="w-8 h-8 mx-auto mb-2 text-muted-foreground/20" />
+              <Star className="w-8 h-8 mx-auto mb-2 text-muted-foreground/65" />
               <p className="text-sm text-muted-foreground">Nessuna recensione ancora</p>
             </div>
           ) : (

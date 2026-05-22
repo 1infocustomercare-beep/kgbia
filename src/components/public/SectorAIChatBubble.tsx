@@ -224,7 +224,7 @@ export default function SectorAIChatBubble({ sector, sectorLabel, sectorEmoji, a
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-white truncate">Empire AI Advisor</p>
-                <p className="text-[10px] text-white/40 flex items-center gap-1">
+                <p className="text-[10px] text-white/80 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                   Online • {sectorLabel}
                 </p>
@@ -316,7 +316,7 @@ export default function SectorAIChatBubble({ sector, sectorLabel, sectorEmoji, a
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Chiedi qualcosa..."
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 transition"
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder:text-white/70 focus:outline-none focus:border-white/20 transition"
                   disabled={isStreaming}
                 />
                 <button
@@ -328,7 +328,7 @@ export default function SectorAIChatBubble({ sector, sectorLabel, sectorEmoji, a
                   <Send className="w-4 h-4" />
                 </button>
               </form>
-              <p className="text-[8px] text-white/20 text-center mt-1.5">
+              <p className="text-[8px] text-white/65 text-center mt-1.5">
                 Powered by Empire AI • Risposte personalizzate per {sectorLabel}
               </p>
             </div>

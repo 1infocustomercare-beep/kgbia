@@ -176,7 +176,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
             onChange={e => setFreeText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={getPlaceholder()}
-            className="pl-10 h-11 text-sm bg-black/30 border-white/10 text-white placeholder:text-white/30"
+            className="pl-10 h-11 text-sm bg-black/30 border-white/10 text-white placeholder:text-white/70"
           />
         </div>
 

@@ -1091,7 +1091,7 @@ export function IPhoneFrame({
                       <motion.span className="text-xl drop-shadow-lg" animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 3, repeat: Infinity }}>{emoji}</motion.span>
                     </div>
                     <p className="text-[10px] font-bold text-white/90 leading-tight tracking-wide">{companyName}</p>
-                    <p className="text-[6px] text-white/30 mt-0.5 tracking-[0.2em] uppercase font-medium">{sectorStyle.heroSubtext}</p>
+                    <p className="text-[6px] text-white/70 mt-0.5 tracking-[0.2em] uppercase font-medium">{sectorStyle.heroSubtext}</p>
                     <motion.div className="mt-3 px-5 py-1.5 rounded-full text-[7px] font-bold text-white tracking-wider uppercase relative overflow-hidden"
                       style={{ background: `linear-gradient(135deg, ${color}, ${sectorStyle.chartColors[1] || color})`, boxShadow: `0 4px 20px ${color}40` }}>
                       <motion.div className="absolute inset-0" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)" }}
@@ -1103,7 +1103,7 @@ export function IPhoneFrame({
                     {sectorStyle.kpis.slice(0, 3).map((k, i) => (
                       <motion.div key={i} className="flex-1 text-center p-1.5 rounded-lg" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(8px)", border: `0.5px solid rgba(255,255,255,0.06)` }}
                         initial={{ opacity: 0, y: 5 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 + i * 0.1 }}>
-                        <p className="text-[5px] text-white/30">{k.label}</p>
+                        <p className="text-[5px] text-white/70">{k.label}</p>
                         <p className="text-[8px] font-bold" style={{ color }}>{k.val}</p>
                       </motion.div>
                     ))}
@@ -1123,11 +1123,11 @@ export function IPhoneFrame({
                       <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#22c55e' }} />
                     </div>
                     <p className="text-[11px] font-black text-white/95 leading-tight">{companyName}</p>
-                    <p className="text-[7px] text-white/30 mt-1 tracking-[0.2em] uppercase font-medium">{sectorStyle.heroSubtext}</p>
+                    <p className="text-[7px] text-white/70 mt-1 tracking-[0.2em] uppercase font-medium">{sectorStyle.heroSubtext}</p>
                     <div className="mt-3 flex gap-1">
                       {sectorStyle.kpis.slice(0, 2).map((k, i) => (
                         <div key={i} className="px-2 py-1 rounded-lg" style={{ background: `${color}10`, border: `0.5px solid ${color}15` }}>
-                          <p className="text-[5px] text-white/20">{k.label}</p>
+                          <p className="text-[5px] text-white/65">{k.label}</p>
                           <p className="text-[8px] font-bold" style={{ color }}>{k.val}</p>
                         </div>
                       ))}
@@ -1153,11 +1153,11 @@ export function IPhoneFrame({
                     animate={{ y: [0, -4, 0] }} transition={{ duration: 4, repeat: Infinity }}>
                     <span className="text-2xl">{emoji}</span>
                     <p className="text-[10px] font-bold text-white/90 mt-1.5">{companyName}</p>
-                    <p className="text-[6px] text-white/30 tracking-widest uppercase mt-0.5">{sectorStyle.heroSubtext}</p>
+                    <p className="text-[6px] text-white/70 tracking-widest uppercase mt-0.5">{sectorStyle.heroSubtext}</p>
                     <div className="flex gap-1 mt-2 justify-center">
                       {sectorStyle.kpis.slice(0, 3).map((k, i) => (
                         <div key={i} className="px-1.5 py-0.5 rounded-md" style={{ backgroundColor: `${color}12` }}>
-                          <p className="text-[4px] text-white/20">{k.label}</p>
+                          <p className="text-[4px] text-white/65">{k.label}</p>
                           <p className="text-[7px] font-bold" style={{ color }}>{k.val}</p>
                         </div>
                       ))}
@@ -1257,7 +1257,7 @@ export function IPhoneFrame({
                             <p className="text-[6px] font-bold text-white/85 truncate">{s.name}</p>
                             <div className="flex items-center gap-0.5 mt-0.5">
                               <div className="w-1 h-1 rounded-full bg-emerald-400" />
-                              <span className="text-[4px] text-white/30">Disponibile</span>
+                              <span className="text-[4px] text-white/70">Disponibile</span>
                             </div>
                           </div>
                           <div className="text-right">
@@ -1321,7 +1321,7 @@ export function IPhoneFrame({
                         </div>
                         <div className="flex-1">
                           <p className="text-[6px] font-semibold text-white/85 truncate">{s.name}</p>
-                          <p className="text-[4px] text-white/30">Dr. {["Rossi","Bianchi","Verdi","Neri"][i]}</p>
+                          <p className="text-[4px] text-white/70">Dr. {["Rossi","Bianchi","Verdi","Neri"][i]}</p>
                         </div>
                         <div className="text-right">
                           <span className="text-[7px] font-bold" style={{ color }}>€{s.price}</span>
@@ -1354,8 +1354,8 @@ export function IPhoneFrame({
                       ))}
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex items-center gap-0.5"><div className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: color }} /><span className="text-[3px] text-white/30">Libero</span></div>
-                      <div className="flex items-center gap-0.5"><div className="w-1.5 h-1.5 rounded-sm bg-red-500/25" /><span className="text-[3px] text-white/30">Occupato</span></div>
+                      <div className="flex items-center gap-0.5"><div className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: color }} /><span className="text-[3px] text-white/70">Libero</span></div>
+                      <div className="flex items-center gap-0.5"><div className="w-1.5 h-1.5 rounded-sm bg-red-500/25" /><span className="text-[3px] text-white/70">Occupato</span></div>
                     </div>
                   </div>
                   {services.slice(0, 2).map((s, i) => (
@@ -1453,13 +1453,13 @@ export function IPhoneFrame({
                         <div className="flex-1">
                           <p className="text-[6px] font-semibold text-white/85 truncate">{s.name}</p>
                           <div className="flex items-center gap-1 mt-0.5">
-                            <span className="text-[4px] text-white/30">{["2 ospiti","4 ospiti","2 ospiti","6 ospiti"][i]}</span>
+                            <span className="text-[4px] text-white/70">{["2 ospiti","4 ospiti","2 ospiti","6 ospiti"][i]}</span>
                             <span className="text-[4px]" style={{ color: i!==2?'#22c55e':'#ef4444' }}>●</span>
                           </div>
                         </div>
                         <div className="text-right">
                           <p className="text-[7px] font-bold" style={{ color }}>€{s.price}</p>
-                          <p className="text-[3px] text-white/20">/notte</p>
+                          <p className="text-[3px] text-white/65">/notte</p>
                         </div>
                       </div>
                     </motion.div>
@@ -1617,15 +1617,15 @@ export function IPhoneFrame({
                   <div className="space-y-2 flex-1">
                     {sectorStyle.bookingFields.slice(0, 2).map((f, i) => (
                       <div key={i}>
-                        <p className="text-[5px] text-white/30 mb-0.5 uppercase tracking-wider">{f}</p>
+                        <p className="text-[5px] text-white/70 mb-0.5 uppercase tracking-wider">{f}</p>
                         <div className="h-[20px] rounded-xl border px-2 flex items-center" style={{ backgroundColor: `${color}04`, borderColor: `${color}20` }}>
-                          <span className="text-[6px] text-white/40">Inserisci {f.toLowerCase()}</span>
+                          <span className="text-[6px] text-white/80">Inserisci {f.toLowerCase()}</span>
                         </div>
                       </div>
                     ))}
                     {/* Time slots */}
                     <div>
-                      <p className="text-[5px] text-white/30 mb-1 uppercase tracking-wider">Orario</p>
+                      <p className="text-[5px] text-white/70 mb-1 uppercase tracking-wider">Orario</p>
                       <div className="grid grid-cols-3 gap-1">
                         {["09:00","10:30","12:00","14:00","15:30","17:00"].map((t, i) => (
                           <div key={i} className="py-1 rounded-lg text-center text-[5px] font-bold"
@@ -1662,7 +1662,7 @@ export function IPhoneFrame({
                   <div className="rounded-xl p-1.5 mb-2" style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}10` }}>
                     <div className="grid grid-cols-7 gap-[2px]">
                       {["L","M","M","G","V","S","D"].map((d, i) => (
-                        <div key={i} className="text-[4px] text-white/20 text-center font-bold">{d}</div>
+                        <div key={i} className="text-[4px] text-white/65 text-center font-bold">{d}</div>
                       ))}
                       {Array.from({ length: 14 }).map((_, i) => (
                         <div key={i} className="aspect-square rounded flex items-center justify-center text-[4px]"
@@ -1689,9 +1689,9 @@ export function IPhoneFrame({
                   <div className="space-y-2 flex-1">
                     {sectorStyle.bookingFields.map((f, i) => (
                       <div key={i}>
-                        <p className="text-[5px] text-white/20 mb-0.5 font-bold uppercase tracking-[0.2em]">{f}</p>
+                        <p className="text-[5px] text-white/65 mb-0.5 font-bold uppercase tracking-[0.2em]">{f}</p>
                         <div className="h-[1px] w-full" style={{ backgroundColor: `${color}20` }} />
-                        <p className="text-[6px] text-white/40 mt-1">...</p>
+                        <p className="text-[6px] text-white/80 mt-1">...</p>
                       </div>
                     ))}
                   </div>
@@ -1742,7 +1742,7 @@ export function IPhoneFrame({
                   {/* Revenue chart */}
                   <div className="mx-2.5 rounded-xl p-2 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.02)", border: "0.5px solid rgba(255,255,255,0.06)" }}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-[5px] text-white/30 font-semibold uppercase tracking-wider">Revenue</span>
+                      <span className="text-[5px] text-white/70 font-semibold uppercase tracking-wider">Revenue</span>
                       <div className="flex items-center gap-1">
                         <div className="w-1 h-1 rounded-full bg-emerald-400" />
                         <span className="text-[4px] font-bold text-emerald-400">+18%</span>
@@ -1766,7 +1766,7 @@ export function IPhoneFrame({
                         initial={{ opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.6 + i * 0.1 }}>
                         <span className="text-[7px]">{n.icon}</span>
                         <span className="text-[5px] text-white/50 flex-1 truncate">{n.text}</span>
-                        <span className="text-[3px] text-white/20 font-medium">{n.time}</span>
+                        <span className="text-[3px] text-white/65 font-medium">{n.time}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -1780,7 +1780,7 @@ export function IPhoneFrame({
                     <p className="text-[7px] font-bold text-white/70">Dashboard</p>
                     <div className="flex items-center gap-1">
                       <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#22c55e' }} />
-                      <span className="text-[4px] text-white/30">Oggi</span>
+                      <span className="text-[4px] text-white/70">Oggi</span>
                     </div>
                   </div>
                   {/* Radial gauge */}
@@ -1802,7 +1802,7 @@ export function IPhoneFrame({
                   {/* Horizontal metric bars */}
                   {sectorStyle.kpis.slice(1).map((kpi, i) => (
                     <div key={i} className="flex items-center gap-1.5 mb-1.5">
-                      <p className="text-[5px] text-white/30 w-10 truncate">{kpi.label}</p>
+                      <p className="text-[5px] text-white/70 w-10 truncate">{kpi.label}</p>
                       <div className="flex-1 h-[6px] rounded-full" style={{ backgroundColor: `${color}10` }}>
                         <motion.div className="h-full rounded-full" style={{ backgroundColor: sectorStyle.chartColors[i % 3] }}
                           initial={{ width: 0 }} whileInView={{ width: `${60 + i * 15}%` }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.3 + i * 0.1 }} />
@@ -1815,7 +1815,7 @@ export function IPhoneFrame({
                     {sectorStyle.activityFeed.slice(0, 2).map((item, i) => (
                       <div key={i} className="flex items-center gap-1 px-1.5 py-1 rounded-md text-[5px]" style={{ backgroundColor: `${color}06` }}>
                         <span className="text-[7px]">{item.icon}</span>
-                        <span className="text-white/40 flex-1 truncate">{item.text}</span>
+                        <span className="text-white/80 flex-1 truncate">{item.text}</span>
                       </div>
                     ))}
                   </div>
@@ -1845,7 +1845,7 @@ export function IPhoneFrame({
                       <motion.div key={i} className="flex-1 p-1.5 rounded-lg text-center"
                         style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}08` }}
                         initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 + i * 0.1 }}>
-                        <p className="text-[4px] text-white/20">{kpi.label}</p>
+                        <p className="text-[4px] text-white/65">{kpi.label}</p>
                         <p className="text-[8px] font-bold" style={{ color }}>{kpi.val}</p>
                         <div className="flex justify-center gap-[1px] mt-1">
                           {[3,5,4,6,5,7,6].map((h, j) => (
@@ -1876,7 +1876,7 @@ export function IPhoneFrame({
                       <div className="w-1 h-4 rounded-full" style={{ backgroundColor: color }} />
                       <div>
                         <p className="text-[7px] font-bold text-white/80">Command Center</p>
-                        <p className="text-[4px] text-white/20">{sectorStyle.heroSubtext}</p>
+                        <p className="text-[4px] text-white/65">{sectorStyle.heroSubtext}</p>
                       </div>
                     </div>
                     <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[8px]" style={{ backgroundColor: `${color}15` }}>{emoji}</div>
@@ -1905,7 +1905,7 @@ export function IPhoneFrame({
                     {sectorStyle.activityFeed.map((item, i) => (
                       <div key={i} className="flex items-center gap-1 px-1 py-[3px] rounded text-[4px]" style={{ backgroundColor: `${color}04` }}>
                         <span className="text-[6px]">{item.icon}</span>
-                        <span className="text-white/30 flex-1 truncate">{item.text}</span>
+                        <span className="text-white/70 flex-1 truncate">{item.text}</span>
                         <span className="text-[3px] text-white/15">{item.time}</span>
                       </div>
                     ))}
@@ -1975,7 +1975,7 @@ export function IPhoneFrame({
                       </svg>
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
                         <p className="text-[8px] font-black" style={{ color }}>{sectorStyle.kpis[3]?.val}</p>
-                        <p className="text-[3px] text-white/20">Totale</p>
+                        <p className="text-[3px] text-white/65">Totale</p>
                       </div>
                     </div>
                   </div>
@@ -1983,7 +1983,7 @@ export function IPhoneFrame({
                   {sectorStyle.analyticsMetrics.map((m, i) => (
                     <div key={i} className="flex items-center gap-1.5 mb-1">
                       <div className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: sectorStyle.chartColors[i % 3] }} />
-                      <p className="text-[5px] text-white/40 flex-1">{m.label}</p>
+                      <p className="text-[5px] text-white/80 flex-1">{m.label}</p>
                       <p className="text-[6px] font-bold" style={{ color }}>{m.val}</p>
                       <p className="text-[4px] text-emerald-400">{m.delta}</p>
                     </div>
@@ -2011,7 +2011,7 @@ export function IPhoneFrame({
                   <div className="flex gap-1">
                     {sectorStyle.analyticsMetrics.slice(0, 2).map((m, i) => (
                       <div key={i} className="flex-1 p-1.5 rounded-lg" style={{ backgroundColor: `${color}08` }}>
-                        <p className="text-[4px] text-white/20">{m.label}</p>
+                        <p className="text-[4px] text-white/65">{m.label}</p>
                         <p className="text-[7px] font-bold" style={{ color }}>{m.val}</p>
                       </div>
                     ))}
@@ -2035,7 +2035,7 @@ export function IPhoneFrame({
                   {sectorStyle.analyticsMetrics.map((m, i) => (
                     <div key={i} className="mb-2">
                       <div className="flex items-center justify-between mb-0.5">
-                        <p className="text-[5px] text-white/40">{m.label}</p>
+                        <p className="text-[5px] text-white/80">{m.label}</p>
                         <p className="text-[6px] font-bold" style={{ color }}>{m.val}</p>
                       </div>
                       <div className="h-[5px] rounded-full overflow-hidden flex" style={{ backgroundColor: `${color}08` }}>
@@ -2062,7 +2062,7 @@ export function IPhoneFrame({
                     <div className="px-1.5 py-0.5 rounded-full text-[5px] font-bold" style={{ backgroundColor: `${color}20`, color }}>{sectorStyle.crmClients.length} attivi</div>
                   </div>
                   <div className="h-[16px] rounded-lg border px-2 flex items-center mb-1.5" style={{ backgroundColor: `${color}04`, borderColor: `${color}12` }}>
-                    <span className="text-[5px] text-white/20">🔍 Cerca cliente...</span>
+                    <span className="text-[5px] text-white/65">🔍 Cerca cliente...</span>
                   </div>
                   <div className="space-y-1">
                     {sectorStyle.crmClients.map((c, i) => (
@@ -2117,9 +2117,9 @@ export function IPhoneFrame({
                   </div>
                   {/* Table header */}
                   <div className="flex items-center gap-1 px-1.5 py-1 mb-0.5">
-                    <span className="text-[4px] text-white/20 flex-[2]">NOME</span>
-                    <span className="text-[4px] text-white/20 flex-1 text-center">TIPO</span>
-                    <span className="text-[4px] text-white/20 flex-1 text-right">VALORE</span>
+                    <span className="text-[4px] text-white/65 flex-[2]">NOME</span>
+                    <span className="text-[4px] text-white/65 flex-1 text-center">TIPO</span>
+                    <span className="text-[4px] text-white/65 flex-1 text-right">VALORE</span>
                   </div>
                   {sectorStyle.crmClients.map((c, i) => (
                     <motion.div key={i} className="flex items-center gap-1 px-1.5 py-1.5 rounded-md mb-0.5"
@@ -2212,7 +2212,7 @@ export function IPhoneFrame({
                           <p className="text-[5px] text-white/60 truncate">{o.items}</p>
                           <div className="flex items-center justify-between mt-0.5">
                             <span className="text-[6px] font-bold" style={{ color }}>{o.total}</span>
-                            <span className="text-[3px] text-white/20">{o.time}</span>
+                            <span className="text-[3px] text-white/65">{o.time}</span>
                           </div>
                         </motion.div>
                       );
@@ -2246,11 +2246,11 @@ export function IPhoneFrame({
                   <div className="p-1.5 rounded-lg mb-1.5" style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}10` }}>
                     {[5, 4, 3, 2, 1].map(r => (
                       <div key={r} className="flex items-center gap-1 mb-0.5">
-                        <span className="text-[4px] text-white/30 w-2">{r}★</span>
+                        <span className="text-[4px] text-white/70 w-2">{r}★</span>
                         <div className="flex-1 h-[3px] rounded-full" style={{ backgroundColor: `${color}10` }}>
                           <div className="h-full rounded-full" style={{ backgroundColor: color, width: `${r === 5 ? 78 : r === 4 ? 18 : r === 3 ? 4 : 0}%` }} />
                         </div>
-                        <span className="text-[3px] text-white/20 w-3 text-right">{r === 5 ? "78%" : r === 4 ? "18%" : r === 3 ? "4%" : "0%"}</span>
+                        <span className="text-[3px] text-white/65 w-3 text-right">{r === 5 ? "78%" : r === 4 ? "18%" : r === 3 ? "4%" : "0%"}</span>
                       </div>
                     ))}
                   </div>
@@ -2263,10 +2263,10 @@ export function IPhoneFrame({
                           <span className="text-[5px] font-bold text-white/70">{r.name}</span>
                           <div className="flex items-center gap-0.5">
                             <span className="text-[5px] text-yellow-400">{"★".repeat(r.rating)}</span>
-                            <span className="text-[3px] text-white/20">{r.source}</span>
+                            <span className="text-[3px] text-white/65">{r.source}</span>
                           </div>
                         </div>
-                        <p className="text-[4px] text-white/40 leading-relaxed">{r.text}</p>
+                        <p className="text-[4px] text-white/80 leading-relaxed">{r.text}</p>
                         <p className="text-[3px] text-white/15 mt-0.5">{r.time} fa</p>
                       </motion.div>
                     ))}
@@ -2289,19 +2289,19 @@ export function IPhoneFrame({
                   {/* Points card */}
                   <div className="p-2 rounded-xl mb-1.5 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${color}20, ${color}08)`, border: `1px solid ${color}25` }}>
                     <div className="absolute top-0 right-0 w-12 h-12 rounded-full opacity-10" style={{ background: color, filter: "blur(12px)" }} />
-                    <p className="text-[4px] text-white/30 uppercase tracking-wider">Punti Fedeltà</p>
+                    <p className="text-[4px] text-white/70 uppercase tracking-wider">Punti Fedeltà</p>
                     <p className="text-[14px] font-black" style={{ color }}>2.450</p>
                     <div className="flex items-center gap-1 mt-1">
                       <div className="flex-1 h-[4px] rounded-full" style={{ backgroundColor: `${color}15` }}>
                         <motion.div className="h-full rounded-full" style={{ backgroundColor: color }}
                           initial={{ width: 0 }} whileInView={{ width: "72%" }} viewport={{ once: true }} transition={{ duration: 1 }} />
                       </div>
-                      <span className="text-[4px] text-white/30">72%</span>
+                      <span className="text-[4px] text-white/70">72%</span>
                     </div>
                     <p className="text-[4px] text-white/25 mt-0.5">550 punti al prossimo premio 🎁</p>
                   </div>
                   {/* Rewards */}
-                  <p className="text-[4px] text-white/20 uppercase tracking-wider mb-1 font-bold">Premi Disponibili</p>
+                  <p className="text-[4px] text-white/65 uppercase tracking-wider mb-1 font-bold">Premi Disponibili</p>
                   {[
                     { emoji: "☕", name: "Caffè omaggio", pts: "500", status: "available" },
                     { emoji: "🎂", name: "Dessert gratis", pts: "1.000", status: "available" },
@@ -2348,7 +2348,7 @@ export function IPhoneFrame({
                     ))}
                   </div>
                   {/* Scheduled posts */}
-                  <p className="text-[4px] text-white/20 uppercase tracking-wider mb-1 font-bold">Post Programmati</p>
+                  <p className="text-[4px] text-white/65 uppercase tracking-wider mb-1 font-bold">Post Programmati</p>
                   {[
                     { time: "Oggi 18:00", platform: "📸", text: "Novità della settimana! ✨", status: "scheduled" },
                     { time: "Dom 12:00", platform: "👍", text: "Promo weekend speciale 🔥", status: "draft" },
@@ -2372,7 +2372,7 @@ export function IPhoneFrame({
                   <div className="mt-1 p-1.5 rounded-lg" style={{ background: `linear-gradient(135deg, ${color}08, ${color}04)`, border: `0.5px dashed ${color}20` }}>
                     <div className="flex items-center gap-1">
                       <span className="text-[6px]">🤖</span>
-                      <p className="text-[4px] text-white/40">AI suggerisce: "Post sulla nuova stagione"</p>
+                      <p className="text-[4px] text-white/80">AI suggerisce: "Post sulla nuova stagione"</p>
                     </div>
                   </div>
                 </div>
@@ -2390,7 +2390,7 @@ export function IPhoneFrame({
                     </div>
                     <div className="flex items-center gap-0.5">
                       <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#f59e0b" }} />
-                      <span className="text-[4px] text-white/30">3 alert</span>
+                      <span className="text-[4px] text-white/70">3 alert</span>
                     </div>
                   </div>
                   {/* Summary */}
@@ -2408,7 +2408,7 @@ export function IPhoneFrame({
                     ))}
                   </div>
                   {/* Stock items */}
-                  <p className="text-[4px] text-white/20 uppercase tracking-wider mb-1 font-bold">⚠️ Scorte Basse</p>
+                  <p className="text-[4px] text-white/65 uppercase tracking-wider mb-1 font-bold">⚠️ Scorte Basse</p>
                   {[
                     { name: services[0]?.name || "Prodotto A", stock: 3, min: 10, trend: "↓" },
                     { name: services[1]?.name || "Prodotto B", stock: 5, min: 15, trend: "↓" },
@@ -2427,7 +2427,7 @@ export function IPhoneFrame({
                       </div>
                       <div className="text-right">
                         <span className="text-[6px] font-bold" style={{ color: item.stock <= 5 ? '#ef4444' : '#f59e0b' }}>{item.stock}</span>
-                        <span className="text-[4px] text-white/20">/{item.min}</span>
+                        <span className="text-[4px] text-white/65">/{item.min}</span>
                       </div>
                     </motion.div>
                   ))}
@@ -2464,7 +2464,7 @@ export function IPhoneFrame({
                     </div>
                     <div className="flex items-center gap-0.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                      <span className="text-[4px] text-white/30">3 online</span>
+                      <span className="text-[4px] text-white/70">3 online</span>
                     </div>
                   </div>
                   {/* Today summary */}
@@ -2504,7 +2504,7 @@ export function IPhoneFrame({
                   </div>
                   {/* Shift bar */}
                   <div className="mt-1.5 p-1 rounded-md" style={{ backgroundColor: `${color}04` }}>
-                    <p className="text-[3px] text-white/20 mb-0.5 font-bold uppercase">Turni Oggi</p>
+                    <p className="text-[3px] text-white/65 mb-0.5 font-bold uppercase">Turni Oggi</p>
                     <div className="flex gap-[1px]">
                       {Array.from({ length: 12 }).map((_, i) => (
                         <div key={i} className="flex-1 h-[6px] rounded-sm" style={{ backgroundColor: i >= 2 && i <= 9 ? `${color}${i <= 7 ? '30' : '15'}` : `${color}05` }} />
@@ -2575,7 +2575,7 @@ export function IPhoneFrame({
                           style={{ backgroundColor: i === 0 ? color : `${color}30`, boxShadow: i === 0 ? `0 0 6px ${color}50` : 'none' }}>
                         </div>
                         <p className="text-[6px] font-semibold text-white/80">{n.icon} {n.text}</p>
-                        <p className="text-[4px] text-white/20 mt-0.5">{n.time} fa</p>
+                        <p className="text-[4px] text-white/65 mt-0.5">{n.time} fa</p>
                       </motion.div>
                     ))}
                   </div>
@@ -2595,14 +2595,14 @@ export function IPhoneFrame({
                   </div>
                   {/* Priority sections */}
                   <div className="mb-1.5">
-                    <p className="text-[4px] text-white/20 uppercase tracking-wider mb-1 font-bold">● Urgenti</p>
+                    <p className="text-[4px] text-white/65 uppercase tracking-wider mb-1 font-bold">● Urgenti</p>
                     {sectorStyle.notifications.slice(0, 2).map((n, i) => (
                       <motion.div key={i} className="flex items-center gap-1.5 p-1.5 rounded-xl mb-1"
                         style={{ background: `linear-gradient(135deg, ${color}15, ${color}06)`, border: `1px solid ${color}25` }}
                         initial={{ opacity: 0, y: 5 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.08 }}>
                         <span className="text-[10px]">{n.icon}</span>
                         <div className="flex-1"><p className="text-[6px] font-bold text-white/85">{n.text}</p></div>
-                        <span className="text-[4px] text-white/20">{n.time}</span>
+                        <span className="text-[4px] text-white/65">{n.time}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -2637,7 +2637,7 @@ export function IPhoneFrame({
                           <div className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px]" style={{ backgroundColor: `${color}15` }}>{n.icon}</div>
                           <div className="flex-1">
                             <p className="text-[6px] font-semibold text-white/85">{n.text}</p>
-                            <p className="text-[4px] text-white/20 mt-0.5">{n.time} fa</p>
+                            <p className="text-[4px] text-white/65 mt-0.5">{n.time} fa</p>
                           </div>
                         </div>
                         {i === 0 && <div className="absolute top-0 right-0 w-1.5 h-1.5 rounded-bl-md" style={{ backgroundColor: color }} />}
@@ -2662,7 +2662,7 @@ export function IPhoneFrame({
                       style={{ background: `linear-gradient(135deg, ${color}, ${sectorStyle.chartColors[1] || color})` }}>{sectorStyle.serviceIcon}</div>
                     <div>
                       <p className="text-[7px] font-bold text-white/80">Il Mio Business</p>
-                      <p className="text-[5px] text-white/30">Piano Premium · Attivo</p>
+                      <p className="text-[5px] text-white/70">Piano Premium · Attivo</p>
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -2677,7 +2677,7 @@ export function IPhoneFrame({
                   </div>
                   <div className="mt-1.5 flex items-center justify-center gap-1">
                     <div className="w-1 h-1 rounded-full" style={{ backgroundColor: "#22c55e" }} />
-                    <span className="text-[4px] text-white/20">Empire v3.2 · Tutti i sistemi attivi</span>
+                    <span className="text-[4px] text-white/65">Empire v3.2 · Tutti i sistemi attivi</span>
                   </div>
                 </div>
               );
@@ -2707,10 +2707,10 @@ export function IPhoneFrame({
                     ))}
                   </div>
                   <div className="p-1.5 rounded-lg" style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}08` }}>
-                    <p className="text-[5px] text-white/30 mb-1">Piano attivo</p>
+                    <p className="text-[5px] text-white/70 mb-1">Piano attivo</p>
                     <div className="flex items-center justify-between">
                       <span className="text-[6px] font-bold" style={{ color }}>Premium</span>
-                      <span className="text-[4px] text-white/20">v3.2</span>
+                      <span className="text-[4px] text-white/65">v3.2</span>
                     </div>
                   </div>
                 </div>
@@ -2732,13 +2732,13 @@ export function IPhoneFrame({
                     </div>
                   </div>
                   {/* Feature sections */}
-                  <p className="text-[4px] text-white/20 uppercase tracking-wider mb-1 font-bold">Funzionalità</p>
+                  <p className="text-[4px] text-white/65 uppercase tracking-wider mb-1 font-bold">Funzionalità</p>
                   {sectorStyle.settingsToggles.slice(0, 4).map((t, i) => (
                     <div key={i} className="flex items-center justify-between py-1.5 border-b" style={{ borderColor: `${color}06` }}>
                       <span className="text-[5px] text-white/50">{t.label}</span>
                       <div className="flex items-center gap-1">
                         <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: t.on ? '#22c55e' : '#ef4444' }} />
-                        <span className="text-[4px] text-white/20">{t.on ? 'On' : 'Off'}</span>
+                        <span className="text-[4px] text-white/65">{t.on ? 'On' : 'Off'}</span>
                       </div>
                     </div>
                   ))}
@@ -2768,7 +2768,7 @@ export function IPhoneFrame({
                     </motion.div>
                   ))}
                   <div className="mt-3 p-1.5 rounded-xl text-center" style={{ backgroundColor: `${color}04` }}>
-                    <p className="text-[4px] text-white/20">Piano <span style={{ color }} className="font-bold">Premium</span> · Empire v3.2</p>
+                    <p className="text-[4px] text-white/65">Piano <span style={{ color }} className="font-bold">Premium</span> · Empire v3.2</p>
                   </div>
                 </div>
               );
@@ -3148,9 +3148,9 @@ export function AllIndustriesShowcase({ onViewDemo }: { onViewDemo?: (id: Indust
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Cerca settore..."
-          className="w-full px-4 py-2.5 pl-9 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/25 transition-colors"
+          className="w-full px-4 py-2.5 pl-9 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder:text-white/70 focus:outline-none focus:border-white/25 transition-colors"
         />
-        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
@@ -3181,13 +3181,13 @@ export function AllIndustriesShowcase({ onViewDemo }: { onViewDemo?: (id: Indust
         })}
       </div>
 
-      <p className="text-[10px] text-white/30 px-1">{filteredIds.length} settori{search ? ` per "${search}"` : ""}</p>
+      <p className="text-[10px] text-white/70 px-1">{filteredIds.length} settori{search ? ` per "${search}"` : ""}</p>
 
       {/* Accordion */}
       {grouped.map(cat => (
         <div key={cat.label} className="space-y-1.5">
           {!activeCategory && (
-            <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-1 pt-2">
+            <p className="text-[10px] font-bold text-white/80 uppercase tracking-widest px-1 pt-2">
               {cat.emoji} {cat.label}
             </p>
           )}
@@ -3264,7 +3264,7 @@ export function AllIndustriesShowcase({ onViewDemo }: { onViewDemo?: (id: Indust
 
       {filteredIds.length === 0 && (
         <div className="py-12 text-center">
-          <p className="text-sm text-white/40">Nessun settore trovato</p>
+          <p className="text-sm text-white/80">Nessun settore trovato</p>
           <button onClick={() => { setSearch(""); setActiveCategory(null); }} className="text-xs text-primary mt-2">
             Resetta filtri
           </button>

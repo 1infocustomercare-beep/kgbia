@@ -330,7 +330,7 @@ const RestaurantVoiceAgent: React.FC<Props> = ({ restaurantName, menuItems, prim
             <div className="flex-1 overflow-y-auto p-3 space-y-3" style={{ maxHeight: "45vh", minHeight: "200px" }}>
               {messages.length === 0 && (
                 <div className="text-center py-8">
-                  <Bot className="w-10 h-10 mx-auto mb-3 text-muted-foreground/30" />
+                  <Bot className="w-10 h-10 mx-auto mb-3 text-muted-foreground/70" />
                   <p className="text-sm font-medium text-foreground/60">Ciao! 👋</p>
                   <p className="text-xs text-muted-foreground mt-1">Chiedimi il menu o dimmi cosa vorresti ordinare</p>
                   <div className="flex flex-wrap justify-center gap-1.5 mt-4">
@@ -399,7 +399,7 @@ const RestaurantVoiceAgent: React.FC<Props> = ({ restaurantName, menuItems, prim
                 {SpeechRecognition && (
                   <button type="button" onClick={toggleListening}
                     className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                      isListening ? "text-white" : "bg-muted/50 text-foreground/40 hover:text-foreground/60"
+                      isListening ? "text-white" : "bg-muted/50 text-foreground/80 hover:text-foreground/60"
                     }`}
                     style={isListening ? { background: accentColor } : undefined}
                   >

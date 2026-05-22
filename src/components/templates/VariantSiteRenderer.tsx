@@ -465,7 +465,7 @@ function ScreenSwitcher({
           );
         })}
       </div>
-      <p className="text-[8px] uppercase tracking-[0.25em] text-white/40 text-center mt-1.5">
+      <p className="text-[8px] uppercase tracking-[0.25em] text-white/80 text-center mt-1.5">
         4 schermate · come la preview
       </p>
     </div>

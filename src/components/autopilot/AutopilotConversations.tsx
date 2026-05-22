@@ -105,7 +105,7 @@ export default function AutopilotConversations() {
           {!activeId ? (
             <div className="flex-1 flex items-center justify-center text-xs text-muted-foreground p-6">
               <div className="text-center space-y-2">
-                <MessageSquare className="w-8 h-8 mx-auto text-muted-foreground/40" />
+                <MessageSquare className="w-8 h-8 mx-auto text-muted-foreground/75" />
                 <p>Seleziona una conversazione per vedere i messaggi</p>
               </div>
             </div>

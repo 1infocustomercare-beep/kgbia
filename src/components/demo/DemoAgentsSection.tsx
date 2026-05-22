@@ -45,7 +45,7 @@ export default function DemoAgentsSection({ sector, accentColor, sectorName }: P
             Il Tuo Team AI per{" "}
             <span style={{ color: accentColor }}>{sectorName}</span>
           </h2>
-          <p className="text-sm text-white/40 max-w-xl mx-auto">
+          <p className="text-sm text-white/80 max-w-xl mx-auto">
             Agenti AI specializzati che lavorano 24/7 per automatizzare operazioni, acquisire clienti e far crescere il tuo business
           </p>
         </motion.div>
@@ -75,7 +75,7 @@ export default function DemoAgentsSection({ sector, accentColor, sectorName }: P
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-4 h-4" style={{ color: accentColor }} />
             <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider">Agenti Universali — Ogni settore</h3>
-            <Badge variant="outline" className="text-[10px] border-white/10 text-white/30 ml-auto">{universalAgents.length}</Badge>
+            <Badge variant="outline" className="text-[10px] border-white/10 text-white/70 ml-auto">{universalAgents.length}</Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {universalAgents.map((agent, i) => (
@@ -90,7 +90,7 @@ export default function DemoAgentsSection({ sector, accentColor, sectorName }: P
             <div className="flex items-center gap-2 mb-4">
               <Zap className="w-4 h-4" style={{ color: accentColor }} />
               <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider">Specialisti — Solo per {sectorName}</h3>
-              <Badge variant="outline" className="text-[10px] border-white/10 text-white/30 ml-auto">{sectorAgents.length}</Badge>
+              <Badge variant="outline" className="text-[10px] border-white/10 text-white/70 ml-auto">{sectorAgents.length}</Badge>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {sectorAgents.map((agent, i) => (
@@ -142,7 +142,7 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-[10px] text-emerald-400 font-medium">ATTIVO 24/7</span>
                 {isSectorSpecific && <Badge className="text-[0.45rem] px-1 py-0" style={{ background: `${accentColor}20`, color: accentColor }}>Specialista</Badge>}
-                {agent.category && <Badge variant="outline" className="text-[0.45rem] px-1 py-0 border-white/10 text-white/30">{agent.category}</Badge>}
+                {agent.category && <Badge variant="outline" className="text-[0.45rem] px-1 py-0 border-white/10 text-white/70">{agent.category}</Badge>}
               </div>
             </div>
           </div>
@@ -152,7 +152,7 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
           {/* Capabilities */}
           <div className="flex flex-wrap gap-1 mb-3">
             {agent.capabilities.map((c: string) => (
-              <Badge key={c} variant="outline" className="text-[10px] border-white/10 text-white/40 px-1.5">{c}</Badge>
+              <Badge key={c} variant="outline" className="text-[10px] border-white/10 text-white/80 px-1.5">{c}</Badge>
             ))}
           </div>
 
@@ -160,17 +160,17 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
           <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.04] mb-2">
             <div className="text-center">
               <p className="text-xs font-bold text-white">{agent.accuracy || 95}%</p>
-              <p className="text-[0.45rem] text-white/30">Precisione</p>
+              <p className="text-[0.45rem] text-white/70">Precisione</p>
             </div>
             <div className="text-center">
               <p className="text-xs font-bold text-white">{agent.hoursPerWeek || 10}h</p>
-              <p className="text-[0.45rem] text-white/30">Risparmio/sett</p>
+              <p className="text-[0.45rem] text-white/70">Risparmio/sett</p>
             </div>
             <div className="text-center">
               <p className="text-xs font-bold" style={{ color: accentColor }}>
                 <CheckCircle className="w-3 h-3 inline mr-0.5" />Attivo
               </p>
-              <p className="text-[0.45rem] text-white/30">Stato</p>
+              <p className="text-[0.45rem] text-white/70">Stato</p>
             </div>
           </div>
 

@@ -139,12 +139,12 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
             {/* Search */}
             <div className="px-4 py-2.5 border-b border-white/[0.05] shrink-0">
               <div className="relative">
-                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
+                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-white/70" />
                 <input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Cerca settore, brand o stile (es. food, COTE, obsidian)..."
-                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/40"
+                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder:text-white/70 focus:outline-none focus:border-purple-500/40"
                 />
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
               {/* Sector sidebar */}
               <div className="w-[120px] lg:w-[180px] border-r border-white/[0.06] overflow-y-auto p-2 space-y-1 shrink-0"
                 style={{ background: "rgba(0,0,0,0.35)" }}>
-                <p className="text-[0.55rem] uppercase tracking-wider text-white/30 font-bold px-2 pt-1 pb-1">Settori</p>
+                <p className="text-[0.55rem] uppercase tracking-wider text-white/70 font-bold px-2 pt-1 pb-1">Settori</p>
                 {allAvailableSectors
                   .filter(s => !search.trim() || s.label.toLowerCase().includes(search.toLowerCase()) || s.id.includes(search.toLowerCase()))
                   .map(s => {
@@ -182,7 +182,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                   <>
                     {/* Brand list */}
                     <div className="mb-3">
-                      <p className="text-[0.6rem] uppercase tracking-wider text-white/40 font-bold mb-2">
+                      <p className="text-[0.6rem] uppercase tracking-wider text-white/80 font-bold mb-2">
                         Brand · {currentSector.brands.length}
                       </p>
                       <div className="flex flex-wrap gap-1.5">
@@ -216,7 +216,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                             <ImageIcon className="w-3 h-3 text-white/70" />
                           </div>
                           <p className="text-xs font-black text-white">{brand.name}</p>
-                          <span className="text-[0.6rem] text-white/40">{brand.styles.length} stili</span>
+                          <span className="text-[0.6rem] text-white/80">{brand.styles.length} stili</span>
                         </div>
                         <div className="space-y-3">
                           {brand.styles.map(style => (
@@ -251,7 +251,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                   </>
                 ) : fallbackImages.length > 0 ? (
                   <>
-                    <p className="text-[0.6rem] uppercase tracking-wider text-white/40 font-bold mb-2">
+                    <p className="text-[0.6rem] uppercase tracking-wider text-white/80 font-bold mb-2">
                       Mockup disponibili · {fallbackImages.length}
                     </p>
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -270,7 +270,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                     </div>
                   </>
                 ) : (
-                  <div className="text-center py-12 text-white/40 text-xs">
+                  <div className="text-center py-12 text-white/80 text-xs">
                     Nessun mockup per questo settore.
                   </div>
                 )}
@@ -280,7 +280,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
             {/* Footer hint */}
             <div className="px-4 py-2.5 border-t border-white/[0.06] flex items-center justify-between"
               style={{ background: "rgba(0,0,0,0.35)" }}>
-              <p className="text-[0.6rem] text-white/40 flex items-center gap-1.5">
+              <p className="text-[0.6rem] text-white/80 flex items-center gap-1.5">
                 <Eye className="w-3 h-3" /> Tap su un mockup per allegarlo al messaggio
               </p>
               <button onClick={onClose} className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[0.65rem] text-white/70 font-bold">

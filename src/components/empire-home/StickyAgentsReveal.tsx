@@ -117,13 +117,13 @@ export default function StickyAgentsReveal() {
                     }}
                   />
                   <div className="min-w-0">
-                    <div className="font-mono text-[9px] tracking-[3px] text-white/40">AGENT-{String(i + 1).padStart(2, "0")}</div>
+                    <div className="font-mono text-[9px] tracking-[3px] text-white/80">AGENT-{String(i + 1).padStart(2, "0")}</div>
                     <div className="text-xs font-bold uppercase tracking-[2px]" style={{ color: a.c }}>{a.role}</div>
                   </div>
                 </div>
 
                 <div className="mb-3 flex items-center gap-3 sm:mb-4">
-                  <span className="font-mono text-xs tracking-[3px] text-white/40">{String(i + 1).padStart(2, "0")} / 04</span>
+                  <span className="font-mono text-xs tracking-[3px] text-white/80">{String(i + 1).padStart(2, "0")} / 04</span>
                   <span className="h-px flex-1 bg-white/15" />
                   <span className="hidden text-xs uppercase tracking-[3px] sm:inline" style={{ color: a.c }}>{a.role}</span>
                 </div>

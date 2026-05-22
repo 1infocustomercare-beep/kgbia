@@ -458,7 +458,7 @@ const StudioTab = ({
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50" />
               <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                 placeholder={`Cerca tra ${menuItems.length} piatti...`}
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40" />
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/75" />
             </div>
             <motion.button onClick={() => setShowAddItem(!showAddItem)}
               className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold min-h-[44px] flex-shrink-0 shadow-sm"
@@ -622,7 +622,7 @@ const StudioTab = ({
                             <div key={item.id} draggable onDragStart={() => handleDragStart(item.id)} onDragOver={(e) => handleDragOver(e, item.id)} onDragEnd={handleDragEnd}
                               className={`flex items-center gap-3 px-4 py-3 transition-all ${draggedItem === item.id ? "opacity-50 bg-primary/5" : ""}`}>
                               {/* Drag handle */}
-                              <GripVertical className="w-4 h-4 text-muted-foreground/30 flex-shrink-0 cursor-grab active:cursor-grabbing" />
+                              <GripVertical className="w-4 h-4 text-muted-foreground/70 flex-shrink-0 cursor-grab active:cursor-grabbing" />
 
                               {/* Image */}
                               <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-secondary/50">
@@ -630,7 +630,7 @@ const StudioTab = ({
                                   <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center">
-                                    <UtensilsCrossed className="w-4 h-4 text-muted-foreground/30" />
+                                    <UtensilsCrossed className="w-4 h-4 text-muted-foreground/70" />
                                   </div>
                                 )}
                                 {regeneratingId === item.id && (
@@ -693,7 +693,7 @@ const StudioTab = ({
 
           {menuItems.length === 0 && (
             <div className="text-center py-16 rounded-2xl bg-card border border-border/40">
-              <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
+              <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 text-muted-foreground/65" />
               <p className="text-sm font-medium text-muted-foreground">Nessun piatto nel menu</p>
               <p className="text-xs text-muted-foreground/60 mt-1">Aggiungi manualmente o usa l'IA per importare</p>
             </div>
@@ -701,7 +701,7 @@ const StudioTab = ({
 
           {searchQuery && filteredItems.length === 0 && menuItems.length > 0 && (
             <div className="text-center py-8 rounded-2xl bg-card border border-border/40">
-              <Search className="w-8 h-8 mx-auto mb-2 text-muted-foreground/20" />
+              <Search className="w-8 h-8 mx-auto mb-2 text-muted-foreground/65" />
               <p className="text-sm text-muted-foreground">Nessun risultato per "{searchQuery}"</p>
             </div>
           )}
@@ -751,7 +751,7 @@ const StudioTab = ({
                         <div className="w-full h-full flex items-center justify-center"><Loader2 className="w-5 h-5 text-primary animate-spin" /></div>
                       ) : dish.image_url ? (
                         <img src={dish.image_url} alt={dish.name} className="w-full h-full object-cover" />
-                      ) : <div className="w-full h-full flex items-center justify-center"><Wand2 className="w-4 h-4 text-primary/40" /></div>}
+                      ) : <div className="w-full h-full flex items-center justify-center"><Wand2 className="w-4 h-4 text-primary/80" /></div>}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground truncate">{dish.name}</p>
@@ -884,7 +884,7 @@ const StudioTab = ({
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tagline</p>
             <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
               placeholder="Es: La vera cucina italiana dal 1985" maxLength={120} onBlur={handleSaveSettings}
-              className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40" />
+              className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/75" />
           </div>
 
           {/* Color Picker */}

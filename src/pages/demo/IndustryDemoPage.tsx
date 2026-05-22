@@ -303,7 +303,7 @@ export default function IndustryDemoPage() {
             {logoOverride && <img src={logoOverride} alt="" className="w-7 h-7 rounded-lg object-cover border border-white/10" />}
             <div className="min-w-0">
               <p className="text-xs font-bold text-white truncate">{brandOverride}</p>
-              <p className="text-[9px] text-white/40">Bozza demo — Empire Platform</p>
+              <p className="text-[9px] text-white/80">Bozza demo — Empire Platform</p>
             </div>
           </div>
           <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
@@ -380,7 +380,7 @@ export default function IndustryDemoPage() {
                   <p className="text-3xl sm:text-4xl font-black" style={{ color: theme.accent }}>
                     <AnimatedNumber value={s.value} suffix={s.suffix} />
                   </p>
-                  <p className="text-[10px] text-white/30 uppercase tracking-[2px] mt-1 font-semibold">{s.label}</p>
+                  <p className="text-[10px] text-white/70 uppercase tracking-[2px] mt-1 font-semibold">{s.label}</p>
                 </div>
               ))}
             </motion.div>
@@ -407,7 +407,7 @@ export default function IndustryDemoPage() {
             { icon: <Lock className="w-4 h-4" />, label: "100% Sicuro" },
             { icon: <Smartphone className="w-4 h-4" />, label: "Mobile First" },
           ].map((item, i) => (
-            <div key={i} className="flex items-center gap-2 text-white/30 text-xs font-semibold">
+            <div key={i} className="flex items-center gap-2 text-white/70 text-xs font-semibold">
               <span style={{ color: theme.accent }}>{item.icon}</span>
               {item.label}
             </div>
@@ -425,7 +425,7 @@ export default function IndustryDemoPage() {
             <h2 className="text-2xl sm:text-4xl font-bold mb-3">
               I Problemi che <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>Eliminiamo</span>
             </h2>
-            <p className="text-sm text-white/40 max-w-lg mx-auto">
+            <p className="text-sm text-white/80 max-w-lg mx-auto">
               Ogni giorno migliaia di attività nel settore {industryConfig?.label} perdono clienti e fatturato per questi motivi
             </p>
           </div>
@@ -439,7 +439,7 @@ export default function IndustryDemoPage() {
                     <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0 text-red-400 text-sm font-bold">✗</div>
                     <div>
                       <p className="text-sm font-semibold text-white/80">{problem}</p>
-                      <p className="text-xs text-white/30 mt-1">Empire lo risolve automaticamente</p>
+                      <p className="text-xs text-white/70 mt-1">Empire lo risolve automaticamente</p>
                     </div>
                   </div>
                 </div>
@@ -460,7 +460,7 @@ export default function IndustryDemoPage() {
               Cosa Creiamo per il Tuo{" "}
               <span style={{ color: theme.accent }}>{industryConfig?.label}</span>
             </h2>
-            <p className="text-sm text-white/40 max-w-xl mx-auto">
+            <p className="text-sm text-white/80 max-w-xl mx-auto">
               Non un semplice sito web — un ecosistema digitale completo che lavora per te 24/7
             </p>
           </div>
@@ -476,7 +476,7 @@ export default function IndustryDemoPage() {
                   <div className="relative">
                     <span className="text-3xl block mb-3">{item.emoji}</span>
                     <h3 className="font-bold text-base text-white mb-2">{item.title}</h3>
-                    <p className="text-sm text-white/40 leading-relaxed">{item.desc}</p>
+                    <p className="text-sm text-white/80 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               </motion.div>
@@ -489,7 +489,7 @@ export default function IndustryDemoPage() {
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             <Sparkles className="w-6 h-6 mx-auto mb-3" style={{ color: theme.accent }} />
             <h3 className="font-bold text-lg text-white mb-2">Tutto Personalizzabile al 100%</h3>
-            <p className="text-sm text-white/40 max-w-lg mx-auto">
+            <p className="text-sm text-white/80 max-w-lg mx-auto">
               Design, funzionalità, workflow — ogni aspetto è costruito su misura per le tue esigenze specifiche.
               <br />Non trovi una funzione? <strong style={{ color: theme.accent }}>Chiedi ad Arianna</strong> — la nostra AI trova soluzioni a qualsiasi problema.
             </p>
@@ -530,7 +530,7 @@ export default function IndustryDemoPage() {
             <h2 className="text-2xl sm:text-4xl font-bold mb-3">
               Un Ecosistema che <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>Lavora per Te</span>
             </h2>
-            <p className="text-white/40 max-w-lg mx-auto text-sm">
+            <p className="text-white/80 max-w-lg mx-auto text-sm">
               Non servono 10 strumenti diversi. Tutto è integrato, automatizzato e sempre attivo.
             </p>
           </div>
@@ -549,7 +549,7 @@ export default function IndustryDemoPage() {
                       <span style={{ color: theme.accent }}>{feat.icon}</span>
                     </div>
                     <h3 className="font-bold text-sm text-white mb-1">{feat.title}</h3>
-                    <p className="text-xs text-white/40 leading-relaxed">{feat.desc}</p>
+                    <p className="text-xs text-white/80 leading-relaxed">{feat.desc}</p>
                   </div>
                 </div>
               </motion.div>
@@ -567,7 +567,7 @@ export default function IndustryDemoPage() {
             ].map((b, i) => (
               <div key={i} className="text-center p-4 rounded-xl border border-white/5" style={{ background: `${theme.accent}04` }}>
                 <span className="text-xl block mb-1">{b.emoji}</span>
-                <span className="text-[10px] text-white/40 font-semibold uppercase tracking-wider">{b.label}</span>
+                <span className="text-[10px] text-white/80 font-semibold uppercase tracking-wider">{b.label}</span>
               </div>
             ))}
           </motion.div>
@@ -590,7 +590,7 @@ export default function IndustryDemoPage() {
             <h2 className="text-2xl sm:text-3xl font-bold mb-2">
               Scopri Come Possiamo Trasformare il Tuo Business
             </h2>
-            <p className="text-sm text-white/40">
+            <p className="text-sm text-white/80">
               Compila il form — ti chiamiamo noi per una consulenza personalizzata gratuita
             </p>
           </div>
@@ -602,7 +602,7 @@ export default function IndustryDemoPage() {
                 <CheckCircle className="w-10 h-10" style={{ color: theme.accent }} />
               </div>
               <h3 className="text-2xl font-bold mb-2">Richiesta Inviata!</h3>
-              <p className="text-sm text-white/40">Ti contatteremo entro 24 ore per la tua consulenza gratuita.</p>
+              <p className="text-sm text-white/80">Ti contatteremo entro 24 ore per la tua consulenza gratuita.</p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 p-8 rounded-2xl border border-white/10 backdrop-blur-sm"
@@ -615,23 +615,23 @@ export default function IndustryDemoPage() {
                   { key: "business", label: "Nome Attività", type: "text" },
                 ].map(f => (
                   <div key={f.key}>
-                    <label className="text-xs text-white/40 mb-1.5 block font-medium">{f.label}</label>
+                    <label className="text-xs text-white/80 mb-1.5 block font-medium">{f.label}</label>
                     <Input
                       type={f.type}
                       value={formData[f.key] || ""}
                       onChange={e => setFormData(p => ({ ...p, [f.key]: e.target.value }))}
-                      className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-11 focus:border-white/20"
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/65 h-11 focus:border-white/20"
                       placeholder={f.label.replace(" *", "")}
                     />
                   </div>
                 ))}
               </div>
               <div>
-                <label className="text-xs text-white/40 mb-1.5 block font-medium">Raccontaci le tue esigenze</label>
+                <label className="text-xs text-white/80 mb-1.5 block font-medium">Raccontaci le tue esigenze</label>
                 <Textarea
                   value={formData.notes || ""}
                   onChange={e => setFormData(p => ({ ...p, notes: e.target.value }))}
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/20 min-h-[80px] focus:border-white/20"
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/65 min-h-[80px] focus:border-white/20"
                   placeholder="Cosa vorresti migliorare nel tuo business? Quali funzionalità ti servono?"
                 />
               </div>
@@ -639,7 +639,7 @@ export default function IndustryDemoPage() {
                 style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`, boxShadow: `0 8px 30px ${theme.accent}30` }}>
                 <Send className="w-5 h-5 mr-2" /> Richiedi Consulenza Gratuita
               </Button>
-              <p className="text-[10px] text-white/20 text-center flex items-center justify-center gap-1">
+              <p className="text-[10px] text-white/65 text-center flex items-center justify-center gap-1">
                 <Lock className="w-3 h-3" /> I tuoi dati sono al sicuro — niente spam, lo promettiamo.
               </p>
             </form>

@@ -846,7 +846,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
                   className="p-1.5 rounded-lg hover:bg-white/10 transition"
                   title={scrollNarrationActive ? "Pausa guida" : "Riattiva guida"}
                 >
-                  <Eye className={`w-3.5 h-3.5 ${scrollNarrationActive ? "text-white/80" : "text-white/30"}`} />
+                  <Eye className={`w-3.5 h-3.5 ${scrollNarrationActive ? "text-white/80" : "text-white/70"}`} />
                 </button>
               )}
               {isSpeaking && !callActive && (
@@ -880,7 +880,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
                 <ChevronDown className="w-3.5 h-3.5 text-white/60" />
               </button>
               <button onClick={handleDismiss} className="p-1.5 rounded-lg hover:bg-white/10 transition" title="Chiudi definitivamente">
-                <X className="w-3.5 h-3.5 text-white/40" />
+                <X className="w-3.5 h-3.5 text-white/80" />
               </button>
             </div>
           </div>
@@ -982,7 +982,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
                 {/* Chat messages */}
                 {!callActive && messages.length === 0 && (
                   <div className="text-center py-4 space-y-3">
-                    <p className="text-xs text-white/40 font-semibold">
+                    <p className="text-xs text-white/80 font-semibold">
                       Chiedimi tutto su Empire per {industryName}
                     </p>
                     <div className="space-y-1.5">

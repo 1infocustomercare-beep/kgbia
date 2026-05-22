@@ -676,7 +676,7 @@ export default function PartnerPortfolioPage() {
                       title="Mini-anteprima delle 4 schermate principali"
                     >
                       {screenImgs.length === 0 && (
-                        <div className="self-center text-[10px] text-white/40 flex flex-col items-center gap-1">
+                        <div className="self-center text-[10px] text-white/80 flex flex-col items-center gap-1">
                           <Smartphone className="w-6 h-6" /> Nessuna anteprima
                         </div>
                       )}
@@ -920,7 +920,7 @@ function DemoSiteRow({
               className="w-[40px] aspect-[9/19.5] rounded-md shrink-0 flex items-center justify-center"
               style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)" }}
             >
-              <Smartphone className="w-3 h-3 text-white/20" />
+              <Smartphone className="w-3 h-3 text-white/65" />
             </div>
           ))}
         </div>

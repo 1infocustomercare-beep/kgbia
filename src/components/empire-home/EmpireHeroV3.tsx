@@ -329,7 +329,7 @@ const EmpireHeroV3 = forwardRef<HTMLElement, Record<string, never>>(function Emp
           </div>
 
           {/* Scroll hint — sotto i dots, no overlap */}
-          <div className="absolute bottom-0 flex flex-col items-center gap-1 text-[9px] uppercase tracking-[0.35em] text-foreground/40 sm:text-[10px] sm:tracking-[0.4em]">
+          <div className="absolute bottom-0 flex flex-col items-center gap-1 text-[9px] uppercase tracking-[0.35em] text-foreground/80 sm:text-[10px] sm:tracking-[0.4em]">
             <span>Scopri come</span>
             <span className="h-6 w-px animate-pulse bg-gradient-to-b from-foreground/50 to-transparent sm:h-7" />
           </div>

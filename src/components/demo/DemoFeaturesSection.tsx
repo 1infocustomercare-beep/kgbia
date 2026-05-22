@@ -77,7 +77,7 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
             Tutto quello che Empire può fare per{" "}
             <span style={{ color: accentColor }}>{sectorName}</span>
           </h2>
-          <p className="text-sm text-white/40 max-w-xl mx-auto">
+          <p className="text-sm text-white/80 max-w-xl mx-auto">
             Una piattaforma completa con CRM, booking, marketing, analytics, pagamenti e agenti AI — tutto integrato e pronto all'uso
           </p>
         </motion.div>
@@ -94,7 +94,7 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
               <h3 className="text-sm font-bold text-white/70 uppercase tracking-wider">
                 {CATEGORY_LABELS[cat] || cat}
               </h3>
-              <Badge variant="outline" className="text-[10px] border-white/10 text-white/30 ml-2">{features.length}</Badge>
+              <Badge variant="outline" className="text-[10px] border-white/10 text-white/70 ml-2">{features.length}</Badge>
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -116,7 +116,7 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-bold text-white/90 mb-1">{f.title}</p>
-                            <p className="text-[0.65rem] text-white/40 leading-relaxed">{f.desc}</p>
+                            <p className="text-[0.65rem] text-white/80 leading-relaxed">{f.desc}</p>
                           </div>
                         </div>
                       </CardContent>

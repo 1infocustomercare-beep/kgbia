@@ -265,7 +265,7 @@ export default function PartnerSplashScreen({ userName, avatarUrl, onComplete }:
             </motion.h1>
 
             <motion.p
-              className="text-[10px] text-white/40 font-medium tracking-wider uppercase mb-5"
+              className="text-[10px] text-white/80 font-medium tracking-wider uppercase mb-5"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.5 }}

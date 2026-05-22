@@ -287,7 +287,7 @@ const MediaVaultPage = () => {
             <>
               <h3 className="text-xs font-semibold text-foreground mb-0.5 truncate">{item.name}</h3>
               <p className="text-[0.55rem] text-muted-foreground mb-1.5">{item.dimensions}</p>
-              <p className="text-[10px] text-foreground/40 line-clamp-2 mb-2">{item.description}</p>
+              <p className="text-[10px] text-foreground/80 line-clamp-2 mb-2">{item.description}</p>
               <div className="flex gap-1 flex-wrap">
                 <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-0.5 px-1.5" onClick={() => setPreview(item)}>
                   <Eye className="w-2.5 h-2.5" />
@@ -504,7 +504,7 @@ const MediaVaultPage = () => {
               })}
               {sectionKeys.length === 0 && (
                 <div className="text-center py-16">
-                  <Image className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
+                  <Image className="w-12 h-12 text-muted-foreground/65 mx-auto mb-3" />
                   <p className="text-sm text-muted-foreground">Nessun media trovato</p>
                 </div>
               )}
@@ -567,7 +567,7 @@ const MediaVaultPage = () => {
 
           {!loading && filtered.length === 0 && viewMode !== "sections" && (
             <div className="text-center py-16">
-              <Image className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
+              <Image className="w-12 h-12 text-muted-foreground/65 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">Nessun media trovato</p>
             </div>
           )}
@@ -657,7 +657,7 @@ const MediaVaultPage = () => {
                           )}
                           {!previewUrl && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              {isVideo ? <Film className="w-6 h-6 text-muted-foreground/30" /> : <Image className="w-6 h-6 text-muted-foreground/30" />}
+                              {isVideo ? <Film className="w-6 h-6 text-muted-foreground/70" /> : <Image className="w-6 h-6 text-muted-foreground/70" />}
                             </div>
                           )}
                           {hasCustom && (
@@ -716,7 +716,7 @@ const MediaVaultPage = () => {
 
           {!siteAssetsLoading && saFiltered.length === 0 && (
             <div className="text-center py-16">
-              <Palette className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
+              <Palette className="w-12 h-12 text-muted-foreground/65 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">Nessun asset trovato</p>
             </div>
           )}
