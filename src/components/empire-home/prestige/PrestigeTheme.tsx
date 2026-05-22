@@ -19,8 +19,8 @@ export default function PrestigeTheme() {
         --pr-ink: 162 30% 10%;
         --pr-text-on-dark: 42 30% 94%;
         --pr-text-on-light: 162 35% 12%;
-        --pr-muted-on-dark: 42 18% 78%;
-        --pr-muted-on-light: 162 18% 32%;
+        --pr-muted-on-dark: 42 22% 86%;
+        --pr-muted-on-light: 162 28% 22%;
 
         background: hsl(var(--pr-emerald-deep));
         color: hsl(var(--pr-text-on-dark));
