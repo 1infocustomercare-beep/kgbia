@@ -155,17 +155,20 @@ export const GuidesToggle = () => {
   return (
     <motion.button
       onClick={toggleGuides}
-      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+      aria-label={guidesEnabled ? "Disattiva guide" : "Attiva guide"}
+      title={guidesEnabled ? "Guide attive" : "Guide disattivate"}
+      className={`flex items-center justify-center gap-1.5 h-9 min-w-[36px] px-2 rounded-xl text-[11px] font-semibold whitespace-nowrap transition-all flex-shrink-0 ${
         guidesEnabled
           ? "bg-primary/10 text-primary border border-primary/20"
           : "bg-secondary text-muted-foreground border border-border/50"
       }`}
       whileTap={{ scale: 0.95 }}
     >
-      <HelpCircle className="w-3.5 h-3.5" />
-      {guidesEnabled ? "Guide ?" : "Guide Off"}
+      <HelpCircle className="w-4 h-4 flex-shrink-0" />
+      <span className="hidden sm:inline">{guidesEnabled ? "Guide" : "Off"}</span>
     </motion.button>
   );
 };
+
 
 export default InfoGuide;

@@ -195,11 +195,13 @@ const EmpireAssistant = ({ restaurantId, companyId }: EmpireAssistantProps) => {
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setOpen(true)}
             className="fixed z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 flex items-center justify-center"
-            style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 76px)", right: "16px" }}
+            style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 96px)", right: "16px" }}
             whileTap={{ scale: 0.9 }}
+            aria-label="Apri Empire Assistant"
           >
             <Sparkles className="w-5 h-5" />
           </motion.button>
+
         )}
       </AnimatePresence>
 
