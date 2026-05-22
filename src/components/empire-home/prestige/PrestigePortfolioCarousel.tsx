@@ -74,8 +74,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "paperfish",
-    tag: "Sushi & Omakase",
+    tag: "Food",
+    subtag: "Sushi",
+    pill: { bg: "hsl(20 90% 92%)", text: "hsl(20 80% 38%)" },
+    pill2: { bg: "hsl(340 60% 94%)", text: "hsl(340 55% 40%)" },
     title: "Paperfish",
+
     city: "Roma",
     oneLiner: "L'esperienza del ristorante stellato, anche prima di entrare.",
     problem: [
