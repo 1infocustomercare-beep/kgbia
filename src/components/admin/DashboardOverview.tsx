@@ -67,8 +67,9 @@ const DashboardOverview = ({
         />
       </div>
 
-      {/* Main KPIs — 2x2 grid with COTE copper borders */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Main KPIs — 2x2 on mobile, 4x1 from tablet up */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+
         <motion.div
           className="cote-card-accent p-4 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform"
           onClick={() => onNavigate("profit")}
@@ -119,7 +120,8 @@ const DashboardOverview = ({
       </div>
 
       {/* Reviews & Reservations */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
         <motion.div className="cote-card p-3.5 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("profit")} whileTap={{ scale: 0.97 }}>
           <div className="flex items-center gap-1.5 mb-1.5">
             <Star className="w-3.5 h-3.5 text-primary" />
@@ -276,7 +278,7 @@ const DashboardOverview = ({
       {/* Quick Actions */}
       <div className="space-y-2.5">
         <p className="text-[0.5rem] uppercase tracking-[3px] text-primary/50 font-semibold">Accesso Rapido</p>
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <motion.button onClick={() => window.open(menuUrl, "_blank")}
             className="cote-card flex items-center gap-2.5 p-3.5 rounded-xl text-sm text-foreground min-h-[48px] active:scale-[0.97] transition-all font-medium"
             whileTap={{ scale: 0.97 }}>
