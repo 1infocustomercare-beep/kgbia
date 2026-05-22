@@ -6,6 +6,30 @@
 
 @layer base {
   :root {
+    /* ═══ EMPIRE SPACING SCALE (4px base, mobile-first) ═══ */
+    --space-3xs: 0.125rem;  /* 2px  — hairlines */
+    --space-2xs: 0.25rem;   /* 4px  — icon nudges */
+    --space-xs:  0.5rem;    /* 8px  — chip padding */
+    --space-sm:  0.75rem;   /* 12px — input gap */
+    --space-md:  1rem;      /* 16px — card padding (mobile) */
+    --space-lg:  1.5rem;    /* 24px — card padding (desktop), stack gap */
+    --space-xl:  2rem;      /* 32px — block separation */
+    --space-2xl: 3rem;      /* 48px — section separation (mobile) */
+    --space-3xl: 4rem;      /* 64px — section separation (desktop) */
+    --space-4xl: 6rem;      /* 96px — hero / marketing */
+
+    /* ═══ LAYOUT CONTAINERS ═══ */
+    --container-narrow:  40rem;  /* 640px  — auth forms, prose */
+    --container-default: 64rem;  /* 1024px — default content */
+    --container-wide:    80rem;  /* 1280px — admin dashboards */
+    --container-full:    90rem;  /* 1440px — marketing hero */
+
+    /* ═══ RESPONSIVE GUTTER & SECTION RHYTHM ═══ */
+    --layout-gutter: 1rem;       /* 16px on mobile */
+    --section-y:     2.5rem;     /* 40px on mobile */
+    --section-y-lg:  4rem;       /* 64px on mobile */
+    --safe-bottom:   6rem;       /* keeps content above floating FABs (>= 6rem rule) */
+
     --background: 220 20% 97%;
     --foreground: 222 20% 14%;
 
