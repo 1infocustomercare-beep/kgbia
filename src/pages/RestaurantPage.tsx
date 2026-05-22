@@ -229,10 +229,7 @@ const RestaurantPage = () => {
                 </button>
               )}
               <button onClick={() => scrollToSection("home")} className="flex items-center gap-3">
-                <img src={restaurantLogoUrl} alt="" className="w-10 h-10 rounded-xl object-contain" />
-                <span className="font-display font-bold text-lg text-foreground tracking-[0.08em] uppercase hidden sm:block">
-                  {restaurantName}
-                </span>
+                <img src={restaurantLogoUrl} alt={restaurantName} className="h-10 sm:h-12 w-auto max-w-[160px] object-contain" />
               </button>
             </div>
 

@@ -367,6 +367,7 @@ const AdminDashboard = () => {
               aiTokens={aiTokens}
               restaurantName={restaurantName}
               restaurantId={restaurant?.id}
+              restaurantLogo={restaurant?.logo_url}
               reviews={reviews}
               reservations={reservations}
               menuUrl={menuUrl}
