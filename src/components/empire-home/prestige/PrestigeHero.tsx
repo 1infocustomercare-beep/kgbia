@@ -62,11 +62,11 @@ export default function PrestigeHero() {
     <section
       ref={ref}
       data-section="prestige-hero"
-      className="prestige-section prestige-dark relative min-h-[100svh] flex items-center"
-      style={{ paddingTop: "max(110px, 14svh)", paddingBottom: "8svh" }}
+      className="prestige-section prestige-dark relative min-h-[100svh] flex items-center overflow-x-clip"
+      style={{ paddingTop: "max(120px, 15svh)", paddingBottom: "8svh" }}
     >
-      {/* Lang toggle — absolute top-right of the hero, never overlaps copy */}
-      <div className="absolute right-4 top-[78px] z-20 sm:right-6 sm:top-[92px]">
+      {/* Lang toggle — top-right, scaled down on mobile to never collide with eyebrow */}
+      <div className="absolute right-3 top-[72px] z-20 scale-90 origin-top-right sm:right-6 sm:top-[92px] sm:scale-100">
         <PrestigeLangToggle />
       </div>
 
@@ -80,17 +80,17 @@ export default function PrestigeHero() {
         }}
       />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 lg:grid-cols-12 lg:gap-12 lg:px-10">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-5 lg:grid-cols-12 lg:gap-12 lg:px-10">
         {/* LEFT — Copy */}
-        <div className="lg:col-span-7">
-          <div className="prestige-eyebrow inline-flex max-w-full items-start gap-2 pr-20 sm:pr-24" style={{ color: "hsl(var(--pr-gold-light))" }}>
+        <div className="lg:col-span-7 min-w-0">
+          <div className="prestige-eyebrow inline-flex max-w-full items-start gap-2 pr-16 sm:pr-24" style={{ color: "hsl(var(--pr-gold-light))" }}>
             <Sparkles size={14} className="mt-[2px] shrink-0" />
-            <span className="whitespace-normal leading-snug">{t({ it: "Empire · Agency AI per la tua azienda", en: "Empire · AI Agency for your business" })}</span>
+            <span className="whitespace-normal leading-snug text-[10px] sm:text-xs">{t({ it: "Empire · Agency AI per la tua azienda", en: "Empire · AI Agency for your business" })}</span>
           </div>
 
 
 
-          <h1 className="prestige-display mt-5 text-4xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="prestige-display mt-5 text-[2rem] font-semibold leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl break-words">
             {t({
               it: "Trasformiamo la tua azienda in un ",
               en: "We turn your business into a ",
@@ -100,6 +100,7 @@ export default function PrestigeHero() {
             </span>{" "}
             {t({ it: "che lavora 24/7.", en: "that works 24/7." })}
           </h1>
+
 
           <p
             className="mt-6 max-w-2xl text-base leading-relaxed sm:text-lg"
