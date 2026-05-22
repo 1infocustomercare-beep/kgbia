@@ -60,7 +60,7 @@ export default function PrestigeTheme() {
         letter-spacing: 0.32em;
         text-transform: uppercase;
         font-weight: 600;
-        opacity: 0.85;
+        opacity: 0.95;
       }
       @media (min-width: 768px) {
         .prestige-eyebrow { font-size: 12px; }
