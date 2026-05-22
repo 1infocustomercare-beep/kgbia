@@ -277,7 +277,7 @@ const DashboardOverview = ({
 
       {/* Quick Actions */}
       <div className="space-y-2.5">
-        <p className="text-[10px] uppercase tracking-[3px] text-primary/50 font-semibold">Accesso Rapido</p>
+        <p className="text-[10px] uppercase tracking-[3px] text-primary/80 font-semibold">Accesso Rapido</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <motion.button onClick={() => window.open(menuUrl, "_blank")}
             className="cote-card flex items-center gap-2.5 p-3.5 rounded-xl text-sm text-foreground min-h-[48px] active:scale-[0.97] transition-all font-medium"
