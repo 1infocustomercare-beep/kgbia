@@ -67,8 +67,9 @@ const DashboardOverview = ({
         />
       </div>
 
-      {/* Main KPIs — 2x2 grid with COTE copper borders */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Main KPIs — 2x2 on mobile, 4x1 from tablet up */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+
         <motion.div
           className="cote-card-accent p-4 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform"
           onClick={() => onNavigate("profit")}
