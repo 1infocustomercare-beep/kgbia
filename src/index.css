@@ -1991,8 +1991,9 @@
   .partner-page-guide-fab {
     left: 0.75rem;
     right: auto;
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 0.75rem);
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px) + 1.25rem);
   }
+
 
   .partner-arianna-fab {
     left: 0.75rem;

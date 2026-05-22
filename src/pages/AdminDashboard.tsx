@@ -355,7 +355,7 @@ const AdminDashboard = () => {
 
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 pb-24">
+      <div className="flex-1 overflow-y-auto px-4 py-4 pb-32">
         <AnimatePresence mode="wait">
           {activeTab === "dashboard" && (
             <DashboardOverview
