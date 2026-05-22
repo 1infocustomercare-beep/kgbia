@@ -297,9 +297,19 @@ const RestaurantPage = () => {
       {/* ====== 1. HERO — Full Screen with Video/Image ====== */}
       <section id="home" ref={heroRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <motion.div className="absolute inset-0" style={{ scale: heroScale }}>
-          <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
+          {(dbRestaurant as any)?.theme_config?.hero?.image ? (
+            <img
+              src={(dbRestaurant as any).theme_config.hero.image}
+              alt={`${restaurantName} — ${restaurantTagline}`}
+              className="w-full h-full object-cover object-center"
+              loading="eager"
+            />
+          ) : (
+            <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
+          )}
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/80" />
+
 
         <motion.div className="relative z-10 text-center px-5" style={{ opacity: heroOpacity }}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
