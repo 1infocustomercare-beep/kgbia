@@ -195,7 +195,86 @@
   }
 }
 
-/* ═══ LANDING PAGE DARK PREMIUM SCOPE — only active in dark mode ═══ */
+/* ═══ EMPIRE LAYOUT SYSTEM — responsive overrides + utility classes ═══ */
+@media (min-width: 768px) {
+  :root {
+    --layout-gutter: 1.5rem;   /* 24px tablet */
+    --section-y:     3.5rem;   /* 56px */
+    --section-y-lg:  5.5rem;   /* 88px */
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --layout-gutter: 2rem;     /* 32px desktop */
+    --section-y:     4.5rem;   /* 72px */
+    --section-y-lg:  7rem;     /* 112px */
+  }
+}
+@media (min-width: 1440px) {
+  :root {
+    --layout-gutter: 2.5rem;   /* 40px wide desktop */
+  }
+}
+
+@layer components {
+  /* Containers — width-capped + responsive gutter, single source of truth */
+  .app-container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--layout-gutter);
+    max-width: var(--container-default);
+  }
+  .app-container-narrow { max-width: var(--container-narrow); }
+  .app-container-wide   { max-width: var(--container-wide); }
+  .app-container-full   { max-width: var(--container-full); }
+
+  /* Vertical rhythm — apply to <section> for consistent spacing */
+  .app-section    { padding-block: var(--section-y); }
+  .app-section-lg { padding-block: var(--section-y-lg); }
+
+  /* Stack helpers — replace ad-hoc space-y-N with tokenized rhythm */
+  .app-stack-sm > * + * { margin-top: var(--space-sm); }
+  .app-stack-md > * + * { margin-top: var(--space-md); }
+  .app-stack-lg > * + * { margin-top: var(--space-lg); }
+  .app-stack-xl > * + * { margin-top: var(--space-xl); }
+
+  /* 12-column grid — mobile collapses to 1, tablet to 6, desktop to 12 */
+  .app-grid {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  @media (min-width: 768px) {
+    .app-grid { gap: var(--space-lg); grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .app-grid { gap: var(--space-xl); grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  }
+
+  /* Auto-fit card grid — for KPI/feature card decks */
+  .app-grid-cards {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  }
+  @media (min-width: 1024px) {
+    .app-grid-cards { gap: var(--space-lg); }
+  }
+
+  /* Card surface padding — tokenized to keep all cards aligned */
+  .app-card-pad    { padding: var(--space-md); }
+  @media (min-width: 768px) {
+    .app-card-pad  { padding: var(--space-lg); }
+  }
+  .app-card-pad-lg { padding: var(--space-lg); }
+  @media (min-width: 768px) {
+    .app-card-pad-lg { padding: var(--space-xl); }
+  }
+
+  /* Safe bottom — keeps content clear of floating FABs (>= 6rem rule) */
+  .app-safe-bottom { padding-bottom: var(--safe-bottom); }
+}
+
 .dark .landing-dark,
 .landing-dark.force-dark {
   --background: 228 18% 7%;
