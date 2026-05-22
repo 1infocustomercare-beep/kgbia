@@ -52,19 +52,19 @@ export default function LandingNav() {
           <a
             href="#hero"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-            className="flex items-center gap-2.5 font-heading text-base font-extrabold tracking-normal text-foreground sm:gap-3 sm:text-xl"
+            className="flex items-center gap-2 font-heading text-base font-extrabold tracking-tight text-foreground sm:text-lg"
             aria-label="Empire AI — Home"
           >
-            <span className="grid h-9 w-[118px] place-items-center overflow-hidden rounded-2xl border border-primary/30 bg-[linear-gradient(135deg,hsl(var(--primary)/0.18),hsl(var(--empire-violet)/0.18),hsl(var(--gold)/0.16))] px-3 shadow-[0_18px_38px_-20px_hsl(var(--primary)/0.8)] sm:h-10 sm:w-[140px]">
-              <img
-                src={empireLogo}
-                alt="Empire AI"
-                className="h-6 w-full object-contain sm:h-7"
-                loading="eager"
-                decoding="async"
-              />
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: "linear-gradient(135deg, hsl(var(--gold)), hsl(var(--primary)), hsl(var(--empire-violet)))" }}
+            >
+              EMPIRE
             </span>
+            <span className="hidden text-foreground/40 sm:inline">·</span>
+            <span className="hidden text-foreground/70 sm:inline text-sm font-medium">AI</span>
           </a>
+
 
           <ul className="hidden lg:flex gap-7">
             {NAV_LINKS.map((l) => (

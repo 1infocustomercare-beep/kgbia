@@ -31,10 +31,11 @@ export default function PrestigeStoryPinned() {
     <section
       ref={ref}
       data-section="prestige-story"
-      className="prestige-section prestige-dark relative"
-      style={{ height: "260svh" }}
+      className="prestige-section prestige-dark relative scroll-mt-24"
+      style={{ height: "180svh" }}
     >
-      <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden">
+      <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pt-16">
+
         {/* Sfondo che vira da rosso bruciato a oro smeraldo */}
         <div
           className="absolute inset-0 transition-[background] duration-200"
