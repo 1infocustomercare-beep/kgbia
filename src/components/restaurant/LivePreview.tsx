@@ -345,11 +345,12 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
               <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <img src={restaurantLogo} alt="" className="w-10 h-10 rounded-xl mb-2" />
+                <img src={displayLogo} alt="" className="w-10 h-10 rounded-xl mb-2 object-contain bg-background/40" />
                 <p className="font-display font-bold text-sm text-foreground tracking-widest uppercase">
-                  {slug?.replace(/-/g, " ") || "Impero Roma"}
+                  {displayName}
                 </p>
-                <p className="text-[8px] text-foreground/60 tracking-[0.2em] uppercase mt-0.5">Cucina Italiana d'Eccellenza</p>
+                <p className="text-[8px] text-foreground/60 tracking-[0.2em] uppercase mt-0.5 px-2 text-center line-clamp-2">{displayTagline}</p>
+
               </div>
             </div>
           </TipBubble>
