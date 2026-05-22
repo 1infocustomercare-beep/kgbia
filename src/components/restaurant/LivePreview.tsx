@@ -488,7 +488,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
       {/* Admin header */}
       <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/30 bg-card/50 flex-shrink-0">
         <div className="flex items-center gap-1.5">
-          <img src={restaurantLogo} alt="" className="w-5 h-5 rounded-lg flex-shrink-0" />
+          <img src={displayLogo} alt="" className="w-5 h-5 rounded-lg flex-shrink-0 object-contain" />
           <div className="min-w-0">
             <p className="text-[9px] font-bold truncate">Impero Roma</p>
             <p className="text-[7px] text-primary">{["Home", "Studio", "Ordini", "Profitto", "Altro"][["home", "studio", "orders", "profit", "more"].indexOf(adminTab)]}</p>
