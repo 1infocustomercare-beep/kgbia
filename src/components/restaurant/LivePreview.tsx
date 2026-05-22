@@ -577,7 +577,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
                       <div className="px-1.5 py-0.5 rounded-lg bg-primary text-primary-foreground text-[7px]">+ Nuovo</div>
                     </div>
                   </div>
-                  {DEMO_MENU.slice(0, 4).map((item, i) => (
+                  {realMenu.slice(0, 4).map((item: any, i: number) => (
                     <div key={i} className="flex items-center gap-1.5 py-1 border-b border-border/10 last:border-0">
                       <img src={item.img} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
                       <div className="flex-1 min-w-0">
