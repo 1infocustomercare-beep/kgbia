@@ -390,7 +390,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
         <div className="px-2 py-2">
           <TipBubble id="menu-categories">
             <div className="flex gap-1 overflow-x-auto pb-2 mb-2">
-              {["Antipasti", "Primi", "Pizze", "Secondi", "Dolci"].map(cat => (
+              {realCategories.map(cat => (
                 <button key={cat} onClick={() => setSelectedCat(cat)}
                   className={`px-2.5 py-1 rounded-lg text-[8px] font-medium whitespace-nowrap ${selectedCat === cat ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
                   {cat}
