@@ -210,8 +210,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "iron-club",
-    tag: "Fitness & Wellness",
+    tag: "Lifestyle",
+    subtag: "Fitness",
+    pill: { bg: "hsl(15 80% 92%)", text: "hsl(15 75% 38%)" },
+    pill2: { bg: "hsl(0 0% 92%)", text: "hsl(0 0% 25%)" },
     title: "Iron Club",
+
     city: "Bologna",
     oneLiner: "Onboarding nuovi membri 100% automatico, in 4 minuti.",
     problem: [
