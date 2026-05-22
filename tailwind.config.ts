@@ -83,6 +83,30 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      spacing: {
+        // ═══ EMPIRE SPACING TOKENS (mobile-first, 4px base) ═══
+        "space-3xs": "var(--space-3xs)", // 2px
+        "space-2xs": "var(--space-2xs)", // 4px
+        "space-xs": "var(--space-xs)",   // 8px
+        "space-sm": "var(--space-sm)",   // 12px
+        "space-md": "var(--space-md)",   // 16px
+        "space-lg": "var(--space-lg)",   // 24px
+        "space-xl": "var(--space-xl)",   // 32px
+        "space-2xl": "var(--space-2xl)", // 48px
+        "space-3xl": "var(--space-3xl)", // 64px
+        "space-4xl": "var(--space-4xl)", // 96px
+        // Layout offsets
+        "gutter": "var(--layout-gutter)",
+        "section-y": "var(--section-y)",
+        "section-y-lg": "var(--section-y-lg)",
+        "safe-bottom": "var(--safe-bottom)",
+      },
+      maxWidth: {
+        "app-narrow": "var(--container-narrow)",  // 640px — forms, prose
+        "app": "var(--container-default)",         // 1024px — default content
+        "app-wide": "var(--container-wide)",       // 1280px — dashboards
+        "app-full": "var(--container-full)",       // 1440px — marketing
+      },
       boxShadow: {
         "soft": "0 2px 12px -2px hsl(0 0% 0% / 0.12), 0 1px 4px -1px hsl(0 0% 0% / 0.08)",
         "soft-lg": "0 8px 30px -6px hsl(0 0% 0% / 0.16), 0 2px 8px -2px hsl(0 0% 0% / 0.1)",
