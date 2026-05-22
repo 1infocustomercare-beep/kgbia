@@ -19,6 +19,10 @@ const pool = createMockupPool();
 interface Project {
   id: string;
   tag: string;
+  subtag: string;
+  /** Tailwind class pair for pastel pills: [bg, text] */
+  pill: { bg: string; text: string };
+  pill2: { bg: string; text: string };
   title: string;
   city: string;
   oneLiner: string;
@@ -31,6 +35,7 @@ interface Project {
   cover: string;
   accent: string;
 }
+
 
 const PROJECTS: Project[] = [
   {
