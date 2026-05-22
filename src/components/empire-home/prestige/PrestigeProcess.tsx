@@ -30,20 +30,21 @@ export default function PrestigeProcess() {
     <section
       ref={ref}
       data-section="prestige-process"
-      className="prestige-section prestige-dark py-24 sm:py-32"
+      className="prestige-section prestige-dark py-16 sm:py-24 md:py-32"
     >
-      <div className="mx-auto max-w-6xl px-5 lg:px-10">
+      <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
         <div className="text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Come lavoriamo
           </div>
-          <h2 className="prestige-display mt-4 text-4xl font-semibold sm:text-5xl md:text-6xl">
+          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl md:text-6xl break-words">
             Quattro passi. <span className="prestige-gold-text italic">Zero stress.</span>
           </h2>
           <div className="prestige-divider mx-auto mt-5" />
         </div>
 
-        <ol className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-10 sm:mt-14 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-4">
+
           {STEPS.map((s, i) => {
             const isActive = i <= step;
             return (
@@ -57,7 +58,7 @@ export default function PrestigeProcess() {
                 }}
               >
                 <div
-                  className="prestige-display text-5xl font-bold"
+                  className="prestige-display text-4xl sm:text-5xl font-bold"
                   style={{
                     color: isActive ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-gold) / 0.3)",
                     transition: "color .6s ease",
@@ -65,10 +66,11 @@ export default function PrestigeProcess() {
                 >
                   {s.n}
                 </div>
-                <h3 className="prestige-display mt-3 text-xl sm:text-2xl">{s.title}</h3>
+                <h3 className="prestige-display mt-3 text-lg sm:text-2xl break-words">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
                   {s.desc}
                 </p>
+
                 {isActive && (
                   <span
                     className="absolute right-3 top-3 h-2 w-2 rounded-full"

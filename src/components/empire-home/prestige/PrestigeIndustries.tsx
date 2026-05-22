@@ -103,26 +103,26 @@ export default function PrestigeIndustries() {
     <section
       ref={ref}
       data-section="prestige-industries"
-      className="prestige-section prestige-dark py-24 sm:py-32"
+      className="prestige-section prestige-dark py-16 sm:py-24 md:py-32"
     >
-      <div className="mx-auto max-w-6xl px-5 lg:px-10">
+      <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
         <div className="text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
           </div>
-          <h2 className="prestige-display mt-4 text-4xl font-semibold sm:text-5xl md:text-6xl">
+          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl md:text-6xl break-words">
             Empire parla la lingua del{" "}
             <span className="prestige-gold-text italic">tuo settore</span>
           </h2>
           <div className="prestige-divider mx-auto mt-5" />
-          <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+          <p className="mx-auto mt-5 max-w-2xl text-sm sm:text-base md:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
             Tocca il tuo settore qui sotto e ti mostriamo esattamente come Empire risolve i problemi della
             tua giornata-tipo.
           </p>
         </div>
 
         {/* Tabs */}
-        <div className="mt-10 flex flex-wrap justify-center gap-2">
+        <div className="mt-8 flex flex-wrap justify-center gap-1.5 sm:gap-2">
           {INDUSTRIES.map((i) => {
             const TabIcon = i.icon;
             const isActive = i.id === active;
@@ -130,7 +130,7 @@ export default function PrestigeIndustries() {
               <button
                 key={i.id}
                 onClick={() => handleTab(i.id)}
-                className="flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-semibold transition-all sm:text-sm"
+                className="flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-semibold transition-all sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm max-w-full"
                 style={{
                   background: isActive
                     ? "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))"
@@ -140,33 +140,37 @@ export default function PrestigeIndustries() {
                   boxShadow: isActive ? "0 10px 30px -8px hsl(var(--pr-gold) / 0.5)" : "none",
                 }}
               >
-                <TabIcon size={14} />
-                {i.name}
+                <TabIcon size={13} className="shrink-0" />
+                <span className="truncate">{i.name}</span>
               </button>
             );
           })}
         </div>
 
+
         {/* Active panel */}
         <div
           key={current.id}
-          className="prestige-card mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[auto_1fr] lg:items-start"
+          className="prestige-card mt-8 grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[auto_1fr] lg:items-start"
           style={{ animation: "prestigeFadeIn .6s ease-out" }}
         >
           <div
-            className="flex h-20 w-20 items-center justify-center rounded-2xl"
+            className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl shrink-0"
             style={{
               background: "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))",
               color: "hsl(var(--pr-emerald-deep))",
               boxShadow: "0 16px 40px -12px hsl(var(--pr-gold) / 0.5)",
             }}
           >
-            <Icon size={36} />
+            <Icon size={32} className="sm:hidden" />
+            <Icon size={36} className="hidden sm:block" />
           </div>
-          <div>
-            <h3 className="prestige-display text-2xl sm:text-3xl md:text-4xl">{current.name}</h3>
-            <p className="mt-3 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+          <div className="min-w-0">
+
+            <h3 className="prestige-display text-xl sm:text-3xl md:text-4xl break-words">{current.name}</h3>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed sm:text-base md:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
               {current.pitch}
+
             </p>
             <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {current.wins.map((w) => (

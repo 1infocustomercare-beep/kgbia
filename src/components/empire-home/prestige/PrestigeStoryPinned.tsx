@@ -32,9 +32,9 @@ export default function PrestigeStoryPinned() {
       ref={ref}
       data-section="prestige-story"
       className="prestige-section prestige-dark relative scroll-mt-24"
-      style={{ height: "180svh" }}
+      style={{ height: "min(200svh, 1600px)" }}
     >
-      <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pt-16">
+      <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pt-20 sm:pt-16">
 
         {/* Sfondo che vira da rosso bruciato a oro smeraldo */}
         <div
@@ -44,7 +44,7 @@ export default function PrestigeStoryPinned() {
           }}
         />
 
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-5 lg:px-10">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-5 lg:px-10">
           {/* Headline */}
           <div className="text-center">
             <div
@@ -53,7 +53,7 @@ export default function PrestigeStoryPinned() {
             >
               ✦ {t({ it: "Il problema · La soluzione", en: "The problem · The solution" })}
             </div>
-            <h2 className="prestige-display mt-3 text-3xl font-semibold sm:text-5xl md:text-6xl">
+            <h2 className="prestige-display mt-3 text-2xl font-semibold sm:text-5xl md:text-6xl break-words leading-tight">
               <span
                 className="italic line-through"
                 style={{
@@ -74,6 +74,7 @@ export default function PrestigeStoryPinned() {
             </h2>
             <div className="prestige-divider mx-auto mt-5" />
           </div>
+
 
           {/* Track orizzontale: due colonne che si scambiano peso visivo */}
           <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
