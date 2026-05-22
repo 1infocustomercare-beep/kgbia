@@ -103,26 +103,26 @@ export default function PrestigeIndustries() {
     <section
       ref={ref}
       data-section="prestige-industries"
-      className="prestige-section prestige-dark py-24 sm:py-32"
+      className="prestige-section prestige-dark py-16 sm:py-24 md:py-32"
     >
-      <div className="mx-auto max-w-6xl px-5 lg:px-10">
+      <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
         <div className="text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
           </div>
-          <h2 className="prestige-display mt-4 text-4xl font-semibold sm:text-5xl md:text-6xl">
+          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl md:text-6xl break-words">
             Empire parla la lingua del{" "}
             <span className="prestige-gold-text italic">tuo settore</span>
           </h2>
           <div className="prestige-divider mx-auto mt-5" />
-          <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+          <p className="mx-auto mt-5 max-w-2xl text-sm sm:text-base md:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
             Tocca il tuo settore qui sotto e ti mostriamo esattamente come Empire risolve i problemi della
             tua giornata-tipo.
           </p>
         </div>
 
         {/* Tabs */}
-        <div className="mt-10 flex flex-wrap justify-center gap-2">
+        <div className="mt-8 flex flex-wrap justify-center gap-1.5 sm:gap-2">
           {INDUSTRIES.map((i) => {
             const TabIcon = i.icon;
             const isActive = i.id === active;
@@ -130,7 +130,7 @@ export default function PrestigeIndustries() {
               <button
                 key={i.id}
                 onClick={() => handleTab(i.id)}
-                className="flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-semibold transition-all sm:text-sm"
+                className="flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-semibold transition-all sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm max-w-full"
                 style={{
                   background: isActive
                     ? "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))"
@@ -140,12 +140,13 @@ export default function PrestigeIndustries() {
                   boxShadow: isActive ? "0 10px 30px -8px hsl(var(--pr-gold) / 0.5)" : "none",
                 }}
               >
-                <TabIcon size={14} />
-                {i.name}
+                <TabIcon size={13} className="shrink-0" />
+                <span className="truncate">{i.name}</span>
               </button>
             );
           })}
         </div>
+
 
         {/* Active panel */}
         <div
