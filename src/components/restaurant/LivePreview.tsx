@@ -364,7 +364,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
           <div className="px-2 py-3">
             <p className="text-[8px] text-primary uppercase tracking-widest font-medium mb-2">⭐ I più amati</p>
             <div className="flex gap-1.5 overflow-x-auto pb-1">
-              {DEMO_MENU.filter(i => i.popular).map((item, idx) => (
+              {realMenu.filter((i: any) => i.popular).slice(0, 8).map((item: any, idx: number) => (
                 <div key={idx} className="flex-shrink-0 w-20">
                   <img src={item.img} alt="" className="w-20 h-16 rounded-lg object-cover" />
                   <p className="text-[8px] font-medium mt-0.5 truncate">{item.name}</p>
