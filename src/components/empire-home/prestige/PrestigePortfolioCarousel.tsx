@@ -176,8 +176,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "asinara-resort",
-    tag: "Boutique Hotel",
+    tag: "Travel",
+    subtag: "Boutique Hotel",
+    pill: { bg: "hsl(195 70% 92%)", text: "hsl(195 65% 32%)" },
+    pill2: { bg: "hsl(160 50% 92%)", text: "hsl(160 50% 30%)" },
     title: "Asinara Resort",
+
     city: "Sardegna",
     oneLiner: "Concierge digitale 24/7, in 6 lingue, sempre sul tono giusto.",
     problem: [
