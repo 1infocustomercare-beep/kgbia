@@ -111,7 +111,7 @@ export default function PrestigeTheme() {
         background: transparent;
         color: currentColor;
         border: 1px solid currentColor;
-        opacity: 0.85;
+        opacity: 1;
         transition: opacity .3s ease, background .3s ease;
         cursor: pointer;
       }
