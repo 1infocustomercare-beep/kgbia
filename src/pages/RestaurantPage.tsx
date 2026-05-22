@@ -305,27 +305,37 @@ const RestaurantPage = () => {
             <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
           )}
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/75" />
 
 
-        <motion.div className="relative z-10 text-center px-5" style={{ opacity: heroOpacity }}>
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-            <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-bold text-white tracking-[0.1em] sm:tracking-[0.15em] uppercase leading-none">
-              {restaurantName.split(" ").map((word, i) => (
-                <span key={i} className="block">{word}</span>
-              ))}
-            </h1>
-            <div className="flex items-center justify-center gap-3 mt-3">
-              <span className="w-8 sm:w-12 h-px bg-primary" />
-              <p className="text-xs sm:text-sm text-foreground/70 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-light">
+        <motion.div className="relative z-10 text-center px-5 max-w-full" style={{ opacity: heroOpacity }}>
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="flex flex-col items-center">
+            {dbRestaurant?.logo_url ? (
+              <>
+                <img
+                  src={dbRestaurant.logo_url}
+                  alt={restaurantName}
+                  className="w-[78vw] max-w-[420px] sm:max-w-[520px] h-auto object-contain drop-shadow-[0_8px_30px_rgba(0,0,0,0.7)]"
+                  loading="eager"
+                />
+                <h1 className="sr-only">{restaurantName}</h1>
+              </>
+            ) : (
+              <h1 className="text-5xl sm:text-7xl md:text-8xl font-display font-bold text-white tracking-[0.08em] uppercase leading-[0.95]">
+                {restaurantName}
+              </h1>
+            )}
+            <div className="flex items-center justify-center gap-3 mt-5 px-2">
+              <span className="w-6 sm:w-12 h-px bg-primary" />
+              <p className="text-[10px] sm:text-sm text-white/85 tracking-[0.18em] uppercase font-light text-center">
                 {restaurantTagline}
               </p>
-              <span className="w-8 sm:w-12 h-px bg-primary" />
+              <span className="w-6 sm:w-12 h-px bg-primary" />
             </div>
           </motion.div>
 
           <motion.button onClick={() => scrollToSection("menu-section")}
-            className="mt-6 sm:mt-10 px-7 sm:px-10 py-3 sm:py-4 border-2 border-foreground/30 text-foreground text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all duration-300"
+            className="mt-7 sm:mt-10 px-7 sm:px-10 py-3 sm:py-4 border-2 border-white/40 text-white text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all duration-300 backdrop-blur-sm bg-black/20"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
             Ordina Ora
           </motion.button>
