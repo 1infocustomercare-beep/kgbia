@@ -19,6 +19,10 @@ const pool = createMockupPool();
 interface Project {
   id: string;
   tag: string;
+  subtag: string;
+  /** Tailwind class pair for pastel pills: [bg, text] */
+  pill: { bg: string; text: string };
+  pill2: { bg: string; text: string };
   title: string;
   city: string;
   oneLiner: string;
@@ -32,11 +36,16 @@ interface Project {
   accent: string;
 }
 
+
 const PROJECTS: Project[] = [
   {
     id: "strapizzami",
-    tag: "Pizzeria",
+    tag: "Food",
+    subtag: "Pizzeria",
+    pill: { bg: "hsl(20 90% 92%)", text: "hsl(20 80% 38%)" },
+    pill2: { bg: "hsl(20 60% 95%)", text: "hsl(20 50% 35%)" },
     title: "Strapizzami",
+
     city: "Milano",
     oneLiner: "Da pizzeria di quartiere a marchio digitale che vende anche di notte.",
     problem: [
@@ -65,8 +74,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "paperfish",
-    tag: "Sushi & Omakase",
+    tag: "Food",
+    subtag: "Sushi",
+    pill: { bg: "hsl(20 90% 92%)", text: "hsl(20 80% 38%)" },
+    pill2: { bg: "hsl(340 60% 94%)", text: "hsl(340 55% 40%)" },
     title: "Paperfish",
+
     city: "Roma",
     oneLiner: "L'esperienza del ristorante stellato, anche prima di entrare.",
     problem: [
@@ -95,8 +108,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "empire-ncc",
-    tag: "NCC Luxury",
+    tag: "Travel",
+    subtag: "NCC Luxury",
+    pill: { bg: "hsl(210 70% 92%)", text: "hsl(210 65% 35%)" },
+    pill2: { bg: "hsl(45 70% 90%)", text: "hsl(45 70% 32%)" },
     title: "Empire NCC",
+
     city: "Milano · Como · Sankt Moritz",
     oneLiner: "Un centralino AI che parla 4 lingue e non dorme mai.",
     problem: [
@@ -125,8 +142,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "velvet-studio",
-    tag: "Beauty & Spa",
+    tag: "Lifestyle",
+    subtag: "Beauty & Spa",
+    pill: { bg: "hsl(330 70% 94%)", text: "hsl(330 55% 42%)" },
+    pill2: { bg: "hsl(280 50% 94%)", text: "hsl(280 40% 42%)" },
     title: "Velvet Studio",
+
     city: "Torino",
     oneLiner: "Agenda piena tutti i giorni, senza alzare mai il telefono.",
     problem: [
@@ -155,8 +176,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "asinara-resort",
-    tag: "Boutique Hotel",
+    tag: "Travel",
+    subtag: "Boutique Hotel",
+    pill: { bg: "hsl(195 70% 92%)", text: "hsl(195 65% 32%)" },
+    pill2: { bg: "hsl(160 50% 92%)", text: "hsl(160 50% 30%)" },
     title: "Asinara Resort",
+
     city: "Sardegna",
     oneLiner: "Concierge digitale 24/7, in 6 lingue, sempre sul tono giusto.",
     problem: [
@@ -185,8 +210,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "iron-club",
-    tag: "Fitness & Wellness",
+    tag: "Lifestyle",
+    subtag: "Fitness",
+    pill: { bg: "hsl(15 80% 92%)", text: "hsl(15 75% 38%)" },
+    pill2: { bg: "hsl(0 0% 92%)", text: "hsl(0 0% 25%)" },
     title: "Iron Club",
+
     city: "Bologna",
     oneLiner: "Onboarding nuovi membri 100% automatico, in 4 minuti.",
     problem: [
@@ -324,67 +353,79 @@ export default function PrestigePortfolioCarousel() {
               key={p.id}
               data-slide={i}
               className="snap-start shrink-0"
-              style={{ width: "min(82vw, 340px)" }}
+              style={{ width: "min(86vw, 380px)" }}
             >
               <button
                 onClick={() => setOpenId(p.id)}
                 className="group block w-full text-left"
               >
+                {/* Light cream card with two floating iPhones — Lowengeld style */}
                 <div
-                  className="relative aspect-[4/5] overflow-hidden rounded-3xl"
+                  className="relative flex aspect-[5/4] items-center justify-center overflow-hidden rounded-[28px] transition-all duration-500"
                   style={{
-                    background: `linear-gradient(155deg, ${p.accent}, hsl(var(--pr-emerald-deep)))`,
-                    boxShadow: "0 25px 60px -25px hsl(var(--pr-emerald) / 0.6)",
+                    background:
+                      "linear-gradient(160deg, hsl(40 30% 97%) 0%, hsl(40 20% 93%) 100%)",
+                    boxShadow:
+                      "0 1px 0 hsl(0 0% 100%) inset, 0 30px 60px -35px hsl(var(--pr-emerald-deep) / 0.35), 0 8px 24px -12px hsl(0 0% 0% / 0.08)",
                   }}
                 >
-                  <img
-                    src={p.cover}
-                    alt={p.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover opacity-90 transition-transform duration-[900ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06] group-active:scale-[1.02]"
-                  />
-                  {/* Bottom gradient + tag */}
+                  {/* Soft accent glow */}
                   <div
-                    className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%]"
+                    className="pointer-events-none absolute inset-0 opacity-60"
                     style={{
-                      background:
-                        "linear-gradient(180deg, transparent, hsl(var(--pr-emerald-deep) / 0.92))",
+                      background: `radial-gradient(60% 50% at 50% 110%, ${p.accent} / 0.18, transparent 70%)`,
                     }}
                   />
-                  <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-                    <div>
-                      <span
-                        className="inline-block rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
-                        style={{
-                          background: "hsl(var(--pr-gold))",
-                          color: "hsl(var(--pr-emerald-deep))",
-                        }}
-                      >
-                        {p.tag}
-                      </span>
-                      <h3
-                        className="prestige-display mt-2 text-2xl font-semibold text-white"
-                        style={{ textShadow: "0 2px 14px hsl(0 0% 0% / 0.5)" }}
-                      >
-                        {p.title}
-                      </h3>
-                      <p className="mt-0.5 text-[11px] uppercase tracking-wider text-white/70">
-                        {p.city}
-                      </p>
+
+                  {/* Two iPhones side-by-side, slightly staggered */}
+                  <div className="relative flex items-end gap-2 transition-transform duration-[700ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04] group-hover:-translate-y-1">
+                    <div className="translate-y-2 -rotate-[3deg]">
+                      <PrestigePhone src={p.screens[0]} width={120} loading="lazy" />
                     </div>
-                    <div
-                      className="flex h-9 w-9 items-center justify-center rounded-full"
-                      style={{
-                        background: "hsl(var(--pr-gold))",
-                        color: "hsl(var(--pr-emerald-deep))",
-                      }}
-                    >
-                      <ExternalLink size={14} />
+                    <div className="-translate-y-2 rotate-[3deg]">
+                      <PrestigePhone src={p.screens[1]} width={120} loading="lazy" />
                     </div>
                   </div>
+
+                  {/* Hover hint */}
+                  <div
+                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    style={{
+                      background: "hsl(var(--pr-emerald-deep))",
+                      color: "hsl(var(--pr-gold-light))",
+                    }}
+                  >
+                    <ExternalLink size={12} />
+                  </div>
                 </div>
+
+                {/* Pills */}
+                <div className="mt-5 flex flex-wrap items-center gap-2">
+                  <span
+                    className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider"
+                    style={{ background: p.pill.bg, color: p.pill.text }}
+                  >
+                    {p.tag}
+                  </span>
+                  <span
+                    className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider"
+                    style={{ background: p.pill2.bg, color: p.pill2.text }}
+                  >
+                    {p.subtag}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3
+                  className="prestige-display mt-3 text-2xl font-semibold"
+                  style={{ color: "hsl(var(--pr-text-on-light))" }}
+                >
+                  {p.title}
+                </h3>
+
+                {/* Description */}
                 <p
-                  className="mt-3 line-clamp-2 text-sm"
+                  className="mt-1.5 line-clamp-2 text-sm leading-relaxed"
                   style={{ color: "hsl(var(--pr-muted-on-light))" }}
                 >
                   {p.oneLiner}
@@ -392,6 +433,7 @@ export default function PrestigePortfolioCarousel() {
               </button>
             </article>
           ))}
+
         </div>
 
         {/* Dots */}
