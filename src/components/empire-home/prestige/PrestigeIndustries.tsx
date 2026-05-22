@@ -151,20 +151,22 @@ export default function PrestigeIndustries() {
         {/* Active panel */}
         <div
           key={current.id}
-          className="prestige-card mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[auto_1fr] lg:items-start"
+          className="prestige-card mt-8 grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[auto_1fr] lg:items-start"
           style={{ animation: "prestigeFadeIn .6s ease-out" }}
         >
           <div
-            className="flex h-20 w-20 items-center justify-center rounded-2xl"
+            className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl shrink-0"
             style={{
               background: "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))",
               color: "hsl(var(--pr-emerald-deep))",
               boxShadow: "0 16px 40px -12px hsl(var(--pr-gold) / 0.5)",
             }}
           >
-            <Icon size={36} />
+            <Icon size={32} className="sm:hidden" />
+            <Icon size={36} className="hidden sm:block" />
           </div>
-          <div>
+          <div className="min-w-0">
+
             <h3 className="prestige-display text-2xl sm:text-3xl md:text-4xl">{current.name}</h3>
             <p className="mt-3 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
               {current.pitch}
