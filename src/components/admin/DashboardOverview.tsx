@@ -267,7 +267,7 @@ const DashboardOverview = ({
                 ))}
               </div>
 
-              <p className="text-[10px] text-muted-foreground/60 text-center">
+              <p className="text-[10px] text-muted-foreground text-center">
                 Pagamento sicuro via Stripe · I gettoni non scadono
               </p>
             </motion.div>
