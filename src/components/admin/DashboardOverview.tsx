@@ -79,7 +79,7 @@ const DashboardOverview = ({
             <DollarSign className="w-5 h-5 text-primary" />
           </div>
           <p className="text-2xl font-display font-bold text-primary leading-tight">€{todayRevenue.toFixed(0)}</p>
-          <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">Revenue Giornaliero</p>
+          <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">Revenue Giornaliero</p>
         </motion.div>
         <motion.div
           className="cote-card p-4 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform"
@@ -90,7 +90,7 @@ const DashboardOverview = ({
             <ShoppingCart className="w-5 h-5 text-primary" />
           </div>
           <p className="text-2xl font-display font-bold text-foreground leading-tight">{todayOrderCount}</p>
-          <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">Ordini Ricevuti</p>
+          <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">Ordini Ricevuti</p>
         </motion.div>
         <motion.div
           className="cote-card p-4 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform"
@@ -104,7 +104,7 @@ const DashboardOverview = ({
             <p className="text-2xl font-display font-bold text-foreground leading-tight">{activeOrderCount}</p>
             {activeOrderCount > 0 && <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />}
           </div>
-          <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">In Preparazione</p>
+          <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">In Preparazione</p>
         </motion.div>
         <motion.div
           className="cote-card p-4 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform"
@@ -115,7 +115,7 @@ const DashboardOverview = ({
             <TrendingUp className="w-5 h-5 text-primary" />
           </div>
           <p className="text-2xl font-display font-bold text-foreground leading-tight">{menuItemCount}</p>
-          <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">Catalogo Piatti</p>
+          <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground font-semibold mt-1.5">Catalogo Piatti</p>
         </motion.div>
       </div>
 
@@ -125,7 +125,7 @@ const DashboardOverview = ({
         <motion.div className="cote-card p-3.5 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("profit")} whileTap={{ scale: 0.97 }}>
           <div className="flex items-center gap-1.5 mb-1.5">
             <Star className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold">Reputazione</span>
+            <span className="text-[10px] uppercase tracking-[2px] text-muted-foreground font-semibold">Reputazione</span>
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl font-display font-bold text-primary">{avgRating}</span>
@@ -135,7 +135,7 @@ const DashboardOverview = ({
         <motion.div className="cote-card p-3.5 rounded-2xl cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")} whileTap={{ scale: 0.97 }}>
           <div className="flex items-center gap-1.5 mb-1.5">
             <CalendarDays className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold">Prenotazioni</span>
+            <span className="text-[10px] uppercase tracking-[2px] text-muted-foreground font-semibold">Prenotazioni</span>
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl font-display font-bold text-foreground">{todayReservations.length}</span>
@@ -169,7 +169,7 @@ const DashboardOverview = ({
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-foreground">Intelligenza Artificiale</p>
-            <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground font-semibold truncate">Menu · Photo · Translate</p>
+            <p className="text-[10px] uppercase tracking-[2px] text-muted-foreground font-semibold truncate">Menu · Photo · Translate</p>
           </div>
           <span className={`text-lg font-display font-bold flex-shrink-0 ${aiTokens <= 5 ? "text-destructive" : "text-primary"}`}>{aiTokens}</span>
         </div>
@@ -277,7 +277,7 @@ const DashboardOverview = ({
 
       {/* Quick Actions */}
       <div className="space-y-2.5">
-        <p className="text-[0.5rem] uppercase tracking-[3px] text-primary/50 font-semibold">Accesso Rapido</p>
+        <p className="text-[10px] uppercase tracking-[3px] text-primary/50 font-semibold">Accesso Rapido</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <motion.button onClick={() => window.open(menuUrl, "_blank")}
             className="cote-card flex items-center gap-2.5 p-3.5 rounded-xl text-sm text-foreground min-h-[48px] active:scale-[0.97] transition-all font-medium"
