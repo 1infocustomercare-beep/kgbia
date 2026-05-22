@@ -96,7 +96,7 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
             {loading ? "Accesso..." : "Prova la Dashboard Admin Demo"}
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
-          <p className="text-center text-[0.5rem] text-white/40 mt-1">
+          <p className="text-center text-[10px] text-white/40 mt-1">
             <Lock className="w-2.5 h-2.5 inline mr-0.5" /> Accesso immediato · Nessuna registrazione
           </p>
         </div>
@@ -132,7 +132,7 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
                   <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/60" />
                   <div className="w-2.5 h-2.5 rounded-full bg-green-400/60" />
                 </div>
-                <span className="text-[0.5rem] text-white/20 ml-2">empire-ai.app/admin/{slug}</span>
+                <span className="text-[10px] text-white/20 ml-2">empire-ai.app/admin/{slug}</span>
               </div>
               <div className="grid grid-cols-4 gap-2">
                 {["€24.850", "342", "156", "+18%"].map((v, i) => (

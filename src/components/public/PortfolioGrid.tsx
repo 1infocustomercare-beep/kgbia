@@ -244,7 +244,7 @@ export default function PortfolioGrid() {
                     : "text-white/30 hover:text-white/50 border border-transparent"
                 }`}>
                 {CATEGORY_LABELS[cat] || cat}
-                <span className="ml-1.5 text-[0.5rem] opacity-50">{count}</span>
+                <span className="ml-1.5 text-[10px] opacity-50">{count}</span>
               </button>
             );
           })}
@@ -305,11 +305,11 @@ export default function PortfolioGrid() {
                 {/* Info */}
                 <div className="px-5 pb-5 pt-2">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[0.5rem] px-2 py-0.5 rounded-full font-bold tracking-wider uppercase"
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wider uppercase"
                       style={{ background: `${item.accent}15`, color: item.accent, border: `1px solid ${item.accent}20` }}>
                       {item.category}
                     </span>
-                    <span className="text-[0.5rem] text-white/25">{item.subCategory}</span>
+                    <span className="text-[10px] text-white/25">{item.subCategory}</span>
                   </div>
                   <h3 className="text-sm font-heading font-bold text-white mb-1 group-hover:text-white/90 transition-colors">{item.name}</h3>
                   <p className="text-[0.65rem] text-white/35 leading-relaxed line-clamp-2">{item.description}</p>

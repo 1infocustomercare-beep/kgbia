@@ -94,7 +94,7 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
               <h3 className="text-sm font-bold text-white/70 uppercase tracking-wider">
                 {CATEGORY_LABELS[cat] || cat}
               </h3>
-              <Badge variant="outline" className="text-[0.5rem] border-white/10 text-white/30 ml-2">{features.length}</Badge>
+              <Badge variant="outline" className="text-[10px] border-white/10 text-white/30 ml-2">{features.length}</Badge>
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

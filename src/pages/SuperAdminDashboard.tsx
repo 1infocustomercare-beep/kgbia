@@ -2015,7 +2015,7 @@ const SuperAdminDashboard = () => {
                       <div className={`w-2 h-2 rounded-full shrink-0 ${isDisabled ? "bg-muted-foreground/30" : statusDot(item.status)}`} />
                       <div className="flex-1 min-w-0">
                         <p className={`text-[0.65rem] font-semibold leading-tight truncate ${isDisabled ? "text-muted-foreground line-through" : "text-foreground"}`}>{item.name}</p>
-                        <p className="text-[0.5rem] text-muted-foreground truncate">{item.description}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{item.description}</p>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
                         {/* Status badge */}
@@ -2057,7 +2057,7 @@ const SuperAdminDashboard = () => {
                         >
                           <div className="px-2.5 pb-2.5 pt-0.5 border-t border-border/20 space-y-1.5">
                             {/* Info row */}
-                            <p className="text-[0.5rem] text-muted-foreground/70 italic">{item.detail}</p>
+                            <p className="text-[10px] text-muted-foreground/70 italic">{item.detail}</p>
                             {item.secretName && (
                               <div className="flex items-center gap-1">
                                 <Lock className="w-2.5 h-2.5 text-muted-foreground/40" />
@@ -2093,7 +2093,7 @@ const SuperAdminDashboard = () => {
                             {item.guideSteps && (
                               <div className="pt-1 space-y-0.5">
                                 {item.guideSteps.map((step, i) => (
-                                  <p key={i} className="text-[0.5rem] text-muted-foreground/70 pl-2 flex items-start gap-1">
+                                  <p key={i} className="text-[10px] text-muted-foreground/70 pl-2 flex items-start gap-1">
                                     <span className="text-primary/50 shrink-0">▸</span>{step}
                                   </p>
                                 ))}
@@ -2115,15 +2115,15 @@ const SuperAdminDashboard = () => {
                   <div className="grid grid-cols-3 gap-1.5">
                     <div className="py-2 px-2 rounded-lg bg-green-500/[0.06] border border-green-500/10 text-center">
                       <p className="text-xl font-display font-bold text-green-400 leading-none">{totalConnected}</p>
-                      <p className="text-[0.5rem] text-green-400/60 font-medium mt-0.5">Connessi</p>
+                      <p className="text-[10px] text-green-400/60 font-medium mt-0.5">Connessi</p>
                     </div>
                     <div className="py-2 px-2 rounded-lg bg-amber-500/[0.06] border border-amber-500/10 text-center">
                       <p className="text-xl font-display font-bold text-amber-400 leading-none">{totalWarning}</p>
-                      <p className="text-[0.5rem] text-amber-400/60 font-medium mt-0.5">Parziali</p>
+                      <p className="text-[10px] text-amber-400/60 font-medium mt-0.5">Parziali</p>
                     </div>
                     <div className="py-2 px-2 rounded-lg bg-destructive/[0.06] border border-destructive/10 text-center">
                       <p className="text-xl font-display font-bold text-destructive leading-none">{totalMissing}</p>
-                      <p className="text-[0.5rem] text-destructive/60 font-medium mt-0.5">Mancanti</p>
+                      <p className="text-[10px] text-destructive/60 font-medium mt-0.5">Mancanti</p>
                     </div>
                   </div>
 
@@ -2142,7 +2142,7 @@ const SuperAdminDashboard = () => {
                     </div>
                     {/* Status chips */}
                     <div className="flex flex-wrap gap-1">
-                      <span className="text-[0.5rem] text-muted-foreground/60 font-semibold self-center mr-0.5">Stato:</span>
+                      <span className="text-[10px] text-muted-foreground/60 font-semibold self-center mr-0.5">Stato:</span>
                       {([
                         { key: "all", label: "Tutti", color: "text-foreground bg-secondary/40" },
                         { key: "connected", label: "🟢 Connessi", color: "text-green-400 bg-green-500/10" },
@@ -2160,7 +2160,7 @@ const SuperAdminDashboard = () => {
                     </div>
                     {/* Category chips */}
                     <div className="flex flex-wrap gap-1">
-                      <span className="text-[0.5rem] text-muted-foreground/60 font-semibold self-center mr-0.5">Tipo:</span>
+                      <span className="text-[10px] text-muted-foreground/60 font-semibold self-center mr-0.5">Tipo:</span>
                       {([
                         { key: "all", label: "Tutti" },
                         { key: "admin", label: "🛡️ Infrastruttura" },
@@ -2177,7 +2177,7 @@ const SuperAdminDashboard = () => {
                     </div>
                     {/* Sector chips */}
                     <div className="flex flex-wrap gap-1">
-                      <span className="text-[0.5rem] text-muted-foreground/60 font-semibold self-center mr-0.5">Settore:</span>
+                      <span className="text-[10px] text-muted-foreground/60 font-semibold self-center mr-0.5">Settore:</span>
                       {[
                         { key: "all", label: "Tutti" },
                         { key: "food", label: "🍽️ Food" },
@@ -2198,7 +2198,7 @@ const SuperAdminDashboard = () => {
                     </div>
                     {/* Account usage chips */}
                     <div className="flex flex-wrap gap-1">
-                      <span className="text-[0.5rem] text-muted-foreground/60 font-semibold self-center mr-0.5">Account:</span>
+                      <span className="text-[10px] text-muted-foreground/60 font-semibold self-center mr-0.5">Account:</span>
                       {([
                         { key: "all", label: "Tutti", color: "text-foreground bg-secondary/40" },
                         { key: "subscribed", label: "📋 In Piano", color: "text-blue-400 bg-blue-500/10" },
@@ -2225,7 +2225,7 @@ const SuperAdminDashboard = () => {
                       </button>
                     )}
                     {hasActiveFilters && (
-                      <p className="text-[0.5rem] text-muted-foreground/50">{filteredAdmin.length + filteredClient.length} risultati</p>
+                      <p className="text-[10px] text-muted-foreground/50">{filteredAdmin.length + filteredClient.length} risultati</p>
                     )}
                   </div>
 
@@ -2237,7 +2237,7 @@ const SuperAdminDashboard = () => {
                       <div className="flex items-center gap-2">
                         <Crown className="w-3.5 h-3.5 text-primary" />
                         <span className="text-xs font-display font-bold text-foreground">Infrastruttura</span>
-                        <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-bold">{adminConnected}/{adminTotal}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-bold">{adminConnected}/{adminTotal}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {/* Progress mini */}
@@ -2267,7 +2267,7 @@ const SuperAdminDashboard = () => {
                       <div className="flex items-center gap-2">
                         <Users className="w-3.5 h-3.5 text-accent" />
                         <span className="text-xs font-display font-bold text-foreground">Per Settore</span>
-                        <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-accent/10 text-accent font-bold">{clientConnected}/{clientTotal}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent/10 text-accent font-bold">{clientConnected}/{clientTotal}</span>
                       </div>
                       {expandedSection === "client" ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
                     </button>
@@ -2285,11 +2285,11 @@ const SuperAdminDashboard = () => {
                                   <div className="flex items-center justify-between mb-1.5">
                                     <span className="text-[0.65rem] font-bold text-foreground flex items-center gap-1">
                                       {sectorIcon(sector)} {sectorLabel(sector)}
-                                      <span className="text-[0.5rem] text-muted-foreground font-normal ml-1">{sectorConn}/{sectorItems.length}</span>
+                                      <span className="text-[10px] text-muted-foreground font-normal ml-1">{sectorConn}/{sectorItems.length}</span>
                                     </span>
                                     <motion.button
                                       onClick={() => toggleSector(sector)}
-                                      className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[0.5rem] font-bold ${isSectorOff ? "bg-destructive/10 text-destructive" : "bg-green-500/10 text-green-400"}`}
+                                      className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold ${isSectorOff ? "bg-destructive/10 text-destructive" : "bg-green-500/10 text-green-400"}`}
                                       whileTap={{ scale: 0.95 }}
                                     >
                                       {isSectorOff ? <ToggleLeft className="w-3 h-3" /> : <ToggleRight className="w-3 h-3" />}
@@ -2299,7 +2299,7 @@ const SuperAdminDashboard = () => {
                                   {!isSectorOff ? (
                                     <div className="space-y-1">{sectorItems.map(renderCompactItem)}</div>
                                   ) : (
-                                    <p className="text-[0.5rem] text-muted-foreground text-center py-2 bg-muted/5 rounded-lg">Settore disattivato</p>
+                                    <p className="text-[10px] text-muted-foreground text-center py-2 bg-muted/5 rounded-lg">Settore disattivato</p>
                                   )}
                                 </div>
                               );
@@ -2320,7 +2320,7 @@ const SuperAdminDashboard = () => {
                       <div className="flex items-center gap-2">
                         <Building2 className="w-3.5 h-3.5 text-blue-400" />
                         <span className="text-xs font-display font-bold text-foreground">Per Account</span>
-                        <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-bold">Tenant</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-bold">Tenant</span>
                       </div>
                       {expandedSection === ("accounts" as any) ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
                     </button>
@@ -2344,7 +2344,7 @@ const SuperAdminDashboard = () => {
                       <div className="flex items-center gap-2">
                         <Cpu className="w-3.5 h-3.5 text-muted-foreground" />
                         <span className="text-xs font-display font-bold text-foreground">Edge Functions</span>
-                        <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-400 font-bold">20 attive</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-400 font-bold">20 attive</span>
                       </div>
                       {expandedSection === "functions" ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
                     </button>
@@ -2459,18 +2459,18 @@ const SuperAdminDashboard = () => {
                             <div>
                               <p className="text-[0.6rem] font-bold text-foreground mb-1.5">📋 Come Collegare</p>
                               <div className="space-y-1 pl-1">
-                                <p className="text-[0.5rem] text-muted-foreground">1️⃣ Espandi l'integrazione cliccando la freccia ▼</p>
-                                <p className="text-[0.5rem] text-muted-foreground">2️⃣ Segui i passi indicati nella guida step-by-step</p>
-                                <p className="text-[0.5rem] text-muted-foreground">3️⃣ Clicca "Configura" per inserire la API key come secret sicuro</p>
-                                <p className="text-[0.5rem] text-muted-foreground">4️⃣ Il pallino diventerà 🟢 verde — connessione attiva</p>
-                                <p className="text-[0.5rem] text-muted-foreground">5️⃣ Usa il toggle per attivare/disattivare senza cancellare la key</p>
+                                <p className="text-[10px] text-muted-foreground">1️⃣ Espandi l'integrazione cliccando la freccia ▼</p>
+                                <p className="text-[10px] text-muted-foreground">2️⃣ Segui i passi indicati nella guida step-by-step</p>
+                                <p className="text-[10px] text-muted-foreground">3️⃣ Clicca "Configura" per inserire la API key come secret sicuro</p>
+                                <p className="text-[10px] text-muted-foreground">4️⃣ Il pallino diventerà 🟢 verde — connessione attiva</p>
+                                <p className="text-[10px] text-muted-foreground">5️⃣ Usa il toggle per attivare/disattivare senza cancellare la key</p>
                               </div>
                             </div>
 
                             {/* Security note */}
                             <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary/10 bg-primary/[0.02]">
                               <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
-                              <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
+                              <p className="text-[10px] text-muted-foreground leading-relaxed">
                                 Tutte le API key sono archiviate server-side come <strong className="text-foreground">encrypted secrets</strong>. Mai esposte nel frontend. Toggle singolo o per settore.
                               </p>
                             </div>
@@ -2507,22 +2507,22 @@ const SuperAdminDashboard = () => {
                   <h3 className="text-sm font-bold text-foreground">Empire WhatsApp Agent</h3>
                   <p className="text-[0.55rem] text-muted-foreground">Chat IA · Template · Broadcast · Sentiment</p>
                 </div>
-                <span className="text-[0.5rem] px-2 py-1 rounded-full bg-[#25D366]/15 text-[#25D366] font-bold">v2.0</span>
+                <span className="text-[10px] px-2 py-1 rounded-full bg-[#25D366]/15 text-[#25D366] font-bold">v2.0</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-lg bg-background/50 p-2 text-center">
                   <p className="text-lg font-bold text-foreground">25+</p>
-                  <p className="text-[0.5rem] text-muted-foreground">Settori supportati</p>
+                  <p className="text-[10px] text-muted-foreground">Settori supportati</p>
                 </div>
                 <div className="rounded-lg bg-background/50 p-2 text-center">
                   <p className="text-lg font-bold text-foreground">8</p>
-                  <p className="text-[0.5rem] text-muted-foreground">Prompt settoriali</p>
+                  <p className="text-[10px] text-muted-foreground">Prompt settoriali</p>
                 </div>
               </div>
               {/* Capabilities */}
               <div className="flex flex-wrap gap-1">
                 {["Chat IA Auto-Reply", "Template Notifiche", "Broadcast Promo", "Sentiment Analysis", "Multi-Tenant"].map(cap => (
-                  <span key={cap} className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary/70 font-medium">{cap}</span>
+                  <span key={cap} className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary/70 font-medium">{cap}</span>
                 ))}
               </div>
             </div>
@@ -2561,9 +2561,9 @@ const SuperAdminDashboard = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-[0.6rem] font-bold text-foreground">{item.title}</p>
-                      <p className="text-[0.5rem] text-muted-foreground leading-relaxed">{item.desc}</p>
+                      <p className="text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
                       {item.url && (
-                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-[0.5rem] text-primary/70 hover:text-primary flex items-center gap-0.5 mt-0.5">
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-primary/70 hover:text-primary flex items-center gap-0.5 mt-0.5">
                           <ExternalLink className="w-2.5 h-2.5" /> Apri Meta Developers
                         </a>
                       )}
@@ -2636,7 +2636,7 @@ const SuperAdminDashboard = () => {
             {/* Security note */}
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[#25D366]/10 bg-[#25D366]/[0.02]">
               <ShieldCheck className="w-3.5 h-3.5 text-[#25D366] shrink-0" />
-              <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
+              <p className="text-[10px] text-muted-foreground leading-relaxed">
                 Token Meta e credenziali API salvati come secrets server-side · Mai esposti ai client · RLS su ogni tabella
               </p>
             </div>
@@ -2688,7 +2688,7 @@ const SuperAdminDashboard = () => {
                         <td className="px-3 py-2 text-foreground font-medium">{reg.fullName}</td>
                         <td className="px-3 py-2 text-foreground/80">{reg.email || "—"}</td>
                         <td className="px-3 py-2">
-                          <span className={`px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold ${
+                          <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
                             reg.role === "super_admin" ? "bg-amber-500/15 text-amber-400" :
                             reg.role === "partner" || reg.role === "team_leader" ? "bg-purple-500/15 text-purple-400" :
                             reg.role === "restaurant_admin" ? "bg-primary/15 text-primary" :
@@ -2703,7 +2703,7 @@ const SuperAdminDashboard = () => {
                         </td>
                         <td className="px-3 py-2">
                           {reg.sector !== "—" ? (
-                            <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold" style={{ background: `${INDUSTRY_COLORS[reg.sector] || "#666"}20`, color: INDUSTRY_COLORS[reg.sector] || "#666" }}>
+                            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold" style={{ background: `${INDUSTRY_COLORS[reg.sector] || "#666"}20`, color: INDUSTRY_COLORS[reg.sector] || "#666" }}>
                               {INDUSTRY_LABELS[reg.sector] || reg.sector}
                             </span>
                           ) : <span className="text-muted-foreground">—</span>}
@@ -2737,7 +2737,7 @@ const SuperAdminDashboard = () => {
                     setPartnerNetwork(prev => prev.map(x => ({ ...x, demoEnabled: newVal })));
                     toast({ title: newVal ? "Demo attivata per tutti" : "Demo disattivata per tutti" });
                   }}
-                  className="px-2.5 py-1 rounded-lg text-[0.5rem] font-bold bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-colors"
+                  className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-colors"
                 >
                   {partnerNetwork.every(p => p.demoEnabled) ? "Disattiva Demo tutti" : "Attiva Demo tutti"}
                 </motion.button>
@@ -2792,7 +2792,7 @@ const SuperAdminDashboard = () => {
                   <Copy className="w-3.5 h-3.5" />
                 </motion.button>
               </div>
-              <p className="text-[0.5rem] text-muted-foreground">Chi si registra con questo link sarà direttamente sotto di te nella gerarchia.</p>
+              <p className="text-[10px] text-muted-foreground">Chi si registra con questo link sarà direttamente sotto di te nella gerarchia.</p>
             </div>
 
             {/* Link generico senza ref */}
@@ -2856,7 +2856,7 @@ const SuperAdminDashboard = () => {
                         <p className="text-[0.55rem] text-muted-foreground">{p.createdAt ? new Date(p.createdAt).toLocaleDateString("it-IT") : "—"}</p>
                       </div>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-[0.5rem] font-bold ${p.role === "team_leader" ? "bg-amber-500/15 text-amber-400" : "bg-purple-500/15 text-purple-400"}`}>
+                    <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${p.role === "team_leader" ? "bg-amber-500/15 text-amber-400" : "bg-purple-500/15 text-purple-400"}`}>
                       {p.role === "team_leader" ? "Team Leader" : "Partner"}
                     </span>
                   </div>
@@ -2865,15 +2865,15 @@ const SuperAdminDashboard = () => {
                   <div className="grid grid-cols-3 gap-2">
                     <div className="rounded-lg bg-emerald-500/10 p-2 text-center">
                       <p className="text-lg font-bold text-emerald-400">{p.salesCount}</p>
-                      <p className="text-[0.5rem] text-muted-foreground">Vendite</p>
+                      <p className="text-[10px] text-muted-foreground">Vendite</p>
                     </div>
                     <div className="rounded-lg bg-blue-500/10 p-2 text-center">
                       <p className="text-sm font-bold text-blue-400">€{p.salesRevenue.toLocaleString("it-IT")}</p>
-                      <p className="text-[0.5rem] text-muted-foreground">Fatturato</p>
+                      <p className="text-[10px] text-muted-foreground">Fatturato</p>
                     </div>
                     <div className="rounded-lg bg-amber-500/10 p-2 text-center">
                       <p className="text-sm font-bold text-amber-400">€{p.salesCommission.toLocaleString("it-IT")}</p>
-                      <p className="text-[0.5rem] text-muted-foreground">Commissioni</p>
+                      <p className="text-[10px] text-muted-foreground">Commissioni</p>
                     </div>
                   </div>
 
@@ -2891,7 +2891,7 @@ const SuperAdminDashboard = () => {
                         setPartnerNetwork(prev => prev.map(x => x.id === p.id ? { ...x, demoEnabled: newVal } : x));
                         toast({ title: newVal ? "Demo attivata" : "Demo disattivata", description: `Per ${p.fullName}` });
                       }}
-                      className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.5rem] font-bold transition-colors ${p.demoEnabled ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/10 text-red-400"}`}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold transition-colors ${p.demoEnabled ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/10 text-red-400"}`}
                     >
                       {p.demoEnabled ? <><ToggleRight className="w-3.5 h-3.5" /> Attiva</> : <><ToggleLeft className="w-3.5 h-3.5" /> Disattivata</>}
                     </motion.button>
@@ -2900,7 +2900,7 @@ const SuperAdminDashboard = () => {
                   {/* Referral link for this partner */}
                   <div className="flex items-center gap-2 py-1.5 px-2.5 rounded-lg bg-background/50 border border-border/20">
                     <Link2 className="w-3 h-3 text-purple-400 shrink-0" />
-                    <code className="flex-1 text-[0.5rem] text-foreground/60 truncate">{window.location.origin}/join?ref={p.id}</code>
+                    <code className="flex-1 text-[10px] text-foreground/60 truncate">{window.location.origin}/join?ref={p.id}</code>
                     <motion.button
                       whileTap={{ scale: 0.9 }}
                       onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/join?ref=${p.id}`); toast({ title: `Link di ${p.fullName} copiato!` }); }}

@@ -176,7 +176,7 @@ export default function AssetCMSPage() {
                     ) : (
                       <div className="flex gap-1">
                         {/* Upload */}
-                        <label className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[0.5rem] font-semibold cursor-pointer transition-colors ${
+                        <label className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[10px] font-semibold cursor-pointer transition-colors ${
                           uploading === asset.id ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary hover:bg-primary/20"
                         }`}>
                           <Upload className="w-3 h-3" />
@@ -186,7 +186,7 @@ export default function AssetCMSPage() {
                         </label>
                         {/* URL */}
                         <button onClick={() => { setEditingId(asset.id); setEditUrl(asset.url || ""); }}
-                          className="flex items-center justify-center gap-0.5 px-2 py-1.5 rounded-lg bg-secondary/60 text-muted-foreground hover:text-foreground text-[0.5rem] font-semibold transition-colors">
+                          className="flex items-center justify-center gap-0.5 px-2 py-1.5 rounded-lg bg-secondary/60 text-muted-foreground hover:text-foreground text-[10px] font-semibold transition-colors">
                           <ExternalLink className="w-3 h-3" /> URL
                         </button>
                         {/* Reset */}

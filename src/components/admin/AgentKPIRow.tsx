@@ -35,7 +35,7 @@ export default function AgentKPIRow({ activeCount, totalInstalls, successRate, m
         >
           <c.icon className={`w-3 h-3 mx-auto mb-0.5 ${c.text}`} />
           <p className={`text-sm font-bold ${c.text}`}>{values[c.key]}</p>
-          <p className="text-[0.5rem] text-muted-foreground">{c.label}</p>
+          <p className="text-[10px] text-muted-foreground">{c.label}</p>
         </motion.div>
       ))}
     </div>

@@ -247,10 +247,10 @@ const MediaVaultPage = () => {
             <img src={item.resolvedUrl} alt={item.name} className="w-full h-full object-cover" />
           )}
           <div className="absolute top-2 left-2 flex gap-1">
-            <span className={`px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold tracking-wider uppercase ${item.type === "video" ? "bg-accent/80 text-accent-foreground" : "bg-primary/80 text-primary-foreground"}`}>
+            <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase ${item.type === "video" ? "bg-accent/80 text-accent-foreground" : "bg-primary/80 text-primary-foreground"}`}>
               {item.type === "video" ? "VIDEO" : "IMG"}
             </span>
-            {item.is_bundled && <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold bg-secondary/80 text-secondary-foreground">BUNDLE</span>}
+            {item.is_bundled && <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-secondary/80 text-secondary-foreground">BUNDLE</span>}
           </div>
           <div className="absolute top-2 right-2">
             <span className="px-1.5 py-0.5 rounded-full text-[0.45rem] font-medium bg-foreground/60 text-background">#{item.sort_order}</span>
@@ -287,7 +287,7 @@ const MediaVaultPage = () => {
             <>
               <h3 className="text-xs font-semibold text-foreground mb-0.5 truncate">{item.name}</h3>
               <p className="text-[0.55rem] text-muted-foreground mb-1.5">{item.dimensions}</p>
-              <p className="text-[0.5rem] text-foreground/40 line-clamp-2 mb-2">{item.description}</p>
+              <p className="text-[10px] text-foreground/40 line-clamp-2 mb-2">{item.description}</p>
               <div className="flex gap-1 flex-wrap">
                 <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-0.5 px-1.5" onClick={() => setPreview(item)}>
                   <Eye className="w-2.5 h-2.5" />
@@ -341,7 +341,7 @@ const MediaVaultPage = () => {
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${pageTab === "site_assets" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground border border-border"}`}>
           <Palette className="w-4 h-4" /> Site Assets
           {customCount > 0 && (
-            <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold bg-accent/20 text-accent">{customCount}</span>
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-accent/20 text-accent">{customCount}</span>
           )}
         </button>
       </div>
@@ -491,7 +491,7 @@ const MediaVaultPage = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="text-sm font-bold text-foreground">{sectionInfo?.label || sectionKey}</h3>
-                          <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-medium bg-secondary text-muted-foreground">{sectionItems.length}</span>
+                          <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-secondary text-muted-foreground">{sectionItems.length}</span>
                         </div>
                         {sectionInfo && <p className="text-[0.55rem] text-muted-foreground">{sectionInfo.description}</p>}
                       </div>
@@ -543,7 +543,7 @@ const MediaVaultPage = () => {
                       </span>
                       <span className="text-[0.45rem] text-muted-foreground">#{item.sort_order}</span>
                     </div>
-                    <p className="text-[0.5rem] text-muted-foreground truncate">{item.section}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{item.section}</p>
                   </div>
                   <div className="flex gap-0.5 flex-shrink-0">
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveItem(item.id, "up")}><ArrowUp className="w-3 h-3" /></Button>
@@ -631,7 +631,7 @@ const MediaVaultPage = () => {
                       </h2>
                       <span className="text-[0.55rem] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-mono">{sItems.length}</span>
                     </div>
-                    {secInfo && <p className="text-[0.5rem] text-muted-foreground">{secInfo.description}</p>}
+                    {secInfo && <p className="text-[10px] text-muted-foreground">{secInfo.description}</p>}
                   </div>
                 </div>
 
@@ -685,7 +685,7 @@ const MediaVaultPage = () => {
                             </div>
                           ) : (
                             <div className="flex gap-1">
-                              <label className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[0.5rem] font-semibold cursor-pointer transition-colors ${
+                              <label className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[10px] font-semibold cursor-pointer transition-colors ${
                                 saUploading === asset.id ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary hover:bg-primary/20"
                               }`}>
                                 <Upload className="w-3 h-3" />
@@ -694,7 +694,7 @@ const MediaVaultPage = () => {
                                   onChange={e => { const f = e.target.files?.[0]; if (f) handleSaUpload(asset.id, f); }} />
                               </label>
                               <button onClick={() => { setSaEditingId(asset.id); setSaEditUrl(asset.url || ""); }}
-                                className="flex items-center justify-center gap-0.5 px-2 py-1.5 rounded-lg bg-secondary/60 text-muted-foreground hover:text-foreground text-[0.5rem] font-semibold transition-colors">
+                                className="flex items-center justify-center gap-0.5 px-2 py-1.5 rounded-lg bg-secondary/60 text-muted-foreground hover:text-foreground text-[10px] font-semibold transition-colors">
                                 <ExternalLink className="w-3 h-3" /> URL
                               </button>
                               {hasCustom && (

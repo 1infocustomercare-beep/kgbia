@@ -166,7 +166,7 @@ const DemoAccountsPage = () => {
                   {/* Sector Label */}
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-xs font-bold text-foreground">{label}</span>
-                    <span className="text-[0.5rem] font-mono text-muted-foreground bg-secondary/50 px-1.5 py-0.5 rounded">{slug}</span>
+                    <span className="text-[10px] font-mono text-muted-foreground bg-secondary/50 px-1.5 py-0.5 rounded">{slug}</span>
                   </div>
 
                   {/* Email Row */}
@@ -220,7 +220,7 @@ const DemoAccountsPage = () => {
             >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-bold text-foreground">{acc.name}</span>
-                <span className="text-[0.5rem] font-medium text-empire-violet bg-empire-violet/10 px-1.5 py-0.5 rounded">
+                <span className="text-[10px] font-medium text-empire-violet bg-empire-violet/10 px-1.5 py-0.5 rounded">
                   {LABELS[acc.industry] || acc.industry}
                 </span>
               </div>

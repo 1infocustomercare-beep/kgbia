@@ -595,7 +595,7 @@ export default function MultiSectorShowcase() {
           <button
             key={cat.id}
             onClick={() => { setActiveCat(cat.id); setIsAutoPlaying(false); }}
-            className={`flex items-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-[0.5rem] sm:text-[0.6rem] font-heading font-semibold tracking-wide uppercase transition-all duration-300 border ${
+            className={`flex items-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-[10px] sm:text-[0.6rem] font-heading font-semibold tracking-wide uppercase transition-all duration-300 border ${
               activeCat === cat.id
                 ? "text-foreground border-primary/30 bg-primary/8"
                 : "text-foreground/30 border-transparent hover:text-foreground/50 hover:bg-muted/5"
@@ -683,7 +683,7 @@ export default function MultiSectorShowcase() {
         </button>
 
         {/* Progress indicator */}
-        <span className="text-[0.5rem] text-foreground/25 font-mono ml-1">
+        <span className="text-[10px] text-foreground/25 font-mono ml-1">
           {activeIdx + 1}/{SHOWCASE_SECTORS.length}
         </span>
       </div>
@@ -810,7 +810,7 @@ export default function MultiSectorShowcase() {
               {industryCfg && demoData && (
                 <motion.button
                   onClick={() => { setShowAllScreens(p => !p); setIsAutoPlaying(false); }}
-                  className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-full text-[0.5rem] sm:text-[0.6rem] font-heading font-semibold tracking-wider uppercase border inline-flex items-center gap-1.5 sm:gap-2 transition-all duration-300 hover:scale-105"
+                  className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-full text-[10px] sm:text-[0.6rem] font-heading font-semibold tracking-wider uppercase border inline-flex items-center gap-1.5 sm:gap-2 transition-all duration-300 hover:scale-105"
                   style={{
                     borderColor: `${sector.color.replace("1)", "0.2)")}`,
                     color: sector.color,
@@ -857,7 +857,7 @@ export default function MultiSectorShowcase() {
                           <motion.div key={i} className="px-3 py-2 rounded-xl text-center"
                             style={{ background: "hsla(0,0%,100%,0.03)", border: `1px solid ${sector.color.replace("1)", "0.1)")}` }}
                             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.1 }}>
-                            <p className="text-[0.5rem] tracking-wider uppercase" style={{ color: sector.color.replace("1)", "0.6)") }}>{s.label}</p>
+                            <p className="text-[10px] tracking-wider uppercase" style={{ color: sector.color.replace("1)", "0.6)") }}>{s.label}</p>
                             <p className="text-[0.7rem] font-heading font-bold text-foreground">{s.val}</p>
                           </motion.div>
                         ))}
@@ -895,7 +895,7 @@ export default function MultiSectorShowcase() {
                           <motion.div key={i} className="flex-1 px-2 py-2 rounded-lg text-center"
                             style={{ background: "hsla(0,0%,0%,0.6)", backdropFilter: "blur(8px)", border: `1px solid ${sector.color.replace("1)", "0.12)")}` }}
                             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.1 }}>
-                            <p className="text-[0.5rem] tracking-wider uppercase" style={{ color: sector.color.replace("1)", "0.7)") }}>{s.label}</p>
+                            <p className="text-[10px] tracking-wider uppercase" style={{ color: sector.color.replace("1)", "0.7)") }}>{s.label}</p>
                             <p className="text-[0.7rem] font-heading font-bold text-foreground">{s.val}</p>
                           </motion.div>
                         ))}

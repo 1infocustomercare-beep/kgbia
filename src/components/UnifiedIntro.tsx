@@ -810,7 +810,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
               animate={{ width: 140, opacity: 0.5 }}
               transition={{ duration: 0.5, delay: 0.55, ease: smoothEase }}
             />
-            <p className="text-[0.5rem] sm:text-[0.55rem] md:text-[0.6rem] tracking-[0.5em] uppercase text-foreground/20 font-heading">
+            <p className="text-[10px] sm:text-[0.55rem] md:text-[0.6rem] tracking-[0.5em] uppercase text-foreground/20 font-heading">
               Il Sistema Operativo del Business
             </p>
           </motion.div>
@@ -1289,7 +1289,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
         animate={{ opacity: phase === "assemble" || phase === "pulse" ? 0.35 : 0 }}
         transition={{ delay: 2, duration: 0.4 }}
       >
-        <p className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.3em] uppercase text-foreground/15 font-mono">
+        <p className="text-[0.45rem] sm:text-[10px] tracking-[0.3em] uppercase text-foreground/15 font-mono">
           {IS_MOBILE ? "Tap per continuare" : "Click per continuare"}
         </p>
       </motion.div>

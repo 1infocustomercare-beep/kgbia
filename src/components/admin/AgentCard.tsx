@@ -85,7 +85,7 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
             </span>
           )}
           {isBeta && (
-            <span className="text-[0.5rem] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/90 text-white">
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/90 text-white">
               BETA
             </span>
           )}
@@ -108,12 +108,12 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
         <div className="flex items-center gap-1 flex-wrap">
           <Badge
             variant="outline"
-            className="text-[0.5rem] px-1 py-0 h-4 rounded-md"
+            className="text-[10px] px-1 py-0 h-4 rounded-md"
             style={{ borderColor: cat.color, color: cat.color }}
           >
             {cat.icon} {cat.label}
           </Badge>
-          <Badge variant="outline" className="text-[0.5rem] px-1 py-0 h-4 rounded-md border-white/15 text-muted-foreground">
+          <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 rounded-md border-white/15 text-muted-foreground">
             {agent.type === "universal" ? "🌐" : "🎯"}
           </Badge>
         </div>
@@ -142,7 +142,7 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
           </span>
           <span className="flex items-center gap-1.5">
             <span>{successRate}%</span>
-            <span className="px-1 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold text-[0.5rem]">
+            <span className="px-1 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold text-[10px]">
               AI {Math.min(100, Math.round((agent.autonomy_level ?? 7) * 8 + Math.min(installs * 5, 20)))}
             </span>
           </span>

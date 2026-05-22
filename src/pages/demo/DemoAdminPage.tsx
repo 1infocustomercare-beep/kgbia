@@ -1167,7 +1167,7 @@ export default function DemoAdminPage() {
               <Icon className="w-4 h-4 shrink-0" />
               <span className="flex-1 text-left">{mod.label}</span>
               {badgeCount > 0 && (
-                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full font-bold" style={{ background: `${accentColor}25`, color: accentColor }}>{badgeCount}</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: `${accentColor}25`, color: accentColor }}>{badgeCount}</span>
               )}
             </button>
           );
@@ -1180,7 +1180,7 @@ export default function DemoAdminPage() {
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: `${accentColor}50` }}>AD</div>
           <div className="min-w-0">
             <p className="text-[0.65rem] font-bold text-white/80 truncate">Admin Demo</p>
-            <p className="text-[0.5rem] text-white/30">admin@demo.empire.ai</p>
+            <p className="text-[10px] text-white/30">admin@demo.empire.ai</p>
           </div>
         </div>
         <Button onClick={() => navigate(`/demo/${slug}`)} variant="outline" size="sm"
@@ -1240,7 +1240,7 @@ export default function DemoAdminPage() {
                       </div>
                       <p className="text-lg font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
                       <p className="text-[0.55rem] text-white/35 mt-1">{kpi.label}</p>
-                      <span className={`text-[0.5rem] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.up ? "↑" : "↓"} {kpi.change}</span>
+                      <span className={`text-[10px] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.up ? "↑" : "↓"} {kpi.change}</span>
                     </div>
                   ) : layoutConfig.kpiStyle === "inline" ? (
                     <div className="flex items-center gap-2">
@@ -1249,7 +1249,7 @@ export default function DemoAdminPage() {
                         <p className="text-[0.55rem] text-white/35">{kpi.label}</p>
                         <p className="text-base font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
                       </div>
-                      <span className={`text-[0.5rem] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.change}</span>
+                      <span className={`text-[10px] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.change}</span>
                     </div>
                   ) : (
                     <>
@@ -1285,7 +1285,7 @@ export default function DemoAdminPage() {
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm text-white/80">Fatturato 12 Mesi</CardTitle>
-              <Badge className="text-[0.5rem] bg-emerald-500/15 text-emerald-400">+18% YoY</Badge>
+              <Badge className="text-[10px] bg-emerald-500/15 text-emerald-400">+18% YoY</Badge>
             </div>
           </CardHeader>
           <CardContent>
@@ -1325,7 +1325,7 @@ export default function DemoAdminPage() {
               {PIE_DATA.map((d, i) => (
                 <div key={d.name} className="flex items-center gap-1">
                   <div className="w-2 h-2 rounded-full" style={{ background: PIE_COLORS[i] }} />
-                  <span className="text-[0.5rem] text-white/40">{d.name} {d.value}%</span>
+                  <span className="text-[10px] text-white/40">{d.name} {d.value}%</span>
                 </div>
               ))}
             </div>
@@ -1386,7 +1386,7 @@ export default function DemoAdminPage() {
                       {row.map((cell, j) => (
                         <td key={j} className="p-3 text-[0.65rem] text-white/60 whitespace-nowrap">
                           {cell.startsWith("✅") || cell.startsWith("🔥") || cell.startsWith("📦") || cell.startsWith("⏳") || cell.startsWith("🔄") || cell.startsWith("📅") ? (
-                            <Badge className="text-[0.5rem] px-1.5" style={{
+                            <Badge className="text-[10px] px-1.5" style={{
                               background: cell.startsWith("✅") ? "#22c55e18" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f618" : cell.startsWith("📦") ? "#8b5cf618" : "#f59e0b18",
                               color: cell.startsWith("✅") ? "#22c55e" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f6" : cell.startsWith("📦") ? "#8b5cf6" : "#f59e0b",
                             }}>{cell}</Badge>
@@ -1420,7 +1420,7 @@ export default function DemoAdminPage() {
                   tooltip={`Tutti gli agenti del settore ${completeness.label} sono già attivi nella demo. Il titolare può disattivarli o personalizzarne il comportamento.`}
                 />
               </div>
-              <span className="text-[0.5rem] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-bold">{allAgents.length} Online</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-bold">{allAgents.length} Online</span>
             </div>
           </CardHeader>
           <CardContent className="space-y-1.5">
@@ -1516,7 +1516,7 @@ export default function DemoAdminPage() {
                   <tr key={i} className={`border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors cursor-pointer ${i % 2 === 0 ? "" : "bg-white/[0.01]"}`}>
                     <td className="p-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-[0.5rem] font-bold text-white" style={{ background: `${accentColor}30` }}>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style={{ background: `${accentColor}30` }}>
                           {c.name.split(" ").map(n => n[0]).join("")}
                         </div>
                         <span className="text-xs text-white/80 font-medium">{c.name}</span>
@@ -1527,7 +1527,7 @@ export default function DemoAdminPage() {
                     <td className="p-3 text-xs text-white/70 font-bold">€{(180 + i * 120 + Math.round(Math.random() * 400)).toLocaleString("it-IT")}</td>
                     <td className="p-3 text-xs text-white/50">{3 + Math.floor(Math.random() * 20)}</td>
                     <td className="p-3">
-                      <Badge className="text-[0.5rem]" style={{
+                      <Badge className="text-[10px]" style={{
                         background: statuses[i % statuses.length] === "Attivo" ? "#22c55e18" : statuses[i % statuses.length] === "Premium" ? `${accentColor}18` : statuses[i % statuses.length] === "Nuovo" ? "#3b82f618" : "#f59e0b18",
                         color: statuses[i % statuses.length] === "Attivo" ? "#22c55e" : statuses[i % statuses.length] === "Premium" ? accentColor : statuses[i % statuses.length] === "Nuovo" ? "#3b82f6" : "#f59e0b",
                       }}>{statuses[i % statuses.length]}</Badge>
@@ -1572,7 +1572,7 @@ export default function DemoAdminPage() {
         <CardContent>
           <div className="grid grid-cols-7 gap-1 mb-2">
             {["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"].map(d => (
-              <div key={d} className="text-center text-[0.5rem] text-white/25 font-bold uppercase py-1">{d}</div>
+              <div key={d} className="text-center text-[10px] text-white/25 font-bold uppercase py-1">{d}</div>
             ))}
           </div>
           <div className="grid grid-cols-7 gap-1">
@@ -1664,7 +1664,7 @@ export default function DemoAdminPage() {
                     {row.map((cell, j) => (
                       <td key={j} className="p-3 text-[0.65rem] text-white/60 whitespace-nowrap">
                         {cell.startsWith("✅") || cell.startsWith("🔥") || cell.startsWith("📦") || cell.startsWith("⏳") || cell.startsWith("🔄") || cell.startsWith("📅") ? (
-                          <Badge className="text-[0.5rem] px-1.5" style={{
+                          <Badge className="text-[10px] px-1.5" style={{
                             background: cell.startsWith("✅") ? "#22c55e18" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f618" : "#f59e0b18",
                             color: cell.startsWith("✅") ? "#22c55e" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f6" : "#f59e0b",
                           }}>{cell}</Badge>
@@ -1745,7 +1745,7 @@ export default function DemoAdminPage() {
                   <CardContent className="p-3 text-center">
                     <s.icon className="w-4 h-4 mx-auto mb-1" style={{ color: accentColor }} />
                     <p className="text-sm font-bold text-white">{s.value}</p>
-                    <p className="text-[0.5rem] text-white/30">{s.label}</p>
+                    <p className="text-[10px] text-white/30">{s.label}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -1832,7 +1832,7 @@ export default function DemoAdminPage() {
                   ].map((m, i) => (
                     <div key={i} className="text-center p-2.5 rounded-lg bg-white/[0.03]">
                       <p className="text-base font-bold text-white">{m.v}</p>
-                      <p className="text-[0.5rem] text-white/30">{m.l}</p>
+                      <p className="text-[10px] text-white/30">{m.l}</p>
                     </div>
                   ))}
                 </div>
@@ -1914,7 +1914,7 @@ export default function DemoAdminPage() {
               <CardContent className="p-3 text-center">
                 <k.i className="w-4 h-4 mx-auto mb-1" style={{ color: accentColor }} />
                 <p className="text-sm font-bold text-white">{k.v}</p>
-                <p className="text-[0.5rem] text-white/30">{k.l}</p>
+                <p className="text-[10px] text-white/30">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -1934,11 +1934,11 @@ export default function DemoAdminPage() {
                   {campaigns.map((c, i) => (
                     <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
                       <td className="p-3 text-xs text-white/70 font-medium">{c.name}</td>
-                      <td className="p-3"><Badge className="text-[0.5rem]" style={{ background: c.type === "WhatsApp" ? "#22c55e18" : c.type === "SMS" ? "#8b5cf618" : `${accentColor}18`, color: c.type === "WhatsApp" ? "#22c55e" : c.type === "SMS" ? "#8b5cf6" : accentColor }}>{c.type}</Badge></td>
+                      <td className="p-3"><Badge className="text-[10px]" style={{ background: c.type === "WhatsApp" ? "#22c55e18" : c.type === "SMS" ? "#8b5cf618" : `${accentColor}18`, color: c.type === "WhatsApp" ? "#22c55e" : c.type === "SMS" ? "#8b5cf6" : accentColor }}>{c.type}</Badge></td>
                       <td className="p-3 text-xs text-white/50">{c.sent.toLocaleString("it-IT")}</td>
                       <td className="p-3 text-xs text-white/70 font-bold">{c.opened}%</td>
                       <td className="p-3 text-xs text-white/70 font-bold">{c.clicked}%</td>
-                      <td className="p-3"><Badge className="text-[0.5rem]" style={{ background: c.status === "Attiva" ? "#22c55e18" : c.status === "Completata" ? `${accentColor}18` : "#f59e0b18", color: c.status === "Attiva" ? "#22c55e" : c.status === "Completata" ? accentColor : "#f59e0b" }}>{c.status}</Badge></td>
+                      <td className="p-3"><Badge className="text-[10px]" style={{ background: c.status === "Attiva" ? "#22c55e18" : c.status === "Completata" ? `${accentColor}18` : "#f59e0b18", color: c.status === "Attiva" ? "#22c55e" : c.status === "Completata" ? accentColor : "#f59e0b" }}>{c.status}</Badge></td>
                     </tr>
                   ))}
                 </tbody>
@@ -1989,7 +1989,7 @@ export default function DemoAdminPage() {
             <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
               <CardContent className="p-3 text-center">
                 <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
-                <p className="text-[0.5rem] text-white/30 mt-0.5">{k.l}</p>
+                <p className="text-[10px] text-white/30 mt-0.5">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -2010,7 +2010,7 @@ export default function DemoAdminPage() {
                       <td className="p-3 text-xs text-white/70">{inv.client}</td>
                       <td className="p-3 text-xs text-white/50">{inv.date}</td>
                       <td className="p-3 text-xs text-white/80 font-bold">€{inv.amount.toLocaleString("it-IT")}</td>
-                      <td className="p-3"><Badge className="text-[0.5rem]" style={{ background: inv.status === "Pagata" ? "#22c55e18" : inv.status === "Inviata" ? "#3b82f618" : "#ef444418", color: inv.status === "Pagata" ? "#22c55e" : inv.status === "Inviata" ? "#3b82f6" : "#ef4444" }}>{inv.status}</Badge></td>
+                      <td className="p-3"><Badge className="text-[10px]" style={{ background: inv.status === "Pagata" ? "#22c55e18" : inv.status === "Inviata" ? "#3b82f618" : "#ef444418", color: inv.status === "Pagata" ? "#22c55e" : inv.status === "Inviata" ? "#3b82f6" : "#ef4444" }}>{inv.status}</Badge></td>
                       <td className="p-3 text-xs text-white/50">{inv.method}</td>
                     </tr>
                   ))}
@@ -2146,10 +2146,10 @@ export default function DemoAdminPage() {
                     <span className="text-sm font-bold text-white/80">{item.price}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge className="text-[0.5rem]" style={{ background: item.active ? "#22c55e18" : "#ef444418", color: item.active ? "#22c55e" : "#ef4444" }}>
+                    <Badge className="text-[10px]" style={{ background: item.active ? "#22c55e18" : "#ef444418", color: item.active ? "#22c55e" : "#ef4444" }}>
                       {item.active ? "Attivo" : "Disattivato"}
                     </Badge>
-                    {item.popular && <Badge className="text-[0.5rem]" style={{ background: `${accentColor}18`, color: accentColor }}>⭐ Popolare</Badge>}
+                    {item.popular && <Badge className="text-[10px]" style={{ background: `${accentColor}18`, color: accentColor }}>⭐ Popolare</Badge>}
                   </div>
                 </CardContent>
               </Card>
@@ -2184,7 +2184,7 @@ export default function DemoAdminPage() {
             <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
               <CardContent className="p-3 text-center">
                 <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
-                <p className="text-[0.5rem] text-white/30">{k.l}</p>
+                <p className="text-[10px] text-white/30">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -2210,7 +2210,7 @@ export default function DemoAdminPage() {
                     </td>
                     <td className="p-3 text-xs text-white/50">{s.role}</td>
                     <td className="p-3 text-xs text-white/50">{s.hours}</td>
-                    <td className="p-3"><Badge className="text-[0.5rem]" style={{
+                    <td className="p-3"><Badge className="text-[10px]" style={{
                       background: s.status === "Presente" ? "#22c55e18" : s.status === "Ferie" ? "#3b82f618" : "#f59e0b18",
                       color: s.status === "Presente" ? "#22c55e" : s.status === "Ferie" ? "#3b82f6" : "#f59e0b",
                     }}>{s.status}</Badge></td>
@@ -2251,7 +2251,7 @@ export default function DemoAdminPage() {
             <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
               <CardContent className="p-3 text-center">
                 <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
-                <p className="text-[0.5rem] text-white/30">{k.l}</p>
+                <p className="text-[10px] text-white/30">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -2263,12 +2263,12 @@ export default function DemoAdminPage() {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-[0.5rem] font-bold text-white" style={{ background: `${accentColor}30` }}>
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style={{ background: `${accentColor}30` }}>
                         {r.name.split(" ").map(n => n[0]).join("")}
                       </div>
                       <div>
                         <p className="text-xs font-bold text-white/80">{r.name}</p>
-                        <p className="text-[0.5rem] text-white/30">{r.date} · {r.platform}</p>
+                        <p className="text-[10px] text-white/30">{r.date} · {r.platform}</p>
                       </div>
                     </div>
                     <div className="flex gap-0.5">
@@ -2316,7 +2316,7 @@ export default function DemoAdminPage() {
             <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
               <CardContent className="p-3 text-center">
                 <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
-                <p className="text-[0.5rem] text-white/30">{k.l}</p>
+                <p className="text-[10px] text-white/30">{k.l}</p>
               </CardContent>
             </Card>
           ))}
@@ -2336,7 +2336,7 @@ export default function DemoAdminPage() {
                     <td className="p-3 text-xs text-white/70 font-bold">{item.qty}</td>
                     <td className="p-3 text-xs text-white/50">{item.unit}</td>
                     <td className="p-3 text-xs text-white/40">{item.min}</td>
-                    <td className="p-3"><Badge className="text-[0.5rem]" style={{
+                    <td className="p-3"><Badge className="text-[10px]" style={{
                       background: item.status === "ok" ? "#22c55e18" : item.status === "low" ? "#f59e0b18" : "#ef444418",
                       color: item.status === "ok" ? "#22c55e" : item.status === "low" ? "#f59e0b" : "#ef4444",
                     }}>{item.status === "ok" ? "✅ OK" : item.status === "low" ? "⚠️ Basso" : "🔴 Critico"}</Badge></td>
@@ -2498,7 +2498,7 @@ export default function DemoAdminPage() {
               className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all ${isActive ? "" : "text-white/30"}`}
               style={isActive ? { color: accentColor } : {}}>
               <Icon className="w-4 h-4" />
-              <span className="text-[0.5rem]">{mod.label}</span>
+              <span className="text-[10px]">{mod.label}</span>
             </button>
           );
         })}

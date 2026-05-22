@@ -75,7 +75,7 @@ export default function DemoAgentsSection({ sector, accentColor, sectorName }: P
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-4 h-4" style={{ color: accentColor }} />
             <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider">Agenti Universali — Ogni settore</h3>
-            <Badge variant="outline" className="text-[0.5rem] border-white/10 text-white/30 ml-auto">{universalAgents.length}</Badge>
+            <Badge variant="outline" className="text-[10px] border-white/10 text-white/30 ml-auto">{universalAgents.length}</Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {universalAgents.map((agent, i) => (
@@ -90,7 +90,7 @@ export default function DemoAgentsSection({ sector, accentColor, sectorName }: P
             <div className="flex items-center gap-2 mb-4">
               <Zap className="w-4 h-4" style={{ color: accentColor }} />
               <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider">Specialisti — Solo per {sectorName}</h3>
-              <Badge variant="outline" className="text-[0.5rem] border-white/10 text-white/30 ml-auto">{sectorAgents.length}</Badge>
+              <Badge variant="outline" className="text-[10px] border-white/10 text-white/30 ml-auto">{sectorAgents.length}</Badge>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {sectorAgents.map((agent, i) => (
@@ -140,7 +140,7 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
               <p className="text-xs font-bold text-white">{agent.name}</p>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[0.5rem] text-emerald-400 font-medium">ATTIVO 24/7</span>
+                <span className="text-[10px] text-emerald-400 font-medium">ATTIVO 24/7</span>
                 {isSectorSpecific && <Badge className="text-[0.45rem] px-1 py-0" style={{ background: `${accentColor}20`, color: accentColor }}>Specialista</Badge>}
                 {agent.category && <Badge variant="outline" className="text-[0.45rem] px-1 py-0 border-white/10 text-white/30">{agent.category}</Badge>}
               </div>
@@ -152,7 +152,7 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
           {/* Capabilities */}
           <div className="flex flex-wrap gap-1 mb-3">
             {agent.capabilities.map((c: string) => (
-              <Badge key={c} variant="outline" className="text-[0.5rem] border-white/10 text-white/40 px-1.5">{c}</Badge>
+              <Badge key={c} variant="outline" className="text-[10px] border-white/10 text-white/40 px-1.5">{c}</Badge>
             ))}
           </div>
 
@@ -224,7 +224,7 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
                         </div>
                         <div className="min-w-0 pt-0.5">
                           <p className="text-[0.6rem] font-bold text-white/80">{step.label}</p>
-                          <p className="text-[0.5rem] text-white/35 leading-relaxed">{step.detail}</p>
+                          <p className="text-[10px] text-white/35 leading-relaxed">{step.detail}</p>
                         </div>
                       </motion.div>
                     ))}
@@ -233,7 +233,7 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
                   {/* Example */}
                   {agent.example && (
                     <div className="mt-3 p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-                      <p className="text-[0.5rem] font-bold text-white/50 uppercase tracking-wider mb-1">💡 Esempio Concreto</p>
+                      <p className="text-[10px] font-bold text-white/50 uppercase tracking-wider mb-1">💡 Esempio Concreto</p>
                       <p className="text-[0.55rem] text-white/60 leading-relaxed italic">{agent.example}</p>
                     </div>
                   )}

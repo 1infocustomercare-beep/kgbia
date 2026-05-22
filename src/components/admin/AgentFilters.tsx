@@ -124,7 +124,7 @@ export default function AgentFilters({
                   >
                     {catInfo ? <span>{catInfo.icon}</span> : null}
                     <span>{catInfo ? catInfo.label : "Tutte"}</span>
-                    <span className={`text-[0.5rem] px-1 rounded-full ${categoryFilter === c ? "bg-primary-foreground/20" : "bg-foreground/10"}`}>
+                    <span className={`text-[10px] px-1 rounded-full ${categoryFilter === c ? "bg-primary-foreground/20" : "bg-foreground/10"}`}>
                       {categoryCounts[c] || 0}
                     </span>
                   </button>

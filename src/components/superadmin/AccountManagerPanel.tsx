@@ -359,16 +359,16 @@ function UserCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-xs font-bold text-foreground truncate">{user.full_name}</p>
-            <span className={`px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold ${
+            <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
               user.primary_role === "super_admin" ? "bg-amber-500/15 text-amber-400" :
               user.primary_role === "team_leader" || user.primary_role === "partner" ? "bg-purple-500/15 text-purple-400" :
               user.primary_role === "restaurant_admin" ? "bg-primary/15 text-primary" :
               "bg-muted text-muted-foreground"
             }`}>{ROLE_OPTIONS.find((r) => r.value === user.primary_role)?.label || user.primary_role}</span>
             {!user.email_confirmed_at && (
-              <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold bg-rose-500/15 text-rose-400">Non conf.</span>
+              <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-400">Non conf.</span>
             )}
-            <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold bg-muted text-muted-foreground">{user.origin === "demo_seed" ? "Demo seed" : user.origin.startsWith("oauth") ? user.origin.replace("oauth:", "OAuth ") : "Registrato"}</span>
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-muted text-muted-foreground">{user.origin === "demo_seed" ? "Demo seed" : user.origin.startsWith("oauth") ? user.origin.replace("oauth:", "OAuth ") : "Registrato"}</span>
           </div>
           <p className="text-[0.6rem] text-muted-foreground truncate">{user.email}</p>
           <p className="text-[0.55rem] text-muted-foreground">Creato {created} · Ultimo accesso: {lastSeen}</p>
@@ -398,7 +398,7 @@ function UserCard({
           {user.tenants.map((t) => (
             <div key={`${t.kind}-${t.id}`} className="flex items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/40 px-2 py-1.5">
               <div className="min-w-0">
-                <p className="text-[0.65rem] font-bold text-foreground truncate">{t.name} <span className="text-[0.5rem] text-muted-foreground">/{t.slug}</span></p>
+                <p className="text-[0.65rem] font-bold text-foreground truncate">{t.name} <span className="text-[10px] text-muted-foreground">/{t.slug}</span></p>
                 <p className="text-[0.55rem] text-muted-foreground">{INDUSTRY_LABELS[t.industry] || t.industry} · {t.kind === "company" ? "Company" : "Restaurant"} · {t.is_blocked ? "🔴 Bloccato" : t.is_active ? "🟢 Attivo" : "⚪ Disattivo"}</p>
               </div>
               <div className="flex items-center gap-1 shrink-0">

@@ -255,7 +255,7 @@ export default function BrandAssetsPage() {
                     <img src={assetUrl(asset.file)} alt={asset.name} className="w-full h-full object-cover" loading="lazy" />
                   )}
                   <div className="absolute top-1.5 left-1.5 flex gap-1">
-                    <span className={`px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold uppercase ${asset.type === "video" ? "bg-accent/80 text-accent-foreground" : "bg-primary/80 text-primary-foreground"}`}>
+                    <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${asset.type === "video" ? "bg-accent/80 text-accent-foreground" : "bg-primary/80 text-primary-foreground"}`}>
                       {asset.type === "video" ? "VIDEO" : "IMG"}
                     </span>
                   </div>
@@ -297,7 +297,7 @@ export default function BrandAssetsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h3 className="text-xs font-semibold text-foreground truncate">{asset.name}</h3>
-                    <span className={`px-1.5 py-0.5 rounded text-[0.5rem] font-bold flex-shrink-0 ${asset.type === "video" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
+                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold flex-shrink-0 ${asset.type === "video" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
                       {asset.type.toUpperCase()}
                     </span>
                   </div>

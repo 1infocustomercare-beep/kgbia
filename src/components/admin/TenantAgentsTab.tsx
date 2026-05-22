@@ -183,17 +183,17 @@ export default function TenantAgentsTab() {
         <div className="bg-secondary/40 border border-border/40 rounded-xl p-2 text-center">
           <Building2 className="w-3 h-3 mx-auto mb-0.5 text-primary" />
           <p className="text-sm font-bold text-primary">{totalTenants}</p>
-          <p className="text-[0.5rem] text-muted-foreground">Account</p>
+          <p className="text-[10px] text-muted-foreground">Account</p>
         </div>
         <div className="bg-secondary/40 border border-border/40 rounded-xl p-2 text-center">
           <Bot className="w-3 h-3 mx-auto mb-0.5 text-emerald-400" />
           <p className="text-sm font-bold text-emerald-400">{totalActiveInstalls}</p>
-          <p className="text-[0.5rem] text-muted-foreground">Agenti Attivi</p>
+          <p className="text-[10px] text-muted-foreground">Agenti Attivi</p>
         </div>
         <div className="bg-secondary/40 border border-border/40 rounded-xl p-2 text-center">
           <Zap className="w-3 h-3 mx-auto mb-0.5 text-amber-400" />
           <p className="text-sm font-bold text-amber-400">{installations.length}</p>
-          <p className="text-[0.5rem] text-muted-foreground">Installazioni</p>
+          <p className="text-[10px] text-muted-foreground">Installazioni</p>
         </div>
       </div>
 

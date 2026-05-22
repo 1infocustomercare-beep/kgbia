@@ -2030,7 +2030,7 @@ const EmpireVoiceAgent: React.FC = () => {
               )}
 
               {!SpeechRecognition && mode === "voice" && (
-                <p className="text-[0.5rem] text-foreground/20 text-center mt-2">
+                <p className="text-[10px] text-foreground/20 text-center mt-2">
                   Il riconoscimento vocale non è supportato. Usa la chat testuale.
                 </p>
               )}

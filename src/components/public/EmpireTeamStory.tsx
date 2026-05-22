@@ -371,7 +371,7 @@ export default function EmpireTeamStory() {
                       animate={{ opacity: [0.4, 1, 0.4] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
-                    <p className="text-[0.5rem] sm:text-[0.6rem] font-bold tracking-[3px] uppercase text-foreground/85">{member.role}</p>
+                    <p className="text-[10px] sm:text-[0.6rem] font-bold tracking-[3px] uppercase text-foreground/85">{member.role}</p>
                   </div>
                   <h3 className="text-sm sm:text-lg font-bold text-foreground tracking-tight leading-tight">{member.name}</h3>
                 </div>

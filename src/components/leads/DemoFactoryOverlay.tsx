@@ -529,7 +529,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                             {Object.entries(result.brand.palette).map(([k, v]) => (
                               <div key={k} className="flex-1 text-center min-w-0">
                                 <div className="w-full h-6 rounded-md border border-white/10" style={{ background: v }} />
-                                <p className="text-[0.5rem] text-white/40 mt-0.5 font-mono truncate">{v.slice(0, 7)}</p>
+                                <p className="text-[10px] text-white/40 mt-0.5 font-mono truncate">{v.slice(0, 7)}</p>
                               </div>
                             ))}
                           </div>

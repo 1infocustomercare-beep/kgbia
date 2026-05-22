@@ -81,15 +81,15 @@ export default function AdminAgents() {
               </h1>
             </div>
             <div className="flex gap-1.5 flex-wrap">
-              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[0.5rem]">
+              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px]">
                 <Sparkles className="w-2 h-2 text-primary" />
                 <span className="font-bold text-primary">{allAgents.length}</span>
               </span>
-              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-accent/10 border border-accent/20 text-[0.5rem]">
+              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-accent/10 border border-accent/20 text-[10px]">
                 <Zap className="w-2 h-2 text-accent-foreground" />
                 <span className="font-bold text-accent-foreground">{Object.keys(sectorCounts).length - 1} settori</span>
               </span>
-              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[0.5rem]">
+              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[10px]">
                 <Crown className="w-2 h-2 text-amber-400" />
                 <span className="font-bold text-amber-400">{universalCount} univ.</span>
               </span>
@@ -208,8 +208,8 @@ export default function AdminAgents() {
                       <div>
                         <span className="text-[0.7rem] font-semibold text-foreground capitalize">{sector}</span>
                         <div className="flex gap-1.5 mt-0.5">
-                          <span className="text-[0.5rem] text-muted-foreground">{count} agenti</span>
-                          <span className="text-[0.5rem] text-emerald-400">{activeCount} attivi</span>
+                          <span className="text-[10px] text-muted-foreground">{count} agenti</span>
+                          <span className="text-[10px] text-emerald-400">{activeCount} attivi</span>
                         </div>
                       </div>
                       <div className="flex -space-x-1">
@@ -343,15 +343,15 @@ function AgentDetailModal({
           <div className="grid grid-cols-3 gap-1.5">
             <div className="p-2 rounded-xl bg-secondary/40 text-center border border-border/30">
               <p className="text-base font-bold text-blue-400">{installs}</p>
-              <p className="text-[0.5rem] text-muted-foreground">Utenti</p>
+              <p className="text-[10px] text-muted-foreground">Utenti</p>
             </div>
             <div className="p-2 rounded-xl bg-secondary/40 text-center border border-border/30">
               <p className="text-base font-bold text-emerald-400">{sr}%</p>
-              <p className="text-[0.5rem] text-muted-foreground">Success</p>
+              <p className="text-[10px] text-muted-foreground">Success</p>
             </div>
             <div className="p-2 rounded-xl bg-secondary/40 text-center border border-border/30">
               <p className="text-base font-bold text-amber-400">{m?.avgMs || 0}ms</p>
-              <p className="text-[0.5rem] text-muted-foreground">Latenza</p>
+              <p className="text-[10px] text-muted-foreground">Latenza</p>
             </div>
           </div>
           <div className="p-2 rounded-xl bg-secondary/40 border border-border/30 text-xs text-muted-foreground space-y-0.5">

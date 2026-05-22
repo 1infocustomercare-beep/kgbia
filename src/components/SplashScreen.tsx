@@ -325,7 +325,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
                 className="w-1 h-1 rounded-full animate-pulse"
                 style={{ background: "hsl(265,85%,65%)", animationDelay: `${i * 300}ms` }}
               />
-              <span className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.2em] uppercase text-foreground/15 font-heading">{label}</span>
+              <span className="text-[0.45rem] sm:text-[10px] tracking-[0.2em] uppercase text-foreground/15 font-heading">{label}</span>
             </div>
           ))}
         </motion.div>
@@ -366,7 +366,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
       >
-        <p className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.6em] uppercase text-foreground/8 font-heading">
+        <p className="text-[0.45rem] sm:text-[10px] tracking-[0.6em] uppercase text-foreground/8 font-heading">
           Powered by Autonomous AI
         </p>
       </motion.div>

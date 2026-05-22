@@ -412,7 +412,7 @@ export default function TenantIntegrationsSection() {
         <span className="text-[0.55rem] text-muted-foreground">{filtered.length} account</span>
         <div className="flex items-center gap-2">
           {statusFilter !== "all" && (
-            <button onClick={() => setStatusFilter("all")} className="text-[0.5rem] text-primary underline">
+            <button onClick={() => setStatusFilter("all")} className="text-[10px] text-primary underline">
               Mostra tutti
             </button>
           )}
@@ -519,15 +519,15 @@ export default function TenantIntegrationsSection() {
                             <div className="space-y-1.5">
                               <div className="grid grid-cols-3 gap-1">
                                 <div className="rounded-lg bg-background/60 p-1.5 text-center">
-                                  <p className="text-[0.5rem] text-muted-foreground">Pagato</p>
+                                  <p className="text-[10px] text-muted-foreground">Pagato</p>
                                   <p className="text-xs font-bold text-foreground">€{payment.amount_paid?.toLocaleString()}</p>
                                 </div>
                                 <div className="rounded-lg bg-background/60 p-1.5 text-center">
-                                  <p className="text-[0.5rem] text-muted-foreground">Totale</p>
+                                  <p className="text-[10px] text-muted-foreground">Totale</p>
                                   <p className="text-xs font-bold text-foreground">€{payment.total_amount?.toLocaleString()}</p>
                                 </div>
                                 <div className="rounded-lg bg-background/60 p-1.5 text-center">
-                                  <p className="text-[0.5rem] text-muted-foreground">Rate</p>
+                                  <p className="text-[10px] text-muted-foreground">Rate</p>
                                   <p className="text-xs font-bold text-foreground">{payment.installments_paid}/{payment.installments_total}</p>
                                 </div>
                               </div>
@@ -545,7 +545,7 @@ export default function TenantIntegrationsSection() {
 
                               {payment.next_due_date && (
                                 <div className="flex items-center justify-between">
-                                  <span className="text-[0.5rem] text-muted-foreground flex items-center gap-1">
+                                  <span className="text-[10px] text-muted-foreground flex items-center gap-1">
                                     <Clock className="w-2.5 h-2.5" />
                                     Prossima rata: {new Date(payment.next_due_date).toLocaleDateString("it-IT")}
                                   </span>
@@ -579,7 +579,7 @@ export default function TenantIntegrationsSection() {
                               )}
                             </div>
                           ) : (
-                            <p className="text-[0.5rem] text-muted-foreground">Nessun piano pagamento attivo</p>
+                            <p className="text-[10px] text-muted-foreground">Nessun piano pagamento attivo</p>
                           )}
                         </div>
 
@@ -601,7 +601,7 @@ export default function TenantIntegrationsSection() {
                         </div>
 
                         {tenant.blockedReason && (
-                          <p className="text-[0.5rem] text-destructive bg-destructive/5 px-2 py-1 rounded-lg">
+                          <p className="text-[10px] text-destructive bg-destructive/5 px-2 py-1 rounded-lg">
                             ⚠️ {tenant.blockedReason}
                           </p>
                         )}
@@ -610,7 +610,7 @@ export default function TenantIntegrationsSection() {
                         <div className="space-y-1">
                           <div className="flex items-center gap-1 mb-1">
                             <Zap className="w-2.5 h-2.5 text-primary" />
-                            <span className="text-[0.5rem] text-muted-foreground">
+                            <span className="text-[10px] text-muted-foreground">
                               Piano: <strong className="text-foreground">{PLAN_LABELS[tenant.plan] || tenant.plan}</strong>
                             </span>
                           </div>
@@ -656,7 +656,7 @@ export default function TenantIntegrationsSection() {
       {/* ═══ Kill-Switch Info ═══ */}
       <div className="flex items-start gap-2 px-3 py-2 rounded-lg border border-empire-violet/15 bg-empire-violet/[0.03]">
         <ShieldCheck className="w-3.5 h-3.5 text-empire-violet shrink-0 mt-0.5" />
-        <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
+        <p className="text-[10px] text-muted-foreground leading-relaxed">
           <strong className="text-foreground">Kill-Switch Automatico:</strong> Gli account con rate scadute vengono bloccati automaticamente dopo il periodo di grazia. 
           Avviso inviato 3 giorni prima della scadenza. Riattivazione automatica al pagamento.
         </p>

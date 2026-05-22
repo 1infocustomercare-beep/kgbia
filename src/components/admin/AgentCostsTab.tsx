@@ -109,17 +109,17 @@ export default function AgentCostsTab() {
         <div className="bg-secondary/40 border border-border/40 rounded-xl p-2 text-center">
           <DollarSign className="w-3 h-3 mx-auto mb-0.5 text-amber-400" />
           <p className="text-sm font-bold text-amber-400">${totalCost.toFixed(2)}</p>
-          <p className="text-[0.5rem] text-muted-foreground">Costo Totale</p>
+          <p className="text-[10px] text-muted-foreground">Costo Totale</p>
         </div>
         <div className="bg-secondary/40 border border-border/40 rounded-xl p-2 text-center">
           <Zap className="w-3 h-3 mx-auto mb-0.5 text-primary" />
           <p className="text-sm font-bold text-primary">{(totalTokens / 1000).toFixed(1)}K</p>
-          <p className="text-[0.5rem] text-muted-foreground">Token Usati</p>
+          <p className="text-[10px] text-muted-foreground">Token Usati</p>
         </div>
         <div className="bg-secondary/40 border border-border/40 rounded-xl p-2 text-center">
           <TrendingUp className="w-3 h-3 mx-auto mb-0.5 text-emerald-400" />
           <p className="text-sm font-bold text-emerald-400">{totalCalls}</p>
-          <p className="text-[0.5rem] text-muted-foreground">Chiamate AI</p>
+          <p className="text-[10px] text-muted-foreground">Chiamate AI</p>
         </div>
       </div>
 
@@ -136,7 +136,7 @@ export default function AgentCostsTab() {
             {lowBalanceAlerts.slice(0, 5).map((a: any) => (
               <div key={a.restaurant_id} className="flex items-center justify-between px-2 py-1 rounded-lg bg-background/60">
                 <span className="text-[0.6rem] text-foreground truncate max-w-[60%]">{a.name}</span>
-                <Badge variant="destructive" className="text-[0.5rem] h-4 px-1.5">
+                <Badge variant="destructive" className="text-[10px] h-4 px-1.5">
                   {a.balance} crediti
                 </Badge>
               </div>
@@ -185,7 +185,7 @@ export default function AgentCostsTab() {
                         <Badge variant="outline" className="text-[0.45rem] h-3.5 px-1 border-border/50">
                           {c.industry}
                         </Badge>
-                        <span className="text-[0.5rem] text-muted-foreground">{c.total_calls} call</span>
+                        <span className="text-[10px] text-muted-foreground">{c.total_calls} call</span>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
