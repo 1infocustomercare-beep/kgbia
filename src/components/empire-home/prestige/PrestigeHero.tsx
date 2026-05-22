@@ -127,17 +127,18 @@ export default function PrestigeHero() {
             <span>· {t({ it: "90 giorni gratis", en: "90 days free" })}</span>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <button className="prestige-cta" onClick={() => navigate("/onboarding")}>
-              {t({ it: "Inizia la tua trasformazione", en: "Start your transformation" })} <ArrowRight size={16} />
+          <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
+            <button className="prestige-cta justify-center w-full sm:w-auto" onClick={() => navigate("/onboarding")}>
+              <span className="truncate">{t({ it: "Inizia la tua trasformazione", en: "Start your transformation" })}</span> <ArrowRight size={16} className="shrink-0" />
             </button>
             <button
-              className="prestige-cta-ghost"
+              className="prestige-cta-ghost justify-center w-full sm:w-auto"
               onClick={() => document.getElementById("prestige-mockups")?.scrollIntoView({ behavior: "smooth" })}
             >
-              <Play size={14} /> {t({ it: "Vedi i casi reali", en: "See real cases" })}
+              <Play size={14} className="shrink-0" /> <span className="truncate">{t({ it: "Vedi i casi reali", en: "See real cases" })}</span>
             </button>
           </div>
+
         </div>
 
         {/* RIGHT — iPhone stage */}
