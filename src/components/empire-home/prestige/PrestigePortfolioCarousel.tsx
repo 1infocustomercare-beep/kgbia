@@ -108,8 +108,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "empire-ncc",
-    tag: "NCC Luxury",
+    tag: "Travel",
+    subtag: "NCC Luxury",
+    pill: { bg: "hsl(210 70% 92%)", text: "hsl(210 65% 35%)" },
+    pill2: { bg: "hsl(45 70% 90%)", text: "hsl(45 70% 32%)" },
     title: "Empire NCC",
+
     city: "Milano · Como · Sankt Moritz",
     oneLiner: "Un centralino AI che parla 4 lingue e non dorme mai.",
     problem: [
