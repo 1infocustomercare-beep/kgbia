@@ -14,6 +14,7 @@ interface DashboardOverviewProps {
   aiTokens: number;
   restaurantName: string;
   restaurantId?: string;
+  restaurantLogo?: string | null;
   reviews: any[];
   reservations: any[];
   menuUrl: string;
