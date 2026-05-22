@@ -142,8 +142,12 @@ const PROJECTS: Project[] = [
   },
   {
     id: "velvet-studio",
-    tag: "Beauty & Spa",
+    tag: "Lifestyle",
+    subtag: "Beauty & Spa",
+    pill: { bg: "hsl(330 70% 94%)", text: "hsl(330 55% 42%)" },
+    pill2: { bg: "hsl(280 50% 94%)", text: "hsl(280 40% 42%)" },
     title: "Velvet Studio",
+
     city: "Torino",
     oneLiner: "Agenda piena tutti i giorni, senza alzare mai il telefono.",
     problem: [
