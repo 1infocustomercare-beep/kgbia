@@ -59,7 +59,7 @@ export function PaperfishHeader({ brandName, subtitle, cartCount, onBack, onCart
             <ShoppingCart className="w-4 h-4" strokeWidth={2} />
             {cartCount && cartCount > 0 ? (
               <span
-                className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center text-[0.6rem] font-bold"
+                className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center text-[11px] font-bold"
                 style={{ background: PAPERFISH.primary, color: PAPERFISH.bg }}
               >
                 {cartCount}

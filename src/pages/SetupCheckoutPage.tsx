@@ -184,7 +184,7 @@ const SetupCheckoutPage = () => {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
             <Lock className="w-4 h-4 text-primary" />
-            <span className="text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-primary">
+            <span className="text-[11px] font-heading font-bold tracking-[2px] uppercase text-primary">
               Setup richiesto
             </span>
           </div>
@@ -231,7 +231,7 @@ const SetupCheckoutPage = () => {
                   <div className="flex items-center gap-2">
                     <h3 className="font-heading font-bold text-foreground text-base">{p.name}</h3>
                     {p.recommended && (
-                      <span className="text-[0.6rem] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
+                      <span className="text-[11px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
                         Consigliato
                       </span>
                     )}
@@ -288,7 +288,7 @@ const SetupCheckoutPage = () => {
                   <div className="text-base font-heading font-bold text-primary mt-0.5">
                     €{price.toLocaleString("it-IT")}
                   </div>
-                  {n > 1 && <div className="text-[0.65rem] text-foreground/50 mt-0.5">/mese</div>}
+                  {n > 1 && <div className="text-[11px] text-foreground/50 mt-0.5">/mese</div>}
                 </button>
               );
             })}
@@ -315,7 +315,7 @@ const SetupCheckoutPage = () => {
           )}
         </motion.button>
 
-        <div className="mt-4 flex items-center justify-center gap-2 text-[0.65rem] text-foreground/45">
+        <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-foreground/45">
           <Lock className="w-3 h-3" />
           <span>Pagamento sicuro Stripe · SSL 256-bit · Nessun dato carta salvato</span>
         </div>

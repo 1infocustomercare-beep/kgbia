@@ -227,16 +227,16 @@ export default function AccountManagerPanel() {
           <h2 className="text-base font-bold text-foreground flex items-center gap-2">
             <Users className="w-4 h-4 text-primary" /> Account Manager
           </h2>
-          <p className="text-[0.65rem] text-muted-foreground">Tutti gli account creati o registrati. Filtra, modifica, accedi, elimina.</p>
+          <p className="text-[11px] text-muted-foreground">Tutti gli account creati o registrati. Filtra, modifica, accedi, elimina.</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[0.55rem] px-2 py-1 rounded-full bg-primary/10 text-primary font-bold">{users.length} totali</span>
-          <span className="text-[0.55rem] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold">{totalActive} attivi</span>
-          <span className="text-[0.55rem] px-2 py-1 rounded-full bg-rose-500/10 text-rose-400 font-bold">{totalBlocked} bloccati</span>
-          <span className="text-[0.55rem] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 font-bold">{totalDemo} demo</span>
+          <span className="text-[10px] px-2 py-1 rounded-full bg-primary/10 text-primary font-bold">{users.length} totali</span>
+          <span className="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold">{totalActive} attivi</span>
+          <span className="text-[10px] px-2 py-1 rounded-full bg-rose-500/10 text-rose-400 font-bold">{totalBlocked} bloccati</span>
+          <span className="text-[10px] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 font-bold">{totalDemo} demo</span>
           <button
             onClick={load}
-            className="ml-2 inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1 text-[0.6rem] hover:bg-muted/30"
+            className="ml-2 inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1 text-[11px] hover:bg-muted/30"
           >
             <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} /> Aggiorna
           </button>
@@ -278,7 +278,7 @@ export default function AccountManagerPanel() {
           ]} />
           <button
             onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
-            className="inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1 text-[0.6rem] hover:bg-muted/30"
+            className="inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1 text-[11px] hover:bg-muted/30"
             title="Inverti ordinamento"
           >
             <ArrowUpDown className="w-3 h-3" /> {sortDir === "asc" ? "ASC" : "DESC"}
@@ -321,12 +321,12 @@ export default function AccountManagerPanel() {
 
 function Select({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: { value: string; label: string }[] }) {
   return (
-    <label className="inline-flex items-center gap-1 text-[0.6rem] text-muted-foreground">
+    <label className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
       <Filter className="w-3 h-3" /> {label}:
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-lg bg-background border border-border px-2 py-1 text-[0.65rem] text-foreground"
+        className="rounded-lg bg-background border border-border px-2 py-1 text-[11px] text-foreground"
       >
         {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
@@ -370,8 +370,8 @@ function UserCard({
             )}
             <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-muted text-muted-foreground">{user.origin === "demo_seed" ? "Demo seed" : user.origin.startsWith("oauth") ? user.origin.replace("oauth:", "OAuth ") : "Registrato"}</span>
           </div>
-          <p className="text-[0.6rem] text-muted-foreground truncate">{user.email}</p>
-          <p className="text-[0.55rem] text-muted-foreground">Creato {created} · Ultimo accesso: {lastSeen}</p>
+          <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
+          <p className="text-[10px] text-muted-foreground">Creato {created} · Ultimo accesso: {lastSeen}</p>
         </div>
         <div className="flex items-center gap-1">
           <IconBtn title="Modifica profilo" onClick={onEdit}><Pencil className="w-3 h-3" /></IconBtn>
@@ -381,12 +381,12 @@ function UserCard({
       </div>
 
       {/* Role quick switch */}
-      <div className="flex items-center gap-2 text-[0.6rem]">
+      <div className="flex items-center gap-2 text-[11px]">
         <span className="text-muted-foreground inline-flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Ruolo</span>
         <select
           value={user.primary_role}
           onChange={(e) => onSetRole(user, e.target.value)}
-          className="rounded-md bg-background border border-border px-2 py-1 text-[0.6rem]"
+          className="rounded-md bg-background border border-border px-2 py-1 text-[11px]"
         >
           {ROLE_OPTIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
         </select>
@@ -398,20 +398,20 @@ function UserCard({
           {user.tenants.map((t) => (
             <div key={`${t.kind}-${t.id}`} className="flex items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/40 px-2 py-1.5">
               <div className="min-w-0">
-                <p className="text-[0.65rem] font-bold text-foreground truncate">{t.name} <span className="text-[10px] text-muted-foreground">/{t.slug}</span></p>
-                <p className="text-[0.55rem] text-muted-foreground">{INDUSTRY_LABELS[t.industry] || t.industry} · {t.kind === "company" ? "Company" : "Restaurant"} · {t.is_blocked ? "🔴 Bloccato" : t.is_active ? "🟢 Attivo" : "⚪ Disattivo"}</p>
+                <p className="text-[11px] font-bold text-foreground truncate">{t.name} <span className="text-[10px] text-muted-foreground">/{t.slug}</span></p>
+                <p className="text-[10px] text-muted-foreground">{INDUSTRY_LABELS[t.industry] || t.industry} · {t.kind === "company" ? "Company" : "Restaurant"} · {t.is_blocked ? "🔴 Bloccato" : t.is_active ? "🟢 Attivo" : "⚪ Disattivo"}</p>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <a href={publicLinkFor(t)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-md border border-border px-1.5 py-1 text-[0.55rem] hover:bg-muted/30">
+                <a href={publicLinkFor(t)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-md border border-border px-1.5 py-1 text-[10px] hover:bg-muted/30">
                   <ExternalLink className="w-3 h-3" /> Sito
                 </a>
-                <a href={adminLinkFor(t)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-md border border-border px-1.5 py-1 text-[0.55rem] hover:bg-muted/30">
+                <a href={adminLinkFor(t)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-md border border-border px-1.5 py-1 text-[10px] hover:bg-muted/30">
                   <ExternalLink className="w-3 h-3" /> Admin
                 </a>
-                <button onClick={() => onMagicLink(user, t)} className="inline-flex items-center gap-1 rounded-md border border-primary/40 text-primary px-1.5 py-1 text-[0.55rem] hover:bg-primary/10">
+                <button onClick={() => onMagicLink(user, t)} className="inline-flex items-center gap-1 rounded-md border border-primary/40 text-primary px-1.5 py-1 text-[10px] hover:bg-primary/10">
                   <KeyRound className="w-3 h-3" /> Link
                 </button>
-                <button onClick={() => onToggleBlock(user, t)} className={`inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[0.55rem] ${t.is_blocked ? "border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10" : "border border-rose-500/40 text-rose-400 hover:bg-rose-500/10"}`}>
+                <button onClick={() => onToggleBlock(user, t)} className={`inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[10px] ${t.is_blocked ? "border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10" : "border border-rose-500/40 text-rose-400 hover:bg-rose-500/10"}`}>
                   {t.is_blocked ? <><Unlock className="w-3 h-3" /> Sblocca</> : <><Lock className="w-3 h-3" /> Blocca</>}
                 </button>
               </div>
@@ -419,11 +419,11 @@ function UserCard({
           ))}
         </div>
       ) : (
-        <p className="text-[0.55rem] text-muted-foreground italic">Nessun tenant collegato.</p>
+        <p className="text-[10px] text-muted-foreground italic">Nessun tenant collegato.</p>
       )}
 
       {user.sales && user.sales.count > 0 && (
-        <div className="text-[0.55rem] text-purple-400">
+        <div className="text-[10px] text-purple-400">
           Vendite: {user.sales.count} · Revenue €{user.sales.revenue.toLocaleString()} · Commissioni €{user.sales.commission.toLocaleString()}
         </div>
       )}
@@ -456,13 +456,13 @@ function EditProfileModal({ user, working, onClose, onSave }: { user: AccountUse
           <h3 className="text-sm font-bold text-foreground">Modifica account</h3>
           <button onClick={onClose} className="w-7 h-7 rounded-md border border-border flex items-center justify-center"><X className="w-3 h-3" /></button>
         </div>
-        <p className="text-[0.6rem] text-muted-foreground">{user.email}</p>
+        <p className="text-[11px] text-muted-foreground">{user.email}</p>
         <div className="space-y-2">
           <Field label="Nome completo" value={fullName} onChange={setFullName} />
           <Field label="Telefono" value={phone} onChange={setPhone} />
           <Field label="Città" value={city} onChange={setCity} />
           <label className="flex items-center justify-between rounded-lg border border-border bg-background/50 px-3 py-2">
-            <span className="text-[0.65rem] text-foreground">Sezione demo abilitata</span>
+            <span className="text-[11px] text-foreground">Sezione demo abilitata</span>
             <input type="checkbox" checked={demoEnabled} onChange={(e) => setDemoEnabled(e.target.checked)} />
           </label>
         </div>
@@ -484,7 +484,7 @@ function EditProfileModal({ user, working, onClose, onSave }: { user: AccountUse
 function Field({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <label className="block">
-      <span className="text-[0.6rem] text-muted-foreground">{label}</span>
+      <span className="text-[11px] text-muted-foreground">{label}</span>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -504,7 +504,7 @@ function ConfirmDeleteModal({ user, working, onClose, onConfirm }: { user: Accou
           <AlertTriangle className="w-4 h-4" />
           <h3 className="text-sm font-bold">Eliminare definitivamente?</h3>
         </div>
-        <p className="text-[0.65rem] text-foreground/80">
+        <p className="text-[11px] text-foreground/80">
           Stai per eliminare <strong>{user.full_name}</strong> ({user.email}). Verrà rimosso anche dall'autenticazione. Tenant e dati collegati resteranno fino a cancellazione manuale.
         </p>
         <input

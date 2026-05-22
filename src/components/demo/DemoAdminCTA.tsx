@@ -113,7 +113,7 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <Badge className="mb-4 text-[0.6rem] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor }}>
+          <Badge className="mb-4 text-[11px] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor }}>
             <Sparkles className="w-3 h-3 mr-1 inline" /> ACCESSO IMMEDIATO
           </Badge>
           <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
@@ -138,7 +138,7 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
                 {["€24.850", "342", "156", "+18%"].map((v, i) => (
                   <div key={i} className="bg-white/[0.04] rounded-lg p-2 text-center">
                     <p className="text-xs font-bold text-white">{v}</p>
-                    <p className="text-[0.45rem] text-white/70">{["Fatturato", "Clienti", "Booking", "Crescita"][i]}</p>
+                    <p className="text-[10px] text-white/70">{["Fatturato", "Clienti", "Booking", "Crescita"][i]}</p>
                   </div>
                 ))}
               </div>
@@ -161,7 +161,7 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
             {loading ? "Accesso..." : "Entra nella Dashboard Demo"}
             <ArrowRight className="w-4 h-4" />
           </Button>
-          <p className="text-[0.6rem] text-white/70 mt-3">
+          <p className="text-[11px] text-white/70 mt-3">
             <Lock className="w-3 h-3 inline mr-1" />
             Nessuna registrazione richiesta · Tutti i moduli attivi · Dati demo realistici
           </p>

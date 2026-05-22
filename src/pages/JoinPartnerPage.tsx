@@ -55,7 +55,7 @@ const JoinPartnerPage = () => {
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
             <Handshake className="w-4 h-4 text-primary" />
-            <span className="text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-primary">Programma Partner</span>
+            <span className="text-[11px] font-heading font-bold tracking-[2px] uppercase text-primary">Programma Partner</span>
           </div>
           <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
             Guadagna Vendendo la <span className="text-shimmer">Piattaforma AI</span> più Completa
@@ -76,7 +76,7 @@ const JoinPartnerPage = () => {
                 {kpi.icon}
               </div>
               <p className="text-xl font-heading font-bold text-foreground">{kpi.value}</p>
-              <p className="text-[0.6rem] text-foreground/60 uppercase tracking-wider font-heading">{kpi.label}</p>
+              <p className="text-[11px] text-foreground/60 uppercase tracking-wider font-heading">{kpi.label}</p>
             </motion.div>
           ))}
         </div>
@@ -111,7 +111,7 @@ const JoinPartnerPage = () => {
               <motion.div key={i} className="rounded-2xl glow-card p-6 text-center"
                 initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }} transition={{ delay: 0.1 * i }}>
-                <p className="text-[0.6rem] font-heading font-bold text-foreground/60 uppercase tracking-wider mb-4">
+                <p className="text-[11px] font-heading font-bold text-foreground/60 uppercase tracking-wider mb-4">
                   {s.sales} vendite/mese
                 </p>
                 <div className="space-y-2 text-xs mb-4">
@@ -119,7 +119,7 @@ const JoinPartnerPage = () => {
                   {s.bonus > 0 && <div className="flex justify-between"><span className="text-foreground/65">Bonus</span><span className="font-bold text-primary">€{s.bonus.toLocaleString()}</span></div>}
                 </div>
                 <div className="pt-3 border-t border-border/30">
-                  <p className="text-[0.6rem] text-foreground/60 mb-1">Totale mensile</p>
+                  <p className="text-[11px] text-foreground/60 mb-1">Totale mensile</p>
                   <p className="text-2xl font-heading font-bold text-shimmer">€{s.total.toLocaleString()}</p>
                 </div>
               </motion.div>
@@ -147,7 +147,7 @@ const JoinPartnerPage = () => {
           </motion.button>
           <div className="flex items-center justify-center gap-4 mt-4">
             {["Zero costi", "Zero rischi", "Pagamenti istantanei"].map((t, i) => (
-              <span key={i} className="text-[0.6rem] text-foreground/50 flex items-center gap-1">
+              <span key={i} className="text-[11px] text-foreground/50 flex items-center gap-1">
                 <Check className="w-3 h-3 text-primary/60" /> {t}
               </span>
             ))}

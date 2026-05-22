@@ -300,7 +300,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover" />
             </motion.div>
             <h1 className="text-2xl font-heading font-bold text-white">Area Riservata</h1>
-            <p className="text-sm text-gray-300 mt-1">Seleziona il tuo accesso</p>
+            <p className="text-sm text-muted-foreground mt-1">Seleziona il tuo accesso</p>
           </div>
 
           {[
@@ -326,7 +326,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               </div>
               <div>
                 <p className="text-base font-semibold text-white">{item.title}</p>
-                <p className="text-xs text-gray-300 mt-0.5">{item.desc}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
               </div>
             </motion.button>
           ))}
@@ -351,7 +351,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               <KeyRound className="w-8 h-8 text-primary-foreground" />
             </div>
             <h1 className="text-2xl font-heading font-bold text-white">Recupera Password</h1>
-            <p className="text-sm text-gray-300 mt-1">Riceverai un link per reimpostare la password</p>
+            <p className="text-sm text-muted-foreground mt-1">Riceverai un link per reimpostare la password</p>
           </div>
 
           {forgotSent ? (
@@ -359,12 +359,12 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               className="p-6 rounded-2xl bg-primary/10 border border-primary/20 text-center space-y-3">
               <Mail className="w-10 h-10 text-primary mx-auto" />
               <p className="text-white font-semibold">Email inviata!</p>
-              <p className="text-sm text-gray-300">Controlla la tua casella di posta e clicca sul link per reimpostare la password.</p>
+              <p className="text-sm text-muted-foreground">Controlla la tua casella di posta e clicca sul link per reimpostare la password.</p>
             </motion.div>
           ) : (
             <form onSubmit={handleForgotPassword} className="space-y-4">
               <div>
-                <label className="text-xs text-gray-400 uppercase tracking-wider block mb-2">Email</label>
+                <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-2">Email</label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="titolare@ristorante.it"
                   className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/80 focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -400,7 +400,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               <ChefHat className="w-8 h-8 text-primary-foreground" />
             </motion.div>
             <h1 className="text-2xl font-heading font-bold text-white">Kitchen View</h1>
-            <p className="text-sm text-gray-300 mt-1">Inserisci il PIN</p>
+            <p className="text-sm text-muted-foreground mt-1">Inserisci il PIN</p>
           </div>
 
           {/* PIN dots display */}
@@ -489,7 +489,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
                 <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Nome completo</label>
                 <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                   placeholder={isPartnerMode ? "Marco Bianchi" : "Mario Rossi"}
-                  className="w-full px-4 py-3 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
               </div>
               {isPartnerMode && (
                 <>
@@ -498,13 +498,13 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
                       <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Telefono</label>
                       <input type="tel" value={partnerPhone} onChange={e => setPartnerPhone(e.target.value)}
                         placeholder="+39 333..."
-                        className="w-full px-4 py-3 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                     <div>
                       <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Città</label>
                       <input type="text" value={partnerCity} onChange={e => setPartnerCity(e.target.value)}
                         placeholder="Roma"
-                        className="w-full px-4 py-3 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                   </div>
                   <div>
@@ -526,7 +526,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
               placeholder={isPartnerMode ? "partner@email.com" : "titolare@ristorante.it"}
-              className="w-full px-4 py-3 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               required />
           </div>
           <div>
@@ -534,7 +534,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <div className="relative">
               <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 pr-11 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full px-4 py-3 pr-11 rounded-xl bg-white border border-white/20 !text-black text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                 required minLength={6} />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">

@@ -513,7 +513,7 @@ const NetworkNode = ({
 
       {/* Name + role */}
       <div className="text-center max-w-[60px] sm:max-w-[100px]">
-        <h3 className="font-bold text-[0.42rem] sm:text-[0.6rem] leading-tight truncate" style={{ color: "hsla(0,0%,100%,0.92)" }}>
+        <h3 className="font-bold text-[0.42rem] sm:text-[11px] leading-tight truncate" style={{ color: "hsla(0,0%,100%,0.92)" }}>
           {agent.name}
         </h3>
         <p className="text-[0.32rem] sm:text-[0.44rem] tracking-wider uppercase truncate leading-tight" style={{ color: "hsl(215,80%,70%)" }}>
@@ -586,7 +586,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-4"
             style={{ borderColor: "hsla(215,80%,60%,0.3)", background: "hsla(215,30%,15%,0.7)", backdropFilter: "blur(12px)" }}>
             <Network className="w-3.5 h-3.5 animate-pulse" style={{ color: "hsl(215,90%,65%)" }} />
-            <span className="text-[0.6rem] font-bold tracking-[0.15em] uppercase" style={{ color: "hsl(215,90%,70%)" }}>Rete Neurale Operativa</span>
+            <span className="text-[11px] font-bold tracking-[0.15em] uppercase" style={{ color: "hsl(215,90%,70%)" }}>Rete Neurale Operativa</span>
             <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: "hsla(215,80%,55%,0.2)", color: "hsl(215,90%,70%)" }}>Oltre {TOTAL_AGENTS_COUNT} Agenti IA</span>
           </motion.div>
 
@@ -616,7 +616,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
               <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border"
                 style={{ borderColor: "hsla(215,60%,55%,0.25)", background: "hsla(215,25%,14%,0.65)", backdropFilter: "blur(8px)" }}>
                 <div style={{ color: "hsl(215,85%,65%)" }}>{v.icon}</div>
-                <span className="text-[0.55rem] font-medium" style={{ color: "hsla(220,15%,82%,0.9)" }}>{v.text}</span>
+                <span className="text-[10px] font-medium" style={{ color: "hsla(220,15%,82%,0.9)" }}>{v.text}</span>
               </div>
             ))}
           </motion.div>
@@ -659,9 +659,9 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                   }}>
                   <div className="flex items-center gap-1.5 mb-2">
                     <div style={{ color: block.color }}>{block.icon}</div>
-                    <span className="text-[0.6rem] sm:text-xs font-bold tracking-wider uppercase" style={{ color: block.color }}>{block.title}</span>
+                    <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase" style={{ color: block.color }}>{block.title}</span>
                   </div>
-                  <p className="text-[0.55rem] sm:text-xs leading-[1.5]" style={{ color: "hsla(220,15%,75%,0.85)" }}>{block.desc}</p>
+                  <p className="text-[10px] sm:text-xs leading-[1.5]" style={{ color: "hsla(220,15%,75%,0.85)" }}>{block.desc}</p>
                 </div>
               ))}
             </div>
@@ -674,7 +674,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           <div className="flex gap-1 justify-center flex-wrap mb-2">
             {SECTOR_GROUPS[0].tabs.map((tab) => (
               <button key={tab.id} onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] sm:text-[0.6rem] font-semibold tracking-wider uppercase transition-all border"
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase transition-all border"
                 style={activeSector === tab.id ? {
                   color: "hsla(0,0%,100%,0.95)",
                   borderColor: "hsla(215,70%,55%,0.5)",
@@ -703,7 +703,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                         setExpandedAgent(null);
                       }
                     }}
-                    className="flex items-center gap-1 px-2 py-1 rounded-full text-[0.45rem] sm:text-[0.55rem] font-semibold tracking-wide transition-all border"
+                    className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] sm:text-[10px] font-semibold tracking-wide transition-all border"
                     style={isGroupActive ? {
                       color: "hsla(0,0%,100%,0.9)",
                       borderColor: "hsla(215,60%,55%,0.4)",
@@ -712,7 +712,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                       color: "hsla(220,15%,65%,0.6)",
                       borderColor: "hsla(220,15%,30%,0.35)",
                     }}>
-                    <span className="text-[0.55rem]">{group.emoji}</span> {group.group}
+                    <span className="text-[10px]">{group.emoji}</span> {group.group}
                     <ChevronDown className="w-2 h-2 opacity-40" />
                   </button>
 
@@ -745,7 +745,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             {/* +Altro toggle */}
             <button
               onClick={() => setShowMoreSectors(!showMoreSectors)}
-              className="flex items-center gap-1 px-2 py-1 rounded-full text-[0.45rem] sm:text-[0.55rem] font-semibold tracking-wide transition-all border"
+              className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] sm:text-[10px] font-semibold tracking-wide transition-all border"
               style={(showMoreSectors || SECTOR_GROUPS[5].tabs.some(t => t.id === activeSector)) ? {
                 color: "hsla(0,0%,100%,0.9)",
                 borderColor: "hsla(215,60%,55%,0.4)",
@@ -754,7 +754,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                 color: "hsla(220,15%,65%,0.6)",
                 borderColor: "hsla(220,15%,30%,0.35)",
               }}>
-              <span className="text-[0.55rem]">🏢</span> +{SECTOR_GROUPS[5].tabs.length} settori
+              <span className="text-[10px]">🏢</span> +{SECTOR_GROUPS[5].tabs.length} settori
               {showMoreSectors ? <ChevronUp className="w-2 h-2" /> : <ChevronDown className="w-2 h-2" />}
             </button>
           </div>
@@ -771,7 +771,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                   {SECTOR_GROUPS[5].tabs.map(tab => (
                     <button key={tab.id}
                       onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
-                      className="flex items-center gap-0.5 px-2 py-1 rounded-full text-[0.45rem] sm:text-[10px] font-semibold tracking-wide transition-all border"
+                      className="flex items-center gap-0.5 px-2 py-1 rounded-full text-[10px] sm:text-[10px] font-semibold tracking-wide transition-all border"
                       style={activeSector === tab.id ? {
                         color: "hsla(0,0%,100%,0.95)",
                         borderColor: "hsla(215,60%,55%,0.4)",
@@ -804,7 +804,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             <div className="flex-1 relative h-px sm:hidden">
               <div className="absolute inset-0" style={{ background: "linear-gradient(to right, hsla(215,70%,55%,0.3), transparent)" }} />
             </div>
-            <span className="text-[0.45rem] sm:text-[10px] font-bold tracking-[1.5px] sm:tracking-[3px] uppercase whitespace-nowrap" style={{ color: "hsl(215,80%,70%)" }}>
+            <span className="text-[10px] sm:text-[10px] font-bold tracking-[1.5px] sm:tracking-[3px] uppercase whitespace-nowrap" style={{ color: "hsl(215,80%,70%)" }}>
               {filteredAgents.length} Nodi Attivi
             </span>
             <div className="flex-1 relative h-px sm:hidden">
@@ -869,7 +869,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                         style={{ borderColor: "hsla(220,15%,30%,0.45)", background: "hsla(230,18%,14%,0.7)" }}>
                         <motion.div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: activeAgent.glow }}
                           animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity, delay: ci * 0.2 }} />
-                        <span className="text-[0.55rem]" style={{ color: "hsla(220,15%,80%,0.85)" }}>{cap}</span>
+                        <span className="text-[10px]" style={{ color: "hsla(220,15%,80%,0.85)" }}>{cap}</span>
                       </div>
                     ))}
                   </div>
@@ -1029,7 +1029,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </div>
           <div className="text-center mb-5">
             <h3 className="font-bold text-sm sm:text-lg mb-1" style={{ color: "hsla(0,0%,100%,0.95)" }}>Output della Rete</h3>
-            <p className="text-[0.6rem] sm:text-xs" style={{ color: "hsla(220,15%,75%,0.75)" }}>Risultati misurabili — garantiti per contratto</p>
+            <p className="text-[11px] sm:text-xs" style={{ color: "hsla(220,15%,75%,0.75)" }}>Risultati misurabili — garantiti per contratto</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
             {[
@@ -1050,8 +1050,8 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                 <div className="text-xl sm:text-3xl font-bold mb-0.5" style={{ color: "hsla(0,0%,100%,0.95)" }}>
                   <Counter value={stat.value} suffix={stat.suffix} />
                 </div>
-                <div className="text-[0.55rem] sm:text-xs font-semibold" style={{ color: "hsla(0,0%,100%,0.88)" }}>{stat.label}</div>
-                <div className="text-[0.45rem] sm:text-[0.55rem] mt-0.5" style={{ color: "hsla(220,15%,72%,0.7)" }}>{stat.desc}</div>
+                <div className="text-[10px] sm:text-xs font-semibold" style={{ color: "hsla(0,0%,100%,0.88)" }}>{stat.label}</div>
+                <div className="text-[10px] sm:text-[10px] mt-0.5" style={{ color: "hsla(220,15%,72%,0.7)" }}>{stat.desc}</div>
               </motion.div>
             ))}
           </div>
@@ -1063,7 +1063,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           <p className="text-xs sm:text-sm font-semibold mb-3" style={{ color: "hsla(0,0%,100%,0.9)" }}>
             Una Rete che Evolve per Sempre.
           </p>
-          <p className="text-[0.6rem] sm:text-xs max-w-md mx-auto mb-4" style={{ color: "hsla(220,15%,70%,0.65)" }}>
+          <p className="text-[11px] sm:text-xs max-w-md mx-auto mb-4" style={{ color: "hsla(220,15%,70%,0.65)" }}>
             Ogni settimana nuovi nodi, nuove connessioni, nuove automazioni. Il tuo circuito IA diventa più intelligente ogni giorno.
           </p>
           <div className="flex flex-wrap justify-center gap-2">

@@ -95,7 +95,7 @@ const DemoAccountsPage = () => {
             </button>
             <div>
               <h1 className="text-sm font-display font-bold text-foreground">Account Demo</h1>
-              <p className="text-[0.6rem] text-muted-foreground">{INDUSTRIES.length} admin + {CUSTOMER_ACCOUNTS.length} clienti</p>
+              <p className="text-[11px] text-muted-foreground">{INDUSTRIES.length} admin + {CUSTOMER_ACCOUNTS.length} clienti</p>
             </div>
           </div>
           <button
@@ -103,7 +103,7 @@ const DemoAccountsPage = () => {
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-empire-violet/10 hover:bg-empire-violet/20 transition-colors"
           >
             {showPasswords ? <EyeOff className="w-3.5 h-3.5 text-empire-violet" /> : <Eye className="w-3.5 h-3.5 text-empire-violet" />}
-            <span className="text-[0.6rem] font-medium text-empire-violet">{showPasswords ? "Nascondi" : "Mostra"} password</span>
+            <span className="text-[11px] font-medium text-empire-violet">{showPasswords ? "Nascondi" : "Mostra"} password</span>
           </button>
         </div>
 
@@ -121,13 +121,13 @@ const DemoAccountsPage = () => {
           <div className="flex rounded-lg border border-border overflow-hidden">
             <button
               onClick={() => setView("admin")}
-              className={`px-3 py-2 text-[0.6rem] font-medium transition-colors ${view === "admin" ? "bg-empire-violet text-white" : "bg-secondary/30 text-muted-foreground"}`}
+              className={`px-3 py-2 text-[11px] font-medium transition-colors ${view === "admin" ? "bg-empire-violet text-white" : "bg-secondary/30 text-muted-foreground"}`}
             >
               <Users className="w-3 h-3 inline mr-1" />Admin
             </button>
             <button
               onClick={() => setView("customer")}
-              className={`px-3 py-2 text-[0.6rem] font-medium transition-colors ${view === "customer" ? "bg-empire-violet text-white" : "bg-secondary/30 text-muted-foreground"}`}
+              className={`px-3 py-2 text-[11px] font-medium transition-colors ${view === "customer" ? "bg-empire-violet text-white" : "bg-secondary/30 text-muted-foreground"}`}
             >
               <Users className="w-3 h-3 inline mr-1" />Clienti
             </button>
@@ -138,7 +138,7 @@ const DemoAccountsPage = () => {
       {/* Global Password Banner */}
       <div className="mx-4 mt-3 flex items-center gap-2 px-3 py-2 rounded-lg border border-empire-violet/20 bg-empire-violet/[0.04]">
         <Shield className="w-3.5 h-3.5 text-empire-violet shrink-0" />
-        <p className="text-[0.55rem] text-muted-foreground flex-1">
+        <p className="text-[10px] text-muted-foreground flex-1">
           Password universale: <span className="font-mono font-bold text-foreground">{showPasswords ? PASSWORD : "••••••••••"}</span>
         </p>
         <button onClick={() => copyToClipboard(PASSWORD, "Password")} className="p-1 rounded hover:bg-empire-violet/10">
@@ -171,7 +171,7 @@ const DemoAccountsPage = () => {
 
                   {/* Email Row */}
                   <div className="flex items-center gap-1.5 mb-2">
-                    <span className="text-[0.6rem] font-mono text-foreground/80 flex-1 truncate">{email}</span>
+                    <span className="text-[11px] font-mono text-foreground/80 flex-1 truncate">{email}</span>
                     <button onClick={() => copyToClipboard(email, "Email")} className="p-1 rounded hover:bg-secondary">
                       <Copy className="w-3 h-3 text-muted-foreground" />
                     </button>
@@ -184,7 +184,7 @@ const DemoAccountsPage = () => {
                         const url = getPublicUrl(industry);
                         window.open(url, "_blank");
                       }}
-                      className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-[0.55rem] font-medium text-muted-foreground"
+                      className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-[10px] font-medium text-muted-foreground"
                     >
                       <Eye className="w-3 h-3" /> Sito Pubblico
                     </button>
@@ -195,7 +195,7 @@ const DemoAccountsPage = () => {
                         copyToClipboard(`${email}\n${PASSWORD}`, "Credenziali");
                         window.open(url, "_blank");
                       }}
-                      className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-empire-violet/15 hover:bg-empire-violet/25 transition-colors text-[0.55rem] font-bold text-empire-violet"
+                      className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-empire-violet/15 hover:bg-empire-violet/25 transition-colors text-[10px] font-bold text-empire-violet"
                     >
                       <ExternalLink className="w-3 h-3" /> Dashboard Admin
                     </button>
@@ -225,7 +225,7 @@ const DemoAccountsPage = () => {
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="text-[0.6rem] font-mono text-foreground/80 flex-1 truncate">{acc.email}</span>
+                <span className="text-[11px] font-mono text-foreground/80 flex-1 truncate">{acc.email}</span>
                 <button onClick={() => copyToClipboard(acc.email, "Email")} className="p-1 rounded hover:bg-secondary">
                   <Copy className="w-3 h-3 text-muted-foreground" />
                 </button>

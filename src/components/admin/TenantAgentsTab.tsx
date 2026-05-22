@@ -210,7 +210,7 @@ export default function TenantAgentsTab() {
         <select
           value={industryFilter}
           onChange={e => setIndustryFilter(e.target.value)}
-          className="h-8 px-2 rounded-lg bg-secondary/40 border border-border/30 text-[0.6rem] text-foreground"
+          className="h-8 px-2 rounded-lg bg-secondary/40 border border-border/30 text-[11px] text-foreground"
         >
           <option value="all">Tutti i settori</option>
           {industries.map(ind => (
@@ -262,12 +262,12 @@ export default function TenantAgentsTab() {
                     </p>
                     <div className="flex gap-1 mt-0.5">
                       {tenant && (
-                        <Badge variant="outline" className="text-[0.45rem] h-3.5 px-1" style={{ borderColor: color, color }}>
+                        <Badge variant="outline" className="text-[10px] h-3.5 px-1" style={{ borderColor: color, color }}>
                           {tenant.industry}
                         </Badge>
                       )}
                       {tenant && (
-                        <Badge variant="secondary" className="text-[0.45rem] h-3.5 px-1">
+                        <Badge variant="secondary" className="text-[10px] h-3.5 px-1">
                           {PLAN_LABELS[tenant.plan] || tenant.plan}
                         </Badge>
                       )}
@@ -275,12 +275,12 @@ export default function TenantAgentsTab() {
                   </div>
                   <div className="text-right shrink-0 mr-1">
                     <div className="flex items-center gap-1">
-                      <span className="text-[0.55rem] text-emerald-400 font-bold">{activeCount}</span>
+                      <span className="text-[10px] text-emerald-400 font-bold">{activeCount}</span>
                       {inactiveCount > 0 && (
-                        <span className="text-[0.55rem] text-muted-foreground">/ {inactiveCount} off</span>
+                        <span className="text-[10px] text-muted-foreground">/ {inactiveCount} off</span>
                       )}
                     </div>
-                    <p className="text-[0.45rem] text-muted-foreground">agenti</p>
+                    <p className="text-[10px] text-muted-foreground">agenti</p>
                   </div>
                   {isExpanded ? <ChevronUp className="w-3 h-3 text-muted-foreground shrink-0" /> : <ChevronDown className="w-3 h-3 text-muted-foreground shrink-0" />}
                 </button>
@@ -312,16 +312,16 @@ export default function TenantAgentsTab() {
                               >
                                 <span className="text-sm shrink-0">{agent?.icon_emoji || "🤖"}</span>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-[0.65rem] font-semibold text-foreground truncate">
+                                  <p className="text-[11px] font-semibold text-foreground truncate">
                                     {agent?.name || inst.agent_id}
                                   </p>
                                   <div className="flex gap-1 mt-0.5">
                                     {cat && (
-                                      <span className="text-[0.45rem] px-1 py-0.5 rounded-full" style={{ backgroundColor: `${cat.color}15`, color: cat.color }}>
+                                      <span className="text-[10px] px-1 py-0.5 rounded-full" style={{ backgroundColor: `${cat.color}15`, color: cat.color }}>
                                         {cat.label}
                                       </span>
                                     )}
-                                    <span className="text-[0.45rem] text-muted-foreground">
+                                    <span className="text-[10px] text-muted-foreground">
                                       {new Date(inst.created_at).toLocaleDateString("it-IT")}
                                     </span>
                                   </div>

@@ -122,7 +122,7 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-3"
             style={{ background: "hsla(174,60%,45%,0.12)", border: "1px solid hsla(174,60%,45%,0.25)" }}>
             <Sparkles className="w-3 h-3 text-[hsl(174,60%,55%)]" />
-            <span className="text-[0.6rem] font-bold tracking-widest uppercase text-[hsl(174,60%,65%)]">25+ Settori</span>
+            <span className="text-[11px] font-bold tracking-widest uppercase text-[hsl(174,60%,65%)]">25+ Settori</span>
           </div>
 
           <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -137,7 +137,7 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
           <div className="flex flex-wrap gap-1.5 justify-center sm:justify-start mb-5">
             {HERO_SECTORS.map((s, i) => (
               <button key={s.id} onClick={() => setActiveIdx(i)}
-                className="px-2.5 py-1 rounded-full text-[0.6rem] font-semibold tracking-wide transition-all duration-300"
+                className="px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300"
                 style={{
                   background: i === activeIdx ? `hsla(${s.color} / 0.2)` : "hsla(220,20%,20%,0.5)",
                   border: `1px solid ${i === activeIdx ? `hsla(${s.color} / 0.5)` : "hsla(220,15%,25%,0.4)"}`,
@@ -216,7 +216,7 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
             key={sector.id + "-label"}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[0.55rem] font-bold tracking-wider uppercase whitespace-nowrap"
+            className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase whitespace-nowrap"
             style={{
               background: `hsla(${sector.color} / 0.2)`,
               border: `1px solid hsla(${sector.color} / 0.4)`,
@@ -337,7 +337,7 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
           </>
         )}
         {/* Counter badge */}
-        <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-[0.55rem] font-bold text-white/90 bg-black/50 backdrop-blur-sm">
+        <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-bold text-white/90 bg-black/50 backdrop-blur-sm">
           {idx + 1}/{count}
         </div>
       </div>
@@ -361,7 +361,7 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
       {/* Mockup count badge */}
       {catalog && (
         <div className="flex justify-center">
-          <span className="text-[0.6rem] px-2.5 py-1 rounded-full font-semibold text-foreground/70"
+          <span className="text-[11px] px-2.5 py-1 rounded-full font-semibold text-foreground/70"
             style={{ background: `${color}15`, border: `1px solid ${color}25` }}>
             <Images className="w-3 h-3 inline mr-1 -mt-0.5" />
             {catalog ? `${count}/${catalog.totalCount} mockup caricati` : `${count} mockup caricati`}
@@ -457,7 +457,7 @@ export default function DemoDirectoryPage() {
           </div>
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/45 bg-primary/20 shadow-sm shadow-primary/20">
             <div className="w-1.5 h-1.5 rounded-full animate-pulse bg-primary" />
-            <span className="text-[0.6rem] font-bold tracking-wider text-foreground">LIVE</span>
+            <span className="text-[11px] font-bold tracking-wider text-foreground">LIVE</span>
           </div>
         </div>
       </div>
@@ -633,7 +633,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <div className="flex items-center gap-2 mb-0.5">
               <h3 className="font-bold text-[0.8rem] sm:text-sm text-foreground font-heading truncate">{label}</h3>
               {isFeatured && (
-                <span className="text-[0.56rem] sm:text-[0.6rem] px-2 py-0.5 rounded-full font-bold tracking-[1.4px] uppercase flex items-center gap-0.5 flex-shrink-0 text-foreground"
+                <span className="text-[0.56rem] sm:text-[11px] px-2 py-0.5 rounded-full font-bold tracking-[1.4px] uppercase flex items-center gap-0.5 flex-shrink-0 text-foreground"
                   style={{ background: `${color}30`, border: `1px solid ${color}58` }}>
                   <Crown className="w-2 h-2" /> PREMIUM
                 </span>
@@ -646,7 +646,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <motion.button
               onClick={(e) => { e.stopPropagation(); isFeatured ? navigate(route) : onNavigate(id); }}
-              className="px-3 py-1.5 rounded-xl text-[0.55rem] sm:text-[0.6rem] font-semibold transition-all hidden sm:flex items-center gap-1 hover:scale-105"
+              className="px-3 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-semibold transition-all hidden sm:flex items-center gap-1 hover:scale-105"
               style={isFeatured ? {
                 backgroundColor: color,
                 color: "#fff",

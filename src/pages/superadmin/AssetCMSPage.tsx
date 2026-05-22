@@ -100,7 +100,7 @@ export default function AssetCMSPage() {
       <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-hide pb-1">
         {[{ key: "all", label: "Tutti", icon: "📋" }, ...Object.entries(SECTION_LABELS).map(([k, v]) => ({ key: k, ...v }))].map(s => (
           <button key={s.key} onClick={() => setSectionFilter(s.key)}
-            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[0.6rem] font-semibold whitespace-nowrap transition-all ${
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold whitespace-nowrap transition-all ${
               sectionFilter === s.key ? "bg-primary text-primary-foreground shadow-sm" : "bg-secondary/50 text-muted-foreground"
             }`}>
             <span>{s.icon}</span>
@@ -119,7 +119,7 @@ export default function AssetCMSPage() {
             <h2 className="text-sm font-heading font-bold text-foreground">
               {SECTION_LABELS[section]?.icon} {SECTION_LABELS[section]?.label || section}
             </h2>
-            <span className="text-[0.55rem] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-mono">{items.length}</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-mono">{items.length}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -150,7 +150,7 @@ export default function AssetCMSPage() {
                     
                     {/* Custom badge */}
                     {hasCustom && (
-                      <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-primary/90 text-primary-foreground text-[0.45rem] font-bold">
+                      <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-primary/90 text-primary-foreground text-[10px] font-bold">
                         CUSTOM
                       </div>
                     )}
@@ -158,14 +158,14 @@ export default function AssetCMSPage() {
 
                   {/* Info */}
                   <div className="p-2">
-                    <p className="text-[0.6rem] font-semibold text-foreground truncate mb-0.5">{asset.label}</p>
-                    <p className="text-[0.45rem] font-mono text-muted-foreground truncate mb-1.5">{asset.slot_key}</p>
+                    <p className="text-[11px] font-semibold text-foreground truncate mb-0.5">{asset.label}</p>
+                    <p className="text-[10px] font-mono text-muted-foreground truncate mb-1.5">{asset.slot_key}</p>
 
                     {/* URL edit mode */}
                     {isEditing ? (
                       <div className="flex gap-1">
                         <Input value={editUrl} onChange={e => setEditUrl(e.target.value)} placeholder="https://..."
-                          className="h-7 text-[0.55rem] flex-1 bg-secondary/40 border-border/50 rounded-lg" />
+                          className="h-7 text-[10px] flex-1 bg-secondary/40 border-border/50 rounded-lg" />
                         <button onClick={() => handleSetUrl(asset.id)} className="w-7 h-7 rounded-lg bg-primary/15 text-primary flex items-center justify-center">
                           <Check className="w-3 h-3" />
                         </button>

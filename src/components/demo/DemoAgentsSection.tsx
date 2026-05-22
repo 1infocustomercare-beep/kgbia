@@ -38,7 +38,7 @@ export default function DemoAgentsSection({ sector, accentColor, sectorName }: P
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <Badge className="mb-3 text-[0.6rem] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor, border: `1px solid ${accentColor}30` }}>
+          <Badge className="mb-3 text-[11px] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor, border: `1px solid ${accentColor}30` }}>
             <Bot className="w-3 h-3 mr-1 inline" /> {agents.length} AGENTI AI ATTIVI
           </Badge>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
@@ -65,7 +65,7 @@ export default function DemoAgentsSection({ sector, accentColor, sectorName }: P
             <div key={i} className="text-center p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-lg">{s.icon}</span>
               <p className="text-base font-bold text-white mt-1">{s.value}</p>
-              <p className="text-[0.55rem] text-white/35">{s.label}</p>
+              <p className="text-[10px] text-white/35">{s.label}</p>
             </div>
           ))}
         </motion.div>
@@ -141,13 +141,13 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-[10px] text-emerald-400 font-medium">ATTIVO 24/7</span>
-                {isSectorSpecific && <Badge className="text-[0.45rem] px-1 py-0" style={{ background: `${accentColor}20`, color: accentColor }}>Specialista</Badge>}
-                {agent.category && <Badge variant="outline" className="text-[0.45rem] px-1 py-0 border-white/10 text-white/70">{agent.category}</Badge>}
+                {isSectorSpecific && <Badge className="text-[10px] px-1 py-0" style={{ background: `${accentColor}20`, color: accentColor }}>Specialista</Badge>}
+                {agent.category && <Badge variant="outline" className="text-[10px] px-1 py-0 border-white/10 text-white/70">{agent.category}</Badge>}
               </div>
             </div>
           </div>
 
-          <p className="text-[0.65rem] text-white/50 leading-relaxed mb-3">{agent.desc}</p>
+          <p className="text-[11px] text-white/50 leading-relaxed mb-3">{agent.desc}</p>
 
           {/* Capabilities */}
           <div className="flex flex-wrap gap-1 mb-3">
@@ -160,17 +160,17 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
           <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.04] mb-2">
             <div className="text-center">
               <p className="text-xs font-bold text-white">{agent.accuracy || 95}%</p>
-              <p className="text-[0.45rem] text-white/70">Precisione</p>
+              <p className="text-[10px] text-white/70">Precisione</p>
             </div>
             <div className="text-center">
               <p className="text-xs font-bold text-white">{agent.hoursPerWeek || 10}h</p>
-              <p className="text-[0.45rem] text-white/70">Risparmio/sett</p>
+              <p className="text-[10px] text-white/70">Risparmio/sett</p>
             </div>
             <div className="text-center">
               <p className="text-xs font-bold" style={{ color: accentColor }}>
                 <CheckCircle className="w-3 h-3 inline mr-0.5" />Attivo
               </p>
-              <p className="text-[0.45rem] text-white/70">Stato</p>
+              <p className="text-[10px] text-white/70">Stato</p>
             </div>
           </div>
 
@@ -178,7 +178,7 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
           {agent.workflow && agent.workflow.length > 0 && (
             <button
               onClick={handleExpand}
-              className="w-full flex items-center justify-center gap-1.5 py-2 mt-1 rounded-lg text-[0.6rem] font-semibold transition-all hover:bg-white/[0.04]"
+              className="w-full flex items-center justify-center gap-1.5 py-2 mt-1 rounded-lg text-[11px] font-semibold transition-all hover:bg-white/[0.04]"
               style={{ color: accentColor }}
             >
               {expanded ? "Chiudi workflow" : "Vedi come lavora →"}
@@ -223,7 +223,7 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
                           {step.icon}
                         </div>
                         <div className="min-w-0 pt-0.5">
-                          <p className="text-[0.6rem] font-bold text-white/80">{step.label}</p>
+                          <p className="text-[11px] font-bold text-white/80">{step.label}</p>
                           <p className="text-[10px] text-white/35 leading-relaxed">{step.detail}</p>
                         </div>
                       </motion.div>
@@ -234,14 +234,14 @@ function AgentCardWithWorkflow({ agent, accentColor, delay, isInView, isSectorSp
                   {agent.example && (
                     <div className="mt-3 p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
                       <p className="text-[10px] font-bold text-white/50 uppercase tracking-wider mb-1">💡 Esempio Concreto</p>
-                      <p className="text-[0.55rem] text-white/60 leading-relaxed italic">{agent.example}</p>
+                      <p className="text-[10px] text-white/60 leading-relaxed italic">{agent.example}</p>
                     </div>
                   )}
 
                   {/* Result */}
                   {agent.result && (
                     <div className="mt-2 p-2 rounded-lg text-center" style={{ background: `${accentColor}10`, border: `1px solid ${accentColor}20` }}>
-                      <p className="text-[0.55rem] font-bold" style={{ color: accentColor }}>{agent.result}</p>
+                      <p className="text-[10px] font-bold" style={{ color: accentColor }}>{agent.result}</p>
                     </div>
                   )}
                 </div>

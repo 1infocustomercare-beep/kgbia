@@ -61,7 +61,7 @@ export function BateyCart({
       {/* Riepilogo Ordine */}
       <section className="px-4 mt-4">
         <div className="text-center mb-4">
-          <p className="text-[0.6rem] tracking-[0.42em] mb-1 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
+          <p className="text-[11px] tracking-[0.42em] mb-1 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
             tu pedido
           </p>
           <h2 className="text-xl font-serif-bt" style={{ color: BATEY.text, fontFamily: BATEY.fontHead, letterSpacing: "0.18em" }}>
@@ -78,7 +78,7 @@ export function BateyCart({
               style={{ background: BATEY.bgPanel, border: `1px solid ${BATEY.border}` }}
             >
               <span
-                className="absolute -top-1 -left-1 w-6 h-6 rounded-full flex items-center justify-center text-[0.65rem] font-serif-bt"
+                className="absolute -top-1 -left-1 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-serif-bt"
                 style={{ background: BATEY.primary, color: BATEY.bg, fontFamily: BATEY.fontHead }}
               >
                 {idx + 1}

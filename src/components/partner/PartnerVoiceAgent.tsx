@@ -579,9 +579,9 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                    Arianna <span className="text-[0.55rem] font-normal text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">AI</span>
+                    Arianna <span className="text-[10px] font-normal text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">AI</span>
                   </h3>
-                  <p className="text-[0.55rem] text-muted-foreground tracking-wider uppercase">
+                  <p className="text-[10px] text-muted-foreground tracking-wider uppercase">
                     {isPaused ? "⏸ In pausa" : isSpeaking ? "🔊 Sta parlando..." : isListening ? "🎙️ Ti ascolta..." : isLoading ? "💭 Sta pensando..." : guideMode ? "🧭 Guida Vocale Attiva" : `📍 ${tabLabel}`}
                   </p>
                 </div>
@@ -640,7 +640,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                 {currentQuickActions.map((action) => (
                   <motion.button key={action.label}
                     onClick={() => sendMessage(action.prompt)}
-                    className="px-2.5 py-1.5 rounded-full text-[0.6rem] font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-all border border-primary/10"
+                    className="px-2.5 py-1.5 rounded-full text-[11px] font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-all border border-primary/10"
                     whileTap={{ scale: 0.95 }}>
                     {action.label}
                   </motion.button>
@@ -678,7 +678,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
               )}
 
               {liveTranscript && (
-                <motion.div className="text-[0.65rem] text-foreground/75 italic px-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <motion.div className="text-[11px] text-foreground/75 italic px-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   🎙️ {liveTranscript}...
                 </motion.div>
               )}
@@ -711,7 +711,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                     disabled={isLoading}>
                     {isListening ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
                   </motion.button>
-                  <p className="text-[0.6rem] text-muted-foreground max-w-[140px]">
+                  <p className="text-[11px] text-muted-foreground max-w-[140px]">
                     {isListening ? "Sto ascoltando..." : "Tocca per parlare"}
                   </p>
                 </div>

@@ -516,7 +516,7 @@ export default function PartnerSavedPreviewsSection() {
                   value={editLabel}
                   onChange={(e) => setEditLabel(e.target.value)}
                   placeholder="Es. Pizzeria Da Mario — variante notturna"
-                  className="w-full h-11 px-3 rounded-lg text-sm bg-white !text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-400/40"
+                  className="w-full h-11 px-3 rounded-lg text-sm bg-white !text-black placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-pink-400/40"
                 />
               </div>
               <div className="space-y-1.5">
@@ -526,7 +526,7 @@ export default function PartnerSavedPreviewsSection() {
                   onChange={(e) => setEditNotes(e.target.value)}
                   rows={3}
                   placeholder="Promemoria, contesto trattativa, prezzo proposto…"
-                  className="w-full px-3 py-2 rounded-lg text-sm bg-white !text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-400/40 resize-none"
+                  className="w-full px-3 py-2 rounded-lg text-sm bg-white !text-black placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-pink-400/40 resize-none"
                 />
               </div>
               <button

@@ -55,7 +55,7 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
       {isInactive && (
         <div className="absolute inset-0 z-10 bg-background/60 backdrop-blur-sm flex flex-col items-center justify-center gap-2">
           <Lock className="w-6 h-6 text-red-400" />
-          <span className="text-[0.6rem] text-red-400 font-medium">Disattivato</span>
+          <span className="text-[11px] text-red-400 font-medium">Disattivato</span>
         </div>
       )}
 
@@ -76,11 +76,11 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
         {/* Price + beta badges */}
         <div className="absolute top-1.5 right-1.5 flex flex-col gap-1 items-end">
           {isPaid ? (
-            <span className="text-[0.55rem] font-bold px-1.5 py-0.5 rounded-full bg-violet-500/80 text-white backdrop-blur-sm">
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-violet-500/80 text-white backdrop-blur-sm">
               €{price}/mo
             </span>
           ) : (
-            <span className="text-[0.55rem] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/80 text-white backdrop-blur-sm">
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/80 text-white backdrop-blur-sm">
               Free
             </span>
           )}
@@ -118,24 +118,24 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
           </Badge>
         </div>
 
-        <p className="text-[0.6rem] text-muted-foreground line-clamp-2 leading-relaxed">{agent.description_it}</p>
+        <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">{agent.description_it}</p>
 
         {/* Sectors */}
         <div className="flex flex-wrap gap-0.5">
           {(agent.sectors || []).slice(0, 2).map((s) => (
-            <span key={s} className="text-[0.45rem] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
+            <span key={s} className="text-[10px] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
               {SECTOR_LABELS[s] || s}
             </span>
           ))}
           {(agent.sectors || []).length > 2 && (
-            <span className="text-[0.45rem] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
+            <span className="text-[10px] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
               +{agent.sectors.length - 2}
             </span>
           )}
         </div>
 
         {/* Metrics + AI Score */}
-        <div className="flex items-center justify-between text-[0.55rem] text-muted-foreground pt-1">
+        <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-1">
           <span className="flex items-center gap-1">
             <span className={`w-1.5 h-1.5 rounded-full ${installs > 0 ? "bg-blue-400" : "bg-white/20"}`} />
             {installs} utenti
@@ -153,7 +153,7 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
           className="flex items-center justify-between pt-1.5 border-t border-white/5"
           onClick={(e) => e.stopPropagation()}
         >
-          <span className={`text-[0.6rem] font-semibold ${isActive ? "text-emerald-400" : isBeta ? "text-amber-400" : "text-red-400"}`}>
+          <span className={`text-[11px] font-semibold ${isActive ? "text-emerald-400" : isBeta ? "text-amber-400" : "text-red-400"}`}>
             {isActive ? "● Attivo" : isBeta ? "◐ Beta" : "○ Off"}
           </span>
           <Switch

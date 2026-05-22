@@ -61,7 +61,7 @@ export function PaperfishCart({
       {/* Riepilogo Ordine */}
       <section className="px-4 mt-4">
         <div className="text-center mb-4">
-          <p className="text-[0.6rem] tracking-[0.42em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
+          <p className="text-[11px] tracking-[0.42em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
             注文の概要
           </p>
           <h2 className="text-xl font-serif-pf" style={{ color: PAPERFISH.text, fontFamily: PAPERFISH.fontHead, letterSpacing: "0.18em" }}>
@@ -78,7 +78,7 @@ export function PaperfishCart({
               style={{ background: PAPERFISH.bgPanel, border: `1px solid ${PAPERFISH.border}` }}
             >
               <span
-                className="absolute -top-1 -left-1 w-6 h-6 rounded-full flex items-center justify-center text-[0.65rem] font-serif-pf"
+                className="absolute -top-1 -left-1 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-serif-pf"
                 style={{ background: PAPERFISH.primary, color: PAPERFISH.bg, fontFamily: PAPERFISH.fontHead }}
               >
                 {idx + 1}

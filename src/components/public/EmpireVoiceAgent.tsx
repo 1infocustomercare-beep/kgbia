@@ -1784,7 +1784,7 @@ const EmpireVoiceAgent: React.FC = () => {
                 <div>
                   <h3 className="text-sm font-bold text-foreground">Arianna</h3>
                   <div className="flex items-center gap-1">
-                    <p className="text-[0.55rem] text-foreground/80 tracking-wider uppercase">
+                    <p className="text-[10px] text-foreground/80 tracking-wider uppercase">
                     {voiceMode === "elevenlabs" && conversation.status === "connected"
                       ? conversation.isSpeaking ? "🔊 Conversazione attiva" : "🎙️ Ti ascolta..."
                       : isPaused ? "⏸ In pausa"
@@ -1796,7 +1796,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     </p>
                     {/* BUG 3: HD badge when premium voice active */}
                     {!useBrowserFallbackRef.current && !isBrowserOnlyTTS() && isSpeaking && (
-                      <span className="text-[0.45rem] px-1 py-0.5 rounded bg-primary/20 text-primary font-bold">HD</span>
+                      <span className="text-[10px] px-1 py-0.5 rounded bg-primary/20 text-primary font-bold">HD</span>
                     )}
                   </div>
                 </div>
@@ -1894,7 +1894,7 @@ const EmpireVoiceAgent: React.FC = () => {
               )}
 
               {liveTranscript && (
-                <motion.div className="text-[0.65rem] text-foreground/75 italic px-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <motion.div className="text-[11px] text-foreground/75 italic px-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   🎙️ {liveTranscript}...
                 </motion.div>
               )}
@@ -1925,7 +1925,7 @@ const EmpireVoiceAgent: React.FC = () => {
             {isPaused && (
               <div className="flex items-center justify-center gap-2 py-2 px-4">
                 <Pause className="w-3.5 h-3.5 text-amber-400/70" />
-                <span className="text-[0.6rem] text-foreground/75 tracking-wider uppercase">In pausa — scorri per continuare</span>
+                <span className="text-[11px] text-foreground/75 tracking-wider uppercase">In pausa — scorri per continuare</span>
               </div>
             )}
 
@@ -1942,13 +1942,13 @@ const EmpireVoiceAgent: React.FC = () => {
                           animate={{ opacity: [0.4, 1, 0.4] }}
                           transition={{ duration: 1.5, repeat: Infinity }}
                         />
-                        <span className="text-[0.6rem] text-foreground/50 uppercase tracking-wider font-medium">
+                        <span className="text-[11px] text-foreground/50 uppercase tracking-wider font-medium">
                           {conversation.isSpeaking ? "🔊 Arianna parla..." : "🎙️ Ti ascolta..."}
                         </span>
                       </div>
                       <button
                         onClick={stopElevenlabsConversation}
-                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-destructive/10 text-destructive text-[0.6rem] font-bold tracking-wider uppercase hover:bg-destructive/20 transition-all"
+                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-destructive/10 text-destructive text-[11px] font-bold tracking-wider uppercase hover:bg-destructive/20 transition-all"
                       >
                         <PhoneOff className="w-3.5 h-3.5" /> Chiudi
                       </button>
@@ -1959,7 +1959,7 @@ const EmpireVoiceAgent: React.FC = () => {
                       {isSpeaking && (
                         <button
                           onClick={togglePause}
-                          className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-bold tracking-wider uppercase transition-all ${
+                          className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[11px] font-bold tracking-wider uppercase transition-all ${
                             isPaused
                               ? "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15"
                               : "bg-amber-500/10 text-amber-400 hover:bg-amber-500/15"
@@ -2001,7 +2001,7 @@ const EmpireVoiceAgent: React.FC = () => {
                       {isSpeaking && (
                         <button
                           onClick={stopAll}
-                          className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[0.6rem] font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
+                          className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[11px] font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
                         >
                           <Square className="w-3.5 h-3.5" /> Stop
                         </button>

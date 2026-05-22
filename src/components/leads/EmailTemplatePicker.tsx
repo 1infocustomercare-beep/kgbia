@@ -67,7 +67,7 @@ export default function EmailTemplatePicker({
           <Sparkles className="w-4 h-4 text-violet-400 mt-0.5 shrink-0" />
           <div className="min-w-0">
             <p className="text-[11px] font-bold uppercase tracking-wider text-violet-300">AI consiglia: {TEMPLATES.find(t => t.id === recommendedId)?.name}</p>
-            {recommendedReason && <p className="text-xs text-zinc-300 mt-0.5">{recommendedReason}</p>}
+            {recommendedReason && <p className="text-xs text-muted-foreground mt-0.5">{recommendedReason}</p>}
           </div>
         </div>
       )}
@@ -96,7 +96,7 @@ export default function EmailTemplatePicker({
                 <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-violet-500 flex items-center justify-center"><Check className="w-2.5 h-2.5 text-white" /></div>
               )}
               <p className="text-[11px] font-bold text-zinc-100 leading-tight pr-5">{t.name.replace(" — Aurora", "")}</p>
-              <p className="text-[9.5px] text-zinc-400 mt-1 line-clamp-2 leading-snug">{t.description}</p>
+              <p className="text-[9.5px] text-muted-foreground mt-1 line-clamp-2 leading-snug">{t.description}</p>
               <div className="flex items-center gap-1.5 mt-1.5">
                 <span className="text-[9px] px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-200 font-bold">{t.conversionScore}/100</span>
                 {isFit && <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">FIT</span>}
@@ -118,7 +118,7 @@ export default function EmailTemplatePicker({
             <button
               type="button"
               onClick={() => setDevice("desktop")}
-              className={`p-1.5 rounded-md transition-colors ${device === "desktop" ? "bg-violet-500/30 text-violet-200" : "text-zinc-500 hover:text-zinc-300"}`}
+              className={`p-1.5 rounded-md transition-colors ${device === "desktop" ? "bg-violet-500/30 text-violet-200" : "text-zinc-500 hover:text-muted-foreground"}`}
               aria-label="Anteprima desktop"
             >
               <Monitor className="w-3.5 h-3.5" />
@@ -126,7 +126,7 @@ export default function EmailTemplatePicker({
             <button
               type="button"
               onClick={() => setDevice("mobile")}
-              className={`p-1.5 rounded-md transition-colors ${device === "mobile" ? "bg-violet-500/30 text-violet-200" : "text-zinc-500 hover:text-zinc-300"}`}
+              className={`p-1.5 rounded-md transition-colors ${device === "mobile" ? "bg-violet-500/30 text-violet-200" : "text-zinc-500 hover:text-muted-foreground"}`}
               aria-label="Anteprima mobile"
             >
               <Smartphone className="w-3.5 h-3.5" />
@@ -162,7 +162,7 @@ export default function EmailTemplatePicker({
         </div>
 
         <div className="flex items-center justify-between px-3 py-2 border-t border-white/10 bg-white/[0.03] gap-2">
-          <div className="flex items-center gap-1.5 text-[10px] text-zinc-400">
+          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
             <ShieldCheck className="w-3 h-3 text-emerald-400" />
             HTML inline-style · GDPR opt-out incluso
           </div>

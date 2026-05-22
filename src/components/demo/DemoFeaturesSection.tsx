@@ -70,7 +70,7 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <Badge className="mb-3 text-[0.6rem] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor, border: `1px solid ${accentColor}30` }}>
+          <Badge className="mb-3 text-[11px] px-3 py-1" style={{ background: `${accentColor}20`, color: accentColor, border: `1px solid ${accentColor}30` }}>
             {allFeatures.length}+ FUNZIONALITÀ
           </Badge>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
@@ -116,7 +116,7 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-bold text-white/90 mb-1">{f.title}</p>
-                            <p className="text-[0.65rem] text-white/80 leading-relaxed">{f.desc}</p>
+                            <p className="text-[11px] text-white/80 leading-relaxed">{f.desc}</p>
                           </div>
                         </div>
                       </CardContent>

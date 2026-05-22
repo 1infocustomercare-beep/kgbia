@@ -1029,7 +1029,7 @@ const SuperAdminDashboard = () => {
                                   whileHover={{ y: -1 }}
                                   whileTap={{ scale: 0.96 }}
                                   onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
-                                  className="relative flex flex-col items-center justify-center gap-1 px-1.5 py-2 rounded-lg text-[0.6rem] font-semibold transition-all min-h-[52px] overflow-hidden"
+                                  className="relative flex flex-col items-center justify-center gap-1 px-1.5 py-2 rounded-lg text-[11px] font-semibold transition-all min-h-[52px] overflow-hidden"
                                   style={isActive ? {
                                     background: "linear-gradient(160deg, hsl(265 75% 55%), hsl(250 65% 42%))",
                                     color: "white",
@@ -1105,7 +1105,7 @@ const SuperAdminDashboard = () => {
                     {alert.type === "fisco" && (
                       <button
                         onClick={() => setActiveTab("fisco")}
-                        className="text-[0.65rem] font-semibold px-2.5 py-1 rounded-lg bg-primary/15 text-primary hover:bg-primary/25 transition-colors whitespace-nowrap"
+                        className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-primary/15 text-primary hover:bg-primary/25 transition-colors whitespace-nowrap"
                       >
                         Configura →
                       </button>
@@ -1113,7 +1113,7 @@ const SuperAdminDashboard = () => {
                     {alert.type === "payment" && (
                       <button
                         onClick={() => setActiveTab("payments")}
-                        className="text-[0.65rem] font-semibold px-2.5 py-1 rounded-lg bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors whitespace-nowrap"
+                        className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors whitespace-nowrap"
                       >
                         Vedi →
                       </button>
@@ -1121,7 +1121,7 @@ const SuperAdminDashboard = () => {
                     {alert.type === "blocked" && (
                       <button
                         onClick={() => setActiveTab("tenants")}
-                        className="text-[0.65rem] font-semibold px-2.5 py-1 rounded-lg bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors whitespace-nowrap"
+                        className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors whitespace-nowrap"
                       >
                         Gestisci →
                       </button>
@@ -2014,14 +2014,14 @@ const SuperAdminDashboard = () => {
                     <div className="flex items-center gap-2 px-2.5 py-2">
                       <div className={`w-2 h-2 rounded-full shrink-0 ${isDisabled ? "bg-muted-foreground/30" : statusDot(item.status)}`} />
                       <div className="flex-1 min-w-0">
-                        <p className={`text-[0.65rem] font-semibold leading-tight truncate ${isDisabled ? "text-muted-foreground line-through" : "text-foreground"}`}>{item.name}</p>
+                        <p className={`text-[11px] font-semibold leading-tight truncate ${isDisabled ? "text-muted-foreground line-through" : "text-foreground"}`}>{item.name}</p>
                         <p className="text-[10px] text-muted-foreground truncate">{item.description}</p>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
                         {/* Status badge */}
-                        {!isDisabled && item.status === "connected" && <span className="text-[0.45rem] px-1 py-0.5 rounded bg-green-500/15 text-green-400 font-bold">ON</span>}
-                        {!isDisabled && item.status === "missing" && <span className="text-[0.45rem] px-1 py-0.5 rounded bg-destructive/15 text-destructive font-bold">OFF</span>}
-                        {isDisabled && <span className="text-[0.45rem] px-1 py-0.5 rounded bg-muted/20 text-muted-foreground font-bold">⏸</span>}
+                        {!isDisabled && item.status === "connected" && <span className="text-[10px] px-1 py-0.5 rounded bg-green-500/15 text-green-400 font-bold">ON</span>}
+                        {!isDisabled && item.status === "missing" && <span className="text-[10px] px-1 py-0.5 rounded bg-destructive/15 text-destructive font-bold">OFF</span>}
+                        {isDisabled && <span className="text-[10px] px-1 py-0.5 rounded bg-muted/20 text-muted-foreground font-bold">⏸</span>}
 
                         {/* Expand details */}
                         {!isDisabled && (
@@ -2061,16 +2061,16 @@ const SuperAdminDashboard = () => {
                             {item.secretName && (
                               <div className="flex items-center gap-1">
                                 <Lock className="w-2.5 h-2.5 text-muted-foreground/75" />
-                                <span className="text-[0.45rem] font-mono text-muted-foreground/50">{item.secretName}</span>
+                                <span className="text-[10px] font-mono text-muted-foreground/50">{item.secretName}</span>
                               </div>
                             )}
-                            <p className="text-[0.45rem] text-primary/60">👤 {item.usedBy}</p>
+                            <p className="text-[10px] text-primary/60">👤 {item.usedBy}</p>
 
                             {/* Action buttons — compact grid */}
                             <div className="flex flex-wrap gap-1 pt-0.5">
                               {item.actionLabel && (
                                 <motion.button
-                                  className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[0.55rem] font-bold flex items-center gap-0.5"
+                                  className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] font-bold flex items-center gap-0.5"
                                   whileTap={{ scale: 0.95 }}
                                   onClick={() => toast({ title: "🔧 " + item.actionLabel, description: item.name + (item.secretName ? ` → ${item.secretName}` : "") })}
                                 >
@@ -2078,12 +2078,12 @@ const SuperAdminDashboard = () => {
                                 </motion.button>
                               )}
                               {item.guideUrl && (
-                                <a href={item.guideUrl} target="_blank" rel="noopener noreferrer" className="px-2 py-0.5 rounded-md bg-accent/10 text-accent text-[0.55rem] font-bold flex items-center gap-0.5">
+                                <a href={item.guideUrl} target="_blank" rel="noopener noreferrer" className="px-2 py-0.5 rounded-md bg-accent/10 text-accent text-[10px] font-bold flex items-center gap-0.5">
                                   <ExternalLink className="w-2.5 h-2.5" />Docs
                                 </a>
                               )}
                               {item.buyCreditsUrl && (
-                                <a href={item.buyCreditsUrl} target="_blank" rel="noopener noreferrer" className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 text-[0.55rem] font-bold flex items-center gap-0.5 border border-amber-500/15">
+                                <a href={item.buyCreditsUrl} target="_blank" rel="noopener noreferrer" className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 text-[10px] font-bold flex items-center gap-0.5 border border-amber-500/15">
                                   <CreditCard className="w-2.5 h-2.5" />Crediti
                                 </a>
                               )}
@@ -2137,7 +2137,7 @@ const SuperAdminDashboard = () => {
                         placeholder="Cerca integrazione..."
                         value={intFilter.search}
                         onChange={(e) => setIntFilter(prev => ({ ...prev, search: e.target.value }))}
-                        className="w-full pl-6 pr-2 py-1.5 rounded-lg bg-secondary/30 border border-border text-[0.65rem] text-foreground placeholder:text-muted-foreground/75 focus:outline-none focus:border-primary/30"
+                        className="w-full pl-6 pr-2 py-1.5 rounded-lg bg-secondary/30 border border-border text-[11px] text-foreground placeholder:text-muted-foreground/75 focus:outline-none focus:border-primary/30"
                       />
                     </div>
                     {/* Status chips */}
@@ -2152,7 +2152,7 @@ const SuperAdminDashboard = () => {
                         <button
                           key={s.key}
                           onClick={() => setIntFilter(prev => ({ ...prev, status: s.key }))}
-                          className={`px-2 py-0.5 rounded-md text-[0.55rem] font-bold transition-all ${intFilter.status === s.key ? s.color + " ring-1 ring-primary/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
+                          className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${intFilter.status === s.key ? s.color + " ring-1 ring-primary/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
                         >
                           {s.label}
                         </button>
@@ -2169,7 +2169,7 @@ const SuperAdminDashboard = () => {
                         <button
                           key={c.key}
                           onClick={() => setIntFilter(prev => ({ ...prev, category: c.key }))}
-                          className={`px-2 py-0.5 rounded-md text-[0.55rem] font-bold transition-all ${intFilter.category === c.key ? "text-primary bg-primary/10 ring-1 ring-primary/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
+                          className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${intFilter.category === c.key ? "text-primary bg-primary/10 ring-1 ring-primary/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
                         >
                           {c.label}
                         </button>
@@ -2190,7 +2190,7 @@ const SuperAdminDashboard = () => {
                         <button
                           key={s.key}
                           onClick={() => setIntFilter(prev => ({ ...prev, sector: s.key }))}
-                          className={`px-2 py-0.5 rounded-md text-[0.55rem] font-bold transition-all ${intFilter.sector === s.key ? "text-accent bg-accent/10 ring-1 ring-accent/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
+                          className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${intFilter.sector === s.key ? "text-accent bg-accent/10 ring-1 ring-accent/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
                         >
                           {s.label}
                         </button>
@@ -2209,7 +2209,7 @@ const SuperAdminDashboard = () => {
                         <button
                           key={a.key}
                           onClick={() => setIntFilter(prev => ({ ...prev, account: a.key }))}
-                          className={`px-2 py-0.5 rounded-md text-[0.55rem] font-bold transition-all ${intFilter.account === a.key ? a.color + " ring-1 ring-primary/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
+                          className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${intFilter.account === a.key ? a.color + " ring-1 ring-primary/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
                         >
                           {a.label}
                         </button>
@@ -2219,7 +2219,7 @@ const SuperAdminDashboard = () => {
                     {hasActiveFilters && (
                       <button
                         onClick={() => setIntFilter({ status: "all", category: "all", sector: "all", account: "all", search: "" })}
-                        className="text-[0.55rem] text-primary font-bold flex items-center gap-0.5 hover:underline"
+                        className="text-[10px] text-primary font-bold flex items-center gap-0.5 hover:underline"
                       >
                         <X className="w-2.5 h-2.5" /> Reset filtri
                       </button>
@@ -2251,7 +2251,7 @@ const SuperAdminDashboard = () => {
                       {expandedSection === "admin" && (
                         <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
                           <div className="p-2 space-y-1">
-                            {filteredAdmin.length > 0 ? filteredAdmin.map(renderCompactItem) : <p className="text-[0.55rem] text-muted-foreground/50 text-center py-3">Nessun risultato con i filtri attivi</p>}
+                            {filteredAdmin.length > 0 ? filteredAdmin.map(renderCompactItem) : <p className="text-[10px] text-muted-foreground/50 text-center py-3">Nessun risultato con i filtri attivi</p>}
                           </div>
                         </motion.div>
                       )}
@@ -2283,7 +2283,7 @@ const SuperAdminDashboard = () => {
                               return (
                                 <div key={sector}>
                                   <div className="flex items-center justify-between mb-1.5">
-                                    <span className="text-[0.65rem] font-bold text-foreground flex items-center gap-1">
+                                    <span className="text-[11px] font-bold text-foreground flex items-center gap-1">
                                       {sectorIcon(sector)} {sectorLabel(sector)}
                                       <span className="text-[10px] text-muted-foreground font-normal ml-1">{sectorConn}/{sectorItems.length}</span>
                                     </span>
@@ -2304,7 +2304,7 @@ const SuperAdminDashboard = () => {
                                 </div>
                               );
                             })}
-                            {filteredClient.length === 0 && <p className="text-[0.55rem] text-muted-foreground/50 text-center py-3">Nessun risultato con i filtri attivi</p>}
+                            {filteredClient.length === 0 && <p className="text-[10px] text-muted-foreground/50 text-center py-3">Nessun risultato con i filtri attivi</p>}
                           </div>
                         </motion.div>
                       )}
@@ -2379,8 +2379,8 @@ const SuperAdminDashboard = () => {
                             ].map(f => (
                               <div key={f.fn} className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-muted/20 transition-colors">
                                 <div className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
-                                <span className="text-[0.55rem] font-mono text-foreground/70 truncate flex-1">{f.fn}</span>
-                                <span className={`text-[0.4rem] font-mono px-1 rounded ${f.deps === "—" ? "text-muted-foreground/70" : "text-amber-400/60 bg-amber-500/5"}`}>{f.deps}</span>
+                                <span className="text-[10px] font-mono text-foreground/70 truncate flex-1">{f.fn}</span>
+                                <span className={`text-[10px] font-mono px-1 rounded ${f.deps === "—" ? "text-muted-foreground/70" : "text-amber-400/60 bg-amber-500/5"}`}>{f.deps}</span>
                               </div>
                             ))}
                           </div>
@@ -2407,57 +2407,57 @@ const SuperAdminDashboard = () => {
                           <div className="p-3 space-y-3">
                             {/* Status legend */}
                             <div>
-                              <p className="text-[0.6rem] font-bold text-foreground mb-1.5">📊 Stato Connessione</p>
+                              <p className="text-[11px] font-bold text-foreground mb-1.5">📊 Stato Connessione</p>
                               <div className="space-y-1.5">
                                 <div className="flex items-center gap-2">
                                   <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                                  <span className="text-[0.55rem] font-semibold text-green-400">ON — Connesso</span>
-                                  <span className="text-[0.45rem] text-muted-foreground flex-1">API key configurata e funzionante. Pronto all'uso.</span>
+                                  <span className="text-[10px] font-semibold text-green-400">ON — Connesso</span>
+                                  <span className="text-[10px] text-muted-foreground flex-1">API key configurata e funzionante. Pronto all'uso.</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                                  <span className="text-[0.55rem] font-semibold text-amber-400">⚠ Parziale</span>
-                                  <span className="text-[0.45rem] text-muted-foreground flex-1">Configurata ma con limitazioni (crediti bassi, scadenza vicina).</span>
+                                  <span className="text-[10px] font-semibold text-amber-400">⚠ Parziale</span>
+                                  <span className="text-[10px] text-muted-foreground flex-1">Configurata ma con limitazioni (crediti bassi, scadenza vicina).</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <div className="w-2.5 h-2.5 rounded-full bg-destructive" />
-                                  <span className="text-[0.55rem] font-semibold text-destructive">OFF — Mancante</span>
-                                  <span className="text-[0.45rem] text-muted-foreground flex-1">Non configurata. Clicca "Configura" per aggiungere la API key.</span>
+                                  <span className="text-[10px] font-semibold text-destructive">OFF — Mancante</span>
+                                  <span className="text-[10px] text-muted-foreground flex-1">Non configurata. Clicca "Configura" per aggiungere la API key.</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30" />
-                                  <span className="text-[0.55rem] font-semibold text-muted-foreground">⏸ Disattivata</span>
-                                  <span className="text-[0.45rem] text-muted-foreground flex-1">Configurata ma disabilitata manualmente con il toggle.</span>
+                                  <span className="text-[10px] font-semibold text-muted-foreground">⏸ Disattivata</span>
+                                  <span className="text-[10px] text-muted-foreground flex-1">Configurata ma disabilitata manualmente con il toggle.</span>
                                 </div>
                               </div>
                             </div>
 
                             {/* Type legend */}
                             <div>
-                              <p className="text-[0.6rem] font-bold text-foreground mb-1.5">🔌 Tipi di Connessione</p>
+                              <p className="text-[11px] font-bold text-foreground mb-1.5">🔌 Tipi di Connessione</p>
                               <div className="space-y-1.5">
                                 <div className="flex items-start gap-2">
-                                  <span className="text-[0.55rem] font-bold text-primary shrink-0 w-20">🏗️ Infrastruttura</span>
-                                  <span className="text-[0.45rem] text-muted-foreground">Servizi core della piattaforma (DB, AI, Auth). Gestiti automaticamente.</span>
+                                  <span className="text-[10px] font-bold text-primary shrink-0 w-20">🏗️ Infrastruttura</span>
+                                  <span className="text-[10px] text-muted-foreground">Servizi core della piattaforma (DB, AI, Auth). Gestiti automaticamente.</span>
                                 </div>
                                 <div className="flex items-start gap-2">
-                                  <span className="text-[0.55rem] font-bold text-accent shrink-0 w-20">🔗 Connector</span>
-                                  <span className="text-[0.45rem] text-muted-foreground">Integrazioni native Lovable (ElevenLabs, Slack, Telegram…). Si collegano con un click.</span>
+                                  <span className="text-[10px] font-bold text-accent shrink-0 w-20">🔗 Connector</span>
+                                  <span className="text-[10px] text-muted-foreground">Integrazioni native Lovable (ElevenLabs, Slack, Telegram…). Si collegano con un click.</span>
                                 </div>
                                 <div className="flex items-start gap-2">
-                                  <span className="text-[0.55rem] font-bold text-amber-400 shrink-0 w-20">🔑 API Key</span>
-                                  <span className="text-[0.45rem] text-muted-foreground">Servizi esterni (Stripe, Google Maps…). Richiedono copia/incolla della chiave.</span>
+                                  <span className="text-[10px] font-bold text-amber-400 shrink-0 w-20">🔑 API Key</span>
+                                  <span className="text-[10px] text-muted-foreground">Servizi esterni (Stripe, Google Maps…). Richiedono copia/incolla della chiave.</span>
                                 </div>
                                 <div className="flex items-start gap-2">
-                                  <span className="text-[0.55rem] font-bold text-blue-400 shrink-0 w-20">🏭 Per Settore</span>
-                                  <span className="text-[0.45rem] text-muted-foreground">Integrazioni attive solo per specifici settori (Food, NCC, Beauty…).</span>
+                                  <span className="text-[10px] font-bold text-blue-400 shrink-0 w-20">🏭 Per Settore</span>
+                                  <span className="text-[10px] text-muted-foreground">Integrazioni attive solo per specifici settori (Food, NCC, Beauty…).</span>
                                 </div>
                               </div>
                             </div>
 
                             {/* How to connect */}
                             <div>
-                              <p className="text-[0.6rem] font-bold text-foreground mb-1.5">📋 Come Collegare</p>
+                              <p className="text-[11px] font-bold text-foreground mb-1.5">📋 Come Collegare</p>
                               <div className="space-y-1 pl-1">
                                 <p className="text-[10px] text-muted-foreground">1️⃣ Espandi l'integrazione cliccando la freccia ▼</p>
                                 <p className="text-[10px] text-muted-foreground">2️⃣ Segui i passi indicati nella guida step-by-step</p>
@@ -2505,7 +2505,7 @@ const SuperAdminDashboard = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-bold text-foreground">Empire WhatsApp Agent</h3>
-                  <p className="text-[0.55rem] text-muted-foreground">Chat IA · Template · Broadcast · Sentiment</p>
+                  <p className="text-[10px] text-muted-foreground">Chat IA · Template · Broadcast · Sentiment</p>
                 </div>
                 <span className="text-[10px] px-2 py-1 rounded-full bg-[#25D366]/15 text-[#25D366] font-bold">v2.0</span>
               </div>
@@ -2533,7 +2533,7 @@ const SuperAdminDashboard = () => {
                 <Shield className="w-4 h-4 text-primary" />
                 <h3 className="text-xs font-bold text-foreground">Isolamento Multi-Tenant</h3>
               </div>
-              <div className="space-y-1.5 text-[0.55rem] text-muted-foreground leading-relaxed">
+              <div className="space-y-1.5 text-[10px] text-muted-foreground leading-relaxed">
                 <p>✅ Ogni account ha la <strong className="text-foreground">propria configurazione WhatsApp</strong> separata (numero, token, webhook)</p>
                 <p>✅ Le conversazioni sono isolate per <strong className="text-foreground">tenant_id</strong> — Ristorante X non vede mai i dati di Ristorante Y</p>
                 <p>✅ I prompt IA sono personalizzati per <strong className="text-foreground">settore</strong> (food, beauty, NCC, hotel...)</p>
@@ -2557,10 +2557,10 @@ const SuperAdminDashboard = () => {
                 ].map(item => (
                   <div key={item.step} className="flex gap-2">
                     <div className="w-5 h-5 rounded-full bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
-                      <span className="text-[0.55rem] font-bold text-primary">{item.step}</span>
+                      <span className="text-[10px] font-bold text-primary">{item.step}</span>
                     </div>
                     <div className="flex-1">
-                      <p className="text-[0.6rem] font-bold text-foreground">{item.title}</p>
+                      <p className="text-[11px] font-bold text-foreground">{item.title}</p>
                       <p className="text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
                       {item.url && (
                         <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-primary/70 hover:text-primary flex items-center gap-0.5 mt-0.5">
@@ -2581,8 +2581,8 @@ const SuperAdminDashboard = () => {
                 whileTap={{ scale: 0.97 }}
               >
                 <MessageCircle className="w-5 h-5 text-[#25D366]" />
-                <span className="text-[0.6rem] font-bold text-foreground">Apri Chat WA</span>
-                <span className="text-[0.45rem] text-muted-foreground">Vai alla dashboard</span>
+                <span className="text-[11px] font-bold text-foreground">Apri Chat WA</span>
+                <span className="text-[10px] text-muted-foreground">Vai alla dashboard</span>
               </motion.button>
               <motion.button
                 onClick={() => { setActiveTab("integrations"); setExpandedSection("client" as any); }}
@@ -2590,8 +2590,8 @@ const SuperAdminDashboard = () => {
                 whileTap={{ scale: 0.97 }}
               >
                 <Wifi className="w-5 h-5 text-muted-foreground" />
-                <span className="text-[0.6rem] font-bold text-foreground">Connettori</span>
-                <span className="text-[0.45rem] text-muted-foreground">Config per tenant</span>
+                <span className="text-[11px] font-bold text-foreground">Connettori</span>
+                <span className="text-[10px] text-muted-foreground">Config per tenant</span>
               </motion.button>
             </div>
 
@@ -2608,8 +2608,8 @@ const SuperAdminDashboard = () => {
                 ].map(t => (
                   <div key={t.table} className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-muted/10">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#25D366] shrink-0" />
-                    <span className="text-[0.55rem] font-mono text-foreground/70">{t.table}</span>
-                    <span className="text-[0.45rem] text-muted-foreground flex-1 truncate">— {t.desc}</span>
+                    <span className="text-[10px] font-mono text-foreground/70">{t.table}</span>
+                    <span className="text-[10px] text-muted-foreground flex-1 truncate">— {t.desc}</span>
                   </div>
                 ))}
               </div>
@@ -2626,8 +2626,8 @@ const SuperAdminDashboard = () => {
                 ].map(f => (
                   <div key={f.fn} className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-muted/20">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#25D366] shrink-0" />
-                    <span className="text-[0.55rem] font-mono text-foreground/70">{f.fn}</span>
-                    <span className="text-[0.45rem] text-muted-foreground flex-1 truncate">— {f.desc}</span>
+                    <span className="text-[10px] font-mono text-foreground/70">{f.fn}</span>
+                    <span className="text-[10px] text-muted-foreground flex-1 truncate">— {f.desc}</span>
                   </div>
                 ))}
               </div>
@@ -2647,7 +2647,7 @@ const SuperAdminDashboard = () => {
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold text-foreground">Tutte le Registrazioni</h2>
-              <span className="text-[0.55rem] px-2 py-1 rounded-full bg-primary/10 text-primary font-bold">{allRegistrations.length} utenti</span>
+              <span className="text-[10px] px-2 py-1 rounded-full bg-primary/10 text-primary font-bold">{allRegistrations.length} utenti</span>
             </div>
             
             {/* Link condivisibile partner */}
@@ -2656,7 +2656,7 @@ const SuperAdminDashboard = () => {
                 <Link2 className="w-3.5 h-3.5 text-primary" /> Link Reclutamento Partner
               </p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
+                <code className="flex-1 text-[10px] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
                   {window.location.origin}/join
                 </code>
                 <motion.button
@@ -2672,7 +2672,7 @@ const SuperAdminDashboard = () => {
             {/* Table */}
             <div className="rounded-xl border border-border overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-[0.6rem]">
+                <table className="w-full text-[11px]">
                   <thead>
                     <tr className="border-b border-border bg-muted/30">
                       <th className="text-left px-3 py-2 font-bold text-foreground/70">Nome</th>
@@ -2724,7 +2724,7 @@ const SuperAdminDashboard = () => {
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold text-foreground">Rete Venditori</h2>
               <div className="flex items-center gap-2">
-                <span className="text-[0.55rem] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 font-bold">{partnerNetwork.length} partner</span>
+                <span className="text-[10px] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 font-bold">{partnerNetwork.length} partner</span>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={async () => {
@@ -2755,7 +2755,7 @@ const SuperAdminDashboard = () => {
                 </div>
                 <div>
                   <p className="text-sm font-bold text-foreground">Stripe Platform — Il Tuo Account</p>
-                  <p className="text-[0.55rem] text-muted-foreground">La tua chiave Stripe gestisce tutti i pagamenti e split automatici</p>
+                  <p className="text-[10px] text-muted-foreground">La tua chiave Stripe gestisce tutti i pagamenti e split automatici</p>
                 </div>
               </div>
               <div className="space-y-2 text-[11px] text-muted-foreground">
@@ -2781,7 +2781,7 @@ const SuperAdminDashboard = () => {
                 <Crown className="w-3.5 h-3.5 text-amber-400" /> Il Tuo Link Personale (i partner si registrano sotto di te)
               </p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
+                <code className="flex-1 text-[10px] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
                   {window.location.origin}/join?ref={user?.id || ""}
                 </code>
                 <motion.button
@@ -2801,7 +2801,7 @@ const SuperAdminDashboard = () => {
                 <Handshake className="w-3.5 h-3.5 text-purple-400" /> Link Generico (senza referente)
               </p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
+                <code className="flex-1 text-[10px] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
                   {window.location.origin}/join
                 </code>
                 <motion.button
@@ -2819,14 +2819,14 @@ const SuperAdminDashboard = () => {
               <p className="text-xs font-bold text-foreground flex items-center gap-2">
                 <ExternalLink className="w-3.5 h-3.5 text-emerald-400" /> Homepage Registrazione Venditori
               </p>
-              <p className="text-[0.55rem] text-muted-foreground">Apri direttamente la pagina pubblica dove i nuovi venditori possono registrarsi.</p>
+              <p className="text-[10px] text-muted-foreground">Apri direttamente la pagina pubblica dove i nuovi venditori possono registrarsi.</p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 text-[0.55rem] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
+                <code className="flex-1 text-[10px] bg-background/50 px-2 py-1.5 rounded-lg text-foreground/70 overflow-x-auto whitespace-nowrap">
                   {window.location.origin}/join
                 </code>
                 <motion.button
                   onClick={() => window.open(`${window.location.origin}/join`, "_blank")}
-                  className="shrink-0 px-3 py-1.5 rounded-lg bg-emerald-500/15 flex items-center gap-1.5 text-emerald-400 text-[0.6rem] font-bold hover:bg-emerald-500/25 transition-colors"
+                  className="shrink-0 px-3 py-1.5 rounded-lg bg-emerald-500/15 flex items-center gap-1.5 text-emerald-400 text-[11px] font-bold hover:bg-emerald-500/25 transition-colors"
                   whileTap={{ scale: 0.9 }}
                 >
                   <ExternalLink className="w-3 h-3" /> Apri
@@ -2852,8 +2852,8 @@ const SuperAdminDashboard = () => {
                       </div>
                       <div>
                         <p className="text-sm font-bold text-foreground">{p.fullName}</p>
-                        <p className="text-[0.55rem] text-muted-foreground">{p.email || "—"}</p>
-                        <p className="text-[0.55rem] text-muted-foreground">{p.createdAt ? new Date(p.createdAt).toLocaleDateString("it-IT") : "—"}</p>
+                        <p className="text-[10px] text-muted-foreground">{p.email || "—"}</p>
+                        <p className="text-[10px] text-muted-foreground">{p.createdAt ? new Date(p.createdAt).toLocaleDateString("it-IT") : "—"}</p>
                       </div>
                     </div>
                     <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${p.role === "team_leader" ? "bg-amber-500/15 text-amber-400" : "bg-purple-500/15 text-purple-400"}`}>
@@ -2881,7 +2881,7 @@ const SuperAdminDashboard = () => {
                   <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-purple-500/[0.04] border border-purple-500/10">
                     <div className="flex items-center gap-2">
                       <Eye className="w-3.5 h-3.5 text-purple-400" />
-                      <span className="text-[0.6rem] font-medium text-foreground">Demo Personalizzata</span>
+                      <span className="text-[11px] font-medium text-foreground">Demo Personalizzata</span>
                     </div>
                     <motion.button
                       whileTap={{ scale: 0.9 }}
@@ -2912,7 +2912,7 @@ const SuperAdminDashboard = () => {
 
                   {/* Team Leader ID */}
                   {p.teamLeaderId && (
-                    <p className="text-[0.55rem] text-muted-foreground">
+                    <p className="text-[10px] text-muted-foreground">
                       Reclutato da: <span className="text-foreground font-medium">
                         {p.teamLeaderId === user?.id ? "Te (Super Admin)" : (partnerNetwork.find(x => x.id === p.teamLeaderId)?.fullName || p.teamLeaderId.slice(0, 8))}
                       </span>
@@ -2922,14 +2922,14 @@ const SuperAdminDashboard = () => {
                   {/* Sub-partners */}
                   {p.subPartners.length > 0 && (
                     <div className="pl-4 border-l-2 border-purple-500/20 space-y-1.5">
-                      <p className="text-[0.55rem] font-bold text-foreground/60 uppercase tracking-wider">Sotto-partner ({p.subPartners.length})</p>
+                      <p className="text-[10px] font-bold text-foreground/60 uppercase tracking-wider">Sotto-partner ({p.subPartners.length})</p>
                       {p.subPartners.map(sp => (
                         <div key={sp.id} className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-purple-400/50" />
-                            <span className="text-[0.6rem] text-foreground/80">{sp.fullName}</span>
+                            <span className="text-[11px] text-foreground/80">{sp.fullName}</span>
                           </div>
-                          <span className="text-[0.55rem] font-semibold text-emerald-400">{sp.salesCount} vendite · €{sp.salesRevenue.toLocaleString("it-IT")}</span>
+                          <span className="text-[10px] font-semibold text-emerald-400">{sp.salesCount} vendite · €{sp.salesRevenue.toLocaleString("it-IT")}</span>
                         </div>
                       ))}
                     </div>

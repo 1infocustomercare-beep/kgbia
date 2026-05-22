@@ -55,7 +55,7 @@ export function BateyHome({
       >
         <div className="flex flex-col items-center gap-1 mb-3">
           <p
-            className="text-[0.6rem] tracking-[0.42em]"
+            className="text-[11px] tracking-[0.42em]"
             style={{ color: BATEY.primary, fontFamily: BATEY.fontEs, fontStyle: "italic" }}
           >
             {subtitle}
@@ -99,7 +99,7 @@ export function BateyHome({
           <img src={heroImage} alt={heroTagline} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,19,31,0.1) 0%, rgba(8,19,31,0.88) 100%)" }} />
           <div className="absolute inset-x-0 bottom-0 px-4 pb-4 text-center">
-            <p className="text-[0.6rem] tracking-[0.4em] mb-1" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs, fontStyle: "italic" }}>
+            <p className="text-[11px] tracking-[0.4em] mb-1" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs, fontStyle: "italic" }}>
               especialidad de la casa
             </p>
             <h2
@@ -139,7 +139,7 @@ export function BateyHome({
       {/* Chef's Recommendation */}
       <section className="mt-4 px-4 py-6" style={{ background: BATEY.bgDeep }}>
         <div className="text-center mb-4">
-          <p className="text-[0.6rem] tracking-[0.4em] mb-1" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs, fontStyle: "italic" }}>
+          <p className="text-[11px] tracking-[0.4em] mb-1" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs, fontStyle: "italic" }}>
             recomendación del chef
           </p>
           <h3
@@ -162,7 +162,7 @@ export function BateyHome({
                 <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                 {item.is_popular && (
                   <span
-                    className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[0.55rem] tracking-[0.18em] uppercase font-medium"
+                    className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] tracking-[0.18em] uppercase font-medium"
                     style={{ background: BATEY.coral, color: BATEY.bg }}
                   >
                     Popular
@@ -171,7 +171,7 @@ export function BateyHome({
               </div>
               <div className="p-3 flex-1 flex flex-col">
                 {item.es_label && (
-                  <p className="text-[0.55rem] tracking-[0.32em] mb-1 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
+                  <p className="text-[10px] tracking-[0.32em] mb-1 italic" style={{ color: BATEY.primary, fontFamily: BATEY.fontEs }}>
                     {item.es_label}
                   </p>
                 )}
@@ -182,7 +182,7 @@ export function BateyHome({
                   {item.name}
                 </h4>
                 <p
-                  className="text-[0.65rem] leading-snug mb-2 line-clamp-2 flex-1"
+                  className="text-[11px] leading-snug mb-2 line-clamp-2 flex-1"
                   style={{ color: BATEY.textMuted }}
                 >
                   {item.description}

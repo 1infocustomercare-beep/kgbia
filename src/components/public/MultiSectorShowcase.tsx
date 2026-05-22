@@ -527,7 +527,7 @@ const SectionLabel = ({ text, icon }: SectionLabelProps) => (
         animate={{ x: ["-150%", "250%"] }}
         transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
       {icon || <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />}
-      <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90 relative z-10">{text}</span>
+      <span className="text-[11px] font-heading font-semibold tracking-[3px] uppercase text-primary/90 relative z-10">{text}</span>
     </div>
   </motion.div>
 );
@@ -595,7 +595,7 @@ export default function MultiSectorShowcase() {
           <button
             key={cat.id}
             onClick={() => { setActiveCat(cat.id); setIsAutoPlaying(false); }}
-            className={`flex items-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-[10px] sm:text-[0.6rem] font-heading font-semibold tracking-wide uppercase transition-all duration-300 border ${
+            className={`flex items-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-[10px] sm:text-[11px] font-heading font-semibold tracking-wide uppercase transition-all duration-300 border ${
               activeCat === cat.id
                 ? "text-foreground border-primary/30 bg-primary/8"
                 : "text-foreground/75 border-transparent hover:text-foreground/50 hover:bg-muted/5"
@@ -617,7 +617,7 @@ export default function MultiSectorShowcase() {
               <motion.button
                 key={s.id}
                 onClick={() => { setActiveIdx(globalIdx); setIsAutoPlaying(false); setShowAllScreens(false); }}
-                className={`relative flex flex-col items-center justify-center gap-0.5 py-1 sm:py-1.5 px-0.5 sm:px-1 rounded-md text-[0.4rem] sm:text-[0.45rem] font-heading font-medium tracking-wide uppercase transition-all duration-200 border ${
+                className={`relative flex flex-col items-center justify-center gap-0.5 py-1 sm:py-1.5 px-0.5 sm:px-1 rounded-md text-[10px] sm:text-[10px] font-heading font-medium tracking-wide uppercase transition-all duration-200 border ${
                   isActive
                     ? "text-foreground border-primary/30 z-10"
                     : "text-foreground/25 border-border/5 hover:text-foreground/45 hover:border-border/15"
@@ -672,7 +672,7 @@ export default function MultiSectorShowcase() {
 
         <button
           onClick={() => { setShowAllSectors(p => !p); setIsAutoPlaying(false); }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.55rem] font-heading font-semibold tracking-wider uppercase border transition-all ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-heading font-semibold tracking-wider uppercase border transition-all ${
             showAllSectors
               ? "border-primary/40 text-primary bg-primary/10"
               : "border-border/20 text-foreground/80 hover:text-foreground/60 hover:border-border/30 bg-background/5"
@@ -701,7 +701,7 @@ export default function MultiSectorShowcase() {
             <div className="rounded-2xl border border-border/15 backdrop-blur-md p-4"
               style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.02), hsla(265,20%,12%,0.3))" }}>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-[0.6rem] font-heading font-semibold tracking-widest uppercase text-foreground/80">
+                <p className="text-[11px] font-heading font-semibold tracking-widest uppercase text-foreground/80">
                   <LayoutGrid className="w-3 h-3 inline mr-1.5" />
                   Preview di tutti i {SHOWCASE_SECTORS.length} settori
                 </p>
@@ -742,7 +742,7 @@ export default function MultiSectorShowcase() {
                           <div className="w-[180px] h-[360px] rounded-[2rem] flex flex-col items-center justify-center gap-2"
                             style={{ background: s.color.replace("1)", "0.08)"), border: `1px solid ${s.color.replace("1)", "0.15)")}` }}>
                             <span style={{ color: s.color }}>{s.icon}</span>
-                            <span className="text-foreground/75 text-[0.55rem]">{s.label}</span>
+                            <span className="text-foreground/75 text-[10px]">{s.label}</span>
                           </div>
                         )}
                       </div>
@@ -767,7 +767,7 @@ export default function MultiSectorShowcase() {
 
           {/* Left — Text + features */}
           <div className="text-center lg:text-left">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full mb-3 sm:mb-5 text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase"
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full mb-3 sm:mb-5 text-[10px] sm:text-[11px] font-heading font-semibold tracking-[2px] uppercase"
               style={{ background: sector.color.replace("1)", "0.08)"), color: sector.color, border: `1px solid ${sector.color.replace("1)", "0.15)")}` }}>
               {sector.icon} {sector.label}
             </div>
@@ -785,8 +785,8 @@ export default function MultiSectorShowcase() {
                     <span style={{ color: sector.color }}>{f.icon}</span>
                   </div>
                   <div>
-                    <p className="text-[0.65rem] sm:text-xs font-semibold text-foreground">{f.title}</p>
-                    <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/35 mt-0.5">{f.desc}</p>
+                    <p className="text-[11px] sm:text-xs font-semibold text-foreground">{f.title}</p>
+                    <p className="text-[10px] sm:text-[11px] text-foreground/35 mt-0.5">{f.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -810,7 +810,7 @@ export default function MultiSectorShowcase() {
               {industryCfg && demoData && (
                 <motion.button
                   onClick={() => { setShowAllScreens(p => !p); setIsAutoPlaying(false); }}
-                  className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-full text-[10px] sm:text-[0.6rem] font-heading font-semibold tracking-wider uppercase border inline-flex items-center gap-1.5 sm:gap-2 transition-all duration-300 hover:scale-105"
+                  className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-full text-[10px] sm:text-[11px] font-heading font-semibold tracking-wider uppercase border inline-flex items-center gap-1.5 sm:gap-2 transition-all duration-300 hover:scale-105"
                   style={{
                     borderColor: `${sector.color.replace("1)", "0.2)")}`,
                     color: sector.color,
@@ -863,7 +863,7 @@ export default function MultiSectorShowcase() {
                         ))}
                       </div>
                       {/* Tap hint */}
-                      <motion.p className="text-center text-[0.55rem] text-foreground/25 mt-3 tracking-wider uppercase"
+                      <motion.p className="text-center text-[10px] text-foreground/25 mt-3 tracking-wider uppercase"
                         animate={{ opacity: [0.3, 0.6, 0.3] }}
                         transition={{ duration: 2, repeat: Infinity }}>
                         <Layers className="w-3 h-3 inline mr-1" /> Tap per vedere tutte le schermate

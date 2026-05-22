@@ -136,7 +136,7 @@ export function AutomationShowcase({ accentColor, accentBg, sectorName, darkMode
               <p className="text-3xl sm:text-4xl font-bold relative z-10" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                 <AnimatedCounter value={s.value} suffix={s.suffix} accentColor={accentColor} />
               </p>
-              <p className="text-[0.6rem] tracking-[2px] uppercase mt-2 relative z-10" style={{ color: textMuted }}>{s.label}</p>
+              <p className="text-[11px] tracking-[2px] uppercase mt-2 relative z-10" style={{ color: textMuted }}>{s.label}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -190,7 +190,7 @@ export function AutomationShowcase({ accentColor, accentBg, sectorName, darkMode
                   {step.icon}
                 </div>
                 <h4 className="font-bold text-xs mb-1.5" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{step.title}</h4>
-                <p className="text-[0.6rem] leading-relaxed" style={{ color: textMuted }}>{step.desc}</p>
+                <p className="text-[11px] leading-relaxed" style={{ color: textMuted }}>{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -250,7 +250,7 @@ export function AutomationShowcase({ accentColor, accentBg, sectorName, darkMode
                 <span style={{ color: `${accentColor}60` }}>{s.icon}</span>
                 <p className="text-2xl sm:text-3xl font-bold" style={{ color: accentColor, fontFamily: "'Space Grotesk', sans-serif" }}>{s.value}</p>
               </div>
-              <p className="text-[0.55rem] tracking-[2px] uppercase" style={{ color: textMuted }}>{s.label}</p>
+              <p className="text-[10px] tracking-[2px] uppercase" style={{ color: textMuted }}>{s.label}</p>
             </motion.div>
           ))}
         </div>

@@ -583,7 +583,7 @@ const PartnerDashboard = () => {
                         <label className="text-[10px] font-medium" style={{ color: "#9ca3af" }}>Nome Attività del Cliente</label>
                         <input type="text" value={editName} onChange={e => setEditName(e.target.value)}
                           placeholder="Es: Ristorante Da Mario, Salone Bella..."
-                          className="w-full px-3 py-2 rounded-lg text-sm bg-white !text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400/30" />
+                          className="w-full px-3 py-2 rounded-lg text-sm bg-white !text-black placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-400/30" />
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-medium" style={{ color: "#9ca3af" }}>Colori Brand</label>

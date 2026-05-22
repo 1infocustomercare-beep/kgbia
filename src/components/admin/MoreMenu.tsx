@@ -111,7 +111,7 @@ const AcademySection = () => {
           <GraduationCap className="w-7 h-7 text-primary" />
         </div>
         <h3 className="text-lg font-display font-bold text-foreground">Empire Academy</h3>
-        <p className="text-[0.55rem] uppercase tracking-[3px] text-muted-foreground/50 font-semibold mt-1">Tutorial Completo · {totalGuides} Guide</p>
+        <p className="text-[10px] uppercase tracking-[3px] text-muted-foreground/50 font-semibold mt-1">Tutorial Completo · {totalGuides} Guide</p>
       </div>
 
       {/* Stats bar */}
@@ -162,7 +162,7 @@ const AcademySection = () => {
                     {items.map((guide) => (
                       <div key={guide.key} className="p-3 rounded-xl bg-secondary/40 space-y-1.5">
                         <p className="text-xs font-semibold text-foreground">{guide.title}</p>
-                        <p className="text-[0.65rem] text-muted-foreground/60 leading-relaxed">{guide.description}</p>
+                        <p className="text-[11px] text-muted-foreground/60 leading-relaxed">{guide.description}</p>
                         {guide.steps && guide.steps.length > 0 && (
                           <div className="pt-1 space-y-1">
                             {guide.steps.map((step, si) => (
@@ -170,7 +170,7 @@ const AcademySection = () => {
                                 <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                                   <span className="text-[10px] font-bold text-primary">{si + 1}</span>
                                 </div>
-                                <p className="text-[0.6rem] text-muted-foreground/50">{step}</p>
+                                <p className="text-[11px] text-muted-foreground/50">{step}</p>
                               </div>
                             ))}
                           </div>

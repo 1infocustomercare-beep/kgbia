@@ -37,7 +37,7 @@ export function PaperfishMenu({
 
       {/* Title MENU */}
       <div className="text-center mt-5 mb-4">
-        <p className="text-[0.6rem] tracking-[0.42em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
+        <p className="text-[11px] tracking-[0.42em] mb-1" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
           メニュー
         </p>
         <h2
@@ -95,7 +95,7 @@ export function PaperfishMenu({
               <div className="flex items-start justify-between gap-2 mb-1">
                 <div className="flex-1 min-w-0">
                   {item.jp_label && (
-                    <p className="text-[0.55rem] tracking-[0.32em] mb-0.5" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
+                    <p className="text-[10px] tracking-[0.32em] mb-0.5" style={{ color: PAPERFISH.primary, fontFamily: PAPERFISH.fontJp }}>
                       {item.jp_label}
                     </p>
                   )}

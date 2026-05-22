@@ -289,7 +289,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
           </div>
 
           <p
-            className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.5em] uppercase text-foreground/70 font-heading"
+            className="text-[10px] sm:text-[11px] tracking-[0.5em] uppercase text-foreground/70 font-heading"
           >
             Il Sistema Operativo del Business
           </p>
@@ -325,7 +325,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
                 className="w-1 h-1 rounded-full animate-pulse"
                 style={{ background: "hsl(265,85%,65%)", animationDelay: `${i * 300}ms` }}
               />
-              <span className="text-[0.45rem] sm:text-[10px] tracking-[0.2em] uppercase text-foreground/15 font-heading">{label}</span>
+              <span className="text-[10px] sm:text-[10px] tracking-[0.2em] uppercase text-foreground/15 font-heading">{label}</span>
             </div>
           ))}
         </motion.div>
@@ -341,7 +341,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
             className="w-1.5 h-1.5 rounded-full animate-pulse"
             style={{ background: "hsla(140,70%,50%,0.8)" }}
           />
-          <span className="text-[0.4rem] sm:text-[0.45rem] tracking-[0.3em] uppercase text-foreground/70 font-mono">
+          <span className="text-[10px] sm:text-[10px] tracking-[0.3em] uppercase text-foreground/70 font-mono">
             NEURAL MESH v4.2 — STATUS: OPTIMAL
           </span>
         </motion.div>
@@ -366,7 +366,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
       >
-        <p className="text-[0.45rem] sm:text-[10px] tracking-[0.6em] uppercase text-foreground/8 font-heading">
+        <p className="text-[10px] sm:text-[10px] tracking-[0.6em] uppercase text-foreground/8 font-heading">
           Powered by Autonomous AI
         </p>
       </motion.div>

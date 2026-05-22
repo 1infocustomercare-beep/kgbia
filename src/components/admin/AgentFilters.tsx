@@ -64,7 +64,7 @@ export default function AgentFilters({
         </div>
         <button
           onClick={() => setExpanded(!expanded)}
-          className={`flex items-center gap-1 px-3 h-9 rounded-xl text-[0.65rem] font-medium transition-colors border ${
+          className={`flex items-center gap-1 px-3 h-9 rounded-xl text-[11px] font-medium transition-colors border ${
             hasActiveFilter
               ? "bg-primary/10 border-primary/30 text-primary"
               : "bg-secondary/40 border-border/50 text-muted-foreground"
@@ -93,10 +93,10 @@ export default function AgentFilters({
                 }`}
               >
                 <span className="text-sm leading-none">{catInfo ? catInfo.icon : "🔷"}</span>
-                <span className="text-[0.55rem] font-semibold mt-0.5 leading-tight truncate max-w-full px-0.5">
+                <span className="text-[10px] font-semibold mt-0.5 leading-tight truncate max-w-full px-0.5">
                   {catInfo ? catInfo.label : "Tutte"}
                 </span>
-                <span className={`absolute -top-1 -right-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full text-[0.45rem] font-bold ${
+                <span className={`absolute -top-1 -right-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full text-[10px] font-bold ${
                   isActive ? "bg-primary-foreground text-primary" : "bg-foreground/10 text-muted-foreground"
                 }`}>
                   {categoryCounts[c] || 0}
@@ -112,7 +112,7 @@ export default function AgentFilters({
         <div className="space-y-2 p-2.5 rounded-xl bg-secondary/30 border border-border/40">
           {/* Categories */}
           <div>
-            <p className="text-[0.55rem] uppercase tracking-wider text-muted-foreground mb-1 font-semibold">Categoria</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1 font-semibold">Categoria</p>
             <div className="flex gap-1 flex-wrap">
               {CATEGORY_ORDER.map((c) => {
                 const catInfo = c === "all" ? null : CATEGORY_LABELS[c];
@@ -120,7 +120,7 @@ export default function AgentFilters({
                   <button
                     key={c}
                     onClick={() => onCategory(c)}
-                    className={`px-2 py-1 rounded-lg text-[0.6rem] font-medium whitespace-nowrap transition-all flex items-center gap-0.5 ${pill(categoryFilter === c)}`}
+                    className={`px-2 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all flex items-center gap-0.5 ${pill(categoryFilter === c)}`}
                   >
                     {catInfo ? <span>{catInfo.icon}</span> : null}
                     <span>{catInfo ? catInfo.label : "Tutte"}</span>
@@ -136,13 +136,13 @@ export default function AgentFilters({
           {/* Type + Status + Usage in a compact grid */}
           <div className="grid grid-cols-3 gap-2">
             <div>
-              <p className="text-[0.55rem] uppercase tracking-wider text-muted-foreground mb-1 font-semibold">Tipo</p>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1 font-semibold">Tipo</p>
               <div className="flex flex-col gap-0.5">
                 {types.map((t) => (
                   <button
                     key={t.value}
                     onClick={() => onType(t.value)}
-                    className={`px-2 py-1 rounded-lg text-[0.6rem] font-medium transition-colors text-left ${pill(typeFilter === t.value)}`}
+                    className={`px-2 py-1 rounded-lg text-[11px] font-medium transition-colors text-left ${pill(typeFilter === t.value)}`}
                   >
                     {t.label}
                   </button>
@@ -150,13 +150,13 @@ export default function AgentFilters({
               </div>
             </div>
             <div>
-              <p className="text-[0.55rem] uppercase tracking-wider text-muted-foreground mb-1 font-semibold">Stato</p>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1 font-semibold">Stato</p>
               <div className="flex flex-col gap-0.5">
                 {statuses.map((s) => (
                   <button
                     key={s.value}
                     onClick={() => onStatus(s.value)}
-                    className={`px-2 py-1 rounded-lg text-[0.6rem] font-medium transition-colors flex items-center gap-1 ${pill(statusFilter === s.value)}`}
+                    className={`px-2 py-1 rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1 ${pill(statusFilter === s.value)}`}
                   >
                     {s.dot && <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />}
                     {s.label}
@@ -165,13 +165,13 @@ export default function AgentFilters({
               </div>
             </div>
             <div>
-              <p className="text-[0.55rem] uppercase tracking-wider text-muted-foreground mb-1 font-semibold">Utilizzo</p>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1 font-semibold">Utilizzo</p>
               <div className="flex flex-col gap-0.5">
                 {usageOptions.map((u) => (
                   <button
                     key={u.value}
                     onClick={() => onUsage(u.value)}
-                    className={`px-2 py-1 rounded-lg text-[0.6rem] font-medium transition-colors ${pill(usageFilter === u.value)}`}
+                    className={`px-2 py-1 rounded-lg text-[11px] font-medium transition-colors ${pill(usageFilter === u.value)}`}
                   >
                     {u.label}
                   </button>
@@ -184,7 +184,7 @@ export default function AgentFilters({
           {hasActiveFilter && (
             <button
               onClick={() => { onType("all"); onStatus("all"); onCategory("all"); onUsage("all"); }}
-              className="text-[0.6rem] text-primary underline"
+              className="text-[11px] text-primary underline"
             >
               Reset filtri
             </button>

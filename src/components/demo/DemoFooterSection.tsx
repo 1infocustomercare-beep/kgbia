@@ -79,7 +79,7 @@ export default function DemoFooterSection({ sector, accentColor, sectorName, com
               </div>
               <div>
                 <p className="text-sm font-bold text-white">{companyName}</p>
-                <p className="text-[0.55rem] text-white/25 uppercase tracking-wider">Powered by Empire.AI</p>
+                <p className="text-[10px] text-white/25 uppercase tracking-wider">Powered by Empire.AI</p>
               </div>
             </div>
             <p className="text-xs text-white/70 leading-relaxed mb-4">
@@ -116,7 +116,7 @@ export default function DemoFooterSection({ sector, accentColor, sectorName, com
       {/* Bottom bar */}
       <div className="border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[0.6rem] text-white/15">
+          <p className="text-[11px] text-white/15">
             © 2026 {companyName} — Powered by{" "}
             <button onClick={() => navigate("/")} className="text-white/25 hover:text-white/80 transition underline">
               Empire.AI
@@ -125,7 +125,7 @@ export default function DemoFooterSection({ sector, accentColor, sectorName, com
           </p>
           <div className="flex gap-4">
             {["Privacy", "Cookie", "Termini"].map(l => (
-              <button key={l} className="text-[0.6rem] text-white/15 hover:text-white/70 transition">{l}</button>
+              <button key={l} className="text-[11px] text-white/15 hover:text-white/70 transition">{l}</button>
             ))}
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function DemoFooterSection({ sector, accentColor, sectorName, com
 
       {/* Demo notice */}
       <div className="text-center py-3 border-t border-white/[0.03]" style={{ background: `${accentColor}05` }}>
-        <p className="text-[0.55rem] text-white/15">
+        <p className="text-[10px] text-white/15">
           🏗️ Questo è un sito demo generato automaticamente dalla piattaforma Empire.AI · Nessun dato reale
         </p>
       </div>

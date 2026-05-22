@@ -261,16 +261,16 @@ export default function BrandAssetsPage() {
                   </div>
                 </div>
                 <div className="p-2">
-                  <h3 className="text-[0.65rem] font-semibold text-foreground truncate">{asset.name}</h3>
-                  <p className="text-[0.55rem] text-muted-foreground">{asset.category}</p>
+                  <h3 className="text-[11px] font-semibold text-foreground truncate">{asset.name}</h3>
+                  <p className="text-[10px] text-muted-foreground">{asset.category}</p>
                   <div className="flex gap-1 mt-1.5">
-                    <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-1 px-1.5" onClick={() => downloadAsset(asset)}>
+                    <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1 px-1.5" onClick={() => downloadAsset(asset)}>
                       <Download className="w-3 h-3" />
                     </Button>
-                    <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-1 px-1.5" onClick={() => copyUrl(i, asset.file)}>
+                    <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1 px-1.5" onClick={() => copyUrl(i, asset.file)}>
                       {copiedIdx === i ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
                     </Button>
-                    <Button variant="ghost" size="sm" className="h-6 text-[0.55rem] gap-1 px-1.5" onClick={() => setPreview(asset)}>
+                    <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1 px-1.5" onClick={() => setPreview(asset)}>
                       <Eye className="w-3 h-3" />
                     </Button>
                   </div>
@@ -301,7 +301,7 @@ export default function BrandAssetsPage() {
                       {asset.type.toUpperCase()}
                     </span>
                   </div>
-                  <p className="text-[0.6rem] text-muted-foreground">{asset.category}</p>
+                  <p className="text-[11px] text-muted-foreground">{asset.category}</p>
                 </div>
                 <div className="flex gap-1 flex-shrink-0">
                   <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => downloadAsset(asset)}>

@@ -615,7 +615,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
       <section id="servizi" className="py-20 px-4" style={{ background: `${A}04` }}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.2em] mb-4"
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] mb-4"
               style={{ background: `${A}15`, color: A, border: `1px solid ${A}25` }}>
               {config.emoji} {config.label}
             </div>
@@ -771,7 +771,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                 <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center text-2xl relative"
                   style={{ background: `${A}15`, border: `1px solid ${A}20` }}>
                   {s.emoji}
-                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-[0.6rem] font-bold flex items-center justify-center" style={{ background: A, color: D }}>{s.step}</span>
+                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-[11px] font-bold flex items-center justify-center" style={{ background: A, color: D }}>{s.step}</span>
                 </div>
                 <h3 className="font-bold text-white mb-1.5 text-sm">{s.title}</h3>
                 <p className="text-xs text-white/35">{s.desc}</p>
@@ -785,7 +785,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
       <section id="perche" className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.2em] mb-4"
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] mb-4"
               style={{ background: `${A}15`, color: A, border: `1px solid ${A}25` }}>
               🛡️ Garanzie
             </div>

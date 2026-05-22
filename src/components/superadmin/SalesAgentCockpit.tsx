@@ -307,7 +307,7 @@ export default function SalesAgentCockpit() {
                         </Button>
                       </div>
                       {showSource ? (
-                        <pre className="text-[10px] text-zinc-300 p-2 max-h-[280px] overflow-auto">{currentHtml}</pre>
+                        <pre className="text-[10px] text-muted-foreground p-2 max-h-[280px] overflow-auto">{currentHtml}</pre>
                       ) : (
                         <div className="flex justify-center bg-zinc-900/40 p-2">
                           <iframe

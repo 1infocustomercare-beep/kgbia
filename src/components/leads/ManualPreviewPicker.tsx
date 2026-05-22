@@ -126,7 +126,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                   <h2 className="text-sm lg:text-base font-black text-white tracking-tight truncate">
                     Galleria Preview Manuale
                   </h2>
-                  <p className="text-[0.6rem] lg:text-[0.65rem] text-white/45">
+                  <p className="text-[11px] lg:text-[11px] text-white/45">
                     {totalMockups}+ mockup • {SECTOR_PORTFOLIO.length} settori premium • Brand reali
                   </p>
                 </div>
@@ -154,7 +154,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
               {/* Sector sidebar */}
               <div className="w-[120px] lg:w-[180px] border-r border-white/[0.06] overflow-y-auto p-2 space-y-1 shrink-0"
                 style={{ background: "rgba(0,0,0,0.35)" }}>
-                <p className="text-[0.55rem] uppercase tracking-wider text-white/70 font-bold px-2 pt-1 pb-1">Settori</p>
+                <p className="text-[10px] uppercase tracking-wider text-white/70 font-bold px-2 pt-1 pb-1">Settori</p>
                 {allAvailableSectors
                   .filter(s => !search.trim() || s.label.toLowerCase().includes(search.toLowerCase()) || s.id.includes(search.toLowerCase()))
                   .map(s => {
@@ -167,10 +167,10 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                         isActive ? "bg-purple-500/15 border border-purple-500/30" : "hover:bg-white/[0.04] border border-transparent"
                       }`}
                     >
-                      <p className={`text-[0.65rem] font-bold truncate ${isActive ? "text-purple-200" : "text-white/70"}`}>
+                      <p className={`text-[11px] font-bold truncate ${isActive ? "text-purple-200" : "text-white/70"}`}>
                         {s.label}
                       </p>
-                      <p className="text-[0.55rem] text-white/35">{s.count} stili</p>
+                      <p className="text-[10px] text-white/35">{s.count} stili</p>
                     </button>
                   );
                 })}
@@ -182,13 +182,13 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                   <>
                     {/* Brand list */}
                     <div className="mb-3">
-                      <p className="text-[0.6rem] uppercase tracking-wider text-white/80 font-bold mb-2">
+                      <p className="text-[11px] uppercase tracking-wider text-white/80 font-bold mb-2">
                         Brand · {currentSector.brands.length}
                       </p>
                       <div className="flex flex-wrap gap-1.5">
                         <button
                           onClick={() => setActiveBrand(null)}
-                          className={`px-2.5 py-1 rounded-lg text-[0.65rem] font-bold transition ${
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
                             !activeBrand ? "bg-purple-500/20 text-purple-200 border border-purple-500/40" : "bg-white/[0.04] text-white/55 border border-white/[0.06] hover:bg-white/[0.08]"
                           }`}
                         >
@@ -198,7 +198,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                           <button
                             key={b.name}
                             onClick={() => setActiveBrand(b.name)}
-                            className={`px-2.5 py-1 rounded-lg text-[0.65rem] font-bold transition ${
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
                               activeBrand === b.name ? "bg-teal-500/20 text-teal-200 border border-teal-500/40" : "bg-white/[0.04] text-white/55 border border-white/[0.06] hover:bg-white/[0.08]"
                             }`}
                           >
@@ -216,16 +216,16 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                             <ImageIcon className="w-3 h-3 text-white/70" />
                           </div>
                           <p className="text-xs font-black text-white">{brand.name}</p>
-                          <span className="text-[0.6rem] text-white/80">{brand.styles.length} stili</span>
+                          <span className="text-[11px] text-white/80">{brand.styles.length} stili</span>
                         </div>
                         <div className="space-y-3">
                           {brand.styles.map(style => (
                             <div key={style.name} className="rounded-xl p-2.5 bg-white/[0.02] border border-white/[0.05]">
                               <div className="flex items-center justify-between mb-2">
-                                <p className="text-[0.65rem] font-bold text-purple-200">
+                                <p className="text-[11px] font-bold text-purple-200">
                                   Stile: <span className="text-white">{style.name}</span>
                                 </p>
-                                <span className="text-[0.55rem] text-white/35">{style.screens.length} screen</span>
+                                <span className="text-[10px] text-white/35">{style.screens.length} screen</span>
                               </div>
                               <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
                                 {style.screens.map((src, i) => (
@@ -236,7 +236,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                                   >
                                     <img src={src} alt={`${brand.name} ${style.name} ${i + 1}`} loading="lazy" className="w-full h-full object-cover object-top" />
                                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-t from-purple-900/90 via-purple-900/40 to-transparent transition-opacity flex items-end justify-center pb-1.5">
-                                      <span className="px-1.5 py-0.5 rounded-md bg-white/95 text-purple-900 text-[0.55rem] font-black flex items-center gap-1">
+                                      <span className="px-1.5 py-0.5 rounded-md bg-white/95 text-purple-900 text-[10px] font-black flex items-center gap-1">
                                         <Check className="w-2.5 h-2.5" /> Usa
                                       </span>
                                     </div>
@@ -251,7 +251,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                   </>
                 ) : fallbackImages.length > 0 ? (
                   <>
-                    <p className="text-[0.6rem] uppercase tracking-wider text-white/80 font-bold mb-2">
+                    <p className="text-[11px] uppercase tracking-wider text-white/80 font-bold mb-2">
                       Mockup disponibili · {fallbackImages.length}
                     </p>
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -263,7 +263,7 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
                         >
                           <img src={src} alt={`Preview ${i + 1}`} loading="lazy" className="w-full h-full object-cover object-top" />
                           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-t from-purple-900/90 to-transparent transition-opacity flex items-end justify-center pb-1.5">
-                            <span className="px-1.5 py-0.5 rounded-md bg-white/95 text-purple-900 text-[0.55rem] font-black">Usa</span>
+                            <span className="px-1.5 py-0.5 rounded-md bg-white/95 text-purple-900 text-[10px] font-black">Usa</span>
                           </div>
                         </button>
                       ))}
@@ -280,10 +280,10 @@ export default function ManualPreviewPicker({ open, onClose, onSelect, initialSe
             {/* Footer hint */}
             <div className="px-4 py-2.5 border-t border-white/[0.06] flex items-center justify-between"
               style={{ background: "rgba(0,0,0,0.35)" }}>
-              <p className="text-[0.6rem] text-white/80 flex items-center gap-1.5">
+              <p className="text-[11px] text-white/80 flex items-center gap-1.5">
                 <Eye className="w-3 h-3" /> Tap su un mockup per allegarlo al messaggio
               </p>
-              <button onClick={onClose} className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[0.65rem] text-white/70 font-bold">
+              <button onClick={onClose} className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] text-white/70 font-bold">
                 Chiudi
               </button>
             </div>

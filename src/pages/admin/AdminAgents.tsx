@@ -115,7 +115,7 @@ export default function AdminAgents() {
             <button
               key={tab.id}
               onClick={() => setMainTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-[0.6rem] font-semibold transition-all ${
+              className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-[11px] font-semibold transition-all ${
                 mainTab === tab.id
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
@@ -143,7 +143,7 @@ export default function AdminAgents() {
             />
 
             <div className="flex items-center justify-between">
-              <p className="text-[0.6rem] text-muted-foreground">{agents.length} risultati</p>
+              <p className="text-[11px] text-muted-foreground">{agents.length} risultati</p>
             </div>
 
             {isLoading ? (
@@ -176,7 +176,7 @@ export default function AdminAgents() {
 
             {sectorFilter !== "all" && (
               <div className="space-y-2">
-                <p className="text-[0.6rem] text-muted-foreground">
+                <p className="text-[11px] text-muted-foreground">
                   {agents.filter(a => a.sectors?.includes(sectorFilter)).length} agenti in questo settore
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -214,11 +214,11 @@ export default function AdminAgents() {
                       </div>
                       <div className="flex -space-x-1">
                         {sectorAgents.slice(0, 3).map(a => (
-                          <span key={a.id} className="w-5 h-5 rounded-full bg-primary/10 border border-border/40 flex items-center justify-center text-[0.45rem]">
+                          <span key={a.id} className="w-5 h-5 rounded-full bg-primary/10 border border-border/40 flex items-center justify-center text-[10px]">
                             {a.icon_emoji}
                           </span>
                         ))}
-                        {count > 3 && <span className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center text-[0.45rem] text-muted-foreground border border-border/40">+{count - 3}</span>}
+                        {count > 3 && <span className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center text-[10px] text-muted-foreground border border-border/40">+{count - 3}</span>}
                       </div>
                     </button>
                   );
@@ -292,11 +292,11 @@ function AgentDetailModal({
             <DialogTitle className="text-base">{agent.name}</DialogTitle>
             <div className="flex gap-1 mt-0.5">
               {cat && (
-                <Badge variant="outline" className="text-[0.55rem] h-4" style={{ borderColor: cat.color, color: cat.color }}>
+                <Badge variant="outline" className="text-[10px] h-4" style={{ borderColor: cat.color, color: cat.color }}>
                   {cat.icon} {cat.label}
                 </Badge>
               )}
-              <Badge variant="outline" className="text-[0.55rem] h-4 border-border/40 text-muted-foreground">
+              <Badge variant="outline" className="text-[10px] h-4 border-border/40 text-muted-foreground">
                 {agent.type === "universal" ? "🌐 Universale" : "🎯 Settore"}
               </Badge>
             </div>
@@ -314,20 +314,20 @@ function AgentDetailModal({
 
           {(agent.capabilities || []).length > 0 && (
             <div>
-              <p className="text-[0.6rem] font-semibold mb-1.5 text-muted-foreground uppercase tracking-wider">Capabilities</p>
+              <p className="text-[11px] font-semibold mb-1.5 text-muted-foreground uppercase tracking-wider">Capabilities</p>
               <div className="flex flex-wrap gap-1">
                 {agent.capabilities.map((c) => (
-                  <Badge key={c} variant="secondary" className="text-[0.55rem] h-4">{c}</Badge>
+                  <Badge key={c} variant="secondary" className="text-[10px] h-4">{c}</Badge>
                 ))}
               </div>
             </div>
           )}
 
           <div>
-            <p className="text-[0.6rem] font-semibold mb-1.5 text-muted-foreground uppercase tracking-wider">Settori</p>
+            <p className="text-[11px] font-semibold mb-1.5 text-muted-foreground uppercase tracking-wider">Settori</p>
             <div className="flex flex-wrap gap-1">
               {(agent.sectors || []).map((s) => (
-                <Badge key={s} variant="outline" className="text-[0.55rem] h-4 border-border/40">{s}</Badge>
+                <Badge key={s} variant="outline" className="text-[10px] h-4 border-border/40">{s}</Badge>
               ))}
             </div>
           </div>

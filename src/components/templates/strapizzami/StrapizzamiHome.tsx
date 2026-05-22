@@ -66,7 +66,7 @@ export function StrapizzamiHome({
               {brandName.toUpperCase()}
             </h1>
             {subtitle && (
-              <p className="text-[0.65rem] mt-0.5" style={{ color: STRAPIZZAMI.textMuted }}>
+              <p className="text-[11px] mt-0.5" style={{ color: STRAPIZZAMI.textMuted }}>
                 {subtitle}
               </p>
             )}
@@ -161,7 +161,7 @@ export function StrapizzamiHome({
                   {item.name}
                 </h4>
                 <p
-                  className="text-[0.65rem] leading-snug mb-2 line-clamp-2 flex-1"
+                  className="text-[11px] leading-snug mb-2 line-clamp-2 flex-1"
                   style={{ color: STRAPIZZAMI.textMuted }}
                 >
                   {item.description}

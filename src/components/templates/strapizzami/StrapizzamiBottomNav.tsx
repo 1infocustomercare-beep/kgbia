@@ -32,7 +32,7 @@ export function StrapizzamiBottomNav({ active, onChange, showOffers = false }: P
             >
               <Icon className="w-5 h-5" strokeWidth={isActive ? 2.4 : 1.8} />
               <span
-                className="text-[0.65rem] font-bold tracking-wide uppercase"
+                className="text-[11px] font-bold tracking-wide uppercase"
                 style={{ fontFamily: STRAPIZZAMI.fontBody }}
               >
                 {label}

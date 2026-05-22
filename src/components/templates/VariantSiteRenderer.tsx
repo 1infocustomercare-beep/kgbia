@@ -303,7 +303,7 @@ function BrandIdentityHalo({
               </div>
             )}
 
-            <p className="text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground/60 text-center pt-2">
+            <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground/60 text-center pt-2">
               Demo personalizzata · Empire AI
             </p>
           </div>

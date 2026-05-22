@@ -128,21 +128,21 @@ export default function AgentCostsTab() {
         <div className="p-2.5 rounded-xl bg-destructive/10 border border-destructive/20">
           <div className="flex items-center gap-1.5 mb-2">
             <AlertTriangle className="w-3.5 h-3.5 text-destructive" />
-            <span className="text-[0.65rem] font-semibold text-destructive">
+            <span className="text-[11px] font-semibold text-destructive">
               {lowBalanceAlerts.length} account con crediti bassi (≤10)
             </span>
           </div>
           <div className="space-y-1">
             {lowBalanceAlerts.slice(0, 5).map((a: any) => (
               <div key={a.restaurant_id} className="flex items-center justify-between px-2 py-1 rounded-lg bg-background/60">
-                <span className="text-[0.6rem] text-foreground truncate max-w-[60%]">{a.name}</span>
+                <span className="text-[11px] text-foreground truncate max-w-[60%]">{a.name}</span>
                 <Badge variant="destructive" className="text-[10px] h-4 px-1.5">
                   {a.balance} crediti
                 </Badge>
               </div>
             ))}
             {lowBalanceAlerts.length > 5 && (
-              <p className="text-[0.55rem] text-destructive/70 text-center">
+              <p className="text-[10px] text-destructive/70 text-center">
                 +{lowBalanceAlerts.length - 5} altri
               </p>
             )}
@@ -152,7 +152,7 @@ export default function AgentCostsTab() {
 
       {/* Top spenders by company */}
       <div>
-        <p className="text-[0.6rem] uppercase tracking-wider text-muted-foreground mb-1.5 font-semibold flex items-center gap-1">
+        <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1.5 font-semibold flex items-center gap-1">
           <Building2 className="w-3 h-3" /> Utilizzo AI per Account
         </p>
         {usageByCompany.length === 0 ? (
@@ -178,19 +178,19 @@ export default function AgentCostsTab() {
                   <div className="relative flex items-center justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[0.55rem] font-bold text-muted-foreground w-4">#{i + 1}</span>
-                        <span className="text-[0.65rem] font-semibold text-foreground truncate">{c.company_name}</span>
+                        <span className="text-[10px] font-bold text-muted-foreground w-4">#{i + 1}</span>
+                        <span className="text-[11px] font-semibold text-foreground truncate">{c.company_name}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <Badge variant="outline" className="text-[0.45rem] h-3.5 px-1 border-border/50">
+                        <Badge variant="outline" className="text-[10px] h-3.5 px-1 border-border/50">
                           {c.industry}
                         </Badge>
                         <span className="text-[10px] text-muted-foreground">{c.total_calls} call</span>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-[0.65rem] font-bold text-primary">{(c.total_tokens / 1000).toFixed(1)}K</p>
-                      <p className="text-[0.45rem] text-muted-foreground">${c.cost_usd.toFixed(2)}</p>
+                      <p className="text-[11px] font-bold text-primary">{(c.total_tokens / 1000).toFixed(1)}K</p>
+                      <p className="text-[10px] text-muted-foreground">${c.cost_usd.toFixed(2)}</p>
                     </div>
                   </div>
                 </motion.div>

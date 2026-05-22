@@ -115,13 +115,13 @@ export function TutorialPopup({ id, title, steps, accentColor = "#C8963E", posit
                 )}
                 {step < steps.length - 1 ? (
                   <button onClick={() => setStep(s => s + 1)}
-                    className="px-3 py-1.5 rounded-lg text-[0.65rem] font-bold text-white transition-all"
+                    className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all"
                     style={{ background: accentColor }}>
                     Avanti <ChevronRight className="w-3 h-3 inline ml-0.5" />
                   </button>
                 ) : (
                   <button onClick={dismiss}
-                    className="px-3 py-1.5 rounded-lg text-[0.65rem] font-bold text-white transition-all"
+                    className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all"
                     style={{ background: accentColor }}>
                     Ho capito ✓
                   </button>
@@ -149,7 +149,7 @@ export function HelpTooltip({ text, accentColor = "#C8963E" }: { text: string; a
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
-            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 rounded-xl text-[0.6rem] text-white/70 z-50 shadow-xl border border-white/10"
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 rounded-xl text-[11px] text-white/70 z-50 shadow-xl border border-white/10"
             style={{ background: "rgba(15,15,25,0.98)" }}>
             {text}
             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 border-r border-b border-white/10" style={{ background: "rgba(15,15,25,0.98)" }} />

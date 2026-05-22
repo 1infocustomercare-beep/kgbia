@@ -156,7 +156,7 @@ export default function ContentAIPage() {
         <h1 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-violet-400" /> Content AI Studio
         </h1>
-        <p className="text-[11px] mt-0.5 text-gray-300">Genera, programma e ottimizza contenuti per ogni piattaforma</p>
+        <p className="text-[11px] mt-0.5 text-muted-foreground">Genera, programma e ottimizza contenuti per ogni piattaforma</p>
       </div>
 
       {/* Tabs */}

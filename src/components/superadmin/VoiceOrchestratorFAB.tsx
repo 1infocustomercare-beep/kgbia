@@ -117,7 +117,7 @@ export default function VoiceOrchestratorFAB() {
               {currentPlan?.actions && currentPlan.actions.length > 0 && (
                 <div className="mt-2 space-y-1">
                   {currentPlan.actions.map((a, i) => (
-                    <div key={i} className="text-[11px] text-zinc-400 flex items-center gap-1.5">
+                    <div key={i} className="text-[11px] text-muted-foreground flex items-center gap-1.5">
                       <CheckCircle2 className="w-3 h-3 text-emerald-500" />
                       {a.description}
                     </div>

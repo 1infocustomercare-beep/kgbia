@@ -146,7 +146,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">Ricerca Lead Intelligente</h3>
-              <p className="text-[10px] text-gray-400">
+              <p className="text-[10px] text-muted-foreground">
                 {mode === "zone" ? "Per zona geografica" : mode === "keyword" ? "Per parola chiave" : mode === "sector" ? "Per settore" : mode === "maps_url" ? "Da Google Maps" : "Da sito web"}
                 {" · "}
                 <span className={useReal ? "text-emerald-400" : "text-amber-400"}>
@@ -184,7 +184,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
         {(mode === "zone" || mode === "sector" || mode === "keyword") && (
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-[9px] font-bold uppercase tracking-wider mb-1 block text-gray-400">Settore</label>
+              <label className="text-[9px] font-bold uppercase tracking-wider mb-1 block text-muted-foreground">Settore</label>
               <Select value={sector} onValueChange={setSector}>
                 <SelectTrigger className="bg-black/30 border-white/10 text-white text-xs h-9">
                   <SelectValue />
@@ -197,7 +197,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
               </Select>
             </div>
             <div>
-              <label className="text-[9px] font-bold uppercase tracking-wider mb-1 block text-gray-400">Città</label>
+              <label className="text-[9px] font-bold uppercase tracking-wider mb-1 block text-muted-foreground">Città</label>
               <Select value={city} onValueChange={setCity}>
                 <SelectTrigger className="bg-black/30 border-white/10 text-white text-xs h-9">
                   <SelectValue />
@@ -213,7 +213,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
         )}
 
         {/* Advanced Filters */}
-        <button onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center gap-1 text-[10px] font-semibold text-gray-400">
+        <button onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground">
           <Filter className="w-3 h-3" /> Filtri avanzati
           <ChevronDown className={`w-3 h-3 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
         </button>
@@ -222,7 +222,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
           {showAdvanced && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="grid grid-cols-2 gap-2 overflow-hidden">
               <div>
-                <label className="text-[9px] font-bold uppercase tracking-wider mb-1 block text-gray-400">Rating min.</label>
+                <label className="text-[9px] font-bold uppercase tracking-wider mb-1 block text-muted-foreground">Rating min.</label>
                 <Select value={String(minRating)} onValueChange={v => setMinRating(Number(v))}>
                   <SelectTrigger className="bg-black/30 border-white/10 text-white text-xs h-9"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -234,7 +234,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
                 </Select>
               </div>
               <div>
-                <label className="text-[9px] font-bold uppercase tracking-wider mb-1 block text-gray-400">Recensioni min.</label>
+                <label className="text-[9px] font-bold uppercase tracking-wider mb-1 block text-muted-foreground">Recensioni min.</label>
                 <Select value={String(minReviews)} onValueChange={v => setMinReviews(Number(v))}>
                   <SelectTrigger className="bg-black/30 border-white/10 text-white text-xs h-9"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -296,7 +296,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
                   <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-emerald-500/20 text-emerald-400">GRATIS</span>
                 </div>
               </div>
-              <p className="text-[10px] text-gray-400">Cerca attività reali da OpenStreetMap. Nessun account o API key necessari. Dati community-driven con copertura globale.</p>
+              <p className="text-[10px] text-muted-foreground">Cerca attività reali da OpenStreetMap. Nessun account o API key necessari. Dati community-driven con copertura globale.</p>
               <div className="flex items-center gap-1.5 text-[9px] text-gray-500">
                 <CheckCircle2 className="w-3 h-3 text-emerald-500" /> Attivo automaticamente — nessuna configurazione
               </div>
@@ -314,8 +314,8 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
                   <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-blue-500/20 text-blue-400">PREMIUM</span>
                 </div>
               </div>
-              <p className="text-[10px] text-gray-400">Rating, recensioni, telefoni e siti web reali da Google Maps. Free tier: $200/mese (~11.000 ricerche).</p>
-              <div className="space-y-1.5 text-[10px] text-gray-300">
+              <p className="text-[10px] text-muted-foreground">Rating, recensioni, telefoni e siti web reali da Google Maps. Free tier: $200/mese (~11.000 ricerche).</p>
+              <div className="space-y-1.5 text-[10px] text-muted-foreground">
                 <p><strong>1.</strong> <a href="https://console.cloud.google.com/apis/library/places-backend.googleapis.com" target="_blank" rel="noopener noreferrer" className="underline text-blue-400">Abilita Places API (New)</a></p>
                 <p><strong>2.</strong> <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" className="underline text-blue-400">Crea API Key</a></p>
                 <p><strong>3.</strong> Aggiungi come secret <code className="px-1 py-0.5 rounded bg-white/5 text-blue-300 text-[9px]">GOOGLE_PLACES_API_KEY</code> nelle impostazioni</p>
@@ -334,15 +334,15 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
                 </div>
                 <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-red-500/20 text-red-400">ANALISI</span>
               </div>
-              <p className="text-[10px] text-gray-400">Analizza siti web dei lead: branding, tecnologie, stato digitale. 500 crediti gratis, poi da $19/mese.</p>
-              <p className="text-[10px] text-gray-300">
+              <p className="text-[10px] text-muted-foreground">Analizza siti web dei lead: branding, tecnologie, stato digitale. 500 crediti gratis, poi da $19/mese.</p>
+              <p className="text-[10px] text-muted-foreground">
                 <a href="https://firecrawl.dev" target="_blank" rel="noopener noreferrer" className="underline text-red-400">Registrati su Firecrawl</a> → Connetti da <strong>Impostazioni → Connessioni</strong>
               </p>
             </div>
 
             <div className="p-2.5 rounded-lg" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <p className="text-[10px] text-gray-400">
-                💡 <strong className="text-gray-300">Default gratuito</strong>: Nominatim è sempre attivo. Google Places migliora la qualità dei dati. Firecrawl aggiunge analisi approfondita dei siti.
+              <p className="text-[10px] text-muted-foreground">
+                💡 <strong className="text-muted-foreground">Default gratuito</strong>: Nominatim è sempre attivo. Google Places migliora la qualità dei dati. Firecrawl aggiunge analisi approfondita dei siti.
               </p>
             </div>
           </motion.div>
