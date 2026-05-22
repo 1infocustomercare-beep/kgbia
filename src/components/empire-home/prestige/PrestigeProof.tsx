@@ -35,24 +35,25 @@ export default function PrestigeProof() {
     <section
       ref={ref}
       data-section="prestige-proof"
-      className="prestige-section prestige-dark py-24 sm:py-32"
+      className="prestige-section prestige-dark py-16 sm:py-24 md:py-32"
     >
-      <div className="mx-auto max-w-6xl px-5 lg:px-10">
+      <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
         {/* Stats strip */}
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {STATS.map((s, i) => (
             <div
               key={s.label}
-              className="prestige-card text-center"
+              className="prestige-card text-center min-w-0"
               style={{ animation: `prestigePop .8s ${i * 0.1}s cubic-bezier(.22,1,.36,1) backwards` }}
             >
-              <div className="prestige-display text-3xl sm:text-4xl md:text-5xl prestige-gold-text">{s.value}</div>
-              <div className="mt-2 text-[11px] uppercase tracking-[0.2em]" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+              <div className="prestige-display text-2xl sm:text-4xl md:text-5xl prestige-gold-text break-words">{s.value}</div>
+              <div className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.2em] leading-snug" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
                 {s.label}
               </div>
             </div>
           ))}
         </div>
+
 
         {/* Testimonials */}
         <div className="mt-16">
