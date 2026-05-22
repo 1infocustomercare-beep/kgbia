@@ -197,7 +197,7 @@ const DashboardOverview = ({
             className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
             onClick={() => setShowTokenShop(false)}>
             <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }}
-              className="w-full max-w-sm cote-card rounded-2xl p-5 space-y-4 shadow-xl"
+              className="w-full max-w-sm cote-card rounded-2xl p-5 space-y-4 shadow-xl max-h-[88vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between">
                 <div>
