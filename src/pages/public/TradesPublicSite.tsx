@@ -509,7 +509,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
               <span className="text-[8px] tracking-[0.25em] uppercase block font-medium text-white/70" style={{ fontFamily: palette.fontBody }}>{config.label.toUpperCase()}</span>
             </div>
           </div>
-          <div className="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-white/35" style={{ fontFamily: palette.fontBody }}>
+          <div className="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-white/75" style={{ fontFamily: palette.fontBody }}>
             {navLinks.map(l => <a key={l.href} href={l.href} className="hover:text-white transition-colors">{l.label}</a>)}
           </div>
           <div className="flex items-center gap-3">
@@ -588,7 +588,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
             {stats.map((s, i) => (
               <div key={i} className="text-center">
                 <p className="text-2xl sm:text-3xl font-bold" style={{ color: A }}>{s.value}</p>
-                <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">{s.label}</p>
+                <p className="text-[10px] text-white/70 uppercase tracking-widest mt-1">{s.label}</p>
               </div>
             ))}
           </motion.div>
@@ -646,7 +646,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                         </div>
                         <div>
                           <h3 className="font-bold text-white text-sm mb-1">{s.name}</h3>
-                          <p className="text-xs text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                          <p className="text-xs text-white/75" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
                         </div>
                       </div>
                     </CardContent>
@@ -661,7 +661,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                         <span className="text-2xl">{s.emoji}</span>
                       </div>
                       <h3 className="font-bold text-white text-sm mb-1" style={{ fontFamily: palette.fontDisplay }}>{s.name}</h3>
-                      <p className="text-[11px] text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                      <p className="text-[11px] text-white/75" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
                     </CardContent>
                   </Card>
                 ) : palette.visualStyle === "neon" ? (
@@ -678,7 +678,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                           <span className="text-2xl">{s.emoji}</span>
                         </div>
                         <h3 className="font-bold text-white text-sm mb-1">{s.name}</h3>
-                        <p className="text-xs text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                        <p className="text-xs text-white/75" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -707,7 +707,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                           <span className="text-3xl">{s.emoji}</span>
                         </div>
                         <h3 className="font-bold text-white text-sm mb-1" style={{ fontFamily: palette.fontDisplay }}>{s.name}</h3>
-                        <p className="text-[11px] text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                        <p className="text-[11px] text-white/75" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -740,7 +740,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                           <span className="text-3xl">{s.emoji}</span>
                         </div>
                         <h3 className="font-bold text-white mb-1.5">{s.name}</h3>
-                        <p className="text-sm text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                        <p className="text-sm text-white/75" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -774,7 +774,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                   <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-[11px] font-bold flex items-center justify-center" style={{ background: A, color: D }}>{s.step}</span>
                 </div>
                 <h3 className="font-bold text-white mb-1.5 text-sm">{s.title}</h3>
-                <p className="text-xs text-white/35">{s.desc}</p>
+                <p className="text-xs text-white/75">{s.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -803,7 +803,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                         <item.icon className="w-5 h-5" style={{ color: A }} />
                       </div>
                       <h3 className="font-bold text-white mb-1" style={{ fontFamily: palette.fontDisplay }}>{item.title}</h3>
-                      <p className="text-sm text-white/35" style={{ fontFamily: palette.fontBody }}>{item.desc}</p>
+                      <p className="text-sm text-white/75" style={{ fontFamily: palette.fontBody }}>{item.desc}</p>
                     </div>
                   </CardContent>
                 </Card>
