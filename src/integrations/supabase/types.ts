@@ -6070,6 +6070,7 @@ export type Database = {
           is_blocked: boolean
           languages: string[] | null
           logo_url: string | null
+          menu_pdf_url: string | null
           min_order_amount: number | null
           name: string
           opening_hours: Json | null
@@ -6107,6 +6108,7 @@ export type Database = {
           is_blocked?: boolean
           languages?: string[] | null
           logo_url?: string | null
+          menu_pdf_url?: string | null
           min_order_amount?: number | null
           name: string
           opening_hours?: Json | null
@@ -6144,6 +6146,7 @@ export type Database = {
           is_blocked?: boolean
           languages?: string[] | null
           logo_url?: string | null
+          menu_pdf_url?: string | null
           min_order_amount?: number | null
           name?: string
           opening_hours?: Json | null

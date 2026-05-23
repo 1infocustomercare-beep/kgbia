@@ -350,6 +350,11 @@ export default function RestaurantSiteEditor({
                   )}
                 </div>
               </Field>
+
+              {/* Menu PDF (download dalla pagina pubblica) */}
+              <Field label="Menu PDF (scaricabile dai clienti)">
+                <MenuPdfUploader restaurant={restaurant} onSaved={onSaved} />
+              </Field>
             </>
           ) : (
             <p className="text-xs text-muted-foreground">
@@ -357,6 +362,7 @@ export default function RestaurantSiteEditor({
             </p>
           )}
         </Section>
+
 
         {/* HERO */}
         <Section k="hero">
@@ -624,6 +630,75 @@ function ToggleField({ label, checked, onChange }: { label: string; checked: boo
     <div className="flex items-center justify-between py-1.5 gap-3">
       <Label className="text-sm">{label}</Label>
       <Switch checked={checked} onCheckedChange={onChange} />
+    </div>
+  );
+}
+
+function MenuPdfUploader({ restaurant, onSaved }: { restaurant: any; onSaved?: () => void }) {
+  const [uploading, setUploading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const url: string | null = restaurant?.menu_pdf_url || null;
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      toast({ title: "Formato non valido", description: "Carica un file PDF", variant: "destructive" });
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: "File troppo grande", description: "Massimo 10 MB", variant: "destructive" });
+      return;
+    }
+    setUploading(true);
+    try {
+      const path = `${restaurant.id}/menu-${Date.now()}.pdf`;
+      const { error: upErr } = await supabase.storage.from("homepage-media").upload(path, file, { upsert: true, contentType: "application/pdf" });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from("homepage-media").getPublicUrl(path);
+      const { error: updErr } = await supabase.from("restaurants").update({ menu_pdf_url: pub.publicUrl } as any).eq("id", restaurant.id);
+      if (updErr) throw updErr;
+      toast({ title: "Menu PDF caricato", description: "Ora è scaricabile dalla pagina pubblica" });
+      onSaved?.();
+    } catch (err: any) {
+      toast({ title: "Errore caricamento", description: err.message || "Riprova", variant: "destructive" });
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  const handleRemove = async () => {
+    try {
+      const { error } = await supabase.from("restaurants").update({ menu_pdf_url: null } as any).eq("id", restaurant.id);
+      if (error) throw error;
+      toast({ title: "Menu PDF rimosso" });
+      onSaved?.();
+    } catch (err: any) {
+      toast({ title: "Errore", description: err.message, variant: "destructive" });
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <input ref={inputRef} type="file" accept="application/pdf" className="hidden" onChange={handleFile} />
+      <div className="flex flex-wrap gap-2">
+        <Button type="button" variant="secondary" onClick={() => inputRef.current?.click()} disabled={uploading} className="flex-1 min-h-[44px]">
+          {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+          {uploading ? "Caricamento..." : url ? "Sostituisci PDF" : "Carica PDF"}
+        </Button>
+        {url && (
+          <>
+            <Button type="button" variant="outline" size="sm" asChild className="min-h-[44px]">
+              <a href={url} target="_blank" rel="noopener noreferrer">Apri</a>
+            </Button>
+            <Button type="button" variant="outline" size="sm" onClick={handleRemove} className="min-h-[44px]">
+              Rimuovi
+            </Button>
+          </>
+        )}
+      </div>
+      {!url && <p className="text-[11px] text-muted-foreground">Max 10 MB · Formato PDF</p>}
     </div>
   );
 }
