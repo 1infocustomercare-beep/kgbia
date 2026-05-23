@@ -294,7 +294,7 @@ export default function CinematicHero() {
                       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                       className="inline-block landing-heading-gradient font-extrabold"
                     >
-                      {ROTATING_WORDS[wordIdx]}
+                      {ROT[wordIdx % ROT.length]}
                     </motion.span>
                   </AnimatePresence>
                 </span>{" "}
@@ -340,7 +340,7 @@ export default function CinematicHero() {
               transition={{ delay: 1.4, duration: 0.6 }}
               className="flex flex-wrap justify-center gap-1.5 sm:gap-2 lg:justify-start"
             >
-              {TRUST.map((item) => (
+              {TRUST_PILLS.map((item) => (
                 <motion.span
                   key={item}
                   whileHover={{ y: -2, scale: 1.04 }}
