@@ -77,6 +77,19 @@ const PLANS_DEFAULT: PricingPlan[] = [
 
 export default function PricingSection() {
   const navigate = useNavigate();
+  const { content } = useHomepageContent();
+  const pc = content.pricing ?? {};
+  const PLANS = pick(pc.plans, PLANS_DEFAULT);
+  const PILL_LABEL = pick(pc.eyebrow, "Investimento · ROI · Scala");
+  const TITLE_LEAD = pick(pc.titleLead, "Smetti di pagare stipendi.");
+  const TITLE_ACC = pick(pc.titleAccent, "Inizia a pagare risultati.");
+  const PR_SUB = pick(pc.subtitle, "Setup una tantum (rateizzabile) + mantenimento mensile. Ogni piano si ripaga in 2–4 mesi sostituendo costi operativi reali.");
+  const TRUST_STRIP = pick(pc.trustStrip, ["Garanzia 90 giorni", "Cambio piano in qualsiasi momento", "Setup rateizzabile 3× o 6×"]);
+  const BOTTOM_STATS = pick(pc.bottomStats, [
+    { value: "14 giorni", label: "Time to live" },
+    { value: "847+", label: "Business attivi" },
+    { value: "€2.8M", label: "Risparmiati nel 2024" },
+  ]);
 
   return (
     <section id="prezzi" className="landing-section relative overflow-visible px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="light">
@@ -113,8 +126,8 @@ export default function PricingSection() {
         </motion.div>
 
         {(() => {
-          const renderPlan = (plan: typeof PLANS[number], index: number, inCarousel = false) => {
-            const Icon = plan.icon;
+          const renderPlan = (plan: PricingPlan, index: number, inCarousel = false) => {
+            const Icon = TONE_TO_ICON[plan.tone ?? "gold"] ?? Sparkles;
             return (
               <motion.article
                 key={plan.name}
