@@ -77,9 +77,11 @@ export default function LandingNav() {
           </ul>
 
           <div className="hidden lg:flex gap-3 items-center">
+            <PrestigeLangToggle />
             <button onClick={() => navigate("/auth")} className="text-[13px] font-medium text-foreground/60 transition-colors hover:text-foreground">Accedi</button>
             <button onClick={() => scrollTo("#contatti")} className="landing-button-primary px-6 py-2.5 text-sm font-semibold">Inizia Ora</button>
           </div>
+
 
           <button className="text-foreground lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
