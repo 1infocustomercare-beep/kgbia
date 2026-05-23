@@ -103,25 +103,25 @@ export default function PricingSection() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
           className="mx-auto mb-10 max-w-[820px] text-center sm:mb-14"
-          data-tone="gold"
-        >
           <span className="landing-pill mb-4 inline-flex items-center gap-2 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">
-            <Zap className="h-3 w-3" strokeWidth={2.5} /> Investimento · ROI · Scala
+            <Zap className="h-3 w-3" strokeWidth={2.5} /> {PILL_LABEL}
           </span>
           <h2 className="text-[clamp(1.8rem,5vw,3.6rem)] font-heading font-extrabold leading-[0.94] tracking-[-0.05em] text-foreground">
-            Smetti di pagare stipendi. <span className="landing-heading-gradient">Inizia a pagare risultati.</span>
+            {TITLE_LEAD} <span className="landing-heading-gradient">{TITLE_ACC}</span>
           </h2>
           <p className="mx-auto mt-4 max-w-[640px] text-[clamp(0.95rem,1.6vw,1.05rem)] leading-[1.68] text-foreground/78">
-            Setup una tantum (rateizzabile) + mantenimento mensile. Ogni piano si ripaga in <strong className="text-foreground">2–4 mesi</strong> sostituendo costi operativi reali.
+            {PR_SUB}
           </p>
 
           {/* Trust strip */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[12px] text-foreground/65 sm:text-[13px]">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-accent" /> Garanzia 90 giorni</span>
-            <span className="text-foreground/25">•</span>
-            <span>Cambio piano in qualsiasi momento</span>
-            <span className="text-foreground/25">•</span>
-            <span>Setup rateizzabile 3× o 6×</span>
+            {TRUST_STRIP.map((t, i) => (
+              <span key={i} className="flex items-center gap-1.5">
+                {i === 0 && <ShieldCheck className="h-4 w-4 text-accent" />}
+                {t}
+                {i < TRUST_STRIP.length - 1 && <span className="text-foreground/25 ml-2">•</span>}
+              </span>
+            ))}
           </div>
         </motion.div>
 
