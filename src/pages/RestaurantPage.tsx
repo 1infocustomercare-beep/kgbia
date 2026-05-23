@@ -122,7 +122,34 @@ const RestaurantPage = () => {
     };
     const descEl = ensureMeta("description", `${restaurantName} — ${restaurantTagline}. ${restaurantAddress}, ${restaurantCity}. Prenota un tavolo o ordina online.`);
 
-    const ld = {
+    // Map IT day labels to schema.org day-of-week codes
+    const dayMap: Record<string, string[]> = {
+      "lunedì": ["Mo"], "martedì": ["Tu"], "mercoledì": ["We"], "giovedì": ["Th"],
+      "venerdì": ["Fr"], "sabato": ["Sa"], "domenica": ["Su"],
+      "lun-ven": ["Mo","Tu","We","Th","Fr"], "lunedì - venerdì": ["Mo","Tu","We","Th","Fr"],
+      "lun - ven": ["Mo","Tu","We","Th","Fr"],
+    };
+    const hoursLD = (openingHours || [])
+      .filter((h: any) => h?.hours && !/chiuso/i.test(h.hours))
+      .map((h: any) => {
+        const key = (h.day || "").toLowerCase().trim();
+        const days = dayMap[key] || [];
+        if (!days.length) return null;
+        const ranges = h.hours.split(/[·•|]/).map((r: string) => r.trim()).filter(Boolean);
+        return ranges.map((r: string) => {
+          const [open, close] = r.split("-").map((s) => s.trim().replace(".", ":"));
+          if (!open || !close) return null;
+          return { "@type": "OpeningHoursSpecification", dayOfWeek: days, opens: open, closes: close };
+        }).filter(Boolean);
+      })
+      .filter(Boolean)
+      .flat();
+
+    const geo = (dbRestaurant as any)?.latitude && (dbRestaurant as any)?.longitude
+      ? { "@type": "GeoCoordinates", latitude: (dbRestaurant as any).latitude, longitude: (dbRestaurant as any).longitude }
+      : undefined;
+
+    const ld: any = {
       "@context": "https://schema.org",
       "@type": "Restaurant",
       name: restaurantName,
@@ -134,6 +161,9 @@ const RestaurantPage = () => {
       priceRange: (dbRestaurant as any)?.price_range || "€€",
       url: typeof window !== "undefined" ? window.location.href : undefined,
       menu: typeof window !== "undefined" ? `${window.location.origin}/r/${slug}#menu-section` : undefined,
+      ...(geo ? { geo } : {}),
+      ...(hoursLD.length ? { openingHoursSpecification: hoursLD } : {}),
+      ...(dbRestaurant?.id ? { aggregateRating: undefined } : {}),
     };
     const script = document.createElement("script");
     script.type = "application/ld+json";
