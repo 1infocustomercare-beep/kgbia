@@ -19,7 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import cartoonStudioMenu from "@/assets/cartoon-studio-menu-v2.png";
 import RestaurantSiteEditor from "@/components/admin/RestaurantSiteEditor";
 
-type StudioSection = "menu" | "ai" | "foodphoto" | "plates" | "translate" | "preview" | "site";
+type StudioSection = "menu" | "ai" | "foodphoto" | "plates" | "translate" | "site";
 
 /* ── EU Allergen Icons ── */
 const EU_ALLERGENS = [
