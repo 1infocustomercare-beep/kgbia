@@ -962,7 +962,7 @@ const RestaurantPage = () => {
   );
 };
 
-import { RestaurantSiteProvider, useRestaurantSite } from "@/hooks/useRestaurantSite";
+
 
 /**
  * Wrapper: fornisce il context con gli override editabili dall'admin
