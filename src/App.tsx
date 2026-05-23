@@ -776,6 +776,7 @@ function App() {
                         <Route path="reservations" element={<ReservationsPage />} />
                         <Route path="reviews" element={<ReviewsPage />} />
                         <Route path="inventory" element={<InventoryPage />} />
+                        <Route path="warehouse" element={<WarehousePage />} />
                         {/* NCC modules */}
                         <Route path="fleet" element={<NCCFleetPage />} />
                         <Route path="routes" element={<NCCRoutesPage />} />
