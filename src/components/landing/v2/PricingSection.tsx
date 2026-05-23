@@ -2,11 +2,16 @@ import { motion } from "framer-motion";
 import { Check, ShieldCheck, Zap, TrendingUp, Crown, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import MobileCarousel from "./MobileCarousel";
+import { useHomepageContent, pick } from "@/hooks/useHomepageContent";
+import type { PricingPlan } from "@/lib/homepage-content";
 
-const PLANS = [
+const ICON_MAP: Record<string, any> = { Sparkles, TrendingUp, Crown, Zap, ShieldCheck };
+const TONE_TO_ICON: Record<string, any> = { blue: Sparkles, gold: TrendingUp, violet: Crown };
+
+const PLANS_DEFAULT: PricingPlan[] = [
   {
     name: "Digital Start",
-    icon: Sparkles,
+
     setup: "€1.997",
     setupRate: "o 3× €697",
     monthly: "€49",
@@ -26,7 +31,7 @@ const PLANS = [
   },
   {
     name: "Empire Pro",
-    icon: TrendingUp,
+
     setup: "€3.997",
     setupRate: "o 6× €697",
     monthly: "€149",
@@ -49,7 +54,7 @@ const PLANS = [
   },
   {
     name: "Empire Elite",
-    icon: Crown,
+
     setup: "€9.997",
     setupRate: "o 6× €1.747",
     monthly: "€299",
@@ -72,6 +77,19 @@ const PLANS = [
 
 export default function PricingSection() {
   const navigate = useNavigate();
+  const { content } = useHomepageContent();
+  const pc = content.pricing ?? {};
+  const PLANS = pick(pc.plans, PLANS_DEFAULT);
+  const PILL_LABEL = pick(pc.eyebrow, "Investimento · ROI · Scala");
+  const TITLE_LEAD = pick(pc.titleLead, "Smetti di pagare stipendi.");
+  const TITLE_ACC = pick(pc.titleAccent, "Inizia a pagare risultati.");
+  const PR_SUB = pick(pc.subtitle, "Setup una tantum (rateizzabile) + mantenimento mensile. Ogni piano si ripaga in 2–4 mesi sostituendo costi operativi reali.");
+  const TRUST_STRIP = pick(pc.trustStrip, ["Garanzia 90 giorni", "Cambio piano in qualsiasi momento", "Setup rateizzabile 3× o 6×"]);
+  const BOTTOM_STATS = pick(pc.bottomStats, [
+    { value: "14 giorni", label: "Time to live" },
+    { value: "847+", label: "Business attivi" },
+    { value: "€2.8M", label: "Risparmiati nel 2024" },
+  ]);
 
   return (
     <section id="prezzi" className="landing-section relative overflow-visible px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20" data-theme="light">
@@ -88,28 +106,30 @@ export default function PricingSection() {
           data-tone="gold"
         >
           <span className="landing-pill mb-4 inline-flex items-center gap-2 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">
-            <Zap className="h-3 w-3" strokeWidth={2.5} /> Investimento · ROI · Scala
+            <Zap className="h-3 w-3" strokeWidth={2.5} /> {PILL_LABEL}
           </span>
           <h2 className="text-[clamp(1.8rem,5vw,3.6rem)] font-heading font-extrabold leading-[0.94] tracking-[-0.05em] text-foreground">
-            Smetti di pagare stipendi. <span className="landing-heading-gradient">Inizia a pagare risultati.</span>
+            {TITLE_LEAD} <span className="landing-heading-gradient">{TITLE_ACC}</span>
           </h2>
           <p className="mx-auto mt-4 max-w-[640px] text-[clamp(0.95rem,1.6vw,1.05rem)] leading-[1.68] text-foreground/78">
-            Setup una tantum (rateizzabile) + mantenimento mensile. Ogni piano si ripaga in <strong className="text-foreground">2–4 mesi</strong> sostituendo costi operativi reali.
+            {PR_SUB}
           </p>
 
           {/* Trust strip */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[12px] text-foreground/65 sm:text-[13px]">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-accent" /> Garanzia 90 giorni</span>
-            <span className="text-foreground/25">•</span>
-            <span>Cambio piano in qualsiasi momento</span>
-            <span className="text-foreground/25">•</span>
-            <span>Setup rateizzabile 3× o 6×</span>
+            {TRUST_STRIP.map((t, i) => (
+              <span key={i} className="flex items-center gap-1.5">
+                {i === 0 && <ShieldCheck className="h-4 w-4 text-accent" />}
+                {t}
+                {i < TRUST_STRIP.length - 1 && <span className="text-foreground/25 ml-2">•</span>}
+              </span>
+            ))}
           </div>
         </motion.div>
 
         {(() => {
-          const renderPlan = (plan: typeof PLANS[number], index: number, inCarousel = false) => {
-            const Icon = plan.icon;
+          const renderPlan = (plan: PricingPlan, index: number, inCarousel = false) => {
+            const Icon = TONE_TO_ICON[plan.tone ?? "gold"] ?? Sparkles;
             return (
               <motion.article
                 key={plan.name}
@@ -224,18 +244,12 @@ export default function PricingSection() {
           className="mx-auto mt-10 max-w-[920px] rounded-[20px] border border-border/60 bg-card/40 p-5 backdrop-blur-md sm:p-6"
         >
           <div className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
-            <div>
-              <div className="font-heading text-2xl font-extrabold text-foreground sm:text-3xl">14 giorni</div>
-              <div className="mt-1 text-[12px] uppercase tracking-[0.2em] text-foreground/60">Time to live</div>
-            </div>
-            <div className="sm:border-x sm:border-border/40">
-              <div className="font-heading text-2xl font-extrabold text-foreground sm:text-3xl">847+</div>
-              <div className="mt-1 text-[12px] uppercase tracking-[0.2em] text-foreground/60">Business attivi</div>
-            </div>
-            <div>
-              <div className="font-heading text-2xl font-extrabold text-foreground sm:text-3xl">€2.8M</div>
-              <div className="mt-1 text-[12px] uppercase tracking-[0.2em] text-foreground/60">Risparmiati nel 2024</div>
-            </div>
+            {BOTTOM_STATS.map((s, i) => (
+              <div key={i} className={i === 1 ? "sm:border-x sm:border-border/40" : ""}>
+                <div className="font-heading text-2xl font-extrabold text-foreground sm:text-3xl">{s.value}</div>
+                <div className="mt-1 text-[12px] uppercase tracking-[0.2em] text-foreground/60">{s.label}</div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>

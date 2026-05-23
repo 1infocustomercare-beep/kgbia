@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useHomepageContent, pick } from "@/hooks/useHomepageContent";
 
 const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
 
@@ -91,6 +92,21 @@ export default function CinematicHero() {
   const prefersReducedMotion = useReducedMotion();
   const lite = isMobile || prefersReducedMotion;
 
+  // CMS overrides
+  const { content } = useHomepageContent();
+  const h = content.hero ?? {};
+  const EYEBROW = pick(h.eyebrow, "Empire AI · Webapp + 4 Agenti AI");
+  const TITLE_LINE1 = pick(h.titleLine1, "Sostituisci");
+  const TITLE_LINE2 = pick(h.titleLine2, "i dipendenti.");
+  const SUBTITLE_LEAD = pick(h.titleAccent, "L'AI gestisce");
+  const SUBTITLE = pick(h.subtitle, "Webapp su misura + agenti AI che rispondono al telefono, vendono, prenotano e raccolgono recensioni — 24/7, in tutte le lingue. Setup in 14 giorni. 25+ verticali coperti.");
+  const ROT = pick(h.rotatingWords, ROTATING_WORDS);
+  const TRUST_PILLS = pick(h.trustPills, TRUST);
+  const CTA1_LABEL = pick(h.ctaPrimaryLabel, "Prenota call gratuita");
+  const CTA1_HREF = pick(h.ctaPrimaryHref, "/demo");
+  const CTA2_LABEL = pick(h.ctaSecondaryLabel, "Vedi 12 progetti live");
+  const CTA2_HREF = pick(h.ctaSecondaryHref, "#portfolio");
+
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 26, mass: 0.7 });
 
@@ -110,9 +126,9 @@ export default function CinematicHero() {
 
   // Rotating word
   useEffect(() => {
-    const id = setInterval(() => setWordIdx((w) => (w + 1) % ROTATING_WORDS.length), 2200);
+    const id = setInterval(() => setWordIdx((w) => (w + 1) % ROT.length), 2200);
     return () => clearInterval(id);
-  }, []);
+  }, [ROT.length]);
 
   // Pointer tracking — DESKTOP ONLY (skip on mobile to save perf, drop gyro)
   useEffect(() => {
@@ -260,14 +276,14 @@ export default function CinematicHero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_14px_hsl(var(--accent)/0.9)]" />
               </span>
-              Empire AI · Webapp + 4 Agenti AI
+              {EYEBROW}
             </motion.div>
 
             <h1 className="mx-auto mb-4 max-w-[18ch] font-heading text-[clamp(2rem,7.6vw,5.4rem)] font-extrabold leading-[0.94] tracking-[-0.04em] text-foreground sm:mb-5 lg:mx-0 lg:max-w-[14ch]">
-              <span className="block"><RevealWord text="Sostituisci" delay={0.15} /></span>
-              <span className="block landing-heading-gradient"><RevealWord text="i dipendenti." delay={0.3} /></span>
+              <span className="block"><RevealWord text={TITLE_LINE1} delay={0.15} /></span>
+              <span className="block landing-heading-gradient"><RevealWord text={TITLE_LINE2} delay={0.3} /></span>
               <span className="block mt-1 text-[clamp(1.05rem,3.4vw,2rem)] font-semibold text-foreground/85">
-                <RevealWord text="L'AI gestisce" delay={0.5} />{" "}
+                <RevealWord text={SUBTITLE_LEAD} delay={0.5} />{" "}
                 <span className="relative inline-block min-w-[8ch] text-left align-baseline">
                   <AnimatePresence mode="wait">
                     <motion.span
@@ -278,7 +294,7 @@ export default function CinematicHero() {
                       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                       className="inline-block landing-heading-gradient font-extrabold"
                     >
-                      {ROTATING_WORDS[wordIdx]}
+                      {ROT[wordIdx % ROT.length]}
                     </motion.span>
                   </AnimatePresence>
                 </span>{" "}
@@ -292,7 +308,7 @@ export default function CinematicHero() {
               transition={{ delay: 1, duration: 0.7 }}
               className="mx-auto mb-5 max-w-[480px] text-[clamp(0.9rem,2vw,1.1rem)] leading-[1.6] text-foreground/72 sm:mb-6 lg:mx-0"
             >
-              Webapp su misura + agenti AI che <span className="font-semibold text-foreground">rispondono al telefono, vendono, prenotano</span> e raccolgono recensioni — 24/7, in tutte le lingue. Setup in 14 giorni. 25+ verticali coperti.
+              {SUBTITLE}
             </motion.p>
 
             <motion.div
@@ -302,19 +318,19 @@ export default function CinematicHero() {
               className="mb-5 flex flex-col items-center gap-2.5 sm:flex-row sm:gap-3 lg:items-start lg:justify-start"
             >
               <MagneticCTA
-                onClick={() => navigate("/demo")}
+                onClick={() => CTA1_HREF.startsWith("#") ? document.querySelector(CTA1_HREF)?.scrollIntoView({ behavior: "smooth" }) : navigate(CTA1_HREF)}
                 variant="primary"
                 className="w-full max-w-[300px] px-7 py-3.5 text-sm font-semibold sm:w-auto sm:text-[15px]"
               >
-                Prenota call gratuita
+                {CTA1_LABEL}
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </MagneticCTA>
               <MagneticCTA
-                onClick={() => document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => CTA2_HREF.startsWith("#") ? document.querySelector(CTA2_HREF)?.scrollIntoView({ behavior: "smooth" }) : navigate(CTA2_HREF)}
                 variant="secondary"
                 className="w-full max-w-[300px] px-7 py-3.5 text-sm font-semibold sm:w-auto"
               >
-                Vedi 12 progetti live
+                {CTA2_LABEL}
               </MagneticCTA>
             </motion.div>
 
@@ -324,7 +340,7 @@ export default function CinematicHero() {
               transition={{ delay: 1.4, duration: 0.6 }}
               className="flex flex-wrap justify-center gap-1.5 sm:gap-2 lg:justify-start"
             >
-              {TRUST.map((item) => (
+              {TRUST_PILLS.map((item) => (
                 <motion.span
                   key={item}
                   whileHover={{ y: -2, scale: 1.04 }}

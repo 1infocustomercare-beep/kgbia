@@ -3211,6 +3211,36 @@ export type Database = {
           },
         ]
       }
+      homepage_content: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          published_content: Json
+          singleton: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          id?: string
+          published_content?: Json
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          published_content?: Json
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       infrastructure_costs: {
         Row: {
           category: string
