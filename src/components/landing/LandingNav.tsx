@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import empireLogo from "@/assets/empire-logo-full.png";
+import { PrestigeLangToggle } from "@/components/empire-home/prestige/PrestigeLang";
+
 
 const NAV_LINKS = [
   { label: "Settori", href: "#sectors" },
@@ -75,9 +77,11 @@ export default function LandingNav() {
           </ul>
 
           <div className="hidden lg:flex gap-3 items-center">
+            <PrestigeLangToggle />
             <button onClick={() => navigate("/auth")} className="text-[13px] font-medium text-foreground/60 transition-colors hover:text-foreground">Accedi</button>
             <button onClick={() => scrollTo("#contatti")} className="landing-button-primary px-6 py-2.5 text-sm font-semibold">Inizia Ora</button>
           </div>
+
 
           <button className="text-foreground lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -91,9 +95,15 @@ export default function LandingNav() {
             {NAV_LINKS.map((l) => (
               <button key={l.href} onClick={() => scrollTo(l.href)} className="text-left text-sm font-medium text-foreground/74 transition-colors hover:text-foreground">{l.label}</button>
             ))}
-            <button onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }} className="landing-button-primary mt-2 px-6 py-3 text-center text-sm font-semibold">Inizia Ora</button>
+            <div className="flex items-center justify-between pt-2 border-t border-border/40">
+              <span className="text-[11px] uppercase tracking-wider text-foreground/55 font-semibold">Lingua</span>
+              <PrestigeLangToggle />
+            </div>
+            <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-left text-sm font-medium text-foreground/74 transition-colors hover:text-foreground">Accedi</button>
+            <button onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }} className="landing-button-primary mt-1 px-6 py-3 text-center text-sm font-semibold">Inizia Ora</button>
           </motion.div>
         )}
+
       </nav>
     </>
   );
