@@ -7,6 +7,7 @@ import {
   Sun, Moon, Clock, Leaf, Flame, Wheat, Fish, Milk, Egg, TreePine
 } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
+import { SplineScene } from "@/components/ui/spline-scene";
 import LivePreview from "@/components/restaurant/LivePreview";
 import FoodPhotoGenerator from "@/components/admin/FoodPhotoGenerator";
 import PlateGallery from "@/components/admin/PlateGallery";
