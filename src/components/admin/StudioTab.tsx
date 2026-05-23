@@ -853,6 +853,11 @@ const StudioTab = ({
         </div>
       )}
 
+      {/* ===== SITO PUBBLICO (full editor) ===== */}
+      {section === "site" && restaurant && (
+        <RestaurantSiteEditor restaurant={restaurant} />
+      )}
+
       {/* ===== DESIGN & LIVE PREVIEW ===== */}
       {section === "preview" && restaurant && (
         <div className="space-y-4">
