@@ -126,9 +126,9 @@ export default function CinematicHero() {
 
   // Rotating word
   useEffect(() => {
-    const id = setInterval(() => setWordIdx((w) => (w + 1) % ROTATING_WORDS.length), 2200);
+    const id = setInterval(() => setWordIdx((w) => (w + 1) % ROT.length), 2200);
     return () => clearInterval(id);
-  }, []);
+  }, [ROT.length]);
 
   // Pointer tracking — DESKTOP ONLY (skip on mobile to save perf, drop gyro)
   useEffect(() => {
