@@ -725,6 +725,11 @@ function App() {
                           <HomepageEditorPage />
                         </ProtectedRoute>
                       } />
+                      <Route path="/superadmin/media-manager" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <HomepageMediaManagerPage />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/staff" element={
                         <ProtectedRoute requiredRole="staff">
                           <StaffPanel />
