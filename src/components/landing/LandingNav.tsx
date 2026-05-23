@@ -95,9 +95,15 @@ export default function LandingNav() {
             {NAV_LINKS.map((l) => (
               <button key={l.href} onClick={() => scrollTo(l.href)} className="text-left text-sm font-medium text-foreground/74 transition-colors hover:text-foreground">{l.label}</button>
             ))}
-            <button onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }} className="landing-button-primary mt-2 px-6 py-3 text-center text-sm font-semibold">Inizia Ora</button>
+            <div className="flex items-center justify-between pt-2 border-t border-border/40">
+              <span className="text-[11px] uppercase tracking-wider text-foreground/55 font-semibold">Lingua</span>
+              <PrestigeLangToggle />
+            </div>
+            <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-left text-sm font-medium text-foreground/74 transition-colors hover:text-foreground">Accedi</button>
+            <button onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }} className="landing-button-primary mt-1 px-6 py-3 text-center text-sm font-semibold">Inizia Ora</button>
           </motion.div>
         )}
+
       </nav>
     </>
   );
