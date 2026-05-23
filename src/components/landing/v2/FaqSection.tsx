@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
+import { useHomepageContent, pick } from "@/hooks/useHomepageContent";
 
-const FAQ = [
+const FAQ_DEFAULT = [
   { q: "In quanto tempo sono operativo con Empire AI?", a: "Dal primo contatto al sito attivo con agenti AI operativi: 14 giorni lavorativi. Discovery e strategia, design e sviluppo, onboarding e lancio con affiancamento dedicato dal giorno 1." },
   { q: "Quanto risparmio davvero sul personale?", a: "Mediamente i nostri clienti riducono di 1-2 figure operative tra centralino, gestione prenotazioni, recall, social e fatturazione, con un servizio più rapido e senza errori umani." },
   { q: "Funziona anche per il mio settore specifico?", a: "Empire copre 25+ settori verticali: ristorazione, beauty, fitness, healthcare, NCC, hotel, retail, studi professionali, real estate, e-commerce, palestre, cliniche e altro." },
@@ -15,6 +16,12 @@ const FAQ = [
 
 export default function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
+  const { content } = useHomepageContent();
+  const fc = content.faq ?? {};
+  const FAQ = pick(fc.items, FAQ_DEFAULT);
+  const PILL = pick(fc.pillLabel, "Domande frequenti");
+  const TITLE_LEAD = pick(fc.titleLead, "Tutto chiaro,");
+  const TITLE_ACC = pick(fc.titleAccent, "prima di partire.");
 
   return (
     <section id="faq" className="landing-section relative overflow-hidden px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12" data-theme="dark">
@@ -29,10 +36,10 @@ export default function FaqSection() {
           className="mb-8 text-center"
           data-tone="gold"
         >
-          <span className="landing-pill mb-4 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">Domande frequenti</span>
+          <span className="landing-pill mb-4 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">{PILL}</span>
           <h2 className="font-heading text-[clamp(1.8rem,4.8vw,3.2rem)] font-extrabold leading-[0.94] tracking-[-0.04em] text-foreground">
-            Tutto chiaro,
-            <span className="block landing-heading-gradient">prima di partire.</span>
+            {TITLE_LEAD}
+            <span className="block landing-heading-gradient">{TITLE_ACC}</span>
           </h2>
         </motion.div>
 
