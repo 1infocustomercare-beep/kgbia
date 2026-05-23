@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useHomepageContent, pick } from "@/hooks/useHomepageContent";
 
 const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
 
@@ -90,6 +91,21 @@ export default function CinematicHero() {
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
   const lite = isMobile || prefersReducedMotion;
+
+  // CMS overrides
+  const { content } = useHomepageContent();
+  const h = content.hero ?? {};
+  const EYEBROW = pick(h.eyebrow, "Empire AI · Webapp + 4 Agenti AI");
+  const TITLE_LINE1 = pick(h.titleLine1, "Sostituisci");
+  const TITLE_LINE2 = pick(h.titleLine2, "i dipendenti.");
+  const SUBTITLE_LEAD = pick(h.titleAccent, "L'AI gestisce");
+  const SUBTITLE = pick(h.subtitle, "Webapp su misura + agenti AI che rispondono al telefono, vendono, prenotano e raccolgono recensioni — 24/7, in tutte le lingue. Setup in 14 giorni. 25+ verticali coperti.");
+  const ROT = pick(h.rotatingWords, ROTATING_WORDS);
+  const TRUST_PILLS = pick(h.trustPills, TRUST);
+  const CTA1_LABEL = pick(h.ctaPrimaryLabel, "Prenota call gratuita");
+  const CTA1_HREF = pick(h.ctaPrimaryHref, "/demo");
+  const CTA2_LABEL = pick(h.ctaSecondaryLabel, "Vedi 12 progetti live");
+  const CTA2_HREF = pick(h.ctaSecondaryHref, "#portfolio");
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 26, mass: 0.7 });
