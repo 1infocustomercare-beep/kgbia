@@ -953,4 +953,33 @@ const RestaurantPage = () => {
   );
 };
 
-export default RestaurantPage;
+import { RestaurantSiteProvider, useRestaurantSite } from "@/hooks/useRestaurantSite";
+
+/**
+ * Wrapper: fornisce il context con gli override editabili dall'admin
+ * (restaurants.theme_config.site) + applica live updates da postMessage in preview.
+ */
+const RestaurantPageWithSiteOverrides = () => {
+  const { slug } = useParams();
+  const { restaurant } = useRestaurantBySlug(slug);
+  return (
+    <RestaurantSiteProvider restaurant={restaurant}>
+      <RestaurantSiteThemeBridge />
+      <RestaurantPage />
+    </RestaurantSiteProvider>
+  );
+};
+
+const RestaurantSiteThemeBridge = () => {
+  const { content } = useRestaurantSite();
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    if (content.brand?.primaryHex) root.style.setProperty("--site-primary", content.brand.primaryHex);
+    if (content.brand?.accentHex) root.style.setProperty("--site-accent", content.brand.accentHex);
+  }, [content.brand?.primaryHex, content.brand?.accentHex]);
+  return null;
+};
+
+export default RestaurantPageWithSiteOverrides;
+
