@@ -571,18 +571,21 @@ function App() {
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
                       {/* Public routes */}
-                      {/* ═══ HOMEPAGE UFFICIALE EMPIRE — LandingPage v2 ═══
-                          Versione più completa, conversion-oriented, con tutti i settori,
-                          mockup, agenti, pricing, testimonial, FAQ e CTA finale. */}
-                      <Route path="/" element={<LandingPage />} />
-                      <Route path="/index" element={<LandingPage />} />
-                      <Route path="/home" element={<LandingPage />} />
-                      <Route path="/landing-legacy" element={<LandingPage />} />
-                      {/* Vecchie varianti ora reindirizzano alla home ufficiale */}
+                      {/* ═══ HOMEPAGE UFFICIALE EMPIRE — Prestige Home ═══
+                          Versione premium, elegante, rassicurante: storytelling pinnato
+                          Caos→Empire, bilingue IT/EN, mockup showcase, tutti i settori,
+                          agenti, pricing, testimonial, FAQ e CTA finale. */}
+                      <Route path="/" element={<EmpirePrestigeHome />} />
+                      <Route path="/index" element={<EmpirePrestigeHome />} />
+                      <Route path="/home" element={<EmpirePrestigeHome />} />
                       <Route path="/home-prestige" element={<EmpirePrestigeHome />} />
+                      {/* Vecchie varianti mantenute come fallback */}
+                      <Route path="/landing-legacy" element={<LandingPage />} />
+                      <Route path="/home-landing" element={<LandingPage />} />
                       <Route path="/home-cinematic" element={<EmpireCinematicHome />} />
                       <Route path="/home-legacy" element={<EmpireHomePage />} />
                       <Route path="/home-v5" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
+
                       <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/home#pricing" replace />} />
                       <Route path="/marketing" element={<MarketingPage />} />
