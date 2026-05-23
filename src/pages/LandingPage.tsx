@@ -22,12 +22,27 @@ import CinematicCursor from "@/components/landing/v2/CinematicCursor";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import PrestigeStoryPinned from "@/components/empire-home/prestige/PrestigeStoryPinned";
 import { PrestigeLangProvider } from "@/components/empire-home/prestige/PrestigeLang";
+import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepageContent";
 
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
-export default function LandingPage() {
-  // Resilienza Framer Motion: invece di un setTimeout cieco a 4s, sblocca le
-  // sezioni "stuck" solo quando entrano in viewport e non sono ancora visibili.
+function LandingPageInner() {
+  const { content, isPreview } = useHomepageContent();
+  const hidden = content.hidden ?? {};
+
+  // Inject brand HSL overrides as CSS variables
+  useEffect(() => {
+    const b = content.brand ?? {};
+    const root = document.documentElement;
+    const apply = (cssVar: string, hsl?: string) => {
+      if (hsl && hsl.trim()) root.style.setProperty(cssVar, hsl);
+    };
+    apply("--primary", b.primaryHsl);
+    apply("--accent", b.accentHsl);
+    apply("--gold", b.goldHsl);
+  }, [content.brand]);
+
+  // Resilienza Framer Motion
   useEffect(() => {
     if (typeof window === "undefined") return;
     const io = new IntersectionObserver(
@@ -44,18 +59,12 @@ export default function LandingPage() {
       },
       { rootMargin: "0px 0px -10% 0px", threshold: 0.05 }
     );
-
     const scan = () => {
-      document
-        .querySelectorAll<HTMLElement>('[style*="opacity: 0"]')
-        .forEach((el) => io.observe(el));
+      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach((el) => io.observe(el));
     };
     scan();
-    // Riscansiona dopo i mount tardivi delle sezioni cinematiche
     const t1 = setTimeout(scan, 1200);
     const t2 = setTimeout(scan, 3000);
-
-    // Safety net finale: se dopo 6s qualcosa è ancora invisibile, lo sblocca
     const safety = setTimeout(() => {
       document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach((el) => {
         const r = el.getBoundingClientRect();
@@ -65,7 +74,6 @@ export default function LandingPage() {
         }
       });
     }, 6000);
-
     return () => {
       io.disconnect();
       clearTimeout(t1);
@@ -75,37 +83,45 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <PrestigeLangProvider>
-      {/* Tokens Prestige (pr-gold, pr-emerald…) per la sezione Story Pinned */}
+    <>
       <PrestigeTheme />
       <div className="landing-dark force-dark landing-shell min-h-screen overflow-x-hidden bg-background text-foreground">
-        <CinematicCursor />
+        {!isPreview && <CinematicCursor />}
         <LandingNav />
         <CinematicHero />
-        <ManifestoSection />
-        {/* Storytelling cinematico Caos → Empire (pinned + horizontal split) */}
-        <div className="prestige-root">
-          <PrestigeStoryPinned />
-        </div>
-        <SectorsCarousel />
-        <HorizontalPortfolio />
-        <Orbital3DShowcase />
-        <AgentsBento />
-        <AgentsAlaCarte />
-        <ProcessSection />
-        <CustomizationSection />
-        <AboutSection />
-        <TeamSection />
-        <PricingSection />
-        <GuaranteeSection />
-        <TestimonialsSection />
-        <FaqSection />
-        <ContactCTA />
+        {!hidden.manifesto && <ManifestoSection />}
+        {!hidden.storyPinned && (
+          <div className="prestige-root">
+            <PrestigeStoryPinned />
+          </div>
+        )}
+        {!hidden.sectorsCarousel && <SectorsCarousel />}
+        {!hidden.horizontalPortfolio && <HorizontalPortfolio />}
+        {!hidden.orbital3D && <Orbital3DShowcase />}
+        {!hidden.agentsBento && <AgentsBento />}
+        {!hidden.agentsAlaCarte && <AgentsAlaCarte />}
+        {!hidden.process && <ProcessSection />}
+        {!hidden.customization && <CustomizationSection />}
+        {!hidden.about && <AboutSection />}
+        {!hidden.team && <TeamSection />}
+        {!hidden.pricing && <PricingSection />}
+        {!hidden.guarantee && <GuaranteeSection />}
+        {!hidden.testimonials && <TestimonialsSection />}
+        {!hidden.faq && <FaqSection />}
+        {!hidden.contactCta && <ContactCTA />}
         <LandingFooter />
       </div>
-      {/* Voice Agent fuori dal landing-shell per evitare break di position:fixed
-          dovuti a transform/filter degli antenati cinematici */}
-      <SafeVoiceAgent />
-    </PrestigeLangProvider>
+      {!isPreview && <SafeVoiceAgent />}
+    </>
+  );
+}
+
+export default function LandingPage() {
+  return (
+    <HomepageContentProvider>
+      <PrestigeLangProvider>
+        <LandingPageInner />
+      </PrestigeLangProvider>
+    </HomepageContentProvider>
   );
 }
