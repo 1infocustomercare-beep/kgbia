@@ -7,12 +7,10 @@ import {
   Sun, Moon, Clock, Leaf, Flame, Wheat, Fish, Milk, Egg, TreePine
 } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
-import LivePreview from "@/components/restaurant/LivePreview";
 import FoodPhotoGenerator from "@/components/admin/FoodPhotoGenerator";
 import PlateGallery from "@/components/admin/PlateGallery";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { applyBrandTheme, resetBrandTheme, extractDominantColor, hslToHex, DEFAULT_PRIMARY_HEX } from "@/lib/color-extract";
 import type { MenuItem } from "@/types/restaurant";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
