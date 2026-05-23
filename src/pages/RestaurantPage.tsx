@@ -975,16 +975,58 @@ const RestaurantPage = () => {
       )}
 
       {/* ====== FOOTER ====== */}
-      <motion.footer className="border-t border-border/30 py-6 sm:py-10 px-4 sm:px-5"
+      <motion.footer className="border-t border-border/30 py-8 sm:py-12 px-4 sm:px-5 bg-background/40"
         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <motion.div className="flex items-center gap-3"
-            initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <img src={restaurantLogoUrl} alt="" className="w-8 h-8 rounded-lg object-contain" />
-            <span className="font-display font-bold text-foreground tracking-[0.08em] uppercase text-sm">{restaurantName}</span>
-          </motion.div>
-          <p className="text-xs text-muted-foreground">© 2026 {restaurantName}. Tutti i diritti riservati.</p>
-          <p className="text-[10px] text-muted-foreground/50">Powered by Empire</p>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          {/* Brand */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <img src={restaurantLogoUrl} alt={restaurantName} className="w-9 h-9 rounded-lg object-contain" />
+              <span className="font-display font-bold text-foreground tracking-[0.08em] uppercase text-sm">{restaurantName}</span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {siteOverride.footer?.tagline || restaurantTagline}
+            </p>
+          </div>
+
+          {/* Contacts */}
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-foreground/70 font-semibold mb-2">Contatti</p>
+            <a href={`tel:${restaurantPhone}`} className="flex items-center gap-2 hover:text-primary"><Phone className="w-3 h-3" />{restaurantPhone}</a>
+            <a href={`mailto:${restaurantEmail}`} className="flex items-center gap-2 hover:text-primary"><Mail className="w-3 h-3" />{restaurantEmail}</a>
+            <p className="flex items-start gap-2"><MapPin className="w-3 h-3 mt-0.5 shrink-0" /><span>{restaurantAddress}, {restaurantCity}</span></p>
+          </div>
+
+          {/* Social */}
+          <div className="space-y-2 text-xs">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-foreground/70 font-semibold mb-2">Seguici</p>
+            {siteOverride.contact?.instagram && (
+              <a href={siteOverride.contact.instagram} target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary">Instagram</a>
+            )}
+            {siteOverride.contact?.facebook && (
+              <a href={siteOverride.contact.facebook} target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary">Facebook</a>
+            )}
+            {siteOverride.contact?.whatsapp && (
+              <a href={`https://wa.me/${siteOverride.contact.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary">WhatsApp</a>
+            )}
+            {!siteOverride.contact?.instagram && !siteOverride.contact?.facebook && !siteOverride.contact?.whatsapp && (
+              <p className="text-muted-foreground/60 italic">Presto disponibile</p>
+            )}
+          </div>
+
+          {/* Legal */}
+          <div className="space-y-2 text-xs">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-foreground/70 font-semibold mb-2">Legale</p>
+            <a href="/privacy" className="block text-muted-foreground hover:text-primary">Privacy Policy</a>
+            <a href="/cookie-policy" className="block text-muted-foreground hover:text-primary">Cookie Policy</a>
+            {(dbRestaurant as any)?.vat_number && (
+              <p className="text-muted-foreground/70">P.IVA {(dbRestaurant as any).vat_number}</p>
+            )}
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto mt-8 pt-6 border-t border-border/20 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-muted-foreground/60">
+          <p>{siteOverride.footer?.copyright || `© ${new Date().getFullYear()} ${restaurantName}. Tutti i diritti riservati.`}</p>
+          <p>Powered by Empire</p>
         </div>
       </motion.footer>
 
