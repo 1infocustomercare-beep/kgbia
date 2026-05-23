@@ -303,7 +303,14 @@ const RestaurantPage = () => {
       {/* ====== 1. HERO — Full Screen with Video/Image ====== */}
       <section id="home" ref={heroRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <motion.div className="absolute inset-0" style={{ scale: heroScale }}>
-          {(dbRestaurant as any)?.theme_config?.hero?.image ? (
+          {heroImageSrc ? (
+            <img
+              src={heroImageSrc}
+              alt={`${restaurantName} — ${restaurantTagline}`}
+              className="w-full h-full object-cover object-center"
+              loading="eager"
+            />
+          ) : (dbRestaurant as any)?.theme_config?.hero?.image ? (
             <img
               src={(dbRestaurant as any).theme_config.hero.image}
               alt={`${restaurantName} — ${restaurantTagline}`}
@@ -311,10 +318,13 @@ const RestaurantPage = () => {
               loading="eager"
             />
           ) : (
-            <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
+            <video src={heroVideoSrc} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
           )}
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/75" />
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/75"
+          style={ siteOverride.hero?.overlayOpacity != null ? { background: `rgba(0,0,0,${(siteOverride.hero.overlayOpacity)/100})` } : undefined }
+        />
 
 
         <motion.div className="relative z-10 text-center px-5 max-w-full" style={{ opacity: heroOpacity }}>
