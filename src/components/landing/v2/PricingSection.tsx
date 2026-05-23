@@ -244,18 +244,12 @@ export default function PricingSection() {
           className="mx-auto mt-10 max-w-[920px] rounded-[20px] border border-border/60 bg-card/40 p-5 backdrop-blur-md sm:p-6"
         >
           <div className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
-            <div>
-              <div className="font-heading text-2xl font-extrabold text-foreground sm:text-3xl">14 giorni</div>
-              <div className="mt-1 text-[12px] uppercase tracking-[0.2em] text-foreground/60">Time to live</div>
-            </div>
-            <div className="sm:border-x sm:border-border/40">
-              <div className="font-heading text-2xl font-extrabold text-foreground sm:text-3xl">847+</div>
-              <div className="mt-1 text-[12px] uppercase tracking-[0.2em] text-foreground/60">Business attivi</div>
-            </div>
-            <div>
-              <div className="font-heading text-2xl font-extrabold text-foreground sm:text-3xl">€2.8M</div>
-              <div className="mt-1 text-[12px] uppercase tracking-[0.2em] text-foreground/60">Risparmiati nel 2024</div>
-            </div>
+            {BOTTOM_STATS.map((s, i) => (
+              <div key={i} className={i === 1 ? "sm:border-x sm:border-border/40" : ""}>
+                <div className="font-heading text-2xl font-extrabold text-foreground sm:text-3xl">{s.value}</div>
+                <div className="mt-1 text-[12px] uppercase tracking-[0.2em] text-foreground/60">{s.label}</div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>
