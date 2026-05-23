@@ -108,6 +108,46 @@ const RestaurantPage = () => {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
+  // SEO: dynamic <title>, meta description and JSON-LD Restaurant schema
+  useEffect(() => {
+    if (typeof document === "undefined" || !dbRestaurant) return;
+    const prevTitle = document.title;
+    document.title = `${restaurantName} — ${restaurantCity}`;
+
+    const ensureMeta = (name: string, content: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.name = name; document.head.appendChild(el); }
+      el.content = content;
+      return el;
+    };
+    const descEl = ensureMeta("description", `${restaurantName} — ${restaurantTagline}. ${restaurantAddress}, ${restaurantCity}. Prenota un tavolo o ordina online.`);
+
+    const ld = {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      name: restaurantName,
+      image: restaurantLogoUrl,
+      telephone: restaurantPhone,
+      email: restaurantEmail,
+      address: { "@type": "PostalAddress", streetAddress: restaurantAddress, addressLocality: restaurantCity, addressCountry: "IT" },
+      servesCuisine: (dbRestaurant as any)?.theme_config?.cuisines || ["Italiana"],
+      priceRange: (dbRestaurant as any)?.price_range || "€€",
+      url: typeof window !== "undefined" ? window.location.href : undefined,
+      menu: typeof window !== "undefined" ? `${window.location.origin}/r/${slug}#menu-section` : undefined,
+    };
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.text = JSON.stringify(ld);
+    script.setAttribute("data-restaurant-ld", "1");
+    document.head.appendChild(script);
+
+    return () => {
+      document.title = prevTitle;
+      script.remove();
+      descEl?.remove();
+    };
+  }, [dbRestaurant, restaurantName, restaurantCity, restaurantAddress, restaurantPhone, restaurantEmail, restaurantLogoUrl, restaurantTagline, slug]);
+
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
