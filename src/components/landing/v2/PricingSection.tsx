@@ -11,7 +11,7 @@ const TONE_TO_ICON: Record<string, any> = { blue: Sparkles, gold: TrendingUp, vi
 const PLANS_DEFAULT: PricingPlan[] = [
   {
     name: "Digital Start",
-    icon: Sparkles,
+
     setup: "€1.997",
     setupRate: "o 3× €697",
     monthly: "€49",
@@ -31,7 +31,7 @@ const PLANS_DEFAULT: PricingPlan[] = [
   },
   {
     name: "Empire Pro",
-    icon: TrendingUp,
+
     setup: "€3.997",
     setupRate: "o 6× €697",
     monthly: "€149",
@@ -54,7 +54,7 @@ const PLANS_DEFAULT: PricingPlan[] = [
   },
   {
     name: "Empire Elite",
-    icon: Crown,
+
     setup: "€9.997",
     setupRate: "o 6× €1.747",
     monthly: "€299",
