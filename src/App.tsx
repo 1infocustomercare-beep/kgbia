@@ -225,6 +225,7 @@ const NCCExpiryPage = lazy(() => import("./pages/app/NCCExpiryPage"));
 const MenuPage = lazy(() => import("./pages/app/MenuPage"));
 const OrdersPage = lazy(() => import("./pages/app/OrdersPage"));
 const InventoryPage = lazy(() => import("./pages/app/InventoryPage"));
+const WarehousePage = lazy(() => import("./pages/app/WarehousePage"));
 const PayrollPage = lazy(() => import("./pages/app/PayrollPage"));
 const FinancePage = lazy(() => import("./pages/app/FinancePage"));
 const SocialPage = lazy(() => import("./pages/app/SocialPage"));
