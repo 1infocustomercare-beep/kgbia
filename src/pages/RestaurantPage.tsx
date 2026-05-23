@@ -108,6 +108,46 @@ const RestaurantPage = () => {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
+  // SEO: dynamic <title>, meta description and JSON-LD Restaurant schema
+  useEffect(() => {
+    if (typeof document === "undefined" || !dbRestaurant) return;
+    const prevTitle = document.title;
+    document.title = `${restaurantName} — ${restaurantCity}`;
+
+    const ensureMeta = (name: string, content: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.name = name; document.head.appendChild(el); }
+      el.content = content;
+      return el;
+    };
+    const descEl = ensureMeta("description", `${restaurantName} — ${restaurantTagline}. ${restaurantAddress}, ${restaurantCity}. Prenota un tavolo o ordina online.`);
+
+    const ld = {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      name: restaurantName,
+      image: restaurantLogoUrl,
+      telephone: restaurantPhone,
+      email: restaurantEmail,
+      address: { "@type": "PostalAddress", streetAddress: restaurantAddress, addressLocality: restaurantCity, addressCountry: "IT" },
+      servesCuisine: (dbRestaurant as any)?.theme_config?.cuisines || ["Italiana"],
+      priceRange: (dbRestaurant as any)?.price_range || "€€",
+      url: typeof window !== "undefined" ? window.location.href : undefined,
+      menu: typeof window !== "undefined" ? `${window.location.origin}/r/${slug}#menu-section` : undefined,
+    };
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.text = JSON.stringify(ld);
+    script.setAttribute("data-restaurant-ld", "1");
+    document.head.appendChild(script);
+
+    return () => {
+      document.title = prevTitle;
+      script.remove();
+      descEl?.remove();
+    };
+  }, [dbRestaurant, restaurantName, restaurantCity, restaurantAddress, restaurantPhone, restaurantEmail, restaurantLogoUrl, restaurantTagline, slug]);
+
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -403,26 +443,43 @@ const RestaurantPage = () => {
               Una passione per la<br />
               <span className="text-brand-gradient">cucina autentica</span>
             </motion.h2>
-            <motion.p className="mt-6 text-muted-foreground leading-relaxed"
-              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.45 }}>
-              Nel cuore della città vi attende {restaurantName} — un luogo dove l'ospitalità italiana incontra l'eccellenza culinaria. 
-              La nostra cucina unisce ricette tradizionali con accenti moderni, utilizzando solo gli ingredienti più pregiati d'Italia e del territorio.
-            </motion.p>
-            <motion.p className="mt-4 text-muted-foreground leading-relaxed"
-              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.55 }}>
-              Dalla nostra pasta fatta a mano alle carni selezionate, dai vini della nostra enoteca ai dolci della tradizione — 
-              ogni visita diventa un'esperienza indimenticabile per tutti i sensi.
-            </motion.p>
-            <motion.div className="mt-8 flex items-center gap-4"
-              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.65 }}>
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                <Crown className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <p className="font-display font-bold text-foreground">Chef & Proprietario</p>
-                <p className="text-sm text-muted-foreground">{restaurantName}</p>
-              </div>
-            </motion.div>
+            {(() => {
+              const storyIntro = siteOverride.story?.intro;
+              const themeHighlights: Array<{ icon?: string; label?: string; text?: string } | string> =
+                (dbRestaurant as any)?.theme_config?.highlights || [];
+              const defaultText = `Nel cuore della città vi attende ${restaurantName} — un luogo dove l'ospitalità italiana incontra l'eccellenza culinaria. La nostra cucina unisce ricette tradizionali con accenti moderni.`;
+              return (
+                <>
+                  <motion.p className="mt-6 text-muted-foreground leading-relaxed whitespace-pre-line"
+                    initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.45 }}>
+                    {storyIntro || defaultText}
+                  </motion.p>
+                  {themeHighlights.length > 0 && (
+                    <motion.div className="mt-6 flex flex-wrap gap-2"
+                      initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.55 }}>
+                      {themeHighlights.slice(0, 8).map((h: any, i) => {
+                        const label = typeof h === "string" ? h : `${h.icon || ""} ${h.label || h.text || ""}`.trim();
+                        return (
+                          <span key={i} className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs sm:text-sm text-foreground/90 font-medium">
+                            {label}
+                          </span>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                  <motion.div className="mt-8 flex items-center gap-4"
+                    initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.65 }}>
+                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Crown className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-display font-bold text-foreground">Chef & Proprietario</p>
+                      <p className="text-sm text-muted-foreground">{restaurantName}</p>
+                    </div>
+                  </motion.div>
+                </>
+              );
+            })()}
           </motion.div>
 
           {/* Photo Grid — usa galleria reale dal DB se disponibile */}
@@ -704,6 +761,18 @@ const RestaurantPage = () => {
               </div>
             </motion.div>
           </div>
+
+          {/* Embedded Google Map */}
+          <motion.div className="mt-6 sm:mt-10 rounded-2xl sm:rounded-3xl overflow-hidden border border-border/30 glass"
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.8 }}>
+            <iframe
+              title={`Mappa ${restaurantName}`}
+              src={`https://www.google.com/maps?q=${encodeURIComponent(`${restaurantName} ${restaurantAddress} ${restaurantCity}`)}&output=embed`}
+              className="w-full h-64 sm:h-80 border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </motion.div>
         </div>
       </section>
 
@@ -946,16 +1015,58 @@ const RestaurantPage = () => {
       )}
 
       {/* ====== FOOTER ====== */}
-      <motion.footer className="border-t border-border/30 py-6 sm:py-10 px-4 sm:px-5"
+      <motion.footer className="border-t border-border/30 py-8 sm:py-12 px-4 sm:px-5 bg-background/40"
         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <motion.div className="flex items-center gap-3"
-            initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <img src={restaurantLogoUrl} alt="" className="w-8 h-8 rounded-lg object-contain" />
-            <span className="font-display font-bold text-foreground tracking-[0.08em] uppercase text-sm">{restaurantName}</span>
-          </motion.div>
-          <p className="text-xs text-muted-foreground">© 2026 {restaurantName}. Tutti i diritti riservati.</p>
-          <p className="text-[10px] text-muted-foreground/50">Powered by Empire</p>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          {/* Brand */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <img src={restaurantLogoUrl} alt={restaurantName} className="w-9 h-9 rounded-lg object-contain" />
+              <span className="font-display font-bold text-foreground tracking-[0.08em] uppercase text-sm">{restaurantName}</span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {siteOverride.footer?.tagline || restaurantTagline}
+            </p>
+          </div>
+
+          {/* Contacts */}
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-foreground/70 font-semibold mb-2">Contatti</p>
+            <a href={`tel:${restaurantPhone}`} className="flex items-center gap-2 hover:text-primary"><Phone className="w-3 h-3" />{restaurantPhone}</a>
+            <a href={`mailto:${restaurantEmail}`} className="flex items-center gap-2 hover:text-primary"><Mail className="w-3 h-3" />{restaurantEmail}</a>
+            <p className="flex items-start gap-2"><MapPin className="w-3 h-3 mt-0.5 shrink-0" /><span>{restaurantAddress}, {restaurantCity}</span></p>
+          </div>
+
+          {/* Social */}
+          <div className="space-y-2 text-xs">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-foreground/70 font-semibold mb-2">Seguici</p>
+            {siteOverride.contact?.instagram && (
+              <a href={siteOverride.contact.instagram} target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary">Instagram</a>
+            )}
+            {siteOverride.contact?.facebook && (
+              <a href={siteOverride.contact.facebook} target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary">Facebook</a>
+            )}
+            {siteOverride.contact?.whatsapp && (
+              <a href={`https://wa.me/${siteOverride.contact.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary">WhatsApp</a>
+            )}
+            {!siteOverride.contact?.instagram && !siteOverride.contact?.facebook && !siteOverride.contact?.whatsapp && (
+              <p className="text-muted-foreground/60 italic">Presto disponibile</p>
+            )}
+          </div>
+
+          {/* Legal */}
+          <div className="space-y-2 text-xs">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-foreground/70 font-semibold mb-2">Legale</p>
+            <a href="/privacy" className="block text-muted-foreground hover:text-primary">Privacy Policy</a>
+            <a href="/cookie-policy" className="block text-muted-foreground hover:text-primary">Cookie Policy</a>
+            {(dbRestaurant as any)?.vat_number && (
+              <p className="text-muted-foreground/70">P.IVA {(dbRestaurant as any).vat_number}</p>
+            )}
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto mt-8 pt-6 border-t border-border/20 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-muted-foreground/60">
+          <p>{siteOverride.footer?.copyright || `© ${new Date().getFullYear()} ${restaurantName}. Tutti i diritti riservati.`}</p>
+          <p>Powered by Empire</p>
         </div>
       </motion.footer>
 
