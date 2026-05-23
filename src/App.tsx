@@ -225,6 +225,7 @@ const NCCExpiryPage = lazy(() => import("./pages/app/NCCExpiryPage"));
 const MenuPage = lazy(() => import("./pages/app/MenuPage"));
 const OrdersPage = lazy(() => import("./pages/app/OrdersPage"));
 const InventoryPage = lazy(() => import("./pages/app/InventoryPage"));
+const WarehousePage = lazy(() => import("./pages/app/WarehousePage"));
 const PayrollPage = lazy(() => import("./pages/app/PayrollPage"));
 const FinancePage = lazy(() => import("./pages/app/FinancePage"));
 const SocialPage = lazy(() => import("./pages/app/SocialPage"));
@@ -758,6 +759,18 @@ function App() {
                           <SetupPaidGuard><AdminDashboard /></SetupPaidGuard>
                         </ProtectedRoute>
                       } />
+                      <Route path="/warehouse" element={
+                        <ProtectedRoute>
+                          <SetupPaidGuard><WarehousePage /></SetupPaidGuard>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/t/:slug/admin/warehouse" element={
+                        <ProtectedRoute>
+                          <TenantGuard>
+                            <WarehousePage />
+                          </TenantGuard>
+                        </ProtectedRoute>
+                      } />
                       <Route path="/setup" element={<Navigate to="/onboarding" replace />} />
 
                       {/* ═══ Adaptive App Routes (industry-aware) ═══ */}
@@ -775,6 +788,7 @@ function App() {
                         <Route path="reservations" element={<ReservationsPage />} />
                         <Route path="reviews" element={<ReviewsPage />} />
                         <Route path="inventory" element={<InventoryPage />} />
+                        <Route path="warehouse" element={<WarehousePage />} />
                         {/* NCC modules */}
                         <Route path="fleet" element={<NCCFleetPage />} />
                         <Route path="routes" element={<NCCRoutesPage />} />
