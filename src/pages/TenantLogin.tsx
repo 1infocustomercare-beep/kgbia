@@ -463,11 +463,20 @@ export default function TenantLogin() {
 }
 
 /**
- * Verifies the user is either the owner or has a membership in this restaurant.
- * Both queries are RLS-safe; we use maybeSingle to avoid 406.
+ * Server-side authoritative tenant access check via SECURITY DEFINER RPC.
+ * This is the only check that matters for security — client-side membership
+ * queries are kept as a fast fallback for environments where the RPC is
+ * unreachable.
  */
-async function verifyTenantAccess(userId: string, restaurantId: string): Promise<boolean> {
-  // Check ownership
+async function verifyTenantAccess(userId: string, restaurantId: string, slug?: string): Promise<boolean> {
+  if (slug) {
+    const { data, error } = await supabase.rpc("verify_tenant_access", { p_slug: slug });
+    if (!error && data) {
+      const v = data as { allowed?: boolean; restaurant_id?: string };
+      return v.allowed === true && v.restaurant_id === restaurantId;
+    }
+  }
+  // Fallback: ownership / membership lookup
   const { data: owned } = await supabase
     .from("restaurants")
     .select("id")
@@ -475,8 +484,6 @@ async function verifyTenantAccess(userId: string, restaurantId: string): Promise
     .eq("owner_id", userId)
     .maybeSingle();
   if (owned) return true;
-
-  // Check membership
   const { data: member } = await supabase
     .from("restaurant_memberships")
     .select("restaurant_id")
