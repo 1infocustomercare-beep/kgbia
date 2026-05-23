@@ -122,7 +122,34 @@ const RestaurantPage = () => {
     };
     const descEl = ensureMeta("description", `${restaurantName} — ${restaurantTagline}. ${restaurantAddress}, ${restaurantCity}. Prenota un tavolo o ordina online.`);
 
-    const ld = {
+    // Map IT day labels to schema.org day-of-week codes
+    const dayMap: Record<string, string[]> = {
+      "lunedì": ["Mo"], "martedì": ["Tu"], "mercoledì": ["We"], "giovedì": ["Th"],
+      "venerdì": ["Fr"], "sabato": ["Sa"], "domenica": ["Su"],
+      "lun-ven": ["Mo","Tu","We","Th","Fr"], "lunedì - venerdì": ["Mo","Tu","We","Th","Fr"],
+      "lun - ven": ["Mo","Tu","We","Th","Fr"],
+    };
+    const hoursLD = (openingHours || [])
+      .filter((h: any) => h?.hours && !/chiuso/i.test(h.hours))
+      .map((h: any) => {
+        const key = (h.day || "").toLowerCase().trim();
+        const days = dayMap[key] || [];
+        if (!days.length) return null;
+        const ranges = h.hours.split(/[·•|]/).map((r: string) => r.trim()).filter(Boolean);
+        return ranges.map((r: string) => {
+          const [open, close] = r.split("-").map((s) => s.trim().replace(".", ":"));
+          if (!open || !close) return null;
+          return { "@type": "OpeningHoursSpecification", dayOfWeek: days, opens: open, closes: close };
+        }).filter(Boolean);
+      })
+      .filter(Boolean)
+      .flat();
+
+    const geo = (dbRestaurant as any)?.latitude && (dbRestaurant as any)?.longitude
+      ? { "@type": "GeoCoordinates", latitude: (dbRestaurant as any).latitude, longitude: (dbRestaurant as any).longitude }
+      : undefined;
+
+    const ld: any = {
       "@context": "https://schema.org",
       "@type": "Restaurant",
       name: restaurantName,
@@ -134,6 +161,9 @@ const RestaurantPage = () => {
       priceRange: (dbRestaurant as any)?.price_range || "€€",
       url: typeof window !== "undefined" ? window.location.href : undefined,
       menu: typeof window !== "undefined" ? `${window.location.origin}/r/${slug}#menu-section` : undefined,
+      ...(geo ? { geo } : {}),
+      ...(hoursLD.length ? { openingHoursSpecification: hoursLD } : {}),
+      ...(dbRestaurant?.id ? { aggregateRating: undefined } : {}),
     };
     const script = document.createElement("script");
     script.type = "application/ld+json";
@@ -146,7 +176,7 @@ const RestaurantPage = () => {
       script.remove();
       descEl?.remove();
     };
-  }, [dbRestaurant, restaurantName, restaurantCity, restaurantAddress, restaurantPhone, restaurantEmail, restaurantLogoUrl, restaurantTagline, slug]);
+  }, [dbRestaurant, restaurantName, restaurantCity, restaurantAddress, restaurantPhone, restaurantEmail, restaurantLogoUrl, restaurantTagline, slug, openingHours]);
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
@@ -676,6 +706,22 @@ const RestaurantPage = () => {
                 ))}
               </motion.div>
             </AnimatePresence>
+
+            {/* Allergens legend + Menu PDF download */}
+            <motion.div className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl glass border border-border/30"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-muted-foreground">
+                <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-foreground/70 mr-1">Legenda allergeni</span>
+                <span>🌾 Glutine</span><span>🥚 Uova</span><span>🧀 Latticini</span>
+                <span>🐟 Pesce</span><span>🥜 Arachidi</span><span>🌰 Frutta a guscio</span>
+              </div>
+              {(dbRestaurant as any)?.menu_pdf_url && (
+                <a href={(dbRestaurant as any).menu_pdf_url} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground text-xs font-bold tracking-wider uppercase hover:opacity-90 transition">
+                  📄 Scarica Menu PDF
+                </a>
+              )}
+            </motion.div>
           </div>
         </div>
       </section>
