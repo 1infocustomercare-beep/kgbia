@@ -759,6 +759,16 @@ function App() {
                           <SetupPaidGuard><AdminDashboard /></SetupPaidGuard>
                         </ProtectedRoute>
                       } />
+                      <Route path="/warehouse" element={
+                        <ProtectedRoute>
+                          <SetupPaidGuard><WarehousePage /></SetupPaidGuard>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/t/:slug/admin/warehouse" element={
+                        <ProtectedRoute>
+                          <WarehousePage />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/setup" element={<Navigate to="/onboarding" replace />} />
 
                       {/* ═══ Adaptive App Routes (industry-aware) ═══ */}
