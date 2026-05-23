@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import empireLogo from "@/assets/empire-logo-full.png";
+import { PrestigeLangToggle } from "@/components/empire-home/prestige/PrestigeLang";
+
 
 const NAV_LINKS = [
   { label: "Settori", href: "#sectors" },
