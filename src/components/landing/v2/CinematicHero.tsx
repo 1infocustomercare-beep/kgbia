@@ -276,14 +276,14 @@ export default function CinematicHero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_14px_hsl(var(--accent)/0.9)]" />
               </span>
-              Empire AI · Webapp + 4 Agenti AI
+              {EYEBROW}
             </motion.div>
 
             <h1 className="mx-auto mb-4 max-w-[18ch] font-heading text-[clamp(2rem,7.6vw,5.4rem)] font-extrabold leading-[0.94] tracking-[-0.04em] text-foreground sm:mb-5 lg:mx-0 lg:max-w-[14ch]">
-              <span className="block"><RevealWord text="Sostituisci" delay={0.15} /></span>
-              <span className="block landing-heading-gradient"><RevealWord text="i dipendenti." delay={0.3} /></span>
+              <span className="block"><RevealWord text={TITLE_LINE1} delay={0.15} /></span>
+              <span className="block landing-heading-gradient"><RevealWord text={TITLE_LINE2} delay={0.3} /></span>
               <span className="block mt-1 text-[clamp(1.05rem,3.4vw,2rem)] font-semibold text-foreground/85">
-                <RevealWord text="L'AI gestisce" delay={0.5} />{" "}
+                <RevealWord text={SUBTITLE_LEAD} delay={0.5} />{" "}
                 <span className="relative inline-block min-w-[8ch] text-left align-baseline">
                   <AnimatePresence mode="wait">
                     <motion.span
@@ -318,19 +318,19 @@ export default function CinematicHero() {
               className="mb-5 flex flex-col items-center gap-2.5 sm:flex-row sm:gap-3 lg:items-start lg:justify-start"
             >
               <MagneticCTA
-                onClick={() => navigate("/demo")}
+                onClick={() => CTA1_HREF.startsWith("#") ? document.querySelector(CTA1_HREF)?.scrollIntoView({ behavior: "smooth" }) : navigate(CTA1_HREF)}
                 variant="primary"
                 className="w-full max-w-[300px] px-7 py-3.5 text-sm font-semibold sm:w-auto sm:text-[15px]"
               >
-                Prenota call gratuita
+                {CTA1_LABEL}
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </MagneticCTA>
               <MagneticCTA
-                onClick={() => document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => CTA2_HREF.startsWith("#") ? document.querySelector(CTA2_HREF)?.scrollIntoView({ behavior: "smooth" }) : navigate(CTA2_HREF)}
                 variant="secondary"
                 className="w-full max-w-[300px] px-7 py-3.5 text-sm font-semibold sm:w-auto"
               >
-                Vedi 12 progetti live
+                {CTA2_LABEL}
               </MagneticCTA>
             </motion.div>
 
