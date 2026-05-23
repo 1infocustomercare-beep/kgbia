@@ -267,6 +267,7 @@ const VoiceOrchestratorFAB = lazy(() =>
 const OutreachHealthPage = lazy(() => import("./pages/superadmin/OutreachHealthPage"));
 const SuperAdminCostsPage = lazy(() => import("./pages/superadmin/SuperAdminCostsPage"));
 const HomepageEditorPage = lazy(() => import("./pages/superadmin/HomepageEditorPage"));
+const HomepageMediaManagerPage = lazy(() => import("./pages/superadmin/HomepageMediaManagerPage"));
 
 // Part 6 — AI Marketplace + Sector pages
 const AIMarketplacePage = lazy(() => import("./pages/app/AIMarketplacePage"));
@@ -722,6 +723,11 @@ function App() {
                       <Route path="/superadmin/homepage-editor" element={
                         <ProtectedRoute requiredRole="super_admin">
                           <HomepageEditorPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/superadmin/media-manager" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <HomepageMediaManagerPage />
                         </ProtectedRoute>
                       } />
                       <Route path="/staff" element={
