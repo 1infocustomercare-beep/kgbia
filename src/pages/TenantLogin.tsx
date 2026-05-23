@@ -114,7 +114,7 @@ export default function TenantLogin() {
     if (!user || !tenant) return;
     let cancelled = false;
     (async () => {
-      const allowed = await verifyTenantAccess(user.id, tenant.id);
+      const allowed = await verifyTenantAccess(user.id, tenant.id, tenant.slug);
       if (cancelled) return;
       if (allowed) {
         setActiveTenant({
@@ -154,6 +154,14 @@ export default function TenantLogin() {
       if (error || !session?.user) {
         const next = registerLoginFailure(tenant.slug, email);
         setThrottle(next);
+        try {
+          await supabase.rpc("log_tenant_login_event", {
+            p_slug: tenant.slug,
+            p_outcome: "invalid_credentials",
+            p_email: email.trim() || null,
+            p_metadata: { failures: next.failures, locked: next.locked },
+          });
+        } catch { /* best effort */ }
         toast({
           title: next.locked ? "Accesso bloccato" : "Credenziali non valide",
           description:
@@ -166,13 +174,20 @@ export default function TenantLogin() {
         return;
       }
 
-      const allowed = await verifyTenantAccess(session.user.id, tenant.id);
+      const allowed = await verifyTenantAccess(session.user.id, tenant.id, tenant.slug);
       if (!allowed) {
         // Hard isolation: not a member of this tenant → wipe session + cookies
         await hardWipeTenantSession("unauthorized_tenant");
-        // Treat unauthorized-tenant as a failed attempt for throttle purposes too
         const next = registerLoginFailure(tenant.slug, email);
         setThrottle(next);
+        try {
+          await supabase.rpc("log_tenant_login_event", {
+            p_slug: tenant.slug,
+            p_outcome: "unauthorized_tenant",
+            p_email: email.trim() || null,
+            p_metadata: { user_id: session.user.id },
+          });
+        } catch { /* best effort */ }
         toast({
           title: "Accesso non autorizzato",
           description:
@@ -194,6 +209,15 @@ export default function TenantLogin() {
         setAt: Date.now(),
       });
       await bindSessionToTenant(tenant.id, session.user.id);
+
+      try {
+        await supabase.rpc("log_tenant_login_event", {
+          p_slug: tenant.slug,
+          p_outcome: "success",
+          p_email: email.trim() || null,
+          p_metadata: { user_id: session.user.id },
+        });
+      } catch { /* best effort */ }
 
       toast({
         title: `Benvenuto in ${tenant.name}`,
