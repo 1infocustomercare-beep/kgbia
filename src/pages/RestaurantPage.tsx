@@ -403,26 +403,43 @@ const RestaurantPage = () => {
               Una passione per la<br />
               <span className="text-brand-gradient">cucina autentica</span>
             </motion.h2>
-            <motion.p className="mt-6 text-muted-foreground leading-relaxed"
-              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.45 }}>
-              Nel cuore della città vi attende {restaurantName} — un luogo dove l'ospitalità italiana incontra l'eccellenza culinaria. 
-              La nostra cucina unisce ricette tradizionali con accenti moderni, utilizzando solo gli ingredienti più pregiati d'Italia e del territorio.
-            </motion.p>
-            <motion.p className="mt-4 text-muted-foreground leading-relaxed"
-              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.55 }}>
-              Dalla nostra pasta fatta a mano alle carni selezionate, dai vini della nostra enoteca ai dolci della tradizione — 
-              ogni visita diventa un'esperienza indimenticabile per tutti i sensi.
-            </motion.p>
-            <motion.div className="mt-8 flex items-center gap-4"
-              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.65 }}>
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                <Crown className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <p className="font-display font-bold text-foreground">Chef & Proprietario</p>
-                <p className="text-sm text-muted-foreground">{restaurantName}</p>
-              </div>
-            </motion.div>
+            {(() => {
+              const storyIntro = siteOverride.story?.intro;
+              const themeHighlights: Array<{ icon?: string; label?: string; text?: string } | string> =
+                (dbRestaurant as any)?.theme_config?.highlights || [];
+              const defaultText = `Nel cuore della città vi attende ${restaurantName} — un luogo dove l'ospitalità italiana incontra l'eccellenza culinaria. La nostra cucina unisce ricette tradizionali con accenti moderni.`;
+              return (
+                <>
+                  <motion.p className="mt-6 text-muted-foreground leading-relaxed whitespace-pre-line"
+                    initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.45 }}>
+                    {storyIntro || defaultText}
+                  </motion.p>
+                  {themeHighlights.length > 0 && (
+                    <motion.div className="mt-6 flex flex-wrap gap-2"
+                      initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.55 }}>
+                      {themeHighlights.slice(0, 8).map((h: any, i) => {
+                        const label = typeof h === "string" ? h : `${h.icon || ""} ${h.label || h.text || ""}`.trim();
+                        return (
+                          <span key={i} className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs sm:text-sm text-foreground/90 font-medium">
+                            {label}
+                          </span>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                  <motion.div className="mt-8 flex items-center gap-4"
+                    initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.65 }}>
+                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Crown className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-display font-bold text-foreground">Chef & Proprietario</p>
+                      <p className="text-sm text-muted-foreground">{restaurantName}</p>
+                    </div>
+                  </motion.div>
+                </>
+              );
+            })()}
           </motion.div>
 
           {/* Photo Grid — usa galleria reale dal DB se disponibile */}
