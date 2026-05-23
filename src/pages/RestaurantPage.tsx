@@ -30,6 +30,7 @@ import { getBusinessTypeConfig, normalizeBusinessType } from "@/lib/business-typ
 const RestaurantVoiceAgent = lazy(() => import("@/components/restaurant/RestaurantVoiceAgent"));
 const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
+import { useRestaurantSite, RestaurantSiteProvider } from "@/hooks/useRestaurantSite";
 
 const RestaurantPage = () => {
   const { slug } = useParams();
