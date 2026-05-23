@@ -721,6 +721,18 @@ const RestaurantPage = () => {
               </div>
             </motion.div>
           </div>
+
+          {/* Embedded Google Map */}
+          <motion.div className="mt-6 sm:mt-10 rounded-2xl sm:rounded-3xl overflow-hidden border border-border/30 glass"
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.8 }}>
+            <iframe
+              title={`Mappa ${restaurantName}`}
+              src={`https://www.google.com/maps?q=${encodeURIComponent(`${restaurantName} ${restaurantAddress} ${restaurantCity}`)}&output=embed`}
+              className="w-full h-64 sm:h-80 border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </motion.div>
         </div>
       </section>
 
