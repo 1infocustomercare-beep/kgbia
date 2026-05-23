@@ -766,7 +766,9 @@ function App() {
                       } />
                       <Route path="/t/:slug/admin/warehouse" element={
                         <ProtectedRoute>
-                          <WarehousePage />
+                          <TenantGuard>
+                            <WarehousePage />
+                          </TenantGuard>
                         </ProtectedRoute>
                       } />
                       <Route path="/setup" element={<Navigate to="/onboarding" replace />} />
