@@ -706,6 +706,22 @@ const RestaurantPage = () => {
                 ))}
               </motion.div>
             </AnimatePresence>
+
+            {/* Allergens legend + Menu PDF download */}
+            <motion.div className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl glass border border-border/30"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-muted-foreground">
+                <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-foreground/70 mr-1">Legenda allergeni</span>
+                <span>🌾 Glutine</span><span>🥚 Uova</span><span>🧀 Latticini</span>
+                <span>🐟 Pesce</span><span>🥜 Arachidi</span><span>🌰 Frutta a guscio</span>
+              </div>
+              {(dbRestaurant as any)?.menu_pdf_url && (
+                <a href={(dbRestaurant as any).menu_pdf_url} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground text-xs font-bold tracking-wider uppercase hover:opacity-90 transition">
+                  📄 Scarica Menu PDF
+                </a>
+              )}
+            </motion.div>
           </div>
         </div>
       </section>
