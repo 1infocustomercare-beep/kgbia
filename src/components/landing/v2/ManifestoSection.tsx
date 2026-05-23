@@ -29,6 +29,13 @@ export default function ManifestoSection() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.55 });
 
+  const { content } = useHomepageContent();
+  const m = content.manifesto ?? {};
+  const WORDS = pick(m.words, WORDS_DEFAULT);
+  const ACCENT_WORDS = new Set(pick(m.accentWords, ACCENT_DEFAULT));
+  const STATS = pick(m.stats, STATS_DEFAULT);
+  const PILL = pick(m.pillLabel, "Manifesto Empire");
+
   return (
     <section ref={ref} id="manifesto" className="landing-section relative overflow-visible px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16" data-theme="light">
       <div className="landing-section-glow" data-tone="violet" />
@@ -36,7 +43,7 @@ export default function ManifestoSection() {
       <div className="relative mx-auto max-w-[1280px]">
         <div className="mb-5 text-center sm:mb-6" data-tone="gold">
           <span className="landing-pill px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.26em] sm:px-4 sm:py-2 sm:text-[10px]">
-            Manifesto Empire
+            {PILL}
           </span>
         </div>
 
@@ -57,7 +64,7 @@ export default function ManifestoSection() {
           // DESKTOP / tablet: cinematic word-by-word reveal driven by scroll
           <h2 className="mx-auto mb-8 flex max-w-[22ch] flex-wrap justify-center gap-x-[0.28em] gap-y-1 text-center font-heading text-[clamp(2rem,5.4vw,4rem)] font-extrabold leading-[1] tracking-[-0.04em] text-foreground sm:mb-10 lg:mb-12">
             {WORDS.map((word, index) => (
-              <Word key={word + index} word={word} index={index} total={WORDS.length} progress={smooth} />
+              <Word key={word + index} word={word} index={index} total={WORDS.length} accentWords={ACCENT_WORDS} progress={smooth} />
             ))}
           </h2>
         )}
@@ -88,17 +95,19 @@ function Word({
   index,
   total,
   progress,
+  accentWords,
 }: {
   word: string;
   index: number;
   total: number;
   progress: ReturnType<typeof useSpring>;
+  accentWords: Set<string>;
 }) {
   const start = 0.08 + (index / total) * 0.44;
   const end = start + 0.18;
   const opacity = useTransform(progress, [start, end], [0.32, 1]);
   const y = useTransform(progress, [start, end], [14, 0]);
-  const accent = ACCENT_WORDS.has(word);
+  const accent = accentWords.has(word);
 
   return (
     <motion.span

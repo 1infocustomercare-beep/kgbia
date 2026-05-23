@@ -6,8 +6,8 @@ import { useHomepageContent, pick } from "@/hooks/useHomepageContent";
 export default function ContactCTA() {
   const navigate = useNavigate();
   const { content } = useHomepageContent();
-  const cc = content.cta ? undefined : content.contactCta ?? {};
   const c = content.contactCta ?? {};
+  const f = content.footer ?? {};
   const f = content.footer ?? {};
 
   const PILL = pick(c.pillLabel, "Pronto a iniziare?");
