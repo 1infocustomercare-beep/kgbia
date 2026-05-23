@@ -7,7 +7,6 @@ import {
   Sun, Moon, Clock, Leaf, Flame, Wheat, Fish, Milk, Egg, TreePine
 } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
-import { SplineScene } from "@/components/ui/spline-scene";
 import LivePreview from "@/components/restaurant/LivePreview";
 import FoodPhotoGenerator from "@/components/admin/FoodPhotoGenerator";
 import PlateGallery from "@/components/admin/PlateGallery";
@@ -418,25 +417,14 @@ const StudioTab = ({
 
   return (
     <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      {/* Hero Studio: scena 3D Spline + titolo */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[hsl(162_30%_8%)] via-[hsl(162_25%_10%)] to-[hsl(162_30%_6%)] shadow-[0_10px_40px_-15px_hsl(160_70%_25%/0.55)]">
-        <div className="absolute inset-0 h-44 sm:h-52">
-          <SplineScene sector="food" />
-        </div>
-        <div className="relative z-10 flex flex-col items-center text-center gap-2 px-4 pt-32 sm:pt-36 pb-4">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 backdrop-blur-md border border-[hsl(42_75%_55%/0.35)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(42_75%_60%)] animate-pulse" />
-            <span className="text-[10px] uppercase tracking-[0.18em] text-[hsl(42_75%_75%)] font-semibold">Studio Creativo</span>
-          </div>
-          <h3 className="text-xl sm:text-2xl font-display font-bold text-white drop-shadow-[0_2px_8px_hsl(160_70%_15%/0.8)]">
-            Crea, ispira, converti
-          </h3>
-          <p className="text-xs sm:text-sm text-white/75 max-w-sm">
-            Menu, foto IA, design e lingue — tutto orchestrato in un unico studio premium.
-          </p>
+      {/* Cartoon illustration */}
+      <div className="flex flex-col items-center text-center gap-2 py-2">
+        <img src={cartoonStudioMenu} alt="" className="w-24 h-24 object-contain" />
+        <div>
+          <h3 className="text-lg font-display font-bold text-foreground">Studio Creativo</h3>
+          <p className="text-xs text-muted-foreground">Menu, foto IA, design e lingue</p>
         </div>
       </div>
-
       <div className="flex items-center gap-2">
         <div className="flex-1 flex gap-1.5 bg-secondary/30 p-1 rounded-xl">
         {sections.map(s => (
