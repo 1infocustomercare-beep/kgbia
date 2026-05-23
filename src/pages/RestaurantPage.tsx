@@ -353,11 +353,23 @@ const RestaurantPage = () => {
             </div>
           </motion.div>
 
-          <motion.button onClick={() => scrollToSection("menu-section")}
-            className="mt-7 sm:mt-10 px-7 sm:px-10 py-3 sm:py-4 border-2 border-white/40 text-white text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all duration-300 backdrop-blur-sm bg-black/20"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-            Ordina Ora
-          </motion.button>
+          <div className="mt-7 sm:mt-10 flex flex-wrap items-center justify-center gap-3">
+            <motion.a
+              href={siteOverride.hero?.ctaPrimaryHref || "#menu-section"}
+              onClick={(e) => { if (!siteOverride.hero?.ctaPrimaryHref) { e.preventDefault(); scrollToSection("menu-section"); } }}
+              className="px-7 sm:px-10 py-3 sm:py-4 border-2 border-white/40 text-white text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all duration-300 backdrop-blur-sm bg-black/20"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
+              {ctaPrimary}
+            </motion.a>
+            {ctaSecondary && (
+              <motion.a
+                href={siteOverride.hero?.ctaSecondaryHref || "#reservations"}
+                className="px-7 sm:px-10 py-3 sm:py-4 border-2 border-primary/70 text-primary text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-300 backdrop-blur-sm bg-black/20"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
+                {ctaSecondary}
+              </motion.a>
+            )}
+          </div>
         </motion.div>
 
         <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
