@@ -3241,6 +3241,69 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_media: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          focal_x: number | null
+          focal_y: number | null
+          height: number | null
+          id: string
+          is_video: boolean | null
+          mime_type: string | null
+          poster_url: string | null
+          public_url: string
+          size_bytes: number | null
+          storage_path: string
+          tags: string[] | null
+          title: string | null
+          updated_at: string
+          uploaded_by: string | null
+          width: number | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          focal_x?: number | null
+          focal_y?: number | null
+          height?: number | null
+          id?: string
+          is_video?: boolean | null
+          mime_type?: string | null
+          poster_url?: string | null
+          public_url: string
+          size_bytes?: number | null
+          storage_path: string
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          focal_x?: number | null
+          focal_y?: number | null
+          height?: number | null
+          id?: string
+          is_video?: boolean | null
+          mime_type?: string | null
+          poster_url?: string | null
+          public_url?: string
+          size_bytes?: number | null
+          storage_path?: string
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
       infrastructure_costs: {
         Row: {
           category: string
