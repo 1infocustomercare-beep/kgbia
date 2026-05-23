@@ -604,6 +604,7 @@ function App() {
                       <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
                       <Route path="/admin" element={<AuthPage />} />
                       <Route path="/kitchen" element={<KitchenView />} />
+                      <Route path="/kitchen/:slug" element={<KitchenView />} />
                       <Route path="/partner/register" element={<PartnerRegister />} />
                       <Route path="/join" element={<JoinPartnerPage />} />
                       <Route path="/privacy" element={<PrivacyPolicy />} />
