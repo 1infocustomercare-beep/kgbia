@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { useHomepageContent, pick } from "@/hooks/useHomepageContent";
 
-const WORDS = ["Non", "vendiamo", "software.", "Liberiamo", "il", "tuo", "tempo", "mentre", "fatturi", "di", "più."];
-const ACCENT_WORDS = new Set(["Liberiamo", "fatturi", "più."]);
-const STATS = [
+const WORDS_DEFAULT = ["Non", "vendiamo", "software.", "Liberiamo", "il", "tuo", "tempo", "mentre", "fatturi", "di", "più."];
+const ACCENT_DEFAULT = ["Liberiamo", "fatturi", "più."];
+const STATS_DEFAULT = [
   { value: "847+", label: "business attivati" },
   { value: "98", label: "agenti proprietari" },
   { value: "25+", label: "settori coperti" },
