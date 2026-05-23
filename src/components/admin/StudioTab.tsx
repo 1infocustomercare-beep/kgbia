@@ -7,19 +7,17 @@ import {
   Sun, Moon, Clock, Leaf, Flame, Wheat, Fish, Milk, Egg, TreePine
 } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
-import LivePreview from "@/components/restaurant/LivePreview";
 import FoodPhotoGenerator from "@/components/admin/FoodPhotoGenerator";
 import PlateGallery from "@/components/admin/PlateGallery";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { applyBrandTheme, resetBrandTheme, extractDominantColor, hslToHex, DEFAULT_PRIMARY_HEX } from "@/lib/color-extract";
 import type { MenuItem } from "@/types/restaurant";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import cartoonStudioMenu from "@/assets/cartoon-studio-menu-v2.png";
 import RestaurantSiteEditor from "@/components/admin/RestaurantSiteEditor";
 
-type StudioSection = "menu" | "ai" | "foodphoto" | "plates" | "translate" | "preview" | "site";
+type StudioSection = "menu" | "ai" | "foodphoto" | "plates" | "translate" | "site";
 
 /* ── EU Allergen Icons ── */
 const EU_ALLERGENS = [
@@ -350,8 +348,7 @@ const StudioTab = ({
     { id: "ai", label: "OCR", icon: <Camera className="w-4 h-4" /> },
     { id: "foodphoto", label: "📸 Foto", icon: <Sparkles className="w-4 h-4" /> },
     { id: "plates", label: "🍽️ Piatti", icon: <ImageIcon className="w-4 h-4" /> },
-    { id: "site", label: "Sito", icon: <Globe className="w-4 h-4" /> },
-    { id: "preview", label: "Design", icon: <Palette className="w-4 h-4" /> },
+    { id: "site", label: "Sito & Design", icon: <Globe className="w-4 h-4" /> },
     { id: "translate", label: "Lingue", icon: <Languages className="w-4 h-4" /> },
   ];
 
@@ -853,99 +850,18 @@ const StudioTab = ({
         </div>
       )}
 
-      {/* ===== SITO PUBBLICO (full editor) ===== */}
+      {/* ===== SITO & DESIGN (editor unificato con logo, tagline, brand color, hero, story, brand & live preview) ===== */}
       {section === "site" && restaurant && (
-        <RestaurantSiteEditor restaurant={restaurant} />
-      )}
-
-      {/* ===== DESIGN & LIVE PREVIEW ===== */}
-      {section === "preview" && restaurant && (
-        <div className="space-y-4">
-          {/* Logo */}
-          <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-3">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-              <ImageIcon className="w-3.5 h-3.5" /> Logo del ristorante
-            </p>
-            <div className="flex items-center gap-4">
-              <div className="relative flex-shrink-0">
-                <img src={restaurant?.logo_url || "/placeholder.svg"} alt="Logo"
-                  className="w-16 h-16 rounded-2xl object-contain border-2 border-border/50 shadow-sm bg-secondary/30" />
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-md">
-                  <Upload className="w-3 h-3 text-primary-foreground" />
-                </div>
-              </div>
-              <div className="flex-1 space-y-1.5">
-                <motion.button onClick={handleLogoUpload} disabled={logoUploading}
-                  className="w-full px-4 py-3 rounded-xl bg-primary/10 text-primary text-sm font-medium min-h-[44px] border border-primary/20 hover:bg-primary/20 transition-colors"
-                  whileTap={{ scale: 0.97 }}>
-                  {logoUploading ? <Loader2 className="w-4 h-4 inline animate-spin mr-2" /> : null}
-                  {logoUploading ? "Caricamento..." : "Carica nuovo logo"}
-                </motion.button>
-                <p className="text-[10px] text-muted-foreground/70 text-center">I colori si estraggono automaticamente</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Tagline */}
-          <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tagline</p>
-            <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
-              placeholder="Es: La vera cucina italiana dal 1985" maxLength={120} onBlur={handleSaveSettings}
-              className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/75" />
-          </div>
-
-          {/* Color Picker */}
-          <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-3">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-              <Palette className="w-3.5 h-3.5" /> Colore Brand
-            </p>
-            <div className="flex items-center gap-3">
-              <input type="color" value={settingsPrimaryColor}
-                onChange={e => { setSettingsPrimaryColor(e.target.value); applyBrandTheme(e.target.value); }}
-                onBlur={handleSaveSettings}
-                className="w-12 h-12 rounded-xl border-2 border-border/50 cursor-pointer bg-transparent p-0.5 appearance-none flex-shrink-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-lg [&::-webkit-color-swatch]:border-0" />
-              <div className="flex-1 space-y-2">
-                <input type="text" value={settingsPrimaryColor}
-                  onChange={e => { setSettingsPrimaryColor(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) applyBrandTheme(e.target.value); }}
-                  onBlur={handleSaveSettings} placeholder="#C8963E" maxLength={7}
-                  className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                <div className="flex gap-1.5 flex-wrap">
-                  {["#C8963E", "#E74C3C", "#2ECC71", "#3498DB", "#9B59B6", "#1ABC9C", "#F39C12", "#E91E63"].map(c => (
-                    <motion.button key={c} onClick={() => { setSettingsPrimaryColor(c); applyBrandTheme(c); handleSaveSettings(); }}
-                      className={`w-7 h-7 rounded-lg border-2 transition-all ${settingsPrimaryColor === c ? "border-foreground scale-110 shadow-md" : "border-transparent hover:border-muted-foreground/30"}`}
-                      style={{ backgroundColor: c }}
-                      whileTap={{ scale: 0.85 }} whileHover={{ scale: 1.15 }} />
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => { setSettingsPrimaryColor(DEFAULT_PRIMARY_HEX); resetBrandTheme(); handleSaveSettings(); }}
-                className="flex-1 px-3 py-2.5 rounded-xl bg-secondary/50 text-muted-foreground text-xs min-h-[40px] hover:bg-secondary transition-colors font-medium">
-                Ripristina default
-              </button>
-              {restaurant?.logo_url && (
-                <button onClick={async () => {
-                  try { const h = await extractDominantColor(restaurant.logo_url!); const hex = hslToHex(h); setSettingsPrimaryColor(hex); applyBrandTheme(hex); handleSaveSettings(); toast({ title: "Colore estratto dal logo!" }); }
-                  catch { toast({ title: "Errore", variant: "destructive" }); }
-                }}
-                  className="flex-1 px-3 py-2.5 rounded-xl bg-primary/10 text-primary text-xs min-h-[40px] hover:bg-primary/20 transition-colors font-medium">
-                  Estrai dal logo
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Live Preview */}
-          {restaurantSlug && (
-            <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-3">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                <Globe className="w-3.5 h-3.5" /> Anteprima Live
-              </p>
-              <LivePreview slug={restaurantSlug} />
-            </div>
-          )}
-        </div>
+        <RestaurantSiteEditor
+          restaurant={restaurant}
+          logoUploading={logoUploading}
+          handleLogoUpload={handleLogoUpload}
+          settingsTagline={settingsTagline}
+          setSettingsTagline={setSettingsTagline}
+          settingsPrimaryColor={settingsPrimaryColor}
+          setSettingsPrimaryColor={setSettingsPrimaryColor}
+          handleSaveSettings={handleSaveSettings}
+        />
       )}
     </motion.div>
   );

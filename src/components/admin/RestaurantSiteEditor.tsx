@@ -13,25 +13,46 @@ import {
   RotateCcw,
   Eye,
   Smartphone,
+  Tablet,
+  Monitor,
   Sparkles,
   Loader2,
   ChevronDown,
   ChevronUp,
   ExternalLink,
   Wand2,
+  Upload,
+  Palette,
+  Image as ImageIcon,
 } from "lucide-react";
 import {
   RestaurantSiteContent,
   EMPTY_SITE,
   extractSiteOverride,
 } from "@/lib/restaurant-site-content";
+import {
+  applyBrandTheme,
+  resetBrandTheme,
+  extractDominantColor,
+  hslToHex,
+  DEFAULT_PRIMARY_HEX,
+} from "@/lib/color-extract";
 
 interface Props {
   restaurant: any;
   onSaved?: () => void;
+  // Integrazione opzionale con i settings "core" del ristorante
+  logoUploading?: boolean;
+  handleLogoUpload?: () => void;
+  settingsTagline?: string;
+  setSettingsTagline?: (v: string) => void;
+  settingsPrimaryColor?: string;
+  setSettingsPrimaryColor?: (v: string) => void;
+  handleSaveSettings?: () => void;
 }
 
 type SectionKey =
+  | "identity"
   | "hero"
   | "splash"
   | "about"
@@ -45,6 +66,7 @@ type SectionKey =
   | "visibility";
 
 const SECTIONS: { key: SectionKey; label: string; emoji: string; desc: string }[] = [
+  { key: "identity", label: "Identità · Logo & Tagline", emoji: "🪪", desc: "Logo del locale, tagline e colore brand globale" },
   { key: "hero", label: "Hero / Copertina", emoji: "🎬", desc: "Titolo, sottotitolo, video di sfondo, pulsanti CTA" },
   { key: "splash", label: "Splash di apertura", emoji: "✨", desc: "Schermata cinematica iniziale" },
   { key: "about", label: "Chi siamo", emoji: "📖", desc: "Storia breve e presentazione" },
@@ -54,20 +76,41 @@ const SECTIONS: { key: SectionKey; label: string; emoji: string; desc: string }[
   { key: "reviews", label: "Recensioni", emoji: "💬", desc: "Titolo sezione recensioni" },
   { key: "contact", label: "Contatti social", emoji: "📞", desc: "WhatsApp, Instagram, Facebook" },
   { key: "footer", label: "Footer", emoji: "🦶", desc: "Tagline e copyright" },
-  { key: "brand", label: "Brand & colori", emoji: "🎨", desc: "Colori primario/accento, font" },
+  { key: "brand", label: "Brand sito · Colori specifici", emoji: "🎨", desc: "Override colori per la pagina pubblica" },
   { key: "visibility", label: "Visibilità sezioni", emoji: "👁️", desc: "Mostra o nascondi blocchi del sito" },
 ];
 
-export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
+const PRESET_COLORS = ["#C8963E", "#E74C3C", "#2ECC71", "#3498DB", "#9B59B6", "#1ABC9C", "#F39C12", "#E91E63"];
+
+type DeviceKey = "iphone16promax" | "iphone-se" | "ipad" | "desktop";
+const DEVICES: Record<DeviceKey, { label: string; w: number; h: number; icon: any; radius: number }> = {
+  "iphone16promax": { label: "iPhone 16 Pro Max", w: 320, h: 660, icon: Smartphone, radius: 55 },
+  "iphone-se":      { label: "iPhone SE",          w: 260, h: 540, icon: Smartphone, radius: 36 },
+  "ipad":           { label: "iPad",               w: 420, h: 560, icon: Tablet,     radius: 28 },
+  "desktop":        { label: "Desktop",            w: 520, h: 360, icon: Monitor,    radius: 12 },
+};
+
+export default function RestaurantSiteEditor({
+  restaurant,
+  onSaved,
+  logoUploading,
+  handleLogoUpload,
+  settingsTagline,
+  setSettingsTagline,
+  settingsPrimaryColor,
+  setSettingsPrimaryColor,
+  handleSaveSettings,
+}: Props) {
   const initial = useMemo<RestaurantSiteContent>(() => extractSiteOverride(restaurant), [restaurant]);
   const [content, setContent] = useState<RestaurantSiteContent>(initial);
   const [saving, setSaving] = useState(false);
-  const [open, setOpen] = useState<SectionKey | null>("hero");
-  const [device, setDevice] = useState<"iphone16promax" | "iphone-se" | "ipad">("iphone16promax");
+  const [open, setOpen] = useState<SectionKey | null>("identity");
+  const [device, setDevice] = useState<DeviceKey>("iphone16promax");
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const slug = restaurant?.slug;
   const previewUrl = slug ? `/r/${slug}?preview=1` : "";
+  const hasCoreSettings = Boolean(setSettingsPrimaryColor && setSettingsTagline);
 
   // Sync live: ogni modifica viene inviata al preview via postMessage
   useEffect(() => {
@@ -129,26 +172,29 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
         <button
           type="button"
           onClick={() => setOpen(isOpen ? null : k)}
-          className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-muted/40 transition"
+          className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-muted/40 transition min-h-[56px]"
         >
-          <div className="flex items-center gap-3">
-            <span className="text-xl">{meta.emoji}</span>
-            <div>
-              <div className="font-semibold text-sm">{meta.label}</div>
-              <div className="text-xs text-muted-foreground">{meta.desc}</div>
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="text-xl flex-shrink-0">{meta.emoji}</span>
+            <div className="min-w-0">
+              <div className="font-semibold text-sm truncate">{meta.label}</div>
+              <div className="text-[11px] text-muted-foreground truncate">{meta.desc}</div>
             </div>
           </div>
-          {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          {isOpen ? <ChevronUp className="w-4 h-4 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 flex-shrink-0" />}
         </button>
         {isOpen && <CardContent className="pt-0 pb-4 space-y-3">{children}</CardContent>}
       </Card>
     );
   };
 
+  const dev = DEVICES[device];
+  const DeviceIcon = dev.icon;
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_390px] gap-4">
+    <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-4">
       {/* === EDITOR === */}
-      <div className="space-y-3">
+      <div className="space-y-3 min-w-0">
         <Card className="bg-gradient-to-br from-primary/10 via-card to-card border-primary/30">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
@@ -158,26 +204,159 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
           <CardContent className="text-xs text-muted-foreground space-y-1">
             <p>
               ✏️ Modifica ogni dettaglio della tua pagina pubblica <b>/r/{slug}</b>.
-              Le anteprime appaiono <b>in diretta</b> nel mockup iPhone a destra.
+              Le anteprime appaiono <b>in diretta</b> nel mockup a destra.
             </p>
-            <p>💾 Premi <b>Salva</b> per pubblicare. 🔄 <b>Ripristina</b> rimuove tutte le personalizzazioni.</p>
+            <p>💾 <b>Pubblica</b> per salvare. 🔄 <b>Ripristina</b> rimuove le personalizzazioni del sito.</p>
           </CardContent>
         </Card>
 
-        <div className="flex gap-2 sticky top-0 z-20 bg-background/95 backdrop-blur py-2 -mx-1 px-1 border-b">
-          <Button onClick={save} disabled={saving} className="flex-1 bg-primary text-primary-foreground font-bold">
+        <div className="flex flex-wrap gap-2 sticky top-0 z-20 bg-background/95 backdrop-blur py-2 -mx-1 px-1 border-b">
+          <Button onClick={save} disabled={saving} className="flex-1 min-w-[160px] bg-primary text-primary-foreground font-bold min-h-[44px]">
             {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             Pubblica modifiche
           </Button>
-          <Button variant="outline" onClick={reset} title="Ripristina default">
+          <Button variant="outline" onClick={reset} title="Ripristina default" className="min-h-[44px]">
             <RotateCcw className="w-4 h-4" />
           </Button>
-          <Button variant="outline" asChild title="Apri pagina pubblica">
+          <Button variant="outline" asChild title="Apri pagina pubblica" className="min-h-[44px]">
             <a href={`/r/${slug}`} target="_blank" rel="noreferrer">
               <ExternalLink className="w-4 h-4" />
             </a>
           </Button>
         </div>
+
+        {/* ===== IDENTITÀ (logo + tagline + colore brand globale) ===== */}
+        <Section k="identity">
+          {hasCoreSettings ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-3 items-center p-3 rounded-xl bg-muted/40 border border-border/40">
+                <div className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-border/60 bg-secondary/40 flex-shrink-0 mx-auto sm:mx-0">
+                  <img
+                    src={restaurant?.logo_url || "/placeholder.svg"}
+                    alt="Logo ristorante"
+                    className="w-full h-full object-contain p-1"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-md">
+                    <Upload className="w-3 h-3 text-primary-foreground" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Button
+                    type="button"
+                    onClick={handleLogoUpload}
+                    disabled={logoUploading}
+                    variant="secondary"
+                    className="w-full min-h-[44px]"
+                  >
+                    {logoUploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <ImageIcon className="w-4 h-4 mr-2" />}
+                    {logoUploading ? "Caricamento..." : "Carica nuovo logo"}
+                  </Button>
+                  <p className="text-[11px] text-muted-foreground text-center sm:text-left">
+                    Il colore brand verrà estratto automaticamente.
+                  </p>
+                </div>
+              </div>
+
+              <Field label="Tagline globale del ristorante">
+                <Input
+                  value={settingsTagline ?? ""}
+                  onChange={(e) => setSettingsTagline?.(e.target.value)}
+                  onBlur={handleSaveSettings}
+                  placeholder="Es: La vera cucina italiana dal 1985"
+                  maxLength={120}
+                  className="min-h-[44px]"
+                />
+              </Field>
+
+              <Field label="Colore brand principale (tutta l'app)">
+                <div className="flex flex-wrap items-center gap-3">
+                  <input
+                    type="color"
+                    value={settingsPrimaryColor || "#C8963E"}
+                    onChange={(e) => {
+                      setSettingsPrimaryColor?.(e.target.value);
+                      applyBrandTheme(e.target.value);
+                    }}
+                    onBlur={handleSaveSettings}
+                    className="w-12 h-12 rounded-xl border-2 border-border/50 cursor-pointer bg-transparent p-0.5 flex-shrink-0"
+                  />
+                  <Input
+                    value={settingsPrimaryColor || ""}
+                    onChange={(e) => {
+                      setSettingsPrimaryColor?.(e.target.value);
+                      if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) applyBrandTheme(e.target.value);
+                    }}
+                    onBlur={handleSaveSettings}
+                    placeholder="#C8963E"
+                    maxLength={7}
+                    className="flex-1 min-w-[120px] font-mono min-h-[44px]"
+                  />
+                </div>
+                <div className="flex gap-1.5 flex-wrap mt-2">
+                  {PRESET_COLORS.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => {
+                        setSettingsPrimaryColor?.(c);
+                        applyBrandTheme(c);
+                        handleSaveSettings?.();
+                      }}
+                      className={`w-8 h-8 rounded-lg border-2 transition-all ${
+                        settingsPrimaryColor === c
+                          ? "border-foreground scale-110 shadow-md"
+                          : "border-transparent hover:border-muted-foreground/30"
+                      }`}
+                      style={{ backgroundColor: c }}
+                      title={c}
+                    />
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSettingsPrimaryColor?.(DEFAULT_PRIMARY_HEX);
+                      resetBrandTheme();
+                      handleSaveSettings?.();
+                    }}
+                    className="flex-1 min-h-[40px]"
+                  >
+                    Ripristina default
+                  </Button>
+                  {restaurant?.logo_url && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={async () => {
+                        try {
+                          const h = await extractDominantColor(restaurant.logo_url!);
+                          const hex = hslToHex(h);
+                          setSettingsPrimaryColor?.(hex);
+                          applyBrandTheme(hex);
+                          handleSaveSettings?.();
+                          toast({ title: "Colore estratto dal logo!" });
+                        } catch {
+                          toast({ title: "Errore", variant: "destructive" });
+                        }
+                      }}
+                      className="flex-1 min-h-[40px]"
+                    >
+                      <Palette className="w-3.5 h-3.5 mr-1" /> Estrai dal logo
+                    </Button>
+                  )}
+                </div>
+              </Field>
+            </>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              Le impostazioni globali del ristorante non sono disponibili in questo contesto.
+            </p>
+          )}
+        </Section>
 
         {/* HERO */}
         <Section k="hero">
@@ -190,7 +369,7 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
           <Field label="Sottotitolo / tagline">
             <Textarea rows={2} placeholder={restaurant?.tagline} value={content.hero?.subtitle || ""} onChange={(e) => update("hero", { subtitle: e.target.value })} />
           </Field>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Field label="CTA primario - testo">
               <Input placeholder="Ordina Ora" value={content.hero?.ctaPrimaryLabel || ""} onChange={(e) => update("hero", { ctaPrimaryLabel: e.target.value })} />
             </Field>
@@ -240,7 +419,7 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
           <Field label="Titolo galleria"><Input value={content.story?.title || ""} onChange={(e) => update("story", { title: e.target.value })} /></Field>
           <Field label="Intro"><Textarea rows={2} value={content.story?.intro || ""} onChange={(e) => update("story", { intro: e.target.value })} /></Field>
           {[0,1,2,3].map(i => (
-            <div key={i} className="grid grid-cols-2 gap-2 p-2 rounded border border-border/40">
+            <div key={i} className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-2 rounded border border-border/40">
               <Field label={`Immagine ${i+1} (URL)`}>
                 <Input value={content.story?.images?.[i] || ""} onChange={(e) => {
                   const arr = [...(content.story?.images || ["","","",""])];
@@ -271,7 +450,7 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
             onChange={(v) => update("reservations", { enabled: v })} />
           <Field label="Titolo"><Input value={content.reservations?.title || ""} onChange={(e) => update("reservations", { title: e.target.value })} /></Field>
           <Field label="Testo"><Textarea rows={2} value={content.reservations?.body || ""} onChange={(e) => update("reservations", { body: e.target.value })} /></Field>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Field label="CTA testo"><Input value={content.reservations?.ctaLabel || ""} onChange={(e) => update("reservations", { ctaLabel: e.target.value })} /></Field>
             <Field label="CTA link"><Input value={content.reservations?.ctaHref || ""} onChange={(e) => update("reservations", { ctaHref: e.target.value })} /></Field>
           </div>
@@ -285,7 +464,7 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
 
         <Section k="contact">
           <Field label="Titolo blocco contatti"><Input value={content.contact?.title || ""} onChange={(e) => update("contact", { title: e.target.value })} /></Field>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Field label="WhatsApp (numero)"><Input placeholder="+39 333 1234567" value={content.contact?.whatsapp || ""} onChange={(e) => update("contact", { whatsapp: e.target.value })} /></Field>
             <Field label="Instagram (@handle)"><Input placeholder="@comemai" value={content.contact?.instagram || ""} onChange={(e) => update("contact", { instagram: e.target.value })} /></Field>
             <Field label="Facebook URL"><Input value={content.contact?.facebook || ""} onChange={(e) => update("contact", { facebook: e.target.value })} /></Field>
@@ -299,8 +478,11 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
         </Section>
 
         <Section k="brand">
-          <div className="grid grid-cols-2 gap-2">
-            <Field label="Colore primario">
+          <p className="text-[11px] text-muted-foreground -mt-1 mb-2">
+            Override <b>solo per il sito pubblico</b>. Per cambiare i colori dell'app, usa "Identità" in alto.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <Field label="Colore primario sito">
               <div className="flex gap-2">
                 <input type="color" value={content.brand?.primaryHex || restaurant?.primary_color || "#C8963E"}
                   onChange={(e) => update("brand", { primaryHex: e.target.value })}
@@ -309,7 +491,7 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
                   onChange={(e) => update("brand", { primaryHex: e.target.value })} />
               </div>
             </Field>
-            <Field label="Colore accento">
+            <Field label="Colore accento sito">
               <div className="flex gap-2">
                 <input type="color" value={content.brand?.accentHex || "#1a1a1a"}
                   onChange={(e) => update("brand", { accentHex: e.target.value })}
@@ -344,36 +526,62 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
         <div className="h-8" />
       </div>
 
-      {/* === IPHONE 16 PRO MAX PREVIEW === */}
-      <div className="lg:sticky lg:top-4 self-start">
-        <Card className="bg-gradient-to-b from-zinc-900 to-black border-zinc-800 text-white">
+      {/* === LIVE PREVIEW (responsive: iPhone/iPad/Desktop) === */}
+      <div className="xl:sticky xl:top-4 self-start">
+        <Card className="bg-gradient-to-b from-zinc-900 to-black border-zinc-800 text-white overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Smartphone className="w-4 h-4" /> Anteprima Live
+            <CardTitle className="flex items-center gap-2 text-sm flex-wrap">
+              <DeviceIcon className="w-4 h-4" /> Anteprima Live
               <Badge variant="outline" className="ml-auto border-amber-400/40 text-amber-300 text-[10px]">
-                iPhone 16 Pro Max
+                {dev.label}
               </Badge>
             </CardTitle>
+            <div className="flex flex-wrap gap-1 pt-2">
+              {(Object.keys(DEVICES) as DeviceKey[]).map((k) => {
+                const D = DEVICES[k];
+                const Icon = D.icon;
+                return (
+                  <button
+                    key={k}
+                    type="button"
+                    onClick={() => setDevice(k)}
+                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] border transition min-h-[32px] ${
+                      device === k
+                        ? "bg-amber-500/20 border-amber-400/50 text-amber-200"
+                        : "bg-zinc-800/60 border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                    }`}
+                    title={D.label}
+                  >
+                    <Icon className="w-3 h-3" />
+                    <span className="hidden sm:inline">{D.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </CardHeader>
-          <CardContent className="flex justify-center pb-4">
+          <CardContent className="flex justify-center pb-4 overflow-x-auto">
             <div
-              className="relative bg-black rounded-[55px] p-[10px] shadow-[0_30px_60px_-15px_rgba(0,0,0,.6)] border-[3px] border-zinc-700"
-              style={{ width: 320, height: 660 }}
+              className="relative bg-black shadow-[0_30px_60px_-15px_rgba(0,0,0,.6)] border-[3px] border-zinc-700"
+              style={{
+                width: dev.w,
+                height: dev.h,
+                borderRadius: dev.radius,
+                padding: device === "desktop" ? 4 : 10,
+              }}
             >
-              {/* Dynamic Island */}
-              <div className="absolute top-3 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full z-10 border border-zinc-800" />
-              <div className="w-full h-full overflow-hidden rounded-[46px] bg-white">
+              {device !== "desktop" && (
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-black rounded-full z-10 border border-zinc-800" />
+              )}
+              <div
+                className="w-full h-full overflow-hidden bg-white"
+                style={{ borderRadius: Math.max(dev.radius - 9, 6) }}
+              >
                 {previewUrl ? (
                   <iframe
                     ref={iframeRef}
                     src={previewUrl}
                     title="Live preview"
                     className="w-full h-full border-0"
-                    style={{
-                      // Scaliamo il sito reale per simulare la viewport iPhone
-                      transform: "scale(1)",
-                      transformOrigin: "top left",
-                    }}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-zinc-400 text-xs p-6 text-center">
@@ -393,9 +601,9 @@ export default function RestaurantSiteEditor({ restaurant, onSaved }: Props) {
           <div className="flex items-center gap-1 font-semibold text-foreground">
             <Sparkles className="w-3 h-3 text-primary" /> Tips
           </div>
-          <p>• Le modifiche appaiono nel mockup mentre digiti.</p>
-          <p>• Per pubblicarle sul sito vero premi <b>Pubblica</b>.</p>
-          <p>• Lascia un campo vuoto per usare il valore predefinito.</p>
+          <p>• Cambia dispositivo per vedere il sito su iPhone, iPad o Desktop.</p>
+          <p>• Le modifiche appaiono live mentre digiti.</p>
+          <p>• Premi <b>Pubblica</b> per renderle visibili al pubblico.</p>
         </div>
       </div>
     </div>
@@ -413,7 +621,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function ToggleField({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <div className="flex items-center justify-between py-1.5">
+    <div className="flex items-center justify-between py-1.5 gap-3">
       <Label className="text-sm">{label}</Label>
       <Switch checked={checked} onCheckedChange={onChange} />
     </div>
