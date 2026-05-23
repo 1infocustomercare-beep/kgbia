@@ -103,6 +103,8 @@ export default function PricingSection() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
           className="mx-auto mb-10 max-w-[820px] text-center sm:mb-14"
+          data-tone="gold"
+        >
           <span className="landing-pill mb-4 inline-flex items-center gap-2 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em]">
             <Zap className="h-3 w-3" strokeWidth={2.5} /> {PILL_LABEL}
           </span>
