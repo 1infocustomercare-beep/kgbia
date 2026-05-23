@@ -39,16 +39,25 @@ const RestaurantPage = () => {
   const isDemo = slug === "impero-roma";
   const { restaurant: dbRestaurant, menuItems: dbMenu, categories: dbCats, loading: dbLoading, notFound } = useRestaurantBySlug(slug);
 
+  // Override live editor (theme_config.site)
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const siteCtx = (typeof window !== "undefined") ? (require("@/hooks/useRestaurantSite") as typeof import("@/hooks/useRestaurantSite")).useRestaurantSite() : { content: {} as any, isPreview: false };
+  const siteOverride = siteCtx.content || {};
+
   const hasDbData = dbMenu.length > 0;
   const menu = hasDbData ? dbMenu : demoMenu;
   const menuCategories = hasDbData ? dbCats : demoCats;
-  const restaurantName = dbRestaurant?.name || demoRestaurant.name;
-  const restaurantTagline = dbRestaurant?.tagline || demoRestaurant.tagline;
+  const restaurantName = siteOverride.hero?.title || dbRestaurant?.name || demoRestaurant.name;
+  const restaurantTagline = siteOverride.hero?.subtitle || dbRestaurant?.tagline || demoRestaurant.tagline;
   const restaurantLogoUrl = dbRestaurant?.logo_url || restaurantLogo;
   const restaurantPhone = dbRestaurant?.phone || "+39 06 1234 5678";
   const restaurantAddress = dbRestaurant?.address || "Via del Corso 42, Roma";
   const restaurantCity = dbRestaurant?.city || "Roma, Italia";
   const restaurantEmail = dbRestaurant?.email || `info@${slug}.it`;
+  const heroVideoSrc = siteOverride.hero?.videoUrl || heroVideo;
+  const heroImageSrc = siteOverride.hero?.imageUrl;
+  const ctaPrimary = siteOverride.hero?.ctaPrimaryLabel || "Ordina Ora";
+  const ctaSecondary = siteOverride.hero?.ctaSecondaryLabel;
   const defaultHours = [
     { day: "Lunedì - Venerdì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
     { day: "Sabato", hours: "12:00 - 15:30 · 19:00 - 24:00" },
