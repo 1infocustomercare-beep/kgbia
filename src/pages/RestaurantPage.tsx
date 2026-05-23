@@ -209,7 +209,6 @@ const RestaurantPage = () => {
 
   return (
     <div className="min-h-screen overflow-x-hidden cote-luxury" style={{ background: "linear-gradient(180deg, hsl(20 10% 3%), hsl(20 8% 5%))" }}>
-      <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
       {/* TABLE QR BANNER */}
       {tableFromQR && (
         <div className="fixed top-0 inset-x-0 z-[60] bg-primary/90 text-primary-foreground px-4 py-2 flex items-center justify-between text-sm font-medium">

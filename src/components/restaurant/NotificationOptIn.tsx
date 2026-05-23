@@ -16,15 +16,17 @@ const NotificationOptIn = ({ restaurantId, restaurantName }: NotificationOptInPr
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Show banner after 10 seconds on page
+    // Mostra il banner solo DOPO che l'utente ha accettato i cookie (no overlap)
+    // e dopo 25s di permanenza, così non copre la hero / CTA principale.
     const timer = setTimeout(() => {
+      const cookieConsent = localStorage.getItem("cookie-consent");
       const wasDismissed = localStorage.getItem(`push-dismissed-${restaurantId}`);
       const wasSubscribed = localStorage.getItem(`push-subscribed-${restaurantId}`);
-      if (!wasDismissed && !wasSubscribed) {
+      if (cookieConsent && !wasDismissed && !wasSubscribed) {
         setShowBanner(true);
       }
       if (wasSubscribed) setIsSubscribed(true);
-    }, 10000);
+    }, 25000);
     return () => clearTimeout(timer);
   }, [restaurantId]);
 
