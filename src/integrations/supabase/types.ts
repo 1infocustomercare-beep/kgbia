@@ -3420,6 +3420,146 @@ export type Database = {
           },
         ]
       }
+      inventory_items: {
+        Row: {
+          category: string
+          cost_per_unit: number
+          created_at: string
+          id: string
+          is_active: boolean
+          last_restocked_at: string | null
+          min_qty: number
+          name: string
+          notes: string | null
+          par_qty: number
+          restaurant_id: string
+          sku: string | null
+          stock_qty: number
+          supplier_id: string | null
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          cost_per_unit?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_restocked_at?: string | null
+          min_qty?: number
+          name: string
+          notes?: string | null
+          par_qty?: number
+          restaurant_id: string
+          sku?: string | null
+          stock_qty?: number
+          supplier_id?: string | null
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          cost_per_unit?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_restocked_at?: string | null
+          min_qty?: number
+          name?: string
+          notes?: string | null
+          par_qty?: number
+          restaurant_id?: string
+          sku?: string | null
+          stock_qty?: number
+          supplier_id?: string | null
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_items_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_items_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "restock_suggestions"
+            referencedColumns: ["supplier_id"]
+          },
+          {
+            foreignKeyName: "inventory_items_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inventory_movements: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          movement_type: string
+          performed_by: string | null
+          quantity: number
+          reason: string | null
+          reference: string | null
+          restaurant_id: string
+          unit_cost: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          movement_type: string
+          performed_by?: string | null
+          quantity: number
+          reason?: string | null
+          reference?: string | null
+          restaurant_id: string
+          unit_cost?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          movement_type?: string
+          performed_by?: string | null
+          quantity?: number
+          reason?: string | null
+          reference?: string | null
+          restaurant_id?: string
+          unit_cost?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_movements_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "inventory_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "restock_suggestions"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kitchen_access_pins: {
         Row: {
           created_at: string
@@ -5743,6 +5883,112 @@ export type Database = {
         }
         Relationships: []
       }
+      recipe_ingredients: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          notes: string | null
+          quantity: number
+          recipe_id: string
+          unit: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          notes?: string | null
+          quantity: number
+          recipe_id: string
+          unit?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          notes?: string | null
+          quantity?: number
+          recipe_id?: string
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recipe_ingredients_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "inventory_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recipe_ingredients_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "restock_suggestions"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "recipe_ingredients_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recipes: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          menu_item_id: string | null
+          name: string
+          notes: string | null
+          restaurant_id: string
+          updated_at: string
+          yield_qty: number
+          yield_unit: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          menu_item_id?: string | null
+          name: string
+          notes?: string | null
+          restaurant_id: string
+          updated_at?: string
+          yield_qty?: number
+          yield_unit?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          menu_item_id?: string | null
+          name?: string
+          notes?: string | null
+          restaurant_id?: string
+          updated_at?: string
+          yield_qty?: number
+          yield_unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recipes_menu_item_id_fkey"
+            columns: ["menu_item_id"]
+            isOneToOne: false
+            referencedRelation: "menu_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recipes_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reservations: {
         Row: {
           created_at: string
@@ -7850,6 +8096,59 @@ export type Database = {
         }
         Relationships: []
       }
+      suppliers: {
+        Row: {
+          address: string | null
+          contact_name: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_active: boolean
+          lead_time_days: number
+          name: string
+          notes: string | null
+          phone: string | null
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          lead_time_days?: number
+          name: string
+          notes?: string | null
+          phone?: string | null
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          lead_time_days?: number
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suppliers_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_login_audit: {
         Row: {
           created_at: string
@@ -8370,7 +8669,38 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      restock_suggestions: {
+        Row: {
+          category: string | null
+          cost_per_unit: number | null
+          item_id: string | null
+          last_restocked_at: string | null
+          lead_time_days: number | null
+          min_qty: number | null
+          name: string | null
+          par_qty: number | null
+          restaurant_id: string | null
+          sku: string | null
+          stock_qty: number | null
+          suggested_order_cost: number | null
+          suggested_order_qty: number | null
+          supplier_email: string | null
+          supplier_id: string | null
+          supplier_name: string | null
+          supplier_phone: string | null
+          unit: string | null
+          urgency: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_items_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       award_xp: {
