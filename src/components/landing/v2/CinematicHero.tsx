@@ -308,7 +308,7 @@ export default function CinematicHero() {
               transition={{ delay: 1, duration: 0.7 }}
               className="mx-auto mb-5 max-w-[480px] text-[clamp(0.9rem,2vw,1.1rem)] leading-[1.6] text-foreground/72 sm:mb-6 lg:mx-0"
             >
-              Webapp su misura + agenti AI che <span className="font-semibold text-foreground">rispondono al telefono, vendono, prenotano</span> e raccolgono recensioni — 24/7, in tutte le lingue. Setup in 14 giorni. 25+ verticali coperti.
+              {SUBTITLE}
             </motion.p>
 
             <motion.div
