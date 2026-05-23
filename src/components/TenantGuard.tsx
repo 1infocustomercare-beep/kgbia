@@ -48,37 +48,66 @@ export default function TenantGuard({ children }: TenantGuardProps) {
 
       setVerifying(true);
 
-      // 1) Slug must match active tenant + same user
+      // 1) Slug must match active tenant + same user. Otherwise HARD WIPE:
+      //    do not allow a session bound to tenant A to wander into tenant B's URL.
       if (!activeTenant || activeTenant.slug !== slug || activeTenant.userId !== user.id) {
+        await hardWipeTenantSession("slug_mismatch");
+        try {
+          await supabase.rpc("log_tenant_login_event", {
+            p_slug: slug,
+            p_outcome: "session_wipe",
+            p_email: user.email ?? null,
+            p_metadata: { reason: "slug_mismatch", active_slug: activeTenant?.slug ?? null },
+          });
+        } catch { /* best effort */ }
         if (!cancelled) { setAllowed(false); setVerifying(false); }
         return;
       }
 
-      // 2) Re-verify against DB to catch revoked memberships
-      const { data: rest } = await supabase
-        .from("restaurants")
-        .select("id, slug, is_blocked")
-        .eq("slug", slug)
-        .maybeSingle();
-
+      // 2) Server-side authoritative verification (cannot be bypassed client-side)
+      const { data: verdict, error: rpcError } = await supabase.rpc(
+        "verify_tenant_access",
+        { p_slug: slug },
+      );
       if (cancelled) return;
 
-      if (!rest || rest.id !== activeTenant.restaurantId || rest.is_blocked) {
-        await hardWipeTenantSession("tenant_invalid");
+      const v = (verdict ?? {}) as { allowed?: boolean; reason?: string; restaurant_id?: string };
+      const allowedByServer = !rpcError && v.allowed === true;
+
+      if (!allowedByServer || v.restaurant_id !== activeTenant.restaurantId) {
+        const reason = v.reason ?? "server_denied";
+        await hardWipeTenantSession(reason);
+        try {
+          await supabase.rpc("log_tenant_login_event", {
+            p_slug: slug,
+            p_outcome: reason === "tenant_blocked" ? "tenant_blocked"
+                     : reason === "tenant_missing" ? "tenant_missing"
+                     : reason === "unauthorized_tenant" ? "unauthorized_tenant"
+                     : "membership_revoked",
+            p_email: user.email ?? null,
+            p_metadata: { source: "TenantGuard", verdict: v },
+          });
+        } catch { /* best effort */ }
         setAllowed(false);
         setVerifying(false);
         return;
       }
 
-      // 2.5) Session fingerprint must match this tenant — detects cookie/session
-      // reuse from another restaurant in the same browser
+      // 3) Session fingerprint must match this tenant
       const fp = await verifyTenantSessionFingerprint();
       if (!fp.ok) {
         if (fp.reason === "missing_fingerprint") {
-          // First navigation after login — bind now
           await bindSessionToTenant(activeTenant.restaurantId, user.id);
         } else {
           await hardWipeTenantSession(`session_isolation_${fp.reason}`);
+          try {
+            await supabase.rpc("log_tenant_login_event", {
+              p_slug: slug,
+              p_outcome: "fingerprint_mismatch",
+              p_email: user.email ?? null,
+              p_metadata: { source: "TenantGuard", reason: fp.reason },
+            });
+          } catch { /* best effort */ }
           if (cancelled) return;
           setAllowed(false);
           setVerifying(false);
@@ -86,34 +115,9 @@ export default function TenantGuard({ children }: TenantGuardProps) {
         }
       }
 
-      const { data: owned } = await supabase
-        .from("restaurants")
-        .select("id")
-        .eq("id", rest.id)
-        .eq("owner_id", user.id)
-        .maybeSingle();
-
-      let isMember = !!owned;
-      if (!isMember) {
-        const { data: m } = await supabase
-          .from("restaurant_memberships")
-          .select("restaurant_id")
-          .eq("restaurant_id", rest.id)
-          .eq("user_id", user.id)
-          .maybeSingle();
-        isMember = !!m;
-      }
-
-      if (cancelled) return;
-
-      if (!isMember) {
-        await hardWipeTenantSession("membership_revoked");
-        setAllowed(false);
-      } else {
-        // Refresh setAt timestamp so other tabs see liveness
-        setActiveTenant({ ...activeTenant, setAt: Date.now() });
-        setAllowed(true);
-      }
+      // Refresh setAt timestamp so other tabs see liveness
+      setActiveTenant({ ...activeTenant, setAt: Date.now() });
+      setAllowed(true);
       setVerifying(false);
     })();
     return () => { cancelled = true; };
