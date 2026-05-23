@@ -834,6 +834,19 @@
 .dark .cote-luxury .gold-glow {
   box-shadow: 0 0 24px hsla(30, 55%, 50%, 0.3), 0 0 48px hsla(30, 45%, 40%, 0.12);
 }
+
+/* ═══ RESILIENCE FALLBACK ═══
+   Se Framer Motion non triggera whileInView entro 1.2s (browser headless,
+   crawler SEO, screenshot tool, JS bloccato) le sezioni restano comunque
+   visibili. Override sui figli di .cote-luxury con style="opacity:0".
+   Si applica solo dopo 1200ms così non interferisce con l'animazione vera. */
+@keyframes cote-fallback-reveal {
+  to { opacity: 1 !important; transform: none !important; }
+}
+.cote-luxury [style*="opacity: 0"],
+.cote-luxury [style*="opacity:0"] {
+  animation: cote-fallback-reveal 0s linear 1.2s forwards;
+}
 .dark .cote-luxury .bg-card {
   background: linear-gradient(160deg, hsl(20 8% 9%), hsl(20 6% 7%)) !important;
   border: 1px solid hsla(30, 20%, 25%, 0.3);
