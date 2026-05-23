@@ -350,6 +350,11 @@ export default function RestaurantSiteEditor({
                   )}
                 </div>
               </Field>
+
+              {/* Menu PDF (download dalla pagina pubblica) */}
+              <Field label="Menu PDF (scaricabile dai clienti)">
+                <MenuPdfUploader restaurant={restaurant} onSaved={onSaved} />
+              </Field>
             </>
           ) : (
             <p className="text-xs text-muted-foreground">
@@ -357,6 +362,7 @@ export default function RestaurantSiteEditor({
             </p>
           )}
         </Section>
+
 
         {/* HERO */}
         <Section k="hero">
