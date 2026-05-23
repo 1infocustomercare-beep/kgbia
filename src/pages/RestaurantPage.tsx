@@ -30,6 +30,7 @@ import { getBusinessTypeConfig, normalizeBusinessType } from "@/lib/business-typ
 const RestaurantVoiceAgent = lazy(() => import("@/components/restaurant/RestaurantVoiceAgent"));
 const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
+import { useRestaurantSite, RestaurantSiteProvider } from "@/hooks/useRestaurantSite";
 
 const RestaurantPage = () => {
   const { slug } = useParams();
@@ -39,16 +40,24 @@ const RestaurantPage = () => {
   const isDemo = slug === "impero-roma";
   const { restaurant: dbRestaurant, menuItems: dbMenu, categories: dbCats, loading: dbLoading, notFound } = useRestaurantBySlug(slug);
 
+  // Override live editor (theme_config.site) — provider applicato dal wrapper esportato
+  const siteCtx = useRestaurantSite();
+  const siteOverride = siteCtx.content || {};
+
   const hasDbData = dbMenu.length > 0;
   const menu = hasDbData ? dbMenu : demoMenu;
   const menuCategories = hasDbData ? dbCats : demoCats;
-  const restaurantName = dbRestaurant?.name || demoRestaurant.name;
-  const restaurantTagline = dbRestaurant?.tagline || demoRestaurant.tagline;
+  const restaurantName = siteOverride.hero?.title || dbRestaurant?.name || demoRestaurant.name;
+  const restaurantTagline = siteOverride.hero?.subtitle || dbRestaurant?.tagline || demoRestaurant.tagline;
   const restaurantLogoUrl = dbRestaurant?.logo_url || restaurantLogo;
   const restaurantPhone = dbRestaurant?.phone || "+39 06 1234 5678";
   const restaurantAddress = dbRestaurant?.address || "Via del Corso 42, Roma";
   const restaurantCity = dbRestaurant?.city || "Roma, Italia";
   const restaurantEmail = dbRestaurant?.email || `info@${slug}.it`;
+  const heroVideoSrc = siteOverride.hero?.videoUrl || heroVideo;
+  const heroImageSrc = siteOverride.hero?.imageUrl;
+  const ctaPrimary = siteOverride.hero?.ctaPrimaryLabel || "Ordina Ora";
+  const ctaSecondary = siteOverride.hero?.ctaSecondaryLabel;
   const defaultHours = [
     { day: "Lunedì - Venerdì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
     { day: "Sabato", hours: "12:00 - 15:30 · 19:00 - 24:00" },
@@ -294,7 +303,14 @@ const RestaurantPage = () => {
       {/* ====== 1. HERO — Full Screen with Video/Image ====== */}
       <section id="home" ref={heroRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <motion.div className="absolute inset-0" style={{ scale: heroScale }}>
-          {(dbRestaurant as any)?.theme_config?.hero?.image ? (
+          {heroImageSrc ? (
+            <img
+              src={heroImageSrc}
+              alt={`${restaurantName} — ${restaurantTagline}`}
+              className="w-full h-full object-cover object-center"
+              loading="eager"
+            />
+          ) : (dbRestaurant as any)?.theme_config?.hero?.image ? (
             <img
               src={(dbRestaurant as any).theme_config.hero.image}
               alt={`${restaurantName} — ${restaurantTagline}`}
@@ -302,10 +318,13 @@ const RestaurantPage = () => {
               loading="eager"
             />
           ) : (
-            <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
+            <video src={heroVideoSrc} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
           )}
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/75" />
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/75"
+          style={ siteOverride.hero?.overlayOpacity != null ? { background: `rgba(0,0,0,${(siteOverride.hero.overlayOpacity)/100})` } : undefined }
+        />
 
 
         <motion.div className="relative z-10 text-center px-5 max-w-full" style={{ opacity: heroOpacity }}>
@@ -334,11 +353,23 @@ const RestaurantPage = () => {
             </div>
           </motion.div>
 
-          <motion.button onClick={() => scrollToSection("menu-section")}
-            className="mt-7 sm:mt-10 px-7 sm:px-10 py-3 sm:py-4 border-2 border-white/40 text-white text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all duration-300 backdrop-blur-sm bg-black/20"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-            Ordina Ora
-          </motion.button>
+          <div className="mt-7 sm:mt-10 flex flex-wrap items-center justify-center gap-3">
+            <motion.a
+              href={siteOverride.hero?.ctaPrimaryHref || "#menu-section"}
+              onClick={(e) => { if (!siteOverride.hero?.ctaPrimaryHref) { e.preventDefault(); scrollToSection("menu-section"); } }}
+              className="px-7 sm:px-10 py-3 sm:py-4 border-2 border-white/40 text-white text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all duration-300 backdrop-blur-sm bg-black/20"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
+              {ctaPrimary}
+            </motion.a>
+            {ctaSecondary && (
+              <motion.a
+                href={siteOverride.hero?.ctaSecondaryHref || "#reservations"}
+                className="px-7 sm:px-10 py-3 sm:py-4 border-2 border-primary/70 text-primary text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-300 backdrop-blur-sm bg-black/20"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
+                {ctaSecondary}
+              </motion.a>
+            )}
+          </div>
         </motion.div>
 
         <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
@@ -953,4 +984,33 @@ const RestaurantPage = () => {
   );
 };
 
-export default RestaurantPage;
+
+
+/**
+ * Wrapper: fornisce il context con gli override editabili dall'admin
+ * (restaurants.theme_config.site) + applica live updates da postMessage in preview.
+ */
+const RestaurantPageWithSiteOverrides = () => {
+  const { slug } = useParams();
+  const { restaurant } = useRestaurantBySlug(slug);
+  return (
+    <RestaurantSiteProvider restaurant={restaurant}>
+      <RestaurantSiteThemeBridge />
+      <RestaurantPage />
+    </RestaurantSiteProvider>
+  );
+};
+
+const RestaurantSiteThemeBridge = () => {
+  const { content } = useRestaurantSite();
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    if (content.brand?.primaryHex) root.style.setProperty("--site-primary", content.brand.primaryHex);
+    if (content.brand?.accentHex) root.style.setProperty("--site-accent", content.brand.accentHex);
+  }, [content.brand?.primaryHex, content.brand?.accentHex]);
+  return null;
+};
+
+export default RestaurantPageWithSiteOverrides;
+

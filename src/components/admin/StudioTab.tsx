@@ -17,8 +17,9 @@ import type { MenuItem } from "@/types/restaurant";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import cartoonStudioMenu from "@/assets/cartoon-studio-menu-v2.png";
+import RestaurantSiteEditor from "@/components/admin/RestaurantSiteEditor";
 
-type StudioSection = "menu" | "ai" | "foodphoto" | "plates" | "translate" | "preview";
+type StudioSection = "menu" | "ai" | "foodphoto" | "plates" | "translate" | "preview" | "site";
 
 /* ── EU Allergen Icons ── */
 const EU_ALLERGENS = [
@@ -349,6 +350,7 @@ const StudioTab = ({
     { id: "ai", label: "OCR", icon: <Camera className="w-4 h-4" /> },
     { id: "foodphoto", label: "📸 Foto", icon: <Sparkles className="w-4 h-4" /> },
     { id: "plates", label: "🍽️ Piatti", icon: <ImageIcon className="w-4 h-4" /> },
+    { id: "site", label: "Sito", icon: <Globe className="w-4 h-4" /> },
     { id: "preview", label: "Design", icon: <Palette className="w-4 h-4" /> },
     { id: "translate", label: "Lingue", icon: <Languages className="w-4 h-4" /> },
   ];
@@ -849,6 +851,11 @@ const StudioTab = ({
             </motion.div>
           )}
         </div>
+      )}
+
+      {/* ===== SITO PUBBLICO (full editor) ===== */}
+      {section === "site" && restaurant && (
+        <RestaurantSiteEditor restaurant={restaurant} />
       )}
 
       {/* ===== DESIGN & LIVE PREVIEW ===== */}
