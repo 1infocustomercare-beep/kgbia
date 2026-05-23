@@ -39,9 +39,8 @@ const RestaurantPage = () => {
   const isDemo = slug === "impero-roma";
   const { restaurant: dbRestaurant, menuItems: dbMenu, categories: dbCats, loading: dbLoading, notFound } = useRestaurantBySlug(slug);
 
-  // Override live editor (theme_config.site)
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const siteCtx = (typeof window !== "undefined") ? (require("@/hooks/useRestaurantSite") as typeof import("@/hooks/useRestaurantSite")).useRestaurantSite() : { content: {} as any, isPreview: false };
+  // Override live editor (theme_config.site) — provider applicato dal wrapper esportato
+  const siteCtx = useRestaurantSite();
   const siteOverride = siteCtx.content || {};
 
   const hasDbData = dbMenu.length > 0;
