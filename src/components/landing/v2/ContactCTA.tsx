@@ -8,7 +8,6 @@ export default function ContactCTA() {
   const { content } = useHomepageContent();
   const c = content.contactCta ?? {};
   const f = content.footer ?? {};
-  const f = content.footer ?? {};
 
   const PILL = pick(c.pillLabel, "Pronto a iniziare?");
   const TITLE_LEAD = pick(c.titleLead, "Il tuo business merita");
