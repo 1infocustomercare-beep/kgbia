@@ -2,8 +2,13 @@ import { motion } from "framer-motion";
 import { Check, ShieldCheck, Zap, TrendingUp, Crown, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import MobileCarousel from "./MobileCarousel";
+import { useHomepageContent, pick } from "@/hooks/useHomepageContent";
+import type { PricingPlan } from "@/lib/homepage-content";
 
-const PLANS = [
+const ICON_MAP: Record<string, any> = { Sparkles, TrendingUp, Crown, Zap, ShieldCheck };
+const TONE_TO_ICON: Record<string, any> = { blue: Sparkles, gold: TrendingUp, violet: Crown };
+
+const PLANS_DEFAULT: PricingPlan[] = [
   {
     name: "Digital Start",
     icon: Sparkles,
