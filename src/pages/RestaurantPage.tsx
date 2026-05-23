@@ -176,7 +176,7 @@ const RestaurantPage = () => {
       script.remove();
       descEl?.remove();
     };
-  }, [dbRestaurant, restaurantName, restaurantCity, restaurantAddress, restaurantPhone, restaurantEmail, restaurantLogoUrl, restaurantTagline, slug]);
+  }, [dbRestaurant, restaurantName, restaurantCity, restaurantAddress, restaurantPhone, restaurantEmail, restaurantLogoUrl, restaurantTagline, slug, openingHours]);
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
