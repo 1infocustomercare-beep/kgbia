@@ -220,7 +220,7 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
         <MarqueeCarousel speed={40} pauseOnHover items={
           tickerItems.map((item, i) => (
             <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap text-white/80" style={{ fontFamily: "'Work Sans', sans-serif" }}>
-              <Stethoscope className="w-3 h-3 text-white/25" /> {item}
+              <Stethoscope className="w-3 h-3 text-white/70" /> {item}
             </span>
           ))
         } />

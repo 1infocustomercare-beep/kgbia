@@ -590,7 +590,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
         )}
 
         <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
-          <ChevronDown className="w-5 h-5 text-white/15" />
+          <ChevronDown className="w-5 h-5 text-white/55" />
         </motion.div>
       </section>
 
@@ -767,7 +767,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                     <item.icon className="w-5 h-5" style={{ color: gold }} />
                   </div>
                   <h3 className="font-bold text-sm sm:text-base mb-2 text-white group-hover:text-white/95 transition-colors">{item.title}</h3>
-                  <p className="text-xs sm:text-sm leading-relaxed text-white/35 group-hover:text-white/50 transition-colors">{item.desc}</p>
+                  <p className="text-xs sm:text-sm leading-relaxed text-white/75 group-hover:text-white/50 transition-colors">{item.desc}</p>
                   <div className="mt-4 flex items-center gap-1 text-[11px] font-semibold opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-300" style={{ color: gold }}>
                     Scopri di più <ArrowRight className="w-3 h-3" />
                   </div>
@@ -796,7 +796,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                     <item.icon className="w-5 h-5" style={{ color: gold }} />
                   </div>
                   <h3 className="font-bold text-sm sm:text-base mb-2 text-white">{item.title}</h3>
-                  <p className="text-xs sm:text-sm leading-relaxed text-white/35 group-hover:text-white/50 transition-colors">{item.desc}</p>
+                  <p className="text-xs sm:text-sm leading-relaxed text-white/75 group-hover:text-white/50 transition-colors">{item.desc}</p>
                   <div className="mt-4 flex items-center gap-1 text-[11px] font-semibold opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-300" style={{ color: gold }}>
                     Scopri di più <ArrowRight className="w-3 h-3" />
                   </div>
@@ -1073,7 +1073,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                   style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}
                 >
                   <div className="flex justify-center gap-1 mb-6">
-                    {[1,2,3,4,5].map(s => <Star key={s} className={`w-5 h-5 ${s <= (displayReviews[reviewIndex % displayReviews.length] as any)?.rating ? "fill-amber-400 text-amber-400" : "text-white/10"}`} />)}
+                    {[1,2,3,4,5].map(s => <Star key={s} className={`w-5 h-5 ${s <= (displayReviews[reviewIndex % displayReviews.length] as any)?.rating ? "fill-amber-400 text-amber-400" : "text-white/40"}`} />)}
                   </div>
                   <p className="text-lg sm:text-xl text-white/70 mb-8 leading-relaxed italic max-w-2xl mx-auto">
                     "{(displayReviews[reviewIndex % displayReviews.length] as any)?.comment}"
@@ -1368,7 +1368,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
             </div>
             <div>
               <h4 className="text-[11px] font-semibold mb-4 text-white/80 uppercase tracking-wider">Link</h4>
-              <div className="space-y-2 text-sm text-white/25">
+              <div className="space-y-2 text-sm text-white/70">
                 <a href="#servizi" className="block hover:text-white/50 transition-colors">Servizi</a>
                 <a href="#flotta" className="block hover:text-white/50 transition-colors">Flotta</a>
                 <a href="#recensioni" className="block hover:text-white/50 transition-colors">Recensioni</a>
@@ -1377,7 +1377,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
             </div>
             <div>
               <h4 className="text-[11px] font-semibold mb-4 text-white/80 uppercase tracking-wider">Contatti</h4>
-              <div className="space-y-3 text-sm text-white/25">
+              <div className="space-y-3 text-sm text-white/70">
                 {company.phone && <a href={`tel:${company.phone}`} className="flex items-center gap-2 hover:text-white/50 transition-colors"><Phone className="w-3.5 h-3.5" /> {company.phone}</a>}
                 {company.email && <a href={`mailto:${company.email}`} className="flex items-center gap-2 hover:text-white/50 transition-colors"><Mail className="w-3.5 h-3.5" /> {company.email}</a>}
                 {company.address && <p className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> {company.address}{company.city ? `, ${company.city}` : ""}</p>}
@@ -1399,7 +1399,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
             </div>
           </div>
           <div className="text-center pt-8 border-t" style={{ borderColor: NCC.cardBorder }}>
-            <p className="text-xs text-white/10">© 2026 {company.name}. Tutti i diritti riservati.</p>
+            <p className="text-xs text-white/40">© 2026 {company.name}. Tutti i diritti riservati.</p>
             <div className="flex items-center justify-center gap-4 mt-2 text-[10px] text-white/[0.08]">
               <span>Privacy</span>
               <span>Termini</span>

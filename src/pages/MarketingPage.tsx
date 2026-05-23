@@ -309,7 +309,7 @@ const ComparisonSection = () => {
               <div className="p-4 text-center">
                 {r.empire === true ? <Check className="w-4 h-4 text-emerald-400 mx-auto" /> : r.empire}
               </div>
-              <div className="p-4 text-center text-white/25 text-sm">
+              <div className="p-4 text-center text-white/70 text-sm">
                 {r.others === true ? <Check className="w-4 h-4 mx-auto" /> : r.others === false ? "—" : r.others}
               </div>
             </motion.div>
