@@ -114,7 +114,7 @@ export default function TenantLogin() {
     if (!user || !tenant) return;
     let cancelled = false;
     (async () => {
-      const allowed = await verifyTenantAccess(user.id, tenant.id);
+      const allowed = await verifyTenantAccess(user.id, tenant.id, tenant.slug);
       if (cancelled) return;
       if (allowed) {
         setActiveTenant({
@@ -154,6 +154,14 @@ export default function TenantLogin() {
       if (error || !session?.user) {
         const next = registerLoginFailure(tenant.slug, email);
         setThrottle(next);
+        try {
+          await supabase.rpc("log_tenant_login_event", {
+            p_slug: tenant.slug,
+            p_outcome: "invalid_credentials",
+            p_email: email.trim() || null,
+            p_metadata: { failures: next.failures, locked: next.locked },
+          });
+        } catch { /* best effort */ }
         toast({
           title: next.locked ? "Accesso bloccato" : "Credenziali non valide",
           description:
@@ -166,13 +174,20 @@ export default function TenantLogin() {
         return;
       }
 
-      const allowed = await verifyTenantAccess(session.user.id, tenant.id);
+      const allowed = await verifyTenantAccess(session.user.id, tenant.id, tenant.slug);
       if (!allowed) {
         // Hard isolation: not a member of this tenant → wipe session + cookies
         await hardWipeTenantSession("unauthorized_tenant");
-        // Treat unauthorized-tenant as a failed attempt for throttle purposes too
         const next = registerLoginFailure(tenant.slug, email);
         setThrottle(next);
+        try {
+          await supabase.rpc("log_tenant_login_event", {
+            p_slug: tenant.slug,
+            p_outcome: "unauthorized_tenant",
+            p_email: email.trim() || null,
+            p_metadata: { user_id: session.user.id },
+          });
+        } catch { /* best effort */ }
         toast({
           title: "Accesso non autorizzato",
           description:
@@ -194,6 +209,15 @@ export default function TenantLogin() {
         setAt: Date.now(),
       });
       await bindSessionToTenant(tenant.id, session.user.id);
+
+      try {
+        await supabase.rpc("log_tenant_login_event", {
+          p_slug: tenant.slug,
+          p_outcome: "success",
+          p_email: email.trim() || null,
+          p_metadata: { user_id: session.user.id },
+        });
+      } catch { /* best effort */ }
 
       toast({
         title: `Benvenuto in ${tenant.name}`,
@@ -463,11 +487,20 @@ export default function TenantLogin() {
 }
 
 /**
- * Verifies the user is either the owner or has a membership in this restaurant.
- * Both queries are RLS-safe; we use maybeSingle to avoid 406.
+ * Server-side authoritative tenant access check via SECURITY DEFINER RPC.
+ * This is the only check that matters for security — client-side membership
+ * queries are kept as a fast fallback for environments where the RPC is
+ * unreachable.
  */
-async function verifyTenantAccess(userId: string, restaurantId: string): Promise<boolean> {
-  // Check ownership
+async function verifyTenantAccess(userId: string, restaurantId: string, slug?: string): Promise<boolean> {
+  if (slug) {
+    const { data, error } = await supabase.rpc("verify_tenant_access", { p_slug: slug });
+    if (!error && data) {
+      const v = data as { allowed?: boolean; restaurant_id?: string };
+      return v.allowed === true && v.restaurant_id === restaurantId;
+    }
+  }
+  // Fallback: ownership / membership lookup
   const { data: owned } = await supabase
     .from("restaurants")
     .select("id")
@@ -475,8 +508,6 @@ async function verifyTenantAccess(userId: string, restaurantId: string): Promise
     .eq("owner_id", userId)
     .maybeSingle();
   if (owned) return true;
-
-  // Check membership
   const { data: member } = await supabase
     .from("restaurant_memberships")
     .select("restaurant_id")

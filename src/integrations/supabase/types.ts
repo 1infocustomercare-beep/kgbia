@@ -7850,6 +7850,53 @@ export type Database = {
         }
         Relationships: []
       }
+      tenant_login_audit: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json
+          outcome: string
+          restaurant_id: string | null
+          slug: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          outcome: string
+          restaurant_id?: string | null
+          slug: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          outcome?: string
+          restaurant_id?: string | null
+          slug?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_login_audit_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_login_unlock_tokens: {
         Row: {
           consumed_at: string | null
@@ -8529,6 +8576,16 @@ export type Database = {
         }
         Returns: string
       }
+      list_my_tenants: {
+        Args: never
+        Returns: {
+          is_blocked: boolean
+          name: string
+          restaurant_id: string
+          role: string
+          slug: string
+        }[]
+      }
       log_outreach_failure: {
         Args: {
           p_channel: string
@@ -8545,6 +8602,15 @@ export type Database = {
           p_severity?: string
           p_source_function: string
           p_touch_id?: string
+        }
+        Returns: string
+      }
+      log_tenant_login_event: {
+        Args: {
+          p_email?: string
+          p_metadata?: Json
+          p_outcome: string
+          p_slug: string
         }
         Returns: string
       }
@@ -8601,6 +8667,7 @@ export type Database = {
           restaurant_id: string
         }[]
       }
+      verify_tenant_access: { Args: { p_slug: string }; Returns: Json }
     }
     Enums: {
       app_role:
