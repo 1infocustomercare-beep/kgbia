@@ -215,22 +215,35 @@ const KitchenView = () => {
 
   const printTicket = (order: any) => {
     const items = Array.isArray(order.items) ? order.items : [];
+    const escHtml = (s: any) =>
+      String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    const typeLabel =
+      order.order_type === "table"
+        ? "Tavolo " + escHtml(order.table_number)
+        : order.order_type === "delivery"
+        ? "Consegna"
+        : "Asporto";
     const ticketContent = `
-      <html><head><title>Ticket #${order.id.slice(0, 8)}</title>
+      <html><head><title>Ticket #${escHtml(order.id.slice(0, 8))}</title>
       <style>body{font-family:monospace;font-size:14px;padding:20px;max-width:300px;margin:0 auto}
       h2{text-align:center;border-bottom:2px dashed #000;padding-bottom:8px}
       .item{display:flex;justify-content:space-between;padding:4px 0}
       .footer{border-top:2px dashed #000;padding-top:8px;margin-top:12px;text-align:center;font-size:12px}</style></head>
       <body>
-        <h2>${restaurantName}</h2>
-        <p><strong>Ordine #${order.id.slice(0, 8)}</strong></p>
-        <p>${order.customer_name || "Cliente"} · ${order.order_type === "table" ? "Tavolo " + order.table_number : order.order_type === "delivery" ? "Consegna" : "Asporto"}</p>
-        <p>${new Date(order.created_at).toLocaleString("it-IT")}</p>
+        <h2>${escHtml(restaurantName)}</h2>
+        <p><strong>Ordine #${escHtml(order.id.slice(0, 8))}</strong></p>
+        <p>${escHtml(order.customer_name || "Cliente")} · ${typeLabel}</p>
+        <p>${escHtml(new Date(order.created_at).toLocaleString("it-IT"))}</p>
         <hr/>
-        ${items.map((i: any) => `<div class="item"><span>${i.quantity || 1}× ${i.name}</span><span>€${(i.price * (i.quantity || 1)).toFixed(2)}</span></div>`).join("")}
+        ${items.map((i: any) => `<div class="item"><span>${Number(i.quantity || 1)}× ${escHtml(i.name)}</span><span>€${(Number(i.price) * Number(i.quantity || 1)).toFixed(2)}</span></div>`).join("")}
         <hr/>
         <div class="item"><strong>TOTALE</strong><strong>€${Number(order.total).toFixed(2)}</strong></div>
-        ${order.notes ? `<p style="margin-top:8px;padding:4px;background:#f5f5f5">📝 ${order.notes}</p>` : ""}
+        ${order.notes ? `<p style="margin-top:8px;padding:4px;background:#f5f5f5">📝 ${escHtml(order.notes)}</p>` : ""}
         <div class="footer">Grazie per l'ordine!</div>
       </body></html>
     `;
@@ -241,6 +254,7 @@ const KitchenView = () => {
       setTimeout(() => { win.print(); }, 300);
     }
   };
+
 
   const handleLogout = () => {
     sessionStorage.removeItem("kitchen_mode");
