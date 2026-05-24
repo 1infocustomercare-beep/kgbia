@@ -3088,7 +3088,8 @@ const SuperAdminDashboard = () => {
       </motion.div>
 
       {/* Spacer per evitare overlap del contenuto con bottom nav */}
-      <div className="h-20" aria-hidden />
+      <div aria-hidden style={{ height: "calc(env(safe-area-inset-bottom, 0px) + 6rem)" }} />
+
     </div>
   );
 };
