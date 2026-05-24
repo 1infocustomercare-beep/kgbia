@@ -3028,7 +3028,7 @@ const SuperAdminDashboard = () => {
 
         {/* ===== ACCOUNT — Gestione profilo Super Admin ===== */}
         {!loading && activeTab === "account" && user && (
-          <motion.div className="mt-2 pb-24" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div className="mt-2" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 7rem)" }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
             <SuperAdminProfileSection
               userId={user.id}
               userName={profileName || user.user_metadata?.full_name || user.email?.split("@")[0] || "Owner"}
@@ -3088,7 +3088,8 @@ const SuperAdminDashboard = () => {
       </motion.div>
 
       {/* Spacer per evitare overlap del contenuto con bottom nav */}
-      <div className="h-20" aria-hidden />
+      <div aria-hidden style={{ height: "calc(env(safe-area-inset-bottom, 0px) + 6rem)" }} />
+
     </div>
   );
 };

@@ -46,7 +46,7 @@ export default function WarehousePage() {
   const lowCount = (suggestions.data || []).filter(s => s.urgency !== "ok").length;
 
   return (
-    <div className="container mx-auto p-4 pb-32 space-y-4 max-w-6xl">
+    <div className="container mx-auto p-4 space-y-4 max-w-6xl" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 8rem)" }}>
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-display font-bold flex items-center gap-2">

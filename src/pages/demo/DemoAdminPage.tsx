@@ -2483,7 +2483,7 @@ export default function DemoAdminPage() {
         </header>
 
         {/* Page content */}
-        <div className="p-4 lg:p-6 pb-20 lg:pb-6">
+        <div className="p-4 lg:p-6 lg:pb-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 6.5rem)" }}>
           {renderModuleContent()}
         </div>
       </main>
