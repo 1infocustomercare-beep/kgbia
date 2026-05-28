@@ -1634,6 +1634,8 @@ export type Database = {
       }
       companies: {
         Row: {
+          acquired_by_partner_id: string | null
+          acquired_by_sub_partner_id: string | null
           address: string | null
           blocked_reason: string | null
           city: string | null
@@ -1666,6 +1668,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          acquired_by_partner_id?: string | null
+          acquired_by_sub_partner_id?: string | null
           address?: string | null
           blocked_reason?: string | null
           city?: string | null
@@ -1698,6 +1702,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          acquired_by_partner_id?: string | null
+          acquired_by_sub_partner_id?: string | null
           address?: string | null
           blocked_reason?: string | null
           city?: string | null
@@ -6303,6 +6309,8 @@ export type Database = {
       }
       restaurants: {
         Row: {
+          acquired_by_partner_id: string | null
+          acquired_by_sub_partner_id: string | null
           address: string | null
           blocked_keywords: string[] | null
           blocked_reason: string | null
@@ -6341,6 +6349,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          acquired_by_partner_id?: string | null
+          acquired_by_sub_partner_id?: string | null
           address?: string | null
           blocked_keywords?: string[] | null
           blocked_reason?: string | null
@@ -6379,6 +6389,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          acquired_by_partner_id?: string | null
+          acquired_by_sub_partner_id?: string | null
           address?: string | null
           blocked_keywords?: string[] | null
           blocked_reason?: string | null
@@ -8009,6 +8021,48 @@ export type Database = {
         }
         Relationships: []
       }
+      sub_partner_invites: {
+        Row: {
+          accepted_at: string | null
+          accepted_by: string | null
+          commission_pct: number
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          status: string
+          team_leader_id: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          commission_pct?: number
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          status?: string
+          team_leader_id: string
+          token?: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          commission_pct?: number
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          status?: string
+          team_leader_id?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscription_modules: {
         Row: {
           compatible_sectors: string[] | null
@@ -8703,6 +8757,7 @@ export type Database = {
       }
     }
     Functions: {
+      accept_sub_partner_invite: { Args: { p_token: string }; Returns: Json }
       award_xp: {
         Args: { _amount: number; _reason?: string; _user_id: string }
         Returns: {
@@ -8784,6 +8839,10 @@ export type Database = {
       }
       consume_seller_credits_for: {
         Args: { p_action: string; p_metadata?: Json; p_user_id: string }
+        Returns: Json
+      }
+      create_sub_partner_invite: {
+        Args: { p_commission_pct?: number; p_email: string }
         Returns: Json
       }
       enqueue_autopilot_retry: {
@@ -8906,6 +8965,7 @@ export type Database = {
         }
         Returns: string
       }
+      list_my_sub_partners: { Args: never; Returns: Json }
       list_my_tenants: {
         Args: never
         Returns: {
@@ -8969,6 +9029,7 @@ export type Database = {
         }
         Returns: Json
       }
+      super_admin_network_overview: { Args: never; Returns: Json }
       super_admin_set_credit_limits: {
         Args: {
           p_alert_threshold_pct?: number
