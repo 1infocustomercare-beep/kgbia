@@ -44,7 +44,7 @@ export default function PartnerTeamPage() {
     if (error) {
       toast.error(error.message);
     } else if (data) {
-      const d = data as { sub_partners: SubPartner[]; invites: Invite[] };
+      const d = data as unknown as { sub_partners: SubPartner[]; invites: Invite[] };
       setSubPartners(d.sub_partners || []);
       setInvites(d.invites || []);
     }
