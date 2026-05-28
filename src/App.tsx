@@ -755,7 +755,13 @@ function App() {
                         <Route path="portfolio" element={<PartnerPortfolioPage />} />
                         <Route path="profile" element={<PartnerProfilePage />} />
                         <Route path="content-ai" element={<ContentAIPage />} />
+                        <Route path="team" element={<PartnerTeamPage />} />
                       </Route>
+                      <Route path="/superadmin/network" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <NetworkPage />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/admin/dashboard" element={
                         <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
                           <SetupPaidGuard><AdminDashboard /></SetupPaidGuard>
