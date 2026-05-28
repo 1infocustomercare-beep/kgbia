@@ -78,6 +78,19 @@ export default function AuthPage() {
     let cancelled = false;
 
     const resolveDestination = async () => {
+      // If an invite token is in the URL, accept it before routing
+      const inviteToken = searchParams.get("invite");
+      if (inviteToken) {
+        try {
+          const { data: res } = await supabase.rpc("accept_sub_partner_invite", { p_token: inviteToken });
+          if ((res as any)?.success) {
+            toast.success("Invito accettato! Ora sei un sotto-venditore Empire.");
+          }
+        } catch (e) {
+          console.warn("Invite accept failed:", e);
+        }
+      }
+
       if (roles.includes("super_admin")) {
         navigate("/superadmin", { replace: true });
         return;
@@ -92,6 +105,7 @@ export default function AuthPage() {
         navigate("/partner", { replace: true });
         return;
       }
+
 
       const { data: ownedRestaurant } = await supabase
         .from("restaurants")
