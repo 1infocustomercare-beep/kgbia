@@ -186,6 +186,8 @@ const PartnerProfilePage = lazy(() => import("./pages/partner/PartnerProfilePage
 const PartnerApiConnectionsPage = lazy(() => import("./pages/partner/PartnerApiConnectionsPage"));
 const PartnerCustomPreviewPage = lazy(() => import("./pages/partner/PartnerCustomPreviewPage"));
 const PartnerAutopilotPage = lazy(() => import("./pages/partner/PartnerAutopilotPage"));
+const PartnerTeamPage = lazy(() => import("./pages/partner/PartnerTeamPage"));
+const NetworkPage = lazy(() => import("./pages/superadmin/NetworkPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const JoinPartnerPage = lazy(() => import("./pages/JoinPartnerPage"));
 const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
