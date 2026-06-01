@@ -1,4 +1,84 @@
 project_id = "gypnxirzmhpapmhjguaj"
 
+[functions.ai-menu]
+verify_jwt = false
+
+[functions.ai-inventory]
+verify_jwt = false
+
+[functions.ai-translate]
+verify_jwt = false
+
+[functions.send-push-discount]
+verify_jwt = false
+
+[functions.assign-partner-role]
+verify_jwt = false
+
+[functions.empire-assistant]
+verify_jwt = false
+
+[functions.payment-notifications]
+verify_jwt = false
+
+[functions.stripe-setup-checkout]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.stripe-platform-fee]
+verify_jwt = false
+
+[functions.generate-fee-invoice]
+verify_jwt = false
+
+[functions.ai-token-checkout]
+verify_jwt = false
+
+[functions.partner-connect-onboarding]
+verify_jwt = false
+
+[functions.create-company]
+verify_jwt = false
+
+[functions.empire-voice-agent]
+verify_jwt = false
+
+[functions.empire-tts]
+verify_jwt = false
+
+[functions.restaurant-voice-agent]
+verify_jwt = false
+
+[functions.whatsapp-webhook]
+verify_jwt = false
+
+[functions.whatsapp-send]
+verify_jwt = false
+
+[functions.whatsapp-ai-chat]
+verify_jwt = false
+
+[functions.generate-demo-from-lead]
+verify_jwt = false
+
+[functions.temp-ncc-magic-links]
+verify_jwt = false
+
+[functions.tenant-login-unlock-request]
+verify_jwt = false
+
+[functions.tenant-login-unlock-verify]
+verify_jwt = false
+
+[functions.autopilot-pain-detector]
+verify_jwt = false
+
+[functions.autopilot-conversation-engine]
+verify_jwt = false
+
+[functions.autopilot-sales-coach]
+verify_jwt = false
 [functions.empire-diagnostic]
 verify_jwt = false
