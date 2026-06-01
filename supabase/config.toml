@@ -80,3 +80,7 @@ verify_jwt = false
 
 [functions.autopilot-sales-coach]
 verify_jwt = false
+
+[functions.empire-diagnostic]
+verify_jwt = false
+

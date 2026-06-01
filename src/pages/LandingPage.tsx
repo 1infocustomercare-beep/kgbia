@@ -23,6 +23,7 @@ import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import PrestigeStoryPinned from "@/components/empire-home/prestige/PrestigeStoryPinned";
 import { PrestigeLangProvider } from "@/components/empire-home/prestige/PrestigeLang";
 import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepageContent";
+import EmpireDiagnostic from "@/components/empire-home/EmpireDiagnostic";
 
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
@@ -89,13 +90,14 @@ function LandingPageInner() {
         {!isPreview && <CinematicCursor />}
         <LandingNav />
         <CinematicHero />
+        <EmpireDiagnostic />
         {!hidden.manifesto && <ManifestoSection />}
         {!hidden.storyPinned && (
           <div className="prestige-root">
             <PrestigeStoryPinned />
           </div>
         )}
-        {!hidden.sectorsCarousel && <SectorsCarousel />}
+        {!hidden.sectorsCarousel && <div id="sectors-carousel"><SectorsCarousel /></div>}
         {!hidden.horizontalPortfolio && <HorizontalPortfolio />}
         {!hidden.orbital3D && <Orbital3DShowcase />}
         {!hidden.agentsBento && <AgentsBento />}
