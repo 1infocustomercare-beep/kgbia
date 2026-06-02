@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import LandingNav from "@/components/landing/LandingNav";
 import CinematicHero from "@/components/landing/v2/CinematicHero";
+import CosmicHero from "@/components/empire-home/CosmicHero";
 import ManifestoSection from "@/components/landing/v2/ManifestoSection";
 import SectorsCarousel from "@/components/landing/v2/SectorsCarousel";
 import HorizontalPortfolio from "@/components/landing/v2/HorizontalPortfolio";
@@ -89,7 +90,7 @@ function LandingPageInner() {
       <div className="landing-dark force-dark landing-shell min-h-screen overflow-x-hidden bg-background text-foreground">
         {!isPreview && <CinematicCursor />}
         <LandingNav />
-        <CinematicHero />
+        <CosmicHero />
         <EmpireDiagnostic />
         {!hidden.manifesto && <ManifestoSection />}
         {!hidden.storyPinned && (
