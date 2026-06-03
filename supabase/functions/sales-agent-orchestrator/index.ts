@@ -734,6 +734,28 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ─── AUTH GUARD ───
+    const authHeader = req.headers.get("Authorization") || "";
+    const isServiceCall = !!SERVICE_KEY && authHeader.includes(SERVICE_KEY);
+    if (!isServiceCall) {
+      if (!authHeader) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const userClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: userData } = await userClient.auth.getUser();
+      const callerId = userData?.user?.id;
+      if (!callerId || callerId !== owner_id) {
+        return new Response(JSON.stringify({ error: "Forbidden: owner_id mismatch" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
+
     const { data: config } = await supabase
       .from("sales_agent_config")
       .select("*")
