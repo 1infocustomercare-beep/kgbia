@@ -144,6 +144,28 @@ Deno.serve(async (req) => {
     const { user_id, action = "run_cycle" } = body;
     if (!user_id) return new Response(JSON.stringify({ error: "user_id required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
+    // ─── AUTH GUARD ───
+    const authHeader = req.headers.get("Authorization") || "";
+    const isServiceCall = !!SERVICE_KEY && authHeader.includes(SERVICE_KEY);
+    if (!isServiceCall) {
+      if (!authHeader) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const userClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: userData } = await userClient.auth.getUser();
+      const callerId = userData?.user?.id;
+      if (!callerId || callerId !== user_id) {
+        return new Response(JSON.stringify({ error: "Forbidden: user_id mismatch" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
+
     // Carica/crea stato autopilot
     let { data: state } = await supabase
       .from("arianna_autopilot_state")

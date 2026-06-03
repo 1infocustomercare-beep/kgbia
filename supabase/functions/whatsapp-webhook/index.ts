@@ -52,7 +52,36 @@ serve(async (req) => {
   // ── POST: Incoming webhook events ──
   if (req.method === "POST") {
     try {
-      const payload = await req.json();
+      // Read raw body for HMAC verification before parsing JSON
+      const rawBody = await req.text();
+
+      // ── HMAC signature verification (Meta X-Hub-Signature-256) ──
+      const appSecret = Deno.env.get("WHATSAPP_APP_SECRET");
+      if (appSecret) {
+        const sigHeader = req.headers.get("x-hub-signature-256") || req.headers.get("X-Hub-Signature-256");
+        if (!sigHeader || !sigHeader.startsWith("sha256=")) {
+          return new Response("Missing signature", { status: 401, headers: corsHeaders });
+        }
+        const provided = sigHeader.slice("sha256=".length).toLowerCase();
+        const keyData = new TextEncoder().encode(appSecret);
+        const cryptoKey = await crypto.subtle.importKey(
+          "raw", keyData,
+          { name: "HMAC", hash: "SHA-256" },
+          false, ["sign"],
+        );
+        const sigBuf = await crypto.subtle.sign("HMAC", cryptoKey, new TextEncoder().encode(rawBody));
+        const expected = Array.from(new Uint8Array(sigBuf))
+          .map((b) => b.toString(16).padStart(2, "0")).join("");
+        if (expected !== provided) {
+          return new Response("Invalid signature", { status: 401, headers: corsHeaders });
+        }
+      } else {
+        console.warn("[whatsapp-webhook] WHATSAPP_APP_SECRET not configured — rejecting POST for safety");
+        return new Response("Webhook signing not configured", { status: 503, headers: corsHeaders });
+      }
+
+      const payload = JSON.parse(rawBody);
+
 
       if (payload.object !== "whatsapp_business_account") {
         return new Response("Not a WhatsApp event", { status: 400, headers: corsHeaders });
