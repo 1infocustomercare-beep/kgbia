@@ -225,8 +225,9 @@ serve(async (req) => {
           demo_sub_sector: vaultRow.sub_sector,
           demo_generated_at: new Date().toISOString(),
           demo_whatsapp_message: outreach.whatsappMessage,
-          demo_admin_email: vaultRow.admin_email,
-          demo_admin_password: vaultRow.admin_password,
+          // Admin credentials intentionally NOT persisted on leads (security):
+          // they live only in demo_sites/seller_demo_vault scoped by owner_id.
+
           demo_auto_status: "reused",
         }).eq("id", leadId);
       } catch (e) {

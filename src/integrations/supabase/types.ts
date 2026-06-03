@@ -4236,8 +4236,6 @@ export type Database = {
           company_id: string | null
           contact_stage: string | null
           created_at: string
-          demo_admin_email: string | null
-          demo_admin_password: string | null
           demo_admin_url: string | null
           demo_auto_status: string | null
           demo_generated_at: string | null
@@ -4282,8 +4280,6 @@ export type Database = {
           company_id?: string | null
           contact_stage?: string | null
           created_at?: string
-          demo_admin_email?: string | null
-          demo_admin_password?: string | null
           demo_admin_url?: string | null
           demo_auto_status?: string | null
           demo_generated_at?: string | null
@@ -4328,8 +4324,6 @@ export type Database = {
           company_id?: string | null
           contact_stage?: string | null
           created_at?: string
-          demo_admin_email?: string | null
-          demo_admin_password?: string | null
           demo_admin_url?: string | null
           demo_auto_status?: string | null
           demo_generated_at?: string | null
