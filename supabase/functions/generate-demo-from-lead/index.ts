@@ -1926,8 +1926,9 @@ serve(async (req) => {
           demo_sub_sector: match.sub,
           demo_generated_at: new Date().toISOString(),
           demo_whatsapp_message: outreachKit.whatsappMessage,
-          demo_admin_email: credentials.email,
-          demo_admin_password: credentials.password,
+          // Admin credentials intentionally NOT persisted on leads (security):
+          // they live only in demo_sites/demo_factory_runs scoped by owner_id.
+
           demo_auto_status: "ready",
         }).eq("id", leadId);
       } catch (e) {
