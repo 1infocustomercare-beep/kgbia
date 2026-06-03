@@ -318,6 +318,33 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const { action, lead_id, owner_id, dry_run } = body;
 
+    // ─── AUTH GUARD ───
+    const authHeader = req.headers.get("Authorization") || "";
+    const isServiceCall = !!SERVICE_KEY && authHeader.includes(SERVICE_KEY);
+    if (!isServiceCall) {
+      if (!authHeader) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const userClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: userData } = await userClient.auth.getUser();
+      const callerId = userData?.user?.id;
+      if (!callerId) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (owner_id && owner_id !== callerId) {
+        return new Response(JSON.stringify({ error: "Forbidden: owner_id mismatch" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
+
     // ─── ACTION: start sequence for a lead ───
     if (action === "start_sequence") {
       if (!lead_id || !owner_id) {
