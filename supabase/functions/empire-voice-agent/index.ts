@@ -500,8 +500,45 @@ serve(async (req) => {
     const pageContent = payload?.pageContent as string | undefined;
     const sectionId = payload?.sectionId as string | undefined;
 
+    // ─── AUTH GUARD: restricted modes require authenticated partner/team_leader ───
+    const RESTRICTED_MODES = new Set(["partner-assistant"]);
+    if (mode && RESTRICTED_MODES.has(mode)) {
+      const authHeader = req.headers.get("Authorization") || "";
+      if (!authHeader) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+      const ANON = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const SERVICE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2.45.0");
+      const userClient = createClient(SUPABASE_URL, ANON, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: ud } = await userClient.auth.getUser();
+      const uid = ud?.user?.id;
+      if (!uid) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const admin = createClient(SUPABASE_URL, SERVICE);
+      const [{ data: isPartner }, { data: isLead }, { data: isSuper }] = await Promise.all([
+        admin.rpc("has_role", { _user_id: uid, _role: "partner" }),
+        admin.rpc("has_role", { _user_id: uid, _role: "team_leader" }),
+        admin.rpc("has_role", { _user_id: uid, _role: "super_admin" }),
+      ]);
+      if (!isPartner && !isLead && !isSuper) {
+        return new Response(JSON.stringify({ error: "Forbidden: partner role required" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+
 
     const systemMessages = [
       { role: "system", content: EMPIRE_SYSTEM_PROMPT },
