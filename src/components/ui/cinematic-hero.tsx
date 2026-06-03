@@ -207,7 +207,7 @@ export function CinematicHero({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=7000",
+          end: isMobile ? "+=2800" : "+=4500",
           pin: true,
           scrub: 1,
           anticipatePin: 1,
@@ -391,8 +391,8 @@ export function CinematicHero({
               </div>
             </div>
 
-            <div className="card-left-text gsap-reveal order-3 lg:order-1 flex flex-col justify-center text-center lg:text-left z-20 w-full lg:max-w-none px-4 lg:px-0">
-              <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-0 lg:mb-5 tracking-tight">
+            <div className="card-left-text gsap-reveal order-3 lg:order-1 flex flex-col justify-center text-center lg:text-left z-20 w-full lg:max-w-none px-6 lg:px-0 pr-20 lg:pr-0">
+              <h3 className="text-white text-xl md:text-3xl lg:text-4xl font-bold mb-0 lg:mb-5 tracking-tight leading-tight">
                 {cardHeading}
               </h3>
               <p className="hidden md:block text-[#c9a84c]/80 text-sm md:text-base lg:text-lg font-normal leading-relaxed mx-auto lg:mx-0 max-w-sm lg:max-w-none">
