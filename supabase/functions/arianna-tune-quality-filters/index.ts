@@ -130,12 +130,47 @@ Deno.serve(async (req) => {
     const supa = createClient(SUPABASE_URL, SERVICE_ROLE);
     const body = await req.json().catch(() => ({}));
 
+    // ─── AUTH GUARD ───
+    const authHeader = req.headers.get("Authorization") || "";
+    const isServiceCall = !!SERVICE_ROLE && authHeader.includes(SERVICE_ROLE);
+
+    if (!isServiceCall) {
+      // Per-user path: require JWT and enforce user.id === body.user_id
+      if (!authHeader) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const userClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: userData } = await userClient.auth.getUser();
+      const callerId = userData?.user?.id;
+      if (!callerId) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      // Batch mode only allowed for service-role
+      if (!body.user_id) {
+        return new Response(JSON.stringify({ error: "Forbidden: batch mode requires service role" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (body.user_id !== callerId) {
+        return new Response(JSON.stringify({ error: "Forbidden: user_id mismatch" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     if (body.user_id) {
       const result = await tuneForUser(supa, body.user_id);
       return new Response(JSON.stringify({ success: true, ...result }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
 
     // Batch: tutti gli auto_tune attivi
     const { data: rows } = await supa
