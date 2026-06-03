@@ -87,25 +87,63 @@ const SECTOR_CONTEXT: Record<string, { name: string; emoji: string; services: st
   },
 };
 
+// ── Simple in-memory IP rate limiter (per cold-start) ──
+// 20 requests / 10 minutes per IP. Best-effort defense against AI cost abuse.
+const RL_WINDOW_MS = 10 * 60 * 1000;
+const RL_MAX = 20;
+const ipHits = new Map<string, number[]>();
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const arr = (ipHits.get(ip) || []).filter((t) => now - t < RL_WINDOW_MS);
+  if (arr.length >= RL_MAX) {
+    ipHits.set(ip, arr);
+    return true;
+  }
+  arr.push(now);
+  ipHits.set(ip, arr);
+  return false;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+    if (rateLimited(ip)) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded. Riprova tra qualche minuto." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { messages, sector, companyName } = await req.json();
 
-    if (!messages || !Array.isArray(messages)) {
-      return new Response(JSON.stringify({ error: "messages array required" }), {
+    if (!messages || !Array.isArray(messages) || messages.length > 30) {
+      return new Response(JSON.stringify({ error: "messages array required (max 30)" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+    // Cap message content size to prevent prompt-stuffing cost abuse
+    for (const m of messages) {
+      if (typeof m?.content === "string" && m.content.length > 4000) {
+        return new Response(JSON.stringify({ error: "Message too long (max 4000 chars)" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
 
     const ctx = SECTOR_CONTEXT[sector] || SECTOR_CONTEXT["custom"];
 
