@@ -68,9 +68,18 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("ElevenLabs token error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: `ElevenLabs API error: ${response.status}` }), {
-        status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      const isFallbackable = response.status === 429 || response.status === 401 || response.status >= 500;
+      return new Response(
+        JSON.stringify({
+          token: null,
+          unavailable: true,
+          fallback: isFallbackable,
+          reason: response.status === 429
+            ? "Voice agent temporaneamente non disponibile (rate limit)."
+            : `ElevenLabs API error: ${response.status}`,
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     const { token } = await response.json();
