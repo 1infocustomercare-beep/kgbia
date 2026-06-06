@@ -49,7 +49,9 @@ const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
 // Skip intro on landing and on client/demo routes where content must appear immediately
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
   (window.location.pathname === "/" ||
+    window.location.pathname === "/index" ||
     window.location.pathname === "/home" ||
+    window.location.pathname === "/landing-legacy" ||
     /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding|t\/)/.test(window.location.pathname));
 
 const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 25000 : 25000;
@@ -428,11 +430,12 @@ class IntroErrorBoundary extends React.Component<{ children: ReactNode; onFail: 
   }
 }
 
-/** Hide Empire DNA background on client public sites, demo pages, and all admin dashboards */
-const HIDE_DNA_PATTERN = /^\/(b|r|t|ncc-demo|demo|dashboard|app|superadmin|admin|auth|login|reset-password|kitchen|partner|join|onboarding)(\/|$)/;
+/** Hide Empire DNA background on client public sites, demo pages, home variants, and all admin dashboards */
+const HIDE_DNA_PATTERN = /^\/(b|r|t|ncc-demo|demo|dashboard|app|superadmin|admin|auth|login|reset-password|kitchen|partner|join|onboarding|index|home|landing-legacy)(\/|$)/;
 
 function ConditionalDNABackground() {
   const { pathname } = useLocation();
+  if (pathname === "/") return null;
   if (HIDE_DNA_PATTERN.test(pathname)) return null;
   return <EmpireDNABackground />;
 }
