@@ -155,13 +155,13 @@ function HeroStage() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <h1 className="max-w-5xl font-display text-[clamp(3.25rem,12vw,9rem)] font-extrabold leading-[0.86] tracking-normal text-foreground">
-              L'impero digitale che lavora mentre tu vendi.
+            <h1 className="max-w-5xl font-display text-[clamp(2.65rem,11vw,8.5rem)] font-extrabold leading-[0.9] tracking-normal text-foreground [hyphens:none] [overflow-wrap:normal] [word-break:normal] sm:text-[clamp(4rem,10vw,8.5rem)] lg:leading-[0.86]">
+              L&apos;impero digitale che lavora mentre tu vendi.
             </h1>
           </Reveal>
 
           <Reveal delay={0.16}>
-            <p className="mt-7 max-w-2xl text-base leading-8 text-muted-foreground md:text-xl md:leading-9">
+            <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground md:mt-7 md:text-xl md:leading-9">
               Empire trasforma siti, demo, agenti vocali, automazioni e dashboard in un'unica macchina commerciale per business locali e partner.
             </p>
           </Reveal>
