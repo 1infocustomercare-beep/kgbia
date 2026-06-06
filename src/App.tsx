@@ -503,7 +503,7 @@ function App() {
     const path = window.location.pathname;
     const constrained = isConstrainedNetwork();
     const shouldDeferPreloads = IS_MOBILE || constrained;
-    let deferredPreload: number | null = null;
+    const deferredPreload: number | null = null;
 
     // On mobile/slow connections, avoid eager preloads to reduce startup contention
     if (shouldDeferPreloads) {
