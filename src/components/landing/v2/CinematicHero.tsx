@@ -14,7 +14,7 @@ const SCENES = [
   { sector: "Healthcare premium", brand: "FAR Medical", metric: "GDPR", metricLabel: "compliance totale", img: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%" },
 ];
 
-const TRUST = ["847+ business attivi", "98 agenti AI", "25+ verticali", "Go-live 14 giorni"];
+const TRUST = ["847+ business attivi", "38 agenti AI", "24 verticali", "Go-live 14 giorni"];
 const ROTATING_WORDS = ["telefonate", "ordini", "prenotazioni", "recensioni", "clienti"];
 const MARQUEE = ["VOICE AI", "WHATSAPP", "WEBAPP", "AUTOMATION", "CRM", "REVIEWS", "BOOKING", "PAYMENTS"];
 const SCENE_DURATION = 4200;
