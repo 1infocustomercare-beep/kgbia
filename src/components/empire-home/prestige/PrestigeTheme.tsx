@@ -30,7 +30,8 @@ export default function PrestigeTheme() {
 
       .prestige-section {
         position: relative;
-        overflow: hidden;
+        overflow-x: clip;
+        overflow-y: visible;
       }
 
       .prestige-dark {
@@ -514,6 +515,36 @@ export default function PrestigeTheme() {
 
       /* Keep content above aurora */
       .prestige-root > *:not(.prestige-aurora):not(.prestige-noise) { position: relative; z-index: 2; }
+
+      /* Mobile stability guardrails: no vertically clipped sections, no sticky viewport traps. */
+      @media (max-width: 767px) {
+        .prestige-section {
+          overflow-x: clip;
+          overflow-y: visible;
+        }
+        [data-section="prestige-story"] {
+          height: auto !important;
+          min-height: 0 !important;
+        }
+        [data-section="prestige-story"] > .prestige-story-sticky {
+          position: relative !important;
+          top: auto !important;
+          height: auto !important;
+          min-height: 0 !important;
+          overflow: visible !important;
+          padding-top: 4.5rem !important;
+          padding-bottom: 4.5rem !important;
+        }
+        [data-section="prestige-story"] .prestige-card {
+          transform: none !important;
+          opacity: 1 !important;
+          filter: none !important;
+        }
+        .prestige-card,
+        .prestige-card-gilt {
+          contain: layout paint;
+        }
+      }
 
       /* ── Scroll reveal (auto-bound via PrestigeEffects) ───────────── */
       .prestige-reveal {
