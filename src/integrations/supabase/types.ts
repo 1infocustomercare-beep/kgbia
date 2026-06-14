@@ -8839,6 +8839,10 @@ export type Database = {
         Args: { p_commission_pct?: number; p_email: string }
         Returns: Json
       }
+      delete_push_subscription: {
+        Args: { p_endpoint: string; p_p256dh: string }
+        Returns: boolean
+      }
       enqueue_autopilot_retry: {
         Args: {
           p_error?: string
@@ -8890,6 +8894,14 @@ export type Database = {
         Returns: {
           onboarding_complete: boolean
           stripe_account_id: string
+        }[]
+      }
+      get_public_custom_preview: {
+        Args: { p_slug: string }
+        Returns: {
+          generation_status: string
+          lead_name: string
+          preview_html: string
         }[]
       }
       get_seller_credit_balance: {
