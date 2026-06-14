@@ -51,6 +51,7 @@ const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
   (window.location.pathname === "/" ||
     window.location.pathname === "/index" ||
     window.location.pathname === "/home" ||
+    window.location.pathname === "/home-prestige" ||
     window.location.pathname === "/landing-legacy" ||
     /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding|t\/)/.test(window.location.pathname));
 
