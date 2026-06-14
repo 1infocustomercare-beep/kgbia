@@ -343,6 +343,16 @@ export default function PrestigeTheme() {
         color: hsl(var(--pr-gold-light));
         opacity: 0.9;
       }
+      /* Light section override: gold-light is unreadable on cream — flip to gold-deep */
+      .prestige-light .prestige-eyebrow-indexed,
+      .prestige-light .prestige-eyebrow {
+        color: hsl(var(--pr-gold-deep)) !important;
+      }
+      .prestige-light .prestige-eyebrow-indexed::before {
+        color: hsl(var(--pr-gold-deep));
+        border-color: hsl(var(--pr-gold-deep) / 0.6);
+        background: hsl(var(--pr-gold) / 0.08);
+      }
 
       /* ── Marquee strip (additive editorial band) ─────────────────── */
       .prestige-marquee {
