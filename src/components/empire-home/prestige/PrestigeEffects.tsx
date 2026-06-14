@@ -167,9 +167,11 @@ export default function PrestigeEffects() {
     return () => {
       io.disconnect();
       countIO.disconnect();
+      window.removeEventListener("scroll", onScrollFallback);
       tiltCleanups.forEach((fn) => fn());
       magCleanups.forEach((fn) => fn());
     };
+
   }, []);
 
   return (
