@@ -312,6 +312,132 @@ export default function PrestigeTheme() {
 
       /* Hide duplicate floating language toggle if LandingNav already mounts one */
       body:has(nav .prestige-lang-toggle) .prestige-hero-lang-floating { display: none; }
+
+      /* ── Editorial typography polish ─────────────────────────────── */
+      .prestige-display em,
+      .prestige-italic {
+        font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+      }
+      .prestige-eyebrow-indexed {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        font-weight: 600;
+        opacity: 0.95;
+      }
+      .prestige-eyebrow-indexed::before {
+        content: attr(data-index);
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 10px;
+        letter-spacing: 0.05em;
+        padding: 2px 6px;
+        border: 1px solid hsl(var(--pr-gold) / 0.55);
+        border-radius: 4px;
+        color: hsl(var(--pr-gold-light));
+        opacity: 0.9;
+      }
+
+      /* ── Marquee strip (additive editorial band) ─────────────────── */
+      .prestige-marquee {
+        position: relative;
+        overflow: hidden;
+        border-top: 1px solid hsl(var(--pr-gold) / 0.18);
+        border-bottom: 1px solid hsl(var(--pr-gold) / 0.18);
+        padding: 0.85rem 0;
+        z-index: 2;
+      }
+      .prestige-marquee::before,
+      .prestige-marquee::after {
+        content: "";
+        position: absolute;
+        top: 0; bottom: 0;
+        width: 80px;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .prestige-marquee::before {
+        left: 0;
+        background: linear-gradient(90deg, hsl(var(--pr-emerald-deep)) 0%, transparent 100%);
+      }
+      .prestige-marquee::after {
+        right: 0;
+        background: linear-gradient(270deg, hsl(var(--pr-emerald-deep)) 0%, transparent 100%);
+      }
+      .prestige-marquee__track {
+        display: inline-flex;
+        gap: 2.5rem;
+        white-space: nowrap;
+        animation: prestige-marquee-scroll 38s linear infinite;
+        will-change: transform;
+      }
+      .prestige-marquee:hover .prestige-marquee__track {
+        animation-play-state: paused;
+      }
+      .prestige-marquee__item {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: hsl(var(--pr-text-on-dark) / 0.78);
+      }
+      .prestige-marquee__dot {
+        width: 6px;
+        height: 6px;
+        transform: rotate(45deg);
+        background: linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)));
+        box-shadow: 0 0 8px hsl(var(--pr-gold) / 0.6);
+        flex-shrink: 0;
+      }
+      .prestige-marquee__text {
+        background: linear-gradient(120deg, hsl(var(--pr-text-on-dark)) 0%, hsl(var(--pr-gold-light)) 50%, hsl(var(--pr-text-on-dark)) 100%);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      @keyframes prestige-marquee-scroll {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .prestige-marquee__track { animation: none !important; }
+      }
+
+      /* ── Section corner ornaments (subtle gold brackets) ─────────── */
+      .prestige-corners {
+        position: relative;
+      }
+      .prestige-corners::before,
+      .prestige-corners::after {
+        content: "";
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        border: 1px solid hsl(var(--pr-gold) / 0.5);
+        pointer-events: none;
+        opacity: 0.7;
+      }
+      .prestige-corners::before {
+        top: 12px; left: 12px;
+        border-right: none;
+        border-bottom: none;
+      }
+      .prestige-corners::after {
+        bottom: 12px; right: 12px;
+        border-left: none;
+        border-top: none;
+      }
     `}</style>
   );
 }
