@@ -22,18 +22,35 @@ export default function PrestigeEffects() {
     );
     revealTargets.forEach((el) => el.classList.add("prestige-reveal"));
 
+    const reveal = (el: Element) => el.classList.add("is-revealed");
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            e.target.classList.add("is-revealed");
+            reveal(e.target);
             io.unobserve(e.target);
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      // Fire as soon as ANY part of the section enters the viewport (top-only trigger)
+      { threshold: 0, rootMargin: "0px 0px -5% 0px" }
     );
     revealTargets.forEach((el) => io.observe(el));
+
+    // Safety fallback: on every scroll, force-reveal anything whose top is above the viewport bottom.
+    // Guards against IntersectionObserver missing tall pinned sections under Lenis smooth-scroll.
+    const onScrollFallback = () => {
+      const vh = window.innerHeight;
+      revealTargets.forEach((el) => {
+        if (el.classList.contains("is-revealed")) return;
+        const r = el.getBoundingClientRect();
+        if (r.top < vh * 0.95) reveal(el);
+      });
+    };
+    onScrollFallback();
+    window.addEventListener("scroll", onScrollFallback, { passive: true });
+
 
     // ── 3D tilt on cards (desktop only) ──────────────────────────────
     const tiltCleanups: Array<() => void> = [];
@@ -150,9 +167,11 @@ export default function PrestigeEffects() {
     return () => {
       io.disconnect();
       countIO.disconnect();
+      window.removeEventListener("scroll", onScrollFallback);
       tiltCleanups.forEach((fn) => fn());
       magCleanups.forEach((fn) => fn());
     };
+
   }, []);
 
   return (
