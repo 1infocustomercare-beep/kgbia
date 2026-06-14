@@ -529,6 +529,19 @@ export default function PrestigeTheme() {
 
       /* Mobile stability guardrails: no vertically clipped sections, no sticky viewport traps. */
       @media (max-width: 767px) {
+        [data-section="prestige-hero"] {
+          min-height: auto !important;
+          align-items: flex-start !important;
+          padding-top: 8.75rem !important;
+          padding-bottom: 6rem !important;
+        }
+        .prestige-hero-phone-stage {
+          margin-top: 1.5rem;
+          width: min(70vw, 240px) !important;
+        }
+        .prestige-scroll-hint {
+          display: none !important;
+        }
         .prestige-section {
           overflow-x: clip;
           overflow-y: visible;
