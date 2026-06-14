@@ -186,17 +186,16 @@ export default function PrestigeTheme() {
         80% { transform: translate(4%, -3%); }
       }
 
-      /* Vignette around dark sections for cinematic framing */
-      .prestige-dark::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background:
-          radial-gradient(ellipse 90% 70% at 50% 50%, transparent 55%, hsl(var(--pr-emerald-deep) / 0.55) 100%);
-        z-index: 1;
+      /* Cinematic vignette — applied via background-image so it never
+         creates a positioned overlay that could clip absolute children. */
+      .prestige-dark {
+        background-image:
+          radial-gradient(ellipse 60% 40% at 20% 10%, hsl(var(--pr-emerald-glow) / 0.10), transparent 60%),
+          radial-gradient(ellipse 50% 35% at 85% 90%, hsl(var(--pr-gold) / 0.08), transparent 65%),
+          radial-gradient(ellipse 95% 75% at 50% 50%, transparent 55%, hsl(var(--pr-emerald-deep) / 0.55) 100%),
+          linear-gradient(180deg, hsl(var(--pr-emerald-deep)), hsl(var(--pr-emerald)));
       }
-      .prestige-dark > * { position: relative; z-index: 2; }
+
 
       /* Gold shimmer sweep on display text */
       .prestige-gold-text {
