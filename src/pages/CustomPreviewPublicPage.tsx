@@ -12,12 +12,11 @@ export default function CustomPreviewPublicPage() {
   useEffect(() => {
     if (!slug) return;
     (async () => {
-      const { data, error } = await supabase
-        .from("seller_custom_previews" as any)
-        .select("preview_html, generation_status, lead_name")
-        .eq("public_slug", slug)
-        .eq("is_published", true)
-        .maybeSingle();
+      const { data: rows, error } = await supabase.rpc(
+        "get_public_custom_preview" as any,
+        { p_slug: slug },
+      );
+      const data = Array.isArray(rows) ? rows[0] : rows;
 
       if (error || !data) {
         setError("Preview non trovata o non più disponibile");
