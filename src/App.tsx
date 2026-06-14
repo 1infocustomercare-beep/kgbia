@@ -579,20 +579,20 @@ function App() {
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
                       {/* Public routes */}
-                      {/* ═══ HOMEPAGE UFFICIALE EMPIRE — LandingPage v2 (potenziata) ═══
-                          Versione conversion-oriented massima: cinematic hero,
-                          Story Pinned Caos→Empire, settori, mockup, agenti,
-                          pricing+garanzia, FAQ, contatti, Voice Agent Arianna,
-                          bilingue IT/EN. */}
-                      <Route path="/" element={<LandingPage />} />
-                      <Route path="/index" element={<LandingPage />} />
-                      <Route path="/home" element={<LandingPage />} />
-                      <Route path="/landing-legacy" element={<LandingPage />} />
-                      {/* Vecchie varianti mantenute come fallback */}
+                      {/* ═══ HOMEPAGE UFFICIALE EMPIRE — Emerald Prestige ═══
+                          Luxury Lowengeld-style: hero cinematic, story pinned
+                          Caos→Empire, services, industries, portfolio, process,
+                          proof, CTA. Bilingue IT/EN. */}
+                      <Route path="/" element={<EmpirePrestigeHome />} />
+                      <Route path="/index" element={<EmpirePrestigeHome />} />
+                      <Route path="/home" element={<EmpirePrestigeHome />} />
                       <Route path="/home-prestige" element={<EmpirePrestigeHome />} />
+                      {/* Vecchie varianti mantenute come fallback */}
+                      <Route path="/landing-legacy" element={<LandingPage />} />
                       <Route path="/home-cinematic" element={<EmpireCinematicHome />} />
                       <Route path="/home-legacy" element={<EmpireHomePage />} />
                       <Route path="/home-v5" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
+
 
 
                       <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
