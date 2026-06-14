@@ -1,0 +1,170 @@
+import { useEffect } from "react";
+
+/**
+ * Premium effects layer — PURE ADDITIVE.
+ * Mounted once inside EmpirePrestigeHome. Auto-binds to existing DOM nodes:
+ *  - Renders fixed aurora/mesh background + light beams + grain (behind content)
+ *  - Scroll-reveal on every <section data-section="..."> via IntersectionObserver
+ *  - 3D tilt on .prestige-card / .prestige-card-gilt (desktop pointer only)
+ *  - Magnetic micro-interaction on .prestige-cta / .prestige-cta-ghost
+ *  - Count-up on elements marked [data-countup] (auto-detects leading digits)
+ * All effects respect prefers-reduced-motion and (pointer: coarse) media queries.
+ * No layout changes, no component duplication, no new heavy dependencies.
+ */
+export default function PrestigeEffects() {
+  useEffect(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+
+    // ── Scroll reveal ────────────────────────────────────────────────
+    const revealTargets = document.querySelectorAll<HTMLElement>(
+      "[data-section]:not([data-no-reveal])"
+    );
+    revealTargets.forEach((el) => el.classList.add("prestige-reveal"));
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-revealed");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+    );
+    revealTargets.forEach((el) => io.observe(el));
+
+    // ── 3D tilt on cards (desktop only) ──────────────────────────────
+    const tiltCleanups: Array<() => void> = [];
+    if (!prefersReduced && !isCoarse) {
+      const cards = document.querySelectorAll<HTMLElement>(
+        ".prestige-card, .prestige-card-gilt"
+      );
+      cards.forEach((card) => {
+        card.classList.add("prestige-tilt");
+        let rafId = 0;
+        const onMove = (e: PointerEvent) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(() => {
+            card.style.setProperty("--tilt-x", (y * -6).toFixed(2) + "deg");
+            card.style.setProperty("--tilt-y", (x * 8).toFixed(2) + "deg");
+            card.style.setProperty("--spot-x", (x * 100 + 50).toFixed(1) + "%");
+            card.style.setProperty("--spot-y", (y * 100 + 50).toFixed(1) + "%");
+          });
+        };
+        const onLeave = () => {
+          cancelAnimationFrame(rafId);
+          card.style.setProperty("--tilt-x", "0deg");
+          card.style.setProperty("--tilt-y", "0deg");
+        };
+        card.addEventListener("pointermove", onMove);
+        card.addEventListener("pointerleave", onLeave);
+        tiltCleanups.push(() => {
+          card.removeEventListener("pointermove", onMove);
+          card.removeEventListener("pointerleave", onLeave);
+          card.classList.remove("prestige-tilt");
+        });
+      });
+    }
+
+    // ── Magnetic CTA (desktop only) ──────────────────────────────────
+    const magCleanups: Array<() => void> = [];
+    if (!prefersReduced && !isCoarse) {
+      const ctas = document.querySelectorAll<HTMLElement>(
+        ".prestige-cta, .prestige-cta-ghost"
+      );
+      ctas.forEach((btn) => {
+        btn.classList.add("prestige-magnetic");
+        const onMove = (e: PointerEvent) => {
+          const r = btn.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          btn.style.setProperty("--mag-x", (x * 10).toFixed(1) + "px");
+          btn.style.setProperty("--mag-y", (y * 6).toFixed(1) + "px");
+        };
+        const onLeave = () => {
+          btn.style.setProperty("--mag-x", "0px");
+          btn.style.setProperty("--mag-y", "0px");
+        };
+        btn.addEventListener("pointermove", onMove);
+        btn.addEventListener("pointerleave", onLeave);
+        magCleanups.push(() => {
+          btn.removeEventListener("pointermove", onMove);
+          btn.removeEventListener("pointerleave", onLeave);
+        });
+      });
+    }
+
+    // ── Count-up on [data-countup] ───────────────────────────────────
+    const countTargets = document.querySelectorAll<HTMLElement>("[data-countup]");
+    const countIO = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          const raw = el.textContent || "";
+          const match = raw.match(/(\D*)([\d.,]+)(.*)/);
+          if (!match) {
+            countIO.unobserve(el);
+            return;
+          }
+          const [, prefix, numStr, suffix] = match;
+          const sep = numStr.includes(".") && numStr.lastIndexOf(".") < numStr.length - 3 ? "." : "";
+          const clean = numStr.replace(/[.,](?=\d{3}\b)/g, "");
+          const target = parseFloat(clean.replace(",", "."));
+          if (!isFinite(target)) {
+            countIO.unobserve(el);
+            return;
+          }
+          if (prefersReduced) {
+            countIO.unobserve(el);
+            return;
+          }
+          const duration = 1400;
+          const t0 = performance.now();
+          const decimals = (clean.split(".")[1] || "").length;
+          const fmt = (n: number) => {
+            const fixed = n.toFixed(decimals);
+            if (!sep) return fixed;
+            const [int, dec] = fixed.split(".");
+            return int.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + (dec ? "." + dec : "");
+          };
+          const tick = (now: number) => {
+            const p = Math.min(1, (now - t0) / duration);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = prefix + fmt(target * eased) + suffix;
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+          countIO.unobserve(el);
+        });
+      },
+      { threshold: 0.5 }
+    );
+    countTargets.forEach((el) => countIO.observe(el));
+
+    return () => {
+      io.disconnect();
+      countIO.disconnect();
+      tiltCleanups.forEach((fn) => fn());
+      magCleanups.forEach((fn) => fn());
+    };
+  }, []);
+
+  return (
+    <>
+      {/* Aurora mesh + light beams — fixed, behind all content, pointer-events:none */}
+      <div className="prestige-aurora" aria-hidden="true">
+        <div className="prestige-aurora__layer prestige-aurora__layer--a" />
+        <div className="prestige-aurora__layer prestige-aurora__layer--b" />
+        <div className="prestige-aurora__layer prestige-aurora__layer--c" />
+        <div className="prestige-aurora__beam prestige-aurora__beam--1" />
+        <div className="prestige-aurora__beam prestige-aurora__beam--2" />
+      </div>
+    </>
+  );
+}
