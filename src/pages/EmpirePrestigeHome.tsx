@@ -5,6 +5,7 @@ import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
 import PrestigeStoryPinned from "@/components/empire-home/prestige/PrestigeStoryPinned";
+import PrestigeMarquee from "@/components/empire-home/prestige/PrestigeMarquee";
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolioCarousel from "@/components/empire-home/prestige/PrestigePortfolioCarousel";
@@ -66,6 +67,7 @@ function EmpirePrestigeHomeInner() {
 
         <LandingNav />
         <PrestigeHero />
+        <PrestigeMarquee />
         <PrestigeStoryPinned />
         <PrestigeServices />
         <PrestigeIndustries />
