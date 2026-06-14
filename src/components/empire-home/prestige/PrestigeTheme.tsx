@@ -622,6 +622,21 @@ export default function PrestigeTheme() {
         }
       }
 
+      /* Story comparison is conversion-critical: never sticky/clip/tilt this block. */
+      .prestige-story-safe,
+      .prestige-story-safe * {
+        overflow: visible;
+      }
+      .prestige-story-safe .prestige-card,
+      .prestige-story-safe .prestige-card:hover {
+        transform: none !important;
+        filter: none !important;
+        opacity: 1 !important;
+      }
+      .prestige-story-safe .prestige-card::after {
+        overflow: hidden;
+      }
+
       /* ── Scroll reveal (auto-bound via PrestigeEffects) ───────────── */
       .prestige-reveal {
         opacity: 0.001;
