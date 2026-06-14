@@ -63,7 +63,7 @@ const PLANS_DEFAULT: PricingPlan[] = [
     saved: "€180k+/anno",
     features: [
       "Tutto Empire Pro +",
-      "98 agenti AI completi",
+      "38 agenti AI completi",
       "Agenti custom per il tuo brand",
       "Integrazioni illimitate",
       "Multi-brand · multi-sede",
