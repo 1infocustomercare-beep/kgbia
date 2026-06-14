@@ -46,7 +46,7 @@ export default function PrestigeProof() {
               className="prestige-card text-center min-w-0"
               style={{ animation: `prestigePop .8s ${i * 0.1}s cubic-bezier(.22,1,.36,1) backwards` }}
             >
-              <div className="prestige-display text-2xl sm:text-4xl md:text-5xl prestige-gold-text break-words">{s.value}</div>
+              <div data-countup className="prestige-display text-2xl sm:text-4xl md:text-5xl prestige-gold-text break-words">{s.value}</div>
               <div className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.2em] leading-snug" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
                 {s.label}
               </div>

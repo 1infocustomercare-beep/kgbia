@@ -3,6 +3,7 @@ import LandingNav from "@/components/landing/LandingNav";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
+import PrestigeEffects from "@/components/empire-home/prestige/PrestigeEffects";
 import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
 import PrestigeStoryPinned from "@/components/empire-home/prestige/PrestigeStoryPinned";
 import PrestigeMarquee from "@/components/empire-home/prestige/PrestigeMarquee";
@@ -62,8 +63,11 @@ function EmpirePrestigeHomeInner() {
       <PrestigeTheme />
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen overflow-x-hidden">
+        {/* Premium effects layer: aurora background + scroll-reveal + tilt + magnetic + count-up */}
+        <PrestigeEffects />
         {/* Cinematic film grain — purely decorative, pointer-events:none */}
         <div className="prestige-noise" aria-hidden="true" />
+
 
         <LandingNav />
         <PrestigeHero />

@@ -438,6 +438,139 @@ export default function PrestigeTheme() {
         border-left: none;
         border-top: none;
       }
+
+      /* ── Aurora / mesh gradient background (fixed, behind content) ── */
+      .prestige-aurora {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+      .prestige-aurora__layer {
+        position: absolute;
+        inset: -20%;
+        opacity: 0.55;
+        filter: blur(80px);
+        will-change: transform;
+        mix-blend-mode: screen;
+      }
+      .prestige-aurora__layer--a {
+        background:
+          radial-gradient(40% 35% at 22% 18%, hsl(var(--pr-emerald-glow) / 0.55), transparent 60%),
+          radial-gradient(45% 30% at 78% 28%, hsl(var(--pr-gold) / 0.35), transparent 65%);
+        animation: prestige-aurora-drift-a 22s ease-in-out infinite alternate;
+      }
+      .prestige-aurora__layer--b {
+        background:
+          radial-gradient(35% 32% at 70% 72%, hsl(var(--pr-emerald-glow) / 0.42), transparent 60%),
+          radial-gradient(50% 32% at 18% 82%, hsl(var(--pr-gold-deep) / 0.32), transparent 65%);
+        animation: prestige-aurora-drift-b 28s ease-in-out infinite alternate;
+        opacity: 0.45;
+      }
+      .prestige-aurora__layer--c {
+        background: radial-gradient(30% 22% at 50% 50%, hsl(var(--pr-gold-light) / 0.18), transparent 70%);
+        animation: prestige-aurora-drift-c 36s ease-in-out infinite alternate;
+        opacity: 0.4;
+      }
+      .prestige-aurora__beam {
+        position: absolute;
+        top: -10%;
+        width: 22vw;
+        height: 130vh;
+        background: linear-gradient(180deg, transparent 0%, hsl(var(--pr-gold-light) / 0.07) 45%, transparent 100%);
+        filter: blur(28px);
+        transform-origin: top center;
+      }
+      .prestige-aurora__beam--1 { left: 18%; transform: rotate(8deg); animation: prestige-beam-sway 14s ease-in-out infinite alternate; }
+      .prestige-aurora__beam--2 { right: 14%; transform: rotate(-6deg); animation: prestige-beam-sway 18s ease-in-out infinite alternate-reverse; }
+
+      @keyframes prestige-aurora-drift-a {
+        from { transform: translate3d(-4%, -2%, 0) scale(1); }
+        to   { transform: translate3d(4%, 3%, 0) scale(1.08); }
+      }
+      @keyframes prestige-aurora-drift-b {
+        from { transform: translate3d(3%, 2%, 0) scale(1.05); }
+        to   { transform: translate3d(-3%, -4%, 0) scale(1); }
+      }
+      @keyframes prestige-aurora-drift-c {
+        from { transform: translate3d(0, 0, 0) scale(1); }
+        to   { transform: translate3d(2%, -3%, 0) scale(1.15); }
+      }
+      @keyframes prestige-beam-sway {
+        from { transform: rotate(8deg) translateY(-3%); opacity: 0.7; }
+        to   { transform: rotate(-4deg) translateY(2%); opacity: 1; }
+      }
+
+      /* Keep content above aurora */
+      .prestige-root > *:not(.prestige-aurora):not(.prestige-noise) { position: relative; z-index: 2; }
+
+      /* ── Scroll reveal (auto-bound via PrestigeEffects) ───────────── */
+      .prestige-reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        filter: blur(6px);
+        transition:
+          opacity .9s cubic-bezier(.22,1,.36,1),
+          transform .9s cubic-bezier(.22,1,.36,1),
+          filter .9s cubic-bezier(.22,1,.36,1);
+        will-change: opacity, transform, filter;
+      }
+      .prestige-reveal.is-revealed { opacity: 1; transform: none; filter: blur(0); }
+      .prestige-reveal .prestige-card,
+      .prestige-reveal .prestige-card-gilt,
+      .prestige-reveal article,
+      .prestige-reveal figure {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1);
+        transition-delay: calc(var(--reveal-i, 0) * 70ms + 120ms);
+      }
+      .prestige-reveal.is-revealed .prestige-card,
+      .prestige-reveal.is-revealed .prestige-card-gilt,
+      .prestige-reveal.is-revealed article,
+      .prestige-reveal.is-revealed figure {
+        opacity: 1;
+        transform: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .prestige-reveal,
+        .prestige-reveal .prestige-card,
+        .prestige-reveal .prestige-card-gilt,
+        .prestige-reveal article,
+        .prestige-reveal figure {
+          opacity: 1 !important;
+          transform: none !important;
+          filter: none !important;
+          transition: none !important;
+        }
+        .prestige-aurora__layer,
+        .prestige-aurora__beam { animation: none !important; }
+      }
+
+      /* ── Card 3D tilt + spotlight (desktop only, auto-bound) ─────── */
+      .prestige-tilt {
+        transform-style: preserve-3d;
+        transform: perspective(900px)
+          rotateX(var(--tilt-x, 0deg))
+          rotateY(var(--tilt-y, 0deg))
+          translateZ(0);
+        transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
+      }
+      .prestige-tilt::before {
+        background:
+          radial-gradient(180px circle at var(--spot-x, 50%) var(--spot-y, 50%), hsl(var(--pr-gold-light) / 0.25), transparent 70%),
+          linear-gradient(135deg, hsl(var(--pr-gold-light) / 0.55), hsl(var(--pr-gold) / 0.18) 35%, transparent 55%, hsl(var(--pr-gold-deep) / 0.45) 100%);
+      }
+
+      /* ── Magnetic CTA ────────────────────────────────────────────── */
+      .prestige-magnetic {
+        transform: translate3d(var(--mag-x, 0), var(--mag-y, 0), 0);
+        transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
+      }
+      .prestige-cta.prestige-magnetic:hover {
+        transform: translate3d(var(--mag-x, 0), calc(var(--mag-y, 0px) - 2px), 0);
+      }
     `}</style>
   );
 }
