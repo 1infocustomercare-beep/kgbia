@@ -6,8 +6,8 @@ const WORDS_DEFAULT = ["Non", "vendiamo", "software.", "Liberiamo", "il", "tuo",
 const ACCENT_DEFAULT = ["Liberiamo", "fatturi", "più."];
 const STATS_DEFAULT = [
   { value: "847+", label: "business attivati" },
-  { value: "98", label: "agenti proprietari" },
-  { value: "25+", label: "settori coperti" },
+  { value: "38", label: "agenti proprietari" },
+  { value: "24", label: "settori coperti" },
   { value: "−12h", label: "lavoro a settimana" },
 ];
 
