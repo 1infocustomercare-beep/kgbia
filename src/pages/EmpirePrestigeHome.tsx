@@ -63,8 +63,11 @@ function EmpirePrestigeHomeInner() {
       <PrestigeTheme />
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen overflow-x-hidden">
+        {/* Premium effects layer: aurora background + scroll-reveal + tilt + magnetic + count-up */}
+        <PrestigeEffects />
         {/* Cinematic film grain — purely decorative, pointer-events:none */}
         <div className="prestige-noise" aria-hidden="true" />
+
 
         <LandingNav />
         <PrestigeHero />
