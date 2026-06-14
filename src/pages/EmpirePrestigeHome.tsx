@@ -3,6 +3,7 @@ import LandingNav from "@/components/landing/LandingNav";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
+import PrestigeEffects from "@/components/empire-home/prestige/PrestigeEffects";
 import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
 import PrestigeStoryPinned from "@/components/empire-home/prestige/PrestigeStoryPinned";
 import PrestigeMarquee from "@/components/empire-home/prestige/PrestigeMarquee";
