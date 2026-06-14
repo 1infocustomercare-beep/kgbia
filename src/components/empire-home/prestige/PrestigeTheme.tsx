@@ -161,7 +161,157 @@ export default function PrestigeTheme() {
       @media (prefers-reduced-motion: reduce) {
         .prestige-fade-up { opacity: 1 !important; transform: none !important; }
         .prestige-cta, .prestige-card { transition: none !important; }
+        .prestige-shimmer::after, .prestige-noise { animation: none !important; }
       }
+
+      /* ── Premium additive layer ─────────────────────────────────── */
+
+      /* Subtle film grain — sits above background, below content */
+      .prestige-noise {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.06;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        background-size: 160px 160px;
+        animation: prestige-grain 8s steps(8) infinite;
+      }
+      @keyframes prestige-grain {
+        0%, 100% { transform: translate(0, 0); }
+        20% { transform: translate(-4%, 3%); }
+        40% { transform: translate(3%, -2%); }
+        60% { transform: translate(-2%, 4%); }
+        80% { transform: translate(4%, -3%); }
+      }
+
+      /* Cinematic vignette — applied via background-image so it never
+         creates a positioned overlay that could clip absolute children. */
+      .prestige-dark {
+        background-image:
+          radial-gradient(ellipse 60% 40% at 20% 10%, hsl(var(--pr-emerald-glow) / 0.10), transparent 60%),
+          radial-gradient(ellipse 50% 35% at 85% 90%, hsl(var(--pr-gold) / 0.08), transparent 65%),
+          radial-gradient(ellipse 95% 75% at 50% 50%, transparent 55%, hsl(var(--pr-emerald-deep) / 0.55) 100%),
+          linear-gradient(180deg, hsl(var(--pr-emerald-deep)), hsl(var(--pr-emerald)));
+      }
+
+
+      /* Gold shimmer sweep on display text */
+      .prestige-gold-text {
+        position: relative;
+        background-size: 200% 100%;
+        animation: prestige-gold-shift 9s ease-in-out infinite;
+      }
+      @keyframes prestige-gold-shift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+
+      .prestige-shimmer {
+        position: relative;
+        overflow: hidden;
+      }
+      .prestige-shimmer::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(110deg, transparent 30%, hsl(var(--pr-gold-light) / 0.25) 50%, transparent 70%);
+        transform: translateX(-100%);
+        animation: prestige-shimmer-sweep 4.5s ease-in-out infinite;
+        pointer-events: none;
+      }
+      @keyframes prestige-shimmer-sweep {
+        0% { transform: translateX(-100%); }
+        55%, 100% { transform: translateX(100%); }
+      }
+
+      /* Ornate divider with a centered gold diamond */
+      .prestige-divider-ornate {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.85rem;
+        opacity: 0.85;
+      }
+      .prestige-divider-ornate::before,
+      .prestige-divider-ornate::after {
+        content: "";
+        height: 1px;
+        width: clamp(28px, 8vw, 80px);
+        background: linear-gradient(90deg, transparent, hsl(var(--pr-gold) / 0.7), transparent);
+      }
+      .prestige-divider-ornate > span {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        transform: rotate(45deg);
+        background: linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)));
+        box-shadow: 0 0 12px hsl(var(--pr-gold) / 0.55);
+      }
+
+      /* Premium gold-border card variant (additive) */
+      .prestige-card-gilt {
+        position: relative;
+        border-radius: 20px;
+        padding: 1.15rem;
+        background: hsl(var(--pr-emerald-mid) / 0.55);
+        backdrop-filter: blur(10px);
+        transition: transform .5s cubic-bezier(.22,1,.36,1), box-shadow .3s ease;
+      }
+      .prestige-card-gilt::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, hsl(var(--pr-gold-light) / 0.55), hsl(var(--pr-gold) / 0.18) 35%, transparent 55%, hsl(var(--pr-gold-deep) / 0.45) 100%);
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+      .prestige-card-gilt:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 70px -24px hsl(var(--pr-gold) / 0.4);
+      }
+      @media (min-width: 640px) {
+        .prestige-card-gilt { border-radius: 24px; padding: 1.5rem; }
+      }
+
+      /* Refine baseline card with inner sheen */
+      .prestige-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(180deg, hsl(0 0% 100% / 0.06), transparent 30%);
+        pointer-events: none;
+      }
+
+      /* CTA: add inner highlight + subtle rotating conic ring on hover */
+      .prestige-cta { position: relative; isolation: isolate; }
+      .prestige-cta::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: inherit;
+        background: conic-gradient(from var(--ang, 0deg), hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)), hsl(var(--pr-gold-light)));
+        opacity: 0;
+        z-index: -1;
+        transition: opacity .35s ease;
+        filter: blur(8px);
+      }
+      .prestige-cta:hover::before { opacity: 0.55; animation: prestige-spin 6s linear infinite; }
+      @keyframes prestige-spin { to { --ang: 360deg; } }
+      @property --ang {
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+      }
+
+      /* Hide duplicate floating language toggle if LandingNav already mounts one */
+      body:has(nav .prestige-lang-toggle) .prestige-hero-lang-floating { display: none; }
     `}</style>
   );
 }

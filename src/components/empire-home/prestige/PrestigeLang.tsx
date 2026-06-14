@@ -39,7 +39,7 @@ export function PrestigeLangToggle({ className = "" }: { className?: string }) {
   const { lang, setLang } = usePrestigeLang();
   return (
     <div
-      className={`inline-flex items-center rounded-full p-1 text-[11px] font-bold uppercase tracking-wider ${className}`}
+      className={`prestige-lang-toggle inline-flex items-center rounded-full p-1 text-[11px] font-bold uppercase tracking-wider ${className}`}
       style={{
         background: "hsl(var(--pr-emerald-deep) / 0.6)",
         border: "1px solid hsl(var(--pr-gold) / 0.3)",
