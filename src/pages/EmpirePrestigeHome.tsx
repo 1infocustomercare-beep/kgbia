@@ -15,6 +15,19 @@ import PrestigeProof from "@/components/empire-home/prestige/PrestigeProof";
 import PrestigeCTA from "@/components/empire-home/prestige/PrestigeCTA";
 import PrestigeProgressBar from "@/components/empire-home/prestige/PrestigeProgressBar";
 import { PrestigeLangProvider } from "@/components/empire-home/prestige/PrestigeLang";
+import {
+  PrestigeProblem,
+  PrestigeHowItWorks,
+  PrestigeAriannaDemo,
+  PrestigeCases,
+  PrestigeRoiCalculator,
+  PrestigeComparison,
+  PrestigePricing,
+  PrestigeUrgency,
+  PrestigeFAQ,
+  PrestigeLeadForm,
+  PrestigeStickyCTA,
+} from "@/components/empire-home/prestige/PrestigeConversion";
 
 import { CinematicFooter } from "@/components/empire-21st/MotionFooter";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
@@ -72,16 +85,30 @@ function EmpirePrestigeHomeInner() {
         <LandingNav />
         <PrestigeHero />
         <PrestigeMarquee />
+        {/* ─── Conversion flow: problem → solution → how → services ─── */}
+        <PrestigeProblem />
         <PrestigeStoryPinned />
+        <PrestigeHowItWorks />
         <PrestigeServices />
         <PrestigeIndustries />
+        <PrestigeAriannaDemo />
         <PrestigePortfolioCarousel />
-        <PrestigeProcess />
+        <PrestigeCases />
         <PrestigeProof />
+        <PrestigeRoiCalculator />
+        <PrestigeComparison />
+        <PrestigeProcess />
+        <PrestigePricing />
+        <PrestigeUrgency />
+        <PrestigeFAQ />
+        <PrestigeLeadForm />
         <PrestigeCTA />
         <div className="prestige-dark">
           <CinematicFooter />
         </div>
+
+        {/* Sticky mobile CTA — appears after first viewport */}
+        <PrestigeStickyCTA />
 
         {!isPreview && <SafeVoiceAgent />}
       </div>
