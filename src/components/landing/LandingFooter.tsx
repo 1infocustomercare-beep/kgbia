@@ -17,7 +17,7 @@ export default function LandingFooter() {
               EMPIRE.AI
             </div>
             <p className="max-w-[260px] text-[13px] leading-[1.7] text-muted-foreground">
-              La piattaforma AI che automatizza ogni processo del tuo business. 98 agenti IA, 25+ settori, risultati garantiti.
+              La piattaforma AI che automatizza ogni processo del tuo business. 38 agenti IA, 25+ settori, risultati garantiti.
             </p>
           </div>
           <div>
