@@ -517,41 +517,24 @@ export default function PrestigeTheme() {
 
       /* ── Scroll reveal (auto-bound via PrestigeEffects) ───────────── */
       .prestige-reveal {
-        opacity: 0;
-        transform: translateY(28px);
-        filter: blur(6px);
+        opacity: 0.001;
+        transform: translateY(20px);
         transition:
-          opacity .9s cubic-bezier(.22,1,.36,1),
-          transform .9s cubic-bezier(.22,1,.36,1),
-          filter .9s cubic-bezier(.22,1,.36,1);
-        will-change: opacity, transform, filter;
+          opacity .7s cubic-bezier(.22,1,.36,1),
+          transform .7s cubic-bezier(.22,1,.36,1);
+        will-change: opacity, transform;
       }
-      .prestige-reveal.is-revealed { opacity: 1; transform: none; filter: blur(0); }
-      .prestige-reveal .prestige-card,
-      .prestige-reveal .prestige-card-gilt,
-      .prestige-reveal article,
-      .prestige-reveal figure {
-        opacity: 0;
-        transform: translateY(18px);
-        transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1);
-        transition-delay: calc(var(--reveal-i, 0) * 70ms + 120ms);
-      }
-      .prestige-reveal.is-revealed .prestige-card,
-      .prestige-reveal.is-revealed .prestige-card-gilt,
-      .prestige-reveal.is-revealed article,
-      .prestige-reveal.is-revealed figure {
-        opacity: 1;
-        transform: none;
+      .prestige-reveal.is-revealed { opacity: 1; transform: none; }
+      /* Pinned/sticky sections must always be visible — they manage their own animation */
+      [data-section="prestige-story"].prestige-reveal,
+      [data-section="prestige-hero"].prestige-reveal {
+        opacity: 1 !important;
+        transform: none !important;
       }
       @media (prefers-reduced-motion: reduce) {
-        .prestige-reveal,
-        .prestige-reveal .prestige-card,
-        .prestige-reveal .prestige-card-gilt,
-        .prestige-reveal article,
-        .prestige-reveal figure {
+        .prestige-reveal {
           opacity: 1 !important;
           transform: none !important;
-          filter: none !important;
           transition: none !important;
         }
         .prestige-aurora__layer,
