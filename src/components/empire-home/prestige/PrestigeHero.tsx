@@ -65,8 +65,8 @@ export default function PrestigeHero() {
       className="prestige-section prestige-dark relative min-h-[100svh] flex items-center overflow-x-clip"
       style={{ paddingTop: "max(120px, 15svh)", paddingBottom: "8svh" }}
     >
-      {/* Lang toggle — top-right, scaled down on mobile to never collide with eyebrow */}
-      <div className="absolute right-3 top-[72px] z-20 scale-90 origin-top-right sm:right-6 sm:top-[92px] sm:scale-100">
+      {/* Lang toggle — top-right floating; auto-hidden when LandingNav already mounts one (see PrestigeTheme) */}
+      <div className="prestige-hero-lang-floating absolute right-3 top-[72px] z-20 scale-90 origin-top-right sm:right-6 sm:top-[92px] sm:scale-100">
         <PrestigeLangToggle />
       </div>
 
