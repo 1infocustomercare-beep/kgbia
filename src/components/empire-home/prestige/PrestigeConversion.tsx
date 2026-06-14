@@ -321,8 +321,8 @@ export function PrestigeComparison() {
             <span className="prestige-gold-text italic">{t({ it: "il vecchio modo.", en: "the old way." })}</span>
           </h2>
         </div>
-        <div className="mt-10 overflow-x-auto rounded-2xl border" style={{ borderColor: "hsl(var(--pr-gold) / 0.25)", background: "hsl(var(--pr-emerald-mid) / 0.45)" }}>
-          <table className="w-full text-sm min-w-[560px]">
+        <div className="prestige-compare-wrap mt-10 overflow-x-auto rounded-2xl border" style={{ borderColor: "hsl(var(--pr-gold) / 0.25)", background: "hsl(var(--pr-emerald-mid) / 0.45)" }}>
+          <table className="prestige-compare-table w-full text-sm min-w-[560px]">
             <thead>
               <tr style={{ background: "hsl(var(--pr-emerald-deep) / 0.8)" }}>
                 <th className="p-4 text-left font-semibold" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>{t({ it: "Caratteristica", en: "Feature" })}</th>
@@ -335,9 +335,9 @@ export function PrestigeComparison() {
               {rows.map((r, i) => (
                 <tr key={i} style={{ borderTop: "1px solid hsl(var(--pr-gold) / 0.12)" }}>
                   <td className="p-4 font-medium" style={{ color: "hsl(var(--pr-text-on-dark))" }}>{t(r.k)}</td>
-                  <td className="p-4 text-center" style={{ background: "hsl(var(--pr-gold) / 0.05)" }}><Cell v={r.empire} /></td>
-                  <td className="p-4 text-center" style={{ color: "hsl(var(--pr-muted-on-dark))" }}><Cell v={r.agency} /></td>
-                  <td className="p-4 text-center" style={{ color: "hsl(var(--pr-muted-on-dark))" }}><Cell v={r.staff} /></td>
+                  <td data-label="Empire" className="p-4 text-center" style={{ background: "hsl(var(--pr-gold) / 0.05)" }}><Cell v={r.empire} /></td>
+                  <td data-label={t({ it: "Agenzia", en: "Agency" })} className="p-4 text-center" style={{ color: "hsl(var(--pr-muted-on-dark))" }}><Cell v={r.agency} /></td>
+                  <td data-label={t({ it: "Staff", en: "Staff" })} className="p-4 text-center" style={{ color: "hsl(var(--pr-muted-on-dark))" }}><Cell v={r.staff} /></td>
                 </tr>
               ))}
             </tbody>

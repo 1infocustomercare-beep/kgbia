@@ -28,9 +28,21 @@ export default function PrestigeTheme() {
         position: relative;
       }
 
+      .prestige-root,
+      .prestige-root * {
+        box-sizing: border-box;
+      }
+
+      .prestige-root img,
+      .prestige-root video,
+      .prestige-root canvas {
+        max-width: 100%;
+      }
+
       .prestige-section {
         position: relative;
-        overflow: hidden;
+        overflow-x: clip;
+        overflow-y: visible;
       }
 
       .prestige-dark {
@@ -514,6 +526,101 @@ export default function PrestigeTheme() {
 
       /* Keep content above aurora */
       .prestige-root > *:not(.prestige-aurora):not(.prestige-noise) { position: relative; z-index: 2; }
+
+      /* Mobile stability guardrails: no vertically clipped sections, no sticky viewport traps. */
+      @media (max-width: 767px) {
+        [data-section="prestige-hero"] {
+          min-height: auto !important;
+          align-items: flex-start !important;
+          padding-top: 8.75rem !important;
+          padding-bottom: 6rem !important;
+        }
+        .prestige-hero-phone-stage {
+          margin-top: 1.5rem;
+          width: min(70vw, 240px) !important;
+        }
+        .prestige-scroll-hint {
+          display: none !important;
+        }
+        .prestige-section {
+          overflow-x: clip;
+          overflow-y: visible;
+        }
+        [data-section="prestige-story"] {
+          height: auto !important;
+          min-height: 0 !important;
+        }
+        [data-section="prestige-story"] > .prestige-story-sticky {
+          position: relative !important;
+          top: auto !important;
+          height: auto !important;
+          min-height: 0 !important;
+          overflow: visible !important;
+          padding-top: 4.5rem !important;
+          padding-bottom: 4.5rem !important;
+        }
+        [data-section="prestige-story"] .prestige-card {
+          transform: none !important;
+          opacity: 1 !important;
+          filter: none !important;
+        }
+        .prestige-cta,
+        .prestige-cta-ghost {
+          min-height: 44px;
+          white-space: normal;
+          text-align: center;
+        }
+        .prestige-compare-wrap {
+          overflow: visible !important;
+          border-radius: 18px !important;
+          background: transparent !important;
+        }
+        .prestige-compare-table,
+        .prestige-compare-table thead,
+        .prestige-compare-table tbody,
+        .prestige-compare-table tr,
+        .prestige-compare-table th,
+        .prestige-compare-table td {
+          display: block;
+          width: 100% !important;
+          min-width: 0 !important;
+        }
+        .prestige-compare-table thead {
+          display: none;
+        }
+        .prestige-compare-table tr {
+          margin-bottom: 0.85rem;
+          overflow: hidden;
+          border: 1px solid hsl(var(--pr-gold) / 0.22) !important;
+          border-radius: 16px;
+          background: hsl(var(--pr-emerald-mid) / 0.48);
+        }
+        .prestige-compare-table td {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          padding: 0.85rem 1rem !important;
+          text-align: right !important;
+          border-top: 1px solid hsl(var(--pr-gold) / 0.10);
+        }
+        .prestige-compare-table td:first-child {
+          display: block;
+          border-top: 0;
+          text-align: left !important;
+          background: hsl(var(--pr-emerald-deep) / 0.72);
+        }
+        .prestige-compare-table td:not(:first-child)::before {
+          content: attr(data-label);
+          flex: 1;
+          text-align: left;
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: hsl(var(--pr-muted-on-dark));
+        }
+      }
 
       /* ── Scroll reveal (auto-bound via PrestigeEffects) ───────────── */
       .prestige-reveal {

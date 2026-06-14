@@ -34,7 +34,7 @@ export default function PrestigeStoryPinned() {
       className="prestige-section prestige-dark relative scroll-mt-24"
       style={{ height: "min(200svh, 1600px)" }}
     >
-      <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pt-20 sm:pt-16">
+      <div className="prestige-story-sticky sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pt-20 sm:pt-16">
 
         {/* Sfondo che vira da rosso bruciato a oro smeraldo */}
         <div

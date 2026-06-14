@@ -23,6 +23,9 @@ export default function PrestigeEffects() {
     revealTargets.forEach((el) => el.classList.add("prestige-reveal"));
 
     const reveal = (el: Element) => el.classList.add("is-revealed");
+    if (prefersReduced || isCoarse) {
+      revealTargets.forEach(reveal);
+    }
 
     const io = new IntersectionObserver(
       (entries) => {
