@@ -5,25 +5,21 @@ import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import PrestigeEffects from "@/components/empire-home/prestige/PrestigeEffects";
 import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
-import PrestigeStoryPinned from "@/components/empire-home/prestige/PrestigeStoryPinned";
 import PrestigeMarquee from "@/components/empire-home/prestige/PrestigeMarquee";
+import PrestigeUnifiedNarrative from "@/components/empire-home/prestige/PrestigeUnifiedNarrative";
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolioCarousel from "@/components/empire-home/prestige/PrestigePortfolioCarousel";
-import PrestigeProcess from "@/components/empire-home/prestige/PrestigeProcess";
 import PrestigeProof from "@/components/empire-home/prestige/PrestigeProof";
 import PrestigeCTA from "@/components/empire-home/prestige/PrestigeCTA";
 import PrestigeProgressBar from "@/components/empire-home/prestige/PrestigeProgressBar";
 import { PrestigeLangProvider } from "@/components/empire-home/prestige/PrestigeLang";
 import {
-  PrestigeProblem,
-  PrestigeHowItWorks,
   PrestigeAriannaDemo,
   PrestigeCases,
   PrestigeRoiCalculator,
   PrestigeComparison,
   PrestigePricing,
-  PrestigeUrgency,
   PrestigeFAQ,
   PrestigeLeadForm,
   PrestigeStickyCTA,
