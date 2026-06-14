@@ -47,7 +47,7 @@ export default function LandingFooter() {
         </div>
 
         <div className="flex flex-col items-center justify-between gap-3 border-t border-border pt-8 md:flex-row">
-          <span className="text-[12px] text-muted-foreground/70">© 2024 Empire AI Group — Tutti i diritti riservati · P.IVA IT00000000000</span>
+          <span className="text-[12px] text-muted-foreground/70">© 2026 Empire AI Group — Tutti i diritti riservati</span>
           <span className="text-[12px] text-muted-foreground/70">Made with precision in Italy</span>
         </div>
       </div>
