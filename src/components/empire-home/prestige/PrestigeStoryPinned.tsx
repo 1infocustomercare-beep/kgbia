@@ -1,4 +1,3 @@
-import { useEmpireScrollDirector } from "../ScrollDirector";
 import { AlertTriangle, Phone, Clock, TrendingDown, Bot, Calendar, MessageSquare, TrendingUp, ArrowRight } from "lucide-react";
 import { useT } from "./PrestigeLang";
 
@@ -17,34 +16,28 @@ const SOLUZIONI = [
 ];
 
 /**
- * PrestigeStoryPinned — sezione sticky con horizontal scroll guidato dal verticale.
- * Trasforma "Caos" in "Empire" mentre l'utente scorre; usa --empire-progress.
+ * PrestigeStoryPinned — intentionally non-sticky.
+ * This section used to be scroll-driven; keeping it natural prevents clipped cards
+ * on short desktop viewports and mobile browsers with dynamic address bars.
  */
 export default function PrestigeStoryPinned() {
   const t = useT();
-  const { ref, progress } = useEmpireScrollDirector<HTMLDivElement>("prestige-story", { steps: 4 });
-
-  // mappa progress → split di transizione (0..1) tra caos e empire
-  const split = Math.min(1, Math.max(0, (progress - 0.18) / 0.6));
 
   return (
     <section
-      ref={ref}
       data-section="prestige-story"
-      className="prestige-section prestige-dark relative scroll-mt-24"
-      style={{ height: "min(200svh, 1600px)" }}
+      data-no-reveal
+      className="prestige-section prestige-story-safe prestige-dark relative scroll-mt-24 overflow-visible py-20 sm:py-24 lg:py-28"
     >
-      <div className="prestige-story-sticky sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pt-20 sm:pt-16">
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 45% at 20% 35%, hsl(0 62% 24% / 0.28), transparent 62%), radial-gradient(ellipse 68% 48% at 82% 58%, hsl(var(--pr-gold) / 0.18), transparent 64%)",
+        }}
+      />
 
-        {/* Sfondo che vira da rosso bruciato a oro smeraldo */}
-        <div
-          className="absolute inset-0 transition-[background] duration-200"
-          style={{
-            background: `radial-gradient(ellipse 60% 45% at ${20 + split * 60}% 50%, hsl(${0 + split * 158} ${60 + split * 10}% ${20 + split * 25}% / ${0.5 - split * 0.2}), transparent 60%)`,
-          }}
-        />
-
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-5 lg:px-10">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-5 lg:px-10">
           {/* Headline */}
           <div className="text-center">
             <div
@@ -57,17 +50,16 @@ export default function PrestigeStoryPinned() {
               <span
                 className="italic line-through"
                 style={{
-                  color: `hsl(0 ${70 - split * 70}% ${65 - split * 25}% / ${1 - split * 0.7})`,
-                  textDecorationColor: `hsl(0 70% 60% / ${1 - split})`,
-                  transition: "color .3s",
+                  color: "hsl(0 68% 72% / 0.78)",
+                  textDecorationColor: "hsl(0 70% 60% / 0.78)",
                 }}
               >
                 {t({ it: "Caos quotidiano", en: "Daily chaos" })}
               </span>{" "}
-              <span style={{ opacity: 0.4 + split * 0.6 }}>→</span>{" "}
+              <span style={{ opacity: 0.85 }}>→</span>{" "}
               <span
                 className="prestige-gold-text italic"
-                style={{ opacity: 0.3 + split * 0.7, transition: "opacity .3s" }}
+                style={{ opacity: 1 }}
               >
                 {t({ it: "Impero ordinato", en: "Ordered empire" })}
               </span>
@@ -76,17 +68,13 @@ export default function PrestigeStoryPinned() {
           </div>
 
 
-          {/* Track orizzontale: due colonne che si scambiano peso visivo */}
-          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+          {/* Stable comparison grid: no sticky, no scroll transforms, no clipping. */}
+          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-stretch">
             {/* PRIMA */}
             <div
-              className="prestige-card"
+              className="prestige-card h-full min-w-0"
               style={{
-                borderColor: `hsl(0 ${60 - split * 30}% 50% / ${0.45 - split * 0.3})`,
-                opacity: 1 - split * 0.55,
-                transform: `translateX(${-split * 40}px) scale(${1 - split * 0.06})`,
-                filter: `grayscale(${split * 0.6}) blur(${split * 1.5}px)`,
-                transition: "transform .25s linear, opacity .25s linear, filter .25s linear",
+                borderColor: "hsl(0 62% 54% / 0.42)",
               }}
             >
               <div className="prestige-eyebrow mb-3" style={{ color: "hsl(0 70% 70%)" }}>
@@ -124,9 +112,7 @@ export default function PrestigeStoryPinned() {
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))",
                   color: "hsl(var(--pr-emerald-deep))",
-                  boxShadow: `0 0 ${20 + split * 50}px hsl(var(--pr-gold) / ${0.3 + split * 0.6})`,
-                  transform: `scale(${0.85 + split * 0.4}) rotate(${split * 360}deg)`,
-                  transition: "transform .25s linear, box-shadow .25s linear",
+                  boxShadow: "0 0 42px hsl(var(--pr-gold) / 0.42)",
                 }}
               >
                 <ArrowRight size={32} strokeWidth={2.5} />
@@ -138,21 +124,16 @@ export default function PrestigeStoryPinned() {
                 className="rotate-90"
                 style={{
                   color: "hsl(var(--pr-gold))",
-                  transform: `rotate(${90 + split * 180}deg) scale(${0.9 + split * 0.4})`,
-                  transition: "transform .25s linear",
                 }}
               />
             </div>
 
             {/* DOPO */}
             <div
-              className="prestige-card"
+              className="prestige-card h-full min-w-0"
               style={{
-                borderColor: `hsl(var(--pr-gold) / ${0.2 + split * 0.45})`,
-                transform: `translateX(${split * 40}px) scale(${0.94 + split * 0.06})`,
-                opacity: 0.55 + split * 0.45,
-                boxShadow: `0 ${20 + split * 30}px ${40 + split * 40}px -20px hsl(var(--pr-gold) / ${0.15 + split * 0.4})`,
-                transition: "transform .25s linear, opacity .25s linear, box-shadow .25s linear",
+                borderColor: "hsl(var(--pr-gold) / 0.55)",
+                boxShadow: "0 32px 70px -28px hsl(var(--pr-gold) / 0.35)",
               }}
             >
               <div className="prestige-eyebrow mb-3" style={{ color: "hsl(var(--pr-gold-light))" }}>
@@ -183,24 +164,6 @@ export default function PrestigeStoryPinned() {
               </ul>
             </div>
           </div>
-
-          {/* Progress dots della sezione */}
-          <div className="mt-10 flex justify-center gap-1.5">
-            {[0, 0.33, 0.66, 1].map((threshold, i) => {
-              const active = split >= threshold - 0.05;
-              return (
-                <span
-                  key={i}
-                  className="h-1 rounded-full transition-all duration-300"
-                  style={{
-                    width: active ? 28 : 8,
-                    background: active ? "hsl(var(--pr-gold))" : "hsl(var(--pr-gold) / 0.25)",
-                  }}
-                />
-              );
-            })}
-          </div>
-        </div>
       </div>
     </section>
   );
