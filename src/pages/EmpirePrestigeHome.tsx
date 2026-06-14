@@ -81,10 +81,8 @@ function EmpirePrestigeHomeInner() {
         <LandingNav />
         <PrestigeHero />
         <PrestigeMarquee />
-        {/* ─── Conversion flow: problem → solution → how → services ─── */}
-        <PrestigeProblem />
-        <PrestigeStoryPinned />
-        <PrestigeHowItWorks />
+        {/* ─── Conversion flow: problem + solution + how (unified) → services ─── */}
+        <PrestigeUnifiedNarrative />
         <PrestigeServices />
         <PrestigeIndustries />
         <PrestigeAriannaDemo />
@@ -93,9 +91,7 @@ function EmpirePrestigeHomeInner() {
         <PrestigeProof />
         <PrestigeRoiCalculator />
         <PrestigeComparison />
-        <PrestigeProcess />
         <PrestigePricing />
-        <PrestigeUrgency />
         <PrestigeFAQ />
         <PrestigeLeadForm />
         <PrestigeCTA />
