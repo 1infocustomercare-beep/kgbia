@@ -17,7 +17,7 @@ const MOCKUPS = [
   { src: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, label: "FAR Medical", cat: "Healthcare", accent: "#60a5fa" },
 ];
 
-const TRUST = ["847+ Imprese Attive", "25+ Settori", "98 Agenti IA", "Garanzia 90 Giorni"];
+const TRUST = ["847+ Imprese Attive", "24 Settori", "38 Agenti IA", "Garanzia 90 Giorni"];
 
 /* ── Interactive Featured Phone ── */
 function FeaturedPhone({ m, isActive, onClick }: { m: typeof MOCKUPS[0]; isActive: boolean; onClick: () => void }) {

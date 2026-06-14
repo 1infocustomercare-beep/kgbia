@@ -1,4 +1,4 @@
-const ITEMS = "Stripe Connect · Crittografia AES-256 · PWA Certified · GDPR Compliant · 99.9% Uptime · 98 Agenti IA Autonomi · 100% Made in Italy · White Label · 25+ Settori Verticali · Operativo in 24h · ROI Garantito 90 Giorni · Zero Costi Nascosti";
+const ITEMS = "Stripe Connect · Crittografia AES-256 · PWA Certified · GDPR Compliant · 99.9% Uptime · 38 Agenti IA Autonomi · 100% Made in Italy · White Label · 24 Settori Verticali · Operativo in 24h · ROI Garantito 90 Giorni · Zero Costi Nascosti";
 
 export default function LandingTicker() {
   return (
