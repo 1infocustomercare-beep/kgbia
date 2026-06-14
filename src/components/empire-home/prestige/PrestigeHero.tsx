@@ -22,7 +22,10 @@ export default function PrestigeHero() {
 
   // Responsive phone width
   useEffect(() => {
-    const compute = () => setPhoneW(Math.round(Math.min(320, window.innerWidth * 0.78)));
+    const compute = () => {
+      const isMobile = window.innerWidth < 640;
+      setPhoneW(Math.round(Math.min(isMobile ? 240 : 320, window.innerWidth * (isMobile ? 0.62 : 0.78))));
+    };
     compute();
     window.addEventListener("resize", compute);
     return () => window.removeEventListener("resize", compute);
@@ -145,7 +148,7 @@ export default function PrestigeHero() {
         <div className="lg:col-span-5">
           <div
             ref={stageRef}
-            className="relative mx-auto"
+            className="prestige-hero-phone-stage relative mx-auto"
             style={{
               perspective: "1400px",
               transform: `translateY(calc(var(--empire-progress, 0) * -24px))`,
@@ -198,7 +201,7 @@ export default function PrestigeHero() {
       </div>
 
       {/* Scroll hint */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em]" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+      <div className="prestige-scroll-hint absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em]" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
         SCORRI PER SCOPRIRE ↓
       </div>
     </section>
