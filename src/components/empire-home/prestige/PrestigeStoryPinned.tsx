@@ -16,8 +16,9 @@ const SOLUZIONI = [
 ];
 
 /**
- * PrestigeStoryPinned — sezione sticky con horizontal scroll guidato dal verticale.
- * Trasforma "Caos" in "Empire" mentre l'utente scorre; usa --empire-progress.
+ * PrestigeStoryPinned — intentionally non-sticky.
+ * This section used to be scroll-driven; keeping it natural prevents clipped cards
+ * on short desktop viewports and mobile browsers with dynamic address bars.
  */
 export default function PrestigeStoryPinned() {
   const t = useT();
@@ -26,7 +27,7 @@ export default function PrestigeStoryPinned() {
     <section
       data-section="prestige-story"
       data-no-reveal
-      className="prestige-section prestige-dark relative scroll-mt-24 overflow-visible py-20 sm:py-24 lg:py-28"
+      className="prestige-section prestige-story-safe prestige-dark relative scroll-mt-24 overflow-visible py-20 sm:py-24 lg:py-28"
     >
       <div
         className="absolute inset-0 pointer-events-none"
@@ -67,11 +68,11 @@ export default function PrestigeStoryPinned() {
           </div>
 
 
-          {/* Track orizzontale: due colonne che si scambiano peso visivo */}
-          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+          {/* Stable comparison grid: no sticky, no scroll transforms, no clipping. */}
+          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-stretch">
             {/* PRIMA */}
             <div
-              className="prestige-card"
+              className="prestige-card h-full min-w-0"
               style={{
                 borderColor: "hsl(0 62% 54% / 0.42)",
               }}
@@ -129,7 +130,7 @@ export default function PrestigeStoryPinned() {
 
             {/* DOPO */}
             <div
-              className="prestige-card"
+              className="prestige-card h-full min-w-0"
               style={{
                 borderColor: "hsl(var(--pr-gold) / 0.55)",
                 boxShadow: "0 32px 70px -28px hsl(var(--pr-gold) / 0.35)",
