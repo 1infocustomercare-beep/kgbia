@@ -437,7 +437,58 @@ function AppView({ s }: { s: SectorMeta }) {
         Catalogo
       </div>
       <div className="space-y-1.5 px-3" style={{ maxHeight: "62%", overflow: "hidden" }}>
-        {s.catalog.map((p) => (
+        {/* Featured card with real photo */}
+        {s.catalog[0] && (
+          <div
+            className="relative overflow-hidden rounded-lg"
+            style={{
+              height: 78,
+              border: "1px solid rgba(212,175,55,0.3)",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.4)",
+            }}
+          >
+            <img
+              src={s.dish}
+              alt={s.catalog[0].name}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(4,19,14,0.85) 0%, rgba(4,19,14,0.35) 55%, rgba(4,19,14,0.1) 100%)",
+              }}
+            />
+            <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-2.5" style={{ width: "62%" }}>
+              <div className="text-[6px] uppercase tracking-[0.15em]" style={{ color: "#E8D9A0" }}>
+                Signature
+              </div>
+              <div
+                className="mt-0.5 text-[11px] leading-tight"
+                style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#F5F1E6", fontWeight: 600 }}
+              >
+                {s.catalog[0].name}
+              </div>
+              <div className="mt-0.5 truncate text-[7px]" style={{ color: "#C9D4CE" }}>
+                {s.catalog[0].sub}
+              </div>
+              <div className="mt-1 flex items-center gap-1.5">
+                <span className="text-[10px] font-bold" style={{ color: "#E8D9A0" }}>
+                  {s.catalog[0].price}
+                </span>
+                <span
+                  className="rounded-full px-2 py-[2px] text-[6px] font-bold uppercase tracking-wider"
+                  style={{ background: "linear-gradient(90deg, #D4AF37, #E8D9A0)", color: "#04130E" }}
+                >
+                  Aggiungi
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Remaining items as compact rows */}
+        {s.catalog.slice(1).map((p) => (
           <div
             key={p.name}
             className="flex items-center gap-2 rounded-lg p-1.5"
@@ -447,13 +498,17 @@ function AppView({ s }: { s: SectorMeta }) {
             }}
           >
             <div
-              className="h-8 w-8 shrink-0 rounded-md"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(212,175,55,0.35), rgba(10,42,30,0.9))",
-                border: "1px solid rgba(212,175,55,0.3)",
-              }}
-            />
+              className="h-8 w-8 shrink-0 overflow-hidden rounded-md"
+              style={{ border: "1px solid rgba(212,175,55,0.3)" }}
+            >
+              <img
+                src={s.dish}
+                alt={p.name}
+                loading="lazy"
+                className="h-full w-full object-cover"
+                style={{ filter: "saturate(1.05) brightness(0.95)" }}
+              />
+            </div>
             <div className="min-w-0 flex-1">
               <div className="truncate text-[9px] font-semibold" style={{ color: "#F5F1E6" }}>
                 {p.name}
