@@ -104,6 +104,8 @@ const SECTORS: Record<EmpireSector, SectorMeta> = {
       { label: "Prenota", icon: Calendar },
       { label: "Chat", icon: MessageCircle },
     ],
+    hero: restaurantHero,
+    dish: restaurantDish,
   },
   beauty: {
     brand: "Aurea Spa",
@@ -146,6 +148,8 @@ const SECTORS: Record<EmpireSector, SectorMeta> = {
       { label: "Agenda", icon: Calendar },
       { label: "Chat", icon: MessageCircle },
     ],
+    hero: beautyHero,
+    dish: beautyDish,
   },
   fitness: {
     brand: "Vertex Club",
@@ -188,6 +192,8 @@ const SECTORS: Record<EmpireSector, SectorMeta> = {
       { label: "Prenota", icon: Calendar },
       { label: "Chat", icon: MessageCircle },
     ],
+    hero: fitnessHero,
+    dish: fitnessDish,
   },
   realestate: {
     brand: "Dimore Smeraldo",
@@ -230,6 +236,8 @@ const SECTORS: Record<EmpireSector, SectorMeta> = {
       { label: "Agenda", icon: Calendar },
       { label: "Chat", icon: MessageCircle },
     ],
+    hero: realestateHero,
+    dish: realestateDish,
   },
 };
 
