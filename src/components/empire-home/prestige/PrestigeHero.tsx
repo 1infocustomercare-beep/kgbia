@@ -65,7 +65,7 @@ export default function PrestigeHero() {
     <section
       ref={ref}
       data-section="prestige-hero"
-      className="prestige-section prestige-dark relative flex items-center overflow-x-clip"
+      className="prestige-section prestige-dark relative flex items-center overflow-hidden"
       style={{ paddingTop: "clamp(96px, 12svh, 140px)", paddingBottom: "clamp(64px, 8svh, 96px)", minHeight: "auto" }}
     >
       {/* Lang toggle — top-right floating; auto-hidden when LandingNav already mounts one (see PrestigeTheme) */}
@@ -144,14 +144,17 @@ export default function PrestigeHero() {
         </div>
 
         {/* RIGHT — iPhone stage */}
-        <div className="lg:col-span-5 pb-10 lg:pb-0">
+        <div className="lg:col-span-5 pb-10 lg:pb-0 overflow-hidden">
           <div
             ref={stageRef}
-            className="prestige-hero-phone-stage relative mx-auto"
+            className="prestige-hero-phone-stage relative mx-auto will-change-transform"
             style={{
               perspective: "1400px",
               width: "min(86vw, 320px)",
               aspectRatio: "9 / 19.5",
+              // Clamped parallax: max ±20px so the phone never overflows the section.
+              transform:
+                "translate3d(0, clamp(-20px, calc(var(--empire-progress, 0) * -28px), 20px), 0)",
             }}
           >
             {HERO_MOCKS.map((src, i) => {
