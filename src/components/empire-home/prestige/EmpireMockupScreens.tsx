@@ -23,6 +23,15 @@ import {
 } from "lucide-react";
 import type { PhoneView } from "./PrestigePhone";
 
+import restaurantHero from "@/assets/empire-mockups/restaurant-hero.jpg";
+import restaurantDish from "@/assets/empire-mockups/restaurant-dish.jpg";
+import beautyHero from "@/assets/empire-mockups/beauty-hero.jpg";
+import beautyDish from "@/assets/empire-mockups/beauty-dish.jpg";
+import fitnessHero from "@/assets/empire-mockups/fitness-hero.jpg";
+import fitnessDish from "@/assets/empire-mockups/fitness-dish.jpg";
+import realestateHero from "@/assets/empire-mockups/realestate-hero.jpg";
+import realestateDish from "@/assets/empire-mockups/realestate-dish.jpg";
+
 /**
  * Empire native iPhone screens — Emerald Prestige design system.
  * Palette: emerald #04130E→#0A2A1E · gold #D4AF37 / #E8D9A0 · ivory #F5F1E6.
@@ -49,6 +58,8 @@ interface SectorMeta {
   chat: { from: "in" | "out"; text: string; time: string }[];
   quickReplies: string[];
   tab: { label: string; icon: typeof Home }[];
+  hero: string;
+  dish: string;
 }
 
 const SECTORS: Record<EmpireSector, SectorMeta> = {
@@ -93,6 +104,8 @@ const SECTORS: Record<EmpireSector, SectorMeta> = {
       { label: "Prenota", icon: Calendar },
       { label: "Chat", icon: MessageCircle },
     ],
+    hero: restaurantHero,
+    dish: restaurantDish,
   },
   beauty: {
     brand: "Aurea Spa",
@@ -135,6 +148,8 @@ const SECTORS: Record<EmpireSector, SectorMeta> = {
       { label: "Agenda", icon: Calendar },
       { label: "Chat", icon: MessageCircle },
     ],
+    hero: beautyHero,
+    dish: beautyDish,
   },
   fitness: {
     brand: "Vertex Club",
@@ -177,6 +192,8 @@ const SECTORS: Record<EmpireSector, SectorMeta> = {
       { label: "Prenota", icon: Calendar },
       { label: "Chat", icon: MessageCircle },
     ],
+    hero: fitnessHero,
+    dish: fitnessDish,
   },
   realestate: {
     brand: "Dimore Smeraldo",
@@ -219,6 +236,8 @@ const SECTORS: Record<EmpireSector, SectorMeta> = {
       { label: "Agenda", icon: Calendar },
       { label: "Chat", icon: MessageCircle },
     ],
+    hero: realestateHero,
+    dish: realestateDish,
   },
 };
 
@@ -321,27 +340,41 @@ function HomeView({ s }: { s: SectorMeta }) {
   return (
     <ScreenShell>
       <Header s={s} />
-      {/* Hero */}
+      {/* Hero — photo with brand overlay */}
       <div
         className="relative mx-3 overflow-hidden rounded-xl"
         style={{
           height: "44%",
-          background:
-            "linear-gradient(135deg, rgba(212,175,55,0.18) 0%, rgba(10,42,30,0.9) 60%), radial-gradient(circle at 70% 30%, rgba(232,217,160,0.3), transparent 60%)",
-          border: "1px solid rgba(212,175,55,0.28)",
+          border: "1px solid rgba(212,175,55,0.32)",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(232,217,160,0.08)",
         }}
       >
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-3 text-center">
-          <HeroIcon size={32} color="#E8D9A0" strokeWidth={1.4} />
+        <img
+          src={s.hero}
+          alt={s.brand}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ filter: "saturate(1.05) contrast(1.02)" }}
+        />
+        {/* gradient veil for text legibility */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(4,19,14,0.15) 0%, rgba(4,19,14,0.55) 55%, rgba(4,19,14,0.92) 100%)",
+          }}
+        />
+        <div className="absolute inset-x-0 bottom-0 flex flex-col items-center px-3 pb-3 text-center">
+          <HeroIcon size={18} color="#E8D9A0" strokeWidth={1.6} />
           <div
-            className="mt-1.5 text-[14px] leading-tight"
-            style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#F5F1E6", fontWeight: 600 }}
+            className="mt-1 text-[15px] leading-tight"
+            style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#F5F1E6", fontWeight: 600, letterSpacing: "0.01em" }}
           >
             {s.brand}
           </div>
           <div
             className="mx-auto mt-1 h-px"
-            style={{ width: 28, background: "linear-gradient(90deg, transparent, #D4AF37, transparent)" }}
+            style={{ width: 34, background: "linear-gradient(90deg, transparent, #D4AF37, transparent)" }}
           />
           <div className="mt-1 text-[7px] uppercase tracking-[0.18em]" style={{ color: "#E8D9A0" }}>
             {s.tagline}
@@ -351,7 +384,7 @@ function HomeView({ s }: { s: SectorMeta }) {
             style={{
               background: "linear-gradient(90deg, #D4AF37, #E8D9A0)",
               color: "#04130E",
-              boxShadow: "0 4px 12px rgba(212,175,55,0.35)",
+              boxShadow: "0 4px 12px rgba(212,175,55,0.45)",
             }}
           >
             {s.primaryCta}
@@ -404,7 +437,58 @@ function AppView({ s }: { s: SectorMeta }) {
         Catalogo
       </div>
       <div className="space-y-1.5 px-3" style={{ maxHeight: "62%", overflow: "hidden" }}>
-        {s.catalog.map((p) => (
+        {/* Featured card with real photo */}
+        {s.catalog[0] && (
+          <div
+            className="relative overflow-hidden rounded-lg"
+            style={{
+              height: 78,
+              border: "1px solid rgba(212,175,55,0.3)",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.4)",
+            }}
+          >
+            <img
+              src={s.dish}
+              alt={s.catalog[0].name}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(4,19,14,0.85) 0%, rgba(4,19,14,0.35) 55%, rgba(4,19,14,0.1) 100%)",
+              }}
+            />
+            <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-2.5" style={{ width: "62%" }}>
+              <div className="text-[6px] uppercase tracking-[0.15em]" style={{ color: "#E8D9A0" }}>
+                Signature
+              </div>
+              <div
+                className="mt-0.5 text-[11px] leading-tight"
+                style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#F5F1E6", fontWeight: 600 }}
+              >
+                {s.catalog[0].name}
+              </div>
+              <div className="mt-0.5 truncate text-[7px]" style={{ color: "#C9D4CE" }}>
+                {s.catalog[0].sub}
+              </div>
+              <div className="mt-1 flex items-center gap-1.5">
+                <span className="text-[10px] font-bold" style={{ color: "#E8D9A0" }}>
+                  {s.catalog[0].price}
+                </span>
+                <span
+                  className="rounded-full px-2 py-[2px] text-[6px] font-bold uppercase tracking-wider"
+                  style={{ background: "linear-gradient(90deg, #D4AF37, #E8D9A0)", color: "#04130E" }}
+                >
+                  Aggiungi
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Remaining items as compact rows */}
+        {s.catalog.slice(1).map((p) => (
           <div
             key={p.name}
             className="flex items-center gap-2 rounded-lg p-1.5"
@@ -414,13 +498,17 @@ function AppView({ s }: { s: SectorMeta }) {
             }}
           >
             <div
-              className="h-8 w-8 shrink-0 rounded-md"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(212,175,55,0.35), rgba(10,42,30,0.9))",
-                border: "1px solid rgba(212,175,55,0.3)",
-              }}
-            />
+              className="h-8 w-8 shrink-0 overflow-hidden rounded-md"
+              style={{ border: "1px solid rgba(212,175,55,0.3)" }}
+            >
+              <img
+                src={s.dish}
+                alt={p.name}
+                loading="lazy"
+                className="h-full w-full object-cover"
+                style={{ filter: "saturate(1.05) brightness(0.95)" }}
+              />
+            </div>
             <div className="min-w-0 flex-1">
               <div className="truncate text-[9px] font-semibold" style={{ color: "#F5F1E6" }}>
                 {p.name}
