@@ -902,13 +902,16 @@ function AdminView({ s }: { s: SectorMeta }) {
 
 function ChatView({ s }: { s: SectorMeta }) {
   const p = s.palette;
+  const avatarR = p.badgeShape === "square" ? p.radiusSmall : p.badgeShape === "cut" ? 0 : 999;
+  const chipR = p.badgeShape === "pill" ? 999 : p.badgeShape === "cut" ? 0 : p.radiusSmall;
+  const bubbleR = Math.max(p.radius - 4, 6);
   return (
     <ScreenShell s={s}>
       <div className="flex items-center gap-2 px-3 pt-1 pb-2" style={{ borderBottom: `1px solid ${p.line}` }}>
-        <div className="flex h-7 w-7 items-center justify-center rounded-full text-[8px] font-bold" style={{ background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`, color: p.accentText }}>E</div>
+        <div className="flex h-7 w-7 items-center justify-center text-[8px] font-bold" style={{ background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`, color: p.accentText, borderRadius: avatarR, fontFamily: p.font }}>E</div>
         <div className="flex flex-col leading-none">
-          <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: "'Fraunces', Georgia, serif" }}>Empire AI</span>
-          <span className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.1em" }}>online · risponde in 12s</span>
+          <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>Empire AI</span>
+          <span className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>online · risponde in 12s</span>
         </div>
         <div className="ml-auto flex items-center gap-1 text-[7px]" style={{ color: p.muted }}><Clock size={8} /> 24/7</div>
       </div>
@@ -917,7 +920,7 @@ function ChatView({ s }: { s: SectorMeta }) {
           const out = m.from === "out";
           return (
             <div key={i} className={`flex ${out ? "justify-end" : "justify-start"}`}>
-              <div className="max-w-[78%] rounded-2xl px-2 py-1.5" style={{ background: out ? p.bubble : p.inbound, color: out ? p.text : p.accentText, border: `1px solid ${out ? p.line : "rgba(0,0,0,0.06)"}`, borderTopRightRadius: out ? 5 : 16, borderTopLeftRadius: out ? 16 : 5 }}>
+              <div className="max-w-[78%] px-2 py-1.5" style={{ background: out ? p.bubble : p.inbound, color: out ? p.text : p.accentText, border: `1px solid ${out ? p.line : "rgba(0,0,0,0.06)"}`, borderRadius: bubbleR, borderTopRightRadius: out ? Math.min(5, bubbleR) : bubbleR, borderTopLeftRadius: out ? bubbleR : Math.min(5, bubbleR), fontFamily: p.uiFont }}>
                 <div className="text-[8px] leading-snug">{m.text}</div>
                 <div className="mt-0.5 flex items-center justify-end gap-0.5 text-[6px] opacity-70">
                   {m.time}{out ? <CheckCheck size={8} color={p.accent} /> : <Check size={8} />}
@@ -929,7 +932,7 @@ function ChatView({ s }: { s: SectorMeta }) {
       </div>
       <div className="absolute inset-x-3 flex gap-1.5" style={{ bottom: "12%" }}>
         {s.quickReplies.map((q) => (
-          <div key={q} className="flex-1 rounded-full py-1 text-center text-[7px] font-bold uppercase" style={{ background: p.surface, border: `1px solid ${p.line}`, color: p.accent, letterSpacing: "0.08em" }}>{q}</div>
+          <div key={q} className="flex-1 py-1 text-center text-[7px] font-bold uppercase" style={{ background: p.surface, border: `1px solid ${p.line}`, color: p.accent, letterSpacing: p.tracking, borderRadius: chipR, fontFamily: p.uiFont }}>{q}</div>
         ))}
       </div>
       <TabBar items={s.tab} p={p} />
