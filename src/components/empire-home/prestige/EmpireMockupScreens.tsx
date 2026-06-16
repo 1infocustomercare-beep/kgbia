@@ -28,8 +28,6 @@ import {
   Utensils,
   Waves,
   Wifi,
-  Waves,
-  Wifi,
 } from "lucide-react";
 import type { PhoneView } from "./PrestigePhone";
 
