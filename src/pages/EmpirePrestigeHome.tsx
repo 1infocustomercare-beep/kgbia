@@ -43,7 +43,12 @@ import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepage
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
 const homePool = createMockupPool();
-const cardStackImages = homePool.images(6);
+const cardStackImages = homePool.images(6).map((src, i) => ({
+  id: i,
+  title: `Empire ${i + 1}`,
+  imageSrc: src,
+}));
+
 
 
 /**
