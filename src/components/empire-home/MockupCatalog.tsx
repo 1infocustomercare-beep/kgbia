@@ -178,10 +178,9 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
 
 const screenTypesFor = (sectorId: IndustryId): string[] => screenSpecsFor(sectorId).map((s) => s.type);
 
-function CatalogPhonePreview({ item, screenType, size = "lg", priority = false, className = "" }: { item: CatalogItem; screenType: string; size?: "sm" | "lg"; priority?: boolean; className?: string }) {
+function CatalogPhonePreview({ item, imageUrl, alt, size = "lg", priority = false, className = "" }: { item: CatalogItem; imageUrl: string; alt: string; size?: "sm" | "lg"; priority?: boolean; className?: string }) {
   const frameWidth = size === "sm" ? 118 : 252;
   const frameHeight = Math.round(frameWidth * 19.5 / 9);
-  const border = size === "sm" ? 3 : 5;
   return (
     <figure className={`relative flex flex-col items-center ${className}`}>
       <div className="relative shrink-0" style={{ width: frameWidth, height: frameHeight }}>
@@ -199,16 +198,13 @@ function CatalogPhonePreview({ item, screenType, size = "lg", priority = false, 
           }}
         >
           <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: size === "sm" ? 24 : 38, background: "hsl(var(--deep-black))" }}>
-            <MockupReactScreen
-              type={screenType}
-              templateVariant={templateFor(item)}
-              businessName={item.brand}
-              businessSector={item.sectorLabel}
-              businessCity="Italia"
-              width={frameWidth - border * 2}
-              height={frameHeight - border * 2}
-              glassIntensity={size === "sm" ? 50 : 64}
-              boostContrast
+            <img
+              src={imageUrl}
+              alt={alt}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover object-top"
+              draggable={false}
             />
             <div aria-hidden className="pointer-events-none absolute left-1/2 top-[2.3%] z-20 h-[4.7%] w-[33%] -translate-x-1/2 rounded-full" style={{ background: "hsl(0 0% 0%)" }} />
             <div aria-hidden className="pointer-events-none absolute inset-0 z-10" style={{ background: "linear-gradient(116deg, hsl(var(--foreground) / 0.12) 0%, transparent 30%, transparent 66%, hsl(var(--foreground) / 0.06) 100%)", mixBlendMode: "screen" }} />
@@ -306,7 +302,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                 className="group relative overflow-hidden rounded-[1.35rem] border border-foreground/10 bg-foreground/[0.035] shadow-[0_24px_80px_-48px_hsl(0_0%_0%)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/40"
               >
                 <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden bg-muted px-4 pt-8">
-                  <CatalogPhonePreview item={item} screenType="home" priority={index < 8} className="transition-transform duration-700 group-hover:scale-105" />
+                  <CatalogPhonePreview item={item} imageUrl={item.thumbnail} alt={`${item.brand} — ${item.style}`} priority={index < 8} className="transition-transform duration-700 group-hover:scale-105" />
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)_/_0)_45%,hsl(var(--background)_/_0.9)_100%)]" />
                   <div className="absolute left-3 top-3 rounded-full border border-background/40 bg-background/80 px-2 py-1 text-[9px] font-black uppercase tracking-[2px] text-primary">
                     {item.sectorLabel}
@@ -325,24 +321,27 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                   </div>
 
                   <div className="mt-3 -mx-1 flex gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    {previewSpecs.map((spec, i) => (
-                      <div
-                        key={`${item.id}-${spec.type}-${i}`}
-                        onClick={() => setSelected(isSelected ? null : item.id)}
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") setSelected(isSelected ? null : item.id);
-                        }}
-                        className="flex w-[88px] shrink-0 flex-col items-center gap-1.5 transition-transform active:scale-[0.97]"
-                        aria-label={`Mostra ${spec.label} ${item.brand}`}
-                      >
-                        <div className="relative flex h-[180px] w-[84px] items-center justify-center overflow-hidden rounded-[14px] border border-foreground/10 bg-muted">
-                          <CatalogPhonePreview item={item} screenType={spec.type} size="sm" />
+                    {previewSpecs.map((spec, i) => {
+                      const screenImg = item.screens[i] ?? item.thumbnail;
+                      return (
+                        <div
+                          key={`${item.id}-${spec.type}-${i}`}
+                          onClick={() => setSelected(isSelected ? null : item.id)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") setSelected(isSelected ? null : item.id);
+                          }}
+                          className="flex w-[88px] shrink-0 flex-col items-center gap-1.5 transition-transform active:scale-[0.97]"
+                          aria-label={`Mostra ${spec.label} ${item.brand}`}
+                        >
+                          <div className="relative flex h-[180px] w-[84px] items-center justify-center overflow-hidden rounded-[14px] border border-foreground/10 bg-muted">
+                            <CatalogPhonePreview item={item} imageUrl={screenImg} alt={`${item.brand} ${spec.label}`} size="sm" />
+                          </div>
+                          <span className="text-[9px] font-bold uppercase tracking-[1.5px] text-foreground/65 text-center leading-tight">{spec.label}</span>
                         </div>
-                        <span className="text-[9px] font-bold uppercase tracking-[1.5px] text-foreground/65 text-center leading-tight">{spec.label}</span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
 
