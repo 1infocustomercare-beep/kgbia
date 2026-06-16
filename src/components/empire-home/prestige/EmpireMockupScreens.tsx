@@ -757,43 +757,45 @@ function HomeView({ s }: { s: SectorMeta }) {
 
 function AppView({ s }: { s: SectorMeta }) {
   const p = s.palette;
+  const cardR = Math.max(p.radius - 6, 4);
+  const chipR = p.badgeShape === "pill" ? 999 : p.badgeShape === "cut" ? 0 : p.radiusSmall;
   return (
     <ScreenShell s={s}>
       <Header s={s} />
-      <div className="px-3 pb-2 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: "0.16em" }}>{s.catalogTitle}</div>
+      <div className="px-3 pb-2 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{s.catalogTitle}</div>
       <div className="space-y-1.5 px-3" style={{ maxHeight: "62%", overflow: "hidden" }}>
         {s.catalog[0] && (
-          <div className="relative overflow-hidden rounded-[16px]" style={{ height: 88, border: `1px solid ${p.line}`, boxShadow: `0 8px 22px rgba(0,0,0,0.45)` }}>
+          <div className="relative overflow-hidden" style={{ height: 88, border: `1px solid ${p.line}`, boxShadow: p.shadow, borderRadius: cardR }}>
             <img src={s.detail} alt={s.catalog[0].name} loading="lazy" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${p.bg} 0%, rgba(0,0,0,0.42) 58%, transparent)` }} />
             <div className="absolute inset-y-0 left-0 flex w-[65%] flex-col justify-center px-2.5">
-              <div className="text-[6px] font-bold uppercase" style={{ color: p.accent, letterSpacing: "0.15em" }}>{s.signatureLabel}</div>
-              <div className="mt-0.5 text-[12px] font-semibold leading-tight" style={{ fontFamily: "'Fraunces', Georgia, serif", color: p.text }}>{s.catalog[0].name}</div>
+              <div className="text-[6px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{s.signatureLabel}</div>
+              <div className="mt-0.5 text-[12px] font-semibold leading-tight" style={{ fontFamily: p.font, color: p.text }}>{s.catalog[0].name}</div>
               <div className="mt-0.5 truncate text-[7px]" style={{ color: p.muted }}>{s.catalog[0].sub}</div>
               <div className="mt-1 flex items-center gap-1.5">
-                <span className="text-[10px] font-bold" style={{ color: p.accent }}>{s.catalog[0].price}</span>
-                <span className="rounded-full px-2 py-[2px] text-[6px] font-bold uppercase" style={{ background: p.accent, color: p.accentText }}>Add</span>
+                <span className="text-[10px] font-bold" style={{ color: p.accent, fontFamily: p.font }}>{s.catalog[0].price}</span>
+                <span className="px-2 py-[2px] text-[6px] font-bold uppercase" style={{ background: p.accent, color: p.accentText, borderRadius: chipR, letterSpacing: p.tracking }}>Add</span>
               </div>
             </div>
           </div>
         )}
         {s.catalog.slice(1).map((item, index) => (
-          <div key={item.name} className="flex items-center gap-2 rounded-xl p-1.5" style={{ background: index % 2 === 0 ? p.surface2 : p.surface, border: `1px solid ${p.line}` }}>
-            <div className="h-8 w-8 shrink-0 overflow-hidden rounded-lg" style={{ border: `1px solid ${p.line}` }}>
+          <div key={item.name} className="flex items-center gap-2 p-1.5" style={{ background: index % 2 === 0 ? p.surface2 : p.surface, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
+            <div className="h-8 w-8 shrink-0 overflow-hidden" style={{ border: `1px solid ${p.line}`, borderRadius: Math.min(p.radiusSmall, 8) }}>
               <img src={s.detail} alt={item.name} loading="lazy" width={128} height={128} className="h-full w-full object-cover" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="truncate text-[9px] font-semibold" style={{ color: p.text }}>{item.name}</div>
+              <div className="truncate text-[9px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>{item.name}</div>
               <div className="truncate text-[7px]" style={{ color: p.muted }}>{item.sub}</div>
             </div>
-            <div className="text-[9px] font-bold" style={{ color: p.accent }}>{item.price}</div>
+            <div className="text-[9px] font-bold" style={{ color: p.accent, fontFamily: p.font }}>{item.price}</div>
           </div>
         ))}
       </div>
-      <div className="absolute inset-x-3 flex items-center justify-between rounded-full px-3 py-1.5" style={{ bottom: "11%", background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, boxShadow: `0 7px 20px ${p.glow}` }}>
+      <div className="absolute inset-x-3 flex items-center justify-between px-3 py-1.5" style={{ bottom: "11%", background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, boxShadow: `0 7px 20px ${p.glow}`, borderRadius: chipR }}>
         <div className="flex flex-col leading-none">
-          <span className="text-[7px] uppercase" style={{ color: p.accentText, letterSpacing: "0.08em" }}>{s.cartLabel}</span>
-          <span className="text-[9px] font-bold" style={{ color: p.accentText }}>{s.cartCta}</span>
+          <span className="text-[7px] uppercase" style={{ color: p.accentText, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{s.cartLabel}</span>
+          <span className="text-[9px] font-bold" style={{ color: p.accentText, fontFamily: p.font }}>{s.cartCta}</span>
         </div>
         <Send size={11} color={p.accentText} />
       </div>
