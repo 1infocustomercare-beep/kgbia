@@ -1443,7 +1443,21 @@ export function MockupReactScreen({
       case "gallery":
         return <GalleryScreen theme={theme} name={businessName} />;
       case "checkout":
+      case "cart":
         return <CheckoutScreen theme={theme} sector={businessSector} />;
+      case "kitchen":
+      case "kds":
+      case "orders":
+        return <KitchenScreen theme={theme} sector={businessSector} />;
+      case "fleet":
+        return <FleetScreen theme={theme} sector={businessSector} />;
+      case "rooms":
+      case "units":
+        return <RoomsScreen theme={theme} sector={businessSector} />;
+      case "schedule":
+      case "agenda":
+      case "calendar":
+        return <ScheduleScreen theme={theme} sector={businessSector} />;
       case "home":
       default:
         return <HomeScreen theme={theme} name={businessName} sector={businessSector} city={businessCity} />;
