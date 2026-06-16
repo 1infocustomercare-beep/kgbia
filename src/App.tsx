@@ -583,6 +583,9 @@ function App() {
                           Caos→Empire, services, industries, portfolio, process,
                           proof, CTA. Bilingue IT/EN. */}
                       <Route path="/" element={<EmpirePrestigeHome />} />
+                      <Route path="/mockups-demo" element={<MockupsDemo />} />
+                      <Route path="/demo-mockups" element={<Navigate to="/mockups-demo" replace />} />
+                      <Route path="/mockups" element={<Navigate to="/mockups-demo" replace />} />
                       {/* Una sola homepage: tutti gli alias legacy reindirizzano a "/" */}
                       <Route path="/index" element={<Navigate to="/" replace />} />
                       <Route path="/home" element={<Navigate to="/" replace />} />
