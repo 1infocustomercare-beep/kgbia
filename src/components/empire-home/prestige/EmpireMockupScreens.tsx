@@ -23,6 +23,15 @@ import {
 } from "lucide-react";
 import type { PhoneView } from "./PrestigePhone";
 
+import restaurantHero from "@/assets/empire-mockups/restaurant-hero.jpg";
+import restaurantDish from "@/assets/empire-mockups/restaurant-dish.jpg";
+import beautyHero from "@/assets/empire-mockups/beauty-hero.jpg";
+import beautyDish from "@/assets/empire-mockups/beauty-dish.jpg";
+import fitnessHero from "@/assets/empire-mockups/fitness-hero.jpg";
+import fitnessDish from "@/assets/empire-mockups/fitness-dish.jpg";
+import realestateHero from "@/assets/empire-mockups/realestate-hero.jpg";
+import realestateDish from "@/assets/empire-mockups/realestate-dish.jpg";
+
 /**
  * Empire native iPhone screens — Emerald Prestige design system.
  * Palette: emerald #04130E→#0A2A1E · gold #D4AF37 / #E8D9A0 · ivory #F5F1E6.
@@ -49,6 +58,8 @@ interface SectorMeta {
   chat: { from: "in" | "out"; text: string; time: string }[];
   quickReplies: string[];
   tab: { label: string; icon: typeof Home }[];
+  hero: string;
+  dish: string;
 }
 
 const SECTORS: Record<EmpireSector, SectorMeta> = {
