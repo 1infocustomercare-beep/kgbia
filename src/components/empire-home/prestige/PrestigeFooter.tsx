@@ -1,0 +1,113 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
+/**
+ * PrestigeFooter — footer pulito e statico per la home Empire.
+ * Niente position:fixed/clip-path. Niente sezioni vuote.
+ */
+export default function PrestigeFooter() {
+  const scrollTop = () =>
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+  return (
+    <footer className="prestige-dark relative w-full border-t border-white/10 bg-[#0b1410] text-white/80 overflow-hidden">
+      {/* Glow morbido di sfondo */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-40"
+        style={{
+          background:
+            "radial-gradient(60% 60% at 50% 0%, hsl(var(--primary)/0.18), transparent 70%)",
+        }}
+      />
+
+      <div className="relative mx-auto w-full max-w-6xl px-6 py-16">
+        {/* CTA finale */}
+        <div className="flex flex-col items-center text-center gap-6">
+          <h2 className="font-serif text-4xl md:text-6xl tracking-tight text-white">
+            Pronto a iniziare?
+          </h2>
+          <p className="max-w-xl text-sm md:text-base text-white/65">
+            Setup in 7 giorni. Niente carta richiesta per la demo. Parliamone
+            insieme.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <Link
+              to="/auth"
+              className="inline-flex items-center gap-2 rounded-full bg-[hsl(var(--gold,42_60%_55%))] px-7 py-3 text-sm font-semibold text-black shadow-[0_10px_40px_-10px_hsl(var(--gold,42_60%_55%)/0.6)] hover:scale-[1.02] transition-transform"
+            >
+              Inizia ora
+              <span aria-hidden="true">→</span>
+            </Link>
+            <a
+              href="#lead"
+              className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold text-white hover:bg-white/5 transition-colors"
+            >
+              Parla con un consulente
+            </a>
+          </div>
+        </div>
+
+        {/* Link grid */}
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
+          <div>
+            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+              Prodotto
+            </h3>
+            <ul className="space-y-2">
+              <li><a href="#settori" className="hover:text-white">Settori</a></li>
+              <li><a href="#mockups" className="hover:text-white">Mockup</a></li>
+              <li><a href="#portfolio" className="hover:text-white">Portfolio</a></li>
+              <li><a href="#pricing" className="hover:text-white">Prezzi</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+              Azienda
+            </h3>
+            <ul className="space-y-2">
+              <li><Link to="/join" className="hover:text-white">Diventa Partner</Link></li>
+              <li><a href="#faq" className="hover:text-white">FAQ</a></li>
+              <li><a href="#lead" className="hover:text-white">Contatti</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+              Legale
+            </h3>
+            <ul className="space-y-2">
+              <li><Link to="/privacy" className="hover:text-white">Privacy</Link></li>
+              <li><Link to="/cookies" className="hover:text-white">Cookie</Link></li>
+              <li><span className="text-white/40">Dati in EU · GDPR</span></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+              Accesso
+            </h3>
+            <ul className="space-y-2">
+              <li><Link to="/auth" className="hover:text-white">Accedi</Link></li>
+              <li><Link to="/onboarding" className="hover:text-white">Crea account</Link></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-12 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6">
+          <div className="text-[11px] tracking-[0.18em] uppercase text-white/45">
+            © 2026 Empire IA · Tutti i diritti riservati
+          </div>
+          <button
+            onClick={scrollTop}
+            className="inline-flex items-center gap-2 text-xs text-white/55 hover:text-white"
+            aria-label="Torna in cima"
+          >
+            <span>Torna in cima</span>
+            <span aria-hidden="true">↑</span>
+          </button>
+        </div>
+      </div>
+    </footer>
+  );
+}

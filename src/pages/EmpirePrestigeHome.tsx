@@ -20,7 +20,7 @@ import {
   PrestigeStickyCTA,
 } from "@/components/empire-home/prestige/PrestigeConversion";
 
-import { CinematicFooter } from "@/components/empire-21st/MotionFooter";
+import PrestigeFooter from "@/components/empire-home/prestige/PrestigeFooter";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepageContent";
 
@@ -102,10 +102,8 @@ function EmpirePrestigeHomeInner() {
         {/* ── Lead form inline ── */}
         <PrestigeLeadForm />
 
-        {/* ── Footer cinematico ── */}
-        <div className="prestige-dark">
-          <CinematicFooter />
-        </div>
+        {/* ── Footer pulito ── */}
+        <PrestigeFooter />
 
         {/* Sticky CTA mobile + FAB Arianna */}
         <PrestigeStickyCTA />
