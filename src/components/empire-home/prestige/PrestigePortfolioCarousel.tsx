@@ -562,12 +562,19 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           {/* Phone showcase — 4 views with switcher */}
           <div className="mt-12 grid gap-10 md:grid-cols-2 md:items-center">
             <div className="flex flex-col items-center">
-              <PrestigePhone
-                src={project.screens[phoneIdx]}
-                label={PHONE_VIEWS[phoneIdx]}
-                width={280}
-                loading="eager"
-              />
+              {(() => {
+                const sector = projectIdToSector(project.id);
+                const native = sector ? getEmpireScreens(sector, PHONE_VIEWS[phoneIdx]) : null;
+                return (
+                  <PrestigePhone
+                    src={native ? undefined : project.screens[phoneIdx]}
+                    screen={native ?? undefined}
+                    label={PHONE_VIEWS[phoneIdx]}
+                    width={280}
+                    loading="eager"
+                  />
+                );
+              })()}
               <div className="mt-10 flex gap-2">
                 {PHONE_VIEWS.map((v, i) => (
                   <button
