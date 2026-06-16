@@ -102,10 +102,8 @@ function EmpirePrestigeHomeInner() {
         {/* ── Lead form inline ── */}
         <PrestigeLeadForm />
 
-        {/* ── Footer cinematico ── */}
-        <div className="prestige-dark">
-          <CinematicFooter />
-        </div>
+        {/* ── Footer pulito ── */}
+        <PrestigeFooter />
 
         {/* Sticky CTA mobile + FAB Arianna */}
         <PrestigeStickyCTA />
