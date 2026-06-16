@@ -23,7 +23,7 @@ export default function PrestigeUnifiedNarrative() {
   ];
 
   const steps = [
-    { icon: Plug, n: "01", k: { it: "Onboarding in 24h", en: "24h onboarding" }, d: { it: "Ci dai accesso a sito, telefono e WhatsApp. Pensiamo a tutto noi.", en: "You hand over site, phone and WhatsApp. We handle the rest." } },
+    { icon: Plug, n: "01", k: { it: "Onboarding in 7 giorni", en: "7-day onboarding" }, d: { it: "Ci dai accesso a sito, telefono e WhatsApp. Pensiamo a tutto noi.", en: "You hand over site, phone and WhatsApp. We handle the rest." } },
     { icon: BrainCircuit, n: "02", k: { it: "Addestriamo la tua AI", en: "We train your AI" }, d: { it: "Impara menu, prezzi, orari e tono di voce. Diventa parte del team.", en: "Learns menu, prices, hours and tone. Becomes a team member." } },
     { icon: Rocket, n: "03", k: { it: "Vai live in 7 giorni", en: "Go live in 7 days" }, d: { it: "Sito, app, AI, WhatsApp e pagamenti attivi. Guardi i numeri salire.", en: "Site, app, AI, WhatsApp & payments live. Watch numbers rise." } },
   ];
@@ -147,14 +147,14 @@ export default function PrestigeUnifiedNarrative() {
         {/* ── CTA ────────────────────────────────────────────── */}
         <div className="mt-16 sm:mt-20 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
           <button className="prestige-cta justify-center w-full sm:w-auto" onClick={() => navigate("/onboarding")}>
-            <span className="truncate">{t({ it: "Inizia gratis per 90 giorni", en: "Start free for 90 days" })}</span>
+            <span className="truncate">{t({ it: "Inizia ora", en: "Start now" })}</span>
             <ArrowRight size={16} className="shrink-0" />
           </button>
           <button
             className="prestige-cta-ghost justify-center w-full sm:w-auto"
             onClick={() => document.getElementById("prestige-lead")?.scrollIntoView({ behavior: "smooth" })}
           >
-            <span className="truncate">{t({ it: "Prenota una demo", en: "Book a demo" })}</span>
+            <span className="truncate">{t({ it: "Parla con un consulente", en: "Talk to a consultant" })}</span>
           </button>
         </div>
       </div>

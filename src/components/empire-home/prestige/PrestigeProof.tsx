@@ -2,8 +2,7 @@ import { useEmpireScrollDirector } from "../ScrollDirector";
 
 const STATS = [
   { value: "3.500+", label: "Aziende attive in 7 paesi" },
-  { value: "24h", label: "Setup medio chiavi in mano" },
-  { value: "+38%", label: "Ricavi medi nei primi 90 giorni" },
+  { value: "7 giorni", label: "Setup medio chiavi in mano" },
   { value: "4.9★", label: "Soddisfazione clienti (Google)" },
 ];
 
@@ -39,7 +38,7 @@ export default function PrestigeProof() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
         {/* Stats strip */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
           {STATS.map((s, i) => (
             <div
               key={s.label}
