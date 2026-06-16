@@ -594,7 +594,7 @@ function App() {
                       <Route path="/home-v5" element={<Navigate to="/" replace />} />
 
                       <Route path="/settori" element={<Navigate to="/#industries" replace />} />
-                      <Route path="/prezzi" element={<Navigate to="/home#pricing" replace />} />
+                      <Route path="/prezzi" element={<Navigate to="/#pricing" replace />} />
                       <Route path="/marketing" element={<MarketingPage />} />
                       <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
                       <Route path="/b/:slug" element={<BusinessPage />} />
