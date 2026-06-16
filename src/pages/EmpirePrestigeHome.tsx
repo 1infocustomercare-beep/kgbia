@@ -97,6 +97,7 @@ function EmpirePrestigeHomeInner() {
 
   return (
     <>
+      {showSplash && !isPreview && <SplashScreen onComplete={dismissSplash} />}
       <PrestigeTheme />
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen overflow-x-hidden">
@@ -115,8 +116,33 @@ function EmpirePrestigeHomeInner() {
         <PrestigeIndustries />
         <PrestigeAriannaDemo />
         <PrestigePortfolioCarousel />
+
+        {/* ─── Cinematic accent: stacked panels + 3D card stack ─── */}
+        <LazyMount minHeight="80vh" rootMargin="400px 0px" className="prestige-dark overflow-hidden">
+          <StackedPanels />
+        </LazyMount>
+        <LazyMount minHeight="70vh" rootMargin="400px 0px" className="prestige-dark overflow-hidden">
+          <CardStack images={cardStackImages} />
+        </LazyMount>
+
+        {/* ─── Mockup vault (catalog completo) ─── */}
+        <LazyMount minHeight="100vh" rootMargin="500px 0px" id="mockups" className="prestige-dark overflow-hidden">
+          <MockupCatalog />
+        </LazyMount>
+
         <PrestigeCases />
         <PrestigeProof />
+
+        {/* ─── 98 Agenti AI catalog ─── */}
+        <LazyMount minHeight="100vh" rootMargin="500px 0px" id="agents" className="prestige-dark overflow-hidden">
+          <AgentsCatalog />
+        </LazyMount>
+
+        {/* ─── Neon orbs cinematic accent ─── */}
+        <LazyMount minHeight="60vh" rootMargin="400px 0px" className="prestige-dark overflow-hidden">
+          <NeonOrbs />
+        </LazyMount>
+
         <PrestigeRoiCalculator />
         <PrestigeComparison />
         <PrestigePricing />
@@ -135,6 +161,7 @@ function EmpirePrestigeHomeInner() {
     </>
   );
 }
+
 
 export default function EmpirePrestigeHome() {
   return (
