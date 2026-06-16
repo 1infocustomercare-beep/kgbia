@@ -621,12 +621,14 @@ const SECTORS: Record<EmpireSector, SectorMeta> = {
 
 function StatusBar({ p }: { p: SectorPalette }) {
   return (
-    <div className="flex items-center justify-between px-4 pt-2 pb-1 text-[9px] font-semibold" style={{ color: p.text }}>
-      <span>9:41</span>
-      <div className="flex items-center gap-1">
-        <Signal size={9} />
-        <Wifi size={9} />
-        <BatteryFull size={11} />
+    <div className="relative flex items-center justify-between px-5 pt-2 pb-1" style={{ color: p.text }}>
+      <span className="text-[10px] font-semibold tabular-nums" style={{ fontFamily: "'SF Pro Display', system-ui, sans-serif", letterSpacing: "-0.01em" }}>9:41</span>
+      {/* Dynamic Island */}
+      <div className="absolute left-1/2 top-1.5 h-[14px] w-[58px] -translate-x-1/2 rounded-full" style={{ background: "#000", boxShadow: "0 0 0 0.5px rgba(255,255,255,0.04) inset" }} />
+      <div className="flex items-center gap-[3px]">
+        <Signal size={10} strokeWidth={2.4} />
+        <Wifi size={10} strokeWidth={2.4} />
+        <BatteryFull size={12} strokeWidth={2.2} />
       </div>
     </div>
   );
@@ -913,37 +915,60 @@ function ChartViz({ p, data }: { p: SectorPalette; data: number[] }) {
 
 function AdminView({ s }: { s: SectorMeta }) {
   const p = s.palette;
+  // derive a fake revenue from chart
+  const revenue = s.chart.reduce((a, b) => a + b, 0) * 23;
   return (
     <ScreenShell s={s}>
       <Header s={s} />
-      <div className="px-3 pb-1.5 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>Command · oggi</div>
+      {/* Revenue ticker */}
+      <div className="mx-3 mb-2 flex items-center justify-between px-2.5 py-1.5" style={{ background: `linear-gradient(90deg, ${p.surface2}, ${p.bg2})`, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall, boxShadow: `inset 0 0 24px ${p.glow}` }}>
+        <div>
+          <div className="text-[6px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>Incasso oggi</div>
+          <div className="mt-0.5 text-[14px] font-semibold leading-none tabular-nums" style={{ color: p.text, fontFamily: p.font }}>€ {revenue.toLocaleString("it-IT")}</div>
+        </div>
+        <div className="flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[7px] font-bold" style={{ background: p.accent, color: p.accentText, fontFamily: p.uiFont }}>
+          <TrendingUp size={8} strokeWidth={2.6} /> +{18 + s.chart[s.chart.length - 1] % 20}%
+        </div>
+      </div>
       <div className="mx-3 grid grid-cols-3 gap-1.5">
         {s.kpis.map((k) => (
-          <div key={k.label} className="p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
+          <div key={k.label} className="relative overflow-hidden p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
+            <div className="absolute right-0 top-0 h-full w-[2px]" style={{ background: `linear-gradient(180deg, ${p.accent}, transparent)` }} />
             <div className="truncate text-[6px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{k.label}</div>
-            <div className="mt-0.5 text-[11px] font-semibold leading-none" style={{ color: p.text, fontFamily: p.font }}>{k.value}</div>
+            <div className="mt-0.5 text-[11px] font-semibold leading-none tabular-nums" style={{ color: p.text, fontFamily: p.font }}>{k.value}</div>
             <div className="mt-1 flex items-center gap-0.5 text-[7px]" style={{ color: p.accent, fontFamily: p.uiFont }}><TrendingUp size={7} /> {k.trend}</div>
           </div>
         ))}
       </div>
       <div className="mx-3 mt-2 p-2" style={{ background: p.surface, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
         <div className="flex items-center justify-between text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>
-          <span>Settimana</span><span style={{ color: p.accent }}>AI optimized</span>
+          <span>Lun · Mar · Mer · Gio · Ven · Sab · Dom</span><span style={{ color: p.accent }}>AI optimized</span>
         </div>
         <div className="mt-2">
           <ChartViz p={p} data={s.chart} />
         </div>
       </div>
       <div className="mx-3 mt-2 space-y-1">
-        <div className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>Live ops</div>
-        {s.liveList.map((row) => (
+        <div className="flex items-center justify-between text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>
+          <span>Live ops</span>
+          <span className="flex items-center gap-1" style={{ color: p.accent }}>
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" style={{ background: p.accent }} />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full" style={{ background: p.accent }} />
+            </span>
+            in tempo reale
+          </span>
+        </div>
+        {s.liveList.map((row, i) => (
           <div key={row.primary} className="flex items-center gap-1.5 p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
-            <div className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: p.accent, boxShadow: `0 0 8px ${p.accent}` }} />
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center text-[7px] font-bold" style={{ background: `linear-gradient(135deg, ${p.accent}33, ${p.accent2}22)`, color: p.accent, border: `1px solid ${p.line}`, borderRadius: p.badgeShape === "cut" ? 0 : p.badgeShape === "square" ? p.radiusSmall : 999, fontFamily: p.font }}>
+              {String(i + 1).padStart(2, "0")}
+            </div>
             <div className="min-w-0 flex-1">
               <div className="truncate text-[8px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>{row.primary}</div>
               <div className="truncate text-[7px]" style={{ color: p.muted }}>{row.secondary}</div>
             </div>
-            <div className="text-[7px] font-semibold" style={{ color: p.accent, fontFamily: p.uiFont }}>{row.meta}</div>
+            <div className="text-[7px] font-semibold tabular-nums" style={{ color: p.accent, fontFamily: p.uiFont }}>{row.meta}</div>
           </div>
         ))}
       </div>
@@ -956,36 +981,78 @@ function ChatView({ s }: { s: SectorMeta }) {
   const p = s.palette;
   const avatarR = p.badgeShape === "square" ? p.radiusSmall : p.badgeShape === "cut" ? 0 : 999;
   const chipR = p.badgeShape === "pill" ? 999 : p.badgeShape === "cut" ? 0 : p.radiusSmall;
-  const bubbleR = Math.max(p.radius - 4, 6);
+  const bubbleR = Math.max(p.radius - 4, 10);
   return (
     <ScreenShell s={s}>
-      <div className="flex items-center gap-2 px-3 pt-1 pb-2" style={{ borderBottom: `1px solid ${p.line}` }}>
-        <div className="flex h-7 w-7 items-center justify-center text-[8px] font-bold" style={{ background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`, color: p.accentText, borderRadius: avatarR, fontFamily: p.font }}>E</div>
-        <div className="flex flex-col leading-none">
-          <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>Empire AI</span>
-          <span className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>online · risponde in 12s</span>
+      {/* WhatsApp-style header */}
+      <div className="flex items-center gap-2 px-3 pt-1 pb-2" style={{ borderBottom: `1px solid ${p.line}`, background: `linear-gradient(180deg, ${p.surface2}, transparent)` }}>
+        <div className="relative">
+          <div className="flex h-7 w-7 items-center justify-center text-[8px] font-bold" style={{ background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`, color: p.accentText, borderRadius: avatarR, fontFamily: p.font, boxShadow: `0 0 0 1px ${p.line}` }}>{s.monogram}</div>
+          <div className="absolute -right-0.5 -bottom-0.5 h-2 w-2 rounded-full border" style={{ background: "#22c55e", borderColor: p.bg }} />
         </div>
-        <div className="ml-auto flex items-center gap-1 text-[7px]" style={{ color: p.muted }}><Clock size={8} /> 24/7</div>
+        <div className="flex flex-col leading-none">
+          <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>{s.brand}</span>
+          <span className="text-[7px]" style={{ color: "#22c55e", fontFamily: p.uiFont }}>● online · risponde in 12s</span>
+        </div>
+        <div className="ml-auto flex items-center gap-1.5 text-[7px]" style={{ color: p.muted }}>
+          <Clock size={9} /> 24/7
+        </div>
       </div>
-      <div className="flex flex-col gap-1.5 px-2.5 py-2" style={{ maxHeight: "62%", overflow: "hidden" }}>
+
+      {/* Day separator */}
+      <div className="flex justify-center pt-2">
+        <span className="px-2 py-0.5 text-[6px] font-bold uppercase" style={{ background: p.surface, color: p.muted, letterSpacing: p.tracking, borderRadius: 999, fontFamily: p.uiFont }}>Oggi</span>
+      </div>
+
+      <div className="flex flex-col gap-1.5 px-2.5 pt-1.5 pb-2" style={{ maxHeight: "56%", overflow: "hidden" }}>
         {s.chat.map((m, i) => {
           const out = m.from === "out";
           return (
             <div key={i} className={`flex ${out ? "justify-end" : "justify-start"}`}>
-              <div className="max-w-[78%] px-2 py-1.5" style={{ background: out ? p.bubble : p.inbound, color: out ? p.text : p.accentText, border: `1px solid ${out ? p.line : "rgba(0,0,0,0.06)"}`, borderRadius: bubbleR, borderTopRightRadius: out ? Math.min(5, bubbleR) : bubbleR, borderTopLeftRadius: out ? bubbleR : Math.min(5, bubbleR), fontFamily: p.uiFont }}>
-                <div className="text-[8px] leading-snug">{m.text}</div>
-                <div className="mt-0.5 flex items-center justify-end gap-0.5 text-[6px] opacity-70">
-                  {m.time}{out ? <CheckCheck size={8} color={p.accent} /> : <Check size={8} />}
+              <div className="max-w-[78%] px-2 py-1.5" style={{
+                background: out ? p.bubble : p.inbound,
+                color: out ? p.text : p.accentText,
+                border: out ? `1px solid ${p.line}` : "1px solid rgba(0,0,0,0.06)",
+                borderRadius: bubbleR,
+                borderTopRightRadius: out ? 4 : bubbleR,
+                borderTopLeftRadius: out ? bubbleR : 4,
+                fontFamily: p.uiFont,
+                boxShadow: out ? `0 4px 12px ${p.glow}` : "0 2px 6px rgba(0,0,0,0.18)",
+              }}>
+                <div className="text-[8.5px] leading-snug">{m.text}</div>
+                <div className="mt-0.5 flex items-center justify-end gap-0.5 text-[6px] tabular-nums opacity-70">
+                  {m.time}{out ? <CheckCheck size={9} color={p.accent} /> : null}
                 </div>
               </div>
             </div>
           );
         })}
+        {/* Typing indicator */}
+        <div className="flex justify-end">
+          <div className="flex items-center gap-1 px-2 py-1.5" style={{ background: p.bubble, borderRadius: bubbleR, borderTopRightRadius: 4, border: `1px solid ${p.line}` }}>
+            <span className="h-1 w-1 animate-pulse rounded-full" style={{ background: p.accent, animationDelay: "0ms" }} />
+            <span className="h-1 w-1 animate-pulse rounded-full" style={{ background: p.accent, animationDelay: "160ms" }} />
+            <span className="h-1 w-1 animate-pulse rounded-full" style={{ background: p.accent, animationDelay: "320ms" }} />
+          </div>
+        </div>
       </div>
-      <div className="absolute inset-x-3 flex gap-1.5" style={{ bottom: "12%" }}>
+
+      {/* Quick replies */}
+      <div className="absolute inset-x-3 flex gap-1.5" style={{ bottom: "17%" }}>
         {s.quickReplies.map((q) => (
           <div key={q} className="flex-1 py-1 text-center text-[7px] font-bold uppercase" style={{ background: p.surface, border: `1px solid ${p.line}`, color: p.accent, letterSpacing: p.tracking, borderRadius: chipR, fontFamily: p.uiFont }}>{q}</div>
         ))}
+      </div>
+
+      {/* Composer bar */}
+      <div className="absolute inset-x-3 flex items-center gap-1.5" style={{ bottom: "11%" }}>
+        <div className="flex flex-1 items-center gap-1.5 px-2 py-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: 999 }}>
+          <MessageCircle size={9} color={p.muted} />
+          <span className="text-[7px]" style={{ color: p.muted, fontFamily: p.uiFont }}>Scrivi un messaggio…</span>
+        </div>
+        <button className="flex h-6 w-6 items-center justify-center" style={{ background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`, borderRadius: 999, boxShadow: `0 4px 12px ${p.glow}` }}>
+          <Send size={10} color={p.accentText} strokeWidth={2.4} />
+        </button>
       </div>
       <TabBar items={s.tab} p={p} />
     </ScreenShell>
