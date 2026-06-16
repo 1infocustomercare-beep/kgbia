@@ -226,6 +226,7 @@ const NCCCrossSellingPage = lazy(() => import("./pages/app/NCCCrossSellingPage")
 const NCCSettingsPage = lazy(() => import("./pages/app/NCCSettingsPage"));
 const NCCExpiryPage = lazy(() => import("./pages/app/NCCExpiryPage"));
 const MenuPage = lazy(() => import("./pages/app/MenuPage"));
+const MockupsDemo = lazy(() => import("./pages/MockupsDemo"));
 const OrdersPage = lazy(() => import("./pages/app/OrdersPage"));
 const InventoryPage = lazy(() => import("./pages/app/InventoryPage"));
 const WarehousePage = lazy(() => import("./pages/app/WarehousePage"));
@@ -583,6 +584,9 @@ function App() {
                           Caos→Empire, services, industries, portfolio, process,
                           proof, CTA. Bilingue IT/EN. */}
                       <Route path="/" element={<EmpirePrestigeHome />} />
+                      <Route path="/mockups-demo" element={<MockupsDemo />} />
+                      <Route path="/demo-mockups" element={<Navigate to="/mockups-demo" replace />} />
+                      <Route path="/mockups" element={<Navigate to="/mockups-demo" replace />} />
                       {/* Una sola homepage: tutti gli alias legacy reindirizzano a "/" */}
                       <Route path="/index" element={<Navigate to="/" replace />} />
                       <Route path="/home" element={<Navigate to="/" replace />} />
