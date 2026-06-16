@@ -340,27 +340,41 @@ function HomeView({ s }: { s: SectorMeta }) {
   return (
     <ScreenShell>
       <Header s={s} />
-      {/* Hero */}
+      {/* Hero — photo with brand overlay */}
       <div
         className="relative mx-3 overflow-hidden rounded-xl"
         style={{
           height: "44%",
-          background:
-            "linear-gradient(135deg, rgba(212,175,55,0.18) 0%, rgba(10,42,30,0.9) 60%), radial-gradient(circle at 70% 30%, rgba(232,217,160,0.3), transparent 60%)",
-          border: "1px solid rgba(212,175,55,0.28)",
+          border: "1px solid rgba(212,175,55,0.32)",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(232,217,160,0.08)",
         }}
       >
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-3 text-center">
-          <HeroIcon size={32} color="#E8D9A0" strokeWidth={1.4} />
+        <img
+          src={s.hero}
+          alt={s.brand}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ filter: "saturate(1.05) contrast(1.02)" }}
+        />
+        {/* gradient veil for text legibility */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(4,19,14,0.15) 0%, rgba(4,19,14,0.55) 55%, rgba(4,19,14,0.92) 100%)",
+          }}
+        />
+        <div className="absolute inset-x-0 bottom-0 flex flex-col items-center px-3 pb-3 text-center">
+          <HeroIcon size={18} color="#E8D9A0" strokeWidth={1.6} />
           <div
-            className="mt-1.5 text-[14px] leading-tight"
-            style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#F5F1E6", fontWeight: 600 }}
+            className="mt-1 text-[15px] leading-tight"
+            style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#F5F1E6", fontWeight: 600, letterSpacing: "0.01em" }}
           >
             {s.brand}
           </div>
           <div
             className="mx-auto mt-1 h-px"
-            style={{ width: 28, background: "linear-gradient(90deg, transparent, #D4AF37, transparent)" }}
+            style={{ width: 34, background: "linear-gradient(90deg, transparent, #D4AF37, transparent)" }}
           />
           <div className="mt-1 text-[7px] uppercase tracking-[0.18em]" style={{ color: "#E8D9A0" }}>
             {s.tagline}
@@ -370,7 +384,7 @@ function HomeView({ s }: { s: SectorMeta }) {
             style={{
               background: "linear-gradient(90deg, #D4AF37, #E8D9A0)",
               color: "#04130E",
-              boxShadow: "0 4px 12px rgba(212,175,55,0.35)",
+              boxShadow: "0 4px 12px rgba(212,175,55,0.45)",
             }}
           >
             {s.primaryCta}
