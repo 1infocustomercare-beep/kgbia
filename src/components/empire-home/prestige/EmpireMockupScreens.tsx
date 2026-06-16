@@ -712,37 +712,38 @@ function ScreenShell({ s, children }: { s: SectorMeta; children: ReactNode }) {
 function HomeView({ s }: { s: SectorMeta }) {
   const p = s.palette;
   const HeroIcon = s.heroIcon;
+  const badgeRadius = p.badgeShape === "pill" ? 999 : p.badgeShape === "cut" ? 0 : p.radiusSmall;
   return (
     <ScreenShell s={s}>
       <Header s={s} />
-      <div className="relative mx-3 overflow-hidden rounded-[18px]" style={{ height: "45%", border: `1px solid ${p.line}`, boxShadow: `0 12px 30px rgba(0,0,0,0.50), 0 0 24px ${p.glow}` }}>
+      <div className="relative mx-3 overflow-hidden" style={{ height: "45%", borderRadius: p.radius, border: `1px solid ${p.line}`, boxShadow: p.shadow }}>
         <img src={s.hero} alt={s.brand} loading="lazy" width={1024} height={1536} className="absolute inset-0 h-full w-full object-cover" style={{ filter: "saturate(1.08) contrast(1.04)" }} />
         <div className="absolute inset-0" style={{ background: p.heroVeil }} />
-        <div className="absolute left-2 top-2 rounded-full px-2 py-1 text-[6px] font-bold uppercase" style={{ background: "rgba(0,0,0,0.32)", border: `1px solid ${p.line}`, color: p.text, letterSpacing: "0.12em" }}>
+        <div className="absolute left-2 top-2 px-2 py-1 text-[6px] font-bold uppercase" style={{ background: "rgba(0,0,0,0.32)", border: `1px solid ${p.line}`, color: p.text, letterSpacing: p.tracking, borderRadius: badgeRadius, fontFamily: p.uiFont }}>
           Live preview
         </div>
         <div className="absolute inset-x-0 bottom-0 px-3 pb-3 text-left">
           <HeroIcon size={18} color={p.accent} strokeWidth={1.8} />
-          <div className="mt-1 text-[16px] font-semibold leading-none" style={{ fontFamily: "'Fraunces', Georgia, serif", color: p.text }}>
+          <div className="mt-1 text-[16px] font-semibold leading-none" style={{ fontFamily: p.font, color: p.text }}>
             {s.brand}
           </div>
           <div className="mt-1 h-px" style={{ width: 46, background: `linear-gradient(90deg, ${p.accent}, transparent)` }} />
-          <div className="mt-1 text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.16em" }}>
+          <div className="mt-1 text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>
             {s.tagline}
           </div>
-          <button className="mt-2 rounded-full px-3 py-1 text-[8px] font-bold uppercase" style={{ background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, color: p.accentText, boxShadow: `0 6px 16px ${p.glow}`, letterSpacing: "0.08em" }}>
+          <button className="mt-2 px-3 py-1 text-[8px] font-bold uppercase" style={{ background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, color: p.accentText, boxShadow: `0 6px 16px ${p.glow}`, letterSpacing: p.tracking, borderRadius: badgeRadius, fontFamily: p.uiFont }}>
             {s.primaryCta}
           </button>
         </div>
       </div>
       <div className="mx-3 mt-2 grid grid-cols-3 gap-1.5">
         {s.services.map((sv) => (
-          <div key={sv} className="rounded-lg py-1.5 text-center text-[7px] font-semibold uppercase" style={{ background: p.surface, border: `1px solid ${p.line}`, color: p.text, letterSpacing: "0.08em" }}>
+          <div key={sv} className="py-1.5 text-center text-[7px] font-semibold uppercase" style={{ background: p.surface, border: `1px solid ${p.line}`, color: p.text, letterSpacing: p.tracking, borderRadius: p.radiusSmall, fontFamily: p.uiFont }}>
             {sv}
           </div>
         ))}
       </div>
-      <div className="mx-3 mt-2 rounded-xl px-2 py-2" style={{ background: p.surface2, border: `1px solid ${p.line}` }}>
+      <div className="mx-3 mt-2 px-2 py-2" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
         <div className="flex items-center gap-1">
           {[0, 1, 2, 3, 4].map((i) => <Star key={i} size={9} color={p.accent} fill={p.accent} />)}
           <span className="ml-1 text-[9px] font-bold" style={{ color: p.text }}>{s.reviews.toFixed(1)}</span>
