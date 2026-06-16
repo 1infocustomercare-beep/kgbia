@@ -658,23 +658,26 @@ function TabBar({ items, p }: { items: SectorMeta["tab"]; p: SectorPalette }) {
 
 function Header({ s }: { s: SectorMeta }) {
   const p = s.palette;
+  const monoRadius = p.badgeShape === "square" ? p.radiusSmall : p.badgeShape === "cut" ? 0 : 999;
   return (
-    <div className="flex items-center gap-2 px-4 pt-1 pb-2">
+    <div className="flex items-center gap-2 px-4 pt-1 pb-2" style={{ fontFamily: p.uiFont }}>
       <div
-        className="flex h-6 w-6 items-center justify-center rounded-full text-[8px] font-bold"
+        className="flex h-6 w-6 items-center justify-center text-[8px] font-bold"
         style={{
           background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`,
           color: p.accentText,
           boxShadow: `0 0 0 1px ${p.line}, 0 0 18px ${p.glow}`,
+          borderRadius: monoRadius,
+          fontFamily: p.font,
         }}
       >
         {s.monogram}
       </div>
       <div className="flex flex-col leading-none">
-        <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: "'Fraunces', Georgia, serif" }}>
+        <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: p.font, letterSpacing: p.badgeShape === "cut" ? "0.04em" : "0" }}>
           {s.brand}
         </span>
-        <span className="flex items-center gap-1 text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.12em" }}>
+        <span className="flex items-center gap-1 text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking }}>
           <span className="inline-block h-1 w-1 rounded-full" style={{ background: p.accent, boxShadow: `0 0 5px ${p.accent}` }} />
           Empire AI · Live
         </span>
@@ -695,8 +698,11 @@ function ScreenShell({ s, children }: { s: SectorMeta; children: ReactNode }) {
       style={{
         background: `radial-gradient(circle at 20% 0%, ${p.glow}, transparent 30%), linear-gradient(180deg, ${p.bg} 0%, ${p.bg2} 100%)`,
         color: p.text,
+        fontFamily: p.uiFont,
       }}
     >
+      {/* sector-unique texture overlay */}
+      <div className="pointer-events-none absolute inset-0" style={{ backgroundImage: p.texture, opacity: 0.9, mixBlendMode: "screen" }} />
       <StatusBar p={p} />
       {children}
     </div>
