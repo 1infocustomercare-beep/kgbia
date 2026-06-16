@@ -245,15 +245,19 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
 
                   <div className="mt-4 grid grid-cols-3 gap-2">
                     {previewScreens.map((screen, i) => (
-                      <button
+                      <div
                         key={`${item.id}-${screen}-${i}`}
-                        type="button"
                         onClick={() => setSelected(isSelected ? null : item.id)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" || event.key === " ") setSelected(isSelected ? null : item.id);
+                        }}
                         className="relative flex min-h-[118px] items-center justify-center overflow-hidden rounded-lg border border-foreground/10 bg-muted transition-transform active:scale-[0.98]"
                         aria-label={`Mostra schermate ${item.brand}`}
                       >
                          <CatalogPhonePreview item={item} screenType={screen} size="sm" />
-                      </button>
+                      </div>
                     ))}
                   </div>
 
