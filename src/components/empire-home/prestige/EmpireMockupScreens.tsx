@@ -15,7 +15,9 @@ import {
   Home,
   MapPin,
   MessageCircle,
+  Plus,
   Scissors,
+  Search,
   Send,
   Shield,
   ShoppingBag,
@@ -24,6 +26,8 @@ import {
   Star,
   TrendingUp,
   Utensils,
+  Waves,
+  Wifi,
   Waves,
   Wifi,
 } from "lucide-react";
