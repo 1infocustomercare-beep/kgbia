@@ -302,7 +302,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                 className="group relative overflow-hidden rounded-[1.35rem] border border-foreground/10 bg-foreground/[0.035] shadow-[0_24px_80px_-48px_hsl(0_0%_0%)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/40"
               >
                 <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden bg-muted px-4 pt-8">
-                  <CatalogPhonePreview item={item} screenType="home" priority={index < 8} className="transition-transform duration-700 group-hover:scale-105" />
+                  <CatalogPhonePreview item={item} imageUrl={item.thumbnail} alt={`${item.brand} — ${item.style}`} priority={index < 8} className="transition-transform duration-700 group-hover:scale-105" />
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)_/_0)_45%,hsl(var(--background)_/_0.9)_100%)]" />
                   <div className="absolute left-3 top-3 rounded-full border border-background/40 bg-background/80 px-2 py-1 text-[9px] font-black uppercase tracking-[2px] text-primary">
                     {item.sectorLabel}
