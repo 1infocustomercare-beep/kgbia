@@ -2,13 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
-import { createMockupPool } from "@/lib/mockup-pool";
 import PrestigePhone, { PHONE_VIEWS, type PhoneView } from "./PrestigePhone";
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
+import { getEmpireScreens } from "./EmpireMockupScreens";
 
-const pool = createMockupPool();
-const HERO_MOCKS = pool.images(4);
 const HERO_LABELS: PhoneView[] = PHONE_VIEWS;
+const HERO_SCREENS = HERO_LABELS.map((view) => getEmpireScreens("restaurant", view));
 
 const ROTATE_MS = 3200;
 
@@ -33,7 +32,7 @@ export default function PrestigeHero() {
 
   useEffect(() => {
     const id = window.setInterval(() => {
-      setActive((v) => (v + 1) % HERO_MOCKS.length);
+      setActive((v) => (v + 1) % HERO_SCREENS.length);
     }, ROTATE_MS);
     return () => window.clearInterval(id);
   }, []);
@@ -157,11 +156,11 @@ export default function PrestigeHero() {
                 "translate3d(0, clamp(-20px, calc(var(--empire-progress, 0) * -28px), 20px), 0)",
             }}
           >
-            {HERO_MOCKS.map((src, i) => {
+            {HERO_SCREENS.map((screen, i) => {
               const isActive = i === active;
               return (
                 <div
-                  key={src + i}
+                  key={i}
                   className="absolute inset-0 flex items-center justify-center transition-all duration-[1100ms] ease-[cubic-bezier(.22,1,.36,1)]"
                   style={{
                     opacity: isActive ? 1 : 0,
@@ -172,7 +171,7 @@ export default function PrestigeHero() {
                   }}
                 >
                   <PrestigePhone
-                    src={src}
+                    screen={screen}
                     alt={`Vista ${HERO_LABELS[i]}`}
                     label={HERO_LABELS[i]}
                     width={phoneW}
@@ -185,7 +184,7 @@ export default function PrestigeHero() {
 
           {/* Indicators — moved below the phone stage to avoid overflow/clipping */}
           <div className="mt-6 flex justify-center gap-1.5">
-            {HERO_MOCKS.map((_, i) => (
+            {HERO_SCREENS.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActive(i)}
