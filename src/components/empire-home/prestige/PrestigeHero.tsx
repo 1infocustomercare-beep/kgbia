@@ -156,11 +156,11 @@ export default function PrestigeHero() {
                 "translate3d(0, clamp(-20px, calc(var(--empire-progress, 0) * -28px), 20px), 0)",
             }}
           >
-            {HERO_SCREENS.map((src, i) => {
+            {HERO_SCREENS.map((screen, i) => {
               const isActive = i === active;
               return (
                 <div
-                  key={src + i}
+                  key={i}
                   className="absolute inset-0 flex items-center justify-center transition-all duration-[1100ms] ease-[cubic-bezier(.22,1,.36,1)]"
                   style={{
                     opacity: isActive ? 1 : 0,
@@ -171,7 +171,7 @@ export default function PrestigeHero() {
                   }}
                 >
                   <PrestigePhone
-                    src={src}
+                    screen={screen}
                     alt={`Vista ${HERO_LABELS[i]}`}
                     label={HERO_LABELS[i]}
                     width={phoneW}
