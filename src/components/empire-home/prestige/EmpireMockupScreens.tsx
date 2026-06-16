@@ -63,6 +63,16 @@ interface SectorPalette {
   heroVeil: string;
   bubble: string;
   inbound: string;
+  // Style DNA — unique per sector
+  font: string;          // heading font-family
+  uiFont: string;        // body / UI font-family
+  radius: number;        // base corner radius (px) for hero/cards
+  radiusSmall: number;   // chips / pills
+  texture: string;       // CSS background-image overlay (subtle pattern)
+  shadow: string;        // signature box-shadow for hero
+  badgeShape: "pill" | "square" | "cut"; // signature label
+  chartStyle: "bars" | "line" | "dots";
+  tracking: string;      // letter-spacing default for uppercase labels
 }
 
 interface SectorMeta {
@@ -106,6 +116,16 @@ const PALETTES: Record<string, SectorPalette> = {
     heroVeil: "linear-gradient(180deg, rgba(27,16,11,0.08), rgba(27,16,11,0.54) 48%, rgba(27,16,11,0.95))",
     bubble: "linear-gradient(135deg, #B94A24, #6E2718)",
     inbound: "rgba(255, 243, 223, 0.94)",
+    font: "'Fraunces', Georgia, serif",
+    uiFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    radius: 22,
+    radiusSmall: 10,
+    // grainy warm paper
+    texture: "radial-gradient(circle at 15% 20%, rgba(244,163,64,0.10), transparent 28%), radial-gradient(circle at 85% 75%, rgba(217,88,42,0.08), transparent 30%)",
+    shadow: "0 14px 34px rgba(0,0,0,0.55), 0 0 0 1px rgba(246,174,89,0.18) inset",
+    badgeShape: "pill",
+    chartStyle: "bars",
+    tracking: "0.14em",
   },
   sushi: {
     bg: "#08090B",
@@ -122,6 +142,16 @@ const PALETTES: Record<string, SectorPalette> = {
     heroVeil: "linear-gradient(180deg, rgba(8,9,11,0.2), rgba(8,9,11,0.58) 48%, rgba(8,9,11,0.97))",
     bubble: "linear-gradient(135deg, #7C2B3D, #2D1119)",
     inbound: "rgba(255, 247, 248, 0.94)",
+    font: "'Cormorant Garamond', 'Fraunces', serif",
+    uiFont: "'Inter', system-ui, sans-serif",
+    radius: 6,
+    radiusSmall: 2,
+    // vertical brush hairlines (sumi-e)
+    texture: "repeating-linear-gradient(90deg, transparent 0 22px, rgba(239,154,171,0.04) 22px 23px)",
+    shadow: "0 18px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(239,154,171,0.10) inset",
+    badgeShape: "square",
+    chartStyle: "line",
+    tracking: "0.32em",
   },
   ncc: {
     bg: "#05070A",
@@ -138,6 +168,16 @@ const PALETTES: Record<string, SectorPalette> = {
     heroVeil: "linear-gradient(180deg, rgba(5,7,10,0.08), rgba(5,7,10,0.50) 48%, rgba(5,7,10,0.97))",
     bubble: "linear-gradient(135deg, #0D5C70, #0A2633)",
     inbound: "rgba(243, 251, 255, 0.94)",
+    font: "'Archivo Black', 'Space Grotesk', sans-serif",
+    uiFont: "'Space Grotesk', system-ui, sans-serif",
+    radius: 4,
+    radiusSmall: 2,
+    // carbon micro-grid
+    texture: "linear-gradient(rgba(98,191,213,0.05) 1px, transparent 1px) 0 0/100% 14px, linear-gradient(90deg, rgba(98,191,213,0.05) 1px, transparent 1px) 0 0/14px 100%",
+    shadow: "0 20px 50px rgba(0,0,0,0.78), 0 0 0 1px rgba(98,191,213,0.16) inset",
+    badgeShape: "cut",
+    chartStyle: "line",
+    tracking: "0.28em",
   },
   beauty: {
     bg: "#1A0E16",
@@ -154,6 +194,16 @@ const PALETTES: Record<string, SectorPalette> = {
     heroVeil: "linear-gradient(180deg, rgba(26,14,22,0.08), rgba(26,14,22,0.52) 48%, rgba(26,14,22,0.96))",
     bubble: "linear-gradient(135deg, #9B4E78, #4C203A)",
     inbound: "rgba(255, 246, 251, 0.94)",
+    font: "'Playfair Display', Georgia, serif",
+    uiFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    radius: 28,
+    radiusSmall: 999,
+    // soft petal dots
+    texture: "radial-gradient(circle at 30% 40%, rgba(234,164,204,0.08) 0 6px, transparent 7px) 0 0/24px 24px",
+    shadow: "0 12px 36px rgba(155,78,120,0.40), 0 0 30px rgba(234,164,204,0.18)",
+    badgeShape: "pill",
+    chartStyle: "dots",
+    tracking: "0.20em",
   },
   hospitality: {
     bg: "#082027",
@@ -170,6 +220,16 @@ const PALETTES: Record<string, SectorPalette> = {
     heroVeil: "linear-gradient(180deg, rgba(8,32,39,0.02), rgba(8,32,39,0.46) 48%, rgba(8,32,39,0.96))",
     bubble: "linear-gradient(135deg, #178493, #0B4650)",
     inbound: "rgba(244, 255, 251, 0.94)",
+    font: "'DM Serif Display', 'Cormorant Garamond', serif",
+    uiFont: "'Inter', system-ui, sans-serif",
+    radius: 18,
+    radiusSmall: 6,
+    // linen horizontal weave
+    texture: "repeating-linear-gradient(0deg, rgba(102,214,214,0.04) 0 1px, transparent 1px 6px)",
+    shadow: "0 16px 38px rgba(0,0,0,0.50), 0 0 0 1px rgba(102,214,214,0.14) inset",
+    badgeShape: "square",
+    chartStyle: "bars",
+    tracking: "0.18em",
   },
   fitness: {
     bg: "#090908",
@@ -186,6 +246,16 @@ const PALETTES: Record<string, SectorPalette> = {
     heroVeil: "linear-gradient(180deg, rgba(9,9,8,0.08), rgba(9,9,8,0.52) 48%, rgba(9,9,8,0.96))",
     bubble: "linear-gradient(135deg, #566D14, #20290A)",
     inbound: "rgba(247, 247, 233, 0.94)",
+    font: "'Bebas Neue', 'Archivo Black', sans-serif",
+    uiFont: "'Space Grotesk', system-ui, sans-serif",
+    radius: 4,
+    radiusSmall: 2,
+    // diagonal sport stripes
+    texture: "repeating-linear-gradient(135deg, rgba(210,255,73,0.05) 0 1px, transparent 1px 9px)",
+    shadow: "0 16px 38px rgba(0,0,0,0.65), 0 0 22px rgba(210,255,73,0.18)",
+    badgeShape: "cut",
+    chartStyle: "bars",
+    tracking: "0.36em",
   },
   realestate: {
     bg: "#07110D",
@@ -202,6 +272,16 @@ const PALETTES: Record<string, SectorPalette> = {
     heroVeil: "linear-gradient(180deg, rgba(7,17,13,0.06), rgba(7,17,13,0.50) 48%, rgba(7,17,13,0.97))",
     bubble: "linear-gradient(135deg, #476F59, #173126)",
     inbound: "rgba(247, 241, 219, 0.94)",
+    font: "'DM Serif Display', 'Playfair Display', serif",
+    uiFont: "'Inter', system-ui, sans-serif",
+    radius: 12,
+    radiusSmall: 4,
+    // marble vein soft
+    texture: "radial-gradient(ellipse at 70% 30%, rgba(220,190,112,0.08), transparent 40%), radial-gradient(ellipse at 20% 80%, rgba(136,183,160,0.08), transparent 38%)",
+    shadow: "0 18px 44px rgba(0,0,0,0.60), 0 0 0 1px rgba(220,190,112,0.18) inset",
+    badgeShape: "square",
+    chartStyle: "line",
+    tracking: "0.22em",
   },
 };
 
@@ -578,23 +658,26 @@ function TabBar({ items, p }: { items: SectorMeta["tab"]; p: SectorPalette }) {
 
 function Header({ s }: { s: SectorMeta }) {
   const p = s.palette;
+  const monoRadius = p.badgeShape === "square" ? p.radiusSmall : p.badgeShape === "cut" ? 0 : 999;
   return (
-    <div className="flex items-center gap-2 px-4 pt-1 pb-2">
+    <div className="flex items-center gap-2 px-4 pt-1 pb-2" style={{ fontFamily: p.uiFont }}>
       <div
-        className="flex h-6 w-6 items-center justify-center rounded-full text-[8px] font-bold"
+        className="flex h-6 w-6 items-center justify-center text-[8px] font-bold"
         style={{
           background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`,
           color: p.accentText,
           boxShadow: `0 0 0 1px ${p.line}, 0 0 18px ${p.glow}`,
+          borderRadius: monoRadius,
+          fontFamily: p.font,
         }}
       >
         {s.monogram}
       </div>
       <div className="flex flex-col leading-none">
-        <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: "'Fraunces', Georgia, serif" }}>
+        <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: p.font, letterSpacing: p.badgeShape === "cut" ? "0.04em" : "0" }}>
           {s.brand}
         </span>
-        <span className="flex items-center gap-1 text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.12em" }}>
+        <span className="flex items-center gap-1 text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking }}>
           <span className="inline-block h-1 w-1 rounded-full" style={{ background: p.accent, boxShadow: `0 0 5px ${p.accent}` }} />
           Empire AI · Live
         </span>
@@ -615,8 +698,11 @@ function ScreenShell({ s, children }: { s: SectorMeta; children: ReactNode }) {
       style={{
         background: `radial-gradient(circle at 20% 0%, ${p.glow}, transparent 30%), linear-gradient(180deg, ${p.bg} 0%, ${p.bg2} 100%)`,
         color: p.text,
+        fontFamily: p.uiFont,
       }}
     >
+      {/* sector-unique texture overlay */}
+      <div className="pointer-events-none absolute inset-0" style={{ backgroundImage: p.texture, opacity: 0.9, mixBlendMode: "screen" }} />
       <StatusBar p={p} />
       {children}
     </div>
@@ -626,37 +712,38 @@ function ScreenShell({ s, children }: { s: SectorMeta; children: ReactNode }) {
 function HomeView({ s }: { s: SectorMeta }) {
   const p = s.palette;
   const HeroIcon = s.heroIcon;
+  const badgeRadius = p.badgeShape === "pill" ? 999 : p.badgeShape === "cut" ? 0 : p.radiusSmall;
   return (
     <ScreenShell s={s}>
       <Header s={s} />
-      <div className="relative mx-3 overflow-hidden rounded-[18px]" style={{ height: "45%", border: `1px solid ${p.line}`, boxShadow: `0 12px 30px rgba(0,0,0,0.50), 0 0 24px ${p.glow}` }}>
+      <div className="relative mx-3 overflow-hidden" style={{ height: "45%", borderRadius: p.radius, border: `1px solid ${p.line}`, boxShadow: p.shadow }}>
         <img src={s.hero} alt={s.brand} loading="lazy" width={1024} height={1536} className="absolute inset-0 h-full w-full object-cover" style={{ filter: "saturate(1.08) contrast(1.04)" }} />
         <div className="absolute inset-0" style={{ background: p.heroVeil }} />
-        <div className="absolute left-2 top-2 rounded-full px-2 py-1 text-[6px] font-bold uppercase" style={{ background: "rgba(0,0,0,0.32)", border: `1px solid ${p.line}`, color: p.text, letterSpacing: "0.12em" }}>
+        <div className="absolute left-2 top-2 px-2 py-1 text-[6px] font-bold uppercase" style={{ background: "rgba(0,0,0,0.32)", border: `1px solid ${p.line}`, color: p.text, letterSpacing: p.tracking, borderRadius: badgeRadius, fontFamily: p.uiFont }}>
           Live preview
         </div>
         <div className="absolute inset-x-0 bottom-0 px-3 pb-3 text-left">
           <HeroIcon size={18} color={p.accent} strokeWidth={1.8} />
-          <div className="mt-1 text-[16px] font-semibold leading-none" style={{ fontFamily: "'Fraunces', Georgia, serif", color: p.text }}>
+          <div className="mt-1 text-[16px] font-semibold leading-none" style={{ fontFamily: p.font, color: p.text }}>
             {s.brand}
           </div>
           <div className="mt-1 h-px" style={{ width: 46, background: `linear-gradient(90deg, ${p.accent}, transparent)` }} />
-          <div className="mt-1 text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.16em" }}>
+          <div className="mt-1 text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>
             {s.tagline}
           </div>
-          <button className="mt-2 rounded-full px-3 py-1 text-[8px] font-bold uppercase" style={{ background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, color: p.accentText, boxShadow: `0 6px 16px ${p.glow}`, letterSpacing: "0.08em" }}>
+          <button className="mt-2 px-3 py-1 text-[8px] font-bold uppercase" style={{ background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, color: p.accentText, boxShadow: `0 6px 16px ${p.glow}`, letterSpacing: p.tracking, borderRadius: badgeRadius, fontFamily: p.uiFont }}>
             {s.primaryCta}
           </button>
         </div>
       </div>
       <div className="mx-3 mt-2 grid grid-cols-3 gap-1.5">
         {s.services.map((sv) => (
-          <div key={sv} className="rounded-lg py-1.5 text-center text-[7px] font-semibold uppercase" style={{ background: p.surface, border: `1px solid ${p.line}`, color: p.text, letterSpacing: "0.08em" }}>
+          <div key={sv} className="py-1.5 text-center text-[7px] font-semibold uppercase" style={{ background: p.surface, border: `1px solid ${p.line}`, color: p.text, letterSpacing: p.tracking, borderRadius: p.radiusSmall, fontFamily: p.uiFont }}>
             {sv}
           </div>
         ))}
       </div>
-      <div className="mx-3 mt-2 rounded-xl px-2 py-2" style={{ background: p.surface2, border: `1px solid ${p.line}` }}>
+      <div className="mx-3 mt-2 px-2 py-2" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
         <div className="flex items-center gap-1">
           {[0, 1, 2, 3, 4].map((i) => <Star key={i} size={9} color={p.accent} fill={p.accent} />)}
           <span className="ml-1 text-[9px] font-bold" style={{ color: p.text }}>{s.reviews.toFixed(1)}</span>
@@ -670,43 +757,45 @@ function HomeView({ s }: { s: SectorMeta }) {
 
 function AppView({ s }: { s: SectorMeta }) {
   const p = s.palette;
+  const cardR = Math.max(p.radius - 6, 4);
+  const chipR = p.badgeShape === "pill" ? 999 : p.badgeShape === "cut" ? 0 : p.radiusSmall;
   return (
     <ScreenShell s={s}>
       <Header s={s} />
-      <div className="px-3 pb-2 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: "0.16em" }}>{s.catalogTitle}</div>
+      <div className="px-3 pb-2 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{s.catalogTitle}</div>
       <div className="space-y-1.5 px-3" style={{ maxHeight: "62%", overflow: "hidden" }}>
         {s.catalog[0] && (
-          <div className="relative overflow-hidden rounded-[16px]" style={{ height: 88, border: `1px solid ${p.line}`, boxShadow: `0 8px 22px rgba(0,0,0,0.45)` }}>
+          <div className="relative overflow-hidden" style={{ height: 88, border: `1px solid ${p.line}`, boxShadow: p.shadow, borderRadius: cardR }}>
             <img src={s.detail} alt={s.catalog[0].name} loading="lazy" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${p.bg} 0%, rgba(0,0,0,0.42) 58%, transparent)` }} />
             <div className="absolute inset-y-0 left-0 flex w-[65%] flex-col justify-center px-2.5">
-              <div className="text-[6px] font-bold uppercase" style={{ color: p.accent, letterSpacing: "0.15em" }}>{s.signatureLabel}</div>
-              <div className="mt-0.5 text-[12px] font-semibold leading-tight" style={{ fontFamily: "'Fraunces', Georgia, serif", color: p.text }}>{s.catalog[0].name}</div>
+              <div className="text-[6px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{s.signatureLabel}</div>
+              <div className="mt-0.5 text-[12px] font-semibold leading-tight" style={{ fontFamily: p.font, color: p.text }}>{s.catalog[0].name}</div>
               <div className="mt-0.5 truncate text-[7px]" style={{ color: p.muted }}>{s.catalog[0].sub}</div>
               <div className="mt-1 flex items-center gap-1.5">
-                <span className="text-[10px] font-bold" style={{ color: p.accent }}>{s.catalog[0].price}</span>
-                <span className="rounded-full px-2 py-[2px] text-[6px] font-bold uppercase" style={{ background: p.accent, color: p.accentText }}>Add</span>
+                <span className="text-[10px] font-bold" style={{ color: p.accent, fontFamily: p.font }}>{s.catalog[0].price}</span>
+                <span className="px-2 py-[2px] text-[6px] font-bold uppercase" style={{ background: p.accent, color: p.accentText, borderRadius: chipR, letterSpacing: p.tracking }}>Add</span>
               </div>
             </div>
           </div>
         )}
         {s.catalog.slice(1).map((item, index) => (
-          <div key={item.name} className="flex items-center gap-2 rounded-xl p-1.5" style={{ background: index % 2 === 0 ? p.surface2 : p.surface, border: `1px solid ${p.line}` }}>
-            <div className="h-8 w-8 shrink-0 overflow-hidden rounded-lg" style={{ border: `1px solid ${p.line}` }}>
+          <div key={item.name} className="flex items-center gap-2 p-1.5" style={{ background: index % 2 === 0 ? p.surface2 : p.surface, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
+            <div className="h-8 w-8 shrink-0 overflow-hidden" style={{ border: `1px solid ${p.line}`, borderRadius: Math.min(p.radiusSmall, 8) }}>
               <img src={s.detail} alt={item.name} loading="lazy" width={128} height={128} className="h-full w-full object-cover" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="truncate text-[9px] font-semibold" style={{ color: p.text }}>{item.name}</div>
+              <div className="truncate text-[9px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>{item.name}</div>
               <div className="truncate text-[7px]" style={{ color: p.muted }}>{item.sub}</div>
             </div>
-            <div className="text-[9px] font-bold" style={{ color: p.accent }}>{item.price}</div>
+            <div className="text-[9px] font-bold" style={{ color: p.accent, fontFamily: p.font }}>{item.price}</div>
           </div>
         ))}
       </div>
-      <div className="absolute inset-x-3 flex items-center justify-between rounded-full px-3 py-1.5" style={{ bottom: "11%", background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, boxShadow: `0 7px 20px ${p.glow}` }}>
+      <div className="absolute inset-x-3 flex items-center justify-between px-3 py-1.5" style={{ bottom: "11%", background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, boxShadow: `0 7px 20px ${p.glow}`, borderRadius: chipR }}>
         <div className="flex flex-col leading-none">
-          <span className="text-[7px] uppercase" style={{ color: p.accentText, letterSpacing: "0.08em" }}>{s.cartLabel}</span>
-          <span className="text-[9px] font-bold" style={{ color: p.accentText }}>{s.cartCta}</span>
+          <span className="text-[7px] uppercase" style={{ color: p.accentText, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{s.cartLabel}</span>
+          <span className="text-[9px] font-bold" style={{ color: p.accentText, fontFamily: p.font }}>{s.cartCta}</span>
         </div>
         <Send size={11} color={p.accentText} />
       </div>
@@ -715,42 +804,94 @@ function AppView({ s }: { s: SectorMeta }) {
   );
 }
 
+function ChartViz({ p, data }: { p: SectorPalette; data: number[] }) {
+  const max = Math.max(...data);
+  if (p.chartStyle === "line") {
+    const W = 100;
+    const H = 44;
+    const step = W / (data.length - 1);
+    const pts = data.map((v, i) => `${i * step},${H - (v / max) * H}`).join(" ");
+    const area = `0,${H} ${pts} ${W},${H}`;
+    return (
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-11 w-full">
+        <defs>
+          <linearGradient id={`gv-${p.accent.replace("#", "")}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={p.accent} stopOpacity="0.55" />
+            <stop offset="100%" stopColor={p.accent} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <polygon points={area} fill={`url(#gv-${p.accent.replace("#", "")})`} />
+        <polyline points={pts} fill="none" stroke={p.accent} strokeWidth="1.4" />
+        {data.map((v, i) => (
+          <circle key={i} cx={i * step} cy={H - (v / max) * H} r={i === data.length - 1 ? 1.8 : 1} fill={i === data.length - 1 ? p.accent2 : p.accent} />
+        ))}
+      </svg>
+    );
+  }
+  if (p.chartStyle === "dots") {
+    return (
+      <div className="flex h-11 items-end gap-1">
+        {data.map((v, i) => {
+          const h = (v / max) * 100;
+          const dots = Math.max(2, Math.round(h / 14));
+          return (
+            <div key={i} className="flex flex-1 flex-col-reverse items-center gap-[2px]">
+              {Array.from({ length: dots }).map((_, d) => (
+                <span key={d} className="h-[5px] w-[5px] rounded-full" style={{ background: i === data.length - 1 && d === 0 ? p.accent2 : p.accent, opacity: 1 - d * 0.12 }} />
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  // bars (default)
+  return (
+    <div className="flex h-11 items-end gap-1">
+      {data.map((v, i) => (
+        <div key={i} className="flex-1" style={{
+          height: `${(v / max) * 100}%`,
+          background: i === data.length - 1 ? `linear-gradient(180deg, ${p.accent2}, ${p.accent})` : `linear-gradient(180deg, ${p.accent}88, ${p.accent}22)`,
+          borderRadius: p.radiusSmall <= 4 ? 0 : 3,
+        }} />
+      ))}
+    </div>
+  );
+}
+
 function AdminView({ s }: { s: SectorMeta }) {
   const p = s.palette;
-  const max = Math.max(...s.chart);
   return (
     <ScreenShell s={s}>
       <Header s={s} />
-      <div className="px-3 pb-1.5 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: "0.16em" }}>Command · oggi</div>
+      <div className="px-3 pb-1.5 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>Command · oggi</div>
       <div className="mx-3 grid grid-cols-3 gap-1.5">
         {s.kpis.map((k) => (
-          <div key={k.label} className="rounded-xl p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}` }}>
-            <div className="truncate text-[6px] uppercase" style={{ color: p.muted, letterSpacing: "0.08em" }}>{k.label}</div>
-            <div className="mt-0.5 text-[11px] font-semibold leading-none" style={{ color: p.text, fontFamily: "'Fraunces', Georgia, serif" }}>{k.value}</div>
-            <div className="mt-1 flex items-center gap-0.5 text-[7px]" style={{ color: p.accent }}><TrendingUp size={7} /> {k.trend}</div>
+          <div key={k.label} className="p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
+            <div className="truncate text-[6px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{k.label}</div>
+            <div className="mt-0.5 text-[11px] font-semibold leading-none" style={{ color: p.text, fontFamily: p.font }}>{k.value}</div>
+            <div className="mt-1 flex items-center gap-0.5 text-[7px]" style={{ color: p.accent, fontFamily: p.uiFont }}><TrendingUp size={7} /> {k.trend}</div>
           </div>
         ))}
       </div>
-      <div className="mx-3 mt-2 rounded-xl p-2" style={{ background: p.surface, border: `1px solid ${p.line}` }}>
-        <div className="flex items-center justify-between text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.08em" }}>
+      <div className="mx-3 mt-2 p-2" style={{ background: p.surface, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
+        <div className="flex items-center justify-between text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>
           <span>Settimana</span><span style={{ color: p.accent }}>AI optimized</span>
         </div>
-        <div className="mt-2 flex h-11 items-end gap-1">
-          {s.chart.map((v, i) => (
-            <div key={i} className="flex-1 rounded-sm" style={{ height: `${(v / max) * 100}%`, background: i === s.chart.length - 1 ? `linear-gradient(180deg, ${p.accent2}, ${p.accent})` : `linear-gradient(180deg, ${p.accent}88, ${p.accent}22)` }} />
-          ))}
+        <div className="mt-2">
+          <ChartViz p={p} data={s.chart} />
         </div>
       </div>
       <div className="mx-3 mt-2 space-y-1">
-        <div className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.1em" }}>Live ops</div>
+        <div className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>Live ops</div>
         {s.liveList.map((row) => (
-          <div key={row.primary} className="flex items-center gap-1.5 rounded-xl p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}` }}>
+          <div key={row.primary} className="flex items-center gap-1.5 p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
             <div className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: p.accent, boxShadow: `0 0 8px ${p.accent}` }} />
             <div className="min-w-0 flex-1">
-              <div className="truncate text-[8px] font-semibold" style={{ color: p.text }}>{row.primary}</div>
+              <div className="truncate text-[8px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>{row.primary}</div>
               <div className="truncate text-[7px]" style={{ color: p.muted }}>{row.secondary}</div>
             </div>
-            <div className="text-[7px] font-semibold" style={{ color: p.accent }}>{row.meta}</div>
+            <div className="text-[7px] font-semibold" style={{ color: p.accent, fontFamily: p.uiFont }}>{row.meta}</div>
           </div>
         ))}
       </div>
@@ -761,13 +902,16 @@ function AdminView({ s }: { s: SectorMeta }) {
 
 function ChatView({ s }: { s: SectorMeta }) {
   const p = s.palette;
+  const avatarR = p.badgeShape === "square" ? p.radiusSmall : p.badgeShape === "cut" ? 0 : 999;
+  const chipR = p.badgeShape === "pill" ? 999 : p.badgeShape === "cut" ? 0 : p.radiusSmall;
+  const bubbleR = Math.max(p.radius - 4, 6);
   return (
     <ScreenShell s={s}>
       <div className="flex items-center gap-2 px-3 pt-1 pb-2" style={{ borderBottom: `1px solid ${p.line}` }}>
-        <div className="flex h-7 w-7 items-center justify-center rounded-full text-[8px] font-bold" style={{ background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`, color: p.accentText }}>E</div>
+        <div className="flex h-7 w-7 items-center justify-center text-[8px] font-bold" style={{ background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`, color: p.accentText, borderRadius: avatarR, fontFamily: p.font }}>E</div>
         <div className="flex flex-col leading-none">
-          <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: "'Fraunces', Georgia, serif" }}>Empire AI</span>
-          <span className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.1em" }}>online · risponde in 12s</span>
+          <span className="text-[10px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>Empire AI</span>
+          <span className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>online · risponde in 12s</span>
         </div>
         <div className="ml-auto flex items-center gap-1 text-[7px]" style={{ color: p.muted }}><Clock size={8} /> 24/7</div>
       </div>
@@ -776,7 +920,7 @@ function ChatView({ s }: { s: SectorMeta }) {
           const out = m.from === "out";
           return (
             <div key={i} className={`flex ${out ? "justify-end" : "justify-start"}`}>
-              <div className="max-w-[78%] rounded-2xl px-2 py-1.5" style={{ background: out ? p.bubble : p.inbound, color: out ? p.text : p.accentText, border: `1px solid ${out ? p.line : "rgba(0,0,0,0.06)"}`, borderTopRightRadius: out ? 5 : 16, borderTopLeftRadius: out ? 16 : 5 }}>
+              <div className="max-w-[78%] px-2 py-1.5" style={{ background: out ? p.bubble : p.inbound, color: out ? p.text : p.accentText, border: `1px solid ${out ? p.line : "rgba(0,0,0,0.06)"}`, borderRadius: bubbleR, borderTopRightRadius: out ? Math.min(5, bubbleR) : bubbleR, borderTopLeftRadius: out ? bubbleR : Math.min(5, bubbleR), fontFamily: p.uiFont }}>
                 <div className="text-[8px] leading-snug">{m.text}</div>
                 <div className="mt-0.5 flex items-center justify-end gap-0.5 text-[6px] opacity-70">
                   {m.time}{out ? <CheckCheck size={8} color={p.accent} /> : <Check size={8} />}
@@ -788,7 +932,7 @@ function ChatView({ s }: { s: SectorMeta }) {
       </div>
       <div className="absolute inset-x-3 flex gap-1.5" style={{ bottom: "12%" }}>
         {s.quickReplies.map((q) => (
-          <div key={q} className="flex-1 rounded-full py-1 text-center text-[7px] font-bold uppercase" style={{ background: p.surface, border: `1px solid ${p.line}`, color: p.accent, letterSpacing: "0.08em" }}>{q}</div>
+          <div key={q} className="flex-1 py-1 text-center text-[7px] font-bold uppercase" style={{ background: p.surface, border: `1px solid ${p.line}`, color: p.accent, letterSpacing: p.tracking, borderRadius: chipR, fontFamily: p.uiFont }}>{q}</div>
         ))}
       </div>
       <TabBar items={s.tab} p={p} />
