@@ -2,13 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
-import { createMockupPool } from "@/lib/mockup-pool";
 import PrestigePhone, { PHONE_VIEWS, type PhoneView } from "./PrestigePhone";
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
+import { getEmpireScreens } from "./EmpireMockupScreens";
 
-const pool = createMockupPool();
-const HERO_MOCKS = pool.images(4);
 const HERO_LABELS: PhoneView[] = PHONE_VIEWS;
+const HERO_SCREENS = HERO_LABELS.map((view) => getEmpireScreens("restaurant", view));
 
 const ROTATE_MS = 3200;
 
