@@ -152,39 +152,100 @@ export function empireCover(opts: EmpireCoverOpts): string {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// Empire Studio CDN bridge — restores high-quality screenshots while the
-// fully AI-regenerated proprietary cover batch is being produced. Keys and
-// labels exposed in code/UI remain Empire-proprietary.
+// Empire Studio proprietary mockup library — AI-generated iPhone screen
+// art owned 100% by Empire. Replaces the legacy third-party CDN bridge.
+// New brand identities: Onyx Brace · Sakura Atelier · Cala Vento Charter
+// · Aurora Nail Atelier · Marina Pacifico · Atrio Padel Club · Costa Residenze.
 // ─────────────────────────────────────────────────────────────────────
-const EMPIRE_CDN = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+import restaurantHero    from "@/assets/empire-mockups/restaurant-hero.jpg";
+import restaurantDish    from "@/assets/empire-mockups/restaurant-dish.jpg";
+import sushiHero         from "@/assets/empire-mockups/sushi-hero.jpg";
+import sushiDish         from "@/assets/empire-mockups/sushi-dish.jpg";
+import nccHero           from "@/assets/empire-mockups/ncc-hero.jpg";
+import nccDetail         from "@/assets/empire-mockups/ncc-detail.jpg";
+import beautyHero        from "@/assets/empire-mockups/beauty-hero.jpg";
+import beautyDish        from "@/assets/empire-mockups/beauty-dish.jpg";
+import hospitalityHero   from "@/assets/empire-mockups/hospitality-hero.jpg";
+import hospitalityDetail from "@/assets/empire-mockups/hospitality-detail.jpg";
+import fitnessHero       from "@/assets/empire-mockups/fitness-hero.jpg";
+import fitnessDish       from "@/assets/empire-mockups/fitness-dish.jpg";
+import realestateHero    from "@/assets/empire-mockups/realestate-hero.jpg";
+import realestateDish    from "@/assets/empire-mockups/realestate-dish.jpg";
 
 const EMPIRE_KEY_TO_CDN: Record<string, string> = {
-  "restaurant-hero":    `${EMPIRE_CDN}/COTE%20Miami/a-obsidian-mobile-home.png`,
-  "restaurant-dish":    `${EMPIRE_CDN}/COTE%20Miami/a-obsidian-mobile-menu.png`,
-  "sushi-hero":         `${EMPIRE_CDN}/Paperfish%20Sushi/b-luxury-dark-home.png`,
-  "sushi-dish":         `${EMPIRE_CDN}/Paperfish%20Sushi/b-luxury-dark-menu.png`,
-  "ncc-hero":           `${EMPIRE_CDN}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/home.png`,
-  "ncc-detail":         `${EMPIRE_CDN}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/tour-detail.png`,
-  "beauty-hero":        `${EMPIRE_CDN}/Neo%20Nails%20Brickell/lavender-luxe-home.png`,
-  "beauty-dish":        `${EMPIRE_CDN}/Neo%20Nails%20Brickell/lavender-luxe-services.png`,
-  "hospitality-hero":   `${EMPIRE_CDN}/Miami%20Boats%20Rental/A-mobile-home.png`,
-  "hospitality-detail": `${EMPIRE_CDN}/Miami%20Boats%20Rental/A-mobile-detail.png`,
-  "fitness-hero":       `${EMPIRE_CDN}/City%20Padel%20Milano/mobile-sage-luxe-home.png`,
-  "fitness-dish":       `${EMPIRE_CDN}/City%20Padel%20Milano/mobile-sage-luxe-classes.png`,
-  "realestate-hero":    `${EMPIRE_CDN}/MMI%20Resident%20Hub/05-ocean-azure-mobile-dashboard.png`,
-  "realestate-dish":    `${EMPIRE_CDN}/MMI%20Resident%20Hub/05-ocean-azure-mobile-units.png`,
+  "restaurant-hero":    restaurantHero,
+  "restaurant-dish":    restaurantDish,
+  "sushi-hero":         sushiHero,
+  "sushi-dish":         sushiDish,
+  "ncc-hero":           nccHero,
+  "ncc-detail":         nccDetail,
+  "beauty-hero":        beautyHero,
+  "beauty-dish":        beautyDish,
+  "hospitality-hero":   hospitalityHero,
+  "hospitality-detail": hospitalityDetail,
+  "fitness-hero":       fitnessHero,
+  "fitness-dish":       fitnessDish,
+  "realestate-hero":    realestateHero,
+  "realestate-dish":    realestateDish,
 };
 
 /**
- * Drop-in replacement for the legacy `${BASE}/${path}` helper. Routes the full
- * 700+ catalog directly to the Empire Studio CDN bucket so screenshots render
- * correctly while AI-regenerated proprietary covers are produced.
+ * Sector → list of proprietary mockups, used to resolve any legacy catalog
+ * path into a deterministic Empire-owned screenshot. Replaces the previous
+ * direct Supabase CDN bridge so no competitor asset is served anymore.
+ */
+const SECTOR_PROPRIETARY_POOL: Record<string, string[]> = {
+  restaurant:  [restaurantHero, restaurantDish],
+  food:        [restaurantHero, restaurantDish],
+  pizzeria:    [restaurantHero, restaurantDish],
+  steakhouse:  [restaurantHero, restaurantDish],
+  sushi:       [sushiHero, sushiDish],
+  japanese:    [sushiHero, sushiDish],
+  paperfish:   [sushiHero, sushiDish],
+  ncc:         [nccHero, nccDetail],
+  charter:     [nccHero, nccDetail],
+  yacht:       [nccHero, nccDetail],
+  asinara:     [nccHero, nccDetail],
+  batey:       [hospitalityHero, hospitalityDetail],
+  boat:        [hospitalityHero, hospitalityDetail],
+  miami:       [hospitalityHero, hospitalityDetail],
+  beauty:      [beautyHero, beautyDish],
+  nail:        [beautyHero, beautyDish],
+  spa:         [beautyHero, beautyDish],
+  hair:        [beautyHero, beautyDish],
+  hospitality: [hospitalityHero, hospitalityDetail],
+  hotel:       [hospitalityHero, hospitalityDetail],
+  fitness:     [fitnessHero, fitnessDish],
+  padel:       [fitnessHero, fitnessDish],
+  gym:         [fitnessHero, fitnessDish],
+  sport:       [fitnessHero, fitnessDish],
+  realestate:  [realestateHero, realestateDish],
+  resident:    [realestateHero, realestateDish],
+  mmi:         [realestateHero, realestateDish],
+  retail:      [realestateHero, realestateDish],
+};
+
+const ALL_PROPRIETARY: string[] = [
+  restaurantHero, restaurantDish, sushiHero, sushiDish,
+  nccHero, nccDetail, beautyHero, beautyDish,
+  hospitalityHero, hospitalityDetail, fitnessHero, fitnessDish,
+  realestateHero, realestateDish,
+];
+
+/**
+ * Drop-in replacement for the legacy `${BASE}/${path}` helper. Resolves any
+ * legacy catalog path (e.g. "COTE Miami/a-obsidian-mobile-home.png") to a
+ * proprietary Empire mockup by sector keyword matching, with deterministic
+ * fallback to the global pool.
  */
 export function empireCoverFromPath(path: string): string {
-  const safe = path
-    .split("/")
-    .map((seg) => encodeURIComponent(seg))
-    .join("/");
-  return `${EMPIRE_CDN}/${safe}`;
+  const lower = path.toLowerCase();
+  for (const key of Object.keys(SECTOR_PROPRIETARY_POOL)) {
+    if (lower.includes(key)) {
+      const pool = SECTOR_PROPRIETARY_POOL[key];
+      return pool[hashStr(path) % pool.length];
+    }
+  }
+  return ALL_PROPRIETARY[hashStr(path) % ALL_PROPRIETARY.length];
 }
 
