@@ -15,7 +15,9 @@ import {
   Home,
   MapPin,
   MessageCircle,
+  Plus,
   Scissors,
+  Search,
   Send,
   Shield,
   ShoppingBag,
@@ -757,45 +759,95 @@ function HomeView({ s }: { s: SectorMeta }) {
 
 function AppView({ s }: { s: SectorMeta }) {
   const p = s.palette;
-  const cardR = Math.max(p.radius - 6, 4);
+  const cardR = Math.max(p.radius - 4, 6);
   const chipR = p.badgeShape === "pill" ? 999 : p.badgeShape === "cut" ? 0 : p.radiusSmall;
+  const pillR = p.badgeShape === "cut" ? 4 : 999;
+  // 4 catalog items: index 0 = featured hero, 1..3 = 2-col grid (we show 2 in grid + featured + 1 list)
+  const featured = s.catalog[0];
+  const grid = s.catalog.slice(1, 5);
+
   return (
     <ScreenShell s={s}>
       <Header s={s} />
-      <div className="px-3 pb-2 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{s.catalogTitle}</div>
-      <div className="space-y-1.5 px-3" style={{ maxHeight: "62%", overflow: "hidden" }}>
-        {s.catalog[0] && (
-          <div className="relative overflow-hidden" style={{ height: 88, border: `1px solid ${p.line}`, boxShadow: p.shadow, borderRadius: cardR }}>
-            <img src={s.detail} alt={s.catalog[0].name} loading="lazy" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${p.bg} 0%, rgba(0,0,0,0.42) 58%, transparent)` }} />
-            <div className="absolute inset-y-0 left-0 flex w-[65%] flex-col justify-center px-2.5">
-              <div className="text-[6px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{s.signatureLabel}</div>
-              <div className="mt-0.5 text-[12px] font-semibold leading-tight" style={{ fontFamily: p.font, color: p.text }}>{s.catalog[0].name}</div>
-              <div className="mt-0.5 truncate text-[7px]" style={{ color: p.muted }}>{s.catalog[0].sub}</div>
-              <div className="mt-1 flex items-center gap-1.5">
-                <span className="text-[10px] font-bold" style={{ color: p.accent, fontFamily: p.font }}>{s.catalog[0].price}</span>
-                <span className="px-2 py-[2px] text-[6px] font-bold uppercase" style={{ background: p.accent, color: p.accentText, borderRadius: chipR, letterSpacing: p.tracking }}>Add</span>
-              </div>
-            </div>
-          </div>
-        )}
-        {s.catalog.slice(1).map((item, index) => (
-          <div key={item.name} className="flex items-center gap-2 p-1.5" style={{ background: index % 2 === 0 ? p.surface2 : p.surface, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
-            <div className="h-8 w-8 shrink-0 overflow-hidden" style={{ border: `1px solid ${p.line}`, borderRadius: Math.min(p.radiusSmall, 8) }}>
-              <img src={s.detail} alt={item.name} loading="lazy" width={128} height={128} className="h-full w-full object-cover" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-[9px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>{item.name}</div>
-              <div className="truncate text-[7px]" style={{ color: p.muted }}>{item.sub}</div>
-            </div>
-            <div className="text-[9px] font-bold" style={{ color: p.accent, fontFamily: p.font }}>{item.price}</div>
-          </div>
+
+      {/* Search bar */}
+      <div className="mx-3 mb-2 flex items-center gap-1.5 px-2 py-1.5" style={{ background: p.surface, border: `1px solid ${p.line}`, borderRadius: pillR }}>
+        <Search size={9} color={p.muted} />
+        <span className="text-[8px]" style={{ color: p.muted, fontFamily: p.uiFont }}>Cerca {s.catalogTitle.toLowerCase()}…</span>
+      </div>
+
+      {/* Category pills */}
+      <div className="mx-3 mb-2 flex gap-1 overflow-hidden">
+        {[s.signatureLabel, ...s.services].slice(0, 4).map((cat, i) => (
+          <div key={cat + i} className="px-2 py-1 text-[7px] font-bold uppercase shrink-0" style={{
+            background: i === 0 ? `linear-gradient(135deg, ${p.accent}, ${p.accent2})` : p.surface2,
+            color: i === 0 ? p.accentText : p.text,
+            border: `1px solid ${i === 0 ? "transparent" : p.line}`,
+            borderRadius: pillR,
+            letterSpacing: p.tracking,
+            fontFamily: p.uiFont,
+            boxShadow: i === 0 ? `0 4px 12px ${p.glow}` : "none",
+          }}>{cat}</div>
         ))}
       </div>
-      <div className="absolute inset-x-3 flex items-center justify-between px-3 py-1.5" style={{ bottom: "11%", background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, boxShadow: `0 7px 20px ${p.glow}`, borderRadius: chipR }}>
-        <div className="flex flex-col leading-none">
-          <span className="text-[7px] uppercase" style={{ color: p.accentText, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{s.cartLabel}</span>
-          <span className="text-[9px] font-bold" style={{ color: p.accentText, fontFamily: p.font }}>{s.cartCta}</span>
+
+      <div className="px-3 pb-1.5 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>
+        {s.catalogTitle}
+      </div>
+
+      <div className="space-y-2 px-3" style={{ maxHeight: "52%", overflow: "hidden" }}>
+        {/* Featured hero card with big image */}
+        {featured && (
+          <div className="relative overflow-hidden" style={{ height: 86, border: `1px solid ${p.line}`, boxShadow: p.shadow, borderRadius: cardR }}>
+            <img src={s.detail} alt={featured.name} loading="lazy" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" style={{ filter: "saturate(1.1) contrast(1.05)" }} />
+            <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${p.bg}EE 0%, ${p.bg}99 45%, transparent 75%)` }} />
+            <div className="absolute left-2 top-2 px-1.5 py-[2px] text-[6px] font-bold uppercase" style={{ background: p.accent, color: p.accentText, borderRadius: pillR, letterSpacing: p.tracking }}>
+              ★ {s.signatureLabel}
+            </div>
+            <div className="absolute inset-y-0 left-0 flex w-[62%] flex-col justify-end px-2.5 pb-2">
+              <div className="text-[12px] font-semibold leading-tight" style={{ fontFamily: p.font, color: p.text }}>{featured.name}</div>
+              <div className="mt-0.5 truncate text-[7px]" style={{ color: p.muted }}>{featured.sub}</div>
+              <div className="mt-1 flex items-center gap-1.5">
+                <span className="text-[11px] font-bold" style={{ color: p.accent, fontFamily: p.font }}>{featured.price}</span>
+              </div>
+            </div>
+            <button className="absolute bottom-2 right-2 flex h-6 w-6 items-center justify-center" style={{ background: `linear-gradient(135deg, ${p.accent}, ${p.accent2})`, color: p.accentText, borderRadius: 999, boxShadow: `0 4px 12px ${p.glow}` }}>
+              <Plus size={12} strokeWidth={2.6} />
+            </button>
+          </div>
+        )}
+
+        {/* 2-column grid like Lowengeld food apps */}
+        <div className="grid grid-cols-2 gap-1.5">
+          {grid.map((item) => (
+            <div key={item.name} className="relative overflow-hidden" style={{ border: `1px solid ${p.line}`, borderRadius: cardR, background: p.surface2 }}>
+              <div className="relative" style={{ aspectRatio: "1.15 / 1" }}>
+                <img src={s.detail} alt={item.name} loading="lazy" width={300} height={260} className="absolute inset-0 h-full w-full object-cover" style={{ filter: "saturate(1.08)" }} />
+                <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 40%, ${p.bg}DD 100%)` }} />
+                <button className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center" style={{ background: p.bg, color: p.accent, borderRadius: 999, border: `1px solid ${p.line}` }}>
+                  <Plus size={8} strokeWidth={2.6} />
+                </button>
+              </div>
+              <div className="px-1.5 pb-1.5 pt-1">
+                <div className="truncate text-[8px] font-semibold leading-tight" style={{ color: p.text, fontFamily: p.font }}>{item.name}</div>
+                <div className="mt-0.5 flex items-center justify-between">
+                  <span className="truncate text-[6px]" style={{ color: p.muted, letterSpacing: p.tracking }}>{item.sub.split("·")[0]?.trim()}</span>
+                  <span className="shrink-0 text-[8px] font-bold" style={{ color: p.accent, fontFamily: p.font }}>{item.price}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Cart bar */}
+      <div className="absolute inset-x-3 flex items-center justify-between px-3 py-1.5" style={{ bottom: "10.5%", background: `linear-gradient(90deg, ${p.accent}, ${p.accent2})`, boxShadow: `0 8px 22px ${p.glow}`, borderRadius: chipR }}>
+        <div className="flex items-center gap-1.5">
+          <ShoppingBag size={10} color={p.accentText} strokeWidth={2.2} />
+          <div className="flex flex-col leading-none">
+            <span className="text-[6px] uppercase" style={{ color: p.accentText, letterSpacing: p.tracking, opacity: 0.85 }}>{s.cartLabel}</span>
+            <span className="text-[9px] font-bold" style={{ color: p.accentText, fontFamily: p.font }}>{s.cartCta}</span>
+          </div>
         </div>
         <Send size={11} color={p.accentText} />
       </div>
