@@ -63,6 +63,16 @@ interface SectorPalette {
   heroVeil: string;
   bubble: string;
   inbound: string;
+  // Style DNA — unique per sector
+  font: string;          // heading font-family
+  uiFont: string;        // body / UI font-family
+  radius: number;        // base corner radius (px) for hero/cards
+  radiusSmall: number;   // chips / pills
+  texture: string;       // CSS background-image overlay (subtle pattern)
+  shadow: string;        // signature box-shadow for hero
+  badgeShape: "pill" | "square" | "cut"; // signature label
+  chartStyle: "bars" | "line" | "dots";
+  tracking: string;      // letter-spacing default for uppercase labels
 }
 
 interface SectorMeta {
