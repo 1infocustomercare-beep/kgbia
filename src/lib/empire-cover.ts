@@ -6,6 +6,8 @@
  * legacy catalog paths to proprietary Empire screenshots by sector keyword.
  */
 
+import { empireMockupFromPath } from "@/lib/empire-mockup-screens";
+
 export type EmpirePaletteId =
   | "obsidian-gold" | "azure-ocean" | "sakura-rose" | "sage-luxe"
   | "terracotta" | "violet-noir" | "amber-sand" | "turquoise-deep"
@@ -54,8 +56,11 @@ export interface EmpireCoverOpts {
 }
 
 export function empireCover(opts: EmpireCoverOpts): string {
-  const mapped = EMPIRE_KEY_TO_CDN[opts.key];
-  if (mapped) return mapped;
+  const generated = empireMockupFromPath(`${opts.label}/${opts.key}-${opts.sublabel ?? "home"}.png`, {
+    label: opts.label,
+    sublabel: opts.sublabel,
+  });
+  if (generated) return generated;
   const palette = opts.paletteId ? EMPIRE_PALETTES[opts.paletteId] : pickPalette(opts.key);
   const w = opts.width ?? 360, h = opts.height ?? 780;
   const mono = monogramFor(opts.label);
@@ -258,9 +263,5 @@ const ALL_PROPRIETARY: string[] = [
  * a sector rotate through that sector's pool for variety.
  */
 export function empireCoverFromPath(path: string): string {
-  const lower = path.toLowerCase();
-  for (const [key, pool] of SECTOR_PROPRIETARY_POOL) {
-    if (lower.includes(key)) return pool[hashStr(path) % pool.length];
-  }
-  return ALL_PROPRIETARY[hashStr(path) % ALL_PROPRIETARY.length];
+  return empireMockupFromPath(path);
 }
