@@ -226,6 +226,7 @@ const NCCCrossSellingPage = lazy(() => import("./pages/app/NCCCrossSellingPage")
 const NCCSettingsPage = lazy(() => import("./pages/app/NCCSettingsPage"));
 const NCCExpiryPage = lazy(() => import("./pages/app/NCCExpiryPage"));
 const MenuPage = lazy(() => import("./pages/app/MenuPage"));
+const MockupsDemo = lazy(() => import("./pages/MockupsDemo"));
 const OrdersPage = lazy(() => import("./pages/app/OrdersPage"));
 const InventoryPage = lazy(() => import("./pages/app/InventoryPage"));
 const WarehousePage = lazy(() => import("./pages/app/WarehousePage"));
