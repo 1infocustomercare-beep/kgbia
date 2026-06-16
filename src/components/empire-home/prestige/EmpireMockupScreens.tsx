@@ -31,24 +31,24 @@ import {
 } from "lucide-react";
 import type { PhoneView } from "./PrestigePhone";
 
-// Use real Empire Studio-grade mockup screenshots from Supabase storage (same source
-// used by /demo and the partner portfolio). This avoids low-quality AI hero shots
-// and keeps the visual standard aligned with the official mockup catalog.
-const MOCKUPS_CDN = "/__empire-cover-removed";
-const restaurantHero = `${MOCKUPS_CDN}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-home.png`;
-const restaurantDish = `${MOCKUPS_CDN}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-detail.png`;
-const sushiHero = `${MOCKUPS_CDN}/Sakura%20Atelier/b-luxury-dark-home.png`;
-const sushiDish = `${MOCKUPS_CDN}/Sakura%20Atelier/b-luxury-dark-detail.png`;
-const nccHero = `${MOCKUPS_CDN}/Cala%20Vento%20Charter/home.png`;
-const nccDetail = `${MOCKUPS_CDN}/Cala%20Vento%20Charter/dettaglio-tour.png`;
-const beautyHero = `${MOCKUPS_CDN}/Aurora%20Nail%20Atelier/lavender-luxe-home.png`;
-const beautyDish = `${MOCKUPS_CDN}/Aurora%20Nail%20Atelier/lavender-luxe-servizi.png`;
-const hospitalityHero = `${MOCKUPS_CDN}/Marina%20Riviera/A-mobile-home.png`;
-const hospitalityDetail = `${MOCKUPS_CDN}/Marina%20Riviera/A-mobile-yacht-detail.png`;
-const fitnessHero = `${MOCKUPS_CDN}/Centro%20Padel%20Brera/mobile-sage-luxe-home.png`;
-const fitnessDish = `${MOCKUPS_CDN}/Centro%20Padel%20Brera/mobile-sage-luxe-dettaglio.png`;
-const realestateHero = `${MOCKUPS_CDN}/Domus%20Living/05-ocean-azure-mobile-dashboard.png`;
-const realestateDish = `${MOCKUPS_CDN}/Domus%20Living/06-ocean-azure-mobile-units.png`;
+// Empire-proprietary cover art for the in-app phone mockups. Uses the central
+// SVG cover generator (zero external dependencies, zero third-party IP).
+import { empireCover } from "@/lib/empire-cover";
+
+const restaurantHero    = empireCover({ key: "restaurant-hero",    label: "Onyx Brace",    sublabel: "Steakhouse",  paletteId: "obsidian-gold" });
+const restaurantDish    = empireCover({ key: "restaurant-dish",    label: "Onyx Brace",    sublabel: "Signature",   paletteId: "obsidian-gold" });
+const sushiHero         = empireCover({ key: "sushi-hero",         label: "Sakura Atelier", sublabel: "Omakase",     paletteId: "sakura-rose" });
+const sushiDish         = empireCover({ key: "sushi-dish",         label: "Sakura Atelier", sublabel: "Nigiri",      paletteId: "sakura-rose" });
+const nccHero           = empireCover({ key: "ncc-hero",           label: "Cala Vento",     sublabel: "Charter",     paletteId: "azure-ocean" });
+const nccDetail         = empireCover({ key: "ncc-detail",         label: "Cala Vento",     sublabel: "Tour",        paletteId: "azure-ocean" });
+const beautyHero        = empireCover({ key: "beauty-hero",        label: "Aurora Nail",    sublabel: "Atelier",     paletteId: "champagne-pearl" });
+const beautyDish        = empireCover({ key: "beauty-dish",        label: "Aurora Nail",    sublabel: "Servizi",     paletteId: "champagne-pearl" });
+const hospitalityHero   = empireCover({ key: "hospitality-hero",   label: "Marina Riviera", sublabel: "Yacht",       paletteId: "turquoise-deep" });
+const hospitalityDetail = empireCover({ key: "hospitality-detail", label: "Marina Riviera", sublabel: "Suite",       paletteId: "turquoise-deep" });
+const fitnessHero       = empireCover({ key: "fitness-hero",       label: "Centro Padel",   sublabel: "Brera",       paletteId: "sage-luxe" });
+const fitnessDish       = empireCover({ key: "fitness-dish",       label: "Centro Padel",   sublabel: "Maestri",     paletteId: "sage-luxe" });
+const realestateHero    = empireCover({ key: "realestate-hero",    label: "Domus Living",   sublabel: "Dashboard",   paletteId: "violet-noir" });
+const realestateDish    = empireCover({ key: "realestate-dish",    label: "Domus Living",   sublabel: "Unità",       paletteId: "violet-noir" });
 
 export type EmpireSector = "restaurant" | "sushi" | "ncc" | "beauty" | "hospitality" | "fitness" | "realestate";
 
