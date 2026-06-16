@@ -1184,6 +1184,213 @@ function MapScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: st
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+// KITCHEN / KDS SCREEN — ticket board cucina (food/sushi/retail)
+// ════════════════════════════════════════════════════════════════════════════
+function KitchenScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
+  const tickets = [
+    { id: "#A124", table: "Tav. 7", time: "00:42", status: "fire", items: ["Tartare manzo", "Risotto zafferano", "Bistecca medium"] },
+    { id: "#A125", table: "Tav. 3", time: "01:18", status: "wait", items: ["Carbonara", "Insalata cesare"] },
+    { id: "#A126", table: "Asporto", time: "02:05", status: "ready", items: ["2× Pizza margherita", "Tiramisù"] },
+  ];
+  const colorOf = (s: string) => s === "fire" ? theme.accent : s === "ready" ? theme.primary : `${theme.text}40`;
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2 flex items-center justify-between">
+        <div>
+          <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>Cucina · Live</p>
+          <p className="text-[7px]" style={{ color: theme.textMuted }}>{tickets.length} ticket attivi · KDS</p>
+        </div>
+        <div className="flex gap-1">
+          {["Tutti", "Sala", "Asporto"].map((c, i) => (
+            <span key={c} className="text-[7px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: i === 0 ? theme.primary : `${theme.text}10`, color: i === 0 ? theme.bg : theme.text }}>{c}</span>
+          ))}
+        </div>
+      </div>
+      <div className="px-4 grid grid-cols-3 gap-1 mb-2">
+        {[{ v: tickets.length, l: "In coda" }, { v: "8m", l: "Tempo medio" }, { v: "94%", l: "On time" }].map((k, i) => (
+          <div key={i} className="rounded-lg p-1.5 text-center" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.55 }}>
+            <p className="text-[10px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>{k.v}</p>
+            <p className="text-[6px]" style={{ color: theme.textMuted }}>{k.l}</p>
+          </div>
+        ))}
+      </div>
+      <div className="px-4 space-y-1.5">
+        {tickets.map((t, i) => (
+          <div key={i} className="rounded-xl p-2" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7, borderLeft: `3px solid ${colorOf(t.status)}` }}>
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>{t.id}</span>
+                <span className="text-[6px] px-1 py-0.5 rounded font-bold" style={{ background: `${theme.text}10`, color: theme.text }}>{t.table}</span>
+              </div>
+              <span className="text-[8px] font-black tabular-nums" style={{ color: colorOf(t.status) }}>{t.time}</span>
+            </div>
+            <div className="space-y-0.5">
+              {t.items.map((it, j) => (
+                <div key={j} className="flex items-center gap-1.5">
+                  <span className="w-1 h-1 rounded-full" style={{ background: theme.primary }} />
+                  <p className="text-[8px]" style={{ color: theme.text }}>{it}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-1 mt-1.5">
+              <button className="flex-1 py-1 rounded-md text-[7px] font-bold" style={{ background: `${theme.text}10`, color: theme.text }}>In preparazione</button>
+              <button className="flex-1 py-1 rounded-md text-[7px] font-bold" style={{ background: theme.primary, color: theme.bg }}>Pronto ✓</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <BottomNav theme={theme} active="menu" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// FLEET SCREEN — flotta NCC / yacht / logistica
+// ════════════════════════════════════════════════════════════════════════════
+function FleetScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
+  const isBoat = /boat|yacht|marina|charter|nautic/i.test(sector);
+  const isLog = /logist|deliver|trasport|tracking/i.test(sector);
+  const units = isBoat
+    ? [{ n: "Riviera 42", t: "Yacht", k: "8 ospiti · skipper", s: "In tour" }, { n: "Azimut 60", t: "Yacht", k: "12 ospiti · chef", s: "Disponibile" }, { n: "Lagoon 50", t: "Catamarano", k: "10 ospiti · weekend", s: "Disponibile" }]
+    : isLog
+    ? [{ n: "Iveco 220", t: "Furgone", k: "Milano → Roma", s: "In transito" }, { n: "Sprinter 314", t: "Express", k: "Torino city", s: "Disponibile" }, { n: "Daily 35", t: "Cold chain", k: "Bologna", s: "Manutenzione" }]
+    : [{ n: "Mercedes S 580", t: "Executive", k: "Patente B+ · 3 pax", s: "In corsa" }, { n: "BMW 7 LWB", t: "Business", k: "WiFi · 3 pax", s: "Disponibile" }, { n: "Van V-Class", t: "Group", k: "7 pax · bagagli", s: "Disponibile" }];
+  const colorOf = (s: string) => s.includes("Dispon") ? theme.primary : s.includes("Manut") ? theme.accent : `${theme.text}50`;
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2">
+        <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{isBoat ? "Flotta nautica" : isLog ? "Mezzi in linea" : "La nostra flotta"}</p>
+        <p className="text-[7px]" style={{ color: theme.textMuted }}>{units.length} unità · live GPS · oggi</p>
+      </div>
+      <div className="px-4 mb-2">
+        <div className="relative h-[88px] rounded-xl overflow-hidden" style={{ background: theme.bgPanelAlt, borderRadius: theme.radius * 0.7 }}>
+          <svg viewBox="0 0 200 88" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="200" height="88" fill={theme.bgPanelAlt} />
+            <path d="M0 30 L200 38 M0 60 L200 55 M40 0 L48 88 M120 0 L128 88" stroke={`${theme.text}18`} strokeWidth="1.2" fill="none" />
+            <path d="M10 70 Q60 30 110 50 T195 35" stroke={theme.primary} strokeWidth="1.8" fill="none" strokeDasharray="4 3" />
+          </svg>
+          {[{ x: "18%", y: "70%" }, { x: "55%", y: "50%" }, { x: "84%", y: "38%" }].map((p, i) => (
+            <div key={i} className="absolute -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full" style={{ left: p.x, top: p.y, background: theme.primary, boxShadow: `0 0 0 4px ${theme.primary}30` }} />
+          ))}
+        </div>
+      </div>
+      <div className="px-4 space-y-1.5">
+        {units.map((u, i) => (
+          <div key={i} className="flex items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
+            <ArtImage theme={theme} seed={i + 70} className="w-10 h-10 shrink-0" style={{ borderRadius: theme.radius * 0.5 }} />
+            <div className="flex-1 min-w-0">
+              <p className="text-[9px] font-bold" style={{ color: theme.text }}>{u.n}</p>
+              <p className="text-[7px]" style={{ color: theme.textMuted }}>{u.t} · {u.k}</p>
+            </div>
+            <span className="text-[7px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${colorOf(u.s)}25`, color: colorOf(u.s) }}>{u.s}</span>
+          </div>
+        ))}
+      </div>
+      <BottomNav theme={theme} active="menu" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ROOMS SCREEN — camere / unità (hotel / agriturismo / real estate)
+// ════════════════════════════════════════════════════════════════════════════
+function RoomsScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
+  const isRE = /real|estate|immob|domus|resident/i.test(sector);
+  const items = isRE
+    ? [{ n: "Attico Brera", k: "180m² · 3 letti · terrazzo", p: "€2.450.000", b: "Esclusiva" }, { n: "Loft Navigli", k: "95m² · 2 letti · open", p: "€1.180.000", b: "Nuovo" }, { n: "Villa Como", k: "320m² · 5 letti · piscina", p: "€3.900.000" }]
+    : [{ n: "Suite Vista Mare", k: "King size · Jacuzzi · 38m²", p: "€420 / notte", b: "Top" }, { n: "Camera Deluxe", k: "Queen · balcone · 28m²", p: "€280 / notte" }, { n: "Family Lodge", k: "4 ospiti · cucina · 55m²", p: "€360 / notte", b: "Famiglia" }];
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2">
+        <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{isRE ? "Unità in vetrina" : "Camere & suite"}</p>
+        <p className="text-[7px]" style={{ color: theme.textMuted }}>{isRE ? "Aggiornate oggi · valutazione AI" : "Disponibili nei prossimi 7 giorni"}</p>
+      </div>
+      <div className="px-4 space-y-1.5">
+        {items.map((it, i) => (
+          <div key={i} className="rounded-xl overflow-hidden" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
+            <div className="relative h-[78px]">
+              <ArtImage theme={theme} seed={i + 80} className="absolute inset-0" />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 40%, ${theme.bg}d0 100%)` }} />
+              {it.b && <span className="absolute top-1.5 left-1.5 text-[6px] font-black px-1.5 py-0.5 rounded uppercase" style={{ background: theme.primary, color: theme.bg }}>{it.b}</span>}
+              <span className="absolute top-1.5 right-1.5 text-[6px] font-bold px-1.5 py-0.5 rounded" style={{ background: `${theme.bg}cc`, color: theme.text }}>★ 4.{8 + (i % 2)}</span>
+              <div className="absolute bottom-1 left-2 right-2 flex items-end justify-between">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black truncate" style={{ color: "#fff", fontFamily: theme.fontHead }}>{it.n}</p>
+                  <p className="text-[6px] opacity-80 truncate" style={{ color: "#fff" }}>{it.k}</p>
+                </div>
+                <p className="text-[9px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>{it.p}</p>
+              </div>
+            </div>
+            <div className="flex gap-1 p-1.5">
+              <button className="flex-1 py-1 rounded-md text-[7px] font-bold" style={{ background: `${theme.text}10`, color: theme.text }}>Dettagli</button>
+              <button className="flex-1 py-1 rounded-md text-[7px] font-bold" style={{ background: theme.primary, color: theme.bg }}>{isRE ? "Prenota visita" : "Prenota"}</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <BottomNav theme={theme} active="menu" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// SCHEDULE SCREEN — agenda operatori (beauty/healthcare/fitness/legal/tecnici)
+// ════════════════════════════════════════════════════════════════════════════
+function ScheduleScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
+  const isHealth = /clinic|medic|dent|physio|health|vet/i.test(sector);
+  const isBeauty = /beauty|hair|spa|nail|estet/i.test(sector);
+  const isFit = /fitness|gym|padel|sport|trainer/i.test(sector);
+  const staff = isHealth ? ["Dr. Conti", "Dr. Sala", "Inf. Rossi"] : isBeauty ? ["Giulia", "Sara", "Anna"] : isFit ? ["Coach Luca", "Marta", "Free"] : ["Team A", "Team B", "Team C"];
+  const slots = [
+    { t: "09:00", s: 0, n: "Visita controllo", c: "M. Bianchi" },
+    { t: "09:30", s: 1, n: "Trattamento viso", c: "L. Verdi" },
+    { t: "10:00", s: 2, n: "Sessione PT", c: "G. Neri" },
+    { t: "10:30", s: 0, n: "Follow-up", c: "P. Ricci" },
+    { t: "11:00", s: 1, n: "Manicure + spa", c: "A. Russo" },
+  ];
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2 flex items-center justify-between">
+        <div>
+          <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>Agenda · Mar 22</p>
+          <p className="text-[7px]" style={{ color: theme.textMuted }}>{slots.length} appuntamenti · 3 operatori</p>
+        </div>
+        <button className="text-[7px] font-bold px-2 py-1 rounded-full" style={{ background: theme.primary, color: theme.bg }}>+ Nuovo</button>
+      </div>
+      <div className="px-4 grid grid-cols-7 gap-0.5 mb-2">
+        {["L","M","M","G","V","S","D"].map((d, i) => (
+          <div key={i} className="text-center py-1 rounded-md" style={{ background: i === 1 ? theme.primary : theme.bgPanel, color: i === 1 ? theme.bg : theme.text }}>
+            <p className="text-[6px] font-bold opacity-70">{d}</p>
+            <p className="text-[8px] font-black">{20 + i}</p>
+          </div>
+        ))}
+      </div>
+      <div className="px-4 grid grid-cols-3 gap-1 mb-1.5">
+        {staff.map((s, i) => (
+          <div key={i} className="text-center rounded-md py-1" style={{ background: theme.bgPanel }}>
+            <div className="w-5 h-5 rounded-full mx-auto mb-0.5 flex items-center justify-center text-[7px] font-black" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg }}>{s.charAt(s.length - 1)}</div>
+            <p className="text-[7px] font-bold truncate" style={{ color: theme.text }}>{s}</p>
+          </div>
+        ))}
+      </div>
+      <div className="px-4 space-y-1">
+        {slots.map((sl, i) => (
+          <div key={i} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.55, borderLeft: `2px solid ${theme.primary}` }}>
+            <span className="text-[8px] font-black tabular-nums w-9" style={{ color: theme.text, fontFamily: theme.fontHead }}>{sl.t}</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[8px] font-bold truncate" style={{ color: theme.text }}>{sl.n}</p>
+              <p className="text-[6px] truncate" style={{ color: theme.textMuted }}>{sl.c} · {staff[sl.s]}</p>
+            </div>
+            <span className="text-[6px] px-1 py-0.5 rounded font-bold" style={{ background: `${theme.accent}25`, color: theme.accent }}>30m</span>
+          </div>
+        ))}
+      </div>
+      <BottomNav theme={theme} active="booking" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 // Main export
 // ════════════════════════════════════════════════════════════════════════════
 export function MockupReactScreen({
@@ -1236,7 +1443,21 @@ export function MockupReactScreen({
       case "gallery":
         return <GalleryScreen theme={theme} name={businessName} />;
       case "checkout":
+      case "cart":
         return <CheckoutScreen theme={theme} sector={businessSector} />;
+      case "kitchen":
+      case "kds":
+      case "orders":
+        return <KitchenScreen theme={theme} sector={businessSector} />;
+      case "fleet":
+        return <FleetScreen theme={theme} sector={businessSector} />;
+      case "rooms":
+      case "units":
+        return <RoomsScreen theme={theme} sector={businessSector} />;
+      case "schedule":
+      case "agenda":
+      case "calendar":
+        return <ScheduleScreen theme={theme} sector={businessSector} />;
       case "home":
       default:
         return <HomeScreen theme={theme} name={businessName} sector={businessSector} city={businessCity} />;
