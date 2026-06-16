@@ -283,8 +283,12 @@ function Header({ s }: { s: SectorMeta }) {
         <span className="text-[10px] font-semibold" style={{ color: "#F5F1E6", fontFamily: "'Fraunces', Georgia, serif" }}>
           {s.brand}
         </span>
-        <span className="text-[7px] uppercase tracking-[0.12em]" style={{ color: "#9FB0A8" }}>
-          Empire AI
+        <span className="flex items-center gap-1 text-[7px] uppercase tracking-[0.12em]" style={{ color: "#9FB0A8" }}>
+          <span
+            className="inline-block h-1 w-1 rounded-full"
+            style={{ background: "#4ADE80", boxShadow: "0 0 4px #4ADE80", animation: "pulse 1.8s ease-in-out infinite" }}
+          />
+          Empire AI · Live
         </span>
       </div>
       <div className="ml-auto">
@@ -335,7 +339,11 @@ function HomeView({ s }: { s: SectorMeta }) {
           >
             {s.brand}
           </div>
-          <div className="mt-0.5 text-[7px] uppercase tracking-[0.18em]" style={{ color: "#E8D9A0" }}>
+          <div
+            className="mx-auto mt-1 h-px"
+            style={{ width: 28, background: "linear-gradient(90deg, transparent, #D4AF37, transparent)" }}
+          />
+          <div className="mt-1 text-[7px] uppercase tracking-[0.18em]" style={{ color: "#E8D9A0" }}>
             {s.tagline}
           </div>
           <button
