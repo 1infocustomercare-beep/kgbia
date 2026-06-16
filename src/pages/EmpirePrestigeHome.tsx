@@ -127,7 +127,7 @@ function EmpirePrestigeHomeInner() {
           <StackedPanels />
         </LazyMount>
         <LazyMount minHeight="70vh" rootMargin="400px 0px" className="prestige-dark overflow-hidden">
-          <CardStack images={cardStackImages} />
+          <CardStack items={cardStackImages} />
         </LazyMount>
 
         {/* ─── Mockup vault (catalog completo) ─── */}
