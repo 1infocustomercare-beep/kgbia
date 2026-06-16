@@ -804,42 +804,94 @@ function AppView({ s }: { s: SectorMeta }) {
   );
 }
 
+function ChartViz({ p, data }: { p: SectorPalette; data: number[] }) {
+  const max = Math.max(...data);
+  if (p.chartStyle === "line") {
+    const W = 100;
+    const H = 44;
+    const step = W / (data.length - 1);
+    const pts = data.map((v, i) => `${i * step},${H - (v / max) * H}`).join(" ");
+    const area = `0,${H} ${pts} ${W},${H}`;
+    return (
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-11 w-full">
+        <defs>
+          <linearGradient id={`gv-${p.accent.replace("#", "")}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={p.accent} stopOpacity="0.55" />
+            <stop offset="100%" stopColor={p.accent} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <polygon points={area} fill={`url(#gv-${p.accent.replace("#", "")})`} />
+        <polyline points={pts} fill="none" stroke={p.accent} strokeWidth="1.4" />
+        {data.map((v, i) => (
+          <circle key={i} cx={i * step} cy={H - (v / max) * H} r={i === data.length - 1 ? 1.8 : 1} fill={i === data.length - 1 ? p.accent2 : p.accent} />
+        ))}
+      </svg>
+    );
+  }
+  if (p.chartStyle === "dots") {
+    return (
+      <div className="flex h-11 items-end gap-1">
+        {data.map((v, i) => {
+          const h = (v / max) * 100;
+          const dots = Math.max(2, Math.round(h / 14));
+          return (
+            <div key={i} className="flex flex-1 flex-col-reverse items-center gap-[2px]">
+              {Array.from({ length: dots }).map((_, d) => (
+                <span key={d} className="h-[5px] w-[5px] rounded-full" style={{ background: i === data.length - 1 && d === 0 ? p.accent2 : p.accent, opacity: 1 - d * 0.12 }} />
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  // bars (default)
+  return (
+    <div className="flex h-11 items-end gap-1">
+      {data.map((v, i) => (
+        <div key={i} className="flex-1" style={{
+          height: `${(v / max) * 100}%`,
+          background: i === data.length - 1 ? `linear-gradient(180deg, ${p.accent2}, ${p.accent})` : `linear-gradient(180deg, ${p.accent}88, ${p.accent}22)`,
+          borderRadius: p.radiusSmall <= 4 ? 0 : 3,
+        }} />
+      ))}
+    </div>
+  );
+}
+
 function AdminView({ s }: { s: SectorMeta }) {
   const p = s.palette;
-  const max = Math.max(...s.chart);
   return (
     <ScreenShell s={s}>
       <Header s={s} />
-      <div className="px-3 pb-1.5 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: "0.16em" }}>Command · oggi</div>
+      <div className="px-3 pb-1.5 text-[9px] font-bold uppercase" style={{ color: p.accent, letterSpacing: p.tracking, fontFamily: p.uiFont }}>Command · oggi</div>
       <div className="mx-3 grid grid-cols-3 gap-1.5">
         {s.kpis.map((k) => (
-          <div key={k.label} className="rounded-xl p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}` }}>
-            <div className="truncate text-[6px] uppercase" style={{ color: p.muted, letterSpacing: "0.08em" }}>{k.label}</div>
-            <div className="mt-0.5 text-[11px] font-semibold leading-none" style={{ color: p.text, fontFamily: "'Fraunces', Georgia, serif" }}>{k.value}</div>
-            <div className="mt-1 flex items-center gap-0.5 text-[7px]" style={{ color: p.accent }}><TrendingUp size={7} /> {k.trend}</div>
+          <div key={k.label} className="p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
+            <div className="truncate text-[6px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>{k.label}</div>
+            <div className="mt-0.5 text-[11px] font-semibold leading-none" style={{ color: p.text, fontFamily: p.font }}>{k.value}</div>
+            <div className="mt-1 flex items-center gap-0.5 text-[7px]" style={{ color: p.accent, fontFamily: p.uiFont }}><TrendingUp size={7} /> {k.trend}</div>
           </div>
         ))}
       </div>
-      <div className="mx-3 mt-2 rounded-xl p-2" style={{ background: p.surface, border: `1px solid ${p.line}` }}>
-        <div className="flex items-center justify-between text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.08em" }}>
+      <div className="mx-3 mt-2 p-2" style={{ background: p.surface, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
+        <div className="flex items-center justify-between text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>
           <span>Settimana</span><span style={{ color: p.accent }}>AI optimized</span>
         </div>
-        <div className="mt-2 flex h-11 items-end gap-1">
-          {s.chart.map((v, i) => (
-            <div key={i} className="flex-1 rounded-sm" style={{ height: `${(v / max) * 100}%`, background: i === s.chart.length - 1 ? `linear-gradient(180deg, ${p.accent2}, ${p.accent})` : `linear-gradient(180deg, ${p.accent}88, ${p.accent}22)` }} />
-          ))}
+        <div className="mt-2">
+          <ChartViz p={p} data={s.chart} />
         </div>
       </div>
       <div className="mx-3 mt-2 space-y-1">
-        <div className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: "0.1em" }}>Live ops</div>
+        <div className="text-[7px] uppercase" style={{ color: p.muted, letterSpacing: p.tracking, fontFamily: p.uiFont }}>Live ops</div>
         {s.liveList.map((row) => (
-          <div key={row.primary} className="flex items-center gap-1.5 rounded-xl p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}` }}>
+          <div key={row.primary} className="flex items-center gap-1.5 p-1.5" style={{ background: p.surface2, border: `1px solid ${p.line}`, borderRadius: p.radiusSmall }}>
             <div className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: p.accent, boxShadow: `0 0 8px ${p.accent}` }} />
             <div className="min-w-0 flex-1">
-              <div className="truncate text-[8px] font-semibold" style={{ color: p.text }}>{row.primary}</div>
+              <div className="truncate text-[8px] font-semibold" style={{ color: p.text, fontFamily: p.font }}>{row.primary}</div>
               <div className="truncate text-[7px]" style={{ color: p.muted }}>{row.secondary}</div>
             </div>
-            <div className="text-[7px] font-semibold" style={{ color: p.accent }}>{row.meta}</div>
+            <div className="text-[7px] font-semibold" style={{ color: p.accent, fontFamily: p.uiFont }}>{row.meta}</div>
           </div>
         ))}
       </div>
