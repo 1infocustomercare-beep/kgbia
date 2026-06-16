@@ -53,6 +53,7 @@ const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
     window.location.pathname === "/home" ||
     window.location.pathname === "/home-prestige" ||
     window.location.pathname === "/landing-legacy" ||
+    window.location.pathname === "/demo" ||
     /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding|t\/)/.test(window.location.pathname));
 
 const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 25000 : 25000;
