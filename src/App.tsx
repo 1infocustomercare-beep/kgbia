@@ -583,21 +583,17 @@ function App() {
                           Caos→Empire, services, industries, portfolio, process,
                           proof, CTA. Bilingue IT/EN. */}
                       <Route path="/" element={<EmpirePrestigeHome />} />
-                      <Route path="/index" element={<EmpirePrestigeHome />} />
-                      <Route path="/home" element={<EmpirePrestigeHome />} />
-                      <Route path="/home-prestige" element={<EmpirePrestigeHome />} />
-                      {/* Tutti gli alias legacy puntano alla stessa home ufficiale */}
-                      <Route path="/landing" element={<EmpirePrestigeHome />} />
-                      <Route path="/landing-legacy" element={<EmpirePrestigeHome />} />
-                      <Route path="/home-cinematic" element={<EmpirePrestigeHome />} />
-                      <Route path="/home-legacy" element={<EmpirePrestigeHome />} />
-                      <Route path="/home-v5" element={<EmpirePrestigeHome />} />
+                      {/* Una sola homepage: tutti gli alias legacy reindirizzano a "/" */}
+                      <Route path="/index" element={<Navigate to="/" replace />} />
+                      <Route path="/home" element={<Navigate to="/" replace />} />
+                      <Route path="/home-prestige" element={<Navigate to="/" replace />} />
+                      <Route path="/landing" element={<Navigate to="/" replace />} />
+                      <Route path="/landing-legacy" element={<Navigate to="/" replace />} />
+                      <Route path="/home-cinematic" element={<Navigate to="/" replace />} />
+                      <Route path="/home-legacy" element={<Navigate to="/" replace />} />
+                      <Route path="/home-v5" element={<Navigate to="/" replace />} />
 
-
-
-
-
-                      <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
+                      <Route path="/settori" element={<Navigate to="/#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/home#pricing" replace />} />
                       <Route path="/marketing" element={<MarketingPage />} />
                       <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
