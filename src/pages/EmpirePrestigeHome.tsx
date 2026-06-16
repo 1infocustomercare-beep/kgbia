@@ -57,14 +57,9 @@ function EmpirePrestigeHomeInner() {
     if (!window.location.hash) {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
-    try {
-      getLenis();
-    } catch (e) {
-      console.warn("Lenis init failed", e);
-    }
-    return () => {
-      destroyLenis();
-    };
+    // Disabled Lenis smooth-scroll on the public home: natural browser scroll
+    // is required to avoid scroll-jacking, black gaps and stutter on mobile.
+    destroyLenis();
   }, []);
 
   return (
