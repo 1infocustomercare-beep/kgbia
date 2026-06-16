@@ -86,17 +86,97 @@ const templateFor = (item: CatalogItem): string => {
   return item.sectorId === "retail" ? "neon_vibrant" : "modern_dark";
 };
 
-const screenTypesFor = (sectorId: IndustryId): string[] => {
-  if (sectorId === "food") return ["home", "menu", "detail", "checkout"];
-  if (sectorId === "beauty") return ["home", "services", "booking", "profile"];
-  if (sectorId === "ncc" || sectorId === "beach") return ["home", "map", "detail", "booking"];
-  if (sectorId === "healthcare") return ["home", "services", "booking", "dashboard"];
-  if (sectorId === "fitness") return ["home", "services", "booking", "dashboard"];
-  if (sectorId === "hospitality" || sectorId === "agriturismo") return ["home", "services", "detail", "booking"];
-  if (sectorId === "retail") return ["home", "catalog", "detail", "checkout"];
-  if (["construction", "legal", "accounting", "logistics", "garage", "cleaning", "plumber", "electrician"].includes(sectorId)) return ["dashboard", "services", "detail", "booking"];
-  return ["home", "services", "detail", "booking"];
+type ScreenSpec = { type: string; label: string };
+
+const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
+  const s = String(sectorId);
+  if (s === "food") return [
+    { type: "home", label: "Vetrina" },
+    { type: "menu", label: "Menù" },
+    { type: "checkout", label: "Checkout" },
+    { type: "kitchen", label: "Cucina KDS" },
+    { type: "profile", label: "Fedeltà" },
+  ];
+  if (s === "beauty") return [
+    { type: "home", label: "Boutique" },
+    { type: "services", label: "Trattamenti" },
+    { type: "schedule", label: "Agenda staff" },
+    { type: "booking", label: "Prenota" },
+    { type: "profile", label: "Scheda VIP" },
+  ];
+  if (s === "ncc") return [
+    { type: "home", label: "Concierge" },
+    { type: "fleet", label: "Flotta" },
+    { type: "map", label: "Itinerario" },
+    { type: "booking", label: "Preventivo" },
+    { type: "profile", label: "Account" },
+  ];
+  if (s === "beach") return [
+    { type: "home", label: "Stabilimento" },
+    { type: "map", label: "Mappa ombrelloni" },
+    { type: "services", label: "Attività" },
+    { type: "booking", label: "Prenota posto" },
+    { type: "profile", label: "Pass" },
+  ];
+  if (s === "healthcare") return [
+    { type: "home", label: "Studio" },
+    { type: "services", label: "Prestazioni" },
+    { type: "schedule", label: "Agenda medici" },
+    { type: "booking", label: "Prenota visita" },
+    { type: "profile", label: "Paziente" },
+  ];
+  if (s === "fitness") return [
+    { type: "home", label: "Club" },
+    { type: "services", label: "Classi" },
+    { type: "schedule", label: "Calendario" },
+    { type: "booking", label: "Iscrivi" },
+    { type: "dashboard", label: "Progressi" },
+  ];
+  if (s === "hospitality" || s === "agriturismo") return [
+    { type: "home", label: "Esperienza" },
+    { type: "rooms", label: "Camere" },
+    { type: "services", label: "Concierge" },
+    { type: "booking", label: "Prenota stay" },
+    { type: "profile", label: "Ospite" },
+  ];
+  if (s === "retail") return [
+    { type: "home", label: "Vetrina" },
+    { type: "catalog", label: "Catalogo" },
+    { type: "detail", label: "Dettaglio" },
+    { type: "checkout", label: "Carrello" },
+    { type: "profile", label: "VIP" },
+  ];
+  if (s === "construction" || s === "logistics" || s === "garage" || s === "plumber" || s === "electrician" || s === "cleaning") return [
+    { type: "dashboard", label: "Dashboard" },
+    { type: "fleet", label: "Mezzi/Team" },
+    { type: "services", label: "Interventi" },
+    { type: "schedule", label: "Pianificazione" },
+    { type: "booking", label: "Nuovo ticket" },
+  ];
+  if (s === "legal" || s === "accounting") return [
+    { type: "dashboard", label: "Desk" },
+    { type: "services", label: "Pratiche" },
+    { type: "schedule", label: "Scadenze" },
+    { type: "checkout", label: "Fatturazione" },
+    { type: "profile", label: "Cliente" },
+  ];
+  if (s === "veterinary" || s === "childcare") return [
+    { type: "home", label: "Home" },
+    { type: "services", label: "Servizi" },
+    { type: "schedule", label: "Agenda" },
+    { type: "booking", label: "Prenota" },
+    { type: "profile", label: "Scheda" },
+  ];
+  return [
+    { type: "home", label: "Home" },
+    { type: "services", label: "Servizi" },
+    { type: "detail", label: "Dettaglio" },
+    { type: "booking", label: "Prenota" },
+    { type: "profile", label: "Profilo" },
+  ];
 };
+
+const screenTypesFor = (sectorId: IndustryId): string[] => screenSpecsFor(sectorId).map((s) => s.type);
 
 function CatalogPhonePreview({ item, screenType, size = "lg", priority = false, className = "" }: { item: CatalogItem; screenType: string; size?: "sm" | "lg"; priority?: boolean; className?: string }) {
   const frameWidth = size === "sm" ? 118 : 252;
