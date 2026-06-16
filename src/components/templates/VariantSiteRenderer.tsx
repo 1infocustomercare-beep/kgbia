@@ -16,8 +16,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Phone, MapPin, Globe, Instagram, Facebook, Home, BookOpen, Eye, ShoppingCart } from "lucide-react";
 import { StrapizzamiSite, type StrapizzamiSiteData } from "@/components/templates/strapizzami/StrapizzamiSite";
-import { Sakura AtelierSite, type Sakura AtelierSiteData } from "@/components/templates/paperfish/Sakura AtelierSite";
-import { Pacifico CevicheSite, type Pacifico CevicheSiteData } from "@/components/templates/batey/Pacifico CevicheSite";
+import { PaperfishSite, type PaperfishSiteData } from "@/components/templates/paperfish/PaperfishSite";
+import { BateySite, type BateySiteData } from "@/components/templates/batey/BateySite";
 import {
   resolveVariantTheme,
   buildVariantStyleTag,
@@ -366,7 +366,7 @@ export function VariantSiteRenderer({
   );
 
   if (spec.shell === "paperfish") {
-    const data: Sakura AtelierSiteData = {
+    const data: PaperfishSiteData = {
       brandName,
       subtitle: finalSubtitle,
       heroImage,
@@ -376,7 +376,7 @@ export function VariantSiteRenderer({
     };
     return (
       <>
-        <Sakura AtelierSite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
+        <PaperfishSite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
         {screenSwitcher}
         {sharedHalo}
       </>
@@ -384,7 +384,7 @@ export function VariantSiteRenderer({
   }
 
   if (spec.shell === "batey") {
-    const data: Pacifico CevicheSiteData = {
+    const data: BateySiteData = {
       brandName,
       subtitle: finalSubtitle,
       heroImage,
@@ -394,7 +394,7 @@ export function VariantSiteRenderer({
     };
     return (
       <>
-        <Pacifico CevicheSite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
+        <BateySite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
         {screenSwitcher}
         {sharedHalo}
       </>
