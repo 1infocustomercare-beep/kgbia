@@ -102,6 +102,10 @@ export interface EmpireCoverOpts {
  * <img src=...> or CSS background-image: url(...).
  */
 export function empireCover(opts: EmpireCoverOpts): string {
+  // Prefer a real Empire Studio screenshot (CDN) when we have one mapped for this key.
+  const mapped = EMPIRE_KEY_TO_CDN[opts.key];
+  if (mapped) return mapped;
+
   const palette = opts.paletteId
     ? EMPIRE_PALETTES[opts.paletteId]
     : pickPalette(opts.key);
@@ -112,7 +116,6 @@ export function empireCover(opts: EmpireCoverOpts): string {
   const accent = palette.accent;
   const ink = palette.ink;
 
-  // Decorative grid stripes scaled to viewBox
   const gridLines: string[] = [];
   const step = Math.max(40, Math.round(h / 10));
   for (let y = step; y < h; y += step) {
@@ -148,21 +151,40 @@ export function empireCover(opts: EmpireCoverOpts): string {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
+// ─────────────────────────────────────────────────────────────────────
+// Empire Studio CDN bridge — restores high-quality screenshots while the
+// fully AI-regenerated proprietary cover batch is being produced. Keys and
+// labels exposed in code/UI remain Empire-proprietary.
+// ─────────────────────────────────────────────────────────────────────
+const EMPIRE_CDN = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+
+const EMPIRE_KEY_TO_CDN: Record<string, string> = {
+  "restaurant-hero":    `${EMPIRE_CDN}/COTE%20Miami/a-obsidian-mobile-home.png`,
+  "restaurant-dish":    `${EMPIRE_CDN}/COTE%20Miami/a-obsidian-mobile-menu.png`,
+  "sushi-hero":         `${EMPIRE_CDN}/Paperfish%20Sushi/b-luxury-dark-home.png`,
+  "sushi-dish":         `${EMPIRE_CDN}/Paperfish%20Sushi/b-luxury-dark-menu.png`,
+  "ncc-hero":           `${EMPIRE_CDN}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/home.png`,
+  "ncc-detail":         `${EMPIRE_CDN}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/tour-detail.png`,
+  "beauty-hero":        `${EMPIRE_CDN}/Neo%20Nails%20Brickell/lavender-luxe-home.png`,
+  "beauty-dish":        `${EMPIRE_CDN}/Neo%20Nails%20Brickell/lavender-luxe-services.png`,
+  "hospitality-hero":   `${EMPIRE_CDN}/Miami%20Boats%20Rental/A-mobile-home.png`,
+  "hospitality-detail": `${EMPIRE_CDN}/Miami%20Boats%20Rental/A-mobile-detail.png`,
+  "fitness-hero":       `${EMPIRE_CDN}/City%20Padel%20Milano/mobile-sage-luxe-home.png`,
+  "fitness-dish":       `${EMPIRE_CDN}/City%20Padel%20Milano/mobile-sage-luxe-classes.png`,
+  "realestate-hero":    `${EMPIRE_CDN}/MMI%20Resident%20Hub/05-ocean-azure-mobile-dashboard.png`,
+  "realestate-dish":    `${EMPIRE_CDN}/MMI%20Resident%20Hub/05-ocean-azure-mobile-units.png`,
+};
+
 /**
- * Drop-in replacement for the legacy `${BASE}/${path}` helper. Accepts the same
- * `Brand Folder/file-name.png` shape that the old catalog data uses and infers
- * a brand label + screen sublabel from it.
+ * Drop-in replacement for the legacy `${BASE}/${path}` helper. Routes the full
+ * 700+ catalog directly to the Empire Studio CDN bucket so screenshots render
+ * correctly while AI-regenerated proprietary covers are produced.
  */
 export function empireCoverFromPath(path: string): string {
-  const decoded = decodeURIComponent(path);
-  const [rawFolder = "Empire Studio", rawFile = ""] = decoded.split("/", 2);
-  const fileToken = rawFile.replace(/\.[a-z0-9]+$/i, "");
-  // last segment after dashes is the screen type (home/menu/detail/cart…)
-  const tokens = fileToken.split(/[-_]/).filter(Boolean);
-  const screen = tokens[tokens.length - 1] ?? "";
-  return empireCover({
-    key: decoded,
-    label: rawFolder,
-    sublabel: screen,
-  });
+  const safe = path
+    .split("/")
+    .map((seg) => encodeURIComponent(seg))
+    .join("/");
+  return `${EMPIRE_CDN}/${safe}`;
 }
+
