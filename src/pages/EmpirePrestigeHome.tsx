@@ -55,6 +55,22 @@ const cardStackImages = homePool.images(6);
 function EmpirePrestigeHomeInner() {
   const { content, isPreview } = useHomepageContent();
 
+  // Cinematic splash — shown once per browser session, bypassed in preview/iframe.
+  const [showSplash, setShowSplash] = useState(() => {
+    if (typeof window === "undefined") return false;
+    if (window.self !== window.top) return false; // iframe
+    try {
+      return sessionStorage.getItem("empire-splash-seen") !== "1";
+    } catch {
+      return false;
+    }
+  });
+  const dismissSplash = () => {
+    try { sessionStorage.setItem("empire-splash-seen", "1"); } catch {}
+    setShowSplash(false);
+  };
+
+
   // Brand HSL overrides (parity con LandingPage)
   useEffect(() => {
     const b = content.brand ?? {};
