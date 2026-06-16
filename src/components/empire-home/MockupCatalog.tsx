@@ -178,10 +178,9 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
 
 const screenTypesFor = (sectorId: IndustryId): string[] => screenSpecsFor(sectorId).map((s) => s.type);
 
-function CatalogPhonePreview({ item, screenType, size = "lg", priority = false, className = "" }: { item: CatalogItem; screenType: string; size?: "sm" | "lg"; priority?: boolean; className?: string }) {
+function CatalogPhonePreview({ item, imageUrl, alt, size = "lg", priority = false, className = "" }: { item: CatalogItem; imageUrl: string; alt: string; size?: "sm" | "lg"; priority?: boolean; className?: string }) {
   const frameWidth = size === "sm" ? 118 : 252;
   const frameHeight = Math.round(frameWidth * 19.5 / 9);
-  const border = size === "sm" ? 3 : 5;
   return (
     <figure className={`relative flex flex-col items-center ${className}`}>
       <div className="relative shrink-0" style={{ width: frameWidth, height: frameHeight }}>
@@ -199,16 +198,13 @@ function CatalogPhonePreview({ item, screenType, size = "lg", priority = false, 
           }}
         >
           <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: size === "sm" ? 24 : 38, background: "hsl(var(--deep-black))" }}>
-            <MockupReactScreen
-              type={screenType}
-              templateVariant={templateFor(item)}
-              businessName={item.brand}
-              businessSector={item.sectorLabel}
-              businessCity="Italia"
-              width={frameWidth - border * 2}
-              height={frameHeight - border * 2}
-              glassIntensity={size === "sm" ? 50 : 64}
-              boostContrast
+            <img
+              src={imageUrl}
+              alt={alt}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover object-top"
+              draggable={false}
             />
             <div aria-hidden className="pointer-events-none absolute left-1/2 top-[2.3%] z-20 h-[4.7%] w-[33%] -translate-x-1/2 rounded-full" style={{ background: "hsl(0 0% 0%)" }} />
             <div aria-hidden className="pointer-events-none absolute inset-0 z-10" style={{ background: "linear-gradient(116deg, hsl(var(--foreground) / 0.12) 0%, transparent 30%, transparent 66%, hsl(var(--foreground) / 0.06) 100%)", mixBlendMode: "screen" }} />
