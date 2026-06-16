@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import LandingNav from "@/components/landing/LandingNav";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 
@@ -25,12 +25,26 @@ import {
   PrestigeStickyCTA,
 } from "@/components/empire-home/prestige/PrestigeConversion";
 
+// ─── Cinematic extras + catalogs (additive, lazy-mounted) ───
+import LazyMount from "@/components/empire-home/LazyMount";
+import MockupCatalog from "@/components/empire-home/MockupCatalog";
+import AgentsCatalog from "@/components/empire-home/AgentsCatalog";
+import StackedPanels from "@/components/empire-21st/StackedPanels";
+import { CardStack } from "@/components/empire-21st/CardStack";
+import { NeonOrbs } from "@/components/empire-21st/NeonOrbs";
+import SplashScreen from "@/components/SplashScreen";
+import { createMockupPool } from "@/lib/mockup-pool";
+
 import { CinematicFooter } from "@/components/empire-21st/MotionFooter";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepageContent";
 
 /** Voice agent memoised so it never re-renders with the page scroll. */
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
+
+const homePool = createMockupPool();
+const cardStackImages = homePool.images(6);
+
 
 /**
  * Emerald Prestige Home — Lowengeld-style luxury agency homepage.
