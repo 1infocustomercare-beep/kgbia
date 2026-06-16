@@ -280,7 +280,7 @@ function Header({ s }: { s: SectorMeta }) {
         {s.monogram}
       </div>
       <div className="flex flex-col leading-none">
-        <span className="text-[10px] font-semibold" style={{ color: "#F5F1E6", fontFamily: "Georgia, serif" }}>
+        <span className="text-[10px] font-semibold" style={{ color: "#F5F1E6", fontFamily: ""Fraunces", Georgia, serif" }}>
           {s.brand}
         </span>
         <span className="text-[7px] uppercase tracking-[0.12em]" style={{ color: "#9FB0A8" }}>
@@ -331,7 +331,7 @@ function HomeView({ s }: { s: SectorMeta }) {
           <HeroIcon size={32} color="#E8D9A0" strokeWidth={1.4} />
           <div
             className="mt-1.5 text-[14px] leading-tight"
-            style={{ fontFamily: "Georgia, serif", color: "#F5F1E6", fontWeight: 600 }}
+            style={{ fontFamily: ""Fraunces", Georgia, serif", color: "#F5F1E6", fontWeight: 600 }}
           >
             {s.brand}
           </div>
@@ -473,7 +473,7 @@ function AdminView({ s }: { s: SectorMeta }) {
             <div className="text-[6px] uppercase tracking-wider" style={{ color: "#9FB0A8" }}>
               {k.label}
             </div>
-            <div className="mt-0.5 text-[11px] font-semibold leading-none" style={{ color: "#F5F1E6", fontFamily: "Georgia, serif" }}>
+            <div className="mt-0.5 text-[11px] font-semibold leading-none" style={{ color: "#F5F1E6", fontFamily: ""Fraunces", Georgia, serif" }}>
               {k.value}
             </div>
             <div className="mt-0.5 flex items-center gap-0.5 text-[7px]" style={{ color: "#D4AF37" }}>
@@ -560,7 +560,7 @@ function ChatView({ s }: { s: SectorMeta }) {
           E
         </div>
         <div className="flex flex-col leading-none">
-          <span className="text-[10px] font-semibold" style={{ color: "#F5F1E6", fontFamily: "Georgia, serif" }}>
+          <span className="text-[10px] font-semibold" style={{ color: "#F5F1E6", fontFamily: ""Fraunces", Georgia, serif" }}>
             Empire AI
           </span>
           <span className="text-[7px] uppercase tracking-wider" style={{ color: "#9FB0A8" }}>
