@@ -20,7 +20,7 @@ import {
   PrestigeStickyCTA,
 } from "@/components/empire-home/prestige/PrestigeConversion";
 
-import { CinematicFooter } from "@/components/empire-21st/MotionFooter";
+import PrestigeFooter from "@/components/empire-home/prestige/PrestigeFooter";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepageContent";
 
