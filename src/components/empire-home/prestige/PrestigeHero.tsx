@@ -65,8 +65,8 @@ export default function PrestigeHero() {
     <section
       ref={ref}
       data-section="prestige-hero"
-      className="prestige-section prestige-dark relative min-h-[100svh] flex items-center overflow-x-clip"
-      style={{ paddingTop: "max(120px, 15svh)", paddingBottom: "8svh" }}
+      className="prestige-section prestige-dark relative flex items-center overflow-x-clip"
+      style={{ paddingTop: "clamp(96px, 12svh, 140px)", paddingBottom: "clamp(64px, 8svh, 96px)", minHeight: "auto" }}
     >
       {/* Lang toggle — top-right floating; auto-hidden when LandingNav already mounts one (see PrestigeTheme) */}
       <div className="prestige-hero-lang-floating absolute right-3 top-[72px] z-20 scale-90 origin-top-right sm:right-6 sm:top-[92px] sm:scale-100">
@@ -131,26 +131,25 @@ export default function PrestigeHero() {
 
           <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
             <button className="prestige-cta justify-center w-full sm:w-auto" onClick={() => navigate("/onboarding")}>
-              <span className="truncate">{t({ it: "Inizia la tua trasformazione", en: "Start your transformation" })}</span> <ArrowRight size={16} className="shrink-0" />
+              <span className="truncate">{t({ it: "Inizia ora", en: "Start now" })}</span> <ArrowRight size={16} className="shrink-0" />
             </button>
             <button
               className="prestige-cta-ghost justify-center w-full sm:w-auto"
-              onClick={() => document.getElementById("prestige-mockups")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => document.getElementById("prestige-lead-form")?.scrollIntoView({ behavior: "smooth" }) ?? document.getElementById("prestige-mockups")?.scrollIntoView({ behavior: "smooth" })}
             >
-              <Play size={14} className="shrink-0" /> <span className="truncate">{t({ it: "Vedi i casi reali", en: "See real cases" })}</span>
+              <Play size={14} className="shrink-0" /> <span className="truncate">{t({ it: "Parla con un consulente", en: "Talk to a consultant" })}</span>
             </button>
           </div>
 
         </div>
 
         {/* RIGHT — iPhone stage */}
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-5 pb-10 lg:pb-0">
           <div
             ref={stageRef}
             className="prestige-hero-phone-stage relative mx-auto"
             style={{
               perspective: "1400px",
-              transform: `translateY(calc(var(--empire-progress, 0) * -24px))`,
               width: "min(86vw, 320px)",
               aspectRatio: "9 / 19.5",
             }}
@@ -179,29 +178,24 @@ export default function PrestigeHero() {
                 </div>
               );
             })}
+          </div>
 
-            {/* Indicators */}
-            <div className="absolute -bottom-12 left-1/2 flex -translate-x-1/2 gap-1.5">
-              {HERO_MOCKS.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActive(i)}
-                  aria-label={`Mostra mockup ${i + 1}`}
-                  className="h-1.5 rounded-full transition-all"
-                  style={{
-                    width: i === active ? 24 : 8,
-                    background: i === active ? "hsl(var(--pr-gold))" : "hsl(var(--pr-gold) / 0.3)",
-                  }}
-                />
-              ))}
-            </div>
+          {/* Indicators — moved below the phone stage to avoid overflow/clipping */}
+          <div className="mt-6 flex justify-center gap-1.5">
+            {HERO_MOCKS.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                aria-label={`Mostra mockup ${i + 1}`}
+                className="h-1.5 rounded-full transition-all"
+                style={{
+                  width: i === active ? 24 : 8,
+                  background: i === active ? "hsl(var(--pr-gold))" : "hsl(var(--pr-gold) / 0.3)",
+                }}
+              />
+            ))}
           </div>
         </div>
-      </div>
-
-      {/* Scroll hint */}
-      <div className="prestige-scroll-hint absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em]" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
-        SCORRI PER SCOPRIRE ↓
       </div>
     </section>
   );
