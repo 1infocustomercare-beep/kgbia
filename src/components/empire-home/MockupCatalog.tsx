@@ -321,24 +321,27 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                   </div>
 
                   <div className="mt-3 -mx-1 flex gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    {previewSpecs.map((spec, i) => (
-                      <div
-                        key={`${item.id}-${spec.type}-${i}`}
-                        onClick={() => setSelected(isSelected ? null : item.id)}
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") setSelected(isSelected ? null : item.id);
-                        }}
-                        className="flex w-[88px] shrink-0 flex-col items-center gap-1.5 transition-transform active:scale-[0.97]"
-                        aria-label={`Mostra ${spec.label} ${item.brand}`}
-                      >
-                        <div className="relative flex h-[180px] w-[84px] items-center justify-center overflow-hidden rounded-[14px] border border-foreground/10 bg-muted">
-                          <CatalogPhonePreview item={item} screenType={spec.type} size="sm" />
+                    {previewSpecs.map((spec, i) => {
+                      const screenImg = item.screens[i] ?? item.thumbnail;
+                      return (
+                        <div
+                          key={`${item.id}-${spec.type}-${i}`}
+                          onClick={() => setSelected(isSelected ? null : item.id)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") setSelected(isSelected ? null : item.id);
+                          }}
+                          className="flex w-[88px] shrink-0 flex-col items-center gap-1.5 transition-transform active:scale-[0.97]"
+                          aria-label={`Mostra ${spec.label} ${item.brand}`}
+                        >
+                          <div className="relative flex h-[180px] w-[84px] items-center justify-center overflow-hidden rounded-[14px] border border-foreground/10 bg-muted">
+                            <CatalogPhonePreview item={item} imageUrl={screenImg} alt={`${item.brand} ${spec.label}`} size="sm" />
+                          </div>
+                          <span className="text-[9px] font-bold uppercase tracking-[1.5px] text-foreground/65 text-center leading-tight">{spec.label}</span>
                         </div>
-                        <span className="text-[9px] font-bold uppercase tracking-[1.5px] text-foreground/65 text-center leading-tight">{spec.label}</span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
 
