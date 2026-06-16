@@ -8,7 +8,7 @@ import { ReactNode } from "react";
 export type PhoneView = "Home sito" | "Admin" | "App cliente" | "AI WhatsApp";
 
 interface Props {
-  src: string;
+  src?: string;
   alt?: string;
   label?: PhoneView;
   /** Width in px. Default 280. */
@@ -16,6 +16,8 @@ interface Props {
   className?: string;
   children?: ReactNode;
   loading?: "eager" | "lazy";
+  /** Optional native React screen rendered inside the bezel in place of <img>. */
+  screen?: ReactNode;
 }
 
 export default function PrestigePhone({
@@ -26,6 +28,7 @@ export default function PrestigePhone({
   className = "",
   children,
   loading = "lazy",
+  screen,
 }: Props) {
   const h = Math.round(width * (19 / 9));
 
@@ -51,13 +54,17 @@ export default function PrestigePhone({
           className="relative h-full w-full overflow-hidden bg-black"
           style={{ borderRadius: `${width * 0.13}px` }}
         >
-          <img
-            src={src}
-            alt={alt}
-            loading={loading}
-            draggable={false}
-            className="h-full w-full object-cover"
-          />
+          {screen ? (
+            <div className="absolute inset-0 overflow-hidden">{screen}</div>
+          ) : src ? (
+            <img
+              src={src}
+              alt={alt}
+              loading={loading}
+              draggable={false}
+              className="h-full w-full object-cover"
+            />
+          ) : null}
 
           {/* Glass reflection overlay */}
           <div
