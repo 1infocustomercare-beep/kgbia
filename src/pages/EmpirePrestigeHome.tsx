@@ -57,9 +57,12 @@ function EmpirePrestigeHomeInner() {
     if (!window.location.hash) {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
-    // Disabled Lenis smooth-scroll on the public home: natural browser scroll
-    // is required to avoid scroll-jacking, black gaps and stutter on mobile.
-    destroyLenis();
+    // Cinematic smooth-scroll (Lenis) for the public home — drives the
+    // --empire-progress CSS var used by parallax/scroll transitions.
+    getLenis();
+    return () => {
+      destroyLenis();
+    };
   }, []);
 
   return (
