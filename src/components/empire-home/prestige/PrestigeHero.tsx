@@ -32,7 +32,7 @@ export default function PrestigeHero() {
 
   useEffect(() => {
     const id = window.setInterval(() => {
-      setActive((v) => (v + 1) % HERO_MOCKS.length);
+      setActive((v) => (v + 1) % HERO_SCREENS.length);
     }, ROTATE_MS);
     return () => window.clearInterval(id);
   }, []);
@@ -156,7 +156,7 @@ export default function PrestigeHero() {
                 "translate3d(0, clamp(-20px, calc(var(--empire-progress, 0) * -28px), 20px), 0)",
             }}
           >
-            {HERO_MOCKS.map((src, i) => {
+            {HERO_SCREENS.map((src, i) => {
               const isActive = i === active;
               return (
                 <div
@@ -184,7 +184,7 @@ export default function PrestigeHero() {
 
           {/* Indicators — moved below the phone stage to avoid overflow/clipping */}
           <div className="mt-6 flex justify-center gap-1.5">
-            {HERO_MOCKS.map((_, i) => (
+            {HERO_SCREENS.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActive(i)}
