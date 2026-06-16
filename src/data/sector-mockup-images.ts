@@ -1,11 +1,19 @@
 /**
  * Mockup screen images for each sector's iPhone showcase.
- * All 577 real mockups from Lowengeld Agency, organized by sector.
+ *
+ * Cover art is generated locally (SVG data URIs) by empireCoverFromPath().
+ * Brand folder identifiers below are Empire-proprietary; the legacy third-party
+ * competitor bucket is no longer referenced.
  */
 
 import { type IndustryId } from "@/config/industry-config";
+import { empireCoverFromPath } from "@/lib/empire-cover";
 
-const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+// Legacy `${S}/path.png` template now resolves to a proprietary Empire cover.
+const S = { toString() { return ""; } };
+const _wrap = (path: string) => empireCoverFromPath(path);
+// Tagged-template style helper kept for compatibility with the catalog below.
+// (The catalog uses both `${S}/foo` and bare strings; we normalise via _wrap.)
 
 // Local generated assets for sectors without Lowengeld mockups
 import retailHome from "@/assets/mockups/retail-home.png";

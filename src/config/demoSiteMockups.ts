@@ -1,9 +1,11 @@
 // ══════════════════════════════════════════════════════════════
-// DEMO SITE MOCKUPS — 583 professional AI-generated mockups
-// All hosted on Supabase Storage (public, no auth required)
+// DEMO SITE MOCKUPS — Empire proprietary cover catalog
+// Cover art is generated locally (SVG data URIs) by empireCoverFromPath().
+// Brand and style identifiers below are Empire-proprietary; the legacy
+// third-party competitor screenshots are no longer referenced.
 // ══════════════════════════════════════════════════════════════
 
-const BASE = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+import { empireCoverFromPath } from "@/lib/empire-cover";
 
 export interface MockupImage {
   url: string;
@@ -28,8 +30,8 @@ export interface SectorMockups {
   totalCount: number;
 }
 
-// ── Helper to build URLs ──
-const m = (path: string) => `${BASE}/${path}`;
+// ── Helper to build cover URLs (Empire proprietary, SVG data URIs) ──
+const m = (path: string) => empireCoverFromPath(path);
 
 // ── Helper for Midtown-style projects (style-a through style-h, 4 pages each) ──
 function midtownStyleImages(folder: string, styles: string[], pages: string[], device: "mobile" | "desktop"): MockupImage[] {
