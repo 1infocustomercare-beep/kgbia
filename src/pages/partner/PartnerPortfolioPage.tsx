@@ -351,7 +351,7 @@ export default function PartnerPortfolioPage() {
       {/* ═══ FLUSSO 3 STEP ═══ */}
       <PartnerFlowStepper currentStep="showcase" />
 
-      {/* ═══ VETRINA PUBBLICA (stile Lowengeld) ═══
+      {/* ═══ VETRINA PUBBLICA (stile Empire Studio) ═══
            Hero "Our Work / Portfolio" + chip categorie + grid card 2-iPhone.
            Tap su una card → apre l'overlay dettagli con tutte le schermate. */}
       <PortfolioPublicShowcase

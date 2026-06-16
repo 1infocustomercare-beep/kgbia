@@ -1,9 +1,9 @@
 /**
  * Empire Mockup Style Presets
  * ----------------------------
- * 12 preset premium ispirati ai mockup interni del portfolio Lowengeld Agency
- * (Paperfish, La Vang, Neo Nails, Asinara, Cote Miami, Texas Horse Ranch,
- *  Dimora, MMI Resident, Pokewaii, FAR Medical, Ashley's Playhouse, Batey).
+ * 12 preset premium ispirati ai mockup interni del portfolio Empire Studio
+ * (Sakura Atelier, Indocina Noir, Neo Nails, Asinara, Cote Miami, Texas Horse Ranch,
+ *  Dimora, MMI Resident, Pokewaii, FAR Medical, Arcobaleno Playhouse, Pacifico Ceviche).
  *
  * Ogni preset definisce:
  *  - palette colori coerente (4 stop)
@@ -70,12 +70,12 @@ export type MockupStylePreset = {
 };
 
 export const MOCKUP_STYLE_PRESETS: MockupStylePreset[] = [
-  // ─────────── EDITORIAL LUXURY (Lowengeld signature) ───────────
+  // ─────────── EDITORIAL LUXURY (Empire Studio signature) ───────────
   {
     key: "sakura_editorial",
     label: "Sakura Editorial",
     description:
-      "Editoriale giapponese: bianco puro, nero inchiostro, rosso sakura. Ispirato a Paperfish Sushi.",
+      "Editoriale giapponese: bianco puro, nero inchiostro, rosso sakura. Ispirato a Sakura Atelier.",
     category: "Editorial Luxury",
     sectorMatch: ["sushi", "ristorante giapponese", "nikkei", "asiatico", "ramen"],
     swatch: ["#FFFFFF", "#0D0D0D", "#D7263D", "#F5E6E0"],
@@ -106,7 +106,7 @@ export const MOCKUP_STYLE_PRESETS: MockupStylePreset[] = [
     key: "noir_saigon",
     label: "Noir Saigon",
     description:
-      "Vietnamita luxury: nero profondo, oro antico, accenti giada. Ispirato a La Vang Beverly Hills.",
+      "Vietnamita luxury: nero profondo, oro antico, accenti giada. Ispirato a Indocina Noir Beverly Hills.",
     category: "Dark Premium",
     sectorMatch: ["vietnamita", "fine dining", "asiatico luxury", "pho"],
     swatch: ["#0A0807", "#C9A24C", "#1F4E3D", "#E8D9B0"],
@@ -170,7 +170,7 @@ export const MOCKUP_STYLE_PRESETS: MockupStylePreset[] = [
     key: "sardinia_azure",
     label: "Sardinia Azure Luxury",
     description:
-      "Yacht club mediterraneo: azure profondo, oro caldo, marmo bianco. Ispirato ad Asinara Charter.",
+      "Yacht club mediterraneo: azure profondo, oro caldo, marmo bianco. Ispirato ad Cala Vento Charter.",
     category: "Mediterranean Luxury",
     sectorMatch: [
       "yacht",
@@ -208,7 +208,7 @@ export const MOCKUP_STYLE_PRESETS: MockupStylePreset[] = [
     key: "costa_pacifico",
     label: "Costa del Pacifico",
     description:
-      "Caraibico luxury: deep ocean, azure caraibico, sabbia, corallo. Ispirato a Batey Cevicheria.",
+      "Caraibico luxury: deep ocean, azure caraibico, sabbia, corallo. Ispirato a Pacifico Ceviche.",
     category: "Mediterranean Luxury",
     sectorMatch: [
       "pesce",
@@ -287,7 +287,7 @@ export const MOCKUP_STYLE_PRESETS: MockupStylePreset[] = [
     key: "frosted_glass",
     label: "Frosted Glass",
     description:
-      "Apple Vision Pro: glassmorphism, lavanda-pesca-cielo, pannelli traslucidi. Ispirato a Neo Nails Brickell.",
+      "Apple Vision Pro: glassmorphism, lavanda-pesca-cielo, pannelli traslucidi. Ispirato a Aurora Nail Atelier.",
     category: "Glassmorphism",
     sectorMatch: [
       "nails",
@@ -404,7 +404,7 @@ export const MOCKUP_STYLE_PRESETS: MockupStylePreset[] = [
     key: "maple_gold",
     label: "Maple & Gold",
     description:
-      "Autunno warm: foglie d'acero, oro, crema, terracotta. Ispirato ad Ashley's Playhouse.",
+      "Autunno warm: foglie d'acero, oro, crema, terracotta. Ispirato ad Arcobaleno Playhouse.",
     category: "Warm Nature",
     sectorMatch: [
       "asilo",
@@ -484,7 +484,7 @@ export const MOCKUP_STYLE_PRESETS: MockupStylePreset[] = [
     key: "ocean_azure",
     label: "Ocean Azure",
     description:
-      "Luxury bianco: bianco puro, ocean azure, accenti corallo. Ispirato a MMI Resident Hub.",
+      "Luxury bianco: bianco puro, ocean azure, accenti corallo. Ispirato a Domus Living.",
     category: "Light Minimal",
     sectorMatch: [
       "hotel",

@@ -2,19 +2,19 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const S = "/__empire-cover-removed";
 const DESKTOP_HEADER_OFFSET = 76;
 const MOBILE_HEADER_OFFSET = 84;
 
 const MOCKUPS = [
-  { src: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`, label: "COTE Miami", cat: "Restaurant", accent: "#f59e0b" },
+  { src: `${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-home.png`, label: "Onyx Brace Steakhouse", cat: "Restaurant", accent: "#f59e0b" },
   { src: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, label: "Aura Spa", cat: "Wellness", accent: "#ec4899" },
-  { src: `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, label: "Neo Nails", cat: "Beauty", accent: "#a78bfa" },
-  { src: `${S}/City%20Padel%20Milano/mobile-fresh-azzurro-home.png`, label: "City Padel", cat: "Sports", accent: "#22d3ee" },
+  { src: `${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, label: "Neo Nails", cat: "Beauty", accent: "#a78bfa" },
+  { src: `${S}/Centro%20Padel%20Brera/mobile-fresh-azzurro-home.png`, label: "City Padel", cat: "Sports", accent: "#22d3ee" },
   { src: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, label: "DIMORA", cat: "Real Estate", accent: "#c9a84c" },
-  { src: `${S}/Paperfish%20Sushi/a-sakura-home.png`, label: "Paperfish", cat: "Sushi", accent: "#ef4444" },
-  { src: `${S}/Aloha%20Pet%20Resorts/mobile-a-home.png`, label: "Aloha Pets", cat: "Pet Care", accent: "#4ade80" },
-  { src: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, label: "FAR Medical", cat: "Healthcare", accent: "#60a5fa" },
+  { src: `${S}/Sakura%20Atelier/a-sakura-home.png`, label: "Sakura Atelier", cat: "Sushi", accent: "#ef4444" },
+  { src: `${S}/Tropico%20Pet%20Resort/mobile-a-home.png`, label: "Aloha Pets", cat: "Pet Care", accent: "#4ade80" },
+  { src: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, label: "FAR Medical", cat: "Healthcare", accent: "#60a5fa" },
 ];
 
 const TRUST = ["847+ Imprese Attive", "24 Settori", "38 Agenti IA", "Garanzia 90 Giorni"];

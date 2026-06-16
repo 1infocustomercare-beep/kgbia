@@ -3,9 +3,9 @@ import { Quote } from "lucide-react";
 import MobileCarousel from "./MobileCarousel";
 
 const TESTIMONIALS = [
-  { quote: "In 60 giorni abbiamo automatizzato l'80% delle richieste clienti. Il fatturato è cresciuto del 34% senza assumere nessuno.", name: "Marco Bianchi", role: "CEO, COTE Miami Steakhouse", initials: "MB", tone: "gold" },
+  { quote: "In 60 giorni abbiamo automatizzato l'80% delle richieste clienti. Il fatturato è cresciuto del 34% senza assumere nessuno.", name: "Marco Bianchi", role: "CEO, Onyx Brace Steakhouse Steakhouse", initials: "MB", tone: "gold" },
   { quote: "Empire ha trasformato la nostra spa. Le prenotazioni online sono triplicate. Il personale ringrazia ogni giorno.", name: "Giulia Romano", role: "Founder, Aura Milano Spa", initials: "GR", tone: "violet" },
-  { quote: "Il Voice Agent risponde meglio di una receptionist. I clienti pensano sia una persona vera. Risultato: zero chiamate perse.", name: "Andrea Conti", role: "Owner, City Padel Milano", initials: "AC", tone: "emerald" },
+  { quote: "Il Voice Agent risponde meglio di una receptionist. I clienti pensano sia una persona vera. Risultato: zero chiamate perse.", name: "Andrea Conti", role: "Owner, Centro Padel Brera", initials: "AC", tone: "emerald" },
   { quote: "Apex Acquisition ci ha portato 187% di lead qualificati in più. Chiudo solo trattative pronte. Tempo risparmiato: 30h/settimana.", name: "Laura De Luca", role: "Sales Director, DIMORA Real Estate", initials: "LD", tone: "blue" },
 ];
 

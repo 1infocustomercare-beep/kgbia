@@ -8,7 +8,7 @@ import { getEmpireScreens, projectIdToSector } from "./EmpireMockupScreens";
 
 /**
  * PrestigePortfolioCarousel — horizontal swipe carousel + fullscreen detail modal.
- * Inspired by Lowengeld's /flame-kebab case study, adapted for Empire's
+ * Inspired by Empire Studio's /flame-kebab case study, adapted for Empire's
  * persuasive narrative (problem → solution → result).
  *
  * Each project ships 4 unique mockups (Home / Admin / App / AI) — never repeated
@@ -79,7 +79,7 @@ const PROJECTS: Project[] = [
     subtag: "Sushi",
     pill: { bg: "hsl(20 90% 92%)", text: "hsl(20 80% 38%)" },
     pill2: { bg: "hsl(340 60% 94%)", text: "hsl(340 55% 40%)" },
-    title: "Paperfish",
+    title: "Sakura Atelier",
 
     city: "Roma",
     oneLiner: "L'esperienza del ristorante stellato, anche prima di entrare.",
@@ -360,7 +360,7 @@ export default function PrestigePortfolioCarousel() {
                 onClick={() => setOpenId(p.id)}
                 className="group block w-full text-left"
               >
-                {/* Light cream card with two floating iPhones — Lowengeld style */}
+                {/* Light cream card with two floating iPhones — Empire Studio style */}
                 <div
                   className="relative flex aspect-[5/4] items-center justify-center overflow-hidden rounded-[28px] transition-all duration-500"
                   style={{

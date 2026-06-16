@@ -2,7 +2,7 @@
  * VariantSiteRenderer
  *
  * Renderizza il sito demo /b/:slug usando la shell iPhone più adatta
- * (Strapizzami / Paperfish / Batey) per il `template_variant` scelto
+ * (Strapizzami / Sakura Atelier / Pacifico Ceviche) per il `template_variant` scelto
  * dalla Demo Factory, con la palette e i font del mockup di riferimento.
  *
  * ⭐ v2 — Brand Identity Injection

@@ -43,7 +43,7 @@ function getScreenLabel(src: string, brandName: string, fallbackIndex: number): 
 }
 
 function getScreenCode(brandName: string, index: number): string {
-  // Es. "FLAME 001" — mostrato come overline sotto la frame, in stile Lowengeld
+  // Es. "FLAME 001" — mostrato come overline sotto la frame, in stile Empire Studio
   const code = brandName
     .toUpperCase()
     .replace(/[^A-Z0-9 ]/g, "")
@@ -324,7 +324,7 @@ export default function ProjectDetailOverlay({ sectorId, onClose }: { sectorId: 
             </div>
             <p className="text-sm leading-relaxed mb-4" style={{ color: "#d1d5db" }}>{project.description}</p>
 
-            {/* Metadata grid (CLIENT / YEAR / PLATFORM) — stile Lowengeld */}
+            {/* Metadata grid (CLIENT / YEAR / PLATFORM) — stile Empire Studio */}
             <div className="grid grid-cols-3 gap-2 mt-4">
               {[
                 { label: "Client", value: project.client },

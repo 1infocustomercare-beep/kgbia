@@ -580,12 +580,12 @@ function App() {
                     <Routes>
                       {/* Public routes */}
                       {/* ═══ HOMEPAGE UFFICIALE EMPIRE — Emerald Prestige ═══
-                          Luxury Lowengeld-style: hero cinematic, story pinned
+                          Luxury Empire Studio-style: hero cinematic, story pinned
                           Caos→Empire, services, industries, portfolio, process,
                           proof, CTA. Bilingue IT/EN. */}
                       <Route path="/" element={<EmpirePrestigeHome />} />
                       {/* Pagina mockup canonica = /demo (DemoDirectoryPage con tutti i settori
-                          e i siti reali Lowengeld). Le rotte legacy /mockups-demo, /demo-mockups,
+                          e i siti reali Empire Studio). Le rotte legacy /mockups-demo, /demo-mockups,
                           /mockups vi reindirizzano per non rompere i link esistenti. */}
                       <Route path="/mockups-demo" element={<Navigate to="/demo" replace />} />
                       <Route path="/demo-mockups" element={<Navigate to="/demo" replace />} />

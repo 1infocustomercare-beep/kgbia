@@ -135,7 +135,7 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
 
   useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
 
-  // ── Universal variant renderer (Strapizzami / Paperfish / Batey shells, themed per variant) ──
+  // ── Universal variant renderer (Strapizzami / Sakura Atelier / Pacifico Ceviche shells, themed per variant) ──
   const themeConfig = (restaurant as any)?.theme_config || (company as any)?.theme_config;
   const templateVariant = themeConfig?.template_variant as string | undefined;
   const hasVariant = !!templateVariant && templateVariant !== "default";

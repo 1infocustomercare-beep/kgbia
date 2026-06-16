@@ -52,10 +52,10 @@ const getDemoSiteUrl = (sectorId: string) => {
 };
 
 const PORTFOLIO_REFS: Record<string, string> = {
-  food: "COTE Miami", beauty: "Neo Nails Brickell", ncc: "Amalfi Luxury Transfer",
-  fitness: "City Padel Milano", healthcare: "FAR Medical", veterinary: "Aloha Pet Resort",
-  hotel: "MMI Resident Hub", tattoo: "Ink Masters Studio", beach: "Miami Watersports",
-  retail: "Store Premium", plumber: "Nick's Plumbing", electrician: "Elite Electrical",
+  food: "Onyx Brace Steakhouse", beauty: "Aurora Nail Atelier", ncc: "Amalfi Luxury Transfer",
+  fitness: "Centro Padel Brera", healthcare: "FAR Medical", veterinary: "Aloha Pet Resort",
+  hotel: "Domus Living", tattoo: "Ink Masters Studio", beach: "Onda Sport Club",
+  retail: "Store Premium", plumber: "Idro Pronto", electrician: "Elite Electrical",
   photography: "Vision Photography", events: "Elite Events", construction: "Premium Costruzioni",
   gardening: "Verde & Giardini", agriturismo: "Tuscan Country Estate", cleaning: "Premium Clean",
   legal: "Studio Legale", accounting: "Studio Commercialista Pro", garage: "Speed Auto Service",

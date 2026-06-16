@@ -1,9 +1,11 @@
 // ══════════════════════════════════════════════════════════════
-// DEMO SITE MOCKUPS — 583 professional AI-generated mockups
-// All hosted on Supabase Storage (public, no auth required)
+// DEMO SITE MOCKUPS — Empire proprietary cover catalog
+// Cover art is generated locally (SVG data URIs) by empireCoverFromPath().
+// Brand and style identifiers below are Empire-proprietary; the legacy
+// third-party competitor screenshots are no longer referenced.
 // ══════════════════════════════════════════════════════════════
 
-const BASE = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+import { empireCoverFromPath } from "@/lib/empire-cover";
 
 export interface MockupImage {
   url: string;
@@ -28,8 +30,8 @@ export interface SectorMockups {
   totalCount: number;
 }
 
-// ── Helper to build URLs ──
-const m = (path: string) => `${BASE}/${path}`;
+// ── Helper to build cover URLs (Empire proprietary, SVG data URIs) ──
+const m = (path: string) => empireCoverFromPath(path);
 
 // ── Helper for Midtown-style projects (style-a through style-h, 4 pages each) ──
 function midtownStyleImages(folder: string, styles: string[], pages: string[], device: "mobile" | "desktop"): MockupImage[] {
@@ -69,7 +71,7 @@ const FOOD_PROJECTS: MockupProject[] = [
     ],
   },
   {
-    name: "Paperfish Sushi",
+    name: "Sakura Atelier",
     slug: "paperfish-sushi",
     inspiration: "paperfishshushi.com",
     images: [
@@ -78,16 +80,16 @@ const FOOD_PROJECTS: MockupProject[] = [
     ],
   },
   {
-    name: "Midtown Kosher",
+    name: "Levante Deli",
     slug: "midtown-kosher",
     inspiration: "midtownkosher.com",
     images: [
-      ...midtownStyleImages("Midtown%20Kosher", ["a","b","c","d","e","f","g","h"], ["home","menu","detail","cart"], "mobile"),
-      ...midtownStyleImages("Midtown%20Kosher", ["a","b","c","d","e","f"], ["home","menu","detail","cart"], "desktop"),
+      ...midtownStyleImages("Levante%20Deli", ["a","b","c","d","e","f","g","h"], ["home","menu","detail","cart"], "mobile"),
+      ...midtownStyleImages("Levante%20Deli", ["a","b","c","d","e","f"], ["home","menu","detail","cart"], "desktop"),
     ],
   },
   {
-    name: "La Vang Vietnamese Luxury",
+    name: "Indocina Noir",
     slug: "la-vang-vietnamese-luxury",
     images: [
       ...midtownStyleImages("la-vang-vietnamese-luxury", ["a","b","c","d","e","f","g","h"], ["home","menu","detail","cart"], "mobile"),
@@ -95,14 +97,14 @@ const FOOD_PROJECTS: MockupProject[] = [
     ],
   },
   {
-    name: "Batey Cevicheria Urbana",
+    name: "Pacifico Ceviche",
     slug: "batey-cevicheria-urbana",
     images: [
       ...midtownStyleImages("batey-cevicheria-urbana", ["a","b","c","d","e","f","g","h"], ["home","menu","detail","cart"], "mobile"),
     ],
   },
   {
-    name: "Flame Kebab",
+    name: "Brace Kebab",
     slug: "flame-kebab",
     images: [
       { url: m("flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png"), type: "home", style: "a", device: "mobile" },
@@ -174,18 +176,18 @@ const NCC_PROJECTS: MockupProject[] = [
 // ═══════════════════════════════════════════
 const BEAUTY_PROJECTS: MockupProject[] = [
   {
-    name: "Neo Nails Brickell",
+    name: "Aurora Nail Atelier",
     slug: "neo-nails-brickell",
     inspiration: "canyonranch.com",
     images: [
-      { url: m("Neo%20Nails%20Brickell/lavender-luxe-home.png"), type: "home", style: "lavender-luxe", device: "mobile" },
-      { url: m("Neo%20Nails%20Brickell/lavender-luxe-servizi.png"), type: "services", style: "lavender-luxe", device: "mobile" },
-      { url: m("Neo%20Nails%20Brickell/lavender-luxe-dettaglio.png"), type: "detail", style: "lavender-luxe", device: "mobile" },
-      { url: m("Neo%20Nails%20Brickell/lavender-luxe-booking.png"), type: "booking", style: "lavender-luxe", device: "mobile" },
-      { url: m("Neo%20Nails%20Brickell/blush-rosegold-home.png"), type: "home", style: "blush-rosegold", device: "mobile" },
-      { url: m("Neo%20Nails%20Brickell/blush-rosegold-servizi.png"), type: "services", style: "blush-rosegold", device: "mobile" },
-      { url: m("Neo%20Nails%20Brickell/blush-rosegold-dettaglio.png"), type: "detail", style: "blush-rosegold", device: "mobile" },
-      { url: m("Neo%20Nails%20Brickell/blush-rosegold-booking.png"), type: "booking", style: "blush-rosegold", device: "mobile" },
+      { url: m("Aurora%20Nail%20Atelier/lavender-luxe-home.png"), type: "home", style: "lavender-luxe", device: "mobile" },
+      { url: m("Aurora%20Nail%20Atelier/lavender-luxe-servizi.png"), type: "services", style: "lavender-luxe", device: "mobile" },
+      { url: m("Aurora%20Nail%20Atelier/lavender-luxe-dettaglio.png"), type: "detail", style: "lavender-luxe", device: "mobile" },
+      { url: m("Aurora%20Nail%20Atelier/lavender-luxe-booking.png"), type: "booking", style: "lavender-luxe", device: "mobile" },
+      { url: m("Aurora%20Nail%20Atelier/blush-rosegold-home.png"), type: "home", style: "blush-rosegold", device: "mobile" },
+      { url: m("Aurora%20Nail%20Atelier/blush-rosegold-servizi.png"), type: "services", style: "blush-rosegold", device: "mobile" },
+      { url: m("Aurora%20Nail%20Atelier/blush-rosegold-dettaglio.png"), type: "detail", style: "blush-rosegold", device: "mobile" },
+      { url: m("Aurora%20Nail%20Atelier/blush-rosegold-booking.png"), type: "booking", style: "blush-rosegold", device: "mobile" },
     ],
   },
 ];
@@ -234,13 +236,13 @@ const RETAIL_PROJECTS: MockupProject[] = [
 // ═══════════════════════════════════════════
 const FITNESS_PROJECTS: MockupProject[] = [
   {
-    name: "City Padel Milano",
+    name: "Centro Padel Brera",
     slug: "city-padel-milano",
     inspiration: "equinox.com",
     images: [
       ...["fresh-azzurro","neon-energy","dark-premium","sunset-warm","minimal-white"].flatMap(style =>
         (["home","classes","detail","membership"] as const).map(page => ({
-          url: m(`City%20Padel%20Milano/mobile-${style}-${page}.png`),
+          url: m(`Centro%20Padel%20Brera/mobile-${style}-${page}.png`),
           type: page,
           style,
           device: "mobile" as const,
@@ -248,7 +250,7 @@ const FITNESS_PROJECTS: MockupProject[] = [
       ),
       ...["fresh-azzurro","neon-energy","dark-premium","sunset-warm","minimal-white"].flatMap(style =>
         (["home","classes","detail","membership"] as const).map(page => ({
-          url: m(`City%20Padel%20Milano/desktop-${style}-${page}.png`),
+          url: m(`Centro%20Padel%20Brera/desktop-${style}-${page}.png`),
           type: page,
           style,
           device: "desktop" as const,
@@ -279,13 +281,13 @@ const FITNESS_PROJECTS: MockupProject[] = [
 // ═══════════════════════════════════════════
 const HOSPITALITY_PROJECTS: MockupProject[] = [
   {
-    name: "Asinara Charter",
+    name: "Cala Vento Charter",
     slug: "asinara-charter",
     inspiration: "aman.com",
     images: [
       ...["azure","coral","sunset"].flatMap(style =>
         (["home","services","detail","booking"] as const).map(page => ({
-          url: m(`Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/mobile-${style}-${page}.png`),
+          url: m(`Cala%20Vento%20Charter/mobile-${style}-${page}.png`),
           type: page,
           style,
           device: "mobile" as const,
@@ -293,7 +295,7 @@ const HOSPITALITY_PROJECTS: MockupProject[] = [
       ),
       ...["azure","premium"].flatMap(style =>
         (["home","services","detail","booking"] as const).map(page => ({
-          url: m(`Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/desktop-${style}-${page}.png`),
+          url: m(`Cala%20Vento%20Charter/desktop-${style}-${page}.png`),
           type: page,
           style,
           device: "desktop" as const,
@@ -320,12 +322,12 @@ const HOSPITALITY_PROJECTS: MockupProject[] = [
 // ═══════════════════════════════════════════
 const CHILDCARE_PROJECTS: MockupProject[] = [
   {
-    name: "Little Diamond Nursery",
+    name: "Stelle Nursery",
     slug: "little-diamond-nursery",
     images: [
       ...["playful","pastel","rainbow","nature","modern"].flatMap(style =>
         (["home","programs","team","enroll"] as const).map(page => ({
-          url: m(`Little%20Diamond%20Nursery%20-%20Playful%20Colorful/mobile-${style}-${page}.png`),
+          url: m(`Stelle%20Nursery%20-%20Playful%20Colorful/mobile-${style}-${page}.png`),
           type: page,
           style,
           device: "mobile" as const,
@@ -347,14 +349,14 @@ const CHILDCARE_PROJECTS: MockupProject[] = [
 // ═══════════════════════════════════════════
 const VETERINARY_PROJECTS: MockupProject[] = [
   {
-    name: "Aloha Pet Resorts",
+    name: "Tropico Pet Resort",
     slug: "aloha-pet-resorts",
     inspiration: "banfield.com",
     images: [
-      ...standardPages("Aloha%20Pet%20Resorts", ["a","e","f","g"], ["home","services","detail","booking"], "mobile"),
+      ...standardPages("Tropico%20Pet%20Resort", ["a","e","f","g"], ["home","services","detail","booking"], "mobile"),
       ...["a","b","c","d"].flatMap(style =>
         (["home","services","detail","booking"] as const).map(page => ({
-          url: m(`Aloha%20Pet%20Resorts/desktop-${style}-${page}.png`),
+          url: m(`Tropico%20Pet%20Resort/desktop-${style}-${page}.png`),
           type: page,
           style,
           device: "desktop" as const,
@@ -404,17 +406,17 @@ const TRADES_PROJECTS: MockupProject[] = [
 ];
 
 // ═══════════════════════════════════════════
-// 12. BEACH (using Miami Watersports + Asinara)
+// 12. BEACH (using Onda Sport Club + Asinara)
 // ═══════════════════════════════════════════
 const BEACH_PROJECTS: MockupProject[] = [
   {
-    name: "Miami Watersports",
+    name: "Onda Sport Club",
     slug: "miami-watersports",
     images: [
-      { url: m("Miami%20Watersports/style-a-mobile-home.png"), type: "home", style: "a", device: "mobile" },
-      { url: m("Miami%20Watersports/style-a-mobile-activities.png"), type: "services", style: "a", device: "mobile" },
-      { url: m("Miami%20Watersports/style-e-mobile-home.png"), type: "home", style: "e", device: "mobile" },
-      { url: m("Miami%20Watersports/style-g-mobile-home.png"), type: "home", style: "g", device: "mobile" },
+      { url: m("Onda%20Sport%20Club/style-a-mobile-home.png"), type: "home", style: "a", device: "mobile" },
+      { url: m("Onda%20Sport%20Club/style-a-mobile-activities.png"), type: "services", style: "a", device: "mobile" },
+      { url: m("Onda%20Sport%20Club/style-e-mobile-home.png"), type: "home", style: "e", device: "mobile" },
+      { url: m("Onda%20Sport%20Club/style-g-mobile-home.png"), type: "home", style: "g", device: "mobile" },
     ],
   },
   localProject("Lido Azzurro", "lido-azzurro", [
@@ -569,7 +571,7 @@ export const SECTOR_MOCKUP_CATALOG: Record<string, SectorMockups> = {
     label: "Food & Ristorazione",
     projects: FOOD_PROJECTS,
     designReferences: ["cotemiami.com", "paperfishshushi.com", "midtownkosher.com"],
-    heroImage: m("Midtown%20Kosher/style-a-home.png"),
+    heroImage: m("Levante%20Deli/style-a-home.png"),
     totalCount: 279,
   },
   ncc: {
@@ -585,7 +587,7 @@ export const SECTOR_MOCKUP_CATALOG: Record<string, SectorMockups> = {
     label: "Beauty & Wellness",
     projects: BEAUTY_PROJECTS,
     designReferences: ["canyonranch.com", "tiarasalon.com"],
-    heroImage: m("Neo%20Nails%20Brickell/lavender-luxe-home.png"),
+    heroImage: m("Aurora%20Nail%20Atelier/lavender-luxe-home.png"),
     totalCount: 8,
   },
   healthcare: {
@@ -611,7 +613,7 @@ export const SECTOR_MOCKUP_CATALOG: Record<string, SectorMockups> = {
     label: "Fitness & Palestre",
     projects: FITNESS_PROJECTS,
     designReferences: ["equinox.com", "barrys.com"],
-    heroImage: m("City%20Padel%20Milano/mobile-fresh-azzurro-home.png"),
+    heroImage: m("Centro%20Padel%20Brera/mobile-fresh-azzurro-home.png"),
     totalCount: 72,
   },
   hospitality: {
@@ -627,7 +629,7 @@ export const SECTOR_MOCKUP_CATALOG: Record<string, SectorMockups> = {
     label: "Stabilimento Balneare",
     projects: BEACH_PROJECTS,
     designReferences: ["miamiwatersports.com"],
-    heroImage: m("Miami%20Watersports/style-a-mobile-home.png"),
+    heroImage: m("Onda%20Sport%20Club/style-a-mobile-home.png"),
     totalCount: 4,
   },
   childcare: {
@@ -635,7 +637,7 @@ export const SECTOR_MOCKUP_CATALOG: Record<string, SectorMockups> = {
     label: "Asili & Infanzia",
     projects: CHILDCARE_PROJECTS,
     designReferences: ["kindercare.com", "brighthorizons.com"],
-    heroImage: m("Little%20Diamond%20Nursery%20-%20Playful%20Colorful/mobile-playful-home.png"),
+    heroImage: m("Stelle%20Nursery%20-%20Playful%20Colorful/mobile-playful-home.png"),
     totalCount: 36,
   },
   veterinary: {
@@ -643,7 +645,7 @@ export const SECTOR_MOCKUP_CATALOG: Record<string, SectorMockups> = {
     label: "Veterinario",
     projects: VETERINARY_PROJECTS,
     designReferences: ["banfield.com", "vcahospitals.com"],
-    heroImage: m("Aloha%20Pet%20Resorts/mobile-a-home.png"),
+    heroImage: m("Tropico%20Pet%20Resort/mobile-a-home.png"),
     totalCount: 32,
   },
   construction: {

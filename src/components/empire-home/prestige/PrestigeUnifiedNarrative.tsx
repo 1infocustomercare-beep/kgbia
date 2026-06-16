@@ -7,7 +7,7 @@ import { useT } from "./PrestigeLang";
 
 /**
  * PrestigeUnifiedNarrative — fonde Problema + Soluzione + Come funziona
- * in un'unica sezione editoriale (dark), stile Lowengeld/Apple.
+ * in un'unica sezione editoriale (dark), stile Empire Studio/Apple.
  * Sostituisce 3 sezioni separate riducendo rumore visivo e accorciando
  * il funnel di conversione. Niente sticky, niente clipping.
  */

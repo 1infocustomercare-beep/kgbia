@@ -208,8 +208,8 @@ export default function EmpireCinematicHome() {
                 <CardStack
                   items={[
                     { id: 1, title: "Strapizzami", description: "Pizzeria · Ordini WhatsApp gestiti dall'AI", imageSrc: cardStackImages[0], tag: "Food", ctaLabel: "Vedi mockup", href: "/demo/strapizzami" },
-                    { id: 2, title: "Paperfish", description: "Sushi · Prenotazioni 24/7 senza staff al telefono", imageSrc: cardStackImages[1], tag: "Sushi", ctaLabel: "Vedi mockup", href: "/demo/paperfish" },
-                    { id: 3, title: "Batey Pacifico", description: "Yacht charter · Booking con voice agent multilingua", imageSrc: cardStackImages[2], tag: "Boat", ctaLabel: "Vedi mockup", href: "/demo/batey" },
+                    { id: 2, title: "Sakura Atelier", description: "Sushi · Prenotazioni 24/7 senza staff al telefono", imageSrc: cardStackImages[1], tag: "Sushi", ctaLabel: "Vedi mockup", href: "/demo/paperfish" },
+                    { id: 3, title: "Pacifico Ceviche", description: "Yacht charter · Booking con voice agent multilingua", imageSrc: cardStackImages[2], tag: "Boat", ctaLabel: "Vedi mockup", href: "/demo/batey" },
                     { id: 4, title: "NCC Luxury", description: "Trasporti · Centralino AI per preventivi e corse", imageSrc: cardStackImages[3], tag: "NCC", ctaLabel: "Vedi mockup", href: "/demo/ncc" },
                     { id: 5, title: "Beauty Studio", description: "Estetica · Agenda piena, zero no-show", imageSrc: cardStackImages[4], tag: "Beauty", ctaLabel: "Vedi mockup", href: "/demo/beauty" },
                     { id: 6, title: "Fitness Club", description: "Palestra · Onboarding membri automatico", imageSrc: cardStackImages[5], tag: "Fitness", ctaLabel: "Vedi mockup", href: "/demo/fitness" },

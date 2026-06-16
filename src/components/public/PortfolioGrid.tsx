@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 import { X, ChevronRight, Eye } from "lucide-react";
 
-const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const S = "/__empire-cover-removed";
 
 interface PortfolioItem {
   name: string;
@@ -16,58 +16,58 @@ interface PortfolioItem {
 
 const PORTFOLIO: PortfolioItem[] = [
   {
-    name: "COTE Miami",
+    name: "Onyx Brace Steakhouse",
     description: "Michelin-starred Korean steakhouse — 6 luxury design styles fusing Korean BBQ with Miami aesthetics.",
     category: "food", subCategory: "Korean Steakhouse", accent: "#c87533",
-    screens: [`${S}/COTE%20Miami/a-obsidian-mobile-home.png`, `${S}/COTE%20Miami/a-obsidian-mobile-menu.png`, `${S}/COTE%20Miami/a-obsidian-mobile-detail.png`],
+    screens: [`${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-home.png`, `${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-menu.png`, `${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-detail.png`],
   },
   {
-    name: "Paperfish Sushi",
+    name: "Sakura Atelier",
     description: "Contemporary Japanese & Nikkei sushi — 12 unique visual styles from sakura to luxury marble.",
     category: "food", subCategory: "Sushi", accent: "#e8a0bf",
-    screens: [`${S}/Paperfish%20Sushi/a-sakura-home.png`, `${S}/Paperfish%20Sushi/a-sakura-menu.png`, `${S}/Paperfish%20Sushi/a-sakura-detail.png`],
+    screens: [`${S}/Sakura%20Atelier/a-sakura-home.png`, `${S}/Sakura%20Atelier/a-sakura-menu.png`, `${S}/Sakura%20Atelier/a-sakura-detail.png`],
   },
   {
-    name: "Flame Kebab",
+    name: "Brace Kebab",
     description: "Premium kebab chain — vibrant food ordering with real-time tracking and customization.",
     category: "food", subCategory: "Kebab", accent: "#e85d04",
     screens: [`${S}/flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png`, `${S}/flame-kebab/c31559c3-67cf-4f62-b4e7-74833046eda7.png`, `${S}/flame-kebab/730290ed-5bf6-485f-b999-b75602a57d11.png`],
   },
   {
-    name: "La Vang Vietnamese",
+    name: "Indocina Noir",
     description: "Beverly Hills luxury Vietnamese — 8 stili mobile + 4 desktop, from Noir Saigon to Obsidian Gold.",
     category: "food", subCategory: "Vietnamese", accent: "#c9a84c",
-    screens: [`${S}/La%20Vang%20Vietnamese%20Luxury/a-noir-saigon-home.png`, `${S}/La%20Vang%20Vietnamese%20Luxury/a-noir-saigon-menu.png`, `${S}/La%20Vang%20Vietnamese%20Luxury/a-noir-saigon-detail.png`],
+    screens: [`${S}/Indocina%20Noir/a-noir-saigon-home.png`, `${S}/Indocina%20Noir/a-noir-saigon-menu.png`, `${S}/Indocina%20Noir/a-noir-saigon-detail.png`],
   },
   {
-    name: "Neo Nails Brickell",
+    name: "Aurora Nail Atelier",
     description: "Premium nail salon with frosted glass design — glassmorphism, Apple Vision Pro aesthetic.",
     category: "App Design", subCategory: "Nails", accent: "#c084fc",
-    screens: [`${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, `${S}/Neo%20Nails%20Brickell/frosted-glass-servizi.png`, `${S}/Neo%20Nails%20Brickell/frosted-glass-dettaglio.png`],
+    screens: [`${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, `${S}/Aurora%20Nail%20Atelier/frosted-glass-servizi.png`, `${S}/Aurora%20Nail%20Atelier/frosted-glass-dettaglio.png`],
   },
   {
-    name: "Asinara Charter",
+    name: "Cala Vento Charter",
     description: "Luxury charter booking for Sardinia — deep azure + warm gold, Costa Smeralda aesthetic.",
     category: "App Design", subCategory: "Mediterranean Luxury", accent: "#2563eb",
-    screens: [`${S}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/home.png`, `${S}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/escursioni.png`, `${S}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/dettaglio-tour.png`],
+    screens: [`${S}/Cala%20Vento%20Charter/home.png`, `${S}/Cala%20Vento%20Charter/escursioni.png`, `${S}/Cala%20Vento%20Charter/dettaglio-tour.png`],
   },
   {
-    name: "City Padel Milano",
+    name: "Centro Padel Brera",
     description: "Premium padel court booking — iOS 18 style, sistema prenotazione campi, profili maestri.",
     category: "App Design", subCategory: "UI/UX", accent: "#22c55e",
-    screens: [`${S}/City%20Padel%20Milano/mobile-fresh-azzurro-home.png`, `${S}/City%20Padel%20Milano/mobile-fresh-azzurro-prenota.png`, `${S}/City%20Padel%20Milano/mobile-fresh-azzurro-maestri.png`],
+    screens: [`${S}/Centro%20Padel%20Brera/mobile-fresh-azzurro-home.png`, `${S}/Centro%20Padel%20Brera/mobile-fresh-azzurro-prenota.png`, `${S}/Centro%20Padel%20Brera/mobile-fresh-azzurro-maestri.png`],
   },
   {
-    name: "Miami Boats Rental",
+    name: "Marina Riviera",
     description: "Luxury yacht & boat rental — 80+ boats, 5 design styles from Miami Sunset to Ice Turquoise.",
     category: "App Design", subCategory: "Boat Rental", accent: "#0ea5e9",
-    screens: [`${S}/Miami%20Boats%20Rental/A-mobile-home.png`, `${S}/Miami%20Boats%20Rental/A-mobile-fleet.png`, `${S}/Miami%20Boats%20Rental/A-mobile-yacht-detail.png`],
+    screens: [`${S}/Marina%20Riviera/A-mobile-home.png`, `${S}/Marina%20Riviera/A-mobile-fleet.png`, `${S}/Marina%20Riviera/A-mobile-yacht-detail.png`],
   },
   {
-    name: "Batey Cevicheria",
+    name: "Pacifico Ceviche",
     description: "Peruvian cevicheria in Milan — 4 styles: Costa del Pacifico, Casa Nostra, Bianco & Memoria.",
     category: "food", subCategory: "Peruvian", accent: "#38bdf8",
-    screens: [`${S}/Batey%20Cevicheria%20Urbana/costa-pacifico-mobile-home.png`, `${S}/Batey%20Cevicheria%20Urbana/costa-pacifico-mobile-menu.png`, `${S}/Batey%20Cevicheria%20Urbana/costa-pacifico-mobile-detail.png`],
+    screens: [`${S}/Pacifico%20Ceviche/costa-pacifico-mobile-home.png`, `${S}/Pacifico%20Ceviche/costa-pacifico-mobile-menu.png`, `${S}/Pacifico%20Ceviche/costa-pacifico-mobile-detail.png`],
   },
   {
     name: "Aura Milano Spa",
@@ -76,19 +76,19 @@ const PORTFOLIO: PortfolioItem[] = [
     screens: [`${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, `${S}/Aura%20Milano%20Spa/mobile-luce-pura-trattamenti.png`, `${S}/Aura%20Milano%20Spa/mobile-luce-pura-dettaglio.png`],
   },
   {
-    name: "Little Diamond Nursery",
+    name: "Stelle Nursery",
     description: "Premium nursery app for Dubai — playful, vivace e child-friendly con qualità premium.",
     category: "education", subCategory: "Nursery", accent: "#facc15",
-    screens: [`${S}/Little%20Diamond%20Nursery%20-%20Playful%20Colorful/home.png`, `${S}/Little%20Diamond%20Nursery%20-%20Playful%20Colorful/programs-activities.png`, `${S}/Little%20Diamond%20Nursery%20-%20Playful%20Colorful/team-tour.png`],
+    screens: [`${S}/Stelle%20Nursery%20-%20Playful%20Colorful/home.png`, `${S}/Stelle%20Nursery%20-%20Playful%20Colorful/programs-activities.png`, `${S}/Stelle%20Nursery%20-%20Playful%20Colorful/team-tour.png`],
   },
   {
-    name: "Ashley's Playhouse",
+    name: "Arcobaleno Playhouse",
     description: "Drop-in childcare Austin TX — iOS 18 design with 4 autumn-themed styles.",
     category: "App Design", subCategory: "Childcare", accent: "#f97316",
     screens: [`${S}/Ashley's%20Playhouse/stile-a-home.png`, `${S}/Ashley's%20Playhouse/stile-a-programs.png`, `${S}/Ashley's%20Playhouse/stile-a-book.png`],
   },
   {
-    name: "Nick's Plumbing & AC",
+    name: "Idro Pronto",
     description: "Home services booking app — Houston TX. Clean White + Green and Dark Premium Amber.",
     category: "App Design", subCategory: "Home Services", accent: "#22c55e",
     screens: [`${S}/Nick's%20Plumbing%20&%20AC/stile-a-home.png`, `${S}/Nick's%20Plumbing%20&%20AC/stile-a-services.png`, `${S}/Nick's%20Plumbing%20&%20AC/stile-a-detail.png`],
@@ -100,28 +100,28 @@ const PORTFOLIO: PortfolioItem[] = [
     screens: [`${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, `${S}/DIMORA%20Milano/eleganza-milanese-annunci-mobile.png`, `${S}/DIMORA%20Milano/eleganza-milanese-dettaglio-mobile.png`],
   },
   {
-    name: "Tatush Hair Fragrance",
+    name: "Velluto Hair Lab",
     description: "Premium hair fragrance brand — Fresh Minimal Blanc: bianco puro, rosa cipria, rose gold.",
     category: "E-Commerce", subCategory: "Beauty", accent: "#f9a8d4",
-    screens: [`${S}/Tatush%20Hair%20Fragrance/mobile-home.png`, `${S}/Tatush%20Hair%20Fragrance/mobile-shop.png`, `${S}/Tatush%20Hair%20Fragrance/mobile-detail.png`],
+    screens: [`${S}/Velluto%20Hair%20Lab/mobile-home.png`, `${S}/Velluto%20Hair%20Lab/mobile-shop.png`, `${S}/Velluto%20Hair%20Lab/mobile-detail.png`],
   },
   {
-    name: "Miami Watersports",
+    name: "Onda Sport Club",
     description: "Jet ski, parasailing, flyboard — 4 design styles from Tropical Energy to Miami Riviera Luxe.",
     category: "App Design", subCategory: "Watersports", accent: "#06b6d4",
-    screens: [`${S}/Miami%20Watersports/style-a-mobile-home.png`, `${S}/Miami%20Watersports/style-a-mobile-activities.png`, `${S}/Miami%20Watersports/style-a-mobile-detail.png`],
+    screens: [`${S}/Onda%20Sport%20Club/style-a-mobile-home.png`, `${S}/Onda%20Sport%20Club/style-a-mobile-activities.png`, `${S}/Onda%20Sport%20Club/style-a-mobile-detail.png`],
   },
   {
-    name: "Aloha Pet Resorts",
+    name: "Tropico Pet Resort",
     description: "Premium pet care booking — live camera feeds, pet profiles, resort management.",
     category: "lifestyle", subCategory: "Pet Care", accent: "#f472b6",
-    screens: [`${S}/Aloha%20Pet%20Resorts/mobile-a-home.png`, `${S}/Aloha%20Pet%20Resorts/mobile-a-services.png`, `${S}/Aloha%20Pet%20Resorts/mobile-a-detail.png`],
+    screens: [`${S}/Tropico%20Pet%20Resort/mobile-a-home.png`, `${S}/Tropico%20Pet%20Resort/mobile-a-services.png`, `${S}/Tropico%20Pet%20Resort/mobile-a-detail.png`],
   },
   {
-    name: "FAR Medical Solutions",
+    name: "Lumen Clinic",
     description: "Medical devices webapp — 4 stili light mode premium: Ethereal Glass, Azure Gradient Flow.",
     category: "App Design", subCategory: "Medical", accent: "#60a5fa",
-    screens: [`${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-servizi.png`, `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-prodotti.png`],
+    screens: [`${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-servizi.png`, `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-prodotti.png`],
   },
 ];
 

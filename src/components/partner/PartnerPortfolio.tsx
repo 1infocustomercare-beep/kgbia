@@ -170,7 +170,7 @@ export default function PartnerPortfolio() {
       <div className="text-center">
         <h2 className="text-lg font-display font-bold text-foreground">Portfolio Settori</h2>
         <p className="text-xs text-muted-foreground">
-          {totalBrands} brand reali • {totalStyles} stili design • Mockup Lowengeld Agency
+          {totalBrands} brand reali • {totalStyles} stili design • Mockup Empire Studio
         </p>
       </div>
 

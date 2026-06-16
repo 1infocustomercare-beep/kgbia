@@ -10,11 +10,11 @@ const PORT = pool.take(12);
 
 const META = [
   { tag: "Food", title: "Strapizzami", desc: "Pizzeria · Ordini WhatsApp gestiti dall'AI in 12 secondi", year: "2025" },
-  { tag: "Sushi", title: "Paperfish", desc: "Sushi bar · Prenotazioni 24/7 senza staff al telefono", year: "2025" },
+  { tag: "Sushi", title: "Sakura Atelier", desc: "Sushi bar · Prenotazioni 24/7 senza staff al telefono", year: "2025" },
   { tag: "NCC", title: "Empire NCC", desc: "Trasporti luxury · Centralino AI in 4 lingue", year: "2025" },
   { tag: "Beauty", title: "Velvet Studio", desc: "Beauty · Agenda piena, zero no-show grazie ai reminder", year: "2025" },
   { tag: "Hotel", title: "Asinara Resort", desc: "Boutique hotel · Concierge AI multilingua 24/7", year: "2024" },
-  { tag: "Boat", title: "Batey Pacifico", desc: "Yacht charter · Booking con voice agent", year: "2025" },
+  { tag: "Boat", title: "Pacifico Ceviche", desc: "Yacht charter · Booking con voice agent", year: "2025" },
   { tag: "Fitness", title: "Iron Club", desc: "Palestra · Onboarding membri 100% automatico", year: "2025" },
   { tag: "Caffè", title: "Bar Centrale", desc: "Caffetteria · Ordini al banco via QR + fidelity", year: "2024" },
   { tag: "Pro", title: "Studio Legale Riva", desc: "Avvocati · Filtro AI delle richieste in entrata", year: "2025" },
