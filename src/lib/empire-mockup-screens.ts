@@ -178,6 +178,8 @@ const sectorCopy: Record<SectorKind, { label: string; nav: string[]; items: stri
   generic: { label: "Business", nav: ["Home", "Servizi", "Booking", "CRM"], items: ["Premium", "Consulenza", "Pacchetto"], kpis: ["Lead", "Sales", "NPS"], cta: "Richiedi" },
 };
 
+type SectorCopy = (typeof sectorCopy)[SectorKind];
+
 function themeFor(path: string, sector: SectorKind): Tokens {
   const list = sectorThemes[sector] || sectorThemes.generic;
   return list[hashStr(path) % list.length];
@@ -225,7 +227,7 @@ function lineRows(x: number, y: number, t: Tokens, rows: string[], iconStart = 0
   return rows.map((r, i) => `<g transform="translate(${x} ${y + i * 58})"><rect width="320" height="46" rx="${Math.min(t.radius, 18)}" fill="${i % 2 ? t.panel2 : t.panel}"/><rect x="10" y="8" width="31" height="31" rx="${Math.min(t.radius, 12)}" fill="${i % 2 ? t.accent : t.primary}" opacity=".9"/><text x="25.5" y="29" text-anchor="middle" fill="${t.bg}" font-size="14" font-family="${t.heading}">${["✦","◆","◌","+","▣","◎"][((i + iconStart) % 6)]}</text><text x="53" y="20" fill="${t.text}" font-family="${t.body}" font-size="13" font-weight="800">${esc(r)}</text><text x="53" y="34" fill="${t.muted}" font-family="${t.body}" font-size="10">${esc(["Disponibile ora", "Gestione smart", "Personalizzabile", "Alta conversione"][i % 4])}</text><text x="296" y="28" text-anchor="end" fill="${t.primary}" font-family="${t.heading}" font-size="15" font-weight="900">${["€45", "4.9", "24h", "+18%"][i % 4]}</text></g>`).join("");
 }
 
-function homeScreen(t: Tokens, copy: typeof sectorCopy[SectorKind], brand: string, city: string, seed: number): string {
+function homeScreen(t: Tokens, copy: SectorCopy, brand: string, city: string, seed: number): string {
   const heroH = t.layout === "editorial" ? 230 : t.layout === "bento" ? 178 : 205;
   return `${statusBar(t)}${shapePattern(t, seed)}
   <g font-family="${t.body}"><text x="28" y="72" fill="${t.muted}" font-size="11" font-weight="800" letter-spacing="2">${esc(copy.label.toUpperCase())} · ${esc(city || "ITALIA")}</text><text x="28" y="105" fill="${t.text}" font-family="${t.heading}" font-size="31" font-weight="900">${esc(brand.slice(0, 19))}</text></g>
@@ -235,14 +237,14 @@ function homeScreen(t: Tokens, copy: typeof sectorCopy[SectorKind], brand: strin
   <g transform="translate(28 642)"><rect width="334" height="68" rx="${t.radius}" fill="${t.primary}"/><text x="22" y="31" fill="${t.bg}" font-family="${t.heading}" font-size="21" font-weight="900">${esc(copy.cta)}</text><text x="22" y="50" fill="${t.bg}" opacity=".76" font-family="${t.body}" font-size="11">Conferma immediata e follow-up automatico</text><text x="304" y="43" text-anchor="middle" fill="${t.bg}" font-size="28">→</text></g>${navBar(t, copy.nav, 0)}`;
 }
 
-function menuScreen(t: Tokens, copy: typeof sectorCopy[SectorKind], seed: number): string {
+function menuScreen(t: Tokens, copy: SectorCopy, seed: number): string {
   return `${statusBar(t)}<text x="28" y="77" fill="${t.text}" font-family="${t.heading}" font-size="32" font-weight="900">${esc(copy.nav[1] || "Catalogo")}</text><text x="28" y="101" fill="${t.muted}" font-family="${t.body}" font-size="12">Filtri, prezzi, stock e upsell live</text>
   <g font-family="${t.body}" font-size="11" font-weight="800">${["Tutti", "Top", "Promo", "VIP"].map((l, i) => `<rect x="${28 + i * 78}" y="124" width="68" height="32" rx="16" fill="${i === 0 ? t.primary : t.panel}"/><text x="${62 + i * 78}" y="145" text-anchor="middle" fill="${i === 0 ? t.bg : t.text}">${l}</text>`).join("")}</g>
   ${lineRows(35, 188, t, [...copy.items, "Gift card", "Pacchetto VIP", "Add-on AI"], seed)}
   <g transform="translate(35 616)"><rect width="320" height="82" rx="${t.radius}" fill="${t.panel2}"/><text x="18" y="29" fill="${t.text}" font-family="${t.heading}" font-size="20" font-weight="900">Bundle consigliato</text><text x="18" y="51" fill="${t.muted}" font-family="${t.body}" font-size="11">Aumenta lo scontrino medio con 2 click</text><rect x="230" y="22" width="70" height="38" rx="19" fill="${t.primary}"/><text x="265" y="46" text-anchor="middle" fill="${t.bg}" font-family="${t.body}" font-size="12" font-weight="900">+ €29</text></g>${navBar(t, copy.nav, 1)}`;
 }
 
-function bookingScreen(t: Tokens, copy: typeof sectorCopy[SectorKind], seed: number): string {
+function bookingScreen(t: Tokens, copy: SectorCopy, seed: number): string {
   const days = ["L", "M", "M", "G", "V", "S", "D"];
   return `${statusBar(t)}<text x="28" y="78" fill="${t.text}" font-family="${t.heading}" font-size="30" font-weight="900">Booking</text><text x="28" y="102" fill="${t.muted}" font-family="${t.body}" font-size="12">Agenda, disponibilità e conferma WhatsApp</text>
   ${card(28, 128, 334, 206, t, `<text x="48" y="162" fill="${t.text}" font-family="${t.body}" font-size="14" font-weight="900">Giugno 2026</text>${days.map((d, i) => `<text x="${57 + i * 43}" y="198" text-anchor="middle" fill="${t.muted}" font-size="10" font-family="${t.body}" font-weight="800">${d}</text>`).join("")}${Array.from({ length: 21 }).map((_, i) => `<rect x="${42 + (i % 7) * 43}" y="${212 + Math.floor(i / 7) * 34}" width="28" height="28" rx="9" fill="${i === (seed % 12) + 5 ? t.primary : t.panel2}"/><text x="${56 + (i % 7) * 43}" y="${231 + Math.floor(i / 7) * 34}" text-anchor="middle" fill="${i === (seed % 12) + 5 ? t.bg : t.text}" font-family="${t.body}" font-size="11" font-weight="900">${i + 8}</text>`).join("")}`)}
@@ -251,20 +253,20 @@ function bookingScreen(t: Tokens, copy: typeof sectorCopy[SectorKind], seed: num
   <rect x="28" y="642" width="334" height="58" rx="${t.radius}" fill="${t.primary}"/><text x="195" y="678" text-anchor="middle" fill="${t.bg}" font-family="${t.body}" font-size="15" font-weight="900">Conferma prenotazione</text>${navBar(t, copy.nav, 3)}`;
 }
 
-function dashboardScreen(t: Tokens, copy: typeof sectorCopy[SectorKind], seed: number): string {
+function dashboardScreen(t: Tokens, copy: SectorCopy, seed: number): string {
   return `${statusBar(t)}<text x="28" y="78" fill="${t.text}" font-family="${t.heading}" font-size="30" font-weight="900">Control room</text><text x="28" y="102" fill="${t.muted}" font-family="${t.body}" font-size="12">KPI, automazioni e attività live</text>
   <g>${copy.kpis.map((k, i) => `${card(28 + i * 112, 132, 102, 92, t, `<text x="${44 + i * 112}" y="166" fill="${t.primary}" font-family="${t.heading}" font-size="25" font-weight="900">${["€12k", "+18%", "4.9"][i] || "92"}</text><text x="${44 + i * 112}" y="192" fill="${t.text}" font-family="${t.body}" font-size="11" font-weight="800">${esc(k)}</text>`)} `).join("")}</g>
   ${card(28, 254, 334, 184, t, `<text x="48" y="292" fill="${t.text}" font-family="${t.body}" font-size="14" font-weight="900">Performance 7 giorni</text>${bars(58, 316, t, seed)}<path d="M58 384 C92 340 124 378 158 322 S232 350 272 294 326 320 342 286" fill="none" stroke="${t.accent}" stroke-width="4" stroke-linecap="round"/>`)}
   <text x="28" y="480" fill="${t.muted}" font-family="${t.body}" font-size="11" font-weight="900" letter-spacing="1.4">ATTIVITÀ RECENTE</text>${lineRows(35, 502, t, ["Nuovo lead caldo", "Pagamento ricevuto", "AI follow-up inviato"], seed)}${navBar(t, copy.nav, 2)}`;
 }
 
-function detailScreen(t: Tokens, copy: typeof sectorCopy[SectorKind], seed: number): string {
+function detailScreen(t: Tokens, copy: SectorCopy, seed: number): string {
   return `${statusBar(t)}<rect x="28" y="58" width="334" height="286" rx="${t.radius}" fill="url(#hero)"/><text x="50" y="288" fill="#fff" font-family="${t.heading}" font-size="34" font-weight="900">${esc(copy.items[seed % copy.items.length])}</text><text x="50" y="316" fill="#fff" opacity=".85" font-family="${t.body}" font-size="13">Scheda completa · foto · recensioni · disponibilità</text>
   ${card(28, 370, 334, 96, t, `<text x="50" y="405" fill="${t.text}" font-family="${t.heading}" font-size="24" font-weight="900">Dettaglio operativo</text><text x="50" y="430" fill="${t.muted}" font-family="${t.body}" font-size="12">Descrizione, varianti, allergeni/documenti, policy e note cliente.</text>`)}
   ${lineRows(35, 498, t, ["Recensioni certificate", "Opzioni personalizzate", "Disponibilità immediata"], seed)}<rect x="28" y="696" width="334" height="58" rx="${t.radius}" fill="${t.primary}"/><text x="195" y="732" text-anchor="middle" fill="${t.bg}" font-family="${t.body}" font-size="15" font-weight="900">${esc(copy.cta)}</text>${navBar(t, copy.nav, 1)}`;
 }
 
-function cartScreen(t: Tokens, copy: typeof sectorCopy[SectorKind], seed: number): string {
+function cartScreen(t: Tokens, copy: SectorCopy, seed: number): string {
   return `${statusBar(t)}<text x="28" y="78" fill="${t.text}" font-family="${t.heading}" font-size="31" font-weight="900">Checkout</text><text x="28" y="102" fill="${t.muted}" font-family="${t.body}" font-size="12">Pagamento, acconto, ricevuta e consenso privacy</text>${lineRows(35, 132, t, copy.items, seed)}
   ${card(28, 360, 334, 164, t, `<text x="50" y="397" fill="${t.text}" font-family="${t.heading}" font-size="22" font-weight="900">Riepilogo ordine</text>${[["Subtotale", "€148"], ["Sconto VIP", "-€18"], ["Servizio", "€4"]].map((r, i) => `<text x="50" y="${430 + i * 28}" fill="${t.muted}" font-family="${t.body}" font-size="12">${r[0]}</text><text x="316" y="${430 + i * 28}" text-anchor="end" fill="${t.text}" font-family="${t.body}" font-size="12" font-weight="900">${r[1]}</text>`).join("")}<text x="50" y="510" fill="${t.text}" font-size="16" font-weight="900">Totale</text><text x="316" y="510" text-anchor="end" fill="${t.primary}" font-family="${t.heading}" font-size="25" font-weight="900">€134</text>`)}
   ${card(28, 552, 334, 74, t, `<rect x="48" y="574" width="54" height="31" rx="8" fill="#1A1F71"/><text x="75" y="595" text-anchor="middle" fill="#fff" font-size="11" font-weight="900">VISA</text><text x="118" y="584" fill="${t.text}" font-size="13" font-weight="900">•••• 4242</text><text x="118" y="603" fill="${t.muted}" font-size="10">Apple Pay · ricevuta automatica</text>`)}<rect x="28" y="660" width="334" height="58" rx="${t.radius}" fill="${t.primary}"/><text x="195" y="696" text-anchor="middle" fill="${t.bg}" font-family="${t.body}" font-size="15" font-weight="900">Paga in sicurezza</text>${navBar(t, copy.nav, 2)}`;
