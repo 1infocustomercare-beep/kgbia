@@ -380,12 +380,21 @@ export default function PrestigePortfolioCarousel() {
 
                   {/* Two iPhones side-by-side, slightly staggered */}
                   <div className="relative flex items-end gap-2 transition-transform duration-[700ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04] group-hover:-translate-y-1">
-                    <div className="translate-y-2 -rotate-[3deg]">
-                      <PrestigePhone src={p.screens[0]} width={120} loading="lazy" />
-                    </div>
-                    <div className="-translate-y-2 rotate-[3deg]">
-                      <PrestigePhone src={p.screens[1]} width={120} loading="lazy" />
-                    </div>
+                    {(() => {
+                      const sector = projectIdToSector(p.id);
+                      const s0 = sector ? getEmpireScreens(sector, PHONE_VIEWS[0]) : null;
+                      const s1 = sector ? getEmpireScreens(sector, PHONE_VIEWS[2]) : null;
+                      return (
+                        <>
+                          <div className="translate-y-2 -rotate-[3deg]">
+                            <PrestigePhone src={sector ? undefined : p.screens[0]} screen={s0 ?? undefined} width={120} loading="lazy" />
+                          </div>
+                          <div className="-translate-y-2 rotate-[3deg]">
+                            <PrestigePhone src={sector ? undefined : p.screens[1]} screen={s1 ?? undefined} width={120} loading="lazy" />
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
 
                   {/* Hover hint */}
