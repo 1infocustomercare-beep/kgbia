@@ -221,7 +221,9 @@ const SECTOR_PROPRIETARY_POOL: Array<[string, string[]]> = [
   ["stelle", POOL_BABY], ["nursery", POOL_BABY], ["playhouse", POOL_BABY], ["baby", POOL_BABY],
   ["plumbing", POOL_ELEC], ["electric", POOL_ELEC], ["nick", POOL_ELEC],
   // Generic
-  ["restaurant", POOL_FOOD], ["food", POOL_FOOD], ["pizzeria", POOL_FOOD], ["bistro", POOL_FOOD],
+  ["pizzeria", POOL_PIZZA], ["pizza", POOL_PIZZA], ["napoletana", POOL_PIZZA],
+  ["dental", POOL_HEALTH], ["dentist", POOL_HEALTH], ["physio", POOL_HEALTH], ["physiotherapy", POOL_HEALTH],
+  ["restaurant", POOL_FOOD], ["food", POOL_FOOD], ["bistro", POOL_FOOD], ["trattoria", POOL_FOOD], ["osteria", POOL_FOOD],
   ["sushi", POOL_SUSHI], ["japanese", POOL_SUSHI], ["ramen", POOL_SUSHI],
   ["ncc", POOL_NCC], ["limousine", POOL_NCC], ["transfer", POOL_NCC],
   ["beauty", POOL_BEAUTY], ["spa", POOL_BEAUTY], ["salon", POOL_BEAUTY],
