@@ -24,6 +24,7 @@ import {
   Star,
   TrendingUp,
   Utensils,
+  Waves,
   Wifi,
 } from "lucide-react";
 import type { PhoneView } from "./PrestigePhone";
