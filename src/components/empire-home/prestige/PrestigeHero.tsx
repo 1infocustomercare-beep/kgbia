@@ -65,7 +65,7 @@ export default function PrestigeHero() {
     <section
       ref={ref}
       data-section="prestige-hero"
-      className="prestige-section prestige-dark relative flex items-center overflow-x-clip"
+      className="prestige-section prestige-dark relative flex items-center overflow-hidden"
       style={{ paddingTop: "clamp(96px, 12svh, 140px)", paddingBottom: "clamp(64px, 8svh, 96px)", minHeight: "auto" }}
     >
       {/* Lang toggle — top-right floating; auto-hidden when LandingNav already mounts one (see PrestigeTheme) */}
