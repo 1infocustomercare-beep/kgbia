@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { createMockupPool } from "@/lib/mockup-pool";
 import PrestigePhone, { PHONE_VIEWS } from "./PrestigePhone";
+import { getEmpireScreens, projectIdToSector } from "./EmpireMockupScreens";
 
 /**
  * PrestigePortfolioCarousel — horizontal swipe carousel + fullscreen detail modal.
