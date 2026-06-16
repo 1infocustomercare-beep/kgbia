@@ -31,20 +31,24 @@ import {
 } from "lucide-react";
 import type { PhoneView } from "./PrestigePhone";
 
-import restaurantHero from "@/assets/empire-mockups/restaurant-hero.jpg";
-import restaurantDish from "@/assets/empire-mockups/restaurant-dish.jpg";
-import sushiHero from "@/assets/empire-mockups/sushi-hero.jpg";
-import sushiDish from "@/assets/empire-mockups/sushi-detail.jpg";
-import nccHero from "@/assets/empire-mockups/ncc-hero.jpg";
-import nccDetail from "@/assets/empire-mockups/ncc-detail.jpg";
-import beautyHero from "@/assets/empire-mockups/beauty-hero.jpg";
-import beautyDish from "@/assets/empire-mockups/beauty-dish.jpg";
-import hospitalityHero from "@/assets/empire-mockups/hospitality-hero.jpg";
-import hospitalityDetail from "@/assets/empire-mockups/hospitality-detail.jpg";
-import fitnessHero from "@/assets/empire-mockups/fitness-hero.jpg";
-import fitnessDish from "@/assets/empire-mockups/fitness-dish.jpg";
-import realestateHero from "@/assets/empire-mockups/realestate-hero.jpg";
-import realestateDish from "@/assets/empire-mockups/realestate-dish.jpg";
+// Use real Lowengeld-grade mockup screenshots from Supabase storage (same source
+// used by /demo and the partner portfolio). This avoids low-quality AI hero shots
+// and keeps the visual standard aligned with the official mockup catalog.
+const MOCKUPS_CDN = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const restaurantHero = `${MOCKUPS_CDN}/COTE%20Miami/a-obsidian-mobile-home.png`;
+const restaurantDish = `${MOCKUPS_CDN}/COTE%20Miami/a-obsidian-mobile-detail.png`;
+const sushiHero = `${MOCKUPS_CDN}/Paperfish%20Sushi/b-luxury-dark-home.png`;
+const sushiDish = `${MOCKUPS_CDN}/Paperfish%20Sushi/b-luxury-dark-detail.png`;
+const nccHero = `${MOCKUPS_CDN}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/home.png`;
+const nccDetail = `${MOCKUPS_CDN}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/dettaglio-tour.png`;
+const beautyHero = `${MOCKUPS_CDN}/Neo%20Nails%20Brickell/lavender-luxe-home.png`;
+const beautyDish = `${MOCKUPS_CDN}/Neo%20Nails%20Brickell/lavender-luxe-servizi.png`;
+const hospitalityHero = `${MOCKUPS_CDN}/Miami%20Boats%20Rental/A-mobile-home.png`;
+const hospitalityDetail = `${MOCKUPS_CDN}/Miami%20Boats%20Rental/A-mobile-yacht-detail.png`;
+const fitnessHero = `${MOCKUPS_CDN}/City%20Padel%20Milano/mobile-sage-luxe-home.png`;
+const fitnessDish = `${MOCKUPS_CDN}/City%20Padel%20Milano/mobile-sage-luxe-dettaglio.png`;
+const realestateHero = `${MOCKUPS_CDN}/MMI%20Resident%20Hub/05-ocean-azure-mobile-dashboard.png`;
+const realestateDish = `${MOCKUPS_CDN}/MMI%20Resident%20Hub/06-ocean-azure-mobile-units.png`;
 
 export type EmpireSector = "restaurant" | "sushi" | "ncc" | "beauty" | "hospitality" | "fitness" | "realestate";
 
