@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import LandingNav from "@/components/landing/LandingNav";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 
@@ -25,12 +25,31 @@ import {
   PrestigeStickyCTA,
 } from "@/components/empire-home/prestige/PrestigeConversion";
 
+// ─── Cinematic extras + catalogs (additive, lazy-mounted) ───
+import LazyMount from "@/components/empire-home/LazyMount";
+import MockupCatalog from "@/components/empire-home/MockupCatalog";
+import AgentsCatalog from "@/components/empire-home/AgentsCatalog";
+import StackedPanels from "@/components/empire-21st/StackedPanels";
+import { CardStack } from "@/components/empire-21st/CardStack";
+import { NeonOrbs } from "@/components/empire-21st/NeonOrbs";
+import SplashScreen from "@/components/SplashScreen";
+import { createMockupPool } from "@/lib/mockup-pool";
+
 import { CinematicFooter } from "@/components/empire-21st/MotionFooter";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepageContent";
 
 /** Voice agent memoised so it never re-renders with the page scroll. */
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
+
+const homePool = createMockupPool();
+const cardStackImages = homePool.images(6).map((src, i) => ({
+  id: i,
+  title: `Empire ${i + 1}`,
+  imageSrc: src,
+}));
+
+
 
 /**
  * Emerald Prestige Home — Lowengeld-style luxury agency homepage.
@@ -40,6 +59,22 @@ const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
  */
 function EmpirePrestigeHomeInner() {
   const { content, isPreview } = useHomepageContent();
+
+  // Cinematic splash — shown once per browser session, bypassed in preview/iframe.
+  const [showSplash, setShowSplash] = useState(() => {
+    if (typeof window === "undefined") return false;
+    if (window.self !== window.top) return false; // iframe
+    try {
+      return sessionStorage.getItem("empire-splash-seen") !== "1";
+    } catch {
+      return false;
+    }
+  });
+  const dismissSplash = () => {
+    try { sessionStorage.setItem("empire-splash-seen", "1"); } catch {}
+    setShowSplash(false);
+  };
+
 
   // Brand HSL overrides (parity con LandingPage)
   useEffect(() => {
@@ -67,6 +102,7 @@ function EmpirePrestigeHomeInner() {
 
   return (
     <>
+      {showSplash && !isPreview && <SplashScreen onComplete={dismissSplash} />}
       <PrestigeTheme />
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen overflow-x-hidden">
@@ -85,8 +121,33 @@ function EmpirePrestigeHomeInner() {
         <PrestigeIndustries />
         <PrestigeAriannaDemo />
         <PrestigePortfolioCarousel />
+
+        {/* ─── Cinematic accent: stacked panels + 3D card stack ─── */}
+        <LazyMount minHeight="80vh" rootMargin="400px 0px" className="prestige-dark overflow-hidden">
+          <StackedPanels />
+        </LazyMount>
+        <LazyMount minHeight="70vh" rootMargin="400px 0px" className="prestige-dark overflow-hidden">
+          <CardStack items={cardStackImages} />
+        </LazyMount>
+
+        {/* ─── Mockup vault (catalog completo) ─── */}
+        <LazyMount minHeight="100vh" rootMargin="500px 0px" id="mockups" className="prestige-dark overflow-hidden">
+          <MockupCatalog />
+        </LazyMount>
+
         <PrestigeCases />
         <PrestigeProof />
+
+        {/* ─── 98 Agenti AI catalog ─── */}
+        <LazyMount minHeight="100vh" rootMargin="500px 0px" id="agents" className="prestige-dark overflow-hidden">
+          <AgentsCatalog />
+        </LazyMount>
+
+        {/* ─── Neon orbs cinematic accent ─── */}
+        <LazyMount minHeight="60vh" rootMargin="400px 0px" className="prestige-dark overflow-hidden">
+          <NeonOrbs />
+        </LazyMount>
+
         <PrestigeRoiCalculator />
         <PrestigeComparison />
         <PrestigePricing />
@@ -105,6 +166,7 @@ function EmpirePrestigeHomeInner() {
     </>
   );
 }
+
 
 export default function EmpirePrestigeHome() {
   return (
