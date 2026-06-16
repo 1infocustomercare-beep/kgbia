@@ -5,7 +5,7 @@ import { getEmpireScreens, type EmpireSector } from "@/components/empire-home/pr
 
 const SECTORS: { id: EmpireSector; brand: string; tagline: string }[] = [
   { id: "restaurant", brand: "Strapizzami", tagline: "Pizzeria napoletana · Milano" },
-  { id: "sushi", brand: "Paperfish", tagline: "Sushi fine dining · Roma" },
+  { id: "sushi", brand: "Sakura Atelier", tagline: "Sushi fine dining · Roma" },
   { id: "ncc", brand: "Empire NCC", tagline: "Chauffeur luxury · Como" },
   { id: "beauty", brand: "Velvet Studio", tagline: "Beauty atelier · Torino" },
   { id: "hospitality", brand: "Asinara Resort", tagline: "Boutique hotel · Sardegna" },

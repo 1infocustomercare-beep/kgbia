@@ -2,23 +2,23 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const S = "/__empire-cover-removed";
 
 const SECTORS = [
   { name: "Ristorazione", img: `${S}/flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png`, desc: "Ordini automatici, prenotazioni smart e delivery — i tuoi clienti ordinano in 30 secondi.", accent: "#f97316" },
-  { name: "Fitness & Sport", img: `${S}/City%20Padel%20Milano/mobile-fresh-azzurro-home.png`, desc: "Prenota campi, corsi e abbonamenti in un tap. Più iscrizioni, meno telefonate.", accent: "#22d3ee" },
+  { name: "Fitness & Sport", img: `${S}/Centro%20Padel%20Brera/mobile-fresh-azzurro-home.png`, desc: "Prenota campi, corsi e abbonamenti in un tap. Più iscrizioni, meno telefonate.", accent: "#22d3ee" },
   { name: "Beauty & Wellness", img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, desc: "Agenda sempre piena. I clienti prenotano da soli, tu ti concentri sul servizio.", accent: "#ec4899" },
-  { name: "Hospitality", img: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`, desc: "Check-in digitale, room service AI e concierge — l'esperienza 5 stelle automatizzata.", accent: "#c9a84c" },
-  { name: "Pet Care", img: `${S}/Aloha%20Pet%20Resorts/mobile-a-home.png`, desc: "Prenotazioni, profili animali e monitoraggio live. I padroni adorano la trasparenza.", accent: "#4ade80" },
-  { name: "Sushi & Nikkei", img: `${S}/Paperfish%20Sushi/a-sakura-home.png`, desc: "Menu interattivo con foto IA, ordini all-you-can-eat e consegna tracciata.", accent: "#fb923c" },
-  { name: "NCC & Transfer", img: `${S}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/home.png`, desc: "Prenotazioni flotta, tracking in tempo reale e pagamenti automatici.", accent: "#60a5fa" },
-  { name: "Charter & Nautica", img: `${S}/Miami%20Boats%20Rental/A-mobile-home.png`, desc: "Booking imbarcazioni, gestione itinerari e contratti digitali.", accent: "#38bdf8" },
-  { name: "Luxury Retail", img: `${S}/Tatush%20Hair%20Fragrance/mobile-home.png`, desc: "Catalogo premium, checkout elegante e clienteling personalizzato dall'IA.", accent: "#a855f7" },
-  { name: "Healthcare", img: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, desc: "Appuntamenti, cartelle digitali e telemedicina — tutto conforme al GDPR.", accent: "#3b82f6" },
+  { name: "Hospitality", img: `${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-home.png`, desc: "Check-in digitale, room service AI e concierge — l'esperienza 5 stelle automatizzata.", accent: "#c9a84c" },
+  { name: "Pet Care", img: `${S}/Tropico%20Pet%20Resort/mobile-a-home.png`, desc: "Prenotazioni, profili animali e monitoraggio live. I padroni adorano la trasparenza.", accent: "#4ade80" },
+  { name: "Sushi & Nikkei", img: `${S}/Sakura%20Atelier/a-sakura-home.png`, desc: "Menu interattivo con foto IA, ordini all-you-can-eat e consegna tracciata.", accent: "#fb923c" },
+  { name: "NCC & Transfer", img: `${S}/Cala%20Vento%20Charter/home.png`, desc: "Prenotazioni flotta, tracking in tempo reale e pagamenti automatici.", accent: "#60a5fa" },
+  { name: "Charter & Nautica", img: `${S}/Marina%20Riviera/A-mobile-home.png`, desc: "Booking imbarcazioni, gestione itinerari e contratti digitali.", accent: "#38bdf8" },
+  { name: "Luxury Retail", img: `${S}/Velluto%20Hair%20Lab/mobile-home.png`, desc: "Catalogo premium, checkout elegante e clienteling personalizzato dall'IA.", accent: "#a855f7" },
+  { name: "Healthcare", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, desc: "Appuntamenti, cartelle digitali e telemedicina — tutto conforme al GDPR.", accent: "#3b82f6" },
   { name: "Immobiliare", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, desc: "Annunci smart, virtual tour e CRM acquirenti con follow-up automatico.", accent: "#8b5cf6" },
-  { name: "Watersports", img: `${S}/Miami%20Watersports/style-a-mobile-home.png`, desc: "Noleggio attrezzature, corsi ed escursioni con booking online e meteo live.", accent: "#06b6d4" },
-  { name: "Nail Art", img: `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, desc: "Galleria lavori, prenotazione servizi e programma loyalty tutto automatizzato.", accent: "#f472b6" },
-  { name: "Nursery & Education", img: `${S}/Little%20Diamond%20Nursery%20-%20Playful%20Colorful/home.png`, desc: "Iscrizioni, diario giornaliero e comunicazioni genitori — tutto in un'app.", accent: "#fbbf24" },
+  { name: "Watersports", img: `${S}/Onda%20Sport%20Club/style-a-mobile-home.png`, desc: "Noleggio attrezzature, corsi ed escursioni con booking online e meteo live.", accent: "#06b6d4" },
+  { name: "Nail Art", img: `${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, desc: "Galleria lavori, prenotazione servizi e programma loyalty tutto automatizzato.", accent: "#f472b6" },
+  { name: "Nursery & Education", img: `${S}/Stelle%20Nursery%20-%20Playful%20Colorful/home.png`, desc: "Iscrizioni, diario giornaliero e comunicazioni genitori — tutto in un'app.", accent: "#fbbf24" },
   { name: "Fast Food", img: `${S}/STRAPIZZAMI/stile-a-home.png`, desc: "Ordini rapidi, combo personalizzabili e fidelity digitale multi-punto vendita.", accent: "#ef4444" },
 ];
 

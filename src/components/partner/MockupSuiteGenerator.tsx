@@ -87,11 +87,11 @@ const TEMPLATE_VARIANTS = [
   { key: "real_estate_trust", label: "Real Estate Trust — immobiliare, legale, finanza", group: "Premium 2026" },
   { key: "fitness_energy",    label: "Fitness Energy — palestre, sport, supplements", group: "Premium 2026" },
   // Esistenti
-  { key: "paperfish",         label: "Paperfish Sakura — sushi/giapponese", group: "Food" },
+  { key: "paperfish",         label: "Sakura Atelier Sakura — sushi/giapponese", group: "Food" },
   { key: "strapizzami",       label: "Strapizzami — pizzeria/italiano", group: "Food" },
   { key: "casual_warm",       label: "Casual Warm — trattoria/bistrot", group: "Food" },
   { key: "luxury_gold",       label: "Luxury Gold — alta cucina/Michelin", group: "Hospitality" },
-  { key: "batey",             label: "Batey Pacifico — mare/lido/yacht", group: "Hospitality" },
+  { key: "batey",             label: "Pacifico Ceviche — mare/lido/yacht", group: "Hospitality" },
   { key: "minimal_zen",       label: "Minimal Zen — spa/wellness", group: "Wellness" },
 ];
 

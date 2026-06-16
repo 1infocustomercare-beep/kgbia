@@ -228,7 +228,7 @@ export default function BusinessPage() {
 
   /* ─── UNIVERSAL VARIANT GATE ───
    * Se la Demo Factory ha scelto un mockup iPhone specifico (template_variant),
-   * renderizza ESATTAMENTE quello (Strapizzami / Paperfish / Batey shell + palette
+   * renderizza ESATTAMENTE quello (Strapizzami / Sakura Atelier / Pacifico Ceviche shell + palette
    * del variant) per QUALSIASI settore, invece dello stock site. 1:1 con preview.
    */
   const templateVariant = themeConfig?.template_variant as string | undefined;

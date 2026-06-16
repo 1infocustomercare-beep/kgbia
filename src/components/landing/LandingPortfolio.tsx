@@ -23,24 +23,24 @@ const SECTOR_CAT_MAP: Record<string, string> = {
 };
 
 const BRAND_META: Record<string, { desc: string; sub: string }> = {
-  "COTE Miami": { desc: "Michelin-starred Korean steakhouse – 6 luxury styles.", sub: "Korean Steakhouse" },
-  "Paperfish Sushi": { desc: "Premium sushi ordering – 12 unique visual styles.", sub: "Sushi & Nikkei" },
-  "La Vang Vietnamese": { desc: "Luxury Vietnamese cuisine – 8 mobile + 4 desktop.", sub: "Vietnamese Luxury" },
-  "Batey Cevicheria": { desc: "Peruvian cevicheria – Costa Pacifico, Bianco & Memoria.", sub: "Peruvian" },
-  "Midtown Kosher": { desc: "Kosher restaurant Miami – 8 style proposals.", sub: "Kosher Restaurant" },
-  "Flame Kebab": { desc: "Vibrant food ordering – real-time tracking.", sub: "Kebab & Grill" },
-  "Neo Nails Brickell": { desc: "Premium nail salon – glassmorphism aesthetic.", sub: "Nails & Beauty" },
-  "Tatush Hair Fragrance": { desc: "Hair fragrance brand – Fresh Minimal Blanc.", sub: "Hair & Fragrance" },
-  "Miami Boats Rental": { desc: "Luxury yacht & boat rental – 5 styles.", sub: "Boat & Yacht" },
-  "Asinara Charter": { desc: "Sardinian luxury charter – azure + gold palette.", sub: "Charter" },
-  "Aloha Pet Resorts": { desc: "Premium pet care – live cameras & resort management.", sub: "Pet Resort" },
-  "Little Diamond Nursery": { desc: "Premium nursery Dubai – 5 playful styles.", sub: "Nursery" },
-  "Ashley's Playhouse": { desc: "Drop-in childcare Austin TX – 4 autumn styles.", sub: "Childcare" },
-  "City Padel Milano": { desc: "Premium padel club Milano – court booking.", sub: "Padel & Sport" },
-  "Miami Watersports": { desc: "Jet ski, parasailing, flyboard – 4 tropical styles.", sub: "Watersports" },
-  "Nick's Plumbing & AC": { desc: "Home services booking Houston TX – iOS 18.", sub: "Plumbing & HVAC" },
-  "FAR Medical Solutions": { desc: "Medical devices – 4 premium light mode styles.", sub: "Medical Devices" },
-  "MMI Resident Hub": { desc: "Luxury condo resident portal – 4 styles.", sub: "Luxury Condo" },
+  "Onyx Brace Steakhouse": { desc: "Michelin-starred Korean steakhouse – 6 luxury styles.", sub: "Korean Steakhouse" },
+  "Sakura Atelier": { desc: "Premium sushi ordering – 12 unique visual styles.", sub: "Sushi & Nikkei" },
+  "Indocina Noir": { desc: "Luxury Vietnamese cuisine – 8 mobile + 4 desktop.", sub: "Vietnamese Luxury" },
+  "Pacifico Ceviche": { desc: "Peruvian cevicheria – Costa Pacifico, Bianco & Memoria.", sub: "Peruvian" },
+  "Levante Deli": { desc: "Kosher restaurant Miami – 8 style proposals.", sub: "Kosher Restaurant" },
+  "Brace Kebab": { desc: "Vibrant food ordering – real-time tracking.", sub: "Kebab & Grill" },
+  "Aurora Nail Atelier": { desc: "Premium nail salon – glassmorphism aesthetic.", sub: "Nails & Beauty" },
+  "Velluto Hair Lab": { desc: "Hair fragrance brand – Fresh Minimal Blanc.", sub: "Hair & Fragrance" },
+  "Marina Riviera": { desc: "Luxury yacht & boat rental – 5 styles.", sub: "Boat & Yacht" },
+  "Cala Vento Charter": { desc: "Sardinian luxury charter – azure + gold palette.", sub: "Charter" },
+  "Tropico Pet Resort": { desc: "Premium pet care – live cameras & resort management.", sub: "Pet Resort" },
+  "Stelle Nursery": { desc: "Premium nursery Dubai – 5 playful styles.", sub: "Nursery" },
+  "Arcobaleno Playhouse": { desc: "Drop-in childcare Austin TX – 4 autumn styles.", sub: "Childcare" },
+  "Centro Padel Brera": { desc: "Premium padel club Milano – court booking.", sub: "Padel & Sport" },
+  "Onda Sport Club": { desc: "Jet ski, parasailing, flyboard – 4 tropical styles.", sub: "Watersports" },
+  "Idro Pronto": { desc: "Home services booking Houston TX – iOS 18.", sub: "Plumbing & HVAC" },
+  "Lumen Clinic": { desc: "Medical devices – 4 premium light mode styles.", sub: "Medical Devices" },
+  "Domus Living": { desc: "Luxury condo resident portal – 4 styles.", sub: "Luxury Condo" },
   "Pokewaii Brescia": { desc: "Pokeria hawaiana – 4 tropical styles.", sub: "Poke & Hawaiian" },
   "Orygano Pizzeria": { desc: "Pizzeria Gourmet Catania – Dark Gourmet.", sub: "Pizza Gourmet" },
   "STRAPIZZAMI": { desc: "Premium pizza ordering – Italian warm design.", sub: "Pizza" },
@@ -48,7 +48,7 @@ const BRAND_META: Record<string, { desc: string; sub: string }> = {
   "DIMORA Milano": { desc: "Premium real estate app Milano.", sub: "Real Estate" },
 };
 
-const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const S = "/__empire-cover-removed";
 
 function buildProjects(): Project[] {
   const projects: Project[] = [];
@@ -118,7 +118,7 @@ function PhoneFrame({ src, className = "" }: { src: string; className?: string }
 }
 
 /* ═══════════════════════════════════════════
-   Portfolio Card — Lowengeld-style with iPhone frames
+   Portfolio Card — Empire Studio-style with iPhone frames
    ═══════════════════════════════════════════ */
 function PortfolioCard({ project, onClick, index }: { project: Project; onClick: () => void; index: number }) {
   const accent = CAT_COLORS[project.cat] || "#7eb7be";

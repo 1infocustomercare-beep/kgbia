@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useHomepageContent, pick } from "@/hooks/useHomepageContent";
 
-const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const S = "/__empire-cover-removed";
 
 const SCENES = [
-  { sector: "Hospitality premium", brand: "COTE Miami", metric: "+34%", metricLabel: "scontrino medio", img: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`, accent: "215 90% 62%" },
+  { sector: "Hospitality premium", brand: "Onyx Brace Steakhouse", metric: "+34%", metricLabel: "scontrino medio", img: `${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-home.png`, accent: "215 90% 62%" },
   { sector: "Wellness boutique", brand: "Aura Milano Spa", metric: "+218%", metricLabel: "prenotazioni online", img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, accent: "248 80% 70%" },
   { sector: "Real estate luxury", brand: "DIMORA Milano", metric: "+187%", metricLabel: "lead qualificati", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, accent: "38 80% 62%" },
-  { sector: "Beauty studio", brand: "Neo Nails", metric: "3.2×", metricLabel: "retention clienti", img: `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, accent: "325 75% 66%" },
-  { sector: "Healthcare premium", brand: "FAR Medical", metric: "GDPR", metricLabel: "compliance totale", img: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%" },
+  { sector: "Beauty studio", brand: "Neo Nails", metric: "3.2×", metricLabel: "retention clienti", img: `${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, accent: "325 75% 66%" },
+  { sector: "Healthcare premium", brand: "FAR Medical", metric: "GDPR", metricLabel: "compliance totale", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%" },
 ];
 
 const TRUST = ["847+ business attivi", "38 agenti AI", "24 verticali", "Go-live 14 giorni"];

@@ -1,23 +1,23 @@
 import { useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const S = "/__empire-cover-removed";
 
 const SECTORS = [
   { name: "Ristorazione", img: `${S}/flame-kebab/bd5def39-e58c-46db-92f9-19d48e0da2ea.png`, accent: "#f97316" },
-  { name: "Fitness & Sport", img: `${S}/City%20Padel%20Milano/mobile-fresh-azzurro-home.png`, accent: "#22d3ee" },
+  { name: "Fitness & Sport", img: `${S}/Centro%20Padel%20Brera/mobile-fresh-azzurro-home.png`, accent: "#22d3ee" },
   { name: "Beauty & Wellness", img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, accent: "#ec4899" },
-  { name: "Hospitality", img: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`, accent: "#c9a84c" },
-  { name: "Pet Care", img: `${S}/Aloha%20Pet%20Resorts/mobile-a-home.png`, accent: "#4ade80" },
-  { name: "Sushi & Nikkei", img: `${S}/Paperfish%20Sushi/a-sakura-home.png`, accent: "#fb923c" },
-  { name: "NCC & Transfer", img: `${S}/Asinara%20Charter%20-%20Sardinia%20Azure%20Luxury/home.png`, accent: "#60a5fa" },
-  { name: "Charter & Nautica", img: `${S}/Miami%20Boats%20Rental/A-mobile-home.png`, accent: "#38bdf8" },
-  { name: "Luxury Retail", img: `${S}/Tatush%20Hair%20Fragrance/mobile-home.png`, accent: "#a855f7" },
-  { name: "Healthcare", img: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, accent: "#3b82f6" },
+  { name: "Hospitality", img: `${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-home.png`, accent: "#c9a84c" },
+  { name: "Pet Care", img: `${S}/Tropico%20Pet%20Resort/mobile-a-home.png`, accent: "#4ade80" },
+  { name: "Sushi & Nikkei", img: `${S}/Sakura%20Atelier/a-sakura-home.png`, accent: "#fb923c" },
+  { name: "NCC & Transfer", img: `${S}/Cala%20Vento%20Charter/home.png`, accent: "#60a5fa" },
+  { name: "Charter & Nautica", img: `${S}/Marina%20Riviera/A-mobile-home.png`, accent: "#38bdf8" },
+  { name: "Luxury Retail", img: `${S}/Velluto%20Hair%20Lab/mobile-home.png`, accent: "#a855f7" },
+  { name: "Healthcare", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, accent: "#3b82f6" },
   { name: "Immobiliare", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, accent: "#8b5cf6" },
-  { name: "Watersports", img: `${S}/Miami%20Watersports/style-a-mobile-home.png`, accent: "#06b6d4" },
-  { name: "Nail Art", img: `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, accent: "#f472b6" },
-  { name: "Nursery", img: `${S}/Little%20Diamond%20Nursery%20-%20Playful%20Colorful/home.png`, accent: "#fbbf24" },
+  { name: "Watersports", img: `${S}/Onda%20Sport%20Club/style-a-mobile-home.png`, accent: "#06b6d4" },
+  { name: "Nail Art", img: `${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, accent: "#f472b6" },
+  { name: "Nursery", img: `${S}/Stelle%20Nursery%20-%20Playful%20Colorful/home.png`, accent: "#fbbf24" },
   { name: "Fast Food", img: `${S}/STRAPIZZAMI/stile-a-home.png`, accent: "#ef4444" },
 ];
 

@@ -6,7 +6,7 @@ import { useEmpireScrollDirector, clamp01 } from "@/components/empire-home/Scrol
 
 const SLIDES = [
   { sector: "Food · Strapizzami", label: "Pizzeria luxury", img: pickMockup("food", "showcase") ?? SECTOR_MOCKUP_IMAGES.food?.[1], accent: "primary" },
-  { sector: "Sushi · Paperfish", label: "Sakura dark", img: pickMockup("food", "showcase", 2) ?? SECTOR_MOCKUP_IMAGES.food?.[3], accent: "accent" },
+  { sector: "Sushi · Sakura Atelier", label: "Sakura dark", img: pickMockup("food", "showcase", 2) ?? SECTOR_MOCKUP_IMAGES.food?.[3], accent: "accent" },
   { sector: "NCC · Asinara", label: "Charter & Yacht", img: pickMockup("ncc", "showcase") ?? SECTOR_MOCKUP_IMAGES.ncc?.[0], accent: "primary" },
   { sector: "Beauty · Neo Nails", label: "Lavender luxe", img: pickMockup("beauty", "showcase") ?? SECTOR_MOCKUP_IMAGES.beauty?.[0], accent: "empire-violet-glow" },
   { sector: "Padel · City Padel", label: "Sage luxe", img: pickMockup("fitness", "showcase") ?? SECTOR_MOCKUP_IMAGES.fitness?.[0], accent: "gold" },

@@ -1,5 +1,5 @@
 /**
- * Portfolio Public Showcase — stile Lowengeld Agency.
+ * Portfolio Public Showcase — stile Empire Studio.
  * Hero "Our Work / Portfolio" + chip categorie + griglia card a 2 iPhone.
  * Click su una card → apre <ProjectDetailOverlay /> con tutti i dettagli.
  *
@@ -12,7 +12,7 @@ import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { PORTFOLIO_PROJECTS } from "@/data/portfolio-showcase-data";
 import { SECTOR_PORTFOLIO } from "@/data/sector-mockup-images";
 
-/* ─────────── Categorie macro (chip header — ispirate a Lowengeld) ─────────── */
+/* ─────────── Categorie macro (chip header — ispirate a Empire Studio) ─────────── */
 type Category =
   | "Tutti"
   | "Food"

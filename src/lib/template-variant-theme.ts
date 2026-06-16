@@ -2,7 +2,7 @@
  * Template Variant → Mockup iPhone Shell Resolver
  *
  * Mappa ogni `template_variant` (cote-ivory, neo-nails-lavender, asinara-azure, ecc.)
- * a UNA delle 3 shell iPhone esistenti (Strapizzami / Paperfish / Batey) e applica
+ * a UNA delle 3 shell iPhone esistenti (Strapizzami / Sakura Atelier / Pacifico Ceviche) e applica
  * un override di palette/font tramite CSS variables, così il sito demo /b/:slug
  * e l'admin /demo-admin/:slug risultano 1:1 al mockup scelto.
  *
@@ -37,7 +37,7 @@ export type TemplateVariantId =
   | "default";
 
 export interface VariantThemeSpec {
-  /** Iframe-mockup shell to use (Strapizzami / Paperfish / Batey) */
+  /** Iframe-mockup shell to use (Strapizzami / Sakura Atelier / Pacifico Ceviche) */
   shell: TemplateShell;
   /** Display label for the variant */
   label: string;
@@ -86,18 +86,18 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
   },
   "paperfish-sakura": {
     shell: "paperfish",
-    label: "Paperfish Sakura",
+    label: "Sakura Atelier Sakura",
     heroTagline: "L'ARTE GIAPPONESE DEL GUSTO",
     subtitle: "寿司 · 刺身",
     heroImage: "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=1200",
     industryGroup: "food",
     defaultCategories: ["Nigiri", "Sashimi", "Hosomaki", "Uramaki", "Special Roll", "Ramen", "Antipasti", "Dolci"],
-    cssVars: {}, // identità nativa Paperfish-sakura
+    cssVars: {}, // identità nativa Sakura Atelier-sakura
     googleFontsHref: FONTS_GF.cormorant,
   },
   "paperfish-dark": {
     shell: "paperfish",
-    label: "Paperfish Luxury Dark",
+    label: "Sakura Atelier Luxury Dark",
     heroTagline: "OMAKASE EXPERIENCE",
     subtitle: "Edomae · Luxury Sushi",
     heroImage: "https://images.pexels.com/photos/884600/pexels-photo-884600.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -180,7 +180,7 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
   },
   "lavang-noir": {
     shell: "paperfish",
-    label: "La Vang Noir Saigon",
+    label: "Indocina Noir Noir Saigon",
     heroTagline: "ESSENCE OF VIETNAM",
     subtitle: "Vietnamese · Saigon Noir",
     heroImage: "https://images.pexels.com/photos/2456435/pexels-photo-2456435.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -199,7 +199,7 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
   },
   "midtown-kosher": {
     shell: "strapizzami",
-    label: "Midtown Kosher",
+    label: "Levante Deli",
     heroTagline: "TRADITION & TASTE",
     subtitle: "Kosher · Midtown",
     heroImage: "https://images.pexels.com/photos/1633525/pexels-photo-1633525.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -220,13 +220,13 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
   },
   "batey-pacifico": {
     shell: "batey",
-    label: "Batey Pacifico",
+    label: "Pacifico Ceviche",
     heroTagline: "PESCA FRESCA OGNI GIORNO",
     subtitle: "Cevicheria · Costa Pacifico",
     heroImage: "https://images.pexels.com/photos/2087748/pexels-photo-2087748.jpeg?auto=compress&cs=tinysrgb&w=1200",
     industryGroup: "food",
     defaultCategories: ["Crudi", "Ceviche", "Primi", "Secondi", "Dolci"],
-    cssVars: {}, // identità nativa Batey
+    cssVars: {}, // identità nativa Pacifico Ceviche
     googleFontsHref: FONTS_GF.cormorant,
   },
 
@@ -279,7 +279,7 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
   },
   "tatush-hair": {
     shell: "paperfish",
-    label: "Tatush Hair Fragrance",
+    label: "Velluto Hair Lab",
     heroTagline: "LO STILE È UN'ARTE",
     subtitle: "Hair Boutique · Fragrance",
     heroImage: "https://images.pexels.com/photos/3993456/pexels-photo-3993456.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -319,7 +319,7 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
   },
   "miami-boats": {
     shell: "batey",
-    label: "Miami Boats Rental",
+    label: "Marina Riviera",
     heroTagline: "EXCLUSIVE BOAT EXPERIENCE",
     subtitle: "Yacht & Boat · Miami",
     heroImage: "https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -358,7 +358,7 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
   },
   "miami-watersports": {
     shell: "batey",
-    label: "Miami Watersports",
+    label: "Onda Sport Club",
     heroTagline: "ADRENALINA SUL MARE",
     subtitle: "Watersports · Miami Beach",
     heroImage: "https://images.pexels.com/photos/3756168/pexels-photo-3756168.jpeg?auto=compress&cs=tinysrgb&w=1200",

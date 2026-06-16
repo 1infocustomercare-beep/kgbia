@@ -1,5 +1,5 @@
 /**
- * PortfolioShowcaseSite — Lowengeld Agency-style project showcase page.
+ * PortfolioShowcaseSite — Empire Studio-style project showcase page.
  * Dark premium layout with hero mockup, metadata cards, and screenshot gallery.
  */
 

@@ -188,7 +188,7 @@ export default function SalesPlaybook({ autoOpen = false }: { autoOpen?: boolean
           <BigStep
             n="4"
             title="Galleria Preview Manuale 🎨"
-            text="Pulsante 'Galleria' nell'header preview: scegli tra 577+ mockup professionali (COTE, Paperfish, Amalfi…) e allegali al messaggio AI con un click."
+            text="Pulsante 'Galleria' nell'header preview: scegli tra 577+ mockup professionali (COTE, Sakura Atelier, Amalfi…) e allegali al messaggio AI con un click."
             icon={Layers}
             color="#ec4899"
           />

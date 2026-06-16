@@ -2,7 +2,7 @@
  * VariantSiteRenderer
  *
  * Renderizza il sito demo /b/:slug usando la shell iPhone più adatta
- * (Strapizzami / Paperfish / Batey) per il `template_variant` scelto
+ * (Strapizzami / Sakura Atelier / Pacifico Ceviche) per il `template_variant` scelto
  * dalla Demo Factory, con la palette e i font del mockup di riferimento.
  *
  * ⭐ v2 — Brand Identity Injection
@@ -16,8 +16,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Phone, MapPin, Globe, Instagram, Facebook, Home, BookOpen, Eye, ShoppingCart } from "lucide-react";
 import { StrapizzamiSite, type StrapizzamiSiteData } from "@/components/templates/strapizzami/StrapizzamiSite";
-import { PaperfishSite, type PaperfishSiteData } from "@/components/templates/paperfish/PaperfishSite";
-import { BateySite, type BateySiteData } from "@/components/templates/batey/BateySite";
+import { Sakura AtelierSite, type Sakura AtelierSiteData } from "@/components/templates/paperfish/Sakura AtelierSite";
+import { Pacifico CevicheSite, type Pacifico CevicheSiteData } from "@/components/templates/batey/Pacifico CevicheSite";
 import {
   resolveVariantTheme,
   buildVariantStyleTag,
@@ -366,7 +366,7 @@ export function VariantSiteRenderer({
   );
 
   if (spec.shell === "paperfish") {
-    const data: PaperfishSiteData = {
+    const data: Sakura AtelierSiteData = {
       brandName,
       subtitle: finalSubtitle,
       heroImage,
@@ -376,7 +376,7 @@ export function VariantSiteRenderer({
     };
     return (
       <>
-        <PaperfishSite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
+        <Sakura AtelierSite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
         {screenSwitcher}
         {sharedHalo}
       </>
@@ -384,7 +384,7 @@ export function VariantSiteRenderer({
   }
 
   if (spec.shell === "batey") {
-    const data: BateySiteData = {
+    const data: Pacifico CevicheSiteData = {
       brandName,
       subtitle: finalSubtitle,
       heroImage,
@@ -394,7 +394,7 @@ export function VariantSiteRenderer({
     };
     return (
       <>
-        <BateySite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
+        <Pacifico CevicheSite data={data} controlledScreen={activeScreen} onScreenChange={(s) => setActiveScreen(s as ScreenKey)} />
         {screenSwitcher}
         {sharedHalo}
       </>

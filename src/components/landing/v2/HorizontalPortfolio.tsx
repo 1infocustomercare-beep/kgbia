@@ -2,16 +2,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const S = "/__empire-cover-removed";
 
 const PROJECTS = [
-  { brand: "COTE Miami", sector: "Steakhouse premium", img: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`, accent: "215 90% 62%", tone: "gold", result: "+34%", metric: "scontrino medio", quote: "Esperienza obsidian che alza il perceived value." },
+  { brand: "Onyx Brace Steakhouse", sector: "Steakhouse premium", img: `${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-home.png`, accent: "215 90% 62%", tone: "gold", result: "+34%", metric: "scontrino medio", quote: "Esperienza obsidian che alza il perceived value." },
   { brand: "Aura Spa", sector: "Wellness boutique", img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, accent: "248 80% 70%", tone: "violet", result: "+218%", metric: "prenotazioni online", quote: "Funnel zen, conversione massima." },
-  { brand: "Neo Nails", sector: "Beauty studio", img: `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, accent: "325 75% 66%", tone: "blue", result: "3.2×", metric: "retention clienti", quote: "Frosted glass UI, retention da boutique." },
-  { brand: "City Padel", sector: "Sport club", img: `${S}/City%20Padel%20Milano/mobile-fresh-azzurro-home.png`, accent: "172 80% 58%", tone: "emerald", result: "94%", metric: "occupazione campi", quote: "Booking smart, campi sempre pieni." },
+  { brand: "Neo Nails", sector: "Beauty studio", img: `${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, accent: "325 75% 66%", tone: "blue", result: "3.2×", metric: "retention clienti", quote: "Frosted glass UI, retention da boutique." },
+  { brand: "City Padel", sector: "Sport club", img: `${S}/Centro%20Padel%20Brera/mobile-fresh-azzurro-home.png`, accent: "172 80% 58%", tone: "emerald", result: "94%", metric: "occupazione campi", quote: "Booking smart, campi sempre pieni." },
   { brand: "DIMORA", sector: "Real estate luxury", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, accent: "38 80% 62%", tone: "gold", result: "+187%", metric: "lead qualificati", quote: "Eleganza milanese, lead alto-spendenti." },
-  { brand: "Paperfish", sector: "Sushi omakase", img: `${S}/Paperfish%20Sushi/a-sakura-home.png`, accent: "330 70% 64%", tone: "violet", result: "Sold-out", metric: "3 mesi in anticipo", quote: "Omakase digitale che vende il rito." },
-  { brand: "FAR Medical", sector: "Healthcare premium", img: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%", tone: "blue", result: "GDPR", metric: "compliance totale", quote: "Estetica ethereal con compliance totale." },
+  { brand: "Sakura Atelier", sector: "Sushi omakase", img: `${S}/Sakura%20Atelier/a-sakura-home.png`, accent: "330 70% 64%", tone: "violet", result: "Sold-out", metric: "3 mesi in anticipo", quote: "Omakase digitale che vende il rito." },
+  { brand: "FAR Medical", sector: "Healthcare premium", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%", tone: "blue", result: "GDPR", metric: "compliance totale", quote: "Estetica ethereal con compliance totale." },
 ];
 
 const AUTOPLAY_MS = 4200;

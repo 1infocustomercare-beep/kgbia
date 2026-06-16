@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useSpring, useTransform, useMotionValue } from "framer-motion";
 
-const S = "https://vdzbezmzmznfxebxaaus.supabase.co/storage/v1/object/public/mockups";
+const S = "/__empire-cover-removed";
 
 type Mockup = {
   brand: string;
@@ -15,14 +15,14 @@ type Mockup = {
 };
 
 const MOCKUPS: Mockup[] = [
-  { brand: "COTE Miami", sector: "Hospitality premium", metric: "+34%", metricLabel: "scontrino medio", img: `${S}/COTE%20Miami/a-obsidian-mobile-home.png`, accent: "215 90% 62%", tagline: "Korean BBQ Michelin · ordini tableside", features: ["Ordini al tavolo AI", "Loyalty premium", "Recensioni shield"] },
+  { brand: "Onyx Brace Steakhouse", sector: "Hospitality premium", metric: "+34%", metricLabel: "scontrino medio", img: `${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-home.png`, accent: "215 90% 62%", tagline: "Korean BBQ Michelin · ordini tableside", features: ["Ordini al tavolo AI", "Loyalty premium", "Recensioni shield"] },
   { brand: "Aura Milano Spa", sector: "Wellness boutique", metric: "+218%", metricLabel: "prenotazioni online", img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, accent: "248 80% 70%", tagline: "Spa luxury · booking & loyalty integrato", features: ["Booking smart", "Memberships", "Upsell wellness"] },
   { brand: "DIMORA Milano", sector: "Real estate luxury", metric: "+187%", metricLabel: "lead qualificati", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, accent: "38 80% 62%", tagline: "Immobiliare premium · CRM AI integrato", features: ["CRM AI", "Lead scoring", "Tour virtuali"] },
-  { brand: "Neo Nails Brickell", sector: "Beauty studio", metric: "3.2×", metricLabel: "retention clienti", img: `${S}/Neo%20Nails%20Brickell/frosted-glass-home.png`, accent: "325 75% 66%", tagline: "Beauty studio · agenda + upsell automatico", features: ["Agenda smart", "Upsell auto", "Reminder AI"] },
-  { brand: "FAR Medical", sector: "Healthcare premium", metric: "GDPR", metricLabel: "compliance totale", img: `${S}/FAR%20Medical%20Solutions/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%", tagline: "Studio medico · cartella crittografata", features: ["Cartella crypto", "Telemedicina", "GDPR ready"] },
-  { brand: "Paperfish Sushi", sector: "Fine dining", metric: "+92%", metricLabel: "coperti weekend", img: `${S}/Paperfish%20Sushi/b-luxury-dark-home.png`, accent: "338 70% 64%", tagline: "Omakase japanese · prenotazioni AI", features: ["Prenotazioni AI", "Omakase menu", "VIP table"] },
-  { brand: "La Vang Vietnamese", sector: "Luxury restaurant", metric: "+156%", metricLabel: "reorder mensile", img: `${S}/La%20Vang%20Vietnamese%20Luxury/a-noir-saigon-home.png`, accent: "45 85% 60%", tagline: "Asian fusion · loyalty + recensioni shield", features: ["Loyalty fusion", "Reorder smart", "Reviews shield"] },
-  { brand: "Batey Cevicheria", sector: "Casual premium", metric: "−42%", metricLabel: "no-show", img: `${S}/Batey%20Cevicheria%20Urbana/costa-pacifico-mobile-home.png`, accent: "192 78% 56%", tagline: "Cevicheria urbana · QR ordering smart", features: ["QR ordering", "Anti no-show", "Pay smart"] },
+  { brand: "Aurora Nail Atelier", sector: "Beauty studio", metric: "3.2×", metricLabel: "retention clienti", img: `${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, accent: "325 75% 66%", tagline: "Beauty studio · agenda + upsell automatico", features: ["Agenda smart", "Upsell auto", "Reminder AI"] },
+  { brand: "FAR Medical", sector: "Healthcare premium", metric: "GDPR", metricLabel: "compliance totale", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%", tagline: "Studio medico · cartella crittografata", features: ["Cartella crypto", "Telemedicina", "GDPR ready"] },
+  { brand: "Sakura Atelier", sector: "Fine dining", metric: "+92%", metricLabel: "coperti weekend", img: `${S}/Sakura%20Atelier/b-luxury-dark-home.png`, accent: "338 70% 64%", tagline: "Omakase japanese · prenotazioni AI", features: ["Prenotazioni AI", "Omakase menu", "VIP table"] },
+  { brand: "Indocina Noir", sector: "Luxury restaurant", metric: "+156%", metricLabel: "reorder mensile", img: `${S}/Indocina%20Noir/a-noir-saigon-home.png`, accent: "45 85% 60%", tagline: "Asian fusion · loyalty + recensioni shield", features: ["Loyalty fusion", "Reorder smart", "Reviews shield"] },
+  { brand: "Pacifico Ceviche", sector: "Casual premium", metric: "−42%", metricLabel: "no-show", img: `${S}/Pacifico%20Ceviche/costa-pacifico-mobile-home.png`, accent: "192 78% 56%", tagline: "Cevicheria urbana · QR ordering smart", features: ["QR ordering", "Anti no-show", "Pay smart"] },
 ];
 
 const AUTOPLAY_MS = 4200;

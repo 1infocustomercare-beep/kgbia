@@ -1,5 +1,5 @@
 /**
- * Portfolio showcase data for each sector — Lowengeld-style project pages.
+ * Portfolio showcase data for each sector — Empire Studio-style project pages.
  * Each sector has its own "project" with metadata, categories, and screen labels.
  */
 
@@ -43,14 +43,14 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     accent: "#d4af37",
     screenLabels: [
       "COTE – Home", "COTE – Menu", "COTE – Detail",
-      "Paperfish Sushi – Home", "Paperfish – Menu", "Paperfish – Detail",
-      "Flame Kebab – Home", "Flame Kebab – Menu", "Flame Kebab – Detail",
-      "La Vang – Home", "La Vang – Menu", "La Vang – Detail",
-      "Batey Cevicheria – Home", "Batey – Menu",
+      "Sakura Atelier – Home", "Sakura Atelier – Menu", "Sakura Atelier – Detail",
+      "Brace Kebab – Home", "Brace Kebab – Menu", "Brace Kebab – Detail",
+      "Indocina Noir – Home", "Indocina Noir – Menu", "Indocina Noir – Detail",
+      "Pacifico Ceviche – Home", "Pacifico Ceviche – Menu",
     ],
     subProjects: [
       {
-        name: "COTE Miami",
+        name: "Onyx Brace Steakhouse",
         description: "Michelin-starred Korean BBQ with premium dark UI, featured cuts showcase and table-side ordering.",
         tags: ["Fine Dining", "Korean BBQ", "Michelin Star"],
         accent: "#c87533",
@@ -58,7 +58,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
         imageRange: [0, 2],
       },
       {
-        name: "Paperfish Sushi",
+        name: "Sakura Atelier",
         description: "Japanese omakase experience with sakura-inspired design, chef's selections and sake pairing.",
         tags: ["Sushi", "Japanese", "Omakase"],
         accent: "#e8a0bf",
@@ -66,7 +66,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
         imageRange: [3, 5],
       },
       {
-        name: "Flame Kebab",
+        name: "Brace Kebab",
         description: "Modern Middle Eastern grill with fire-themed UI, combo builder and delivery tracking.",
         tags: ["Kebab", "Grill", "Street Food"],
         accent: "#e85d04",
@@ -74,7 +74,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
         imageRange: [6, 8],
       },
       {
-        name: "La Vang Vietnamese",
+        name: "Indocina Noir",
         description: "Luxury Vietnamese cuisine with noir-saigon aesthetic, pho bar and cocktail pairing.",
         tags: ["Vietnamese", "Luxury", "Asian Fusion"],
         accent: "#c9a84c",
@@ -82,7 +82,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
         imageRange: [9, 11],
       },
       {
-        name: "Batey Cevicheria",
+        name: "Pacifico Ceviche",
         description: "Urban Latin ceviche bar with coastal Pacific design, fresh catch of the day and tropical cocktails.",
         tags: ["Ceviche", "Latin", "Seafood"],
         accent: "#38bdf8",
@@ -106,7 +106,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     ],
     subProjects: [
       {
-        name: "Neo Nails Brickell",
+        name: "Aurora Nail Atelier",
         description: "Frosted glass UI for a luxury nail art studio with appointment booking and loyalty rewards.",
         tags: ["Nail Art", "Luxury", "Miami"],
         accent: "#f0abfc",
@@ -135,7 +135,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     screenLabels: [
       "Amalfi Transfer – Home", "Amalfi Transfer – Fleet", "Amalfi Transfer – Booking",
       "Miami Boats – Home", "Miami Boats – Fleet", "Miami Boats – Yacht Detail",
-      "Asinara Charter – Home", "Asinara Charter – Tours", "Asinara Charter – Detail",
+      "Cala Vento Charter – Home", "Cala Vento Charter – Tours", "Cala Vento Charter – Detail",
     ],
     subProjects: [
       {
@@ -147,7 +147,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
         imageRange: [0, 2],
       },
       {
-        name: "Miami Boats Rental",
+        name: "Marina Riviera",
         description: "Luxury yacht and boat rental platform with captain booking and marina management.",
         tags: ["Yacht", "Boat Rental", "Miami"],
         accent: "#0ea5e9",
@@ -155,7 +155,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
         imageRange: [3, 5],
       },
       {
-        name: "Asinara Charter",
+        name: "Cala Vento Charter",
         description: "Sardinian azure luxury charter with tour packages, snorkeling excursions and group booking.",
         tags: ["Charter", "Sardinia", "Excursions"],
         accent: "#06b6d4",
@@ -191,7 +191,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     name: "Veterinary & Pet Care",
     description: "Piattaforme per cliniche veterinarie e pet resort con profili animali, videocamere live e booking.",
     tags: ["Veterinary", "Pet Care", "Booking"],
-    client: "Aloha Pet Resorts Inc.",
+    client: "Tropico Pet Resort Inc.",
     year: "2025",
     platform: "iOS, Android & Web",
     accent: "#4ade80",
@@ -208,11 +208,11 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     accent: "#fb923c",
     screenLabels: [
       "Little Diamond – Home", "Little Diamond – Programs", "Little Diamond – Team",
-      "Ashley's Playhouse – Home", "Ashley's Playhouse – Programs", "Ashley's Playhouse – Book",
+      "Arcobaleno Playhouse – Home", "Arcobaleno Playhouse – Programs", "Arcobaleno Playhouse – Book",
     ],
     subProjects: [
       {
-        name: "Little Diamond Nursery",
+        name: "Stelle Nursery",
         description: "Playful and colorful nursery platform with daily updates, photo sharing and parent portal.",
         tags: ["Nursery", "Colorful", "Family"],
         accent: "#f97316",
@@ -220,7 +220,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
         imageRange: [0, 2],
       },
       {
-        name: "Ashley's Playhouse",
+        name: "Arcobaleno Playhouse",
         description: "Modern playhouse booking with activity programs, birthday parties and enrichment classes.",
         tags: ["Playhouse", "Activities", "Kids"],
         accent: "#a855f7",
@@ -234,22 +234,22 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     name: "Plumbing & HVAC",
     description: "Piattaforme per idraulici e tecnici HVAC con richieste di intervento, preventivi e tracking.",
     tags: ["Plumbing", "HVAC", "Service"],
-    client: "Nick's Plumbing & AC",
+    client: "Idro Pronto",
     year: "2025",
     platform: "iOS, Android & Web",
     accent: "#3b82f6",
-    screenLabels: ["Nick's Plumbing – Home", "Nick's Plumbing – Services", "Nick's Plumbing – Detail"],
+    screenLabels: ["Idro Pronto – Home", "Idro Pronto – Services", "Idro Pronto – Detail"],
   },
 
   beach: {
     name: "Beach & Watersports",
     description: "Piattaforme per lidi balneari e centri watersport con mappa spiaggia, prenotazioni e servizi extra.",
     tags: ["Beach", "Watersports", "Resort"],
-    client: "Miami Watersports Co.",
+    client: "Onda Sport Club Co.",
     year: "2025",
     platform: "iOS, Android & Web",
     accent: "#06b6d4",
-    screenLabels: ["Miami Watersports – Home", "Miami Watersports – Activities", "Miami Watersports – Detail"],
+    screenLabels: ["Onda Sport Club – Home", "Onda Sport Club – Activities", "Onda Sport Club – Detail"],
   },
 
   retail: {
@@ -410,7 +410,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     name: "Hospitality & Hotel",
     description: "Piattaforme per hotel e resort con prenotazioni, concierge digitale e guest experience.",
     tags: ["Hotel", "Hospitality", "Resort"],
-    client: "MMI Resident Hub",
+    client: "Domus Living",
     year: "2025",
     platform: "iOS, Android & Web",
     accent: "#c9a84c",
