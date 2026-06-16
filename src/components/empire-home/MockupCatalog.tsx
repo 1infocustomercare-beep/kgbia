@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Grid2X2, Monitor, Smartphone, Sparkles } from "lucide-react";
 import { SECTOR_PORTFOLIO, type SectorPortfolio } from "@/data/sector-mockup-images";
 import type { IndustryId } from "@/config/industry-config";
-import RealisticIPhonePreview from "@/components/empire-home/RealisticIPhonePreview";
 import { MockupReactScreen } from "@/components/partner/MockupReactScreen";
 
 type CatalogItem = {
