@@ -82,7 +82,7 @@ export function PrestigeProblem() {
 export function PrestigeHowItWorks() {
   const t = useT();
   const steps = [
-    { icon: Plug, n: "01", k: { it: "Onboarding 24h", en: "24h onboarding" }, d: { it: "Ci dai accesso al tuo sito, telefono e WhatsApp. Pensiamo a tutto noi.", en: "You give us access to your site, phone and WhatsApp. We handle the rest." } },
+    { icon: Plug, n: "01", k: { it: "Onboarding 7 giorni", en: "7-day onboarding" }, d: { it: "Ci dai accesso al tuo sito, telefono e WhatsApp. Pensiamo a tutto noi.", en: "You give us access to your site, phone and WhatsApp. We handle the rest." } },
     { icon: BrainCircuit, n: "02", k: { it: "Addestriamo la tua AI", en: "We train your AI" }, d: { it: "L'AI impara il tuo menu, i prezzi, gli orari, il tuo tono di voce. Diventa un membro del team.", en: "The AI learns your menu, prices, hours, your tone of voice. It becomes a team member." } },
     { icon: Rocket, n: "03", k: { it: "Vai live in 7 giorni", en: "Go live in 7 days" }, d: { it: "Sito, app, AI, WhatsApp e pagamenti attivi. Tu guardi i numeri salire dalla dashboard.", en: "Site, app, AI, WhatsApp and payments live. You watch the numbers rise from the dashboard." } },
   ];
@@ -401,7 +401,7 @@ export function PrestigePricing() {
             <span className="prestige-gold-text italic">{t({ it: "non in problemi.", en: "not in problems." })}</span>
           </h2>
           <p className="mt-3 text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-            {t({ it: "90 giorni gratis · No setup · Cancelli quando vuoi · Soddisfatti o rimborsati", en: "90 days free · No setup · Cancel anytime · Money-back guarantee" })}
+            {t({ it: "Setup in 7 giorni · Cancelli quando vuoi · Soddisfatti o rimborsati", en: "7-day setup · Cancel anytime · Money-back guarantee" })}
           </p>
         </div>
 
@@ -425,7 +425,7 @@ export function PrestigePricing() {
                 ))}
               </ul>
               <button className={p.highlight ? "prestige-cta mt-6 w-full justify-center" : "prestige-cta-ghost mt-6 w-full justify-center"} style={p.highlight ? undefined : { color: "hsl(var(--pr-emerald))" }} onClick={() => navigate("/onboarding")}>
-                <span>{t({ it: "Inizia gratis 90gg", en: "Start 90-day free trial" })}</span> <ArrowRight size={16} />
+                <span>{t({ it: "Inizia ora", en: "Start now" })}</span> <ArrowRight size={16} />
               </button>
             </div>
           ))}
@@ -487,7 +487,7 @@ export function PrestigeFAQ() {
     { q: { it: "L'AI sostituisce davvero il mio staff?", en: "Does the AI really replace my staff?" }, a: { it: "Lo affianca. L'AI risponde a routine, prenotazioni, FAQ. Il tuo staff si concentra sui clienti VIP e sulle situazioni che richiedono empatia umana.", en: "It supports them. The AI handles routine, bookings, FAQs. Your staff focuses on VIP customers and situations needing human empathy." } },
     { q: { it: "Quanto ci vuole davvero per partire?", en: "How long does it really take to launch?" }, a: { it: "7 giorni in media. Il primo giorno ci dai gli accessi, in una settimana sei live con sito, AI, WhatsApp e telefono.", en: "7 days on average. Day one you give us access, within a week you're live with site, AI, WhatsApp and phone." } },
     { q: { it: "I miei dati e quelli dei clienti sono sicuri?", en: "Are my and my customers' data safe?" }, a: { it: "Sì. Server in UE, crittografia at-rest, GDPR compliant, nessun dato venduto a terzi. Mai.", en: "Yes. EU servers, at-rest encryption, GDPR compliant, no data sold to third parties. Ever." } },
-    { q: { it: "Posso cancellare in qualunque momento?", en: "Can I cancel anytime?" }, a: { it: "Sì, senza penali. I primi 90 giorni sono gratis e se non sei soddisfatto rimborsiamo quanto pagato. Per iscritto.", en: "Yes, no penalties. The first 90 days are free and if not satisfied we refund what you paid. In writing." } },
+    { q: { it: "Posso cancellare in qualunque momento?", en: "Can I cancel anytime?" }, a: { it: "Sì, senza penali. Soddisfatti o rimborsati per iscritto se i risultati non arrivano.", en: "Yes, no penalties. Money-back guarantee in writing if results don't show up." } },
     { q: { it: "Funziona anche per il mio settore?", en: "Does it work for my industry?" }, a: { it: "Empire è già attivo in 25+ settori: food, NCC, beauty, hotel, palestre, studi medici/legali, e-commerce. Lo addestriamo sul tuo specifico.", en: "Empire is live in 25+ industries: food, NCC, beauty, hotels, gyms, medical/legal practices, e-commerce. We train it on yours." } },
   ];
 
@@ -497,8 +497,8 @@ export function PrestigeFAQ() {
         <div className="text-center">
           <SectionEyebrow index="08">{t({ it: "Domande frequenti", en: "Frequently asked" })}</SectionEyebrow>
           <h2 className="prestige-display mt-4 text-3xl sm:text-5xl">
-            {t({ it: "Le tue dubbi, ", en: "Your doubts, " })}
-            <span className="prestige-gold-text italic">{t({ it: "risolte.", en: "answered." })}</span>
+            {t({ it: "I tuoi dubbi, ", en: "Your doubts, " })}
+            <span className="prestige-gold-text italic">{t({ it: "risolti.", en: "answered." })}</span>
           </h2>
         </div>
         <div className="mt-10 space-y-3">
@@ -553,7 +553,7 @@ export function PrestigeLeadForm() {
         (parsed.data.sector ? `\n🏷️ ${parsed.data.sector}` : "");
       const url = `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
       window.open(url, "_blank", "noopener,noreferrer");
-      toast.success(t({ it: "Richiesta inviata. Ti contattiamo entro 24h.", en: "Request sent. We'll reach out within 24h." }));
+      toast.success(t({ it: "Richiesta inviata. Ti contattiamo a breve.", en: "Request sent. We'll be in touch shortly." }));
       setForm({ name: "", business: "", contact: "", sector: "" });
     } finally {
       setBusy(false);
@@ -567,7 +567,7 @@ export function PrestigeLeadForm() {
           <div className="text-center">
             <SectionEyebrow index="09">{t({ it: "Prenota la tua demo", en: "Book your demo" })}</SectionEyebrow>
             <h2 className="prestige-display mt-4 text-3xl sm:text-5xl">
-              {t({ it: "Demo gratuita ", en: "Free demo " })}
+              {t({ it: "Demo personalizzata ", en: "Personalised demo " })}
               <span className="prestige-gold-text italic">{t({ it: "30 minuti.", en: "30 minutes." })}</span>
             </h2>
             <p className="mt-3 text-sm sm:text-base" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
@@ -581,7 +581,7 @@ export function PrestigeLeadForm() {
             <Field label={t({ it: "Settore (opz.)", en: "Industry (opt.)" })} value={form.sector} onChange={(v) => setForm({ ...form, sector: v })} placeholder={t({ it: "Es. ristorazione", en: "e.g. hospitality" })} />
             <div className="sm:col-span-2 mt-2 flex flex-col sm:flex-row gap-3">
               <button type="submit" disabled={busy} className="prestige-cta justify-center w-full sm:flex-1">
-                <Send size={16} /> <span>{busy ? "…" : t({ it: "Prenota demo gratuita", en: "Book free demo" })}</span>
+                <Send size={16} /> <span>{busy ? "…" : t({ it: "Prenota la demo", en: "Book the demo" })}</span>
               </button>
               <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener noreferrer" className="prestige-cta-ghost justify-center w-full sm:w-auto">
                 <MessageSquare size={14} /> <span>WhatsApp</span>
@@ -639,7 +639,7 @@ export function PrestigeStickyCTA() {
     >
       <div className="mx-3 mb-3 rounded-2xl p-2 flex gap-2 shadow-2xl" style={{ background: "hsl(var(--pr-emerald-deep) / 0.95)", border: "1px solid hsl(var(--pr-gold) / 0.4)", backdropFilter: "blur(10px)" }}>
         <a href="#prestige-lead" className="prestige-cta flex-1 justify-center" style={{ padding: "0.7rem 1rem", fontSize: 13 }}>
-          <Calendar size={14} /> <span>{t({ it: "Demo gratuita", en: "Free demo" })}</span>
+          <Calendar size={14} /> <span>{t({ it: "Prenota demo", en: "Book demo" })}</span>
         </a>
         <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center rounded-full px-4" style={{ background: "hsl(142 70% 45%)", color: "white" }} aria-label="WhatsApp">
           <MessageSquare size={18} />

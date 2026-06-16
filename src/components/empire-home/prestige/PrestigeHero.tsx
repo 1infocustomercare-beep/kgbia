@@ -126,8 +126,7 @@ export default function PrestigeHero() {
           <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
             <span>★ ★ ★ ★ ★ <span className="ml-1 font-semibold" style={{ color: "hsl(var(--pr-gold-light))" }}>4.9/5</span></span>
             <span>· {t({ it: "3.500+ aziende attive", en: "3,500+ active businesses" })}</span>
-            <span>· {t({ it: "Setup in 24h", en: "24h setup" })}</span>
-            <span>· {t({ it: "90 giorni gratis", en: "90 days free" })}</span>
+            <span>· {t({ it: "Setup in 7 giorni", en: "7-day setup" })}</span>
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">

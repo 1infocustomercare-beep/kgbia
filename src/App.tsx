@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { ThemeProvider } from "next-themes";
 import type { ErrorInfo, ReactNode } from 'react';
 import UnifiedIntro from "@/components/UnifiedIntro";
-import LandingPage from "@/pages/LandingPage";
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -175,8 +175,6 @@ const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
 const StaticIframePage = lazy(() => import("./pages/StaticIframePage"));
-import EmpireHomePage from "./pages/empire/EmpireHomePage";
-import EmpireCinematicHome from "./pages/EmpireCinematicHome";
 import EmpirePrestigeHome from "./pages/EmpirePrestigeHome";
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
@@ -588,11 +586,14 @@ function App() {
                       <Route path="/index" element={<EmpirePrestigeHome />} />
                       <Route path="/home" element={<EmpirePrestigeHome />} />
                       <Route path="/home-prestige" element={<EmpirePrestigeHome />} />
-                      {/* Vecchie varianti mantenute come fallback */}
-                      <Route path="/landing-legacy" element={<LandingPage />} />
-                      <Route path="/home-cinematic" element={<EmpireCinematicHome />} />
-                      <Route path="/home-legacy" element={<EmpireHomePage />} />
-                      <Route path="/home-v5" element={<StaticIframePage src="/empire-home-v5.html" title="Empire.AI — Sostituisci i dipendenti con AI 24/7" />} />
+                      {/* Tutti gli alias legacy puntano alla stessa home ufficiale */}
+                      <Route path="/landing" element={<EmpirePrestigeHome />} />
+                      <Route path="/landing-legacy" element={<EmpirePrestigeHome />} />
+                      <Route path="/home-cinematic" element={<EmpirePrestigeHome />} />
+                      <Route path="/home-legacy" element={<EmpirePrestigeHome />} />
+                      <Route path="/home-v5" element={<EmpirePrestigeHome />} />
+
+
 
 
 
@@ -645,7 +646,7 @@ function App() {
                           </TenantGuard>
                         </ProtectedRoute>
                       } />
-                      <Route path="/landing" element={<StaticIframePage src="/homepage.html" title="Empire.AI" />} />
+                      
                       <Route path="/catalogo" element={<MockupCatalogPage />} />
 
                       {/* Onboarding (post-payment branding/data completion) */}

@@ -24,13 +24,13 @@ export default function PrestigeCTA() {
         </h2>
         <div className="prestige-divider mx-auto mt-6" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--pr-gold) / 0.7), transparent)" }} />
         <p className="mx-auto mt-6 max-w-2xl text-sm sm:text-base md:text-lg" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-          Prova Empire <strong>gratis per 90 giorni</strong>. Nessuna carta richiesta. Setup incluso. Se non
-          aumenti fatturato e clienti, non paghi un centesimo. Promesso per iscritto.
+          Setup chiavi in mano in 7 giorni, cancellazione in qualunque momento, soddisfatti o
+          rimborsati per iscritto. Decidi tu quando partire.
         </p>
 
         <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
           <button className="prestige-cta justify-center w-full sm:w-auto" onClick={() => navigate("/onboarding")}>
-            <span className="truncate">Inizia gratis ora</span> <ArrowRight size={16} className="shrink-0" />
+            <span className="truncate">Inizia ora</span> <ArrowRight size={16} className="shrink-0" />
           </button>
           <a className="prestige-cta-ghost justify-center w-full sm:w-auto" href="tel:+390000000000" style={{ color: "hsl(var(--pr-emerald))" }}>
             <Phone size={14} className="shrink-0" /> <span className="truncate">Parla con un consulente</span>
@@ -38,7 +38,7 @@ export default function PrestigeCTA() {
         </div>
 
         <p className="mt-8 text-[11px] sm:text-xs leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-          ✓ Setup gratuito · ✓ 90 giorni di prova · ✓ Cancelli quando vuoi · ✓ Soddisfatti o rimborsati
+          ✓ Setup in 7 giorni · ✓ Cancelli quando vuoi · ✓ Soddisfatti o rimborsati
         </p>
 
       </div>

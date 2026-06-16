@@ -34,7 +34,7 @@ const INDUSTRIES = [
     pitch: "Agenda sempre piena, niente più no-show. Le clienti prenotano da WhatsApp anche di notte e ricevono reminder automatici.",
     wins: [
       "Agenda online sincronizzata con Google Calendar",
-      "Reminder automatici 24h prima dell'appuntamento",
+      "Reminder automatici il giorno prima dell'appuntamento",
       "Cataloghi trattamenti con prezzi e foto",
       "Programma fedeltà con punti e premi",
     ],

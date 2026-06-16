@@ -728,8 +728,8 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
               className="max-w-md text-sm"
               style={{ color: "hsl(var(--pr-muted-on-dark))" }}
             >
-              Ti costruiamo lo stesso ecosistema, calibrato sul tuo brand, in 24 ore.
-              Primi 90 giorni gratis.
+              Ti costruiamo lo stesso ecosistema, calibrato sul tuo brand, in 7 giorni.
+              Soddisfatti o rimborsati per iscritto.
             </p>
             <button
               className="prestige-cta"
