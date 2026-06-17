@@ -197,7 +197,7 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const CustomPreviewPublicPage = lazy(() => import("./pages/CustomPreviewPublicPage"));
 const PublicMockupSuitePage = lazy(() => import("./pages/PublicMockupSuitePage"));
-const MarketingPage = lazy(() => import("./pages/MarketingPage"));
+
 const MockupCatalogPage = lazy(() => import("./pages/MockupCatalogPage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
 const BusinessPage = lazy(() => import("./pages/BusinessPage"));
@@ -603,7 +603,7 @@ function App() {
 
                       <Route path="/settori" element={<Navigate to="/#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/#pricing" replace />} />
-                      <Route path="/marketing" element={<MarketingPage />} />
+                      <Route path="/marketing" element={<Navigate to="/" replace />} />
                       <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
                       <Route path="/b/:slug" element={<BusinessPage />} />
                       <Route path="/demo" element={<DemoDirectoryPage />} />
