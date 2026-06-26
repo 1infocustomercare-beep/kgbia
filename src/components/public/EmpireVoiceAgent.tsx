@@ -1721,6 +1721,7 @@ const EmpireVoiceAgent: React.FC = () => {
           <motion.button
             className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-[9998] group touch-manipulation"
             onClick={toggleOpen}
+            aria-label="Apri Arianna"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
@@ -1832,6 +1833,7 @@ const EmpireVoiceAgent: React.FC = () => {
                 <button
                   onClick={() => setIsOpen(false)}
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground hover:bg-foreground/[0.05] transition-all"
+                  aria-label="Chiudi pannello"
                 >
                   <X className="w-4 h-4" />
                 </button>

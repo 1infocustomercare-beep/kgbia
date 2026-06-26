@@ -79,11 +79,11 @@ export default function LandingNav() {
           <div className="hidden lg:flex gap-3 items-center">
             <PrestigeLangToggle />
             <button onClick={() => navigate("/auth")} className="text-[13px] font-medium text-foreground/60 transition-colors hover:text-foreground">Accedi</button>
-            <button onClick={() => scrollTo("#contatti")} className="landing-button-primary px-6 py-2.5 text-sm font-semibold">Inizia Ora</button>
+            <button onClick={() => scrollTo("#contatti")} className="landing-button-primary !text-black px-6 py-2.5 text-sm font-semibold">Inizia Ora</button>
           </div>
 
 
-          <button className="text-foreground lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>
+          <button className="text-foreground lg:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}>
             {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
             </div>
@@ -100,7 +100,7 @@ export default function LandingNav() {
               <PrestigeLangToggle />
             </div>
             <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-left text-sm font-medium text-foreground/74 transition-colors hover:text-foreground">Accedi</button>
-            <button onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }} className="landing-button-primary mt-1 px-6 py-3 text-center text-sm font-semibold">Inizia Ora</button>
+            <button onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }} className="landing-button-primary !text-black mt-1 px-6 py-3 text-center text-sm font-semibold">Inizia Ora</button>
           </motion.div>
         )}
 

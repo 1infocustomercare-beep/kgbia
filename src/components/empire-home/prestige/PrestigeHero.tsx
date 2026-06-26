@@ -65,7 +65,7 @@ export default function PrestigeHero() {
       ref={ref}
       data-section="prestige-hero"
       className="prestige-section prestige-dark relative flex items-center overflow-hidden"
-      style={{ paddingTop: "clamp(96px, 12svh, 140px)", paddingBottom: "clamp(64px, 8svh, 96px)", minHeight: "auto" }}
+      style={{ paddingTop: "clamp(96px, 12svh, 140px)", paddingBottom: "clamp(64px, 8svh, 96px)", minHeight: "auto", overflowX: "hidden" }}
     >
       {/* Lang toggle — top-right floating; auto-hidden when LandingNav already mounts one (see PrestigeTheme) */}
       <div className="prestige-hero-lang-floating absolute right-3 top-[72px] z-20 scale-90 origin-top-right sm:right-6 sm:top-[92px] sm:scale-100">
@@ -92,7 +92,7 @@ export default function PrestigeHero() {
 
 
 
-          <h1 className="prestige-display mt-5 text-[2rem] font-semibold leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl break-words">
+          <h1 className="prestige-display mt-5 text-[clamp(1.75rem,5.5vw,4.5rem)] font-semibold leading-[1.05] break-words">
             {t({
               it: "Trasformiamo la tua azienda in un ",
               en: "We turn your business into a ",

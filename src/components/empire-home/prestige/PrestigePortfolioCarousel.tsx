@@ -306,7 +306,7 @@ export default function PrestigePortfolioCarousel() {
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-deep))" }}>
-              ✦ Casi reali · Risultati certificati
+              ✦ Casi reali · Risultati concreti
             </div>
             <h2
               className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"

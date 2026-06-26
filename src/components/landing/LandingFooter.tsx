@@ -17,7 +17,7 @@ export default function LandingFooter() {
               EMPIRE.AI
             </div>
             <p className="max-w-[260px] text-[13px] leading-[1.7] text-muted-foreground">
-              La piattaforma AI che automatizza ogni processo del tuo business. 38 agenti IA, 25+ settori, risultati garantiti.
+              La piattaforma AI che automatizza ogni processo del tuo business. Agenti IA su misura, 25+ settori, risultati concreti.
             </p>
           </div>
           <div>
@@ -47,7 +47,7 @@ export default function LandingFooter() {
         </div>
 
         <div className="flex flex-col items-center justify-between gap-3 border-t border-border pt-8 md:flex-row">
-          <span className="text-[12px] text-muted-foreground/70">© 2026 Empire AI Group — Tutti i diritti riservati</span>
+          <span className="text-[12px] text-muted-foreground/70">© 2026 Empire AI — Tutti i diritti riservati</span>
           <span className="text-[12px] text-muted-foreground/70">Made with precision in Italy</span>
         </div>
       </div>
