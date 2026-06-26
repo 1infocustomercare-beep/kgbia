@@ -31,7 +31,7 @@ export default function LandingFooter() {
           <div>
             <h4 className="mb-4 text-[11px] font-bold uppercase tracking-[1.5px] text-foreground/70">Risorse</h4>
             <ul className="space-y-2.5">
-              {[["Agenti IA", "agents"], ["FAQ", "faq"], ["Demo Gratuita", "/demo"], ["Contatti", "contatti"]].map(([l, h]) => (
+              {[["Agenti IA", "agents"], ["FAQ", "faq"], ["Prenota una demo", "/demo"], ["Contatti", "contatti"]].map(([l, h]) => (
                 <li key={l}><button onClick={() => h.startsWith("/") ? navigate(h) : scrollTo(h)} className="text-[13px] text-muted-foreground transition-colors hover:text-primary">{l}</button></li>
               ))}
             </ul>
