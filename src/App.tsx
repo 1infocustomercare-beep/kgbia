@@ -49,10 +49,6 @@ const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
 // Skip intro on landing and on client/demo routes where content must appear immediately
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
   (window.location.pathname === "/" ||
-    window.location.pathname === "/index" ||
-    window.location.pathname === "/home" ||
-    window.location.pathname === "/home-prestige" ||
-    window.location.pathname === "/landing-legacy" ||
     window.location.pathname === "/demo" ||
     /^\/(r|b|demo\/|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding|t\/)/.test(window.location.pathname));
 
@@ -567,7 +563,7 @@ function App() {
               <Toaster />
               <Sonner />
 
-              {/* Cinematic Intro — shown on first load for / and /home */}
+              {/* Cinematic Intro — shown on first load for / */}
               {!introCompleted && (
                 <IntroErrorBoundary onFail={handleIntroComplete}>
                   <UnifiedIntro onComplete={handleIntroComplete} />
@@ -591,19 +587,8 @@ function App() {
                       <Route path="/mockups-demo" element={<Navigate to="/demo" replace />} />
                       <Route path="/demo-mockups" element={<Navigate to="/demo" replace />} />
                       <Route path="/mockups" element={<Navigate to="/demo" replace />} />
-                      {/* Una sola homepage: tutti gli alias legacy reindirizzano a "/" */}
-                      <Route path="/index" element={<Navigate to="/" replace />} />
-                      <Route path="/home" element={<Navigate to="/" replace />} />
-                      <Route path="/home-prestige" element={<Navigate to="/" replace />} />
-                      <Route path="/landing" element={<Navigate to="/" replace />} />
-                      <Route path="/landing-legacy" element={<Navigate to="/" replace />} />
-                      <Route path="/home-cinematic" element={<Navigate to="/" replace />} />
-                      <Route path="/home-legacy" element={<Navigate to="/" replace />} />
-                      <Route path="/home-v5" element={<Navigate to="/" replace />} />
-
                       <Route path="/settori" element={<Navigate to="/#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/#pricing" replace />} />
-                      <Route path="/marketing" element={<Navigate to="/" replace />} />
                       <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
                       <Route path="/b/:slug" element={<BusinessPage />} />
                       <Route path="/demo" element={<DemoDirectoryPage />} />
