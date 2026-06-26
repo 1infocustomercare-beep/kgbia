@@ -401,7 +401,7 @@ export function PrestigePricing() {
             <span className="prestige-gold-text italic">{t({ it: "non in problemi.", en: "not in problems." })}</span>
           </h2>
           <p className="mt-3 text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-            {t({ it: "Setup in 7 giorni · Cancelli quando vuoi · Soddisfatti o rimborsati", en: "7-day setup · Cancel anytime · Money-back guarantee" })}
+            {t({ it: "Setup in 7 giorni · Cancelli quando vuoi · Nessun vincolo", en: "7-day setup · Cancel anytime · No commitment" })}
           </p>
         </div>
 
@@ -436,7 +436,7 @@ export function PrestigePricing() {
           <span>·</span>
           <span className="inline-flex items-center gap-1.5"><Lock size={14} /> {t({ it: "Dati in EU", en: "Data hosted in EU" })}</span>
           <span>·</span>
-          <span className="inline-flex items-center gap-1.5"><BadgePercent size={14} /> {t({ it: "Garanzia soddisfatti", en: "Money-back guarantee" })}</span>
+          <span className="inline-flex items-center gap-1.5"><BadgePercent size={14} /> {t({ it: "Nessun vincolo", en: "No commitment" })}</span>
         </div>
       </div>
     </section>
@@ -461,7 +461,7 @@ export function PrestigeUrgency() {
             <p className="text-sm sm:text-base">
               <strong>{t({ it: "Onboarding limitato:", en: "Limited onboarding:" })}</strong>{" "}
               {t({
-                it: `accettiamo solo ${SLOTS_TOTAL} nuovi clienti al mese per garantire qualità. `,
+                it: `accettiamo solo ${SLOTS_TOTAL} nuovi clienti al mese per mantenere alta qualità. `,
                 en: `we accept only ${SLOTS_TOTAL} new customers per month to ensure quality. `,
               })}
               <span style={{ color: "hsl(var(--pr-gold-light))" }}>
@@ -487,7 +487,7 @@ export function PrestigeFAQ() {
     { q: { it: "L'AI sostituisce davvero il mio staff?", en: "Does the AI really replace my staff?" }, a: { it: "Lo affianca. L'AI risponde a routine, prenotazioni, FAQ. Il tuo staff si concentra sui clienti VIP e sulle situazioni che richiedono empatia umana.", en: "It supports them. The AI handles routine, bookings, FAQs. Your staff focuses on VIP customers and situations needing human empathy." } },
     { q: { it: "Quanto ci vuole davvero per partire?", en: "How long does it really take to launch?" }, a: { it: "7 giorni in media. Il primo giorno ci dai gli accessi, in una settimana sei live con sito, AI, WhatsApp e telefono.", en: "7 days on average. Day one you give us access, within a week you're live with site, AI, WhatsApp and phone." } },
     { q: { it: "I miei dati e quelli dei clienti sono sicuri?", en: "Are my and my customers' data safe?" }, a: { it: "Sì. Server in UE, crittografia at-rest, GDPR compliant, nessun dato venduto a terzi. Mai.", en: "Yes. EU servers, at-rest encryption, GDPR compliant, no data sold to third parties. Ever." } },
-    { q: { it: "Posso cancellare in qualunque momento?", en: "Can I cancel anytime?" }, a: { it: "Sì, senza penali. Soddisfatti o rimborsati per iscritto se i risultati non arrivano.", en: "Yes, no penalties. Money-back guarantee in writing if results don't show up." } },
+    { q: { it: "Posso cancellare in qualunque momento?", en: "Can I cancel anytime?" }, a: { it: "Sì, senza penali. Puoi disdire in qualunque momento, senza costi nascosti.", en: "Yes, no penalties. You can cancel anytime with no hidden fees." } },
     { q: { it: "Funziona anche per il mio settore?", en: "Does it work for my industry?" }, a: { it: "Empire è già attivo in 25+ settori: food, NCC, beauty, hotel, palestre, studi medici/legali, e-commerce. Lo addestriamo sul tuo specifico.", en: "Empire is live in 25+ industries: food, NCC, beauty, hotels, gyms, medical/legal practices, e-commerce. We train it on yours." } },
   ];
 
