@@ -103,13 +103,14 @@ export default function PrestigeHero() {
           </div>
 
           {/* Monumental Urbanist headline */}
-          <h1 className="prestige-display mt-8 break-words" style={{ fontSize: "clamp(2.6rem, 9vw, 7.5rem)" }}>
-            <span className="block">{t({ it: "Trasformiamo", en: "We turn" })}</span>
-            <span className="block translate-x-0 lg:translate-x-[6%]">{t({ it: "la tua azienda", en: "your business" })}</span>
-            <span className="block prestige-italic" style={{ fontSize: "clamp(1.6rem, 6vw, 5rem)" }}>
+          <h1 className="prestige-display mt-8" style={{ fontSize: "clamp(2.4rem, 7.2vw, 6rem)", wordBreak: "keep-all", hyphens: "none" }}>
+            <span className="block whitespace-nowrap">{t({ it: "Trasformiamo", en: "We turn" })}</span>
+            <span className="block whitespace-nowrap translate-x-0 lg:translate-x-[6%]">{t({ it: "la tua azienda", en: "your business" })}</span>
+            <span className="block prestige-italic mt-2" style={{ fontSize: "clamp(1.4rem, 4.8vw, 3.8rem)" }}>
               {t({ it: "in un impero digitale.", en: "into a digital empire." })}
             </span>
           </h1>
+
 
           {/* Gold rule + subcopy */}
           <div className="mt-10 grid grid-cols-12 gap-6 items-start">
