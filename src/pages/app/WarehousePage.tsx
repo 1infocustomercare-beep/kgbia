@@ -30,6 +30,13 @@ export default function WarehousePage() {
   const suggestions = useRestockSuggestions(restaurantId);
   const recipes = useRecipes(restaurantId);
 
+  const stockValue = useMemo(
+    () => (items.data || []).reduce((s, i) => s + i.stock_qty * i.cost_per_unit, 0),
+    [items.data],
+  );
+
+  const lowCount = (suggestions.data || []).filter(s => s.urgency !== "ok").length;
+
   if (!restaurantId) {
     return (
       <div className="p-8 text-center text-muted-foreground">
@@ -38,12 +45,6 @@ export default function WarehousePage() {
     );
   }
 
-  const stockValue = useMemo(
-    () => (items.data || []).reduce((s, i) => s + i.stock_qty * i.cost_per_unit, 0),
-    [items.data],
-  );
-
-  const lowCount = (suggestions.data || []).filter(s => s.urgency !== "ok").length;
 
   return (
     <div className="container mx-auto p-4 space-y-4 max-w-6xl" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 8rem)" }}>
