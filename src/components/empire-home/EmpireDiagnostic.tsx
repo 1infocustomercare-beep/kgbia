@@ -326,7 +326,7 @@ export default function EmpireDiagnostic() {
                     </div>
                   </div>
                   <Button asChild className="font-body bg-gradient-to-r from-[#c9a84c] to-[#f0d78c] text-[#0d0d0d] hover:opacity-90 font-semibold h-12">
-                    <Link to="/auth">Inizia ora — 90 giorni gratis <ArrowRight className="w-4 h-4 ml-2" /></Link>
+                    <Link to="/auth">Inizia ora — senza impegno <ArrowRight className="w-4 h-4 ml-2" /></Link>
                   </Button>
                 </div>
               </motion.div>
@@ -506,7 +506,7 @@ function DiagnosticCard({ r }: { r: DiagnosticResult }) {
         )}
       </div>
       <Button asChild className="font-body w-full bg-gradient-to-r from-[#c9a84c] to-[#f0d78c] text-[#0d0d0d] hover:opacity-90 font-semibold mt-2">
-        <Link to="/auth">{r.nextStep || "Inizia ora gratis"} <ArrowRight className="w-4 h-4 ml-2" /></Link>
+        <Link to="/auth">{r.nextStep || "Inizia ora"} <ArrowRight className="w-4 h-4 ml-2" /></Link>
       </Button>
     </motion.div>
   );

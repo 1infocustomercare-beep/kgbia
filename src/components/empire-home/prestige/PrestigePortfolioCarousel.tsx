@@ -746,7 +746,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
               style={{ color: "hsl(var(--pr-muted-on-dark))" }}
             >
               Ti costruiamo lo stesso ecosistema, calibrato sul tuo brand, in 7 giorni.
-              Soddisfatti o rimborsati per iscritto.
+              Cancellazione senza penali in qualunque momento.
             </p>
             <button
               className="prestige-cta"
