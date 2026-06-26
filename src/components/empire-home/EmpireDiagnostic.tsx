@@ -143,7 +143,7 @@ export default function EmpireDiagnostic() {
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
           <Badge variant="outline" className="mb-4 border-[#c9a84c]/40 text-[#f0d78c] bg-[#c9a84c]/5">
-            <Sparkles className="w-3 h-3 mr-1" /> Diagnosi AI gratuita
+            <Sparkles className="w-3 h-3 mr-1" /> Diagnosi AI
           </Badge>
           <h2 className="font-display text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
             Dimmi il tuo <span className="bg-gradient-to-r from-[#c9a84c] to-[#f0d78c] bg-clip-text text-transparent">problema</span>.

@@ -220,7 +220,7 @@ const PROJECTS: Project[] = [
     city: "Bologna",
     oneLiner: "Onboarding nuovi membri 100% automatico, in 4 minuti.",
     problem: [
-      "Trial gratuiti senza follow-up = zero conversioni",
+      "Trial senza follow-up = zero conversioni",
       "Pagamenti ricorrenti gestiti a mano",
       "Nessun contatto tra trainer e membri fuori palestra",
     ],
