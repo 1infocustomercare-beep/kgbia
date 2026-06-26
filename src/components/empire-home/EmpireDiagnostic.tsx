@@ -143,7 +143,7 @@ export default function EmpireDiagnostic() {
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
           <Badge variant="outline" className="mb-4 border-[#c9a84c]/40 text-[#f0d78c] bg-[#c9a84c]/5">
-            <Sparkles className="w-3 h-3 mr-1" /> Diagnosi AI gratuita
+            <Sparkles className="w-3 h-3 mr-1" /> Diagnosi AI
           </Badge>
           <h2 className="font-display text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
             Dimmi il tuo <span className="bg-gradient-to-r from-[#c9a84c] to-[#f0d78c] bg-clip-text text-transparent">problema</span>.
@@ -326,7 +326,7 @@ export default function EmpireDiagnostic() {
                     </div>
                   </div>
                   <Button asChild className="font-body bg-gradient-to-r from-[#c9a84c] to-[#f0d78c] text-[#0d0d0d] hover:opacity-90 font-semibold h-12">
-                    <Link to="/auth">Inizia ora — 90 giorni gratis <ArrowRight className="w-4 h-4 ml-2" /></Link>
+                    <Link to="/auth">Inizia ora — senza impegno <ArrowRight className="w-4 h-4 ml-2" /></Link>
                   </Button>
                 </div>
               </motion.div>
@@ -506,7 +506,7 @@ function DiagnosticCard({ r }: { r: DiagnosticResult }) {
         )}
       </div>
       <Button asChild className="font-body w-full bg-gradient-to-r from-[#c9a84c] to-[#f0d78c] text-[#0d0d0d] hover:opacity-90 font-semibold mt-2">
-        <Link to="/auth">{r.nextStep || "Inizia ora gratis"} <ArrowRight className="w-4 h-4 ml-2" /></Link>
+        <Link to="/auth">{r.nextStep || "Inizia ora"} <ArrowRight className="w-4 h-4 ml-2" /></Link>
       </Button>
     </motion.div>
   );

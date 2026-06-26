@@ -96,7 +96,7 @@ export default function PrestigeFooter() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6">
           <div className="text-[11px] tracking-[0.18em] uppercase text-white/45">
-            © 2026 Empire IA · Tutti i diritti riservati
+            © 2026 Empire AI · Tutti i diritti riservati
           </div>
           <button
             onClick={scrollTop}

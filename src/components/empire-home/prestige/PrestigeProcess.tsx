@@ -19,7 +19,7 @@ const STEPS = [
   {
     n: "04",
     title: "Lanciamo & seguiamo",
-    desc: "Setup completo in 7-14 giorni. Ti formiamo in 1 ora. Restiamo accanto a te per i primi 90 giorni — gratuitamente — finché non vola da solo.",
+    desc: "Setup completo in 7-14 giorni. Ti formiamo in 1 ora. Restiamo accanto a te per i primi 90 giorni — senza costi aggiuntivi — finché non vola da solo.",
   },
 ];
 

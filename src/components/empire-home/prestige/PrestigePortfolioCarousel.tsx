@@ -220,7 +220,7 @@ const PROJECTS: Project[] = [
     city: "Bologna",
     oneLiner: "Onboarding nuovi membri 100% automatico, in 4 minuti.",
     problem: [
-      "Trial gratuiti senza follow-up = zero conversioni",
+      "Trial senza follow-up = zero conversioni",
       "Pagamenti ricorrenti gestiti a mano",
       "Nessun contatto tra trainer e membri fuori palestra",
     ],
@@ -306,7 +306,7 @@ export default function PrestigePortfolioCarousel() {
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-deep))" }}>
-              ✦ Casi reali · Risultati certificati
+              ✦ Casi reali · Risultati concreti
             </div>
             <h2
               className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"
@@ -746,7 +746,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
               style={{ color: "hsl(var(--pr-muted-on-dark))" }}
             >
               Ti costruiamo lo stesso ecosistema, calibrato sul tuo brand, in 7 giorni.
-              Soddisfatti o rimborsati per iscritto.
+              Cancellazione senza penali in qualunque momento.
             </p>
             <button
               className="prestige-cta"

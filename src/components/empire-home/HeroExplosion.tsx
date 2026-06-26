@@ -188,8 +188,8 @@ export default function HeroExplosion() {
         </div>
 
         <h1 className="w-full font-heading font-black uppercase leading-[0.92] tracking-normal text-foreground" style={{ fontSize: "clamp(2.45rem, 11vw, 10.5rem)", textShadow: "0 4px 34px hsl(0 0% 0% / 0.72)" }}>
-          <span data-hero-word className="block whitespace-nowrap will-change-transform">Il tuo business,</span>
-          <span data-hero-word className="block whitespace-nowrap bg-[linear-gradient(110deg,hsl(var(--gold)),hsl(var(--primary)),hsl(var(--accent)))] bg-clip-text text-transparent will-change-transform">
+          <span data-hero-word className="block whitespace-normal break-words will-change-transform">Il tuo business,</span>
+          <span data-hero-word className="block whitespace-normal break-words bg-[linear-gradient(110deg,hsl(var(--gold)),hsl(var(--primary)),hsl(var(--accent)))] bg-clip-text text-transparent will-change-transform">
             potenziato dall'AI.
           </span>
         </h1>
@@ -198,7 +198,7 @@ export default function HeroExplosion() {
           Costruiamo siti, app e agenti AI che lavorano per te 24/7: portano clienti, gestiscono prenotazioni, chiudono vendite e automatizzano l'operativo. Un ecosistema premium pronto in 7 giorni — senza perdere il tuo brand.
         </p>
 
-        <div className="pointer-events-none mt-7 flex w-full items-end justify-center gap-1.5 sm:mt-9 sm:gap-3" style={{ perspective: "1200px" }}>
+        <div className="pointer-events-none mt-7 flex w-full items-end justify-center gap-1.5 overflow-hidden sm:mt-9 sm:gap-3" style={{ perspective: "1200px" }}>
           {HERO_MOCKUPS.map((mockup, i) => (
             <div
               key={mockup.img}
@@ -223,7 +223,7 @@ export default function HeroExplosion() {
         <div data-hero-cta className="mt-7 flex w-full flex-col items-center gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:gap-4">
           <button
             onClick={() => navigate("/demo")}
-            className="group relative min-h-12 w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-primary-foreground transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
+            className="group relative min-h-12 w-full overflow-hidden rounded-full px-8 py-4 text-sm font-bold tracking-wide text-black transition-transform hover:-translate-y-1 sm:w-auto sm:px-9"
             style={{
               background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)), hsl(var(--gold)))",
               boxShadow: "0 24px 60px -20px hsl(var(--primary) / 0.6)",

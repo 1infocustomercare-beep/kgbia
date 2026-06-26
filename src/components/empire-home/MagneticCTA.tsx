@@ -74,18 +74,19 @@ export default function MagneticCTA() {
         </h2>
 
         <p className="mx-auto mt-7 max-w-[600px] text-[14px] leading-[1.85] text-white/65 sm:mt-8 sm:text-[15px]">
-          Prenota una demo gratuita di 20 minuti: ti mostriamo dal vivo come Empire può trasformare il tuo settore. Senza impegno, senza carta, senza fuffa.
+          Prenota una demo di 20 minuti: ti mostriamo dal vivo come Empire può trasformare il tuo settore. Senza impegno, senza carta, senza fuffa.
         </p>
 
-        <button
-          ref={btn}
-          onClick={() => navigate("/demo")}
-          className="group relative mt-10 w-full max-w-[420px] overflow-hidden rounded-full px-10 py-5 text-sm font-extrabold uppercase tracking-[2px] text-white sm:mt-12 sm:w-auto sm:max-w-none sm:px-14 sm:py-6 sm:text-base"
-          style={{
-            background: "linear-gradient(135deg, #22d3ee, #a78bfa, #ec4899)",
-            boxShadow: "0 40px 100px -20px rgba(167,139,250,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",
-          }}
-        >
+          <button
+            ref={btn}
+            onClick={() => navigate("/demo")}
+            className="group relative mt-10 w-full max-w-[420px] overflow-hidden rounded-full px-10 py-5 text-sm font-extrabold uppercase tracking-[2px] text-black sm:mt-12 sm:w-auto sm:max-w-none sm:px-14 sm:py-6 sm:text-base"
+            style={{
+              background: "linear-gradient(135deg, #22d3ee, #a78bfa, #ec4899)",
+              boxShadow: "0 40px 100px -20px rgba(167,139,250,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",
+            }}
+            aria-label="Prenota una demo di 20 minuti"
+          >
           <span className="relative z-10">Inizia ora →</span>
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
         </button>
