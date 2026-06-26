@@ -693,6 +693,76 @@ export default function PrestigeTheme() {
       .prestige-cta.prestige-magnetic:hover {
         transform: translate3d(var(--mag-x, 0), calc(var(--mag-y, 0px) - 2px), 0);
       }
+
+      /* ── Editorial broken-grid additions (v4 redesign) ─────────────── */
+      .prestige-numeral {
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 900;
+        font-size: clamp(5rem, 11vw, 9.5rem);
+        line-height: 0.82;
+        letter-spacing: -0.06em;
+        color: hsl(var(--pr-gold) / 0.16);
+        user-select: none;
+        pointer-events: none;
+      }
+      .prestige-light .prestige-numeral { color: hsl(var(--pr-emerald) / 0.10); }
+
+      .prestige-hairline {
+        display: inline-block;
+        height: 1px;
+        width: clamp(36px, 6vw, 72px);
+        background: linear-gradient(90deg, hsl(var(--pr-gold)), transparent);
+        vertical-align: middle;
+      }
+
+      .prestige-ghost-word {
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 900;
+        font-size: clamp(8rem, 28vw, 22rem);
+        line-height: 0.78;
+        letter-spacing: -0.08em;
+        color: hsl(var(--pr-gold) / 0.04);
+        text-transform: uppercase;
+        pointer-events: none;
+        user-select: none;
+      }
+      .prestige-light .prestige-ghost-word { color: hsl(var(--pr-emerald) / 0.06); }
+
+      .prestige-rule-gold {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, hsl(var(--pr-gold) / 0.55) 20%, hsl(var(--pr-gold) / 0.55) 80%, transparent);
+      }
+
+      .prestige-vertical-label {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 800;
+        font-size: 11px;
+        letter-spacing: 0.5em;
+        text-transform: uppercase;
+        color: hsl(var(--pr-gold) / 0.85);
+      }
+
+      .prestige-phone-frame {
+        border-radius: 2.2rem;
+        padding: 8px;
+        background: linear-gradient(145deg, hsl(0 0% 18%), hsl(0 0% 6%) 38%, hsl(0 0% 14%) 65%, hsl(0 0% 4%));
+        box-shadow:
+          0 50px 90px -30px hsl(var(--pr-emerald-deep) / 0.95),
+          0 0 0 1.2px hsl(var(--pr-gold) / 0.38),
+          inset 0 1px 0 hsl(0 0% 100% / 0.08);
+      }
+
+      .prestige-display-mono {
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 900;
+        font-size: clamp(2.5rem, 4.5vw, 4rem);
+        line-height: 0.9;
+        letter-spacing: -0.03em;
+        text-transform: uppercase;
+      }
     `}</style>
   );
 }
+
