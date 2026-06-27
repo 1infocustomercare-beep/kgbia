@@ -82,11 +82,6 @@ export default function PrestigeHero() {
         }}
       />
 
-      {/* Ghost EMPIRE word backdrop — editorial type as architecture */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-1/2 z-0 flex -translate-y-1/2 items-center justify-center overflow-hidden">
-        <span className="prestige-ghost-word">EMPIRE</span>
-      </div>
-
       {/* Vertical editorial label — far right */}
       <div aria-hidden className="hidden lg:flex absolute right-6 top-1/2 z-10 -translate-y-1/2 items-center gap-3">
         <span className="prestige-vertical-label">Est. 2024 · Made in Italy</span>
