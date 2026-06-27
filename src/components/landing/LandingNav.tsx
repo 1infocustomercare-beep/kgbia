@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import empireLogo from "@/assets/empire-logo-full.png";
 import { PrestigeLangToggle } from "@/components/empire-home/prestige/PrestigeLang";
 
 
@@ -42,7 +41,7 @@ export default function LandingNav() {
         className="fixed left-0 top-0 z-[10002] h-[3px] rounded-r-full"
         style={{
           width: `${progress}%`,
-          background: "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--empire-violet)), hsl(var(--gold)))",
+          background: "linear-gradient(90deg, #0B3B2E, #C9A24B)",
         }}
       />
 
@@ -54,17 +53,32 @@ export default function LandingNav() {
           <a
             href="#hero"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-            className="flex items-center gap-2 font-heading text-base font-extrabold tracking-tight text-foreground sm:text-lg"
+            className="flex items-center gap-2.5"
             aria-label="Empire AI — Home"
           >
             <span
-              className="bg-clip-text text-transparent"
-              style={{ backgroundImage: "linear-gradient(135deg, hsl(var(--gold)), hsl(var(--primary)), hsl(var(--empire-violet)))" }}
+              aria-hidden
+              className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[13px] font-black"
+              style={{
+                background: "linear-gradient(135deg, #0F4C3A, #0B3B2E)",
+                color: "#C9A24B",
+                boxShadow: "inset 0 0 0 1px rgba(201,162,75,0.45)",
+                fontFamily: "Urbanist, Inter, sans-serif",
+                letterSpacing: "-0.02em",
+              }}
             >
-              EMPIRE
+              E
             </span>
-            <span className="hidden text-foreground/80 sm:inline">·</span>
-            <span className="hidden text-foreground/70 sm:inline text-sm font-medium">AI</span>
+            <span
+              className="text-base font-black tracking-tight sm:text-lg"
+              style={{
+                fontFamily: "Urbanist, Inter, sans-serif",
+                color: "#F7F3EC",
+                letterSpacing: "0.02em",
+              }}
+            >
+              EMPIRE<span style={{ color: "#C9A24B" }}>.AI</span>
+            </span>
           </a>
 
 
