@@ -184,23 +184,6 @@ export default function PrestigeHero() {
               );
             })}
 
-            {/* Floating gold proof tag — overlaps phone */}
-            <div
-              className="absolute -left-10 bottom-16 z-20 hidden sm:block"
-              style={{
-                background: "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)) 60%, hsl(var(--pr-gold-deep)))",
-                color: "hsl(var(--pr-emerald-deep))",
-                padding: "14px 18px",
-                boxShadow: "0 18px 50px -12px hsl(var(--pr-gold) / 0.55)",
-                transform: "rotate(-4deg)",
-                fontFamily: "Urbanist, sans-serif",
-              }}
-            >
-              <div className="text-3xl font-black leading-none">+187%</div>
-              <div className="text-[9px] font-bold uppercase tracking-[0.22em] opacity-80 mt-1">
-                {t({ it: "Prenotazioni medie", en: "Avg. bookings" })}
-              </div>
-            </div>
           </div>
 
           {/* Indicators */}
