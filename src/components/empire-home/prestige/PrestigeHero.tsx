@@ -116,13 +116,13 @@ export default function PrestigeHero() {
               style={{ color: "hsl(var(--pr-muted-on-dark))", fontFamily: "Epilogue, sans-serif", fontWeight: 300 }}
             >
               {t({
-                it: "Sito, app, prenotazioni, WhatsApp, telefonate e pagamenti — orchestrati da un'unica ",
-                en: "Site, app, bookings, WhatsApp, calls and payments — orchestrated by a single ",
+                it: "Sito, vendite, operations, marketing e customer care unificati in un unico ",
+                en: "Website, sales, operations, marketing and customer care unified in a single ",
               })}
               <strong className="font-semibold" style={{ color: "hsl(var(--pr-text-on-dark))" }}>
-                {t({ it: "AI cucita sul tuo settore", en: "AI tailored to your industry" })}
+                {t({ it: "sistema AI cucito sul tuo settore", en: "AI system tailored to your industry" })}
               </strong>
-              {t({ it: ". Niente staff al telefono. Niente clienti persi.", en: ". No staff on the phone. No lost customers." })}
+              {t({ it: ".", en: "." })}
             </p>
           </div>
 
@@ -139,14 +139,10 @@ export default function PrestigeHero() {
             </button>
           </div>
 
-          {/* Trust strip */}
+          {/* Trust strip — onesto */}
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] uppercase tracking-[0.22em]" style={{ color: "hsl(var(--pr-muted-on-dark))", fontWeight: 600 }}>
-            <span className="inline-flex items-center gap-2">
-              <span style={{ color: "hsl(var(--pr-gold-light))" }}>★★★★★</span>
-              <span style={{ color: "hsl(var(--pr-gold-light))" }}>4.9/5</span>
-            </span>
-            <span>· {t({ it: "3.500+ aziende attive", en: "3,500+ active brands" })}</span>
-            <span>· {t({ it: "Setup in 7 giorni", en: "7-day setup" })}</span>
+            <span>{t({ it: "Setup in 7 giorni", en: "7-day setup" })}</span>
+            <span>· {t({ it: "Sistemi AI su misura per la tua azienda", en: "AI systems tailored to your business" })}</span>
           </div>
         </div>
 
