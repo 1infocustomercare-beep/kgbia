@@ -94,15 +94,14 @@ export default function PrestigeHero() {
           <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.34em] sm:text-[11px]" style={{ color: "hsl(var(--pr-gold-light))" }}>
             <span className="border px-2 py-1 rounded-sm" style={{ borderColor: "hsl(var(--pr-gold) / 0.55)" }}>01</span>
             <span className="prestige-hairline" />
-            <span className="inline-flex items-center gap-2"><Sparkles size={12} /> {t({ it: "Agenzia AI · Italia", en: "AI Agency · Italy" })}</span>
+            <span className="inline-flex items-center gap-2"><Sparkles size={12} /> {t({ it: "Empire · Agency AI per la tua azienda", en: "Empire · AI Agency for your business" })}</span>
           </div>
 
           {/* Monumental Urbanist headline */}
-          <h1 className="prestige-display mt-8" style={{ fontSize: "clamp(2.4rem, 7.2vw, 6rem)", wordBreak: "keep-all", hyphens: "none" }}>
-            <span className="block whitespace-nowrap">{t({ it: "Trasformiamo", en: "We turn" })}</span>
-            <span className="block whitespace-nowrap translate-x-0 lg:translate-x-[6%]">{t({ it: "la tua azienda", en: "your business" })}</span>
-            <span className="block prestige-italic mt-2" style={{ fontSize: "clamp(1.4rem, 4.8vw, 3.8rem)" }}>
-              {t({ it: "in un impero digitale.", en: "into a digital empire." })}
+          <h1 className="prestige-display mt-8" style={{ fontSize: "clamp(2.2rem, 6.4vw, 5.4rem)", wordBreak: "keep-all", hyphens: "none" }}>
+            <span className="block">{t({ it: "Trasformiamo la tua azienda", en: "We turn your business" })}</span>
+            <span className="block prestige-italic mt-2" style={{ fontSize: "clamp(1.3rem, 4.4vw, 3.4rem)" }}>
+              {t({ it: "in un impero digitale che lavora 24/7.", en: "into a digital empire that works 24/7." })}
             </span>
           </h1>
 
