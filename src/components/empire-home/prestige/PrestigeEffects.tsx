@@ -167,10 +167,36 @@ export default function PrestigeEffects() {
     );
     countTargets.forEach((el) => countIO.observe(el));
 
+    // ── Parallax on [data-parallax="<depth-px>"] ─────────────────────
+    const parallaxNodes = Array.from(document.querySelectorAll<HTMLElement>("[data-parallax]"));
+    let parallaxRaf = 0;
+    const onParallaxScroll = () => {
+      if (prefersReduced) return;
+      if (parallaxRaf) return;
+      parallaxRaf = requestAnimationFrame(() => {
+        parallaxRaf = 0;
+        const vh = window.innerHeight;
+        parallaxNodes.forEach((el) => {
+          const depth = parseFloat(el.dataset.parallax || "40");
+          const r = el.getBoundingClientRect();
+          const center = r.top + r.height / 2;
+          const progress = (center - vh / 2) / vh; // -1..1 across viewport
+          const y = Math.max(-1.2, Math.min(1.2, progress)) * -depth;
+          el.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
+        });
+      });
+    };
+    onParallaxScroll();
+    window.addEventListener("scroll", onParallaxScroll, { passive: true });
+    window.addEventListener("resize", onParallaxScroll);
+
     return () => {
       io.disconnect();
       countIO.disconnect();
       window.removeEventListener("scroll", onScrollFallback);
+      window.removeEventListener("scroll", onParallaxScroll);
+      window.removeEventListener("resize", onParallaxScroll);
+      if (parallaxRaf) cancelAnimationFrame(parallaxRaf);
       tiltCleanups.forEach((fn) => fn());
       magCleanups.forEach((fn) => fn());
     };
