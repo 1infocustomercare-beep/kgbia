@@ -568,9 +568,14 @@
 }
 
 .landing-button-primary {
-  color: hsl(var(--primary-foreground));
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)) 52%, hsl(var(--gold)));
-  box-shadow: 0 24px 72px -28px hsl(var(--primary) / 0.7), inset 0 1px 0 hsl(var(--foreground) / 0.2);
+  color: #0B3B2E;
+  background: linear-gradient(135deg, hsl(var(--gold-light, 42 70% 70%)), hsl(var(--gold, 42 60% 50%)) 55%, hsl(var(--gold-deep, 38 55% 42%)));
+  box-shadow: 0 22px 60px -28px hsl(var(--gold) / 0.55), inset 0 1px 0 rgba(255,255,255,0.35);
+  transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease;
+}
+.landing-button-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 30px 80px -28px hsl(var(--gold) / 0.7), inset 0 1px 0 rgba(255,255,255,0.45);
 }
 
 .landing-button-secondary {
@@ -581,12 +586,12 @@
 }
 
 .landing-button-secondary:hover {
-  border-color: hsl(var(--gold) / 0.34);
+  border-color: hsl(var(--gold) / 0.5);
   background: hsl(var(--card) / 0.52);
 }
 
 .landing-heading-gradient {
-  background-image: linear-gradient(120deg, hsl(var(--gold-light)), hsl(var(--foreground)), hsl(var(--empire-violet-glow)));
+  background-image: linear-gradient(120deg, hsl(var(--gold-light)), hsl(var(--foreground)), hsl(var(--gold)));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
