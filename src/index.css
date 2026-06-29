@@ -63,13 +63,13 @@
     --glass: 0 0% 100% / 0.82;
     --glass-border: 220 14% 88% / 0.6;
     --glass-shine: 220 20% 98% / 0.5;
-    --gold-glow: 215 90% 52% / 0.12;
+    --gold-glow: 42 65% 55% / 0.18;
 
-    /* ═══ PREMIUM ACCENT TOKENS ═══ */
-    --gold: 215 90% 52%;
-    --gold-light: 215 80% 62%;
-    --gold-dark: 215 95% 42%;
-    --gold-muted: 215 40% 58%;
+    /* ═══ PREMIUM ACCENT TOKENS — warm gold ═══ */
+    --gold: 42 65% 52%;
+    --gold-light: 42 75% 68%;
+    --gold-dark: 38 60% 38%;
+    --gold-muted: 40 35% 55%;
     --deep-black: 220 20% 97%;
 
     /* ═══ EMPIRE VIOLET TOKENS ═══ */
