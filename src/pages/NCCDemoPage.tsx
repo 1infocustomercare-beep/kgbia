@@ -20,7 +20,7 @@ export default function NCCDemoPage() {
       if (!slug) return null;
       const { data } = await supabase
         .from("companies")
-        .select("*")
+        .select("id, name, slug, industry, owner_id, logo_url, primary_color, secondary_color, tagline, address, city, phone, email, subscription_plan, modules_enabled, is_active, is_blocked, blocked_reason, created_at, updated_at, font_family, modules_config, opening_hours, social_links, theme_config, setup_paid, selected_plan, selected_installments, setup_paid_at")
         .eq("slug", slug)
         .eq("industry", "ncc")
         .maybeSingle();
