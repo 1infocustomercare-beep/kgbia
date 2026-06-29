@@ -178,7 +178,7 @@ export default function BusinessPage() {
       if (!slug) return null;
       const { data: companyData } = await supabase
         .from("companies")
-        .select("*")
+        .select("id, name, slug, industry, owner_id, logo_url, primary_color, secondary_color, tagline, address, city, phone, email, subscription_plan, modules_enabled, is_active, is_blocked, blocked_reason, created_at, updated_at, font_family, modules_config, opening_hours, social_links, theme_config, setup_paid, selected_plan, selected_installments, setup_paid_at")
         .eq("slug", slug)
         .eq("is_active", true)
         .maybeSingle();
@@ -186,7 +186,7 @@ export default function BusinessPage() {
 
       const { data: restaurant } = await supabase
         .from("restaurants")
-        .select("*")
+        .select("id, owner_id, name, slug, logo_url, primary_color, tagline, address, phone, city, is_active, setup_paid, created_at, updated_at, email, opening_hours, languages, min_order_amount, blocked_keywords, policy_accepted, policy_accepted_at, delivery_enabled, takeaway_enabled, table_orders_enabled, is_blocked, blocked_reason, stripe_onboarding_complete, business_type, theme_config, selected_plan, selected_installments, setup_paid_at, menu_pdf_url")
         .eq("slug", slug)
         .eq("is_active", true)
         .maybeSingle();

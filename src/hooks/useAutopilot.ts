@@ -171,12 +171,10 @@ export function useMyLeaderboardRow() {
     queryKey: ["my-leaderboard", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await from("sales_leaderboard")
-        .select("*")
-        .eq("user_id", user!.id)
-        .maybeSingle();
+      const { data, error } = await (supabase as any).rpc("get_my_leaderboard_row");
       if (error) throw error;
-      return data;
+      const rows = Array.isArray(data) ? data : [];
+      return rows[0] || null;
     },
   });
 }
@@ -187,7 +185,7 @@ export function useGlobalLeaderboard() {
     queryFn: async () => {
       const { data, error } = await from("sales_leaderboard")
         .select(
-          "user_id, display_name, avatar_url, total_xp, level, badges, deals_closed_month, revenue_month_eur, streak_days, global_rank",
+          "user_id, display_name, avatar_url, total_xp, level, badges, streak_days, global_rank",
         )
         .order("total_xp", { ascending: false })
         .limit(50);
