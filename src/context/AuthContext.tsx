@@ -218,6 +218,43 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
 
+        // Defensive: validate the restored session with the auth server.
+        // If the local JWT is corrupted ("missing sub claim" / "bad_jwt"),
+        // wipe storage so the user can sign in again cleanly.
+        if (data.session) {
+          const { data: userCheck, error: userErr } = await supabase.auth.getUser();
+          const msg = userErr?.message?.toLowerCase() ?? "";
+          const isBadJwt =
+            !!userErr &&
+            (msg.includes("missing sub") ||
+              msg.includes("bad_jwt") ||
+              msg.includes("invalid jwt") ||
+              msg.includes("invalid claim") ||
+              msg.includes("jwt"));
+
+          if (isBadJwt || (!userErr && !userCheck?.user)) {
+            console.warn("[Auth] Stale/invalid session detected — wiping storage", userErr?.message);
+            try {
+              await supabase.auth.signOut({ scope: "local" });
+            } catch {}
+            try {
+              for (let i = window.localStorage.length - 1; i >= 0; i--) {
+                const k = window.localStorage.key(i);
+                if (k && k.startsWith("sb-") && k.includes("auth-token")) {
+                  window.localStorage.removeItem(k);
+                }
+              }
+            } catch {}
+            if (isMounted) {
+              setSession(null);
+              setUser(null);
+              setRoles([]);
+              setRolesReady(true);
+            }
+            return;
+          }
+        }
+
         applySessionState(data.session);
 
         if (data.session?.user) {
