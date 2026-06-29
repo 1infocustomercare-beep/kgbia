@@ -8858,6 +8858,35 @@ export type Database = {
         }
         Returns: string
       }
+      get_my_leaderboard_row: {
+        Args: never
+        Returns: {
+          avatar_url: string | null
+          badges: Json
+          created_at: string
+          deals_closed_month: number
+          deals_closed_total: number
+          display_name: string | null
+          global_rank: number | null
+          id: string
+          last_activity_at: string | null
+          level: number
+          revenue_month_eur: number
+          revenue_total_eur: number
+          sector: string | null
+          sector_rank: number | null
+          streak_days: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "sales_leaderboard"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_pain_scan_cached: {
         Args: { _domain_hash: string; _owner_id: string }
         Returns: {
@@ -8894,6 +8923,17 @@ export type Database = {
         Returns: {
           onboarding_complete: boolean
           stripe_account_id: string
+        }[]
+      }
+      get_public_company_settings: {
+        Args: { p_company_id: string }
+        Returns: {
+          confirmation_message: string
+          email_template: string
+          facebook_url: string
+          hours: string
+          instagram_url: string
+          whatsapp: string
         }[]
       }
       get_public_custom_preview: {
