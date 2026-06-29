@@ -122,7 +122,9 @@ export function useDemoVault() {
     try {
       const { data, error } = await supabase
         .from("seller_demo_vault" as any)
-        .select("*")
+        .select(
+          "id, owner_id, display_name, original_lead_name, sector, sector_label, sub_sector, template_variant, generation_engine, theme_hint, tenant_id, tenant_kind, tenant_slug, preview_url, admin_url, admin_email, magic_link, lead_snapshot, brand_payload, images_payload, outreach_payload, full_result, is_favorite, is_archived, reuse_count, last_reused_at, last_reused_for_lead, tags, notes, created_at, updated_at"
+        )
         .eq("owner_id", userId)
         .eq("is_archived", false)
         .order("is_favorite", { ascending: false })
