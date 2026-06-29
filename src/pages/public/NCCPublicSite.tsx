@@ -316,8 +316,8 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
   const { data: settings } = useQuery({
     queryKey: ["ncc-pub-settings", companyId],
     queryFn: async () => {
-      const { data } = await supabase.from("company_settings").select("*").eq("company_id", companyId).maybeSingle();
-      return data;
+      const { data } = await (supabase as any).rpc("get_public_company_settings", { p_company_id: companyId });
+      return Array.isArray(data) ? (data[0] || null) : data;
     },
   });
 
