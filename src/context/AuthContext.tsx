@@ -358,12 +358,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signOut = async () => {
     try {
       clearIndustryCache();
-      // Clear tenant context FIRST so cross-tab listeners log out instantly,
-      // then hard-wipe any tenant session fingerprints so cookies/tokens
-      // cannot be reused against another restaurant.
       clearActiveTenant("user_signout");
       const { hardWipeTenantSession } = await import("@/lib/tenant-session-isolation");
       await hardWipeTenantSession("user_signout");
+      // Ensure Supabase session is actually revoked locally (token cleared)
+      try { await supabase.auth.signOut({ scope: "local" }); } catch {}
     } catch (error) {
       console.error("Sign out failed", error);
     } finally {
