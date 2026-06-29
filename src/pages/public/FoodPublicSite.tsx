@@ -92,7 +92,7 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
   const { data: restaurant } = useQuery({
     queryKey: ["food-pub-restaurant", company.slug],
     queryFn: async () => {
-      const { data } = await supabase.from("restaurants").select("*").eq("slug", company.slug).eq("is_active", true).maybeSingle();
+      const { data } = await supabase.from("restaurants").select("id, owner_id, name, slug, logo_url, primary_color, tagline, address, phone, city, is_active, setup_paid, created_at, updated_at, email, opening_hours, languages, min_order_amount, blocked_keywords, policy_accepted, policy_accepted_at, delivery_enabled, takeaway_enabled, table_orders_enabled, is_blocked, blocked_reason, stripe_onboarding_complete, business_type, theme_config, selected_plan, selected_installments, setup_paid_at, menu_pdf_url").eq("slug", company.slug).eq("is_active", true).maybeSingle();
       return data;
     },
   });
