@@ -49,9 +49,9 @@ export default function PrestigeUnifiedNarrative() {
           <div className="prestige-eyebrow-indexed" data-index="01" style={{ color: "hsl(var(--pr-gold-light))" }}>
             {t({ it: "Il problema reale", en: "The real problem" })}
           </div>
-          <h2 className="prestige-display mt-5 text-[2.25rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl">
+          <h2 className="prestige-display mt-5 leading-[1.05] break-words [hyphens:auto]" style={{ fontSize: "clamp(2rem, 7.5vw, 5.25rem)" }} data-reveal>
             {t({ it: "Mentre leggi, ", en: "While you read this, " })}
-            <span className="prestige-gold-text italic">
+            <span className="prestige-gold-text italic inline-block max-w-full">
               {t({ it: "stai perdendo clienti.", en: "you're losing customers." })}
             </span>
           </h2>
