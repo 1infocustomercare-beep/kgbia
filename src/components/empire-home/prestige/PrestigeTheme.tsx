@@ -336,12 +336,13 @@ export default function PrestigeTheme() {
       /* ── Editorial typography polish ─────────────────────────────── */
       .prestige-display em,
       .prestige-italic {
-        font-family: 'Urbanist', 'Inter', sans-serif;
+        font-family: 'DM Serif Display', Georgia, serif;
         font-style: italic;
-        font-weight: 800;
-        letter-spacing: -0.025em;
+        font-weight: 400;
+        letter-spacing: -0.015em;
         color: hsl(var(--pr-gold-light));
       }
+
 
       .prestige-eyebrow-indexed {
         display: inline-flex;
