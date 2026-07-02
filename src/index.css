@@ -3246,11 +3246,12 @@ video::-webkit-media-controls-enclosure {
    content, and enforces a minimum contrast on muted text.
    ════════════════════════════════════════════════════════════════════════ */
 
-/* 1. No horizontal overflow on any device */
+/* 1. No horizontal overflow on any device — use clip so we don't break position:sticky */
 html, body, #root {
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
+
 
 /* Common offenders: long words, code, URLs, big numbers */
 @media (max-width: 640px) {
