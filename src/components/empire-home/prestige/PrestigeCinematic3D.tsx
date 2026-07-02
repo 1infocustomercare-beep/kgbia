@@ -105,9 +105,11 @@ export default function PrestigeCinematic3D() {
     <section
       ref={wrapRef}
       data-section="prestige-3d"
+      data-no-reveal
       className="prestige-section prestige-dark relative"
       style={{ height: "300vh" }}
     >
+
       <div
         className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden"
         style={{
