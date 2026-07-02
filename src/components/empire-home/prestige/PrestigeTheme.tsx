@@ -24,9 +24,11 @@ export default function PrestigeTheme() {
 
         background: hsl(var(--pr-emerald-deep));
         color: hsl(var(--pr-text-on-dark));
-        font-family: 'Epilogue', 'Inter', system-ui, sans-serif;
+        font-family: 'Fira Sans', 'Inter', system-ui, sans-serif;
+        font-weight: 400;
         position: relative;
       }
+
 
 
       .prestige-root,
@@ -62,13 +64,14 @@ export default function PrestigeTheme() {
       }
 
       .prestige-display {
-        font-family: 'Urbanist', 'Inter', system-ui, sans-serif;
-        font-weight: 900;
-        letter-spacing: -0.035em;
-        line-height: 0.92;
-        text-transform: uppercase;
-        font-feature-settings: "ss01", "ss02";
+        font-family: 'DM Serif Display', 'Playfair Display', Georgia, serif;
+        font-weight: 400;
+        letter-spacing: -0.022em;
+        line-height: 1.02;
+        text-transform: none;
+        font-feature-settings: "ss01", "liga", "dlig";
       }
+
 
 
       .prestige-eyebrow {
@@ -333,12 +336,13 @@ export default function PrestigeTheme() {
       /* ── Editorial typography polish ─────────────────────────────── */
       .prestige-display em,
       .prestige-italic {
-        font-family: 'Urbanist', 'Inter', sans-serif;
+        font-family: 'DM Serif Display', Georgia, serif;
         font-style: italic;
-        font-weight: 800;
-        letter-spacing: -0.025em;
+        font-weight: 400;
+        letter-spacing: -0.015em;
         color: hsl(var(--pr-gold-light));
       }
+
 
       .prestige-eyebrow-indexed {
         display: inline-flex;
