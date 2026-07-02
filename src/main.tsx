@@ -9,6 +9,14 @@ import "@fontsource/epilogue/300.css";
 import "@fontsource/epilogue/400.css";
 import "@fontsource/epilogue/500.css";
 import "@fontsource/epilogue/600.css";
+import "@fontsource/dm-serif-display/400.css";
+import "@fontsource/fira-sans/300.css";
+import "@fontsource/fira-sans/400.css";
+import "@fontsource/fira-sans/500.css";
+import "@fontsource/fira-sans/600.css";
+import "@fontsource/fira-sans/700.css";
+
+
 
 
 // Performance: ensure root renders immediately
