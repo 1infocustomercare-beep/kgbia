@@ -24,9 +24,11 @@ export default function PrestigeTheme() {
 
         background: hsl(var(--pr-emerald-deep));
         color: hsl(var(--pr-text-on-dark));
-        font-family: 'Epilogue', 'Inter', system-ui, sans-serif;
+        font-family: 'Fira Sans', 'Inter', system-ui, sans-serif;
+        font-weight: 400;
         position: relative;
       }
+
 
 
       .prestige-root,
