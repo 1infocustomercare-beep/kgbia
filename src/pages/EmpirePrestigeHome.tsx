@@ -8,6 +8,9 @@ import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
 import PrestigeMarquee from "@/components/empire-home/prestige/PrestigeMarquee";
 import PrestigeUnifiedNarrative from "@/components/empire-home/prestige/PrestigeUnifiedNarrative";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
+import PrestigeCapabilities from "@/components/empire-home/prestige/PrestigeCapabilities";
+import PrestigeCinematic3D from "@/components/empire-home/prestige/PrestigeCinematic3D";
+
 import PrestigePortfolioCarousel from "@/components/empire-home/prestige/PrestigePortfolioCarousel";
 import PrestigeProof from "@/components/empire-home/prestige/PrestigeProof";
 import PrestigeProgressBar from "@/components/empire-home/prestige/PrestigeProgressBar";
@@ -64,7 +67,7 @@ function EmpirePrestigeHomeInner() {
     <>
       <PrestigeTheme />
       <PrestigeProgressBar />
-      <div className="prestige-root min-h-screen overflow-x-hidden">
+      <div className="prestige-root min-h-screen [overflow-x:clip]">
         {/* Aurora background + scroll-reveal + tilt + magnetic + count-up */}
         <PrestigeEffects />
         {/* Cinematic film grain — purely decorative */}
@@ -84,8 +87,15 @@ function EmpirePrestigeHomeInner() {
         {/* ── Showcase settoriale (bento denso) ── */}
         <PrestigeIndustries />
 
+        {/* ── Capabilities: cosa fa Empire per te (12 superpoteri) ── */}
+        <PrestigeCapabilities />
+
+        {/* ── 3D cinematic pinned scene ── */}
+        <PrestigeCinematic3D />
+
         {/* ── Portfolio mockup (carousel curato) ── */}
         <PrestigePortfolioCarousel />
+
 
         {/* ── Arianna voice — strip prominente, non solo FAB ── */}
         <PrestigeAriannaDemo />
