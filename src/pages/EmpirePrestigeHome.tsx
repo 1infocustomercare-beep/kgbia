@@ -25,6 +25,7 @@ import {
 
 import PrestigeFooter from "@/components/empire-home/prestige/PrestigeFooter";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
+import EmpireLogoSplash from "@/components/empire-home/EmpireLogoSplash";
 import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepageContent";
 
 /** Voice agent memoised so it never re-renders with the page scroll. */
@@ -65,6 +66,7 @@ function EmpirePrestigeHomeInner() {
 
   return (
     <>
+      <EmpireLogoSplash />
       <PrestigeTheme />
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen [overflow-x:clip]">
