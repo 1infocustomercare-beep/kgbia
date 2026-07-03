@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PrestigeLangToggle } from "@/components/empire-home/prestige/PrestigeLang";
+import empireLogo from "@/assets/empire-logo.jpeg.asset.json";
 
 
 const NAV_LINKS = [
