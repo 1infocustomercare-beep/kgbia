@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-import empireLogoNew from "@/assets/empire-logo-new.png";
+import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 
 const NotFound = () => {
   const location = useLocation();
@@ -20,10 +20,10 @@ const NotFound = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mx-auto mb-6"
-          style={{ boxShadow: "0 0 0 2px hsla(38,65%,58%,0.3), 0 0 20px hsla(265,70%,60%,0.15)" }}>
-          <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover" />
+        <div className="mx-auto mb-6 flex items-center justify-center">
+          <EmpireLogo size={64} rounded="full" glow />
         </div>
+        <EmpireWordmark size={20} serif className="mb-4 block tracking-[0.14em]" />
         <h1 className="text-5xl font-display font-bold mb-3"
           style={{ background: "linear-gradient(135deg, hsl(38 65% 58%), hsl(38 55% 68%), hsl(250 90% 68%))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
           404
