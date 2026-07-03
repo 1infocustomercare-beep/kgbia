@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import empireLogo from "@/assets/empire-logo.jpeg.asset.json";
+import { EMPIRE_BRAND } from "@/lib/empire-brand";
 
 /**
  * Empire AI — Splash screen premium (Glovo-style).
