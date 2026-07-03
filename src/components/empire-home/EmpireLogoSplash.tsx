@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import empireLogo from "@/assets/empire-logo.jpeg.asset.json";
+import { EMPIRE_BRAND } from "@/lib/empire-brand";
 
 /**
  * Empire AI — Splash screen premium (Glovo-style).
@@ -95,7 +95,7 @@ export default function EmpireLogoSplash({
           }}
         >
           <img
-            src={empireLogo.url}
+            src={EMPIRE_BRAND.logoUrl}
             alt="Empire AI"
             className="h-full w-full object-cover"
             draggable={false}
@@ -122,7 +122,7 @@ export default function EmpireLogoSplash({
             textShadow: "0 2px 24px rgba(201,162,75,0.35)",
           }}
         >
-          EMPIRE<span style={{ color: "#C9A24B" }}>.AI</span>
+          {EMPIRE_BRAND.name}<span style={{ color: EMPIRE_BRAND.colors.gold }}>{EMPIRE_BRAND.suffix}</span>
         </div>
         <div
           className="mt-2 text-center text-[10px] uppercase"

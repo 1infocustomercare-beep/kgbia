@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PrestigeLangToggle } from "@/components/empire-home/prestige/PrestigeLang";
-import empireLogo from "@/assets/empire-logo.jpeg.asset.json";
+import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 
 
 const NAV_LINKS = [
@@ -57,26 +57,8 @@ export default function LandingNav() {
             className="flex items-center gap-2.5"
             aria-label="Empire AI — Home"
           >
-            <span
-              aria-hidden
-              className="inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg"
-              style={{
-                boxShadow: "inset 0 0 0 1px rgba(201,162,75,0.5), 0 6px 20px -10px rgba(201,162,75,0.6)",
-                background: "#0B3B2E",
-              }}
-            >
-              <img src={empireLogo.url} alt="Empire AI" className="h-full w-full object-cover" />
-            </span>
-            <span
-              className="text-base font-black tracking-tight sm:text-lg"
-              style={{
-                fontFamily: "Urbanist, Inter, sans-serif",
-                color: "#F7F3EC",
-                letterSpacing: "0.02em",
-              }}
-            >
-              EMPIRE<span style={{ color: "#C9A24B" }}>.AI</span>
-            </span>
+            <EmpireLogo size={36} rounded="lg" glow />
+            <EmpireWordmark size={17} className="hidden sm:inline text-base sm:text-lg" />
           </a>
 
 

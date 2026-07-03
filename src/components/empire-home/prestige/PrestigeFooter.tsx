@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 
 /**
  * PrestigeFooter — footer pulito e statico per la home Empire.
@@ -22,6 +23,12 @@ export default function PrestigeFooter() {
       />
 
       <div className="relative mx-auto w-full max-w-6xl px-6 py-16">
+        {/* Brand lockup */}
+        <div className="mb-10 flex flex-col items-center gap-4">
+          <EmpireLogo size={56} rounded="xl" glow />
+          <EmpireWordmark size={22} serif />
+        </div>
+
         {/* CTA finale */}
         <div className="flex flex-col items-center text-center gap-6">
           <h2 className="font-serif text-4xl md:text-6xl tracking-tight text-white">
