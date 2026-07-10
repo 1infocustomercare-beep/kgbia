@@ -303,7 +303,7 @@ function homeScreen(t: Tokens, copy: SectorCopy, brand: string, city: string, se
   if (t.layout === "editorial" || t.layout === "zen") return editorialHome(t, copy, brand, city, seed);
   if (t.layout === "glass") return glassHome(t, copy, brand, city, seed);
   if (t.layout === "brutal" || t.layout === "neon") return brutalHome(t, copy, brand, city, seed);
-  const heroH = t.layout === "editorial" ? 230 : t.layout === "bento" ? 178 : 205;
+  const heroH = t.layout === "bento" ? 178 : 205;
   return `${statusBar(t)}${shapePattern(t, seed)}
   <g font-family="${t.body}"><text x="28" y="72" fill="${t.muted}" font-size="11" font-weight="800" letter-spacing="2">${esc(copy.label.toUpperCase())} · ${esc(city || "ITALIA")}</text><text x="28" y="105" fill="${t.text}" font-family="${t.heading}" font-size="31" font-weight="900">${esc(brand.slice(0, 19))}</text></g>
   <rect x="302" y="55" width="48" height="48" rx="${t.radius}" fill="${t.primary}"/><text x="326" y="88" text-anchor="middle" fill="${t.bg}" font-size="25" font-family="${t.heading}" font-weight="900">${t.icon}</text>
