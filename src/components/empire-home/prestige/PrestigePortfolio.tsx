@@ -9,18 +9,18 @@ const pool = createMockupPool();
 const PORT = pool.take(12);
 
 const META = [
-  { tag: "Food", title: "Strapizzami", desc: "Pizzeria · Ordini WhatsApp gestiti dall'AI in 12 secondi", year: "2025" },
-  { tag: "Sushi", title: "Sakura Atelier", desc: "Sushi bar · Prenotazioni 24/7 senza staff al telefono", year: "2025" },
-  { tag: "NCC", title: "Empire NCC", desc: "Trasporti luxury · Centralino AI in 4 lingue", year: "2025" },
-  { tag: "Beauty", title: "Velvet Studio", desc: "Beauty · Agenda piena, zero no-show grazie ai reminder", year: "2025" },
-  { tag: "Hotel", title: "Asinara Resort", desc: "Boutique hotel · Concierge AI multilingua 24/7", year: "2024" },
-  { tag: "Boat", title: "Pacifico Ceviche", desc: "Yacht charter · Booking con voice agent", year: "2025" },
-  { tag: "Fitness", title: "Iron Club", desc: "Palestra · Onboarding membri 100% automatico", year: "2025" },
-  { tag: "Caffè", title: "Bar Centrale", desc: "Caffetteria · Ordini al banco via QR + fidelity", year: "2024" },
-  { tag: "Pro", title: "Studio Legale Riva", desc: "Avvocati · Filtro AI delle richieste in entrata", year: "2025" },
-  { tag: "Pet", title: "Pet Care", desc: "Toelettatura · Appuntamenti via WhatsApp", year: "2025" },
-  { tag: "Auto", title: "Officina Romeo", desc: "Meccanico · Preventivi istantanei + check-in foto", year: "2024" },
-  { tag: "Eventi", title: "Wedding Planner", desc: "Eventi · CRM clienti + portfolio interattivo", year: "2025" },
+  { tag: "Ristorante", title: "Voltaia", desc: "Menù digitale, prenotazioni e ordini WhatsApp gestiti dall'AI · da €39/mese", year: "2026" },
+  { tag: "Spa & Wellness", title: "Séva", desc: "Booking 24/7, cataloghi trattamenti e reminder automatici · da €49/mese", year: "2026" },
+  { tag: "Fitness", title: "Forgia", desc: "Iscrizioni online, schede AI e rinnovi abbonamento automatici · da €59/mese", year: "2026" },
+  { tag: "Immobiliare", title: "Dimora", desc: "Vetrina immobili, tour virtuali e qualifica lead in chat · da €89/mese", year: "2026" },
+  { tag: "Fashion", title: "Atelier Nove", desc: "E-commerce brandizzato, personal shopper AI e clienteling · da €79/mese", year: "2026" },
+  { tag: "Studio Dentistico", title: "Aurora", desc: "Agenda medica, promemoria trattamenti e piani di cura digitali · da €69/mese", year: "2026" },
+  { tag: "Viaggi & Tour", title: "Rotta", desc: "Preventivi istantanei multilingua e itinerari personalizzati AI · da €69/mese", year: "2026" },
+  { tag: "Pet Care", title: "Coda Felice", desc: "Toelettatura e visite veterinarie prenotate via WhatsApp · da €39/mese", year: "2026" },
+  { tag: "NCC", title: "Empire NCC", desc: "Centralino AI in 4 lingue e app autisti con corse e pagamenti · da €99/mese", year: "2026" },
+  { tag: "Hotel Boutique", title: "Asinara Resort", desc: "Concierge AI multilingua 24/7 e upselling stanze automatico · da €149/mese", year: "2026" },
+  { tag: "Officina Auto", title: "Officina Romeo", desc: "Preventivi istantanei, check-in foto e storico interventi cliente · da €49/mese", year: "2026" },
+  { tag: "Studio Legale", title: "Studio Riva", desc: "Filtro AI richieste, appuntamenti con video-call e portale documenti · da €99/mese", year: "2026" },
 ];
 
 const ITEMS = PORT.map((p, i) => ({ ...META[i], image: p.image, sector: p.sector }));
