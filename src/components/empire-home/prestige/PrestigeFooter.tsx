@@ -35,8 +35,7 @@ export default function PrestigeFooter() {
             Pronto a iniziare?
           </h2>
           <p className="max-w-xl text-sm md:text-base text-white/65">
-            Setup in 7 giorni. Niente carta richiesta per la demo. Parliamone
-            insieme.
+            Setup in 7 giorni. Parliamone insieme e valutiamo se Empire fa al caso tuo.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -57,25 +56,27 @@ export default function PrestigeFooter() {
         </div>
 
         {/* Link grid */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
           <div>
             <h3 className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
-              Prodotto
+              Piattaforma
             </h3>
             <ul className="space-y-2">
-              <li><a href="#settori" className="hover:text-white">Settori</a></li>
-              <li><a href="#mockups" className="hover:text-white">Mockup</a></li>
+              <li><a href="#services" className="hover:text-white">Servizi</a></li>
+              <li><a href="#sectors" className="hover:text-white">Settori</a></li>
               <li><a href="#portfolio" className="hover:text-white">Portfolio</a></li>
+              <li><a href="#agents" className="hover:text-white">AI Agents</a></li>
               <li><a href="#pricing" className="hover:text-white">Prezzi</a></li>
             </ul>
           </div>
           <div>
             <h3 className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
-              Azienda
+              Risorse
             </h3>
             <ul className="space-y-2">
-              <li><Link to="/join" className="hover:text-white">Diventa Partner</Link></li>
+              <li><a href="#how" className="hover:text-white">Come funziona</a></li>
               <li><a href="#faq" className="hover:text-white">FAQ</a></li>
+              <li><Link to="/join" className="hover:text-white">Diventa Partner</Link></li>
               <li><a href="#lead" className="hover:text-white">Contatti</a></li>
             </ul>
           </div>
@@ -87,15 +88,7 @@ export default function PrestigeFooter() {
               <li><Link to="/privacy" className="hover:text-white">Privacy</Link></li>
               <li><Link to="/cookies" className="hover:text-white">Cookie</Link></li>
               <li><span className="text-white/40">Dati in EU · GDPR</span></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
-              Accesso
-            </h3>
-            <ul className="space-y-2">
               <li><Link to="/auth" className="hover:text-white">Accedi</Link></li>
-              <li><Link to="/onboarding" className="hover:text-white">Crea account</Link></li>
             </ul>
           </div>
         </div>
@@ -103,7 +96,10 @@ export default function PrestigeFooter() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6">
           <div className="text-[11px] tracking-[0.18em] uppercase text-white/45">
-            © 2026 Empire AI · Tutti i diritti riservati
+            © 2026 Empire AI Group · Tutti i diritti riservati
+          </div>
+          <div className="text-[11px] tracking-[0.18em] uppercase text-white/55">
+            Made with precision in Italy
           </div>
           <button
             onClick={scrollTop}

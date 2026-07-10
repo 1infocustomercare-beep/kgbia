@@ -8,9 +8,11 @@ import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 
 const NAV_LINKS = [
   { label: "Settori", href: "#sectors" },
-  { label: "Mockup", href: "#mockups" },
+  { label: "Servizi", href: "#services" },
   { label: "Portfolio", href: "#portfolio" },
+  { label: "Prezzi", href: "#pricing" },
   { label: "AI Agents", href: "#agents" },
+  { label: "FAQ", href: "#faq" },
   { label: "Contatti", href: "#contatti" },
 ];
 

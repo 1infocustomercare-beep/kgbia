@@ -5,18 +5,16 @@ import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import PrestigeEffects from "@/components/empire-home/prestige/PrestigeEffects";
 import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
-import PrestigeMarquee from "@/components/empire-home/prestige/PrestigeMarquee";
-import PrestigeUnifiedNarrative from "@/components/empire-home/prestige/PrestigeUnifiedNarrative";
+import PrestigeProofBar from "@/components/empire-home/prestige/PrestigeProofBar";
+import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
-import PrestigeCapabilities from "@/components/empire-home/prestige/PrestigeCapabilities";
-import PrestigeCinematic3D from "@/components/empire-home/prestige/PrestigeCinematic3D";
-
-import PrestigePortfolioCarousel from "@/components/empire-home/prestige/PrestigePortfolioCarousel";
-import PrestigeProof from "@/components/empire-home/prestige/PrestigeProof";
+import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
+import PrestigeAgents from "@/components/empire-home/prestige/PrestigeAgents";
+import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA";
 import PrestigeProgressBar from "@/components/empire-home/prestige/PrestigeProgressBar";
 import { PrestigeLangProvider } from "@/components/empire-home/prestige/PrestigeLang";
 import {
-  PrestigeAriannaDemo,
+  PrestigeHowItWorks,
   PrestigePricing,
   PrestigeFAQ,
   PrestigeLeadForm,
@@ -32,16 +30,14 @@ import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepage
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
 /**
- * Empire AI — Single canonical agency homepage (route: `/`).
- *
- * Direzione: "Cinematic editorial luxury" (v3).
- * Flusso conversione lineare, denso, monumentale. Niente duplicazioni di sezioni,
- * niente cataloghi pesanti, niente splash. Una sola home, pulita e professionale.
+ * Empire AI — homepage editoriale (route: `/`).
+ * Funnel lineare: hero → proof → servizi → settori → portfolio →
+ * come funziona → agents → prezzi → faq → CTA finale → footer.
+ * Nessuna sezione pinnata: lo scroll resta sempre libero.
  */
 function EmpirePrestigeHomeInner() {
   const { content, isPreview } = useHomepageContent();
 
-  // Brand HSL overrides (parity con LandingPage)
   useEffect(() => {
     const b = content.brand ?? {};
     const root = document.documentElement;
@@ -57,7 +53,6 @@ function EmpirePrestigeHomeInner() {
     if (!window.location.hash) {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
-    // Smooth-scroll Lenis: pilota la CSS var --empire-progress per i parallax.
     getLenis();
     return () => {
       destroyLenis();
@@ -70,54 +65,63 @@ function EmpirePrestigeHomeInner() {
       <PrestigeTheme />
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen [overflow-x:clip]">
-        {/* Aurora background + scroll-reveal + tilt + magnetic + count-up */}
         <PrestigeEffects />
-        {/* Cinematic film grain — purely decorative */}
         <div className="prestige-noise" aria-hidden="true" />
 
         <LandingNav />
 
-        {/* ── HERO monumentale ── */}
-        <PrestigeHero />
+        {/* HERO */}
+        <div id="hero">
+          <PrestigeHero />
+        </div>
 
-        {/* ── Marquee settori ── */}
-        <PrestigeMarquee />
+        {/* PROOF BAR onesto */}
+        <PrestigeProofBar />
 
-        {/* ── Problema → Soluzione → Come (unified) ── */}
-        <PrestigeUnifiedNarrative />
+        {/* SERVIZI bento */}
+        <div id="services">
+          <PrestigeServices />
+        </div>
 
-        {/* ── Showcase settoriale (bento denso) ── */}
-        <PrestigeIndustries />
+        {/* SETTORI */}
+        <div id="sectors">
+          <PrestigeIndustries />
+        </div>
 
-        {/* ── Capabilities: cosa fa Empire per te (12 superpoteri) ── */}
-        <PrestigeCapabilities />
+        {/* PORTFOLIO */}
+        <div id="portfolio">
+          <PrestigePortfolio />
+        </div>
 
-        {/* ── 3D cinematic pinned scene ── */}
-        <PrestigeCinematic3D />
+        {/* COME FUNZIONA — 3 step con linea di progresso */}
+        <div id="how">
+          <PrestigeHowItWorks />
+        </div>
 
-        {/* ── Portfolio mockup (carousel curato) ── */}
-        <PrestigePortfolioCarousel />
+        {/* AI AGENTS marquee */}
+        <PrestigeAgents />
 
+        {/* PREZZI */}
+        <div id="pricing">
+          <PrestigePricing />
+        </div>
 
-        {/* ── Arianna voice — strip prominente, non solo FAB ── */}
-        <PrestigeAriannaDemo />
+        {/* FAQ */}
+        <div id="faq">
+          <PrestigeFAQ />
+        </div>
 
-        {/* ── Proof numerico monumentale ── */}
-        <PrestigeProof />
+        {/* LEAD FORM (ancora #lead per Parla con un consulente) */}
+        <div id="lead">
+          <PrestigeLeadForm />
+        </div>
 
-        {/* ── Pricing tactile ── */}
-        <PrestigePricing />
+        {/* CTA FINALE (ancora #contatti per la navbar) */}
+        <PrestigeFinalCTA />
 
-        {/* ── FAQ "I tuoi dubbi, risolti." ── */}
-        <PrestigeFAQ />
-
-        {/* ── Lead form inline ── */}
-        <PrestigeLeadForm />
-
-        {/* ── Footer pulito ── */}
+        {/* FOOTER */}
         <PrestigeFooter />
 
-        {/* Sticky CTA mobile + FAB Arianna */}
         <PrestigeStickyCTA />
         {!isPreview && <SafeVoiceAgent />}
       </div>
