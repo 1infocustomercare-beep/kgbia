@@ -5,21 +5,23 @@ import { useEmpireScrollDirector } from "../ScrollDirector";
 import { createMockupPool } from "@/lib/mockup-pool";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 
+const MOCKUP_IMAGES = SECTOR_MOCKUP_IMAGES as Record<string, string[] | undefined>;
+
 // Curated proprietary mockups — no low-quality generated PNG batch artifacts here.
 // Order matches META below.
 const PREMIUM_IMAGES: string[] = [
-  SECTOR_MOCKUP_IMAGES.food?.[0],
-  SECTOR_MOCKUP_IMAGES.beauty?.[0],
-  SECTOR_MOCKUP_IMAGES.fitness?.[0],
-  SECTOR_MOCKUP_IMAGES.realestate?.[0],
-  SECTOR_MOCKUP_IMAGES.retail?.[0],
-  SECTOR_MOCKUP_IMAGES.healthcare?.[0],
-  SECTOR_MOCKUP_IMAGES.hospitality?.[0],
-  SECTOR_MOCKUP_IMAGES.veterinary?.[0],
-  SECTOR_MOCKUP_IMAGES.ncc?.[0],
-  SECTOR_MOCKUP_IMAGES.hospitality?.[2],
-  SECTOR_MOCKUP_IMAGES.garage?.[0],
-  SECTOR_MOCKUP_IMAGES.legal?.[0],
+  MOCKUP_IMAGES.food?.[0],
+  MOCKUP_IMAGES.beauty?.[0],
+  MOCKUP_IMAGES.fitness?.[0],
+  MOCKUP_IMAGES.realestate?.[0],
+  MOCKUP_IMAGES.retail?.[0],
+  MOCKUP_IMAGES.healthcare?.[0],
+  MOCKUP_IMAGES.hospitality?.[0],
+  MOCKUP_IMAGES.veterinary?.[0],
+  MOCKUP_IMAGES.ncc?.[0],
+  MOCKUP_IMAGES.hospitality?.[2],
+  MOCKUP_IMAGES.garage?.[0],
+  MOCKUP_IMAGES.legal?.[0],
 ].filter(Boolean) as string[];
 
 // Fallback pool if a slot is missing.
