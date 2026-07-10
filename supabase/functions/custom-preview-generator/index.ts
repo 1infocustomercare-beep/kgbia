@@ -23,6 +23,7 @@ const corsHeaders = {
 };
 
 const AI_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const IMAGE_GATEWAY = "https://ai.gateway.lovable.dev/v1/images/generations";
 
 interface LeadData {
   lead_name: string;
@@ -41,7 +42,7 @@ interface LeadData {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-// MOCKUP iPhone catalog-faithful — riusa la stessa pipeline di lead-mockup-suite:
+// MOCKUP screen-only catalog-faithful — riusa la stessa pipeline di lead-mockup-suite:
 // reference image dal catalogo PNG settoriale + foto/video reali del lead come
 // secondary references → Nano Banana Pro replica fedelmente il layout catalogo
 // sostituendo brand+contenuti.
@@ -106,17 +107,14 @@ ${(lead.brand_photos?.length ?? 0) > 0 ? `• Foto hero/galleria/card: usa le fo
 ${(lead.brand_video_frames?.length ?? 0) > 0 ? `• Background hero / sezione storia: usa i fotogrammi video reali del lead allegati.` : ""}`
     : "";
 
-  const prompt = `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screenTitle}" di un'app mobile reale per "${lead.lead_name}" (${sector}${city}).${catalogDirective}${brandRefDirective}
+  const prompt = `SCREEN UI MOBILE PREMIUM — schermata "${screenTitle}" di un'app reale per "${lead.lead_name}" (${sector}${city}).${catalogDirective}${brandRefDirective}
 
-═══ COMPOSIZIONE FOTOGRAFICA (REGOLE INDEROGABILI) ═══
-• iPhone PERFETTAMENTE CENTRATO orizzontalmente e verticalmente
-• Vista FRONTALE ortogonale: ZERO prospettiva, ZERO inclinazione, ZERO 3D, ZERO tilt
-• Aspect ratio reale 9:19.5, proporzioni iPhone 16 Pro Max accurate
-• Cornice titanio naturale sottile uniforme su tutti i lati
-• Display interamente visibile, NESSUN cropping
-• Sfondo: gradiente neutro morbido in tinta col tema (studio fotografico Apple)
-• Ombra naturale soft sotto il dispositivo
-• NESSUN testo o decorazione FUORI dallo schermo iPhone
+═══ FORMATO OUTPUT (REGOLE INDEROGABILI) ═══
+• SOLO UI DELLO SCHERMO, SENZA telefono, SENZA cornice, SENZA ombra esterna
+• Canvas verticale 9:19.5, riempito al 100% dall'interfaccia
+• Safe area iOS interna già inclusa: status bar, dynamic island e home indicator fanno parte della UI
+• Nessun testo o decorazione fuori dalla UI
+• Deve poter essere inserito dentro un frame iPhone esterno senza doppia cornice
 
 ═══ CONTENUTO SCHERMATA (PERTINENTE AL SETTORE) ═══
 ${hint}
@@ -131,7 +129,7 @@ ${preset.copyTone}. Preset "${preset.label}": ${preset.description}.
 Palette: bg ${preset.palette.bg}, surface ${preset.palette.surface}, accent ${accentColor}, text ${preset.palette.text}.
 Font heading: ${preset.fonts.heading}. Font body: ${preset.fonts.body}.
 
-═══ UI COMPONENTS OBBLIGATORI ═══
+═══ UI COMPONENTS OBBLIGATORI INTERNI ALLO SCREEN ═══
 • Status bar iOS: ora 9:41, segnale 5G, WiFi, batteria 100%
 • Dynamic Island nera centrata in alto
 • Header app con titolo schermata coerente
@@ -140,21 +138,21 @@ Font heading: ${preset.fonts.heading}. Font body: ${preset.fonts.body}.
 • Home indicator iOS sottile in basso
 • CTA primari grandi (52px), full-width
 
-═══ QUALITÀ ULTRA-CINEMATOGRAFICA 8K ═══
-Render fotorealistico Apple Store keynote:
-• Illuminazione studio 3 punti (key + fill + rim caldo)
-• Riflessi vetro Ceramic Shield perfetti, micro-highlight bordi titanio
-• Anti-aliasing perfetto, ZERO pixelation, grana cinematica 5%
-• Color grading filmico premium
+═══ QUALITÀ UI PORTFOLIO PREMIUM ═══
+• Screen-only nitido come screenshot finale di app pubblicata
+• Tipografia leggibile, gerarchia editoriale, nessun testo fuso o deformato
+• Immagini dentro l'interfaccia realistiche e pertinenti al business
+• Spacing coerente iOS, componenti rifiniti, contrasti alti
+• Risultato simile a una case-study card Lowengeld: app concreta, vendibile, non poster generico
 
 ═══ DIVIETI ASSOLUTI ═══
 🚫 VIETATO scrivere "Empire", "Empire AI", "Empireia", "Lovable"
 🚫 VIETATO loghi Apple, Google, Meta, Instagram, WhatsApp visibili
 🚫 VIETATO testo in inglese nei contenuti app
-🚫 VIETATO prospettive 3D, tilt, dispositivo inclinato
-🚫 VIETATO wireframe o sketch — SOLO render fotografico premium`;
+🚫 VIETATO telefono/cornice iPhone/tilt/prospettive 3D/mockup device esterno
+🚫 VIETATO wireframe o sketch`;
 
-  // Usiamo SEMPRE Nano Banana Pro quando c'è una reference catalogo (qualità top)
+  // Reference image → Gemini image-to-image. Nessuna reference → GPT-Image-2 premium per tipografia/UI.
   const model = catalogRef
     ? "google/gemini-3-pro-image-preview"
     : "google/gemini-3.1-flash-image-preview";
@@ -169,6 +167,33 @@ Render fotorealistico Apple Store keynote:
   // 2 tentativi con backoff per resilienza
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
+      if (finalRefs.length === 0) {
+        const r = await fetch(IMAGE_GATEWAY, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "openai/gpt-image-2",
+            prompt,
+            quality: "high",
+            size: "1024x1792",
+            n: 1,
+            stream: false,
+          }),
+        });
+        if (r.status === 429) {
+          if (attempt < 2) { await new Promise(res => setTimeout(res, 2000 * attempt)); continue; }
+          return { dataUrl: null, catalogRef };
+        }
+        if (!r.ok) {
+          console.warn(`[mockup-screen] gpt-image error ${r.status} screen=${screenType}`);
+          if (attempt < 2) { await new Promise(res => setTimeout(res, 1500)); continue; }
+          return { dataUrl: null, catalogRef };
+        }
+        const data = await r.json();
+        const b64 = data?.data?.[0]?.b64_json;
+        return { dataUrl: b64 ? `data:image/png;base64,${b64}` : null, catalogRef };
+      }
+
       const r = await fetch(AI_GATEWAY, {
         method: "POST",
         headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
