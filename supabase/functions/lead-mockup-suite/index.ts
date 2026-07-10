@@ -1,11 +1,12 @@
-// Lead Mockup Suite — genera 4 mockup iPhone (Home/Menu/Booking/Profile) con 3 motori
+// Lead Mockup Suite — genera mockup mobile screen-only coerenti per portfolio/cliente.
 // Engine: 'react' (gratis, lato client) | 'nano_banana' (20 crediti) | 'nano_banana_pro' (40 crediti)
 // Ritorna: suite_id + array screens [{type, title, image_url}]
 //
 // QUALITÀ MOCKUP — strategia "fedeltà al catalogo":
 // 1. Per ogni schermata cerchiamo il mockup di catalogo più affine (sector+screen)
 //    e lo passiamo all'AI come REFERENCE IMAGE (image-to-image) → fedeltà visiva massima.
-// 2. Quando esiste una reference forziamo SEMPRE Nano Banana Pro (qualità top).
+// 2. Quando non serve image-to-image usiamo GPT-Image-2 via images/generations,
+//    più affidabile per tipografia editoriale e UI screen-only.
 // 3. Se l'AI fallisce dopo tutti i retry, NON ritorniamo errore: facciamo
 //    fallback automatico al render React, così l'utente vede SEMPRE 4 mockup.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
@@ -16,6 +17,7 @@ const corsHeaders = {
 };
 
 const AI_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const IMAGE_GATEWAY = "https://ai.gateway.lovable.dev/v1/images/generations";
 
 // ──────────────────────────────────────────────────────────────────────────────
 // CATALOG REFERENCE MAP — i 42 mockup di public/mockup-references/ servono come
@@ -93,10 +95,9 @@ interface ScreenConfig {
 }
 
 const DEFAULT_SCREENS: ScreenConfig[] = [
-  { type: "home",    title: "Home",         prompt_hint: "hero immagine luxury full-bleed, logo brand in alto, claim italiano breve, CTA primario evidenziato, social proof (★ 4.9 - 247 recensioni), sezione 'in evidenza' con 2-3 card" },
-  { type: "menu",    title: "Menu",         prompt_hint: "lista categorie scrollabile orizzontale in alto, lista item con foto a destra, nome+descrizione+prezzo, badge 'popolare'/'novità', filtro veloce (vegan/gluten-free)" },
-  { type: "booking", title: "Prenota",      prompt_hint: "calendario mensile con giorni disponibili evidenziati, fascia oraria a chip, stepper numero persone, campo note, CTA 'Conferma Prenotazione' grande in basso" },
-  { type: "profile", title: "Profilo",      prompt_hint: "avatar utente cerchio, nome+livello fedeltà (Gold), barra punti, lista ordini recenti con stato, sezione preferiti, impostazioni" },
+  { type: "home",     title: "Home",      prompt_hint: "prima schermata commerciale: hero fotografico credibile del business, nome brand grande, claim italiano breve, CTA principale, 2 card 'in evidenza' con prezzi reali e una sezione preview sotto" },
+  { type: "services", title: "Servizi",   prompt_hint: "seconda schermata operativa: elenco servizi/prodotti con categorie, foto piccole, descrizioni specifiche, prezzi realistici in euro, filtri e CTA contestuale" },
+  { type: "booking",  title: "Prenota",   prompt_hint: "terza schermata conversione: calendario/slot/orari o configuratore ordine, riepilogo compatto, dettagli cliente, CTA finale molto chiara" },
 ];
 
 // Mappa settore -> template variante consigliata (esteso 15+ settori)
@@ -139,6 +140,27 @@ async function generateAIImage(
   modelOverride?: string,
   referenceImageUrl?: string | null,
 ): Promise<string | null> {
+  if (!referenceImageUrl && (pro || modelOverride === "openai/gpt-image-2")) {
+    const r = await fetch(IMAGE_GATEWAY, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${lovableKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "openai/gpt-image-2",
+        prompt,
+        quality: "high",
+        size: "1024x1792",
+        n: 1,
+        stream: false,
+      }),
+    });
+    if (r.status === 402) throw new Error("payment_required");
+    if (r.status === 429) throw new Error("rate_limited");
+    if (!r.ok) throw new Error(`image_gen_error: ${r.status} ${(await r.text()).slice(0, 200)}`);
+    const data = await r.json();
+    const b64 = data?.data?.[0]?.b64_json;
+    return b64 ? `data:image/png;base64,${b64}` : null;
+  }
+
   const model = modelOverride || (pro ? "google/gemini-3-pro-image-preview" : "google/gemini-3.1-flash-image-preview");
   // Costruisce content multimodale: se c'è una reference image, è IMAGE-TO-IMAGE
   // (Nano Banana usa la reference come ground truth visivo e replica il layout)
@@ -376,12 +398,9 @@ async function generateValidatedAIImage(
 // (layout, densità, ordine sezioni, componenti) anche con stesso lead+template.
 // ──────────────────────────────────────────────────────────────────────────────
 const LAYOUT_VARIATIONS = [
-  { key: "airy-editorial", desc: "layout AERATO stile editorial: hero molto grande full-bleed in alto, abbondante white-space, tipografia generosa, max 2-3 card visibili, focus su una sola call-to-action centrale" },
-  { key: "dense-discovery", desc: "layout DENSO stile discovery feed: header compatto, search bar prominente, chip categorie scrollabili orizzontalmente, griglia 2 colonne di card piccole, molti elementi visibili" },
-  { key: "story-stacked", desc: "layout NARRATIVO stacked: sezioni verticali separate da titoli grandi maiuscoli, stories circolari in alto, card large rectangulari con immagine sopra e testo sotto, ritmo a blocchi" },
-  { key: "card-spotlight", desc: "layout SPOTLIGHT a card singola: una card grande protagonista al centro con immagine, titolo, descrizione e CTA inline, sotto lista compatta a 1 colonna di alternative" },
-  { key: "split-grid", desc: "layout SPLIT GRID: parte alta hero immagine 60% altezza, parte bassa griglia bento 2x2 con card asimmetriche di dimensioni diverse, badge e prezzi prominenti" },
-  { key: "minimal-list", desc: "layout LIST minimal: header con saluto personalizzato, niente hero immagine, lista verticale pulita di 4-5 elementi con divider sottili, prezzo a destra grande, immagini piccole quadrate a sinistra" },
+  { key: "lowengeld-hero", desc: "HOME portfolio app: hero fotografico alto, brand evidente, CTA e 2 card prodotto sotto; composizione da app reale, non poster" },
+  { key: "lowengeld-catalog", desc: "CATALOGO/servizi: search, chip categorie, lista/card con prezzi e foto; densità alta ma ordinata" },
+  { key: "lowengeld-action", desc: "PRENOTAZIONE/ordine: stepper, calendario o riepilogo, form essenziale, CTA sticky; schermata chiaramente diversa ma stesso brand" },
 ];
 
 const COMPONENT_VARIATIONS = [
@@ -455,18 +474,13 @@ function buildScreenPrompt(
   const bottomNav = navMap[templateVariant] || "Home, Esplora, Prenota, Profilo, Chat AI";
 
   const quality = pro
-    ? `ULTRA-CINEMATOGRAFICO 8K iperrealistico Apple Store keynote:
-       • Illuminazione studio professionale a 3 punti (key + fill + rim light caldo)
-       • Riflessi vetro Ceramic Shield perfetti con micro-highlight a luce radente sui bordi titanio
-       • Cornice titanio naturale con micro-bevel anodizzato uniforme
-       • Ombra naturale soft drop-shadow sotto il dispositivo (penombra fotografica realistica)
-       • Profondità di campo leggera dietro il device (bokeh sottile, sfondo studio sweep)
-       • Anti-aliasing perfetto su ogni testo (zero pixelation), grana cinematica sottile 5%
-       • Color grading filmico premium (curve cinema, contrasto morbido, micro-vignettatura)
-       • Texture sottile vetro display visibile, riflessi UI nitidi e leggibili
-       • Render fotografico, NON CGI plasticoso, NON wireframe`
-    : `Fotorealistico premium 4K studio: illuminazione soft a 2 punti, vetro display nitido,
-       ombre naturali, dettagli UI leggibili, color grading professionale, no CGI plasticoso`;
+    ? `QUALITÀ UI PORTFOLIO PREMIUM:
+       • screen-only verticale 9:19.5, nitido come screenshot finale di app pubblicata
+       • tipografia leggibile, gerarchia editoriale, nessun testo fuso o deformato
+       • immagini dentro l'interfaccia realistiche e pertinenti al business
+       • spacing coerente iOS, componenti rifiniti, contrasti alti
+       • risultato simile a una case-study card Lowengeld: app concreta, vendibile, non poster generico`
+    : `Qualità UI premium: screen-only verticale, testo leggibile, componenti app reali, spacing iOS coerente`;
 
   // VARIATION: layout + componenti diversi per ogni screen
   const layout = pickByIndex(LAYOUT_VARIATIONS, variationSeed, variantIndex);
@@ -529,17 +543,14 @@ ESATTAMENTE il livello che devi raggiungere.\n`
     ? `\n═══ 🏷️ BRAND REALE DEL CLIENTE (REGOLA PRIORITARIA) ═══\n${brandLines.join("\n")}\n`
     : "";
 
-  return `MOCKUP iPhone 16 Pro Max ULTRA-PROFESSIONALE — schermata "${screen.title}" (variante #${variantIndex + 1}/4 · seed ${variationSeed}) di un'app mobile reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}${brandDirective}
+  return `SCREEN UI MOBILE PREMIUM — schermata "${screen.title}" (${variantIndex + 1}/3 · seed ${variationSeed}) di un'app reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}${brandDirective}
 
-═══ COMPOSIZIONE FOTOGRAFICA (REGOLE INDEROGABILI) ═══
-• iPhone PERFETTAMENTE CENTRATO sia orizzontalmente che verticalmente nel frame
-• Vista ESCLUSIVAMENTE FRONTALE ortogonale: ZERO prospettiva, ZERO inclinazione, ZERO 3D, ZERO tilt
-• Aspect ratio dispositivo REALE 9:19.5, proporzioni iPhone 16 Pro Max accurate
-• Cornice in titanio naturale visibile sottile e uniforme su tutti i lati
-• Display interamente visibile, NESSUN cropping, NESSUNA distorsione ottica
-• Sfondo: gradiente neutro morbido in tinta col tema (studio fotografico Apple)
-• Ombra naturale soft sotto il dispositivo
-• NESSUN testo o decorazione FUORI dallo schermo iPhone
+═══ FORMATO OUTPUT (REGOLE INDEROGABILI) ═══
+• SOLO UI DELLO SCHERMO, SENZA telefono, SENZA cornice, SENZA ombra esterna
+• Canvas verticale 9:19.5, riempito al 100% dall'interfaccia
+• Safe area iOS interna già inclusa: status bar, dynamic island e home indicator fanno parte della UI
+• Nessun testo o decorazione fuori dalla UI
+• Deve poter essere inserito dentro un frame iPhone esterno senza doppia cornice
 
 ═══ CONTENUTO SCHERMATA (PERTINENTE AL SETTORE) ═══
 ${screen.prompt_hint || screen.title}
@@ -550,20 +561,20 @@ Il contenuto deve essere AUTENTICO per il settore "${business.sector}":
 • Microcopy 100% in italiano professionale (zero inglese eccetto status bar iOS)
 • ZERO testo placeholder/lorem ipsum/finto
 
-═══ VARIAZIONE OBBLIGATORIA TRA LE 4 SCHERMATE ═══
-🎨 Questa è la schermata #${variantIndex + 1} di 4 — DEVE essere visivamente DIVERSA dalle altre 3 in layout, densità, ordine sezioni e componenti.
+═══ COERENZA LOWENGELD-STYLE TRA LE 3 SCHERMATE ═══
+🎨 Questa è la schermata #${variantIndex + 1} di 3: deve essere diversa nella FUNZIONE, non un altro stile scollegato.
 • Layout di QUESTA schermata: ${layout.desc}
 • Componenti UI specifici: ${components}
-• Variazione palette: usa una sfumatura ${accentRotation} del primario per gli elementi attivi
-• Cambia ordine, dimensioni e tipologia delle sezioni rispetto alle altre 3 schermate
-• Card layout, immagini, CTA e ritmo visivo distintivi di questa singola schermata
-• Anche titoli, sottotitoli, prodotti in evidenza diversi dagli altri screen
+• Mantieni stessi font, palette, logo, radius e stile iconografico su tutte le schermate
+• Cambia solo architettura e contenuti in base alla funzione: Home / Servizi / Prenota
+• Niente cambi colore casuali: usa ${primaryColor} come accento costante, solo micro-variazione ${accentRotation} sugli stati attivi
+• Deve sembrare una suite di 3 screenshot dello stesso prodotto, pronta per portfolio cliente
 
 ═══ STILE GRAFICO ═══
 ${style}
 Colore primario brand del cliente (accent CTA principale): ${primaryColor}
 
-═══ UI COMPONENTS OBBLIGATORI ═══
+═══ UI COMPONENTS OBBLIGATORI INTERNI ALLO SCREEN ═══
 • Status bar iOS in alto: ora 9:41, segnale 5G, WiFi, batteria 100%
 • Dynamic Island nera centrata in alto
 • Header app con titolo schermata coerente
@@ -580,10 +591,10 @@ ${quality}
 🚫 VIETATO scrivere "Empire", "Empire AI", "Empire AI Group", "Lovable", "Empireia"
 🚫 VIETATO loghi Apple, Google, Meta o brand di terze parti
 🚫 VIETATO testo in inglese nei contenuti dell'app
-🚫 VIETATO prospettive 3D, tilt, dispositivo inclinato
+🚫 VIETATO telefono/cornice iPhone/tilt/prospettive 3D/mockup device esterno
 🚫 VIETATO testo distorto, lorem ipsum, placeholder generici
-🚫 VIETATO mockup wireframe o sketch — SOLO render fotografici premium
-🚫 VIETATO che le 4 schermate sembrino la stessa: DEVONO avere layout strutturalmente DIVERSI`;
+🚫 VIETATO mockup wireframe o sketch
+🚫 VIETATO che le schermate sembrino tre template uguali con colori cambiati`;
 }
 
 Deno.serve(async (req) => {
@@ -661,7 +672,7 @@ Deno.serve(async (req) => {
 
     const templateVariant = templateVariantInput || suggestTemplate(business_sector);
     const screens: ScreenConfig[] = (Array.isArray(screensInput) && screensInput.length > 0)
-      ? screensInput.slice(0, 4).map((s: any) => ({
+      ? screensInput.slice(0, 3).map((s: any) => ({
           type: s.type || "home",
           title: s.title || "Schermata",
           prompt_hint: s.prompt_hint || DEFAULT_SCREENS.find(d => d.type === s.type)?.prompt_hint,
