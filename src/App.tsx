@@ -637,6 +637,7 @@ function App() {
                       } />
                       
                       <Route path="/catalogo" element={<MockupCatalogPage />} />
+                      <Route path="/portfolio" element={<MockupCatalogPage />} />
 
                       {/* Onboarding (post-payment branding/data completion) */}
                       <Route path="/onboarding" element={
