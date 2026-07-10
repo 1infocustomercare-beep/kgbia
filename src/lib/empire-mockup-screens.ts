@@ -12,7 +12,7 @@ type SectorKind =
   | "garage" | "photography" | "construction" | "gardening" | "tattoo" | "education" | "events"
   | "logistics" | "beach" | "veterinary" | "childcare" | "generic";
 
-type LayoutKind = "editorial" | "bento" | "split" | "dashboard" | "market" | "concierge" | "zen" | "neon";
+type LayoutKind = "editorial" | "bento" | "split" | "dashboard" | "market" | "concierge" | "zen" | "neon" | "glass" | "brutal" | "masonry";
 
 type Tokens = {
   bg: string; panel: string; panel2: string; text: string; muted: string; primary: string; accent: string;
@@ -180,9 +180,36 @@ const sectorCopy: Record<SectorKind, { label: string; nav: string[]; items: stri
 
 type SectorCopy = (typeof sectorCopy)[SectorKind];
 
+function styleTheme(path: string, base: Tokens): Partial<Tokens> {
+  const p = path.toLowerCase();
+  if (/obsidian|luxury-dark|noir|gold|black|dark/.test(p)) {
+    return { bg: "#050505", panel: "#12100D", panel2: "#21180F", text: "#FFF4DD", muted: "#A99678", primary: "#D6B15F", accent: "#7B4A22", radius: 10, heading: "Georgia", body: "Arial", layout: "editorial", icon: "◈" };
+  }
+  if (/ivory|white|clean|marble|bianco|pearl|champagne|casa/.test(p)) {
+    return { bg: "#F7F1E7", panel: "#FFFFFF", panel2: "#E8DCCB", text: "#16120E", muted: "#786B5B", primary: "#B58A47", accent: "#1D2B25", radius: 6, heading: "Times New Roman", body: "Arial", layout: "editorial", icon: "—" };
+  }
+  if (/sakura|rose|blush|lavender|pastel|crystal|arctic|frost|glass/.test(p)) {
+    return { bg: "#F9EEF5", panel: "rgba(255,255,255,0.72)", panel2: "rgba(232,210,226,0.72)", text: "#2B1723", muted: "#8B6678", primary: "#E892B8", accent: "#A78BFA", radius: 26, heading: "Georgia", body: "Arial", layout: "glass", icon: "✧" };
+  }
+  if (/miami|ocean|azure|costa|pacifico|turquoise|riviera|charter|boat|yacht/.test(p)) {
+    return { bg: "#061B26", panel: "#0D3344", panel2: "#154B5F", text: "#F3FBF6", muted: "#A4C6C9", primary: "#5CD6E6", accent: "#F3B66A", radius: 20, heading: "Trebuchet MS", body: "Arial", layout: "bento", icon: "≈" };
+  }
+  if (/neon|gangnam|blaze|acid|sport|fresh|energy/.test(p)) {
+    return { bg: "#070707", panel: "#141414", panel2: "#232323", text: "#F8FFE8", muted: "#AAB096", primary: "#D7FF35", accent: "#FF4E88", radius: 4, heading: "Impact", body: "Arial", layout: "neon", icon: "▲" };
+  }
+  if (/volcanic|crimson|fire|brutal|mono|ink/.test(p)) {
+    return { bg: "#090706", panel: "#F1EEE6", panel2: "#1B1714", text: "#F8F2EA", muted: "#B4A69A", primary: "#F0542E", accent: "#F1EEE6", radius: 2, heading: "Impact", body: "Arial", layout: "brutal", icon: "◆" };
+  }
+  if (/hanok|joseon|wabi|hinoki|zen|garden/.test(p)) {
+    return { bg: "#F3EBDD", panel: "#FFFDF7", panel2: "#DCCEBB", text: "#18130F", muted: "#766A5B", primary: "#8F3F2C", accent: "#1E5A46", radius: 4, heading: "Times New Roman", body: "Arial", layout: "zen", icon: "一" };
+  }
+  return { layout: base.layout };
+}
+
 function themeFor(path: string, sector: SectorKind): Tokens {
   const list = sectorThemes[sector] || sectorThemes.generic;
-  return list[hashStr(path) % list.length];
+  const base = list[hashStr(path) % list.length];
+  return { ...base, ...styleTheme(path, base) };
 }
 
 function layoutFor(path: string, base: LayoutKind): LayoutKind {
@@ -190,6 +217,11 @@ function layoutFor(path: string, base: LayoutKind): LayoutKind {
   if (/dashboard|tracking|fleet|timeline|deadline/.test(p)) return "dashboard";
   if (/cart|shop|menu|catalog/.test(p)) return "market";
   if (/booking|prenota|tour/.test(p)) return "concierge";
+  if (/glass|crystal|arctic|frost|lavender|pastel/.test(p)) return "glass";
+  if (/brutal|mono|ink|volcanic|crimson/.test(p)) return "brutal";
+  if (/miami|ocean|azure|costa|bento|pacifico/.test(p)) return "bento";
+  if (/neon|gangnam|blaze|acid/.test(p)) return "neon";
+  if (/ivory|white|clean|marble|bianco|pearl|obsidian|noir|editorial/.test(p)) return "editorial";
   return base;
 }
 
@@ -197,6 +229,8 @@ function shapePattern(t: Tokens, seed: number): string {
   const a = 28 + (seed % 18);
   const b = 65 + (seed % 20);
   if (t.layout === "neon") return `<path d="M0 ${b} C90 ${a} 180 ${b + 30} 390 ${a}" fill="none" stroke="${t.primary}" stroke-width="5" opacity=".6"/><path d="M0 ${b + 70} C120 ${a + 70} 230 ${b + 92} 390 ${a + 80}" fill="none" stroke="${t.accent}" stroke-width="3" opacity=".7"/>`;
+  if (t.layout === "glass") return `<circle cx="74" cy="86" r="92" fill="${t.primary}" opacity=".24"/><circle cx="326" cy="178" r="118" fill="${t.accent}" opacity=".18"/><path d="M38 248 C128 188 252 302 354 216" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/>`;
+  if (t.layout === "brutal") return `<rect x="0" y="42" width="390" height="44" fill="${t.primary}" opacity=".92"/><path d="M32 132 H358 M32 170 H358 M32 208 H358" stroke="${t.accent}" stroke-width="2" opacity=".35"/><text x="312" y="116" fill="${t.primary}" font-family="${t.heading}" font-size="92" opacity=".18">${t.icon}</text>`;
   if (t.layout === "zen") return `<circle cx="310" cy="85" r="74" fill="${t.primary}" opacity=".18"/><circle cx="340" cy="55" r="34" fill="none" stroke="${t.accent}" stroke-width="2" opacity=".55"/>`;
   if (t.layout === "editorial") return `<rect x="248" y="36" width="112" height="152" rx="${t.radius}" fill="${t.primary}" opacity=".28"/><path d="M28 178 L350 44" stroke="${t.accent}" stroke-width="1.5" opacity=".55"/>`;
   if (t.layout === "dashboard") return `<path d="M0 152 C80 116 150 184 238 132 S340 88 390 116 V0 H0 Z" fill="${t.primary}" opacity=".18"/>`;
@@ -227,8 +261,49 @@ function lineRows(x: number, y: number, t: Tokens, rows: string[], iconStart = 0
   return rows.map((r, i) => `<g transform="translate(${x} ${y + i * 58})"><rect width="320" height="46" rx="${Math.min(t.radius, 18)}" fill="${i % 2 ? t.panel2 : t.panel}"/><rect x="10" y="8" width="31" height="31" rx="${Math.min(t.radius, 12)}" fill="${i % 2 ? t.accent : t.primary}" opacity=".9"/><text x="25.5" y="29" text-anchor="middle" fill="${t.bg}" font-size="14" font-family="${t.heading}">${["✦","◆","◌","+","▣","◎"][((i + iconStart) % 6)]}</text><text x="53" y="20" fill="${t.text}" font-family="${t.body}" font-size="13" font-weight="800">${esc(r)}</text><text x="53" y="34" fill="${t.muted}" font-family="${t.body}" font-size="10">${esc(["Disponibile ora", "Gestione smart", "Personalizzabile", "Alta conversione"][i % 4])}</text><text x="296" y="28" text-anchor="end" fill="${t.primary}" font-family="${t.heading}" font-size="15" font-weight="900">${["€45", "4.9", "24h", "+18%"][i % 4]}</text></g>`).join("");
 }
 
+function brandLine(brand: string, max = 17): string {
+  return brand.replace(/\s+/g, " ").trim().slice(0, max);
+}
+
+function editorialHome(t: Tokens, copy: SectorCopy, brand: string, city: string, seed: number): string {
+  const first = brandLine(brand.split(/\s+/)[0] || brand, 12).toUpperCase();
+  const second = brandLine(brand.split(/\s+/).slice(1).join(" ") || copy.label, 16);
+  return `${statusBar(t)}${shapePattern(t, seed)}
+  <text x="28" y="82" fill="${t.muted}" font-family="${t.body}" font-size="10" font-weight="900" letter-spacing="3">${esc(copy.label.toUpperCase())} / ${esc((city || "MILANO").toUpperCase())}</text>
+  <text x="26" y="146" fill="${t.text}" font-family="${t.heading}" font-size="54" font-weight="900" letter-spacing="-1">${esc(first)}</text>
+  <text x="30" y="179" fill="${t.primary}" font-family="${t.heading}" font-size="28" font-style="italic">${esc(second)}</text>
+  <rect x="28" y="212" width="146" height="250" rx="${t.radius}" fill="url(#hero)"/>
+  <rect x="194" y="226" width="152" height="84" rx="${t.radius}" fill="${t.panel}"/><text x="212" y="258" fill="${t.text}" font-family="${t.heading}" font-size="22" font-weight="900">${esc(copy.items[0])}</text><text x="212" y="282" fill="${t.muted}" font-family="${t.body}" font-size="11">Disponibile ora</text>
+  <rect x="194" y="330" width="152" height="132" rx="${t.radius}" fill="${t.panel2}"/><text x="212" y="370" fill="${t.primary}" font-family="${t.heading}" font-size="38" font-weight="900">${80 + seed % 18}%</text><text x="212" y="398" fill="${t.text}" font-family="${t.body}" font-size="12" font-weight="800">conversione mobile</text>
+  <text x="28" y="512" fill="${t.muted}" font-family="${t.body}" font-size="11" font-weight="900" letter-spacing="2">SELEZIONE</text>${lineRows(35, 536, t, copy.items.slice(0, 3), seed)}
+  <rect x="28" y="715" width="334" height="54" rx="${t.radius}" fill="${t.primary}"/><text x="195" y="749" text-anchor="middle" fill="${t.bg}" font-family="${t.body}" font-size="14" font-weight="900">${esc(copy.cta)}</text>${navBar(t, copy.nav, 0)}`;
+}
+
+function glassHome(t: Tokens, copy: SectorCopy, brand: string, city: string, seed: number): string {
+  return `${statusBar(t)}${shapePattern(t, seed)}
+  <text x="28" y="82" fill="${t.muted}" font-family="${t.body}" font-size="10" font-weight="900" letter-spacing="3">${esc((city || "ITALIA").toUpperCase())}</text>
+  <text x="28" y="122" fill="${t.text}" font-family="${t.heading}" font-size="38" font-weight="900">${esc(brandLine(brand, 16))}</text>
+  <rect x="28" y="150" width="334" height="178" rx="32" fill="rgba(255,255,255,.42)" stroke="rgba(255,255,255,.65)"/><rect x="50" y="172" width="128" height="132" rx="28" fill="url(#hero)" opacity=".92"/>
+  <text x="198" y="203" fill="${t.text}" font-family="${t.heading}" font-size="25" font-weight="900">${esc(copy.items[0])}</text><text x="198" y="229" fill="${t.muted}" font-family="${t.body}" font-size="12">Rituale guidato AI</text><rect x="198" y="252" width="116" height="36" rx="18" fill="${t.primary}"/><text x="256" y="275" text-anchor="middle" fill="${t.bg}" font-family="${t.body}" font-size="12" font-weight="900">Prenota</text>
+  <g>${copy.items.slice(0, 3).map((item, i) => `<rect x="${28 + i * 114}" y="360" width="102" height="122" rx="26" fill="rgba(255,255,255,.38)" stroke="rgba(255,255,255,.5)"/><circle cx="${79 + i * 114}" cy="397" r="21" fill="${i === 1 ? t.accent : t.primary}" opacity=".72"/><text x="${79 + i * 114}" y="442" text-anchor="middle" fill="${t.text}" font-family="${t.body}" font-size="11" font-weight="900">${esc(item.slice(0, 13))}</text><text x="${79 + i * 114}" y="462" text-anchor="middle" fill="${t.muted}" font-family="${t.body}" font-size="10">€${45 + i * 20}</text>`).join("")}</g>
+  ${card(28, 522, 334, 110, t, bars(58, 538, t, seed), .72)}<rect x="28" y="666" width="334" height="58" rx="29" fill="${t.text}"/><text x="195" y="702" text-anchor="middle" fill="${t.bg}" font-family="${t.body}" font-size="14" font-weight="900">${esc(copy.cta)}</text>${navBar(t, copy.nav, 0)}`;
+}
+
+function brutalHome(t: Tokens, copy: SectorCopy, brand: string, city: string, seed: number): string {
+  const word = brandLine(brand, 10).toUpperCase();
+  return `${statusBar(t)}${shapePattern(t, seed)}
+  <text x="28" y="136" fill="${t.primary}" font-family="${t.heading}" font-size="76" font-weight="900">${esc(word)}</text>
+  <text x="30" y="168" fill="${t.accent}" font-family="${t.body}" font-size="11" font-weight="900" letter-spacing="3">${esc(copy.label.toUpperCase())} — ${esc((city || "ITALIA").toUpperCase())}</text>
+  <rect x="28" y="202" width="334" height="138" rx="2" fill="${t.accent}"/><text x="46" y="252" fill="${t.bg}" font-family="${t.heading}" font-size="31" font-weight="900">${esc(copy.items[0])}</text><text x="46" y="286" fill="${t.bg}" font-family="${t.body}" font-size="13" font-weight="900">Sistema operativo commerciale</text>
+  <g>${[0,1,2,3].map((i) => `<rect x="${28 + (i % 2) * 172}" y="${366 + Math.floor(i / 2) * 116}" width="158" height="96" rx="2" fill="${i === 0 ? t.primary : t.panel2}" stroke="${t.accent}"/><text x="${44 + (i % 2) * 172}" y="${404 + Math.floor(i / 2) * 116}" fill="${i === 0 ? t.bg : t.text}" font-family="${t.heading}" font-size="26" font-weight="900">${["+28%", "AI", "CRM", "PAY"][i]}</text><text x="${44 + (i % 2) * 172}" y="${432 + Math.floor(i / 2) * 116}" fill="${i === 0 ? t.bg : t.muted}" font-family="${t.body}" font-size="10" font-weight="900">${esc(copy.kpis[i % copy.kpis.length])}</text>`).join("")}</g>
+  <rect x="28" y="640" width="334" height="64" rx="2" fill="${t.primary}"/><text x="195" y="680" text-anchor="middle" fill="${t.bg}" font-family="${t.body}" font-size="15" font-weight="900">${esc(copy.cta)}</text>${navBar(t, copy.nav, 0)}`;
+}
+
 function homeScreen(t: Tokens, copy: SectorCopy, brand: string, city: string, seed: number): string {
-  const heroH = t.layout === "editorial" ? 230 : t.layout === "bento" ? 178 : 205;
+  if (t.layout === "editorial" || t.layout === "zen") return editorialHome(t, copy, brand, city, seed);
+  if (t.layout === "glass") return glassHome(t, copy, brand, city, seed);
+  if (t.layout === "brutal" || t.layout === "neon") return brutalHome(t, copy, brand, city, seed);
+  const heroH = t.layout === "bento" ? 178 : 205;
   return `${statusBar(t)}${shapePattern(t, seed)}
   <g font-family="${t.body}"><text x="28" y="72" fill="${t.muted}" font-size="11" font-weight="800" letter-spacing="2">${esc(copy.label.toUpperCase())} · ${esc(city || "ITALIA")}</text><text x="28" y="105" fill="${t.text}" font-family="${t.heading}" font-size="31" font-weight="900">${esc(brand.slice(0, 19))}</text></g>
   <rect x="302" y="55" width="48" height="48" rx="${t.radius}" fill="${t.primary}"/><text x="326" y="88" text-anchor="middle" fill="${t.bg}" font-size="25" font-family="${t.heading}" font-weight="900">${t.icon}</text>

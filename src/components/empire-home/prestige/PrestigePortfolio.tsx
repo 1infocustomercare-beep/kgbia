@@ -3,24 +3,26 @@ import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { createMockupPool } from "@/lib/mockup-pool";
-import { EMPIRE_MOCKUPS } from "@/assets/mockups/generated";
+import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 
-// Premium mockups generated with Nano Banana Pro — one per case study.
+const MOCKUP_IMAGES = SECTOR_MOCKUP_IMAGES as Record<string, string[] | undefined>;
+
+// Curated proprietary mockups — no low-quality generated PNG batch artifacts here.
 // Order matches META below.
 const PREMIUM_IMAGES: string[] = [
-  EMPIRE_MOCKUPS.food.pizzeriaHome,      // Ristorante · Voltaia
-  EMPIRE_MOCKUPS.beauty.spaHome,         // Spa & Wellness · Séva
-  EMPIRE_MOCKUPS.fitness.gymHome,        // Fitness · Forgia
-  EMPIRE_MOCKUPS.realestate.home,        // Immobiliare · Dimora
-  EMPIRE_MOCKUPS.retail.atelierHome,     // Fashion · Atelier Nove
-  EMPIRE_MOCKUPS.beauty.nailHome,        // Studio Dentistico · Aurora
-  EMPIRE_MOCKUPS.hospitality.hotelHome,  // Viaggi & Tour · Rotta
-  EMPIRE_MOCKUPS.food.sushiHome,         // Pet Care · Coda Felice (foto lifestyle)
-  EMPIRE_MOCKUPS.ncc.chauffeurHome,      // NCC · Empire NCC
-  EMPIRE_MOCKUPS.hospitality.suiteDetail,// Hotel Boutique · Asinara
-  EMPIRE_MOCKUPS.food.steakhouseDetail,  // Officina Auto · Romeo (detail dark)
-  EMPIRE_MOCKUPS.realestate.detail,      // Studio Legale · Riva
-];
+  MOCKUP_IMAGES.food?.[0],
+  MOCKUP_IMAGES.beauty?.[0],
+  MOCKUP_IMAGES.fitness?.[0],
+  MOCKUP_IMAGES.realestate?.[0],
+  MOCKUP_IMAGES.retail?.[0],
+  MOCKUP_IMAGES.healthcare?.[0],
+  MOCKUP_IMAGES.hospitality?.[0],
+  MOCKUP_IMAGES.veterinary?.[0],
+  MOCKUP_IMAGES.ncc?.[0],
+  MOCKUP_IMAGES.hospitality?.[2],
+  MOCKUP_IMAGES.garage?.[0],
+  MOCKUP_IMAGES.legal?.[0],
+].filter(Boolean) as string[];
 
 // Fallback pool if a slot is missing.
 const pool = createMockupPool();
