@@ -3,10 +3,28 @@ import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { createMockupPool } from "@/lib/mockup-pool";
+import { EMPIRE_MOCKUPS } from "@/assets/mockups/generated";
 
+// Premium mockups generated with Nano Banana Pro — one per case study.
+// Order matches META below.
+const PREMIUM_IMAGES: string[] = [
+  EMPIRE_MOCKUPS.food.pizzeriaHome,      // Ristorante · Voltaia
+  EMPIRE_MOCKUPS.beauty.spaHome,         // Spa & Wellness · Séva
+  EMPIRE_MOCKUPS.fitness.gymHome,        // Fitness · Forgia
+  EMPIRE_MOCKUPS.realestate.home,        // Immobiliare · Dimora
+  EMPIRE_MOCKUPS.retail.atelierHome,     // Fashion · Atelier Nove
+  EMPIRE_MOCKUPS.beauty.nailHome,        // Studio Dentistico · Aurora
+  EMPIRE_MOCKUPS.hospitality.hotelHome,  // Viaggi & Tour · Rotta
+  EMPIRE_MOCKUPS.food.sushiHome,         // Pet Care · Coda Felice (foto lifestyle)
+  EMPIRE_MOCKUPS.ncc.chauffeurHome,      // NCC · Empire NCC
+  EMPIRE_MOCKUPS.hospitality.suiteDetail,// Hotel Boutique · Asinara
+  EMPIRE_MOCKUPS.food.steakhouseDetail,  // Officina Auto · Romeo (detail dark)
+  EMPIRE_MOCKUPS.realestate.detail,      // Studio Legale · Riva
+];
+
+// Fallback pool if a slot is missing.
 const pool = createMockupPool();
-// reserve 12 mockups for the portfolio strip
-const PORT = pool.take(12);
+const POOL_BACKUP = pool.take(12);
 
 const META = [
   { tag: "Ristorante", title: "Voltaia", desc: "Menù digitale, prenotazioni e ordini WhatsApp gestiti dall'AI · da €39/mese", year: "2026" },
@@ -23,7 +41,12 @@ const META = [
   { tag: "Studio Legale", title: "Studio Riva", desc: "Filtro AI richieste, appuntamenti con video-call e portale documenti · da €99/mese", year: "2026" },
 ];
 
-const ITEMS = PORT.map((p, i) => ({ ...META[i], image: p.image, sector: p.sector }));
+const ITEMS = META.map((m, i) => ({
+  ...m,
+  image: PREMIUM_IMAGES[i] ?? POOL_BACKUP[i]?.image,
+  sector: POOL_BACKUP[i]?.sector ?? "food",
+}));
+
 
 export default function PrestigePortfolio() {
   const navigate = useNavigate();
