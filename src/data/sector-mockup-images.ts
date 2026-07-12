@@ -607,14 +607,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
             _wrap("Tropico%20Pet%20Resort/desktop-b-home.png"), _wrap("Tropico%20Pet%20Resort/desktop-b-services.png"),
             _wrap("Tropico%20Pet%20Resort/desktop-b-detail.png"), _wrap("Tropico%20Pet%20Resort/desktop-b-booking.png"),
           ]},
-          { name: "Desktop C", thumbnail: _wrap("Tropico%20Pet%20Resort/desktop-c-home.png"), screens: [
-            _wrap("Tropico%20Pet%20Resort/desktop-c-home.png"), _wrap("Tropico%20Pet%20Resort/desktop-c-services.png"),
-            _wrap("Tropico%20Pet%20Resort/desktop-c-detail.png"), _wrap("Tropico%20Pet%20Resort/desktop-c-booking.png"),
-          ]},
-          { name: "Desktop D", thumbnail: _wrap("Tropico%20Pet%20Resort/desktop-d-home.png"), screens: [
-            _wrap("Tropico%20Pet%20Resort/desktop-d-home.png"), _wrap("Tropico%20Pet%20Resort/desktop-d-services.png"),
-            _wrap("Tropico%20Pet%20Resort/desktop-d-detail.png"), _wrap("Tropico%20Pet%20Resort/desktop-d-booking.png"),
-          ]},
         ],
       },
     ],
