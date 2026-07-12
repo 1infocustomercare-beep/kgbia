@@ -4,6 +4,7 @@ import { ArrowRight, Grid2X2, Monitor, Smartphone, Sparkles } from "lucide-react
 import { SECTOR_PORTFOLIO, type SectorPortfolio } from "@/data/sector-mockup-images";
 import type { IndustryId } from "@/config/industry-config";
 import { MockupReactScreen } from "@/components/partner/MockupReactScreen";
+import { catalogMockupUrl } from "@/data/catalog-mockup-registry";
 
 type CatalogItem = {
   id: string;
@@ -35,19 +36,29 @@ const SECTOR_COPY: Partial<Record<IndustryId, string>> = {
 const flattenPortfolio = (portfolio: SectorPortfolio[]): CatalogItem[] =>
   portfolio.flatMap((sector) =>
     sector.brands.flatMap((brand) =>
-      brand.styles.map((style, index) => ({
-        id: `${sector.sectorId}-${brand.name}-${style.name}-${index}`,
-        sectorId: sector.sectorId,
-        sectorLabel: sector.sectorLabel,
-        brand: brand.name,
-        style: style.name,
-        thumbnail: style.thumbnail,
-        screens: style.screens,
-        desktopScreens: style.desktopScreens,
-        description:
-          SECTOR_COPY[sector.sectorId] ??
-          "Mockup settoriale con schermate operative per presentare servizi, contenuti, conversione e gestione clienti.",
-      }))
+      brand.styles.map((style, index) => {
+        // Prefer premium AI-generated hero when available, else fall back to SVG cover.
+        const aiHero = catalogMockupUrl(sector.sectorId, brand.name, style.name);
+        const thumbnail = aiHero ?? style.thumbnail;
+        // When we have an AI hero, use it as the FIRST screen too so the expanded
+        // card leads with the premium artwork.
+        const screens = aiHero
+          ? [aiHero, ...style.screens.slice(1)]
+          : style.screens;
+        return {
+          id: `${sector.sectorId}-${brand.name}-${style.name}-${index}`,
+          sectorId: sector.sectorId,
+          sectorLabel: sector.sectorLabel,
+          brand: brand.name,
+          style: style.name,
+          thumbnail,
+          screens,
+          desktopScreens: style.desktopScreens,
+          description:
+            SECTOR_COPY[sector.sectorId] ??
+            "Mockup settoriale con schermate operative per presentare servizi, contenuti, conversione e gestione clienti.",
+        };
+      })
     )
   );
 
