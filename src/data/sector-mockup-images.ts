@@ -244,13 +244,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
             _wrap("Onyx%20Brace%20Steakhouse/b-ivory-desktop-home.png"), _wrap("Onyx%20Brace%20Steakhouse/b-ivory-desktop-menu.png"),
             _wrap("Onyx%20Brace%20Steakhouse/b-ivory-desktop-detail.png"), _wrap("Onyx%20Brace%20Steakhouse/b-ivory-desktop-cart.png"),
           ]},
-          { name: "Marble", thumbnail: _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-home.png"), screens: [
-            _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-home.png"), _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-menu.png"),
-            _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-detail.png"), _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-cart.png"),
-          ], desktopScreens: [
-            _wrap("Onyx%20Brace%20Steakhouse/d-marble-desktop-home.png"), _wrap("Onyx%20Brace%20Steakhouse/d-marble-desktop-menu.png"),
-            _wrap("Onyx%20Brace%20Steakhouse/d-marble-desktop-detail.png"), _wrap("Onyx%20Brace%20Steakhouse/d-marble-desktop-cart.png"),
-          ]},
           { name: "Hanok", thumbnail: _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-home.png"), screens: [
             _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-home.png"), _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-menu.png"),
             _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-detail.png"), _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-cart.png"),
@@ -353,13 +346,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
             _wrap("Indocina%20Noir/i-neon-spice-desktop-home.png"), _wrap("Indocina%20Noir/i-neon-spice-desktop-menu.png"),
             _wrap("Indocina%20Noir/i-neon-spice-desktop-detail.png"), _wrap("Indocina%20Noir/i-neon-spice-desktop-cart.png"),
           ]},
-          { name: "Volcanic", thumbnail: _wrap("Indocina%20Noir/j-volcanic-home.png"), screens: [
-            _wrap("Indocina%20Noir/j-volcanic-home.png"), _wrap("Indocina%20Noir/j-volcanic-menu.png"),
-            _wrap("Indocina%20Noir/j-volcanic-detail.png"), _wrap("Indocina%20Noir/j-volcanic-cart.png"),
-          ], desktopScreens: [
-            _wrap("Indocina%20Noir/j-volcanic-desktop-home.png"), _wrap("Indocina%20Noir/j-volcanic-desktop-menu.png"),
-            _wrap("Indocina%20Noir/j-volcanic-desktop-detail.png"), _wrap("Indocina%20Noir/j-volcanic-desktop-cart.png"),
-          ]},
           { name: "Matcha Blaze", thumbnail: _wrap("Indocina%20Noir/k-matcha-blaze-home.png"), screens: [
             _wrap("Indocina%20Noir/k-matcha-blaze-home.png"), _wrap("Indocina%20Noir/k-matcha-blaze-menu.png"),
             _wrap("Indocina%20Noir/k-matcha-blaze-detail.png"), _wrap("Indocina%20Noir/k-matcha-blaze-cart.png"),
@@ -448,10 +434,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
           { name: "Style F", thumbnail: _wrap("Levante%20Deli/mobile-f-home.png"), screens: [
             _wrap("Levante%20Deli/mobile-f-home.png"), _wrap("Levante%20Deli/mobile-f-menu.png"),
             _wrap("Levante%20Deli/mobile-f-detail.png"), _wrap("Levante%20Deli/mobile-f-cart.png"),
-          ]},
-          { name: "Style G", thumbnail: _wrap("Levante%20Deli/mobile-g-home.png"), screens: [
-            _wrap("Levante%20Deli/mobile-g-home.png"), _wrap("Levante%20Deli/mobile-g-menu.png"),
-            _wrap("Levante%20Deli/mobile-g-detail.png"), _wrap("Levante%20Deli/mobile-g-cart.png"),
           ]},
           { name: "Style H", thumbnail: _wrap("Levante%20Deli/mobile-h-home.png"), screens: [
             _wrap("Levante%20Deli/mobile-h-home.png"), _wrap("Levante%20Deli/mobile-h-menu.png"),
@@ -556,10 +538,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
       {
         name: "Cala Vento Charter",
         styles: [
-          { name: "Sardinia Azure Luxury", thumbnail: _wrap("Cala%20Vento%20Charter/home.png"), screens: [
-            _wrap("Cala%20Vento%20Charter/home.png"), _wrap("Cala%20Vento%20Charter/escursioni.png"),
-            _wrap("Cala%20Vento%20Charter/dettaglio-tour.png"), _wrap("Cala%20Vento%20Charter/prenotazione.png"),
-          ]},
           { name: "Emerald Cove", thumbnail: _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/home.png"), screens: [
             _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/home.png"), _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/escursioni.png"),
             _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/dettaglio-tour.png"), _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/prenotazione.png"),
@@ -601,10 +579,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
             _wrap("Tropico%20Pet%20Resort/mobile-f-home.png"), _wrap("Tropico%20Pet%20Resort/mobile-f-services.png"),
             _wrap("Tropico%20Pet%20Resort/mobile-f-detail.png"), _wrap("Tropico%20Pet%20Resort/mobile-f-booking.png"),
           ]},
-          { name: "Style G", thumbnail: _wrap("Tropico%20Pet%20Resort/mobile-g-home.png"), screens: [
-            _wrap("Tropico%20Pet%20Resort/mobile-g-home.png"), _wrap("Tropico%20Pet%20Resort/mobile-g-services.png"),
-            _wrap("Tropico%20Pet%20Resort/mobile-g-detail.png"), _wrap("Tropico%20Pet%20Resort/mobile-g-booking.png"),
-          ]},
           // Desktop
           { name: "Desktop A", thumbnail: _wrap("Tropico%20Pet%20Resort/desktop-a-home.png"), screens: [
             _wrap("Tropico%20Pet%20Resort/desktop-a-home.png"), _wrap("Tropico%20Pet%20Resort/desktop-a-services.png"),
@@ -613,14 +587,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
           { name: "Desktop B", thumbnail: _wrap("Tropico%20Pet%20Resort/desktop-b-home.png"), screens: [
             _wrap("Tropico%20Pet%20Resort/desktop-b-home.png"), _wrap("Tropico%20Pet%20Resort/desktop-b-services.png"),
             _wrap("Tropico%20Pet%20Resort/desktop-b-detail.png"), _wrap("Tropico%20Pet%20Resort/desktop-b-booking.png"),
-          ]},
-          { name: "Desktop C", thumbnail: _wrap("Tropico%20Pet%20Resort/desktop-c-home.png"), screens: [
-            _wrap("Tropico%20Pet%20Resort/desktop-c-home.png"), _wrap("Tropico%20Pet%20Resort/desktop-c-services.png"),
-            _wrap("Tropico%20Pet%20Resort/desktop-c-detail.png"), _wrap("Tropico%20Pet%20Resort/desktop-c-booking.png"),
-          ]},
-          { name: "Desktop D", thumbnail: _wrap("Tropico%20Pet%20Resort/desktop-d-home.png"), screens: [
-            _wrap("Tropico%20Pet%20Resort/desktop-d-home.png"), _wrap("Tropico%20Pet%20Resort/desktop-d-services.png"),
-            _wrap("Tropico%20Pet%20Resort/desktop-d-detail.png"), _wrap("Tropico%20Pet%20Resort/desktop-d-booking.png"),
           ]},
         ],
       },
@@ -853,15 +819,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
           ]},
         ],
       },
-      {
-        name: "Marina Riviera",
-        styles: [
-          { name: "Style A", thumbnail: _wrap("Marina%20Riviera/A-mobile-home.png"), screens: [
-            _wrap("Marina%20Riviera/A-mobile-home.png"), _wrap("Marina%20Riviera/A-mobile-fleet.png"),
-            _wrap("Marina%20Riviera/A-mobile-yacht-detail.png"), _wrap("Marina%20Riviera/A-mobile-booking.png"),
-          ]},
-        ],
-      },
     ],
   },
   // ═══ ARTIGIANI ═══
@@ -879,41 +836,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
           { name: "Style B", thumbnail: _wrap("Nick's%20Plumbing%20&%20AC/stile-b-home.png"), screens: [
             _wrap("Nick's%20Plumbing%20&%20AC/stile-b-home.png"), _wrap("Nick's%20Plumbing%20&%20AC/stile-b-services.png"),
             _wrap("Nick's%20Plumbing%20&%20AC/stile-b-detail.png"), _wrap("Nick's%20Plumbing%20&%20AC/stile-b-booking.png"),
-          ]},
-        ],
-      },
-    ],
-  },
-  // ═══ RETAIL ═══
-  {
-    sectorId: "retail",
-    sectorLabel: "Retail & Negozi",
-    brands: [
-      {
-        name: "Velluto Hair Lab",
-        styles: [
-          { name: "Mobile", thumbnail: _wrap("Velluto%20Hair%20Lab/mobile-home.png"), screens: [
-            _wrap("Velluto%20Hair%20Lab/mobile-home.png"), _wrap("Velluto%20Hair%20Lab/mobile-shop.png"),
-            _wrap("Velluto%20Hair%20Lab/mobile-detail.png"), _wrap("Velluto%20Hair%20Lab/mobile-cart.png"),
-          ]},
-          { name: "Desktop", thumbnail: _wrap("Velluto%20Hair%20Lab/desktop-homepage.png"), screens: [
-            _wrap("Velluto%20Hair%20Lab/desktop-homepage.png"), _wrap("Velluto%20Hair%20Lab/desktop-shop.png"),
-            _wrap("Velluto%20Hair%20Lab/desktop-detail.png"), _wrap("Velluto%20Hair%20Lab/desktop-cart.png"),
-          ]},
-        ],
-      },
-    ],
-  },
-  // ═══ BEACH ═══
-  {
-    sectorId: "beach",
-    sectorLabel: "Stabilimenti Balneari",
-    brands: [
-      {
-        name: "Onda Sport Club",
-        styles: [
-          { name: "Style A", thumbnail: _wrap("Onda%20Sport%20Club/style-a-mobile-home.png"), screens: [
-            _wrap("Onda%20Sport%20Club/style-a-mobile-home.png"), _wrap("Onda%20Sport%20Club/style-a-mobile-activities.png"),
           ]},
         ],
       },
