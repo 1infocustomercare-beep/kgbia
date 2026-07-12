@@ -380,7 +380,7 @@ export const featureGuides: Record<string, GuideEntry> = {
     steps: [
       "Controlla le funzionalità del tuo piano",
       "Upgrada per sbloccare più funzionalità e gettoni IA",
-      "Il trial gratuito dura 90 giorni",
+      "Il trial senza impegno dura 90 giorni",
     ],
   },
 };

@@ -10,7 +10,7 @@ const FAQS: [string, string][] = [
   ["Posso aggiungere o rimuovere agenti?", "Certo. Ogni agente aggiuntivo costa €29/mese (sconto 30% per clienti Empire). Li attivi e disattivi in un click dalla dashboard."],
   ["Che tipo di supporto offrite?", "Digital Start: supporto email. Growth AI: prioritario 7/7. Empire: Account Manager VIP con risposta garantita entro 2 ore."],
   ["Funziona per qualsiasi tipo di business?", "Supportiamo 25+ settori: ristorazione, fitness, beauty, hotel, legal, immobiliare, healthcare, NCC, e-commerce e molti altri."],
-  ["Posso provare prima di decidere?", "Demo gratuita di 15 minuti nel tuo settore specifico + garanzia soddisfatti o rimborsati di 90 giorni. Zero rischi."],
+  ["Posso provare prima di decidere?", "Demo omaggio di 15 minuti nel tuo settore specifico + garanzia soddisfatti o rimborsati di 90 giorni. Zero rischi."],
   ["Cosa succede se non sono soddisfatto?", "Rimborso integrale entro 90 giorni. Nessuna domanda, nessun vincolo. Il rischio è completamente nostro."],
 ];
 

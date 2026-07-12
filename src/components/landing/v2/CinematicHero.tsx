@@ -102,7 +102,7 @@ export default function CinematicHero() {
   const SUBTITLE = pick(h.subtitle, "Webapp su misura + agenti AI che rispondono al telefono, vendono, prenotano e raccolgono recensioni — 24/7, in tutte le lingue. Setup in 14 giorni. 25+ verticali coperti.");
   const ROT = pick(h.rotatingWords, ROTATING_WORDS);
   const TRUST_PILLS = pick(h.trustPills, TRUST);
-  const CTA1_LABEL = pick(h.ctaPrimaryLabel, "Prenota call gratuita");
+  const CTA1_LABEL = pick(h.ctaPrimaryLabel, "Prenota call senza impegno");
   const CTA1_HREF = pick(h.ctaPrimaryHref, "/demo");
   const CTA2_LABEL = pick(h.ctaSecondaryLabel, "Vedi 12 progetti live");
   const CTA2_HREF = pick(h.ctaSecondaryHref, "#portfolio");

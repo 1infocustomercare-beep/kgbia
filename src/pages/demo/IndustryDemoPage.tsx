@@ -363,7 +363,7 @@ export default function IndustryDemoPage() {
               <Button onClick={() => document.getElementById("consulenza")?.scrollIntoView({ behavior: "smooth" })}
                 size="lg" className="h-14 px-10 font-bold rounded-2xl text-white border-0 text-base shadow-2xl"
                 style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`, boxShadow: `0 12px 40px ${theme.accent}40` }}>
-                Richiedi Consulenza Gratuita <ArrowRight className="w-5 h-5 ml-2" />
+                Richiedi Consulenza Senza Impegno <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               <Button onClick={() => document.getElementById("preview")?.scrollIntoView({ behavior: "smooth" })}
                 size="lg" variant="outline"
@@ -579,19 +579,19 @@ export default function IndustryDemoPage() {
       <DemoAgentsSection sector={resolvedIndustry!} accentColor={accentColor} sectorName={industryConfig?.label || ""} />
       <DemoPricingSection sector={resolvedIndustry!} accentColor={accentColor} sectorName={industryConfig?.label || ""} />
 
-      {/* ═══════ CONSULENZA GRATUITA FORM ═══════ */}
+      {/* ═══════ CONSULENZA OMAGGIO FORM ═══════ */}
       <AnimSection id="consulenza" className="py-20 px-4"
         style={{ background: `linear-gradient(180deg, transparent, ${theme.accent}08, transparent)` }}>
         <div className="max-w-xl mx-auto">
           <div className="text-center mb-8">
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-              🎯 Consulenza Gratuita
+              🎯 Consulenza Senza Impegno
             </Badge>
             <h2 className="text-2xl sm:text-3xl font-bold mb-2">
               Scopri Come Possiamo Trasformare il Tuo Business
             </h2>
             <p className="text-sm text-white/80">
-              Compila il form — ti chiamiamo noi per una consulenza personalizzata gratuita
+              Compila il form — ti chiamiamo noi per una consulenza personalizzata omaggio
             </p>
           </div>
 
@@ -602,7 +602,7 @@ export default function IndustryDemoPage() {
                 <CheckCircle className="w-10 h-10" style={{ color: theme.accent }} />
               </div>
               <h3 className="text-2xl font-bold mb-2">Richiesta Inviata!</h3>
-              <p className="text-sm text-white/80">Ti contatteremo entro 24 ore per la tua consulenza gratuita.</p>
+              <p className="text-sm text-white/80">Ti contatteremo entro 24 ore per la tua consulenza senza impegno.</p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 p-8 rounded-2xl border border-white/10 backdrop-blur-sm"
@@ -637,7 +637,7 @@ export default function IndustryDemoPage() {
               </div>
               <Button type="submit" className="w-full h-13 font-bold rounded-xl text-white border-0 text-base shadow-xl"
                 style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`, boxShadow: `0 8px 30px ${theme.accent}30` }}>
-                <Send className="w-5 h-5 mr-2" /> Richiedi Consulenza Gratuita
+                <Send className="w-5 h-5 mr-2" /> Richiedi Consulenza Senza Impegno
               </Button>
               <p className="text-[10px] text-white/65 text-center flex items-center justify-center gap-1">
                 <Lock className="w-3 h-3" /> I tuoi dati sono al sicuro — niente spam, lo promettiamo.
@@ -660,7 +660,7 @@ export default function IndustryDemoPage() {
           whileTap={{ scale: 0.95 }}
         >
           <Send className="w-4 h-4" />
-          <span className="hidden sm:inline">Consulenza Gratuita</span>
+          <span className="hidden sm:inline">Consulenza Senza Impegno</span>
         </motion.button>
       </div>
 

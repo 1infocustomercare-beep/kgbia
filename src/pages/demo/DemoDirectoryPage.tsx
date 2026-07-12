@@ -152,7 +152,7 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
             <button onClick={() => navigate("/auth")}
               className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-transform hover:scale-105"
               style={{ background: "linear-gradient(135deg, hsl(174 60% 45%), hsl(190 55% 40%))", boxShadow: "0 4px 20px hsla(174,60%,30%,0.4)" }}>
-              Inizia Gratis <ArrowRight className="w-3.5 h-3.5" />
+              Inizia Omaggio <ArrowRight className="w-3.5 h-3.5" />
             </button>
             <button onClick={() => { const el = document.getElementById("demo-list"); el?.scrollIntoView({ behavior: "smooth" }); }}
               className="px-5 py-2.5 rounded-xl text-xs font-bold text-white/80 flex items-center gap-1.5 transition-transform hover:scale-105"

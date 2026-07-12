@@ -331,7 +331,7 @@ export default function PrestigeCapabilities() {
               style={{ color: "hsl(var(--pr-emerald) / 0.65)" }}
             >
               {t({
-                it: "24h · mockup gratuito · zero impegno",
+                it: "24h · mockup omaggio · zero impegno",
                 en: "24h · free mockup · zero commitment",
               })}
             </div>

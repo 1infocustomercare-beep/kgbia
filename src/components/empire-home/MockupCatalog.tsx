@@ -239,20 +239,20 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 45% at 50% 0%, hsl(var(--primary) / 0.18), transparent 68%), linear-gradient(180deg, hsl(var(--background)), hsl(var(--deep-black)))",
+            "radial-gradient(ellipse 70% 45% at 50% 0%, hsl(var(--accent) / 0.20), transparent 68%), radial-gradient(ellipse 40% 30% at 82% 12%, hsl(var(--gold) / 0.14), transparent 70%), linear-gradient(180deg, hsl(var(--background)), hsl(var(--deep-black)))",
         }}
       />
 
       <div className="relative z-10 mx-auto max-w-[1400px]">
         <div className="mb-8 flex flex-col gap-6 lg:mb-12 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[3px] text-primary">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[hsl(var(--gold))]/35 bg-background/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[3px] text-[hsl(var(--gold))]">
               <Grid2X2 className="h-3.5 w-3.5" />
               Catalogo mockup reale · {allItems.length} stili · {screensCount} schermate
             </div>
             <h2 className="font-heading text-[clamp(2.1rem,6vw,5.2rem)] font-black uppercase leading-[0.95] tracking-normal text-foreground">
               Apri il catalogo.
-              <span className="block bg-[linear-gradient(110deg,hsl(var(--primary)),hsl(var(--gold)),hsl(var(--accent)))] bg-clip-text text-transparent">
+              <span className="block bg-[linear-gradient(110deg,hsl(var(--accent)),hsl(var(--gold)),hsl(var(--gold-light)))] bg-clip-text text-transparent">
                 Trova il tuo settore.
               </span>
             </h2>
@@ -264,7 +264,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
           <button
             type="button"
             onClick={() => (isPage ? navigate("/") : navigate("/portfolio"))}
-            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-[hsl(var(--gold))]/40 bg-[linear-gradient(110deg,hsl(var(--primary)),hsl(var(--gold)))] px-5 py-3 text-sm font-black uppercase tracking-[2px] text-[hsl(var(--deep-black))] shadow-[0_18px_60px_-24px_hsl(var(--gold))] transition-transform active:scale-[0.98]"
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-[hsl(var(--gold))]/45 bg-[linear-gradient(110deg,hsl(var(--accent)),hsl(var(--gold)))] px-5 py-3 text-sm font-black uppercase tracking-[2px] text-[hsl(var(--deep-black))] shadow-[0_18px_60px_-24px_hsl(var(--gold))] transition-transform active:scale-[0.98]"
           >
             {isPage ? "Torna alla home" : "Apri pagina catalogo"}
             <ArrowRight className="h-4 w-4" />
@@ -275,7 +275,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
           <button
             type="button"
             onClick={() => setSector("all")}
-            className={`shrink-0 rounded-full border px-4 py-2 text-[11px] font-bold uppercase tracking-[2px] transition-all ${sector === "all" ? "border-primary bg-primary text-primary-foreground" : "border-foreground/15 bg-foreground/[0.04] text-foreground/70"}`}
+            className={`shrink-0 rounded-full border px-4 py-2 text-[11px] font-bold uppercase tracking-[2px] transition-all ${sector === "all" ? "border-[hsl(var(--gold))] bg-[hsl(var(--accent))] text-[hsl(var(--gold-light))] shadow-[0_10px_30px_-14px_hsl(var(--gold))]" : "border-foreground/15 bg-foreground/[0.04] text-foreground/70"}`}
           >
             Tutti
           </button>
@@ -284,7 +284,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
               key={s.id}
               type="button"
               onClick={() => setSector(s.id)}
-              className={`shrink-0 rounded-full border px-4 py-2 text-[11px] font-bold uppercase tracking-[2px] transition-all ${sector === s.id ? "border-primary bg-primary text-primary-foreground" : "border-foreground/15 bg-foreground/[0.04] text-foreground/70"}`}
+              className={`shrink-0 rounded-full border px-4 py-2 text-[11px] font-bold uppercase tracking-[2px] transition-all ${sector === s.id ? "border-[hsl(var(--gold))] bg-[hsl(var(--accent))] text-[hsl(var(--gold-light))] shadow-[0_10px_30px_-14px_hsl(var(--gold))]" : "border-foreground/15 bg-foreground/[0.04] text-foreground/70"}`}
             >
               {s.label}
             </button>
@@ -299,12 +299,12 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
             return (
               <article
                 key={item.id}
-                className="group relative overflow-hidden rounded-[1.35rem] border border-foreground/10 bg-foreground/[0.035] shadow-[0_24px_80px_-48px_hsl(0_0%_0%)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/40"
+                className="group relative overflow-hidden rounded-[1.35rem] border border-foreground/10 bg-foreground/[0.035] shadow-[0_24px_80px_-48px_hsl(0_0%_0%)] transition-all duration-500 hover:-translate-y-1 hover:border-[hsl(var(--gold))]/45"
               >
                 <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden bg-muted px-4 pt-8">
                   <CatalogPhonePreview item={item} imageUrl={item.thumbnail} alt={`${item.brand} — ${item.style}`} priority={index < 8} className="transition-transform duration-700 group-hover:scale-105" />
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)_/_0)_45%,hsl(var(--background)_/_0.9)_100%)]" />
-                  <div className="absolute left-3 top-3 rounded-full border border-background/40 bg-background/80 px-2 py-1 text-[9px] font-black uppercase tracking-[2px] text-primary">
+                  <div className="absolute left-3 top-3 rounded-full border border-[hsl(var(--gold))]/40 bg-[hsl(var(--accent))]/85 px-2 py-1 text-[9px] font-black uppercase tracking-[2px] text-[hsl(var(--gold-light))]">
                     {item.sectorLabel}
                   </div>
                   <div className="absolute bottom-3 left-3 right-3">
@@ -316,8 +316,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                 <div className="p-4">
                   <p className="min-h-[54px] text-xs leading-relaxed text-foreground/62">{item.description}</p>
                   <div className="mt-4 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[2px] text-foreground/55">
-                    <span className="inline-flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5 text-primary" />{previewSpecs.length} schermate</span>
-                    {item.desktopScreens?.length ? <span className="inline-flex items-center gap-1.5"><Monitor className="h-3.5 w-3.5 text-gold" />{item.desktopScreens.length} desktop</span> : null}
+                    <span className="inline-flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />{previewSpecs.length} schermate</span>
+                    {item.desktopScreens?.length ? <span className="inline-flex items-center gap-1.5"><Monitor className="h-3.5 w-3.5 text-[hsl(var(--accent))]" />{item.desktopScreens.length} desktop</span> : null}
                   </div>
 
                   <div className="mt-3 -mx-1 flex gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

@@ -103,7 +103,7 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
             <span style={{ color: accentColor }}>{sectorName}</span>
           </h2>
           <p className={`text-sm ${textMuted} max-w-lg mx-auto`}>
-            14 giorni di prova gratuita · Nessuna carta di credito richiesta · Cancella quando vuoi
+            14 giorni di prova senza impegno · Nessuna carta di credito richiesta · Cancella quando vuoi
           </p>
         </motion.div>
 
@@ -172,7 +172,7 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
                 }}
               >
                 {plan.popular ? (
-                  <>Inizia Gratis <ArrowRight className="w-4 h-4 ml-1" /></>
+                  <>Inizia Omaggio <ArrowRight className="w-4 h-4 ml-1" /></>
                 ) : (
                   "Inizia la Prova"
                 )}

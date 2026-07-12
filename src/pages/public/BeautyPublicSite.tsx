@@ -137,7 +137,7 @@ const FAQ_ITEMS = [
   { q: "Utilizzate prodotti cruelty-free?", a: "Assolutamente sì. Lavoriamo esclusivamente con brand eco-luxury certificati vegan e cruelty-free." },
   { q: "Quanto dura un trattamento viso completo?", a: "I trattamenti viso durano da 45 a 90 minuti a seconda del protocollo scelto." },
   { q: "Offrite pacchetti regalo?", a: "Sì! Le nostre Gift Card sono personalizzabili e confezionate in packaging luxury." },
-  { q: "C'è il parcheggio?", a: "Sì, disponiamo di parcheggio dedicato e gratuito per i clienti." },
+  { q: "C'è il parcheggio?", a: "Sì, disponiamo di parcheggio dedicato e omaggio per i clienti." },
 ];
 
 export default function BeautyPublicSite({ company, afterHero }: Props) {
@@ -498,7 +498,7 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
             {[
               { icon: Award, title: "Professionisti Certificati", desc: "Team con formazione nelle migliori accademie europee" },
               { icon: Heart, title: "Prodotti Eco-Luxury", desc: "Solo brand certificati vegan e cruelty-free" },
-              { icon: Sparkles, title: "Cura Personalizzata", desc: "Consulenza gratuita per ogni trattamento" },
+              { icon: Sparkles, title: "Cura Personalizzata", desc: "Consulenza omaggio per ogni trattamento" },
               { icon: Calendar, title: "Prenotazione Istantanea", desc: "Online in pochi click con conferma immediata" },
               { icon: Shield, title: "Garanzia Soddisfazione", desc: "Non sei soddisfatta? Rifacciamo il trattamento" },
               { icon: Zap, title: "Tecnologie Avanzate", desc: "Laser diodo, LED therapy, radiofrequenza" },

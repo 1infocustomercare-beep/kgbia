@@ -211,7 +211,7 @@ export default function DemoAdminAccessButton({ sector, accentColor = "#8b5cf6" 
               }}
             >
               <LayoutDashboard className="w-3 h-3" />
-              Accesso Demo Gratuito
+              Accesso Demo Omaggio
             </span>
           </motion.div>
 
@@ -297,7 +297,7 @@ export default function DemoAdminAccessButton({ sector, accentColor = "#8b5cf6" 
               ) : (
                 <>
                   <LayoutDashboard className="w-5 h-5" />
-                  Prova il Pannello Admin — Gratis
+                  Prova il Pannello Admin — Omaggio
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </>
               )}

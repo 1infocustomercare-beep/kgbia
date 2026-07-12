@@ -225,7 +225,7 @@ const PricingClosing = ({ onOpenROI, demoMode = false }: Props) => {
       <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/5 to-amber-500/5 border border-primary/10 text-center space-y-2">
         <Shield className="w-6 h-6 text-primary mx-auto" />
         <p className="text-sm font-display font-bold text-foreground">
-          Risultati Garantiti + 1 Mese Assistenza Gratuita
+          Risultati Garantiti + 1 Mese Assistenza Omaggio
         </p>
         <p className="text-[10px] text-muted-foreground">
           Nessun vincolo. Proprietà totale. Supporto dedicato dal primo giorno.

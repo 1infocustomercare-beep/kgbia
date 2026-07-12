@@ -132,7 +132,7 @@ export default function SuperAdminCreditsManager() {
             <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
               Regala Crediti AI <Crown className="w-3.5 h-3.5 text-amber-400" />
             </h3>
-            <p className="text-[10px] text-muted-foreground">Solo Super Admin · accredito gratuito a qualsiasi venditore</p>
+            <p className="text-[10px] text-muted-foreground">Solo Super Admin · accredito omaggio a qualsiasi venditore</p>
           </div>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">

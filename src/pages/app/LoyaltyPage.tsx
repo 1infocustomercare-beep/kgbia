@@ -16,7 +16,7 @@ const LEVELS = [
 
 const REWARDS = [
   { name: "Sconto 10%", points: 100, icon: "🎫" },
-  { name: "Trattamento gratuito", points: 300, icon: "💆" },
+  { name: "Trattamento omaggio", points: 300, icon: "💆" },
   { name: "Prodotto omaggio", points: 200, icon: "🎁" },
   { name: "VIP Experience", points: 500, icon: "👑" },
   { name: "Gift Card €50", points: 800, icon: "💳" },

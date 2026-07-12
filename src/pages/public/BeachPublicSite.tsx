@@ -169,7 +169,7 @@ function BeachPublicSiteInner({ company, afterHero }: Props) {
     { emoji: "🏊", name: "Area Piscina", desc: "Piscina con acqua di mare riscaldata", img: GALLERY[2] },
     { emoji: "👶", name: "Area Bambini", desc: "Parco giochi e animazione", img: GALLERY[3] },
     { emoji: "🌅", name: "Aperitivi al Tramonto", desc: "Cocktail bar con vista mare", img: GALLERY[4] },
-    { emoji: "📶", name: "WiFi Gratuito", desc: "Connessione veloce ovunque", img: GALLERY[5] },
+    { emoji: "📶", name: "WiFi Omaggio", desc: "Connessione veloce ovunque", img: GALLERY[5] },
   ];
 
   const pricingTiers = [

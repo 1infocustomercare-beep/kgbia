@@ -432,7 +432,7 @@ ${headerWithTarget("consulenza")}
     </td></tr>
   </table>
 
-  <p style="margin:0 0 14px 0;font-size:15px;line-height:1.65;color:#2d2a4a;">Mi rispondi anche solo con due righe e ti mando un'analisi gratuita su misura. Nessuna call obbligatoria.</p>
+  <p style="margin:0 0 14px 0;font-size:15px;line-height:1.65;color:#2d2a4a;">Mi rispondi anche solo con due righe e ti mando un'analisi senza impegno su misura. Nessuna call obbligatoria.</p>
   ${v.previewLink ? `<p style="margin:0 0 14px 0;font-size:14px;line-height:1.6;color:#2d2a4a;">Nel frattempo qui c'è una preview iniziale: ${linkAurora("dai un'occhiata", v.previewLink)}.</p>` : ""}
   <p style="margin:18px 0 4px 0;font-size:15px;line-height:1.6;color:#0f0a1f;">Grazie,<br/><strong>${ESC(v.senderName || "Arianna")}</strong></p>
 </td></tr>
@@ -445,7 +445,7 @@ Prima di proporre qualcosa, due domande:
 1. Qual è la cosa più ripetitiva che fate ogni giorno?
 2. Se avesse una bacchetta magica, cosa cambierebbe della parte digitale?
 
-Anche solo due righe — ti mando un'analisi gratuita.
+Anche solo due righe — ti mando un'analisi senza impegno.
 
 ${v.previewLink ? `Preview iniziale: ${v.previewLink}\n\n` : ""}${v.senderName || "Arianna"}`,
   },

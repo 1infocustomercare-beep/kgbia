@@ -41,7 +41,7 @@ export default function LandingCTA() {
             className="px-10 py-4 rounded-full text-white font-semibold text-sm transition-all hover:-translate-y-[2px]"
             style={{ background: "linear-gradient(135deg, #7eb7be, #a78bfa, #ec4899)", boxShadow: "0 16px 48px rgba(167,139,250,0.25)" }}
           >
-            Prenota una Demo Gratuita →
+            Prenota una Demo Omaggio →
           </button>
           <button
             onClick={() => navigate("/auth")}

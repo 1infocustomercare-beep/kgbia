@@ -71,7 +71,7 @@ interface Props {
 }
 
 const ENGINE_OPTIONS: { key: MockupEngine; label: string; cost: number; icon: React.ElementType; desc: string; color: string }[] = [
-  { key: "react",           label: "React Render",     cost: 0,  icon: Zap,    desc: "Gratis · template fedeli · veloce",          color: "from-emerald-500 to-teal-600" },
+  { key: "react",           label: "React Render",     cost: 0,  icon: Zap,    desc: "Omaggio · template fedeli · veloce",          color: "from-emerald-500 to-teal-600" },
   { key: "nano_banana",     label: "Nano Banana 2",    cost: 20, icon: Wand2,  desc: "AI fotorealistico · qualità premium",        color: "from-amber-500 to-orange-600" },
   { key: "nano_banana_pro", label: "Nano Banana Pro",  cost: 40, icon: Crown,  desc: "AI cinematografico 8K · qualità massima",    color: "from-fuchsia-500 to-purple-700" },
 ];
@@ -745,7 +745,7 @@ export function MockupSuiteGenerator({
       // ═══════════════════════════════════════════════════════════════════════
       // FASE 1 — PREVIEW PROGRESSIVA ISTANTANEA
       // Per gli engine AI (che richiedono 10-30s), mostriamo SUBITO le 4 schermate
-      // renderizzate via React (centrate, fedeli al template, gratis lato client).
+      // renderizzate via React (centrate, fedeli al template, omaggio lato client).
       // L'utente vede l'anteprima entro 200ms invece di aspettare 30 secondi.
       // ═══════════════════════════════════════════════════════════════════════
       const isAIEngine = engine === "nano_banana" || engine === "nano_banana_pro";
@@ -808,7 +808,7 @@ export function MockupSuiteGenerator({
         if (d?.error === "insufficient_credits") {
           toast.error(`Crediti insufficienti per ${ENGINE_OPTIONS.find(e => e.key === engine)?.label}`);
         } else if (d?.error === "ai_rate_limited") {
-          toast.error("AI temporaneamente sovraccarica. Riprova tra qualche secondo o usa modalità React (gratis).");
+          toast.error("AI temporaneamente sovraccarica. Riprova tra qualche secondo o usa modalità React (omaggio).");
         } else {
           toast.error(`Errore: ${d?.error || "sconosciuto"}`);
         }
@@ -1176,7 +1176,7 @@ export function MockupSuiteGenerator({
           subtitle="Scegli velocità vs. qualità fotorealistica"
           badge={
             <Badge variant={selectedEngineCfg.cost === 0 ? "secondary" : "default"} className="text-[10px]">
-              {selectedEngineCfg.cost === 0 ? "GRATIS" : `${selectedEngineCfg.cost} cr`}
+              {selectedEngineCfg.cost === 0 ? "OMAGGIO" : `${selectedEngineCfg.cost} cr`}
             </Badge>
           }
           defaultOpen={true}
@@ -1202,7 +1202,7 @@ export function MockupSuiteGenerator({
                     <div className="flex items-center justify-between gap-2">
                       <Icon className="h-5 w-5 text-foreground shrink-0" />
                       <Badge variant={opt.cost === 0 ? "secondary" : "default"} className="text-[11px] whitespace-nowrap">
-                        {opt.cost === 0 ? "GRATIS" : `${opt.cost} crediti`}
+                        {opt.cost === 0 ? "OMAGGIO" : `${opt.cost} crediti`}
                       </Badge>
                     </div>
                     <p className="font-semibold text-sm leading-tight">{opt.label}</p>
@@ -1914,7 +1914,7 @@ export function MockupSuiteGenerator({
           {controlsLocked ? (
             <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> {previewPhase === "upgrading" ? "Upgrade 4K/8K in corso…" : "Generazione 4 mockup in corso…"}</>
           ) : (
-            <><Sparkles className="h-4 w-4 mr-2" /> Genera Suite ({selectedEngineCfg.cost === 0 ? "GRATIS" : `${selectedEngineCfg.cost} crediti`})</>
+            <><Sparkles className="h-4 w-4 mr-2" /> Genera Suite ({selectedEngineCfg.cost === 0 ? "OMAGGIO" : `${selectedEngineCfg.cost} crediti`})</>
           )}
         </Button>
 

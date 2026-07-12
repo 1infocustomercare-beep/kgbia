@@ -221,7 +221,7 @@ export default function DemoFactoryOverlay({ open, loading, progress, result, le
                                 <BookmarkCheck className="w-2.5 h-2.5" />
                                 Salvata nel Portfolio
                               </span>
-                              <span className="text-[10px] text-white/80">riusabile gratis</span>
+                              <span className="text-[10px] text-white/80">riusabile omaggio</span>
                             </div>
                           </div>
                         </div>

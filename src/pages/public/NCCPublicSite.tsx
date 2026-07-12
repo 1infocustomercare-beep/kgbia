@@ -1017,7 +1017,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
                       {cs.description && <p className="text-xs line-clamp-1" style={{ color: NCC.textSecondary }}>{cs.description}</p>}
                     </div>
                     {cs.is_free ? (
-                      <Badge className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20">Gratis</Badge>
+                      <Badge className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20">Omaggio</Badge>
                     ) : cs.price > 0 ? (
                       <span className="text-sm font-bold" style={{ color: gold }}>€{cs.price}</span>
                     ) : null}
@@ -1306,7 +1306,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
               <span className="text-white">Prenota il Tuo </span><span style={{ color: gold }}>Viaggio</span>
             </h2>
             <p className="mt-4 max-w-2xl mx-auto text-base text-white/80">
-              Siamo disponibili 24 ore su 24, 7 giorni su 7. Contattaci per un preventivo gratuito o per prenotare il tuo prossimo transfer.
+              Siamo disponibili 24 ore su 24, 7 giorni su 7. Contattaci per un preventivo senza costi o per prenotare il tuo prossimo transfer.
             </p>
           </div>
 

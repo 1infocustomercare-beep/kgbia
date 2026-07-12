@@ -52,7 +52,7 @@ const STEPS: Step[] = [
     bullets: [
       "✅ Zero configurazione tecnica",
       "📊 Stato delle fonti dati visibile sempre",
-      "🛡️ Cache 24h: stesso lead = stessi dati gratis",
+      "🛡️ Cache 24h: stesso lead = stessi dati omaggio",
     ],
     cta: { label: "Vedi connessioni API", path: "/partner/api-connections" },
     accent: "linear-gradient(135deg, #06b6d4, #3b82f6)",

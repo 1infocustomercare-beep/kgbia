@@ -166,8 +166,8 @@ export default function SubscriptionSection({ restaurantId }: { restaurantId: st
                 isExpired ? "text-destructive" : "text-foreground"
               }`}>
                 {isExpired
-                  ? "Prova Gratuita Scaduta"
-                  : `Prova Gratuita — ${daysLeft} giorni rimasti`}
+                  ? "Prova Senza Impegno Scaduta"
+                  : `Prova Senza Impegno — ${daysLeft} giorni rimasti`}
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">
                 {isExpired

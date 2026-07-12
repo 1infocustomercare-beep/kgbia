@@ -133,7 +133,7 @@ export const SECTOR_THEMES: Record<string, SectorTheme> = {
     hero: {
       eyebrow: "Pronto Intervento Idraulico",
       headline: "Soluzioni rapide e garantite",
-      subheadline: "Idraulico certificato, interventi in giornata e preventivi gratuiti per ogni emergenza",
+      subheadline: "Idraulico certificato, interventi in giornata e preventivo senza costi per ogni emergenza",
       cta1: "Richiedi Intervento", cta2: "I Nostri Servizi",
     },
     services: [
@@ -146,13 +146,13 @@ export const SECTOR_THEMES: Record<string, SectorTheme> = {
     ],
     whyUs: [
       { title: "Intervento Rapido", desc: "Arriviamo in giornata per le emergenze" },
-      { title: "Preventivi Gratuiti", desc: "Nessun costo nascosto, prezzi trasparenti" },
+      { title: "Preventivo Senza Costi", desc: "Nessun costo nascosto, prezzi trasparenti" },
       { title: "Garanzia Lavori", desc: "Tutti gli interventi sono garantiti" },
       { title: "Certificati", desc: "Professionisti abilitati e assicurati" },
     ],
     howItWorks: [
       { step: "01", title: "Descrivi il problema", desc: "Compila il form o chiamaci" },
-      { step: "02", title: "Ricevi preventivo", desc: "Gratuito e senza impegno" },
+      { step: "02", title: "Ricevi preventivo", desc: "Senza impegno" },
       { step: "03", title: "Interveniamo", desc: "Risolviamo il problema rapidamente" },
     ],
     testimonials: [
@@ -227,7 +227,7 @@ export const SECTOR_THEMES: Record<string, SectorTheme> = {
       { emoji: "🍽️", name: "Ristorante", desc: "Cucina gourmet con chef stellato" },
       { emoji: "🧖", name: "SPA & Wellness", desc: "Centro benessere completo" },
       { emoji: "🏊", name: "Piscina", desc: "Vista panoramica mozzafiato" },
-      { emoji: "🅿️", name: "Parcheggio", desc: "Custodito e gratuito" },
+      { emoji: "🅿️", name: "Parcheggio", desc: "Custodito e omaggio" },
       { emoji: "📶", name: "WiFi Premium", desc: "Connessione ultraveloce ovunque" },
     ],
     whyUs: [
@@ -356,11 +356,11 @@ export const SECTOR_THEMES: Record<string, SectorTheme> = {
       { emoji: "👟", name: "Calzature", desc: "Scarpe per ogni occasione" },
       { emoji: "🎁", name: "Idee Regalo", desc: "Confezioni personalizzate" },
       { emoji: "🏷️", name: "Promozioni", desc: "Offerte e saldi esclusivi" },
-      { emoji: "🚚", name: "Consegna", desc: "Spedizione gratuita sopra €50" },
+      { emoji: "🚚", name: "Consegna", desc: "Spedizione omaggio sopra €50" },
     ],
     whyUs: [
       { title: "Qualità Garantita", desc: "Solo brand selezionati e certificati" },
-      { title: "Reso Facile", desc: "14 giorni per il reso gratuito" },
+      { title: "Reso Facile", desc: "14 giorni per il reso omaggio" },
       { title: "Assistenza Dedicata", desc: "Un team a tua disposizione" },
       { title: "Pagamenti Sicuri", desc: "Carte, PayPal e contrassegno" },
     ],
@@ -398,7 +398,7 @@ export const SECTOR_THEMES: Record<string, SectorTheme> = {
       { emoji: "🍽️", name: "Ristorante", desc: "Cucina gourmet interna" },
       { emoji: "🧖", name: "SPA & Wellness", desc: "Relax totale" },
       { emoji: "🏊", name: "Piscina", desc: "Vista panoramica" },
-      { emoji: "🅿️", name: "Parcheggio", desc: "Custodito e gratuito" },
+      { emoji: "🅿️", name: "Parcheggio", desc: "Custodito e omaggio" },
       { emoji: "📶", name: "WiFi Premium", desc: "Connessione ultraveloce" },
     ],
     whyUs: [
@@ -526,7 +526,7 @@ export const SECTOR_THEMES: Record<string, SectorTheme> = {
     services: [
       { emoji: "⭐", name: "Servizio Premium", desc: "Qualità garantita" },
       { emoji: "🤝", name: "Consulenza", desc: "Supporto personalizzato" },
-      { emoji: "📋", name: "Preventivi", desc: "Gratuiti e senza impegno" },
+      { emoji: "📋", name: "Preventivi", desc: "Omaggio e senza impegno" },
       { emoji: "🔧", name: "Assistenza", desc: "Supporto post-servizio" },
       { emoji: "📅", name: "Prenotazioni", desc: "Facili e veloci" },
       { emoji: "✅", name: "Garanzia", desc: "Soddisfazione assicurata" },

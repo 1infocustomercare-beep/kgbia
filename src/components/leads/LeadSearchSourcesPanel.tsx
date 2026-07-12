@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
    - Legenda chiara (Attivo / Disponibile / Da sbloccare)
    - Per categoria: contatore "X attivi su Y" + warning se vuota
    - Banner fallback: se tutta una categoria è bloccata o vuota,
-     mostriamo quale fonte gratuita verrà usata al suo posto per
+     mostriamo quale fonte omaggio verrà usata al suo posto per
      evitare risultati incompleti.
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -31,9 +31,9 @@ export interface LeadSource {
 
 export const ALL_LEAD_SOURCES: LeadSource[] = [
   // 🗺️ MAPPE
-  { id: "nominatim", label: "🗺️ OpenStreetMap", category: "maps", desc: "DB pubblico mondiale, gratis" },
-  { id: "photon", label: "🔎 Photon", category: "maps", desc: "Geocoder Komoot, gratis" },
-  { id: "overpass", label: "🏷️ Overpass", category: "maps", desc: "Tag strutturati OSM, gratis" },
+  { id: "nominatim", label: "🗺️ OpenStreetMap", category: "maps", desc: "DB pubblico mondiale, omaggio" },
+  { id: "photon", label: "🔎 Photon", category: "maps", desc: "Geocoder Komoot, omaggio" },
+  { id: "overpass", label: "🏷️ Overpass", category: "maps", desc: "Tag strutturati OSM, omaggio" },
   { id: "google", label: "⭐ Google Places", category: "maps", desc: "Rating + recensioni reali",
     requiresApi: "GOOGLE_PLACES_API", apiProvider: "Google Cloud Console",
     apiHowTo: "https://console.cloud.google.com/apis/library/places-backend.googleapis.com" },
@@ -57,7 +57,7 @@ export const ALL_LEAD_SOURCES: LeadSource[] = [
   { id: "bing_web", label: "🅱️ Bing Web", category: "web", desc: "Microsoft Web Search, free tier",
     requiresApi: "BING_SEARCH_API_KEY", apiProvider: "Azure Cognitive Services",
     apiHowTo: "https://portal.azure.com/" },
-  { id: "duckduckgo", label: "🦆 DuckDuckGo", category: "web", desc: "Privacy-first, gratis (HTML)" },
+  { id: "duckduckgo", label: "🦆 DuckDuckGo", category: "web", desc: "Privacy-first, omaggio (HTML)" },
   { id: "firecrawl", label: "🔥 Firecrawl", category: "web", desc: "Scraping AI-powered di siti business",
     requiresApi: "FIRECRAWL_API_KEY", apiProvider: "Firecrawl",
     apiHowTo: "https://www.firecrawl.dev/" },
@@ -81,14 +81,14 @@ export const ALL_LEAD_SOURCES: LeadSource[] = [
     requiresApi: "REGISTRO_IMPRESE_API", apiProvider: "InfoCamere",
     apiHowTo: "https://www.registroimprese.it/" },
   { id: "pagine_gialle", label: "📒 Pagine Gialle", category: "registry", desc: "Directory IT + telefoni" },
-  { id: "europages", label: "🇪🇺 Europages", category: "registry", desc: "B2B europeo, gratis (scraping)" },
+  { id: "europages", label: "🇪🇺 Europages", category: "registry", desc: "B2B europeo, omaggio (scraping)" },
 ];
 
 const CATEGORY_META: Record<SourceCategory, {
   label: string;
   icon: string;
   color: string;
-  /** Cosa Empire AI userà come fallback gratuito se la categoria è vuota o solo bloccata. */
+  /** Cosa Empire AI userà come fallback senza costi se la categoria è vuota o solo bloccata. */
   fallbackHint: string;
   fallbackIds: string[];
 }> = {
@@ -96,28 +96,28 @@ const CATEGORY_META: Record<SourceCategory, {
     label: "Mappe & POI",
     icon: "🗺️",
     color: "#14b8a6",
-    fallbackHint: "OpenStreetMap + Photon + Overpass (gratis, copertura globale)",
+    fallbackHint: "OpenStreetMap + Photon + Overpass (omaggio, copertura globale)",
     fallbackIds: ["nominatim", "photon", "overpass"],
   },
   web: {
     label: "Web & Motori di Ricerca",
     icon: "🌐",
     color: "#3b82f6",
-    fallbackHint: "DuckDuckGo HTML (gratis, no API key)",
+    fallbackHint: "DuckDuckGo HTML (omaggio, no API key)",
     fallbackIds: ["duckduckgo"],
   },
   social: {
     label: "Social Network",
     icon: "📱",
     color: "#ec4899",
-    fallbackHint: "Nessun fallback gratuito · risultati social omessi finché non sblocchi un'API",
+    fallbackHint: "Nessun fallback senza costi · risultati social omessi finché non sblocchi un'API",
     fallbackIds: [],
   },
   registry: {
     label: "Registri & Directory",
     icon: "📋",
     color: "#f59e0b",
-    fallbackHint: "Pagine Gialle + Europages (scraping gratuito)",
+    fallbackHint: "Pagine Gialle + Europages (scraping omaggio)",
     fallbackIds: ["pagine_gialle", "europages"],
   },
 };
@@ -338,7 +338,7 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
                 }}
               >
                 <ShieldCheck className="w-3 h-3 inline mr-1" />
-                Solo gratis ({totalFree})
+                Solo omaggio ({totalFree})
               </button>
               <button
                 onClick={selectAllAvailable}
@@ -372,9 +372,9 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
                   style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.06)" }}
                 >
                   <LegendItem color="#14b8a6" icon={<Zap className="w-3 h-3" />} label="Attivo" desc="Selezionato per questa ricerca" />
-                  <LegendItem color="#34d399" icon={<Check className="w-3 h-3" />} label="Disponibile" desc="Pronto da attivare (gratis o API ok)" />
+                  <LegendItem color="#34d399" icon={<Check className="w-3 h-3" />} label="Disponibile" desc="Pronto da attivare (omaggio o API ok)" />
                   <LegendItem color="#fbbf24" icon={<Lock className="w-3 h-3" />} label="Da sbloccare" desc="Richiede API key — tap per la guida" />
-                  <LegendItem color="#94a3b8" icon={<ShieldCheck className="w-3 h-3" />} label="Gratis" desc="Nessuna chiave necessaria" />
+                  <LegendItem color="#94a3b8" icon={<ShieldCheck className="w-3 h-3" />} label="Omaggio" desc="Nessuna chiave necessaria" />
                 </div>
               </div>
             </div>
@@ -440,7 +440,7 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
                             <button
                               key={src.id}
                               onClick={() => (locked ? setHowToSource(src) : toggle(src.id, available))}
-                              title={locked ? `Richiede ${src.requiresApi}` : `${src.desc}${free ? " · Gratis" : " · API configurata"}`}
+                              title={locked ? `Richiede ${src.requiresApi}` : `${src.desc}${free ? " · Omaggio" : " · API configurata"}`}
                               className="text-[10px] md:text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5"
                               style={{
                                 background: locked
@@ -499,7 +499,7 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
                   Per evitare risultati incompleti
                 </p>
                 <p className="text-[10px] md:text-[11px]" style={{ color: "#cbd5e1" }}>
-                  Alcune categorie sono vuote. Empire AI userà comunque dei <strong>fallback gratuiti</strong> per
+                  Alcune categorie sono vuote. Empire AI userà comunque dei <strong>fallback omaggio</strong> per
                   mantenere i risultati ricchi e coerenti, ma puoi attivarli manualmente con un click:
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -600,7 +600,7 @@ export function LeadSearchSourcesPanel({ activeSources, onChange }: Props) {
                     </p>
                     <p className="text-[11px]" style={{ color: "#cbd5e1" }}>
                       Empire AI usa già <strong>{CATEGORY_META[howToSource.category].fallbackHint}</strong> come
-                      fallback gratuito, così i risultati restano coerenti anche senza questa API.
+                      fallback senza costi, così i risultati restano coerenti anche senza questa API.
                     </p>
                   </div>
                 )}

@@ -25,7 +25,7 @@ const plans = [
     tagline: "Il più scelto",
     price: "€297",
     period: "/mese",
-    setup: "Setup €990 · 90 giorni gratis",
+    setup: "Setup €990 · 90 giorni senza impegno",
     highlight: true,
     features: [
       "Tutto di Starter +",

@@ -370,7 +370,7 @@ export default function PartnerIntegrationsSetup({ userId, userEmail }: Props) {
           {[
             { q: "Come funziona lo split automatico?", a: "Quando il cliente paga tramite il tuo link, Stripe divide automaticamente l'importo: la tua commissione va sul tuo conto Stripe, l'override al Team Leader, e il resto a Empire. Tutto in un'unica transazione." },
             { q: "Quanto tempo ci vuole per ricevere i soldi?", a: "La tua commissione arriva sul tuo conto bancario in 2-7 giorni lavorativi dal pagamento del cliente. Stripe gestisce tutto automaticamente." },
-            { q: "Devo pagare qualcosa per Stripe?", a: "No, la creazione dell'account è gratuita. Le commissioni di Stripe (circa 1.4% + €0.25 per transazione) sono a carico di Empire." },
+            { q: "Devo pagare qualcosa per Stripe?", a: "No, la creazione dell'account è omaggio. Le commissioni di Stripe (circa 1.4% + €0.25 per transazione) sono a carico di Empire." },
             { q: "Posso vedere tutti i pagamenti ricevuti?", a: "Sì! Dalla Dashboard Stripe (pulsante sopra) vedi lo storico completo di tutti i trasferimenti, date e importi." },
             { q: "E se sono un Team Leader?", a: "Come TL ricevi sia la tua commissione diretta (€997) che l'override (€200) per ogni vendita del tuo team. Entrambi arrivano automaticamente sul tuo Stripe." },
             { q: "Posso cambiare il mio conto bancario?", a: "Sì, accedi alla Dashboard Stripe e modifica i dati bancari in qualsiasi momento." },

@@ -37,8 +37,8 @@ const MAP: Record<string, SectorCTA> = {
   spa:         { anchor: "prenota",     label: "Prenota un trattamento",        verb: "Prenota",  emoji: "🧖" },
 
   // Fitness
-  fitness:     { anchor: "prenota",     label: "Prova una lezione gratis",      verb: "Prenota",  emoji: "💪" },
-  palestra:    { anchor: "prenota",     label: "Prova una lezione gratis",      verb: "Prenota",  emoji: "💪" },
+  fitness:     { anchor: "prenota",     label: "Prima lezione omaggio",      verb: "Prenota",  emoji: "💪" },
+  palestra:    { anchor: "prenota",     label: "Prima lezione omaggio",      verb: "Prenota",  emoji: "💪" },
   yoga:        { anchor: "prenota",     label: "Prenota una lezione",           verb: "Prenota",  emoji: "🧘" },
 
   // Healthcare

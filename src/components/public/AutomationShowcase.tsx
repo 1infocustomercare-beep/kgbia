@@ -228,7 +228,7 @@ export function AutomationShowcase({ accentColor, accentBg, sectorName, darkMode
               style={{ color: darkMode ? "#000" : "#fff", background: accentColor }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}>
-              Richiedi una Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              Richiedi una Demo Omaggio <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </motion.div>
           </div>
         </motion.div>

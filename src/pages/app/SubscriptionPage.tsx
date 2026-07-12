@@ -164,7 +164,7 @@ export default function SubscriptionPage() {
               </div>
               <div>
                 <p className="text-sm font-bold">
-                  Prova Gratuita — {daysLeft > 0 ? `${daysLeft} giorni rimasti` : "Scaduta"}
+                  Prova Senza Impegno — {daysLeft > 0 ? `${daysLeft} giorni rimasti` : "Scaduta"}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {daysLeft > 0

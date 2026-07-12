@@ -8,57 +8,57 @@ import { CheckCircle, Sparkles, Zap, Crown } from "lucide-react";
 const SECTOR_PRICING: Record<string, { plans: { name: string; price: string; unit: string; features: string[]; popular?: boolean; cta: string }[] }> = {
   beauty: {
     plans: [
-      { name: "Essential", price: "€49", unit: "/mese", features: ["Gestione appuntamenti", "Schede clienti", "Notifiche automatiche", "1 operatore", "Report base"], cta: "Inizia Gratis" },
-      { name: "Professional", price: "€99", unit: "/mese", popular: true, features: ["Tutto Essential +", "Fino a 5 operatori", "Marketing automatico", "Programma fedeltà", "AI Beauty Advisor", "App clienti branded"], cta: "Prova 14gg Gratis" },
+      { name: "Essential", price: "€49", unit: "/mese", features: ["Gestione appuntamenti", "Schede clienti", "Notifiche automatiche", "1 operatore", "Report base"], cta: "Inizia Omaggio" },
+      { name: "Professional", price: "€99", unit: "/mese", popular: true, features: ["Tutto Essential +", "Fino a 5 operatori", "Marketing automatico", "Programma fedeltà", "AI Beauty Advisor", "App clienti branded"], cta: "Prova 14gg Omaggio" },
       { name: "Enterprise", price: "€199", unit: "/mese", features: ["Tutto Professional +", "Operatori illimitati", "Multi-sede", "API & integrazioni", "Account manager dedicato", "Formazione personalizzata"], cta: "Contattaci" },
     ],
   },
   healthcare: {
     plans: [
-      { name: "Studio Base", price: "€79", unit: "/mese", features: ["Agenda digitale", "Cartelle pazienti", "Teleconsulto base", "Referti online", "1 medico"], cta: "Inizia Gratis" },
-      { name: "Studio Pro", price: "€149", unit: "/mese", popular: true, features: ["Tutto Base +", "Fino a 5 medici", "Teleconsulto HD", "AI Triage Assistant", "Integrazione SSN", "Promemoria automatici"], cta: "Prova 14gg Gratis" },
+      { name: "Studio Base", price: "€79", unit: "/mese", features: ["Agenda digitale", "Cartelle pazienti", "Teleconsulto base", "Referti online", "1 medico"], cta: "Inizia Omaggio" },
+      { name: "Studio Pro", price: "€149", unit: "/mese", popular: true, features: ["Tutto Base +", "Fino a 5 medici", "Teleconsulto HD", "AI Triage Assistant", "Integrazione SSN", "Promemoria automatici"], cta: "Prova 14gg Omaggio" },
       { name: "Clinica", price: "€349", unit: "/mese", features: ["Tutto Pro +", "Medici illimitati", "Multi-ambulatorio", "Fatturazione elettronica", "API HL7/FHIR", "Support prioritario"], cta: "Contattaci" },
     ],
   },
   fitness: {
     plans: [
-      { name: "Starter", price: "€59", unit: "/mese", features: ["Gestione iscritti", "Classi & prenotazioni", "Check-in digitale", "1 trainer", "Report base"], cta: "Prova Gratis" },
-      { name: "Performance", price: "€129", unit: "/mese", popular: true, features: ["Tutto Starter +", "Fino a 10 trainer", "App soci branded", "Programmi allenamento AI", "Marketing automatico", "Pagamenti ricorrenti"], cta: "Prova 14gg Gratis" },
+      { name: "Starter", price: "€59", unit: "/mese", features: ["Gestione iscritti", "Classi & prenotazioni", "Check-in digitale", "1 trainer", "Report base"], cta: "Prova Omaggio" },
+      { name: "Performance", price: "€129", unit: "/mese", popular: true, features: ["Tutto Starter +", "Fino a 10 trainer", "App soci branded", "Programmi allenamento AI", "Marketing automatico", "Pagamenti ricorrenti"], cta: "Prova 14gg Omaggio" },
       { name: "Enterprise", price: "€249", unit: "/mese", features: ["Tutto Performance +", "Trainer illimitati", "Multi-sede", "Wearable integration", "Account manager", "White label"], cta: "Contattaci" },
     ],
   },
   hotel: {
     plans: [
-      { name: "Boutique", price: "€99", unit: "/mese", features: ["Channel manager base", "Booking engine", "Gestione camere", "Check-in digitale", "Fino a 20 camere"], cta: "Inizia Gratis" },
-      { name: "Premium", price: "€249", unit: "/mese", popular: true, features: ["Tutto Boutique +", "Fino a 80 camere", "Revenue management AI", "Concierge digitale", "Upselling automatico", "Integrazione OTA"], cta: "Prova 14gg Gratis" },
+      { name: "Boutique", price: "€99", unit: "/mese", features: ["Channel manager base", "Booking engine", "Gestione camere", "Check-in digitale", "Fino a 20 camere"], cta: "Inizia Omaggio" },
+      { name: "Premium", price: "€249", unit: "/mese", popular: true, features: ["Tutto Boutique +", "Fino a 80 camere", "Revenue management AI", "Concierge digitale", "Upselling automatico", "Integrazione OTA"], cta: "Prova 14gg Omaggio" },
       { name: "Resort", price: "€499", unit: "/mese", features: ["Tutto Premium +", "Camere illimitate", "Multi-struttura", "SPA & F&B management", "API complete", "Support 24/7"], cta: "Contattaci" },
     ],
   },
   retail: {
     plans: [
-      { name: "Shop", price: "€49", unit: "/mese", features: ["Catalogo prodotti", "Ordini online", "Gestione inventario", "1 punto vendita", "Report vendite"], cta: "Inizia Gratis" },
-      { name: "Store Pro", price: "€99", unit: "/mese", popular: true, features: ["Tutto Shop +", "Fino a 5 POS", "CRM clienti", "Programma loyalty", "AI Product Advisor", "Marketing automatico"], cta: "Prova 14gg Gratis" },
+      { name: "Shop", price: "€49", unit: "/mese", features: ["Catalogo prodotti", "Ordini online", "Gestione inventario", "1 punto vendita", "Report vendite"], cta: "Inizia Omaggio" },
+      { name: "Store Pro", price: "€99", unit: "/mese", popular: true, features: ["Tutto Shop +", "Fino a 5 POS", "CRM clienti", "Programma loyalty", "AI Product Advisor", "Marketing automatico"], cta: "Prova 14gg Omaggio" },
       { name: "Chain", price: "€249", unit: "/mese", features: ["Tutto Pro +", "POS illimitati", "Multi-negozio", "Warehouse management", "API & integrazioni", "Account manager"], cta: "Contattaci" },
     ],
   },
   bakery: {
     plans: [
-      { name: "Artigiano", price: "€39", unit: "/mese", features: ["Pre-ordini online", "Gestione prodotti", "Notifiche clienti", "QR menu", "Report giornaliero"], cta: "Inizia Gratis" },
-      { name: "Maestro", price: "€79", unit: "/mese", popular: true, features: ["Tutto Artigiano +", "Programma fedeltà", "Consegne a domicilio", "AI Menu Advisor", "Marketing WhatsApp", "App clienti"], cta: "Prova 14gg Gratis" },
+      { name: "Artigiano", price: "€39", unit: "/mese", features: ["Pre-ordini online", "Gestione prodotti", "Notifiche clienti", "QR menu", "Report giornaliero"], cta: "Inizia Omaggio" },
+      { name: "Maestro", price: "€79", unit: "/mese", popular: true, features: ["Tutto Artigiano +", "Programma fedeltà", "Consegne a domicilio", "AI Menu Advisor", "Marketing WhatsApp", "App clienti"], cta: "Prova 14gg Omaggio" },
       { name: "Catena", price: "€159", unit: "/mese", features: ["Tutto Maestro +", "Multi-punto vendita", "Gestione produzione", "Fornitori & ordini", "API complete", "Support dedicato"], cta: "Contattaci" },
     ],
   },
   beach: {
     plans: [
-      { name: "Spiaggia", price: "€49", unit: "/mese", features: ["Mappa ombrelloni", "Prenotazioni online", "Gestione postazioni", "Cassa base", "Report giornaliero"], cta: "Inizia Gratis" },
-      { name: "Lido Pro", price: "€99", unit: "/mese", popular: true, features: ["Tutto Spiaggia +", "Abbonamenti stagionali", "Bar & ristorante", "App clienti", "Marketing automatico", "AI Weather Alerts"], cta: "Prova 14gg Gratis" },
+      { name: "Spiaggia", price: "€49", unit: "/mese", features: ["Mappa ombrelloni", "Prenotazioni online", "Gestione postazioni", "Cassa base", "Report giornaliero"], cta: "Inizia Omaggio" },
+      { name: "Lido Pro", price: "€99", unit: "/mese", popular: true, features: ["Tutto Spiaggia +", "Abbonamenti stagionali", "Bar & ristorante", "App clienti", "Marketing automatico", "AI Weather Alerts"], cta: "Prova 14gg Omaggio" },
       { name: "Resort", price: "€199", unit: "/mese", features: ["Tutto Pro +", "Multi-stabilimento", "Piscine & SPA", "Cross-selling", "API complete", "Support prioritario"], cta: "Contattaci" },
     ],
   },
   trades: {
     plans: [
-      { name: "Artigiano", price: "€39", unit: "/mese", features: ["Gestione interventi", "Preventivi digitali", "Calendario lavori", "1 tecnico", "Report base"], cta: "Inizia Gratis" },
-      { name: "Impresa", price: "€89", unit: "/mese", popular: true, features: ["Tutto Artigiano +", "Fino a 10 tecnici", "Fatturazione automatica", "GPS fleet tracking", "AI Scheduler", "CRM clienti"], cta: "Prova 14gg Gratis" },
+      { name: "Artigiano", price: "€39", unit: "/mese", features: ["Gestione interventi", "Preventivi digitali", "Calendario lavori", "1 tecnico", "Report base"], cta: "Inizia Omaggio" },
+      { name: "Impresa", price: "€89", unit: "/mese", popular: true, features: ["Tutto Artigiano +", "Fino a 10 tecnici", "Fatturazione automatica", "GPS fleet tracking", "AI Scheduler", "CRM clienti"], cta: "Prova 14gg Omaggio" },
       { name: "Enterprise", price: "€199", unit: "/mese", features: ["Tutto Impresa +", "Tecnici illimitati", "Multi-sede", "Integrazione contabile", "API complete", "Account manager"], cta: "Contattaci" },
     ],
   },
@@ -130,7 +130,7 @@ export function DemoPricingSection({ sector, accentColor, darkMode = false, bgCo
             Scegli il Piano <span style={{ color: accentColor }}>Perfetto</span>
           </h2>
           <p className="text-sm mt-3 max-w-md mx-auto" style={{ color: muted }}>
-            Prova gratuita 14 giorni. Nessuna carta di credito richiesta.
+            Prova omaggio 14 giorni. Nessuna carta di credito richiesta.
           </p>
         </div>
 
@@ -205,7 +205,7 @@ export function DemoPricingSection({ sector, accentColor, darkMode = false, bgCo
           className="text-center text-xs mt-8"
           style={{ color: muted }}
         >
-          Tutti i piani includono supporto tecnico, aggiornamenti gratuiti e conformità GDPR.
+          Tutti i piani includono supporto tecnico, aggiornamenti omaggio e conformità GDPR.
         </motion.p>
       </motion.div>
     </section>

@@ -219,7 +219,7 @@ export default function LandingTeamContact() {
               Pronto a Trasformare il Tuo <span className="text-amber-400">Business?</span>
             </h2>
             <p className="text-white/55 max-w-[520px] mx-auto text-[15px] leading-[1.7] mt-3">
-              Contattaci per una consulenza gratuita di 15 minuti. Ti mostriamo cosa possiamo fare per il tuo settore.
+              Contattaci per una consulenza senza impegno di 15 minuti. Ti mostriamo cosa possiamo fare per il tuo settore.
             </p>
           </div>
 
