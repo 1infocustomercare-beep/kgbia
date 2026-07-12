@@ -244,13 +244,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
             _wrap("Onyx%20Brace%20Steakhouse/b-ivory-desktop-home.png"), _wrap("Onyx%20Brace%20Steakhouse/b-ivory-desktop-menu.png"),
             _wrap("Onyx%20Brace%20Steakhouse/b-ivory-desktop-detail.png"), _wrap("Onyx%20Brace%20Steakhouse/b-ivory-desktop-cart.png"),
           ]},
-          { name: "Marble", thumbnail: _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-home.png"), screens: [
-            _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-home.png"), _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-menu.png"),
-            _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-detail.png"), _wrap("Onyx%20Brace%20Steakhouse/d-marble-mobile-cart.png"),
-          ], desktopScreens: [
-            _wrap("Onyx%20Brace%20Steakhouse/d-marble-desktop-home.png"), _wrap("Onyx%20Brace%20Steakhouse/d-marble-desktop-menu.png"),
-            _wrap("Onyx%20Brace%20Steakhouse/d-marble-desktop-detail.png"), _wrap("Onyx%20Brace%20Steakhouse/d-marble-desktop-cart.png"),
-          ]},
           { name: "Hanok", thumbnail: _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-home.png"), screens: [
             _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-home.png"), _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-menu.png"),
             _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-detail.png"), _wrap("Onyx%20Brace%20Steakhouse/e-hanok-mobile-cart.png"),
