@@ -846,15 +846,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
           ]},
         ],
       },
-      {
-        name: "Marina Riviera",
-        styles: [
-          { name: "Style A", thumbnail: _wrap("Marina%20Riviera/A-mobile-home.png"), screens: [
-            _wrap("Marina%20Riviera/A-mobile-home.png"), _wrap("Marina%20Riviera/A-mobile-fleet.png"),
-            _wrap("Marina%20Riviera/A-mobile-yacht-detail.png"), _wrap("Marina%20Riviera/A-mobile-booking.png"),
-          ]},
-        ],
-      },
     ],
   },
   // ═══ ARTIGIANI ═══
