@@ -877,39 +877,4 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
       },
     ],
   },
-  // ═══ RETAIL ═══
-  {
-    sectorId: "retail",
-    sectorLabel: "Retail & Negozi",
-    brands: [
-      {
-        name: "Velluto Hair Lab",
-        styles: [
-          { name: "Mobile", thumbnail: _wrap("Velluto%20Hair%20Lab/mobile-home.png"), screens: [
-            _wrap("Velluto%20Hair%20Lab/mobile-home.png"), _wrap("Velluto%20Hair%20Lab/mobile-shop.png"),
-            _wrap("Velluto%20Hair%20Lab/mobile-detail.png"), _wrap("Velluto%20Hair%20Lab/mobile-cart.png"),
-          ]},
-          { name: "Desktop", thumbnail: _wrap("Velluto%20Hair%20Lab/desktop-homepage.png"), screens: [
-            _wrap("Velluto%20Hair%20Lab/desktop-homepage.png"), _wrap("Velluto%20Hair%20Lab/desktop-shop.png"),
-            _wrap("Velluto%20Hair%20Lab/desktop-detail.png"), _wrap("Velluto%20Hair%20Lab/desktop-cart.png"),
-          ]},
-        ],
-      },
-    ],
-  },
-  // ═══ BEACH ═══
-  {
-    sectorId: "beach",
-    sectorLabel: "Stabilimenti Balneari",
-    brands: [
-      {
-        name: "Onda Sport Club",
-        styles: [
-          { name: "Style A", thumbnail: _wrap("Onda%20Sport%20Club/style-a-mobile-home.png"), screens: [
-            _wrap("Onda%20Sport%20Club/style-a-mobile-home.png"), _wrap("Onda%20Sport%20Club/style-a-mobile-activities.png"),
-          ]},
-        ],
-      },
-    ],
-  },
 ];
