@@ -442,10 +442,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
             _wrap("Levante%20Deli/mobile-f-home.png"), _wrap("Levante%20Deli/mobile-f-menu.png"),
             _wrap("Levante%20Deli/mobile-f-detail.png"), _wrap("Levante%20Deli/mobile-f-cart.png"),
           ]},
-          { name: "Style G", thumbnail: _wrap("Levante%20Deli/mobile-g-home.png"), screens: [
-            _wrap("Levante%20Deli/mobile-g-home.png"), _wrap("Levante%20Deli/mobile-g-menu.png"),
-            _wrap("Levante%20Deli/mobile-g-detail.png"), _wrap("Levante%20Deli/mobile-g-cart.png"),
-          ]},
           { name: "Style H", thumbnail: _wrap("Levante%20Deli/mobile-h-home.png"), screens: [
             _wrap("Levante%20Deli/mobile-h-home.png"), _wrap("Levante%20Deli/mobile-h-menu.png"),
             _wrap("Levante%20Deli/mobile-h-detail.png"), _wrap("Levante%20Deli/mobile-h-cart.png"),
