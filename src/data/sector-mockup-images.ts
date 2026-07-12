@@ -549,10 +549,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
       {
         name: "Cala Vento Charter",
         styles: [
-          { name: "Sardinia Azure Luxury", thumbnail: _wrap("Cala%20Vento%20Charter/home.png"), screens: [
-            _wrap("Cala%20Vento%20Charter/home.png"), _wrap("Cala%20Vento%20Charter/escursioni.png"),
-            _wrap("Cala%20Vento%20Charter/dettaglio-tour.png"), _wrap("Cala%20Vento%20Charter/prenotazione.png"),
-          ]},
           { name: "Emerald Cove", thumbnail: _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/home.png"), screens: [
             _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/home.png"), _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/escursioni.png"),
             _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/dettaglio-tour.png"), _wrap("Cala%20Vento%20Charter%20-%20Emerald%20Cove/prenotazione.png"),
