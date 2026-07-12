@@ -346,13 +346,6 @@ export const SECTOR_PORTFOLIO: SectorPortfolio[] = [
             _wrap("Indocina%20Noir/i-neon-spice-desktop-home.png"), _wrap("Indocina%20Noir/i-neon-spice-desktop-menu.png"),
             _wrap("Indocina%20Noir/i-neon-spice-desktop-detail.png"), _wrap("Indocina%20Noir/i-neon-spice-desktop-cart.png"),
           ]},
-          { name: "Volcanic", thumbnail: _wrap("Indocina%20Noir/j-volcanic-home.png"), screens: [
-            _wrap("Indocina%20Noir/j-volcanic-home.png"), _wrap("Indocina%20Noir/j-volcanic-menu.png"),
-            _wrap("Indocina%20Noir/j-volcanic-detail.png"), _wrap("Indocina%20Noir/j-volcanic-cart.png"),
-          ], desktopScreens: [
-            _wrap("Indocina%20Noir/j-volcanic-desktop-home.png"), _wrap("Indocina%20Noir/j-volcanic-desktop-menu.png"),
-            _wrap("Indocina%20Noir/j-volcanic-desktop-detail.png"), _wrap("Indocina%20Noir/j-volcanic-desktop-cart.png"),
-          ]},
           { name: "Matcha Blaze", thumbnail: _wrap("Indocina%20Noir/k-matcha-blaze-home.png"), screens: [
             _wrap("Indocina%20Noir/k-matcha-blaze-home.png"), _wrap("Indocina%20Noir/k-matcha-blaze-menu.png"),
             _wrap("Indocina%20Noir/k-matcha-blaze-detail.png"), _wrap("Indocina%20Noir/k-matcha-blaze-cart.png"),
