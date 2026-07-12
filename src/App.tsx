@@ -581,12 +581,12 @@ function App() {
                           Caos→Empire, services, industries, portfolio, process,
                           proof, CTA. Bilingue IT/EN. */}
                       <Route path="/" element={<EmpirePrestigeHome />} />
-                      {/* Pagina mockup canonica = /demo (DemoDirectoryPage con tutti i settori
-                          e i siti reali Empire Studio). Le rotte legacy /mockups-demo, /demo-mockups,
-                          /mockups vi reindirizzano per non rompere i link esistenti. */}
-                      <Route path="/mockups-demo" element={<Navigate to="/demo" replace />} />
-                      <Route path="/demo-mockups" element={<Navigate to="/demo" replace />} />
-                      <Route path="/mockups" element={<Navigate to="/demo" replace />} />
+                      {/* Pagina catalogo mockup canonica = /portfolio (MockupCatalogPage).
+                          Le rotte legacy /mockups-demo, /demo-mockups, /mockups
+                          reindirizzano lì per non rompere i link esistenti. */}
+                      <Route path="/mockups-demo" element={<Navigate to="/portfolio" replace />} />
+                      <Route path="/demo-mockups" element={<Navigate to="/portfolio" replace />} />
+                      <Route path="/mockups" element={<Navigate to="/portfolio" replace />} />
                       <Route path="/settori" element={<Navigate to="/#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/#pricing" replace />} />
                       <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
