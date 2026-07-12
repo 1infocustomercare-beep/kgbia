@@ -66,7 +66,7 @@ export const COACH_CHAPTERS: CoachChapter[] = [
     bestPractices: [
       "Inizia con le API gestite Empire — zero setup, paghi solo l'uso effettivo",
       "Configura Resend appena fai 50+ lead/giorno: email custom dominio = +30% open rate",
-      "Twilio sandbox è gratis ma limitato: per produzione richiedi numero WhatsApp Business",
+      "Twilio sandbox è omaggio ma limitato: per produzione richiedi numero WhatsApp Business",
       "Stripe è obbligatorio se vuoi vendere: anche test mode è ok all'inizio",
     ],
     pitfalls: [
@@ -75,7 +75,7 @@ export const COACH_CHAPTERS: CoachChapter[] = [
       "Non testare con il tuo numero personale: usa numeri sandbox dei provider",
     ],
     automations: [
-      { label: "Auto-failover Firecrawl", description: "Se la chiave premium si esaurisce, Empire passa al fallback gratuito" },
+      { label: "Auto-failover Firecrawl", description: "Se la chiave premium si esaurisce, Empire passa al fallback senza costi" },
       { label: "Health check 5min", description: "Monitoring continuo: ti avvisa se una chiave smette di funzionare" },
     ],
     shortcuts: [
@@ -102,7 +102,7 @@ export const COACH_CHAPTERS: CoachChapter[] = [
     ],
     automations: [
       { label: "Auto-match settore", description: "L'AI sceglie il template giusto in base al sotto-settore del lead" },
-      { label: "Vault riuso", description: "Preview salvate riutilizzabili gratis su lead simili" },
+      { label: "Vault riuso", description: "Preview salvate riutilizzabili omaggio su lead simili" },
     ],
     shortcuts: [
       { label: "🎨 Da lead", tip: "Apri il lead → 'Genera demo' → preview pronta + link WhatsApp" },

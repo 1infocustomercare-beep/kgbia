@@ -121,7 +121,7 @@ export default function NCCCrossSellingPage() {
                 </div>
                 <div><Label>Descrizione</Label><Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} /></div>
                 <div className="flex items-center gap-3">
-                  <Switch checked={form.is_free} onCheckedChange={(v) => setForm({ ...form, is_free: v })} /><Label>Gratuito</Label>
+                  <Switch checked={form.is_free} onCheckedChange={(v) => setForm({ ...form, is_free: v })} /><Label>Omaggio</Label>
                 </div>
                 {!form.is_free && <div><Label>Prezzo (€)</Label><Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="h-11" /></div>}
                 <div><Label>Mostrato a</Label>
@@ -153,7 +153,7 @@ export default function NCCCrossSellingPage() {
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
                       <div className="flex items-center gap-2 mt-2">
-                        <Badge variant="outline">{item.is_free ? "Gratuito" : `€${item.price}`}</Badge>
+                        <Badge variant="outline">{item.is_free ? "Omaggio" : `€${item.price}`}</Badge>
                         <Badge variant="secondary" className="text-[10px]">{SHOWN_OPTIONS.find((o) => o.value === item.shown_to)?.label}</Badge>
                       </div>
                     </div>

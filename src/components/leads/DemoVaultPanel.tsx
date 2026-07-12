@@ -62,7 +62,7 @@ const VARIANT_LABEL: Record<string, string> = {
 };
 
 const ENGINE_LABEL: Record<string, { label: string; color: string; icon: any }> = {
-  react:           { label: "React (Gratis)",  color: "#34d399", icon: Zap },
+  react:           { label: "React (Omaggio)",  color: "#34d399", icon: Zap },
   nano_banana:     { label: "Nano Banana",     color: "#fbbf24", icon: Wand2 },
   nano_banana_pro: { label: "Nano Banana Pro", color: "#c084fc", icon: Crown },
 };

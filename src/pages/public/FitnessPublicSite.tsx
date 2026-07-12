@@ -66,11 +66,11 @@ const FALLBACK_REVIEWS = [
 ];
 
 const FAQ_ITEMS = [
-  { q: "Posso provare prima di iscrivermi?", a: "Certamente! Offriamo una sessione di prova gratuita. Compila il modulo e ti contatteremo." },
+  { q: "Posso provare prima di iscrivermi?", a: "Certamente! Offriamo una sessione di prova senza impegno. Compila il modulo e ti contatteremo." },
   { q: "Quali sono gli orari di apertura?", a: "Lun-Ven 6:00-22:00, Sab 8:00-20:00, Dom 9:00-14:00. Il piano Elite include accesso 24/7." },
   { q: "Posso congelare l'abbonamento?", a: "Sì, con i piani Pro ed Elite puoi sospendere fino a 30 giorni all'anno." },
   { q: "Avete personal trainer?", a: "Sì, 15+ personal trainer certificati. Sessioni singole o pacchetti mensili." },
-  { q: "C'è un parcheggio?", a: "Sì, parcheggio gratuito riservato ai soci con oltre 50 posti auto." },
+  { q: "C'è un parcheggio?", a: "Sì, parcheggio omaggio riservato ai soci con oltre 50 posti auto." },
 ];
 
 export default function FitnessPublicSite({ company, afterHero }: Props) {
@@ -202,7 +202,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
             </h1>
             <p className="text-sm sm:text-base text-white/80 max-w-md mb-10 leading-relaxed" style={{ fontFamily: "'Barlow', sans-serif" }}>{tagline}</p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button className="px-10 py-6 text-lg tracking-[0.2em] rounded-none border-0 shadow-2xl" style={{ background: VOLT, color: CARBON, fontFamily: "'Bebas Neue', sans-serif", boxShadow: `0 20px 60px -15px ${VOLT}44` }} onClick={() => scrollTo("iscriviti")}>PROVA GRATUITA</Button>
+              <Button className="px-10 py-6 text-lg tracking-[0.2em] rounded-none border-0 shadow-2xl" style={{ background: VOLT, color: CARBON, fontFamily: "'Bebas Neue', sans-serif", boxShadow: `0 20px 60px -15px ${VOLT}44` }} onClick={() => scrollTo("iscriviti")}>PROVA SENZA IMPEGNO</Button>
               <Button variant="outline" className="px-10 py-6 text-lg tracking-[0.2em] rounded-none text-white" style={{ borderColor: "#fff2", fontFamily: "'Bebas Neue', sans-serif" }} onClick={() => scrollTo("classi")}>LE CLASSI</Button>
             </div>
           </motion.div>
@@ -423,7 +423,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
         <div className="relative z-10 max-w-lg mx-auto px-5 text-center">
           <Dumbbell className="w-12 h-12 mx-auto mb-4" style={{ color: VOLT }} />
           <h2 className="text-4xl sm:text-5xl tracking-[0.05em] mb-3">INIZIA <span style={{ color: VOLT }}>OGGI</span></h2>
-          <p className="text-white/70 mb-8 text-sm" style={{ fontFamily: "'Barlow', sans-serif" }}>Compila il form per una prova gratuita</p>
+          <p className="text-white/70 mb-8 text-sm" style={{ fontFamily: "'Barlow', sans-serif" }}>Compila il form per una prova senza impegno</p>
           <Card className="p-6 text-left rounded-none border-0" style={{ background: `${CARBON}`, border: `1px solid ${VOLT}20` }}>
             <div className="space-y-3" style={{ fontFamily: "'Barlow', sans-serif" }}>
               <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Il tuo nome *" className="bg-transparent border-white/10 text-white h-12 rounded-none" />
@@ -432,7 +432,7 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
               <Input value={form.interest} onChange={e => setForm({ ...form, interest: e.target.value })} placeholder="Cosa ti interessa? (CrossFit, PT...)" className="bg-transparent border-white/10 text-white h-12 rounded-none" />
             </div>
             <Button onClick={handleLead} disabled={submitting} className="w-full mt-5 py-6 text-lg tracking-[0.2em] rounded-none border-0 shadow-2xl" style={{ background: VOLT, color: CARBON, fontFamily: "'Bebas Neue', sans-serif", boxShadow: `0 15px 40px -10px ${VOLT}44` }}>
-              {submitting ? "INVIO..." : "RICHIEDI PROVA GRATUITA"}
+              {submitting ? "INVIO..." : "RICHIEDI PROVA SENZA IMPEGNO"}
             </Button>
           </Card>
         </div>

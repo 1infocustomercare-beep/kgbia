@@ -172,7 +172,7 @@ export default function AgentsAlaCarte() {
             Costruisci il tuo team AI <span className="landing-heading-gradient">un agente alla volta.</span>
           </h2>
           <p className="mx-auto mt-4 max-w-[600px] text-[clamp(0.9rem,1.5vw,1rem)] leading-[1.65] text-foreground/72">
-            Hai già un sito? Nessun problema. Aggiungi solo gli agenti che ti servono. <strong className="text-foreground">Cancellazione in 1 click</strong>, prova gratuita 14 giorni.
+            Hai già un sito? Nessun problema. Aggiungi solo gli agenti che ti servono. <strong className="text-foreground">Cancellazione in 1 click</strong>, prova senza impegno 14 giorni.
           </p>
         </motion.div>
 
@@ -279,7 +279,7 @@ export default function AgentsAlaCarte() {
                       </span>
                       <span className="text-[11px] text-foreground/55">/mese</span>
                     </div>
-                    <div className="mt-0.5 text-[10px] uppercase tracking-[0.18em] text-foreground/50">14gg gratis</div>
+                    <div className="mt-0.5 text-[10px] uppercase tracking-[0.18em] text-foreground/50">14gg omaggio</div>
                   </div>
                   <button
                     onClick={() => navigate("/auth?mode=register")}

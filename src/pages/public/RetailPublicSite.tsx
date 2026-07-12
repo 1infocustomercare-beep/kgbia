@@ -64,8 +64,8 @@ const FALLBACK_REVIEWS = [
 ];
 
 const FAQ_ITEMS = [
-  { q: "Quanto costa la spedizione?", a: "Gratuita per ordini superiori a €50. Altrimenti €5.90 in tutta Italia." },
-  { q: "Posso restituire un prodotto?", a: "Reso gratuito entro 30 giorni dall'acquisto." },
+  { q: "Quanto costa la spedizione?", a: "Omaggio per ordini superiori a €50. Altrimenti €5.90 in tutta Italia." },
+  { q: "Posso restituire un prodotto?", a: "Reso omaggio entro 30 giorni dall'acquisto." },
   { q: "Avete un programma fedeltà?", a: "Sì, ogni acquisto accumula punti per sconti esclusivi." },
   { q: "Posso pagare a rate?", a: "Sì, 3 rate senza interessi tramite Klarna o PayPal." },
   { q: "Fate personal shopping?", a: "Sì, su appuntamento sia in negozio che via videochiamata." },
@@ -104,7 +104,7 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
   };
 
   const navLinks = [{ href: "#chi-siamo", label: "Chi Siamo" }, { href: "#collezioni", label: "Collezioni" }, { href: "#recensioni", label: "Recensioni" }, { href: "#contatti", label: "Contatti" }];
-  const tickerItems = ["NUOVI ARRIVI", "SPEDIZIONE GRATUITA", "RESO FACILE", "MADE IN ITALY", "QUALITÀ PREMIUM", "OFFERTE ESCLUSIVE"];
+  const tickerItems = ["NUOVI ARRIVI", "SPEDIZIONE OMAGGIO", "RESO FACILE", "MADE IN ITALY", "QUALITÀ PREMIUM", "OFFERTE ESCLUSIVE"];
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: "'Cormorant Garamond', serif", background: IVORY, color: ONYX }}>
@@ -181,7 +181,7 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
       <Section className="py-8 px-4" style={{ background: IVORY }}>
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
-            { icon: Truck, text: "Spedizione Gratuita" },
+            { icon: Truck, text: "Spedizione Omaggio" },
             { icon: RefreshCw, text: "Reso 30gg" },
             { icon: Shield, text: "Pagamento Sicuro" },
             { icon: CreditCard, text: "3 Rate" },

@@ -213,7 +213,7 @@ export default function SalesPlaybook({ autoOpen = false }: { autoOpen?: boolean
 
           <ScriptCard
             label="🎯 Primo contatto WhatsApp"
-            text="Ciao [Nome], ho visto [Attività] su Google. Complimenti per le [N] recensioni a 4.8★! Ho notato che il sito è da aggiornare e non hai prenotazioni online: stai perdendo €X/mese in clienti che non riescono a contattarti la sera. Ti ho preparato una demo del nuovo sito (gratis, 2 minuti per vederla): [link]. Cosa ne pensi?"
+            text="Ciao [Nome], ho visto [Attività] su Google. Complimenti per le [N] recensioni a 4.8★! Ho notato che il sito è da aggiornare e non hai prenotazioni online: stai perdendo €X/mese in clienti che non riescono a contattarti la sera. Ti ho preparato una demo del nuovo sito (omaggio, 2 minuti per vederla): [link]. Cosa ne pensi?"
           />
           <ScriptCard
             label="🔁 Follow-up dopo 48h (no risposta)"
@@ -221,11 +221,11 @@ export default function SalesPlaybook({ autoOpen = false }: { autoOpen?: boolean
           />
           <ScriptCard
             label="💰 Obiezione 'costa troppo'"
-            text="Capisco. Facciamo 2 conti veloci: il sistema costa €X/mese. Solo 2 prenotazioni in più al giorno lo ripagano 4 volte. Ti faccio vedere il calcolo? In più ho un'offerta solo per oggi: 90 giorni gratis di prova. Zero rischi. Partiamo?"
+            text="Capisco. Facciamo 2 conti veloci: il sistema costa €X/mese. Solo 2 prenotazioni in più al giorno lo ripagano 4 volte. Ti faccio vedere il calcolo? In più ho un'offerta solo per oggi: 90 giorni senza impegno di prova. Zero rischi. Partiamo?"
           />
           <ScriptCard
             label="👑 Closing finale"
-            text="[Nome] tre cose: 1) Il tuo concorrente [Competitor] ha già un sistema simile. 2) Ho 3 slot questa settimana per [Città]. 3) Se firmiamo oggi, primo mese gratis + setup gratuito. Ti mando il link di pagamento ora o domani mattina?"
+            text="[Nome] tre cose: 1) Il tuo concorrente [Competitor] ha già un sistema simile. 2) Ho 3 slot questa settimana per [Città]. 3) Se firmiamo oggi, primo mese omaggio + setup omaggio. Ti mando il link di pagamento ora o domani mattina?"
           />
         </div>
       ),
@@ -269,7 +269,7 @@ export default function SalesPlaybook({ autoOpen = false }: { autoOpen?: boolean
           <DayCard day="Giorno 2" action="Follow-up: 'Hai aperto la demo? Cosa ne pensi?'" />
           <DayCard day="Giorno 3" action="Call telefonica 10 min: 3 funzionalità chiave + ROI" />
           <DayCard day="Giorno 4" action="Invio video Loom personalizzato col tour del backend" />
-          <DayCard day="Giorno 5" action="Offerta scarsità: 'Solo oggi, primo mese gratis + setup omaggio'" />
+          <DayCard day="Giorno 5" action="Offerta scarsità: 'Solo oggi, primo mese omaggio + setup omaggio'" />
           <DayCard day="Giorno 6" action="Call con titolare/socio se richiesto + invio contratto" />
           <DayCard day="Giorno 7" action="Closing: link Stripe, attivazione, primo onboarding" />
         </div>

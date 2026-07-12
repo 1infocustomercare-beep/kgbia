@@ -191,7 +191,7 @@ const InvestmentSummary = () => {
       <div className="p-4 rounded-2xl bg-card border border-border/50 text-center space-y-2">
         <Shield className="w-6 h-6 text-primary mx-auto" />
         <p className="text-sm font-display font-bold text-foreground">
-          Risultati Garantiti + 1 Mese Assistenza Gratuita
+          Risultati Garantiti + 1 Mese Assistenza Omaggio
         </p>
         <p className="text-[10px] text-muted-foreground">
           Nessun vincolo. Nessun rinnovo. Il software è tuo. Per sempre.

@@ -23,7 +23,7 @@ export default function MinimalFinalCTA() {
           </span>
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-base text-white/60 sm:text-lg">
-          Setup in 24 ore. 90 giorni gratis. Zero rischio.
+          Setup in 24 ore. 90 giorni senza impegno. Zero rischio.
         </p>
 
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -46,7 +46,7 @@ export default function MinimalFinalCTA() {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-white/40">
           <span>★ 4.9/5 · 3.500+ aziende</span>
           <span>· Setup in 24h</span>
-          <span>· 90 giorni gratis</span>
+          <span>· 90 giorni senza impegno</span>
           <span>· Cancelli quando vuoi</span>
         </div>
       </div>

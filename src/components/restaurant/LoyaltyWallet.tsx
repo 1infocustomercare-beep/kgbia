@@ -7,7 +7,7 @@ const LoyaltyWallet = () => {
   const progress = (points / nextReward) * 100;
 
   const rewards = [
-    { name: "Dessert gratis", points: 200, redeemed: true },
+    { name: "Dessert omaggio", points: 200, redeemed: true },
     { name: "Sconto 10%", points: 350, redeemed: true },
     { name: "Antipasto omaggio", points: 500, redeemed: false },
     { name: "Cena per 2 -20%", points: 1000, redeemed: false },

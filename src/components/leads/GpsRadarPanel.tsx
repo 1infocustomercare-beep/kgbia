@@ -413,7 +413,7 @@ export default function GpsRadarPanel({ open, onClose, onSearch, loading }: Prop
           </motion.button>
 
           <p className="text-[8px] text-center" style={{ color: "#6b7280" }}>
-            🌍 Dati reali OpenStreetMap + Nominatim · 100% gratuiti, illimitati
+            🌍 Dati reali OpenStreetMap + Nominatim · 100% omaggio, illimitati
           </p>
         </div>
       </motion.div>

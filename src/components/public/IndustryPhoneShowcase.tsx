@@ -2304,7 +2304,7 @@ export function IPhoneFrame({
                   <p className="text-[4px] text-white/65 uppercase tracking-wider mb-1 font-bold">Premi Disponibili</p>
                   {[
                     { emoji: "☕", name: "Caffè omaggio", pts: "500", status: "available" },
-                    { emoji: "🎂", name: "Dessert gratis", pts: "1.000", status: "available" },
+                    { emoji: "🎂", name: "Dessert omaggio", pts: "1.000", status: "available" },
                     { emoji: "💎", name: "Sconto 20%", pts: "2.000", status: "available" },
                     { emoji: "🌟", name: "Esperienza VIP", pts: "5.000", status: "locked" },
                   ].map((r, i) => (

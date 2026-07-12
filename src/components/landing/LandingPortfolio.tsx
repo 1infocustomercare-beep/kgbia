@@ -299,7 +299,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
         <div className="max-w-5xl mx-auto px-4 sm:px-8 pb-10">
           <div className="rounded-xl p-5 sm:p-8 text-center border border-white/[0.06]" style={{ background: "linear-gradient(135deg, rgba(126,183,190,0.06), rgba(108,60,224,0.06))" }}>
             <h3 className="text-base sm:text-lg font-bold text-white mb-1">Vuoi un progetto simile?</h3>
-            <p className="text-[10px] sm:text-xs text-white/35 mb-3">Contattaci per una consulenza gratuita.</p>
+            <p className="text-[10px] sm:text-xs text-white/35 mb-3">Contattaci per una consulenza senza impegno.</p>
             <a href="#contact"
               onClick={(e) => { e.preventDefault(); onClose(); setTimeout(() => document.getElementById("team")?.scrollIntoView({ behavior: "smooth" }), 300); }}
               className="inline-flex px-5 py-2 rounded-full bg-gradient-to-r from-[#7eb7be] to-[#6c3ce0] text-white font-semibold text-xs sm:text-sm hover:shadow-lg hover:shadow-[#7eb7be]/20 transition-all">

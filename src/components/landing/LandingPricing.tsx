@@ -6,7 +6,7 @@ const PLANS = [
     name: "Digital Start", price: "€1.997", old: "€2.880", disc: "-31%",
     rate: "oppure €666/mese x3 (TAN 0%)", after: "poi €49/mese · 2% transazioni",
     features: ["App White Label completa", "Menu/Catalogo QR illimitato", "Ordini & Prenotazioni", "Dashboard Analytics base", "Supporto Email dedicato", "Setup & Onboarding guidato"],
-    cta: "Inizia con Digital Start", urgency: "Setup gratuito questa settimana", urgencyRed: true,
+    cta: "Inizia con Digital Start", urgency: "Setup omaggio questa settimana", urgencyRed: true,
     accent: "#22d3ee", style: "default" as const,
   },
   {

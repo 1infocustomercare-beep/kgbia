@@ -214,8 +214,8 @@ export const DEMO_INDUSTRY_DATA: Record<IndustryId, DemoIndustryData> = {
     ],
     features: [
       { icon: "Award", label: "100% Artigianale", desc: "Ogni pezzo è unico e fatto a mano" },
-      { icon: "Package", label: "Spedizione Gratis", desc: "In tutta Italia sopra i €100" },
-      { icon: "Shield", label: "Garanzia a Vita", desc: "Riparazione gratuita per sempre" },
+      { icon: "Package", label: "Spedizione Omaggio", desc: "In tutta Italia sopra i €100" },
+      { icon: "Shield", label: "Garanzia a Vita", desc: "Riparazione omaggio per sempre" },
     ],
   },
 
@@ -228,7 +228,7 @@ export const DEMO_INDUSTRY_DATA: Record<IndustryId, DemoIndustryData> = {
     city: "Milano",
     phone: "+39 02 3456 7890",
     email: "info@irongym.it",
-    bookingLabel: "Prova Gratuita",
+    bookingLabel: "Prova Senza Impegno",
     ctaLabel: "Vedi Abbonamenti",
     bookingFields: ["name", "phone", "email", "service"],
     hours: [
@@ -241,7 +241,7 @@ export const DEMO_INDUSTRY_DATA: Record<IndustryId, DemoIndustryData> = {
       { name: "Corso Yoga", description: "Lezione di gruppo, tutti i livelli", price: 15, duration: "60 min", category: "Corsi", emoji: "🧘" },
       { name: "Corso CrossFit", description: "Allenamento funzionale ad alta intensità", price: 18, duration: "45 min", category: "Corsi", popular: true, emoji: "🔥" },
       { name: "Piano Alimentare", description: "Consulenza nutrizionale personalizzata", price: 80, category: "Servizi", emoji: "🥗" },
-      { name: "Abbonamento Annuale", description: "12 mesi + 2 PT sessions gratuite", price: 399, category: "Abbonamenti", emoji: "⭐" },
+      { name: "Abbonamento Annuale", description: "12 mesi + 2 PT sessions omaggio", price: 399, category: "Abbonamenti", emoji: "⭐" },
     ],
     reviews: [
       { name: "Alessandro F.", rating: 5, comment: "Palestra top, attrezzatura sempre nuova!" },
@@ -332,7 +332,7 @@ export const DEMO_INDUSTRY_DATA: Record<IndustryId, DemoIndustryData> = {
     companyName: "Idraulica Rapida",
     tagline: "Pronto intervento idraulico 24/7",
     heroTitle: "Problemi idraulici? Ci pensiamo noi",
-    heroSubtitle: "Interventi rapidi, preventivi gratuiti, garanzia su ogni lavoro",
+    heroSubtitle: "Interventi rapidi, preventivo senza costi, garanzia su ogni lavoro",
     address: "Via dell'Industria 33, Bologna",
     city: "Bologna",
     phone: "+39 051 234 5678",
@@ -360,7 +360,7 @@ export const DEMO_INDUSTRY_DATA: Record<IndustryId, DemoIndustryData> = {
     ],
     features: [
       { icon: "Zap", label: "Intervento Rapido", desc: "Arriviamo entro 1 ora in città" },
-      { icon: "FileText", label: "Preventivo Gratis", desc: "Sopralluogo e preventivo senza impegno" },
+      { icon: "FileText", label: "Preventivo Omaggio", desc: "Sopralluogo e preventivo senza impegno" },
       { icon: "Shield", label: "Garanzia 2 Anni", desc: "Su tutti i lavori e materiali" },
     ],
   },
@@ -750,7 +750,7 @@ export const DEMO_INDUSTRY_DATA: Record<IndustryId, DemoIndustryData> = {
       { name: "Tatuaggio Grande", description: "Pezzo unico, più sessioni", price: 500, category: "Tatuaggi", emoji: "🖼️" },
       { name: "Cover Up", description: "Copertura tatuaggio esistente", price: 300, category: "Speciali", popular: true, emoji: "🔄" },
       { name: "Piercing", description: "Piercing + gioiello in titanio", price: 40, category: "Piercing", emoji: "💎" },
-      { name: "Consulenza Gratuita", description: "Parliamo del tuo progetto", price: 0, duration: "30 min", category: "Consulenze", emoji: "💬" },
+      { name: "Consulenza Senza Impegno", description: "Parliamo del tuo progetto", price: 0, duration: "30 min", category: "Consulenze", emoji: "💬" },
     ],
     reviews: [
       { name: "Matteo R.", rating: 5, comment: "Artista incredibile, tatuaggio realistico pazzesco." },

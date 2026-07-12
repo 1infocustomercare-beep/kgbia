@@ -432,11 +432,11 @@ async function speakText(
 
 // ── Local fallback responses when AI credits exhausted ──
 const LOCAL_FALLBACK_RESPONSES: Record<string, string> = {
-  default: "Grazie per il tuo interesse! 🌟 Empire AI può trasformare il tuo business con soluzioni digitali personalizzate: menu QR, CRM, agenti AI, automazioni e molto altro. **Prenota una consulenza gratuita** per scoprire tutto ciò che possiamo fare per te!",
+  default: "Grazie per il tuo interesse! 🌟 Empire AI può trasformare il tuo business con soluzioni digitali personalizzate: menu QR, CRM, agenti AI, automazioni e molto altro. **Prenota una consulenza senza impegno** per scoprire tutto ciò che possiamo fare per te!",
   pricing: "I nostri pacchetti partono da **€1.997** (rateizzabile in 6 rate da €333) con Digital Start, fino a **€7.997** con Empire Domination che include TUTTO. Oppure scegli il mensile da **€55/mese**. Contattaci per un preventivo personalizzato!",
   sector: "Empire copre **25+ settori**: ristorazione, hotel, beauty, NCC, healthcare, fitness, retail, edilizia e molti altri. Ogni soluzione è costruita su misura con funzionalità specifiche per il tuo mercato. Dimmi il tuo settore e ti mostro cosa possiamo fare!",
-  custom: "Certamente! Noi di Empire sviluppiamo soluzioni **100% su misura**. Se non trovi una funzionalità specifica, la costruiamo noi per te: app custom, integrazioni API, agenti AI specializzati, workflow automatizzati. Contattaci per una consulenza gratuita!",
-  contact: "Puoi contattarci per una **consulenza gratuita** e senza impegno. Ti mostreremo una demo personalizzata per il tuo settore in soli 10 minuti. Visita la sezione contatti sul sito o scrivi direttamente qui!",
+  custom: "Certamente! Noi di Empire sviluppiamo soluzioni **100% su misura**. Se non trovi una funzionalità specifica, la costruiamo noi per te: app custom, integrazioni API, agenti AI specializzati, workflow automatizzati. Contattaci per una consulenza senza impegno!",
+  contact: "Puoi contattarci per una **consulenza senza impegno** e senza impegno. Ti mostreremo una demo personalizzata per il tuo settore in soli 10 minuti. Visita la sezione contatti sul sito o scrivi direttamente qui!",
 };
 
 function getLocalFallbackResponse(userMessage: string): string {
@@ -645,13 +645,13 @@ const EmpireVoiceAgent: React.FC = () => {
 
       // If quota failed, don't reconnect — switch to free voice immediately
       if (elevenlabsQuotaFailedRef.current) {
-        console.log("[Arianna LIVE] 🔄 Quota esaurita — passo alla voce gratuita");
+        console.log("[Arianna LIVE] 🔄 Quota esaurita — passo alla voce omaggio");
         releaseVoiceAgent("arianna-live");
         setVoiceMode("legacy");
         abortRef.current = false;
         useBrowserFallbackRef.current = true;
         setBrowserOnlyTTS(true);
-        setMessages(prev => [...prev, { role: "assistant", content: "Sono passata alla voce gratuita. Continuiamo a parlare! 🎤" }]);
+        setMessages(prev => [...prev, { role: "assistant", content: "Sono passata alla voce omaggio. Continuiamo a parlare! 🎤" }]);
         return;
       }
       
@@ -676,7 +676,7 @@ const EmpireVoiceAgent: React.FC = () => {
       useBrowserFallbackRef.current = true;
       setBrowserOnlyTTS(true);
       if (!elevenlabsIntentionalStopRef.current) {
-        setMessages(prev => [...prev, { role: "assistant", content: "Sono passata alla voce gratuita. Scrivi o parlami, sono qui! 🎤" }]);
+        setMessages(prev => [...prev, { role: "assistant", content: "Sono passata alla voce omaggio. Scrivi o parlami, sono qui! 🎤" }]);
       }
     },
     onMessage: (message: any) => {

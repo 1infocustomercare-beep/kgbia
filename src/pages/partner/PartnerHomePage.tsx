@@ -508,7 +508,7 @@ export default function PartnerHomePage() {
                 {[
                   { q: "È complicato da usare?", a: "No. Intuitivo come Instagram. Il nostro team ti segue passo passo nell'avvio e nella gestione." },
                   { q: "Funziona per il mio settore?", a: "Assolutamente sì. Si adatta a 25+ settori con moduli e funzionalità specifiche per ogni business." },
-                  { q: "E se non funziona?", a: "90 giorni di prova gratuita. Se non sei soddisfatto, non paghi nulla. Zero rischi." },
+                  { q: "E se non funziona?", a: "90 giorni di prova senza impegno. Se non sei soddisfatto, non paghi nulla. Zero rischi." },
                   { q: "Quanto tempo per partire?", a: "48 ore — il nostro team costruisce tutto su misura: app, sito web e configurazione completa." },
                   { q: "Posso rateizzare?", a: "Sì, rate comode in 3 o 6 mesi. Tasso zero sulle 3 rate." },
                 ].map((faq, i) => (
@@ -563,7 +563,7 @@ export default function PartnerHomePage() {
                   <ShieldCheck className="w-7 h-7 text-emerald-400" />
                 </motion.div>
                 <div>
-                  <p className="text-sm font-bold text-foreground">90 Giorni di Prova Gratuita</p>
+                  <p className="text-sm font-bold text-foreground">90 Giorni di Prova Senza Impegno</p>
                   <p className="text-[10px] text-muted-foreground mt-1 leading-relaxed">Nessun rischio. Provi tutto il sistema. Non paghi nulla se non sei soddisfatto.</p>
                 </div>
               </motion.div>

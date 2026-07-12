@@ -502,7 +502,7 @@ function getMenuItems(sector: string) {
   }
   if (/edili|costruz|impresa|impiant|ristruttur/.test(s)) {
     return [
-      { name: "Sopralluogo Gratuito", desc: "Tecnico in 24h · Preventivo dettagliato", price: 0, badge: "Top" },
+      { name: "Sopralluogo Omaggio", desc: "Tecnico in 24h · Preventivo dettagliato", price: 0, badge: "Top" },
       { name: "Ristrutturazione Bagno", desc: "Chiavi in mano · 2 settimane", price: 6500, badge: "Chef" },
       { name: "Cappotto Termico", desc: "Bonus 65% · Pratica inclusa", price: 12000 },
       { name: "Impianto Fotovoltaico", desc: "6 kW · Accumulo · Detrazione", price: 9800, badge: "Hot" },
@@ -512,7 +512,7 @@ function getMenuItems(sector: string) {
   }
   if (/auto|moto|conces/.test(s)) {
     return [
-      { name: "Test Drive Gratuito", desc: "Modello a scelta · 30 min", price: 0, badge: "Top" },
+      { name: "Test Drive Omaggio", desc: "Modello a scelta · 30 min", price: 0, badge: "Top" },
       { name: "Tagliando Premium", desc: "Olio · Filtri · Check 30 punti", price: 220 },
       { name: "Cambio Gomme + Bilanc.", desc: "4 pneumatici premium installati", price: 480, badge: "Hot" },
       { name: "Detailing Completo", desc: "Lavaggio + lucidatura + interni", price: 180 },
@@ -526,7 +526,7 @@ function getMenuItems(sector: string) {
       { name: "Masterclass Avanzata", desc: "Weekend intensivo · Certificato", price: 290, badge: "Chef" },
       { name: "Lezione Privata 1:1", desc: "60 min · Online o in sede", price: 55 },
       { name: "Pacchetto 10 Lezioni", desc: "Sconto 15% · Validità 6 mesi", price: 470 },
-      { name: "Workshop Open Day", desc: "3h gratuita · Iscrizione richiesta", price: 0, badge: "Hot" },
+      { name: "Workshop Open Day", desc: "3h omaggio · Iscrizione richiesta", price: 0, badge: "Hot" },
       { name: "Certificazione Pro", desc: "Esame + diploma riconosciuto", price: 350 },
     ];
   }
@@ -777,7 +777,7 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
         <button className="w-full py-2.5 rounded-xl text-[10px] font-bold" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg, borderRadius: theme.radius * 0.8 }}>
           Conferma · Ven 22 alle 20:00
         </button>
-        <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Cancellazione gratuita fino a 4h prima</p>
+        <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Cancellazione omaggio fino a 4h prima</p>
       </div>
 
       <BottomNav theme={theme} active="booking" />
@@ -832,7 +832,7 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
             <div className="h-1 rounded-full bg-black/20 mt-1.5">
               <div className="h-1 rounded-full bg-white" style={{ width: "80%" }} />
             </div>
-            <p className="text-[7px] mt-1 opacity-90" style={{ color: theme.bg }}>60 punti per la tua prossima cena gratis 🎁</p>
+            <p className="text-[7px] mt-1 opacity-90" style={{ color: theme.bg }}>60 punti per la tua prossima cena omaggio 🎁</p>
           </div>
         </div>
 

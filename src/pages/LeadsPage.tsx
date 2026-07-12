@@ -789,7 +789,7 @@ export default function LeadsPage() {
         const creditsUsed = data?.credit?.credits_used ?? 0;
         const creditTag = cachedHit
           ? "♻️ Risultati cached · 0 crediti"
-          : creditsUsed > 0 ? `💳 -${creditsUsed} cr` : "Gratis";
+          : creditsUsed > 0 ? `💳 -${creditsUsed} cr` : "Omaggio";
         toast.success(`${append ? "+" : ""}${processed.length} lead reali trovati${isNameOnly ? " (per nome)" : ""}`, {
           description: `${creditTag} · ${data.fallback_used
             ? `📍 esteso a "${data.fallback_used}" · `
@@ -862,7 +862,7 @@ export default function LeadsPage() {
         const sources = data.sources || {};
         const cachedHit = !!data.cached;
         const creditsUsed = data?.credit?.credits_used ?? 0;
-        const creditTag = cachedHit ? "♻️ Cached · 0 cr" : creditsUsed > 0 ? `💳 -${creditsUsed} cr` : "Gratis";
+        const creditTag = cachedHit ? "♻️ Cached · 0 cr" : creditsUsed > 0 ? `💳 -${creditsUsed} cr` : "Omaggio";
         toast.success(`📡 ${processed.length} lead reali nel raggio di ${radiusKm < 1 ? `${radiusKm * 1000}m` : `${radiusKm}km`}`, {
           description: `${creditTag} · OSM: ${sources.nominatim || 0} · Overpass: ${sources.overpass || 0} · Google: ${sources.google || 0}`,
         });

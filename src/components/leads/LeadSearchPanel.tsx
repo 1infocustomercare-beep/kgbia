@@ -293,7 +293,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
                 </div>
                 <div className="flex items-center gap-1.5">
                   <StatusDot status={apiStatus.nominatim} />
-                  <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-emerald-500/20 text-emerald-400">GRATIS</span>
+                  <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-emerald-500/20 text-emerald-400">OMAGGIO</span>
                 </div>
               </div>
               <p className="text-[10px] text-muted-foreground">Cerca attività reali da OpenStreetMap. Nessun account o API key necessari. Dati community-driven con copertura globale.</p>
@@ -334,7 +334,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
                 </div>
                 <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-red-500/20 text-red-400">ANALISI</span>
               </div>
-              <p className="text-[10px] text-muted-foreground">Analizza siti web dei lead: branding, tecnologie, stato digitale. 500 crediti gratis, poi da $19/mese.</p>
+              <p className="text-[10px] text-muted-foreground">Analizza siti web dei lead: branding, tecnologie, stato digitale. 500 crediti omaggio, poi da $19/mese.</p>
               <p className="text-[10px] text-muted-foreground">
                 <a href="https://firecrawl.dev" target="_blank" rel="noopener noreferrer" className="underline text-red-400">Registrati su Firecrawl</a> → Connetti da <strong>Impostazioni → Connessioni</strong>
               </p>
@@ -342,7 +342,7 @@ export default function LeadSearchPanel({ onSearch, onRealResults, loading }: Pr
 
             <div className="p-2.5 rounded-lg" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <p className="text-[10px] text-muted-foreground">
-                💡 <strong className="text-muted-foreground">Default gratuito</strong>: Nominatim è sempre attivo. Google Places migliora la qualità dei dati. Firecrawl aggiunge analisi approfondita dei siti.
+                💡 <strong className="text-muted-foreground">Default omaggio</strong>: Nominatim è sempre attivo. Google Places migliora la qualità dei dati. Firecrawl aggiunge analisi approfondita dei siti.
               </p>
             </div>
           </motion.div>

@@ -349,7 +349,7 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
               </button>
             </div>
             <p className="text-[10px]" style={{ color: "#9ca3af" }}>
-              La ricerca base (OpenStreetMap) è gratuita e illimitata. Per risultati più precisi con <b style={{ color: "#fbbf24" }}>telefono, rating, sito web e recensioni reali</b>, puoi collegare la Google Places API (a pagamento, pay-per-use ~$17/1000 ricerche).
+              La ricerca base (OpenStreetMap) è omaggio e illimitata. Per risultati più precisi con <b style={{ color: "#fbbf24" }}>telefono, rating, sito web e recensioni reali</b>, puoi collegare la Google Places API (a pagamento, pay-per-use ~$17/1000 ricerche).
             </p>
             <AnimatePresence>
               {showGoogleGuide && (
@@ -375,7 +375,7 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
                       </li>
                       <li className="flex gap-2">
                         <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold" style={{ background: "rgba(59,130,246,0.2)", color: "#60a5fa" }}>5</span>
-                        <span>Abilita la fatturazione (Billing) sul progetto Google Cloud — è necessario per attivare l'API. Google offre <b style={{ color: "#34d399" }}>$200 di credito gratuito/mese</b> ai nuovi utenti.</span>
+                        <span>Abilita la fatturazione (Billing) sul progetto Google Cloud — è necessario per attivare l'API. Google offre <b style={{ color: "#34d399" }}>$200 di credito omaggio/mese</b> ai nuovi utenti.</span>
                       </li>
                       <li className="flex gap-2">
                         <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold" style={{ background: "rgba(16,185,129,0.2)", color: "#34d399" }}>6</span>
@@ -384,14 +384,14 @@ export default function LeadEnginePro({ onSectorSelected, onLeadSelected, onMess
                     </ol>
                     <div className="rounded-lg p-2.5 mt-2" style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)" }}>
                       <p className="text-[9px] font-semibold" style={{ color: "#34d399" }}>
-                        💡 Costi: ~$17 per 1.000 ricerche (Text Search). Con $200/mese di credito gratuito Google = ~11.700 ricerche gratis/mese.
+                        💡 Costi: ~$17 per 1.000 ricerche (Text Search). Con $200/mese di credito omaggio Google = ~11.700 ricerche omaggio/mese.
                       </p>
                     </div>
                     <div className="rounded-lg p-2.5" style={{ background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.2)" }}>
                       <div className="flex items-center gap-2">
                         <Info className="w-3 h-3 shrink-0" style={{ color: "#a78bfa" }} />
                         <p className="text-[9px]" style={{ color: "#c4b5fd" }}>
-                          Senza questa chiave il sistema funziona comunque con dati OpenStreetMap (gratuiti). Google Places aggiunge: numero di telefono, rating, recensioni, sito web e stato dell'attività.
+                          Senza questa chiave il sistema funziona comunque con dati OpenStreetMap (omaggio). Google Places aggiunge: numero di telefono, rating, recensioni, sito web e stato dell'attività.
                         </p>
                       </div>
                     </div>

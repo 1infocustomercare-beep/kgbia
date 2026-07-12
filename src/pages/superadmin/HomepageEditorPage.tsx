@@ -207,7 +207,7 @@ export default function HomepageEditorPage() {
               <ListField label="Parole rotanti (animate)" items={hero.rotatingWords} onChange={(arr) => update(["hero", "rotatingWords"], arr)} placeholder="telefonate" />
               <ListField label="Trust pills" items={hero.trustPills} onChange={(arr) => update(["hero", "trustPills"], arr)} placeholder="847+ business attivi" />
               <div className="grid grid-cols-2 gap-2">
-                <Field label="CTA primaria · testo" v={hero.ctaPrimaryLabel} onChange={(v) => update(["hero", "ctaPrimaryLabel"], v)} placeholder="Prenota call gratuita" />
+                <Field label="CTA primaria · testo" v={hero.ctaPrimaryLabel} onChange={(v) => update(["hero", "ctaPrimaryLabel"], v)} placeholder="Prenota call senza impegno" />
                 <Field label="CTA primaria · link" v={hero.ctaPrimaryHref} onChange={(v) => update(["hero", "ctaPrimaryHref"], v)} placeholder="/demo" />
                 <Field label="CTA secondaria · testo" v={hero.ctaSecondaryLabel} onChange={(v) => update(["hero", "ctaSecondaryLabel"], v)} placeholder="Vedi 12 progetti live" />
                 <Field label="CTA secondaria · link" v={hero.ctaSecondaryHref} onChange={(v) => update(["hero", "ctaSecondaryHref"], v)} placeholder="#portfolio" />

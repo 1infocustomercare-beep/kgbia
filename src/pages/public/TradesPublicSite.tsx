@@ -256,7 +256,7 @@ const SECTOR_WHY_US: Record<string, { icon: typeof Shield; title: string; desc: 
     { icon: Award, title: "Artisti Premiati", desc: "Portfolio con migliaia di lavori" },
     { icon: Shield, title: "Igiene Certificata", desc: "Sterilizzazione e materiali monouso" },
     { icon: Palette, title: "Stili Unici", desc: "Realistico, old school, Japanese, minimal" },
-    { icon: CheckCircle, title: "Consulenza Gratuita", desc: "Incontro per definire il progetto" },
+    { icon: CheckCircle, title: "Consulenza Senza Impegno", desc: "Incontro per definire il progetto" },
     { icon: Heart, title: "Cura Post-Tattoo", desc: "Follow-up e istruzioni dettagliate" },
     { icon: Clock, title: "Su Appuntamento", desc: "Sessioni dedicate e rilassate" },
   ],
@@ -308,11 +308,11 @@ const SECTOR_CTA: Record<string, { primary: string; secondary: string; formTitle
   childcare: { primary: "Prenota Visita", secondary: "Info Iscrizioni", formTitle: "Richiedi Informazioni", formSubtitle: "Prenota una visita alla struttura" },
   tattoo: { primary: "Prenota Sessione", secondary: "Vedi Portfolio", formTitle: "Prenota Appuntamento", formSubtitle: "Descrivi il tatuaggio che desideri" },
   education: { primary: "Iscriviti Ora", secondary: "Catalogo Corsi", formTitle: "Richiedi Informazioni", formSubtitle: "Scegli il percorso formativo ideale" },
-  construction: { primary: "Richiedi Preventivo", secondary: "Vedi Cantieri", formTitle: "Preventivo Gratuito", formSubtitle: "Descrivi il tuo progetto edilizio" },
-  legal: { primary: "Prenota Consulenza", secondary: "Info Studio", formTitle: "Prenota Consulenza", formSubtitle: "Primo incontro conoscitivo gratuito" },
+  construction: { primary: "Richiedi Preventivo", secondary: "Vedi Cantieri", formTitle: "Preventivo Omaggio", formSubtitle: "Descrivi il tuo progetto edilizio" },
+  legal: { primary: "Prenota Consulenza", secondary: "Info Studio", formTitle: "Prenota Consulenza", formSubtitle: "Primo incontro conoscitivo senza impegno" },
   accounting: { primary: "Prenota Consulenza", secondary: "Info Servizi", formTitle: "Richiedi Preventivo", formSubtitle: "Gestione fiscale senza pensieri" },
   logistics: { primary: "Richiedi Preventivo", secondary: "Tracking", formTitle: "Preventivo Spedizione", formSubtitle: "Calcola il costo della tua spedizione" },
-  default: { primary: "Preventivo Gratuito", secondary: "Emergenza? Chiama", formTitle: "Preventivo Gratuito", formSubtitle: "Descrivi il problema e ti rispondiamo in meno di 1 ora" },
+  default: { primary: "Preventivo Omaggio", secondary: "Emergenza? Chiama", formTitle: "Preventivo Omaggio", formSubtitle: "Descrivi il problema e ti rispondiamo in meno di 1 ora" },
 };
 
 /* ─── SECTOR HERO ICONS ─── */
@@ -484,7 +484,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
   const whyUs = SECTOR_WHY_US[industry] || [
     { icon: Shield, title: "Lavoro Garantito", desc: "Garanzia con copertura assicurativa completa" },
     { icon: Clock, title: "Intervento Rapido", desc: "Rispondiamo in meno di 1 ora" },
-    { icon: FileText, title: "Preventivo Gratuito", desc: "Sopralluogo senza impegno" },
+    { icon: FileText, title: "Preventivo Omaggio", desc: "Sopralluogo senza impegno" },
     { icon: Award, title: "Esperienza Certificata", desc: "Tecnici qualificati con anni di esperienza" },
     { icon: CheckCircle, title: "Prezzi Trasparenti", desc: "Nessuna sorpresa sul prezzo finale" },
     { icon: AlertTriangle, title: "Emergenze H24", desc: "Disponibili tutti i giorni, festivi inclusi" },
@@ -567,7 +567,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
               industry === "accounting" ? "Gestione fiscale precisa, puntuale e senza stress." :
               industry === "logistics" ? "Spedizioni sicure, veloci e tracciate in tempo reale." :
               industry === "agriturismo" ? "Un'esperienza autentica immersa nella natura italiana." :
-              "Interventi professionali, preventivi gratuiti e garanzia su ogni lavoro."
+              "Interventi professionali, preventivo senza costi e garanzia su ogni lavoro."
             }
             {company.city && ` Operiamo a ${company.city} e dintorni.`}
           </motion.p>
@@ -762,7 +762,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
               { step: "01", title: industry === "education" ? "Scegli il Corso" : industry === "events" ? "Raccontaci l'Evento" : industry === "childcare" ? "Visita la Struttura" : "Descrivi il Problema", desc: industry === "education" ? "Sfoglia il catalogo e trova il percorso ideale" : industry === "events" ? "Briefing iniziale per capire ogni tuo desiderio" : industry === "childcare" ? "Prenota una visita per conoscerci" : "Compila il form o chiamaci — rispondiamo in meno di 1 ora", emoji: "📝" },
-              { step: "02", title: industry === "education" ? "Iscriviti Online" : industry === "events" ? "Preventivo Dettagliato" : industry === "childcare" ? "Iscrizione" : "Preventivo Gratuito", desc: industry === "education" ? "Completa l'iscrizione e accedi ai materiali" : industry === "events" ? "Proposta creativa con budget trasparente" : industry === "childcare" ? "Documenti e inserimento graduale" : "Sopralluogo, analisi e preventivo dettagliato senza impegno", emoji: "📋" },
+              { step: "02", title: industry === "education" ? "Iscriviti Online" : industry === "events" ? "Preventivo Dettagliato" : industry === "childcare" ? "Iscrizione" : "Preventivo Omaggio", desc: industry === "education" ? "Completa l'iscrizione e accedi ai materiali" : industry === "events" ? "Proposta creativa con budget trasparente" : industry === "childcare" ? "Documenti e inserimento graduale" : "Sopralluogo, analisi e preventivo dettagliato senza impegno", emoji: "📋" },
               { step: "03", title: industry === "education" ? "Impara e Cresci" : industry === "events" ? "Il Giorno Perfetto" : industry === "childcare" ? "Il Tuo Bimbo è Felice" : "Interveniamo", desc: industry === "education" ? "Lezioni, esami e certificazione finale" : industry === "events" ? "Coordinamento perfetto dal setup al teardown" : industry === "childcare" ? "Aggiornamenti giornalieri e report sviluppo" : "Risolviamo il problema con garanzia su materiali e manodopera", emoji: "✅" },
             ].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }}
@@ -862,7 +862,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                 {submitting ? "Invio..." : "Invia Richiesta"} <Send className="w-4 h-4 ml-2" />
               </Button>
               <p className="text-[11px] text-white/65 text-center">
-                {industry === "legal" || industry === "accounting" ? "Prima consulenza gratuita." :
+                {industry === "legal" || industry === "accounting" ? "Prima consulenza senza impegno." :
                  industry === "childcare" ? "Ti ricontattiamo entro 24 ore." :
                  "Rispondiamo in meno di 1 ora."}
               </p>

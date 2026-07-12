@@ -269,7 +269,7 @@ export default function OnboardingPage() {
                   );
                 })}
               </div>
-              <p className="text-center text-xs text-muted-foreground mb-4">🎁 90 giorni di prova gratuita su tutti i piani</p>
+              <p className="text-center text-xs text-muted-foreground mb-4">🎁 90 giorni di prova senza impegno su tutti i piani</p>
 
               <Button onClick={() => setStep(1)} disabled={!form.industry} className="w-full h-11 min-h-[44px]" size="lg">
                 Continua <ArrowRight className="w-4 h-4 ml-2" />
@@ -405,7 +405,7 @@ export default function OnboardingPage() {
                   <div className="flex justify-between"><span className="text-muted-foreground text-sm">Piano</span>
                     <span className="font-medium text-sm">{PLANS.find(p => p.id === form.plan)?.label} — {PLANS.find(p => p.id === form.plan)?.price}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground text-sm">Trial</span>
-                    <Badge className="bg-green-500/20 text-green-400 text-xs">90 giorni gratis</Badge></div>
+                    <Badge className="bg-green-500/20 text-green-400 text-xs">90 giorni senza impegno</Badge></div>
                   {form.city && <div className="flex justify-between"><span className="text-muted-foreground text-sm">Città</span><span className="font-medium text-sm">{form.city}</span></div>}
                 </CardContent>
               </Card>
@@ -439,7 +439,7 @@ export default function OnboardingPage() {
                   <ArrowLeft className="w-4 h-4 mr-2" /> Indietro
                 </Button>
                 <Button onClick={handleCreate} disabled={loading} className="flex-1 h-11 min-h-[44px]" size="lg">
-                  {loading ? "Creazione..." : <><Sparkles className="w-4 h-4 mr-2" /> Avvia Trial Gratuito</>}
+                  {loading ? "Creazione..." : <><Sparkles className="w-4 h-4 mr-2" /> Avvia Trial Senza Impegno</>}
                 </Button>
               </div>
             </motion.div>

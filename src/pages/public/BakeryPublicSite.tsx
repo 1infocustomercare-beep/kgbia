@@ -65,7 +65,7 @@ const FAQ_ITEMS = [
   { q: "Posso pre-ordinare torte personalizzate?", a: "Assolutamente sì! Consigliamo almeno 48h di anticipo per torte personalizzate." },
   { q: "Utilizzate farine biologiche?", a: "Sì, farine biologiche macinate a pietra e lievito madre centenario." },
   { q: "Avete opzioni senza glutine?", a: "Offriamo una selezione gluten-free preparata in area dedicata." },
-  { q: "Fate consegne a domicilio?", a: "Sì, consegna gratuita per ordini superiori a €30." },
+  { q: "Fate consegne a domicilio?", a: "Sì, consegna omaggio per ordini superiori a €30." },
 ];
 
 export default function BakeryPublicSite({ company, afterHero }: Props) {

@@ -38,7 +38,7 @@ const CHANNELS = [
 ];
 
 const APPROACHES = [
-  { id: "value", label: "Valore Gratis", emoji: "🎁" },
+  { id: "value", label: "Valore Omaggio", emoji: "🎁" },
   { id: "case", label: "Case Study", emoji: "📊" },
   { id: "question", label: "Domanda", emoji: "❓" },
   { id: "audit", label: "Audit Free", emoji: "🔍" },

@@ -429,7 +429,7 @@ export function SectorValueProposition({ sectorKey, accentColor, darkMode = true
               style={{ color: darkMode ? "#000" : "#fff", background: accentColor }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}>
-              Scopri Tutto in una Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              Scopri Tutto in una Demo Omaggio <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </motion.a>
           </motion.div>
         </div>
