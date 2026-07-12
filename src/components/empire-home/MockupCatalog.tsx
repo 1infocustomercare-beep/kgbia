@@ -263,8 +263,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
 
           <button
             type="button"
-            onClick={() => (isPage ? navigate("/home#mockup-catalog") : navigate("/catalogo"))}
-            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-primary/30 bg-primary px-5 py-3 text-sm font-black uppercase tracking-[2px] text-primary-foreground shadow-[0_18px_60px_-24px_hsl(var(--primary))] transition-transform active:scale-[0.98]"
+            onClick={() => (isPage ? navigate("/") : navigate("/portfolio"))}
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-[hsl(var(--gold))]/40 bg-[linear-gradient(110deg,hsl(var(--primary)),hsl(var(--gold)))] px-5 py-3 text-sm font-black uppercase tracking-[2px] text-[hsl(var(--deep-black))] shadow-[0_18px_60px_-24px_hsl(var(--gold))] transition-transform active:scale-[0.98]"
           >
             {isPage ? "Torna alla home" : "Apri pagina catalogo"}
             <ArrowRight className="h-4 w-4" />
