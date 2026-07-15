@@ -830,6 +830,13 @@ function getMenuItems(sector: string) {
 function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: string; sector: string; city: string }) {
   const sLabel = sectorLabel(sector);
   const items = getMenuItems(sector).slice(0, 3);
+  const copy = getExperienceCopy(sector);
+  const kind = sectorKind(sector);
+  const metrics = kind === "construction" ? ["SAL 82%", "7 ticket", "2 squadre"]
+    : kind === "healthcare" ? ["12 slot", "-58% no-show", "GDPR"]
+    : kind === "childcare" ? ["3 classi", "Mensa live", "Tour oggi"]
+    : kind === "ncc" ? ["ETA 8m", "3 driver", "B2B"]
+    : ["4.9★", "Live", "+38%"];
 
   return (
     <div className="pb-14 overflow-hidden h-full">
@@ -841,7 +848,7 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
             {brandInitials(name)}
           </div>
           <div>
-            <p className="text-[7px] uppercase tracking-wider font-semibold" style={{ color: theme.textMuted }}>{city || "Italia"}</p>
+             <p className="text-[7px] uppercase tracking-wider font-semibold" style={{ color: theme.textMuted }}>{city || sLabel}</p>
             <p className="text-[10px] font-bold leading-none" style={{ color: theme.text, fontFamily: theme.fontHead }}>{name}</p>
           </div>
         </div>
@@ -860,27 +867,38 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
       <div className="px-4 mb-2.5">
         <div className="flex items-center gap-2 px-3 py-2 rounded-full" style={{ background: theme.bgPanel }}>
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth="2.5" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <span className="text-[8px]" style={{ color: theme.textMuted }}>Cerca {sLabel.toLowerCase()}…</span>
+          <span className="text-[8px]" style={{ color: theme.textMuted }}>Cerca {copy.search}…</span>
         </div>
       </div>
 
       {/* Hero */}
       <div className="px-4 mb-2.5">
-        <div className="relative rounded-2xl overflow-hidden h-[105px]" style={{ borderRadius: theme.radius }}>
+        <div className="relative rounded-2xl overflow-hidden h-[112px]" style={{ borderRadius: theme.radius }} data-float="true">
           <ArtImage theme={theme} seed={1} className="absolute inset-0" />
           <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 30%, ${theme.bg}ee 100%)` }} />
+          {theme.vibe === "blueprint-build" && <div className="absolute inset-3 border border-white/25" />}
+          {theme.vibe === "childcare-sun" && <div className="absolute right-3 top-3 text-[20px]">☀️</div>}
+          {theme.vibe === "limo-noir" && <div className="absolute left-0 top-0 h-full w-1/3" style={{ background: `linear-gradient(90deg, ${theme.primary}55, transparent)` }} />}
           <div className="absolute inset-0 p-3 flex flex-col justify-end">
-            <span className="self-start px-1.5 py-0.5 rounded text-[7px] font-bold mb-1" style={{ background: theme.primary, color: theme.bg }}>NUOVO</span>
-            <p className="text-[12px] font-black leading-tight" style={{ color: "#fff", fontFamily: theme.fontHead }}>Esperienza Signature 2026</p>
-            <p className="text-[8px] mt-0.5 opacity-90" style={{ color: "#fff" }}>{sLabel} · {city || "Italia"} · ★ 4.9</p>
+            <span className="self-start px-1.5 py-0.5 rounded text-[7px] font-bold mb-1" style={{ background: theme.primary, color: theme.bg }}>{kind === "healthcare" ? "TRUST" : kind === "construction" ? "LIVE OPS" : "SIGNATURE"}</span>
+            <p className="text-[12px] font-black leading-tight" style={{ color: "#fff", fontFamily: theme.fontHead }}>{copy.hero}</p>
+            <p className="text-[8px] mt-0.5 opacity-90" style={{ color: "#fff" }}>{copy.sub} · ★ 4.9</p>
           </div>
         </div>
+      </div>
+
+      <div className="px-4 mb-2.5 grid grid-cols-3 gap-1.5">
+        {metrics.map((m, i) => (
+          <div key={m} className="py-1.5 text-center rounded-lg" style={{ background: i === 1 ? `${theme.primary}22` : theme.bgPanel, border: `1px solid ${i === 1 ? theme.primary : theme.text}18` }}>
+            <p className="text-[7px] font-black uppercase tracking-wide" style={{ color: i === 1 ? theme.primary : theme.text }}>{m}</p>
+          </div>
+        ))}
       </div>
 
       {/* Categories */}
       <div className="px-4 mb-2.5">
         <div className="flex gap-1.5 overflow-hidden">
-          {["Tutti", "Top", "Nuovi", "Promo", "VIP"].map((c, i) => (
+          {copy.tabs.map((c, i) => (
             <span key={i} className="text-[8px] px-2.5 py-1 rounded-full font-semibold whitespace-nowrap" style={{
               background: i === 0 ? theme.primary : theme.bgPanel,
               color: i === 0 ? theme.bg : theme.text,
@@ -891,12 +909,12 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
 
       {/* Featured */}
       <div className="px-4 flex items-center justify-between mb-1.5">
-        <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.text }}>I Più Richiesti</p>
+        <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.text }}>{copy.featured}</p>
         <p className="text-[7px] font-semibold" style={{ color: theme.primary }}>Vedi tutti →</p>
       </div>
       <div className="px-4 space-y-1.5">
         {items.map((it, i) => (
-          <div key={i} className="flex items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
+          <div key={i} className="flex items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }} data-slide={i === 0 ? "true" : undefined}>
             <ArtImage theme={theme} seed={i + 3} className="w-10 h-10 rounded-lg shrink-0" style={{ borderRadius: theme.radius * 0.5 }} />
             <div className="flex-1 min-w-0">
               <p className="text-[9px] font-bold truncate" style={{ color: theme.text }}>{it.name}</p>
