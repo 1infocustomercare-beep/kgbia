@@ -701,76 +701,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
             const specs = screenSpecsFor(item.sectorId);
             const previewSpecs = isSelected ? specs : specs.slice(0, 5);
             const p = paletteFor(item.sectorId);
-            // 4 distinct screens labelled like Lowengeld: HOME · [sector primary] · DETAIL · BOOKING
-            const s = String(item.sectorId);
-            const quartet: Array<{ type: string; label: string }> = (() => {
-              if (s === "food")   return [
-                { type: "home", label: "Home" },
-                { type: "menu", label: "Menu" },
-                { type: "detail", label: "Detail" },
-                { type: "checkout", label: "Booking" },
-              ];
-              if (s === "retail") return [
-                { type: "home", label: "Home" },
-                { type: "catalog", label: "Catalog" },
-                { type: "detail", label: "Detail" },
-                { type: "checkout", label: "Cart" },
-              ];
-              if (s === "ncc" || s === "logistics" || s === "garage") return [
-                { type: "home", label: "Home" },
-                { type: "fleet", label: "Fleet" },
-                { type: "detail", label: "Detail" },
-                { type: "booking", label: "Booking" },
-              ];
-              if (s === "beach" || s === "hospitality" || s === "agriturismo") return [
-                { type: "home", label: "Home" },
-                { type: "services", label: "Activities" },
-                { type: "detail", label: "Detail" },
-                { type: "booking", label: "Booking" },
-              ];
-              if (s === "construction" || s === "plumber" || s === "electrician" || s === "cleaning") return [
-                { type: "dashboard", label: "Dashboard" },
-                { type: "services", label: "Services" },
-                { type: "schedule", label: "Schedule" },
-                { type: "booking", label: "Ticket" },
-              ];
-              if (s === "legal" || s === "accounting") return [
-                { type: "dashboard", label: "Desk" },
-                { type: "services", label: "Cases" },
-                { type: "schedule", label: "Deadlines" },
-                { type: "profile", label: "Client" },
-              ];
-              if (s === "healthcare" || s === "veterinary") return [
-                { type: "home", label: "Home" },
-                { type: "services", label: "Services" },
-                { type: "schedule", label: "Agenda" },
-                { type: "booking", label: "Booking" },
-              ];
-              if (s === "fitness") return [
-                { type: "home", label: "Home" },
-                { type: "services", label: "Classes" },
-                { type: "schedule", label: "Schedule" },
-                { type: "booking", label: "Booking" },
-              ];
-              if (s === "childcare") return [
-                { type: "home", label: "Home" },
-                { type: "services", label: "Programs" },
-                { type: "schedule", label: "Agenda" },
-                { type: "booking", label: "Enroll" },
-              ];
-              if (s === "beauty") return [
-                { type: "home", label: "Home" },
-                { type: "services", label: "Services" },
-                { type: "schedule", label: "Agenda" },
-                { type: "booking", label: "Booking" },
-              ];
-              return [
-                { type: "home", label: "Home" },
-                { type: "services", label: "Services" },
-                { type: "detail", label: "Detail" },
-                { type: "booking", label: "Booking" },
-              ];
-            })();
+            // 4 distinct screens labelled like Lowengeld, but tailored per sector/style.
+            const quartet = screenFlowFor(item);
             return (
               <article
                 key={item.id}
@@ -788,15 +720,12 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                   }}
                 />
 
-                {/* 4-phone lineup with labels (Lowengeld style) — every phone uses the brand's
-                    real branded PNG when available (screens[0..3]), so all 4 mockups share the same
-                    premium art direction of the AI hero. Live MockupReactScreen is a last-resort fallback. */}
+                {/* 4-phone lineup with labels (Lowengeld style): first phone = approved premium hero,
+                    secondary phones = rebuilt live sector-specific interfaces matched to that hero. */}
                 <div className="relative overflow-hidden px-4 pt-8 pb-4 sm:px-6 sm:pt-10">
                   <div className="grid grid-cols-4 items-end gap-2 sm:gap-3">
                     {quartet.map((screen, i) => {
-                      // screens[0] is already the aiHero (or the branded home PNG) via flattenPortfolio.
-                      // screens[1..3] are the same-brand menu / detail / cart PNGs.
-                      const brandedPng = item.screens[i] ?? item.screens[item.screens.length - 1] ?? null;
+                      const heroPng = item.aiHero ?? item.screens[0] ?? null;
                       return (
                         <div key={`${item.id}-quad-${i}`} className="flex flex-col items-center gap-2">
                           <div className="w-full">
@@ -806,7 +735,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                               tilt={0}
                               elevate={0}
                               priority={index < 2}
-                              imageUrl={brandedPng}
+                              imageUrl={i === 0 ? heroPng : null}
                               objectPosition={i === 0 ? "center top" : "center 12%"}
                             />
                           </div>
@@ -891,8 +820,9 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                   type={spec.type}
                                   templateVariant={template}
                                   businessName={item.brand}
-                                  businessSector={item.sectorId}
+                                  businessSector={sectorCueFor(item)}
                                   primaryColor={primary}
+                                  colorStyle={colorStyleFor(item)}
                                   width={104}
                                   height={224}
                                   glassIntensity={40}
