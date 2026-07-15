@@ -2304,7 +2304,7 @@ export function MockupReactScreen({
       case "contact":
         return <BookingScreen theme={theme} sector={businessSector} />;
       case "profile":
-        return <ProfileScreen theme={theme} name={businessName} />;
+        return <ProfileScreen theme={theme} name={businessName} sector={businessSector} />;
       case "dashboard":
       case "stats":
         return <DashboardScreen theme={theme} name={businessName} sector={businessSector} />;
