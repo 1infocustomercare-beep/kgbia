@@ -727,26 +727,35 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                   }}
                 />
 
-                {/* 4-phone lineup with labels (Lowengeld style) */}
+                {/* 4-phone lineup with labels (Lowengeld style) — every phone uses the brand's
+                    real branded PNG when available (screens[0..3]), so all 4 mockups share the same
+                    premium art direction of the AI hero. Live MockupReactScreen is a last-resort fallback. */}
                 <div className="relative overflow-hidden px-4 pt-8 pb-4 sm:px-6 sm:pt-10">
                   <div className="grid grid-cols-4 items-end gap-2 sm:gap-3">
-                    {quartet.map((screen, i) => (
-                      <div key={`${item.id}-quad-${i}`} className="flex flex-col items-center gap-2">
-                        <div className="w-full">
-                          <TripletPhone
-                            item={item}
-                            screenType={screen.type}
-                            tilt={0}
-                            elevate={0}
-                            priority={index < 2}
-                            imageUrl={i === 0 ? item.aiHero : null}
-                          />
-                        </div>
-                        <span className="text-[9px] font-black uppercase tracking-[2.4px] text-foreground/55 sm:text-[10px] sm:tracking-[3px]">
+                    {quartet.map((screen, i) => {
+                      // screens[0] is already the aiHero (or the branded home PNG) via flattenPortfolio.
+                      // screens[1..3] are the same-brand menu / detail / cart PNGs.
+                      const brandedPng = item.screens[i] ?? item.screens[item.screens.length - 1] ?? null;
+                      return (
+                        <div key={`${item.id}-quad-${i}`} className="flex flex-col items-center gap-2">
+                          <div className="w-full">
+                            <TripletPhone
+                              item={item}
+                              screenType={screen.type}
+                              tilt={0}
+                              elevate={0}
+                              priority={index < 2}
+                              imageUrl={brandedPng}
+                              objectPosition={i === 0 ? "center top" : "center 12%"}
+                            />
+                          </div>
+                          <span className="text-[9px] font-black uppercase tracking-[2.4px] text-foreground/55 sm:text-[10px] sm:tracking-[3px]">
+
                           {screen.label}
                         </span>
-                      </div>
-                    ))}
+                        </div>
+                      );
+                    })}
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.6))]" />
                 </div>
