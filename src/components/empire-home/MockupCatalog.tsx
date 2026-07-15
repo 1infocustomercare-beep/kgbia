@@ -412,8 +412,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                   <div className="mt-3 -mx-1 flex gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                     {previewSpecs.map((spec, i) => {
                       const isLive = LIVE_SECTION_TYPES.has(spec.type);
-                      const screenImg = item.screens[i] ?? item.thumbnail;
                       const template = templateFor(item);
+                      const primary = primaryFor(item);
                       return (
                         <div
                           key={`${item.id}-${spec.type}-${i}`}
@@ -423,10 +423,10 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                           onKeyDown={(event) => {
                             if (event.key === "Enter" || event.key === " ") setSelected(isSelected ? null : item.id);
                           }}
-                          className="flex w-[88px] shrink-0 flex-col items-center gap-1.5 transition-transform active:scale-[0.97]"
+                          className="flex w-[112px] shrink-0 flex-col items-center gap-1.5 transition-transform active:scale-[0.97]"
                           aria-label={`Mostra ${spec.label} ${item.brand}`}
                         >
-                          <div className="relative flex h-[180px] w-[84px] items-center justify-center overflow-hidden rounded-[14px] border border-foreground/10 bg-muted">
+                          <div className="relative flex h-[224px] w-[104px] items-center justify-center overflow-hidden rounded-[18px] border border-foreground/10 bg-muted shadow-[0_18px_44px_-28px_hsl(0_0%_0%)]">
                             {isLive ? (
                               <div className="absolute inset-0">
                                 <MockupReactScreen
@@ -434,11 +434,11 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                   templateVariant={template}
                                   businessName={item.brand}
                                   businessSector={item.sectorId}
-                                  primaryColor={primaryFor(item)}
-                                  width={84}
-                                  height={180}
+                                  primaryColor={primary}
+                                  width={104}
+                                  height={224}
                                   glassIntensity={40}
-                                  typeScale={0.92}
+                                  typeScale={0.98}
                                   boostContrast
                                 />
                                 <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
@@ -446,7 +446,18 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                 </span>
                               </div>
                             ) : (
-                              <CatalogPhonePreview item={item} imageUrl={screenImg} alt={`${item.brand} ${spec.label}`} size="sm" />
+                              <MockupReactScreen
+                                type={spec.type}
+                                templateVariant={template}
+                                businessName={item.brand}
+                                businessSector={item.sectorId}
+                                primaryColor={primary}
+                                width={104}
+                                height={224}
+                                glassIntensity={40}
+                                typeScale={0.98}
+                                boostContrast
+                              />
                             )}
                           </div>
                           <span className="text-[9px] font-bold uppercase tracking-[1.5px] text-foreground/65 text-center leading-tight">{spec.label}</span>
