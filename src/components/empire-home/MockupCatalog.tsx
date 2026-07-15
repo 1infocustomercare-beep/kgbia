@@ -332,7 +332,7 @@ const DEFAULT_TAG = { text: "#C6B8FF", bg: "rgba(150,130,255,0.14)", border: "rg
 const paletteFor = (sectorId: IndustryId) => SECTOR_TAG_PALETTE[String(sectorId)] ?? DEFAULT_TAG;
 
 // Compact iPhone-style frame used for the 3-phone card hero. Fully live via MockupReactScreen.
-function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; imageUrl?: string | null; }) {
+function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl, objectPosition, scale }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; imageUrl?: string | null; objectPosition?: string; scale?: number; }) {
   const width = 118;
   const height = Math.round(width * 19.5 / 9); // ~256
   const template = templateFor(item);
@@ -364,7 +364,8 @@ function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl }: {
               alt={`${item.brand} — ${item.style}`}
               loading={priority ? "eager" : "lazy"}
               decoding="async"
-              className="absolute inset-0 h-full w-full object-cover object-top"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: objectPosition ?? "center top", transform: scale && scale !== 1 ? `scale(${scale})` : undefined, transformOrigin: "center top" }}
               draggable={false}
             />
           ) : (
