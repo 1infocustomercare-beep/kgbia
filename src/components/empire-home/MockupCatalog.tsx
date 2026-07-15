@@ -85,16 +85,48 @@ const interleaveBySector = (items: CatalogItem[]): CatalogItem[] => {
 
 const templateFor = (item: CatalogItem): string => {
   const name = `${item.brand} ${item.style}`.toLowerCase();
+  const styleCycle = item.style.toLowerCase();
   if (/sakura|paperfish|sushi|omakase|hinoki|tsukiji/.test(name)) return "paperfish";
   if (/pizza|strapizzami|forno|casual|ivory|casa/.test(name)) return "strapizzami";
-  if (/boat|yacht|charter|marina|pacifico|ocean|azure|beach|cala|batey/.test(name)) return "batey";
+  if (/marina|ncc|limousine|driver|executive|transfer/.test(name) || item.sectorId === "ncc") return /cala|charter|yacht|marina|vento|azure|emerald|sunset/.test(name) ? "batey" : "ncc_limo";
+  if (/boat|yacht|charter|pacifico|ocean|azure|beach|cala|batey/.test(name)) return "beach_resort";
   if (/nail|beauty|hair|rose|lavender|pastel|velluto|aurora/.test(name)) return "boutique_pastel";
-  if (/clinic|medical|dental|health|lumen|crystal|ice/.test(name)) return "clinical_clean";
+  if (/clinic|medical|dental|health|lumen|crystal|ice|soft blue|azure gradient|ethereal/.test(name) || item.sectorId === "healthcare") return "clinical_clean";
   if (/fitness|padel|sport|gym|neon|onda/.test(name)) return "fitness_energy";
-  if (/real|estate|domus|resident|milan|property/.test(name)) return "real_estate_trust";
+  if (/domus|construction|cantiere|building|maintenance|urban concrete/.test(name) || item.sectorId === "construction") return "construction_blueprint";
+  if (/real|estate|resident|milan|property/.test(name)) return "real_estate_trust";
+  if (/idro|plumb|servizi|artigiani|ac|tecnico/.test(name) || item.sectorId === "plumber") return "plumber_utility";
+  if (/pet|veterin|resort|tropico/.test(name) || item.sectorId === "veterinary") return "pet_care_playful";
+  if (/nursery|playhouse|stelle|arcobaleno|ashley|child|sunny|playful|nature explorer/.test(name) || item.sectorId === "childcare") return "childcare_sunshine";
+  if (/hotel|hospitality|suite|resort|sardinia/.test(name) || item.sectorId === "hospitality") return "hospitality_sunset";
+  if (/retail|shop|fashion|boutique|chrome/.test(name) || item.sectorId === "retail") return "retail_chrome";
+  if (/legal|law|studio legale/.test(name) || item.sectorId === "legal") return "legal_navy";
+  if (/account|commercial|fiscal/.test(name) || item.sectorId === "accounting") return "accounting_emerald";
   if (/noir|obsidian|gold|steak|brace|luxury|volcanic/.test(name)) return "luxury_gold";
   if (/minimal|white|clean|marble|zen/.test(name)) return "editorial_clean";
+  if (/style a|sage|fresh|ocean/.test(styleCycle)) return item.sectorId === "food" ? "batey" : "glass_aurora";
+  if (/style b|rose|coral|sunset/.test(styleCycle)) return item.sectorId === "food" ? "strapizzami" : "boutique_pastel";
+  if (/style c|urban|ice/.test(styleCycle)) return item.sectorId === "food" ? "editorial_clean" : "modern_dark";
+  if (/style d|green|nature/.test(styleCycle)) return item.sectorId === "food" ? "casual_warm" : "minimal_zen";
+  if (/style e|lime|emerald/.test(styleCycle)) return item.sectorId === "food" ? "neon_vibrant" : "fitness_energy";
+  if (/style f|azure/.test(styleCycle)) return "glass_aurora";
+  if (/style g/.test(styleCycle)) return "monochrome_bold";
+  if (/style h/.test(styleCycle)) return "luxury_gold";
   return item.sectorId === "retail" ? "neon_vibrant" : "modern_dark";
+};
+
+const primaryFor = (item: CatalogItem): string | undefined => {
+  const key = `${item.sectorId} ${item.brand} ${item.style}`.toLowerCase();
+  if (/construction|domus|cantiere/.test(key)) return "#F6C85F";
+  if (/plumber|idro|ac|artigiani/.test(key)) return "#26D9B8";
+  if (/health|clinic|lumen/.test(key)) return "#0EA5B7";
+  if (/child|nursery|playhouse|stelle|ashley/.test(key)) return /ocean/.test(key) ? "#57B7FF" : "#FF8B3D";
+  if (/veterinary|pet|tropico/.test(key)) return "#7C9A4B";
+  if (/hospitality|sardinia|hotel/.test(key)) return "#FF9F6E";
+  if (/ncc|marina|charter|cala/.test(key)) return /sunset|gold/.test(key) ? "#FFB36B" : "#5CC8D9";
+  if (/beauty|nail|hair|velluto/.test(key)) return /lavender/.test(key) ? "#A89DC9" : "#E8A0B8";
+  if (/fitness|padel|onda/.test(key)) return /fresh|azzurro/.test(key) ? "#00E5FF" : "#C8FF00";
+  return undefined;
 };
 
 type ScreenSpec = { type: string; label: string };
@@ -402,6 +434,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                   templateVariant={template}
                                   businessName={item.brand}
                                   businessSector={item.sectorId}
+                                  primaryColor={primaryFor(item)}
                                   width={84}
                                   height={180}
                                   glassIntensity={40}
