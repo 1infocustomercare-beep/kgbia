@@ -13,6 +13,7 @@ type CatalogItem = {
   brand: string;
   style: string;
   thumbnail: string;
+  aiHero: string | null;
   screens: string[];
   desktopScreens?: string[];
   description: string;
@@ -52,6 +53,7 @@ const flattenPortfolio = (portfolio: SectorPortfolio[]): CatalogItem[] =>
           brand: brand.name,
           style: style.name,
           thumbnail,
+          aiHero: aiHero ?? null,
           screens,
           desktopScreens: style.desktopScreens,
           description:
@@ -330,7 +332,7 @@ const DEFAULT_TAG = { text: "#C6B8FF", bg: "rgba(150,130,255,0.14)", border: "rg
 const paletteFor = (sectorId: IndustryId) => SECTOR_TAG_PALETTE[String(sectorId)] ?? DEFAULT_TAG;
 
 // Compact iPhone-style frame used for the 3-phone card hero. Fully live via MockupReactScreen.
-function TripletPhone({ item, screenType, tilt, elevate, priority }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; }) {
+function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; imageUrl?: string | null; }) {
   const width = 118;
   const height = Math.round(width * 19.5 / 9); // ~256
   const template = templateFor(item);
@@ -356,18 +358,29 @@ function TripletPhone({ item, screenType, tilt, elevate, priority }: { item: Cat
         }}
       >
         <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: 24, background: "hsl(var(--deep-black))" }}>
-          <MockupReactScreen
-            type={screenType}
-            templateVariant={template}
-            businessName={item.brand}
-            businessSector={item.sectorId}
-            primaryColor={primary}
-            width={width - 6}
-            height={height - 6}
-            glassIntensity={40}
-            typeScale={0.9}
-            boostContrast
-          />
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={`${item.brand} — ${item.style}`}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover object-top"
+              draggable={false}
+            />
+          ) : (
+            <MockupReactScreen
+              type={screenType}
+              templateVariant={template}
+              businessName={item.brand}
+              businessSector={item.sectorId}
+              primaryColor={primary}
+              width={width - 6}
+              height={height - 6}
+              glassIntensity={40}
+              typeScale={0.9}
+              boostContrast
+            />
+          )}
           <div aria-hidden className="pointer-events-none absolute left-1/2 top-[2%] z-20 h-[4.2%] w-[34%] -translate-x-1/2 rounded-full" style={{ background: "hsl(0 0% 0%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 z-10" style={{ background: "linear-gradient(118deg, hsl(var(--foreground) / 0.14) 0%, transparent 32%, transparent 68%, hsl(var(--foreground) / 0.08) 100%)", mixBlendMode: "screen" }} />
         </div>
@@ -513,7 +526,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                 <div className="relative flex min-h-[340px] items-end justify-center overflow-hidden px-5 pt-10 pb-6">
                   <div className="flex items-end justify-center gap-1">
                     <TripletPhone item={item} screenType={trio[0]} tilt={-4}  elevate={10} priority={index < 4} />
-                    <TripletPhone item={item} screenType={trio[1]} tilt={0}   elevate={0}  priority={index < 4} />
+                    <TripletPhone item={item} screenType={trio[1]} tilt={0}   elevate={0}  priority={index < 4} imageUrl={item.aiHero} />
                     <TripletPhone item={item} screenType={trio[2]} tilt={4}   elevate={10} priority={index < 4} />
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.75))]" />
@@ -566,6 +579,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                       {previewSpecs.map((spec, i) => {
                         const template = templateFor(item);
                         const primary = primaryFor(item);
+                        const useHero = i === 0 && !!item.aiHero;
                         return (
                           <div
                             key={`${item.id}-${spec.type}-${i}`}
@@ -573,21 +587,37 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                             aria-label={`${spec.label} ${item.brand}`}
                           >
                             <div className="relative flex h-[224px] w-[104px] items-center justify-center overflow-hidden rounded-[18px] border border-foreground/10 bg-muted shadow-[0_18px_44px_-28px_hsl(0_0%_0%)]">
-                              <MockupReactScreen
-                                type={spec.type}
-                                templateVariant={template}
-                                businessName={item.brand}
-                                businessSector={item.sectorId}
-                                primaryColor={primary}
-                                width={104}
-                                height={224}
-                                glassIntensity={40}
-                                typeScale={0.98}
-                                boostContrast
-                              />
-                              {LIVE_SECTION_TYPES.has(spec.type) ? (
+                              {useHero ? (
+                                <img
+                                  src={item.aiHero as string}
+                                  alt={`${item.brand} — ${spec.label}`}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="absolute inset-0 h-full w-full object-cover object-top"
+                                  draggable={false}
+                                />
+                              ) : (
+                                <MockupReactScreen
+                                  type={spec.type}
+                                  templateVariant={template}
+                                  businessName={item.brand}
+                                  businessSector={item.sectorId}
+                                  primaryColor={primary}
+                                  width={104}
+                                  height={224}
+                                  glassIntensity={40}
+                                  typeScale={0.98}
+                                  boostContrast
+                                />
+                              )}
+                              {LIVE_SECTION_TYPES.has(spec.type) && !useHero ? (
                                 <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
                                   Live
+                                </span>
+                              ) : null}
+                              {useHero ? (
+                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-[hsl(var(--gold))]/85 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-[hsl(var(--deep-black))]">
+                                  Hero
                                 </span>
                               ) : null}
                             </div>
