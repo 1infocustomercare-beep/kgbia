@@ -332,7 +332,7 @@ const DEFAULT_TAG = { text: "#C6B8FF", bg: "rgba(150,130,255,0.14)", border: "rg
 const paletteFor = (sectorId: IndustryId) => SECTOR_TAG_PALETTE[String(sectorId)] ?? DEFAULT_TAG;
 
 // Compact iPhone-style frame used for the 3-phone card hero. Fully live via MockupReactScreen.
-function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; imageUrl?: string | null; }) {
+function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl, objectPosition, scale }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; imageUrl?: string | null; objectPosition?: string; scale?: number; }) {
   const width = 118;
   const height = Math.round(width * 19.5 / 9); // ~256
   const template = templateFor(item);
@@ -364,7 +364,8 @@ function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl }: {
               alt={`${item.brand} — ${item.style}`}
               loading={priority ? "eager" : "lazy"}
               decoding="async"
-              className="absolute inset-0 h-full w-full object-cover object-top"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: objectPosition ?? "center top", transform: scale && scale !== 1 ? `scale(${scale})` : undefined, transformOrigin: "center top" }}
               draggable={false}
             />
           ) : (
@@ -525,9 +526,9 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                 {/* 3-phone triptych */}
                 <div className="relative flex min-h-[340px] items-end justify-center overflow-hidden px-5 pt-10 pb-6">
                   <div className="flex items-end justify-center gap-1">
-                    <TripletPhone item={item} screenType={trio[0]} tilt={-4}  elevate={10} priority={index < 4} />
-                    <TripletPhone item={item} screenType={trio[1]} tilt={0}   elevate={0}  priority={index < 4} imageUrl={item.aiHero} />
-                    <TripletPhone item={item} screenType={trio[2]} tilt={4}   elevate={10} priority={index < 4} />
+                    <TripletPhone item={item} screenType={trio[0]} tilt={-4}  elevate={10} priority={index < 4} imageUrl={item.aiHero} objectPosition="center 32%" scale={1.08} />
+                    <TripletPhone item={item} screenType={trio[1]} tilt={0}   elevate={0}  priority={index < 4} imageUrl={item.aiHero} objectPosition="center top" />
+                    <TripletPhone item={item} screenType={trio[2]} tilt={4}   elevate={10} priority={index < 4} imageUrl={item.aiHero} objectPosition="center 78%" scale={1.08} />
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.75))]" />
                 </div>
@@ -579,7 +580,12 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                       {previewSpecs.map((spec, i) => {
                         const template = templateFor(item);
                         const primary = primaryFor(item);
-                        const useHero = i === 0 && !!item.aiHero;
+                        const useHero = !!item.aiHero;
+                        // Stagger vertical crops so each mini-phone shows a different "section" of the same premium mockup
+                        const positions = ["center top", "center 22%", "center 44%", "center 66%", "center 85%", "center bottom"];
+                        const pos = positions[i % positions.length];
+                        // Slight zoom on non-hero shots so they read as distinct in-app screens
+                        const scale = i === 0 ? 1 : 1.12;
                         return (
                           <div
                             key={`${item.id}-${spec.type}-${i}`}
@@ -593,7 +599,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                   alt={`${item.brand} — ${spec.label}`}
                                   loading="lazy"
                                   decoding="async"
-                                  className="absolute inset-0 h-full w-full object-cover object-top"
+                                  className="absolute inset-0 h-full w-full object-cover"
+                                  style={{ objectPosition: pos, transform: scale !== 1 ? `scale(${scale})` : undefined, transformOrigin: "center top" }}
                                   draggable={false}
                                 />
                               ) : (
@@ -610,14 +617,13 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                   boostContrast
                                 />
                               )}
-                              {LIVE_SECTION_TYPES.has(spec.type) && !useHero ? (
-                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
-                                  Live
-                                </span>
-                              ) : null}
                               {useHero ? (
                                 <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-[hsl(var(--gold))]/85 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-[hsl(var(--deep-black))]">
-                                  Hero
+                                  {i === 0 ? "Hero" : spec.label.slice(0, 6)}
+                                </span>
+                              ) : LIVE_SECTION_TYPES.has(spec.type) ? (
+                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
+                                  Live
                                 </span>
                               ) : null}
                             </div>
