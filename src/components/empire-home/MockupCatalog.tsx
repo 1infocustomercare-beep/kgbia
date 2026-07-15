@@ -13,6 +13,7 @@ type CatalogItem = {
   brand: string;
   style: string;
   thumbnail: string;
+  aiHero: string | null;
   screens: string[];
   desktopScreens?: string[];
   description: string;
