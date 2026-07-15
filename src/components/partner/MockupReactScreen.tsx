@@ -51,11 +51,15 @@ interface ThemeTokens {
     | "dark-luxury" | "warm-craft" | "ocean-breeze" | "minimal-zen"
     | "sushi-noir" | "gold-elegance" | "tech-modern" | "neon-vibrant"
     | "editorial-clean" | "boutique-pastel" | "monochrome-bold" | "glass-aurora"
-    | "real-estate-trust" | "fitness-energy";
+    | "real-estate-trust" | "fitness-energy" | "clinical-crystal" | "sunset-hospitality"
+    | "retail-chrome" | "blueprint-build" | "utility-flow" | "pet-playful"
+    | "childcare-sun" | "legal-navy" | "emerald-ledger" | "limo-noir";
   radius: number;
   imageStyle:
     | "food-warm" | "spa-soft" | "ocean" | "noir" | "luxury" | "modern"
-    | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy";
+    | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy"
+    | "clinical" | "hospitality" | "retail" | "blueprint" | "utility" | "pet"
+    | "childcare" | "legal" | "ledger" | "limo";
   /** Optional runtime override for glass intensity propagated to BottomNav and overlays. */
   glassIntensity?: number;
 }
@@ -218,13 +222,100 @@ function getTheme(variant: string, primaryOverride?: string, colorStyle?: ColorS
       fontBody: "'Inter', system-ui, sans-serif",
       vibe: "fitness-energy", radius: 14, imageStyle: "energy",
     },
+    clinical_clean: {
+      bg: "#F6FBFF", bgPanel: "#FFFFFF", bgPanelAlt: "#E8F5FF",
+      text: "#123047", textMuted: "rgba(18,48,71,0.58)",
+      primary: "#0EA5B7", accent: "#7DD3FC",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "clinical-crystal", radius: 16, imageStyle: "clinical",
+    },
+    beach_resort: {
+      bg: "#06212C", bgPanel: "#0E3742", bgPanelAlt: "#155261",
+      text: "#FFF2D6", textMuted: "rgba(255,242,214,0.62)",
+      primary: "#4DD4C6", accent: "#FFB36B",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'Outfit', system-ui, sans-serif",
+      vibe: "ocean-breeze", radius: 26, imageStyle: "ocean",
+    },
+    hospitality_sunset: {
+      bg: "#20121A", bgPanel: "#2D1B24", bgPanelAlt: "#3A2530",
+      text: "#FFF0DE", textMuted: "rgba(255,240,222,0.62)",
+      primary: "#FF9F6E", accent: "#D8B4FE",
+      fontHead: "'DM Serif Display', 'Cormorant Garamond', serif",
+      fontBody: "'Outfit', system-ui, sans-serif",
+      vibe: "sunset-hospitality", radius: 24, imageStyle: "hospitality",
+    },
+    retail_chrome: {
+      bg: "#F7F8FB", bgPanel: "#FFFFFF", bgPanelAlt: "#E9EEF7",
+      text: "#111827", textMuted: "rgba(17,24,39,0.55)",
+      primary: "#FF3B7A", accent: "#00B8D9",
+      fontHead: "'Space Grotesk', 'Sora', sans-serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "retail-chrome", radius: 18, imageStyle: "retail",
+    },
+    construction_blueprint: {
+      bg: "#0D1B2A", bgPanel: "#152C42", bgPanelAlt: "#1F3F5C",
+      text: "#EAF4FF", textMuted: "rgba(234,244,255,0.62)",
+      primary: "#F6C85F", accent: "#6BC6FF",
+      fontHead: "'Urbanist', 'Sora', sans-serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "blueprint-build", radius: 8, imageStyle: "blueprint",
+    },
+    plumber_utility: {
+      bg: "#071A24", bgPanel: "#0E2B38", bgPanelAlt: "#123C4F",
+      text: "#E9FBFF", textMuted: "rgba(233,251,255,0.62)",
+      primary: "#26D9B8", accent: "#FFCF5A",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "utility-flow", radius: 20, imageStyle: "utility",
+    },
+    pet_care_playful: {
+      bg: "#FFF9EC", bgPanel: "#FFFFFF", bgPanelAlt: "#FCE8C8",
+      text: "#3E2A1C", textMuted: "rgba(62,42,28,0.58)",
+      primary: "#7C9A4B", accent: "#F08A5D",
+      fontHead: "'Outfit', 'Nunito Sans', sans-serif",
+      fontBody: "'Nunito Sans', system-ui, sans-serif",
+      vibe: "pet-playful", radius: 22, imageStyle: "pet",
+    },
+    childcare_sunshine: {
+      bg: "#FFF7D8", bgPanel: "#FFFFFF", bgPanelAlt: "#FFE9A8",
+      text: "#49321A", textMuted: "rgba(73,50,26,0.58)",
+      primary: "#FF8B3D", accent: "#57B7FF",
+      fontHead: "'Outfit', 'Nunito Sans', sans-serif",
+      fontBody: "'Nunito Sans', system-ui, sans-serif",
+      vibe: "childcare-sun", radius: 28, imageStyle: "childcare",
+    },
+    legal_navy: {
+      bg: "#081426", bgPanel: "#111F36", bgPanelAlt: "#1A2B46",
+      text: "#F4ECDC", textMuted: "rgba(244,236,220,0.60)",
+      primary: "#C7A66A", accent: "#8FB3D9",
+      fontHead: "'Libre Baskerville', 'Cormorant Garamond', serif",
+      fontBody: "'IBM Plex Sans', system-ui, sans-serif",
+      vibe: "legal-navy", radius: 6, imageStyle: "legal",
+    },
+    accounting_emerald: {
+      bg: "#06241D", bgPanel: "#0C352B", bgPanelAlt: "#10483A",
+      text: "#F0FFF8", textMuted: "rgba(240,255,248,0.60)",
+      primary: "#65D6A4", accent: "#E5C76B",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'IBM Plex Sans', system-ui, sans-serif",
+      vibe: "emerald-ledger", radius: 10, imageStyle: "ledger",
+    },
+    ncc_limo: {
+      bg: "#070708", bgPanel: "#141416", bgPanelAlt: "#202026",
+      text: "#F7F0E6", textMuted: "rgba(247,240,230,0.58)",
+      primary: "#CFA85B", accent: "#A7B7C7",
+      fontHead: "'Cormorant Garamond', 'Playfair Display', serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "limo-noir", radius: 12, imageStyle: "limo",
+    },
   };
   // Aliases for variants used in edge function but mapped to closest existing theme
   const aliases: Record<string, string> = {
     noir_gold: "luxury_gold",
     blush_lavender: "boutique_pastel",
-    ocean_deep: "batey",
-    clinical_clean: "minimal_zen",
+    ocean_deep: "beach_resort",
     luxury_chrome: "monochrome_bold",
     navy_trust: "real_estate_trust",
   };
