@@ -53,6 +53,7 @@ const flattenPortfolio = (portfolio: SectorPortfolio[]): CatalogItem[] =>
           brand: brand.name,
           style: style.name,
           thumbnail,
+          aiHero: aiHero ?? null,
           screens,
           desktopScreens: style.desktopScreens,
           description:
