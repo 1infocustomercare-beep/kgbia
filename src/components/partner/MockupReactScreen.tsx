@@ -943,15 +943,17 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
 function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
   const items = getMenuItems(sector);
   const isFood = /ristor|pizz|sushi|trat|oster|food|cucin|bar|cafe/i.test(sector);
-  const cats = isFood ? ["Tutti", "Antipasti", "Primi", "Secondi", "Dolci"] : ["Tutti", "Top", "Nuovi", "VIP", "Pacchetti"];
+  const copy = getExperienceCopy(sector);
+  const cats = isFood ? ["Tutti", "Antipasti", "Primi", "Secondi", "Dolci"] : copy.tabs;
+  const kind = sectorKind(sector);
 
   return (
     <div className="pb-14 overflow-hidden h-full">
       <div className="px-4 pt-1 pb-2">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{isFood ? "Il Nostro Menù" : "I Nostri Servizi"}</p>
-            <p className="text-[7px]" style={{ color: theme.textMuted }}>Selezionati con cura · 2026</p>
+            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{copy.menu}</p>
+            <p className="text-[7px]" style={{ color: theme.textMuted }}>{copy.sub}</p>
           </div>
           <div className="flex gap-1">
             <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: theme.bgPanel }}>
@@ -974,6 +976,36 @@ function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
         </div>
       </div>
 
+      {kind === "retail" ? (
+        <div className="px-4 grid grid-cols-2 gap-1.5">
+          {items.slice(0, 6).map((it, i) => (
+            <div key={i} className="relative overflow-hidden rounded-xl" style={{ background: theme.bgPanel, minHeight: 72 }}>
+              <ArtImage theme={theme} seed={i + 7} className="absolute inset-0 opacity-70" />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 35%, ${theme.bg}d8 100%)` }} />
+              <div className="absolute left-1.5 right-1.5 bottom-1.5">
+                <p className="text-[7.5px] font-black leading-tight truncate" style={{ color: "#fff" }}>{it.name}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-[6px]" style={{ color: "#fff" }}>{it.badge ?? "Drop"}</span>
+                  <span className="text-[8px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>€{it.price}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : kind === "construction" ? (
+        <div className="px-4 space-y-1.5">
+          {items.slice(0, 5).map((it, i) => (
+            <div key={i} className="grid grid-cols-[32px_1fr_auto] items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderLeft: `3px solid ${i === 0 ? theme.primary : theme.accent}` }}>
+              <span className="text-[8px] font-black tabular-nums" style={{ color: theme.primary }}>#{i + 12}</span>
+              <div className="min-w-0">
+                <p className="text-[8.5px] font-bold truncate" style={{ color: theme.text }}>{it.name}</p>
+                <p className="text-[6.5px] truncate" style={{ color: theme.textMuted }}>{it.desc}</p>
+              </div>
+              <span className="text-[6px] font-bold px-1 py-0.5 rounded" style={{ background: `${theme.primary}22`, color: theme.primary }}>{i % 2 ? "SLA" : "SAL"}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
       <div className="px-4 space-y-1.5">
         {items.map((it, i) => (
           <div key={i} className="flex items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
@@ -996,6 +1028,7 @@ function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
           </div>
         ))}
       </div>
+      )}
 
       <BottomNav theme={theme} active="menu" />
     </div>
@@ -1007,11 +1040,14 @@ function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
 // ════════════════════════════════════════════════════════════════════════════
 function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
   const isService = /spa|wellness|beauty|estetic|parruc|medic|dent|fitness/i.test(sector);
+  const copy = getExperienceCopy(sector);
+  const kind = sectorKind(sector);
+  const slotLabel = kind === "ncc" ? "Pickup" : kind === "construction" || kind === "plumber" ? "Urgenza" : kind === "hospitality" ? "Check-in" : kind === "healthcare" ? "Specialista" : "Orario disponibile";
   return (
     <div className="pb-14 overflow-hidden h-full">
       <div className="px-4 pt-1 pb-2">
-        <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{isService ? "Prenota un Trattamento" : "Prenota un Tavolo"}</p>
-        <p className="text-[7px]" style={{ color: theme.textMuted }}>Conferma immediata via SMS · WhatsApp</p>
+        <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{copy.booking}</p>
+        <p className="text-[7px]" style={{ color: theme.textMuted }}>{copy.bookingNote}</p>
       </div>
 
       {/* Date picker */}
@@ -1048,9 +1084,9 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
 
       {/* Time */}
       <div className="px-4 mb-2">
-        <p className="text-[7px] font-bold mb-1 uppercase tracking-wider" style={{ color: theme.textMuted }}>Orario disponibile</p>
+        <p className="text-[7px] font-bold mb-1 uppercase tracking-wider" style={{ color: theme.textMuted }}>{slotLabel}</p>
         <div className="grid grid-cols-4 gap-1">
-          {["12:30","13:00","13:30","14:00","19:30","20:00","20:30","21:00"].map((t, i) => (
+          {(kind === "ncc" ? ["MXP", "LIN", "Hotel", "Duomo", "19:30", "20:00", "21:30", "B2B"] : kind === "plumber" || kind === "construction" ? ["SOS", "2h", "Oggi", "Domani", "Zona A", "Zona B", "Team 1", "Team 2"] : ["12:30","13:00","13:30","14:00","19:30","20:00","20:30","21:00"]).map((t, i) => (
             <span key={i} className="text-[8px] py-1.5 text-center rounded-md font-semibold" style={{
               background: i === 5 ? theme.primary : `${theme.text}10`,
               color: i === 5 ? theme.bg : theme.text,
@@ -1077,7 +1113,7 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
       {/* CTA */}
       <div className="px-4">
         <button className="w-full py-2.5 rounded-xl text-[10px] font-bold" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg, borderRadius: theme.radius * 0.8 }}>
-          Conferma · Ven 22 alle 20:00
+          Conferma · {kind === "ncc" ? "driver assegnato" : kind === "plumber" ? "tecnico in arrivo" : "Ven 22 alle 20:00"}
         </button>
         <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Cancellazione omaggio fino a 4h prima</p>
       </div>
