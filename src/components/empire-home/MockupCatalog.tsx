@@ -332,7 +332,7 @@ const DEFAULT_TAG = { text: "#C6B8FF", bg: "rgba(150,130,255,0.14)", border: "rg
 const paletteFor = (sectorId: IndustryId) => SECTOR_TAG_PALETTE[String(sectorId)] ?? DEFAULT_TAG;
 
 // Compact iPhone-style frame used for the 3-phone card hero. Fully live via MockupReactScreen.
-function TripletPhone({ item, screenType, tilt, elevate, priority }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; }) {
+function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; imageUrl?: string | null; }) {
   const width = 118;
   const height = Math.round(width * 19.5 / 9); // ~256
   const template = templateFor(item);
@@ -358,18 +358,29 @@ function TripletPhone({ item, screenType, tilt, elevate, priority }: { item: Cat
         }}
       >
         <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: 24, background: "hsl(var(--deep-black))" }}>
-          <MockupReactScreen
-            type={screenType}
-            templateVariant={template}
-            businessName={item.brand}
-            businessSector={item.sectorId}
-            primaryColor={primary}
-            width={width - 6}
-            height={height - 6}
-            glassIntensity={40}
-            typeScale={0.9}
-            boostContrast
-          />
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={`${item.brand} — ${item.style}`}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover object-top"
+              draggable={false}
+            />
+          ) : (
+            <MockupReactScreen
+              type={screenType}
+              templateVariant={template}
+              businessName={item.brand}
+              businessSector={item.sectorId}
+              primaryColor={primary}
+              width={width - 6}
+              height={height - 6}
+              glassIntensity={40}
+              typeScale={0.9}
+              boostContrast
+            />
+          )}
           <div aria-hidden className="pointer-events-none absolute left-1/2 top-[2%] z-20 h-[4.2%] w-[34%] -translate-x-1/2 rounded-full" style={{ background: "hsl(0 0% 0%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 z-10" style={{ background: "linear-gradient(118deg, hsl(var(--foreground) / 0.14) 0%, transparent 32%, transparent 68%, hsl(var(--foreground) / 0.08) 100%)", mixBlendMode: "screen" }} />
         </div>
