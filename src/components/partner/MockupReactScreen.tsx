@@ -1817,6 +1817,8 @@ function CtaScreen({ theme, name, sector }: { theme: ThemeTokens; name: string; 
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+export function MockupReactScreen({
+
 
   type, templateVariant, businessName, businessSector = "", businessCity = "", primaryColor, width, height,
   glassIntensity = 60, colorStyle = "vivid",
