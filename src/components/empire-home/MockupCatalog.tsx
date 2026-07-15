@@ -577,7 +577,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
               </span>
             </h2>
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-foreground/65 sm:text-base">
-              {allItems.length} stili · {screensCount} schermate reali. Ogni card mostra 3 mockup live dello stesso brand — home, servizi/menu e dettaglio — nello stile del settore, con la stessa qualità dei nostri progetti Full Power.
+              {allItems.length} stili · {screensCount} schermate reali. Ogni card mostra 4 mockup iPhone dello stesso brand — home, servizi, dettaglio e booking — nello stile del settore, con la stessa qualità dei nostri progetti Full Power.
             </p>
           </div>
 
