@@ -1884,9 +1884,30 @@ export function MockupReactScreen({
       case "agenda":
       case "calendar":
         return <ScheduleScreen theme={theme} sector={businessSector} />;
+      case "cases":
+      case "casi":
+      case "success":
+        return <CasesScreen theme={theme} sector={businessSector} />;
+      case "reviews":
+      case "testimonials":
+      case "recensioni":
+        return <ReviewsScreen theme={theme} sector={businessSector} />;
+      case "pricing":
+      case "packages":
+      case "plans":
+        return <PricingScreen theme={theme} sector={businessSector} />;
+      case "faq":
+      case "faqs":
+        return <FaqScreen theme={theme} sector={businessSector} />;
+      case "cta":
+      case "conversion":
+      case "final":
+        return <CtaScreen theme={theme} name={businessName} sector={businessSector} />;
+      case "hero":
       case "home":
       default:
         return <HomeScreen theme={theme} name={businessName} sector={businessSector} city={businessCity} />;
+
     }
   };
 
