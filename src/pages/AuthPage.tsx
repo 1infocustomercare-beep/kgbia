@@ -78,6 +78,13 @@ export default function AuthPage() {
     let cancelled = false;
 
     const resolveDestination = async () => {
+      // Honor same-origin `next` redirect (OAuth consent flow, etc.)
+      const nextParam = searchParams.get("next");
+      if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")) {
+        navigate(nextParam, { replace: true });
+        return;
+      }
+
       // If an invite token is in the URL, accept it before routing
       const inviteToken = searchParams.get("invite");
       if (inviteToken) {

@@ -303,6 +303,7 @@ const TreatmentsPage = lazy(() => import("./pages/app/TreatmentsPage"));
 
 // Agent Marketplace
 const AgentMarketplace = lazy(() => import("./pages/AgentMarketplace"));
+const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
 const AdminAgentsPage = lazy(() => import("./pages/admin/AdminAgents"));
 const AdminWhatsApp = lazy(() => import("./pages/admin/AdminWhatsApp"));
@@ -611,6 +612,8 @@ function App() {
                       <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/login" element={<AuthPage />} />
+                      <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
+
 
                       {/* Mandatory setup payment gate (€1.997+) before dashboard access */}
                       <Route path="/checkout-setup" element={
