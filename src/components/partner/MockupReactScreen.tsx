@@ -1867,6 +1867,7 @@ export function MockupReactScreen({
       case "map":
         return <MapScreen theme={theme} name={businessName} sector={businessSector} city={businessCity} />;
       case "gallery":
+      case "detail":
         return <GalleryScreen theme={theme} name={businessName} />;
       case "checkout":
       case "cart":

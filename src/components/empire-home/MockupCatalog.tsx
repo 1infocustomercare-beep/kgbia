@@ -207,15 +207,29 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
   ];
 };
 
-// Types rendered LIVE by MockupReactScreen (rich sector-specific content + micro-interactions).
-// Everything else keeps using the static PNG thumbnail associated to that screen index.
+// Render EVERY screen live via MockupReactScreen so the whole set of screens
+// per sector shares the same visual DNA (template + brand + sector) instead of
+// mixing static PNGs (which caused incoherent, repetitive thumbnails).
 const LIVE_SECTION_TYPES = new Set([
+  "hero", "home",
+  "menu", "catalog", "listing", "services", "portfolio",
+  "booking", "contact",
+  "profile",
+  "dashboard", "stats",
+  "chat",
+  "map",
+  "gallery",
+  "checkout", "cart",
+  "kitchen", "kds", "orders",
+  "fleet",
+  "rooms", "units",
+  "schedule", "agenda", "calendar",
+  "detail",
   "cases", "casi", "success",
   "reviews", "testimonials", "recensioni",
   "pricing", "packages", "plans",
   "faq", "faqs",
   "cta", "conversion", "final",
-  "hero",
 ]);
 
 
