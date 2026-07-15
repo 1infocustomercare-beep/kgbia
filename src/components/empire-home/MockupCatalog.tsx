@@ -596,23 +596,82 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
           })}
         </div>
 
-        {/* Card grid — 3-phone Lowengeld-style hero per card */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Card grid — Lowengeld-style 4-phone lineup per card */}
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {visible.map((item, index) => {
             const isSelected = selected === item.id;
             const specs = screenSpecsFor(item.sectorId);
             const previewSpecs = isSelected ? specs : specs.slice(0, 5);
             const p = paletteFor(item.sectorId);
-            // 3 heroes: home / services or menu / detail (fallbacks per sector)
+            // 4 distinct screens labelled like Lowengeld: HOME · [sector primary] · DETAIL · BOOKING
             const s = String(item.sectorId);
-            const trio = (() => {
-              if (s === "food")   return ["home", "menu", "detail"];
-              if (s === "retail") return ["home", "catalog", "detail"];
-              if (s === "ncc" || s === "logistics" || s === "garage") return ["home", "fleet", "booking"];
-              if (s === "beach" || s === "hospitality" || s === "agriturismo") return ["home", "services", "booking"];
-              if (s === "construction" || s === "plumber" || s === "electrician" || s === "cleaning") return ["dashboard", "services", "schedule"];
-              if (s === "legal" || s === "accounting") return ["dashboard", "services", "profile"];
-              return ["home", "services", "detail"];
+            const quartet: Array<{ type: string; label: string }> = (() => {
+              if (s === "food")   return [
+                { type: "home", label: "Home" },
+                { type: "menu", label: "Menu" },
+                { type: "detail", label: "Detail" },
+                { type: "checkout", label: "Booking" },
+              ];
+              if (s === "retail") return [
+                { type: "home", label: "Home" },
+                { type: "catalog", label: "Catalog" },
+                { type: "detail", label: "Detail" },
+                { type: "checkout", label: "Cart" },
+              ];
+              if (s === "ncc" || s === "logistics" || s === "garage") return [
+                { type: "home", label: "Home" },
+                { type: "fleet", label: "Fleet" },
+                { type: "detail", label: "Detail" },
+                { type: "booking", label: "Booking" },
+              ];
+              if (s === "beach" || s === "hospitality" || s === "agriturismo") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Activities" },
+                { type: "detail", label: "Detail" },
+                { type: "booking", label: "Booking" },
+              ];
+              if (s === "construction" || s === "plumber" || s === "electrician" || s === "cleaning") return [
+                { type: "dashboard", label: "Dashboard" },
+                { type: "services", label: "Services" },
+                { type: "schedule", label: "Schedule" },
+                { type: "booking", label: "Ticket" },
+              ];
+              if (s === "legal" || s === "accounting") return [
+                { type: "dashboard", label: "Desk" },
+                { type: "services", label: "Cases" },
+                { type: "schedule", label: "Deadlines" },
+                { type: "profile", label: "Client" },
+              ];
+              if (s === "healthcare" || s === "veterinary") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Services" },
+                { type: "schedule", label: "Agenda" },
+                { type: "booking", label: "Booking" },
+              ];
+              if (s === "fitness") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Classes" },
+                { type: "schedule", label: "Schedule" },
+                { type: "booking", label: "Booking" },
+              ];
+              if (s === "childcare") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Programs" },
+                { type: "schedule", label: "Agenda" },
+                { type: "booking", label: "Enroll" },
+              ];
+              if (s === "beauty") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Services" },
+                { type: "schedule", label: "Agenda" },
+                { type: "booking", label: "Booking" },
+              ];
+              return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Services" },
+                { type: "detail", label: "Detail" },
+                { type: "booking", label: "Booking" },
+              ];
             })();
             return (
               <article
@@ -631,15 +690,30 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                   }}
                 />
 
-                {/* 3-phone triptych */}
-                <div className="relative flex min-h-[340px] items-end justify-center overflow-hidden px-5 pt-10 pb-6">
-                  <div className="flex items-end justify-center gap-1">
-                    <TripletPhone item={item} screenType={trio[0]} tilt={-4}  elevate={10} priority={index < 4} />
-                    <TripletPhone item={item} screenType={trio[1]} tilt={0}   elevate={0}  priority={index < 4} imageUrl={item.aiHero} />
-                    <TripletPhone item={item} screenType={trio[2]} tilt={4}   elevate={10} priority={index < 4} />
+                {/* 4-phone lineup with labels (Lowengeld style) */}
+                <div className="relative overflow-hidden px-4 pt-8 pb-4 sm:px-6 sm:pt-10">
+                  <div className="grid grid-cols-4 items-end gap-2 sm:gap-3">
+                    {quartet.map((screen, i) => (
+                      <div key={`${item.id}-quad-${i}`} className="flex flex-col items-center gap-2">
+                        <div className="w-full">
+                          <TripletPhone
+                            item={item}
+                            screenType={screen.type}
+                            tilt={0}
+                            elevate={0}
+                            priority={index < 2}
+                            imageUrl={i === 0 ? item.aiHero : null}
+                          />
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-[2.4px] text-foreground/55 sm:text-[10px] sm:tracking-[3px]">
+                          {screen.label}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.75))]" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.6))]" />
                 </div>
+
 
                 {/* Meta */}
                 <div className="relative p-5 pt-4">
