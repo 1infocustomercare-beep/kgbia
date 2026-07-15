@@ -1393,7 +1393,433 @@ function ScheduleScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
 // ════════════════════════════════════════════════════════════════════════════
 // Main export
 // ════════════════════════════════════════════════════════════════════════════
+// SECTOR CONTENT HELPERS (Casi, Recensioni, Pricing, FAQ, CTA)
+// ════════════════════════════════════════════════════════════════════════════
+function getCases(sector: string): { title: string; kpi: string; result: string; tag: string }[] {
+  const s = (sector || "").toLowerCase();
+  if (/pizz|ristor|trattor|oster|food|sushi|bar/i.test(s)) return [
+    { title: "Copertura serale +38%", kpi: "+38%", result: "coperti · 6 settimane", tag: "Ristorante" },
+    { title: "No-show ridotti al 3%", kpi: "-71%", result: "cancellazioni · SMS smart", tag: "Prenotazioni" },
+    { title: "Recensioni 5★ raddoppiate", kpi: "×2", result: "Google · funnel AI", tag: "Reputazione" },
+  ];
+  if (/spa|wellness|beauty|estetic|parruc|hair|nail/i.test(s)) return [
+    { title: "Poltrone piene al 92%", kpi: "92%", result: "occupancy · agenda AI", tag: "Salone" },
+    { title: "Pacchetti VIP +52%", kpi: "+52%", result: "upsell automatico", tag: "Fidelity" },
+    { title: "Rebooking 30 giorni", kpi: "78%", result: "clienti che tornano", tag: "Retention" },
+  ];
+  if (/hotel|resort|b&b|bnb|agriturismo|hospit/i.test(s)) return [
+    { title: "Direct booking +64%", kpi: "+64%", result: "meno OTA · più margine", tag: "Hotel" },
+    { title: "Extra concierge +€47", kpi: "€47", result: "spesa media per stay", tag: "Upsell" },
+    { title: "ADR premium +18%", kpi: "+18%", result: "revenue per notte", tag: "Revenue" },
+  ];
+  if (/ncc|taxi|charter|transfer|yacht|boat/i.test(s)) return [
+    { title: "Preventivi in 40 sec", kpi: "40s", result: "risposta media WhatsApp", tag: "Flotta" },
+    { title: "Corse ripetute +46%", kpi: "+46%", result: "clienti B2B fidelizzati", tag: "Loyalty" },
+    { title: "Riempimento flotta 88%", kpi: "88%", result: "utilizzo mezzi mensile", tag: "Ops" },
+  ];
+  if (/fitness|palestra|gym|padel|crossfit|sport/i.test(s)) return [
+    { title: "Iscritti trial → member", kpi: "42%", result: "conversione onboarding", tag: "Sales" },
+    { title: "Classi piene 96%", kpi: "96%", result: "occupancy prime-time", tag: "Ops" },
+    { title: "Abbonamenti annuali +34%", kpi: "+34%", result: "upgrade automatico", tag: "Revenue" },
+  ];
+  if (/medic|dent|clinic|salute|health|vet/i.test(s)) return [
+    { title: "Slot liberi visibili", kpi: "-58%", result: "no-show pazienti", tag: "Studio" },
+    { title: "Richiami automatici", kpi: "82%", result: "adesione ai richiami", tag: "Care" },
+    { title: "Recensioni verificate", kpi: "+120", result: "Google in 90 giorni", tag: "Trust" },
+  ];
+  if (/edili|costruz|impresa|impiant|idraul|elettr|plumb|cleaning/i.test(s)) return [
+    { title: "Preventivi in 2h", kpi: "2h", result: "risposta media clienti", tag: "Cantiere" },
+    { title: "Interventi tracciati 100%", kpi: "100%", result: "team sempre allineato", tag: "Ops" },
+    { title: "Ticket urgenti risolti", kpi: "24h", result: "SLA rispettato", tag: "Service" },
+  ];
+  if (/retail|shop|store|fashion|moda|boutique|profum/i.test(s)) return [
+    { title: "Carrello medio +€28", kpi: "€28", result: "cross-sell automatico", tag: "E-com" },
+    { title: "Recupero abbandoni 34%", kpi: "34%", result: "WhatsApp + email", tag: "Funnel" },
+    { title: "Clienti VIP +2.4×", kpi: "×2.4", result: "spesa vs standard", tag: "CRM" },
+  ];
+  return [
+    { title: "Contatti qualificati +58%", kpi: "+58%", result: "lead pronti a firmare", tag: "Sales" },
+    { title: "Risposta media 90 sec", kpi: "90s", result: "agente AI H24", tag: "Care" },
+    { title: "Recensioni 5★ ×2", kpi: "×2", result: "reputation autopilot", tag: "Trust" },
+  ];
+}
+
+function getReviews(sector: string): { name: string; role: string; text: string; stars: number }[] {
+  const s = (sector || "").toLowerCase();
+  if (/pizz|ristor|trattor|oster|food|sushi/i.test(s)) return [
+    { name: "Marco B.", role: "Chef · Milano", text: "Ordini raddoppiati la sera. Il KDS in cucina è oro.", stars: 5 },
+    { name: "Giulia R.", role: "Cliente abituale", text: "Prenoto in 10 secondi, non torno indietro.", stars: 5 },
+    { name: "Andrea V.", role: "Titolare pizzeria", text: "Le recensioni Google sono salite subito.", stars: 5 },
+  ];
+  if (/spa|beauty|estetic|parruc|hair|nail/i.test(s)) return [
+    { name: "Chiara M.", role: "Titolare salone", text: "Agenda sempre piena, zero telefonate a vuoto.", stars: 5 },
+    { name: "Sara P.", role: "Cliente VIP", text: "Ricordi ogni mio trattamento. Sembra magia.", stars: 5 },
+    { name: "Elena F.", role: "Nail artist", text: "Upselling automatico, tip più alte.", stars: 5 },
+  ];
+  if (/hotel|resort|hospit|b&b/i.test(s)) return [
+    { name: "Luca T.", role: "Direttore hotel", text: "Direct booking finalmente competitivi contro OTA.", stars: 5 },
+    { name: "Anna S.", role: "Ospite", text: "Concierge risponde di notte in 30 secondi.", stars: 5 },
+    { name: "Marco D.", role: "Revenue manager", text: "ADR e occupancy insieme. Rarissimo.", stars: 5 },
+  ];
+  if (/ncc|charter|yacht|transfer|taxi/i.test(s)) return [
+    { name: "Roberto G.", role: "Autista NCC", text: "Preventivi mentre guido. Chiudo 3 su 4.", stars: 5 },
+    { name: "Cliente B2B", role: "Studio legale", text: "Prenoto trasferte in 20 secondi, ricevo fattura.", stars: 5 },
+    { name: "Skipper", role: "Capitano charter", text: "Booking chiaro, deposito già incassato.", stars: 5 },
+  ];
+  return [
+    { name: "Sofia L.", role: "Cliente Empire", text: "Come avere 5 persone in più senza assumere.", stars: 5 },
+    { name: "Davide N.", role: "Founder", text: "In 30 giorni ha cambiato il business.", stars: 5 },
+    { name: "Martina P.", role: "Titolare", text: "Non torno indietro. Team più sereno.", stars: 5 },
+  ];
+}
+
+function getPricingTiers(sector: string): { name: string; price: string; period: string; highlight: boolean; features: string[] }[] {
+  const s = (sector || "").toLowerCase();
+  const isB2C = /pizz|ristor|spa|beauty|hotel|hospit|shop|retail|charter|ncc|fitness/i.test(s);
+  return [
+    {
+      name: isB2C ? "Essential" : "Starter",
+      price: "€197",
+      period: "/mese",
+      highlight: false,
+      features: ["Sito & prenotazioni", "1 agente AI", "Support base"],
+    },
+    {
+      name: isB2C ? "Signature" : "Growth",
+      price: "€397",
+      period: "/mese",
+      highlight: true,
+      features: ["Sito Full Power", "3 agenti AI · WhatsApp", "Concierge H24", "Recensioni autopilot"],
+    },
+    {
+      name: "Empire",
+      price: "€997",
+      period: "/mese",
+      highlight: false,
+      features: ["Tutto incluso", "Agenti illimitati", "Voice AI · Analytics"],
+    },
+  ];
+}
+
+function getFaqs(sector: string): { q: string; a: string }[] {
+  const s = (sector || "").toLowerCase();
+  const base = [
+    { q: "In quanti giorni parte tutto?", a: "48–72h. Setup, brand kit e agenti pronti chiavi in mano." },
+    { q: "Serve competenza tecnica?", a: "No. Ti seguiamo passo passo, tu approvi e vai online." },
+    { q: "Posso disdire?", a: "Sì, in ogni momento. Zero vincoli, zero penali." },
+  ];
+  if (/pizz|ristor|trattor|food|sushi|bar/i.test(s)) return [
+    { q: "Funziona con il mio POS?", a: "Sì. Integrazione con Cassa in Cloud, TheFork, Deliverect e altri." },
+    { q: "Gestisce anche il delivery?", a: "Sì, orari, zone, tariffe e KDS cucina in un unico posto." },
+    ...base,
+  ];
+  if (/hotel|hospit|b&b|resort/i.test(s)) return [
+    { q: "Si integra con il PMS?", a: "Sì. Beddy, Octorate, Simplebooking e altri channel manager." },
+    { q: "Gestisce Booking.com?", a: "Sincronizziamo tariffe e disponibilità, riducendo commissioni." },
+    ...base,
+  ];
+  if (/ncc|charter|transfer|yacht/i.test(s)) return [
+    { q: "Come arrivano le richieste?", a: "WhatsApp, sito, Google Maps. Tutte nello stesso pannello." },
+    { q: "L'agente parla in inglese?", a: "Sì, 32 lingue. Risposta media 40 secondi." },
+    ...base,
+  ];
+  if (/spa|beauty|estetic|parruc|nail/i.test(s)) return [
+    { q: "Gestisce staff multiplo?", a: "Sì. Ogni operatore ha la sua agenda, competenze e cabine." },
+    { q: "Come funziona il rebooking?", a: "Automatico via WhatsApp a 30 gg dall'ultimo appuntamento." },
+    ...base,
+  ];
+  return base;
+}
+// ════════════════════════════════════════════════════════════════════════════
+// CASES SCREEN — success stories with KPI badges + pulse indicator
+// ════════════════════════════════════════════════════════════════════════════
+function CasesScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
+  const cases = getCases(sector);
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2">
+        <p className="text-[7px] uppercase tracking-[2px] font-bold" style={{ color: theme.textMuted }}>Risultati veri</p>
+        <p className="text-[15px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>
+          Casi <span style={{ color: theme.primary }}>reali</span>.
+        </p>
+      </div>
+
+      {/* KPI hero band */}
+      <div className="px-4 mb-2.5">
+        <div className="relative rounded-2xl overflow-hidden p-3" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, borderRadius: theme.radius }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[8px] font-bold uppercase opacity-90" style={{ color: theme.bg }}>Media clienti Empire</p>
+              <p className="text-[22px] font-black leading-none mt-0.5" style={{ color: theme.bg, fontFamily: theme.fontHead }}>+58%</p>
+              <p className="text-[8px] opacity-90 mt-0.5" style={{ color: theme.bg }}>fatturato dopo 90 giorni</p>
+            </div>
+            <div className="relative">
+              <span className="absolute inset-0 rounded-full animate-ping opacity-40" style={{ background: theme.bg }} />
+              <span className="relative block w-2 h-2 rounded-full" style={{ background: theme.bg }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 space-y-1.5">
+        {cases.map((c, i) => (
+          <div key={i} className="flex items-center gap-2 p-2 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: `linear-gradient(135deg, ${theme.primary}30, ${theme.accent}25)`, borderRadius: theme.radius * 0.55 }}>
+              <span className="text-[11px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>{c.kpi}</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[9px] font-bold truncate" style={{ color: theme.text }}>{c.title}</p>
+              <p className="text-[7px] truncate" style={{ color: theme.textMuted }}>{c.result}</p>
+            </div>
+            <span className="text-[6px] font-bold uppercase px-1.5 py-0.5 rounded" style={{ background: `${theme.accent}25`, color: theme.accent }}>{c.tag}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* trust strip */}
+      <div className="px-4 mt-2.5">
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg" style={{ background: `${theme.primary}12`, border: `1px solid ${theme.primary}30` }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2.5" strokeLinecap="round"><path d="M5 13l4 4L19 7"/></svg>
+          <span className="text-[7.5px] font-bold" style={{ color: theme.text }}>Dati verificati · 340+ clienti attivi</span>
+        </div>
+      </div>
+
+      <BottomNav theme={theme} active="home" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// REVIEWS SCREEN — testimonials with star badges + shimmer avatar
+// ════════════════════════════════════════════════════════════════════════════
+function ReviewsScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
+  const reviews = getReviews(sector);
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2 flex items-center justify-between">
+        <div>
+          <p className="text-[7px] uppercase tracking-[2px] font-bold" style={{ color: theme.textMuted }}>Voci vere</p>
+          <p className="text-[15px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>
+            Cosa dicono <span style={{ color: theme.primary }}>di noi</span>.
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-[13px] font-black" style={{ color: theme.accent, fontFamily: theme.fontHead }}>4.9</p>
+          <p className="text-[6px] font-bold" style={{ color: theme.textMuted }}>★★★★★</p>
+        </div>
+      </div>
+
+      <div className="px-4 space-y-2">
+        {reviews.map((r, i) => (
+          <div key={i} className="p-2.5 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
+            <div className="flex items-center gap-2 mb-1.5">
+              <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})` }}>
+                <span className="absolute inset-0 flex items-center justify-center text-[8px] font-black" style={{ color: theme.bg, fontFamily: theme.fontHead }}>
+                  {r.name.split(" ").map(w => w[0]).join("").slice(0, 2)}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[8.5px] font-bold" style={{ color: theme.text }}>{r.name}</p>
+                <p className="text-[7px]" style={{ color: theme.textMuted }}>{r.role}</p>
+              </div>
+              <span className="text-[7px] font-bold" style={{ color: theme.accent }}>{"★".repeat(r.stars)}</span>
+            </div>
+            <p className="text-[8px] leading-snug italic" style={{ color: theme.text }}>"{r.text}"</p>
+          </div>
+        ))}
+      </div>
+
+      {/* micro-badge live */}
+      <div className="px-4 mt-2">
+        <div className="flex items-center justify-center gap-1.5">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-70" style={{ background: theme.primary }} />
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: theme.primary }} />
+          </span>
+          <span className="text-[7px] font-bold uppercase tracking-wider" style={{ color: theme.textMuted }}>3 nuove recensioni oggi</span>
+        </div>
+      </div>
+
+      <BottomNav theme={theme} active="profile" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PRICING SCREEN — 3 tier cards, middle highlighted, feature bullets
+// ════════════════════════════════════════════════════════════════════════════
+function PricingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
+  const tiers = getPricingTiers(sector);
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2">
+        <p className="text-[7px] uppercase tracking-[2px] font-bold" style={{ color: theme.textMuted }}>Pacchetti</p>
+        <p className="text-[15px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>
+          Un prezzo. <span style={{ color: theme.primary }}>Tutto incluso.</span>
+        </p>
+      </div>
+
+      <div className="px-4 space-y-1.5">
+        {tiers.map((t, i) => (
+          <div
+            key={i}
+            className="relative p-2.5 rounded-xl"
+            style={{
+              background: t.highlight ? `linear-gradient(135deg, ${theme.primary}18, ${theme.accent}12)` : theme.bgPanel,
+              border: t.highlight ? `1px solid ${theme.primary}70` : `1px solid ${theme.text}12`,
+              borderRadius: theme.radius * 0.7,
+              boxShadow: t.highlight ? `0 8px 24px -12px ${theme.primary}80` : undefined,
+            }}
+          >
+            {t.highlight && (
+              <span className="absolute -top-1.5 right-2 px-1.5 py-0.5 rounded text-[6px] font-black uppercase tracking-wider" style={{ background: theme.primary, color: theme.bg }}>
+                Consigliato
+              </span>
+            )}
+            <div className="flex items-baseline justify-between mb-1">
+              <p className="text-[10px] font-black uppercase tracking-wide" style={{ color: theme.text, fontFamily: theme.fontHead }}>{t.name}</p>
+              <p className="text-[13px] font-black" style={{ color: t.highlight ? theme.primary : theme.text, fontFamily: theme.fontHead }}>
+                {t.price}<span className="text-[8px] font-semibold opacity-70">{t.period}</span>
+              </p>
+            </div>
+            <div className="space-y-0.5">
+              {t.features.map((f, j) => (
+                <div key={j} className="flex items-center gap-1.5">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke={t.highlight ? theme.primary : theme.accent} strokeWidth="3" strokeLinecap="round"><path d="M5 13l4 4L19 7"/></svg>
+                  <span className="text-[7.5px]" style={{ color: theme.text }}>{f}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="px-4 mt-2">
+        <div className="rounded-xl py-2 text-center" style={{ background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})`, borderRadius: theme.radius * 0.6 }}>
+          <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: theme.bg }}>Prova 90 giorni gratis →</span>
+        </div>
+      </div>
+
+      <BottomNav theme={theme} active="home" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// FAQ SCREEN — accordion with the first row "open"
+// ════════════════════════════════════════════════════════════════════════════
+function FaqScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
+  const faqs = getFaqs(sector).slice(0, 5);
+  return (
+    <div className="pb-14 overflow-hidden h-full">
+      <div className="px-4 pt-1 pb-2">
+        <p className="text-[7px] uppercase tracking-[2px] font-bold" style={{ color: theme.textMuted }}>Domande frequenti</p>
+        <p className="text-[15px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>
+          Prima di <span style={{ color: theme.primary }}>iniziare</span>.
+        </p>
+      </div>
+
+      <div className="px-4 space-y-1.5">
+        {faqs.map((f, i) => {
+          const open = i === 0;
+          return (
+            <div key={i} className="rounded-xl overflow-hidden" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.6, border: open ? `1px solid ${theme.primary}50` : `1px solid ${theme.text}10` }}>
+              <div className="flex items-center justify-between px-2.5 py-2">
+                <p className="text-[8.5px] font-bold flex-1 pr-2" style={{ color: theme.text }}>{f.q}</p>
+                <div className="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style={{ background: open ? theme.primary : `${theme.text}12` }}>
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke={open ? theme.bg : theme.text} strokeWidth="3" strokeLinecap="round">
+                    {open ? <path d="M5 12h14"/> : <path d="M12 5v14M5 12h14"/>}
+                  </svg>
+                </div>
+              </div>
+              {open && (
+                <div className="px-2.5 pb-2">
+                  <p className="text-[7.5px] leading-snug" style={{ color: theme.textMuted }}>{f.a}</p>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="px-4 mt-2 flex items-center gap-2 py-2 rounded-xl" style={{ background: `${theme.primary}10` }}>
+        <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: theme.primary }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={theme.bg} strokeWidth="2.5" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <span className="text-[7.5px] font-bold" style={{ color: theme.text }}>Chatta con un consulente ora</span>
+      </div>
+
+      <BottomNav theme={theme} active="profile" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CTA SCREEN — final conversion block, glowing button + urgency ticker
+// ════════════════════════════════════════════════════════════════════════════
+function CtaScreen({ theme, name, sector }: { theme: ThemeTokens; name: string; sector: string }) {
+  const sLabel = sectorLabel(sector);
+  return (
+    <div className="pb-14 overflow-hidden h-full relative">
+      {/* radial glow bg */}
+      <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse 70% 55% at 50% 30%, ${theme.primary}25, transparent 65%)` }} />
+
+      <div className="relative px-4 pt-4 flex flex-col items-center text-center">
+        <div className="mb-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-full" style={{ background: `${theme.primary}15`, border: `1px solid ${theme.primary}40` }}>
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-70" style={{ background: theme.primary }} />
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: theme.primary }} />
+          </span>
+          <span className="text-[6.5px] font-black uppercase tracking-[1.5px]" style={{ color: theme.primary }}>Ultimi posti · {sLabel}</span>
+        </div>
+
+        <p className="text-[17px] font-black leading-[1.05]" style={{ color: theme.text, fontFamily: theme.fontHead }}>
+          Trasforma <span style={{ color: theme.primary }}>{name || "il tuo brand"}</span> in un impero.
+        </p>
+        <p className="text-[8.5px] mt-1.5 max-w-[85%]" style={{ color: theme.textMuted }}>
+          Setup completo in 72h. Agenti AI attivi H24. Zero rischio, garanzia 30 giorni.
+        </p>
+
+        {/* stat row */}
+        <div className="mt-3 grid grid-cols-3 gap-1.5 w-full">
+          {[
+            { v: "72h", l: "Setup" },
+            { v: "H24", l: "Agenti AI" },
+            { v: "30gg", l: "Garanzia" },
+          ].map((s, i) => (
+            <div key={i} className="rounded-lg py-1.5 px-1" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.5 }}>
+              <p className="text-[11px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>{s.v}</p>
+              <p className="text-[6.5px] font-bold uppercase tracking-wider" style={{ color: theme.textMuted }}>{s.l}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Primary CTA — glow pulse */}
+        <div className="mt-3 w-full relative">
+          <div className="absolute inset-0 rounded-full blur-md opacity-70 animate-pulse" style={{ background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})` }} />
+          <button className="relative w-full py-2.5 rounded-full font-black text-[10px] uppercase tracking-[2px]" style={{ background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})`, color: theme.bg, fontFamily: theme.fontHead }}>
+            Prenota Demo →
+          </button>
+        </div>
+        <button className="mt-1.5 w-full py-2 rounded-full font-bold text-[8.5px] uppercase tracking-[2px]" style={{ background: "transparent", color: theme.text, border: `1px solid ${theme.text}25` }}>
+          Parla su WhatsApp
+        </button>
+
+        {/* ticker */}
+        <p className="text-[6.5px] mt-2" style={{ color: theme.textMuted }}>
+          ✓ 340+ imprese attive · ✓ 4.9★ 128 recensioni · ✓ Nessuna carta richiesta
+        </p>
+      </div>
+
+      <BottomNav theme={theme} active="home" />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 export function MockupReactScreen({
+
+
   type, templateVariant, businessName, businessSector = "", businessCity = "", primaryColor, width, height,
   glassIntensity = 60, colorStyle = "vivid",
   safeAreaPx = 0, typeScale = 1, boostContrast = false,
@@ -1458,9 +1884,30 @@ export function MockupReactScreen({
       case "agenda":
       case "calendar":
         return <ScheduleScreen theme={theme} sector={businessSector} />;
+      case "cases":
+      case "casi":
+      case "success":
+        return <CasesScreen theme={theme} sector={businessSector} />;
+      case "reviews":
+      case "testimonials":
+      case "recensioni":
+        return <ReviewsScreen theme={theme} sector={businessSector} />;
+      case "pricing":
+      case "packages":
+      case "plans":
+        return <PricingScreen theme={theme} sector={businessSector} />;
+      case "faq":
+      case "faqs":
+        return <FaqScreen theme={theme} sector={businessSector} />;
+      case "cta":
+      case "conversion":
+      case "final":
+        return <CtaScreen theme={theme} name={businessName} sector={businessSector} />;
+      case "hero":
       case "home":
       default:
         return <HomeScreen theme={theme} name={businessName} sector={businessSector} city={businessCity} />;
+
     }
   };
 
