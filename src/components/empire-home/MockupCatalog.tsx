@@ -631,8 +631,6 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                           </div>
                         );
                       })}
-                        );
-                      })}
                     </div>
                   ) : null}
                 </div>
