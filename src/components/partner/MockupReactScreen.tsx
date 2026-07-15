@@ -344,6 +344,16 @@ function ArtImage({ theme, seed = 0, className = "", style = {} }: { theme: Them
     "aurora":     [["#7C9FFF","#A5F3D0","#0B0F1F"], ["#C9A4FF","#7CD8FF","#141B33"], ["#A5F3D0","#FFD3B6","#0B0F1F"], ["#FF9EC7","#A8B0FF","#1B2547"]],
     "estate":     [["#B89760","#7A6240","#1B2A3A"], ["#D4BC8A","#9C8557","#2C3E50"], ["#E0C9A0","#A88B5C","#34495E"], ["#F5E9D2","#B89760","#1B2A3A"]],
     "energy":     [["#C8FF00","#7AAD00","#0D0D0D"], ["#FF3D3D","#A02020","#0D0D0D"], ["#00FFE5","#0099A8","#171717"], ["#FFD60A","#B89500","#0D0D0D"]],
+    "clinical":   [["#DDF7FF","#6ED8E8","#0EA5B7"], ["#FFFFFF","#BFEFFF","#1B7A8A"], ["#EAFBFF","#7DD3FC","#123047"], ["#F6FBFF","#9FE7F2","#0B7285"]],
+    "hospitality":[["#FF9F6E","#C45C8A","#20121A"], ["#D8B4FE","#FFB36B","#3A2530"], ["#FFE0B8","#D9826B","#2D1B24"], ["#F8C7A3","#B85B88","#20121A"]],
+    "retail":     [["#FF3B7A","#00B8D9","#F7F8FB"], ["#111827","#C7D2FE","#FFFFFF"], ["#00E0C6","#FFB4D2","#E9EEF7"], ["#FB7185","#38BDF8","#111827"]],
+    "blueprint":  [["#F6C85F","#6BC6FF","#0D1B2A"], ["#D7E7F5","#416D91","#152C42"], ["#FFDD7A","#1F3F5C","#091522"], ["#9DD5FF","#F6C85F","#20364E"]],
+    "utility":    [["#26D9B8","#FFCF5A","#071A24"], ["#3B82F6","#26D9B8","#0E2B38"], ["#E9FBFF","#FFCF5A","#123C4F"], ["#12BFA5","#F97316","#071A24"]],
+    "pet":        [["#7C9A4B","#F08A5D","#FFF9EC"], ["#FFD36E","#78B7A6","#5A3D2B"], ["#F6C177","#A7C957","#FFFFFF"], ["#E5989B","#6B705C","#FFF1DC"]],
+    "childcare":  [["#FF8B3D","#57B7FF","#FFF7D8"], ["#FFE45E","#8BD3DD","#F7A072"], ["#9AE66E","#FFB6C1","#FFF4B8"], ["#57B7FF","#FFCF5A","#49321A"]],
+    "legal":      [["#C7A66A","#8FB3D9","#081426"], ["#F4ECDC","#455A78","#111F36"], ["#B79A5D","#233957","#06101F"], ["#E8D9BE","#8FB3D9","#1A2B46"]],
+    "ledger":     [["#65D6A4","#E5C76B","#06241D"], ["#D9FFF0","#2E8B67","#0C352B"], ["#A7F3D0","#FDE68A","#10483A"], ["#30B981","#C7A64A","#06241D"]],
+    "limo":       [["#CFA85B","#A7B7C7","#070708"], ["#F7F0E6","#CFA85B","#141416"], ["#4B5563","#D8C08A","#020203"], ["#A7B7C7","#725A2E","#202026"]],
   };
   const palette = palettes[theme.imageStyle][seed % palettes[theme.imageStyle].length];
   const id = `g-${theme.imageStyle}-${seed}`;
