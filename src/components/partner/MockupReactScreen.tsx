@@ -377,9 +377,139 @@ function ArtImage({ theme, seed = 0, className = "", style = {} }: { theme: Them
         {theme.imageStyle === "noir" && <rect x="0" y="60" width="100" height="40" fill="black" opacity="0.4" />}
         {theme.imageStyle === "luxury" && <path d={`M0,${50 + seed % 20} Q50,${30 + seed % 20} 100,${55 + seed % 15} L100,100 L0,100 Z`} fill={palette[2]} opacity="0.5" />}
         {theme.imageStyle === "ocean" && <path d={`M0,${65 + seed % 10} Q25,${55 + seed % 10} 50,${65} T100,${60} L100,100 L0,100 Z`} fill="white" opacity="0.15" />}
+        {theme.imageStyle === "clinical" && <g opacity="0.24" stroke="#fff" strokeWidth="1"><path d="M15 20h70M15 38h70M15 56h70M15 74h70M24 12v76M46 12v76M68 12v76"/><path d="M40 26h20M50 16v20" strokeWidth="3"/></g>}
+        {theme.imageStyle === "hospitality" && <path d="M0 78 C24 54 34 82 58 58 S82 38 100 58 L100 100 L0 100 Z" fill="#fff" opacity="0.18" />}
+        {theme.imageStyle === "retail" && <g opacity="0.18" fill="#fff"><path d="M-10 24 L24 -10 H48 L-10 48Z"/><path d="M48 110 L110 48 V75 L75 110Z"/><rect x="12" y="62" width="42" height="10" rx="5"/></g>}
+        {theme.imageStyle === "blueprint" && <g opacity="0.30" stroke="#fff" fill="none"><path d="M8 18h84v54H8zM8 38h84M35 18v54M62 18v54"/><path d="M14 84h70" strokeDasharray="4 3"/></g>}
+        {theme.imageStyle === "utility" && <g opacity="0.22" fill="#fff"><path d="M0 72 C18 56 36 90 54 68 S82 48 100 64 V100 H0Z"/><rect x="18" y="22" width="64" height="12" rx="6" transform="rotate(-14 50 28)"/></g>}
+        {theme.imageStyle === "pet" && <g opacity="0.23" fill="#fff"><ellipse cx="34" cy="46" rx="13" ry="10"/><circle cx="22" cy="32" r="5"/><circle cx="34" cy="28" r="5"/><circle cx="47" cy="32" r="5"/><path d="M68 22 C82 34 82 54 66 70" stroke="#fff" strokeWidth="5" fill="none" strokeLinecap="round"/></g>}
+        {theme.imageStyle === "childcare" && <g opacity="0.24" fill="#fff"><path d="M50 16l6 12 14 2-10 10 3 14-13-7-13 7 3-14-10-10 14-2z"/><path d="M8 76 Q30 52 52 76 T96 76" stroke="#fff" strokeWidth="6" fill="none" strokeLinecap="round"/></g>}
+        {theme.imageStyle === "legal" && <g opacity="0.18" stroke="#fff" fill="none" strokeWidth="2"><path d="M50 14v64M28 28h44M32 78h36"/><path d="M28 28l-14 30h28zM72 28l-14 30h28z"/></g>}
+        {theme.imageStyle === "ledger" && <g opacity="0.22" stroke="#fff" fill="none"><path d="M16 18h68v64H16zM16 34h68M16 50h68M16 66h68M36 18v64"/><path d="M44 58l8-10 8 7 12-18" strokeWidth="3"/></g>}
+        {theme.imageStyle === "limo" && <g opacity="0.20" fill="#fff"><path d="M14 60 C22 42 36 34 58 38 L76 48 C84 49 90 54 92 62 H14Z"/><circle cx="32" cy="66" r="6"/><circle cx="74" cy="66" r="6"/><rect x="34" y="43" width="20" height="10" rx="2" fill={palette[2]} opacity="0.8"/></g>}
       </svg>
     </div>
   );
+}
+
+function screenBackground(theme: ThemeTokens) {
+  const base = theme.bg;
+  const bgByVibe: Partial<Record<ThemeTokens["vibe"], string>> = {
+    "sushi-noir": `linear-gradient(180deg, ${base}, ${theme.bgPanelAlt})`,
+    "warm-craft": `linear-gradient(160deg, ${theme.bg} 0%, ${theme.bgPanelAlt} 58%, ${theme.primary}18 100%)`,
+    "ocean-breeze": `linear-gradient(180deg, ${theme.bg} 0%, ${theme.bgPanelAlt} 100%)`,
+    "clinical-crystal": `linear-gradient(180deg, #F8FDFF 0%, ${theme.bgPanelAlt} 100%)`,
+    "fitness-energy": `linear-gradient(160deg, ${theme.bg} 0%, #111 46%, ${theme.primary}18 100%)`,
+    "blueprint-build": `linear-gradient(180deg, ${theme.bg} 0%, ${theme.bgPanelAlt} 100%)`,
+    "childcare-sun": `linear-gradient(180deg, ${theme.bg} 0%, #FFEFB7 100%)`,
+    "retail-chrome": `linear-gradient(180deg, ${theme.bg} 0%, ${theme.bgPanelAlt} 100%)`,
+    "limo-noir": `linear-gradient(180deg, #020203 0%, ${theme.bgPanel} 100%)`,
+  };
+  return bgByVibe[theme.vibe] ?? base;
+}
+
+function ScreenMotif({ theme }: { theme: ThemeTokens }) {
+  const stroke = theme.text;
+  const primary = theme.primary;
+  const accent = theme.accent;
+  const common = "pointer-events-none absolute inset-0 z-0 h-full w-full";
+  if (theme.vibe === "blueprint-build") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.18">
+      <path d="M0 70H240M0 140H240M0 210H240M0 280H240M0 350H240M0 420H240M48 0V520M96 0V520M144 0V520M192 0V520" stroke={accent} strokeWidth="1" />
+      <path d="M26 470 L104 330 L214 394" stroke={primary} strokeWidth="3" fill="none" strokeDasharray="8 7" />
+    </svg>
+  );
+  if (theme.vibe === "ocean-breeze" || theme.vibe === "sunset-hospitality") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.18">
+      <path d="M-20 130 C50 80 88 164 156 118 S250 114 270 86" stroke={accent} strokeWidth="18" fill="none" strokeLinecap="round" />
+      <path d="M-30 420 C42 368 104 450 172 404 S254 378 282 418" stroke={primary} strokeWidth="10" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+  if (theme.vibe === "childcare-sun" || theme.vibe === "pet-playful") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.16">
+      <path d="M24 78 Q72 34 120 78 T216 78" stroke={accent} strokeWidth="9" fill="none" strokeLinecap="round" />
+      <path d="M36 430l16 9 16-9 16 9 16-9 16 9 16-9" stroke={primary} strokeWidth="6" fill="none" strokeLinecap="round" />
+      <path d="M182 130l8 16 18 3-13 12 3 18-16-8-16 8 3-18-13-12 18-3z" fill={primary} />
+    </svg>
+  );
+  if (theme.vibe === "clinical-crystal") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.14">
+      <path d="M36 80h168M36 150h168M36 220h168M36 290h168M36 360h168M60 40v420M120 40v420M180 40v420" stroke={primary} />
+      <path d="M96 126h48M120 102v48" stroke={accent} strokeWidth="10" strokeLinecap="round" />
+    </svg>
+  );
+  if (theme.vibe === "retail-chrome" || theme.vibe === "neon-vibrant") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.16">
+      <path d="M-42 84 L72 -30 H120 L-42 132Z" fill={primary} />
+      <path d="M132 550 L282 332 V412 L180 550Z" fill={accent} />
+    </svg>
+  );
+  if (theme.vibe === "legal-navy" || theme.vibe === "emerald-ledger" || theme.vibe === "limo-noir") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.12">
+      <path d="M0 112H240M0 392H240M36 0V520M204 0V520" stroke={primary} />
+      <path d="M52 88H188M52 416H188" stroke={stroke} strokeWidth="2" />
+    </svg>
+  );
+  return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.12">
+      <path d="M-20 88 C64 38 108 134 188 72 S270 66 292 38" stroke={primary} strokeWidth="12" fill="none" strokeLinecap="round" />
+      <path d="M26 466 L112 344 L214 424" stroke={accent} strokeWidth="7" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function mockupSurfaceCss(theme: ThemeTokens) {
+  const radiusMap: Partial<Record<ThemeTokens["vibe"], string>> = {
+    "sushi-noir": "3px 18px 3px 18px",
+    "warm-craft": "18px 8px 22px 10px",
+    "ocean-breeze": "24px 24px 10px 24px",
+    "minimal-zen": "2px",
+    "gold-elegance": "4px 18px 4px 18px",
+    "tech-modern": "16px 6px 16px 6px",
+    "neon-vibrant": "20px 5px 20px 5px",
+    "editorial-clean": "2px",
+    "boutique-pastel": "26px 14px 26px 14px",
+    "monochrome-bold": "0px",
+    "glass-aurora": "22px 8px 22px 8px",
+    "real-estate-trust": "8px 2px 18px 2px",
+    "fitness-energy": "3px",
+    "clinical-crystal": "18px 18px 6px 18px",
+    "sunset-hospitality": "26px 10px 26px 10px",
+    "retail-chrome": "18px 4px 18px 4px",
+    "blueprint-build": "6px",
+    "utility-flow": "20px 8px 8px 20px",
+    "pet-playful": "22px 14px 28px 14px",
+    "childcare-sun": "28px 18px 28px 18px",
+    "legal-navy": "2px",
+    "emerald-ledger": "10px 2px 10px 2px",
+    "limo-noir": "3px 15px 3px 15px",
+  };
+  const specialClip = theme.vibe === "blueprint-build"
+    ? `clip-path: polygon(0 0, 100% 0, 96% 100%, 0 100%);`
+    : theme.vibe === "fitness-energy"
+    ? `clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);`
+    : theme.vibe === "retail-chrome"
+    ? `clip-path: polygon(0 0, 92% 0, 100% 18%, 100% 100%, 8% 100%, 0 82%);`
+    : "";
+  return `
+    .mockup-screen .rounded-xl,.mockup-screen .rounded-2xl,.mockup-screen .rounded-lg{
+      border-radius:${radiusMap[theme.vibe] ?? `${theme.radius}px`} !important;
+      border-color:${theme.primary}22;
+      box-shadow: inset 0 1px 0 ${theme.text}10, 0 10px 26px -20px ${theme.primary};
+    }
+    .mockup-screen[data-vibe="blueprint-build"] .rounded-xl,
+    .mockup-screen[data-vibe="fitness-energy"] .rounded-xl,
+    .mockup-screen[data-vibe="retail-chrome"] .rounded-xl{${specialClip}}
+    .mockup-screen[data-vibe="sushi-noir"] .rounded-full{border-radius:2px 999px 999px 2px!important;}
+    .mockup-screen[data-vibe="monochrome-bold"] .rounded-full{border-radius:0!important;}
+    .mockup-screen[data-vibe="childcare-sun"] .rounded-md{border-radius:14px!important;}
+    @media (prefers-reduced-motion:no-preference){
+      .mockup-screen [data-float="true"]{animation:mockupFloat 3.8s ease-in-out infinite;}
+      .mockup-screen [data-slide="true"]{animation:mockupSlide 4.4s ease-in-out infinite;}
+    }
+    @keyframes mockupFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+    @keyframes mockupSlide{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  `;
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -446,6 +576,18 @@ function brandInitials(name: string) {
 
 function sectorLabel(sector: string) {
   const s = (sector || "").toLowerCase();
+  if (s === "food") return "Food & Ristorazione";
+  if (s === "beauty") return "Beauty & Wellness";
+  if (s === "ncc") return "NCC & Charter";
+  if (s === "veterinary") return "Pet Care";
+  if (s === "childcare") return "Asilo & Famiglie";
+  if (s === "fitness") return "Fitness Club";
+  if (s === "healthcare") return "Studio Medico";
+  if (s === "construction") return "Cantieri & Real Estate";
+  if (s === "hospitality") return "Hotel & Resort";
+  if (s === "plumber") return "Servizi Tecnici";
+  if (s === "retail") return "Boutique Retail";
+  if (s === "beach") return "Beach Club";
   if (/sushi|giappon/.test(s)) return "Sushi & Ramen";
   if (/pizz/.test(s)) return "Pizzeria";
   if (/ristor|trattor|oster/.test(s)) return "Ristorante";
@@ -467,6 +609,47 @@ function sectorLabel(sector: string) {
   if (/scuola|academy|corso|format/.test(s)) return "Academy";
   if (/auto|moto|conces/.test(s)) return "Automotive";
   return sector || "Premium";
+}
+
+function sectorKind(sector: string) {
+  const s = (sector || "").toLowerCase();
+  if (s === "food" || /sushi|pizz|ristor|trattor|oster|bar|cafe|kebab|deli|steak/.test(s)) return "food";
+  if (s === "beauty" || /spa|wellness|beauty|estetic|parruc|hair|nail/.test(s)) return "beauty";
+  if (s === "ncc" || /ncc|taxi|transfer|noleggi|limousine|driver/.test(s)) return "ncc";
+  if (s === "beach" || /lido|spiagg|beach|ombrell/.test(s)) return "beach";
+  if (s === "hospitality" || s === "agriturismo" || /hotel|resort|albergh|b&b|bnb|stay|suite/.test(s)) return "hospitality";
+  if (s === "healthcare" || /medic|dent|clinic|salute|physio/.test(s)) return "healthcare";
+  if (s === "fitness" || /fitness|palestra|gym|crossfit|padel|sport/.test(s)) return "fitness";
+  if (s === "retail" || /ecommerce|shop|store|fashion|moda|boutique|profum/.test(s)) return "retail";
+  if (s === "construction" || /edili|costruz|cantiere|immobil|real ?estate|domus|resident/.test(s)) return "construction";
+  if (s === "plumber" || /idraul|plumb|elettr|impiant|cleaning|artigian/.test(s)) return "plumber";
+  if (s === "veterinary" || /vet|pet|animali|dog|cat/.test(s)) return "veterinary";
+  if (s === "childcare" || /asilo|nursery|scuola|bimbi|child/.test(s)) return "childcare";
+  if (s === "legal" || /legal|avvocat|notai/.test(s)) return "legal";
+  if (s === "accounting" || /account|commercia|fiscal/.test(s)) return "accounting";
+  return "custom";
+}
+
+function getExperienceCopy(sector: string) {
+  const kind = sectorKind(sector);
+  const copy: Record<string, { search: string; hero: string; sub: string; tabs: string[]; featured: string; menu: string; booking: string; bookingNote: string }> = {
+    food: { search: "piatti, tavoli, delivery", hero: "Sala piena, cucina sincronizzata", sub: "Menù live · KDS · recensioni", tabs: ["Cena", "Delivery", "Carta vini", "Chef", "Allergeni"], featured: "Piatti che vendono", menu: "Menu operativo", booking: "Prenota tavolo", bookingNote: "Capienza, turni e no-show sotto controllo" },
+    beauty: { search: "trattamenti, staff, pacchetti", hero: "Agenda piena e clientela VIP", sub: "Cabine · rebooking · beauty card", tabs: ["Viso", "Capelli", "Nails", "Spa", "VIP"], featured: "Trattamenti signature", menu: "Trattamenti & rituali", booking: "Prenota trattamento", bookingNote: "Staff, cabine e reminder automatici" },
+    ncc: { search: "tratte, driver, aeroporti", hero: "Transfer premium in 40 secondi", sub: "Flotta · preventivi · fattura B2B", tabs: ["Airport", "Hourly", "Eventi", "VIP", "B2B"], featured: "Servizi executive", menu: "Tratte & pacchetti", booking: "Calcola preventivo", bookingNote: "Pickup, flight tracking e autista assegnato" },
+    beach: { search: "ombrelloni, cabane, attività", hero: "Spiaggia live, mare già prenotato", sub: "Mappa ombrelloni · pass · esperienze", tabs: ["Cabane", "Lettini", "Boat", "Food", "Sunset"], featured: "Esperienze sul mare", menu: "Attività & pass", booking: "Prenota posto", bookingNote: "Mappa real-time e upgrade in spiaggia" },
+    hospitality: { search: "camere, suite, concierge", hero: "Ospiti seguiti prima del check-in", sub: "Direct booking · extra · concierge", tabs: ["Suite", "Spa", "Tour", "Dinner", "Transfer"], featured: "Esperienze da vendere", menu: "Camere & extra", booking: "Prenota soggiorno", bookingNote: "Date, ospiti, extra e caparra in un flusso" },
+    healthcare: { search: "prestazioni, medici, referti", hero: "Percorso paziente chiaro e sicuro", sub: "Agenda medici · richiami · privacy", tabs: ["Visite", "Esami", "Follow-up", "Urgenze", "Referti"], featured: "Prestazioni richieste", menu: "Prestazioni cliniche", booking: "Prenota visita", bookingNote: "Medico, sede, consenso e promemoria" },
+    fitness: { search: "classi, coach, abbonamenti", hero: "Club energico, progressi visibili", sub: "Classi · PT · membership", tabs: ["WOD", "Padel", "PT", "Yoga", "Scan"], featured: "Classi ad alta conversione", menu: "Classi & membership", booking: "Iscriviti alla classe", bookingNote: "Slot, coach e livello sempre evidenti" },
+    retail: { search: "prodotti, taglie, novità", hero: "Vetrina shop che spinge il carrello", sub: "Catalogo · drop · CRM VIP", tabs: ["Drop", "Nuovi", "VIP", "Outlet", "Gift"], featured: "Prodotti in evidenza", menu: "Catalogo dinamico", booking: "Completa acquisto", bookingNote: "Taglie, varianti e recupero carrello" },
+    construction: { search: "cantieri, unità, ticket", hero: "Cantiere sotto controllo, cliente aggiornato", sub: "SAL · manutenzioni · documenti", tabs: ["SAL", "Unità", "Ticket", "Team", "Docs"], featured: "Cantieri prioritari", menu: "Interventi & unità", booking: "Apri ticket", bookingNote: "Priorità, squadra e materiali tracciati" },
+    plumber: { search: "urgenze, tecnici, ricambi", hero: "Interventi rapidi senza caos", sub: "SLA · tecnico · preventivo", tabs: ["SOS", "Caldaie", "Clima", "Ricambi", "Check"], featured: "Servizi tecnici", menu: "Interventi disponibili", booking: "Richiedi intervento", bookingNote: "Urgenza, zona e tecnico disponibili" },
+    veterinary: { search: "visite, pet hotel, vaccini", hero: "Pet care premium e proprietari sereni", sub: "Schede animali · vaccini · resort", tabs: ["Visite", "Resort", "Toeletta", "Vaccini", "Shop"], featured: "Servizi pet care", menu: "Cure & resort", booking: "Prenota pet care", bookingNote: "Animale, trattamento e reminder vaccini" },
+    childcare: { search: "programmi, mensa, iscrizioni", hero: "Famiglie informate, bambini felici", sub: "Attività · team · diario genitori", tabs: ["Programmi", "Mensa", "Team", "Tour", "Iscrivi"], featured: "Programmi educativi", menu: "Programmi & attività", booking: "Prenota tour", bookingNote: "Età, fascia oraria e genitore referente" },
+    legal: { search: "pratiche, scadenze, clienti", hero: "Studio ordinato, cliente sempre aggiornato", sub: "Pratiche · scadenze · documenti", tabs: ["Pratiche", "Udienza", "Contratti", "KYC", "Firme"], featured: "Servizi professionali", menu: "Pratiche & consulenze", booking: "Prenota consulenza", bookingNote: "Materia, riservatezza e documenti" },
+    accounting: { search: "scadenze, fatture, fiscalità", hero: "Scadenze fiscali senza sorprese", sub: "F24 · fatture · consulenza", tabs: ["F24", "IVA", "Paghe", "Bilanci", "Alert"], featured: "Servizi contabili", menu: "Scadenze & consulenze", booking: "Apri pratica", bookingNote: "Documenti, scadenza e responsabile" },
+    custom: { search: "servizi, clienti, richieste", hero: "Esperienza digitale su misura", sub: "Sito · agenti · conversione", tabs: ["Top", "Nuovi", "VIP", "Demo", "Care"], featured: "Servizi richiesti", menu: "Offerta completa", booking: "Prenota demo", bookingNote: "Richiesta, team e conferma immediata" },
+  };
+  return copy[kind] ?? copy.custom;
 }
 
 function getMenuItems(sector: string) {
