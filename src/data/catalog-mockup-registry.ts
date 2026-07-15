@@ -56,6 +56,13 @@ export const CATALOG_MOCKUPS: Partial<Record<RegistryKey, string>> = {
   [key("fitness", "Centro Padel Brera", "Sage Luxe")]: fitnessPadelSage,
   [key("healthcare", "Lumen Clinic", "Ethereal Glass")]: healthcareLumenGlass,
   [key("hospitality", "Cala Vento Charter", "Sardinia Azure")]: hospitalityCalaVentoAzure,
+  // Batch 2
+  [key("construction", "Domus Living", "Ocean Azure")]: constructionDomusOceanAzure,
+  [key("construction", "Domus Living", "Living Coral")]: constructionDomusLivingCoral,
+  [key("construction", "Domus Living", "Ice Blue")]: constructionDomusIceBlue,
+  [key("construction", "Domus Living", "Rose Gold")]: constructionDomusRoseGold,
+  [key("plumber", "Idro Pronto", "Style A")]: plumberIdroProntoStyleA,
+  [key("plumber", "Idro Pronto", "Style B")]: plumberIdroProntoStyleB,
 };
 
 /**
