@@ -112,7 +112,7 @@ const templateFor = (item: CatalogItem): string => {
   if (/style f|azure/.test(styleCycle)) return "glass_aurora";
   if (/style g/.test(styleCycle)) return "monochrome_bold";
   if (/style h/.test(styleCycle)) return "luxury_gold";
-  return item.sectorId === "retail" ? "neon_vibrant" : "modern_dark";
+  return "modern_dark";
 };
 
 const primaryFor = (item: CatalogItem): string | undefined => {
