@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Grid2X2, Monitor, Smartphone, Sparkles } from "lucide-react";
+import { ArrowRight, Monitor, Smartphone, Sparkles } from "lucide-react";
 import { SECTOR_PORTFOLIO, type SectorPortfolio } from "@/data/sector-mockup-images";
 import type { IndustryId } from "@/config/industry-config";
 import { MockupReactScreen } from "@/components/partner/MockupReactScreen";
