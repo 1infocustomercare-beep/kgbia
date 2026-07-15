@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Monitor, Smartphone, Sparkles } from "lucide-react";
 import { SECTOR_PORTFOLIO, type SectorPortfolio } from "@/data/sector-mockup-images";
@@ -440,32 +440,66 @@ const DEFAULT_TAG = { text: "#C6B8FF", bg: "rgba(150,130,255,0.14)", border: "rg
 const paletteFor = (sectorId: IndustryId) => SECTOR_TAG_PALETTE[String(sectorId)] ?? DEFAULT_TAG;
 
 // Compact iPhone-style frame used for the 3-phone card hero. Fully live via MockupReactScreen.
-function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl, objectPosition, scale }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; imageUrl?: string | null; objectPosition?: string; scale?: number; }) {
-  const width = 118;
-  const height = Math.round(width * 19.5 / 9); // ~256
+/**
+ * Renders a MockupReactScreen at its intrinsic pixel size (renderWidth × renderHeight)
+ * and fluidly scales it to fill the parent phone frame via CSS transform.
+ * Uses ResizeObserver so the live UI stays crisp at any card width.
+ */
+function ScaledScreen({ renderWidth, renderHeight, children }: { renderWidth: number; renderHeight: number; children: React.ReactNode }) {
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const innerRef = useRef<HTMLDivElement | null>(null);
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current;
+    const inner = innerRef.current;
+    if (!wrap || !inner) return;
+    const apply = () => {
+      const w = wrap.clientWidth;
+      const h = wrap.clientHeight;
+      if (!w || !h) return;
+      const s = Math.min(w / renderWidth, h / renderHeight);
+      inner.style.transform = `scale(${s})`;
+    };
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [renderWidth, renderHeight]);
+  return (
+    <div ref={wrapRef} className="absolute inset-0 overflow-hidden">
+      <div
+        ref={innerRef}
+        style={{ width: renderWidth, height: renderHeight, transformOrigin: "top left" }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function TripletPhone({ item, screenType, priority, imageUrl, objectPosition }: { item: CatalogItem; screenType: string; tilt?: number; elevate?: number; priority: boolean; imageUrl?: string | null; objectPosition?: string; scale?: number; }) {
   const template = templateFor(item);
   const primary = primaryFor(item);
+  // Approximate iPhone-16 aspect for the inner screen so live UI renders at scale
+  const renderWidth = 160;
+  const renderHeight = Math.round(renderWidth * 19.5 / 9);
   return (
-    <div
-      className="relative shrink-0 will-change-transform transition-transform duration-500 group-hover:-translate-y-1"
-      style={{ width, height, transform: `translateY(${elevate}px) rotate(${tilt}deg)` }}
-    >
+    <div className="relative w-full will-change-transform transition-transform duration-500 group-hover:-translate-y-1" style={{ aspectRatio: "9 / 19.5" }}>
       <div
         aria-hidden
-        className="absolute -bottom-[8%] left-1/2 h-[14%] w-[80%] -translate-x-1/2 rounded-full blur-2xl opacity-70"
+        className="absolute -bottom-[6%] left-1/2 h-[10%] w-[80%] -translate-x-1/2 rounded-full blur-2xl opacity-70"
         style={{ background: `radial-gradient(ellipse, ${paletteFor(item.sectorId).glow}, transparent 70%)` }}
       />
       <div
-        className="absolute inset-0 p-[3%]"
+        className="absolute inset-0 p-[3.5%]"
         style={{
-          borderRadius: 30,
+          borderRadius: "14%/6.5%",
           background: "linear-gradient(145deg, hsl(var(--foreground) / 0.28), hsl(var(--deep-black)) 42%, hsl(var(--foreground) / 0.14))",
           boxShadow: priority
             ? "0 34px 78px -28px hsl(0 0% 0% / 0.95), 0 0 0 1px hsl(var(--foreground) / 0.08) inset"
             : "0 22px 58px -30px hsl(0 0% 0% / 0.92), 0 0 0 1px hsl(var(--foreground) / 0.08) inset",
         }}
       >
-        <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: 24, background: "hsl(var(--deep-black))" }}>
+        <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: "11%/5%", background: "hsl(var(--deep-black))" }}>
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -473,30 +507,33 @@ function TripletPhone({ item, screenType, tilt, elevate, priority, imageUrl, obj
               loading={priority ? "eager" : "lazy"}
               decoding="async"
               className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: objectPosition ?? "center top", transform: scale && scale !== 1 ? `scale(${scale})` : undefined, transformOrigin: "center top" }}
+              style={{ objectPosition: objectPosition ?? "center top" }}
               draggable={false}
             />
           ) : (
-            <MockupReactScreen
-              type={screenType}
-              templateVariant={template}
-              businessName={item.brand}
-              businessSector={item.sectorId}
-              primaryColor={primary}
-              width={width - 6}
-              height={height - 6}
-              glassIntensity={40}
-              typeScale={0.9}
-              boostContrast
-            />
+            <ScaledScreen renderWidth={renderWidth} renderHeight={renderHeight}>
+              <MockupReactScreen
+                type={screenType}
+                templateVariant={template}
+                businessName={item.brand}
+                businessSector={item.sectorId}
+                primaryColor={primary}
+                width={renderWidth}
+                height={renderHeight}
+                glassIntensity={40}
+                typeScale={0.95}
+                boostContrast
+              />
+            </ScaledScreen>
           )}
-          <div aria-hidden className="pointer-events-none absolute left-1/2 top-[2%] z-20 h-[4.2%] w-[34%] -translate-x-1/2 rounded-full" style={{ background: "hsl(0 0% 0%)" }} />
+          <div aria-hidden className="pointer-events-none absolute left-1/2 top-[2%] z-20 h-[3.2%] w-[32%] -translate-x-1/2 rounded-full" style={{ background: "hsl(0 0% 0%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 z-10" style={{ background: "linear-gradient(118deg, hsl(var(--foreground) / 0.14) 0%, transparent 32%, transparent 68%, hsl(var(--foreground) / 0.08) 100%)", mixBlendMode: "screen" }} />
         </div>
       </div>
     </div>
   );
 }
+
 
 export default function MockupCatalog({ mode = "section" }: { mode?: "section" | "page" }) {
   const navigate = useNavigate();
@@ -540,7 +577,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
               </span>
             </h2>
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-foreground/65 sm:text-base">
-              {allItems.length} stili · {screensCount} schermate reali. Ogni card mostra 3 mockup live dello stesso brand — home, servizi/menu e dettaglio — nello stile del settore, con la stessa qualità dei nostri progetti Full Power.
+              {allItems.length} stili · {screensCount} schermate reali. Ogni card mostra 4 mockup iPhone dello stesso brand — home, servizi, dettaglio e booking — nello stile del settore, con la stessa qualità dei nostri progetti Full Power.
             </p>
           </div>
 
@@ -596,23 +633,82 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
           })}
         </div>
 
-        {/* Card grid — 3-phone Lowengeld-style hero per card */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Card grid — Lowengeld-style 4-phone lineup per card */}
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {visible.map((item, index) => {
             const isSelected = selected === item.id;
             const specs = screenSpecsFor(item.sectorId);
             const previewSpecs = isSelected ? specs : specs.slice(0, 5);
             const p = paletteFor(item.sectorId);
-            // 3 heroes: home / services or menu / detail (fallbacks per sector)
+            // 4 distinct screens labelled like Lowengeld: HOME · [sector primary] · DETAIL · BOOKING
             const s = String(item.sectorId);
-            const trio = (() => {
-              if (s === "food")   return ["home", "menu", "detail"];
-              if (s === "retail") return ["home", "catalog", "detail"];
-              if (s === "ncc" || s === "logistics" || s === "garage") return ["home", "fleet", "booking"];
-              if (s === "beach" || s === "hospitality" || s === "agriturismo") return ["home", "services", "booking"];
-              if (s === "construction" || s === "plumber" || s === "electrician" || s === "cleaning") return ["dashboard", "services", "schedule"];
-              if (s === "legal" || s === "accounting") return ["dashboard", "services", "profile"];
-              return ["home", "services", "detail"];
+            const quartet: Array<{ type: string; label: string }> = (() => {
+              if (s === "food")   return [
+                { type: "home", label: "Home" },
+                { type: "menu", label: "Menu" },
+                { type: "detail", label: "Detail" },
+                { type: "checkout", label: "Booking" },
+              ];
+              if (s === "retail") return [
+                { type: "home", label: "Home" },
+                { type: "catalog", label: "Catalog" },
+                { type: "detail", label: "Detail" },
+                { type: "checkout", label: "Cart" },
+              ];
+              if (s === "ncc" || s === "logistics" || s === "garage") return [
+                { type: "home", label: "Home" },
+                { type: "fleet", label: "Fleet" },
+                { type: "detail", label: "Detail" },
+                { type: "booking", label: "Booking" },
+              ];
+              if (s === "beach" || s === "hospitality" || s === "agriturismo") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Activities" },
+                { type: "detail", label: "Detail" },
+                { type: "booking", label: "Booking" },
+              ];
+              if (s === "construction" || s === "plumber" || s === "electrician" || s === "cleaning") return [
+                { type: "dashboard", label: "Dashboard" },
+                { type: "services", label: "Services" },
+                { type: "schedule", label: "Schedule" },
+                { type: "booking", label: "Ticket" },
+              ];
+              if (s === "legal" || s === "accounting") return [
+                { type: "dashboard", label: "Desk" },
+                { type: "services", label: "Cases" },
+                { type: "schedule", label: "Deadlines" },
+                { type: "profile", label: "Client" },
+              ];
+              if (s === "healthcare" || s === "veterinary") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Services" },
+                { type: "schedule", label: "Agenda" },
+                { type: "booking", label: "Booking" },
+              ];
+              if (s === "fitness") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Classes" },
+                { type: "schedule", label: "Schedule" },
+                { type: "booking", label: "Booking" },
+              ];
+              if (s === "childcare") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Programs" },
+                { type: "schedule", label: "Agenda" },
+                { type: "booking", label: "Enroll" },
+              ];
+              if (s === "beauty") return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Services" },
+                { type: "schedule", label: "Agenda" },
+                { type: "booking", label: "Booking" },
+              ];
+              return [
+                { type: "home", label: "Home" },
+                { type: "services", label: "Services" },
+                { type: "detail", label: "Detail" },
+                { type: "booking", label: "Booking" },
+              ];
             })();
             return (
               <article
@@ -631,15 +727,30 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                   }}
                 />
 
-                {/* 3-phone triptych */}
-                <div className="relative flex min-h-[340px] items-end justify-center overflow-hidden px-5 pt-10 pb-6">
-                  <div className="flex items-end justify-center gap-1">
-                    <TripletPhone item={item} screenType={trio[0]} tilt={-4}  elevate={10} priority={index < 4} />
-                    <TripletPhone item={item} screenType={trio[1]} tilt={0}   elevate={0}  priority={index < 4} imageUrl={item.aiHero} />
-                    <TripletPhone item={item} screenType={trio[2]} tilt={4}   elevate={10} priority={index < 4} />
+                {/* 4-phone lineup with labels (Lowengeld style) */}
+                <div className="relative overflow-hidden px-4 pt-8 pb-4 sm:px-6 sm:pt-10">
+                  <div className="grid grid-cols-4 items-end gap-2 sm:gap-3">
+                    {quartet.map((screen, i) => (
+                      <div key={`${item.id}-quad-${i}`} className="flex flex-col items-center gap-2">
+                        <div className="w-full">
+                          <TripletPhone
+                            item={item}
+                            screenType={screen.type}
+                            tilt={0}
+                            elevate={0}
+                            priority={index < 2}
+                            imageUrl={i === 0 ? item.aiHero : null}
+                          />
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-[2.4px] text-foreground/55 sm:text-[10px] sm:tracking-[3px]">
+                          {screen.label}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.75))]" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.6))]" />
                 </div>
+
 
                 {/* Meta */}
                 <div className="relative p-5 pt-4">
