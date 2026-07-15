@@ -1374,12 +1374,46 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
 // ════════════════════════════════════════════════════════════════════════════
 function DashboardScreen({ theme, name, sector }: { theme: ThemeTokens; name: string; sector: string }) {
   const sLabel = sectorLabel(sector);
-  const kpis = [
-    { v: "€12.4k", l: "Ricavi mese", trend: "+18%" },
-    { v: "247", l: "Clienti attivi", trend: "+12%" },
-    { v: "4.9★", l: "Rating medio", trend: "+0.2" },
-  ];
+  const kind = sectorKind(sector);
+  const kpis = kind === "construction"
+    ? [{ v: "68%", l: "SAL torre", trend: "+9%" }, { v: "14", l: "ticket aperti", trend: "-6" }, { v: "2", l: "squadre live", trend: "ok" }]
+    : kind === "fitness"
+    ? [{ v: "96%", l: "classi piene", trend: "+11%" }, { v: "42", l: "trial", trend: "+8" }, { v: "88", l: "PR week", trend: "+23" }]
+    : kind === "healthcare"
+    ? [{ v: "12", l: "slot liberi", trend: "+4" }, { v: "58%", l: "no-show", trend: "↓" }, { v: "82%", l: "richiami", trend: "+15" }]
+    : [{ v: "€12.4k", l: "Ricavi mese", trend: "+18%" }, { v: "247", l: "Clienti attivi", trend: "+12%" }, { v: "4.9★", l: "Rating medio", trend: "+0.2" }];
   const bars = [40, 65, 50, 85, 70, 95, 78];
+  if (kind === "construction") {
+    return (
+      <div className="pb-14 overflow-hidden h-full">
+        <div className="px-4 pt-1 pb-2 flex items-center justify-between">
+          <div>
+            <p className="text-[7px] uppercase tracking-wider font-semibold" style={{ color: theme.textMuted }}>Control room · {sLabel}</p>
+            <p className="text-[11px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{name} · SAL live</p>
+          </div>
+          <span className="text-[6px] font-black px-1.5 py-0.5 rounded" style={{ background: theme.primary, color: theme.bg }}>BIM</span>
+        </div>
+        <div className="px-4 mb-2">
+          <div className="relative h-[112px] overflow-hidden rounded-xl" style={{ background: theme.bgPanelAlt }}>
+            <svg viewBox="0 0 200 112" className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
+              <path d="M0 22H200M0 44H200M0 66H200M0 88H200M32 0V112M64 0V112M96 0V112M128 0V112M160 0V112" stroke={`${theme.accent}30`} />
+              <path d="M26 94 L68 35 H118 L166 94 Z" fill={`${theme.primary}18`} stroke={theme.primary} strokeWidth="2" />
+              <path d="M52 94V58H92V94M108 94V48H144V94" stroke={theme.text} strokeOpacity="0.55" fill="none" />
+            </svg>
+            <div className="absolute left-2 top-2 rounded px-1.5 py-0.5 text-[6px] font-black" style={{ background: `${theme.bg}cc`, color: theme.text }}>TORRE BLU · 68%</div>
+            <div className="absolute right-2 bottom-2 text-right"><p className="text-[18px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>A-14</p><p className="text-[6px]" style={{ color: theme.textMuted }}>prossima ispezione</p></div>
+          </div>
+        </div>
+        <div className="px-4 grid grid-cols-3 gap-1.5 mb-2">
+          {kpis.map((k, i) => <div key={i} className="rounded-xl p-1.5" style={{ background: theme.bgPanel }}><p className="text-[10px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>{k.v}</p><p className="text-[6px]" style={{ color: theme.textMuted }}>{k.l}</p></div>)}
+        </div>
+        <div className="px-4 space-y-1">
+          {["Getto piano 12 completato", "RFI materiali in attesa", "Cliente ha approvato variante"].map((a, i) => <div key={a} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: theme.bgPanel, borderLeft: `2px solid ${i === 0 ? theme.primary : theme.accent}` }}><span className="text-[8px] font-black" style={{ color: theme.primary }}>0{i+1}</span><p className="text-[8px] flex-1" style={{ color: theme.text }}>{a}</p><span className="text-[6px]" style={{ color: theme.textMuted }}>ora</span></div>)}
+        </div>
+        <BottomNav theme={theme} active="profile" />
+      </div>
+    );
+  }
   return (
     <div className="pb-14 overflow-hidden h-full">
       <div className="px-4 pt-1 pb-2">
