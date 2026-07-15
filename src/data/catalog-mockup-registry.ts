@@ -1,6 +1,6 @@
 /**
  * Catalog Mockup Registry — real premium AI-generated iPhone screens
- * (Nano Banana Pro / gemini-3-pro-image) for the `/portfolio` catalogue.
+ * for the `/portfolio` catalogue.
  *
  * Each entry maps (sectorId, brandName, styleName) → real PNG URL.
  * `catalogMockupUrl()` returns the AI image when present, otherwise `null`
@@ -44,7 +44,23 @@ import fitnessOndaAqua from "@/assets/mockups/catalog/fitness-onda-aqua.png";
 import childcareArcobalenoBauhaus from "@/assets/mockups/catalog/childcare-arcobaleno-bauhaus.png";
 import hospitalityCalaVentoSunset from "@/assets/mockups/catalog/hospitality-cala-vento-sunset.png";
 import nccMarinaAmalfiStyleB from "@/assets/mockups/catalog/ncc-marina-amalfi-style-b.png";
-...
+
+type RegistryKey = `${IndustryId}::${string}::${string}`;
+
+/** Slug a display string to lowercase-kebab. */
+function slug(v: string): string {
+  return v.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+/** Build a stable key from sector / brand / style triple. */
+function key(sector: IndustryId, brand: string, style: string): RegistryKey {
+  return `${sector}::${slug(brand)}::${slug(style)}`;
+}
+
+/**
+ * Registry table. Add new AI-generated hero mockups here — the catalogue
+ * picks them up automatically via `catalogMockupUrl()`.
+ */
 export const CATALOG_MOCKUPS: Partial<Record<RegistryKey, string>> = {
   [key("food", "Onyx Brace Steakhouse", "Obsidian")]: foodOnyxObsidian,
   [key("food", "Onyx Brace Steakhouse", "Ivory")]: foodOnyxIvory,
@@ -66,7 +82,6 @@ export const CATALOG_MOCKUPS: Partial<Record<RegistryKey, string>> = {
   [key("healthcare", "Lumen Clinic", "Ethereal Glass")]: healthcareLumenGlass,
   [key("hospitality", "Cala Vento Charter", "Sardinia Azure")]: hospitalityCalaVentoAzure,
   [key("hospitality", "Cala Vento Charter", "Sunset Suite")]: hospitalityCalaVentoSunset,
-  // Batch 2
   [key("construction", "Domus Living", "Ocean Azure")]: constructionDomusOceanAzure,
   [key("construction", "Domus Living", "Living Coral")]: constructionDomusLivingCoral,
   [key("construction", "Domus Living", "Ice Blue")]: constructionDomusIceBlue,
