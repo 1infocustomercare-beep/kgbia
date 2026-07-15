@@ -1232,6 +1232,43 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
 // GALLERY SCREEN
 // ════════════════════════════════════════════════════════════════════════════
 function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
+  if (theme.vibe === "retail-chrome") {
+    return (
+      <div className="pb-14 overflow-hidden h-full">
+        <div className="px-4 pt-1 pb-2 flex items-center justify-between">
+          <div><p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>Drop preview</p><p className="text-[7px]" style={{ color: theme.textMuted }}>{name} · nuova capsule</p></div>
+          <span className="text-[6px] font-black px-1.5 py-0.5 rounded" style={{ background: theme.primary, color: theme.bg }}>LIVE</span>
+        </div>
+        <div className="px-4 grid grid-cols-2 gap-1.5">
+          {[0,1,2,3,4,5].map((_, i) => (
+            <div key={i} className="relative overflow-hidden rounded-xl" style={{ height: i === 0 ? 96 : 62, gridColumn: i === 0 ? "span 2" : undefined, background: theme.bgPanel }}>
+              <ArtImage theme={theme} seed={90 + i} className="absolute inset-0" />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 35%, ${theme.bg}de 100%)` }} />
+              <p className="absolute bottom-1.5 left-2 text-[8px] font-black" style={{ color: "#fff", fontFamily: theme.fontHead }}>{i === 0 ? "Hero campaign" : `Look 0${i}`}</p>
+            </div>
+          ))}
+        </div>
+        <BottomNav theme={theme} active="home" />
+      </div>
+    );
+  }
+  if (theme.vibe === "clinical-crystal") {
+    return (
+      <div className="pb-14 overflow-hidden h-full">
+        <div className="px-4 pt-1 pb-2"><p className="text-[10px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>Percorso paziente</p><p className="text-[7px]" style={{ color: theme.textMuted }}>Referti, consensi e follow-up</p></div>
+        <div className="px-4 space-y-1.5">
+          {["Triage completato", "Visita specialistica", "Referto firmato", "Richiamo automatico"].map((step, i) => (
+            <div key={step} className="flex items-center gap-2 p-2 rounded-xl" style={{ background: theme.bgPanel, border: `1px solid ${i === 1 ? theme.primary : theme.text}18` }}>
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-[8px] font-black" style={{ background: i <= 1 ? theme.primary : `${theme.primary}20`, color: i <= 1 ? theme.bg : theme.primary }}>{i+1}</div>
+              <div className="flex-1"><p className="text-[8.5px] font-bold" style={{ color: theme.text }}>{step}</p><p className="text-[6.5px]" style={{ color: theme.textMuted }}>{i === 1 ? "oggi 15:30" : "workflow protetto"}</p></div>
+              {i <= 1 && <span className="text-[6px] font-bold" style={{ color: theme.primary }}>✓</span>}
+            </div>
+          ))}
+        </div>
+        <BottomNav theme={theme} active="profile" />
+      </div>
+    );
+  }
   return (
     <div className="pb-14 overflow-hidden h-full">
       <div className="px-4 pt-1 pb-2 flex items-center justify-between">
