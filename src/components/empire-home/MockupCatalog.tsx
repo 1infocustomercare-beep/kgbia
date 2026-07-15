@@ -440,6 +440,42 @@ const DEFAULT_TAG = { text: "#C6B8FF", bg: "rgba(150,130,255,0.14)", border: "rg
 const paletteFor = (sectorId: IndustryId) => SECTOR_TAG_PALETTE[String(sectorId)] ?? DEFAULT_TAG;
 
 // Compact iPhone-style frame used for the 3-phone card hero. Fully live via MockupReactScreen.
+/**
+ * Renders a MockupReactScreen at its intrinsic pixel size (renderWidth × renderHeight)
+ * and fluidly scales it to fill the parent phone frame via CSS transform.
+ * Uses ResizeObserver so the live UI stays crisp at any card width.
+ */
+function ScaledScreen({ renderWidth, renderHeight, children }: { renderWidth: number; renderHeight: number; children: React.ReactNode }) {
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const innerRef = useRef<HTMLDivElement | null>(null);
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current;
+    const inner = innerRef.current;
+    if (!wrap || !inner) return;
+    const apply = () => {
+      const w = wrap.clientWidth;
+      const h = wrap.clientHeight;
+      if (!w || !h) return;
+      const s = Math.min(w / renderWidth, h / renderHeight);
+      inner.style.transform = `scale(${s})`;
+    };
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [renderWidth, renderHeight]);
+  return (
+    <div ref={wrapRef} className="absolute inset-0 overflow-hidden">
+      <div
+        ref={innerRef}
+        style={{ width: renderWidth, height: renderHeight, transformOrigin: "top left" }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function TripletPhone({ item, screenType, priority, imageUrl, objectPosition }: { item: CatalogItem; screenType: string; tilt?: number; elevate?: number; priority: boolean; imageUrl?: string | null; objectPosition?: string; scale?: number; }) {
   const template = templateFor(item);
   const primary = primaryFor(item);
