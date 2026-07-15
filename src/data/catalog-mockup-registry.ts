@@ -23,6 +23,14 @@ import fitnessPadelSage from "@/assets/mockups/catalog/fitness-padel-sage.png";
 import healthcareLumenGlass from "@/assets/mockups/catalog/healthcare-lumen-glass.png";
 import hospitalityCalaVentoAzure from "@/assets/mockups/catalog/hospitality-cala-vento-azure.png";
 
+// Batch 2 — Phase 2: Construction (Domus Living × 4 styles) + Plumber (Idro Pronto × 2 styles)
+import constructionDomusOceanAzure from "@/assets/mockups/catalog/construction-domus-ocean-azure.png";
+import constructionDomusLivingCoral from "@/assets/mockups/catalog/construction-domus-living-coral.png";
+import constructionDomusIceBlue from "@/assets/mockups/catalog/construction-domus-ice-blue.png";
+import constructionDomusRoseGold from "@/assets/mockups/catalog/construction-domus-rose-gold.png";
+import plumberIdroProntoStyleA from "@/assets/mockups/catalog/plumber-idro-pronto-style-a.png";
+import plumberIdroProntoStyleB from "@/assets/mockups/catalog/plumber-idro-pronto-style-b.png";
+
 type RegistryKey = `${IndustryId}::${string}::${string}`;
 
 /** Slug a display string to lowercase-kebab. */
