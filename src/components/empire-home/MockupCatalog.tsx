@@ -753,8 +753,9 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
 
                           {screen.label}
                         </span>
-                      </div>
-                    ))}
+                        </div>
+                      );
+                    })}
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.6))]" />
                 </div>
