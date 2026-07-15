@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Grid2X2, Monitor, Smartphone, Sparkles } from "lucide-react";
+import { ArrowRight, Monitor, Smartphone, Sparkles } from "lucide-react";
 import { SECTOR_PORTFOLIO, type SectorPortfolio } from "@/data/sector-mockup-images";
 import type { IndustryId } from "@/config/industry-config";
 import { MockupReactScreen } from "@/components/partner/MockupReactScreen";
@@ -304,6 +304,78 @@ function CatalogPhonePreview({ item, imageUrl, alt, size = "lg", priority = fals
   );
 }
 
+// Sector → colored tag palette (Lowengeld-style category pills)
+const SECTOR_TAG_PALETTE: Record<string, { text: string; bg: string; border: string; glow: string }> = {
+  food:         { text: "#FFB169", bg: "rgba(255,132,54,0.14)",  border: "rgba(255,132,54,0.55)",  glow: "rgba(255,132,54,0.55)" },
+  beauty:       { text: "#F5A7C6", bg: "rgba(232,120,170,0.14)", border: "rgba(232,120,170,0.55)", glow: "rgba(232,120,170,0.5)" },
+  ncc:          { text: "#8AE1F0", bg: "rgba(92,200,217,0.12)",  border: "rgba(92,200,217,0.55)",  glow: "rgba(92,200,217,0.5)" },
+  beach:        { text: "#7DD3FC", bg: "rgba(56,189,248,0.12)",  border: "rgba(56,189,248,0.55)",  glow: "rgba(56,189,248,0.5)" },
+  healthcare:   { text: "#7DDFE7", bg: "rgba(14,181,199,0.12)",  border: "rgba(14,181,199,0.55)",  glow: "rgba(14,181,199,0.5)" },
+  fitness:      { text: "#D9FF66", bg: "rgba(200,255,0,0.10)",   border: "rgba(200,255,0,0.55)",   glow: "rgba(200,255,0,0.45)" },
+  hospitality:  { text: "#FFC29E", bg: "rgba(255,159,110,0.14)", border: "rgba(255,159,110,0.55)", glow: "rgba(255,159,110,0.5)" },
+  retail:       { text: "#B7F5C7", bg: "rgba(80,220,140,0.12)",  border: "rgba(80,220,140,0.5)",   glow: "rgba(80,220,140,0.45)" },
+  construction: { text: "#F6D67C", bg: "rgba(246,200,95,0.12)",  border: "rgba(246,200,95,0.55)",  glow: "rgba(246,200,95,0.5)" },
+  plumber:      { text: "#7EE9CE", bg: "rgba(38,217,184,0.12)",  border: "rgba(38,217,184,0.55)",  glow: "rgba(38,217,184,0.5)" },
+  electrician:  { text: "#FFE28A", bg: "rgba(255,210,90,0.12)",  border: "rgba(255,210,90,0.55)",  glow: "rgba(255,210,90,0.5)" },
+  cleaning:     { text: "#A8D8FF", bg: "rgba(120,180,255,0.12)", border: "rgba(120,180,255,0.55)", glow: "rgba(120,180,255,0.5)" },
+  garage:       { text: "#FFB77A", bg: "rgba(255,140,60,0.12)",  border: "rgba(255,140,60,0.55)",  glow: "rgba(255,140,60,0.5)" },
+  logistics:    { text: "#C6B8FF", bg: "rgba(150,130,255,0.14)", border: "rgba(150,130,255,0.55)", glow: "rgba(150,130,255,0.5)" },
+  veterinary:   { text: "#C5E39A", bg: "rgba(160,200,110,0.12)", border: "rgba(160,200,110,0.55)", glow: "rgba(160,200,110,0.5)" },
+  childcare:    { text: "#FFD98A", bg: "rgba(255,190,90,0.14)",  border: "rgba(255,190,90,0.55)",  glow: "rgba(255,190,90,0.5)" },
+  legal:        { text: "#B8C6FF", bg: "rgba(120,140,255,0.12)", border: "rgba(120,140,255,0.55)", glow: "rgba(120,140,255,0.5)" },
+  accounting:   { text: "#9DE8C4", bg: "rgba(60,200,150,0.12)",  border: "rgba(60,200,150,0.55)",  glow: "rgba(60,200,150,0.45)" },
+  agriturismo:  { text: "#D8E39A", bg: "rgba(180,200,90,0.12)",  border: "rgba(180,200,90,0.5)",   glow: "rgba(180,200,90,0.45)" },
+};
+const DEFAULT_TAG = { text: "#C6B8FF", bg: "rgba(150,130,255,0.14)", border: "rgba(150,130,255,0.55)", glow: "rgba(150,130,255,0.5)" };
+const paletteFor = (sectorId: IndustryId) => SECTOR_TAG_PALETTE[String(sectorId)] ?? DEFAULT_TAG;
+
+// Compact iPhone-style frame used for the 3-phone card hero. Fully live via MockupReactScreen.
+function TripletPhone({ item, screenType, tilt, elevate, priority }: { item: CatalogItem; screenType: string; tilt: number; elevate: number; priority: boolean; }) {
+  const width = 118;
+  const height = Math.round(width * 19.5 / 9); // ~256
+  const template = templateFor(item);
+  const primary = primaryFor(item);
+  return (
+    <div
+      className="relative shrink-0 will-change-transform transition-transform duration-500 group-hover:-translate-y-1"
+      style={{ width, height, transform: `translateY(${elevate}px) rotate(${tilt}deg)` }}
+    >
+      <div
+        aria-hidden
+        className="absolute -bottom-[8%] left-1/2 h-[14%] w-[80%] -translate-x-1/2 rounded-full blur-2xl opacity-70"
+        style={{ background: `radial-gradient(ellipse, ${paletteFor(item.sectorId).glow}, transparent 70%)` }}
+      />
+      <div
+        className="absolute inset-0 p-[3%]"
+        style={{
+          borderRadius: 30,
+          background: "linear-gradient(145deg, hsl(var(--foreground) / 0.28), hsl(var(--deep-black)) 42%, hsl(var(--foreground) / 0.14))",
+          boxShadow: priority
+            ? "0 34px 78px -28px hsl(0 0% 0% / 0.95), 0 0 0 1px hsl(var(--foreground) / 0.08) inset"
+            : "0 22px 58px -30px hsl(0 0% 0% / 0.92), 0 0 0 1px hsl(var(--foreground) / 0.08) inset",
+        }}
+      >
+        <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: 24, background: "hsl(var(--deep-black))" }}>
+          <MockupReactScreen
+            type={screenType}
+            templateVariant={template}
+            businessName={item.brand}
+            businessSector={item.sectorId}
+            primaryColor={primary}
+            width={width - 6}
+            height={height - 6}
+            glassIntensity={40}
+            typeScale={0.9}
+            boostContrast
+          />
+          <div aria-hidden className="pointer-events-none absolute left-1/2 top-[2%] z-20 h-[4.2%] w-[34%] -translate-x-1/2 rounded-full" style={{ background: "hsl(0 0% 0%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0 z-10" style={{ background: "linear-gradient(118deg, hsl(var(--foreground) / 0.14) 0%, transparent 32%, transparent 68%, hsl(var(--foreground) / 0.08) 100%)", mixBlendMode: "screen" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MockupCatalog({ mode = "section" }: { mode?: "section" | "page" }) {
   const navigate = useNavigate();
   const isPage = mode === "page";
@@ -314,8 +386,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
   const allItems = useMemo(() => flattenPortfolio(SECTOR_PORTFOLIO), []);
   const interleavedItems = useMemo(() => interleaveBySector(allItems), [allItems]);
   const sectors = useMemo(
-    () => SECTOR_PORTFOLIO.map((s) => ({ id: s.sectorId, label: s.sectorLabel })),
-    []
+    () => SECTOR_PORTFOLIO.map((s) => ({ id: s.sectorId, label: s.sectorLabel, count: allItems.filter((it) => it.sectorId === s.sectorId).length })),
+    [allItems]
   );
   const filtered = sector === "all" ? interleavedItems : allItems.filter((item) => item.sectorId === sector);
   const visible = expanded ? filtered : filtered.slice(0, 12);
@@ -333,119 +405,174 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
       />
 
       <div className="relative z-10 mx-auto max-w-[1400px]">
-        <div className="mb-8 flex flex-col gap-6 lg:mb-12 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-10 flex flex-col gap-6 lg:mb-14 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[hsl(var(--gold))]/35 bg-background/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[3px] text-[hsl(var(--gold))]">
-              <Grid2X2 className="h-3.5 w-3.5" />
-              Catalogo mockup reale · {allItems.length} stili · {screensCount} schermate
+            <div className="mb-4 inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[6px] text-[hsl(var(--gold))]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--gold))] shadow-[0_0_12px_hsl(var(--gold))]" />
+              Our Portfolio
             </div>
-            <h2 className="font-heading text-[clamp(2.1rem,6vw,5.2rem)] font-black uppercase leading-[0.95] tracking-normal text-foreground">
-              Apri il catalogo.
+            <h2 className="font-heading text-[clamp(2.4rem,7vw,5.6rem)] font-black uppercase leading-[0.92] tracking-tight text-foreground">
+              Premium App
               <span className="block bg-[linear-gradient(110deg,hsl(var(--accent)),hsl(var(--gold)),hsl(var(--gold-light)))] bg-clip-text text-transparent">
-                Trova il tuo settore.
+                Development
               </span>
             </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-foreground/65 sm:text-base">
-              Ogni card mostra mockup reali già organizzati per settore, brand, stile e schermate: home, servizi, dettaglio, booking, carrello o dashboard quando disponibili.
+            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-foreground/65 sm:text-base">
+              {allItems.length} stili · {screensCount} schermate reali. Ogni card mostra 3 mockup live dello stesso brand — home, servizi/menu e dettaglio — nello stile del settore, con la stessa qualità dei nostri progetti Full Power.
             </p>
           </div>
 
           <button
             type="button"
             onClick={() => (isPage ? navigate("/") : navigate("/portfolio"))}
-            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-[hsl(var(--gold))]/45 bg-[linear-gradient(110deg,hsl(var(--accent)),hsl(var(--gold)))] px-5 py-3 text-sm font-black uppercase tracking-[2px] text-[hsl(var(--deep-black))] shadow-[0_18px_60px_-24px_hsl(var(--gold))] transition-transform active:scale-[0.98]"
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 self-start rounded-full border border-[hsl(var(--gold))]/45 bg-[linear-gradient(110deg,hsl(var(--accent)),hsl(var(--gold)))] px-6 py-3 text-sm font-black uppercase tracking-[2px] text-[hsl(var(--deep-black))] shadow-[0_18px_60px_-24px_hsl(var(--gold))] transition-transform active:scale-[0.98] lg:self-end"
           >
-            {isPage ? "Torna alla home" : "Apri pagina catalogo"}
+            {isPage ? "Torna alla home" : "Apri il portfolio completo"}
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="mb-7 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* Category pills with count badges (Lowengeld-style) */}
+        <div className="mb-10 flex flex-wrap gap-2.5">
           <button
             type="button"
             onClick={() => setSector("all")}
-            className={`shrink-0 rounded-full border px-4 py-2 text-[11px] font-bold uppercase tracking-[2px] transition-all ${sector === "all" ? "border-[hsl(var(--gold))] bg-[hsl(var(--accent))] text-[hsl(var(--gold-light))] shadow-[0_10px_30px_-14px_hsl(var(--gold))]" : "border-foreground/15 bg-foreground/[0.04] text-foreground/70"}`}
+            className={`group inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[11px] font-black uppercase tracking-[2px] transition-all ${sector === "all" ? "border-[hsl(var(--gold))] bg-[hsl(var(--accent))]/60 text-[hsl(var(--gold-light))] shadow-[0_10px_30px_-14px_hsl(var(--gold))]" : "border-foreground/12 bg-foreground/[0.04] text-foreground/72 hover:border-foreground/25"}`}
           >
+            <span className={`rounded-full px-2 py-0.5 text-[10px] tabular-nums ${sector === "all" ? "bg-[hsl(var(--gold))]/25 text-[hsl(var(--gold-light))]" : "bg-foreground/10 text-foreground/70"}`}>
+              {allItems.length}
+            </span>
             Tutti
           </button>
-          {sectors.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setSector(s.id)}
-              className={`shrink-0 rounded-full border px-4 py-2 text-[11px] font-bold uppercase tracking-[2px] transition-all ${sector === s.id ? "border-[hsl(var(--gold))] bg-[hsl(var(--accent))] text-[hsl(var(--gold-light))] shadow-[0_10px_30px_-14px_hsl(var(--gold))]" : "border-foreground/15 bg-foreground/[0.04] text-foreground/70"}`}
-            >
-              {s.label}
-            </button>
-          ))}
+          {sectors.map((s) => {
+            const p = paletteFor(s.id);
+            const active = sector === s.id;
+            return (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => setSector(s.id)}
+                className={`group inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[11px] font-black uppercase tracking-[2px] transition-all ${active ? "text-[hsl(var(--foreground))]" : "text-foreground/72 hover:text-foreground"}`}
+                style={{
+                  borderColor: active ? p.border : "hsl(var(--foreground) / 0.12)",
+                  background: active ? p.bg : "hsl(var(--foreground) / 0.04)",
+                  boxShadow: active ? `0 10px 34px -18px ${p.glow}` : undefined,
+                }}
+              >
+                <span
+                  className="rounded-full px-2 py-0.5 text-[10px] tabular-nums"
+                  style={{
+                    background: active ? `${p.text}22` : "hsl(var(--foreground) / 0.10)",
+                    color: active ? p.text : "hsl(var(--foreground) / 0.75)",
+                  }}
+                >
+                  {s.count}
+                </span>
+                {s.label}
+              </button>
+            );
+          })}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {/* Card grid — 3-phone Lowengeld-style hero per card */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((item, index) => {
             const isSelected = selected === item.id;
             const specs = screenSpecsFor(item.sectorId);
             const previewSpecs = isSelected ? specs : specs.slice(0, 5);
+            const p = paletteFor(item.sectorId);
+            // 3 heroes: home / services or menu / detail (fallbacks per sector)
+            const s = String(item.sectorId);
+            const trio = (() => {
+              if (s === "food")   return ["home", "menu", "detail"];
+              if (s === "retail") return ["home", "catalog", "detail"];
+              if (s === "ncc" || s === "logistics" || s === "garage") return ["home", "fleet", "booking"];
+              if (s === "beach" || s === "hospitality" || s === "agriturismo") return ["home", "services", "booking"];
+              if (s === "construction" || s === "plumber" || s === "electrician" || s === "cleaning") return ["dashboard", "services", "schedule"];
+              if (s === "legal" || s === "accounting") return ["dashboard", "services", "profile"];
+              return ["home", "services", "detail"];
+            })();
             return (
               <article
                 key={item.id}
-                className="group relative overflow-hidden rounded-[1.35rem] border border-foreground/10 bg-foreground/[0.035] shadow-[0_24px_80px_-48px_hsl(0_0%_0%)] transition-all duration-500 hover:-translate-y-1 hover:border-[hsl(var(--gold))]/45"
+                className="group relative overflow-hidden rounded-[1.6rem] border border-foreground/10 bg-[linear-gradient(180deg,hsl(var(--foreground)/0.05),hsl(var(--foreground)/0.02))] transition-all duration-500 hover:-translate-y-1"
+                style={{
+                  boxShadow: `0 30px 90px -50px hsl(0 0% 0% / 0.95), 0 0 0 1px hsl(var(--foreground) / 0.04) inset`,
+                }}
               >
-                <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden bg-muted px-4 pt-8">
-                  <CatalogPhonePreview item={item} imageUrl={item.thumbnail} alt={`${item.brand} — ${item.style}`} priority={index < 8} className="transition-transform duration-700 group-hover:scale-105" />
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)_/_0)_45%,hsl(var(--background)_/_0.9)_100%)]" />
-                  <div className="absolute left-3 top-3 rounded-full border border-[hsl(var(--gold))]/40 bg-[hsl(var(--accent))]/85 px-2 py-1 text-[9px] font-black uppercase tracking-[2px] text-[hsl(var(--gold-light))]">
-                    {item.sectorLabel}
+                {/* Hover glow tinted to sector */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  style={{
+                    background: `radial-gradient(ellipse 60% 50% at 50% 0%, ${p.glow}, transparent 70%)`,
+                  }}
+                />
+
+                {/* 3-phone triptych */}
+                <div className="relative flex min-h-[340px] items-end justify-center overflow-hidden px-5 pt-10 pb-6">
+                  <div className="flex items-end justify-center gap-1">
+                    <TripletPhone item={item} screenType={trio[0]} tilt={-4}  elevate={10} priority={index < 4} />
+                    <TripletPhone item={item} screenType={trio[1]} tilt={0}   elevate={0}  priority={index < 4} />
+                    <TripletPhone item={item} screenType={trio[2]} tilt={4}   elevate={10} priority={index < 4} />
                   </div>
-                  <div className="absolute bottom-3 left-3 right-3">
-                    <h3 className="font-heading text-xl font-black uppercase leading-none text-foreground">{item.brand}</h3>
-                    <p className="mt-1 text-[11px] font-bold uppercase tracking-[2px] text-foreground/55">{item.style}</p>
-                  </div>
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.75))]" />
                 </div>
 
-                <div className="p-4">
-                  <p className="min-h-[54px] text-xs leading-relaxed text-foreground/62">{item.description}</p>
-                  <div className="mt-4 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[2px] text-foreground/55">
-                    <span className="inline-flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />{previewSpecs.length} schermate</span>
-                    {item.desktopScreens?.length ? <span className="inline-flex items-center gap-1.5"><Monitor className="h-3.5 w-3.5 text-[hsl(var(--accent))]" />{item.desktopScreens.length} desktop</span> : null}
+                {/* Meta */}
+                <div className="relative p-5 pt-4">
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span
+                      className="rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[2px]"
+                      style={{ color: p.text, borderColor: p.border, background: p.bg }}
+                    >
+                      {item.sectorLabel}
+                    </span>
+                    <span className="rounded-full border border-foreground/15 bg-foreground/[0.05] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[2px] text-foreground/70">
+                      {item.style}
+                    </span>
                   </div>
 
-                  <div className="mt-3 -mx-1 flex gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    {previewSpecs.map((spec, i) => {
-                      const isLive = LIVE_SECTION_TYPES.has(spec.type);
-                      const template = templateFor(item);
-                      const primary = primaryFor(item);
-                      return (
-                        <div
-                          key={`${item.id}-${spec.type}-${i}`}
-                          onClick={() => setSelected(isSelected ? null : item.id)}
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(event) => {
-                            if (event.key === "Enter" || event.key === " ") setSelected(isSelected ? null : item.id);
-                          }}
-                          className="flex w-[112px] shrink-0 flex-col items-center gap-1.5 transition-transform active:scale-[0.97]"
-                          aria-label={`Mostra ${spec.label} ${item.brand}`}
-                        >
-                          <div className="relative flex h-[224px] w-[104px] items-center justify-center overflow-hidden rounded-[18px] border border-foreground/10 bg-muted shadow-[0_18px_44px_-28px_hsl(0_0%_0%)]">
-                            {isLive ? (
-                              <div className="absolute inset-0">
-                                <MockupReactScreen
-                                  type={spec.type}
-                                  templateVariant={template}
-                                  businessName={item.brand}
-                                  businessSector={item.sectorId}
-                                  primaryColor={primary}
-                                  width={104}
-                                  height={224}
-                                  glassIntensity={40}
-                                  typeScale={0.98}
-                                  boostContrast
-                                />
-                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
-                                  Live
-                                </span>
-                              </div>
-                            ) : (
+                  <h3 className="font-heading text-2xl font-black uppercase leading-none tracking-tight text-foreground">
+                    {item.brand}
+                  </h3>
+                  <p className="mt-3 text-[13px] leading-relaxed text-foreground/62 line-clamp-3">
+                    {item.description}
+                  </p>
+
+                  <div className="mt-4 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[2px] text-foreground/55">
+                      <span className="inline-flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />{specs.length} screens</span>
+                      {item.desktopScreens?.length ? <span className="inline-flex items-center gap-1.5"><Monitor className="h-3.5 w-3.5 text-[hsl(var(--accent))]" />{item.desktopScreens.length} desktop</span> : null}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSelected(isSelected ? null : item.id)}
+                      className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[2px] transition-colors"
+                      style={{
+                        color: p.text,
+                        borderColor: p.border,
+                        background: isSelected ? p.bg : "transparent",
+                      }}
+                    >
+                      {isSelected ? "Chiudi" : "View"}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Expanded live-screens strip */}
+                  {isSelected ? (
+                    <div className="mt-5 -mx-1 flex gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                      {previewSpecs.map((spec, i) => {
+                        const template = templateFor(item);
+                        const primary = primaryFor(item);
+                        return (
+                          <div
+                            key={`${item.id}-${spec.type}-${i}`}
+                            className="flex w-[112px] shrink-0 flex-col items-center gap-1.5"
+                            aria-label={`${spec.label} ${item.brand}`}
+                          >
+                            <div className="relative flex h-[224px] w-[104px] items-center justify-center overflow-hidden rounded-[18px] border border-foreground/10 bg-muted shadow-[0_18px_44px_-28px_hsl(0_0%_0%)]">
                               <MockupReactScreen
                                 type={spec.type}
                                 templateVariant={template}
@@ -458,24 +585,18 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                 typeScale={0.98}
                                 boostContrast
                               />
-                            )}
+                              {LIVE_SECTION_TYPES.has(spec.type) ? (
+                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
+                                  Live
+                                </span>
+                              ) : null}
+                            </div>
+                            <span className="text-[9px] font-bold uppercase tracking-[1.5px] text-foreground/65 text-center leading-tight">{spec.label}</span>
                           </div>
-                          <span className="text-[9px] font-bold uppercase tracking-[1.5px] text-foreground/65 text-center leading-tight">{spec.label}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-
-
-                  <button
-                    type="button"
-                    onClick={() => setSelected(isSelected ? null : item.id)}
-                    className="mt-4 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-foreground/10 bg-background/70 px-3 py-2 text-[11px] font-black uppercase tracking-[2px] text-foreground transition-colors hover:border-primary/40"
-                  >
-                    <Sparkles className="h-3.5 w-3.5 text-primary" />
-                    {isSelected ? "Chiudi schermate" : "Vedi schermate"}
-                  </button>
+                        );
+                      })}
+                    </div>
+                  ) : null}
                 </div>
               </article>
             );
@@ -483,12 +604,13 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
         </div>
 
         {!expanded && filtered.length > visible.length ? (
-          <div className="mt-8 flex justify-center">
+          <div className="mt-10 flex justify-center">
             <button
               type="button"
               onClick={() => setExpanded(true)}
-              className="min-h-[48px] rounded-full border border-foreground/15 bg-foreground/[0.05] px-6 py-3 text-xs font-black uppercase tracking-[2px] text-foreground transition-colors hover:border-primary/40"
+              className="min-h-[48px] rounded-full border border-foreground/15 bg-foreground/[0.05] px-6 py-3 text-xs font-black uppercase tracking-[2px] text-foreground transition-colors hover:border-[hsl(var(--gold))]/50"
             >
+              <Sparkles className="mr-2 inline h-3.5 w-3.5 text-[hsl(var(--gold))]" />
               Mostra altri {filtered.length - visible.length} mockup
             </button>
           </div>
