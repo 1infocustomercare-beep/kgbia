@@ -579,6 +579,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                       {previewSpecs.map((spec, i) => {
                         const template = templateFor(item);
                         const primary = primaryFor(item);
+                        const useHero = i === 0 && !!item.aiHero;
                         return (
                           <div
                             key={`${item.id}-${spec.type}-${i}`}
@@ -586,21 +587,37 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                             aria-label={`${spec.label} ${item.brand}`}
                           >
                             <div className="relative flex h-[224px] w-[104px] items-center justify-center overflow-hidden rounded-[18px] border border-foreground/10 bg-muted shadow-[0_18px_44px_-28px_hsl(0_0%_0%)]">
-                              <MockupReactScreen
-                                type={spec.type}
-                                templateVariant={template}
-                                businessName={item.brand}
-                                businessSector={item.sectorId}
-                                primaryColor={primary}
-                                width={104}
-                                height={224}
-                                glassIntensity={40}
-                                typeScale={0.98}
-                                boostContrast
-                              />
-                              {LIVE_SECTION_TYPES.has(spec.type) ? (
+                              {useHero ? (
+                                <img
+                                  src={item.aiHero as string}
+                                  alt={`${item.brand} — ${spec.label}`}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="absolute inset-0 h-full w-full object-cover object-top"
+                                  draggable={false}
+                                />
+                              ) : (
+                                <MockupReactScreen
+                                  type={spec.type}
+                                  templateVariant={template}
+                                  businessName={item.brand}
+                                  businessSector={item.sectorId}
+                                  primaryColor={primary}
+                                  width={104}
+                                  height={224}
+                                  glassIntensity={40}
+                                  typeScale={0.98}
+                                  boostContrast
+                                />
+                              )}
+                              {LIVE_SECTION_TYPES.has(spec.type) && !useHero ? (
                                 <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
                                   Live
+                                </span>
+                              ) : null}
+                              {useHero ? (
+                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-[hsl(var(--gold))]/85 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-[hsl(var(--deep-black))]">
+                                  Hero
                                 </span>
                               ) : null}
                             </div>
