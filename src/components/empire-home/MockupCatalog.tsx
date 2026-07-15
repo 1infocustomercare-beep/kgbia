@@ -580,7 +580,12 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                       {previewSpecs.map((spec, i) => {
                         const template = templateFor(item);
                         const primary = primaryFor(item);
-                        const useHero = i === 0 && !!item.aiHero;
+                        const useHero = !!item.aiHero;
+                        // Stagger vertical crops so each mini-phone shows a different "section" of the same premium mockup
+                        const positions = ["center top", "center 22%", "center 44%", "center 66%", "center 85%", "center bottom"];
+                        const pos = positions[i % positions.length];
+                        // Slight zoom on non-hero shots so they read as distinct in-app screens
+                        const scale = i === 0 ? 1 : 1.12;
                         return (
                           <div
                             key={`${item.id}-${spec.type}-${i}`}
@@ -594,7 +599,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                   alt={`${item.brand} — ${spec.label}`}
                                   loading="lazy"
                                   decoding="async"
-                                  className="absolute inset-0 h-full w-full object-cover object-top"
+                                  className="absolute inset-0 h-full w-full object-cover"
+                                  style={{ objectPosition: pos, transform: scale !== 1 ? `scale(${scale})` : undefined, transformOrigin: "center top" }}
                                   draggable={false}
                                 />
                               ) : (
@@ -611,19 +617,20 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                   boostContrast
                                 />
                               )}
-                              {LIVE_SECTION_TYPES.has(spec.type) && !useHero ? (
-                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
-                                  Live
-                                </span>
-                              ) : null}
                               {useHero ? (
                                 <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-[hsl(var(--gold))]/85 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-[hsl(var(--deep-black))]">
-                                  Hero
+                                  {i === 0 ? "Hero" : spec.label.slice(0, 6)}
+                                </span>
+                              ) : LIVE_SECTION_TYPES.has(spec.type) ? (
+                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
+                                  Live
                                 </span>
                               ) : null}
                             </div>
                             <span className="text-[9px] font-bold uppercase tracking-[1.5px] text-foreground/65 text-center leading-tight">{spec.label}</span>
                           </div>
+                        );
+                      })}
                         );
                       })}
                     </div>
