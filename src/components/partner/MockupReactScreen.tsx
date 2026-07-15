@@ -1156,7 +1156,14 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
 // ════════════════════════════════════════════════════════════════════════════
 // PROFILE SCREEN
 // ════════════════════════════════════════════════════════════════════════════
-function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
+function ProfileScreen({ theme, name, sector = "" }: { theme: ThemeTokens; name: string; sector?: string }) {
+  const kind = sectorKind(sector);
+  const persona = kind === "healthcare" ? { initials: "AB", title: "Alessandro Bianchi", meta: "Paziente · follow-up attivo", card: "Percorso cura verificato", next: "Prossima visita: Mar 22 · 15:30", stats: [{ v: "3", l: "Referti" }, { v: "82%", l: "Adesione" }, { v: "GDPR", l: "Privacy" }] }
+    : kind === "veterinary" ? { initials: "MI", title: "Milo", meta: "Golden Retriever · proprietaria Laura", card: "Pet passport completo", next: "Vaccino richiamo tra 18 giorni", stats: [{ v: "4", l: "Visite" }, { v: "9.2kg", l: "Peso" }, { v: "✓", l: "Vaccini" }] }
+    : kind === "childcare" ? { initials: "SF", title: "Sofia", meta: "Classe Stelle · genitore Martina", card: "Diario famiglia live", next: "Mensa, sonno e attività aggiornati", stats: [{ v: "7", l: "Foto" }, { v: "95%", l: "Serena" }, { v: "12:30", l: "Pappa" }] }
+    : kind === "construction" ? { initials: "TB", title: "Torre Blu", meta: "Cliente · progetto residenziale", card: "Area cliente cantiere", next: "Variante bagno da approvare", stats: [{ v: "68%", l: "SAL" }, { v: "14", l: "Ticket" }, { v: "A-14", l: "Unità" }] }
+    : kind === "ncc" ? { initials: "BC", title: "Business Client", meta: "Account corporate · fattura mensile", card: "Travel profile executive", next: "Driver preferito: Massimo R.", stats: [{ v: "22", l: "Corse" }, { v: "4.9★", l: "Driver" }, { v: "B2B", l: "Billing" }] }
+    : { initials: "MR", title: "Marco Rossi", meta: "Membro Gold dal 2024", card: "Fedeltà Gold Member", next: "60 punti per la prossima esperienza", stats: [{ v: "12", l: "Visite" }, { v: "240", l: "Punti" }, { v: "4.9★", l: "Rating" }] };
   return (
     <div className="pb-14 overflow-hidden h-full">
       {/* Cover */}
@@ -1164,7 +1171,7 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
         <ArtImage theme={theme} seed={11} className="absolute inset-0 opacity-50" />
         <div className="absolute -bottom-7 left-4 w-14 h-14 rounded-full border-[3px] flex items-center justify-center text-[14px] font-black"
           style={{ borderColor: theme.bg, background: `linear-gradient(135deg, ${theme.accent}, ${theme.primary})`, color: theme.bg, fontFamily: theme.fontHead }}>
-          MR
+          {persona.initials}
         </div>
         <button className="absolute top-2 right-2 px-2 py-1 rounded-full text-[7px] font-bold" style={{ background: `${theme.bg}aa`, color: theme.text, backdropFilter: "blur(8px)" }}>Modifica</button>
       </div>
@@ -1172,15 +1179,15 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
       <div className="px-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[11px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>Marco Rossi</p>
-            <p className="text-[7px]" style={{ color: theme.textMuted }}>marco.rossi@email.com · Membro Gold dal 2024</p>
+            <p className="text-[11px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>{persona.title}</p>
+            <p className="text-[7px]" style={{ color: theme.textMuted }}>{persona.meta}</p>
           </div>
           <span className="text-[6px] font-bold px-1.5 py-0.5 rounded" style={{ background: theme.primary, color: theme.bg }}>VIP</span>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-1.5 mt-2.5 mb-2.5">
-          {[{ v: "12", l: "Visite" }, { v: "240", l: "Punti" }, { v: "4.9★", l: "Rating" }].map((s, i) => (
+          {persona.stats.map((s, i) => (
             <div key={i} className="text-center rounded-xl py-2" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
               <p className="text-[12px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>{s.v}</p>
               <p className="text-[7px] font-semibold" style={{ color: theme.textMuted }}>{s.l}</p>
@@ -1193,14 +1200,14 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
           <div className="absolute -right-4 -top-4 w-16 h-16 rounded-full opacity-20" style={{ background: "white" }} />
           <div className="relative">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-[7px] font-black uppercase tracking-wider" style={{ color: theme.bg }}>Fedeltà Gold Member</p>
+              <p className="text-[7px] font-black uppercase tracking-wider" style={{ color: theme.bg }}>{persona.card}</p>
               <p className="text-[7px] font-bold" style={{ color: theme.bg }}>★★★★★</p>
             </div>
-            <p className="text-[12px] font-black" style={{ color: theme.bg, fontFamily: theme.fontHead }}>240 / 300 punti</p>
+            <p className="text-[12px] font-black" style={{ color: theme.bg, fontFamily: theme.fontHead }}>{kind === "construction" ? "Documenti · SAL · approvazioni" : kind === "healthcare" ? "Care plan protetto" : "240 / 300 punti"}</p>
             <div className="h-1 rounded-full bg-black/20 mt-1.5">
               <div className="h-1 rounded-full bg-white" style={{ width: "80%" }} />
             </div>
-            <p className="text-[7px] mt-1 opacity-90" style={{ color: theme.bg }}>60 punti per la tua prossima cena omaggio 🎁</p>
+            <p className="text-[7px] mt-1 opacity-90" style={{ color: theme.bg }}>{persona.next}</p>
           </div>
         </div>
 
@@ -1213,7 +1220,7 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
           ].map((it, i, arr) => (
             <div key={i} className="flex items-center gap-2 p-2" style={{ borderBottom: i < arr.length - 1 ? `1px solid ${theme.text}08` : "none" }}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={it.icon} /></svg>
-              <p className="text-[9px] flex-1 font-semibold" style={{ color: theme.text }}>{it.label}</p>
+              <p className="text-[9px] flex-1 font-semibold" style={{ color: theme.text }}>{kind === "healthcare" && i === 0 ? "Referti e visite" : kind === "veterinary" && i === 0 ? "Libretto pet" : kind === "construction" && i === 0 ? "Documenti cantiere" : it.label}</p>
               <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: `${theme.primary}20`, color: theme.primary }}>{it.count}</span>
               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth="2.5"><path d="M9 6l6 6-6 6"/></svg>
             </div>
