@@ -2204,10 +2204,11 @@ export function MockupReactScreen({
   return (
     <div
       className="relative overflow-hidden flex flex-col"
+      data-vibe={theme.vibe}
       style={{
         width,
         height,
-        background: theme.bg,
+        background: screenBackground(theme),
         fontFamily: theme.fontBody,
         // CSS var disponibile ai figli che vogliono leggerla; fallback gestito sotto via fontSize
         ["--mockup-type-scale" as any]: clampedScale,
@@ -2216,9 +2217,11 @@ export function MockupReactScreen({
         fontSize: `${clampedScale}em`,
       }}
     >
+      <style>{mockupSurfaceCss(theme)}</style>
+      <ScreenMotif theme={theme} />
       <StatusBar theme={theme} />
       <div
-        className="flex-1 overflow-hidden"
+        className="mockup-screen relative z-10 flex-1 overflow-hidden"
         style={{
           paddingLeft: safe,
           paddingRight: safe,
