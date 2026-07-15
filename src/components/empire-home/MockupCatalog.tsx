@@ -475,32 +475,20 @@ function TripletPhone({ item, screenType, priority, imageUrl, objectPosition }: 
               draggable={false}
             />
           ) : (
-            <div className="absolute inset-0 flex items-start justify-center">
-              <div style={{ width: renderWidth, height: renderHeight, transformOrigin: "top left" }} className="origin-top-left" ref={(el) => {
-                if (!el) return;
-                const parent = el.parentElement as HTMLElement | null;
-                if (!parent) return;
-                const scaleX = parent.clientWidth / renderWidth;
-                const scaleY = parent.clientHeight / renderHeight;
-                const s = Math.min(scaleX, scaleY);
-                el.style.transform = `scale(${s})`;
-                el.style.width = `${renderWidth}px`;
-                el.style.height = `${renderHeight}px`;
-              }}>
-                <MockupReactScreen
-                  type={screenType}
-                  templateVariant={template}
-                  businessName={item.brand}
-                  businessSector={item.sectorId}
-                  primaryColor={primary}
-                  width={renderWidth}
-                  height={renderHeight}
-                  glassIntensity={40}
-                  typeScale={0.95}
-                  boostContrast
-                />
-              </div>
-            </div>
+            <ScaledScreen renderWidth={renderWidth} renderHeight={renderHeight}>
+              <MockupReactScreen
+                type={screenType}
+                templateVariant={template}
+                businessName={item.brand}
+                businessSector={item.sectorId}
+                primaryColor={primary}
+                width={renderWidth}
+                height={renderHeight}
+                glassIntensity={40}
+                typeScale={0.95}
+                boostContrast
+              />
+            </ScaledScreen>
           )}
           <div aria-hidden className="pointer-events-none absolute left-1/2 top-[2%] z-20 h-[3.2%] w-[32%] -translate-x-1/2 rounded-full" style={{ background: "hsl(0 0% 0%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 z-10" style={{ background: "linear-gradient(118deg, hsl(var(--foreground) / 0.14) 0%, transparent 32%, transparent 68%, hsl(var(--foreground) / 0.08) 100%)", mixBlendMode: "screen" }} />
