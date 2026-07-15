@@ -1327,6 +1327,7 @@ function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
 // ════════════════════════════════════════════════════════════════════════════
 function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
   const items = getMenuItems(sector).slice(0, 3);
+  const kind = sectorKind(sector);
   const subtotal = items.reduce((s, x) => s + x.price, 0);
   const fee = 2.5;
   const total = subtotal + fee;
@@ -1339,8 +1340,8 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke={theme.text} strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
           <div>
-            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>Riepilogo Ordine</p>
-            <p className="text-[7px]" style={{ color: theme.textMuted }}>3 articoli · Pronto in 25 min</p>
+            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{kind === "retail" ? "Carrello VIP" : kind === "healthcare" ? "Piano visita" : kind === "construction" || kind === "plumber" ? "Preventivo intervento" : kind === "ncc" ? "Preventivo corsa" : "Riepilogo Ordine"}</p>
+            <p className="text-[7px]" style={{ color: theme.textMuted }}>{kind === "ncc" ? "Driver · tratta · deposito" : kind === "healthcare" ? "Consensi · slot · promemoria" : kind === "construction" || kind === "plumber" ? "Materiali · tecnico · SLA" : "3 articoli · Pronto in 25 min"}</p>
           </div>
         </div>
       </div>
@@ -1364,10 +1365,10 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
       {/* Promo */}
       <div className="px-4 mb-2">
         <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border-2 border-dashed" style={{ borderColor: `${theme.primary}50` }}>
-          <span className="text-[10px]">🎁</span>
+          <span className="text-[10px]">{kind === "healthcare" ? "🔒" : kind === "construction" || kind === "plumber" ? "🛠️" : kind === "ncc" ? "🚘" : "🎁"}</span>
           <div className="flex-1">
-            <p className="text-[8px] font-bold" style={{ color: theme.primary }}>WELCOME10 applicato</p>
-            <p className="text-[6px]" style={{ color: theme.textMuted }}>Sconto del 10% sul totale</p>
+            <p className="text-[8px] font-bold" style={{ color: theme.primary }}>{kind === "healthcare" ? "Consenso digitale pronto" : kind === "construction" || kind === "plumber" ? "Sopralluogo agganciato" : kind === "ncc" ? "Tracking volo incluso" : "WELCOME10 applicato"}</p>
+            <p className="text-[6px]" style={{ color: theme.textMuted }}>{kind === "healthcare" ? "Privacy e promemoria automatici" : kind === "construction" || kind === "plumber" ? "Foto e note tecniche incluse" : kind === "ncc" ? "Autista aggiornato in tempo reale" : "Sconto del 10% sul totale"}</p>
           </div>
           <span className="text-[8px] font-bold" style={{ color: theme.primary }}>−€{(subtotal * 0.1).toFixed(2)}</span>
         </div>
@@ -1403,7 +1404,7 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
       <div className="px-4">
         <button className="w-full py-2.5 rounded-xl text-[10px] font-bold flex items-center justify-center gap-2" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg, borderRadius: theme.radius * 0.8 }}>
           <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8v3H5a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2v-8a2 2 0 00-2-2h-1V8c0-3.3-2.7-6-6-6zm0 2a4 4 0 014 4v3H8V8a4 4 0 014-4z"/></svg>
-          Paga €{(total * 0.9).toFixed(2)}
+            {kind === "healthcare" ? "Conferma visita" : kind === "construction" || kind === "plumber" ? "Accetta preventivo" : kind === "ncc" ? "Blocca driver" : `Paga €${(total * 0.9).toFixed(2)}`}
         </button>
         <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Pagamento sicuro · SSL crittografato</p>
       </div>
