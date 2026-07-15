@@ -85,7 +85,113 @@ const interleaveBySector = (items: CatalogItem[]): CatalogItem[] => {
   return out;
 };
 
+// Slug helper (must match the registry's slug)
+const heroSlug = (v: string) => v.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+/**
+ * HERO_MATCH — exact (sector::brand::style) → { template, primary } lookup
+ * Ensures the side "live" MockupReactScreen phones share the same vibe/palette
+ * as the AI hero PNG shown in the center, so the whole card reads as ONE brand.
+ */
+type HeroMatch = { template: string; primary?: string };
+const HERO_MATCH: Record<string, HeroMatch> = {
+  // FOOD — Onyx Brace Steakhouse
+  "food::onyx-brace-steakhouse::obsidian":       { template: "luxury_gold",     primary: "#C9A24A" },
+  "food::onyx-brace-steakhouse::ivory":          { template: "editorial_clean", primary: "#B08A54" },
+  "food::onyx-brace-steakhouse::hanok":          { template: "paperfish",       primary: "#E88AA8" },
+  "food::onyx-brace-steakhouse::gangnam":        { template: "neon_vibrant",    primary: "#FF3D8B" },
+  "food::onyx-brace-steakhouse::joseon":         { template: "luxury_gold",     primary: "#8B5E3C" },
+  // FOOD — Sakura Atelier
+  "food::sakura-atelier::sakura":                { template: "paperfish",       primary: "#E88AA8" },
+  "food::sakura-atelier::luxury-dark":           { template: "luxury_gold",     primary: "#C9A24A" },
+  "food::sakura-atelier::white-clean":           { template: "editorial_clean", primary: "#2D2D2D" },
+  "food::sakura-atelier::miami-ocean":           { template: "beach_resort",   primary: "#00A5C8" },
+  "food::sakura-atelier::pearl-gold":            { template: "luxury_gold",     primary: "#D4B45A" },
+  "food::sakura-atelier::marble-zen":            { template: "minimal_zen",     primary: "#B98A5C" },
+  "food::sakura-atelier::champagne-rose":        { template: "boutique_pastel", primary: "#D9A8B6" },
+  "food::sakura-atelier::arctic-crystal":        { template: "clinical_clean",  primary: "#7FC6D9" },
+  "food::sakura-atelier::tsukiji-ice":           { template: "paperfish",       primary: "#5FA8C7" },
+  "food::sakura-atelier::sakura-garden":         { template: "pet_care_playful",primary: "#F0A8B8" },
+  "food::sakura-atelier::wabi-sabi-marble":      { template: "editorial_clean", primary: "#8B7355" },
+  "food::sakura-atelier::hinoki-frost":          { template: "hospitality_sunset", primary: "#7FA8C7" },
+  // FOOD — Indocina Noir
+  "food::indocina-noir::noir-saigon":            { template: "luxury_gold",     primary: "#C9A24A" },
+  "food::indocina-noir::jade-dynasty":           { template: "luxury_gold",     primary: "#3F8F72" },
+  "food::indocina-noir::crimson-silk":           { template: "casual_warm",     primary: "#B23A3A" },
+  "food::indocina-noir::golden-hour":            { template: "hospitality_sunset", primary: "#FF9F6E" },
+  "food::indocina-noir::neon-spice":             { template: "neon_vibrant",    primary: "#FF3D8B" },
+  "food::indocina-noir::matcha-blaze":           { template: "fitness_energy",  primary: "#8FBC5A" },
+  "food::indocina-noir::obsidian-gold":          { template: "luxury_gold",     primary: "#C9A24A" },
+  // FOOD — Pacifico Ceviche
+  "food::pacifico-ceviche::costa-pacifico":      { template: "beach_resort",    primary: "#00A5C8" },
+  "food::pacifico-ceviche::casa-nostra":         { template: "editorial_clean", primary: "#B08A54" },
+  "food::pacifico-ceviche::bianco-memoria":      { template: "paperfish",       primary: "#E88AA8" },
+  "food::pacifico-ceviche::ocra-lima":           { template: "casual_warm",     primary: "#D48A3C" },
+  // FOOD — Levante Deli
+  "food::levante-deli::style-a":                 { template: "casual_warm",     primary: "#D48A3C" },
+  "food::levante-deli::style-b":                 { template: "beach_resort",    primary: "#00A5C8" },
+  "food::levante-deli::style-c":                 { template: "paperfish",       primary: "#E88AA8" },
+  "food::levante-deli::style-d":                 { template: "editorial_clean", primary: "#B08A54" },
+  "food::levante-deli::style-e":                 { template: "hospitality_sunset", primary: "#FF9F6E" },
+  "food::levante-deli::style-f":                 { template: "boutique_pastel", primary: "#D9A8B6" },
+  "food::levante-deli::style-h":                 { template: "neon_vibrant",    primary: "#FF3D8B" },
+  // FOOD — Brace Kebab
+  "food::brace-kebab::default":                  { template: "casual_warm",     primary: "#C9662B" },
+  // BEAUTY — Aurora Nail Atelier
+  "beauty::aurora-nail-atelier::lavender-luxe":  { template: "boutique_pastel", primary: "#A89DC9" },
+  "beauty::aurora-nail-atelier::blush-rosegold": { template: "boutique_pastel", primary: "#E8A0B8" },
+  // BEAUTY — Velluto Hair Lab
+  "beauty::velluto-hair-lab::mobile":            { template: "boutique_pastel", primary: "#E8A0B8" },
+  "beauty::velluto-hair-lab::desktop":           { template: "boutique_pastel", primary: "#A89DC9" },
+  // NCC
+  "ncc::marina-riviera::style-a":                { template: "ncc_limo",        primary: "#5CC8D9" },
+  "ncc::marina-riviera::style-c":                { template: "ncc_limo",        primary: "#4A7FB3" },
+  "ncc::marina-riviera::style-f":                { template: "hospitality_sunset", primary: "#FF9F6E" },
+  "ncc::marina-riviera::style-g":                { template: "batey",           primary: "#5CC8D9" },
+  "ncc::marina-riviera::style-h":                { template: "ncc_limo",        primary: "#5CC8D9" },
+  "ncc::cala-vento-charter::emerald-cove":       { template: "batey",           primary: "#2FA98A" },
+  "ncc::cala-vento-charter::golden-sunset":      { template: "hospitality_sunset", primary: "#FF9F6E" },
+  "ncc::cala-vento-charter::sardinia-azure-desktop": { template: "batey",       primary: "#00A5C8" },
+  "ncc::cala-vento-charter::emerald-cove-desktop":   { template: "hospitality_sunset", primary: "#FF9F6E" },
+  // VETERINARY
+  "veterinary::tropico-pet-resort::style-a":     { template: "pet_care_playful",primary: "#7C9A4B" },
+  "veterinary::tropico-pet-resort::style-e":     { template: "childcare_sunshine", primary: "#FF8B3D" },
+  "veterinary::tropico-pet-resort::style-f":     { template: "pet_care_playful",primary: "#7C9A4B" },
+  // CHILDCARE
+  "childcare::stelle-nursery::playful-colorful": { template: "childcare_sunshine", primary: "#FF8B3D" },
+  "childcare::stelle-nursery::nature-explorer":  { template: "pet_care_playful",primary: "#7C9A4B" },
+  "childcare::stelle-nursery::ocean-breeze":     { template: "beach_resort",    primary: "#57B7FF" },
+  "childcare::stelle-nursery::sunny-garden":     { template: "childcare_sunshine", primary: "#F6C85F" },
+  "childcare::stelle-nursery::sunset-playful":   { template: "hospitality_sunset", primary: "#FF9F6E" },
+  "childcare::arcobaleno-playhouse::style-a":    { template: "childcare_sunshine", primary: "#FF8B3D" },
+  // FITNESS
+  "fitness::centro-padel-brera::sage-luxe":      { template: "fitness_energy",  primary: "#9CBF6A" },
+  "fitness::centro-padel-brera::fresh-azzurro":  { template: "fitness_energy",  primary: "#00E5FF" },
+  "fitness::onda-sport-club::wave-pro":          { template: "fitness_energy",  primary: "#00E5FF" },
+  // HEALTHCARE
+  "healthcare::lumen-clinic::ethereal-glass":    { template: "clinical_clean",  primary: "#7FC6D9" },
+  "healthcare::lumen-clinic::azure-gradient":    { template: "batey",           primary: "#0EA5B7" },
+  "healthcare::lumen-clinic::ice-crystal":       { template: "clinical_clean",  primary: "#9BD4E4" },
+  "healthcare::lumen-clinic::soft-blue":         { template: "ncc_limo",        primary: "#5CC8D9" },
+  // HOSPITALITY
+  "hospitality::cala-vento-charter::sardinia-azure": { template: "batey",       primary: "#00A5C8" },
+  "hospitality::cala-vento-charter::sunset-suite":   { template: "hospitality_sunset", primary: "#FF9F6E" },
+  // CONSTRUCTION — Domus Living
+  "construction::domus-living::ocean-azure":     { template: "construction_blueprint", primary: "#3F8FBF" },
+  "construction::domus-living::living-coral":    { template: "construction_blueprint", primary: "#F07A5A" },
+  "construction::domus-living::ice-blue":        { template: "construction_blueprint", primary: "#7FB8D4" },
+  "construction::domus-living::rose-gold":       { template: "construction_blueprint", primary: "#D9A8B6" },
+  // PLUMBER
+  "plumber::idro-pronto::style-a":               { template: "plumber_utility", primary: "#26D9B8" },
+  "plumber::idro-pronto::style-b":               { template: "plumber_utility", primary: "#2E9BD9" },
+};
+
+const heroMatchFor = (item: CatalogItem): HeroMatch | undefined =>
+  HERO_MATCH[`${item.sectorId}::${heroSlug(item.brand)}::${heroSlug(item.style)}`];
+
 const templateFor = (item: CatalogItem): string => {
+  const override = heroMatchFor(item);
+  if (override) return override.template;
   const name = `${item.brand} ${item.style}`.toLowerCase();
   const styleCycle = item.style.toLowerCase();
   if (/sakura|paperfish|sushi|omakase|hinoki|tsukiji/.test(name)) return "paperfish";
@@ -118,6 +224,8 @@ const templateFor = (item: CatalogItem): string => {
 };
 
 const primaryFor = (item: CatalogItem): string | undefined => {
+  const override = heroMatchFor(item);
+  if (override?.primary) return override.primary;
   const key = `${item.sectorId} ${item.brand} ${item.style}`.toLowerCase();
   if (/construction|domus|cantiere/.test(key)) return "#F6C85F";
   if (/plumber|idro|ac|artigiani/.test(key)) return "#26D9B8";
