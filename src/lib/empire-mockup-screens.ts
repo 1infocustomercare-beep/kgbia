@@ -228,12 +228,15 @@ function layoutFor(path: string, base: LayoutKind): LayoutKind {
 function shapePattern(t: Tokens, seed: number): string {
   const a = 28 + (seed % 18);
   const b = 65 + (seed % 20);
-  if (t.layout === "neon") return `<path d="M0 ${b} C90 ${a} 180 ${b + 30} 390 ${a}" fill="none" stroke="${t.primary}" stroke-width="5" opacity=".6"/><path d="M0 ${b + 70} C120 ${a + 70} 230 ${b + 92} 390 ${a + 80}" fill="none" stroke="${t.accent}" stroke-width="3" opacity=".7"/>`;
-  if (t.layout === "glass") return `<circle cx="74" cy="86" r="92" fill="${t.primary}" opacity=".24"/><circle cx="326" cy="178" r="118" fill="${t.accent}" opacity=".18"/><path d="M38 248 C128 188 252 302 354 216" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/>`;
-  if (t.layout === "brutal") return `<rect x="0" y="42" width="390" height="44" fill="${t.primary}" opacity=".92"/><path d="M32 132 H358 M32 170 H358 M32 208 H358" stroke="${t.accent}" stroke-width="2" opacity=".35"/><text x="312" y="116" fill="${t.primary}" font-family="${t.heading}" font-size="92" opacity=".18">${t.icon}</text>`;
-  if (t.layout === "zen") return `<circle cx="310" cy="85" r="74" fill="${t.primary}" opacity=".18"/><circle cx="340" cy="55" r="34" fill="none" stroke="${t.accent}" stroke-width="2" opacity=".55"/>`;
-  if (t.layout === "editorial") return `<rect x="248" y="36" width="112" height="152" rx="${t.radius}" fill="${t.primary}" opacity=".28"/><path d="M28 178 L350 44" stroke="${t.accent}" stroke-width="1.5" opacity=".55"/>`;
-  if (t.layout === "dashboard") return `<path d="M0 152 C80 116 150 184 238 132 S340 88 390 116 V0 H0 Z" fill="${t.primary}" opacity=".18"/>`;
+  if (t.layout === "neon") return `<path d="M0 ${b} C90 ${a} 180 ${b + 30} 390 ${a}" fill="none" stroke="${t.primary}" stroke-width="5" opacity=".6"/><path d="M0 ${b + 70} C120 ${a + 70} 230 ${b + 92} 390 ${a + 80}" fill="none" stroke="${t.accent}" stroke-width="3" opacity=".7"/><path d="M18 96 L338 52 L374 136 L52 188 Z" fill="none" stroke="${t.primary}" stroke-width="2" opacity=".25"/>`;
+  if (t.layout === "glass") return `<circle cx="74" cy="86" r="92" fill="${t.primary}" opacity=".24"/><circle cx="326" cy="178" r="118" fill="${t.accent}" opacity=".18"/><path d="M38 248 C128 188 252 302 354 216" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/><path d="M0 340 C98 302 148 378 248 334 S344 296 390 324" fill="none" stroke="#fff" stroke-width="1.4" opacity=".28"/>`;
+  if (t.layout === "brutal") return `<path d="M0 42 H390 V86 H22 L0 72 Z" fill="${t.primary}" opacity=".92"/><path d="M32 132 H358 M32 170 H358 M32 208 H358" stroke="${t.accent}" stroke-width="2" opacity=".35"/><text x="312" y="116" fill="${t.primary}" font-family="${t.heading}" font-size="92" opacity=".18">${t.icon}</text>`;
+  if (t.layout === "zen") return `<circle cx="310" cy="85" r="74" fill="${t.primary}" opacity=".18"/><circle cx="340" cy="55" r="34" fill="none" stroke="${t.accent}" stroke-width="2" opacity=".55"/><path d="M44 210 C132 178 212 226 338 184" fill="none" stroke="${t.primary}" stroke-width="2" opacity=".38"/>`;
+  if (t.layout === "editorial") return `<path d="M248 36 C320 22 370 78 350 150 C334 208 278 202 238 176 Z" fill="${t.primary}" opacity=".28"/><path d="M28 178 L350 44" stroke="${t.accent}" stroke-width="1.5" opacity=".55"/>`;
+  if (t.layout === "dashboard") return `<path d="M0 152 C80 116 150 184 238 132 S340 88 390 116 V0 H0 Z" fill="${t.primary}" opacity=".18"/><path d="M28 236 H352" stroke="${t.accent}" stroke-width="1" opacity=".24" stroke-dasharray="5 8"/>`;
+  if (t.layout === "concierge") return `<path d="M0 190 C98 140 178 218 390 152 V0 H0 Z" fill="${t.primary}" opacity=".2"/><path d="M34 134 C126 104 218 162 346 112" fill="none" stroke="${t.accent}" stroke-width="2" opacity=".38"/>`;
+  if (t.layout === "market") return `<path d="M-8 176 C68 84 144 158 194 92 S312 44 398 118 V0 H-8 Z" fill="${t.primary}" opacity=".18"/><circle cx="326" cy="132" r="84" fill="${t.accent}" opacity=".12"/>`;
+  if (t.layout === "split") return `<path d="M0 0 H390 V210 C292 168 228 234 146 190 S62 126 0 166 Z" fill="${t.primary}" opacity=".18"/><path d="M214 24 L388 132" stroke="${t.accent}" stroke-width="1.5" opacity=".45"/>`;
   return `<circle cx="72" cy="58" r="54" fill="${t.primary}" opacity=".18"/><circle cx="326" cy="132" r="84" fill="${t.accent}" opacity=".12"/>`;
 }
 
@@ -246,8 +249,28 @@ function navBar(t: Tokens, labels: string[], active = 0): string {
   return `<g font-family="${t.body}" font-size="10" font-weight="700">${labels.slice(0, 4).map((l, i) => `<g transform="translate(${xs[i]} 792)"><circle cx="0" cy="-14" r="15" fill="${i === active ? t.primary : t.panel2}"/><text x="0" y="18" text-anchor="middle" fill="${i === active ? t.primary : t.muted}">${esc(l.slice(0, 9))}</text><text x="0" y="-10" text-anchor="middle" fill="${i === active ? t.bg : t.text}" font-size="13">${["⌂", "▦", "◷", "◉"][i]}</text></g>`).join("")}</g>`;
 }
 
+function panelShape(x: number, y: number, w: number, h: number, t: Tokens, variant = 0, fill?: string, opacity = 1): string {
+  const r = Math.min(t.radius, 24);
+  const c = fill ?? t.panel;
+  if (t.layout === "brutal" || t.layout === "neon") {
+    const cut = 10 + (variant % 3) * 8;
+    return `<path d="M${x + cut} ${y} H${x + w} L${x + w - cut} ${y + h} H${x} L${x + cut / 2} ${y + h * 0.52} Z" fill="${c}" opacity="${opacity}"/>`;
+  }
+  if (t.layout === "concierge") {
+    const n = Math.min(18, h * 0.18);
+    return `<path d="M${x + r} ${y} H${x + w - r} Q${x + w} ${y} ${x + w} ${y + r} V${y + h * 0.42} Q${x + w - n} ${y + h * 0.5} ${x + w} ${y + h * 0.58} V${y + h - r} Q${x + w} ${y + h} ${x + w - r} ${y + h} H${x + r} Q${x} ${y + h} ${x} ${y + h - r} V${y + h * 0.58} Q${x + n} ${y + h * 0.5} ${x} ${y + h * 0.42} V${y + r} Q${x} ${y} ${x + r} ${y} Z" fill="${c}" opacity="${opacity}"/>`;
+  }
+  if (t.layout === "market" || t.layout === "zen") {
+    return `<path d="M${x + r} ${y} C${x + w * 0.38} ${y - 10} ${x + w * 0.62} ${y + 12} ${x + w - r} ${y} Q${x + w} ${y} ${x + w} ${y + r} V${y + h - r} C${x + w * 0.78} ${y + h + 10} ${x + w * 0.3} ${y + h - 12} ${x + r} ${y + h} Q${x} ${y + h} ${x} ${y + h - r} V${y + r} Q${x} ${y} ${x + r} ${y} Z" fill="${c}" opacity="${opacity}"/>`;
+  }
+  if (t.layout === "editorial" || t.layout === "split") {
+    return `<path d="M${x + r} ${y} H${x + w - r} Q${x + w} ${y} ${x + w} ${y + r} V${y + h - r} Q${x + w} ${y + h} ${x + w - r} ${y + h} H${x + r} Q${x} ${y + h} ${x} ${y + h - r} V${y + r} Q${x} ${y} ${x + r} ${y} Z" fill="${c}" opacity="${opacity}"/>`;
+  }
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${c}" opacity="${opacity}"/>`;
+}
+
 function card(x: number, y: number, w: number, h: number, t: Tokens, extra = "", opacity = 1): string {
-  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(t.radius, 24)}" fill="${t.panel}" opacity="${opacity}"/>${extra}`;
+  return `${panelShape(x, y, w, h, t, Math.round(x + y + w + h), t.panel, opacity)}${extra}`;
 }
 
 function bars(x: number, y: number, t: Tokens, seed: number): string {
@@ -258,7 +281,7 @@ function bars(x: number, y: number, t: Tokens, seed: number): string {
 }
 
 function lineRows(x: number, y: number, t: Tokens, rows: string[], iconStart = 0): string {
-  return rows.map((r, i) => `<g transform="translate(${x} ${y + i * 58})"><rect width="320" height="46" rx="${Math.min(t.radius, 18)}" fill="${i % 2 ? t.panel2 : t.panel}"/><rect x="10" y="8" width="31" height="31" rx="${Math.min(t.radius, 12)}" fill="${i % 2 ? t.accent : t.primary}" opacity=".9"/><text x="25.5" y="29" text-anchor="middle" fill="${t.bg}" font-size="14" font-family="${t.heading}">${["✦","◆","◌","+","▣","◎"][((i + iconStart) % 6)]}</text><text x="53" y="20" fill="${t.text}" font-family="${t.body}" font-size="13" font-weight="800">${esc(r)}</text><text x="53" y="34" fill="${t.muted}" font-family="${t.body}" font-size="10">${esc(["Disponibile ora", "Gestione smart", "Personalizzabile", "Alta conversione"][i % 4])}</text><text x="296" y="28" text-anchor="end" fill="${t.primary}" font-family="${t.heading}" font-size="15" font-weight="900">${["€45", "4.9", "24h", "+18%"][i % 4]}</text></g>`).join("");
+  return rows.map((r, i) => `<g transform="translate(${x} ${y + i * 58})">${panelShape(0, 0, 320, 46, t, i, i % 2 ? t.panel2 : t.panel)}<circle cx="25.5" cy="23" r="16" fill="${i % 2 ? t.accent : t.primary}" opacity=".9"/><text x="25.5" y="29" text-anchor="middle" fill="${t.bg}" font-size="14" font-family="${t.heading}">${["✦","◆","◌","+","▣","◎"][((i + iconStart) % 6)]}</text><text x="53" y="20" fill="${t.text}" font-family="${t.body}" font-size="13" font-weight="800">${esc(r)}</text><text x="53" y="34" fill="${t.muted}" font-family="${t.body}" font-size="10">${esc(["Disponibile ora", "Gestione smart", "Personalizzabile", "Alta conversione"][i % 4])}</text><text x="296" y="28" text-anchor="end" fill="${t.primary}" font-family="${t.heading}" font-size="15" font-weight="900">${["€45", "4.9", "24h", "+18%"][i % 4]}</text></g>`).join("");
 }
 
 function brandLine(brand: string, max = 17): string {
