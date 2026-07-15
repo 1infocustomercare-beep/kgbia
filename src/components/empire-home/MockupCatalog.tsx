@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Monitor, Smartphone, Sparkles } from "lucide-react";
 import { SECTOR_PORTFOLIO, type SectorPortfolio } from "@/data/sector-mockup-images";
 import type { IndustryId } from "@/config/industry-config";
-import { MockupReactScreen } from "@/components/partner/MockupReactScreen";
+import { MockupReactScreen, type ColorStyle } from "@/components/partner/MockupReactScreen";
 import { catalogMockupUrl } from "@/data/catalog-mockup-registry";
 
 type CatalogItem = {
@@ -93,7 +93,7 @@ const heroSlug = (v: string) => v.toLowerCase().normalize("NFKD").replace(/[^a-z
  * Ensures the side "live" MockupReactScreen phones share the same vibe/palette
  * as the AI hero PNG shown in the center, so the whole card reads as ONE brand.
  */
-type HeroMatch = { template: string; primary?: string };
+type HeroMatch = { template: string; primary?: string; colorStyle?: ColorStyle; cue?: string };
 const HERO_MATCH: Record<string, HeroMatch> = {
   // FOOD — Onyx Brace Steakhouse
   "food::onyx-brace-steakhouse::obsidian":       { template: "luxury_gold",     primary: "#C9A24A" },
@@ -188,6 +188,66 @@ const HERO_MATCH: Record<string, HeroMatch> = {
 
 const heroMatchFor = (item: CatalogItem): HeroMatch | undefined =>
   HERO_MATCH[`${item.sectorId}::${heroSlug(item.brand)}::${heroSlug(item.style)}`];
+
+const sectorCueFor = (item: CatalogItem): string => {
+  const override = heroMatchFor(item)?.cue;
+  if (override) return override;
+  const name = `${item.sectorId} ${item.brand} ${item.style}`.toLowerCase();
+  if (item.sectorId === "food") {
+    if (/sakura|sushi|tsukiji|hinoki|omakase/.test(name)) return "food sushi omakase japanese tasting bar";
+    if (/pizza|casa nostra|strapizzami|forno/.test(name)) return "food pizzeria forno delivery tavoli";
+    if (/ceviche|pacifico|seafood|ocean|costa/.test(name)) return "food seafood ceviche beach club raw bar";
+    if (/kebab|brace/.test(name)) return "food kebab grill street food delivery";
+    if (/indocina|saigon|jade|spice|matcha/.test(name)) return "food asian fusion vietnamese cocktail dining";
+    return "food steakhouse fine dining wine cellar kitchen kds";
+  }
+  if (item.sectorId === "beauty") return /hair|velluto/.test(name) ? "beauty hair salon color balayage retail" : "beauty nail spa treatment agenda vip";
+  if (item.sectorId === "ncc") return /cala|charter|yacht|marina|vento/.test(name) ? "ncc yacht charter marina boat skipper booking" : "ncc limousine driver airport corporate transfer";
+  if (item.sectorId === "beach") return "beach lido ombrelloni cabana watersport pass";
+  if (item.sectorId === "hospitality") return "hospitality resort hotel suite concierge experiences direct booking";
+  if (item.sectorId === "healthcare") return "healthcare medical clinic patient agenda referti privacy";
+  if (item.sectorId === "fitness") return /padel/.test(name) ? "fitness padel club courts coaches membership" : "fitness gym classes coach progress membership";
+  if (item.sectorId === "retail") return "retail fashion boutique ecommerce product variants checkout";
+  if (item.sectorId === "construction") return "construction real estate cantiere sal units maintenance tickets";
+  if (item.sectorId === "plumber") return "plumber idraulico ac emergency technician quote booking";
+  if (item.sectorId === "veterinary") return "veterinary pet resort dog cat vaccines grooming";
+  if (item.sectorId === "childcare") return "childcare nursery kids parents meals enrollment";
+  return `${item.sectorId} ${item.brand} ${item.style}`;
+};
+
+const colorStyleFor = (item: CatalogItem): ColorStyle => {
+  const override = heroMatchFor(item)?.colorStyle;
+  if (override) return override;
+  const name = `${item.brand} ${item.style}`.toLowerCase();
+  if (/white|clean|ivory|marble|zen|ice|crystal|frost|soft/.test(name)) return "muted";
+  if (/pastel|blush|lavender|rose|sakura|sunny|garden|champagne/.test(name)) return "pastel";
+  if (/mono|chrome|black|obsidian|noir|luxury|dark|gold/.test(name)) return "vivid";
+  return "vivid";
+};
+
+const screenFlowFor = (item: CatalogItem): Array<{ type: string; label: string }> => {
+  const s = String(item.sectorId);
+  const cue = sectorCueFor(item).toLowerCase();
+  if (s === "food") return /delivery|street/.test(cue)
+    ? [{ type: "home", label: "Brand" }, { type: "menu", label: "Menu" }, { type: "map", label: "Zone" }, { type: "checkout", label: "Order" }]
+    : [{ type: "home", label: "Hero" }, { type: "menu", label: "Menu" }, { type: "kitchen", label: "KDS" }, { type: "booking", label: "Book" }];
+  if (s === "retail") return [{ type: "home", label: "Drop" }, { type: "catalog", label: "Shop" }, { type: "detail", label: "Look" }, { type: "checkout", label: "Cart" }];
+  if (s === "ncc") return /yacht|boat|charter/.test(cue)
+    ? [{ type: "home", label: "Hero" }, { type: "fleet", label: "Yacht" }, { type: "map", label: "Route" }, { type: "booking", label: "Book" }]
+    : [{ type: "home", label: "Hero" }, { type: "fleet", label: "Fleet" }, { type: "map", label: "Route" }, { type: "booking", label: "Quote" }];
+  if (s === "beach") return [{ type: "home", label: "Lido" }, { type: "map", label: "Map" }, { type: "services", label: "Extra" }, { type: "booking", label: "Pass" }];
+  if (s === "hospitality") return [{ type: "home", label: "Stay" }, { type: "rooms", label: "Rooms" }, { type: "services", label: "Concierge" }, { type: "booking", label: "Book" }];
+  if (s === "construction") return [{ type: "dashboard", label: "SAL" }, { type: "units", label: "Units" }, { type: "schedule", label: "Plan" }, { type: "booking", label: "Ticket" }];
+  if (s === "plumber") return [{ type: "dashboard", label: "SOS" }, { type: "services", label: "Jobs" }, { type: "fleet", label: "Team" }, { type: "booking", label: "Ticket" }];
+  if (s === "healthcare") return [{ type: "home", label: "Clinic" }, { type: "services", label: "Care" }, { type: "schedule", label: "Agenda" }, { type: "profile", label: "Patient" }];
+  if (s === "fitness") return [{ type: "home", label: "Club" }, { type: "services", label: "Class" }, { type: "schedule", label: "Slots" }, { type: "dashboard", label: "Stats" }];
+  if (s === "childcare") return [{ type: "home", label: "School" }, { type: "services", label: "Kids" }, { type: "schedule", label: "Day" }, { type: "profile", label: "Parent" }];
+  if (s === "veterinary") return [{ type: "home", label: "Care" }, { type: "services", label: "Pet" }, { type: "schedule", label: "Vet" }, { type: "profile", label: "Pet ID" }];
+  if (s === "beauty") return /hair/.test(cue)
+    ? [{ type: "home", label: "Salon" }, { type: "services", label: "Color" }, { type: "schedule", label: "Staff" }, { type: "profile", label: "VIP" }]
+    : [{ type: "home", label: "Atelier" }, { type: "services", label: "Ritual" }, { type: "schedule", label: "Agenda" }, { type: "booking", label: "Book" }];
+  return [{ type: "home", label: "Home" }, { type: "services", label: "Flow" }, { type: "detail", label: "Detail" }, { type: "booking", label: "Book" }];
+};
 
 const templateFor = (item: CatalogItem): string => {
   const override = heroMatchFor(item);
@@ -516,8 +576,9 @@ function TripletPhone({ item, screenType, priority, imageUrl, objectPosition }: 
                 type={screenType}
                 templateVariant={template}
                 businessName={item.brand}
-                businessSector={item.sectorId}
+                businessSector={sectorCueFor(item)}
                 primaryColor={primary}
+                colorStyle={colorStyleFor(item)}
                 width={renderWidth}
                 height={renderHeight}
                 glassIntensity={40}
