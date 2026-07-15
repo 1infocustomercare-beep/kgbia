@@ -684,7 +684,7 @@ function getMenuItems(sector: string) {
       { name: "Calice di Vino", desc: "Selezione cantina del giorno", price: 8 },
     ];
   }
-  if (/spa|wellness|benesser/.test(s)) {
+  if (/spa|wellness|benesser|beauty/.test(s)) {
     return [
       { name: "Massaggio Rituale Signature", desc: "90 min · Oli essenziali · Pietre calde", price: 145, badge: "Top" },
       { name: "Percorso Hammam", desc: "120 min · Vapore, scrub, idromassaggio", price: 95 },
@@ -704,7 +704,7 @@ function getMenuItems(sector: string) {
       { name: "Make-Up Evento", desc: "Trucco professionale · Prova inclusa", price: 90 },
     ];
   }
-  if (/hotel|albergh|lido|beach|yacht|b&b|bnb/.test(s)) {
+  if (/hotel|albergh|lido|beach|yacht|b&b|bnb|hospitality/.test(s)) {
     return [
       { name: "Suite Vista Mare", desc: "Camera deluxe · Terrazza privata", price: 280, badge: "Top" },
       { name: "Cabana Premium", desc: "Lettini, ombrellone, servizio bar", price: 95 },
@@ -734,7 +734,7 @@ function getMenuItems(sector: string) {
       { name: "Charter Limousine", desc: "Maybach · Champagne · Red carpet", price: 650 },
     ];
   }
-  if (/fitness|palestra|gym|crossfit/.test(s)) {
+  if (/fitness|palestra|gym|crossfit|padel|sport/.test(s)) {
     return [
       { name: "Personal Training 1:1", desc: "60 min · Coach certificato", price: 65, badge: "Top" },
       { name: "Abbonamento Mensile", desc: "Accesso illimitato · Sauna inclusa", price: 79 },
@@ -784,7 +784,7 @@ function getMenuItems(sector: string) {
       { name: "Open Bar Cocktail", desc: "Mixology pro · 4h illimitato", price: 35 },
     ];
   }
-  if (/edili|costruz|impresa|impiant|ristruttur/.test(s)) {
+  if (/edili|costruz|construction|impresa|impiant|ristruttur|plumber|idraul|elettr/.test(s)) {
     return [
       { name: "Sopralluogo Omaggio", desc: "Tecnico in 24h · Preventivo dettagliato", price: 0, badge: "Top" },
       { name: "Ristrutturazione Bagno", desc: "Chiavi in mano · 2 settimane", price: 6500, badge: "Chef" },
@@ -812,6 +812,36 @@ function getMenuItems(sector: string) {
       { name: "Pacchetto 10 Lezioni", desc: "Sconto 15% · Validità 6 mesi", price: 470 },
       { name: "Workshop Open Day", desc: "3h omaggio · Iscrizione richiesta", price: 0, badge: "Hot" },
       { name: "Certificazione Pro", desc: "Esame + diploma riconosciuto", price: 350 },
+    ];
+  }
+  if (/healthcare|clinic|medic|dent|salute|physio/.test(s)) {
+    return [
+      { name: "Visita specialistica", desc: "30 min · anamnesi · piano cura", price: 120, badge: "Top" },
+      { name: "Igiene & controllo", desc: "Richiamo automatico · referto digitale", price: 90 },
+      { name: "Check-up completo", desc: "Esami base · follow-up incluso", price: 180, badge: "Care" },
+      { name: "Teleconsulto", desc: "Video visita · ricetta se prevista", price: 65 },
+      { name: "Fisioterapia", desc: "Percorso 6 sedute · tracking dolore", price: 75, badge: "Plan" },
+      { name: "Urgenza controllata", desc: "Slot protetto · triage smart", price: 150 },
+    ];
+  }
+  if (/veterinary|vet|pet|animali/.test(s)) {
+    return [
+      { name: "Visita veterinaria", desc: "Controllo completo · pet record", price: 55, badge: "Care" },
+      { name: "Pet Resort Day", desc: "Giornata assistita · foto live", price: 38 },
+      { name: "Vaccino + reminder", desc: "Richiamo automatico al proprietario", price: 42, badge: "Top" },
+      { name: "Toeletta premium", desc: "Bagno, taglio, profumazione", price: 49 },
+      { name: "Nutrizione pet", desc: "Piano alimentare personalizzato", price: 70 },
+      { name: "Urgenza serale", desc: "Triage rapido · slot protetto", price: 95 },
+    ];
+  }
+  if (/childcare|nursery|asilo|infanzia|bimbi/.test(s)) {
+    return [
+      { name: "Tour famiglia", desc: "Visita scuola · colloquio pedagogico", price: 0, badge: "Open" },
+      { name: "Programma 3-5 anni", desc: "Laboratori, outdoor, inglese", price: 390 },
+      { name: "Diario genitori", desc: "Foto, pasti, sonno, attività live", price: 29, badge: "Top" },
+      { name: "Mensa naturale", desc: "Menu settimanale · allergeni", price: 95 },
+      { name: "Inserimento soft", desc: "Percorso graduale 10 giorni", price: 180 },
+      { name: "Summer camp", desc: "Giugno-luglio · laboratori creativi", price: 240 },
     ];
   }
   return [
