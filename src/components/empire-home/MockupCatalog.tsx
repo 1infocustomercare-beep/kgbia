@@ -526,7 +526,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                 <div className="relative flex min-h-[340px] items-end justify-center overflow-hidden px-5 pt-10 pb-6">
                   <div className="flex items-end justify-center gap-1">
                     <TripletPhone item={item} screenType={trio[0]} tilt={-4}  elevate={10} priority={index < 4} />
-                    <TripletPhone item={item} screenType={trio[1]} tilt={0}   elevate={0}  priority={index < 4} />
+                    <TripletPhone item={item} screenType={trio[1]} tilt={0}   elevate={0}  priority={index < 4} imageUrl={item.aiHero} />
                     <TripletPhone item={item} screenType={trio[2]} tilt={4}   elevate={10} priority={index < 4} />
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.75))]" />
