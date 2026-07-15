@@ -51,11 +51,15 @@ interface ThemeTokens {
     | "dark-luxury" | "warm-craft" | "ocean-breeze" | "minimal-zen"
     | "sushi-noir" | "gold-elegance" | "tech-modern" | "neon-vibrant"
     | "editorial-clean" | "boutique-pastel" | "monochrome-bold" | "glass-aurora"
-    | "real-estate-trust" | "fitness-energy";
+    | "real-estate-trust" | "fitness-energy" | "clinical-crystal" | "sunset-hospitality"
+    | "retail-chrome" | "blueprint-build" | "utility-flow" | "pet-playful"
+    | "childcare-sun" | "legal-navy" | "emerald-ledger" | "limo-noir";
   radius: number;
   imageStyle:
     | "food-warm" | "spa-soft" | "ocean" | "noir" | "luxury" | "modern"
-    | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy";
+    | "vibrant" | "pastel" | "monochrome" | "aurora" | "estate" | "energy"
+    | "clinical" | "hospitality" | "retail" | "blueprint" | "utility" | "pet"
+    | "childcare" | "legal" | "ledger" | "limo";
   /** Optional runtime override for glass intensity propagated to BottomNav and overlays. */
   glassIntensity?: number;
 }
@@ -218,13 +222,100 @@ function getTheme(variant: string, primaryOverride?: string, colorStyle?: ColorS
       fontBody: "'Inter', system-ui, sans-serif",
       vibe: "fitness-energy", radius: 14, imageStyle: "energy",
     },
+    clinical_clean: {
+      bg: "#F6FBFF", bgPanel: "#FFFFFF", bgPanelAlt: "#E8F5FF",
+      text: "#123047", textMuted: "rgba(18,48,71,0.58)",
+      primary: "#0EA5B7", accent: "#7DD3FC",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "clinical-crystal", radius: 16, imageStyle: "clinical",
+    },
+    beach_resort: {
+      bg: "#06212C", bgPanel: "#0E3742", bgPanelAlt: "#155261",
+      text: "#FFF2D6", textMuted: "rgba(255,242,214,0.62)",
+      primary: "#4DD4C6", accent: "#FFB36B",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'Outfit', system-ui, sans-serif",
+      vibe: "ocean-breeze", radius: 26, imageStyle: "ocean",
+    },
+    hospitality_sunset: {
+      bg: "#20121A", bgPanel: "#2D1B24", bgPanelAlt: "#3A2530",
+      text: "#FFF0DE", textMuted: "rgba(255,240,222,0.62)",
+      primary: "#FF9F6E", accent: "#D8B4FE",
+      fontHead: "'DM Serif Display', 'Cormorant Garamond', serif",
+      fontBody: "'Outfit', system-ui, sans-serif",
+      vibe: "sunset-hospitality", radius: 24, imageStyle: "hospitality",
+    },
+    retail_chrome: {
+      bg: "#F7F8FB", bgPanel: "#FFFFFF", bgPanelAlt: "#E9EEF7",
+      text: "#111827", textMuted: "rgba(17,24,39,0.55)",
+      primary: "#FF3B7A", accent: "#00B8D9",
+      fontHead: "'Space Grotesk', 'Sora', sans-serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "retail-chrome", radius: 18, imageStyle: "retail",
+    },
+    construction_blueprint: {
+      bg: "#0D1B2A", bgPanel: "#152C42", bgPanelAlt: "#1F3F5C",
+      text: "#EAF4FF", textMuted: "rgba(234,244,255,0.62)",
+      primary: "#F6C85F", accent: "#6BC6FF",
+      fontHead: "'Urbanist', 'Sora', sans-serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "blueprint-build", radius: 8, imageStyle: "blueprint",
+    },
+    plumber_utility: {
+      bg: "#071A24", bgPanel: "#0E2B38", bgPanelAlt: "#123C4F",
+      text: "#E9FBFF", textMuted: "rgba(233,251,255,0.62)",
+      primary: "#26D9B8", accent: "#FFCF5A",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "utility-flow", radius: 20, imageStyle: "utility",
+    },
+    pet_care_playful: {
+      bg: "#FFF9EC", bgPanel: "#FFFFFF", bgPanelAlt: "#FCE8C8",
+      text: "#3E2A1C", textMuted: "rgba(62,42,28,0.58)",
+      primary: "#7C9A4B", accent: "#F08A5D",
+      fontHead: "'Outfit', 'Nunito Sans', sans-serif",
+      fontBody: "'Nunito Sans', system-ui, sans-serif",
+      vibe: "pet-playful", radius: 22, imageStyle: "pet",
+    },
+    childcare_sunshine: {
+      bg: "#FFF7D8", bgPanel: "#FFFFFF", bgPanelAlt: "#FFE9A8",
+      text: "#49321A", textMuted: "rgba(73,50,26,0.58)",
+      primary: "#FF8B3D", accent: "#57B7FF",
+      fontHead: "'Outfit', 'Nunito Sans', sans-serif",
+      fontBody: "'Nunito Sans', system-ui, sans-serif",
+      vibe: "childcare-sun", radius: 28, imageStyle: "childcare",
+    },
+    legal_navy: {
+      bg: "#081426", bgPanel: "#111F36", bgPanelAlt: "#1A2B46",
+      text: "#F4ECDC", textMuted: "rgba(244,236,220,0.60)",
+      primary: "#C7A66A", accent: "#8FB3D9",
+      fontHead: "'Libre Baskerville', 'Cormorant Garamond', serif",
+      fontBody: "'IBM Plex Sans', system-ui, sans-serif",
+      vibe: "legal-navy", radius: 6, imageStyle: "legal",
+    },
+    accounting_emerald: {
+      bg: "#06241D", bgPanel: "#0C352B", bgPanelAlt: "#10483A",
+      text: "#F0FFF8", textMuted: "rgba(240,255,248,0.60)",
+      primary: "#65D6A4", accent: "#E5C76B",
+      fontHead: "'Sora', 'Manrope', sans-serif",
+      fontBody: "'IBM Plex Sans', system-ui, sans-serif",
+      vibe: "emerald-ledger", radius: 10, imageStyle: "ledger",
+    },
+    ncc_limo: {
+      bg: "#070708", bgPanel: "#141416", bgPanelAlt: "#202026",
+      text: "#F7F0E6", textMuted: "rgba(247,240,230,0.58)",
+      primary: "#CFA85B", accent: "#A7B7C7",
+      fontHead: "'Cormorant Garamond', 'Playfair Display', serif",
+      fontBody: "'Manrope', system-ui, sans-serif",
+      vibe: "limo-noir", radius: 12, imageStyle: "limo",
+    },
   };
   // Aliases for variants used in edge function but mapped to closest existing theme
   const aliases: Record<string, string> = {
     noir_gold: "luxury_gold",
     blush_lavender: "boutique_pastel",
-    ocean_deep: "batey",
-    clinical_clean: "minimal_zen",
+    ocean_deep: "beach_resort",
     luxury_chrome: "monochrome_bold",
     navy_trust: "real_estate_trust",
   };
@@ -253,6 +344,16 @@ function ArtImage({ theme, seed = 0, className = "", style = {} }: { theme: Them
     "aurora":     [["#7C9FFF","#A5F3D0","#0B0F1F"], ["#C9A4FF","#7CD8FF","#141B33"], ["#A5F3D0","#FFD3B6","#0B0F1F"], ["#FF9EC7","#A8B0FF","#1B2547"]],
     "estate":     [["#B89760","#7A6240","#1B2A3A"], ["#D4BC8A","#9C8557","#2C3E50"], ["#E0C9A0","#A88B5C","#34495E"], ["#F5E9D2","#B89760","#1B2A3A"]],
     "energy":     [["#C8FF00","#7AAD00","#0D0D0D"], ["#FF3D3D","#A02020","#0D0D0D"], ["#00FFE5","#0099A8","#171717"], ["#FFD60A","#B89500","#0D0D0D"]],
+    "clinical":   [["#DDF7FF","#6ED8E8","#0EA5B7"], ["#FFFFFF","#BFEFFF","#1B7A8A"], ["#EAFBFF","#7DD3FC","#123047"], ["#F6FBFF","#9FE7F2","#0B7285"]],
+    "hospitality":[["#FF9F6E","#C45C8A","#20121A"], ["#D8B4FE","#FFB36B","#3A2530"], ["#FFE0B8","#D9826B","#2D1B24"], ["#F8C7A3","#B85B88","#20121A"]],
+    "retail":     [["#FF3B7A","#00B8D9","#F7F8FB"], ["#111827","#C7D2FE","#FFFFFF"], ["#00E0C6","#FFB4D2","#E9EEF7"], ["#FB7185","#38BDF8","#111827"]],
+    "blueprint":  [["#F6C85F","#6BC6FF","#0D1B2A"], ["#D7E7F5","#416D91","#152C42"], ["#FFDD7A","#1F3F5C","#091522"], ["#9DD5FF","#F6C85F","#20364E"]],
+    "utility":    [["#26D9B8","#FFCF5A","#071A24"], ["#3B82F6","#26D9B8","#0E2B38"], ["#E9FBFF","#FFCF5A","#123C4F"], ["#12BFA5","#F97316","#071A24"]],
+    "pet":        [["#7C9A4B","#F08A5D","#FFF9EC"], ["#FFD36E","#78B7A6","#5A3D2B"], ["#F6C177","#A7C957","#FFFFFF"], ["#E5989B","#6B705C","#FFF1DC"]],
+    "childcare":  [["#FF8B3D","#57B7FF","#FFF7D8"], ["#FFE45E","#8BD3DD","#F7A072"], ["#9AE66E","#FFB6C1","#FFF4B8"], ["#57B7FF","#FFCF5A","#49321A"]],
+    "legal":      [["#C7A66A","#8FB3D9","#081426"], ["#F4ECDC","#455A78","#111F36"], ["#B79A5D","#233957","#06101F"], ["#E8D9BE","#8FB3D9","#1A2B46"]],
+    "ledger":     [["#65D6A4","#E5C76B","#06241D"], ["#D9FFF0","#2E8B67","#0C352B"], ["#A7F3D0","#FDE68A","#10483A"], ["#30B981","#C7A64A","#06241D"]],
+    "limo":       [["#CFA85B","#A7B7C7","#070708"], ["#F7F0E6","#CFA85B","#141416"], ["#4B5563","#D8C08A","#020203"], ["#A7B7C7","#725A2E","#202026"]],
   };
   const palette = palettes[theme.imageStyle][seed % palettes[theme.imageStyle].length];
   const id = `g-${theme.imageStyle}-${seed}`;
@@ -276,9 +377,139 @@ function ArtImage({ theme, seed = 0, className = "", style = {} }: { theme: Them
         {theme.imageStyle === "noir" && <rect x="0" y="60" width="100" height="40" fill="black" opacity="0.4" />}
         {theme.imageStyle === "luxury" && <path d={`M0,${50 + seed % 20} Q50,${30 + seed % 20} 100,${55 + seed % 15} L100,100 L0,100 Z`} fill={palette[2]} opacity="0.5" />}
         {theme.imageStyle === "ocean" && <path d={`M0,${65 + seed % 10} Q25,${55 + seed % 10} 50,${65} T100,${60} L100,100 L0,100 Z`} fill="white" opacity="0.15" />}
+        {theme.imageStyle === "clinical" && <g opacity="0.24" stroke="#fff" strokeWidth="1"><path d="M15 20h70M15 38h70M15 56h70M15 74h70M24 12v76M46 12v76M68 12v76"/><path d="M40 26h20M50 16v20" strokeWidth="3"/></g>}
+        {theme.imageStyle === "hospitality" && <path d="M0 78 C24 54 34 82 58 58 S82 38 100 58 L100 100 L0 100 Z" fill="#fff" opacity="0.18" />}
+        {theme.imageStyle === "retail" && <g opacity="0.18" fill="#fff"><path d="M-10 24 L24 -10 H48 L-10 48Z"/><path d="M48 110 L110 48 V75 L75 110Z"/><rect x="12" y="62" width="42" height="10" rx="5"/></g>}
+        {theme.imageStyle === "blueprint" && <g opacity="0.30" stroke="#fff" fill="none"><path d="M8 18h84v54H8zM8 38h84M35 18v54M62 18v54"/><path d="M14 84h70" strokeDasharray="4 3"/></g>}
+        {theme.imageStyle === "utility" && <g opacity="0.22" fill="#fff"><path d="M0 72 C18 56 36 90 54 68 S82 48 100 64 V100 H0Z"/><rect x="18" y="22" width="64" height="12" rx="6" transform="rotate(-14 50 28)"/></g>}
+        {theme.imageStyle === "pet" && <g opacity="0.23" fill="#fff"><ellipse cx="34" cy="46" rx="13" ry="10"/><circle cx="22" cy="32" r="5"/><circle cx="34" cy="28" r="5"/><circle cx="47" cy="32" r="5"/><path d="M68 22 C82 34 82 54 66 70" stroke="#fff" strokeWidth="5" fill="none" strokeLinecap="round"/></g>}
+        {theme.imageStyle === "childcare" && <g opacity="0.24" fill="#fff"><path d="M50 16l6 12 14 2-10 10 3 14-13-7-13 7 3-14-10-10 14-2z"/><path d="M8 76 Q30 52 52 76 T96 76" stroke="#fff" strokeWidth="6" fill="none" strokeLinecap="round"/></g>}
+        {theme.imageStyle === "legal" && <g opacity="0.18" stroke="#fff" fill="none" strokeWidth="2"><path d="M50 14v64M28 28h44M32 78h36"/><path d="M28 28l-14 30h28zM72 28l-14 30h28z"/></g>}
+        {theme.imageStyle === "ledger" && <g opacity="0.22" stroke="#fff" fill="none"><path d="M16 18h68v64H16zM16 34h68M16 50h68M16 66h68M36 18v64"/><path d="M44 58l8-10 8 7 12-18" strokeWidth="3"/></g>}
+        {theme.imageStyle === "limo" && <g opacity="0.20" fill="#fff"><path d="M14 60 C22 42 36 34 58 38 L76 48 C84 49 90 54 92 62 H14Z"/><circle cx="32" cy="66" r="6"/><circle cx="74" cy="66" r="6"/><rect x="34" y="43" width="20" height="10" rx="2" fill={palette[2]} opacity="0.8"/></g>}
       </svg>
     </div>
   );
+}
+
+function screenBackground(theme: ThemeTokens) {
+  const base = theme.bg;
+  const bgByVibe: Partial<Record<ThemeTokens["vibe"], string>> = {
+    "sushi-noir": `linear-gradient(180deg, ${base}, ${theme.bgPanelAlt})`,
+    "warm-craft": `linear-gradient(160deg, ${theme.bg} 0%, ${theme.bgPanelAlt} 58%, ${theme.primary}18 100%)`,
+    "ocean-breeze": `linear-gradient(180deg, ${theme.bg} 0%, ${theme.bgPanelAlt} 100%)`,
+    "clinical-crystal": `linear-gradient(180deg, #F8FDFF 0%, ${theme.bgPanelAlt} 100%)`,
+    "fitness-energy": `linear-gradient(160deg, ${theme.bg} 0%, #111 46%, ${theme.primary}18 100%)`,
+    "blueprint-build": `linear-gradient(180deg, ${theme.bg} 0%, ${theme.bgPanelAlt} 100%)`,
+    "childcare-sun": `linear-gradient(180deg, ${theme.bg} 0%, #FFEFB7 100%)`,
+    "retail-chrome": `linear-gradient(180deg, ${theme.bg} 0%, ${theme.bgPanelAlt} 100%)`,
+    "limo-noir": `linear-gradient(180deg, #020203 0%, ${theme.bgPanel} 100%)`,
+  };
+  return bgByVibe[theme.vibe] ?? base;
+}
+
+function ScreenMotif({ theme }: { theme: ThemeTokens }) {
+  const stroke = theme.text;
+  const primary = theme.primary;
+  const accent = theme.accent;
+  const common = "pointer-events-none absolute inset-0 z-0 h-full w-full";
+  if (theme.vibe === "blueprint-build") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.18">
+      <path d="M0 70H240M0 140H240M0 210H240M0 280H240M0 350H240M0 420H240M48 0V520M96 0V520M144 0V520M192 0V520" stroke={accent} strokeWidth="1" />
+      <path d="M26 470 L104 330 L214 394" stroke={primary} strokeWidth="3" fill="none" strokeDasharray="8 7" />
+    </svg>
+  );
+  if (theme.vibe === "ocean-breeze" || theme.vibe === "sunset-hospitality") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.18">
+      <path d="M-20 130 C50 80 88 164 156 118 S250 114 270 86" stroke={accent} strokeWidth="18" fill="none" strokeLinecap="round" />
+      <path d="M-30 420 C42 368 104 450 172 404 S254 378 282 418" stroke={primary} strokeWidth="10" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+  if (theme.vibe === "childcare-sun" || theme.vibe === "pet-playful") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.16">
+      <path d="M24 78 Q72 34 120 78 T216 78" stroke={accent} strokeWidth="9" fill="none" strokeLinecap="round" />
+      <path d="M36 430l16 9 16-9 16 9 16-9 16 9 16-9" stroke={primary} strokeWidth="6" fill="none" strokeLinecap="round" />
+      <path d="M182 130l8 16 18 3-13 12 3 18-16-8-16 8 3-18-13-12 18-3z" fill={primary} />
+    </svg>
+  );
+  if (theme.vibe === "clinical-crystal") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.14">
+      <path d="M36 80h168M36 150h168M36 220h168M36 290h168M36 360h168M60 40v420M120 40v420M180 40v420" stroke={primary} />
+      <path d="M96 126h48M120 102v48" stroke={accent} strokeWidth="10" strokeLinecap="round" />
+    </svg>
+  );
+  if (theme.vibe === "retail-chrome" || theme.vibe === "neon-vibrant") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.16">
+      <path d="M-42 84 L72 -30 H120 L-42 132Z" fill={primary} />
+      <path d="M132 550 L282 332 V412 L180 550Z" fill={accent} />
+    </svg>
+  );
+  if (theme.vibe === "legal-navy" || theme.vibe === "emerald-ledger" || theme.vibe === "limo-noir") return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.12">
+      <path d="M0 112H240M0 392H240M36 0V520M204 0V520" stroke={primary} />
+      <path d="M52 88H188M52 416H188" stroke={stroke} strokeWidth="2" />
+    </svg>
+  );
+  return (
+    <svg className={common} viewBox="0 0 240 520" preserveAspectRatio="none" opacity="0.12">
+      <path d="M-20 88 C64 38 108 134 188 72 S270 66 292 38" stroke={primary} strokeWidth="12" fill="none" strokeLinecap="round" />
+      <path d="M26 466 L112 344 L214 424" stroke={accent} strokeWidth="7" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function mockupSurfaceCss(theme: ThemeTokens) {
+  const radiusMap: Partial<Record<ThemeTokens["vibe"], string>> = {
+    "sushi-noir": "3px 18px 3px 18px",
+    "warm-craft": "18px 8px 22px 10px",
+    "ocean-breeze": "24px 24px 10px 24px",
+    "minimal-zen": "2px",
+    "gold-elegance": "4px 18px 4px 18px",
+    "tech-modern": "16px 6px 16px 6px",
+    "neon-vibrant": "20px 5px 20px 5px",
+    "editorial-clean": "2px",
+    "boutique-pastel": "26px 14px 26px 14px",
+    "monochrome-bold": "0px",
+    "glass-aurora": "22px 8px 22px 8px",
+    "real-estate-trust": "8px 2px 18px 2px",
+    "fitness-energy": "3px",
+    "clinical-crystal": "18px 18px 6px 18px",
+    "sunset-hospitality": "26px 10px 26px 10px",
+    "retail-chrome": "18px 4px 18px 4px",
+    "blueprint-build": "6px",
+    "utility-flow": "20px 8px 8px 20px",
+    "pet-playful": "22px 14px 28px 14px",
+    "childcare-sun": "28px 18px 28px 18px",
+    "legal-navy": "2px",
+    "emerald-ledger": "10px 2px 10px 2px",
+    "limo-noir": "3px 15px 3px 15px",
+  };
+  const specialClip = theme.vibe === "blueprint-build"
+    ? `clip-path: polygon(0 0, 100% 0, 96% 100%, 0 100%);`
+    : theme.vibe === "fitness-energy"
+    ? `clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);`
+    : theme.vibe === "retail-chrome"
+    ? `clip-path: polygon(0 0, 92% 0, 100% 18%, 100% 100%, 8% 100%, 0 82%);`
+    : "";
+  return `
+    .mockup-screen .rounded-xl,.mockup-screen .rounded-2xl,.mockup-screen .rounded-lg{
+      border-radius:${radiusMap[theme.vibe] ?? `${theme.radius}px`} !important;
+      border-color:${theme.primary}22;
+      box-shadow: inset 0 1px 0 ${theme.text}10, 0 10px 26px -20px ${theme.primary};
+    }
+    .mockup-screen[data-vibe="blueprint-build"] .rounded-xl,
+    .mockup-screen[data-vibe="fitness-energy"] .rounded-xl,
+    .mockup-screen[data-vibe="retail-chrome"] .rounded-xl{${specialClip}}
+    .mockup-screen[data-vibe="sushi-noir"] .rounded-full{border-radius:2px 999px 999px 2px!important;}
+    .mockup-screen[data-vibe="monochrome-bold"] .rounded-full{border-radius:0!important;}
+    .mockup-screen[data-vibe="childcare-sun"] .rounded-md{border-radius:14px!important;}
+    @media (prefers-reduced-motion:no-preference){
+      .mockup-screen [data-float="true"]{animation:mockupFloat 3.8s ease-in-out infinite;}
+      .mockup-screen [data-slide="true"]{animation:mockupSlide 4.4s ease-in-out infinite;}
+    }
+    @keyframes mockupFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+    @keyframes mockupSlide{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  `;
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -345,6 +576,18 @@ function brandInitials(name: string) {
 
 function sectorLabel(sector: string) {
   const s = (sector || "").toLowerCase();
+  if (s === "food") return "Food & Ristorazione";
+  if (s === "beauty") return "Beauty & Wellness";
+  if (s === "ncc") return "NCC & Charter";
+  if (s === "veterinary") return "Pet Care";
+  if (s === "childcare") return "Asilo & Famiglie";
+  if (s === "fitness") return "Fitness Club";
+  if (s === "healthcare") return "Studio Medico";
+  if (s === "construction") return "Cantieri & Real Estate";
+  if (s === "hospitality") return "Hotel & Resort";
+  if (s === "plumber") return "Servizi Tecnici";
+  if (s === "retail") return "Boutique Retail";
+  if (s === "beach") return "Beach Club";
   if (/sushi|giappon/.test(s)) return "Sushi & Ramen";
   if (/pizz/.test(s)) return "Pizzeria";
   if (/ristor|trattor|oster/.test(s)) return "Ristorante";
@@ -366,6 +609,47 @@ function sectorLabel(sector: string) {
   if (/scuola|academy|corso|format/.test(s)) return "Academy";
   if (/auto|moto|conces/.test(s)) return "Automotive";
   return sector || "Premium";
+}
+
+function sectorKind(sector: string) {
+  const s = (sector || "").toLowerCase();
+  if (s === "food" || /sushi|pizz|ristor|trattor|oster|bar|cafe|kebab|deli|steak/.test(s)) return "food";
+  if (s === "beauty" || /spa|wellness|beauty|estetic|parruc|hair|nail/.test(s)) return "beauty";
+  if (s === "ncc" || /ncc|taxi|transfer|noleggi|limousine|driver/.test(s)) return "ncc";
+  if (s === "beach" || /lido|spiagg|beach|ombrell/.test(s)) return "beach";
+  if (s === "hospitality" || s === "agriturismo" || /hotel|resort|albergh|b&b|bnb|stay|suite/.test(s)) return "hospitality";
+  if (s === "healthcare" || /medic|dent|clinic|salute|physio/.test(s)) return "healthcare";
+  if (s === "fitness" || /fitness|palestra|gym|crossfit|padel|sport/.test(s)) return "fitness";
+  if (s === "retail" || /ecommerce|shop|store|fashion|moda|boutique|profum/.test(s)) return "retail";
+  if (s === "construction" || /edili|costruz|cantiere|immobil|real ?estate|domus|resident/.test(s)) return "construction";
+  if (s === "plumber" || /idraul|plumb|elettr|impiant|cleaning|artigian/.test(s)) return "plumber";
+  if (s === "veterinary" || /vet|pet|animali|dog|cat/.test(s)) return "veterinary";
+  if (s === "childcare" || /asilo|nursery|scuola|bimbi|child/.test(s)) return "childcare";
+  if (s === "legal" || /legal|avvocat|notai/.test(s)) return "legal";
+  if (s === "accounting" || /account|commercia|fiscal/.test(s)) return "accounting";
+  return "custom";
+}
+
+function getExperienceCopy(sector: string) {
+  const kind = sectorKind(sector);
+  const copy: Record<string, { search: string; hero: string; sub: string; tabs: string[]; featured: string; menu: string; booking: string; bookingNote: string }> = {
+    food: { search: "piatti, tavoli, delivery", hero: "Sala piena, cucina sincronizzata", sub: "Menù live · KDS · recensioni", tabs: ["Cena", "Delivery", "Carta vini", "Chef", "Allergeni"], featured: "Piatti che vendono", menu: "Menu operativo", booking: "Prenota tavolo", bookingNote: "Capienza, turni e no-show sotto controllo" },
+    beauty: { search: "trattamenti, staff, pacchetti", hero: "Agenda piena e clientela VIP", sub: "Cabine · rebooking · beauty card", tabs: ["Viso", "Capelli", "Nails", "Spa", "VIP"], featured: "Trattamenti signature", menu: "Trattamenti & rituali", booking: "Prenota trattamento", bookingNote: "Staff, cabine e reminder automatici" },
+    ncc: { search: "tratte, driver, aeroporti", hero: "Transfer premium in 40 secondi", sub: "Flotta · preventivi · fattura B2B", tabs: ["Airport", "Hourly", "Eventi", "VIP", "B2B"], featured: "Servizi executive", menu: "Tratte & pacchetti", booking: "Calcola preventivo", bookingNote: "Pickup, flight tracking e autista assegnato" },
+    beach: { search: "ombrelloni, cabane, attività", hero: "Spiaggia live, mare già prenotato", sub: "Mappa ombrelloni · pass · esperienze", tabs: ["Cabane", "Lettini", "Boat", "Food", "Sunset"], featured: "Esperienze sul mare", menu: "Attività & pass", booking: "Prenota posto", bookingNote: "Mappa real-time e upgrade in spiaggia" },
+    hospitality: { search: "camere, suite, concierge", hero: "Ospiti seguiti prima del check-in", sub: "Direct booking · extra · concierge", tabs: ["Suite", "Spa", "Tour", "Dinner", "Transfer"], featured: "Esperienze da vendere", menu: "Camere & extra", booking: "Prenota soggiorno", bookingNote: "Date, ospiti, extra e caparra in un flusso" },
+    healthcare: { search: "prestazioni, medici, referti", hero: "Percorso paziente chiaro e sicuro", sub: "Agenda medici · richiami · privacy", tabs: ["Visite", "Esami", "Follow-up", "Urgenze", "Referti"], featured: "Prestazioni richieste", menu: "Prestazioni cliniche", booking: "Prenota visita", bookingNote: "Medico, sede, consenso e promemoria" },
+    fitness: { search: "classi, coach, abbonamenti", hero: "Club energico, progressi visibili", sub: "Classi · PT · membership", tabs: ["WOD", "Padel", "PT", "Yoga", "Scan"], featured: "Classi ad alta conversione", menu: "Classi & membership", booking: "Iscriviti alla classe", bookingNote: "Slot, coach e livello sempre evidenti" },
+    retail: { search: "prodotti, taglie, novità", hero: "Vetrina shop che spinge il carrello", sub: "Catalogo · drop · CRM VIP", tabs: ["Drop", "Nuovi", "VIP", "Outlet", "Gift"], featured: "Prodotti in evidenza", menu: "Catalogo dinamico", booking: "Completa acquisto", bookingNote: "Taglie, varianti e recupero carrello" },
+    construction: { search: "cantieri, unità, ticket", hero: "Cantiere sotto controllo, cliente aggiornato", sub: "SAL · manutenzioni · documenti", tabs: ["SAL", "Unità", "Ticket", "Team", "Docs"], featured: "Cantieri prioritari", menu: "Interventi & unità", booking: "Apri ticket", bookingNote: "Priorità, squadra e materiali tracciati" },
+    plumber: { search: "urgenze, tecnici, ricambi", hero: "Interventi rapidi senza caos", sub: "SLA · tecnico · preventivo", tabs: ["SOS", "Caldaie", "Clima", "Ricambi", "Check"], featured: "Servizi tecnici", menu: "Interventi disponibili", booking: "Richiedi intervento", bookingNote: "Urgenza, zona e tecnico disponibili" },
+    veterinary: { search: "visite, pet hotel, vaccini", hero: "Pet care premium e proprietari sereni", sub: "Schede animali · vaccini · resort", tabs: ["Visite", "Resort", "Toeletta", "Vaccini", "Shop"], featured: "Servizi pet care", menu: "Cure & resort", booking: "Prenota pet care", bookingNote: "Animale, trattamento e reminder vaccini" },
+    childcare: { search: "programmi, mensa, iscrizioni", hero: "Famiglie informate, bambini felici", sub: "Attività · team · diario genitori", tabs: ["Programmi", "Mensa", "Team", "Tour", "Iscrivi"], featured: "Programmi educativi", menu: "Programmi & attività", booking: "Prenota tour", bookingNote: "Età, fascia oraria e genitore referente" },
+    legal: { search: "pratiche, scadenze, clienti", hero: "Studio ordinato, cliente sempre aggiornato", sub: "Pratiche · scadenze · documenti", tabs: ["Pratiche", "Udienza", "Contratti", "KYC", "Firme"], featured: "Servizi professionali", menu: "Pratiche & consulenze", booking: "Prenota consulenza", bookingNote: "Materia, riservatezza e documenti" },
+    accounting: { search: "scadenze, fatture, fiscalità", hero: "Scadenze fiscali senza sorprese", sub: "F24 · fatture · consulenza", tabs: ["F24", "IVA", "Paghe", "Bilanci", "Alert"], featured: "Servizi contabili", menu: "Scadenze & consulenze", booking: "Apri pratica", bookingNote: "Documenti, scadenza e responsabile" },
+    custom: { search: "servizi, clienti, richieste", hero: "Esperienza digitale su misura", sub: "Sito · agenti · conversione", tabs: ["Top", "Nuovi", "VIP", "Demo", "Care"], featured: "Servizi richiesti", menu: "Offerta completa", booking: "Prenota demo", bookingNote: "Richiesta, team e conferma immediata" },
+  };
+  return copy[kind] ?? copy.custom;
 }
 
 function getMenuItems(sector: string) {
@@ -400,7 +684,7 @@ function getMenuItems(sector: string) {
       { name: "Calice di Vino", desc: "Selezione cantina del giorno", price: 8 },
     ];
   }
-  if (/spa|wellness|benesser/.test(s)) {
+  if (/spa|wellness|benesser|beauty/.test(s)) {
     return [
       { name: "Massaggio Rituale Signature", desc: "90 min · Oli essenziali · Pietre calde", price: 145, badge: "Top" },
       { name: "Percorso Hammam", desc: "120 min · Vapore, scrub, idromassaggio", price: 95 },
@@ -420,7 +704,7 @@ function getMenuItems(sector: string) {
       { name: "Make-Up Evento", desc: "Trucco professionale · Prova inclusa", price: 90 },
     ];
   }
-  if (/hotel|albergh|lido|beach|yacht|b&b|bnb/.test(s)) {
+  if (/hotel|albergh|lido|beach|yacht|b&b|bnb|hospitality/.test(s)) {
     return [
       { name: "Suite Vista Mare", desc: "Camera deluxe · Terrazza privata", price: 280, badge: "Top" },
       { name: "Cabana Premium", desc: "Lettini, ombrellone, servizio bar", price: 95 },
@@ -450,7 +734,7 @@ function getMenuItems(sector: string) {
       { name: "Charter Limousine", desc: "Maybach · Champagne · Red carpet", price: 650 },
     ];
   }
-  if (/fitness|palestra|gym|crossfit/.test(s)) {
+  if (/fitness|palestra|gym|crossfit|padel|sport/.test(s)) {
     return [
       { name: "Personal Training 1:1", desc: "60 min · Coach certificato", price: 65, badge: "Top" },
       { name: "Abbonamento Mensile", desc: "Accesso illimitato · Sauna inclusa", price: 79 },
@@ -500,7 +784,7 @@ function getMenuItems(sector: string) {
       { name: "Open Bar Cocktail", desc: "Mixology pro · 4h illimitato", price: 35 },
     ];
   }
-  if (/edili|costruz|impresa|impiant|ristruttur/.test(s)) {
+  if (/edili|costruz|construction|impresa|impiant|ristruttur|plumber|idraul|elettr/.test(s)) {
     return [
       { name: "Sopralluogo Omaggio", desc: "Tecnico in 24h · Preventivo dettagliato", price: 0, badge: "Top" },
       { name: "Ristrutturazione Bagno", desc: "Chiavi in mano · 2 settimane", price: 6500, badge: "Chef" },
@@ -530,6 +814,36 @@ function getMenuItems(sector: string) {
       { name: "Certificazione Pro", desc: "Esame + diploma riconosciuto", price: 350 },
     ];
   }
+  if (/healthcare|clinic|medic|dent|salute|physio/.test(s)) {
+    return [
+      { name: "Visita specialistica", desc: "30 min · anamnesi · piano cura", price: 120, badge: "Top" },
+      { name: "Igiene & controllo", desc: "Richiamo automatico · referto digitale", price: 90 },
+      { name: "Check-up completo", desc: "Esami base · follow-up incluso", price: 180, badge: "Care" },
+      { name: "Teleconsulto", desc: "Video visita · ricetta se prevista", price: 65 },
+      { name: "Fisioterapia", desc: "Percorso 6 sedute · tracking dolore", price: 75, badge: "Plan" },
+      { name: "Urgenza controllata", desc: "Slot protetto · triage smart", price: 150 },
+    ];
+  }
+  if (/veterinary|vet|pet|animali/.test(s)) {
+    return [
+      { name: "Visita veterinaria", desc: "Controllo completo · pet record", price: 55, badge: "Care" },
+      { name: "Pet Resort Day", desc: "Giornata assistita · foto live", price: 38 },
+      { name: "Vaccino + reminder", desc: "Richiamo automatico al proprietario", price: 42, badge: "Top" },
+      { name: "Toeletta premium", desc: "Bagno, taglio, profumazione", price: 49 },
+      { name: "Nutrizione pet", desc: "Piano alimentare personalizzato", price: 70 },
+      { name: "Urgenza serale", desc: "Triage rapido · slot protetto", price: 95 },
+    ];
+  }
+  if (/childcare|nursery|asilo|infanzia|bimbi/.test(s)) {
+    return [
+      { name: "Tour famiglia", desc: "Visita scuola · colloquio pedagogico", price: 0, badge: "Open" },
+      { name: "Programma 3-5 anni", desc: "Laboratori, outdoor, inglese", price: 390 },
+      { name: "Diario genitori", desc: "Foto, pasti, sonno, attività live", price: 29, badge: "Top" },
+      { name: "Mensa naturale", desc: "Menu settimanale · allergeni", price: 95 },
+      { name: "Inserimento soft", desc: "Percorso graduale 10 giorni", price: 180 },
+      { name: "Summer camp", desc: "Giugno-luglio · laboratori creativi", price: 240 },
+    ];
+  }
   return [
     { name: "Servizio Premium", desc: "Pacchetto base · 60 min", price: 60, badge: "Top" },
     { name: "Consulenza Esperto", desc: "Analisi personalizzata · 90 min", price: 95 },
@@ -546,6 +860,13 @@ function getMenuItems(sector: string) {
 function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: string; sector: string; city: string }) {
   const sLabel = sectorLabel(sector);
   const items = getMenuItems(sector).slice(0, 3);
+  const copy = getExperienceCopy(sector);
+  const kind = sectorKind(sector);
+  const metrics = kind === "construction" ? ["SAL 82%", "7 ticket", "2 squadre"]
+    : kind === "healthcare" ? ["12 slot", "-58% no-show", "GDPR"]
+    : kind === "childcare" ? ["3 classi", "Mensa live", "Tour oggi"]
+    : kind === "ncc" ? ["ETA 8m", "3 driver", "B2B"]
+    : ["4.9★", "Live", "+38%"];
 
   return (
     <div className="pb-14 overflow-hidden h-full">
@@ -557,7 +878,7 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
             {brandInitials(name)}
           </div>
           <div>
-            <p className="text-[7px] uppercase tracking-wider font-semibold" style={{ color: theme.textMuted }}>{city || "Italia"}</p>
+             <p className="text-[7px] uppercase tracking-wider font-semibold" style={{ color: theme.textMuted }}>{city || sLabel}</p>
             <p className="text-[10px] font-bold leading-none" style={{ color: theme.text, fontFamily: theme.fontHead }}>{name}</p>
           </div>
         </div>
@@ -576,27 +897,38 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
       <div className="px-4 mb-2.5">
         <div className="flex items-center gap-2 px-3 py-2 rounded-full" style={{ background: theme.bgPanel }}>
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth="2.5" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <span className="text-[8px]" style={{ color: theme.textMuted }}>Cerca {sLabel.toLowerCase()}…</span>
+          <span className="text-[8px]" style={{ color: theme.textMuted }}>Cerca {copy.search}…</span>
         </div>
       </div>
 
       {/* Hero */}
       <div className="px-4 mb-2.5">
-        <div className="relative rounded-2xl overflow-hidden h-[105px]" style={{ borderRadius: theme.radius }}>
+        <div className="relative rounded-2xl overflow-hidden h-[112px]" style={{ borderRadius: theme.radius }} data-float="true">
           <ArtImage theme={theme} seed={1} className="absolute inset-0" />
           <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 30%, ${theme.bg}ee 100%)` }} />
+          {theme.vibe === "blueprint-build" && <div className="absolute inset-3 border border-white/25" />}
+          {theme.vibe === "childcare-sun" && <div className="absolute right-3 top-3 text-[20px]">☀️</div>}
+          {theme.vibe === "limo-noir" && <div className="absolute left-0 top-0 h-full w-1/3" style={{ background: `linear-gradient(90deg, ${theme.primary}55, transparent)` }} />}
           <div className="absolute inset-0 p-3 flex flex-col justify-end">
-            <span className="self-start px-1.5 py-0.5 rounded text-[7px] font-bold mb-1" style={{ background: theme.primary, color: theme.bg }}>NUOVO</span>
-            <p className="text-[12px] font-black leading-tight" style={{ color: "#fff", fontFamily: theme.fontHead }}>Esperienza Signature 2026</p>
-            <p className="text-[8px] mt-0.5 opacity-90" style={{ color: "#fff" }}>{sLabel} · {city || "Italia"} · ★ 4.9</p>
+            <span className="self-start px-1.5 py-0.5 rounded text-[7px] font-bold mb-1" style={{ background: theme.primary, color: theme.bg }}>{kind === "healthcare" ? "TRUST" : kind === "construction" ? "LIVE OPS" : "SIGNATURE"}</span>
+            <p className="text-[12px] font-black leading-tight" style={{ color: "#fff", fontFamily: theme.fontHead }}>{copy.hero}</p>
+            <p className="text-[8px] mt-0.5 opacity-90" style={{ color: "#fff" }}>{copy.sub} · ★ 4.9</p>
           </div>
         </div>
+      </div>
+
+      <div className="px-4 mb-2.5 grid grid-cols-3 gap-1.5">
+        {metrics.map((m, i) => (
+          <div key={m} className="py-1.5 text-center rounded-lg" style={{ background: i === 1 ? `${theme.primary}22` : theme.bgPanel, border: `1px solid ${i === 1 ? theme.primary : theme.text}18` }}>
+            <p className="text-[7px] font-black uppercase tracking-wide" style={{ color: i === 1 ? theme.primary : theme.text }}>{m}</p>
+          </div>
+        ))}
       </div>
 
       {/* Categories */}
       <div className="px-4 mb-2.5">
         <div className="flex gap-1.5 overflow-hidden">
-          {["Tutti", "Top", "Nuovi", "Promo", "VIP"].map((c, i) => (
+          {copy.tabs.map((c, i) => (
             <span key={i} className="text-[8px] px-2.5 py-1 rounded-full font-semibold whitespace-nowrap" style={{
               background: i === 0 ? theme.primary : theme.bgPanel,
               color: i === 0 ? theme.bg : theme.text,
@@ -607,12 +939,12 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
 
       {/* Featured */}
       <div className="px-4 flex items-center justify-between mb-1.5">
-        <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.text }}>I Più Richiesti</p>
+        <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.text }}>{copy.featured}</p>
         <p className="text-[7px] font-semibold" style={{ color: theme.primary }}>Vedi tutti →</p>
       </div>
       <div className="px-4 space-y-1.5">
         {items.map((it, i) => (
-          <div key={i} className="flex items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
+          <div key={i} className="flex items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }} data-slide={i === 0 ? "true" : undefined}>
             <ArtImage theme={theme} seed={i + 3} className="w-10 h-10 rounded-lg shrink-0" style={{ borderRadius: theme.radius * 0.5 }} />
             <div className="flex-1 min-w-0">
               <p className="text-[9px] font-bold truncate" style={{ color: theme.text }}>{it.name}</p>
@@ -641,15 +973,17 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
 function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
   const items = getMenuItems(sector);
   const isFood = /ristor|pizz|sushi|trat|oster|food|cucin|bar|cafe/i.test(sector);
-  const cats = isFood ? ["Tutti", "Antipasti", "Primi", "Secondi", "Dolci"] : ["Tutti", "Top", "Nuovi", "VIP", "Pacchetti"];
+  const copy = getExperienceCopy(sector);
+  const cats = isFood ? ["Tutti", "Antipasti", "Primi", "Secondi", "Dolci"] : copy.tabs;
+  const kind = sectorKind(sector);
 
   return (
     <div className="pb-14 overflow-hidden h-full">
       <div className="px-4 pt-1 pb-2">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{isFood ? "Il Nostro Menù" : "I Nostri Servizi"}</p>
-            <p className="text-[7px]" style={{ color: theme.textMuted }}>Selezionati con cura · 2026</p>
+            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{copy.menu}</p>
+            <p className="text-[7px]" style={{ color: theme.textMuted }}>{copy.sub}</p>
           </div>
           <div className="flex gap-1">
             <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: theme.bgPanel }}>
@@ -672,6 +1006,36 @@ function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
         </div>
       </div>
 
+      {kind === "retail" ? (
+        <div className="px-4 grid grid-cols-2 gap-1.5">
+          {items.slice(0, 6).map((it, i) => (
+            <div key={i} className="relative overflow-hidden rounded-xl" style={{ background: theme.bgPanel, minHeight: 72 }}>
+              <ArtImage theme={theme} seed={i + 7} className="absolute inset-0 opacity-70" />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 35%, ${theme.bg}d8 100%)` }} />
+              <div className="absolute left-1.5 right-1.5 bottom-1.5">
+                <p className="text-[7.5px] font-black leading-tight truncate" style={{ color: "#fff" }}>{it.name}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-[6px]" style={{ color: "#fff" }}>{it.badge ?? "Drop"}</span>
+                  <span className="text-[8px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>€{it.price}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : kind === "construction" ? (
+        <div className="px-4 space-y-1.5">
+          {items.slice(0, 5).map((it, i) => (
+            <div key={i} className="grid grid-cols-[32px_1fr_auto] items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderLeft: `3px solid ${i === 0 ? theme.primary : theme.accent}` }}>
+              <span className="text-[8px] font-black tabular-nums" style={{ color: theme.primary }}>#{i + 12}</span>
+              <div className="min-w-0">
+                <p className="text-[8.5px] font-bold truncate" style={{ color: theme.text }}>{it.name}</p>
+                <p className="text-[6.5px] truncate" style={{ color: theme.textMuted }}>{it.desc}</p>
+              </div>
+              <span className="text-[6px] font-bold px-1 py-0.5 rounded" style={{ background: `${theme.primary}22`, color: theme.primary }}>{i % 2 ? "SLA" : "SAL"}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
       <div className="px-4 space-y-1.5">
         {items.map((it, i) => (
           <div key={i} className="flex items-center gap-2 p-1.5 rounded-xl" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
@@ -694,6 +1058,7 @@ function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
           </div>
         ))}
       </div>
+      )}
 
       <BottomNav theme={theme} active="menu" />
     </div>
@@ -705,11 +1070,14 @@ function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
 // ════════════════════════════════════════════════════════════════════════════
 function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
   const isService = /spa|wellness|beauty|estetic|parruc|medic|dent|fitness/i.test(sector);
+  const copy = getExperienceCopy(sector);
+  const kind = sectorKind(sector);
+  const slotLabel = kind === "ncc" ? "Pickup" : kind === "construction" || kind === "plumber" ? "Urgenza" : kind === "hospitality" ? "Check-in" : kind === "healthcare" ? "Specialista" : "Orario disponibile";
   return (
     <div className="pb-14 overflow-hidden h-full">
       <div className="px-4 pt-1 pb-2">
-        <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{isService ? "Prenota un Trattamento" : "Prenota un Tavolo"}</p>
-        <p className="text-[7px]" style={{ color: theme.textMuted }}>Conferma immediata via SMS · WhatsApp</p>
+        <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{copy.booking}</p>
+        <p className="text-[7px]" style={{ color: theme.textMuted }}>{copy.bookingNote}</p>
       </div>
 
       {/* Date picker */}
@@ -746,9 +1114,9 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
 
       {/* Time */}
       <div className="px-4 mb-2">
-        <p className="text-[7px] font-bold mb-1 uppercase tracking-wider" style={{ color: theme.textMuted }}>Orario disponibile</p>
+        <p className="text-[7px] font-bold mb-1 uppercase tracking-wider" style={{ color: theme.textMuted }}>{slotLabel}</p>
         <div className="grid grid-cols-4 gap-1">
-          {["12:30","13:00","13:30","14:00","19:30","20:00","20:30","21:00"].map((t, i) => (
+          {(kind === "ncc" ? ["MXP", "LIN", "Hotel", "Duomo", "19:30", "20:00", "21:30", "B2B"] : kind === "plumber" || kind === "construction" ? ["SOS", "2h", "Oggi", "Domani", "Zona A", "Zona B", "Team 1", "Team 2"] : ["12:30","13:00","13:30","14:00","19:30","20:00","20:30","21:00"]).map((t, i) => (
             <span key={i} className="text-[8px] py-1.5 text-center rounded-md font-semibold" style={{
               background: i === 5 ? theme.primary : `${theme.text}10`,
               color: i === 5 ? theme.bg : theme.text,
@@ -775,7 +1143,7 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
       {/* CTA */}
       <div className="px-4">
         <button className="w-full py-2.5 rounded-xl text-[10px] font-bold" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg, borderRadius: theme.radius * 0.8 }}>
-          Conferma · Ven 22 alle 20:00
+          Conferma · {kind === "ncc" ? "driver assegnato" : kind === "plumber" ? "tecnico in arrivo" : "Ven 22 alle 20:00"}
         </button>
         <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Cancellazione omaggio fino a 4h prima</p>
       </div>
@@ -788,7 +1156,14 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
 // ════════════════════════════════════════════════════════════════════════════
 // PROFILE SCREEN
 // ════════════════════════════════════════════════════════════════════════════
-function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
+function ProfileScreen({ theme, name, sector = "" }: { theme: ThemeTokens; name: string; sector?: string }) {
+  const kind = sectorKind(sector);
+  const persona = kind === "healthcare" ? { initials: "AB", title: "Alessandro Bianchi", meta: "Paziente · follow-up attivo", card: "Percorso cura verificato", next: "Prossima visita: Mar 22 · 15:30", stats: [{ v: "3", l: "Referti" }, { v: "82%", l: "Adesione" }, { v: "GDPR", l: "Privacy" }] }
+    : kind === "veterinary" ? { initials: "MI", title: "Milo", meta: "Golden Retriever · proprietaria Laura", card: "Pet passport completo", next: "Vaccino richiamo tra 18 giorni", stats: [{ v: "4", l: "Visite" }, { v: "9.2kg", l: "Peso" }, { v: "✓", l: "Vaccini" }] }
+    : kind === "childcare" ? { initials: "SF", title: "Sofia", meta: "Classe Stelle · genitore Martina", card: "Diario famiglia live", next: "Mensa, sonno e attività aggiornati", stats: [{ v: "7", l: "Foto" }, { v: "95%", l: "Serena" }, { v: "12:30", l: "Pappa" }] }
+    : kind === "construction" ? { initials: "TB", title: "Torre Blu", meta: "Cliente · progetto residenziale", card: "Area cliente cantiere", next: "Variante bagno da approvare", stats: [{ v: "68%", l: "SAL" }, { v: "14", l: "Ticket" }, { v: "A-14", l: "Unità" }] }
+    : kind === "ncc" ? { initials: "BC", title: "Business Client", meta: "Account corporate · fattura mensile", card: "Travel profile executive", next: "Driver preferito: Massimo R.", stats: [{ v: "22", l: "Corse" }, { v: "4.9★", l: "Driver" }, { v: "B2B", l: "Billing" }] }
+    : { initials: "MR", title: "Marco Rossi", meta: "Membro Gold dal 2024", card: "Fedeltà Gold Member", next: "60 punti per la prossima esperienza", stats: [{ v: "12", l: "Visite" }, { v: "240", l: "Punti" }, { v: "4.9★", l: "Rating" }] };
   return (
     <div className="pb-14 overflow-hidden h-full">
       {/* Cover */}
@@ -796,7 +1171,7 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
         <ArtImage theme={theme} seed={11} className="absolute inset-0 opacity-50" />
         <div className="absolute -bottom-7 left-4 w-14 h-14 rounded-full border-[3px] flex items-center justify-center text-[14px] font-black"
           style={{ borderColor: theme.bg, background: `linear-gradient(135deg, ${theme.accent}, ${theme.primary})`, color: theme.bg, fontFamily: theme.fontHead }}>
-          MR
+          {persona.initials}
         </div>
         <button className="absolute top-2 right-2 px-2 py-1 rounded-full text-[7px] font-bold" style={{ background: `${theme.bg}aa`, color: theme.text, backdropFilter: "blur(8px)" }}>Modifica</button>
       </div>
@@ -804,15 +1179,15 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
       <div className="px-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[11px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>Marco Rossi</p>
-            <p className="text-[7px]" style={{ color: theme.textMuted }}>marco.rossi@email.com · Membro Gold dal 2024</p>
+            <p className="text-[11px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>{persona.title}</p>
+            <p className="text-[7px]" style={{ color: theme.textMuted }}>{persona.meta}</p>
           </div>
           <span className="text-[6px] font-bold px-1.5 py-0.5 rounded" style={{ background: theme.primary, color: theme.bg }}>VIP</span>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-1.5 mt-2.5 mb-2.5">
-          {[{ v: "12", l: "Visite" }, { v: "240", l: "Punti" }, { v: "4.9★", l: "Rating" }].map((s, i) => (
+          {persona.stats.map((s, i) => (
             <div key={i} className="text-center rounded-xl py-2" style={{ background: theme.bgPanel, borderRadius: theme.radius * 0.7 }}>
               <p className="text-[12px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>{s.v}</p>
               <p className="text-[7px] font-semibold" style={{ color: theme.textMuted }}>{s.l}</p>
@@ -825,14 +1200,14 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
           <div className="absolute -right-4 -top-4 w-16 h-16 rounded-full opacity-20" style={{ background: "white" }} />
           <div className="relative">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-[7px] font-black uppercase tracking-wider" style={{ color: theme.bg }}>Fedeltà Gold Member</p>
+              <p className="text-[7px] font-black uppercase tracking-wider" style={{ color: theme.bg }}>{persona.card}</p>
               <p className="text-[7px] font-bold" style={{ color: theme.bg }}>★★★★★</p>
             </div>
-            <p className="text-[12px] font-black" style={{ color: theme.bg, fontFamily: theme.fontHead }}>240 / 300 punti</p>
+            <p className="text-[12px] font-black" style={{ color: theme.bg, fontFamily: theme.fontHead }}>{kind === "construction" ? "Documenti · SAL · approvazioni" : kind === "healthcare" ? "Care plan protetto" : "240 / 300 punti"}</p>
             <div className="h-1 rounded-full bg-black/20 mt-1.5">
               <div className="h-1 rounded-full bg-white" style={{ width: "80%" }} />
             </div>
-            <p className="text-[7px] mt-1 opacity-90" style={{ color: theme.bg }}>60 punti per la tua prossima cena omaggio 🎁</p>
+            <p className="text-[7px] mt-1 opacity-90" style={{ color: theme.bg }}>{persona.next}</p>
           </div>
         </div>
 
@@ -845,7 +1220,7 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
           ].map((it, i, arr) => (
             <div key={i} className="flex items-center gap-2 p-2" style={{ borderBottom: i < arr.length - 1 ? `1px solid ${theme.text}08` : "none" }}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={it.icon} /></svg>
-              <p className="text-[9px] flex-1 font-semibold" style={{ color: theme.text }}>{it.label}</p>
+              <p className="text-[9px] flex-1 font-semibold" style={{ color: theme.text }}>{kind === "healthcare" && i === 0 ? "Referti e visite" : kind === "veterinary" && i === 0 ? "Libretto pet" : kind === "construction" && i === 0 ? "Documenti cantiere" : it.label}</p>
               <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: `${theme.primary}20`, color: theme.primary }}>{it.count}</span>
               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth="2.5"><path d="M9 6l6 6-6 6"/></svg>
             </div>
@@ -864,6 +1239,43 @@ function ProfileScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
 // GALLERY SCREEN
 // ════════════════════════════════════════════════════════════════════════════
 function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
+  if (theme.vibe === "retail-chrome") {
+    return (
+      <div className="pb-14 overflow-hidden h-full">
+        <div className="px-4 pt-1 pb-2 flex items-center justify-between">
+          <div><p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>Drop preview</p><p className="text-[7px]" style={{ color: theme.textMuted }}>{name} · nuova capsule</p></div>
+          <span className="text-[6px] font-black px-1.5 py-0.5 rounded" style={{ background: theme.primary, color: theme.bg }}>LIVE</span>
+        </div>
+        <div className="px-4 grid grid-cols-2 gap-1.5">
+          {[0,1,2,3,4,5].map((_, i) => (
+            <div key={i} className="relative overflow-hidden rounded-xl" style={{ height: i === 0 ? 96 : 62, gridColumn: i === 0 ? "span 2" : undefined, background: theme.bgPanel }}>
+              <ArtImage theme={theme} seed={90 + i} className="absolute inset-0" />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 35%, ${theme.bg}de 100%)` }} />
+              <p className="absolute bottom-1.5 left-2 text-[8px] font-black" style={{ color: "#fff", fontFamily: theme.fontHead }}>{i === 0 ? "Hero campaign" : `Look 0${i}`}</p>
+            </div>
+          ))}
+        </div>
+        <BottomNav theme={theme} active="home" />
+      </div>
+    );
+  }
+  if (theme.vibe === "clinical-crystal") {
+    return (
+      <div className="pb-14 overflow-hidden h-full">
+        <div className="px-4 pt-1 pb-2"><p className="text-[10px] font-black" style={{ color: theme.text, fontFamily: theme.fontHead }}>Percorso paziente</p><p className="text-[7px]" style={{ color: theme.textMuted }}>Referti, consensi e follow-up</p></div>
+        <div className="px-4 space-y-1.5">
+          {["Triage completato", "Visita specialistica", "Referto firmato", "Richiamo automatico"].map((step, i) => (
+            <div key={step} className="flex items-center gap-2 p-2 rounded-xl" style={{ background: theme.bgPanel, border: `1px solid ${i === 1 ? theme.primary : theme.text}18` }}>
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-[8px] font-black" style={{ background: i <= 1 ? theme.primary : `${theme.primary}20`, color: i <= 1 ? theme.bg : theme.primary }}>{i+1}</div>
+              <div className="flex-1"><p className="text-[8.5px] font-bold" style={{ color: theme.text }}>{step}</p><p className="text-[6.5px]" style={{ color: theme.textMuted }}>{i === 1 ? "oggi 15:30" : "workflow protetto"}</p></div>
+              {i <= 1 && <span className="text-[6px] font-bold" style={{ color: theme.primary }}>✓</span>}
+            </div>
+          ))}
+        </div>
+        <BottomNav theme={theme} active="profile" />
+      </div>
+    );
+  }
   return (
     <div className="pb-14 overflow-hidden h-full">
       <div className="px-4 pt-1 pb-2 flex items-center justify-between">
@@ -915,6 +1327,7 @@ function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
 // ════════════════════════════════════════════════════════════════════════════
 function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
   const items = getMenuItems(sector).slice(0, 3);
+  const kind = sectorKind(sector);
   const subtotal = items.reduce((s, x) => s + x.price, 0);
   const fee = 2.5;
   const total = subtotal + fee;
@@ -927,8 +1340,8 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke={theme.text} strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
           <div>
-            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>Riepilogo Ordine</p>
-            <p className="text-[7px]" style={{ color: theme.textMuted }}>3 articoli · Pronto in 25 min</p>
+            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{kind === "retail" ? "Carrello VIP" : kind === "healthcare" ? "Piano visita" : kind === "construction" || kind === "plumber" ? "Preventivo intervento" : kind === "ncc" ? "Preventivo corsa" : "Riepilogo Ordine"}</p>
+            <p className="text-[7px]" style={{ color: theme.textMuted }}>{kind === "ncc" ? "Driver · tratta · deposito" : kind === "healthcare" ? "Consensi · slot · promemoria" : kind === "construction" || kind === "plumber" ? "Materiali · tecnico · SLA" : "3 articoli · Pronto in 25 min"}</p>
           </div>
         </div>
       </div>
@@ -952,10 +1365,10 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
       {/* Promo */}
       <div className="px-4 mb-2">
         <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border-2 border-dashed" style={{ borderColor: `${theme.primary}50` }}>
-          <span className="text-[10px]">🎁</span>
+          <span className="text-[10px]">{kind === "healthcare" ? "🔒" : kind === "construction" || kind === "plumber" ? "🛠️" : kind === "ncc" ? "🚘" : "🎁"}</span>
           <div className="flex-1">
-            <p className="text-[8px] font-bold" style={{ color: theme.primary }}>WELCOME10 applicato</p>
-            <p className="text-[6px]" style={{ color: theme.textMuted }}>Sconto del 10% sul totale</p>
+            <p className="text-[8px] font-bold" style={{ color: theme.primary }}>{kind === "healthcare" ? "Consenso digitale pronto" : kind === "construction" || kind === "plumber" ? "Sopralluogo agganciato" : kind === "ncc" ? "Tracking volo incluso" : "WELCOME10 applicato"}</p>
+            <p className="text-[6px]" style={{ color: theme.textMuted }}>{kind === "healthcare" ? "Privacy e promemoria automatici" : kind === "construction" || kind === "plumber" ? "Foto e note tecniche incluse" : kind === "ncc" ? "Autista aggiornato in tempo reale" : "Sconto del 10% sul totale"}</p>
           </div>
           <span className="text-[8px] font-bold" style={{ color: theme.primary }}>−€{(subtotal * 0.1).toFixed(2)}</span>
         </div>
@@ -991,7 +1404,7 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
       <div className="px-4">
         <button className="w-full py-2.5 rounded-xl text-[10px] font-bold flex items-center justify-center gap-2" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg, borderRadius: theme.radius * 0.8 }}>
           <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8v3H5a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2v-8a2 2 0 00-2-2h-1V8c0-3.3-2.7-6-6-6zm0 2a4 4 0 014 4v3H8V8a4 4 0 014-4z"/></svg>
-          Paga €{(total * 0.9).toFixed(2)}
+            {kind === "healthcare" ? "Conferma visita" : kind === "construction" || kind === "plumber" ? "Accetta preventivo" : kind === "ncc" ? "Blocca driver" : `Paga €${(total * 0.9).toFixed(2)}`}
         </button>
         <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Pagamento sicuro · SSL crittografato</p>
       </div>
@@ -1006,12 +1419,46 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
 // ════════════════════════════════════════════════════════════════════════════
 function DashboardScreen({ theme, name, sector }: { theme: ThemeTokens; name: string; sector: string }) {
   const sLabel = sectorLabel(sector);
-  const kpis = [
-    { v: "€12.4k", l: "Ricavi mese", trend: "+18%" },
-    { v: "247", l: "Clienti attivi", trend: "+12%" },
-    { v: "4.9★", l: "Rating medio", trend: "+0.2" },
-  ];
+  const kind = sectorKind(sector);
+  const kpis = kind === "construction"
+    ? [{ v: "68%", l: "SAL torre", trend: "+9%" }, { v: "14", l: "ticket aperti", trend: "-6" }, { v: "2", l: "squadre live", trend: "ok" }]
+    : kind === "fitness"
+    ? [{ v: "96%", l: "classi piene", trend: "+11%" }, { v: "42", l: "trial", trend: "+8" }, { v: "88", l: "PR week", trend: "+23" }]
+    : kind === "healthcare"
+    ? [{ v: "12", l: "slot liberi", trend: "+4" }, { v: "58%", l: "no-show", trend: "↓" }, { v: "82%", l: "richiami", trend: "+15" }]
+    : [{ v: "€12.4k", l: "Ricavi mese", trend: "+18%" }, { v: "247", l: "Clienti attivi", trend: "+12%" }, { v: "4.9★", l: "Rating medio", trend: "+0.2" }];
   const bars = [40, 65, 50, 85, 70, 95, 78];
+  if (kind === "construction") {
+    return (
+      <div className="pb-14 overflow-hidden h-full">
+        <div className="px-4 pt-1 pb-2 flex items-center justify-between">
+          <div>
+            <p className="text-[7px] uppercase tracking-wider font-semibold" style={{ color: theme.textMuted }}>Control room · {sLabel}</p>
+            <p className="text-[11px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{name} · SAL live</p>
+          </div>
+          <span className="text-[6px] font-black px-1.5 py-0.5 rounded" style={{ background: theme.primary, color: theme.bg }}>BIM</span>
+        </div>
+        <div className="px-4 mb-2">
+          <div className="relative h-[112px] overflow-hidden rounded-xl" style={{ background: theme.bgPanelAlt }}>
+            <svg viewBox="0 0 200 112" className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
+              <path d="M0 22H200M0 44H200M0 66H200M0 88H200M32 0V112M64 0V112M96 0V112M128 0V112M160 0V112" stroke={`${theme.accent}30`} />
+              <path d="M26 94 L68 35 H118 L166 94 Z" fill={`${theme.primary}18`} stroke={theme.primary} strokeWidth="2" />
+              <path d="M52 94V58H92V94M108 94V48H144V94" stroke={theme.text} strokeOpacity="0.55" fill="none" />
+            </svg>
+            <div className="absolute left-2 top-2 rounded px-1.5 py-0.5 text-[6px] font-black" style={{ background: `${theme.bg}cc`, color: theme.text }}>TORRE BLU · 68%</div>
+            <div className="absolute right-2 bottom-2 text-right"><p className="text-[18px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>A-14</p><p className="text-[6px]" style={{ color: theme.textMuted }}>prossima ispezione</p></div>
+          </div>
+        </div>
+        <div className="px-4 grid grid-cols-3 gap-1.5 mb-2">
+          {kpis.map((k, i) => <div key={i} className="rounded-xl p-1.5" style={{ background: theme.bgPanel }}><p className="text-[10px] font-black" style={{ color: theme.primary, fontFamily: theme.fontHead }}>{k.v}</p><p className="text-[6px]" style={{ color: theme.textMuted }}>{k.l}</p></div>)}
+        </div>
+        <div className="px-4 space-y-1">
+          {["Getto piano 12 completato", "RFI materiali in attesa", "Cliente ha approvato variante"].map((a, i) => <div key={a} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: theme.bgPanel, borderLeft: `2px solid ${i === 0 ? theme.primary : theme.accent}` }}><span className="text-[8px] font-black" style={{ color: theme.primary }}>0{i+1}</span><p className="text-[8px] flex-1" style={{ color: theme.text }}>{a}</p><span className="text-[6px]" style={{ color: theme.textMuted }}>ora</span></div>)}
+        </div>
+        <BottomNav theme={theme} active="profile" />
+      </div>
+    );
+  }
   return (
     <div className="pb-14 overflow-hidden h-full">
       <div className="px-4 pt-1 pb-2">
@@ -1858,7 +2305,7 @@ export function MockupReactScreen({
       case "contact":
         return <BookingScreen theme={theme} sector={businessSector} />;
       case "profile":
-        return <ProfileScreen theme={theme} name={businessName} />;
+        return <ProfileScreen theme={theme} name={businessName} sector={businessSector} />;
       case "dashboard":
       case "stats":
         return <DashboardScreen theme={theme} name={businessName} sector={businessSector} />;
@@ -1920,10 +2367,11 @@ export function MockupReactScreen({
   return (
     <div
       className="relative overflow-hidden flex flex-col"
+      data-vibe={theme.vibe}
       style={{
         width,
         height,
-        background: theme.bg,
+        background: screenBackground(theme),
         fontFamily: theme.fontBody,
         // CSS var disponibile ai figli che vogliono leggerla; fallback gestito sotto via fontSize
         ["--mockup-type-scale" as any]: clampedScale,
@@ -1932,9 +2380,11 @@ export function MockupReactScreen({
         fontSize: `${clampedScale}em`,
       }}
     >
+      <style>{mockupSurfaceCss(theme)}</style>
+      <ScreenMotif theme={theme} />
       <StatusBar theme={theme} />
       <div
-        className="flex-1 overflow-hidden"
+        className="mockup-screen relative z-10 flex-1 overflow-hidden"
         style={{
           paddingLeft: safe,
           paddingRight: safe,

@@ -85,16 +85,48 @@ const interleaveBySector = (items: CatalogItem[]): CatalogItem[] => {
 
 const templateFor = (item: CatalogItem): string => {
   const name = `${item.brand} ${item.style}`.toLowerCase();
+  const styleCycle = item.style.toLowerCase();
   if (/sakura|paperfish|sushi|omakase|hinoki|tsukiji/.test(name)) return "paperfish";
   if (/pizza|strapizzami|forno|casual|ivory|casa/.test(name)) return "strapizzami";
-  if (/boat|yacht|charter|marina|pacifico|ocean|azure|beach|cala|batey/.test(name)) return "batey";
+  if (/marina|ncc|limousine|driver|executive|transfer/.test(name) || item.sectorId === "ncc") return /cala|charter|yacht|marina|vento|azure|emerald|sunset/.test(name) ? "batey" : "ncc_limo";
+  if (/boat|yacht|charter|pacifico|ocean|azure|beach|cala|batey/.test(name)) return "beach_resort";
   if (/nail|beauty|hair|rose|lavender|pastel|velluto|aurora/.test(name)) return "boutique_pastel";
-  if (/clinic|medical|dental|health|lumen|crystal|ice/.test(name)) return "clinical_clean";
+  if (/clinic|medical|dental|health|lumen|crystal|ice|soft blue|azure gradient|ethereal/.test(name) || item.sectorId === "healthcare") return "clinical_clean";
   if (/fitness|padel|sport|gym|neon|onda/.test(name)) return "fitness_energy";
-  if (/real|estate|domus|resident|milan|property/.test(name)) return "real_estate_trust";
+  if (/domus|construction|cantiere|building|maintenance|urban concrete/.test(name) || item.sectorId === "construction") return "construction_blueprint";
+  if (/real|estate|resident|milan|property/.test(name)) return "real_estate_trust";
+  if (/idro|plumb|servizi|artigiani|ac|tecnico/.test(name) || item.sectorId === "plumber") return "plumber_utility";
+  if (/pet|veterin|resort|tropico/.test(name) || item.sectorId === "veterinary") return "pet_care_playful";
+  if (/nursery|playhouse|stelle|arcobaleno|ashley|child|sunny|playful|nature explorer/.test(name) || item.sectorId === "childcare") return "childcare_sunshine";
+  if (/hotel|hospitality|suite|resort|sardinia/.test(name) || item.sectorId === "hospitality") return "hospitality_sunset";
+  if (/retail|shop|fashion|boutique|chrome/.test(name) || item.sectorId === "retail") return "retail_chrome";
+  if (/legal|law|studio legale/.test(name) || item.sectorId === "legal") return "legal_navy";
+  if (/account|commercial|fiscal/.test(name) || item.sectorId === "accounting") return "accounting_emerald";
   if (/noir|obsidian|gold|steak|brace|luxury|volcanic/.test(name)) return "luxury_gold";
   if (/minimal|white|clean|marble|zen/.test(name)) return "editorial_clean";
-  return item.sectorId === "retail" ? "neon_vibrant" : "modern_dark";
+  if (/style a|sage|fresh|ocean/.test(styleCycle)) return item.sectorId === "food" ? "batey" : "glass_aurora";
+  if (/style b|rose|coral|sunset/.test(styleCycle)) return item.sectorId === "food" ? "strapizzami" : "boutique_pastel";
+  if (/style c|urban|ice/.test(styleCycle)) return item.sectorId === "food" ? "editorial_clean" : "modern_dark";
+  if (/style d|green|nature/.test(styleCycle)) return item.sectorId === "food" ? "casual_warm" : "minimal_zen";
+  if (/style e|lime|emerald/.test(styleCycle)) return item.sectorId === "food" ? "neon_vibrant" : "fitness_energy";
+  if (/style f|azure/.test(styleCycle)) return "glass_aurora";
+  if (/style g/.test(styleCycle)) return "monochrome_bold";
+  if (/style h/.test(styleCycle)) return "luxury_gold";
+  return "modern_dark";
+};
+
+const primaryFor = (item: CatalogItem): string | undefined => {
+  const key = `${item.sectorId} ${item.brand} ${item.style}`.toLowerCase();
+  if (/construction|domus|cantiere/.test(key)) return "#F6C85F";
+  if (/plumber|idro|ac|artigiani/.test(key)) return "#26D9B8";
+  if (/health|clinic|lumen/.test(key)) return "#0EA5B7";
+  if (/child|nursery|playhouse|stelle|ashley/.test(key)) return /ocean/.test(key) ? "#57B7FF" : "#FF8B3D";
+  if (/veterinary|pet|tropico/.test(key)) return "#7C9A4B";
+  if (/hospitality|sardinia|hotel/.test(key)) return "#FF9F6E";
+  if (/ncc|marina|charter|cala/.test(key)) return /sunset|gold/.test(key) ? "#FFB36B" : "#5CC8D9";
+  if (/beauty|nail|hair|velluto/.test(key)) return /lavender/.test(key) ? "#A89DC9" : "#E8A0B8";
+  if (/fitness|padel|onda/.test(key)) return /fresh|azzurro/.test(key) ? "#00E5FF" : "#C8FF00";
+  return undefined;
 };
 
 type ScreenSpec = { type: string; label: string };
@@ -380,8 +412,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                   <div className="mt-3 -mx-1 flex gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                     {previewSpecs.map((spec, i) => {
                       const isLive = LIVE_SECTION_TYPES.has(spec.type);
-                      const screenImg = item.screens[i] ?? item.thumbnail;
                       const template = templateFor(item);
+                      const primary = primaryFor(item);
                       return (
                         <div
                           key={`${item.id}-${spec.type}-${i}`}
@@ -391,10 +423,10 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                           onKeyDown={(event) => {
                             if (event.key === "Enter" || event.key === " ") setSelected(isSelected ? null : item.id);
                           }}
-                          className="flex w-[88px] shrink-0 flex-col items-center gap-1.5 transition-transform active:scale-[0.97]"
+                          className="flex w-[112px] shrink-0 flex-col items-center gap-1.5 transition-transform active:scale-[0.97]"
                           aria-label={`Mostra ${spec.label} ${item.brand}`}
                         >
-                          <div className="relative flex h-[180px] w-[84px] items-center justify-center overflow-hidden rounded-[14px] border border-foreground/10 bg-muted">
+                          <div className="relative flex h-[224px] w-[104px] items-center justify-center overflow-hidden rounded-[18px] border border-foreground/10 bg-muted shadow-[0_18px_44px_-28px_hsl(0_0%_0%)]">
                             {isLive ? (
                               <div className="absolute inset-0">
                                 <MockupReactScreen
@@ -402,10 +434,11 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                   templateVariant={template}
                                   businessName={item.brand}
                                   businessSector={item.sectorId}
-                                  width={84}
-                                  height={180}
+                                  primaryColor={primary}
+                                  width={104}
+                                  height={224}
                                   glassIntensity={40}
-                                  typeScale={0.92}
+                                  typeScale={0.98}
                                   boostContrast
                                 />
                                 <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
@@ -413,7 +446,18 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                 </span>
                               </div>
                             ) : (
-                              <CatalogPhonePreview item={item} imageUrl={screenImg} alt={`${item.brand} ${spec.label}`} size="sm" />
+                              <MockupReactScreen
+                                type={spec.type}
+                                templateVariant={template}
+                                businessName={item.brand}
+                                businessSector={item.sectorId}
+                                primaryColor={primary}
+                                width={104}
+                                height={224}
+                                glassIntensity={40}
+                                typeScale={0.98}
+                                boostContrast
+                              />
                             )}
                           </div>
                           <span className="text-[9px] font-bold uppercase tracking-[1.5px] text-foreground/65 text-center leading-tight">{spec.label}</span>
