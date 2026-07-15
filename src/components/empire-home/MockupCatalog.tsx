@@ -101,12 +101,21 @@ type ScreenSpec = { type: string; label: string };
 
 const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
   const s = String(sectorId);
+  // Landing sections shared by ALL sectors (with tailored content inside)
+  const landing: ScreenSpec[] = [
+    { type: "cases", label: "Casi reali" },
+    { type: "reviews", label: "Recensioni" },
+    { type: "pricing", label: "Pacchetti" },
+    { type: "faq", label: "FAQ" },
+    { type: "cta", label: "Prenota demo" },
+  ];
   if (s === "food") return [
     { type: "home", label: "Vetrina" },
     { type: "menu", label: "Menù" },
     { type: "checkout", label: "Checkout" },
     { type: "kitchen", label: "Cucina KDS" },
     { type: "profile", label: "Fedeltà" },
+    ...landing,
   ];
   if (s === "beauty") return [
     { type: "home", label: "Boutique" },
@@ -114,6 +123,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "schedule", label: "Agenda staff" },
     { type: "booking", label: "Prenota" },
     { type: "profile", label: "Scheda VIP" },
+    ...landing,
   ];
   if (s === "ncc") return [
     { type: "home", label: "Concierge" },
@@ -121,6 +131,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "map", label: "Itinerario" },
     { type: "booking", label: "Preventivo" },
     { type: "profile", label: "Account" },
+    ...landing,
   ];
   if (s === "beach") return [
     { type: "home", label: "Stabilimento" },
@@ -128,6 +139,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "services", label: "Attività" },
     { type: "booking", label: "Prenota posto" },
     { type: "profile", label: "Pass" },
+    ...landing,
   ];
   if (s === "healthcare") return [
     { type: "home", label: "Studio" },
@@ -135,6 +147,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "schedule", label: "Agenda medici" },
     { type: "booking", label: "Prenota visita" },
     { type: "profile", label: "Paziente" },
+    ...landing,
   ];
   if (s === "fitness") return [
     { type: "home", label: "Club" },
@@ -142,6 +155,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "schedule", label: "Calendario" },
     { type: "booking", label: "Iscrivi" },
     { type: "dashboard", label: "Progressi" },
+    ...landing,
   ];
   if (s === "hospitality" || s === "agriturismo") return [
     { type: "home", label: "Esperienza" },
@@ -149,6 +163,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "services", label: "Concierge" },
     { type: "booking", label: "Prenota stay" },
     { type: "profile", label: "Ospite" },
+    ...landing,
   ];
   if (s === "retail") return [
     { type: "home", label: "Vetrina" },
@@ -156,6 +171,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "detail", label: "Dettaglio" },
     { type: "checkout", label: "Carrello" },
     { type: "profile", label: "VIP" },
+    ...landing,
   ];
   if (s === "construction" || s === "logistics" || s === "garage" || s === "plumber" || s === "electrician" || s === "cleaning") return [
     { type: "dashboard", label: "Dashboard" },
@@ -163,6 +179,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "services", label: "Interventi" },
     { type: "schedule", label: "Pianificazione" },
     { type: "booking", label: "Nuovo ticket" },
+    ...landing,
   ];
   if (s === "legal" || s === "accounting") return [
     { type: "dashboard", label: "Desk" },
@@ -170,6 +187,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "schedule", label: "Scadenze" },
     { type: "checkout", label: "Fatturazione" },
     { type: "profile", label: "Cliente" },
+    ...landing,
   ];
   if (s === "veterinary" || s === "childcare") return [
     { type: "home", label: "Home" },
@@ -177,6 +195,7 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "schedule", label: "Agenda" },
     { type: "booking", label: "Prenota" },
     { type: "profile", label: "Scheda" },
+    ...landing,
   ];
   return [
     { type: "home", label: "Home" },
@@ -184,8 +203,21 @@ const screenSpecsFor = (sectorId: IndustryId): ScreenSpec[] => {
     { type: "detail", label: "Dettaglio" },
     { type: "booking", label: "Prenota" },
     { type: "profile", label: "Profilo" },
+    ...landing,
   ];
 };
+
+// Types rendered LIVE by MockupReactScreen (rich sector-specific content + micro-interactions).
+// Everything else keeps using the static PNG thumbnail associated to that screen index.
+const LIVE_SECTION_TYPES = new Set([
+  "cases", "casi", "success",
+  "reviews", "testimonials", "recensioni",
+  "pricing", "packages", "plans",
+  "faq", "faqs",
+  "cta", "conversion", "final",
+  "hero",
+]);
+
 
 const screenTypesFor = (sectorId: IndustryId): string[] => screenSpecsFor(sectorId).map((s) => s.type);
 
