@@ -1301,7 +1301,7 @@ function ProfileScreen({ theme, name, sector = "" }: { theme: ThemeTokens; name:
 // ════════════════════════════════════════════════════════════════════════════
 // GALLERY SCREEN
 // ════════════════════════════════════════════════════════════════════════════
-function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
+function GalleryScreen({ theme, name, sector = "" }: { theme: ThemeTokens; name: string; sector?: string }) {
   if (theme.vibe === "retail-chrome") {
     return (
       <div className="pb-14 overflow-hidden h-full">
@@ -1318,7 +1318,7 @@ function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
             </div>
           ))}
         </div>
-        <BottomNav theme={theme} active="home" />
+        <BottomNav theme={theme} active="home" sector={sector} />
       </div>
     );
   }
@@ -1335,7 +1335,7 @@ function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
             </div>
           ))}
         </div>
-        <BottomNav theme={theme} active="profile" />
+        <BottomNav theme={theme} active="profile" sector={sector} />
       </div>
     );
   }
@@ -1380,7 +1380,7 @@ function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
         ))}
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -1472,7 +1472,7 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
         <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Pagamento sicuro · SSL crittografato</p>
       </div>
 
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
