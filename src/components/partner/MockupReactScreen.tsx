@@ -674,6 +674,16 @@ function getMenuItems(sector: string) {
       { name: "Mochi Dessert", desc: "Tè verde, mango, sesamo nero", price: 7 },
     ];
   }
+  if (/yacht|charter|boat|nautic|skipper|marina/.test(s)) {
+    return [
+      { name: "Sunset Charter 4h", desc: "Skipper, fuel light, prosecco", price: 450, badge: "Top" },
+      { name: "Full Day Yacht", desc: "8h · pranzo a bordo · snorkeling", price: 980, badge: "Chef" },
+      { name: "Capri Blue Route", desc: "Grotta, swim stop, tender incluso", price: 720 },
+      { name: "Private Aperitivo", desc: "2h tramonto · 6 ospiti", price: 290, badge: "VIP" },
+      { name: "Skipper Extra", desc: "Estensione oraria e marina fee", price: 90 },
+      { name: "Sea Transfer", desc: "Porto → Beach club · fast boat", price: 180 },
+    ];
+  }
   if (/ceviche|seafood|raw bar|pacifico|daily catch/.test(s)) {
     return [
       { name: "Ceviche Nikkei", desc: "Ricciola, lime, leche de tigre", price: 21, badge: "Top" },
@@ -744,7 +754,7 @@ function getMenuItems(sector: string) {
       { name: "Make-Up Evento", desc: "Trucco professionale · Prova inclusa", price: 90 },
     ];
   }
-  if (/hotel|albergh|lido|beach|yacht|b&b|bnb|hospitality/.test(s)) {
+  if (/hotel|albergh|lido|beach|b&b|bnb|hospitality/.test(s)) {
     return [
       { name: "Suite Vista Mare", desc: "Camera deluxe · Terrazza privata", price: 280, badge: "Top" },
       { name: "Cabana Premium", desc: "Lettini, ombrellone, servizio bar", price: 95 },
