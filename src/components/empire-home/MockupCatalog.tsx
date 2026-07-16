@@ -511,6 +511,11 @@ const LIVE_SECTION_TYPES = new Set([
 
 const screenTypesFor = (sectorId: IndustryId): string[] => screenSpecsFor(sectorId).map((s) => s.type);
 
+const catalogScreenImageFor = (item: CatalogItem, index: number): string | null => {
+  if (index === 0) return item.aiHero ?? item.screens[0] ?? null;
+  return item.screens[index] ?? item.screens[item.screens.length - 1] ?? null;
+};
+
 function CatalogPhonePreview({ item, imageUrl, alt, size = "lg", priority = false, className = "" }: { item: CatalogItem; imageUrl: string; alt: string; size?: "sm" | "lg"; priority?: boolean; className?: string }) {
   const frameWidth = size === "sm" ? 118 : 252;
   const frameHeight = Math.round(frameWidth * 19.5 / 9);
@@ -795,12 +800,12 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                   }}
                 />
 
-                {/* 4-phone lineup with labels (Lowengeld style): first phone = approved premium hero,
-                    secondary phones = rebuilt live sector-specific interfaces matched to that hero. */}
+                {/* 4-phone lineup with labels (Lowengeld style): every phone uses the style-specific premium mockup artwork,
+                    so secondary screens stay visually coherent with the approved hero instead of generic live UI. */}
                 <div className="relative overflow-hidden px-4 pt-8 pb-4 sm:px-6 sm:pt-10">
                   <div className="grid grid-cols-4 items-end gap-2 sm:gap-3">
                     {quartet.map((screen, i) => {
-                      const heroPng = item.aiHero ?? item.screens[0] ?? null;
+                      const screenImage = catalogScreenImageFor(item, i);
                       return (
                         <div key={`${item.id}-quad-${i}`} className="flex flex-col items-center gap-2">
                           <div className="w-full">
@@ -810,8 +815,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                               tilt={0}
                               elevate={0}
                               priority={index < 2}
-                              imageUrl={i === 0 ? heroPng : null}
-                              objectPosition={i === 0 ? "center top" : "center 12%"}
+                              imageUrl={screenImage}
+                              objectPosition="center top"
                             />
                           </div>
                           <span className="text-[9px] font-black uppercase tracking-[2.4px] text-foreground/55 sm:text-[10px] sm:tracking-[3px]">
@@ -873,7 +878,8 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                       {previewSpecs.map((spec, i) => {
                         const template = templateFor(item);
                         const primary = primaryFor(item);
-                        const useHero = i === 0 && !!item.aiHero;
+                        const screenImage = i < 4 ? catalogScreenImageFor(item, i) : null;
+                        const badgeLabel = i === 0 && item.aiHero ? "Hero" : screenImage ? "Mockup" : LIVE_SECTION_TYPES.has(spec.type) ? "Live" : null;
                         return (
                           <div
                             key={`${item.id}-${spec.type}-${i}`}
@@ -881,9 +887,9 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                             aria-label={`${spec.label} ${item.brand}`}
                           >
                             <div className="relative flex h-[224px] w-[104px] items-center justify-center overflow-hidden rounded-[18px] border border-foreground/10 bg-muted shadow-[0_18px_44px_-28px_hsl(0_0%_0%)]">
-                              {useHero ? (
+                              {screenImage ? (
                                 <img
-                                  src={item.aiHero as string}
+                                  src={screenImage}
                                   alt={`${item.brand} — ${spec.label}`}
                                   loading="lazy"
                                   decoding="async"
@@ -905,13 +911,15 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                                   boostContrast
                                 />
                               )}
-                              {useHero ? (
-                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-[hsl(var(--gold))]/85 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-[hsl(var(--deep-black))]">
-                                  Hero
-                                </span>
-                              ) : LIVE_SECTION_TYPES.has(spec.type) ? (
-                                <span className="pointer-events-none absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-white">
-                                  Live
+                              {badgeLabel ? (
+                                <span
+                                  className="pointer-events-none absolute right-1 top-1 rounded-full px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider"
+                                  style={{
+                                    background: badgeLabel === "Hero" ? "hsl(var(--gold) / 0.85)" : "hsl(var(--background) / 0.72)",
+                                    color: badgeLabel === "Hero" ? "hsl(var(--deep-black))" : "hsl(var(--foreground))",
+                                  }}
+                                >
+                                  {badgeLabel}
                                 </span>
                               ) : null}
                             </div>
