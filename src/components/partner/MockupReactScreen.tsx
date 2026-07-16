@@ -628,7 +628,7 @@ function sectorKind(sector: string) {
   const s = (sector || "").toLowerCase();
   if (s === "food" || /sushi|pizz|ristor|trattor|oster|bar|cafe|kebab|deli|steak/.test(s)) return "food";
   if (s === "beauty" || /spa|wellness|beauty|estetic|parruc|hair|nail/.test(s)) return "beauty";
-  if (s === "ncc" || /ncc|taxi|transfer|noleggi|limousine|driver/.test(s)) return "ncc";
+  if (s === "ncc" || /ncc|taxi|transfer|noleggi|limousine|driver|yacht|charter|boat|skipper|marina/.test(s)) return "ncc";
   if (s === "beach" || /lido|spiagg|beach|ombrell/.test(s)) return "beach";
   if (s === "hospitality" || s === "agriturismo" || /hotel|resort|albergh|b&b|bnb|stay|suite/.test(s)) return "hospitality";
   if (s === "healthcare" || /medic|dent|clinic|salute|physio/.test(s)) return "healthcare";
