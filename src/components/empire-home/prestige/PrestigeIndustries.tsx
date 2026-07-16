@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
+import { PRESTIGE_SECTOR_HERO } from "@/data/prestige-home-mockups";
 
 const INDUSTRIES = [
   {
