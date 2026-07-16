@@ -833,7 +833,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                       className="rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[2px]"
                       style={{ color: p.text, borderColor: p.border, background: p.bg }}
                     >
-                      {item.sectorLabel}
+                      {displaySectorLabelFor(item)}
                     </span>
                     <span className="rounded-full border border-foreground/15 bg-foreground/[0.05] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[2px] text-foreground/70">
                       {item.style}
