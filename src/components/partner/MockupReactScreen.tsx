@@ -1135,6 +1135,7 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
   const isService = /spa|wellness|beauty|estetic|parruc|medic|dent|fitness/i.test(sector);
   const copy = getExperienceCopy(sector);
   const kind = sectorKind(sector);
+  const isCharter = /yacht|charter|boat|skipper|marina/i.test(sector);
   const slotLabel = kind === "ncc" ? "Pickup" : kind === "construction" || kind === "plumber" ? "Urgenza" : kind === "hospitality" ? "Check-in" : kind === "healthcare" ? "Specialista" : "Orario disponibile";
   return (
     <div className="pb-14 overflow-hidden h-full">
@@ -1177,9 +1178,9 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
 
       {/* Time */}
       <div className="px-4 mb-2">
-        <p className="text-[7px] font-bold mb-1 uppercase tracking-wider" style={{ color: theme.textMuted }}>{slotLabel}</p>
+        <p className="text-[7px] font-bold mb-1 uppercase tracking-wider" style={{ color: theme.textMuted }}>{isCharter ? "Partenza" : slotLabel}</p>
         <div className="grid grid-cols-4 gap-1">
-          {(kind === "ncc" ? ["MXP", "LIN", "Hotel", "Duomo", "19:30", "20:00", "21:30", "B2B"] : kind === "plumber" || kind === "construction" ? ["SOS", "2h", "Oggi", "Domani", "Zona A", "Zona B", "Team 1", "Team 2"] : ["12:30","13:00","13:30","14:00","19:30","20:00","20:30","21:00"]).map((t, i) => (
+          {(isCharter ? ["Porto", "Cala", "Sunset", "Full day", "10:00", "14:30", "18:00", "Skipper"] : kind === "ncc" ? ["MXP", "LIN", "Hotel", "Duomo", "19:30", "20:00", "21:30", "B2B"] : kind === "plumber" || kind === "construction" ? ["SOS", "2h", "Oggi", "Domani", "Zona A", "Zona B", "Team 1", "Team 2"] : ["12:30","13:00","13:30","14:00","19:30","20:00","20:30","21:00"]).map((t, i) => (
             <span key={i} className="text-[8px] py-1.5 text-center rounded-md font-semibold" style={{
               background: i === 5 ? theme.primary : `${theme.text}10`,
               color: i === 5 ? theme.bg : theme.text,
@@ -1206,7 +1207,7 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
       {/* CTA */}
       <div className="px-4">
         <button className="w-full py-2.5 rounded-xl text-[10px] font-bold" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg, borderRadius: theme.radius * 0.8 }}>
-          Conferma · {kind === "ncc" ? "driver assegnato" : kind === "plumber" ? "tecnico in arrivo" : "Ven 22 alle 20:00"}
+          Conferma · {isCharter ? "skipper assegnato" : kind === "ncc" ? "driver assegnato" : kind === "plumber" ? "tecnico in arrivo" : "Ven 22 alle 20:00"}
         </button>
         <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Cancellazione omaggio fino a 4h prima</p>
       </div>
