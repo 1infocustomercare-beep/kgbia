@@ -247,7 +247,8 @@ const sectorCueFor = (item: CatalogItem): string => {
     if (/sakura|sushi|tsukiji|hinoki|omakase/.test(name)) return "food sushi omakase japanese tasting bar";
     if (/pizza|casa nostra|strapizzami|forno/.test(name)) return "food pizzeria forno delivery tavoli";
     if (/ceviche|pacifico|seafood|ocean|costa/.test(name)) return "food seafood ceviche beach club raw bar";
-    if (/kebab|brace/.test(name)) return "food kebab grill street food delivery";
+    if (/kebab/.test(name)) return "food kebab grill street food delivery";
+    if (/onyx|steak|brace|joseon|obsidian|hanok|gangnam/.test(name)) return "food steakhouse fine dining grill wine cellar kds table booking";
     if (/indocina|saigon|jade|spice|matcha/.test(name)) return "food asian fusion vietnamese cocktail dining";
     return "food steakhouse fine dining wine cellar kitchen kds";
   }
@@ -278,13 +279,17 @@ const colorStyleFor = (item: CatalogItem): ColorStyle => {
 const screenFlowFor = (item: CatalogItem): Array<{ type: string; label: string }> => {
   const s = String(item.sectorId);
   const cue = sectorCueFor(item).toLowerCase();
-  if (s === "food") return /delivery|street/.test(cue)
-    ? [{ type: "home", label: "Brand" }, { type: "menu", label: "Menu" }, { type: "map", label: "Zone" }, { type: "checkout", label: "Order" }]
-    : [{ type: "home", label: "Hero" }, { type: "menu", label: "Menu" }, { type: "kitchen", label: "KDS" }, { type: "booking", label: "Book" }];
+  if (s === "food") {
+    if (/kebab|delivery|street/.test(cue)) return [{ type: "home", label: "Brand" }, { type: "menu", label: "Combo" }, { type: "checkout", label: "Order" }, { type: "map", label: "Zone" }];
+    if (/sushi|omakase|japanese/.test(cue)) return [{ type: "home", label: "Hero" }, { type: "menu", label: "Omakase" }, { type: "booking", label: "Turni" }, { type: "profile", label: "Sake" }];
+    if (/seafood|ceviche|raw/.test(cue)) return [{ type: "home", label: "Hero" }, { type: "menu", label: "Crudi" }, { type: "booking", label: "Table" }, { type: "checkout", label: "Bill" }];
+    if (/asian|vietnamese|cocktail/.test(cue)) return [{ type: "home", label: "Noir" }, { type: "menu", label: "Menu" }, { type: "booking", label: "Dinner" }, { type: "profile", label: "Club" }];
+    return [{ type: "home", label: "Brand" }, { type: "menu", label: "Cuts" }, { type: "kitchen", label: "KDS" }, { type: "booking", label: "Table" }];
+  }
   if (s === "retail") return [{ type: "home", label: "Drop" }, { type: "catalog", label: "Shop" }, { type: "detail", label: "Look" }, { type: "checkout", label: "Cart" }];
   if (s === "ncc") return /yacht|boat|charter/.test(cue)
-    ? [{ type: "home", label: "Hero" }, { type: "fleet", label: "Yacht" }, { type: "map", label: "Route" }, { type: "booking", label: "Book" }]
-    : [{ type: "home", label: "Hero" }, { type: "fleet", label: "Fleet" }, { type: "map", label: "Route" }, { type: "booking", label: "Quote" }];
+    ? [{ type: "home", label: "Harbor" }, { type: "fleet", label: "Yachts" }, { type: "map", label: "Route" }, { type: "booking", label: "Charter" }]
+    : [{ type: "home", label: "Concierge" }, { type: "fleet", label: "Fleet" }, { type: "map", label: "Pickup" }, { type: "booking", label: "Quote" }];
   if (s === "beach") return [{ type: "home", label: "Lido" }, { type: "map", label: "Map" }, { type: "services", label: "Extra" }, { type: "booking", label: "Pass" }];
   if (s === "hospitality") return [{ type: "home", label: "Stay" }, { type: "rooms", label: "Rooms" }, { type: "services", label: "Concierge" }, { type: "booking", label: "Book" }];
   if (s === "construction") return [{ type: "dashboard", label: "SAL" }, { type: "units", label: "Units" }, { type: "schedule", label: "Plan" }, { type: "booking", label: "Ticket" }];
