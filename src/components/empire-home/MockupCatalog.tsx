@@ -34,6 +34,58 @@ const SECTOR_COPY: Partial<Record<IndustryId, string>> = {
   beach: "Attività, prenotazioni, pacchetti e vendita esperienze per stabilimenti balneari e watersport.",
 };
 
+const descriptionFor = (sectorId: IndustryId, brand: string, style: string): string => {
+  const key = `${sectorId} ${brand} ${style}`.toLowerCase();
+
+  if (sectorId === "food") {
+    if (/onyx|steak|brace|joseon|obsidian|hanok|gangnam/.test(key)) {
+      return "Steakhouse premium: tagli signature, carta vini, prenotazione tavoli, upsell degustazione e KDS cucina coerenti con il visual luxury del brand.";
+    }
+    if (/sakura|sushi|omakase|tsukiji|hinoki|wabi/.test(key)) {
+      return "Sushi e omakase: menu degustazione, sashimi bar, prenotazioni a turni, sake pairing e percorso cliente elegante in stile Japanese luxury.";
+    }
+    if (/indocina|saigon|jade|silk|spice|matcha/.test(key)) {
+      return "Asian fusion: piatti signature, cocktail pairing, booking serale, gestione allergeni e ordine premium con estetica noir esotica.";
+    }
+    if (/pacifico|ceviche|costa|lima|seafood|ocean/.test(key)) {
+      return "Seafood e ceviche bar: crudi, daily catch, tavoli vista mare, cocktail e checkout rapido con interfacce fresche e costiere.";
+    }
+    if (/kebab/.test(key)) {
+      return "Grill e street food: menu combo, delivery, zone di consegna, carrello veloce e offerte pranzo con identità calda e urbana.";
+    }
+    if (/pizza|forno|casa/.test(key)) {
+      return "Pizzeria e forno: impasti, extra topping, asporto, delivery, tavoli e ordini cucina in uno stile editoriale italiano coerente.";
+    }
+    return "Ristorazione premium: vetrina, menu, tavoli, ordini, loyalty e cucina sincronizzata con interfacce coerenti al concept del locale.";
+  }
+
+  if (sectorId === "beauty") {
+    if (/hair|velluto|color|balayage/.test(key)) {
+      return "Hair salon: servizi colore, agenda stylist, retail prodotti, scheda cliente e rebooking automatico con immagine editoriale beauty.";
+    }
+    return "Nail, spa e beauty atelier: trattamenti, cabine, agenda staff, pacchetti VIP e schede cliente in un linguaggio soft luxury coerente.";
+  }
+
+  if (sectorId === "ncc") {
+    if (/cala|charter|yacht|marina|vento|azure|emerald|sunset/.test(key)) {
+      return "Charter e yacht: flotta, rotte, skipper, depositi, booking esperienze e upsell mare con dashboard premium da concierge nautico.";
+    }
+    return "NCC e transfer executive: flotta, tratte, flight tracking, preventivo istantaneo, driver assegnato e fatturazione B2B.";
+  }
+
+  if (sectorId === "healthcare") return "Clinica e studio medico: prestazioni, agenda medici, triage, consenso privacy, richiami e scheda paziente ad alto contrasto.";
+  if (sectorId === "fitness") return "Padel, gym e sport club: campi/classi, coach, membership, calendario slot, progressi e conversione trial in stile energy premium.";
+  if (sectorId === "construction") return "Edilizia e real estate: SAL, unità, ticket manutenzione, documenti, pianificazione squadre e area cliente con precisione blueprint.";
+  if (sectorId === "plumber") return "Servizi tecnici: SOS, interventi, tecnico disponibile, ricambi, preventivi e SLA in una UI operativa chiara e pronta per WhatsApp.";
+  if (sectorId === "veterinary") return "Veterinaria e pet care: visite, vaccini, pet resort, toeletta, schede animali e reminder proprietario con tono caldo e affidabile.";
+  if (sectorId === "childcare") return "Asilo e famiglie: programmi, attività, diario genitori, mensa, team, tour e iscrizioni con visual rassicurante e giocoso.";
+  if (sectorId === "hospitality") return "Hotel e resort: camere, esperienze, concierge, extra, direct booking e profilo ospite in un percorso cinematico da hospitality premium.";
+  if (sectorId === "retail") return "Retail e boutique: vetrina drop, catalogo, varianti prodotto, carrello, CRM VIP e recupero checkout con look e-commerce premium.";
+  if (sectorId === "beach") return "Beach club e watersport: mappa ombrelloni, cabane, attività, pass, upgrade e prenotazioni live con estetica resort costiera.";
+
+  return SECTOR_COPY[sectorId] ?? "Mockup settoriale con schermate operative per presentare servizi, contenuti, conversione e gestione clienti.";
+};
+
 const flattenPortfolio = (portfolio: SectorPortfolio[]): CatalogItem[] =>
   portfolio.flatMap((sector) =>
     sector.brands.flatMap((brand) =>
@@ -56,9 +108,7 @@ const flattenPortfolio = (portfolio: SectorPortfolio[]): CatalogItem[] =>
           aiHero: aiHero ?? null,
           screens,
           desktopScreens: style.desktopScreens,
-          description:
-            SECTOR_COPY[sector.sectorId] ??
-            "Mockup settoriale con schermate operative per presentare servizi, contenuti, conversione e gestione clienti.",
+          description: descriptionFor(sector.sectorId, brand.name, style.name),
         };
       })
     )
