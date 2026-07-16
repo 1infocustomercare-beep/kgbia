@@ -39,6 +39,23 @@ serve(async (req) => {
       });
     }
 
+    // ── Ownership check ──
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: _authUser.id, _role: "super_admin" });
+    if (!isAdmin) {
+      let allowed = false;
+      if (partner_id && partner_id === _authUser.id) allowed = true;
+      if (!allowed && restaurant_id) {
+        const { data: ownership } = await supabase.from("restaurants").select("id")
+          .eq("id", restaurant_id).eq("owner_id", _authUser.id).maybeSingle();
+        if (ownership) allowed = true;
+      }
+      if (!allowed) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const now = new Date();
     const invoiceNumber = `EMP-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
 
