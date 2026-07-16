@@ -595,7 +595,7 @@ function TripletPhone({ item, screenType, priority, imageUrl, objectPosition }: 
   const template = templateFor(item);
   const primary = primaryFor(item);
   // Approximate iPhone-16 aspect for the inner screen so live UI renders at scale
-  const renderWidth = 160;
+  const renderWidth = 240;
   const renderHeight = Math.round(renderWidth * 19.5 / 9);
   return (
     <div className="relative w-full will-change-transform transition-transform duration-500 group-hover:-translate-y-1" style={{ aspectRatio: "9 / 19.5" }}>
@@ -636,8 +636,9 @@ function TripletPhone({ item, screenType, priority, imageUrl, objectPosition }: 
                 colorStyle={colorStyleFor(item)}
                 width={renderWidth}
                 height={renderHeight}
-                glassIntensity={40}
-                typeScale={0.95}
+                glassIntensity={32}
+                typeScale={1}
+                safeAreaPx={2}
                 boostContrast
               />
             </ScaledScreen>
