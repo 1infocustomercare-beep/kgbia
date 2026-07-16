@@ -255,7 +255,9 @@ const sectorCueFor = (item: CatalogItem): string => {
   if (item.sectorId === "beauty") return /hair|velluto/.test(name) ? "beauty hair salon color balayage retail" : "beauty nail spa treatment agenda vip";
   if (item.sectorId === "ncc") return /cala|charter|yacht|marina|vento/.test(name) ? "ncc yacht charter marina boat skipper booking" : "ncc limousine driver airport corporate transfer";
   if (item.sectorId === "beach") return "beach lido ombrelloni cabana watersport pass";
-  if (item.sectorId === "hospitality") return "hospitality resort hotel suite concierge experiences direct booking";
+  if (item.sectorId === "hospitality") return /cala|charter|yacht|vento|marina/.test(name)
+    ? "ncc yacht charter marina boat skipper booking hospitality concierge"
+    : "hospitality resort hotel suite concierge experiences direct booking";
   if (item.sectorId === "healthcare") return "healthcare medical clinic patient agenda referti privacy";
   if (item.sectorId === "fitness") return /padel/.test(name) ? "fitness padel club courts coaches membership" : "fitness gym classes coach progress membership";
   if (item.sectorId === "retail") return "retail fashion boutique ecommerce product variants checkout";
@@ -291,7 +293,9 @@ const screenFlowFor = (item: CatalogItem): Array<{ type: string; label: string }
     ? [{ type: "home", label: "Harbor" }, { type: "fleet", label: "Yachts" }, { type: "map", label: "Route" }, { type: "booking", label: "Charter" }]
     : [{ type: "home", label: "Concierge" }, { type: "fleet", label: "Fleet" }, { type: "map", label: "Pickup" }, { type: "booking", label: "Quote" }];
   if (s === "beach") return [{ type: "home", label: "Lido" }, { type: "map", label: "Map" }, { type: "services", label: "Extra" }, { type: "booking", label: "Pass" }];
-  if (s === "hospitality") return [{ type: "home", label: "Stay" }, { type: "rooms", label: "Rooms" }, { type: "services", label: "Concierge" }, { type: "booking", label: "Book" }];
+  if (s === "hospitality") return /yacht|boat|charter|marina/.test(cue)
+    ? [{ type: "home", label: "Harbor" }, { type: "fleet", label: "Yachts" }, { type: "map", label: "Route" }, { type: "booking", label: "Charter" }]
+    : [{ type: "home", label: "Stay" }, { type: "rooms", label: "Rooms" }, { type: "services", label: "Concierge" }, { type: "booking", label: "Book" }];
   if (s === "construction") return [{ type: "dashboard", label: "SAL" }, { type: "units", label: "Units" }, { type: "schedule", label: "Plan" }, { type: "booking", label: "Ticket" }];
   if (s === "plumber") return [{ type: "dashboard", label: "SOS" }, { type: "services", label: "Jobs" }, { type: "fleet", label: "Team" }, { type: "booking", label: "Ticket" }];
   if (s === "healthcare") return [{ type: "home", label: "Clinic" }, { type: "services", label: "Care" }, { type: "schedule", label: "Agenda" }, { type: "profile", label: "Patient" }];
