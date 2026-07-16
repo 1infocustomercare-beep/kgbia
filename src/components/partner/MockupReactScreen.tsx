@@ -1518,7 +1518,7 @@ function DashboardScreen({ theme, name, sector }: { theme: ThemeTokens; name: st
         <div className="px-4 space-y-1">
           {["Getto piano 12 completato", "RFI materiali in attesa", "Cliente ha approvato variante"].map((a, i) => <div key={a} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: theme.bgPanel, borderLeft: `2px solid ${i === 0 ? theme.primary : theme.accent}` }}><span className="text-[8px] font-black" style={{ color: theme.primary }}>0{i+1}</span><p className="text-[8px] flex-1" style={{ color: theme.text }}>{a}</p><span className="text-[6px]" style={{ color: theme.textMuted }}>ora</span></div>)}
         </div>
-        <BottomNav theme={theme} active="profile" />
+        <BottomNav theme={theme} active="profile" sector={sector} />
       </div>
     );
   }
@@ -1563,7 +1563,7 @@ function DashboardScreen({ theme, name, sector }: { theme: ThemeTokens; name: st
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
@@ -1619,7 +1619,7 @@ function ChatScreen({ theme, name, sector }: { theme: ThemeTokens; name: string;
           </div>
         </div>
       </div>
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
@@ -1688,7 +1688,7 @@ function MapScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: st
           ))}
         </div>
       </div>
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -1749,7 +1749,7 @@ function KitchenScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
@@ -1796,7 +1796,7 @@ function FleetScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) 
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
@@ -1838,7 +1838,7 @@ function RoomsScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) 
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
@@ -1895,7 +1895,7 @@ function ScheduleScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="booking" />
+      <BottomNav theme={theme} active="booking" sector={sector} />
     </div>
   );
 }
@@ -2094,7 +2094,7 @@ function CasesScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) 
         </div>
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -2150,7 +2150,7 @@ function ReviewsScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
         </div>
       </div>
 
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
@@ -2210,7 +2210,7 @@ function PricingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
         </div>
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -2259,7 +2259,7 @@ function FaqScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
         <span className="text-[7.5px] font-bold" style={{ color: theme.text }}>Chatta con un consulente ora</span>
       </div>
 
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
@@ -2321,7 +2321,7 @@ function CtaScreen({ theme, name, sector }: { theme: ThemeTokens; name: string; 
         </p>
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
