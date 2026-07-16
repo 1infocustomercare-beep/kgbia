@@ -53,20 +53,23 @@ serve(async (req) => {
         global: { headers: { Authorization: authHeader } },
       });
       const { data: userData } = await userClient.auth.getUser();
-      if (userData?.user) {
-        const userId = userData.user.id;
-        const sb = createClient(supabaseUrl, serviceKey);
-        const { data: ownership } = await sb.from("restaurants").select("id")
-          .eq("id", restaurantId).eq("owner_id", userId).maybeSingle();
-        if (!ownership) {
-          const { data: membership } = await sb.from("restaurant_memberships").select("id")
-            .eq("restaurant_id", restaurantId).eq("user_id", userId).maybeSingle();
-          if (!membership) {
-            console.warn(`SECURITY: User ${userId} tried to access inventory for restaurant ${restaurantId}`);
-            return new Response(JSON.stringify({ error: "Non autorizzato" }), {
-              status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
-            });
-          }
+      if (!userData?.user) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const userId = userData.user.id;
+      const sb = createClient(supabaseUrl, serviceKey);
+      const { data: ownership } = await sb.from("restaurants").select("id")
+        .eq("id", restaurantId).eq("owner_id", userId).maybeSingle();
+      if (!ownership) {
+        const { data: membership } = await sb.from("restaurant_memberships").select("id")
+          .eq("restaurant_id", restaurantId).eq("user_id", userId).maybeSingle();
+        if (!membership) {
+          console.warn(`SECURITY: User ${userId} tried to access inventory for restaurant ${restaurantId}`);
+          return new Response(JSON.stringify({ error: "Non autorizzato" }), {
+            status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
         }
       }
     }
