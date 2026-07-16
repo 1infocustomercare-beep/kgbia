@@ -39,6 +39,7 @@ import foodIndocinaNeonSpice from "@/assets/mockups/catalog/food-indocina-neon-s
 import foodPacificoCosta from "@/assets/mockups/catalog/food-pacifico-costa.png";
 import foodLevanteDeli from "@/assets/mockups/catalog/food-levante-deli.png";
 import foodBraceKebab from "@/assets/mockups/catalog/food-brace-kebab.png";
+import beautyAuroraBlushRosegold from "@/assets/mockups/catalog/beauty-aurora-blush-rosegold.png";
 import beautyVellutoEditorial from "@/assets/mockups/catalog/beauty-velluto-editorial.png";
 import fitnessOndaAqua from "@/assets/mockups/catalog/fitness-onda-aqua.png";
 import childcareArcobalenoBauhaus from "@/assets/mockups/catalog/childcare-arcobaleno-bauhaus.png";
@@ -99,7 +100,7 @@ export const CATALOG_MOCKUPS: Partial<Record<RegistryKey, string>> = {
   [key("food", "Levante Deli", "Style H")]: foodIndocinaNeonSpice,
   [key("food", "Brace Kebab", "Default")]: foodBraceKebab,
   [key("beauty", "Aurora Nail Atelier", "Lavender Luxe")]: beautyAuroraLavender,
-  [key("beauty", "Aurora Nail Atelier", "Blush Rosegold")]: beautyVellutoEditorial,
+  [key("beauty", "Aurora Nail Atelier", "Blush Rosegold")]: beautyAuroraBlushRosegold,
   [key("beauty", "Velluto Hair Lab", "Mobile")]: beautyVellutoEditorial,
   [key("beauty", "Velluto Hair Lab", "Desktop")]: beautyAuroraLavender,
   [key("ncc", "Marina Riviera", "Style A")]: nccMarinaRiviera,
