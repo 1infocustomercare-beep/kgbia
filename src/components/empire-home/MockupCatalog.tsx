@@ -513,7 +513,13 @@ const screenTypesFor = (sectorId: IndustryId): string[] => screenSpecsFor(sector
 
 const catalogScreenImageFor = (item: CatalogItem, index: number): string | null => {
   if (index === 0) return item.aiHero ?? item.screens[0] ?? null;
+  // Prefer premium AI companion screens generated from the hero as reference —
+  // they carry the exact same palette/typography/lighting DNA so the whole
+  // 4-phone lineup reads as one cohesive brand system.
+  const companions = catalogCompanionUrls(item.sectorId, item.brand, item.style);
+  if (companions && companions[index - 1]) return companions[index - 1];
   return item.screens[index] ?? item.screens[item.screens.length - 1] ?? null;
+
 };
 
 function CatalogPhonePreview({ item, imageUrl, alt, size = "lg", priority = false, className = "" }: { item: CatalogItem; imageUrl: string; alt: string; size?: "sm" | "lg"; priority?: boolean; className?: string }) {
