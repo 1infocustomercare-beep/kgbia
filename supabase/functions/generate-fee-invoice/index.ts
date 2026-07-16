@@ -31,6 +31,20 @@ serve(async (req) => {
 
     if (!restaurantId || !monthYear) throw new Error("Missing restaurantId or monthYear");
 
+    // ── Ownership check ──
+    const { data: ownership } = await supabase.from("restaurants").select("id")
+      .eq("id", restaurantId).eq("owner_id", _authUser.id).maybeSingle();
+    if (!ownership) {
+      const { data: membership } = await supabase.from("restaurant_memberships").select("id")
+        .eq("restaurant_id", restaurantId).eq("user_id", _authUser.id).maybeSingle();
+      const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: _authUser.id, _role: "super_admin" });
+      if (!membership && !isAdmin) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const startDate = `${monthYear}-01`;
     const [year, month] = monthYear.split("-").map(Number);
     const nextMonth = month === 12 ? `${year + 1}-01-01` : `${year}-${String(month + 1).padStart(2, "0")}-01`;
