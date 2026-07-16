@@ -1025,7 +1025,7 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
         ))}
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -1123,7 +1123,7 @@ function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
       </div>
       )}
 
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
@@ -1211,7 +1211,7 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
         <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Cancellazione omaggio fino a 4h prima</p>
       </div>
 
-      <BottomNav theme={theme} active="booking" />
+      <BottomNav theme={theme} active="booking" sector={sector} />
     </div>
   );
 }
@@ -1293,7 +1293,7 @@ function ProfileScreen({ theme, name, sector = "" }: { theme: ThemeTokens; name:
         <p className="text-[6px] text-center mt-2 font-bold" style={{ color: theme.textMuted, fontFamily: theme.fontHead }}>{name}</p>
       </div>
 
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
