@@ -2,52 +2,9 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
-import { createMockupPool } from "@/lib/mockup-pool";
-import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import { PRESTIGE_PORTFOLIO_ITEMS } from "@/data/prestige-home-mockups";
 
-const MOCKUP_IMAGES = SECTOR_MOCKUP_IMAGES as Record<string, string[] | undefined>;
-
-// Curated proprietary mockups — no low-quality generated PNG batch artifacts here.
-// Order matches META below.
-const PREMIUM_IMAGES: string[] = [
-  MOCKUP_IMAGES.food?.[0],
-  MOCKUP_IMAGES.beauty?.[0],
-  MOCKUP_IMAGES.fitness?.[0],
-  MOCKUP_IMAGES.realestate?.[0],
-  MOCKUP_IMAGES.retail?.[0],
-  MOCKUP_IMAGES.healthcare?.[0],
-  MOCKUP_IMAGES.hospitality?.[0],
-  MOCKUP_IMAGES.veterinary?.[0],
-  MOCKUP_IMAGES.ncc?.[0],
-  MOCKUP_IMAGES.hospitality?.[2],
-  MOCKUP_IMAGES.garage?.[0],
-  MOCKUP_IMAGES.legal?.[0],
-].filter(Boolean) as string[];
-
-// Fallback pool if a slot is missing.
-const pool = createMockupPool();
-const POOL_BACKUP = pool.take(12);
-
-const META = [
-  { tag: "Ristorante", title: "Voltaia", desc: "Menù digitale, prenotazioni e ordini WhatsApp gestiti dall'AI · da €39/mese", year: "2026" },
-  { tag: "Spa & Wellness", title: "Séva", desc: "Booking 24/7, cataloghi trattamenti e reminder automatici · da €49/mese", year: "2026" },
-  { tag: "Fitness", title: "Forgia", desc: "Iscrizioni online, schede AI e rinnovi abbonamento automatici · da €59/mese", year: "2026" },
-  { tag: "Immobiliare", title: "Dimora", desc: "Vetrina immobili, tour virtuali e qualifica lead in chat · da €89/mese", year: "2026" },
-  { tag: "Fashion", title: "Atelier Nove", desc: "E-commerce brandizzato, personal shopper AI e clienteling · da €79/mese", year: "2026" },
-  { tag: "Studio Dentistico", title: "Aurora", desc: "Agenda medica, promemoria trattamenti e piani di cura digitali · da €69/mese", year: "2026" },
-  { tag: "Viaggi & Tour", title: "Rotta", desc: "Preventivi istantanei multilingua e itinerari personalizzati AI · da €69/mese", year: "2026" },
-  { tag: "Pet Care", title: "Coda Felice", desc: "Toelettatura e visite veterinarie prenotate via WhatsApp · da €39/mese", year: "2026" },
-  { tag: "NCC", title: "Empire NCC", desc: "Centralino AI in 4 lingue e app autisti con corse e pagamenti · da €99/mese", year: "2026" },
-  { tag: "Hotel Boutique", title: "Asinara Resort", desc: "Concierge AI multilingua 24/7 e upselling stanze automatico · da €149/mese", year: "2026" },
-  { tag: "Officina Auto", title: "Officina Romeo", desc: "Preventivi istantanei, check-in foto e storico interventi cliente · da €49/mese", year: "2026" },
-  { tag: "Studio Legale", title: "Studio Riva", desc: "Filtro AI richieste, appuntamenti con video-call e portale documenti · da €99/mese", year: "2026" },
-];
-
-const ITEMS = META.map((m, i) => ({
-  ...m,
-  image: PREMIUM_IMAGES[i] ?? POOL_BACKUP[i]?.image,
-  sector: POOL_BACKUP[i]?.sector ?? "food",
-}));
+const ITEMS = PRESTIGE_PORTFOLIO_ITEMS;
 
 
 export default function PrestigePortfolio() {

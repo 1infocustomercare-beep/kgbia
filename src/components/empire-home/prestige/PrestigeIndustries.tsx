@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
+import { PRESTIGE_SECTOR_HERO } from "@/data/prestige-home-mockups";
 
 const INDUSTRIES = [
   {
@@ -151,26 +152,41 @@ export default function PrestigeIndustries() {
         {/* Active panel */}
         <div
           key={current.id}
-          className="prestige-card mt-8 grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[auto_1fr] lg:items-start"
+          className="prestige-card mt-8 grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[280px_1fr] lg:items-center"
           style={{ animation: "prestigeFadeIn .6s ease-out" }}
         >
+          {/* Mockup image (real premium PNG) */}
           <div
-            className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl shrink-0"
+            className="relative mx-auto w-full max-w-[260px] overflow-hidden rounded-[2rem] lg:mx-0"
             style={{
-              background: "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))",
-              color: "hsl(var(--pr-emerald-deep))",
-              boxShadow: "0 16px 40px -12px hsl(var(--pr-gold) / 0.5)",
+              aspectRatio: "9 / 19.5",
+              boxShadow: "0 30px 70px -20px hsl(var(--pr-gold) / 0.35), 0 0 0 8px hsl(var(--pr-emerald-deep))",
+              background: "hsl(var(--pr-emerald-deep))",
             }}
           >
-            <Icon size={32} className="sm:hidden" />
-            <Icon size={36} className="hidden sm:block" />
+            <img
+              src={PRESTIGE_SECTOR_HERO[current.id] ?? PRESTIGE_SECTOR_HERO.food}
+              alt={`Mockup ${current.name}`}
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+            <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 65%, hsl(var(--pr-emerald-deep) / 0.6))" }} />
+            <div
+              className="absolute left-3 top-3 flex h-11 w-11 items-center justify-center rounded-xl"
+              style={{
+                background: "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))",
+                color: "hsl(var(--pr-emerald-deep))",
+                boxShadow: "0 10px 30px -8px hsl(var(--pr-gold) / 0.6)",
+              }}
+            >
+              <Icon size={20} />
+            </div>
           </div>
-          <div className="min-w-0">
 
+          <div className="min-w-0">
             <h3 className="prestige-display text-xl sm:text-3xl md:text-4xl break-words">{current.name}</h3>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed sm:text-base md:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
               {current.pitch}
-
             </p>
             <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {current.wins.map((w) => (
