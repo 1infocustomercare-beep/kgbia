@@ -5,6 +5,8 @@ import { SECTOR_PORTFOLIO, type SectorPortfolio } from "@/data/sector-mockup-ima
 import type { IndustryId } from "@/config/industry-config";
 import { MockupReactScreen, type ColorStyle } from "@/components/partner/MockupReactScreen";
 import { catalogMockupUrl } from "@/data/catalog-mockup-registry";
+import { catalogCompanionUrls } from "@/data/catalog-companions-registry";
+
 
 type CatalogItem = {
   id: string;
