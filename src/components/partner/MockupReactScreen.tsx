@@ -532,13 +532,26 @@ function StatusBar({ theme }: { theme: ThemeTokens }) {
   );
 }
 
-function BottomNav({ theme, active = "home", glassIntensity }: { theme: ThemeTokens; active?: string; glassIntensity?: number }) {
+function BottomNav({ theme, active = "home", glassIntensity, sector = "" }: { theme: ThemeTokens; active?: string; glassIntensity?: number; sector?: string }) {
   const intensity = glassIntensity ?? theme.glassIntensity ?? 60;
+  const kind = sectorKind(sector);
+  const isCharter = /yacht|charter|boat|skipper|marina/i.test(sector);
+  const labels = kind === "beauty" ? ["Home", "Servizi", "Agenda", "VIP"]
+    : kind === "ncc" && isCharter ? ["Harbor", "Yacht", "Rotte", "Clienti"]
+    : kind === "ncc" ? ["Home", "Flotta", "Pickup", "Clienti"]
+    : kind === "healthcare" ? ["Studio", "Cure", "Agenda", "Paziente"]
+    : kind === "construction" ? ["SAL", "Unità", "Ticket", "Team"]
+    : kind === "plumber" ? ["SOS", "Jobs", "Ticket", "Team"]
+    : kind === "fitness" ? ["Club", "Classi", "Slot", "Stats"]
+    : kind === "childcare" ? ["Scuola", "Bimbi", "Diario", "Genitori"]
+    : kind === "veterinary" ? ["Care", "Pet", "Vet", "Pet ID"]
+    : kind === "retail" ? ["Home", "Shop", "Cart", "VIP"]
+    : ["Home", "Menu", "Prenota", "Profilo"];
   const items = [
-    { key: "home",    icon: "M3 9l9-7 9 7v11a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2z", label: "Home" },
-    { key: "menu",    icon: "M4 6h16M4 12h16M4 18h16", label: "Menu", stroke: true },
-    { key: "booking", icon: "M3 5h18v16H3zM3 10h18M8 3v4M16 3v4", label: "Prenota", stroke: true },
-    { key: "profile", icon: "M12 12a4 4 0 100-8 4 4 0 000 8zm-7 9a7 7 0 0114 0z", label: "Profilo" },
+    { key: "home",    icon: "M3 9l9-7 9 7v11a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2z", label: labels[0] },
+    { key: "menu",    icon: "M4 6h16M4 12h16M4 18h16", label: labels[1], stroke: true },
+    { key: "booking", icon: "M3 5h18v16H3zM3 10h18M8 3v4M16 3v4", label: labels[2], stroke: true },
+    { key: "profile", icon: "M12 12a4 4 0 100-8 4 4 0 000 8zm-7 9a7 7 0 0114 0z", label: labels[3] },
   ];
   // Glass intensity: 0 = nessun blur, opacità 100%; 100 = blur massimo, opacità ridotta
   const clamped = Math.max(0, Math.min(100, intensity));
