@@ -19,6 +19,16 @@ type CatalogItem = {
   description: string;
 };
 
+const displaySectorLabelFor = (item: Pick<CatalogItem, "sectorId" | "sectorLabel" | "brand" | "style">): string => {
+  const key = `${item.sectorId} ${item.brand} ${item.style}`.toLowerCase();
+  if (/yacht|charter|marina|cala|vento|boat|azure|emerald/.test(key)) return "Charter & Yacht";
+  if (/hair|velluto/.test(key)) return "Hair & Beauty";
+  if (/steak|onyx|brace/.test(key)) return "Fine Dining";
+  if (/sushi|sakura|omakase/.test(key)) return "Sushi & Omakase";
+  if (/ceviche|pacifico|seafood/.test(key)) return "Seafood & Ceviche";
+  return item.sectorLabel;
+};
+
 const SECTOR_COPY: Partial<Record<IndustryId, string>> = {
   food: "Menu, ordini, prenotazioni, carrello e pagamenti per ristoranti, pizzerie, sushi e locali premium.",
   beauty: "Servizi, trattamenti, agenda, pacchetti e schede cliente per saloni, spa, nail studio e centri estetici.",
@@ -32,6 +42,63 @@ const SECTOR_COPY: Partial<Record<IndustryId, string>> = {
   plumber: "Servizi, interventi, preventivi e booking urgente per artigiani e imprese tecniche.",
   retail: "Vetrina, shop, dettaglio prodotto e carrello per retail, profumerie, fashion e negozi verticali.",
   beach: "Attività, prenotazioni, pacchetti e vendita esperienze per stabilimenti balneari e watersport.",
+};
+
+const descriptionFor = (sectorId: IndustryId, brand: string, style: string): string => {
+  const key = `${sectorId} ${brand} ${style}`.toLowerCase();
+
+  if (sectorId === "food") {
+    if (/onyx|steak|brace|joseon|obsidian|hanok|gangnam/.test(key)) {
+      return "Steakhouse premium: tagli signature, carta vini, prenotazione tavoli, upsell degustazione e KDS cucina coerenti con l’identità luxury del brand.";
+    }
+    if (/sakura|sushi|omakase|tsukiji|hinoki|wabi/.test(key)) {
+      return "Sushi e omakase: menu degustazione, sashimi bar, prenotazioni a turni, sake pairing e percorso cliente elegante in stile Japanese luxury.";
+    }
+    if (/indocina|saigon|jade|silk|spice|matcha/.test(key)) {
+      return "Asian fusion: piatti signature, cocktail pairing, booking serale, gestione allergeni e ordine premium con estetica noir esotica.";
+    }
+    if (/pacifico|ceviche|costa|lima|seafood|ocean/.test(key)) {
+      return "Seafood e ceviche bar: crudi, daily catch, tavoli vista mare, cocktail e checkout rapido con interfacce fresche e costiere.";
+    }
+    if (/kebab/.test(key)) {
+      return "Grill e street food: menu combo, delivery, zone di consegna, carrello veloce e offerte pranzo con identità calda e urbana.";
+    }
+    if (/pizza|forno|casa/.test(key)) {
+      return "Pizzeria e forno: impasti, extra topping, asporto, delivery, tavoli e ordini cucina in uno stile editoriale italiano coerente.";
+    }
+    return "Ristorazione premium: vetrina, menu, tavoli, ordini, loyalty e cucina sincronizzata con interfacce coerenti al concept del locale.";
+  }
+
+  if (sectorId === "beauty") {
+    if (/hair|velluto|color|balayage/.test(key)) {
+      return "Hair salon: servizi colore, agenda stylist, retail prodotti, scheda cliente e rebooking automatico con immagine editoriale beauty.";
+    }
+    return "Nail, spa e beauty atelier: trattamenti, cabine, agenda staff, pacchetti VIP e schede cliente in un linguaggio soft luxury coerente.";
+  }
+
+  if (sectorId === "ncc") {
+    if (/cala|charter|yacht|marina|vento|azure|emerald|sunset/.test(key)) {
+      return "Charter e yacht: flotta, rotte, skipper, depositi, booking esperienze e upsell mare con dashboard premium da concierge nautico.";
+    }
+    return "NCC e transfer executive: flotta, tratte, flight tracking, preventivo istantaneo, driver assegnato e fatturazione B2B.";
+  }
+
+  if (sectorId === "healthcare") return "Clinica e studio medico: prestazioni, agenda medici, triage, consenso privacy, richiami e scheda paziente ad alto contrasto.";
+  if (sectorId === "fitness") return "Padel, gym e sport club: campi/classi, coach, membership, calendario slot, progressi e conversione trial in stile energy premium.";
+  if (sectorId === "construction") return "Edilizia e real estate: SAL, unità, ticket manutenzione, documenti, pianificazione squadre e area cliente con precisione blueprint.";
+  if (sectorId === "plumber") return "Servizi tecnici: SOS, interventi, tecnico disponibile, ricambi, preventivi e SLA in una UI operativa chiara e pronta per WhatsApp.";
+  if (sectorId === "veterinary") return "Veterinaria e pet care: visite, vaccini, pet resort, toeletta, schede animali e reminder proprietario con tono caldo e affidabile.";
+  if (sectorId === "childcare") return "Asilo e famiglie: programmi, attività, diario genitori, mensa, team, tour e iscrizioni con visual rassicurante e giocoso.";
+  if (sectorId === "hospitality") {
+    if (/cala|charter|yacht|vento|marina|azure|sunset|emerald/.test(key)) {
+      return "Charter nautico premium: yacht, rotte, skipper, deposito, esperienze in mare e prenotazione con concierge dedicato.";
+    }
+    return "Hotel e resort: camere, esperienze, concierge, extra, direct booking e profilo ospite in un percorso cinematico da hospitality premium.";
+  }
+  if (sectorId === "retail") return "Retail e boutique: vetrina drop, catalogo, varianti prodotto, carrello, CRM VIP e recupero checkout con look e-commerce premium.";
+  if (sectorId === "beach") return "Beach club e watersport: mappa ombrelloni, cabane, attività, pass, upgrade e prenotazioni live con estetica resort costiera.";
+
+  return SECTOR_COPY[sectorId] ?? "Mockup settoriale con schermate operative per presentare servizi, contenuti, conversione e gestione clienti.";
 };
 
 const flattenPortfolio = (portfolio: SectorPortfolio[]): CatalogItem[] =>
@@ -56,9 +123,7 @@ const flattenPortfolio = (portfolio: SectorPortfolio[]): CatalogItem[] =>
           aiHero: aiHero ?? null,
           screens,
           desktopScreens: style.desktopScreens,
-          description:
-            SECTOR_COPY[sector.sectorId] ??
-            "Mockup settoriale con schermate operative per presentare servizi, contenuti, conversione e gestione clienti.",
+          description: descriptionFor(sector.sectorId, brand.name, style.name),
         };
       })
     )
@@ -197,14 +262,17 @@ const sectorCueFor = (item: CatalogItem): string => {
     if (/sakura|sushi|tsukiji|hinoki|omakase/.test(name)) return "food sushi omakase japanese tasting bar";
     if (/pizza|casa nostra|strapizzami|forno/.test(name)) return "food pizzeria forno delivery tavoli";
     if (/ceviche|pacifico|seafood|ocean|costa/.test(name)) return "food seafood ceviche beach club raw bar";
-    if (/kebab|brace/.test(name)) return "food kebab grill street food delivery";
+    if (/kebab/.test(name)) return "food kebab grill street food delivery";
+    if (/onyx|steak|brace|joseon|obsidian|hanok|gangnam/.test(name)) return "food steakhouse fine dining grill wine cellar kds table booking";
     if (/indocina|saigon|jade|spice|matcha/.test(name)) return "food asian fusion vietnamese cocktail dining";
     return "food steakhouse fine dining wine cellar kitchen kds";
   }
   if (item.sectorId === "beauty") return /hair|velluto/.test(name) ? "beauty hair salon color balayage retail" : "beauty nail spa treatment agenda vip";
   if (item.sectorId === "ncc") return /cala|charter|yacht|marina|vento/.test(name) ? "ncc yacht charter marina boat skipper booking" : "ncc limousine driver airport corporate transfer";
   if (item.sectorId === "beach") return "beach lido ombrelloni cabana watersport pass";
-  if (item.sectorId === "hospitality") return "hospitality resort hotel suite concierge experiences direct booking";
+  if (item.sectorId === "hospitality") return /cala|charter|yacht|vento|marina/.test(name)
+    ? "ncc yacht charter marina boat skipper booking hospitality concierge"
+    : "hospitality resort hotel suite concierge experiences direct booking";
   if (item.sectorId === "healthcare") return "healthcare medical clinic patient agenda referti privacy";
   if (item.sectorId === "fitness") return /padel/.test(name) ? "fitness padel club courts coaches membership" : "fitness gym classes coach progress membership";
   if (item.sectorId === "retail") return "retail fashion boutique ecommerce product variants checkout";
@@ -228,15 +296,21 @@ const colorStyleFor = (item: CatalogItem): ColorStyle => {
 const screenFlowFor = (item: CatalogItem): Array<{ type: string; label: string }> => {
   const s = String(item.sectorId);
   const cue = sectorCueFor(item).toLowerCase();
-  if (s === "food") return /delivery|street/.test(cue)
-    ? [{ type: "home", label: "Brand" }, { type: "menu", label: "Menu" }, { type: "map", label: "Zone" }, { type: "checkout", label: "Order" }]
-    : [{ type: "home", label: "Hero" }, { type: "menu", label: "Menu" }, { type: "kitchen", label: "KDS" }, { type: "booking", label: "Book" }];
+  if (s === "food") {
+    if (/kebab|delivery|street/.test(cue)) return [{ type: "home", label: "Brand" }, { type: "menu", label: "Combo" }, { type: "checkout", label: "Order" }, { type: "map", label: "Zone" }];
+    if (/sushi|omakase|japanese/.test(cue)) return [{ type: "home", label: "Hero" }, { type: "menu", label: "Omakase" }, { type: "booking", label: "Turni" }, { type: "profile", label: "Sake" }];
+    if (/seafood|ceviche|raw/.test(cue)) return [{ type: "home", label: "Hero" }, { type: "menu", label: "Crudi" }, { type: "booking", label: "Table" }, { type: "checkout", label: "Bill" }];
+    if (/asian|vietnamese|cocktail/.test(cue)) return [{ type: "home", label: "Noir" }, { type: "menu", label: "Menu" }, { type: "booking", label: "Dinner" }, { type: "profile", label: "Club" }];
+    return [{ type: "home", label: "Brand" }, { type: "menu", label: "Cuts" }, { type: "kitchen", label: "KDS" }, { type: "booking", label: "Table" }];
+  }
   if (s === "retail") return [{ type: "home", label: "Drop" }, { type: "catalog", label: "Shop" }, { type: "detail", label: "Look" }, { type: "checkout", label: "Cart" }];
   if (s === "ncc") return /yacht|boat|charter/.test(cue)
-    ? [{ type: "home", label: "Hero" }, { type: "fleet", label: "Yacht" }, { type: "map", label: "Route" }, { type: "booking", label: "Book" }]
-    : [{ type: "home", label: "Hero" }, { type: "fleet", label: "Fleet" }, { type: "map", label: "Route" }, { type: "booking", label: "Quote" }];
+    ? [{ type: "home", label: "Harbor" }, { type: "fleet", label: "Yachts" }, { type: "map", label: "Route" }, { type: "booking", label: "Charter" }]
+    : [{ type: "home", label: "Concierge" }, { type: "fleet", label: "Fleet" }, { type: "map", label: "Pickup" }, { type: "booking", label: "Quote" }];
   if (s === "beach") return [{ type: "home", label: "Lido" }, { type: "map", label: "Map" }, { type: "services", label: "Extra" }, { type: "booking", label: "Pass" }];
-  if (s === "hospitality") return [{ type: "home", label: "Stay" }, { type: "rooms", label: "Rooms" }, { type: "services", label: "Concierge" }, { type: "booking", label: "Book" }];
+  if (s === "hospitality") return /yacht|boat|charter|marina/.test(cue)
+    ? [{ type: "home", label: "Harbor" }, { type: "fleet", label: "Yachts" }, { type: "map", label: "Route" }, { type: "booking", label: "Charter" }]
+    : [{ type: "home", label: "Stay" }, { type: "rooms", label: "Rooms" }, { type: "services", label: "Concierge" }, { type: "booking", label: "Book" }];
   if (s === "construction") return [{ type: "dashboard", label: "SAL" }, { type: "units", label: "Units" }, { type: "schedule", label: "Plan" }, { type: "booking", label: "Ticket" }];
   if (s === "plumber") return [{ type: "dashboard", label: "SOS" }, { type: "services", label: "Jobs" }, { type: "fleet", label: "Team" }, { type: "booking", label: "Ticket" }];
   if (s === "healthcare") return [{ type: "home", label: "Clinic" }, { type: "services", label: "Care" }, { type: "schedule", label: "Agenda" }, { type: "profile", label: "Patient" }];
@@ -540,7 +614,7 @@ function TripletPhone({ item, screenType, priority, imageUrl, objectPosition }: 
   const template = templateFor(item);
   const primary = primaryFor(item);
   // Approximate iPhone-16 aspect for the inner screen so live UI renders at scale
-  const renderWidth = 160;
+  const renderWidth = 240;
   const renderHeight = Math.round(renderWidth * 19.5 / 9);
   return (
     <div className="relative w-full will-change-transform transition-transform duration-500 group-hover:-translate-y-1" style={{ aspectRatio: "9 / 19.5" }}>
@@ -581,8 +655,9 @@ function TripletPhone({ item, screenType, priority, imageUrl, objectPosition }: 
                 colorStyle={colorStyleFor(item)}
                 width={renderWidth}
                 height={renderHeight}
-                glassIntensity={40}
-                typeScale={0.95}
+                glassIntensity={32}
+                typeScale={1}
+                safeAreaPx={2}
                 boostContrast
               />
             </ScaledScreen>
@@ -758,7 +833,7 @@ export default function MockupCatalog({ mode = "section" }: { mode?: "section" |
                       className="rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[2px]"
                       style={{ color: p.text, borderColor: p.border, background: p.bg }}
                     >
-                      {item.sectorLabel}
+                      {displaySectorLabelFor(item)}
                     </span>
                     <span className="rounded-full border border-foreground/15 bg-foreground/[0.05] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[2px] text-foreground/70">
                       {item.style}

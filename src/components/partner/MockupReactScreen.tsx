@@ -532,13 +532,26 @@ function StatusBar({ theme }: { theme: ThemeTokens }) {
   );
 }
 
-function BottomNav({ theme, active = "home", glassIntensity }: { theme: ThemeTokens; active?: string; glassIntensity?: number }) {
+function BottomNav({ theme, active = "home", glassIntensity, sector = "" }: { theme: ThemeTokens; active?: string; glassIntensity?: number; sector?: string }) {
   const intensity = glassIntensity ?? theme.glassIntensity ?? 60;
+  const kind = sectorKind(sector);
+  const isCharter = /yacht|charter|boat|skipper|marina/i.test(sector);
+  const labels = kind === "beauty" ? ["Home", "Servizi", "Agenda", "VIP"]
+    : kind === "ncc" && isCharter ? ["Harbor", "Yacht", "Rotte", "Clienti"]
+    : kind === "ncc" ? ["Home", "Flotta", "Pickup", "Clienti"]
+    : kind === "healthcare" ? ["Studio", "Cure", "Agenda", "Paziente"]
+    : kind === "construction" ? ["SAL", "Unità", "Ticket", "Team"]
+    : kind === "plumber" ? ["SOS", "Jobs", "Ticket", "Team"]
+    : kind === "fitness" ? ["Club", "Classi", "Slot", "Stats"]
+    : kind === "childcare" ? ["Scuola", "Bimbi", "Diario", "Genitori"]
+    : kind === "veterinary" ? ["Care", "Pet", "Vet", "Pet ID"]
+    : kind === "retail" ? ["Home", "Shop", "Cart", "VIP"]
+    : ["Home", "Menu", "Prenota", "Profilo"];
   const items = [
-    { key: "home",    icon: "M3 9l9-7 9 7v11a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2z", label: "Home" },
-    { key: "menu",    icon: "M4 6h16M4 12h16M4 18h16", label: "Menu", stroke: true },
-    { key: "booking", icon: "M3 5h18v16H3zM3 10h18M8 3v4M16 3v4", label: "Prenota", stroke: true },
-    { key: "profile", icon: "M12 12a4 4 0 100-8 4 4 0 000 8zm-7 9a7 7 0 0114 0z", label: "Profilo" },
+    { key: "home",    icon: "M3 9l9-7 9 7v11a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2z", label: labels[0] },
+    { key: "menu",    icon: "M4 6h16M4 12h16M4 18h16", label: labels[1], stroke: true },
+    { key: "booking", icon: "M3 5h18v16H3zM3 10h18M8 3v4M16 3v4", label: labels[2], stroke: true },
+    { key: "profile", icon: "M12 12a4 4 0 100-8 4 4 0 000 8zm-7 9a7 7 0 0114 0z", label: labels[3] },
   ];
   // Glass intensity: 0 = nessun blur, opacità 100%; 100 = blur massimo, opacità ridotta
   const clamped = Math.max(0, Math.min(100, intensity));
@@ -615,7 +628,7 @@ function sectorKind(sector: string) {
   const s = (sector || "").toLowerCase();
   if (s === "food" || /sushi|pizz|ristor|trattor|oster|bar|cafe|kebab|deli|steak/.test(s)) return "food";
   if (s === "beauty" || /spa|wellness|beauty|estetic|parruc|hair|nail/.test(s)) return "beauty";
-  if (s === "ncc" || /ncc|taxi|transfer|noleggi|limousine|driver/.test(s)) return "ncc";
+  if (s === "ncc" || /ncc|taxi|transfer|noleggi|limousine|driver|yacht|charter|boat|skipper|marina/.test(s)) return "ncc";
   if (s === "beach" || /lido|spiagg|beach|ombrell/.test(s)) return "beach";
   if (s === "hospitality" || s === "agriturismo" || /hotel|resort|albergh|b&b|bnb|stay|suite/.test(s)) return "hospitality";
   if (s === "healthcare" || /medic|dent|clinic|salute|physio/.test(s)) return "healthcare";
@@ -654,6 +667,16 @@ function getExperienceCopy(sector: string) {
 
 function getMenuItems(sector: string) {
   const s = sector.toLowerCase();
+  if (/steak|brace|grill|wine cellar|fine dining/.test(s)) {
+    return [
+      { name: "Ribeye Dry Aged", desc: "Frollatura 45 giorni · sale Maldon", price: 54, badge: "Chef" },
+      { name: "Wagyu Tasting", desc: "A5, striploin, filetto · 3 tagli", price: 98, badge: "Top" },
+      { name: "Bone Marrow Toast", desc: "Midollo, brioche, erbe affumicate", price: 18 },
+      { name: "Wine Pairing Reserve", desc: "3 calici selezione sommelier", price: 42, badge: "VIP" },
+      { name: "Tomahawk 1.2kg", desc: "Per 2 persone · carved table-side", price: 126 },
+      { name: "Chocolate Ember", desc: "Dessert al carbone dolce e cacao", price: 14 },
+    ];
+  }
   if (/sushi|giappon/.test(s)) {
     return [
       { name: "Sashimi Misto", desc: "Tonno, salmone, branzino · 9 pz", price: 24, badge: "Chef" },
@@ -662,6 +685,46 @@ function getMenuItems(sector: string) {
       { name: "Ramen Tonkotsu", desc: "12h di brodo · Chashu di maiale", price: 16, badge: "Hot" },
       { name: "Gyoza al Vapore", desc: "6 pz · Maiale e cavolo", price: 9 },
       { name: "Mochi Dessert", desc: "Tè verde, mango, sesamo nero", price: 7 },
+    ];
+  }
+  if (/yacht|charter|boat|nautic|skipper|marina/.test(s)) {
+    return [
+      { name: "Sunset Charter 4h", desc: "Skipper, fuel light, prosecco", price: 450, badge: "Top" },
+      { name: "Full Day Yacht", desc: "8h · pranzo a bordo · snorkeling", price: 980, badge: "Chef" },
+      { name: "Capri Blue Route", desc: "Grotta, swim stop, tender incluso", price: 720 },
+      { name: "Private Aperitivo", desc: "2h tramonto · 6 ospiti", price: 290, badge: "VIP" },
+      { name: "Skipper Extra", desc: "Estensione oraria e marina fee", price: 90 },
+      { name: "Sea Transfer", desc: "Porto → Beach club · fast boat", price: 180 },
+    ];
+  }
+  if (/ceviche|seafood|raw bar|pacifico|daily catch/.test(s)) {
+    return [
+      { name: "Ceviche Nikkei", desc: "Ricciola, lime, leche de tigre", price: 21, badge: "Top" },
+      { name: "Plateau Crudi", desc: "Ostriche, gamberi, tartare · per 2", price: 68, badge: "Chef" },
+      { name: "Taco Lobster", desc: "Astice, avocado, mais tostato", price: 24 },
+      { name: "Catch of the Day", desc: "Pescato locale · cottura alla brace", price: 32 },
+      { name: "Pisco Sour", desc: "Classic, mango o passion fruit", price: 13, badge: "Bar" },
+      { name: "Tres Leches", desc: "Cocco, lime, meringa bruciata", price: 9 },
+    ];
+  }
+  if (/asian fusion|vietnamese|saigon|indocina|cocktail/.test(s)) {
+    return [
+      { name: "Pho Wagyu Noir", desc: "Brodo 18h · erbe vietnamite", price: 24, badge: "Chef" },
+      { name: "Bao Anatra Laccata", desc: "Hoisin, cetriolo, sesamo nero", price: 16, badge: "Top" },
+      { name: "Bun Cha Charcoal", desc: "Maiale alla brace · noodles freddi", price: 18 },
+      { name: "Jade Dumpling", desc: "Gambero, lime kaffir, chili oil", price: 14 },
+      { name: "Saigon Negroni", desc: "Gin, vermouth, bitter al lemongrass", price: 15 },
+      { name: "Mango Sticky Noir", desc: "Riso nero, mango, cocco", price: 10 },
+    ];
+  }
+  if (/kebab|street food|delivery/.test(s)) {
+    return [
+      { name: "Brace Kebab Signature", desc: "Carne marinata, pita calda, salsa house", price: 11, badge: "Top" },
+      { name: "Combo Grill Box", desc: "Spiedini, patate, hummus, drink", price: 17, badge: "Hot" },
+      { name: "Falafel Crunch", desc: "Ceci, tahina, pickles, erbe", price: 9 },
+      { name: "Loaded Fries", desc: "Spezie, cheddar, pulled beef", price: 8 },
+      { name: "Family Pack", desc: "4 kebab, 2 side, 4 drink", price: 42 },
+      { name: "Baklava Pistacchio", desc: "Miele, pistacchio, sfoglia", price: 6 },
     ];
   }
   if (/pizz/.test(s)) {
@@ -704,7 +767,7 @@ function getMenuItems(sector: string) {
       { name: "Make-Up Evento", desc: "Trucco professionale · Prova inclusa", price: 90 },
     ];
   }
-  if (/hotel|albergh|lido|beach|yacht|b&b|bnb|hospitality/.test(s)) {
+  if (/hotel|albergh|lido|beach|b&b|bnb|hospitality/.test(s)) {
     return [
       { name: "Suite Vista Mare", desc: "Camera deluxe · Terrazza privata", price: 280, badge: "Top" },
       { name: "Cabana Premium", desc: "Lettini, ombrellone, servizio bar", price: 95 },
@@ -962,7 +1025,7 @@ function HomeScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: s
         ))}
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -1060,7 +1123,7 @@ function MenuScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
       </div>
       )}
 
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
@@ -1072,6 +1135,7 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
   const isService = /spa|wellness|beauty|estetic|parruc|medic|dent|fitness/i.test(sector);
   const copy = getExperienceCopy(sector);
   const kind = sectorKind(sector);
+  const isCharter = /yacht|charter|boat|skipper|marina/i.test(sector);
   const slotLabel = kind === "ncc" ? "Pickup" : kind === "construction" || kind === "plumber" ? "Urgenza" : kind === "hospitality" ? "Check-in" : kind === "healthcare" ? "Specialista" : "Orario disponibile";
   return (
     <div className="pb-14 overflow-hidden h-full">
@@ -1114,9 +1178,9 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
 
       {/* Time */}
       <div className="px-4 mb-2">
-        <p className="text-[7px] font-bold mb-1 uppercase tracking-wider" style={{ color: theme.textMuted }}>{slotLabel}</p>
+        <p className="text-[7px] font-bold mb-1 uppercase tracking-wider" style={{ color: theme.textMuted }}>{isCharter ? "Partenza" : slotLabel}</p>
         <div className="grid grid-cols-4 gap-1">
-          {(kind === "ncc" ? ["MXP", "LIN", "Hotel", "Duomo", "19:30", "20:00", "21:30", "B2B"] : kind === "plumber" || kind === "construction" ? ["SOS", "2h", "Oggi", "Domani", "Zona A", "Zona B", "Team 1", "Team 2"] : ["12:30","13:00","13:30","14:00","19:30","20:00","20:30","21:00"]).map((t, i) => (
+          {(isCharter ? ["Porto", "Cala", "Sunset", "Full day", "10:00", "14:30", "18:00", "Skipper"] : kind === "ncc" ? ["MXP", "LIN", "Hotel", "Duomo", "19:30", "20:00", "21:30", "B2B"] : kind === "plumber" || kind === "construction" ? ["SOS", "2h", "Oggi", "Domani", "Zona A", "Zona B", "Team 1", "Team 2"] : ["12:30","13:00","13:30","14:00","19:30","20:00","20:30","21:00"]).map((t, i) => (
             <span key={i} className="text-[8px] py-1.5 text-center rounded-md font-semibold" style={{
               background: i === 5 ? theme.primary : `${theme.text}10`,
               color: i === 5 ? theme.bg : theme.text,
@@ -1143,12 +1207,12 @@ function BookingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
       {/* CTA */}
       <div className="px-4">
         <button className="w-full py-2.5 rounded-xl text-[10px] font-bold" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg, borderRadius: theme.radius * 0.8 }}>
-          Conferma · {kind === "ncc" ? "driver assegnato" : kind === "plumber" ? "tecnico in arrivo" : "Ven 22 alle 20:00"}
+          Conferma · {isCharter ? "skipper assegnato" : kind === "ncc" ? "driver assegnato" : kind === "plumber" ? "tecnico in arrivo" : "Ven 22 alle 20:00"}
         </button>
         <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Cancellazione omaggio fino a 4h prima</p>
       </div>
 
-      <BottomNav theme={theme} active="booking" />
+      <BottomNav theme={theme} active="booking" sector={sector} />
     </div>
   );
 }
@@ -1230,7 +1294,7 @@ function ProfileScreen({ theme, name, sector = "" }: { theme: ThemeTokens; name:
         <p className="text-[6px] text-center mt-2 font-bold" style={{ color: theme.textMuted, fontFamily: theme.fontHead }}>{name}</p>
       </div>
 
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
@@ -1238,7 +1302,7 @@ function ProfileScreen({ theme, name, sector = "" }: { theme: ThemeTokens; name:
 // ════════════════════════════════════════════════════════════════════════════
 // GALLERY SCREEN
 // ════════════════════════════════════════════════════════════════════════════
-function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
+function GalleryScreen({ theme, name, sector = "" }: { theme: ThemeTokens; name: string; sector?: string }) {
   if (theme.vibe === "retail-chrome") {
     return (
       <div className="pb-14 overflow-hidden h-full">
@@ -1255,7 +1319,7 @@ function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
             </div>
           ))}
         </div>
-        <BottomNav theme={theme} active="home" />
+        <BottomNav theme={theme} active="home" sector={sector} />
       </div>
     );
   }
@@ -1272,7 +1336,7 @@ function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
             </div>
           ))}
         </div>
-        <BottomNav theme={theme} active="profile" />
+        <BottomNav theme={theme} active="profile" sector={sector} />
       </div>
     );
   }
@@ -1317,7 +1381,7 @@ function GalleryScreen({ theme, name }: { theme: ThemeTokens; name: string }) {
         ))}
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -1340,8 +1404,8 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke={theme.text} strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
           <div>
-            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{kind === "retail" ? "Carrello VIP" : kind === "healthcare" ? "Piano visita" : kind === "construction" || kind === "plumber" ? "Preventivo intervento" : kind === "ncc" ? "Preventivo corsa" : "Riepilogo Ordine"}</p>
-            <p className="text-[7px]" style={{ color: theme.textMuted }}>{kind === "ncc" ? "Driver · tratta · deposito" : kind === "healthcare" ? "Consensi · slot · promemoria" : kind === "construction" || kind === "plumber" ? "Materiali · tecnico · SLA" : "3 articoli · Pronto in 25 min"}</p>
+            <p className="text-[10px] font-black leading-tight" style={{ color: theme.text, fontFamily: theme.fontHead }}>{/yacht|charter|boat|skipper|marina/i.test(sector) ? "Deposito charter" : kind === "retail" ? "Carrello VIP" : kind === "healthcare" ? "Piano visita" : kind === "construction" || kind === "plumber" ? "Preventivo intervento" : kind === "ncc" ? "Preventivo corsa" : "Riepilogo Ordine"}</p>
+            <p className="text-[7px]" style={{ color: theme.textMuted }}>{/yacht|charter|boat|skipper|marina/i.test(sector) ? "Yacht · skipper · marina fee" : kind === "ncc" ? "Driver · tratta · deposito" : kind === "healthcare" ? "Consensi · slot · promemoria" : kind === "construction" || kind === "plumber" ? "Materiali · tecnico · SLA" : "3 articoli · Pronto in 25 min"}</p>
           </div>
         </div>
       </div>
@@ -1365,10 +1429,10 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
       {/* Promo */}
       <div className="px-4 mb-2">
         <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border-2 border-dashed" style={{ borderColor: `${theme.primary}50` }}>
-          <span className="text-[10px]">{kind === "healthcare" ? "🔒" : kind === "construction" || kind === "plumber" ? "🛠️" : kind === "ncc" ? "🚘" : "🎁"}</span>
+          <span className="text-[10px]">{/yacht|charter|boat|skipper|marina/i.test(sector) ? "⚓" : kind === "healthcare" ? "🔒" : kind === "construction" || kind === "plumber" ? "🛠️" : kind === "ncc" ? "🚘" : "🎁"}</span>
           <div className="flex-1">
-            <p className="text-[8px] font-bold" style={{ color: theme.primary }}>{kind === "healthcare" ? "Consenso digitale pronto" : kind === "construction" || kind === "plumber" ? "Sopralluogo agganciato" : kind === "ncc" ? "Tracking volo incluso" : "WELCOME10 applicato"}</p>
-            <p className="text-[6px]" style={{ color: theme.textMuted }}>{kind === "healthcare" ? "Privacy e promemoria automatici" : kind === "construction" || kind === "plumber" ? "Foto e note tecniche incluse" : kind === "ncc" ? "Autista aggiornato in tempo reale" : "Sconto del 10% sul totale"}</p>
+            <p className="text-[8px] font-bold" style={{ color: theme.primary }}>{/yacht|charter|boat|skipper|marina/i.test(sector) ? "Skipper e ormeggio inclusi" : kind === "healthcare" ? "Consenso digitale pronto" : kind === "construction" || kind === "plumber" ? "Sopralluogo agganciato" : kind === "ncc" ? "Tracking volo incluso" : "WELCOME10 applicato"}</p>
+            <p className="text-[6px]" style={{ color: theme.textMuted }}>{/yacht|charter|boat|skipper|marina/i.test(sector) ? "Deposito sicuro e rotta confermata" : kind === "healthcare" ? "Privacy e promemoria automatici" : kind === "construction" || kind === "plumber" ? "Foto e note tecniche incluse" : kind === "ncc" ? "Autista aggiornato in tempo reale" : "Sconto del 10% sul totale"}</p>
           </div>
           <span className="text-[8px] font-bold" style={{ color: theme.primary }}>−€{(subtotal * 0.1).toFixed(2)}</span>
         </div>
@@ -1404,12 +1468,12 @@ function CheckoutScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
       <div className="px-4">
         <button className="w-full py-2.5 rounded-xl text-[10px] font-bold flex items-center justify-center gap-2" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`, color: theme.bg, borderRadius: theme.radius * 0.8 }}>
           <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8v3H5a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2v-8a2 2 0 00-2-2h-1V8c0-3.3-2.7-6-6-6zm0 2a4 4 0 014 4v3H8V8a4 4 0 014-4z"/></svg>
-            {kind === "healthcare" ? "Conferma visita" : kind === "construction" || kind === "plumber" ? "Accetta preventivo" : kind === "ncc" ? "Blocca driver" : `Paga €${(total * 0.9).toFixed(2)}`}
+            {/yacht|charter|boat|skipper|marina/i.test(sector) ? "Blocca yacht" : kind === "healthcare" ? "Conferma visita" : kind === "construction" || kind === "plumber" ? "Accetta preventivo" : kind === "ncc" ? "Blocca driver" : `Paga €${(total * 0.9).toFixed(2)}`}
         </button>
         <p className="text-[7px] text-center mt-1" style={{ color: theme.textMuted }}>Pagamento sicuro · SSL crittografato</p>
       </div>
 
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
@@ -1455,7 +1519,7 @@ function DashboardScreen({ theme, name, sector }: { theme: ThemeTokens; name: st
         <div className="px-4 space-y-1">
           {["Getto piano 12 completato", "RFI materiali in attesa", "Cliente ha approvato variante"].map((a, i) => <div key={a} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: theme.bgPanel, borderLeft: `2px solid ${i === 0 ? theme.primary : theme.accent}` }}><span className="text-[8px] font-black" style={{ color: theme.primary }}>0{i+1}</span><p className="text-[8px] flex-1" style={{ color: theme.text }}>{a}</p><span className="text-[6px]" style={{ color: theme.textMuted }}>ora</span></div>)}
         </div>
-        <BottomNav theme={theme} active="profile" />
+        <BottomNav theme={theme} active="profile" sector={sector} />
       </div>
     );
   }
@@ -1500,7 +1564,7 @@ function DashboardScreen({ theme, name, sector }: { theme: ThemeTokens; name: st
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
@@ -1556,7 +1620,7 @@ function ChatScreen({ theme, name, sector }: { theme: ThemeTokens; name: string;
           </div>
         </div>
       </div>
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
@@ -1625,7 +1689,7 @@ function MapScreen({ theme, name, sector, city }: { theme: ThemeTokens; name: st
           ))}
         </div>
       </div>
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -1686,7 +1750,7 @@ function KitchenScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
@@ -1733,7 +1797,7 @@ function FleetScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) 
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
@@ -1775,7 +1839,7 @@ function RoomsScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) 
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="menu" />
+      <BottomNav theme={theme} active="menu" sector={sector} />
     </div>
   );
 }
@@ -1832,7 +1896,7 @@ function ScheduleScreen({ theme, sector }: { theme: ThemeTokens; sector: string 
           </div>
         ))}
       </div>
-      <BottomNav theme={theme} active="booking" />
+      <BottomNav theme={theme} active="booking" sector={sector} />
     </div>
   );
 }
@@ -2031,7 +2095,7 @@ function CasesScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) 
         </div>
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -2087,7 +2151,7 @@ function ReviewsScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
         </div>
       </div>
 
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
@@ -2147,7 +2211,7 @@ function PricingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
         </div>
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -2196,7 +2260,7 @@ function FaqScreen({ theme, sector }: { theme: ThemeTokens; sector: string }) {
         <span className="text-[7.5px] font-bold" style={{ color: theme.text }}>Chatta con un consulente ora</span>
       </div>
 
-      <BottomNav theme={theme} active="profile" />
+      <BottomNav theme={theme} active="profile" sector={sector} />
     </div>
   );
 }
@@ -2258,7 +2322,7 @@ function CtaScreen({ theme, name, sector }: { theme: ThemeTokens; name: string; 
         </p>
       </div>
 
-      <BottomNav theme={theme} active="home" />
+      <BottomNav theme={theme} active="home" sector={sector} />
     </div>
   );
 }
@@ -2315,7 +2379,7 @@ export function MockupReactScreen({
         return <MapScreen theme={theme} name={businessName} sector={businessSector} city={businessCity} />;
       case "gallery":
       case "detail":
-        return <GalleryScreen theme={theme} name={businessName} />;
+        return <GalleryScreen theme={theme} name={businessName} sector={businessSector} />;
       case "checkout":
       case "cart":
         return <CheckoutScreen theme={theme} sector={businessSector} />;
