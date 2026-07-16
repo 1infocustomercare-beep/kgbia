@@ -79,7 +79,12 @@ const descriptionFor = (sectorId: IndustryId, brand: string, style: string): str
   if (sectorId === "plumber") return "Servizi tecnici: SOS, interventi, tecnico disponibile, ricambi, preventivi e SLA in una UI operativa chiara e pronta per WhatsApp.";
   if (sectorId === "veterinary") return "Veterinaria e pet care: visite, vaccini, pet resort, toeletta, schede animali e reminder proprietario con tono caldo e affidabile.";
   if (sectorId === "childcare") return "Asilo e famiglie: programmi, attività, diario genitori, mensa, team, tour e iscrizioni con visual rassicurante e giocoso.";
-  if (sectorId === "hospitality") return "Hotel e resort: camere, esperienze, concierge, extra, direct booking e profilo ospite in un percorso cinematico da hospitality premium.";
+  if (sectorId === "hospitality") {
+    if (/cala|charter|yacht|vento|marina|azure|sunset|emerald/.test(key)) {
+      return "Charter e hospitality nautica: yacht, rotte, skipper, deposito, esperienze in mare e booking premium con concierge dedicato.";
+    }
+    return "Hotel e resort: camere, esperienze, concierge, extra, direct booking e profilo ospite in un percorso cinematico da hospitality premium.";
+  }
   if (sectorId === "retail") return "Retail e boutique: vetrina drop, catalogo, varianti prodotto, carrello, CRM VIP e recupero checkout con look e-commerce premium.";
   if (sectorId === "beach") return "Beach club e watersport: mappa ombrelloni, cabane, attività, pass, upgrade e prenotazioni live con estetica resort costiera.";
 
