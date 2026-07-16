@@ -19,6 +19,16 @@ type CatalogItem = {
   description: string;
 };
 
+const displaySectorLabelFor = (item: Pick<CatalogItem, "sectorId" | "sectorLabel" | "brand" | "style">): string => {
+  const key = `${item.sectorId} ${item.brand} ${item.style}`.toLowerCase();
+  if (/yacht|charter|marina|cala|vento|boat|azure|emerald/.test(key)) return "Charter & Yacht";
+  if (/hair|velluto/.test(key)) return "Hair & Beauty";
+  if (/steak|onyx|brace/.test(key)) return "Fine Dining";
+  if (/sushi|sakura|omakase/.test(key)) return "Sushi & Omakase";
+  if (/ceviche|pacifico|seafood/.test(key)) return "Seafood & Ceviche";
+  return item.sectorLabel;
+};
+
 const SECTOR_COPY: Partial<Record<IndustryId, string>> = {
   food: "Menu, ordini, prenotazioni, carrello e pagamenti per ristoranti, pizzerie, sushi e locali premium.",
   beauty: "Servizi, trattamenti, agenda, pacchetti e schede cliente per saloni, spa, nail studio e centri estetici.",
@@ -39,7 +49,7 @@ const descriptionFor = (sectorId: IndustryId, brand: string, style: string): str
 
   if (sectorId === "food") {
     if (/onyx|steak|brace|joseon|obsidian|hanok|gangnam/.test(key)) {
-      return "Steakhouse premium: tagli signature, carta vini, prenotazione tavoli, upsell degustazione e KDS cucina coerenti con il visual luxury del brand.";
+      return "Steakhouse premium: tagli signature, carta vini, prenotazione tavoli, upsell degustazione e KDS cucina coerenti con l’identità luxury del brand.";
     }
     if (/sakura|sushi|omakase|tsukiji|hinoki|wabi/.test(key)) {
       return "Sushi e omakase: menu degustazione, sashimi bar, prenotazioni a turni, sake pairing e percorso cliente elegante in stile Japanese luxury.";
@@ -81,7 +91,7 @@ const descriptionFor = (sectorId: IndustryId, brand: string, style: string): str
   if (sectorId === "childcare") return "Asilo e famiglie: programmi, attività, diario genitori, mensa, team, tour e iscrizioni con visual rassicurante e giocoso.";
   if (sectorId === "hospitality") {
     if (/cala|charter|yacht|vento|marina|azure|sunset|emerald/.test(key)) {
-      return "Charter e hospitality nautica: yacht, rotte, skipper, deposito, esperienze in mare e booking premium con concierge dedicato.";
+      return "Charter nautico premium: yacht, rotte, skipper, deposito, esperienze in mare e prenotazione con concierge dedicato.";
     }
     return "Hotel e resort: camere, esperienze, concierge, extra, direct booking e profilo ospite in un percorso cinematico da hospitality premium.";
   }
