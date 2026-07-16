@@ -654,6 +654,16 @@ function getExperienceCopy(sector: string) {
 
 function getMenuItems(sector: string) {
   const s = sector.toLowerCase();
+  if (/steak|brace|grill|wine cellar|fine dining/.test(s)) {
+    return [
+      { name: "Ribeye Dry Aged", desc: "Frollatura 45 giorni · sale Maldon", price: 54, badge: "Chef" },
+      { name: "Wagyu Tasting", desc: "A5, striploin, filetto · 3 tagli", price: 98, badge: "Top" },
+      { name: "Bone Marrow Toast", desc: "Midollo, brioche, erbe affumicate", price: 18 },
+      { name: "Wine Pairing Reserve", desc: "3 calici selezione sommelier", price: 42, badge: "VIP" },
+      { name: "Tomahawk 1.2kg", desc: "Per 2 persone · carved table-side", price: 126 },
+      { name: "Chocolate Ember", desc: "Dessert al carbone dolce e cacao", price: 14 },
+    ];
+  }
   if (/sushi|giappon/.test(s)) {
     return [
       { name: "Sashimi Misto", desc: "Tonno, salmone, branzino · 9 pz", price: 24, badge: "Chef" },
@@ -662,6 +672,36 @@ function getMenuItems(sector: string) {
       { name: "Ramen Tonkotsu", desc: "12h di brodo · Chashu di maiale", price: 16, badge: "Hot" },
       { name: "Gyoza al Vapore", desc: "6 pz · Maiale e cavolo", price: 9 },
       { name: "Mochi Dessert", desc: "Tè verde, mango, sesamo nero", price: 7 },
+    ];
+  }
+  if (/ceviche|seafood|raw bar|pacifico|daily catch/.test(s)) {
+    return [
+      { name: "Ceviche Nikkei", desc: "Ricciola, lime, leche de tigre", price: 21, badge: "Top" },
+      { name: "Plateau Crudi", desc: "Ostriche, gamberi, tartare · per 2", price: 68, badge: "Chef" },
+      { name: "Taco Lobster", desc: "Astice, avocado, mais tostato", price: 24 },
+      { name: "Catch of the Day", desc: "Pescato locale · cottura alla brace", price: 32 },
+      { name: "Pisco Sour", desc: "Classic, mango o passion fruit", price: 13, badge: "Bar" },
+      { name: "Tres Leches", desc: "Cocco, lime, meringa bruciata", price: 9 },
+    ];
+  }
+  if (/asian fusion|vietnamese|saigon|indocina|cocktail/.test(s)) {
+    return [
+      { name: "Pho Wagyu Noir", desc: "Brodo 18h · erbe vietnamite", price: 24, badge: "Chef" },
+      { name: "Bao Anatra Laccata", desc: "Hoisin, cetriolo, sesamo nero", price: 16, badge: "Top" },
+      { name: "Bun Cha Charcoal", desc: "Maiale alla brace · noodles freddi", price: 18 },
+      { name: "Jade Dumpling", desc: "Gambero, lime kaffir, chili oil", price: 14 },
+      { name: "Saigon Negroni", desc: "Gin, vermouth, bitter al lemongrass", price: 15 },
+      { name: "Mango Sticky Noir", desc: "Riso nero, mango, cocco", price: 10 },
+    ];
+  }
+  if (/kebab|street food|delivery/.test(s)) {
+    return [
+      { name: "Brace Kebab Signature", desc: "Carne marinata, pita calda, salsa house", price: 11, badge: "Top" },
+      { name: "Combo Grill Box", desc: "Spiedini, patate, hummus, drink", price: 17, badge: "Hot" },
+      { name: "Falafel Crunch", desc: "Ceci, tahina, pickles, erbe", price: 9 },
+      { name: "Loaded Fries", desc: "Spezie, cheddar, pulled beef", price: 8 },
+      { name: "Family Pack", desc: "4 kebab, 2 side, 4 drink", price: 42 },
+      { name: "Baklava Pistacchio", desc: "Miele, pistacchio, sfoglia", price: 6 },
     ];
   }
   if (/pizz/.test(s)) {
