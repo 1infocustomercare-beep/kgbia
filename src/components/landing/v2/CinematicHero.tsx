@@ -10,7 +10,7 @@ const SCENES = [
   { sector: "Hospitality premium", brand: "Onyx Brace Steakhouse", metric: "+34%", metricLabel: "scontrino medio", img: `${S}/Onyx%20Brace%20Steakhouse/a-obsidian-mobile-home.png`, accent: "215 90% 62%" },
   { sector: "Wellness boutique", brand: "Aura Milano Spa", metric: "+218%", metricLabel: "prenotazioni online", img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, accent: "248 80% 70%" },
   { sector: "Real estate luxury", brand: "DIMORA Milano", metric: "+187%", metricLabel: "lead qualificati", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, accent: "38 80% 62%" },
-  { sector: "Beauty studio", brand: "Neo Nails", metric: "3.2×", metricLabel: "retention clienti", img: `${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, accent: "325 75% 66%" },
+  { sector: "Beauty studio", brand: "Atelier Unghie", metric: "3.2×", metricLabel: "retention clienti", img: `${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, accent: "325 75% 66%" },
   { sector: "Healthcare premium", brand: "FAR Medical", metric: "GDPR", metricLabel: "compliance totale", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%" },
 ];
 

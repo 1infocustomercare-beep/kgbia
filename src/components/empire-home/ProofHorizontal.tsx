@@ -53,10 +53,9 @@ export default function ProofHorizontal() {
           trigger: el,
           start: "top top",
           end: () => `+=${getDist() + window.innerHeight}`,
-          pin: true,
+          pin: false,
           scrub: 1,
           invalidateOnRefresh: true,
-          anticipatePin: 1,
         },
       });
 

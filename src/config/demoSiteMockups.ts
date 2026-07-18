@@ -115,8 +115,8 @@ const FOOD_PROJECTS: MockupProject[] = [
     ],
   },
   {
-    name: "Otomaki Sushi",
-    slug: "otomaki-sushi",
+    name: "Kaido Sushi",
+    slug: "kaido-sushi",
     images: Array.from({ length: 16 }, (_, i) => ({
       url: m(`migrated-1773167901906-9e1e562a9a71c0a8aed3ac62c7a611a0-177290488${2643 + i}.png`),
       type: (["home", "menu", "detail", "cart"] as const)[i % 4],
@@ -177,7 +177,7 @@ const NCC_PROJECTS: MockupProject[] = [
 const BEAUTY_PROJECTS: MockupProject[] = [
   {
     name: "Aurora Nail Atelier",
-    slug: "neo-nails-brickell",
+    slug: "atelier-unghie-milano",
     inspiration: "canyonranch.com",
     images: [
       { url: m("Aurora%20Nail%20Atelier/lavender-luxe-home.png"), type: "home", style: "lavender-luxe", device: "mobile" },
@@ -237,7 +237,7 @@ const RETAIL_PROJECTS: MockupProject[] = [
 const FITNESS_PROJECTS: MockupProject[] = [
   {
     name: "Centro Padel Brera",
-    slug: "city-padel-milano",
+    slug: "padel-club-torino",
     inspiration: "equinox.com",
     images: [
       ...["fresh-azzurro","neon-energy","dark-premium","sunset-warm","minimal-white"].flatMap(style =>

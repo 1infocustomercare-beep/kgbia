@@ -184,6 +184,6 @@ Food & Ristorazione, NCC & Trasporto, Beauty & Wellness, Healthcare, Retail & Ne
 1. Il problema (piattaforme costose, processi manuali, stress, clienti persi)
 2. La soluzione (Empire: tutto in uno, white-label, fatto SU MISURA)
 3. Uno SCENARIO VIVIDO del settore del cliente
-4. Call to action (provare la demo gratuita per 90 giorni)`;
+4. Call to action (provare la demo senza impegno per 90 giorni)`;
 
 export default ARIANNA_SYSTEM_PROMPT;

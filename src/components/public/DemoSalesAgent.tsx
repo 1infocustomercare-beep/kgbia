@@ -84,7 +84,7 @@ const SCROLL_SECTIONS: Record<string, ScrollSection[]> = {
     { selector: "route,tratt,destin,tour", label: "🗺️ Tratte", pitch: "Matrice prezzi automatica per ogni tratta. Il cross-selling intelligente suggerisce servizi aggiuntivi: il turista prenota Napoli-Positano e il sistema propone il tour in barca a Capri — trecentocinquanta euro extra al carrello, automaticamente." },
     { selector: "book,prenot,reserv", label: "📅 Prenotazioni", pitch: "Un concierge d'hotel chiama per un transfer urgente mentre tu sei in viaggio. Il sistema accetta la prenotazione, assegna l'autista più vicino, il cliente riceve conferma con dettagli del veicolo. Tu ricevi solo la notifica: nuova corsa confermata." },
     { selector: "review,recens", label: "⭐ Reputazione", pitch: "Nel settore NCC le recensioni sono fondamentali. Review Shield protegge la tua reputazione intercettando i feedback negativi prima che diventino pubblici." },
-    { selector: "contact,contatt,cta", label: "📞 Concierge", pitch: "Il Concierge IA premium risponde in otto lingue. Un turista scrive alle due di notte? Il sistema risponde, verifica disponibilità, genera preventivo e invia conferma automaticamente." },
+    { selector: "contact,contatt,cta", label: "📞 Concierge", pitch: "Il Concierge IA premium parla otto lingue. Un turista scrive alle due di notte? Il sistema risponde, verifica disponibilità, genera preventivo e invia conferma automaticamente." },
     { selector: "footer,faq", label: "🔗 Conclusione", pitch: "GPS live fleet map, dispatch autisti, fatturazione B2B, scadenzario intelligente, analytics completi. Tutto personalizzato per la tua attività NCC." },
   ],
   beauty: [
