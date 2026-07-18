@@ -237,7 +237,7 @@ const RETAIL_PROJECTS: MockupProject[] = [
 const FITNESS_PROJECTS: MockupProject[] = [
   {
     name: "Centro Padel Brera",
-    slug: "city-padel-milano",
+    slug: "padel-club-torino",
     inspiration: "equinox.com",
     images: [
       ...["fresh-azzurro","neon-energy","dark-premium","sunset-warm","minimal-white"].flatMap(style =>
