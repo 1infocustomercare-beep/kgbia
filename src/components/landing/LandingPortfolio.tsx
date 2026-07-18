@@ -76,7 +76,7 @@ function buildProjects(): Project[] {
     { name: "Orygano Pizzeria", cat: "Food", sub: "Pizza Gourmet", desc: "Pizzeria Gourmet Catania.", screens: [`${S}/Orygano%20Pizzeria%20Gourmet/mobile-home.png`, `${S}/Orygano%20Pizzeria%20Gourmet/mobile-menu.png`, `${S}/Orygano%20Pizzeria%20Gourmet/mobile-detail.png`] },
     { name: "STRAPIZZAMI", cat: "Food", sub: "Pizza", desc: "Premium pizza ordering – Italian warm.", screens: [`${S}/STRAPIZZAMI/stile-a-home.png`] },
     { name: "LuxDrive", cat: "Travel", sub: "NCC & Chauffeur", desc: "Premium luxury chauffeur service.", screens: [`${S}/LuxDrive/style-a-home.png`] },
-    { name: "Top Golf Bay", cat: "Fitness", sub: "Golf & Sport", desc: "Premium golf booking and social app.", screens: [`${S}/Top%20Golf%20Bay%20App/a-official-home.png`] },
+    { name: "Golf Club Riviera", cat: "Fitness", sub: "Golf & Sport", desc: "Prenotazioni golf e community club premium.", screens: [`${S}/Top%20Golf%20Bay%20App/a-official-home.png`] },
   ];
   const existing = new Set(projects.map(p => p.name));
   for (const e of extras) if (!existing.has(e.name)) projects.push(e);
