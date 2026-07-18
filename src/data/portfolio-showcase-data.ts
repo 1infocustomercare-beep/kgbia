@@ -101,7 +101,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     platform: "iOS, Android & Web",
     accent: "#ec4899",
     screenLabels: [
-      "Neo Nails – Home", "Neo Nails – Servizi", "Neo Nails – Dettaglio",
+      "Atelier Unghie – Home", "Atelier Unghie – Servizi", "Atelier Unghie – Dettaglio",
       "Tatush Hair – Home", "Tatush Hair – Shop", "Tatush Hair – Detail",
     ],
     subProjects: [
@@ -173,7 +173,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     year: "2025",
     platform: "iOS, Android & Web",
     accent: "#22d3ee",
-    screenLabels: ["City Padel – Home", "City Padel – Prenota", "City Padel – Maestri"],
+    screenLabels: ["Padel Torino – Home", "Padel Torino – Prenota", "Padel Torino – Maestri"],
   },
 
   healthcare: {

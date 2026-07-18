@@ -2207,7 +2207,7 @@ function PricingScreen({ theme, sector }: { theme: ThemeTokens; sector: string }
 
       <div className="px-4 mt-2">
         <div className="rounded-xl py-2 text-center" style={{ background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})`, borderRadius: theme.radius * 0.6 }}>
-          <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: theme.bg }}>Prova 90 giorni gratis →</span>
+          <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: theme.bg }}>Prova 90 giorni senza impegno →</span>
         </div>
       </div>
 
