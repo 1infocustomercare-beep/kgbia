@@ -115,8 +115,8 @@ const FOOD_PROJECTS: MockupProject[] = [
     ],
   },
   {
-    name: "Otomaki Sushi",
-    slug: "otomaki-sushi",
+    name: "Kaido Sushi",
+    slug: "kaido-sushi",
     images: Array.from({ length: 16 }, (_, i) => ({
       url: m(`migrated-1773167901906-9e1e562a9a71c0a8aed3ac62c7a611a0-177290488${2643 + i}.png`),
       type: (["home", "menu", "detail", "cart"] as const)[i % 4],
