@@ -117,8 +117,7 @@ export default function InteractiveSectorReel() {
           start: "top top+=80",
           end: () => `+=${getDistance()}`,
           scrub: 0.8,
-          pin: true,
-          anticipatePin: 1,
+          pin: false,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const idx = Math.round(self.progress * (CARDS.length - 1));
