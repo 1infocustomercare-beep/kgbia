@@ -177,7 +177,7 @@ const NCC_PROJECTS: MockupProject[] = [
 const BEAUTY_PROJECTS: MockupProject[] = [
   {
     name: "Aurora Nail Atelier",
-    slug: "neo-nails-brickell",
+    slug: "atelier-unghie-milano",
     inspiration: "canyonranch.com",
     images: [
       { url: m("Aurora%20Nail%20Atelier/lavender-luxe-home.png"), type: "home", style: "lavender-luxe", device: "mobile" },
