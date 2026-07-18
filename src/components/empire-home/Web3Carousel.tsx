@@ -100,9 +100,8 @@ export default function Web3Carousel() {
           start: "top top",
           end: () => `+=${getDistance()}`,
           scrub: 1,
-          pin: true,
+          pin: false,
           invalidateOnRefresh: true,
-          anticipatePin: 1,
         },
       });
     }, el);
