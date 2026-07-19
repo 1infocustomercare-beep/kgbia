@@ -16,9 +16,9 @@ import {
 } from "lucide-react";
 import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
 
-/* ── NEO NAILS / BEAUTY DESIGN SYSTEM — Pastel Lavender + Glass ── */
+/* ── ATELIER UNGHIE / BEAUTY DESIGN SYSTEM — Pastel Lavender + Glass ── */
 const B = {
-  // Light pastel palette inspired by Neo Nails mockup
+  // Light pastel palette inspired by Atelier Unghie mockup
   bgGradient: "linear-gradient(165deg, #e8dff5 0%, #f0e6fa 15%, #f5eef8 30%, #fdf0f0 50%, #fce4d6 70%, #f8e8f0 100%)",
   bgSoft: "#f7f0fc",
   bgWhite: "#ffffff",
