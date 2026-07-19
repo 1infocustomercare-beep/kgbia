@@ -279,7 +279,7 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
               </div>
             </motion.div>
 
-            {/* CTA Buttons — like Neo Nails */}
+            {/* CTA Buttons — like Atelier Unghie */}
             <motion.div variants={fadeUp} custom={2} className="flex gap-3 mb-6">
               <Button className="flex-1 rounded-full h-12 text-base font-semibold text-white border-0 shadow-lg active:scale-[0.97] transition-transform"
                 style={{ background: "linear-gradient(135deg, #8b5cf6, #a78bfa)", boxShadow: "0 8px 30px rgba(139,92,246,0.35)" }}
@@ -293,7 +293,7 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
               </Button>
             </motion.div>
 
-            {/* Category Icons Row — like Neo Nails */}
+            {/* Category Icons Row — like Atelier Unghie */}
             <motion.div variants={fadeUp} custom={3} className="flex gap-4 overflow-x-auto pb-2 px-1" style={{ scrollbarWidth: "none" }}>
               {CATEGORIES.map((cat, i) => (
                 <motion.button key={cat.name} onClick={() => setActiveCat(i)}
