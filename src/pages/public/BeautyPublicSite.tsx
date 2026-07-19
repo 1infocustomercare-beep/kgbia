@@ -98,7 +98,7 @@ const FALLBACK_REVIEWS = [
   { name: "Francesca B.", text: "Trattamento viso anti-age incredibile. La mia pelle non è mai stata così luminosa!", rating: 5, city: "Torino", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" },
 ];
 
-/* ── Category Icons (like Neo Nails mockup) ── */
+/* ── Category Icons (like Atelier Unghie mockup) ── */
 const CATEGORIES = [
   { name: "Nails", emoji: "💅", color: "#c4b5fd" },
   { name: "Massage", emoji: "💆‍♀️", color: "#fda4af" },
