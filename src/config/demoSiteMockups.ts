@@ -62,12 +62,12 @@ function standardPages(folder: string, styles: string[], pages: string[], device
 // ═══════════════════════════════════════════
 const FOOD_PROJECTS: MockupProject[] = [
   {
-    name: "Cote Miami",
+    name: "Cote Milano",
     slug: "cote-miami",
-    inspiration: "cotemiami.com",
+    inspiration: "cotemilano.it",
     images: [
-      ...midtownStyleImages("cote-miami", ["a","b","c","d","e","f","g","h"], ["home","menu","detail","cart"], "mobile"),
-      ...midtownStyleImages("cote-miami", ["a","b","c","d","e","f"], ["home","menu","detail","cart"], "desktop"),
+      ...midtownStyleImages("cote-milano", ["a","b","c","d","e","f","g","h"], ["home","menu","detail","cart"], "mobile"),
+      ...midtownStyleImages("cote-milano", ["a","b","c","d","e","f"], ["home","menu","detail","cart"], "desktop"),
     ],
   },
   {
