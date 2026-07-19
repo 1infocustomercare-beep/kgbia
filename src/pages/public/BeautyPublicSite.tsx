@@ -271,7 +271,7 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
                 <h1 className="text-2xl sm:text-4xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "'Playfair Display', serif", textShadow: "0 2px 12px rgba(0,0,0,0.3)" }}>
-                  {company.tagline || "Your Brickell Retreat"}
+                  {company.tagline || "Atelier Unghie"}
                 </h1>
                 <motion.div variants={fadeUp} custom={1} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium" style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", color: B.textDark }}>
                   <Star className="w-3.5 h-3.5 text-yellow-500" fill="#eab308" /> 4.7 · 3K+ reviews
