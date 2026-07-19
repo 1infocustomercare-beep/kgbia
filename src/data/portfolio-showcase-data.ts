@@ -42,7 +42,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     platform: "iOS, Android & Web",
     accent: "#d4af37",
     screenLabels: [
-      "COTE – Home", "COTE – Menu", "COTE – Detail",
+      "COTE Milano – Home", "COTE Milano – Menu", "COTE Milano – Detail",
       "Sakura Atelier – Home", "Sakura Atelier – Menu", "Sakura Atelier – Detail",
       "Brace Kebab – Home", "Brace Kebab – Menu", "Brace Kebab – Detail",
       "Indocina Noir – Home", "Indocina Noir – Menu", "Indocina Noir – Detail",

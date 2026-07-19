@@ -16,9 +16,9 @@ import {
 } from "lucide-react";
 import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
 
-/* ── NEO NAILS / BEAUTY DESIGN SYSTEM — Pastel Lavender + Glass ── */
+/* ── ATELIER UNGHIE / BEAUTY DESIGN SYSTEM — Pastel Lavender + Glass ── */
 const B = {
-  // Light pastel palette inspired by Neo Nails mockup
+  // Light pastel palette inspired by Atelier Unghie mockup
   bgGradient: "linear-gradient(165deg, #e8dff5 0%, #f0e6fa 15%, #f5eef8 30%, #fdf0f0 50%, #fce4d6 70%, #f8e8f0 100%)",
   bgSoft: "#f7f0fc",
   bgWhite: "#ffffff",
@@ -98,7 +98,7 @@ const FALLBACK_REVIEWS = [
   { name: "Francesca B.", text: "Trattamento viso anti-age incredibile. La mia pelle non è mai stata così luminosa!", rating: 5, city: "Torino", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" },
 ];
 
-/* ── Category Icons (like Neo Nails mockup) ── */
+/* ── Category Icons (like Atelier Unghie mockup) ── */
 const CATEGORIES = [
   { name: "Nails", emoji: "💅", color: "#c4b5fd" },
   { name: "Massage", emoji: "💆‍♀️", color: "#fda4af" },
@@ -271,7 +271,7 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
                 <h1 className="text-2xl sm:text-4xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "'Playfair Display', serif", textShadow: "0 2px 12px rgba(0,0,0,0.3)" }}>
-                  {company.tagline || "Your Brickell Retreat"}
+                  {company.tagline || "Atelier Unghie"}
                 </h1>
                 <motion.div variants={fadeUp} custom={1} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium" style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", color: B.textDark }}>
                   <Star className="w-3.5 h-3.5 text-yellow-500" fill="#eab308" /> 4.7 · 3K+ reviews
@@ -279,7 +279,7 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
               </div>
             </motion.div>
 
-            {/* CTA Buttons — like Neo Nails */}
+            {/* CTA Buttons — like Atelier Unghie */}
             <motion.div variants={fadeUp} custom={2} className="flex gap-3 mb-6">
               <Button className="flex-1 rounded-full h-12 text-base font-semibold text-white border-0 shadow-lg active:scale-[0.97] transition-transform"
                 style={{ background: "linear-gradient(135deg, #8b5cf6, #a78bfa)", boxShadow: "0 8px 30px rgba(139,92,246,0.35)" }}
@@ -293,7 +293,7 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
               </Button>
             </motion.div>
 
-            {/* Category Icons Row — like Neo Nails */}
+            {/* Category Icons Row — like Atelier Unghie */}
             <motion.div variants={fadeUp} custom={3} className="flex gap-4 overflow-x-auto pb-2 px-1" style={{ scrollbarWidth: "none" }}>
               {CATEGORIES.map((cat, i) => (
                 <motion.button key={cat.name} onClick={() => setActiveCat(i)}
