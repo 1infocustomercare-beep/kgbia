@@ -684,6 +684,7 @@ const SuperAdminDashboard = () => {
       { id: "voice_orch" as SuperTab, label: "Voice Orchestrator", icon: <Mic className="w-4 h-4" /> },
     ]},
     { label: "🎨 Contenuti", tabs: [
+      { id: "media_library", label: "Media Library", icon: <ImageIcon className="w-4 h-4" /> },
       { id: "media", label: "Media Vault", icon: <Film className="w-4 h-4" /> },
       { id: "brand" as SuperTab, label: "Brand Assets", icon: <Crown className="w-4 h-4" /> },
       { id: "showcase", label: "Settori", icon: <Eye className="w-4 h-4" /> },
