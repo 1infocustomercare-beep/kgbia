@@ -48,6 +48,11 @@ const companionFiles = import.meta.glob(
   { eager: true, import: "default" },
 ) as Record<string, string>;
 
+const portfolioLowengeldFiles = import.meta.glob(
+  "@/assets/mockups/portfolio-lowengeld/**/*.png",
+  { eager: true, import: "default" },
+) as Record<string, string>;
+
 const companionByStem = new Map<string, { menu?: string; detail?: string; booking?: string }>();
 for (const [path, url] of Object.entries(companionFiles)) {
   const file = path.split("/").pop() ?? "";
@@ -58,6 +63,15 @@ for (const [path, url] of Object.entries(companionFiles)) {
   (bucket as Record<string, string>)[kind] = url;
   companionByStem.set(stem, bucket);
 }
+
+const portfolioImage = (slug: string, file: string): string => {
+  const path = `@/assets/mockups/portfolio-lowengeld/${slug}/${file}`;
+  const image = portfolioLowengeldFiles[path];
+  if (!image) {
+    throw new Error(`Missing portfolio mockup: ${path}`);
+  }
+  return image;
+};
 
 export type MockupScreen = {
   /** Short label shown under the phone (e.g. "Home", "Menu") */
@@ -189,6 +203,20 @@ const buildScreens = (
     .filter((s): s is MockupScreen => s !== null);
 };
 
+const buildManualScreens = (
+  sectorId: string,
+  entries: Array<{ file: string; label?: string; caption?: string }>,
+  slug: string,
+): MockupScreen[] => {
+  const labels = SECTOR_SCREEN_LABELS[sectorId] ?? ["Home", "Menu", "Dettaglio", "Prenotazione"];
+  const captions = CAPTIONS[sectorId] ?? labels;
+  return entries.map((entry, index) => ({
+    label: entry.label ?? labels[index] ?? `Screen ${index + 1}`,
+    caption: entry.caption ?? captions[index] ?? labels[index] ?? `Screen ${index + 1}`,
+    image: portfolioImage(slug, entry.file),
+  }));
+};
+
 const V = (
   sectorId: string,
   id: string,
@@ -210,12 +238,103 @@ const V = (
   screens: buildScreens(sectorId, screen, heroStem),
 });
 
+const VManual = (
+  sectorId: string,
+  id: string,
+  brand: string,
+  style: string,
+  palette: string,
+  description: string,
+  features: string[],
+  slug: string,
+  entries: Array<{ file: string; label?: string; caption?: string }>,
+): SectorMockupVariant => ({
+  id,
+  brand,
+  style,
+  palette,
+  description,
+  features,
+  screen: portfolioImage(slug, entries[0].file),
+  screens: buildManualScreens(sectorId, entries, slug),
+});
+
 export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
   {
     id: "food",
     label: "Ristorazione",
     tagline: "Menu digitale, ordini live, prenotazioni, KDS cucina e pagamenti.",
     variants: [
+      VManual("food", "food-brace-reale", "Brace Reale", "Urban Grill Signature", "Corallo · Crema",
+        "Kebab premium con scheda prodotto completa, extra smart e checkout delivery ad alta conversione.",
+        ["Scheda prodotto", "Extra dinamici", "Valori nutrizionali", "Checkout delivery"],
+        "brace-reale",
+        [
+          { file: "1-home.png", label: "Vetrina" },
+          { file: "2-menu.png", label: "Menu" },
+          { file: "3-detail.png", label: "Dettaglio kebab" },
+          { file: "4-checkout.png", label: "Checkout" },
+        ]),
+      VManual("food", "food-ryo-sushi", "Ryō Sushi Bar", "Midnight Omakase", "Navy · Oro",
+        "Sushi omakase ultra-premium con prenotazione al banco, pairing e deposito elegante.",
+        ["Omakase experience", "Sake pairing", "Chef counter", "Deposito prenotazione"],
+        "ryo-sushi",
+        [
+          { file: "1-home.png", label: "Vetrina" },
+          { file: "2-menu.png", label: "Menu degustazione" },
+          { file: "3-detail.png", label: "Piatto signature" },
+          { file: "4-booking.png", label: "Prenota esperienza" },
+        ]),
+      VManual("food", "food-sakura-atelier", "Sakura Atelier", "Blush Editorial", "Blush · Avorio",
+        "Omakase poetico editoriale con percorso degustazione, storytelling stagionale e booking raffinato.",
+        ["Menu poetico", "Esperienza degustazione", "Iconografia floreale", "Booking elegante"],
+        "sakura-atelier",
+        [
+          { file: "1-home.png", label: "Vetrina" },
+          { file: "2-menu.png", label: "Percorso" },
+          { file: "3-detail.png", label: "Esperienza Hanami" },
+          { file: "4-booking.png", label: "Prenota tavolo" },
+        ]),
+      VManual("food", "food-onyx-brace", "Onyx Brace Milano", "Obsidian Steakhouse", "Onice · Champagne",
+        "Steakhouse dark luxury con tagli A5, wine pairing e prenotazione tavolo immersiva.",
+        ["Tagli A5", "Wine pairing", "Private dining", "Menu degustazione"],
+        "onyx-brace",
+        [
+          { file: "1-home.png", label: "Vetrina" },
+          { file: "2-menu.png", label: "Carta premium" },
+          { file: "3-detail.png", label: "Taglio signature" },
+          { file: "4-booking.png", label: "Prenota tavolo" },
+        ]),
+      VManual("food", "food-pacifico-ceviche-lowengeld", "Pacifico Ceviche", "Beach Club Tropical", "Turchese · Corallo",
+        "Cevicheria costiera con ordine in spiaggia, spice selector e checkout geolocalizzato.",
+        ["Beach delivery", "Spice selector", "Freshness proof", "Checkout spiaggia"],
+        "pacifico-ceviche",
+        [
+          { file: "1-home.png", label: "Vetrina" },
+          { file: "2-menu.png", label: "Beach menu" },
+          { file: "3-detail.png", label: "Dettaglio crudo" },
+          { file: "4-checkout.png", label: "Checkout spiaggia" },
+        ]),
+      VManual("food", "food-basilico-reale", "Basilico Reale", "Gourmet Verde", "Verde bosco · Terracotta",
+        "Pizzeria gourmet con impasti selezionabili, wine pairing e prenotazione dine-in/takeaway.",
+        ["Impasti multipli", "Extra premium", "Wine pairing", "Prenotazione ibrida"],
+        "basilico-reale",
+        [
+          { file: "1-home.png", label: "Vetrina" },
+          { file: "2-menu.png", label: "Menu pizze" },
+          { file: "3-detail.png", label: "Pizza signature" },
+          { file: "4-booking.png", label: "Prenota tavolo" },
+        ]),
+      VManual("food", "food-napoli-slice", "Napoli Slice", "Delivery Napoletano", "Terracotta · Crema",
+        "Pizzeria delivery familiare con configurazione pizza chiara, coupon e checkout rapido.",
+        ["Delivery UX", "Coupon applicato", "Configurazione pizza", "Pagamento veloce"],
+        "napoli-slice",
+        [
+          { file: "1-home.png", label: "Vetrina" },
+          { file: "2-menu.png", label: "Menu delivery" },
+          { file: "3-detail.png", label: "Dettaglio pizza" },
+          { file: "4-checkout.png", label: "Checkout" },
+        ]),
       V("food", "food-onyx-obsidian", "Onyx Brace Steakhouse", "Obsidian Luxury", "Onice · Oro",
         "Steakhouse premium con carta vini, prenotazione tavoli e degustazione signature.",
         ["Menu tagli premium", "Wine pairing", "Tavoli & turni", "Upsell degustazione"],
