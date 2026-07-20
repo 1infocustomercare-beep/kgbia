@@ -8,10 +8,13 @@
  * - Side panel shows brand, style, palette, features.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
+import { getLenis } from "@/lib/lenis-singleton";
+
+
 import type { SectorMockupVariant } from "@/data/sector-mockups";
 
 type Props = {
@@ -44,10 +47,35 @@ export default function MockupLightbox({
     setScreenIdx(0);
   }, [index]);
 
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (!open) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    // Lock background scroll (html + body) and offset scrollbar to avoid jump
+    const html = document.documentElement;
+    const body = document.body;
+    const scrollY = window.scrollY;
+    const prev = {
+      htmlOverflow: html.style.overflow,
+      bodyOverflow: body.style.overflow,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyWidth: body.style.width,
+    };
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+
+    // Pause Lenis smooth-scroll if present
+    let lenisInstance: any = null;
+    try {
+      lenisInstance = getLenis();
+      lenisInstance?.stop?.();
+    } catch {}
+
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowRight") setIndex((i) => (i + 1) % variants.length);
@@ -55,10 +83,17 @@ export default function MockupLightbox({
     };
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = prevOverflow;
+      html.style.overflow = prev.htmlOverflow;
+      body.style.overflow = prev.bodyOverflow;
+      body.style.position = prev.bodyPosition;
+      body.style.top = prev.bodyTop;
+      body.style.width = prev.bodyWidth;
+      window.scrollTo(0, scrollY);
+      lenisInstance?.start?.();
       window.removeEventListener("keydown", onKey);
     };
   }, [open, onClose, variants.length]);
+
 
   const current = variants[index];
   const screens = current?.screens?.length ? current.screens : (current ? [{ label: "Home", caption: "", image: current.screen }] : []);
@@ -94,6 +129,9 @@ export default function MockupLightbox({
       aria-modal="true"
       aria-label={`Mockup ${current.brand} — ${current.style}`}
       className="fixed inset-0 z-[9999] overflow-y-auto overscroll-contain"
+      data-lenis-prevent
+      ref={scrollRef}
+
       style={{ background: "rgba(6,7,12,0.94)", backdropFilter: "blur(18px)", WebkitOverflowScrolling: "touch" }}
       onClick={onClose}
     >
