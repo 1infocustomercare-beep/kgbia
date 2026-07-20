@@ -65,13 +65,17 @@ for (const [path, url] of Object.entries(companionFiles)) {
 }
 
 const portfolioImage = (slug: string, file: string): string => {
-  const path = `@/assets/mockups/portfolio-lowengeld/${slug}/${file}`;
-  const image = portfolioLowengeldFiles[path];
-  if (!image) {
-    throw new Error(`Missing portfolio mockup: ${path}`);
+  const suffix = `/portfolio-lowengeld/${slug}/${file}`;
+  for (const [key, url] of Object.entries(portfolioLowengeldFiles)) {
+    if (key.endsWith(suffix)) return url;
   }
-  return image;
+  // Non-fatal: log and return a transparent placeholder so the whole page still renders.
+  if (typeof console !== "undefined") {
+    console.warn(`[sector-mockups] Missing portfolio mockup: ${suffix}`);
+  }
+  return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/>";
 };
+
 
 export type MockupScreen = {
   /** Short label shown under the phone (e.g. "Home", "Menu") */
