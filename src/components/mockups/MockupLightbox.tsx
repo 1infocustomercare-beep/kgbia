@@ -93,8 +93,8 @@ export default function MockupLightbox({
       role="dialog"
       aria-modal="true"
       aria-label={`Mockup ${current.brand} — ${current.style}`}
-      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto"
-      style={{ background: "rgba(6,7,12,0.94)", backdropFilter: "blur(18px)" }}
+      className="fixed inset-0 z-[9999] overflow-y-auto overscroll-contain"
+      style={{ background: "rgba(6,7,12,0.94)", backdropFilter: "blur(18px)", WebkitOverflowScrolling: "touch" }}
       onClick={onClose}
     >
       {/* Close */}
