@@ -1,17 +1,35 @@
-import { useState } from "react";
-import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { useEmpireScrollDirector } from "../ScrollDirector";
-import { PRESTIGE_PORTFOLIO_ITEMS } from "@/data/prestige-home-mockups";
+import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
+import MockupLightbox from "@/components/mockups/MockupLightbox";
+import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
 
-const ITEMS = PRESTIGE_PORTFOLIO_ITEMS;
-
+type Selection = {
+  sectorId: string;
+  sectorLabel: string;
+  variants: SectorMockupVariant[];
+  index: number;
+} | null;
 
 export default function PrestigePortfolio() {
-  const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
+  const [selection, setSelection] = useState<Selection>(null);
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-mockups", { steps: 4 });
-  const visible = expanded ? ITEMS : ITEMS.slice(0, 4);
+
+  // Hero card per sector (variant 0). Show 8 by default, all when expanded.
+  const heroes = useMemo(
+    () =>
+      SECTOR_MOCKUPS.map((g) => ({
+        sectorId: g.id,
+        sectorLabel: g.label,
+        tagline: g.tagline,
+        variants: g.variants,
+        hero: g.variants[0],
+      })),
+    [],
+  );
+  const visible = expanded ? heroes : heroes.slice(0, 8);
 
   return (
     <section
@@ -23,83 +41,108 @@ export default function PrestigePortfolio() {
       <div className="mx-auto max-w-7xl px-5 lg:px-10">
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-deep))" }}>
-              ✦ I nostri lavori
+            <div className="prestige-eyebrow flex items-center gap-2" style={{ color: "hsl(var(--pr-gold-deep))" }}>
+              <Sparkles size={12} /> Portfolio · webapp reali su iPhone
             </div>
-            <h2 className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
-              Casi reali.<br />
-              <span className="prestige-gold-text">Risultati misurabili.</span>
+            <h2
+              className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"
+              style={{ color: "hsl(var(--pr-text-on-light))" }}
+            >
+              Casi reali.
+              <br />
+              <span className="prestige-gold-text">Uno stile per settore.</span>
             </h2>
           </div>
           <p className="max-w-sm text-sm sm:text-base" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-            Ogni progetto è disegnato sul brand del cliente. Tocca un mockup per esplorare il caso studio
-            completo: problema, soluzione e risultati ottenuti.
+            Tocca un mockup per vederlo a schermo intero e navigare tutte le varianti stilistiche pensate per quel settore.
           </p>
         </div>
 
         {/* Grid */}
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {visible.map((item, i) => (
+        <div className="mt-14 grid grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+          {visible.map((h, i) => (
             <article
-              key={item.title}
-              className="group cursor-pointer"
-              onClick={() => navigate("/portfolio")}
+              key={h.sectorId}
+              className="group flex flex-col items-center"
               style={{ animation: `prestigeSlideUp .7s ${(i % 4) * 0.08}s cubic-bezier(.22,1,.36,1) backwards` }}
             >
-              <div
-                className="relative aspect-[4/5] overflow-hidden rounded-2xl"
-                style={{
-                  background: "linear-gradient(145deg, hsl(var(--pr-emerald)), hsl(var(--pr-emerald-deep)))",
-                  boxShadow: "0 20px 50px -20px hsl(var(--pr-emerald) / 0.4)",
-                }}
-              >
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]"
+              <div className="transition-transform duration-500 group-hover:-translate-y-1">
+                <IPhoneProMaxFrame
+                  src={h.hero.screen}
+                  alt={`${h.hero.brand} — ${h.hero.style}`}
+                  width={240}
+                  onClick={() =>
+                    setSelection({
+                      sectorId: h.sectorId,
+                      sectorLabel: h.sectorLabel,
+                      variants: h.variants,
+                      index: 0,
+                    })
+                  }
                 />
+              </div>
+              <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
                 <div
-                  className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{ background: "linear-gradient(180deg, transparent 50%, hsl(var(--pr-emerald-deep) / 0.85))" }}
-                />
-                <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex items-end justify-between opacity-0 transition-all duration-500 group-hover:opacity-100">
-                  <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: "hsl(var(--pr-gold))", color: "hsl(var(--pr-emerald-deep))" }}>
-                    {item.tag}
-                  </span>
-                  <ExternalLink size={16} style={{ color: "hsl(var(--pr-gold-light))" }} />
+                  className="text-[10px] font-bold uppercase tracking-[0.24em]"
+                  style={{ color: "hsl(var(--pr-gold-deep))" }}
+                >
+                  {h.sectorLabel}
                 </div>
+                <h3
+                  className="prestige-display mt-1 text-lg"
+                  style={{ color: "hsl(var(--pr-text-on-light))" }}
+                >
+                  {h.hero.brand}
+                </h3>
+                <p className="mt-1 text-xs leading-snug" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
+                  {h.tagline}
+                </p>
+                {h.variants.length > 1 && (
+                  <div
+                    className="mt-2 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                    style={{
+                      background: "hsl(var(--pr-gold) / 0.18)",
+                      color: "hsl(var(--pr-gold-deep))",
+                      border: "1px solid hsl(var(--pr-gold) / 0.35)",
+                    }}
+                  >
+                    {h.variants.length} stili premium
+                  </div>
+                )}
               </div>
-              <div className="mt-3 flex items-baseline justify-between gap-3">
-                <h3 className="prestige-display text-lg" style={{ color: "hsl(var(--pr-text-on-light))" }}>{item.title}</h3>
-                <span className="text-[11px] tabular-nums" style={{ color: "hsl(var(--pr-muted-on-light))" }}>{item.year}</span>
-              </div>
-              <p className="mt-1 text-xs leading-snug sm:text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-                {item.desc}
-              </p>
             </article>
           ))}
         </div>
 
-        {/* Expand button */}
-        <div className="mt-10 flex justify-center">
-          <button
-            onClick={() => setExpanded((v) => !v)}
-            className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all"
-            style={{
-              background: "hsl(var(--pr-emerald))",
-              color: "hsl(var(--pr-gold-light))",
-              border: "1px solid hsl(var(--pr-gold) / 0.35)",
-            }}
-          >
-            {expanded ? (
-              <>Mostra meno <ChevronUp size={16} /></>
-            ) : (
-              <>Vedi tutti i {ITEMS.length} progetti <ChevronDown size={16} /></>
-            )}
-          </button>
-        </div>
+        {heroes.length > 8 && (
+          <div className="mt-14 flex justify-center">
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all"
+              style={{
+                background: "hsl(var(--pr-emerald))",
+                color: "hsl(var(--pr-gold-light))",
+                border: "1px solid hsl(var(--pr-gold) / 0.35)",
+              }}
+            >
+              {expanded ? (
+                <>Mostra meno <ChevronUp size={16} /></>
+              ) : (
+                <>Vedi tutti i {heroes.length} settori <ChevronDown size={16} /></>
+              )}
+            </button>
+          </div>
+        )}
       </div>
+
+      <MockupLightbox
+        open={!!selection}
+        onClose={() => setSelection(null)}
+        sectorLabel={selection?.sectorLabel ?? ""}
+        variants={selection?.variants ?? []}
+        initialIndex={selection?.index ?? 0}
+      />
+
       <style>{`
         @keyframes prestigeSlideUp {
           from { opacity: 0; transform: translateY(32px); }
