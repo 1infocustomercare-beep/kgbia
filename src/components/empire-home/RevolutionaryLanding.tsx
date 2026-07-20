@@ -23,6 +23,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import OfficialEmpireHomeAlias from "@/components/empire-home/OfficialEmpireHomeAlias";
 
 type RevealProps = {
   children: React.ReactNode;
@@ -474,6 +475,8 @@ function FinalCta() {
 }
 
 export default function RevolutionaryLanding() {
+  return <OfficialEmpireHomeAlias />;
+
   useEffect(() => {
     document.documentElement.classList.add("dark");
     return () => undefined;

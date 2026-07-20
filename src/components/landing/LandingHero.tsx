@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import OfficialEmpireHomeAlias from "@/components/empire-home/OfficialEmpireHomeAlias";
 
 const S = "/__empire-cover-removed";
 const DESKTOP_HEADER_OFFSET = 76;
@@ -85,6 +86,8 @@ function FeaturedPhone({ m, isActive, onClick }: { m: typeof MOCKUPS[0]; isActiv
 }
 
 export default function LandingHero() {
+  return <OfficialEmpireHomeAlias />;
+
   const navigate = useNavigate();
   const outerRef = useRef<HTMLDivElement>(null);
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 1024;

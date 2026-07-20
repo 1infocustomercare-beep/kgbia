@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, u
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useHomepageContent, pick } from "@/hooks/useHomepageContent";
+import OfficialEmpireHomeAlias from "@/components/empire-home/OfficialEmpireHomeAlias";
 
 const S = "/__empire-cover-removed";
 
@@ -83,6 +84,8 @@ function MagneticCTA({
 }
 
 export default function CinematicHero() {
+  return <OfficialEmpireHomeAlias />;
+
   const navigate = useNavigate();
   const ref = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
