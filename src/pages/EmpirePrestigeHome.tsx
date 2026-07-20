@@ -100,9 +100,14 @@ function EmpirePrestigeHomeInner() {
           <PrestigePortfolio />
         </div>
 
+        {/* ARCHIVIO STILI — griglia esplorabile, click apre demo live */}
+        <div id="styles">
+          <PrestigeStyleGallery />
+        </div>
 
         {/* CAROSELLO PARALLAX — autoplay + drag + pausa hover/touch */}
         <PrestigeParallaxCarousel />
+
 
 
 
