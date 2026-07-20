@@ -1,0 +1,10 @@
+{
+  "sector": "retail",
+  "brand": "District Sneakers",
+  "style": "Streetwear Drop",
+  "palette": "Nero · Giallo neon · Viola",
+  "description": "Sneaker store con drop settimanali, raffle esclusive e ritiro flagship a Milano.",
+  "features": ["Drop settimanali", "Raffle esclusive", "Autenticazione", "Ritiro flagship"],
+  "labels": ["Drop live", "Sneaker grid", "Scheda sneaker", "Checkout"],
+  "order": 2
+}

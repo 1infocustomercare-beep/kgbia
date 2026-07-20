@@ -124,6 +124,7 @@ const SECTOR_SCREEN_LABELS: Record<
   childcare: ["Nido", "Programma giornata", "Attività & foto", "Iscrizione online"],
   construction: ["Progetto", "Unità disponibili", "Tour 3D & capitolato", "Prenota visita"],
   plumber: ["Pronto intervento", "Servizi & tariffe", "Scheda intervento", "Chiama ora"],
+  retail: ["Vetrina", "Catalogo", "Scheda prodotto", "Checkout"],
 };
 
 const CAPTIONS: Record<string, [string, string, string, string]> = {
@@ -186,6 +187,12 @@ const CAPTIONS: Record<string, [string, string, string, string]> = {
     "Servizi: idraulica, caldaie, climatizzazione, gas con tariffe trasparenti.",
     "Scheda intervento: foto pre/post, materiali usati, firma cliente in app.",
     "Chiamata rapida con geolocalizzazione, ETA squadra live e pagamento.",
+  ],
+  retail: [
+    "Vetrina brand con hero collezione, storytelling e drop del momento.",
+    "Catalogo prodotti con filtri smart, categorie curate e wishlist.",
+    "Scheda prodotto premium: gallery, misure, materiali, cross-sell.",
+    "Checkout snello con indirizzi salvati, pagamenti e ritiro in boutique.",
   ],
 };
 
@@ -730,6 +737,12 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         ]),
     ],
   },
+  {
+    id: "retail",
+    label: "Retail & E-commerce",
+    tagline: "Vetrine brand, catalogo, schede prodotto e checkout premium.",
+    variants: [],
+  },
 ];
 
 // =============================================================
@@ -775,6 +788,7 @@ const SLUG_SECTOR_HINTS: Array<[RegExp, string]> = [
   [/(nido|nursery|bimb|kids|child|playhouse)/i, "childcare"],
   [/(cantiere|edil|construc|domus|real-estate|immobili)/i, "construction"],
   [/(volt|idro|plumber|electric|elettric|technician|artigian)/i, "plumber"],
+  [/(retail|shop|store|boutique-shop|concept|sneaker|streetwear|jewel|gioiell|ottica|eyewear|wine|cantina|fashion|apparel|denim|leather|profum|cosm|homeware)/i, "retail"],
 ];
 
 const FALLBACK_SECTOR = "food";

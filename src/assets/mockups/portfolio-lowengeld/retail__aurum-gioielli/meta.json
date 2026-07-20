@@ -1,0 +1,10 @@
+{
+  "sector": "retail",
+  "brand": "Aurum Gioielli",
+  "style": "Luxury Jewelry",
+  "palette": "Nero · Oro · Avorio",
+  "description": "Gioielleria luxury con appuntamento in atelier, incisioni personalizzate e assicurazione inclusa.",
+  "features": ["Atelier privato", "Incisione custom", "Assicurazione", "Consegna in cassaforte"],
+  "labels": ["Vetrina", "Collezioni oro", "Scheda gioiello", "Checkout"],
+  "order": 1
+}

@@ -1,0 +1,10 @@
+{
+  "sector": "retail",
+  "brand": "Nord Concept Store",
+  "style": "Scandi Concept",
+  "palette": "Bianco · Legno naturale · Salvia",
+  "description": "Concept store scandi con oggetti design, home fragrance e workshop artigiani.",
+  "features": ["Curatela design", "Workshop", "Storytelling brand", "Ritiro store"],
+  "labels": ["Vetrina Concept", "Curatela", "Scheda oggetto", "Checkout"],
+  "order": 3
+}
