@@ -257,7 +257,7 @@ const PartnerDashboard = () => {
       {/* ═══════ TOP NAV BAR ═══════ */}
       <div className="sticky top-0 z-50 flex items-center justify-between px-4 h-14 border-b border-border/50 safe-top bg-background/95 backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/home")} className="flex items-center gap-1.5 text-sm font-medium" style={{ color: "#a78bfa" }}>
+          <button onClick={() => navigate("/")} className="flex items-center gap-1.5 text-sm font-medium" style={{ color: "#a78bfa" }}>
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline">Home</span>
           </button>
@@ -332,7 +332,7 @@ const PartnerDashboard = () => {
                     <span className="text-white">Guadagni</span>
                   </button>
                 )}
-                <button onClick={() => navigate("/home?from=partner")}
+                <button onClick={() => navigate("/?from=partner")}
                   className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
                   style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
                   <Globe className="w-4 h-4" style={{ color: "#9ca3af" }} />
@@ -869,7 +869,7 @@ const PartnerDashboard = () => {
                     style={{ background: "linear-gradient(135deg, #14b8a6, #10b981)", color: "#ffffff" }}>
                     <Target className="w-4 h-4" /> Apri LeadEngine Scout
                   </motion.button>
-                  <motion.button onClick={() => navigate("/home?from=partner")} whileTap={{ scale: 0.97 }}
+                  <motion.button onClick={() => navigate("/?from=partner")} whileTap={{ scale: 0.97 }}
                     className="px-6 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
                     style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.25)", color: "#a78bfa" }}>
                     <ExternalLink className="w-4 h-4" /> Mostra al Cliente

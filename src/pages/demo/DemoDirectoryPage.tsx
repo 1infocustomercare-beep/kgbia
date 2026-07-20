@@ -446,7 +446,7 @@ export default function DemoDirectoryPage() {
           boxShadow: "0 4px 20px hsla(265,40%,15%,0.3)"
         }}>
         <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center gap-3">
-          <button onClick={() => navigate("/home")}
+          <button onClick={() => navigate("/")}
             className="p-2 rounded-xl transition-all duration-200 hover:scale-105"
             style={{ background: "hsla(265,30%,30%,0.12)", border: "1px solid hsla(265,30%,40%,0.1)" }}>
             <ArrowLeft className="w-4 h-4 text-foreground/85" />

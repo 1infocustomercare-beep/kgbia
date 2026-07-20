@@ -157,7 +157,7 @@ const PartnerRegister = () => {
       {/* Nav */}
       <nav className="relative z-10 px-4 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="/home" className="flex items-center gap-2">
+          <a href="/" className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center" style={{ boxShadow: "0 0 0 2px hsla(38,50%,55%,0.3)" }}>
               <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover" />
             </div>

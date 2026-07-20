@@ -666,7 +666,7 @@ export default function IndustryDemoPage() {
 
       {/* ═══════ FLOATING BACK BUTTON (mobile) ═══════ */}
       <div className="fixed bottom-6 left-4 z-50 sm:hidden">
-        <button onClick={() => navigate("/home")}
+        <button onClick={() => navigate("/")}
           className="w-12 h-12 rounded-full flex items-center justify-center shadow-2xl border border-white/10 backdrop-blur-xl"
           style={{ background: `${theme.bgFrom}ee` }}>
           <ArrowLeft className="w-5 h-5 text-white/70" />
