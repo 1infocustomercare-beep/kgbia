@@ -212,7 +212,7 @@ export default function OnboardingPage() {
   return (
     <>
       <PrestigeTheme />
-      <div className="prestige-section prestige-light min-h-screen flex items-center justify-center p-4">
+      <div className="prestige-root prestige-section prestige-light min-h-screen flex items-center justify-center p-4">
 
       <div className="w-full max-w-3xl">
         {/* Progress bar — 5 steps */}
