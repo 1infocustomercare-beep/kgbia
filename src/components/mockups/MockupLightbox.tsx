@@ -144,8 +144,8 @@ export default function MockupLightbox({
           {screens.length > 1 && (
             <div className="mt-2 flex flex-wrap items-end justify-center gap-3">
               {screens.map((s, i) => {
-                const thumbW = 74;
                 const active = i === screenIdx;
+                // FLAT thumbnails only — no nested iPhone frames.
                 return (
                   <button
                     key={s.label + i}
@@ -153,22 +153,25 @@ export default function MockupLightbox({
                     aria-label={`Mostra ${s.label}`}
                     aria-current={active}
                     className="group flex flex-col items-center gap-1.5 transition"
-                    style={{ opacity: active ? 1 : 0.55 }}
+                    style={{ opacity: active ? 1 : 0.6 }}
                   >
                     <div
-                      className="rounded-[14px] transition"
+                      className="overflow-hidden rounded-[12px] bg-black transition"
                       style={{
+                        width: 68,
+                        height: Math.round(68 * (19.5 / 9)),
                         boxShadow: active
-                          ? "0 0 0 2px rgba(255,255,255,0.9), 0 12px 28px -12px rgba(0,0,0,0.75)"
-                          : "0 8px 20px -12px rgba(0,0,0,0.6)",
+                          ? "0 0 0 2px rgba(255,255,255,0.95), 0 12px 28px -12px rgba(0,0,0,0.75)"
+                          : "0 0 0 1px rgba(255,255,255,0.15), 0 8px 20px -12px rgba(0,0,0,0.6)",
                       }}
                     >
-                      <IPhoneProMaxFrame
+                      <img
                         src={s.image}
                         alt={s.label}
-                        width={thumbW}
-                        glow={false}
                         loading="lazy"
+                        decoding="async"
+                        draggable={false}
+                        className="h-full w-full object-cover object-top"
                       />
                     </div>
                     <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
