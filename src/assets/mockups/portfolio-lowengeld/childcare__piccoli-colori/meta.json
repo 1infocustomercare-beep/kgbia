@@ -1,0 +1,9 @@
+{
+  "sector": "childcare",
+  "brand": "Piccoli Colori",
+  "style": "Playful Colorful Premium",
+  "palette": "Giallo sole, sky blue, coral, mint",
+  "description": "Nido premium allegro e super leggibile con agenda famiglia, programmi, diario bambino e visita senza impegno.",
+  "features": ["Home famiglia", "Programmi", "Diario", "Prenota visita"],
+  "labels": ["Home", "Programmi", "Diario", "Visita"]
+}
