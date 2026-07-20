@@ -261,6 +261,7 @@ const DemoAdminPage = lazy(() => import("./pages/demo/DemoAdminPage"));
 const DemoPreviewPage = lazy(() => import("./pages/demo/DemoPreviewPage"));
 const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
+const MediaLibraryPage = lazy(() => import("./pages/superadmin/MediaLibraryPage"));
 const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
 const DemoAccountsPage = lazy(() => import("./pages/superadmin/DemoAccountsPage"));
 const ConnectionsPage = lazy(() => import("./pages/superadmin/ConnectionsPage"));
