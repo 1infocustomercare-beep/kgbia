@@ -12,7 +12,8 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
-import type { SectorMockupVariant } from "@/data/sector-mockups";
+import LiveMockupScreen from "./LiveMockupScreen";
+import type { MockupScreen, SectorMockupVariant } from "@/data/sector-mockups";
 
 type Props = {
   open: boolean;
@@ -61,25 +62,25 @@ export default function MockupLightbox({
   }, [open, onClose, variants.length]);
 
   const current = variants[index];
-  const screens = current?.screens?.length ? current.screens : (current ? [{ label: "Home", caption: "", image: current.screen }] : []);
+  const screens = current?.screens?.length ? current.screens : [];
   const activeScreen = screens[Math.min(screenIdx, screens.length - 1)];
 
   const phoneWidth = useMemo(() => {
     if (typeof window === "undefined") return 300;
-    const maxH = window.innerHeight * 0.78;
+    const maxH = window.innerHeight * (window.innerWidth < 768 ? 0.58 : 0.7);
     const wFromH = Math.floor((maxH * 9) / 19.5);
-    const maxW = Math.min(window.innerWidth * 0.38, 380);
-    return Math.max(220, Math.min(wFromH, maxW));
+    const maxW = Math.min(window.innerWidth * (window.innerWidth < 768 ? 0.58 : 0.36), 340);
+    return Math.max(window.innerWidth < 420 ? 190 : 220, Math.min(wFromH, maxW));
   }, [open, index]);
 
-  if (!open || !current || typeof document === "undefined") return null;
+  if (!open || !current || !activeScreen || typeof document === "undefined") return null;
 
   return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       aria-label={`Mockup ${current.brand} — ${current.style}`}
-      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto"
+      className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto overflow-x-hidden overscroll-contain md:items-center"
       style={{ background: "rgba(6,7,12,0.94)", backdropFilter: "blur(18px)" }}
       onClick={onClose}
     >
@@ -87,7 +88,7 @@ export default function MockupLightbox({
       <button
         onClick={onClose}
         aria-label="Chiudi"
-        className="fixed right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15"
+        className="fixed right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/10 text-white transition hover:bg-white/15"
       >
         <X size={20} />
       </button>
@@ -120,7 +121,7 @@ export default function MockupLightbox({
 
       {/* Content */}
       <div
-        className="relative mx-4 flex w-full max-w-6xl flex-col items-center gap-6 px-2 py-10 md:flex-row md:items-start md:justify-center md:gap-10"
+        className="relative mx-3 flex w-full max-w-6xl flex-col items-center gap-6 px-2 pb-12 pt-16 sm:mx-4 md:flex-row md:items-start md:justify-center md:gap-10 md:py-10"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: big phone + filmstrip */}
@@ -129,11 +130,12 @@ export default function MockupLightbox({
             {activeScreen.label} · {screenIdx + 1}/{screens.length}
           </div>
           <IPhoneProMaxFrame
-            src={activeScreen.image}
             alt={`${current.brand} — ${activeScreen.label}`}
             width={phoneWidth}
             loading="eager"
-          />
+          >
+            <LiveMockupScreen variant={current} screen={activeScreen} />
+          </IPhoneProMaxFrame>
           {activeScreen.caption && (
             <p className="max-w-xs text-center text-xs leading-relaxed text-white/70">
               {activeScreen.caption}
@@ -142,7 +144,7 @@ export default function MockupLightbox({
 
           {/* Filmstrip: coherent screen sequence */}
           {screens.length > 1 && (
-            <div className="mt-2 flex flex-wrap items-end justify-center gap-3">
+            <div className="mt-2 grid grid-cols-4 justify-items-center gap-2 sm:flex sm:flex-wrap sm:items-end sm:justify-center sm:gap-3">
               {screens.map((s, i) => {
                 const active = i === screenIdx;
                 // FLAT thumbnails only — no nested iPhone frames.
@@ -155,25 +157,7 @@ export default function MockupLightbox({
                     className="group flex flex-col items-center gap-1.5 transition"
                     style={{ opacity: active ? 1 : 0.6 }}
                   >
-                    <div
-                      className="overflow-hidden rounded-[12px] bg-black transition"
-                      style={{
-                        width: 68,
-                        height: Math.round(68 * (19.5 / 9)),
-                        boxShadow: active
-                          ? "0 0 0 2px rgba(255,255,255,0.95), 0 12px 28px -12px rgba(0,0,0,0.75)"
-                          : "0 0 0 1px rgba(255,255,255,0.15), 0 8px 20px -12px rgba(0,0,0,0.6)",
-                      }}
-                    >
-                      <img
-                        src={s.image}
-                        alt={s.label}
-                        loading="lazy"
-                        decoding="async"
-                        draggable={false}
-                        className="h-full w-full object-cover object-top"
-                      />
-                    </div>
+                    <MiniScreenThumb variant={current} screen={s} active={active} />
                     <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
                       {s.label}
                     </span>
@@ -185,7 +169,7 @@ export default function MockupLightbox({
         </div>
 
         {/* Info panel */}
-        <aside className="flex max-w-md flex-col gap-5 text-white md:max-w-sm md:pt-6">
+        <aside className="flex w-full max-w-md flex-col gap-5 text-white md:max-w-sm md:pt-6">
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-white/60">
             <Sparkles size={12} />
             {sectorLabel} · {index + 1}/{variants.length}
@@ -268,5 +252,32 @@ export default function MockupLightbox({
       </div>
     </div>,
     document.body,
+  );
+}
+
+function MiniScreenThumb({ variant, screen, active }: { variant: SectorMockupVariant; screen: MockupScreen; active: boolean }) {
+  const t = variant.theme;
+  return (
+    <div
+      className="relative overflow-hidden rounded-[12px] transition"
+      style={{
+        width: 62,
+        height: Math.round(62 * (19.5 / 9)),
+        background: t.bg,
+        boxShadow: active
+          ? "0 0 0 2px rgba(255,255,255,0.95), 0 12px 28px -12px rgba(0,0,0,0.75)"
+          : "0 0 0 1px rgba(255,255,255,0.15), 0 8px 20px -12px rgba(0,0,0,0.6)",
+      }}
+    >
+      <div className="absolute inset-x-2 top-2 h-2 rounded-full" style={{ background: t.accent }} />
+      <div className="absolute left-2 right-2 top-6 h-9 rounded-xl" style={{ background: screen.kind === "home" ? t.accent : t.surface }} />
+      <div className="absolute left-2 right-2 top-[52px] grid grid-cols-2 gap-1">
+        <span className="h-5 rounded-md" style={{ background: t.surface2 }} />
+        <span className="h-5 rounded-md" style={{ background: t.surface }} />
+        <span className="h-5 rounded-md" style={{ background: t.surface }} />
+        <span className="h-5 rounded-md" style={{ background: t.accent2 }} />
+      </div>
+      <div className="absolute inset-x-2 bottom-2 h-3 rounded-full" style={{ background: t.line }} />
+    </div>
   );
 }
