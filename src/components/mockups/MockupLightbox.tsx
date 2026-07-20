@@ -2,8 +2,9 @@
  * MockupLightbox — fullscreen viewer for a group of mockup variants.
  *
  * - Opens on any card click (Home + Portfolio).
- * - ESC closes, ← / → cycle variants, tap outside phone closes.
- * - Renders exactly ONE IPhoneProMaxFrame (no phone-in-phone).
+ * - ESC closes; ← / → cycle variants; number keys jump within the screen sequence.
+ * - Renders ONE big IPhoneProMaxFrame for the active screen + a filmstrip of
+ *   the coherent screen sequence (Home → Menu → Dettaglio → Prenotazione).
  * - Side panel shows brand, style, palette, features.
  */
 
@@ -29,10 +30,19 @@ export default function MockupLightbox({
   initialIndex = 0,
 }: Props) {
   const [index, setIndex] = useState(initialIndex);
+  const [screenIdx, setScreenIdx] = useState(0);
 
   useEffect(() => {
-    if (open) setIndex(Math.min(Math.max(0, initialIndex), variants.length - 1));
+    if (open) {
+      setIndex(Math.min(Math.max(0, initialIndex), variants.length - 1));
+      setScreenIdx(0);
+    }
   }, [open, initialIndex, variants.length]);
+
+  // Reset screen index when the variant changes
+  useEffect(() => {
+    setScreenIdx(0);
+  }, [index]);
 
   useEffect(() => {
     if (!open) return;
@@ -51,13 +61,15 @@ export default function MockupLightbox({
   }, [open, onClose, variants.length]);
 
   const current = variants[index];
+  const screens = current?.screens?.length ? current.screens : (current ? [{ label: "Home", caption: "", image: current.screen }] : []);
+  const activeScreen = screens[Math.min(screenIdx, screens.length - 1)];
+
   const phoneWidth = useMemo(() => {
-    if (typeof window === "undefined") return 320;
-    // Fit within ~85% viewport height, using aspect 19.5/9 → maxWidth = H * 9/19.5
-    const maxH = window.innerHeight * 0.85;
+    if (typeof window === "undefined") return 300;
+    const maxH = window.innerHeight * 0.78;
     const wFromH = Math.floor((maxH * 9) / 19.5);
-    const maxW = Math.min(window.innerWidth * 0.42, 420);
-    return Math.max(240, Math.min(wFromH, maxW));
+    const maxW = Math.min(window.innerWidth * 0.38, 380);
+    return Math.max(220, Math.min(wFromH, maxW));
   }, [open, index]);
 
   if (!open || !current || typeof document === "undefined") return null;
@@ -67,20 +79,20 @@ export default function MockupLightbox({
       role="dialog"
       aria-modal="true"
       aria-label={`Mockup ${current.brand} — ${current.style}`}
-      className="fixed inset-0 z-[9999] flex items-center justify-center"
-      style={{ background: "rgba(6,7,12,0.92)", backdropFilter: "blur(18px)" }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto"
+      style={{ background: "rgba(6,7,12,0.94)", backdropFilter: "blur(18px)" }}
       onClick={onClose}
     >
       {/* Close */}
       <button
         onClick={onClose}
         aria-label="Chiudi"
-        className="absolute right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15"
+        className="fixed right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15"
       >
         <X size={20} />
       </button>
 
-      {/* Prev / Next */}
+      {/* Prev / Next variant */}
       {variants.length > 1 && (
         <>
           <button
@@ -89,7 +101,7 @@ export default function MockupLightbox({
               setIndex((i) => (i - 1 + variants.length) % variants.length);
             }}
             aria-label="Variante precedente"
-            className="absolute left-3 top-1/2 z-20 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:left-6"
+            className="fixed left-3 top-1/2 z-20 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:left-6"
           >
             <ChevronLeft size={22} />
           </button>
@@ -99,7 +111,7 @@ export default function MockupLightbox({
               setIndex((i) => (i + 1) % variants.length);
             }}
             aria-label="Variante successiva"
-            className="absolute right-3 top-1/2 z-20 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:right-6"
+            className="fixed right-3 top-1/2 z-20 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:right-6"
           >
             <ChevronRight size={22} />
           </button>
@@ -108,21 +120,69 @@ export default function MockupLightbox({
 
       {/* Content */}
       <div
-        className="relative mx-4 flex w-full max-w-6xl flex-col items-center gap-8 px-2 py-8 md:flex-row md:items-stretch md:justify-center md:gap-14"
+        className="relative mx-4 flex w-full max-w-6xl flex-col items-center gap-6 px-2 py-10 md:flex-row md:items-start md:justify-center md:gap-10"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Phone */}
-        <div className="flex shrink-0 items-center justify-center">
+        {/* Left: big phone + filmstrip */}
+        <div className="flex flex-col items-center gap-4">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.25em] text-white/70">
+            {activeScreen.label} · {screenIdx + 1}/{screens.length}
+          </div>
           <IPhoneProMaxFrame
-            src={current.screen}
-            alt={`${current.brand} — ${current.style}`}
+            src={activeScreen.image}
+            alt={`${current.brand} — ${activeScreen.label}`}
             width={phoneWidth}
             loading="eager"
           />
+          {activeScreen.caption && (
+            <p className="max-w-xs text-center text-xs leading-relaxed text-white/70">
+              {activeScreen.caption}
+            </p>
+          )}
+
+          {/* Filmstrip: coherent screen sequence */}
+          {screens.length > 1 && (
+            <div className="mt-2 flex flex-wrap items-end justify-center gap-3">
+              {screens.map((s, i) => {
+                const thumbW = 74;
+                const active = i === screenIdx;
+                return (
+                  <button
+                    key={s.label + i}
+                    onClick={() => setScreenIdx(i)}
+                    aria-label={`Mostra ${s.label}`}
+                    aria-current={active}
+                    className="group flex flex-col items-center gap-1.5 transition"
+                    style={{ opacity: active ? 1 : 0.55 }}
+                  >
+                    <div
+                      className="rounded-[14px] transition"
+                      style={{
+                        boxShadow: active
+                          ? "0 0 0 2px rgba(255,255,255,0.9), 0 12px 28px -12px rgba(0,0,0,0.75)"
+                          : "0 8px 20px -12px rgba(0,0,0,0.6)",
+                      }}
+                    >
+                      <IPhoneProMaxFrame
+                        src={s.image}
+                        alt={s.label}
+                        width={thumbW}
+                        glow={false}
+                        loading="lazy"
+                      />
+                    </div>
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
+                      {s.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Info panel */}
-        <aside className="flex max-w-md flex-col justify-center gap-5 text-white md:max-w-sm">
+        <aside className="flex max-w-md flex-col gap-5 text-white md:max-w-sm md:pt-6">
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-white/60">
             <Sparkles size={12} />
             {sectorLabel} · {index + 1}/{variants.length}
@@ -139,11 +199,31 @@ export default function MockupLightbox({
             <div className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/50">
               Palette
             </div>
-            <span
-              className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/85"
-            >
+            <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/85">
               {current.palette}
             </span>
+          </div>
+
+          <div>
+            <div className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/50">
+              Sequenza schermate
+            </div>
+            <ol className="grid grid-cols-1 gap-1.5 text-sm text-white/85">
+              {screens.map((s, i) => (
+                <li key={s.label + i} className="flex items-center gap-2">
+                  <span
+                    className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-[10px] font-bold"
+                    style={{
+                      background: i === screenIdx ? "white" : "rgba(255,255,255,0.1)",
+                      color: i === screenIdx ? "#0b0b12" : "rgba(255,255,255,0.85)",
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  {s.label}
+                </li>
+              ))}
+            </ol>
           </div>
 
           <div>
@@ -162,7 +242,7 @@ export default function MockupLightbox({
 
           {/* Variant thumbnails */}
           {variants.length > 1 && (
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-1 flex flex-wrap gap-2">
               {variants.map((v, i) => (
                 <button
                   key={v.id}
