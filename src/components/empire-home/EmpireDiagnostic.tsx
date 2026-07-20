@@ -322,7 +322,7 @@ export default function EmpireDiagnostic() {
                       <Stat icon={TrendingUp} label="Risparmio annuo" value={`€${yearlySaving.toLocaleString("it-IT")}`} />
                       <Stat icon={Target} label="ROI vs costo Empire" value={`${roiMultiple}x`} />
                       <Stat icon={Clock} label="Ore liberate/mese" value={`${Math.round(hoursAdmin * 4 * 0.6)}h`} />
-                      <Stat icon={CheckCircle2} label="Piano consigliato" value="Pro €297" />
+                      <Stat icon={CheckCircle2} label="Piano consigliato" value="Growth AI" />
                     </div>
                   </div>
                   <Button asChild className="font-body bg-gradient-to-r from-[#c9a84c] to-[#f0d78c] text-[#0d0d0d] hover:opacity-90 font-semibold h-12">
