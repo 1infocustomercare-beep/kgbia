@@ -166,16 +166,16 @@ const Dots = ({ count = 3, active = 0, color }: { count?: number; active?: numbe
   </div>
 );
 
-const HomeLuxury = ({ variant, copy, styles }: ScreenRendererArgs) => (
+const HomeLuxury = ({ variant, copy, compact, styles }: ScreenRendererArgs) => (
   <>
     <div className="mt-1 text-center">
       <div className="text-[10px] font-black uppercase tracking-[0.28em]" style={styles.muted}>{variant.style}</div>
-      <div className="mt-2 text-[22px] font-black leading-none">{variant.brand}</div>
+      <div className={`mt-2 font-black leading-none ${compact ? "text-[19px]" : "text-[22px]"}`}>{variant.brand}</div>
     </div>
-    <div className="mt-7 rounded-[30px] p-5" style={styles.accentBlock}>
+    <div className={`${compact ? "mt-5 rounded-[26px] p-4" : "mt-7 rounded-[30px] p-5"}`} style={styles.accentBlock}>
       <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-75">Private club</div>
-      <div className="mt-3 text-[28px] font-black leading-[0.92]">{copy.hero}</div>
-      <div className="mt-6 inline-flex rounded-full px-5 py-2 text-[11px] font-black" style={styles.card}>{copy.cta}</div>
+      <div className={`mt-3 font-black leading-[0.92] ${compact ? "text-[23px]" : "text-[28px]"}`}>{copy.hero}</div>
+      <div className={`${compact ? "mt-4 px-4" : "mt-6 px-5"} inline-flex rounded-full py-2 text-[11px] font-black`} style={styles.card}>{copy.cta}</div>
     </div>
     <div className="mt-4 grid grid-cols-3 gap-2">
       {copy.stats.map((s) => <div key={s} className="rounded-2xl p-3 text-center" style={styles.card}><div className="text-sm font-black">{s}</div><div className="mt-2 h-1 rounded-full" style={{ background: variant.theme.accent }} /></div>)}
@@ -186,11 +186,11 @@ const HomeLuxury = ({ variant, copy, styles }: ScreenRendererArgs) => (
   </>
 );
 
-const HomeEditorial = ({ variant, copy, styles }: ScreenRendererArgs) => (
+const HomeEditorial = ({ variant, copy, compact, styles }: ScreenRendererArgs) => (
   <>
     <div className="border-y py-3 text-center" style={{ borderColor: variant.theme.line }}>
       <div className="text-[9px] font-black uppercase tracking-[0.28em]" style={styles.muted}>Special issue</div>
-      <div className="mt-1 text-[24px] font-black leading-[0.95]">{copy.hero}</div>
+      <div className={`mt-1 font-black leading-[0.95] ${compact ? "text-[21px]" : "text-[24px]"}`}>{copy.hero}</div>
     </div>
     <div className="mt-4 grid grid-cols-[1.15fr_0.85fr] gap-3">
       <div className="rounded-[26px] p-4" style={styles.card}>
@@ -207,7 +207,7 @@ const HomeEditorial = ({ variant, copy, styles }: ScreenRendererArgs) => (
   </>
 );
 
-const HomeCommerce = ({ variant, copy, styles }: ScreenRendererArgs) => (
+const HomeCommerce = ({ variant, copy, compact, styles }: ScreenRendererArgs) => (
   <>
     <div className="flex items-center justify-between rounded-full px-3 py-2" style={styles.pill}>
       <span className="text-[10px] font-black uppercase tracking-[0.16em]">Shop live</span>
@@ -221,7 +221,7 @@ const HomeCommerce = ({ variant, copy, styles }: ScreenRendererArgs) => (
           <div className="h-20 rounded-2xl" style={styles.accentSoft} />
         </div>
       </div>
-      <div className="mt-4 text-[25px] font-black leading-[0.95]">{copy.hero}</div>
+      <div className={`mt-4 font-black leading-[0.95] ${compact ? "text-[21px]" : "text-[25px]"}`}>{copy.hero}</div>
     </div>
     <div className="mt-3 grid grid-cols-2 gap-2">
       {variant.features.slice(0, 4).map((f, i) => <div key={f} className="rounded-[20px] p-3 text-[10px] font-black" style={i === 0 ? styles.accentBlock : styles.pill}>{f}</div>)}
@@ -230,15 +230,15 @@ const HomeCommerce = ({ variant, copy, styles }: ScreenRendererArgs) => (
   </>
 );
 
-const HomeDashboard = ({ variant, copy, styles }: ScreenRendererArgs) => (
+const HomeDashboard = ({ variant, copy, compact, styles }: ScreenRendererArgs) => (
   <>
     <div className="grid grid-cols-3 gap-2">
       {copy.stats.map((s, i) => <div key={s} className="rounded-2xl p-3" style={i === 0 ? styles.accentBlock : styles.card}><div className="text-[10px] font-bold opacity-70">KPI</div><div className="mt-1 text-sm font-black">{s}</div></div>)}
     </div>
     <div className="mt-4 rounded-[26px] p-4" style={styles.card}>
       <div className="text-[10px] font-black uppercase tracking-[0.18em]" style={styles.muted}>Control room</div>
-      <div className="mt-2 text-[25px] font-black leading-[0.94]">{copy.hero}</div>
-      <div className="mt-5 flex h-28 items-end gap-2">
+      <div className={`mt-2 font-black leading-[0.94] ${compact ? "text-[21px]" : "text-[25px]"}`}>{copy.hero}</div>
+      <div className={`${compact ? "h-20" : "h-28"} mt-5 flex items-end gap-2`}>
         {[42, 76, 58, 92, 68].map((h, i) => <div key={i} className="flex-1 rounded-t-xl" style={{ height: `${h}%`, background: i === 3 ? variant.theme.accent : variant.theme.surface2 }} />)}
       </div>
     </div>
@@ -248,11 +248,11 @@ const HomeDashboard = ({ variant, copy, styles }: ScreenRendererArgs) => (
   </>
 );
 
-const HomeAgenda = ({ variant, copy, styles }: ScreenRendererArgs) => (
+const HomeAgenda = ({ variant, copy, compact, styles }: ScreenRendererArgs) => (
   <>
     <div className="rounded-[26px] p-4" style={styles.accentBlock}>
       <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-70">Oggi</div>
-      <div className="mt-2 text-[27px] font-black leading-[0.92]">{copy.hero}</div>
+      <div className={`mt-2 font-black leading-[0.92] ${compact ? "text-[22px]" : "text-[27px]"}`}>{copy.hero}</div>
     </div>
     <div className="mt-4 space-y-3">
       {["08:30", "12:00", "18:45"].map((time, i) => <div key={time} className="grid grid-cols-[48px_1fr] gap-3 rounded-[22px] p-3" style={styles.card}><div className="text-xs font-black" style={{ color: variant.theme.accent }}>{time}</div><div><div className="text-sm font-black">{copy.catalog[i]}</div><div className="mt-1 text-[10px]" style={styles.muted}>{variant.features[i]}</div></div></div>)}
@@ -261,9 +261,9 @@ const HomeAgenda = ({ variant, copy, styles }: ScreenRendererArgs) => (
   </>
 );
 
-const HomeMap = ({ variant, copy, styles }: ScreenRendererArgs) => (
+const HomeMap = ({ variant, copy, compact, styles }: ScreenRendererArgs) => (
   <>
-    <div className="relative mt-1 h-48 overflow-hidden rounded-[30px]" style={styles.card}>
+    <div className={`${compact ? "h-40" : "h-48"} relative mt-1 overflow-hidden rounded-[30px]`} style={styles.card}>
       <div className="absolute inset-0 opacity-70" style={{ backgroundImage: `linear-gradient(${variant.theme.accent}20 1px, transparent 1px), linear-gradient(90deg, ${variant.theme.accent}20 1px, transparent 1px)`, backgroundSize: "28px 28px" }} />
       <div className="absolute left-8 top-10 h-3 w-3 rounded-full" style={styles.accentBlock} />
       <div className="absolute right-9 bottom-9 h-4 w-4 rounded-full" style={styles.gradient} />
@@ -289,12 +289,12 @@ const HomeClinical = ({ variant, copy, styles }: ScreenRendererArgs) => (
   </>
 );
 
-const HomePlayful = ({ variant, copy, styles }: ScreenRendererArgs) => (
+const HomePlayful = ({ variant, copy, compact, styles }: ScreenRendererArgs) => (
   <>
-    <div className="relative h-44 rounded-[32px] p-4" style={styles.accentSoft}>
+    <div className={`${compact ? "h-36" : "h-44"} relative rounded-[32px] p-4`} style={styles.accentSoft}>
       <div className="absolute right-5 top-5 h-16 w-16 rounded-full" style={styles.accentBlock} />
       <div className="absolute bottom-5 left-5 h-10 w-24 rounded-full" style={styles.soft} />
-      <div className="relative max-w-[75%] text-[27px] font-black leading-[0.9]">{copy.hero}</div>
+      <div className={`relative max-w-[75%] font-black leading-[0.9] ${compact ? "text-[22px]" : "text-[27px]"}`}>{copy.hero}</div>
     </div>
     <div className="mt-4 grid grid-cols-2 gap-2">
       {variant.features.slice(0, 4).map((f, i) => <div key={f} className="rounded-[24px] p-3 text-[11px] font-black" style={i % 2 ? styles.card : styles.accentBlock}>{f}</div>)}
@@ -303,11 +303,11 @@ const HomePlayful = ({ variant, copy, styles }: ScreenRendererArgs) => (
   </>
 );
 
-const HomeTechnical = ({ variant, copy, styles }: ScreenRendererArgs) => (
+const HomeTechnical = ({ variant, copy, compact, styles }: ScreenRendererArgs) => (
   <>
     <div className="rounded-[22px] border p-3" style={{ borderColor: variant.theme.accent, background: `${variant.theme.accent}14` }}>
       <div className="flex items-center justify-between"><span className="text-[10px] font-black uppercase tracking-[0.18em]">Dispatch</span><span className="h-2 w-2 rounded-full" style={{ background: variant.theme.accent }} /></div>
-      <div className="mt-3 text-[25px] font-black leading-[0.94]">{copy.hero}</div>
+      <div className={`mt-3 font-black leading-[0.94] ${compact ? "text-[21px]" : "text-[25px]"}`}>{copy.hero}</div>
     </div>
     <div className="mt-4 space-y-2">
       {variant.features.slice(0, 4).map((f, i) => <div key={f} className="grid grid-cols-[34px_1fr_38px] items-center gap-2 rounded-2xl p-3" style={styles.card}><div className="text-[10px] font-black" style={{ color: variant.theme.accent }}>#{i + 1}</div><div className="text-xs font-black">{f}</div><div className="text-right text-[10px]" style={styles.muted}>{i === 0 ? "SOS" : "OK"}</div></div>)}
