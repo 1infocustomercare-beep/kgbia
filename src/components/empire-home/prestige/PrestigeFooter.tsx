@@ -89,6 +89,15 @@ export default function PrestigeFooter() {
               <li><Link to="/cookie-policy" className="hover:text-white">Cookie Policy</Link></li>
               <li><Link to="/termini" className="hover:text-white">Termini e Condizioni</Link></li>
               <li><Link to="/note-legali" className="hover:text-white">Note Legali</Link></li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => import("@/lib/cookie-consent").then((m) => m.openCookiePreferences())}
+                  className="hover:text-white text-left"
+                >
+                  Gestisci cookie
+                </button>
+              </li>
               <li><span className="text-white/40">Dati in EU · GDPR</span></li>
             </ul>
           </div>
