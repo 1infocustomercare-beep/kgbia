@@ -115,7 +115,7 @@ export default function MockupLightbox({
               setIndex((i) => (i - 1 + variants.length) % variants.length);
             }}
             aria-label="Variante precedente"
-            className="fixed left-3 top-1/2 z-20 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:left-6"
+            className="fixed left-3 top-1/2 z-20 hidden -translate-y-1/2 md:grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:left-6"
           >
             <ChevronLeft size={22} />
           </button>
