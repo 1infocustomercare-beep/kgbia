@@ -212,7 +212,43 @@ export default function OnboardingPage() {
   return (
     <>
       <PrestigeTheme />
-      <div className="prestige-root prestige-section prestige-light min-h-screen flex items-center justify-center p-4">
+      <style>{`
+        .onboarding-scope input,
+        .onboarding-scope textarea,
+        .onboarding-scope select {
+          background: hsl(var(--pr-ivory)) !important;
+          color: hsl(var(--pr-text-on-light)) !important;
+          border: 1px solid hsl(var(--pr-emerald) / 0.22) !important;
+        }
+        .onboarding-scope input::placeholder,
+        .onboarding-scope textarea::placeholder {
+          color: hsl(var(--pr-muted-on-light) / 0.65) !important;
+        }
+        .onboarding-scope input:focus,
+        .onboarding-scope textarea:focus,
+        .onboarding-scope select:focus {
+          outline: none !important;
+          border-color: hsl(var(--pr-gold)) !important;
+          box-shadow: 0 0 0 3px hsl(var(--pr-gold) / 0.25) !important;
+        }
+        .onboarding-scope label { color: hsl(var(--pr-text-on-light)); font-weight: 600; }
+        .onboarding-scope .bg-primary,
+        .onboarding-scope button.bg-primary { 
+          background: linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)) 55%, hsl(var(--pr-gold-deep))) !important;
+          color: hsl(var(--pr-emerald-deep)) !important;
+          border: none !important;
+        }
+        .onboarding-scope .text-primary { color: hsl(var(--pr-gold-deep)) !important; }
+        .onboarding-scope .border-primary { border-color: hsl(var(--pr-gold)) !important; }
+        .onboarding-scope .bg-primary\\/10 { background: hsl(var(--pr-gold) / 0.12) !important; }
+        .onboarding-scope .bg-primary\\/5 { background: hsl(var(--pr-gold) / 0.06) !important; }
+        .onboarding-scope .hover\\:border-primary\\/50:hover { border-color: hsl(var(--pr-gold) / 0.55) !important; }
+        .onboarding-scope [data-slot="button"]:not(.bg-transparent):not([class*="outline"]) {
+          background: linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)) 55%, hsl(var(--pr-gold-deep)));
+          color: hsl(var(--pr-emerald-deep));
+        }
+      `}</style>
+      <div className="prestige-root prestige-section prestige-light onboarding-scope min-h-screen flex items-center justify-center p-4">
 
       <div className="w-full max-w-3xl">
         {/* Progress bar — 5 steps */}
@@ -228,7 +264,7 @@ export default function OnboardingPage() {
                 }}
               />
               {i <= step && (
-                <span className="text-[10px] font-semibold hidden sm:inline" style={{ color: "hsl(var(--pr-emerald))" }}>
+                <span className="text-[10px] font-semibold hidden sm:inline" style={{ color: "hsl(var(--pr-gold-deep))" }}>
                   {label}
                 </span>
               )}
@@ -237,10 +273,11 @@ export default function OnboardingPage() {
         </div>
 
 
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
+
           {/* ─── Step 0: Industry + Plan ─── */}
           {step === 0 && (
-            <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s0" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Che tipo di attività hai?</h1>
               <p className="text-center text-muted-foreground mb-4">Seleziona settore e piano per personalizzare la piattaforma</p>
 
@@ -293,7 +330,7 @@ export default function OnboardingPage() {
 
           {/* ─── Step 1: Company Data ─── */}
           {step === 1 && (
-            <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s1" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Dati Azienda</h1>
               <p className="text-center text-muted-foreground mb-6">Inserisci le informazioni della tua attività</p>
               <div className="space-y-3">
@@ -318,7 +355,7 @@ export default function OnboardingPage() {
 
           {/* ─── Step 2: Brand ─── */}
           {step === 2 && (
-            <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s2" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Il tuo Brand</h1>
               <p className="text-center text-muted-foreground mb-6">Personalizza logo, colori e font</p>
               <div className="space-y-5">
@@ -376,7 +413,7 @@ export default function OnboardingPage() {
 
           {/* ─── Step 3: Team ─── */}
           {step === 3 && (
-            <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s3" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Il tuo Team</h1>
               <p className="text-center text-muted-foreground mb-6">Aggiungi il primo membro dello staff (opzionale)</p>
               <div className="space-y-4">
@@ -407,7 +444,7 @@ export default function OnboardingPage() {
 
           {/* ─── Step 4: Go Live ─── */}
           {step === 4 && (
-            <motion.div key="s4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Pronti al Lancio! 🚀</h1>
               <p className="text-center text-muted-foreground mb-6">Verifica i dettagli e vai live</p>
 
