@@ -134,7 +134,7 @@ export default function MockupLightbox({
 
       {/* Content */}
       <div
-        className="relative mx-4 flex w-full max-w-6xl flex-col items-center gap-6 px-2 py-10 md:flex-row md:items-start md:justify-center md:gap-10"
+        className="relative mx-auto flex min-h-full w-full max-w-6xl flex-col items-center gap-6 px-4 pb-16 pt-20 sm:px-6 md:flex-row md:items-start md:justify-center md:gap-10 md:pt-24"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: big phone + filmstrip */}
