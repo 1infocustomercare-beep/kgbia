@@ -461,5 +461,6 @@ export default function OnboardingPage() {
         </AnimatePresence>
       </div>
     </div>
+    </>
   );
 }
