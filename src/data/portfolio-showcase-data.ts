@@ -195,7 +195,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     year: "2025",
     platform: "iOS, Android & Web",
     accent: "#4ade80",
-    screenLabels: ["Aloha Pets – Home", "Aloha Pets – Services", "Aloha Pets – Detail"],
+    screenLabels: ["Cuccia & Coccole – Home", "Cuccia & Coccole – Services", "Cuccia & Coccole – Detail"],
   },
 
   childcare: {
