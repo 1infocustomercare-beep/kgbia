@@ -732,6 +732,157 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
   },
 ];
 
+// =============================================================
+// AUTO-DISCOVERY
+// Any folder dropped in src/assets/mockups/portfolio-lowengeld/<slug>/
+// with numbered PNGs (1-*.png, 2-*.png, ...) is automatically
+// registered as a new variant inside its sector — no manual edit
+// required. Sector is inferred, in order, from:
+//   1) optional meta.json inside the folder ({ "sector": "food", ... })
+//   2) folder-name convention "<sector>__<slug>" (double underscore)
+//   3) keyword heuristics on the slug (sushi→food, spa→beauty, ...)
+//   4) explicit fallback ("food")
+// The variant is appended AFTER manual variants so sector order and
+// filters stay stable; screens reuse the sector's standard labels
+// (Home → Menu → Dettaglio → Prenotazione) and are opened fullscreen
+// through the same MockupLightbox as any manual mockup.
+// =============================================================
+
+const metaFiles = import.meta.glob(
+  "@/assets/mockups/portfolio-lowengeld/**/meta.json",
+  { eager: true, import: "default" },
+) as Record<string, Partial<{
+  sector: string;
+  brand: string;
+  style: string;
+  palette: string;
+  description: string;
+  features: string[];
+  order: number;
+  labels: string[];
+}>>;
+
+const SECTOR_IDS = new Set(SECTOR_MOCKUPS.map((s) => s.id));
+
+const SLUG_SECTOR_HINTS: Array<[RegExp, string]> = [
+  [/(sushi|ramen|pizza|kebab|taco|ceviche|bistrot|caffe|coffee|brace|slice|food|deli|omakase|onigiri|maki|osteria|trattoria|pasta|burger|grill|napoli|strapizz|orygano|otomaki|flame)/i, "food"],
+  [/(nail|hair|barber|medspa|spa|salone|beauty|atelier|serena|velluto|blush)/i, "beauty"],
+  [/(rental|drive|boats|yacht|ncc|charter|marina|chauffeur|limo|transfer)/i, "ncc"],
+  [/(resort|hotel|suite|palazzo|hospitality|boutique|villa)/i, "hospitality"],
+  [/(fit|padel|iron|yoga|pilates|prana|crossfit|gym)/i, "fitness"],
+  [/(medical|clinic|clinica|sorriso|dental|dentist|poliambulatorio)/i, "healthcare"],
+  [/(vet|zampe|zampa|pet(?!al))/i, "veterinary"],
+  [/(nido|nursery|bimb|kids|child|playhouse)/i, "childcare"],
+  [/(cantiere|edil|construc|domus|real-estate|immobili)/i, "construction"],
+  [/(volt|idro|plumber|electric|elettric|technician|artigian)/i, "plumber"],
+];
+
+const FALLBACK_SECTOR = "food";
+
+const titleize = (slug: string): string =>
+  slug
+    .split(/[-_]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+
+const collectFolderScreens = (
+  folder: string,
+): Array<{ file: string; num: number; kind: string }> => {
+  const out: Array<{ file: string; num: number; kind: string }> = [];
+  for (const path of Object.keys(portfolioLowengeldFiles)) {
+    if (!path.includes(`/portfolio-lowengeld/${folder}/`)) continue;
+    const fname = path.split("/").pop() ?? "";
+    const m = fname.match(/^(\d+)[-_](.+)\.png$/i);
+    if (!m) continue;
+    out.push({ file: fname, num: parseInt(m[1], 10), kind: m[2].toLowerCase() });
+  }
+  return out.sort((a, b) => a.num - b.num);
+};
+
+const discoverFolders = (): string[] => {
+  const set = new Set<string>();
+  for (const path of Object.keys(portfolioLowengeldFiles)) {
+    const m = path.match(/portfolio-lowengeld\/([^/]+)\//);
+    if (m) set.add(m[1]);
+  }
+  return Array.from(set).sort();
+};
+
+const inferSector = (slug: string, metaSector?: string): string => {
+  if (metaSector && SECTOR_IDS.has(metaSector)) return metaSector;
+  const conv = slug.match(/^([a-z]+)__/);
+  if (conv && SECTOR_IDS.has(conv[1])) return conv[1];
+  for (const [re, sector] of SLUG_SECTOR_HINTS) {
+    if (re.test(slug)) return sector;
+  }
+  return FALLBACK_SECTOR;
+};
+
+// Already-registered slugs — inferred from manual variants' screen paths
+const registeredSlugs = new Set<string>();
+for (const group of SECTOR_MOCKUPS) {
+  for (const v of group.variants) {
+    const m = v.screen.match(/portfolio-lowengeld\/([^/]+)\//);
+    if (m) registeredSlugs.add(m[1]);
+  }
+}
+
+const readMetaFor = (folder: string) => {
+  for (const [path, meta] of Object.entries(metaFiles)) {
+    if (path.includes(`/portfolio-lowengeld/${folder}/meta.json`)) return meta;
+  }
+  return undefined;
+};
+
+for (const folder of discoverFolders()) {
+  if (registeredSlugs.has(folder)) continue;
+  const files = collectFolderScreens(folder);
+  if (files.length === 0) continue;
+
+  const meta = readMetaFor(folder);
+  const cleanSlug = folder.replace(/^[a-z]+__/, "");
+  const sectorId = inferSector(folder, meta?.sector);
+  const group = SECTOR_MOCKUPS.find((g) => g.id === sectorId);
+  if (!group) continue;
+
+  const labels = SECTOR_SCREEN_LABELS[sectorId] ?? ["Home", "Menu", "Dettaglio", "Prenotazione"];
+  const captions = CAPTIONS[sectorId] ?? labels;
+
+  const screens: MockupScreen[] = files.slice(0, 4).map((f, i) => ({
+    label: meta?.labels?.[i] ?? labels[i] ?? titleize(f.kind),
+    caption: captions[i] ?? labels[i] ?? titleize(f.kind),
+    image: portfolioImage(folder, f.file),
+  }));
+
+  const brand = meta?.brand ?? titleize(cleanSlug);
+  const style = meta?.style ?? "Auto-import Premium";
+  const palette = meta?.palette ?? "Coerente al brand";
+  const description =
+    meta?.description ??
+    `Mockup ${brand} importato automaticamente. Sequenza completa fullscreen in stile ${sectorId}.`;
+  const features = meta?.features ?? screens.map((s) => s.label);
+
+  const variant: SectorMockupVariant = {
+    id: `${sectorId}-${cleanSlug}`,
+    brand,
+    style,
+    palette,
+    description,
+    features,
+    screen: screens[0].image,
+    screens,
+  };
+
+  if (typeof meta?.order === "number") {
+    const idx = Math.max(0, Math.min(group.variants.length, meta.order));
+    group.variants.splice(idx, 0, variant);
+  } else {
+    group.variants.push(variant);
+  }
+  registeredSlugs.add(folder);
+}
+
 /** Lookup a sector group by id. */
 export function getSectorGroup(id: string): SectorMockupGroup | undefined {
   return SECTOR_MOCKUPS.find((g) => g.id === id);
