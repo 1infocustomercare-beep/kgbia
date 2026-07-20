@@ -13,6 +13,8 @@ import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import SetupPaidGuard from "@/components/SetupPaidGuard";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
+import { useReferralCapture } from "@/hooks/useReferralCapture";
+
 
 // Detect mobile for tighter safety timeouts
 const IS_MOBILE = typeof window !== "undefined" && (
