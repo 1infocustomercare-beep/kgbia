@@ -2,13 +2,23 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEmpireScrollDirector } from "../ScrollDirector";
-import PrestigePhone, { PHONE_VIEWS, type PhoneView } from "./PrestigePhone";
+import PrestigePhone from "./PrestigePhone";
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
-import { getEmpireScreens } from "./EmpireMockupScreens";
+import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
-const HERO_LABELS: PhoneView[] = PHONE_VIEWS;
-const HERO_SCREENS = HERO_LABELS.map((view) => getEmpireScreens("restaurant", view));
+// Premium hero rotation: pick the first variant of the 4 flagship sectors and
+// cycle through their 4-screen sequence. Uses the AI-generated PNGs the team
+// already produced so the hero shows real Empire work.
+const HERO_BRAND_IDS = ["food-onyx-brace", "beauty-aurora-nail", "ncc-marina-riviera", "hospitality-cala-vento"] as const;
+const HERO_VARIANT =
+  SECTOR_MOCKUPS.flatMap((g) => g.variants).find((v) => v.id === "food-onyx-brace") ??
+  SECTOR_MOCKUPS[0].variants[0];
+const HERO_SCREENS = HERO_VARIANT.screens.length
+  ? HERO_VARIANT.screens
+  : [{ label: "Home", caption: "", image: HERO_VARIANT.screen }];
+const HERO_LABELS = HERO_SCREENS.map((s) => s.label);
 const ROTATE_MS = 3600;
+void HERO_BRAND_IDS;
 
 /**
  * PrestigeHero — hero cinematografico mobile-first.
@@ -246,12 +256,12 @@ export default function PrestigeHero() {
                   }}
                 >
                   <PrestigePhone
-                    screen={screen}
+                    src={screen.image}
                     alt={`Mockup ${HERO_LABELS[i]}`}
-                    label={isActive ? HERO_LABELS[i] : undefined}
                     width={phoneW}
                     loading="eager"
                   />
+
                 </div>
               );
             })}
