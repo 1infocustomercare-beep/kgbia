@@ -223,10 +223,17 @@ export default function PrestigeHero() {
                     : `translate3d(0, 10%, -220px) rotateY(0deg) scale(.8)`;
 
               return (
-                <button
+                <div
                   key={i}
-                  type="button"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setActive(i)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setActive(i);
+                    }
+                  }}
                   aria-label={`Mostra mockup ${i + 1}: ${HERO_LABELS[i]}`}
                   className="absolute inset-0 flex items-center justify-center transition-all duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] focus:outline-none"
                   style={{
@@ -245,7 +252,7 @@ export default function PrestigeHero() {
                     width={phoneW}
                     loading="eager"
                   />
-                </button>
+                </div>
               );
             })}
           </div>

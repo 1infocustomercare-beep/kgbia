@@ -310,7 +310,7 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12 landing-dark force-dark auth-contrast"
       style={{ background: "linear-gradient(160deg, hsl(228 22% 8%), hsl(250 20% 10%), hsl(228 22% 7%))" }}>
 
-      <button onClick={() => navigate("/home")}
+      <button onClick={() => navigate("/")}
         className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-foreground/85 hover:text-foreground transition-colors">
         <ArrowLeft className="w-4 h-4" /> Home
       </button>

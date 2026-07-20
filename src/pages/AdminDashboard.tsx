@@ -344,7 +344,7 @@ const AdminDashboard = () => {
         <div className="flex items-center gap-1 flex-shrink-0">
           <DarkModeToggle />
           <GuidesToggle />
-          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-primary/10 w-9 h-9 flex items-center justify-center flex-shrink-0" title="Home" aria-label="Home">
+          <button onClick={() => navigate("/")} className="p-2 rounded-full hover:bg-primary/10 w-9 h-9 flex items-center justify-center flex-shrink-0" title="Home" aria-label="Home">
             <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </button>
           <button onClick={handleLogout} className="p-2 rounded-full hover:bg-primary/10 w-9 h-9 flex items-center justify-center flex-shrink-0" title="Esci" aria-label="Esci">

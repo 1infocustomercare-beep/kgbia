@@ -250,7 +250,7 @@ export default function BusinessPage() {
   if (hasVariant && variantSpec) {
     return (
       <Suspense fallback={<SiteLoader />}>
-        <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
+        <BackButton to="/" label="Indietro" variant="floating" theme="glass" />
         <VariantSiteRenderer
           variantId={templateVariant}
           brandName={company.name || config.label}
@@ -272,7 +272,7 @@ export default function BusinessPage() {
 
   return (
     <Suspense fallback={<SiteLoader />}>
-      <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
+      <BackButton to="/" label="Indietro" variant="floating" theme="glass" />
       <Template company={company} />
 
       {/* ═══ CONVERSION MAXIMIZER — solo per siti NON generati dalla Demo Factory ═══

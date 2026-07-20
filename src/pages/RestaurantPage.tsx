@@ -302,7 +302,7 @@ const RestaurantPage = () => {
             {/* Back button for demo + Logo + Name */}
             <div className="flex items-center gap-2">
               {isDemo && (
-                <button onClick={() => navigate("/home")} className="p-2 -ml-2 rounded-xl hover:bg-primary/10 transition-colors" aria-label="Torna alla home">
+                <button onClick={() => navigate("/")} className="p-2 -ml-2 rounded-xl hover:bg-primary/10 transition-colors" aria-label="Torna alla home">
                   <ArrowLeft className="w-5 h-5 text-primary" />
                 </button>
               )}

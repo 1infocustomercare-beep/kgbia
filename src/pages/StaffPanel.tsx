@@ -100,7 +100,7 @@ const StaffPanel = () => {
           </div>
         </div>
         <div className="flex items-center gap-1.5">
-          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Indietro">
+          <button onClick={() => navigate("/")} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Indietro">
             <ArrowLeft className="w-5 h-5 text-muted-foreground" />
           </button>
           <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">

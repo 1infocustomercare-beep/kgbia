@@ -905,7 +905,7 @@ const SuperAdminDashboard = () => {
             >
               {tabBarOpen ? <ChevronUp className="w-4 h-4 text-purple-300" /> : <ChevronDown className="w-4 h-4 text-purple-300" />}
             </button>
-            <button onClick={() => navigate("/home")} className="p-2 rounded-xl hover:bg-secondary transition-colors" title="Home">
+            <button onClick={() => navigate("/")} className="p-2 rounded-xl hover:bg-secondary transition-colors" title="Home">
               <ArrowLeft className="w-4 h-4 text-muted-foreground" />
             </button>
             <DarkModeToggle />

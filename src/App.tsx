@@ -583,6 +583,7 @@ function App() {
                           Caos→Empire, services, industries, portfolio, process,
                           proof, CTA. Bilingue IT/EN. */}
                       <Route path="/" element={<EmpirePrestigeHome />} />
+                      <Route path="/home" element={<Navigate to="/" replace />} />
 
 
                       {/* Pagina catalogo mockup canonica = /portfolio (MockupCatalogPage).

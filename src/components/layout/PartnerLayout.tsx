@@ -227,7 +227,7 @@ export default function PartnerLayout() {
           >
             <div className="flex items-center gap-2 lg:gap-4 flex-shrink-0 min-w-0">
               <button
-                onClick={() => navigate("/home")}
+                onClick={() => navigate("/")}
                 aria-label="Torna alla home"
                 className="flex items-center justify-center w-9 h-9 rounded-xl transition-all hover:scale-105 active:scale-95 flex-shrink-0"
                 style={{
