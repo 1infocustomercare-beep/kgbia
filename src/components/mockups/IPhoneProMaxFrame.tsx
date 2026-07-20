@@ -11,10 +11,10 @@
  * Additive only — does not replace existing frames until callers migrate.
  */
 
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
 
 type IPhoneProMaxFrameProps = {
-  src?: string;
+  src: string;
   alt: string;
   /** Container width in px. Height is derived from the true device aspect. */
   width?: number;
@@ -27,7 +27,6 @@ type IPhoneProMaxFrameProps = {
   /** Optional onClick — used by lightbox triggers */
   onClick?: () => void;
   style?: CSSProperties;
-  children?: ReactNode;
 };
 
 // Real iPhone 15 Pro Max: 77 × 159.9 mm → aspect 0.4816 (≈ 9 : 19.5)
@@ -42,7 +41,6 @@ export default function IPhoneProMaxFrame({
   loading = "lazy",
   onClick,
   style,
-  children,
 }: IPhoneProMaxFrameProps) {
   const height = Math.round(width * ASPECT);
   // Bezel thickness scales with width (real device ≈ 2.5 mm on 77 mm → ~3.2%).
@@ -58,7 +56,7 @@ export default function IPhoneProMaxFrame({
   return (
     <div
       className={`relative select-none ${clickable ? "cursor-zoom-in" : ""} ${className}`}
-      style={{ width, height, maxWidth: "100%", ...style }}
+      style={{ width, height, ...style }}
       onClick={onClick}
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
@@ -110,19 +108,15 @@ export default function IPhoneProMaxFrame({
             boxShadow: "inset 0 0 0 2px rgba(255,255,255,0.04)",
           }}
         >
-          {/* Screen — the webapp render itself. Prefer live flat UI children; keep src for legacy callers. */}
-          {children ? (
-            <div className="absolute inset-0 h-full w-full">{children}</div>
-          ) : src ? (
-            <img
-              src={src}
-              alt={alt}
-              loading={loading}
-              decoding="async"
-              draggable={false}
-              className="absolute inset-0 h-full w-full object-cover object-top"
-            />
-          ) : null}
+          {/* Screen — the webapp render itself */}
+          <img
+            src={src}
+            alt={alt}
+            loading={loading}
+            decoding="async"
+            draggable={false}
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
 
           {/* Dynamic Island */}
           <div
