@@ -8,7 +8,7 @@
  * - Side panel shows brand, style, palette, features.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
@@ -64,13 +64,27 @@ export default function MockupLightbox({
   const screens = current?.screens?.length ? current.screens : (current ? [{ label: "Home", caption: "", image: current.screen }] : []);
   const activeScreen = screens[Math.min(screenIdx, screens.length - 1)];
 
-  const phoneWidth = useMemo(() => {
-    if (typeof window === "undefined") return 300;
-    const maxH = window.innerHeight * 0.78;
-    const wFromH = Math.floor((maxH * 9) / 19.5);
-    const maxW = Math.min(window.innerWidth * 0.38, 380);
-    return Math.max(220, Math.min(wFromH, maxW));
-  }, [open, index]);
+  const [phoneWidth, setPhoneWidth] = useState(260);
+  useEffect(() => {
+    if (!open || typeof window === "undefined") return;
+    const compute = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const isMobile = vw < 768;
+      const reservedV = isMobile ? 280 : 200;
+      const maxH = Math.max(340, vh - reservedV);
+      const wFromH = Math.floor((maxH * 9) / 19.5);
+      const maxW = isMobile ? vw - 56 : Math.min(vw * 0.42, 360);
+      setPhoneWidth(Math.max(200, Math.min(wFromH, maxW)));
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    window.addEventListener("orientationchange", compute);
+    return () => {
+      window.removeEventListener("resize", compute);
+      window.removeEventListener("orientationchange", compute);
+    };
+  }, [open]);
 
   if (!open || !current || typeof document === "undefined") return null;
 
@@ -79,8 +93,8 @@ export default function MockupLightbox({
       role="dialog"
       aria-modal="true"
       aria-label={`Mockup ${current.brand} — ${current.style}`}
-      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto"
-      style={{ background: "rgba(6,7,12,0.94)", backdropFilter: "blur(18px)" }}
+      className="fixed inset-0 z-[9999] overflow-y-auto overscroll-contain"
+      style={{ background: "rgba(6,7,12,0.94)", backdropFilter: "blur(18px)", WebkitOverflowScrolling: "touch" }}
       onClick={onClose}
     >
       {/* Close */}
@@ -101,7 +115,7 @@ export default function MockupLightbox({
               setIndex((i) => (i - 1 + variants.length) % variants.length);
             }}
             aria-label="Variante precedente"
-            className="fixed left-3 top-1/2 z-20 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:left-6"
+            className="fixed left-3 top-1/2 z-20 hidden -translate-y-1/2 md:grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:left-6"
           >
             <ChevronLeft size={22} />
           </button>
@@ -111,7 +125,7 @@ export default function MockupLightbox({
               setIndex((i) => (i + 1) % variants.length);
             }}
             aria-label="Variante successiva"
-            className="fixed right-3 top-1/2 z-20 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:right-6"
+            className="fixed right-3 top-1/2 z-20 hidden -translate-y-1/2 md:grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:right-6"
           >
             <ChevronRight size={22} />
           </button>
@@ -120,7 +134,7 @@ export default function MockupLightbox({
 
       {/* Content */}
       <div
-        className="relative mx-4 flex w-full max-w-6xl flex-col items-center gap-6 px-2 py-10 md:flex-row md:items-start md:justify-center md:gap-10"
+        className="relative mx-auto flex min-h-full w-full max-w-6xl flex-col items-center gap-6 px-4 pb-16 pt-20 sm:px-6 md:flex-row md:items-start md:justify-center md:gap-10 md:pt-24"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: big phone + filmstrip */}
@@ -185,7 +199,7 @@ export default function MockupLightbox({
         </div>
 
         {/* Info panel */}
-        <aside className="flex max-w-md flex-col gap-5 text-white md:max-w-sm md:pt-6">
+        <aside className="flex w-full max-w-md flex-col gap-5 text-white md:max-w-sm md:pt-6">
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-white/60">
             <Sparkles size={12} />
             {sectorLabel} · {index + 1}/{variants.length}
