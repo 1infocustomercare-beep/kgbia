@@ -8,10 +8,11 @@
  * - Side panel shows brand, style, palette, features.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
+
 import type { SectorMockupVariant } from "@/data/sector-mockups";
 
 type Props = {
