@@ -1,0 +1,10 @@
+{
+  "sector": "retail",
+  "brand": "Cantina Rosé",
+  "style": "Wine Shop Bordeaux",
+  "palette": "Bordeaux · Oro · Verde bosco",
+  "description": "Enoteca premium con abbonamento cassette curate, pairing chef e degustazioni.",
+  "features": ["Cassette curate", "Pairing chef", "Sommelier chat", "Consegna refrigerata"],
+  "labels": ["Vetrina Enoteca", "Cantina", "Scheda etichetta", "Checkout"],
+  "order": 5
+}

@@ -1,0 +1,10 @@
+{
+  "sector": "retail",
+  "brand": "Velluto Milano",
+  "style": "Editorial Boutique",
+  "palette": "Crema · Oro · Blu notte",
+  "description": "Boutique moda milanese editoriale con lookbook stagionale, atelier privé e checkout premium.",
+  "features": ["Lookbook stagionale", "Atelier privé", "Wishlist VIP", "Checkout luxury"],
+  "labels": ["Vetrina Boutique", "Collezione FW", "Scheda capo", "Checkout"],
+  "order": 0
+}

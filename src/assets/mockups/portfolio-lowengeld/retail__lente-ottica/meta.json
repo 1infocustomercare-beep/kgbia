@@ -1,0 +1,10 @@
+{
+  "sector": "retail",
+  "brand": "Lente Ottica Editoriale",
+  "style": "Eyewear Premium",
+  "palette": "Grigio · Oliva · Terracotta",
+  "description": "Ottica editoriale con try-on virtuale, prescrizione online e montature d'autore.",
+  "features": ["Try-on virtuale", "Prescrizione online", "Lenti premium", "Prenota vista"],
+  "labels": ["Vetrina", "Collezione montature", "Try-on", "Checkout"],
+  "order": 4
+}
