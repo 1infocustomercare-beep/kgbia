@@ -1208,6 +1208,74 @@ export type Database = {
           },
         ]
       }
+      base_orders: {
+        Row: {
+          amount: number
+          brand_json: Json
+          business_name: string
+          company_id: string | null
+          created_at: string
+          currency: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          id: string
+          sector: string | null
+          seller_id: string | null
+          status: string
+          stripe_session_id: string | null
+          updated_at: string
+          user_id: string | null
+          variant_id: string
+        }
+        Insert: {
+          amount?: number
+          brand_json?: Json
+          business_name: string
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          id?: string
+          sector?: string | null
+          seller_id?: string | null
+          status?: string
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          variant_id: string
+        }
+        Update: {
+          amount?: number
+          brand_json?: Json
+          business_name?: string
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          id?: string
+          sector?: string | null
+          seller_id?: string | null
+          status?: string
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "base_orders_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "sellers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       beach_bookings: {
         Row: {
           booking_date: string
@@ -2079,6 +2147,71 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_project_briefs: {
+        Row: {
+          admin_notes: string | null
+          assigned_amount: number | null
+          budget_range: string | null
+          business_name: string
+          contact_email: string
+          contact_name: string
+          contact_phone: string | null
+          created_at: string
+          files_urls: Json | null
+          id: string
+          payload: Json
+          sector: string | null
+          seller_id: string | null
+          status: string
+          submitted_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          assigned_amount?: number | null
+          budget_range?: string | null
+          business_name: string
+          contact_email: string
+          contact_name: string
+          contact_phone?: string | null
+          created_at?: string
+          files_urls?: Json | null
+          id?: string
+          payload?: Json
+          sector?: string | null
+          seller_id?: string | null
+          status?: string
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          assigned_amount?: number | null
+          budget_range?: string | null
+          business_name?: string
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string | null
+          created_at?: string
+          files_urls?: Json | null
+          id?: string
+          payload?: Json
+          sector?: string | null
+          seller_id?: string | null
+          status?: string
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_project_briefs_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "sellers"
             referencedColumns: ["id"]
           },
         ]
@@ -5607,6 +5740,24 @@ export type Database = {
           },
         ]
       }
+      platform_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string | null
@@ -7214,6 +7365,56 @@ export type Database = {
         }
         Relationships: []
       }
+      seller_commissions: {
+        Row: {
+          commission_amount: number
+          created_at: string
+          gross_amount: number
+          id: string
+          notes: string | null
+          paid_at: string | null
+          pct: number
+          seller_id: string
+          source_id: string
+          source_type: string
+          status: string
+        }
+        Insert: {
+          commission_amount: number
+          created_at?: string
+          gross_amount: number
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          pct: number
+          seller_id: string
+          source_id: string
+          source_type: string
+          status?: string
+        }
+        Update: {
+          commission_amount?: number
+          created_at?: string
+          gross_amount?: number
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          pct?: number
+          seller_id?: string
+          source_id?: string
+          source_type?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seller_commissions_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "sellers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seller_credit_alerts: {
         Row: {
           alert_type: string
@@ -7568,6 +7769,51 @@ export type Database = {
           template_variant?: string | null
           updated_at?: string
           view_count?: number | null
+        }
+        Relationships: []
+      }
+      sellers: {
+        Row: {
+          active: boolean
+          commission_pct: number
+          created_at: string
+          display_name: string
+          email: string | null
+          fiscal_data: Json | null
+          iban: string | null
+          id: string
+          phone: string | null
+          slug: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          commission_pct?: number
+          created_at?: string
+          display_name: string
+          email?: string | null
+          fiscal_data?: Json | null
+          iban?: string | null
+          id?: string
+          phone?: string | null
+          slug: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          commission_pct?: number
+          created_at?: string
+          display_name?: string
+          email?: string | null
+          fiscal_data?: Json | null
+          iban?: string | null
+          id?: string
+          phone?: string | null
+          slug?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
