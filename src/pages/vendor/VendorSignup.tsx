@@ -51,7 +51,7 @@ export default function VendorSignup() {
         return;
       }
       // Best-effort: create seller row + role (may require session)
-      await supabase.from("user_roles").insert({ user_id: userId, role: "seller" as any });
+      // Note: 'seller' identity is defined by the sellers row (user_id); role in user_roles is optional
       await supabase.from("sellers").insert({
         user_id: userId,
         slug,
