@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { clearIndustryCache } from "@/hooks/useIndustry";
 
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -518,7 +518,7 @@ export default function OnboardingPage() {
               </div>
             </motion.div>
           )}
-        </AnimatePresence>
+        </div>
       </div>
     </div>
     </>
