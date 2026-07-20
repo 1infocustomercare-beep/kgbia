@@ -295,9 +295,10 @@ export default function OnboardingPage() {
         </div>
 
 
-        <AnimatePresence initial={false}>
+        {/* No AnimatePresence: entry-only animation via motion.div avoids exit races that could leave a step empty. */}
+        <div>
 
-          {/* ─── Step 0: Industry + Plan ─── */}
+
           {step === 0 && (
             <motion.div key="s0" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Che tipo di attività hai?</h1>
