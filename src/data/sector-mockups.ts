@@ -788,6 +788,7 @@ const SLUG_SECTOR_HINTS: Array<[RegExp, string]> = [
   [/(nido|nursery|bimb|kids|child|playhouse)/i, "childcare"],
   [/(cantiere|edil|construc|domus|real-estate|immobili)/i, "construction"],
   [/(volt|idro|plumber|electric|elettric|technician|artigian)/i, "plumber"],
+  [/(retail|shop|store|boutique-shop|concept|sneaker|streetwear|jewel|gioiell|ottica|eyewear|wine|cantina|fashion|apparel|denim|leather|profum|cosm|homeware)/i, "retail"],
 ];
 
 const FALLBACK_SECTOR = "food";
