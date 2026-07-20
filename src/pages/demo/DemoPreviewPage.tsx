@@ -120,7 +120,7 @@ const VARIANT_MAP: Record<string, VariantConfig> = {
     sectorId: "ncc",
     brand: "Marina Riviera",
     style: "Style A",
-    label: "Miami Boats",
+    label: "Riviera Boats",
     accent: "188 62% 61%",
     screenLabels: ["Home", "Fleet", "Dettaglio", "Booking"],
   },
