@@ -134,7 +134,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     accent: "#D4A017",
     screenLabels: [
       "Amalfi Transfer – Home", "Amalfi Transfer – Fleet", "Amalfi Transfer – Booking",
-      "Miami Boats – Home", "Miami Boats – Fleet", "Miami Boats – Yacht Detail",
+      "Riviera Boats – Home", "Riviera Boats – Fleet", "Riviera Boats – Yacht Detail",
       "Cala Vento Charter – Home", "Cala Vento Charter – Tours", "Cala Vento Charter – Detail",
     ],
     subProjects: [
