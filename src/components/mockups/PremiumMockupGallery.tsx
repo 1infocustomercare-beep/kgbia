@@ -10,6 +10,7 @@
 import { useMemo, useState } from "react";
 import { Sparkles, Layers } from "lucide-react";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
+import LiveMockupScreen from "./LiveMockupScreen";
 import MockupLightbox from "./MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
 
@@ -37,15 +38,15 @@ export default function PremiumMockupGallery() {
   }, [activeSector]);
 
   return (
-    <section className="min-h-screen bg-[#0a0b12] pb-32 pt-24 text-white">
-      <div className="mx-auto max-w-7xl px-5 lg:px-10">
+    <section className="min-h-screen overflow-x-hidden bg-[#0a0b12] pb-32 pt-20 text-white sm:pt-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-5 lg:px-10">
         {/* Header */}
         <div className="mb-10">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-white/80">
             <Sparkles size={12} />
             Portfolio Empire · webapp reali
           </div>
-          <h1 className="font-heading text-4xl font-black leading-[1.02] sm:text-5xl md:text-6xl">
+          <h1 className="font-heading text-3xl font-black leading-[1.05] sm:text-5xl md:text-6xl">
             Un mockup per ogni settore.
             <br />
             <span className="bg-gradient-to-r from-amber-300 via-fuchsia-300 to-sky-300 bg-clip-text text-transparent">
@@ -58,14 +59,14 @@ export default function PremiumMockupGallery() {
         </div>
 
         {/* Sector filter */}
-        <div className="mb-10 flex flex-wrap gap-2">
+        <div className="mb-10 flex max-w-full flex-wrap gap-2">
           {sectors.map((s) => {
             const active = s.id === activeSector;
             return (
               <button
                 key={s.id}
                 onClick={() => setActiveSector(s.id)}
-                className="rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition"
+                className="min-h-11 rounded-full border px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] transition sm:px-4 sm:text-xs"
                 style={
                   active
                     ? { background: "white", color: "#0a0b12", borderColor: "white" }
@@ -95,9 +96,8 @@ export default function PremiumMockupGallery() {
               >
                 <div className="transition-transform duration-500 group-hover:-translate-y-1">
                   <IPhoneProMaxFrame
-                    src={c.screen}
                     alt={`${c.brand} — ${c.style}`}
-                    width={260}
+                    width={typeof window !== "undefined" && window.innerWidth < 390 ? 220 : 240}
                     onClick={() =>
                       setSelection({
                         sectorId: c.sectorId,
@@ -106,7 +106,9 @@ export default function PremiumMockupGallery() {
                         index: c.index,
                       })
                     }
-                  />
+                  >
+                    <LiveMockupScreen variant={c} screen={c.screens[0]} compact />
+                  </IPhoneProMaxFrame>
                 </div>
               </div>
 

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
+import LiveMockupScreen from "@/components/mockups/LiveMockupScreen";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
 
@@ -68,9 +69,8 @@ export default function PrestigePortfolio() {
             >
               <div className="transition-transform duration-500 group-hover:-translate-y-1">
                 <IPhoneProMaxFrame
-                  src={h.hero.screen}
                   alt={`${h.hero.brand} — ${h.hero.style}`}
-                  width={240}
+                  width={220}
                   onClick={() =>
                     setSelection({
                       sectorId: h.sectorId,
@@ -79,7 +79,9 @@ export default function PrestigePortfolio() {
                       index: 0,
                     })
                   }
-                />
+                >
+                  <LiveMockupScreen variant={h.hero} screen={h.hero.screens[0]} compact />
+                </IPhoneProMaxFrame>
               </div>
               <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
                 <div
