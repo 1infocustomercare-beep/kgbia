@@ -9114,6 +9114,7 @@ export type Database = {
         | "customer"
         | "partner"
         | "team_leader"
+        | "seller"
       business_type: "restaurant" | "pizzeria" | "bar" | "bakery" | "sushi"
       privacy_level: "strict" | "standard" | "minimal"
     }
@@ -9250,6 +9251,7 @@ export const Constants = {
         "customer",
         "partner",
         "team_leader",
+        "seller",
       ],
       business_type: ["restaurant", "pizzeria", "bar", "bakery", "sushi"],
       privacy_level: ["strict", "standard", "minimal"],
