@@ -528,6 +528,16 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         "Boutique urbano: suite curate, gastronomia interna, esperienze private.",
         ["Suite curate", "Ristorante interno", "Esperienze private", "Concierge"],
         foodLevanteDeli, "food-levante-deli"),
+      VManual("hospitality", "hosp-cala-corallo", "Cala Corallo Resort", "Mediterranean Coral", "Turchese · Corallo",
+        "Boutique resort mediterraneo: camere vista mare, esperienze curate, concierge chat, upsell tour.",
+        ["Camere & suite", "Esperienze curate", "Concierge chat", "Upsell esperienze"],
+        "cala-corallo",
+        [
+          { file: "1-home.png", label: "Home resort" },
+          { file: "2-rooms.png", label: "Camere & suite" },
+          { file: "3-detail.png", label: "Dettaglio suite" },
+          { file: "4-experiences.png", label: "Esperienze" },
+        ]),
     ],
   },
   {
