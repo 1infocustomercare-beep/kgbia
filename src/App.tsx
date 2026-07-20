@@ -13,6 +13,8 @@ import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import SetupPaidGuard from "@/components/SetupPaidGuard";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
+import { useReferralCapture } from "@/hooks/useReferralCapture";
+
 
 // Detect mobile for tighter safety timeouts
 const IS_MOBILE = typeof window !== "undefined" && (
@@ -50,7 +52,7 @@ const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
   (window.location.pathname === "/" ||
     window.location.pathname === "/demo" ||
-    /^\/(r|b|demo\/|portfolio|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding|t\/)/.test(window.location.pathname));
+    /^\/(r|b|demo\/|portfolio|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding|t\/|pacchetto-|vendor)/.test(window.location.pathname));
 
 
 const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 25000 : 25000;
@@ -308,6 +310,13 @@ const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
 const AdminAgentsPage = lazy(() => import("./pages/admin/AdminAgents"));
 const AdminWhatsApp = lazy(() => import("./pages/admin/AdminWhatsApp"));
+const BasePackagePurchase = lazy(() => import("./pages/BasePackagePurchase"));
+const CustomProjectBrief = lazy(() => import("./pages/CustomProjectBrief"));
+const VendorSignup = lazy(() => import("./pages/vendor/VendorSignup"));
+const VendorDashboard = lazy(() => import("./pages/vendor/VendorDashboard"));
+const SellersManagement = lazy(() => import("./pages/admin/SellersManagement"));
+const CustomBriefsInbox = lazy(() => import("./pages/admin/CustomBriefsInbox"));
+
 
 const queryClient = new QueryClient();
 
@@ -446,7 +455,9 @@ function ConditionalVoiceOrchestratorFAB() {
 }
 
 function App() {
+  useReferralCapture();
   const [introCompleted, setIntroCompleted] = useState(() => SHOULD_SKIP_INTRO_DEFAULT);
+
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
   useEffect(() => {
@@ -609,6 +620,13 @@ function App() {
                       <Route path="/kitchen/:slug" element={<KitchenView />} />
                       <Route path="/partner/register" element={<PartnerRegister />} />
                       <Route path="/join" element={<JoinPartnerPage />} />
+                      <Route path="/pacchetto-base" element={<BasePackagePurchase />} />
+                      <Route path="/pacchetto-completo" element={<CustomProjectBrief />} />
+                      <Route path="/vendor/signup" element={<VendorSignup />} />
+                      <Route path="/vendor/dashboard" element={<ProtectedRoute><VendorDashboard /></ProtectedRoute>} />
+                      <Route path="/admin/sellers" element={<ProtectedRoute><SellersManagement /></ProtectedRoute>} />
+                      <Route path="/admin/briefs" element={<ProtectedRoute><CustomBriefsInbox /></ProtectedRoute>} />
+
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/cookie-policy" element={<CookiePolicy />} />
                       <Route path="/preview/custom/:slug" element={<CustomPreviewPublicPage />} />

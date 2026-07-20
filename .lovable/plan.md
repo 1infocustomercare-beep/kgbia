@@ -1,70 +1,120 @@
-# Piano replica portfolio Lowengeld (`/portfolio` + home Prestige)
+# Ristrutturazione pacchetti + Rete venditori
 
 ## Obiettivo
+Due percorsi commerciali distinti + rete venditori con link referral e commissioni.
 
-Portare il nostro `/portfolio` allo stesso livello di **lowengeldagency.com/portfolio**: 57 progetti reali, 9 categorie filtro, ognuno con hero + 2-4 screen coerenti (mobile + desktop dove serve), palette e layout unici per ogni progetto — nulla di ripetuto. Rinominiamo solo i brand per non essere una copia 1:1.
+---
 
-## Categorie filtro (come Lowengeld)
+## 1. PACCHETTO BASE — Self-service
 
-`All · Food · Lifestyle · Travel · App Design · Education · Web Design · E-Commerce · Healthcare`
+**Flusso cliente**
+```
+Landing → "Acquista Base" → Checkout Stripe → Onboarding guidato:
+ 1. Sceglie stile visivo (galleria da sector-mockups.ts)
+ 2. Carica logo + nome + colore primario + font
+ 3. Anteprima live → Conferma → Consegna automatica sito webapp
+```
 
-## Mappatura completa dei 57 progetti → nostri brand IT
+**Nuove pagine / componenti**
+- `src/pages/BasePackagePurchase.tsx` — landing dedicata con prezzo, cosa è incluso, CTA acquisto.
+- `src/pages/BaseStyleSelector.tsx` — gallery filtrabile per settore che riusa i mockup di `src/data/sector-mockups.ts` (sfrutta già `PremiumMockupGallery`). Click su variante → salva `selectedVariantId` nel wizard.
+- Estensione di `OnboardingPage.tsx` (o nuovo `BaseOnboardingWizard.tsx`) con step: Stile → Brand → Contenuti minimi → Publish.
+- Edge function `deploy-base-site`: legge la variante scelta, applica brand overrides (logo/nome/colori) su `public_site_config`, crea record `companies`, ritorna URL `/b/:slug`.
 
-Ogni progetto avrà un nome IT nuovo ma stesso concept/settore/stile del riferimento.
+**Dati/DB**
+- Tabella `base_orders(id, user_id, seller_id nullable, variant_id, brand_json, stripe_session_id, status, company_id, created_at)`.
+- Colonna `public_site_config.template_variant_id` per tracciare lo stile scelto.
 
-**Food (14)** — Flame Kebab, Otomaki Sushi, La Patrona, Papagua, Cote Miami→Cote Milano, Paperfish→Sakura Atelier, Batey→Pacifico Ceviche, Orygano, La Vang, Midtown Kosher→Levante Deli, Meraki Greek, Pokewaii→Poke Riviera, Strapizzami, Tiramistu→Tiramisù Lab.
+---
 
-**Lifestyle / Pet (4)** — Aloha Pet Resorts→Cuccia & Coccole, PawCare→Zampa Care, PawParadise→Paradiso Zampe, Luxury Car Wash→Autolavaggio Lusso.
+## 2. PACCHETTO COMPLETO — Su misura (no acquisto diretto)
 
-**Travel / NCC / Charter (6)** — Meridia Rental Car→Riviera Rental, LuxDrive→Aurora Drive, Miami Boats→Riviera Boats, Miami Watersports→Garda Watersports, Asinara Charter, Reformer Pilates (Travel-lifestyle→lifestyle).
+**Flusso cliente**
+```
+Landing → "Richiedi progetto Completo" → Modulo lungo → Submit
+ → Notifica admin/venditore → Contatto umano per preventivo/pagamento offline
+```
 
-**App Design / Voice / Admin (5)** — VoceAI Voice Agent, Addio Dipendenti IA, Dental Masters Admin Suite→Studio Aurora Suite, Gestionale Studio Longobardi→Gestionale Aurora, Associard→Associati Card.
+**Modulo (`src/pages/CustomProjectBrief.tsx`)** — sezioni:
+1. Brand: nome, storia, tone of voice, valori, competitor, moodboard (upload).
+2. Obiettivi: KPI, target, mercato geografico.
+3. Contenuti: testi esistenti (upload/paste), foto/video, servizi/prodotti (elenco), FAQ.
+4. Riferimenti: 3-5 siti che ispirano + note stilistiche.
+5. Feature richieste: booking, e-commerce, area riservata, multilingua, integrazioni (checkbox).
+6. Budget indicativo + timing + referente (nome, email, telefono, WhatsApp).
 
-**Education / Kids (4)** — Little Diamond Nursery→Piccolo Diamante, Ashley's Playhouse→Piccoli Passi, Little Stars Daycare→Stelline Asilo, TopGolf Bay App→GreenClub Golf (borderline sport-education).
+**Dati/DB**
+- Tabella `custom_project_briefs(id, submitted_by user_id nullable, seller_id nullable, payload jsonb, files_urls jsonb, status enum[new,contacted,quoted,won,lost], created_at)`.
+- Storage bucket `project-briefs` con RLS strict (solo owner + admin + seller assegnato).
+- Edge function `submit-custom-brief`: valida, salva, invia email admin + eventuale seller.
 
-**Web Design / Real Estate (6)** — Alma Regina Relais (5 stili), Dimora Milano, Gold Vento Real Estate→Aurea Real Estate, Texas Horse Ranch (5 stili)→Ranch Toscana (5 stili), Agarty Atelier Digitale, Arredissima→Arredo Italia.
+**Admin**
+- Pagina `src/pages/admin/CustomBriefsInbox.tsx` con lista, filtri, assegnazione seller, cambio stato.
 
-**E-Commerce / Beauty / Retail (6)** — Neo Nails Brickell→Atelier Unghie, Aura Milano Spa, Tatush Hair Fragrance→Essenza Fragrance, City Padel Milano, MMI Resident Hub→Residenza Aurea Hub, Edilprogress Matera→EdilProgress.
+---
 
-**Healthcare (4)** — FAR Medical→Studio Medico Aurora, Annalisa Longobardi Dental→Studio Longobardi Dental, La Clinica del Ciclo (già nostra), Studio Fisioterapia.
+## 3. RETE VENDITORI
 
-**Costruzioni / Idraulica (8)** — Nicks Plumbing→Idraulica Express, Idraulica Carrieri, Domus Clima, DR Costruzioni, Edil Prato (sito + gestionale = 2), Termoacciai Matera (sito + gestionale = 2), Studio Elettro Impianti.
+**Account & ruolo**
+- Nuovo enum ruolo `seller` nella tabella `user_roles` esistente (memory: user-roles pattern rispettato).
+- Signup dedicato `/vendor/signup` che crea profilo + assegna ruolo seller.
 
-Totale: 57 progetti.
+**Link referral personale**
+- Tabella `sellers(id, user_id unique, slug unique, commission_pct numeric default 15, active bool, iban, fiscal_data jsonb, created_at)`.
+- Link pubblico: `https://empireia.lovable.app/?ref=<slug>` (funziona su tutte le landing).
+- Middleware/hook `useReferralCapture` in `App.tsx`: al mount legge `?ref=`, salva in `localStorage.empire_ref` + cookie 30gg.
+- Al checkout/submit brief il referral corrente viene letto e salvato in `base_orders.seller_id` / `custom_project_briefs.seller_id`.
 
-## Suddivisione in turni (uno per messaggio)
+**Commissioni**
+- Tabella `seller_commissions(id, seller_id, source_type enum[base_order,custom_project], source_id, gross_amount, pct, commission_amount, status enum[pending,approved,paid], paid_at, created_at)`.
+- Trigger DB: alla creazione/completamento di `base_orders` con `seller_id != null` crea riga in `seller_commissions` con `pct = sellers.commission_pct`.
+- Per `custom_project_briefs`: la commissione si genera solo quando l'admin marca `status=won` e inserisce l'importo fatturato.
 
-Ogni turno genera i mockup AI (4 screen coerenti per progetto: Home / Servizi-Menu / Dettaglio / Booking-CTA), aggiorna il registry `sector-mockups.ts` (+ nuovo `portfolio-lowengeld-registry.ts`), e li rende visibili nel filtro categoria.
+**Configurazione admin**
+- Pagina `src/pages/admin/SellersManagement.tsx`:
+  - Lista venditori con vendite/commissioni totali.
+  - Edit `commission_pct` per singolo venditore (default globale in `platform_settings.default_commission_pct`).
+  - Attiva/disattiva account.
+  - Segna commissioni come `paid` (batch payout tracking).
 
-- **T1 · Food parte 1** (7 progetti: Flame Kebab, Otomaki, Sakura Atelier, Cote Milano, Pacifico Ceviche, Orygano, Strapizzami) → 28 immagini AI
-- **T2 · Food parte 2** (7 progetti: La Patrona, Papagua, La Vang, Levante Deli, Meraki, Poke Riviera, Tiramisù Lab) → 28 immagini AI
-- **T3 · Beauty / Retail E-com** (6 progetti) → 24 immagini
-- **T4 · Travel / NCC / Charter** (6 progetti) → 24 immagini
-- **T5 · Real Estate + progetti multi-stile** (Alma Regina 5, Ranch Toscana 5, Dimora, Aurea RE, Agarty, Arredo Italia) → 44 immagini (5+5+4×4 = 40+)
-- **T6 · Pet / Lifestyle** (4 progetti) → 16 immagini
-- **T7 · Education / Kids + Golf** (4 progetti) → 16 immagini
-- **T8 · Healthcare + Dental Admin** (4 progetti + 2 admin suite) → 24 immagini
-- **T9 · Costruzioni / Idraulica / Impianti** (8 progetti) → 32 immagini
-- **T10 · App Design / Voice / Gestionali** (4 progetti + rifiniture desktop) → 16 immagini
-- **T11 · UI portfolio finale**: nuovo layout card doppio-phone come Lowengeld, filtri 9 categorie, lightbox multi-screen mobile+desktop, hover "View Project", pagina dettaglio `/portfolio/:slug` con storia progetto (problema/soluzione/automazioni). Nessuna nuova immagine.
+**Dashboard venditore (`/vendor/dashboard`)**
+- Card KPI: vendite mese, vendite totali, commissioni pending, commissioni pagate.
+- Tabella ordini/brief con status.
+- Copia link referral + QR code + link diretto pagina Base / Custom.
+- Bottone "Compila brief per cliente" → apre `CustomProjectBrief` in modalità venditore (associa automaticamente `seller_id`).
+- Toggle vista prospect (partner-content-surfaces per densità dati, coerente con memory).
 
-Totale stimato: ~250 immagini AI premium + refactor UI finale.
+**RLS**
+- Ogni venditore vede SOLO le proprie righe (`user_id = auth.uid()` via join a `sellers`).
+- Admin (has_role admin/super_admin) vede tutto.
+- Tutte le tabelle nuove: GRANT authenticated + service_role, no anon.
 
-## Vincoli tecnici
+---
 
-- Ogni progetto ha **palette, tipografia e layout unici** (no template ricopiato). Uso `google/gemini-3.1-flash-image` per generare via `imagegen--generate_image` con prompt dettagliati settore per settore.
-- Assets salvati in `src/assets/mockups/portfolio-lowengeld/{slug}/{screen}.png` e caricati come `.asset.json` via `lovable-assets create`.
-- Nuovo registry `src/data/portfolio-lowengeld.ts` con: slug, brand IT, categoria, sotto-categoria, palette accent, 4 screens mobile + (dove serve) 2 desktop, descrizione problema/soluzione/automazioni.
-- Il `MockupLightbox` esistente viene esteso per mostrare desktop screens quando presenti (già supporta `device` toggle in `DemoPreviewPage`).
-- UI portfolio: nuovo `PremiumMockupGallery.tsx` con layout **card doppio-phone** identico a Lowengeld (2 iPhone affiancati leggermente sfalsati + badge categoria + titolo + descrizione + "View Project →").
-- Additivo: nessun file esistente rimosso; i mockup attuali restano disponibili come varianti.
+## 4. PAGAMENTI REALI (Stripe) — solo predisposizione
 
-## Cosa succede al termine di ogni turno
+Non attivare in questa fase. Serviranno:
 
-- Type-check verde.
-- Screenshot Playwright del filtro categoria appena completata su `/portfolio`.
-- Progress tracker aggiornato nel commit message (es. "T3/11 — Beauty & Retail online").
+1. **Provider consigliato**: Stripe (già abilitabile via `payments--enable_stripe_payments` seamless — no chiavi manuali).
+2. **Prodotti Stripe**: 1 prezzo one-shot per il pacchetto Base (es. €1.997) + eventuali add-on. Nessun prezzo per Completo (fatturazione manuale).
+3. **Edge functions da preparare**:
+   - `create-base-checkout` → crea Checkout Session con `client_reference_id = base_orders.id` e `metadata.seller_id`.
+   - `stripe-webhook` → su `checkout.session.completed` marca `base_orders.status=paid`, trigger commissione, invia email cliente + venditore, lancia deploy sito.
+4. **Secrets richiesti** (se BYOK): `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`. Con integrazione seamless non servono.
+5. **Payout venditori**: fase 1 = manuale (admin bonifico e marca `paid`). Fase 2 opzionale = Stripe Connect Express per split automatici.
+6. **Fatturazione**: riusare `Fiscal Vault 2026` esistente (memory) per emettere fattura B2B al cliente e ricevuta commissione al venditore.
 
-## Prossimo passo
+---
 
-Se approvi questo piano, parto subito con **T1 · Food parte 1** (7 progetti, 28 immagini AI premium).
+## 5. Rollout consigliato (ordine implementazione)
+1. Schema DB + RLS + GRANT (base_orders, custom_project_briefs, sellers, seller_commissions).
+2. Referral capture globale (`useReferralCapture`).
+3. Pagina Base + selector stile + wizard.
+4. Modulo Completo + inbox admin.
+5. Signup venditore + dashboard venditore + gestione admin.
+6. (Successivo) attivazione Stripe reale + webhook + deploy automatico.
+
+## 6. Impatto su codice esistente
+- Nessuna cancellazione (memory: sviluppo non distruttivo).
+- `PrestigeConversion.tsx` aggiornato con 2 CTA distinti (Base "Acquista ora" / Completo "Richiedi progetto").
+- `OnboardingPage.tsx` resta per utenti già attivi; nuovo wizard Base è separato per non rompere il flusso esistente.
