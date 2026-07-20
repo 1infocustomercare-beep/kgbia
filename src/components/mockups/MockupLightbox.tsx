@@ -8,7 +8,7 @@
  * - Side panel shows brand, style, palette, features.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
