@@ -1,0 +1,9 @@
+{
+  "sector": "childcare",
+  "brand": "Foglia d'Oro Nido",
+  "style": "Autumn Family Editorial",
+  "palette": "Crema, acero, zucca, oro caldo",
+  "description": "Nido premium in stile autunnale con home famiglia, programmi, diario bimbo e prenotazione visita.",
+  "features": ["Home famiglia", "Programmi", "Diario bambino", "Prenota visita"],
+  "labels": ["Home", "Programmi", "Diario", "Visita"]
+}
