@@ -222,39 +222,52 @@ export default function OnboardingPage() {
     <>
       <PrestigeTheme />
       <style>{`
-        .onboarding-scope input,
+        /* Fallback tokens so inputs stay readable even before PrestigeTheme mounts */
+        .onboarding-scope {
+          --pr-ivory-fb: 42 30% 96%;
+          --pr-text-fb: 158 40% 8%;
+          --pr-muted-fb: 158 15% 30%;
+          --pr-emerald-fb: 158 55% 20%;
+          --pr-gold-fb: 42 55% 52%;
+        }
+        .onboarding-scope input:not([type="color"]):not([type="file"]):not([type="checkbox"]):not([type="radio"]),
         .onboarding-scope textarea,
         .onboarding-scope select {
-          background: hsl(var(--pr-ivory)) !important;
-          color: hsl(var(--pr-text-on-light)) !important;
-          border: 1px solid hsl(var(--pr-emerald) / 0.22) !important;
+          background: hsl(var(--pr-ivory, var(--pr-ivory-fb))) !important;
+          color: hsl(var(--pr-text-on-light, var(--pr-text-fb))) !important;
+          border: 1px solid hsl(var(--pr-emerald, var(--pr-emerald-fb)) / 0.22) !important;
         }
         .onboarding-scope input::placeholder,
         .onboarding-scope textarea::placeholder {
-          color: hsl(var(--pr-muted-on-light) / 0.65) !important;
+          color: hsl(var(--pr-muted-on-light, var(--pr-muted-fb)) / 0.7) !important;
         }
-        .onboarding-scope input:focus,
-        .onboarding-scope textarea:focus,
-        .onboarding-scope select:focus {
+        .onboarding-scope input:focus-visible,
+        .onboarding-scope textarea:focus-visible,
+        .onboarding-scope select:focus-visible {
           outline: none !important;
-          border-color: hsl(var(--pr-gold)) !important;
-          box-shadow: 0 0 0 3px hsl(var(--pr-gold) / 0.25) !important;
+          border-color: hsl(var(--pr-gold, var(--pr-gold-fb))) !important;
+          box-shadow: 0 0 0 3px hsl(var(--pr-gold, var(--pr-gold-fb)) / 0.3) !important;
         }
-        .onboarding-scope label { color: hsl(var(--pr-text-on-light)); font-weight: 600; }
+        .onboarding-scope label { color: hsl(var(--pr-text-on-light, var(--pr-text-fb))); font-weight: 600; }
         .onboarding-scope .bg-primary,
-        .onboarding-scope button.bg-primary { 
-          background: linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)) 55%, hsl(var(--pr-gold-deep))) !important;
-          color: hsl(var(--pr-emerald-deep)) !important;
+        .onboarding-scope button.bg-primary {
+          background: linear-gradient(135deg, hsl(var(--pr-gold-light, 42 65% 62%)), hsl(var(--pr-gold, var(--pr-gold-fb))) 55%, hsl(var(--pr-gold-deep, 42 55% 42%))) !important;
+          color: hsl(var(--pr-emerald-deep, 158 60% 10%)) !important;
           border: none !important;
         }
-        .onboarding-scope .text-primary { color: hsl(var(--pr-gold-deep)) !important; }
-        .onboarding-scope .border-primary { border-color: hsl(var(--pr-gold)) !important; }
-        .onboarding-scope .bg-primary\\/10 { background: hsl(var(--pr-gold) / 0.12) !important; }
-        .onboarding-scope .bg-primary\\/5 { background: hsl(var(--pr-gold) / 0.06) !important; }
-        .onboarding-scope .hover\\:border-primary\\/50:hover { border-color: hsl(var(--pr-gold) / 0.55) !important; }
+        .onboarding-scope .text-primary { color: hsl(var(--pr-gold-deep, 42 55% 42%)) !important; }
+        .onboarding-scope .border-primary { border-color: hsl(var(--pr-gold, var(--pr-gold-fb))) !important; }
+        .onboarding-scope .bg-primary\\/10 { background: hsl(var(--pr-gold, var(--pr-gold-fb)) / 0.12) !important; }
+        .onboarding-scope .bg-primary\\/5 { background: hsl(var(--pr-gold, var(--pr-gold-fb)) / 0.06) !important; }
+        .onboarding-scope .hover\\:border-primary\\/50:hover { border-color: hsl(var(--pr-gold, var(--pr-gold-fb)) / 0.55) !important; }
         .onboarding-scope [data-slot="button"]:not(.bg-transparent):not([class*="outline"]) {
-          background: linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)) 55%, hsl(var(--pr-gold-deep)));
-          color: hsl(var(--pr-emerald-deep));
+          background: linear-gradient(135deg, hsl(var(--pr-gold-light, 42 65% 62%)), hsl(var(--pr-gold, var(--pr-gold-fb))) 55%, hsl(var(--pr-gold-deep, 42 55% 42%)));
+          color: hsl(var(--pr-emerald-deep, 158 60% 10%));
+        }
+        /* Color picker: keep native swatch visible */
+        .onboarding-scope input[type="color"] {
+          padding: 0 !important;
+          background: transparent !important;
         }
       `}</style>
       <div className="prestige-root prestige-section prestige-light onboarding-scope min-h-screen flex items-center justify-center p-4">
