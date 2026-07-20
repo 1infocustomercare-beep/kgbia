@@ -35,6 +35,13 @@ const CookieBanner = ({ restaurantId }: { restaurantId?: string }) => {
     if (!saved) {
       setVisible(true);
     }
+    const reopen = () => {
+      setConsent({ necessary: true, analytics: false, marketing: false });
+      setShowDetails(false);
+      setVisible(true);
+    };
+    window.addEventListener("gdpr:reopen-cookie-banner", reopen);
+    return () => window.removeEventListener("gdpr:reopen-cookie-banner", reopen);
   }, []);
 
   const saveConsent = async (c: CookieConsent) => {
