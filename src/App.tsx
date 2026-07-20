@@ -455,7 +455,9 @@ function ConditionalVoiceOrchestratorFAB() {
 }
 
 function App() {
+  useReferralCapture();
   const [introCompleted, setIntroCompleted] = useState(() => SHOULD_SKIP_INTRO_DEFAULT);
+
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
   useEffect(() => {
