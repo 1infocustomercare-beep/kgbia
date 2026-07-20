@@ -114,7 +114,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
         imageRange: [0, 2],
       },
       {
-        name: "Tatush Hair & Fragrance",
+        name: "Essenza Fragrance",
         description: "Premium hair salon with product shop, stylist profiles and fragrance customization.",
         tags: ["Hair Salon", "E-commerce", "Fragrance"],
         accent: "#be185d",
