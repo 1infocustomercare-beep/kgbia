@@ -11,7 +11,7 @@ const SCENES = [
   { sector: "Wellness boutique", brand: "Aura Milano Spa", metric: "+218%", metricLabel: "prenotazioni online", img: `${S}/Aura%20Milano%20Spa/mobile-luce-pura-home.png`, accent: "248 80% 70%" },
   { sector: "Real estate luxury", brand: "DIMORA Milano", metric: "+187%", metricLabel: "lead qualificati", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, accent: "38 80% 62%" },
   { sector: "Beauty studio", brand: "Atelier Unghie", metric: "3.2×", metricLabel: "retention clienti", img: `${S}/Aurora%20Nail%20Atelier/frosted-glass-home.png`, accent: "325 75% 66%" },
-  { sector: "Healthcare premium", brand: "FAR Medical", metric: "GDPR", metricLabel: "compliance totale", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%" },
+  { sector: "Healthcare premium", brand: "Studio Medico Aurora", metric: "GDPR", metricLabel: "compliance totale", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%" },
 ];
 
 const TRUST = ["847+ business attivi", "38 agenti AI", "24 verticali", "Go-live 14 giorni"];

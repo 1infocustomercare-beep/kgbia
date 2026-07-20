@@ -102,7 +102,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     accent: "#ec4899",
     screenLabels: [
       "Atelier Unghie – Home", "Atelier Unghie – Servizi", "Atelier Unghie – Dettaglio",
-      "Tatush Hair – Home", "Tatush Hair – Shop", "Tatush Hair – Detail",
+      "Essenza Fragrance – Home", "Essenza Fragrance – Shop", "Essenza Fragrance – Detail",
     ],
     subProjects: [
       {
@@ -114,7 +114,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
         imageRange: [0, 2],
       },
       {
-        name: "Tatush Hair & Fragrance",
+        name: "Essenza Fragrance",
         description: "Premium hair salon with product shop, stylist profiles and fragrance customization.",
         tags: ["Hair Salon", "E-commerce", "Fragrance"],
         accent: "#be185d",
@@ -134,7 +134,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     accent: "#D4A017",
     screenLabels: [
       "Amalfi Transfer – Home", "Amalfi Transfer – Fleet", "Amalfi Transfer – Booking",
-      "Miami Boats – Home", "Miami Boats – Fleet", "Miami Boats – Yacht Detail",
+      "Riviera Boats – Home", "Riviera Boats – Fleet", "Riviera Boats – Yacht Detail",
       "Cala Vento Charter – Home", "Cala Vento Charter – Tours", "Cala Vento Charter – Detail",
     ],
     subProjects: [
@@ -184,7 +184,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     year: "2025",
     platform: "iOS, Android & Web",
     accent: "#60a5fa",
-    screenLabels: ["FAR Medical – Home", "FAR Medical – Services", "FAR Medical – Products"],
+    screenLabels: ["Studio Medico Aurora – Home", "Studio Medico Aurora – Services", "Studio Medico Aurora – Products"],
   },
 
   veterinary: {
@@ -195,7 +195,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     year: "2025",
     platform: "iOS, Android & Web",
     accent: "#4ade80",
-    screenLabels: ["Aloha Pets – Home", "Aloha Pets – Services", "Aloha Pets – Detail"],
+    screenLabels: ["Cuccia & Coccole – Home", "Cuccia & Coccole – Services", "Cuccia & Coccole – Detail"],
   },
 
   childcare: {
@@ -207,7 +207,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     platform: "iOS, Android & Web",
     accent: "#fb923c",
     screenLabels: [
-      "Little Diamond – Home", "Little Diamond – Programs", "Little Diamond – Team",
+      "Piccolo Diamante – Home", "Piccolo Diamante – Programs", "Piccolo Diamante – Team",
       "Arcobaleno Playhouse – Home", "Arcobaleno Playhouse – Programs", "Arcobaleno Playhouse – Book",
     ],
     subProjects: [
