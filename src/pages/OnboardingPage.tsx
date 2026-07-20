@@ -71,7 +71,7 @@ export default function OnboardingPage() {
     phone: "",
     city: "",
     address: "",
-    email: user?.email ?? "",
+    email: "",
     whatsapp: "",
     piva: "",
     plan: signupPlan,
@@ -86,10 +86,9 @@ export default function OnboardingPage() {
     setForm((prev) => ({
       ...prev,
       industry: prev.industry || signupSector,
-      email: prev.email || user?.email || "",
       plan: prev.plan || signupPlan,
     }));
-  }, [signupSector, signupPlan, user?.email]);
+  }, [signupSector, signupPlan]);
 
   useEffect(() => {
     if (hasPresetCheckoutSelection && step === 0) {
