@@ -199,7 +199,7 @@ export default function MockupLightbox({
         </div>
 
         {/* Info panel */}
-        <aside className="flex max-w-md flex-col gap-5 text-white md:max-w-sm md:pt-6">
+        <aside className="flex w-full max-w-md flex-col gap-5 text-white md:max-w-sm md:pt-6">
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-white/60">
             <Sparkles size={12} />
             {sectorLabel} · {index + 1}/{variants.length}
