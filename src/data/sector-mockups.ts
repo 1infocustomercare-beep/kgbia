@@ -124,6 +124,7 @@ const SECTOR_SCREEN_LABELS: Record<
   childcare: ["Nido", "Programma giornata", "Attività & foto", "Iscrizione online"],
   construction: ["Progetto", "Unità disponibili", "Tour 3D & capitolato", "Prenota visita"],
   plumber: ["Pronto intervento", "Servizi & tariffe", "Scheda intervento", "Chiama ora"],
+  retail: ["Vetrina", "Catalogo", "Scheda prodotto", "Checkout"],
 };
 
 const CAPTIONS: Record<string, [string, string, string, string]> = {
