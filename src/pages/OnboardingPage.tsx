@@ -277,7 +277,7 @@ export default function OnboardingPage() {
 
           {/* ─── Step 0: Industry + Plan ─── */}
           {step === 0 && (
-            <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s0" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Che tipo di attività hai?</h1>
               <p className="text-center text-muted-foreground mb-4">Seleziona settore e piano per personalizzare la piattaforma</p>
 
@@ -330,7 +330,7 @@ export default function OnboardingPage() {
 
           {/* ─── Step 1: Company Data ─── */}
           {step === 1 && (
-            <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s1" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Dati Azienda</h1>
               <p className="text-center text-muted-foreground mb-6">Inserisci le informazioni della tua attività</p>
               <div className="space-y-3">
@@ -355,7 +355,7 @@ export default function OnboardingPage() {
 
           {/* ─── Step 2: Brand ─── */}
           {step === 2 && (
-            <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s2" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Il tuo Brand</h1>
               <p className="text-center text-muted-foreground mb-6">Personalizza logo, colori e font</p>
               <div className="space-y-5">
@@ -413,7 +413,7 @@ export default function OnboardingPage() {
 
           {/* ─── Step 3: Team ─── */}
           {step === 3 && (
-            <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s3" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Il tuo Team</h1>
               <p className="text-center text-muted-foreground mb-6">Aggiungi il primo membro dello staff (opzionale)</p>
               <div className="space-y-4">
@@ -444,7 +444,7 @@ export default function OnboardingPage() {
 
           {/* ─── Step 4: Go Live ─── */}
           {step === 4 && (
-            <motion.div key="s4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <motion.div key="s4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Pronti al Lancio! 🚀</h1>
               <p className="text-center text-muted-foreground mb-6">Verifica i dettagli e vai live</p>
 
