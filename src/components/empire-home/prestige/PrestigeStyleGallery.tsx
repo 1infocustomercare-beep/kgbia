@@ -26,12 +26,14 @@ function buildAll(): FlatVariant[] {
     const slug = DEMO_SLUGS[g.id as IndustryId];
     const base = getPublicSiteBasePath(g.id);
     const href = slug ? `/${base}/${slug}` : null;
-    return g.variants.map((v) => ({
-      ...v,
-      sectorId: g.id,
-      sectorLabel: g.label,
-      demoHref: href,
-    }));
+    return g.variants
+      .filter((v) => v.tier === "primary")
+      .map((v) => ({
+        ...v,
+        sectorId: g.id,
+        sectorLabel: g.label,
+        demoHref: href,
+      }));
   });
 }
 
