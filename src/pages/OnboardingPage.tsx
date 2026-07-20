@@ -12,6 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { Check, ArrowRight, ArrowLeft, Sparkles, Search, Upload, UserPlus, QrCode, ExternalLink, Share2, Palette } from "lucide-react";
+import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import { toast } from "sonner";
 
 const PLANS = [
