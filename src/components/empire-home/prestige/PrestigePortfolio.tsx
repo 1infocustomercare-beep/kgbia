@@ -80,7 +80,7 @@ export default function PrestigePortfolio() {
                     })
                   }
                 >
-                  <LiveMockupScreen variant={h.hero} screen={h.hero.screens[0]} />
+                  <LiveMockupScreen variant={h.hero} screen={h.hero.screens[0]} compact />
                 </IPhoneProMaxFrame>
               </div>
               <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">

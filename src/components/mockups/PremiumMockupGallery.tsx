@@ -107,7 +107,7 @@ export default function PremiumMockupGallery() {
                       })
                     }
                   >
-                    <LiveMockupScreen variant={c} screen={c.screens[0]} />
+                    <LiveMockupScreen variant={c} screen={c.screens[0]} compact />
                   </IPhoneProMaxFrame>
                 </div>
               </div>
