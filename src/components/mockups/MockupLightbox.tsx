@@ -12,6 +12,8 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
+import { getLenis } from "@/lib/lenis-singleton";
+
 
 import type { SectorMockupVariant } from "@/data/sector-mockups";
 
