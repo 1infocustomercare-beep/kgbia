@@ -693,6 +693,16 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         "Sales office real estate: lead in ingresso, scheda unità, offerte, follow-up.",
         ["Lead ingresso", "Scheda unità", "Offerte", "Follow-up auto"],
         constructionDomusRoseGold, "construction-domus-rose-gold"),
+      VManual("construction", "cons-cantiere-primo", "Cantiere Primo", "Enterprise Works", "Ardesia · Sabbia · Safety Orange",
+        "Piattaforma cantiere/real estate operativa: KPI cantieri, unità disponibili, dettaglio lotto e report avanzamento.",
+        ["Control room", "Unità disponibili", "Dettaglio cantiere", "Report avanzamento"],
+        "cantiere-primo",
+        [
+          { file: "1-home.png", label: "Dashboard" },
+          { file: "2-units.png", label: "Unità" },
+          { file: "3-detail.png", label: "Dettaglio lotto" },
+          { file: "4-report.png", label: "Report" },
+        ]),
     ],
   },
   {
