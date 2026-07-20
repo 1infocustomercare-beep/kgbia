@@ -12,6 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { Check, ArrowRight, ArrowLeft, Sparkles, Search, Upload, UserPlus, QrCode, ExternalLink, Share2, Palette } from "lucide-react";
+import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import { toast } from "sonner";
 
 const PLANS = [
@@ -70,7 +71,7 @@ export default function OnboardingPage() {
     phone: "",
     city: "",
     address: "",
-    email: user?.email ?? "",
+    email: "",
     whatsapp: "",
     piva: "",
     plan: signupPlan,
@@ -85,10 +86,9 @@ export default function OnboardingPage() {
     setForm((prev) => ({
       ...prev,
       industry: prev.industry || signupSector,
-      email: prev.email || user?.email || "",
       plan: prev.plan || signupPlan,
     }));
-  }, [signupSector, signupPlan, user?.email]);
+  }, [signupSector, signupPlan]);
 
   useEffect(() => {
     if (hasPresetCheckoutSelection && step === 0) {
@@ -210,18 +210,32 @@ export default function OnboardingPage() {
   const generatedSlug = form.name ? form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : "mia-azienda";
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      
+    <>
+      <PrestigeTheme />
+      <div className="prestige-root prestige-section prestige-light min-h-screen flex items-center justify-center p-4">
+
       <div className="w-full max-w-3xl">
         {/* Progress bar — 5 steps */}
         <div className="flex items-center justify-center gap-2 mb-6">
           {["Settore", "Dati Azienda", "Brand", "Team", "Go Live"].map((label, i) => (
             <div key={i} className="flex items-center gap-1">
-              <div className={`h-2 rounded-full transition-all ${i <= step ? "bg-primary w-10" : "bg-muted w-6"}`} />
-              {i <= step && <span className="text-[10px] text-primary font-medium hidden sm:inline">{label}</span>}
+              <div
+                className={`h-2 rounded-full transition-all ${i <= step ? "w-10" : "w-6"}`}
+                style={{
+                  background: i <= step
+                    ? "linear-gradient(90deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))"
+                    : "hsl(var(--pr-emerald) / 0.15)",
+                }}
+              />
+              {i <= step && (
+                <span className="text-[10px] font-semibold hidden sm:inline" style={{ color: "hsl(var(--pr-emerald))" }}>
+                  {label}
+                </span>
+              )}
             </div>
           ))}
         </div>
+
 
         <AnimatePresence mode="wait">
           {/* ─── Step 0: Industry + Plan ─── */}
@@ -447,5 +461,6 @@ export default function OnboardingPage() {
         </AnimatePresence>
       </div>
     </div>
+    </>
   );
 }
