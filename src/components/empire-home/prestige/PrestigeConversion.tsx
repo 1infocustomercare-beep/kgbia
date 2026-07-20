@@ -434,6 +434,30 @@ export function PrestigePricing() {
           ))}
         </div>
 
+        {/* Two-track CTA — Base vs Completo */}
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          <div className="prestige-card p-6">
+            <div className="text-xs font-bold uppercase tracking-widest prestige-gold-text">Pacchetto Base</div>
+            <h3 className="prestige-display text-2xl mt-1" style={{ color: "hsl(var(--pr-text-on-light))" }}>Self-service</h3>
+            <p className="mt-2 text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
+              Scegli uno stile dal nostro catalogo, personalizza logo e colori, ricevi il sito.
+            </p>
+            <button onClick={() => navigate("/pacchetto-base")} className="prestige-cta mt-4 w-full justify-center">
+              <span>Acquista ora — €1.997</span> <ArrowRight size={16} />
+            </button>
+          </div>
+          <div className="prestige-card p-6">
+            <div className="text-xs font-bold uppercase tracking-widest prestige-gold-text">Pacchetto Completo</div>
+            <h3 className="prestige-display text-2xl mt-1" style={{ color: "hsl(var(--pr-text-on-light))" }}>Su misura</h3>
+            <p className="mt-2 text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
+              Progetto personalizzato end-to-end. Compila il brief, ti ricontattiamo entro 24h.
+            </p>
+            <button onClick={() => navigate("/pacchetto-completo")} className="prestige-cta-ghost mt-4 w-full justify-center" style={{ color: "hsl(var(--pr-emerald))" }}>
+              <span>Richiedi preventivo</span> <ArrowRight size={16} />
+            </button>
+          </div>
+        </div>
+
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
           <span className="inline-flex items-center gap-1.5"><ShieldCheck size={14} /> {t({ it: "GDPR compliant", en: "GDPR compliant" })}</span>
           <span>·</span>
@@ -441,6 +465,7 @@ export function PrestigePricing() {
           <span>·</span>
           <span className="inline-flex items-center gap-1.5"><BadgePercent size={14} /> {t({ it: "Nessun vincolo", en: "No commitment" })}</span>
         </div>
+
       </div>
     </section>
   );
