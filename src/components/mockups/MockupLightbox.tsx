@@ -72,6 +72,7 @@ export default function MockupLightbox({
     const maxW = Math.min(window.innerWidth * (window.innerWidth < 768 ? 0.58 : 0.36), 340);
     return Math.max(window.innerWidth < 420 ? 190 : 220, Math.min(wFromH, maxW));
   }, [open, index]);
+  const compactPhone = phoneWidth < 250;
 
   if (!open || !current || !activeScreen || typeof document === "undefined") return null;
 
@@ -134,7 +135,7 @@ export default function MockupLightbox({
             width={phoneWidth}
             loading="eager"
           >
-            <LiveMockupScreen variant={current} screen={activeScreen} />
+            <LiveMockupScreen variant={current} screen={activeScreen} compact={compactPhone} />
           </IPhoneProMaxFrame>
           {activeScreen.caption && (
             <p className="max-w-xs text-center text-xs leading-relaxed text-white/70">
