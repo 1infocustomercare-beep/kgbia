@@ -194,6 +194,8 @@ const JoinPartnerPage = lazy(() => import("./pages/JoinPartnerPage"));
 const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
+const TerminiCondizioni = lazy(() => import("./pages/TerminiCondizioni"));
+const NoteLegali = lazy(() => import("./pages/NoteLegali"));
 const CustomPreviewPublicPage = lazy(() => import("./pages/CustomPreviewPublicPage"));
 const PublicMockupSuitePage = lazy(() => import("./pages/PublicMockupSuitePage"));
 
@@ -629,6 +631,9 @@ function App() {
 
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/cookie-policy" element={<CookiePolicy />} />
+                      <Route path="/cookies" element={<Navigate to="/cookie-policy" replace />} />
+                      <Route path="/termini" element={<TerminiCondizioni />} />
+                      <Route path="/note-legali" element={<NoteLegali />} />
                       <Route path="/preview/custom/:slug" element={<CustomPreviewPublicPage />} />
                       <Route path="/preview/mockup/:slug" element={<PublicMockupSuitePage />} />
                       <Route path="/reset-password" element={<ResetPassword />} />
@@ -664,12 +669,8 @@ function App() {
                       <Route path="/catalogo" element={<MockupCatalogPage />} />
                       <Route path="/portfolio" element={<MockupCatalogPage />} />
 
-                      {/* Onboarding (post-payment branding/data completion) */}
-                      <Route path="/onboarding" element={
-                        <ProtectedRoute>
-                          <SetupPaidGuard><OnboardingPage /></SetupPaidGuard>
-                        </ProtectedRoute>
-                      } />
+                      {/* Onboarding wizard PUBLIC: l'account viene richiesto solo al momento del salvataggio */}
+                      <Route path="/onboarding" element={<OnboardingPage />} />
                       {/* partner/leads and partner/content-ai are now nested under /partner layout */}
                       {/* leads is partner-only, not superadmin */}
                       <Route path="/superadmin/leads" element={
