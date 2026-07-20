@@ -1,0 +1,9 @@
+{
+  "sector": "veterinary",
+  "brand": "Aloha Pet Resort",
+  "style": "Playful Tropical Luxury",
+  "palette": "Turchese, corallo, sabbia, verde palma",
+  "description": "Pet resort tropicale premium con soggiorno, servizi, profilo pet e booking vacanza completi e coerenti.",
+  "features": ["Home resort", "Servizi", "Profilo pet", "Prenota soggiorno"],
+  "labels": ["Home", "Servizi", "Profilo Pet", "Prenota"]
+}

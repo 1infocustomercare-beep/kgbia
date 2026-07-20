@@ -1,0 +1,9 @@
+{
+  "sector": "construction",
+  "brand": "Cantiere Cipresso",
+  "style": "Cypress Executive",
+  "palette": "Bianco, verde cipresso, sabbia, grafite",
+  "description": "Gestione cantieri premium B2B con KPI, lista progetti, dettaglio avanzamento e report giornaliero operativo.",
+  "features": ["Dashboard executive", "Lista cantieri", "Dettaglio progetto", "Report giornaliero"],
+  "labels": ["Home", "Cantieri", "Dettaglio", "Report"]
+}

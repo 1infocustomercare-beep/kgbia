@@ -1,0 +1,9 @@
+{
+  "sector": "food",
+  "brand": "Meraki Aegeo",
+  "style": "Santorini Breeze",
+  "palette": "Avorio, blu Egeo, blush cipria",
+  "description": "Bistrot greco premium con impostazione editoriale mediterranea, menu, dettaglio piatto e prenotazione tavolo coerenti.",
+  "features": ["Home ristorante", "Menu", "Dettaglio piatto", "Prenotazione tavolo"],
+  "labels": ["Home", "Menu", "Dettaglio", "Prenota"]
+}

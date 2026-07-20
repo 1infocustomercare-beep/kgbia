@@ -1,0 +1,9 @@
+{
+  "sector": "plumber",
+  "brand": "Carrieri Comfort",
+  "style": "Blue Premium Corporate",
+  "palette": "Bianco, navy, steel blue, arancio tecnico",
+  "description": "Termoidraulica corporate premium con emergenze, servizi, tracking intervento e conferma operativa ben ordinati.",
+  "features": ["Home servizi", "Catalogo servizi", "Tracking intervento", "Conferma intervento"],
+  "labels": ["Home", "Servizi", "Tracking", "Conferma"]
+}

@@ -1,0 +1,9 @@
+{
+  "sector": "ncc",
+  "brand": "Notturno Drive",
+  "style": "Midnight Emerald Performance",
+  "palette": "Charcoal, verde smeraldo, platino",
+  "description": "Autonoleggio premium dark con flotta sportiva, dettaglio vettura e prenotazione di fascia alta.",
+  "features": ["Home premium", "Flotta", "Dettaglio auto", "Prenotazione"],
+  "labels": ["Home", "Flotta", "Dettaglio", "Prenota"]
+}

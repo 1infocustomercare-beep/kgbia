@@ -1,0 +1,9 @@
+{
+  "sector": "construction",
+  "brand": "Vento d'Oro Immobiliare",
+  "style": "Gold Royale Real Estate",
+  "palette": "Charcoal, oro reale, avorio",
+  "description": "Real estate mobile premium con immobili in evidenza, listing, dettaglio proprietà e richiesta visita privata.",
+  "features": ["Home immobili", "Catalogo proprietà", "Dettaglio immobile", "Richiedi visita"],
+  "labels": ["Home", "Proprietà", "Dettaglio", "Visita"]
+}

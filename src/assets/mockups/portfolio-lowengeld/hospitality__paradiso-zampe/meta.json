@@ -1,0 +1,9 @@
+{
+  "sector": "veterinary",
+  "brand": "Paradiso Zampe",
+  "style": "Tropical Resort Luxury",
+  "palette": "Avorio sabbia, verde smeraldo, corallo",
+  "description": "Pet resort premium con estetica tropicale luxury, soggiorni, profilo pet, live cam e booking completo.",
+  "features": ["Home resort", "Servizi pet", "Profilo animale", "Prenota soggiorno"],
+  "labels": ["Home", "Servizi", "Profilo Pet", "Prenota"]
+}

@@ -1,0 +1,9 @@
+{
+  "sector": "healthcare",
+  "brand": "Studio Sorriso Prugna",
+  "style": "Prugna Signature",
+  "palette": "Avorio caldo, prugna, champagne gold",
+  "description": "Odontoiatria estetica femminile di fascia alta con home, trattamenti, dottoressa e prenotazione visita coordinate.",
+  "features": ["Home studio", "Trattamenti", "Profilo dottoressa", "Prenota visita"],
+  "labels": ["Home", "Trattamenti", "Dottoressa", "Prenota"]
+}
