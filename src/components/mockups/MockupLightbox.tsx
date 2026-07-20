@@ -64,13 +64,27 @@ export default function MockupLightbox({
   const screens = current?.screens?.length ? current.screens : (current ? [{ label: "Home", caption: "", image: current.screen }] : []);
   const activeScreen = screens[Math.min(screenIdx, screens.length - 1)];
 
-  const phoneWidth = useMemo(() => {
-    if (typeof window === "undefined") return 300;
-    const maxH = window.innerHeight * 0.78;
-    const wFromH = Math.floor((maxH * 9) / 19.5);
-    const maxW = Math.min(window.innerWidth * 0.38, 380);
-    return Math.max(220, Math.min(wFromH, maxW));
-  }, [open, index]);
+  const [phoneWidth, setPhoneWidth] = useState(260);
+  useEffect(() => {
+    if (!open || typeof window === "undefined") return;
+    const compute = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const isMobile = vw < 768;
+      const reservedV = isMobile ? 280 : 200;
+      const maxH = Math.max(340, vh - reservedV);
+      const wFromH = Math.floor((maxH * 9) / 19.5);
+      const maxW = isMobile ? vw - 56 : Math.min(vw * 0.42, 360);
+      setPhoneWidth(Math.max(200, Math.min(wFromH, maxW)));
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    window.addEventListener("orientationchange", compute);
+    return () => {
+      window.removeEventListener("resize", compute);
+      window.removeEventListener("orientationchange", compute);
+    };
+  }, [open]);
 
   if (!open || !current || typeof document === "undefined") return null;
 
