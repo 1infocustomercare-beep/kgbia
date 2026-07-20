@@ -207,7 +207,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     platform: "iOS, Android & Web",
     accent: "#fb923c",
     screenLabels: [
-      "Little Diamond – Home", "Little Diamond – Programs", "Little Diamond – Team",
+      "Piccolo Diamante – Home", "Piccolo Diamante – Programs", "Piccolo Diamante – Team",
       "Arcobaleno Playhouse – Home", "Arcobaleno Playhouse – Programs", "Arcobaleno Playhouse – Book",
     ],
     subProjects: [
