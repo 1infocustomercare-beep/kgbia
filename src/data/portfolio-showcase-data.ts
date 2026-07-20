@@ -102,7 +102,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     accent: "#ec4899",
     screenLabels: [
       "Atelier Unghie – Home", "Atelier Unghie – Servizi", "Atelier Unghie – Dettaglio",
-      "Tatush Hair – Home", "Tatush Hair – Shop", "Tatush Hair – Detail",
+      "Essenza Fragrance – Home", "Essenza Fragrance – Shop", "Essenza Fragrance – Detail",
     ],
     subProjects: [
       {
