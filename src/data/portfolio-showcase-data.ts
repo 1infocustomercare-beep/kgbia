@@ -184,7 +184,7 @@ export const PORTFOLIO_PROJECTS: Partial<Record<IndustryId, PortfolioProject>> =
     year: "2025",
     platform: "iOS, Android & Web",
     accent: "#60a5fa",
-    screenLabels: ["FAR Medical – Home", "FAR Medical – Services", "FAR Medical – Products"],
+    screenLabels: ["Studio Medico Aurora – Home", "Studio Medico Aurora – Services", "Studio Medico Aurora – Products"],
   },
 
   veterinary: {
