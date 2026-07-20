@@ -716,6 +716,11 @@ function App() {
                           <MediaVaultPage />
                         </ProtectedRoute>
                       } />
+                      <Route path="/superadmin/media-library" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <MediaLibraryPage />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/superadmin/brand-assets" element={
                         <ProtectedRoute requiredRole="super_admin">
                           <BrandAssetsPage />
