@@ -20,6 +20,10 @@ import foodBraceKebab from "@/assets/mockups/catalog/food-brace-kebab.png";
 import beautyAuroraLavender from "@/assets/mockups/catalog/beauty-aurora-lavender.png";
 import beautyAuroraBlushRosegold from "@/assets/mockups/catalog/beauty-aurora-blush-rosegold.png";
 import beautyVellutoEditorial from "@/assets/mockups/catalog/beauty-velluto-editorial.png";
+import beautyNailLavenderV2 from "@/assets/mockups/catalog/beauty-nail-lavender-v2--1-home.png";
+import beautyHairNoir from "@/assets/mockups/catalog/beauty-hair-noir--1-home.png";
+import beautyBarberIndustrial from "@/assets/mockups/catalog/beauty-barber-industrial--1-home.png";
+import beautyMedspaClinical from "@/assets/mockups/catalog/beauty-medspa-clinical--1-home.png";
 import nccMarinaRiviera from "@/assets/mockups/catalog/ncc-marina-riviera.png";
 import nccMarinaAmalfiStyleB from "@/assets/mockups/catalog/ncc-marina-amalfi-style-b.png";
 import fitnessPadelSage from "@/assets/mockups/catalog/fitness-padel-sage.png";
@@ -96,29 +100,79 @@ const SECTOR_SCREEN_LABELS: Record<
   string,
   [string, string, string, string]
 > = {
-  food:         ["Home",  "Menu",       "Piatto",       "Prenotazione"],
-  beauty:       ["Home",  "Trattamenti","Scheda",       "Prenotazione"],
-  ncc:          ["Home",  "Flotta",     "Itinerario",   "Preventivo"],
-  hospitality:  ["Home",  "Camere",     "Esperienza",   "Booking"],
-  fitness:      ["Home",  "Corsi",      "Coach",        "Prenota campo"],
-  healthcare:   ["Home",  "Prestazioni","Specialista",  "Prenota visita"],
-  veterinary:   ["Home",  "Servizi",    "Profilo pet",  "Prenota"],
-  childcare:    ["Home",  "Programma",  "Attività",     "Iscrizione"],
-  construction: ["Home",  "Unità",      "Dettaglio",    "Prenota visita"],
-  plumber:      ["Home",  "Servizi",    "Intervento",   "Chiama ora"],
+  food: ["Home", "Menu", "Piatto", "Prenotazione"],
+  beauty: ["Home", "Trattamenti", "Scheda", "Prenotazione"],
+  ncc: ["Home", "Flotta", "Itinerario", "Preventivo"],
+  hospitality: ["Home", "Camere", "Esperienza", "Booking"],
+  fitness: ["Home", "Corsi", "Coach", "Prenota campo"],
+  healthcare: ["Home", "Prestazioni", "Specialista", "Prenota visita"],
+  veterinary: ["Home", "Servizi", "Profilo pet", "Prenota"],
+  childcare: ["Home", "Programma", "Attività", "Iscrizione"],
+  construction: ["Home", "Unità", "Dettaglio", "Prenota visita"],
+  plumber: ["Home", "Servizi", "Intervento", "Chiama ora"],
 };
 
 const CAPTIONS: Record<string, [string, string, string, string]> = {
-  food:         ["Homepage brand con hero, USP e call-to-action prenota.", "Menu digitale completo con categorie, prezzi e allergeni.", "Scheda piatto con foto, ingredienti e upsell abbinamenti.", "Prenotazione tavolo con turni, ospiti e conferma automatica."],
-  beauty:       ["Homepage salone con brand story e pacchetti in evidenza.", "Listino trattamenti per cabina, durata e prezzo.", "Scheda cliente VIP: storico, foto, preferenze, note.", "Prenotazione stylist/cabina con slot live e rebooking."],
-  ncc:          ["Homepage fleet con hero mare e preventivo istantaneo.", "Flotta completa con auto/barche, capienza e tariffe.", "Itinerario su mappa con tappe, orari e servizi extra.", "Preventivo → checkout con acconto e concierge chat."],
-  hospitality:  ["Homepage resort con hero location e stagione.", "Camere e suite con foto, servizi e disponibilità live.", "Esperienza curata: spa, tour, chef privato, upsell.", "Booking multi-notte con extra e up-sell in checkout."],
-  fitness:      ["Homepage club con hero atleta e prossimi eventi.", "Palinsesto corsi settimanale con coach e livello.", "Scheda coach: bio, specialità, disponibilità e rating.", "Prenotazione campo/lezione con calendario e ricorrenze."],
-  healthcare:   ["Homepage clinica con specialità e prenota rapido.", "Prestazioni per branca con tempi e ticket.", "Specialista: bio, ambulatorio, prime date disponibili.", "Prenota visita → pagamento online e promemoria."],
-  veterinary:   ["Homepage pet resort con hero animali e servizi.", "Servizi: pensione, tolettatura, clinica, addestramento.", "Profilo pet con vaccini, foto giornata e note.", "Prenota soggiorno o visita con calendario dedicato."],
-  childcare:    ["Homepage nido con hero bambini e valori.", "Programma settimanale con attività per fascia.", "Attività del giorno con foto e note educatori.", "Iscrizione online con documenti e ricevuta."],
-  construction: ["Homepage sviluppatore con hero rendering e progetti.", "Elenco unità con planimetria, prezzo e stato.", "Dettaglio unità: tour 3D, capitolato, agenti dedicati.", "Prenota visita in cantiere con calendario agente."],
-  plumber:      ["Homepage pronto intervento con numero one-tap.", "Servizi: idraulica, caldaie, climatizzazione, gas.", "Scheda intervento: foto pre/post, materiali, firma.", "Chiamata rapida con geolocalizzazione e ETA."],
+  food: [
+    "Homepage brand con hero, USP e call-to-action prenota.",
+    "Menu digitale completo con categorie, prezzi e allergeni.",
+    "Scheda piatto con foto, ingredienti e upsell abbinamenti.",
+    "Prenotazione tavolo con turni, ospiti e conferma automatica.",
+  ],
+  beauty: [
+    "Homepage salone con brand story e pacchetti in evidenza.",
+    "Listino trattamenti per cabina, durata e prezzo.",
+    "Scheda cliente VIP: storico, foto, preferenze, note.",
+    "Prenotazione stylist/cabina con slot live e rebooking.",
+  ],
+  ncc: [
+    "Homepage fleet con hero mare e preventivo istantaneo.",
+    "Flotta completa con auto/barche, capienza e tariffe.",
+    "Itinerario su mappa con tappe, orari e servizi extra.",
+    "Preventivo → checkout con acconto e concierge chat.",
+  ],
+  hospitality: [
+    "Homepage resort con hero location e stagione.",
+    "Camere e suite con foto, servizi e disponibilità live.",
+    "Esperienza curata: spa, tour, chef privato, upsell.",
+    "Booking multi-notte con extra e up-sell in checkout.",
+  ],
+  fitness: [
+    "Homepage club con hero atleta e prossimi eventi.",
+    "Palinsesto corsi settimanale con coach e livello.",
+    "Scheda coach: bio, specialità, disponibilità e rating.",
+    "Prenotazione campo/lezione con calendario e ricorrenze.",
+  ],
+  healthcare: [
+    "Homepage clinica con specialità e prenota rapido.",
+    "Prestazioni per branca con tempi e ticket.",
+    "Specialista: bio, ambulatorio, prime date disponibili.",
+    "Prenota visita → pagamento online e promemoria.",
+  ],
+  veterinary: [
+    "Homepage pet resort con hero animali e servizi.",
+    "Servizi: pensione, tolettatura, clinica, addestramento.",
+    "Profilo pet con vaccini, foto giornata e note.",
+    "Prenota soggiorno o visita con calendario dedicato.",
+  ],
+  childcare: [
+    "Homepage nido con hero bambini e valori.",
+    "Programma settimanale con attività per fascia.",
+    "Attività del giorno con foto e note educatori.",
+    "Iscrizione online con documenti e ricevuta.",
+  ],
+  construction: [
+    "Homepage sviluppatore con hero rendering e progetti.",
+    "Elenco unità con planimetria, prezzo e stato.",
+    "Dettaglio unità: tour 3D, capitolato, agenti dedicati.",
+    "Prenota visita in cantiere con calendario agente.",
+  ],
+  plumber: [
+    "Homepage pronto intervento con numero one-tap.",
+    "Servizi: idraulica, caldaie, climatizzazione, gas.",
+    "Scheda intervento: foto pre/post, materiali, firma.",
+    "Chiamata rapida con geolocalizzazione e ETA.",
+  ],
 };
 
 const buildScreens = (
@@ -201,6 +255,22 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
     label: "Beauty & Salone",
     tagline: "Agenda, trattamenti, schede cliente, pacchetti VIP e rebooking.",
     variants: [
+      V("beauty", "beauty-nail-lavender-v2", "Atelier Unghie", "Lavender Editorial II", "Lavanda · Avorio",
+        "Nail atelier editoriale con listino premium, manicure lounge e prenotazione raffinata.",
+        ["Listino manicure", "Nail art gallery", "Cabine beauty", "Prenotazione smart"],
+        beautyNailLavenderV2, "beauty-nail-lavender-v2"),
+      V("beauty", "beauty-hair-noir", "Velluto Hair Lab", "Noir Salon", "Nero · Champagne",
+        "Hair salon fashion con lookbook, color service, stylist agenda e retail curato.",
+        ["Color service", "Lookbook capelli", "Stylist agenda", "Retail premium"],
+        beautyHairNoir, "beauty-hair-noir"),
+      V("beauty", "beauty-barber-industrial", "Officina Barber Club", "Industrial Grooming", "Grafite · Rame",
+        "Barber studio maschile con grooming menu, barber profile, combo e booking rapido.",
+        ["Taglio & barba", "Combo grooming", "Barber profile", "Slot express"],
+        beautyBarberIndustrial, "beauty-barber-industrial"),
+      V("beauty", "beauty-medspa-clinical", "Lumen MedSpa", "Clinical Glass", "Ghiaccio · Teal",
+        "MedSpa clinico con consulti estetici, trattamenti medicali e prenotazione consulto senza impegno.",
+        ["Consulti medici", "Botox & filler", "Before/after", "Booking clinico"],
+        beautyMedspaClinical, "beauty-medspa-clinical"),
       V("beauty", "beauty-aurora-lavender", "Atelier Unghie", "Lavender Luxe", "Lavanda · Oro",
         "Nail atelier soft luxury con menu trattamenti, cabine e schede cliente VIP.",
         ["Menu nail", "Cabine live", "Scheda VIP", "Rebooking auto"],
@@ -213,7 +283,6 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         "Hair salon editoriale: colore, agenda stylist, retail prodotti, look book.",
         ["Servizi colore", "Agenda stylist", "Retail prodotti", "Look book"],
         beautyVellutoEditorial, "beauty-velluto-editorial"),
-      // Remix: same premium PNGs applied as SPA and Make-up studios for more choice
       V("beauty", "beauty-spa-lumen", "Spa Lumen", "Ethereal Spa", "Ghiaccio · Perla",
         "Day spa etereo: rituali, cabine, wellness journey e pacchetti coppia.",
         ["Rituali firmati", "Cabine spa", "Journey coppia", "Retail wellness"],
