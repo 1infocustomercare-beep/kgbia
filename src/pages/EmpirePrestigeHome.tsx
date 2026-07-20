@@ -9,6 +9,7 @@ import PrestigeProofBar from "@/components/empire-home/prestige/PrestigeProofBar
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
+import PrestigeParallaxCarousel from "@/components/empire-home/prestige/PrestigeParallaxCarousel";
 import PrestigeAgents from "@/components/empire-home/prestige/PrestigeAgents";
 import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA";
 import PrestigeProgressBar from "@/components/empire-home/prestige/PrestigeProgressBar";
@@ -92,6 +93,11 @@ function EmpirePrestigeHomeInner() {
         <div id="portfolio">
           <PrestigePortfolio />
         </div>
+
+        {/* CAROSELLO PARALLAX — autoplay + drag + pausa hover/touch */}
+        <PrestigeParallaxCarousel />
+
+
 
         {/* COME FUNZIONA — 3 step con linea di progresso */}
         <div id="how">
