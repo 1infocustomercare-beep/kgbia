@@ -91,10 +91,14 @@ function EmpirePrestigeHomeInner() {
           <PrestigeIndustries />
         </div>
 
+        {/* SITI SETTORE LIVE — navigabili, cliccabili */}
+        <PrestigeSectorLive />
+
         {/* PORTFOLIO */}
         <div id="portfolio">
           <PrestigePortfolio />
         </div>
+
 
         {/* CAROSELLO PARALLAX — autoplay + drag + pausa hover/touch */}
         <PrestigeParallaxCarousel />
