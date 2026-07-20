@@ -58,7 +58,7 @@ export default function IPhoneProMaxFrame({
   return (
     <div
       className={`relative select-none ${clickable ? "cursor-zoom-in" : ""} ${className}`}
-      style={{ width, height, ...style }}
+      style={{ width, height, maxWidth: "100%", ...style }}
       onClick={onClick}
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
