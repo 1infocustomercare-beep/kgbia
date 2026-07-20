@@ -40,7 +40,216 @@ import constructionDomusIceBlue from "@/assets/mockups/catalog/construction-domu
 import constructionDomusRoseGold from "@/assets/mockups/catalog/construction-domus-rose-gold.png";
 import plumberIdroProntoStyleA from "@/assets/mockups/catalog/plumber-idro-pronto-style-a.png";
 import plumberIdroProntoStyleB from "@/assets/mockups/catalog/plumber-idro-pronto-style-b.png";
-...
+
+// Companion PNGs — auto-loaded by Vite glob. Filenames follow
+//   <hero-stem>--2-menu.png / --3-detail.png / --4-booking.png
+const companionFiles = import.meta.glob(
+  "@/assets/mockups/catalog/companions/*.png",
+  { eager: true, import: "default" },
+) as Record<string, string>;
+
+const companionByStem = new Map<string, { menu?: string; detail?: string; booking?: string }>();
+for (const [path, url] of Object.entries(companionFiles)) {
+  const file = path.split("/").pop() ?? "";
+  const m = file.match(/^(.+?)--(\d+)-(menu|detail|booking)\.png$/);
+  if (!m) continue;
+  const [, stem, , kind] = m;
+  const bucket = companionByStem.get(stem) ?? {};
+  (bucket as Record<string, string>)[kind] = url;
+  companionByStem.set(stem, bucket);
+}
+
+export type MockupScreen = {
+  /** Short label shown under the phone (e.g. "Home", "Menu") */
+  label: string;
+  /** Longer caption for the info panel */
+  caption: string;
+  /** Full-size PNG rendered inside the iPhone frame */
+  image: string;
+};
+
+export type SectorMockupVariant = {
+  id: string;
+  brand: string;
+  style: string;
+  /** Short palette label shown as a chip */
+  palette: string;
+  /** 1-line description of what this style shows */
+  description: string;
+  /** UI features highlighted for this variant */
+  features: string[];
+  /** Primary hero screen (used for cards) */
+  screen: string;
+  /** Coherent ordered sequence of screens: Home → Menu → Dettaglio → Prenotazione */
+  screens: MockupScreen[];
+};
+
+export type SectorMockupGroup = {
+  id: string;
+  label: string;
+  /** 1-line sector summary */
+  tagline: string;
+  variants: SectorMockupVariant[];
+};
+
+/**
+ * Sector-specific labels for the 4-screen sequence.
+ * Screen 1 is always the hero (Home).
+ */
+const SECTOR_SCREEN_LABELS: Record<
+  string,
+  [string, string, string, string]
+> = {
+  food: ["Home", "Menu", "Piatto", "Prenotazione"],
+  beauty: ["Home", "Trattamenti", "Scheda", "Prenotazione"],
+  ncc: ["Home", "Flotta", "Itinerario", "Preventivo"],
+  hospitality: ["Home", "Camere", "Esperienza", "Booking"],
+  fitness: ["Home", "Corsi", "Coach", "Prenota campo"],
+  healthcare: ["Home", "Prestazioni", "Specialista", "Prenota visita"],
+  veterinary: ["Home", "Servizi", "Profilo pet", "Prenota"],
+  childcare: ["Home", "Programma", "Attività", "Iscrizione"],
+  construction: ["Home", "Unità", "Dettaglio", "Prenota visita"],
+  plumber: ["Home", "Servizi", "Intervento", "Chiama ora"],
+};
+
+const CAPTIONS: Record<string, [string, string, string, string]> = {
+  food: [
+    "Homepage brand con hero, USP e call-to-action prenota.",
+    "Menu digitale completo con categorie, prezzi e allergeni.",
+    "Scheda piatto con foto, ingredienti e upsell abbinamenti.",
+    "Prenotazione tavolo con turni, ospiti e conferma automatica.",
+  ],
+  beauty: [
+    "Homepage salone con brand story e pacchetti in evidenza.",
+    "Listino trattamenti per cabina, durata e prezzo.",
+    "Scheda cliente VIP: storico, foto, preferenze, note.",
+    "Prenotazione stylist/cabina con slot live e rebooking.",
+  ],
+  ncc: [
+    "Homepage fleet con hero mare e preventivo istantaneo.",
+    "Flotta completa con auto/barche, capienza e tariffe.",
+    "Itinerario su mappa con tappe, orari e servizi extra.",
+    "Preventivo → checkout con acconto e concierge chat.",
+  ],
+  hospitality: [
+    "Homepage resort con hero location e stagione.",
+    "Camere e suite con foto, servizi e disponibilità live.",
+    "Esperienza curata: spa, tour, chef privato, upsell.",
+    "Booking multi-notte con extra e up-sell in checkout.",
+  ],
+  fitness: [
+    "Homepage club con hero atleta e prossimi eventi.",
+    "Palinsesto corsi settimanale con coach e livello.",
+    "Scheda coach: bio, specialità, disponibilità e rating.",
+    "Prenotazione campo/lezione con calendario e ricorrenze.",
+  ],
+  healthcare: [
+    "Homepage clinica con specialità e prenota rapido.",
+    "Prestazioni per branca con tempi e ticket.",
+    "Specialista: bio, ambulatorio, prime date disponibili.",
+    "Prenota visita → pagamento online e promemoria.",
+  ],
+  veterinary: [
+    "Homepage pet resort con hero animali e servizi.",
+    "Servizi: pensione, tolettatura, clinica, addestramento.",
+    "Profilo pet con vaccini, foto giornata e note.",
+    "Prenota soggiorno o visita con calendario dedicato.",
+  ],
+  childcare: [
+    "Homepage nido con hero bambini e valori.",
+    "Programma settimanale con attività per fascia.",
+    "Attività del giorno con foto e note educatori.",
+    "Iscrizione online con documenti e ricevuta.",
+  ],
+  construction: [
+    "Homepage sviluppatore con hero rendering e progetti.",
+    "Elenco unità con planimetria, prezzo e stato.",
+    "Dettaglio unità: tour 3D, capitolato, agenti dedicati.",
+    "Prenota visita in cantiere con calendario agente.",
+  ],
+  plumber: [
+    "Homepage pronto intervento con numero one-tap.",
+    "Servizi: idraulica, caldaie, climatizzazione, gas.",
+    "Scheda intervento: foto pre/post, materiali, firma.",
+    "Chiamata rapida con geolocalizzazione e ETA.",
+  ],
+};
+
+const buildScreens = (
+  sectorId: string,
+  heroImage: string,
+  heroStem: string,
+): MockupScreen[] => {
+  const labels = SECTOR_SCREEN_LABELS[sectorId] ?? ["Home", "Menu", "Dettaglio", "Prenotazione"];
+  const captions = CAPTIONS[sectorId] ?? labels;
+  const comp = companionByStem.get(heroStem) ?? {};
+  const seq: (string | undefined)[] = [heroImage, comp.menu, comp.detail, comp.booking];
+  return seq
+    .map((img, i) => (img ? { label: labels[i], caption: captions[i], image: img } : null))
+    .filter((s): s is MockupScreen => s !== null);
+};
+
+const V = (
+  sectorId: string,
+  id: string,
+  brand: string,
+  style: string,
+  palette: string,
+  description: string,
+  features: string[],
+  screen: string,
+  heroStem: string,
+): SectorMockupVariant => ({
+  id,
+  brand,
+  style,
+  palette,
+  description,
+  features,
+  screen,
+  screens: buildScreens(sectorId, screen, heroStem),
+});
+
+export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
+  {
+    id: "food",
+    label: "Ristorazione",
+    tagline: "Menu digitale, ordini live, prenotazioni, KDS cucina e pagamenti.",
+    variants: [
+      V("food", "food-onyx-obsidian", "Onyx Brace Steakhouse", "Obsidian Luxury", "Onice · Oro",
+        "Steakhouse premium con carta vini, prenotazione tavoli e degustazione signature.",
+        ["Menu tagli premium", "Wine pairing", "Tavoli & turni", "Upsell degustazione"],
+        foodOnyxObsidian, "food-onyx-obsidian"),
+      V("food", "food-onyx-ivory", "Bistrot Avorio", "Ivory Editorial", "Avorio · Nero",
+        "Bistrot editoriale con menu del giorno, prenotazioni e loyalty pulita.",
+        ["Menu del giorno", "Prenotazioni", "Loyalty ospiti", "Delivery brand"],
+        foodOnyxIvory, "food-onyx-ivory"),
+      V("food", "food-sakura-luxury-dark", "Sakura Omakase", "Sakura Luxury Dark", "Nero · Sakura",
+        "Sushi omakase con menu degustazione, sake pairing e prenotazione a turni.",
+        ["Omakase card", "Sake pairing", "Turni serali", "Chef's counter"],
+        foodSakuraLuxuryDark, "food-sakura-luxury-dark"),
+      V("food", "food-sakura-sakura", "Paperfish Sakura", "Sakura Light", "Rosa · Kraft",
+        "Sushi contemporaneo con menu visuale, ordini rapidi e take-away.",
+        ["Menu visuale", "Ordine rapido", "Take-away", "Fidelity roll"],
+        foodSakuraSakura, "food-sakura-sakura"),
+      V("food", "food-indocina-neon", "Indocina Noir", "Neon Spice", "Neon · Giada",
+        "Asian fusion notturno con cocktail pairing, booking serale e allergeni.",
+        ["Cocktail pairing", "Booking serale", "Allergeni", "Dark mode UI"],
+        foodIndocinaNeonSpice, "food-indocina-neon-spice"),
+      V("food", "food-pacifico-costa", "Pacifico Ceviche", "Costa Pacifico", "Blu · Corallo",
+        "Seafood costiero: crudi, daily catch, tavoli vista mare, cocktail beach.",
+        ["Daily catch", "Crudi & ceviche", "Tavoli vista mare", "Beach cocktail"],
+        foodPacificoCosta, "food-pacifico-costa"),
+      V("food", "food-levante-deli", "Levante Deli", "Pearl Gold", "Perla · Oro",
+        "Delicatessen mediterraneo con vetrina prodotti, box regalo e ordini pickup.",
+        ["Vetrina prodotti", "Box regalo", "Pickup deli", "Ricette firmate"],
+        foodLevanteDeli, "food-levante-deli"),
+      V("food", "food-brace-kebab", "Brace Kebab", "Urban Grill", "Rame · Fumo",
+        "Grill urbano: combo, delivery, zone consegna e offerte pranzo veloci.",
+        ["Combo grill", "Delivery zones", "Offerte pranzo", "Ordine 1-tap"],
+        foodBraceKebab, "food-brace-kebab"),
+    ],
+  },
   {
     id: "beauty",
     label: "Beauty & Salone",
@@ -74,13 +283,12 @@ import plumberIdroProntoStyleB from "@/assets/mockups/catalog/plumber-idro-pront
         "Hair salon editoriale: colore, agenda stylist, retail prodotti, look book.",
         ["Servizi colore", "Agenda stylist", "Retail prodotti", "Look book"],
         beautyVellutoEditorial, "beauty-velluto-editorial"),
-      // Remix: same premium PNGs applied as SPA and Make-up studios for more choice
       V("beauty", "beauty-spa-lumen", "Spa Lumen", "Ethereal Spa", "Ghiaccio · Perla",
         "Day spa etereo: rituali, cabine, wellness journey e pacchetti coppia.",
         ["Rituali firmati", "Cabine spa", "Journey coppia", "Retail wellness"],
         healthcareLumenGlass, "healthcare-lumen-glass"),
     ],
-  }
+  },
   {
     id: "ncc",
     label: "NCC · Charter · Yacht",
