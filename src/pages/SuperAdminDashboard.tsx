@@ -1029,7 +1029,7 @@ const SuperAdminDashboard = () => {
                                   key={tab.id}
                                   whileHover={{ y: -1 }}
                                   whileTap={{ scale: 0.96 }}
-                                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
+                                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "media_library" ? navigate("/superadmin/media-library") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
                                   className="relative flex flex-col items-center justify-center gap-1 px-1.5 py-2 rounded-lg text-[11px] font-semibold transition-all min-h-[52px] overflow-hidden"
                                   style={isActive ? {
                                     background: "linear-gradient(160deg, hsl(265 75% 55%), hsl(250 65% 42%))",
