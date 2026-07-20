@@ -111,8 +111,17 @@ export default function OnboardingPage() {
   };
 
   const handleCreate = async () => {
-    if (!user || !form.name || !form.industry) {
+    if (!form.name || !form.industry) {
       toast.error("Compila tutti i campi obbligatori");
+      return;
+    }
+    if (!user) {
+      // Salva il form in sessionStorage così può essere ripreso dopo il login
+      try {
+        sessionStorage.setItem("onboarding_pending", JSON.stringify({ form, step }));
+      } catch {}
+      toast.info("Crea un account per completare l'attivazione");
+      navigate("/auth?next=/onboarding");
       return;
     }
 
