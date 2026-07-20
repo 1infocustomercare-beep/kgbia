@@ -256,12 +256,12 @@ export default function PrestigeHero() {
                   }}
                 >
                   <PrestigePhone
-                    screen={screen}
+                    src={screen.image}
                     alt={`Mockup ${HERO_LABELS[i]}`}
-                    label={isActive ? HERO_LABELS[i] : undefined}
                     width={phoneW}
                     loading="eager"
                   />
+
                 </div>
               );
             })}
