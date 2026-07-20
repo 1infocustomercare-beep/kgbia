@@ -583,13 +583,8 @@ function App() {
                           Caos→Empire, services, industries, portfolio, process,
                           proof, CTA. Bilingue IT/EN. */}
                       <Route path="/" element={<EmpirePrestigeHome />} />
-                      {/* Alias legacy: qualunque vecchio link "home Empire" converge sulla homepage ufficiale. */}
-                      <Route path="/home" element={<Navigate to="/" replace />} />
-                      <Route path="/index" element={<Navigate to="/" replace />} />
-                      <Route path="/landing" element={<Navigate to="/" replace />} />
-                      <Route path="/empire" element={<Navigate to="/" replace />} />
-                      <Route path="/home-prestige" element={<Navigate to="/" replace />} />
-                      <Route path="/landing-legacy" element={<Navigate to="/" replace />} />
+
+
                       {/* Pagina catalogo mockup canonica = /portfolio (MockupCatalogPage).
                           Le rotte legacy /mockups-demo, /demo-mockups, /mockups
                           reindirizzano lì per non rompere i link esistenti. */}
