@@ -308,6 +308,13 @@ const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
 const AdminAgentsPage = lazy(() => import("./pages/admin/AdminAgents"));
 const AdminWhatsApp = lazy(() => import("./pages/admin/AdminWhatsApp"));
+const BasePackagePurchase = lazy(() => import("./pages/BasePackagePurchase"));
+const CustomProjectBrief = lazy(() => import("./pages/CustomProjectBrief"));
+const VendorSignup = lazy(() => import("./pages/vendor/VendorSignup"));
+const VendorDashboard = lazy(() => import("./pages/vendor/VendorDashboard"));
+const SellersManagement = lazy(() => import("./pages/admin/SellersManagement"));
+const CustomBriefsInbox = lazy(() => import("./pages/admin/CustomBriefsInbox"));
+
 
 const queryClient = new QueryClient();
 
