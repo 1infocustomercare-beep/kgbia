@@ -11,7 +11,7 @@ const PROJECTS = [
   { brand: "Padel Torino", sector: "Sport club", img: `${S}/Centro%20Padel%20Brera/mobile-fresh-azzurro-home.png`, accent: "172 80% 58%", tone: "emerald", result: "94%", metric: "occupazione campi", quote: "Booking smart, campi sempre pieni." },
   { brand: "DIMORA", sector: "Real estate luxury", img: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, accent: "38 80% 62%", tone: "gold", result: "+187%", metric: "lead qualificati", quote: "Eleganza milanese, lead alto-spendenti." },
   { brand: "Sakura Atelier", sector: "Sushi omakase", img: `${S}/Sakura%20Atelier/a-sakura-home.png`, accent: "330 70% 64%", tone: "violet", result: "Sold-out", metric: "3 mesi in anticipo", quote: "Omakase digitale che vende il rito." },
-  { brand: "FAR Medical", sector: "Healthcare premium", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%", tone: "blue", result: "GDPR", metric: "compliance totale", quote: "Estetica ethereal con compliance totale." },
+  { brand: "Studio Medico Aurora", sector: "Healthcare premium", img: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, accent: "172 80% 58%", tone: "blue", result: "GDPR", metric: "compliance totale", quote: "Estetica ethereal con compliance totale." },
 ];
 
 const AUTOPLAY_MS = 4200;

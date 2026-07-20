@@ -83,7 +83,7 @@ const getDemoSiteUrl = (sectorId: string) => {
 
 const PORTFOLIO_REFS: Record<string, string> = {
   food: "Onyx Brace Steakhouse", beauty: "Aurora Nail Atelier", ncc: "Amalfi Luxury Transfer",
-  fitness: "Centro Padel Brera", healthcare: "FAR Medical", veterinary: "Aloha Pet Resort",
+  fitness: "Centro Padel Brera", healthcare: "Studio Medico Aurora", veterinary: "Cuccia & Coccole Pet Resort",
   hotel: "Domus Living", tattoo: "Ink Masters Studio", beach: "Onda Sport Club",
   retail: "Store Premium", plumber: "Idro Pronto", electrician: "Elite Electrical",
   photography: "Vision Photography", events: "Elite Events", construction: "Premium Costruzioni",

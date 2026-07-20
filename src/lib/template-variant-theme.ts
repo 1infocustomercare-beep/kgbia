@@ -233,7 +233,7 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
   /* ═══════════════ BEAUTY ═══════════════ */
   "neo-nails-lavender": {
     shell: "strapizzami",
-    label: "Neo Nails Lavender Luxe",
+    label: "Atelier Unghie Lavender Luxe",
     heroTagline: "BELLEZZA SU MISURA",
     subtitle: "Nail Art · Lavender Luxe",
     heroImage: "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -256,7 +256,7 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
   },
   "neo-nails-blush": {
     shell: "strapizzami",
-    label: "Neo Nails Blush Rosegold",
+    label: "Atelier Unghie Blush Rosegold",
     heroTagline: "BELLEZZA SU MISURA",
     subtitle: "Nail Art · Blush Rosegold",
     heroImage: "https://images.pexels.com/photos/887352/pexels-photo-887352.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -360,7 +360,7 @@ export const VARIANT_THEME_MAP: Record<TemplateVariantId, VariantThemeSpec> = {
     shell: "batey",
     label: "Onda Sport Club",
     heroTagline: "ADRENALINA SUL MARE",
-    subtitle: "Watersports · Miami Beach",
+    subtitle: "Watersports · Lago di Garda",
     heroImage: "https://images.pexels.com/photos/3756168/pexels-photo-3756168.jpeg?auto=compress&cs=tinysrgb&w=1200",
     industryGroup: "fitness",
     defaultCategories: ["Jet Ski", "Surf", "SUP", "Kite", "Pacchetti"],
