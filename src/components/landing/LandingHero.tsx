@@ -13,8 +13,8 @@ const MOCKUPS = [
   { src: `${S}/Centro%20Padel%20Brera/mobile-fresh-azzurro-home.png`, label: "Padel Torino", cat: "Sports", accent: "#22d3ee" },
   { src: `${S}/DIMORA%20Milano/eleganza-milanese-home-mobile.png`, label: "DIMORA", cat: "Real Estate", accent: "#c9a84c" },
   { src: `${S}/Sakura%20Atelier/a-sakura-home.png`, label: "Sakura Atelier", cat: "Sushi", accent: "#ef4444" },
-  { src: `${S}/Tropico%20Pet%20Resort/mobile-a-home.png`, label: "Aloha Pets", cat: "Pet Care", accent: "#4ade80" },
-  { src: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, label: "FAR Medical", cat: "Healthcare", accent: "#60a5fa" },
+  { src: `${S}/Tropico%20Pet%20Resort/mobile-a-home.png`, label: "Cuccia & Coccole", cat: "Pet Care", accent: "#4ade80" },
+  { src: `${S}/Lumen%20Clinic/a-ethereal-glass-mobile-home.png`, label: "Studio Medico Aurora", cat: "Healthcare", accent: "#60a5fa" },
 ];
 
 const TRUST = ["847+ Imprese Attive", "24 Settori", "38 Agenti IA", "Garanzia 90 Giorni"];
