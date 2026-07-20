@@ -737,6 +737,12 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         ]),
     ],
   },
+  {
+    id: "retail",
+    label: "Retail & E-commerce",
+    tagline: "Vetrine brand, catalogo, schede prodotto e checkout premium.",
+    variants: [],
+  },
 ];
 
 // =============================================================
