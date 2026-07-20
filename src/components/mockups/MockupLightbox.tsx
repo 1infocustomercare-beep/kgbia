@@ -129,6 +129,9 @@ export default function MockupLightbox({
       aria-modal="true"
       aria-label={`Mockup ${current.brand} — ${current.style}`}
       className="fixed inset-0 z-[9999] overflow-y-auto overscroll-contain"
+      data-lenis-prevent
+      ref={scrollRef}
+
       style={{ background: "rgba(6,7,12,0.94)", backdropFilter: "blur(18px)", WebkitOverflowScrolling: "touch" }}
       onClick={onClose}
     >
