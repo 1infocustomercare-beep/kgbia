@@ -616,6 +616,13 @@ function App() {
                       <Route path="/kitchen/:slug" element={<KitchenView />} />
                       <Route path="/partner/register" element={<PartnerRegister />} />
                       <Route path="/join" element={<JoinPartnerPage />} />
+                      <Route path="/pacchetto-base" element={<BasePackagePurchase />} />
+                      <Route path="/pacchetto-completo" element={<CustomProjectBrief />} />
+                      <Route path="/vendor/signup" element={<VendorSignup />} />
+                      <Route path="/vendor/dashboard" element={<ProtectedRoute><VendorDashboard /></ProtectedRoute>} />
+                      <Route path="/admin/sellers" element={<ProtectedRoute><SellersManagement /></ProtectedRoute>} />
+                      <Route path="/admin/briefs" element={<ProtectedRoute><CustomBriefsInbox /></ProtectedRoute>} />
+
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/cookie-policy" element={<CookiePolicy />} />
                       <Route path="/preview/custom/:slug" element={<CustomPreviewPublicPage />} />
