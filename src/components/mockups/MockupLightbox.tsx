@@ -71,12 +71,10 @@ export default function MockupLightbox({
     // Pause Lenis smooth-scroll if present
     let lenisInstance: any = null;
     try {
-      // dynamic import avoids loading Lenis if not used
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const mod = require("@/lib/lenis-singleton");
-      lenisInstance = mod?.getLenis?.();
+      lenisInstance = getLenis();
       lenisInstance?.stop?.();
     } catch {}
+
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
