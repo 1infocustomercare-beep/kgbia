@@ -100,7 +100,16 @@ export type SectorMockupVariant = {
   screen: string;
   /** Coherent ordered sequence of screens: Home → Menu → Dettaglio → Prenotazione */
   screens: MockupScreen[];
+  /**
+   * Quality tier.
+   * - "primary"  = curated 4-screen sequence from portfolio-lowengeld/<slug>/
+   *                (folder-based, well-crafted texts/icons/photos)
+   * - "extended" = AI companion-based catalog variant, shown as
+   *                secondary / "extended collection" below the primary set.
+   */
+  tier: "primary" | "extended";
 };
+
 
 export type SectorMockupGroup = {
   id: string;
@@ -247,7 +256,9 @@ const V = (
   features,
   screen,
   screens: buildScreens(sectorId, screen, heroStem),
+  tier: "extended",
 });
+
 
 const VManual = (
   sectorId: string,
@@ -268,7 +279,9 @@ const VManual = (
   features,
   screen: portfolioImage(slug, entries[0].file),
   screens: buildManualScreens(sectorId, entries, slug),
+  tier: "primary",
 });
+
 
 export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
   {
@@ -386,10 +399,6 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
           { file: "3-detail.png", label: "Dettaglio combo" },
           { file: "4-tracking.png", label: "Tracking ordine" },
         ]),
-      V("food", "food-onyx-obsidian", "Onyx Brace Steakhouse", "Obsidian Luxury", "Onice · Oro",
-        "Steakhouse premium con carta vini, prenotazione tavoli e degustazione signature.",
-        ["Menu tagli premium", "Wine pairing", "Tavoli & turni", "Upsell degustazione"],
-        foodOnyxObsidian, "food-onyx-obsidian"),
       V("food", "food-onyx-ivory", "Bistrot Avorio", "Ivory Editorial", "Avorio · Nero",
         "Bistrot editoriale con menu del giorno, prenotazioni e loyalty pulita.",
         ["Menu del giorno", "Prenotazioni", "Loyalty ospiti", "Delivery brand"],
@@ -406,10 +415,6 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         "Asian fusion notturno con cocktail pairing, booking serale e allergeni.",
         ["Cocktail pairing", "Booking serale", "Allergeni", "Dark mode UI"],
         foodIndocinaNeonSpice, "food-indocina-neon-spice"),
-      V("food", "food-pacifico-costa", "Pacifico Ceviche", "Costa Pacifico", "Blu · Corallo",
-        "Seafood costiero: crudi, daily catch, tavoli vista mare, cocktail beach.",
-        ["Daily catch", "Crudi & ceviche", "Tavoli vista mare", "Beach cocktail"],
-        foodPacificoCosta, "food-pacifico-costa"),
       V("food", "food-levante-deli", "Levante Deli", "Pearl Gold", "Perla · Oro",
         "Delicatessen mediterraneo con vetrina prodotti, box regalo e ordini pickup.",
         ["Vetrina prodotti", "Box regalo", "Pickup deli", "Ricette firmate"],
@@ -441,22 +446,10 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         "MedSpa clinico con consulti estetici, trattamenti medicali e prenotazione consulto senza impegno.",
         ["Consulti medici", "Botox & filler", "Before/after", "Booking clinico"],
         beautyMedspaClinical, "beauty-medspa-clinical"),
-      V("beauty", "beauty-aurora-lavender", "Atelier Unghie", "Lavender Luxe", "Lavanda · Oro",
-        "Nail atelier soft luxury con menu trattamenti, cabine e schede cliente VIP.",
-        ["Menu nail", "Cabine live", "Scheda VIP", "Rebooking auto"],
-        beautyAuroraLavender, "beauty-aurora-lavender"),
       V("beauty", "beauty-aurora-blush", "Aurora Nail", "Blush Rosegold", "Blush · Oro rosa",
         "Nail luxury con pacchetti sposa, add-on premium e loyalty punti.",
         ["Pacchetti sposa", "Add-on premium", "Loyalty punti", "Gallery lavori"],
         beautyAuroraBlushRosegold, "beauty-aurora-blush-rosegold"),
-      V("beauty", "beauty-velluto-editorial", "Velluto Hair Lab", "Editorial Hair", "Nero · Bordeaux",
-        "Hair salon editoriale: colore, agenda stylist, retail prodotti, look book.",
-        ["Servizi colore", "Agenda stylist", "Retail prodotti", "Look book"],
-        beautyVellutoEditorial, "beauty-velluto-editorial"),
-      V("beauty", "beauty-spa-lumen", "Spa Lumen", "Ethereal Spa", "Ghiaccio · Perla",
-        "Day spa etereo: rituali, cabine, wellness journey e pacchetti coppia.",
-        ["Rituali firmati", "Cabine spa", "Journey coppia", "Retail wellness"],
-        healthcareLumenGlass, "healthcare-lumen-glass"),
       VManual("beauty", "beauty-serena-spa", "Serena Spa", "Sage Wellness Luxury", "Salvia · Perla",
         "Spa premium con rituali corpo, cabine sensoriali, scheda trattamento e booking raffinato.",
         ["Rituali corpo", "Cabine sensoriali", "Scheda trattamento", "Booking spa"],
@@ -486,10 +479,6 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         "Yacht charter Sardegna con calette, day cruise, transfer VIP porto.",
         ["Calette curate", "Day cruise", "Transfer VIP", "Skipper included"],
         hospitalityCalaVentoAzure, "hospitality-cala-vento-azure"),
-      V("ncc", "ncc-cala-sunset", "Cala Vento Golden", "Golden Sunset", "Oro · Corallo",
-        "Yacht sunset experience: aperitivo a bordo, tramonti, pacchetti coppia.",
-        ["Aperitivo bordo", "Tramonti curati", "Pacchetti coppia", "Foto pro"],
-        hospitalityCalaVentoSunset, "hospitality-cala-vento-sunset"),
       VManual("ncc", "ncc-riviera-rental", "Riviera Rental", "Ivory Executive", "Avorio · Champagne",
         "Noleggio premium con vetrina luxury, flotta selezionata, dettaglio veicolo e checkout concierge.",
         ["Ricerca date", "Flotta executive", "Dettaglio auto", "Checkout concierge"],
@@ -531,10 +520,6 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         "Boutique resort: camere, esperienze curate, concierge chat, upsell tour.",
         ["Camere & suite", "Esperienze curate", "Concierge chat", "Upsell tour"],
         hospitalityCalaVentoAzure, "hospitality-cala-vento-azure"),
-      V("hospitality", "hosp-cala-sunset", "Cala Vento Suite", "Sunset Suite", "Oro · Ambra",
-        "Suite sunset: pacchetti romantic, spa in camera, cena privata a bordo mare.",
-        ["Pacchetti romantic", "Spa in camera", "Cena privata", "Sunset ritual"],
-        hospitalityCalaVentoSunset, "hospitality-cala-vento-sunset"),
       V("hospitality", "hosp-levante", "Levante Boutique", "Pearl Gold Retreat", "Perla · Oro",
         "Boutique urbano: suite curate, gastronomia interna, esperienze private.",
         ["Suite curate", "Ristorante interno", "Esperienze private", "Concierge"],
@@ -686,14 +671,6 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         "Community residenti: manutenzioni, servizi condominio, prenota amenità.",
         ["Manutenzioni", "Servizi condominio", "Prenota amenità", "Bacheca residenti"],
         constructionDomusLivingCoral, "construction-domus-living-coral"),
-      V("construction", "cons-ice", "Domus Ice", "Ice Blue", "Ghiaccio · Bianco",
-        "Facility manager: ticket, calendario interventi, mezzi e squadre live.",
-        ["Ticket sistem", "Calendario interventi", "Mezzi & squadre", "Report cliente"],
-        constructionDomusIceBlue, "construction-domus-ice-blue"),
-      V("construction", "cons-rose", "Domus Rose Gold", "Rose Gold", "Rosa · Oro",
-        "Sales office real estate: lead in ingresso, scheda unità, offerte, follow-up.",
-        ["Lead ingresso", "Scheda unità", "Offerte", "Follow-up auto"],
-        constructionDomusRoseGold, "construction-domus-rose-gold"),
       VManual("construction", "cons-cantiere-primo", "Cantiere Primo", "Enterprise Works", "Ardesia · Sabbia · Safety Orange",
         "Piattaforma cantiere/real estate operativa: KPI cantieri, unità disponibili, dettaglio lotto e report avanzamento.",
         ["Control room", "Unità disponibili", "Dettaglio cantiere", "Report avanzamento"],
@@ -870,7 +847,9 @@ for (const folder of discoverFolders()) {
     features,
     screen: screens[0].image,
     screens,
+    tier: "primary",
   };
+
 
   if (typeof meta?.order === "number") {
     const idx = Math.max(0, Math.min(group.variants.length, meta.order));
