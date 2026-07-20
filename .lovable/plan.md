@@ -1,66 +1,63 @@
-
-# Piano: Catalogo mockup — massima qualità AI, tutti i settori, tutti gli stili
+# Ridisegno Mockup Empire — Home & Portfolio
 
 ## Obiettivo
-Portare le ~83 card del catalogo `/portfolio` allo stesso livello dei mockup già presenti in `src/assets/mockups/generated/` (Nano Banana Pro, iPhone screen-only, luci studio, densità UI reale). Oggi ogni card è un SVG deterministico e a colpo d'occhio si assomigliano tutte: questo è il motivo per cui "sembrano basic".
+- Ogni settore ha **6 varianti** stilistiche **realmente diverse** (colore, layout, tipografia, componenti, illustrazioni).
+- Ogni mockup è **un solo iPhone Pro Max** che mostra una webapp reale del settore. **Niente iPhone dentro iPhone**, niente doppia cornice.
+- Ogni schermata rappresenta **funzioni utili e coerenti** per il settore (es. Food = menu QR + ordini live + prenotazioni; NCC = fleet map + booking; Medical = agenda pazienti + refertazione).
+- **Click sul mockup → apertura fullscreen** (lightbox) per vedere il mockup in grande, con swipe/frecce tra le varianti.
 
-## Cosa cambia
+## Fasi
 
-1. **Generatore batch AI** — nuovo script `scripts/gen-catalog-mockups.mjs` che, dato l'elenco degli 83 stili (`SECTOR_PORTFOLIO`), genera per ognuno:
-   - **1 thumbnail hero** (card catalogo, priorità visiva massima) → sempre AI premium
-   - **fino a 4 schermate interne** (home, servizi/menu, dettaglio, booking) → AI premium
-   - Totale target: ~83 hero + ~250 schermate = **~330 PNG reali**
-   - Modello: `google/gemini-3-pro-image` (fedeltà catalogo, come `lead-mockup-suite`)
-   - Prompt template per settore × stile, con palette del preset (obsidian-gold, sakura, azure-ocean, ecc.), brand name reale della card, densità UI concreta (chip, KPI, foto placeholder cinematografici, CTA)
-   - Output salvato in `src/assets/mockups/catalog/<sector>/<style-slug>-<screen>.png.asset.json`
+### Fase 1 — Infrastruttura (subito, ~1h)
+1. **Lightbox fullscreen** condiviso (`MockupLightbox.tsx`) usato sia da Home (`MockupShowcase`, `PrestigePortfolio`, `PrestigeIndustries`, `InteractiveSectorReel`) sia da `/portfolio` (`MockupCatalog`).
+   - Apertura a fullscreen su tap/click con overlay scuro, ESC per chiudere, swipe/frecce per navigare tra le varianti dello stesso settore.
+   - iPhone Pro Max frame singolo, ridimensiona proporzionalmente al viewport.
+2. **Cornice unificata** `IPhoneProMaxFrame.tsx`: unica sorgente di verità (dynamic island, safe area, corner radius reali). Rimuove ogni "iPhone dentro iPhone".
+3. **Registry unificato** `src/data/sector-mockups.ts`: struttura `sector → variants[]` con `id, style, palette, screen, features[], imageAsset`.
 
-2. **Wiring nel catalogo**
-   - Nuovo modulo `src/data/catalog-mockup-registry.ts` che mappa `(sectorId, styleSlug, screenType) → url PNG`
-   - `SECTOR_PORTFOLIO` (in `src/data/portfolio-showcase-data.ts` o equivalente) legge dal registry; se il PNG esiste → usa quello, altrimenti fallback al vecchio `empireCoverFromPath` (garantisce zero card rotte durante la generazione)
-   - `SECTOR_MOCKUP_IMAGES` (thumbnail carousel home) → stesso wiring, prime immagini = PNG reali
+### Fase 2 — Settori prioritari (batch 1, ~2h)
+Ridisegno completo di **8 settori chiave** con **6 varianti ciascuno = 48 mockup**:
+- Food (ristorante, pizzeria, sushi, luxury steakhouse, caffè, bistrot)
+- Beauty (nails, hair, spa, estetica medica, barber, wellness)
+- NCC (executive, luxury black, van tour, aeroporto, matrimoni, sportivo)
+- Medical (studio, dentista, veterinario, fisioterapia, poliambulatorio, estetica)
+- Fitness (palestra, personal, crossfit, yoga, padel, boxing)
+- Hospitality (b&b, boutique hotel, resort, agriturismo, glamping, apartments)
+- Retail (boutique fashion, gioielleria, ottica, concept store, tech, artigianato)
+- Professional (avvocato, commercialista, consulente, architetto, notaio, agenzia)
 
-3. **Coerenza visiva**
-   - Palette per stile (obsidian, sakura, azure, sage, ecc.) presa dal `EMPIRE_PALETTES` esistente → il prompt AI riceve HEX espliciti, così ogni stile è distinguibile
-   - Frame iPhone: NON generato dall'AI (evita distorsioni). L'AI produce solo lo screen (390×844) e `CatalogPhonePreview` continua a wrappare con la cornice titanio
-   - Tutti i mockup vietano loghi Apple/Google/Meta, testo "Empire/Lovable", parole in inglese nei contenuti (copy italiano professionale)
+Generazione via **Gemini 3 Pro Image** con prompt sector-specific: ogni prompt include palette, tipografia, componenti UI reali, features del settore.
 
-4. **Rollout in fasi** (per non saturare il gateway AI)
-   - **Fase 1** — hero thumbnails 83 stili (il valore visivo maggiore, quello che l'utente vede scrollando)
-   - **Fase 2** — schermata "home" per ogni stile (usata quando la card espande)
-   - **Fase 3** — schermate residue (menu / detail / booking)
+### Fase 3 — Settori secondari (batch 2, ~2h)
+Altri **12+ settori** con **6 varianti = 72+ mockup** (real estate, education, automotive, eventi, pet, wedding, sport & outdoor, cultura, servizi casa, edilizia, food delivery, farmacia…).
 
-## Vincoli rispettati
-- SOLO additivo: nessun file esistente rimosso, il registry sovrascrive solo dove esistono i PNG. Il generatore SVG resta come safety net.
-- Nessun impatto su auth / Supabase / route protette / Phase-Final.
-- Nessuna nuova parola vietata (gratis, gratuito, prova gratuita).
-- Numeri hero della home (4.9/5, 3.500+ aziende, setup 7 giorni) intatti.
-- Palette globale smeraldo/oro del sito invariata (le palette dei mockup sono INTERNE agli screen).
+### Fase 4 — Integrazione UI (~1h)
+- `MockupCatalog` (/portfolio): griglia con filtro settore + selector varianti, click → lightbox.
+- `PrestigePortfolio` (home): mostra 1 variante hero per settore, tap → lightbox con tutte le 6.
+- `PrestigeIndustries`: usa il registry, tab settore mostra hero variant.
+- `MockupShowcase` / `InteractiveSectorReel`: rimuovo iPhone-in-iPhone, adotto la cornice unica.
 
-## Dettagli tecnici (per riferimento)
+### Fase 5 — QC e cleanup
+- Ogni mockup verificato via Playwright screenshot.
+- Rimosso vecchio sistema companions (`catalog-companions-registry`) e mockup generici.
+- Typecheck + build.
 
-```text
-scripts/gen-catalog-mockups.mjs
-  ├─ carica SECTOR_PORTFOLIO
-  ├─ per ogni (sector, style, screen):
-  │    ├─ costruisce prompt premium con palette + brand + settore + tipologia schermata
-  │    ├─ POST /v1/images/generations {model: google/gemini-3-pro-image, ...}
-  │    ├─ salva PNG in src/assets/mockups/catalog/...
-  │    └─ genera .asset.json (formato Lovable esistente)
-  ├─ concorrenza 4 richieste parallele con backoff su 429
-  └─ resume-safe: skippa file già presenti (rilanciabile per fasi)
+## Costi / tempi
+- ~120 immagini AI premium (Gemini 3 Pro Image), streaming durante generazione.
+- Tempo stimato reale: **4–6 ore di lavoro agent** distribuite su questa e le prossime iterazioni.
+- Consiglio: partire da **Fase 1 + Fase 2** in questa iterazione (viewer fullscreen + 8 settori × 6 = 48 mockup nuovi), poi Fase 3 nella prossima.
 
-src/data/catalog-mockup-registry.ts
-  export const CATALOG_MOCKUPS: Record<`${sector}::${style}::${screen}`, string>
-  export function catalogMockupUrl(sector, style, screen): string | null
-```
+## Dettagli tecnici
+- Asset esternalizzati via `lovable-assets` in `.asset.json` (nessun binario in repo).
+- Nessuna modifica ad auth/backend/RLS/edge functions.
+- Registry TypeScript strict, tutte le varianti tipizzate.
+- Lightbox usa `Dialog` shadcn + Framer Motion, chiuso da default, `preserveAspectRatio` sull'iPhone.
+- Cornice iPhone Pro Max: SVG vettoriale, dynamic island reale, safe-area corretta, screen inset preciso.
 
-Il generatore SVG attuale resta come fallback in fase di generazione e in caso di rimozione futura di un asset.
+## Cosa NON viene toccato
+- Auth, Supabase, edge functions, RLS.
+- Route protette, onboarding, admin, demo pubblici (`/r/`, `/b/`).
+- Sistema prezzi, wizard, sales agent.
 
-## Costo & tempi
-- ~330 chiamate a Nano Banana Pro. Fase 1 sola = 83 chiamate (~15 min con parallelismo 4).
-- Nessuna interazione utente durante la generazione, ma richiede più turni: **Fase 1 nel primo turno di build, Fase 2 e 3 nei turni successivi** dopo aver visto il primo risultato in preview.
-
-## Deliverable primo turno
-- Script `scripts/gen-catalog-mockups.mjs` creato ed eseguito per Fase 1 (83 hero)
-- Registry creato e wired
-- Nessuna pubblicazione. Preview verificata su `/portfolio`.
+## Conferma richiesta
+Confermi che parto con **Fase 1 (lightbox + cornice unica) + Fase 2 (8 settori × 6 varianti = 48 mockup nuovi)** in questa iterazione? Le Fasi 3–5 seguono nelle prossime.
