@@ -94,6 +94,11 @@ function EmpirePrestigeHomeInner() {
           <PrestigePortfolio />
         </div>
 
+        {/* CAROSELLO PARALLAX — autoplay + drag + pausa hover/touch */}
+        <PrestigeParallaxCarousel />
+
+
+
         {/* COME FUNZIONA — 3 step con linea di progresso */}
         <div id="how">
           <PrestigeHowItWorks />
