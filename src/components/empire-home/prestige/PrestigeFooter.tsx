@@ -85,10 +85,11 @@ export default function PrestigeFooter() {
               Legale
             </h3>
             <ul className="space-y-2">
-              <li><Link to="/privacy" className="hover:text-white">Privacy</Link></li>
-              <li><Link to="/cookies" className="hover:text-white">Cookie</Link></li>
+              <li><Link to="/privacy" className="hover:text-white">Privacy Policy</Link></li>
+              <li><Link to="/cookie-policy" className="hover:text-white">Cookie Policy</Link></li>
+              <li><Link to="/termini" className="hover:text-white">Termini e Condizioni</Link></li>
+              <li><Link to="/note-legali" className="hover:text-white">Note Legali</Link></li>
               <li><span className="text-white/40">Dati in EU · GDPR</span></li>
-              <li><Link to="/auth" className="hover:text-white">Accedi</Link></li>
             </ul>
           </div>
         </div>
