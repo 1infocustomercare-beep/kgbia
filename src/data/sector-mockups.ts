@@ -188,6 +188,12 @@ const CAPTIONS: Record<string, [string, string, string, string]> = {
     "Scheda intervento: foto pre/post, materiali usati, firma cliente in app.",
     "Chiamata rapida con geolocalizzazione, ETA squadra live e pagamento.",
   ],
+  retail: [
+    "Vetrina brand con hero collezione, storytelling e drop del momento.",
+    "Catalogo prodotti con filtri smart, categorie curate e wishlist.",
+    "Scheda prodotto premium: gallery, misure, materiali, cross-sell.",
+    "Checkout snello con indirizzi salvati, pagamenti e ritiro in boutique.",
+  ],
 };
 
 const buildScreens = (
