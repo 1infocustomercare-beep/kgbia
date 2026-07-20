@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import OfficialEmpireHomeAlias from "@/components/empire-home/OfficialEmpireHomeAlias";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,6 +14,8 @@ gsap.registerPlugin(ScrollTrigger);
  * Noir & Gold palette: gold accents over deep cosmic black.
  */
 export default function CosmicHero() {
+  return <OfficialEmpireHomeAlias />;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);

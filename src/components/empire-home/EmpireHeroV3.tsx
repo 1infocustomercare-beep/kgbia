@@ -4,6 +4,7 @@ import { ArrowRight, Blocks, BrainCircuit, MessageCircle, Mic, Play, Sparkles } 
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import RealisticIPhonePreview from "@/components/empire-home/RealisticIPhonePreview";
 import { useEmpireScrollDirector } from "@/components/empire-home/ScrollDirector";
+import OfficialEmpireHomeAlias from "@/components/empire-home/OfficialEmpireHomeAlias";
 
 /**
  * Empire Hero V3 — hero PULITA, professionale, mobile-first.
@@ -35,6 +36,8 @@ const DWELL_MS = 3600;        // tempo di permanenza di ogni mockup completament
 const TRANSITION_MS = 700;    // deve combaciare con duration-700 della transizione CSS
 
 const EmpireHeroV3 = forwardRef<HTMLElement, Record<string, never>>(function EmpireHeroV3(_props, forwardedRef) {
+  return <OfficialEmpireHomeAlias />;
+
   const navigate = useNavigate();
   const stageRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);

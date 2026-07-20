@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { createMockupPool } from "@/lib/mockup-pool";
+import OfficialEmpireHomeAlias from "@/components/empire-home/OfficialEmpireHomeAlias";
 
 /**
  * Empire Hero V2 — primo schermo IMMEDIATO, d'impatto, senza WebGL.
@@ -15,6 +16,8 @@ const heroPool = createMockupPool();
 const HERO_IMGS = heroPool.images(3);
 
 export default function EmpireHeroV2() {
+  return <OfficialEmpireHomeAlias />;
+
   const wrapRef = useRef<HTMLDivElement>(null);
   const phonesRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
