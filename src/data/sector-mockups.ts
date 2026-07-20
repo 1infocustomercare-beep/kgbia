@@ -642,16 +642,6 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
           { file: "3-pet.png", label: "Profilo pet" },
           { file: "4-booking.png", label: "Prenota soggiorno" },
         ]),
-      VManual("veterinary", "vet-zampe-sane", "Clinica Zampe Sane", "Sky Medical Pet", "Cielo · Navy · Lime",
-        "Clinica veterinaria chiara e rassicurante: servizi per specie, scheda pet e booking strutturato.",
-        ["Home clinica", "Servizi pet", "Profilo Milo", "Prenotazione visita"],
-        "zampe-sane",
-        [
-          { file: "1-home.png", label: "Home clinica" },
-          { file: "2-services.png", label: "Servizi" },
-          { file: "3-pet.png", label: "Pet profile" },
-          { file: "4-booking.png", label: "Booking" },
-        ]),
     ],
   },
   {
@@ -725,16 +715,6 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
         "Squadra tecnica: agenda interventi, foto pre/post, firma cliente, fatturazione.",
         ["Agenda squadra", "Foto pre/post", "Firma cliente", "Fatturazione"],
         plumberIdroProntoStyleB, "plumber-idro-pronto-style-b"),
-      VManual("plumber", "plumber-volt-rapido", "Volt Rapido", "Electric Utility", "Carbone · Giallo",
-        "Servizi elettrici e pronto intervento: chiamata rapida, listino, tracking tecnico e report finale.",
-        ["Home urgente", "Servizi elettrici", "Tracking tecnico", "Report intervento"],
-        "volt-rapido",
-        [
-          { file: "1-home.png", label: "Home urgente" },
-          { file: "2-services.png", label: "Servizi" },
-          { file: "3-tracking.png", label: "Tracking" },
-          { file: "4-report.png", label: "Report" },
-        ]),
     ],
   },
   {
