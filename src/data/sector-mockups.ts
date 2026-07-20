@@ -538,6 +538,16 @@ export const SECTOR_MOCKUPS: SectorMockupGroup[] = [
           { file: "3-detail.png", label: "Dettaglio suite" },
           { file: "4-experiences.png", label: "Esperienze" },
         ]),
+      VManual("hospitality", "hosp-palazzo-novecento", "Palazzo Novecento", "Art Deco Urban Stay", "Verde bosco · Champagne",
+        "Boutique hotel urbano art déco: home iconica, camere editoriali, suite detail e concierge esperienziale.",
+        ["Home hotel", "Suite & camere", "Suite detail", "Esperienze concierge"],
+        "palazzo-novecento",
+        [
+          { file: "1-home.png", label: "Home hotel" },
+          { file: "2-rooms.png", label: "Camere" },
+          { file: "3-detail.png", label: "Suite detail" },
+          { file: "4-experiences.png", label: "Esperienze" },
+        ]),
     ],
   },
   {
