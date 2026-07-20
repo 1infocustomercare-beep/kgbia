@@ -49,9 +49,9 @@ const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
 // Skip intro on landing and on client/demo routes where content must appear immediately
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
   (window.location.pathname === "/" ||
-    /^(\/home|\/index|\/landing|\/empire|\/home-prestige|\/landing-legacy)(\/|$)/.test(window.location.pathname) ||
     window.location.pathname === "/demo" ||
     /^\/(r|b|demo\/|portfolio|superadmin|admin|auth|login|reset-password|kitchen|partner\/register|partner|join|onboarding|t\/)/.test(window.location.pathname));
+
 
 const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 25000 : 25000;
 
@@ -583,13 +583,8 @@ function App() {
                           Caos→Empire, services, industries, portfolio, process,
                           proof, CTA. Bilingue IT/EN. */}
                       <Route path="/" element={<EmpirePrestigeHome />} />
-                      {/* Alias legacy: qualunque vecchio link "home Empire" converge sulla homepage ufficiale. */}
-                      <Route path="/home" element={<Navigate to="/" replace />} />
-                      <Route path="/index" element={<Navigate to="/" replace />} />
-                      <Route path="/landing" element={<Navigate to="/" replace />} />
-                      <Route path="/empire" element={<Navigate to="/" replace />} />
-                      <Route path="/home-prestige" element={<Navigate to="/" replace />} />
-                      <Route path="/landing-legacy" element={<Navigate to="/" replace />} />
+
+
                       {/* Pagina catalogo mockup canonica = /portfolio (MockupCatalogPage).
                           Le rotte legacy /mockups-demo, /demo-mockups, /mockups
                           reindirizzano lì per non rompere i link esistenti. */}
