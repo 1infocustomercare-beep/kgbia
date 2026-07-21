@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
-import { PRESTIGE_SECTOR_HERO } from "@/data/prestige-home-mockups";
+import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
 const INDUSTRIES = [
   {
@@ -77,6 +77,19 @@ const INDUSTRIES = [
     ],
   },
 ];
+
+const resolveVisualSectorId = (id: string) => {
+  if (id === "hotel") return "hospitality";
+  if (id === "pro") return "healthcare";
+  return id;
+};
+
+const getStudioMockupForSector = (id: string): string => {
+  const visualId = resolveVisualSectorId(id);
+  const group = SECTOR_MOCKUPS.find((g) => g.id === visualId) ?? SECTOR_MOCKUPS[0];
+  const variant = group?.variants.find((v) => v.tier === "primary" && v.source === "studio") ?? group?.variants[0];
+  return variant?.screens[0]?.image ?? variant?.screen ?? SECTOR_MOCKUPS[0]?.variants[0]?.screen ?? "";
+};
 
 export default function PrestigeIndustries() {
   const userTouchedRef = useRef(false);
@@ -165,7 +178,7 @@ export default function PrestigeIndustries() {
             }}
           >
             <img
-              src={PRESTIGE_SECTOR_HERO[current.id] ?? PRESTIGE_SECTOR_HERO.food}
+              src={getStudioMockupForSector(current.id)}
               alt={`Mockup ${current.name}`}
               loading="lazy"
               className="h-full w-full object-cover"

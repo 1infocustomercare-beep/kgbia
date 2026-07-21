@@ -49,7 +49,7 @@ export default function PrestigePortfolio() {
     );
     return SECTOR_MOCKUPS.flatMap((g) =>
       g.variants
-        .filter((v) => v.tier === "extended" && !primaryBrands.has(v.brand.trim().toLowerCase()))
+        .filter((v) => v.tier === "extended" && v.source === "reference" && !primaryBrands.has(v.brand.trim().toLowerCase()))
         .map((v) => ({ ...v, sectorId: g.id, sectorLabel: g.label })),
     );
   }, []);
