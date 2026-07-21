@@ -335,3 +335,116 @@ export default function MockupLightbox({
     document.body,
   );
 }
+
+/* ---------------- All-styles auto-scroll marquee ---------------- */
+type MarqueeProps = {
+  variants: SectorMockupVariant[];
+  activeIndex: number;
+  activeScreen: number;
+  onPick: (variantIdx: number, screenIdx: number) => void;
+};
+
+function AllStylesMarquee({ variants, activeIndex, activeScreen, onPick }: MarqueeProps) {
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const pausedRef = useRef(false);
+  const offsetRef = useRef(0);
+
+  // Flatten every variant × every screen
+  const items = variants.flatMap((v, vi) => {
+    const screens = v.screens?.length ? v.screens : [{ label: "Home", caption: "", image: v.screen }];
+    return screens.map((s, si) => ({
+      key: `${v.id}-${si}`,
+      variantIdx: vi,
+      screenIdx: si,
+      label: s.label,
+      brand: v.brand,
+      style: v.style,
+      image: s.image,
+    }));
+  });
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    let raf = 0;
+    let last = performance.now();
+    const speed = 40; // px/sec
+    const step = (now: number) => {
+      const dt = (now - last) / 1000;
+      last = now;
+      if (!pausedRef.current) {
+        offsetRef.current += speed * dt;
+        const half = track.scrollWidth / 2;
+        if (half > 0 && offsetRef.current >= half) offsetRef.current -= half;
+        track.style.transform = `translate3d(${-offsetRef.current}px,0,0)`;
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [items.length]);
+
+  if (items.length === 0) return null;
+  // Duplicate for seamless loop
+  const loop = [...items, ...items];
+
+  return (
+    <div
+      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] py-4"
+      onMouseEnter={() => (pausedRef.current = true)}
+      onMouseLeave={() => (pausedRef.current = false)}
+      onTouchStart={() => (pausedRef.current = true)}
+      onTouchEnd={() => (pausedRef.current = false)}
+    >
+      <div className="mb-3 flex items-center justify-between px-4">
+        <div className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/60">
+          Tutti gli stili · {variants.length} varianti · {items.length} schermate
+        </div>
+        <div className="text-[10px] uppercase tracking-[0.2em] text-white/40">hover per mettere in pausa</div>
+      </div>
+      <div ref={trackRef} className="flex w-max gap-3 will-change-transform">
+        {loop.map((it, i) => {
+          const active = it.variantIdx === activeIndex && it.screenIdx === activeScreen;
+          return (
+            <button
+              key={it.key + "-" + i}
+              onClick={() => onPick(it.variantIdx, it.screenIdx)}
+              className="group/card shrink-0 text-left transition"
+              style={{ opacity: active ? 1 : 0.78 }}
+              aria-label={`${it.brand} — ${it.label}`}
+            >
+              <div
+                className="overflow-hidden rounded-[14px] bg-black transition"
+                style={{
+                  width: 96,
+                  height: Math.round(96 * (19.5 / 9)),
+                  boxShadow: active
+                    ? "0 0 0 2px rgba(255,255,255,0.95), 0 16px 34px -14px rgba(0,0,0,0.8)"
+                    : "0 0 0 1px rgba(255,255,255,0.14), 0 10px 24px -14px rgba(0,0,0,0.6)",
+                }}
+              >
+                <img
+                  src={it.image}
+                  alt={`${it.brand} ${it.label}`}
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                  className="h-full w-full object-cover object-top transition duration-500 group-hover/card:scale-[1.04]"
+                />
+              </div>
+              <div className="mt-1.5 max-w-[96px] truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-white/85">
+                {it.brand}
+              </div>
+              <div className="max-w-[96px] truncate text-[9px] uppercase tracking-[0.14em] text-white/50">
+                {it.label}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+      {/* Edge fades */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[rgba(6,7,12,0.94)] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[rgba(6,7,12,0.94)] to-transparent" />
+    </div>
+  );
+}
