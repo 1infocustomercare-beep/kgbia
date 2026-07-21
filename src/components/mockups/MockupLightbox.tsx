@@ -318,6 +318,19 @@ export default function MockupLightbox({
           )}
         </aside>
       </div>
+
+      {/* Auto-scroll marquee: ALL variants × ALL screens */}
+      <div onClick={(e) => e.stopPropagation()} className="relative mx-auto w-full max-w-[1600px] px-2 pb-10">
+        <AllStylesMarquee
+          variants={variants}
+          activeIndex={index}
+          activeScreen={screenIdx}
+          onPick={(vi, si) => {
+            setIndex(vi);
+            setScreenIdx(si);
+          }}
+        />
+      </div>
     </div>,
     document.body,
   );
