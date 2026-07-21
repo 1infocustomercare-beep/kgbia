@@ -100,6 +100,8 @@ export type SectorMockupVariant = {
   screen: string;
   /** Coherent ordered sequence of screens: Home → Menu → Dettaglio → Prenotazione */
   screens: MockupScreen[];
+  /** Asset source quality/origin used to keep old catalog screens out of the main homepage. */
+  source: "studio" | "reference" | "catalog";
   /**
    * Quality tier.
    * - "primary"  = curated 4-screen sequence from portfolio-lowengeld/<slug>/
@@ -256,6 +258,7 @@ const V = (
   features,
   screen,
   screens: buildScreens(sectorId, screen, heroStem),
+  source: "catalog",
   tier: "extended",
 });
 
@@ -279,6 +282,7 @@ const VManual = (
   features,
   screen: portfolioImage(slug, entries[0].file),
   screens: buildManualScreens(sectorId, entries, slug),
+  source: "studio",
   tier: "primary",
 });
 
@@ -847,7 +851,8 @@ for (const folder of discoverFolders()) {
     features,
     screen: screens[0].image,
     screens,
-    tier: "primary",
+    source: "reference",
+    tier: "extended",
   };
 
 

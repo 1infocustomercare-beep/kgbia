@@ -25,13 +25,13 @@ export default function PrestigePortfolio() {
     () =>
       SECTOR_MOCKUPS
         .map((g) => {
-          const primary = g.variants.filter((v) => v.tier === "primary");
+          const primary = g.variants.filter((v) => v.tier === "primary" && v.source === "studio");
           return {
             sectorId: g.id,
             sectorLabel: g.label,
             tagline: g.tagline,
-            variants: primary.length ? primary : g.variants,
-            hero: (primary[0] ?? g.variants[0]) as SectorMockupVariant | undefined,
+            variants: primary,
+            hero: primary[0] as SectorMockupVariant | undefined,
           };
         })
         .filter((h) => !!h.hero),
@@ -49,7 +49,7 @@ export default function PrestigePortfolio() {
     );
     return SECTOR_MOCKUPS.flatMap((g) =>
       g.variants
-        .filter((v) => v.tier === "extended" && !primaryBrands.has(v.brand.trim().toLowerCase()))
+        .filter((v) => v.tier === "extended" && v.source === "reference" && !primaryBrands.has(v.brand.trim().toLowerCase()))
         .map((v) => ({ ...v, sectorId: g.id, sectorLabel: g.label })),
     );
   }, []);

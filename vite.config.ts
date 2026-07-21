@@ -29,6 +29,9 @@ export default defineConfig(({ mode }) => ({
     mcpPlugin(),
     mode === "development" && componentTagger(),
     VitePWA({
+      // Pre-lancio: niente app-shell/cache PWA. La home deve caricare sempre
+      // la build corrente e non può riproporre vecchie landing al refresh.
+      disable: true,
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,svg,webp}"],

@@ -37,8 +37,8 @@ const SPEED_PX_PER_SEC = 32;
 
 export default function PrestigeParallaxCarousel() {
   const slides = useMemo<Slide[]>(() => {
-    const all = allMockupVariants();
-    // one variant per sector — first two — for visual diversity
+    const all = allMockupVariants().filter((v) => v.tier === "primary" && v.source === "studio");
+    // Only the curated studio sequences are allowed on the homepage carousel.
     const bySector = new Map<string, Slide[]>();
     for (const v of all) {
       const arr = bySector.get(v.sectorId) ?? [];
@@ -47,7 +47,7 @@ export default function PrestigeParallaxCarousel() {
           id: `${v.sectorId}-${v.id}`,
           brand: v.brand,
           sector: v.sectorLabel,
-          image: v.screen,
+          image: v.screens[0]?.image ?? v.screen,
           accent: ACCENT_BY_SECTOR[v.sectorId] ?? "hsl(44 72% 58%)",
         });
       }

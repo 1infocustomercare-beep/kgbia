@@ -11,8 +11,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, MousePointerClick, Sparkles } from "lucide-react";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_SLUGS } from "@/data/demo-industries";
-import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
-import { getSectorHeroImages, SECTOR_MOCKUP_CATALOG } from "@/config/demoSiteMockups";
+import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 import { getPublicSiteBasePath } from "@/lib/public-site-path";
 
 type Item = {
@@ -24,18 +23,18 @@ type Item = {
 
 const FEATURED_ORDER: IndustryId[] = [
   "food", "ncc", "beauty", "hospitality", "fitness", "healthcare",
-  "retail", "agriturismo", "beach", "veterinary", "childcare", "photography",
+  "construction", "veterinary", "childcare",
 ];
 
 function pickImages(id: IndustryId): string[] {
   const set = new Set<string>();
-  (SECTOR_MOCKUP_IMAGES[id] || []).forEach((u) => u && set.add(u));
-  getSectorHeroImages(id).forEach((u) => u && set.add(u));
-  const catalog = SECTOR_MOCKUP_CATALOG[id];
-  if (catalog?.heroImage) set.add(catalog.heroImage);
-  catalog?.projects?.forEach((p) =>
-    p.images?.forEach((img) => img?.url && set.add(img.url)),
-  );
+  const group = SECTOR_MOCKUPS.find((g) => g.id === id);
+  group?.variants
+    .filter((v) => v.tier === "primary" && v.source === "studio")
+    .forEach((v) => {
+      const screens = v.screens.length ? v.screens : [{ image: v.screen }];
+      screens.forEach((screen) => screen.image && set.add(screen.image));
+    });
   return Array.from(set).slice(0, 5);
 }
 
