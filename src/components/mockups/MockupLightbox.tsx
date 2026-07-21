@@ -236,18 +236,6 @@ export default function MockupLightbox({
           )}
         </div>
 
-        {/* Auto-scroll marquee: ALL variants × ALL screens */}
-        <AllStylesMarquee
-          variants={variants}
-          activeIndex={index}
-          activeScreen={screenIdx}
-          onPick={(vi, si) => {
-            setIndex(vi);
-            setScreenIdx(si);
-          }}
-        />
-        </div>
-
         {/* Info panel */}
         <aside className="flex w-full max-w-md flex-col gap-5 text-white md:max-w-sm md:pt-6">
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-white/60">
