@@ -30,10 +30,27 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const { orderId, restaurantId, orderTotal, customerEmail, successUrl, cancelUrl } = await req.json();
+    const { orderId, restaurantId, customerEmail, successUrl, cancelUrl } = await req.json();
 
-    if (!orderId || !restaurantId || !orderTotal) {
-      throw new Error("Missing required fields: orderId, restaurantId, orderTotal");
+    if (!orderId || !restaurantId) {
+      throw new Error("Missing required fields: orderId, restaurantId");
+    }
+
+    // ── Trusted server-side lookup of the real order total ──
+    const { data: orderRow, error: orderErr } = await supabase
+      .from("orders")
+      .select("total, restaurant_id, status")
+      .eq("id", orderId)
+      .maybeSingle();
+    if (orderErr || !orderRow) {
+      return new Response(JSON.stringify({ error: "order_not_found" }), { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    if (orderRow.restaurant_id !== restaurantId) {
+      return new Response(JSON.stringify({ error: "restaurant_mismatch" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const orderTotal = Number(orderRow.total);
+    if (!Number.isFinite(orderTotal) || orderTotal <= 0) {
+      return new Response(JSON.stringify({ error: "invalid_order_total" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     // Best-effort: identify the logged-in customer (if any) so the order is linked to them
