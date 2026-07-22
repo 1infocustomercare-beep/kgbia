@@ -62,6 +62,20 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // ── Auth guard ──
+    const authHeader = req.headers.get("Authorization") || "";
+    if (!authHeader.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const userClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: authData, error: authErr } = await userClient.auth.getUser();
+    if (authErr || !authData?.user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const callerId = authData.user.id;
+
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
     const { approval_id, decision, edited_body, edited_subject, edited_html, override_template_id } = await req.json();
     if (!approval_id) return new Response(JSON.stringify({ error: "approval_id required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -69,6 +83,14 @@ Deno.serve(async (req) => {
     const { data: approval } = await supabase
       .from("sales_agent_approvals").select("*").eq("id", approval_id).single();
     if (!approval) return new Response(JSON.stringify({ error: "not_found" }), { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+
+    // ── Ownership check ──
+    if (approval.owner_id !== callerId) {
+      const { data: isSuper } = await supabase.rpc("has_role", { _user_id: callerId, _role: "super_admin" });
+      if (!isSuper) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    }
 
     if (decision === "reject") {
       await supabase.from("sales_agent_approvals").update({

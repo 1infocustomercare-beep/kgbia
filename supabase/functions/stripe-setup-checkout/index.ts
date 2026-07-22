@@ -32,6 +32,23 @@ serve(async (req) => {
       throw new Error("Missing restaurantId or customerEmail");
     }
 
+    // ── Ownership check: caller must own the restaurant, or be super admin ──
+    const svc = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const { data: restaurant } = await svc
+      .from("restaurants")
+      .select("id, owner_id")
+      .eq("id", restaurantId)
+      .maybeSingle();
+    if (!restaurant) {
+      return new Response(JSON.stringify({ error: "restaurant_not_found" }), { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    if (restaurant.owner_id !== _authUser.id) {
+      const { data: isSuper } = await svc.rpc("has_role", { _user_id: _authUser.id, _role: "super_admin" });
+      if (!isSuper) {
+        return new Response(JSON.stringify({ error: "Forbidden: not restaurant owner" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    }
+
     const plans: Record<string, { amount: number; installments: number; label: string }> = {
       full: { amount: 299700, installments: 1, label: "Empire Setup — Pagamento Unico €2.997" },
       "3x": { amount: 109900, installments: 3, label: "Empire Setup — 3 Rate da €1.099/mese" },
