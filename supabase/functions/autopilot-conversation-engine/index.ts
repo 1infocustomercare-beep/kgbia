@@ -452,9 +452,10 @@ serve(async (req) => {
         .from("autopilot_conversations")
         .select("*")
         .eq("id", conversation_id)
-        .single();
+        .eq("owner_id", user.id)
+        .maybeSingle();
       if (!conv) {
-        return new Response(JSON.stringify({ error: "conv not found" }), {
+        return new Response(JSON.stringify({ error: "conv not found or forbidden" }), {
           status: 404,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -503,7 +504,7 @@ serve(async (req) => {
         last_ai_message_at: new Date().toISOString(),
         next_action: "wait_lead_reply",
         next_action_at: null,
-      }).eq("id", conversation_id);
+      }).eq("id", conversation_id).eq("owner_id", user.id);
 
       return new Response(JSON.stringify({ reply: args }), {
         status: 200,
@@ -514,12 +515,23 @@ serve(async (req) => {
     // ── CLOSE ────────────────────────────────────────────────
     if (action === "close_conversation") {
       const { conversation_id, reason, won } = body;
+      const { data: convToClose } = await supabase
+        .from("autopilot_conversations")
+        .select("id, owner_id")
+        .eq("id", conversation_id)
+        .eq("owner_id", user.id)
+        .maybeSingle();
+      if (!convToClose) {
+        return new Response(JSON.stringify({ error: "conv not found or forbidden" }), {
+          status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       await supabase.from("autopilot_conversations").update({
         status: won ? "won" : "closed",
         closed_at: new Date().toISOString(),
         closed_reason: reason,
         funnel_stage: won ? "won" : "lost",
-      }).eq("id", conversation_id);
+      }).eq("id", conversation_id).eq("owner_id", user.id);
 
       if (won) {
         await supabase.rpc("award_xp", {
