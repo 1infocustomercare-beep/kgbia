@@ -224,7 +224,7 @@ serve(async (req) => {
         ? await supabase.from("roi_calculations").select("*").eq(
           "id",
           roi_calculation_id,
-        ).eq("user_id", user.id).maybeSingle()
+        ).eq("owner_id", user.id).maybeSingle()
         : { data: null };
 
       if (pain_scan_id && !scan) {
