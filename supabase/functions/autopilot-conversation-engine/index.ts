@@ -339,9 +339,10 @@ serve(async (req) => {
         .from("autopilot_conversations")
         .select("*")
         .eq("id", conversation_id)
-        .single();
+        .eq("owner_id", user.id)
+        .maybeSingle();
       if (!conv) {
-        return new Response(JSON.stringify({ error: "conv not found" }), {
+        return new Response(JSON.stringify({ error: "conv not found or forbidden" }), {
           status: 404,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
