@@ -396,7 +396,7 @@ serve(async (req) => {
           ? "escalate_to_partner"
           : (args.suggest_followup_at ? "scheduled_followup" : "wait_lead_reply"),
         next_action_at: args.suggest_followup_at ?? null,
-      }).eq("id", conversation_id);
+      }).eq("id", conversation_id).eq("owner_id", user.id);
 
       // Save AI reply
       await supabase.from("autopilot_messages").insert({
