@@ -62,6 +62,17 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
+  // ── Auth guard: require shared cron secret ──
+  const CRON_SECRET = Deno.env.get("CRON_SECRET");
+  const authHeader = req.headers.get("Authorization") || "";
+  const cronHeader = req.headers.get("x-cron-secret") || "";
+  const isService = !!SERVICE_KEY && authHeader.includes(SERVICE_KEY);
+  const isCron = !!CRON_SECRET && cronHeader === CRON_SECRET;
+  if (!isService && !isCron) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
   try {
     const supa = createClient(SUPABASE_URL, SERVICE_KEY, {
       auth: { persistSession: false },
