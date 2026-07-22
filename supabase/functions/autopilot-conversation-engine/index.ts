@@ -217,15 +217,26 @@ serve(async (req) => {
         ? await supabase.from("pain_scans").select("*").eq(
           "id",
           pain_scan_id,
-        ).maybeSingle()
+        ).eq("owner_id", user.id).maybeSingle()
         : { data: null };
 
       const { data: roi } = roi_calculation_id
         ? await supabase.from("roi_calculations").select("*").eq(
           "id",
           roi_calculation_id,
-        ).maybeSingle()
+        ).eq("user_id", user.id).maybeSingle()
         : { data: null };
+
+      if (pain_scan_id && !scan) {
+        return new Response(JSON.stringify({ error: "pain_scan_not_found_or_forbidden" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (roi_calculation_id && !roi) {
+        return new Response(JSON.stringify({ error: "roi_not_found_or_forbidden" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       const sys = buildSystemPrompt({
         sector,
