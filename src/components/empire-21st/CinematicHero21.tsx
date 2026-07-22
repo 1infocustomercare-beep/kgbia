@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
+import OfficialEmpireHomeAlias from "@/components/empire-home/OfficialEmpireHomeAlias";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -192,6 +193,8 @@ export const CinematicHero = React.forwardRef<HTMLDivElement, CinematicHeroProps
   className, 
   ...props 
 }: CinematicHeroProps, forwardedRef) {
+  return <OfficialEmpireHomeAlias />;
+  
   
   const containerRef = useRef<HTMLDivElement>(null);
   const mainCardRef = useRef<HTMLDivElement>(null);
