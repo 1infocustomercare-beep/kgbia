@@ -396,7 +396,7 @@ async function generateValidatedAIImage(
       lastIssues = ["no_image_returned"];
       continue;
     }
-    const v = await validateMockupImage(lovableKey, dataUrl);
+    const v = await validateMockupImage(lovableKey, dataUrl, device);
     console.log(`[validate] attempt ${attempt}/${maxAttempts} engine=${engineUsed} ok=${v.ok} issues=${JSON.stringify(v.issues)}`);
     if (v.ok) return { dataUrl, attempts: attempt, lastIssues: v.issues, validated: true, engine_used: engineUsed };
     lastIssues = v.issues;
