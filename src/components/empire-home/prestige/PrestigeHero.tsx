@@ -186,11 +186,11 @@ export default function PrestigeHero() {
           {/* Trust strip */}
           <div className="prestige-hero-stagger prestige-hero-stagger--6 mt-9 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-[11px] uppercase tracking-[0.22em]"
                style={{ color: "hsl(var(--pr-muted-on-dark))", fontWeight: 600 }}>
-            <span>{t({ it: "★ 4.9/5", en: "★ 4.9/5" })}</span>
-            <span aria-hidden="true">·</span>
-            <span>{t({ it: "3.500+ aziende attive", en: "3,500+ active businesses" })}</span>
-            <span aria-hidden="true">·</span>
             <span>{t({ it: "Setup in 7 giorni", en: "7-day setup" })}</span>
+            <span aria-hidden="true">·</span>
+            <span>{t({ it: "IA multilingua 24/7", en: "Multilingual AI 24/7" })}</span>
+            <span aria-hidden="true">·</span>
+            <span>{t({ it: "90 giorni senza impegno", en: "90 days no commitment" })}</span>
           </div>
         </div>
 

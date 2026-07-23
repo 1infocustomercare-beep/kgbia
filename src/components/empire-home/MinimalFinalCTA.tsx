@@ -44,8 +44,8 @@ export default function MinimalFinalCTA() {
         </div>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-white/40">
-          <span>★ 4.9/5 · 3.500+ aziende</span>
-          <span>· Setup in 24h</span>
+          <span>Setup in 7 giorni</span>
+          <span>· IA multilingua 24/7</span>
           <span>· 90 giorni senza impegno</span>
           <span>· Cancelli quando vuoi</span>
         </div>

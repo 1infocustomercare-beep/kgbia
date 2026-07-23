@@ -1,9 +1,9 @@
 import { useEmpireScrollDirector } from "../ScrollDirector";
 
 const STATS = [
-  { value: "3.500+", label: "Aziende attive in 7 paesi" },
   { value: "7 giorni", label: "Setup medio chiavi in mano" },
-  { value: "4.9★", label: "Soddisfazione clienti (Google)" },
+  { value: "24/7", label: "IA che risponde ai tuoi clienti" },
+  { value: "90 giorni", label: "Senza impegno, cancelli quando vuoi" },
 ];
 
 const TESTIMONIALS = [
