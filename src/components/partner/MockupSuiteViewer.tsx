@@ -39,6 +39,8 @@ interface Props {
   typeScale?: number;
   /** Boost contrasto AA su testo e muted. Default false. */
   boostContrast?: boolean;
+  /** Device del mockup: mobile (iPhone 9:19.5, default) o desktop (browser 16:10). */
+  device?: "mobile" | "desktop";
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
