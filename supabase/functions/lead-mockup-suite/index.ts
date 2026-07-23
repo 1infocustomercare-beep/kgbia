@@ -679,7 +679,16 @@ Deno.serve(async (req) => {
       safeAreaPx: typeof safeAreaInput === "number" ? safeAreaInput : undefined,
       typeScale: typeof typeScaleInput === "number" ? typeScaleInput : undefined,
       boostContrast: !!boostContrastInput,
+      lowengeld: lowengeldStyle ? {
+        style_name: lowengeldStyle.style_name,
+        palette: lowengeldStyle.palette,
+        vibe: lowengeldStyle.vibe,
+        screen_labels: lowengeldStyle.screen_labels,
+      } : null,
     };
+    if (lowengeldStyle) {
+      console.log(`[mockup-suite] lowengeld style locked → ${lowengeldStyle.slug} (${lowengeldStyle.style_name}) for sector "${business_sector}"`);
+    }
     const variationSeed: number = Number.isFinite(Number(variationSeedInput))
       ? Number(variationSeedInput)
       : Math.floor(Math.random() * 1_000_000);
