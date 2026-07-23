@@ -447,6 +447,7 @@ function buildScreenPrompt(
     safeAreaPx?: number;
     typeScale?: number;
     boostContrast?: boolean;
+    lowengeld?: { style_name: string; palette: string; vibe: string; screen_labels: [string, string, string, string] } | null;
   },
 ): string {
   const styleMap: Record<string, string> = {
