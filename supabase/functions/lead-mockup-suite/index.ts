@@ -449,7 +449,9 @@ function buildScreenPrompt(
     boostContrast?: boolean;
     lowengeld?: { style_name: string; palette: string; vibe: string; screen_labels: [string, string, string, string] } | null;
   },
+  device: "mobile" | "desktop" = "mobile",
 ): string {
+  const isDesktop = device === "desktop";
   const styleMap: Record<string, string> = {
     paperfish:        "DARK SAKURA LUXURY giapponese: nero obsidian #0E0B0F, sakura pink #E89BAE, oro caldo #C9A86A. Font Cormorant Garamond serif elegante per heading, Inter per body. Texture carta giapponese sottile, ideogrammi kanji decorativi minimali",
     strapizzami:      "WARM CREAM TERRACOTTA artigianale italiano: crema #F5EBD8, terracotta #C84A2A, oro #B8893E. Font handwritten Caveat per accenti + Manrope sans bold. Texture forno a legna, atmosfera napoletana autentica",
