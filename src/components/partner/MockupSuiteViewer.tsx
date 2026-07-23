@@ -292,13 +292,13 @@ export function MockupSuiteViewer({
             >
               {/* Ambient glow personalizzato sul colore brand */}
               <div
-                className="absolute -inset-3 rounded-[48px] opacity-20 blur-2xl pointer-events-none transition-opacity group-hover:opacity-40"
+                className={`absolute -inset-3 opacity-20 blur-2xl pointer-events-none transition-opacity group-hover:opacity-40 ${isDesktop ? "rounded-[20px]" : "rounded-[48px]"}`}
                 style={{ background: primaryColor }}
               />
 
-              {/* iPhone titanium frame — proporzioni reali, mai distorte */}
+              {/* Frame — iPhone titanium (mobile) o browser chrome (desktop) */}
               <div
-                className="relative rounded-[42px] shadow-2xl overflow-hidden"
+                className={`relative shadow-2xl overflow-hidden ${isDesktop ? "rounded-[14px]" : "rounded-[42px]"}`}
                 style={{
                   width: frameWidth,
                   height: frameHeight,
@@ -309,43 +309,49 @@ export function MockupSuiteViewer({
                   boxSizing: "border-box",
                 }}
               >
-                {/* Dynamic Island — proporzionata al frame */}
-                <div
-                  className="absolute left-1/2 -translate-x-1/2 bg-black rounded-full z-30"
-                  style={{
-                    top: Math.round(frameWidth * 0.035),
-                    width: Math.round(frameWidth * 0.30),
-                    height: Math.round(frameWidth * 0.085),
-                  }}
-                />
-
-                {/* Side titanium buttons */}
-                <div
-                  className="absolute bg-foreground/25 rounded-l-full"
-                  style={{ left: -borderThickness, top: frameHeight * 0.14, width: borderThickness, height: 22 }}
-                />
-                <div
-                  className="absolute bg-foreground/25 rounded-l-full"
-                  style={{ left: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 38 }}
-                />
-                <div
-                  className="absolute bg-foreground/25 rounded-l-full"
-                  style={{ left: -borderThickness, top: frameHeight * 0.28, width: borderThickness, height: 38 }}
-                />
-                <div
-                  className="absolute bg-foreground/25 rounded-r-full"
-                  style={{ right: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 56 }}
-                />
+                {isDesktop ? (
+                  /* Browser chrome bar — 3 pallini + tab */
+                  <div
+                    className="absolute left-0 top-0 flex items-center gap-1.5 px-3 bg-neutral-900/95 border-b border-white/10 z-30"
+                    style={{ width: screenWidth, height: 24 }}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-[#FF5F57]" />
+                    <span className="w-2 h-2 rounded-full bg-[#FEBC2E]" />
+                    <span className="w-2 h-2 rounded-full bg-[#28C840]" />
+                    <div className="ml-3 flex-1 h-3.5 rounded-sm bg-white/10 flex items-center px-2">
+                      <span className="text-[8px] text-white/60 truncate">
+                        {businessName ? `${businessName.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it` : "brand.it"}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Dynamic Island — proporzionata al frame */}
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2 bg-black rounded-full z-30"
+                      style={{
+                        top: Math.round(frameWidth * 0.035),
+                        width: Math.round(frameWidth * 0.30),
+                        height: Math.round(frameWidth * 0.085),
+                      }}
+                    />
+                    {/* Side titanium buttons */}
+                    <div className="absolute bg-foreground/25 rounded-l-full" style={{ left: -borderThickness, top: frameHeight * 0.14, width: borderThickness, height: 22 }} />
+                    <div className="absolute bg-foreground/25 rounded-l-full" style={{ left: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 38 }} />
+                    <div className="absolute bg-foreground/25 rounded-l-full" style={{ left: -borderThickness, top: frameHeight * 0.28, width: borderThickness, height: 38 }} />
+                    <div className="absolute bg-foreground/25 rounded-r-full" style={{ right: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 56 }} />
+                  </>
+                )}
 
                 {/* Screen — riempie esattamente l'area interna, niente distorsioni */}
                 <div
                   className="absolute overflow-hidden bg-background"
                   style={{
-                    top: borderThickness,
+                    top: borderThickness + (isDesktop ? 24 : 0),
                     left: borderThickness,
                     width: screenWidth,
-                    height: screenHeight,
-                    borderRadius: 38,
+                    height: screenHeight - (isDesktop ? 24 : 0),
+                    borderRadius: isDesktop ? 0 : 38,
                   }}
                 >
                   {screen.render_mode === "ai" && screen.image_url ? (
