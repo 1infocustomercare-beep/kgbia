@@ -1,0 +1,20 @@
+{
+  "sector": "food",
+  "brand": "Cote Milano",
+  "style": "Michelin Obsidian Steakhouse",
+  "palette": "Obsidian nero, brace arancio, oro rame",
+  "description": "Steakhouse Michelin milanese in stile dark obsidian con carne wagyu fotorealistica e accenti bracio/oro.",
+  "features": [
+    "home",
+    "menu",
+    "detail",
+    "booking"
+  ],
+  "labels": [
+    "Home",
+    "Menu",
+    "Dettaglio",
+    "Prenota"
+  ],
+  "source": "lowengeld-ref+nano-banana-pro"
+}
