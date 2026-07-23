@@ -2080,6 +2080,7 @@ export function MockupSuiteGenerator({
               safeAreaPx={safeAreaPx}
               typeScale={typeScale}
               boostContrast={boostContrast}
+              device={device}
             />
 
             {/* ═══════════ CTA: GENERA SITO WEBAPP COMPLETO 1:1 ═══════════
