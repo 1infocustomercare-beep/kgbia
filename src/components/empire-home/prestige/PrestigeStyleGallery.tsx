@@ -57,17 +57,13 @@ function VariantCard({ v, i, onOpen }: { v: FlatVariant; i: number; onOpen: (v: 
     <button
       ref={ref}
       onClick={() => onOpen(v)}
-      className="group relative flex flex-col items-center rounded-3xl border p-4 sm:p-5 text-left transition-all duration-700 focus:outline-none focus-visible:ring-2"
+      className="group relative flex flex-col items-center text-center transition-all duration-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--pr-gold))] rounded-[36px]"
       style={{
         transitionDelay: `${(i % 8) * 60}ms`,
         opacity: visible ? 1 : 0,
         transform: visible
           ? `translateY(0) perspective(1000px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`
           : "translateY(28px)",
-        background:
-          "linear-gradient(180deg, hsl(var(--pr-emerald-mid) / 0.35), hsl(var(--pr-emerald-deep) / 0.45))",
-        borderColor: "hsl(var(--pr-gold) / 0.22)",
-        boxShadow: "0 24px 60px -30px hsl(var(--pr-emerald-deep) / 0.9)",
       }}
       onPointerMove={(e) => {
         const r = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
@@ -77,34 +73,25 @@ function VariantCard({ v, i, onOpen }: { v: FlatVariant; i: number; onOpen: (v: 
       }}
       onPointerLeave={() => setTilt({ rx: 0, ry: 0 })}
     >
-      {/* chip settore */}
-      <div className="mb-3 flex w-full items-center justify-between">
+      {/* iPhone senza riquadro */}
+      <div className="transition-transform duration-500 group-hover:-translate-y-1">
+        <PrestigePhone src={v.screen} alt={`${v.brand} — ${v.style}`} width={200} loading="lazy" />
+      </div>
+
+      {/* meta sotto al telefono */}
+      <div className="mt-6 w-full max-w-[240px]">
         <span
-          className="rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em]"
+          className="inline-block rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em]"
           style={{
             color: "hsl(var(--pr-gold-light))",
-            borderColor: "hsl(var(--pr-gold) / 0.35)",
-            background: "hsl(var(--pr-emerald-deep) / 0.55)",
+            background: "hsl(var(--pr-emerald-deep) / 0.6)",
+            border: "1px solid hsl(var(--pr-gold) / 0.3)",
           }}
         >
           {v.sectorLabel}
         </span>
-        <ArrowUpRight
-          size={16}
-          className="opacity-60 transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
-          style={{ color: "hsl(var(--pr-gold))" }}
-        />
-      </div>
-
-      {/* iPhone */}
-      <div className="flex justify-center py-1">
-        <PrestigePhone src={v.screen} alt={`${v.brand} — ${v.style}`} width={168} loading="lazy" />
-      </div>
-
-      {/* meta */}
-      <div className="mt-4 w-full text-center">
         <h3
-          className="prestige-italic text-lg leading-tight"
+          className="prestige-italic mt-3 text-lg leading-tight"
           style={{ color: "hsl(var(--pr-text-on-dark))", fontFamily: "'Playfair Display', serif" }}
         >
           {v.brand}
@@ -121,18 +108,16 @@ function VariantCard({ v, i, onOpen }: { v: FlatVariant; i: number; onOpen: (v: 
         >
           {v.description}
         </p>
-      </div>
-
-      {/* hover CTA */}
-      <div
-        className="mt-4 flex w-full items-center justify-center gap-2 rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] opacity-90 transition-all duration-500 group-hover:opacity-100"
-        style={{
-          color: "hsl(var(--pr-emerald-deep))",
-          background:
-            "linear-gradient(90deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)))",
-        }}
-      >
-        Apri demo live
+        <div
+          className="mt-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] opacity-90 transition-all duration-500 group-hover:opacity-100"
+          style={{
+            color: "hsl(var(--pr-emerald-deep))",
+            background:
+              "linear-gradient(90deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)))",
+          }}
+        >
+          <ArrowUpRight size={12} /> Apri demo live
+        </div>
       </div>
     </button>
   );
