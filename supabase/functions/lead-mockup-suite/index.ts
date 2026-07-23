@@ -327,7 +327,7 @@ REGOLE:
     if (parsed.has_third_party_logos) {
       issues.push(`third_party_logos:${(parsed.third_party_logos_found || []).join("|")}`);
     }
-    if (parsed.iphone_centered_no_tilt === false) {
+    if (!isDesktop && parsed.iphone_centered_no_tilt === false) {
       issues.push("iphone_not_centered_or_tilted");
     }
     // ok se nessun issue critico (centratura considerata "soft" — ammessa se è l'unico problema)
