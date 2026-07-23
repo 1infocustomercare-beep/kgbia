@@ -106,9 +106,10 @@ interface ScreenConfig {
 }
 
 const DEFAULT_SCREENS: ScreenConfig[] = [
-  { type: "home",     title: "Home",      prompt_hint: "prima schermata commerciale: hero fotografico credibile del business, nome brand grande, claim italiano breve, CTA principale, 2 card 'in evidenza' con prezzi reali e una sezione preview sotto" },
-  { type: "services", title: "Servizi",   prompt_hint: "seconda schermata operativa: elenco servizi/prodotti con categorie, foto piccole, descrizioni specifiche, prezzi realistici in euro, filtri e CTA contestuale" },
-  { type: "booking",  title: "Prenota",   prompt_hint: "terza schermata conversione: calendario/slot/orari o configuratore ordine, riepilogo compatto, dettagli cliente, CTA finale molto chiara" },
+  { type: "home",     title: "Home",       prompt_hint: "prima schermata commerciale: hero fotografico credibile del business, nome brand grande, claim italiano breve, CTA principale, 2 card 'in evidenza' con prezzi reali e una sezione preview sotto" },
+  { type: "services", title: "Menu",       prompt_hint: "seconda schermata catalogo: elenco servizi/prodotti con chip categorie in alto, foto piccole quadrate, descrizioni specifiche, prezzi realistici in euro, filtri e CTA contestuale — vista LISTA denza" },
+  { type: "catalog",  title: "Dettaglio",  prompt_hint: "terza schermata DETTAGLIO PRODOTTO/SERVIZIO: foto grande fotorealistica in alto, titolo, rating stelle, prezzo grande, descrizione italiana, opzioni/varianti a chip, add-on con checkbox, bottone gigante 'Aggiungi al carrello' o 'Prenota' — completa e realistica come pagina detail e-commerce" },
+  { type: "booking",  title: "Prenota",    prompt_hint: "quarta schermata conversione: calendario mese o step-by-step slot orari, selettore persone/opzioni, campo note, riepilogo carrello o card riassuntiva, CTA finale molto chiara con nota su cancellazione libera" },
 ];
 
 // Mappa settore -> template variante consigliata (esteso 15+ settori)
