@@ -243,11 +243,13 @@ export function MockupSuiteViewer({
     }
   };
 
-  // Frame dimensions — derivati da una larghezza base, con aspect ratio reale iPhone
-  const frameWidth = compact ? 220 : 280;
-  const frameHeight = Math.round(frameWidth * IPHONE_RATIO); // 220→477 / 280→607
+  // Frame dimensions — derivati da una larghezza base, con aspect ratio reale device
+  const DESKTOP_RATIO = 10 / 16; // height / width
+  const frameWidth = isDesktop ? (compact ? 380 : 480) : (compact ? 220 : 280);
+  const frameHeight = isDesktop
+    ? Math.round(frameWidth * DESKTOP_RATIO) + 26 // 26px browser chrome bar
+    : Math.round(frameWidth * IPHONE_RATIO);
   const borderThickness = compact ? 3 : 4;
-  // Inner screen è sempre frameWidth - 2*border (mai distorto)
   const screenWidth = frameWidth - borderThickness * 2;
   const screenHeight = frameHeight - borderThickness * 2;
 
