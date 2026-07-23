@@ -21,6 +21,7 @@ import { getStylePreset } from "@/lib/mockup-style-presets";
 import { useBrandingKitSettings } from "@/hooks/useBrandingKitSettings";
 import { BrandContrastCheck } from "./BrandContrastCheck";
 import { buildPublicMockupUrl } from "@/lib/public-share-url";
+import { LOWENGELD_STYLES } from "@/data/lowengeld-styles";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
@@ -453,6 +454,7 @@ export function MockupSuiteGenerator({
 
   const [engine, setEngine] = useState<MockupEngine>("react");
   const [templateVariant, setTemplateVariant] = useState<string>(initialTemplate || "auto");
+  const [lowengeldStyleSlug, setLowengeldStyleSlug] = useState<string>("auto");
   // Risincronizza il template quando arriva da deep-link / cambio prop esterno
   // (es. il venditore cambia stile dal form della pagina contenitore).
   useEffect(() => {
@@ -779,6 +781,8 @@ export function MockupSuiteGenerator({
         primary_color: primaryColor,
         engine,
         template_variant: templateVariant === "auto" ? undefined : templateVariant,
+        // Stile Lowengeld esplicito (portfolio-grade AI mockups). "auto" = match automatico su settore.
+        style_slug: lowengeldStyleSlug && lowengeldStyleSlug !== "auto" ? lowengeldStyleSlug : undefined,
         lead_id: leadId,
         preview_id: previewId,
         screens,
@@ -1246,6 +1250,41 @@ export function MockupSuiteGenerator({
                   ✨ Auto-rilevato dal settore: <span className="font-semibold text-foreground">{detectedTemplateLabel}</span>
                 </p>
               )}
+
+              {/* Stile Lowengeld — portfolio-grade AI reference (opzionale) */}
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold flex items-center gap-1.5">
+                  <Layers className="h-3.5 w-3.5" />
+                  Direzione stilistica portfolio (Lowengeld-grade)
+                </Label>
+                <Select value={lowengeldStyleSlug} onValueChange={setLowengeldStyleSlug} disabled={controlsLocked}>
+                  <SelectTrigger className="h-10 text-xs" title="Blocca palette+vibe+layout su uno degli stili del portfolio premium. 'Auto' = miglior match sul settore.">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[400px]">
+                    <SelectItem value="auto">🎯 Auto (match settore)</SelectItem>
+                    {Object.entries(
+                      LOWENGELD_STYLES.reduce<Record<string, typeof LOWENGELD_STYLES>>((acc, s) => {
+                        (acc[s.sector] ||= []).push(s);
+                        return acc;
+                      }, {})
+                    ).map(([sector, items]) => (
+                      <div key={sector}>
+                        <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{sector}</div>
+                        {items.map(s => (
+                          <SelectItem key={s.slug} value={s.slug}>
+                            {s.style_name} · <span className="opacity-60">{s.brand_italian}</span>
+                          </SelectItem>
+                        ))}
+                      </div>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-[11px] text-muted-foreground leading-snug">
+                  57 stili estratti dal portfolio premium — palette, tipografia e vibe agganciati alla reference visiva.
+                </p>
+              </div>
+
 
               {/* Palette swap rapido */}
               <div className="space-y-2">

@@ -10,6 +10,17 @@
 // 3. Se l'AI fallisce dopo tutti i retry, NON ritorniamo errore: facciamo
 //    fallback automatico al render React, così l'utente vede SEMPRE 4 mockup.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { LOWENGELD_STYLES, findLowengeldStyleForSector, type LowengeldStyle } from "../_shared/lowengeld-styles.ts";
+
+// Trova stile Lowengeld per slug esplicito o per sector-keywords auto-match
+function resolveLowengeldStyle(styleSlug: string | null | undefined, sector: string | null | undefined): LowengeldStyle | null {
+  if (styleSlug && typeof styleSlug === "string") {
+    const explicit = LOWENGELD_STYLES.find(s => s.slug === styleSlug);
+    if (explicit) return explicit;
+  }
+  if (sector) return findLowengeldStyleForSector(sector);
+  return null;
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -95,9 +106,10 @@ interface ScreenConfig {
 }
 
 const DEFAULT_SCREENS: ScreenConfig[] = [
-  { type: "home",     title: "Home",      prompt_hint: "prima schermata commerciale: hero fotografico credibile del business, nome brand grande, claim italiano breve, CTA principale, 2 card 'in evidenza' con prezzi reali e una sezione preview sotto" },
-  { type: "services", title: "Servizi",   prompt_hint: "seconda schermata operativa: elenco servizi/prodotti con categorie, foto piccole, descrizioni specifiche, prezzi realistici in euro, filtri e CTA contestuale" },
-  { type: "booking",  title: "Prenota",   prompt_hint: "terza schermata conversione: calendario/slot/orari o configuratore ordine, riepilogo compatto, dettagli cliente, CTA finale molto chiara" },
+  { type: "home",     title: "Home",       prompt_hint: "prima schermata commerciale: hero fotografico credibile del business, nome brand grande, claim italiano breve, CTA principale, 2 card 'in evidenza' con prezzi reali e una sezione preview sotto" },
+  { type: "services", title: "Menu",       prompt_hint: "seconda schermata catalogo: elenco servizi/prodotti con chip categorie in alto, foto piccole quadrate, descrizioni specifiche, prezzi realistici in euro, filtri e CTA contestuale — vista LISTA denza" },
+  { type: "catalog",  title: "Dettaglio",  prompt_hint: "terza schermata DETTAGLIO PRODOTTO/SERVIZIO: foto grande fotorealistica in alto, titolo, rating stelle, prezzo grande, descrizione italiana, opzioni/varianti a chip, add-on con checkbox, bottone gigante 'Aggiungi al carrello' o 'Prenota' — completa e realistica come pagina detail e-commerce" },
+  { type: "booking",  title: "Prenota",    prompt_hint: "quarta schermata conversione: calendario mese o step-by-step slot orari, selettore persone/opzioni, campo note, riepilogo carrello o card riassuntiva, CTA finale molto chiara con nota su cancellazione libera" },
 ];
 
 // Mappa settore -> template variante consigliata (esteso 15+ settori)
@@ -435,6 +447,7 @@ function buildScreenPrompt(
     safeAreaPx?: number;
     typeScale?: number;
     boostContrast?: boolean;
+    lowengeld?: { style_name: string; palette: string; vibe: string; screen_labels: [string, string, string, string] } | null;
   },
 ): string {
   const styleMap: Record<string, string> = {
@@ -539,6 +552,10 @@ ESATTAMENTE il livello che devi raggiungere.\n`
   if (typeof brand.typeScale === "number" && brand.typeScale !== 1) {
     brandLines.push(`• 🔠 Scala tipografica: ×${brand.typeScale.toFixed(2)} (titoli e body proporzionati)`);
   }
+  if (brand.lowengeld) {
+    const lw = brand.lowengeld;
+    brandLines.push(`• 🎨 DIREZIONE STILISTICA (portfolio Lowengeld-grade): stile "${lw.style_name}" — palette: ${lw.palette}. Vibe: ${lw.vibe}. Applica questa palette e questo mood a TUTTA la UI (background, superfici, tipografia, iconografia), mantenendo però il logo/foto reali del brand del cliente. La reference in allegato ha esattamente questa direzione: replicane la finezza tipografica, la densità e la qualità fotografica.`);
+  }
   const brandDirective = brandLines.length
     ? `\n═══ 🏷️ BRAND REALE DEL CLIENTE (REGOLA PRIORITARIA) ═══\n${brandLines.join("\n")}\n`
     : "";
@@ -642,7 +659,11 @@ Deno.serve(async (req) => {
       safe_area_px: safeAreaInput,
       type_scale: typeScaleInput,
       boost_contrast: boostContrastInput,
+      // ── Stile Lowengeld esplicito (portfolio-quality mockups) ──
+      style_slug: styleSlugInput,
     } = body;
+    const styleSlug: string | null = typeof styleSlugInput === "string" && styleSlugInput.trim() ? styleSlugInput.trim() : null;
+    const lowengeldStyle = resolveLowengeldStyle(styleSlug, business_sector);
     const brandLogoUrl: string | null = typeof brandLogoUrlInput === "string" && brandLogoUrlInput.startsWith("http") ? brandLogoUrlInput : null;
     const brandPhotos: string[] = Array.isArray(brandPhotosInput)
       ? brandPhotosInput.filter((u: any) => typeof u === "string" && u.startsWith("http")).slice(0, 4)
@@ -658,7 +679,16 @@ Deno.serve(async (req) => {
       safeAreaPx: typeof safeAreaInput === "number" ? safeAreaInput : undefined,
       typeScale: typeof typeScaleInput === "number" ? typeScaleInput : undefined,
       boostContrast: !!boostContrastInput,
+      lowengeld: lowengeldStyle ? {
+        style_name: lowengeldStyle.style_name,
+        palette: lowengeldStyle.palette,
+        vibe: lowengeldStyle.vibe,
+        screen_labels: lowengeldStyle.screen_labels,
+      } : null,
     };
+    if (lowengeldStyle) {
+      console.log(`[mockup-suite] lowengeld style locked → ${lowengeldStyle.slug} (${lowengeldStyle.style_name}) for sector "${business_sector}"`);
+    }
     const variationSeed: number = Number.isFinite(Number(variationSeedInput))
       ? Number(variationSeedInput)
       : Math.floor(Math.random() * 1_000_000);
@@ -774,15 +804,18 @@ Deno.serve(async (req) => {
     const backgroundJob = (async () => {
       // Reference image priorità:
       //   1) LOGO REALE del lead (sempre, su tutte le schermate per coerenza brand)
-      //   2) Brand photo del lead (round-robin sulle schermate per varietà visiva)
-      //   3) Catalog reference per il settore/tipo schermata (fallback)
+      //   2) Brand photo del lead (round-robin per varietà visiva)
+      //   3) Stile Lowengeld (auto-match settore o esplicito via style_slug) — portfolio-grade
+      //   4) Catalog reference per il settore/tipo schermata (fallback ultimo)
       const catalogRefs: (string | null)[] = screens.map(s => findCatalogReference(business_sector, s.type));
+      const lowRef: string | null = lowengeldStyle?.ref_url || null;
       const screenReferences: (string | null)[] = screens.map((s, i) => {
         if (brandLogoUrl) return brandLogoUrl;
         if (brandPhotos.length > 0) return brandPhotos[i % brandPhotos.length];
+        if (lowRef) return lowRef;
         return catalogRefs[i];
       });
-      const refSource = brandLogoUrl ? "brand_logo" : (brandPhotos.length > 0 ? "brand_photos" : "catalog");
+      const refSource = brandLogoUrl ? "brand_logo" : (brandPhotos.length > 0 ? "brand_photos" : (lowRef ? `lowengeld:${lowengeldStyle!.slug}` : "catalog"));
       const refCount = screenReferences.filter(Boolean).length;
       console.log(`[mockup-suite] reference source=${refSource} → ${refCount}/${screens.length} schermate avranno reference image`);
 
