@@ -31,7 +31,9 @@ import { MockupPresetSelector } from "@/components/partner/MockupPresetSelector"
 import { MOCKUP_STYLE_PRESETS, getStylePreset } from "@/lib/mockup-style-presets";
 import { PresetThemeScope } from "@/components/partner/PresetThemeScope";
 
-const COST = 15;
+// Legacy `custom-preview-generator` path removed — mockup/preview generation
+// now flows exclusively through <MockupSuiteGenerator/> → edge functions
+// `lead-mockup-suite` and `generate-demo-from-lead`.
 
 interface CustomPreview {
   id: string;
