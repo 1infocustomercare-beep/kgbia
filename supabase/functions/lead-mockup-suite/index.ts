@@ -856,10 +856,11 @@ Deno.serve(async (req) => {
               const refUrl = screenReferences[screenIdx];
               return generateValidatedAIImage(
                 LOVABLE_KEY,
-                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl, brandContext),
+                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl, brandContext, device),
                 pro,
                 5,
                 refUrl,
+                device,
               );
             })
           );
