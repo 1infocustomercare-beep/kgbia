@@ -1253,6 +1253,43 @@ export function MockupSuiteGenerator({
                 </p>
               )}
 
+              {/* Device: Mobile iPhone vs Desktop Browser */}
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold flex items-center gap-1.5">
+                  <Layers className="h-3.5 w-3.5" />
+                  Dispositivo mockup
+                </Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    disabled={controlsLocked}
+                    onClick={() => setDevice("mobile")}
+                    className={`h-10 rounded-md border text-xs font-semibold transition-all ${
+                      device === "mobile"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border/60 bg-background/40 text-muted-foreground hover:border-primary/40"
+                    }`}
+                  >
+                    📱 iPhone (9:19.5)
+                  </button>
+                  <button
+                    type="button"
+                    disabled={controlsLocked}
+                    onClick={() => setDevice("desktop")}
+                    className={`h-10 rounded-md border text-xs font-semibold transition-all ${
+                      device === "desktop"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border/60 bg-background/40 text-muted-foreground hover:border-primary/40"
+                    }`}
+                  >
+                    🖥️ Desktop Web (16:10)
+                  </button>
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-snug">
+                  Desktop = browser Chrome/Safari con landing/dashboard responsivo full-width, stessa coerenza visiva.
+                </p>
+              </div>
+
               {/* Stile Lowengeld — portfolio-grade AI reference (opzionale) */}
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold flex items-center gap-1.5">
