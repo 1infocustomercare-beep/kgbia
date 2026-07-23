@@ -358,6 +358,7 @@ async function generateValidatedAIImage(
   pro: boolean,
   maxAttempts = 5,
   referenceImageUrl?: string | null,
+  device: "mobile" | "desktop" = "mobile",
 ): Promise<{ dataUrl: string | null; attempts: number; lastIssues: string[]; validated: boolean; engine_used: string }> {
   let lastIssues: string[] = [];
   let lastDataUrl: string | null = null;
