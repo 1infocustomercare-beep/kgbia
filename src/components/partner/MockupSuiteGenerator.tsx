@@ -21,6 +21,7 @@ import { getStylePreset } from "@/lib/mockup-style-presets";
 import { useBrandingKitSettings } from "@/hooks/useBrandingKitSettings";
 import { BrandContrastCheck } from "./BrandContrastCheck";
 import { buildPublicMockupUrl } from "@/lib/public-share-url";
+import { LOWENGELD_STYLES } from "@/data/lowengeld-styles";
 
 export type MockupEngine = "react" | "nano_banana" | "nano_banana_pro";
 export type ScreenType =
