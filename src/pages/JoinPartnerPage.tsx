@@ -11,8 +11,8 @@ const JoinPartnerPage = () => {
   const navigate = useNavigate();
 
   const kpis = [
-    { icon: <DollarSign className="w-5 h-5" />, value: "€997", label: "per vendita", color: "hsl(var(--primary))" },
-    { icon: <Trophy className="w-5 h-5" />, value: "€1.500", label: "bonus mensile", color: "hsl(var(--empire-violet))" },
+    { icon: <DollarSign className="w-5 h-5" />, value: "Alta", label: "commissione per vendita", color: "hsl(var(--primary))" },
+    { icon: <Trophy className="w-5 h-5" />, value: "Bonus", label: "team leader mensile", color: "hsl(var(--empire-violet))" },
     { icon: <Users className="w-5 h-5" />, value: "25+", label: "settori coperti", color: "hsl(var(--accent))" },
     { icon: <Zap className="w-5 h-5" />, value: "€0", label: "investimento iniziale", color: "hsl(38, 65%, 55%)" },
   ];
@@ -61,8 +61,8 @@ const JoinPartnerPage = () => {
             Guadagna Vendendo la <span className="text-shimmer">Piattaforma AI</span> più Completa
           </h1>
           <p className="text-sm text-foreground/70 max-w-xl mx-auto leading-relaxed mb-8">
-            Diventa Partner Empire e guadagna €997 per ogni vendita + bonus fino a €1.500/mese.
-            Nessun investimento, nessun rischio. Solo guadagni.
+            Diventa Partner Empire: commissione ricorrente su ogni vendita, bonus team leader e kit vendita completo.
+            Zero investimento iniziale, zero rischio.
           </p>
         </motion.div>
 
