@@ -654,7 +654,11 @@ Deno.serve(async (req) => {
       safe_area_px: safeAreaInput,
       type_scale: typeScaleInput,
       boost_contrast: boostContrastInput,
+      // ── Stile Lowengeld esplicito (portfolio-quality mockups) ──
+      style_slug: styleSlugInput,
     } = body;
+    const styleSlug: string | null = typeof styleSlugInput === "string" && styleSlugInput.trim() ? styleSlugInput.trim() : null;
+    const lowengeldStyle = resolveLowengeldStyle(styleSlug, business_sector);
     const brandLogoUrl: string | null = typeof brandLogoUrlInput === "string" && brandLogoUrlInput.startsWith("http") ? brandLogoUrlInput : null;
     const brandPhotos: string[] = Array.isArray(brandPhotosInput)
       ? brandPhotosInput.filter((u: any) => typeof u === "string" && u.startsWith("http")).slice(0, 4)
