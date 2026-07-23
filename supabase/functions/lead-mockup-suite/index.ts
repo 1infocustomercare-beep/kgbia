@@ -552,6 +552,10 @@ ESATTAMENTE il livello che devi raggiungere.\n`
   if (typeof brand.typeScale === "number" && brand.typeScale !== 1) {
     brandLines.push(`• 🔠 Scala tipografica: ×${brand.typeScale.toFixed(2)} (titoli e body proporzionati)`);
   }
+  if (brand.lowengeld) {
+    const lw = brand.lowengeld;
+    brandLines.push(`• 🎨 DIREZIONE STILISTICA (portfolio Lowengeld-grade): stile "${lw.style_name}" — palette: ${lw.palette}. Vibe: ${lw.vibe}. Applica questa palette e questo mood a TUTTA la UI (background, superfici, tipografia, iconografia), mantenendo però il logo/foto reali del brand del cliente. La reference in allegato ha esattamente questa direzione: replicane la finezza tipografica, la densità e la qualità fotografica.`);
+  }
   const brandDirective = brandLines.length
     ? `\n═══ 🏷️ BRAND REALE DEL CLIENTE (REGOLA PRIORITARIA) ═══\n${brandLines.join("\n")}\n`
     : "";
