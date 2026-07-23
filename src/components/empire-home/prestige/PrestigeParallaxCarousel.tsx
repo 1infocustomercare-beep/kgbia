@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { allMockupVariants } from "@/data/sector-mockups";
+import PrestigePhone from "./PrestigePhone";
 
 /**
  * PrestigeParallaxCarousel — carosello orizzontale premium con:
