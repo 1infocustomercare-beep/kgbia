@@ -211,7 +211,7 @@ const StaticIframePage = lazy(() => import("./pages/StaticIframePage"));
 import EmpirePrestigeHome from "./pages/EmpirePrestigeHome";
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
-const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
+
 const PartnerLayout = lazy(() => import("./components/layout/PartnerLayout"));
 const PartnerHomePage = lazy(() => import("./pages/partner/PartnerHomePage"));
 const PartnerEarningsPage = lazy(() => import("./pages/partner/PartnerEarningsPage"));
@@ -224,7 +224,7 @@ const PartnerTeamPage = lazy(() => import("./pages/partner/PartnerTeamPage"));
 const NetworkPage = lazy(() => import("./pages/superadmin/NetworkPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const JoinPartnerPage = lazy(() => import("./pages/JoinPartnerPage"));
-const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
+
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const TerminiCondizioni = lazy(() => import("./pages/TerminiCondizioni"));
