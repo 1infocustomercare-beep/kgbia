@@ -781,6 +781,8 @@ export function MockupSuiteGenerator({
         primary_color: primaryColor,
         engine,
         template_variant: templateVariant === "auto" ? undefined : templateVariant,
+        // Stile Lowengeld esplicito (portfolio-grade AI mockups). "auto" = match automatico su settore.
+        style_slug: lowengeldStyleSlug && lowengeldStyleSlug !== "auto" ? lowengeldStyleSlug : undefined,
         lead_id: leadId,
         preview_id: previewId,
         screens,
