@@ -135,7 +135,7 @@ const JoinPartnerPage = () => {
             Pronto a Guadagnare?
           </h2>
           <p className="text-sm text-foreground/65 mb-6 max-w-md mx-auto">
-            Registrati omaggio, ricevi il tuo kit vendita e inizia a guadagnare commissioni dal primo giorno.
+            Registrati senza impegno, ricevi il tuo kit vendita e inizia a guadagnare commissioni dal primo giorno.
           </p>
           <motion.button
             onClick={() => navigate("/vendor/signup")}
