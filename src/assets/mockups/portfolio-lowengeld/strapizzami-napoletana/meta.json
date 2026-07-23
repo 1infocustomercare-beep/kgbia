@@ -1,0 +1,20 @@
+{
+  "sector": "food",
+  "brand": "Strapizzami",
+  "style": "Cream Terracotta Napoletana",
+  "palette": "Crema pergamena, terracotta scura, legno scuro, oro caldo",
+  "description": "Pizzeria napoletana tradizionale su carta pergamena crema con terracotta e forno a legna, foto pizze fotorealistiche.",
+  "features": [
+    "home",
+    "menu",
+    "detail",
+    "booking"
+  ],
+  "labels": [
+    "Home",
+    "Menu",
+    "Dettaglio",
+    "Ordine"
+  ],
+  "source": "lowengeld-ref+nano-banana-pro"
+}

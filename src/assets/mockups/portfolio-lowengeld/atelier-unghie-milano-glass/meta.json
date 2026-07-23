@@ -1,0 +1,20 @@
+{
+  "sector": "beauty",
+  "brand": "Atelier Unghie Milano",
+  "style": "Frosted Glass Lavender",
+  "palette": "Lavanda pastello, pesca, rosa cipria, bianco frost",
+  "description": "Nail atelier premium Milano stile glassmorphism translucido lavanda-pesca, pannelli sfumati Apple Vision-like.",
+  "features": [
+    "home",
+    "menu",
+    "detail",
+    "booking"
+  ],
+  "labels": [
+    "Home",
+    "Servizi",
+    "Trattamento",
+    "Prenota"
+  ],
+  "source": "lowengeld-ref+nano-banana-pro"
+}
