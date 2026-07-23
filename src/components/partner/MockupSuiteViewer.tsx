@@ -258,7 +258,9 @@ export function MockupSuiteViewer({
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Smartphone className="h-4 w-4" />
-          <span>4 schermate iPhone 16 Pro Max · proporzioni reali 9:19.5</span>
+          <span>
+            {screens.length} schermate {isDesktop ? "Desktop Web · proporzioni 16:10" : "iPhone 16 Pro Max · proporzioni reali 9:19.5"}
+          </span>
           <Badge variant="outline" className="text-xs">{templateVariant.replace(/_/g, " ")}</Badge>
         </div>
         <Button
