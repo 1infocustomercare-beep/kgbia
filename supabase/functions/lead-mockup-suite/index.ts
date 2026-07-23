@@ -790,15 +790,18 @@ Deno.serve(async (req) => {
     const backgroundJob = (async () => {
       // Reference image priorità:
       //   1) LOGO REALE del lead (sempre, su tutte le schermate per coerenza brand)
-      //   2) Brand photo del lead (round-robin sulle schermate per varietà visiva)
-      //   3) Catalog reference per il settore/tipo schermata (fallback)
+      //   2) Brand photo del lead (round-robin per varietà visiva)
+      //   3) Stile Lowengeld (auto-match settore o esplicito via style_slug) — portfolio-grade
+      //   4) Catalog reference per il settore/tipo schermata (fallback ultimo)
       const catalogRefs: (string | null)[] = screens.map(s => findCatalogReference(business_sector, s.type));
+      const lowRef: string | null = lowengeldStyle?.ref_url || null;
       const screenReferences: (string | null)[] = screens.map((s, i) => {
         if (brandLogoUrl) return brandLogoUrl;
         if (brandPhotos.length > 0) return brandPhotos[i % brandPhotos.length];
+        if (lowRef) return lowRef;
         return catalogRefs[i];
       });
-      const refSource = brandLogoUrl ? "brand_logo" : (brandPhotos.length > 0 ? "brand_photos" : "catalog");
+      const refSource = brandLogoUrl ? "brand_logo" : (brandPhotos.length > 0 ? "brand_photos" : (lowRef ? `lowengeld:${lowengeldStyle!.slug}` : "catalog"));
       const refCount = screenReferences.filter(Boolean).length;
       console.log(`[mockup-suite] reference source=${refSource} → ${refCount}/${screens.length} schermate avranno reference image`);
 
