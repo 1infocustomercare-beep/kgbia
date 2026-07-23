@@ -10,6 +10,17 @@
 // 3. Se l'AI fallisce dopo tutti i retry, NON ritorniamo errore: facciamo
 //    fallback automatico al render React, così l'utente vede SEMPRE 4 mockup.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { LOWENGELD_STYLES, findLowengeldStyleForSector, type LowengeldStyle } from "../_shared/lowengeld-styles.ts";
+
+// Trova stile Lowengeld per slug esplicito o per sector-keywords auto-match
+function resolveLowengeldStyle(styleSlug: string | null | undefined, sector: string | null | undefined): LowengeldStyle | null {
+  if (styleSlug && typeof styleSlug === "string") {
+    const explicit = LOWENGELD_STYLES.find(s => s.slug === styleSlug);
+    if (explicit) return explicit;
+  }
+  if (sector) return findLowengeldStyleForSector(sector);
+  return null;
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
