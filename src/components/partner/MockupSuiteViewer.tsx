@@ -415,15 +415,17 @@ export function MockupSuiteViewer({
                   )}
                 </div>
 
-                {/* Home indicator */}
-                <div
-                  className="absolute left-1/2 -translate-x-1/2 bg-foreground/30 rounded-full z-20"
-                  style={{
-                    bottom: Math.max(5, Math.round(frameWidth * 0.025)),
-                    width: Math.round(frameWidth * 0.34),
-                    height: 3,
-                  }}
-                />
+                {/* Home indicator (solo mobile) */}
+                {!isDesktop && (
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 bg-foreground/30 rounded-full z-20"
+                    style={{
+                      bottom: Math.max(5, Math.round(frameWidth * 0.025)),
+                      width: Math.round(frameWidth * 0.34),
+                      height: 3,
+                    }}
+                  />
+                )}
               </div>
             </div>
 
