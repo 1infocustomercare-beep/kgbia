@@ -31,7 +31,9 @@ import { MockupPresetSelector } from "@/components/partner/MockupPresetSelector"
 import { MOCKUP_STYLE_PRESETS, getStylePreset } from "@/lib/mockup-style-presets";
 import { PresetThemeScope } from "@/components/partner/PresetThemeScope";
 
-const COST = 15;
+// Legacy `custom-preview-generator` path removed — mockup/preview generation
+// now flows exclusively through <MockupSuiteGenerator/> → edge functions
+// `lead-mockup-suite` and `generate-demo-from-lead`.
 
 interface CustomPreview {
   id: string;
@@ -383,78 +385,11 @@ export default function PartnerCustomPreviewPage() {
     setGalleryUploading(false);
   };
 
-  const handleGenerate = async () => {
-    if (!form.lead_name.trim()) {
-      toast.error("Nome attività obbligatorio");
-      return;
-    }
-    setGenerating(true);
-    try {
-      const payload: any = {
-        template_style: form.template_style,
-        primary_color: form.primary_color,
-        logo_url: form.logo_url || undefined,
-        gallery_images: form.gallery_images,
-      };
+  // NOTE: la vecchia `handleGenerate` che invocava l'edge function
+  // `custom-preview-generator` è stata rimossa. La generazione mockup/preview
+  // avviene ora esclusivamente dal componente <MockupSuiteGenerator/> più sotto
+  // (lead-mockup-suite → generate-demo-from-lead), che è l'unico entry point.
 
-      if (mode === "lead" && selectedLeadId && selectedLeadId !== "none") {
-        const [src, realId] = selectedLeadId.split(":");
-        if (src === "intel") payload.lead_intelligence_id = realId;
-        else if (src === "scout") payload.lead_id = realId;
-        payload.manual_data = {
-          lead_name: form.lead_name, lead_city: form.lead_city, lead_sector: form.lead_sector,
-          lead_website: form.lead_website, lead_phone: form.lead_phone,
-          lead_address: form.lead_address, lead_email: form.lead_email,
-        };
-      } else {
-        payload.manual_data = {
-          lead_name: form.lead_name, lead_city: form.lead_city, lead_sector: form.lead_sector,
-          lead_website: form.lead_website, lead_phone: form.lead_phone,
-          lead_address: form.lead_address, lead_email: form.lead_email,
-        };
-      }
-
-      const { data, error } = await supabase.functions.invoke("custom-preview-generator", { body: payload });
-      if (error) throw error;
-      if (!(data as any)?.success) {
-        const err = (data as any)?.error || "Errore generazione";
-        if (err === "insufficient_credits") {
-          toast.error(`Crediti insufficienti: servono ${COST} crediti`);
-        } else {
-          toast.error(`Errore: ${err}`);
-        }
-        return;
-      }
-
-      toast.success(`Preview "${form.lead_name}" generata! 🎉`);
-
-      const { data: list } = await supabase.from("seller_custom_previews" as any).select("*").eq("owner_id", user!.id).order("created_at", { ascending: false });
-      setPreviews((list as any) || []);
-
-      setForm({
-        lead_name: "", lead_city: "", lead_sector: "", lead_phone: "", lead_website: "",
-        lead_address: "", lead_email: "",
-        template_style: "modern_dark", primary_color: "#C8963E",
-        logo_url: "", gallery_images: [],
-      });
-      setSelectedLeadId("");
-
-      // Bozza completata: rimuovi dal localStorage
-      if (DRAFT_KEY) {
-        try { localStorage.removeItem(DRAFT_KEY); } catch {}
-        setDraftSavedAt(null);
-        setDraftStatus("idle");
-        setDraftRestored(false);
-      }
-
-      const url = (data as any).public_url;
-      if (url) window.open(url, "_blank");
-    } catch (e: any) {
-      toast.error(e.message || "Errore generazione");
-    } finally {
-      setGenerating(false);
-    }
-  };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Eliminare questa preview?")) return;
