@@ -139,7 +139,9 @@ export function MockupSuiteViewer({
   safeAreaPx = 0,
   typeScale = 1,
   boostContrast = false,
+  device = "mobile",
 }: Props) {
+  const isDesktop = device === "desktop";
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
   const [zipping, setZipping] = useState(false);
