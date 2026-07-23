@@ -151,8 +151,8 @@ export default function PrestigeParallaxCarousel() {
     items.forEach((img) => {
       const r = img.getBoundingClientRect();
       const dx = (r.left + r.width / 2 - center) / rect.width; // -1..1
-      const parallax = dx * -18; // px
-      img.style.transform = `translate3d(${parallax}px,0,0) scale(1.08)`;
+      const parallax = dx * -14; // px
+      img.style.transform = `translate3d(${parallax}px,0,0)`;
     });
   };
 
