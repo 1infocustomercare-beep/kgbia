@@ -636,10 +636,23 @@ function App() {
                       <Route path="/" element={<EmpirePrestigeHome />} />
                       <Route path="/home" element={<Navigate to="/" replace />} />
                       <Route path="/index" element={<Navigate to="/" replace />} />
+                      <Route path="/index.html" element={<Navigate to="/" replace />} />
                       <Route path="/landing" element={<Navigate to="/" replace />} />
                       <Route path="/empire" element={<Navigate to="/" replace />} />
                       <Route path="/home-prestige" element={<Navigate to="/" replace />} />
                       <Route path="/landing-legacy" element={<Navigate to="/" replace />} />
+                      <Route path="/homepage" element={<Navigate to="/" replace />} />
+                      <Route path="/main-home" element={<Navigate to="/" replace />} />
+                      <Route path="/old-home" element={<Navigate to="/" replace />} />
+                      <Route path="/new-home" element={<Navigate to="/" replace />} />
+                      <Route path="/home-v2" element={<Navigate to="/" replace />} />
+                      <Route path="/landing-v2" element={<Navigate to="/" replace />} />
+                      <Route path="/empire-ai" element={<Navigate to="/" replace />} />
+                      <Route path="/ai" element={<Navigate to="/" replace />} />
+                      <Route path="/prestige" element={<Navigate to="/" replace />} />
+                      <Route path="/revolutionary" element={<Navigate to="/" replace />} />
+                      <Route path="/cosmic" element={<Navigate to="/" replace />} />
+                      <Route path="/21st" element={<Navigate to="/" replace />} />
 
 
                       {/* Pagina catalogo mockup canonica = /portfolio (MockupCatalogPage).
