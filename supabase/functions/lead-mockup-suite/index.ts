@@ -272,7 +272,9 @@ async function validateMockupImage(
         messages: [
           {
             role: "system",
-            content: "Sei un validatore qualità mockup iPhone. Ispeziona TUTTO il testo visibile nel display. Rispondi SOLO con JSON valido nello schema richiesto.",
+            content: isDesktop
+              ? "Sei un validatore qualità mockup DESKTOP WEB. Ispeziona TUTTO il testo visibile nel viewport browser. Rispondi SOLO con JSON valido nello schema richiesto."
+              : "Sei un validatore qualità mockup iPhone. Ispeziona TUTTO il testo visibile nel display. Rispondi SOLO con JSON valido nello schema richiesto.",
           },
           {
             role: "user",
