@@ -260,7 +260,9 @@ async function uploadDataUrl(client: any, dataUrl: string, path: string): Promis
 async function validateMockupImage(
   lovableKey: string,
   dataUrl: string,
+  device: "mobile" | "desktop" = "mobile",
 ): Promise<{ ok: boolean; issues: string[]; raw?: string }> {
+  const isDesktop = device === "desktop";
   try {
     const r = await fetch(AI_GATEWAY, {
       method: "POST",
@@ -270,7 +272,9 @@ async function validateMockupImage(
         messages: [
           {
             role: "system",
-            content: "Sei un validatore qualità mockup iPhone. Ispeziona TUTTO il testo visibile nel display. Rispondi SOLO con JSON valido nello schema richiesto.",
+            content: isDesktop
+              ? "Sei un validatore qualità mockup DESKTOP WEB. Ispeziona TUTTO il testo visibile nel viewport browser. Rispondi SOLO con JSON valido nello schema richiesto."
+              : "Sei un validatore qualità mockup iPhone. Ispeziona TUTTO il testo visibile nel display. Rispondi SOLO con JSON valido nello schema richiesto.",
           },
           {
             role: "user",
@@ -323,7 +327,7 @@ REGOLE:
     if (parsed.has_third_party_logos) {
       issues.push(`third_party_logos:${(parsed.third_party_logos_found || []).join("|")}`);
     }
-    if (parsed.iphone_centered_no_tilt === false) {
+    if (!isDesktop && parsed.iphone_centered_no_tilt === false) {
       issues.push("iphone_not_centered_or_tilted");
     }
     // ok se nessun issue critico (centratura considerata "soft" — ammessa se è l'unico problema)
@@ -358,6 +362,7 @@ async function generateValidatedAIImage(
   pro: boolean,
   maxAttempts = 5,
   referenceImageUrl?: string | null,
+  device: "mobile" | "desktop" = "mobile",
 ): Promise<{ dataUrl: string | null; attempts: number; lastIssues: string[]; validated: boolean; engine_used: string }> {
   let lastIssues: string[] = [];
   let lastDataUrl: string | null = null;
@@ -395,7 +400,7 @@ async function generateValidatedAIImage(
       lastIssues = ["no_image_returned"];
       continue;
     }
-    const v = await validateMockupImage(lovableKey, dataUrl);
+    const v = await validateMockupImage(lovableKey, dataUrl, device);
     console.log(`[validate] attempt ${attempt}/${maxAttempts} engine=${engineUsed} ok=${v.ok} issues=${JSON.stringify(v.issues)}`);
     if (v.ok) return { dataUrl, attempts: attempt, lastIssues: v.issues, validated: true, engine_used: engineUsed };
     lastIssues = v.issues;
@@ -449,7 +454,9 @@ function buildScreenPrompt(
     boostContrast?: boolean;
     lowengeld?: { style_name: string; palette: string; vibe: string; screen_labels: [string, string, string, string] } | null;
   },
+  device: "mobile" | "desktop" = "mobile",
 ): string {
+  const isDesktop = device === "desktop";
   const styleMap: Record<string, string> = {
     paperfish:        "DARK SAKURA LUXURY giapponese: nero obsidian #0E0B0F, sakura pink #E89BAE, oro caldo #C9A86A. Font Cormorant Garamond serif elegante per heading, Inter per body. Texture carta giapponese sottile, ideogrammi kanji decorativi minimali",
     strapizzami:      "WARM CREAM TERRACOTTA artigianale italiano: crema #F5EBD8, terracotta #C84A2A, oro #B8893E. Font handwritten Caveat per accenti + Manrope sans bold. Texture forno a legna, atmosfera napoletana autentica",
@@ -560,14 +567,46 @@ ESATTAMENTE il livello che devi raggiungere.\n`
     ? `\n═══ 🏷️ BRAND REALE DEL CLIENTE (REGOLA PRIORITARIA) ═══\n${brandLines.join("\n")}\n`
     : "";
 
-  return `SCREEN UI MOBILE PREMIUM — schermata "${screen.title}" (${variantIndex + 1}/3 · seed ${variationSeed}) di un'app reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}${brandDirective}
-
-═══ FORMATO OUTPUT (REGOLE INDEROGABILI) ═══
+  const formatBlock = isDesktop
+    ? `═══ FORMATO OUTPUT (REGOLE INDEROGABILI) ═══
+• SOLO UI DEL VIEWPORT BROWSER, SENZA laptop/monitor/cornice fisica, SENZA ombra esterna
+• Canvas ORIZZONTALE 16:10 (~1920×1200), riempito al 100% dall'interfaccia web
+• In alto: barra Chrome/Safari finta con 3 pallini (rosso/giallo/verde), tab attivo con favicon e titolo del brand, address bar con "https://${business.name.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it"
+• Sotto la barra browser: sito web landing/dashboard responsivo desktop full-width
+• Deve poter essere inserito dentro un frame browser esterno senza doppia cornice`
+    : `═══ FORMATO OUTPUT (REGOLE INDEROGABILI) ═══
 • SOLO UI DELLO SCHERMO, SENZA telefono, SENZA cornice, SENZA ombra esterna
 • Canvas verticale 9:19.5, riempito al 100% dall'interfaccia
 • Safe area iOS interna già inclusa: status bar, dynamic island e home indicator fanno parte della UI
 • Nessun testo o decorazione fuori dalla UI
-• Deve poter essere inserito dentro un frame iPhone esterno senza doppia cornice
+• Deve poter essere inserito dentro un frame iPhone esterno senza doppia cornice`;
+
+  const componentsBlock = isDesktop
+    ? `═══ UI COMPONENTS OBBLIGATORI INTERNI ALLO SCREEN (DESKTOP WEB) ═══
+• Chrome/Safari browser bar in alto con 3 pallini finestra, tab, address bar https, icone estensioni
+• Header sito full-width con logo brand a sinistra, nav orizzontale (5-6 voci), CTA a destra
+• Hero section grande con foto/video di sfondo e claim italiano tipografia editoriale
+• Layout multi-colonna (2-3 colonne) con card, prezzi, gallery, form
+• Footer completo con contatti, orari, social, mappa embed, P.IVA placeholder
+• Densità informativa desktop: usa tutto lo spazio orizzontale, no vuoti mobile-like
+• Micro-interazioni suggerite: hover states, badge, tooltip, breadcrumb`
+    : `═══ UI COMPONENTS OBBLIGATORI INTERNI ALLO SCREEN (MOBILE iOS) ═══
+• Status bar iOS in alto: ora 9:41, segnale 5G, WiFi, batteria 100%
+• Dynamic Island nera centrata in alto
+• Header app con titolo schermata coerente
+• Contenuto ben spaziato, gerarchia tipografica chiara
+• Card con border-radius 16-20px e ombre soft
+• Bottom navigation bar fissa con 5 icone (${bottomNav}), attiva colorata col primary
+• Home indicator iOS sottile in basso
+• CTA primari grandi (52px altezza), full-width`;
+
+  const forbiddenDevice = isDesktop
+    ? "🚫 VIETATO laptop/monitor/tastiera/mouse/mano/desk/mockup device esterno · niente cornice fisica, solo la UI browser piatta"
+    : "🚫 VIETATO telefono/cornice iPhone/tilt/prospettive 3D/mockup device esterno";
+
+  return `SCREEN UI ${isDesktop ? "DESKTOP WEB" : "MOBILE"} PREMIUM — schermata "${screen.title}" (${variantIndex + 1}/${isDesktop ? 4 : 3} · seed ${variationSeed}) di ${isDesktop ? "un sito web reale" : "un'app reale"} per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}${brandDirective}
+
+${formatBlock}
 
 ═══ CONTENUTO SCHERMATA (PERTINENTE AL SETTORE) ═══
 ${screen.prompt_hint || screen.title}
@@ -578,28 +617,20 @@ Il contenuto deve essere AUTENTICO per il settore "${business.sector}":
 • Microcopy 100% in italiano professionale (zero inglese eccetto status bar iOS)
 • ZERO testo placeholder/lorem ipsum/finto
 
-═══ COERENZA LOWENGELD-STYLE TRA LE 3 SCHERMATE ═══
-🎨 Questa è la schermata #${variantIndex + 1} di 3: deve essere diversa nella FUNZIONE, non un altro stile scollegato.
+═══ COERENZA LOWENGELD-STYLE TRA LE SCHERMATE ═══
+🎨 Questa è la schermata #${variantIndex + 1}: deve essere diversa nella FUNZIONE, non un altro stile scollegato.
 • Layout di QUESTA schermata: ${layout.desc}
 • Componenti UI specifici: ${components}
 • Mantieni stessi font, palette, logo, radius e stile iconografico su tutte le schermate
-• Cambia solo architettura e contenuti in base alla funzione: Home / Servizi / Prenota
+• Cambia solo architettura e contenuti in base alla funzione
 • Niente cambi colore casuali: usa ${primaryColor} come accento costante, solo micro-variazione ${accentRotation} sugli stati attivi
-• Deve sembrare una suite di 3 screenshot dello stesso prodotto, pronta per portfolio cliente
+• Deve sembrare una suite di screenshot dello stesso prodotto, pronta per portfolio cliente
 
 ═══ STILE GRAFICO ═══
 ${style}
 Colore primario brand del cliente (accent CTA principale): ${primaryColor}
 
-═══ UI COMPONENTS OBBLIGATORI INTERNI ALLO SCREEN ═══
-• Status bar iOS in alto: ora 9:41, segnale 5G, WiFi, batteria 100%
-• Dynamic Island nera centrata in alto
-• Header app con titolo schermata coerente
-• Contenuto ben spaziato, gerarchia tipografica chiara
-• Card con border-radius 16-20px e ombre soft
-• Bottom navigation bar fissa con 5 icone (${bottomNav}), attiva colorata col primary
-• Home indicator iOS sottile in basso
-• CTA primari grandi (52px altezza), full-width
+${componentsBlock}
 
 ═══ QUALITÀ ═══
 ${quality}
@@ -607,11 +638,11 @@ ${quality}
 ═══ DIVIETI ASSOLUTI ═══
 🚫 VIETATO scrivere "Empire", "Empire AI", "Empire AI Group", "Lovable", "Empireia"
 🚫 VIETATO loghi Apple, Google, Meta o brand di terze parti
-🚫 VIETATO testo in inglese nei contenuti dell'app
-🚫 VIETATO telefono/cornice iPhone/tilt/prospettive 3D/mockup device esterno
+🚫 VIETATO testo in inglese nei contenuti (eccetto url e status bar iOS)
+${forbiddenDevice}
 🚫 VIETATO testo distorto, lorem ipsum, placeholder generici
 🚫 VIETATO mockup wireframe o sketch
-🚫 VIETATO che le schermate sembrino tre template uguali con colori cambiati`;
+🚫 VIETATO che le schermate sembrino template uguali con colori cambiati`;
 }
 
 Deno.serve(async (req) => {
@@ -661,7 +692,10 @@ Deno.serve(async (req) => {
       boost_contrast: boostContrastInput,
       // ── Stile Lowengeld esplicito (portfolio-quality mockups) ──
       style_slug: styleSlugInput,
+      // ── Device: mobile (default) o desktop (browser web) ──
+      device: deviceInput,
     } = body;
+    const device: "mobile" | "desktop" = deviceInput === "desktop" ? "desktop" : "mobile";
     const styleSlug: string | null = typeof styleSlugInput === "string" && styleSlugInput.trim() ? styleSlugInput.trim() : null;
     const lowengeldStyle = resolveLowengeldStyle(styleSlug, business_sector);
     const brandLogoUrl: string | null = typeof brandLogoUrlInput === "string" && brandLogoUrlInput.startsWith("http") ? brandLogoUrlInput : null;
@@ -830,10 +864,11 @@ Deno.serve(async (req) => {
               const refUrl = screenReferences[screenIdx];
               return generateValidatedAIImage(
                 LOVABLE_KEY,
-                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl, brandContext),
+                buildScreenPrompt(s, business, templateVariant, primary_color, pro, variationSeed, screenIdx, !!refUrl, brandContext, device),
                 pro,
                 5,
                 refUrl,
+                device,
               );
             })
           );

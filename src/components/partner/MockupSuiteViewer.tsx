@@ -39,6 +39,8 @@ interface Props {
   typeScale?: number;
   /** Boost contrasto AA su testo e muted. Default false. */
   boostContrast?: boolean;
+  /** Device del mockup: mobile (iPhone 9:19.5, default) o desktop (browser 16:10). */
+  device?: "mobile" | "desktop";
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -137,7 +139,9 @@ export function MockupSuiteViewer({
   safeAreaPx = 0,
   typeScale = 1,
   boostContrast = false,
+  device = "mobile",
 }: Props) {
+  const isDesktop = device === "desktop";
   const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [downloading, setDownloading] = useState<number | null>(null);
   const [zipping, setZipping] = useState(false);
@@ -239,11 +243,13 @@ export function MockupSuiteViewer({
     }
   };
 
-  // Frame dimensions — derivati da una larghezza base, con aspect ratio reale iPhone
-  const frameWidth = compact ? 220 : 280;
-  const frameHeight = Math.round(frameWidth * IPHONE_RATIO); // 220→477 / 280→607
+  // Frame dimensions — derivati da una larghezza base, con aspect ratio reale device
+  const DESKTOP_RATIO = 10 / 16; // height / width
+  const frameWidth = isDesktop ? (compact ? 380 : 480) : (compact ? 220 : 280);
+  const frameHeight = isDesktop
+    ? Math.round(frameWidth * DESKTOP_RATIO) + 26 // 26px browser chrome bar
+    : Math.round(frameWidth * IPHONE_RATIO);
   const borderThickness = compact ? 3 : 4;
-  // Inner screen è sempre frameWidth - 2*border (mai distorto)
   const screenWidth = frameWidth - borderThickness * 2;
   const screenHeight = frameHeight - borderThickness * 2;
 
@@ -252,7 +258,9 @@ export function MockupSuiteViewer({
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Smartphone className="h-4 w-4" />
-          <span>4 schermate iPhone 16 Pro Max · proporzioni reali 9:19.5</span>
+          <span>
+            {screens.length} schermate {isDesktop ? "Desktop Web · proporzioni 16:10" : "iPhone 16 Pro Max · proporzioni reali 9:19.5"}
+          </span>
           <Badge variant="outline" className="text-xs">{templateVariant.replace(/_/g, " ")}</Badge>
         </div>
         <Button
@@ -284,13 +292,13 @@ export function MockupSuiteViewer({
             >
               {/* Ambient glow personalizzato sul colore brand */}
               <div
-                className="absolute -inset-3 rounded-[48px] opacity-20 blur-2xl pointer-events-none transition-opacity group-hover:opacity-40"
+                className={`absolute -inset-3 opacity-20 blur-2xl pointer-events-none transition-opacity group-hover:opacity-40 ${isDesktop ? "rounded-[20px]" : "rounded-[48px]"}`}
                 style={{ background: primaryColor }}
               />
 
-              {/* iPhone titanium frame — proporzioni reali, mai distorte */}
+              {/* Frame — iPhone titanium (mobile) o browser chrome (desktop) */}
               <div
-                className="relative rounded-[42px] shadow-2xl overflow-hidden"
+                className={`relative shadow-2xl overflow-hidden ${isDesktop ? "rounded-[14px]" : "rounded-[42px]"}`}
                 style={{
                   width: frameWidth,
                   height: frameHeight,
@@ -301,43 +309,49 @@ export function MockupSuiteViewer({
                   boxSizing: "border-box",
                 }}
               >
-                {/* Dynamic Island — proporzionata al frame */}
-                <div
-                  className="absolute left-1/2 -translate-x-1/2 bg-black rounded-full z-30"
-                  style={{
-                    top: Math.round(frameWidth * 0.035),
-                    width: Math.round(frameWidth * 0.30),
-                    height: Math.round(frameWidth * 0.085),
-                  }}
-                />
-
-                {/* Side titanium buttons */}
-                <div
-                  className="absolute bg-foreground/25 rounded-l-full"
-                  style={{ left: -borderThickness, top: frameHeight * 0.14, width: borderThickness, height: 22 }}
-                />
-                <div
-                  className="absolute bg-foreground/25 rounded-l-full"
-                  style={{ left: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 38 }}
-                />
-                <div
-                  className="absolute bg-foreground/25 rounded-l-full"
-                  style={{ left: -borderThickness, top: frameHeight * 0.28, width: borderThickness, height: 38 }}
-                />
-                <div
-                  className="absolute bg-foreground/25 rounded-r-full"
-                  style={{ right: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 56 }}
-                />
+                {isDesktop ? (
+                  /* Browser chrome bar — 3 pallini + tab */
+                  <div
+                    className="absolute left-0 top-0 flex items-center gap-1.5 px-3 bg-neutral-900/95 border-b border-white/10 z-30"
+                    style={{ width: screenWidth, height: 24 }}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-[#FF5F57]" />
+                    <span className="w-2 h-2 rounded-full bg-[#FEBC2E]" />
+                    <span className="w-2 h-2 rounded-full bg-[#28C840]" />
+                    <div className="ml-3 flex-1 h-3.5 rounded-sm bg-white/10 flex items-center px-2">
+                      <span className="text-[8px] text-white/60 truncate">
+                        {businessName ? `${businessName.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it` : "brand.it"}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Dynamic Island — proporzionata al frame */}
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2 bg-black rounded-full z-30"
+                      style={{
+                        top: Math.round(frameWidth * 0.035),
+                        width: Math.round(frameWidth * 0.30),
+                        height: Math.round(frameWidth * 0.085),
+                      }}
+                    />
+                    {/* Side titanium buttons */}
+                    <div className="absolute bg-foreground/25 rounded-l-full" style={{ left: -borderThickness, top: frameHeight * 0.14, width: borderThickness, height: 22 }} />
+                    <div className="absolute bg-foreground/25 rounded-l-full" style={{ left: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 38 }} />
+                    <div className="absolute bg-foreground/25 rounded-l-full" style={{ left: -borderThickness, top: frameHeight * 0.28, width: borderThickness, height: 38 }} />
+                    <div className="absolute bg-foreground/25 rounded-r-full" style={{ right: -borderThickness, top: frameHeight * 0.20, width: borderThickness, height: 56 }} />
+                  </>
+                )}
 
                 {/* Screen — riempie esattamente l'area interna, niente distorsioni */}
                 <div
                   className="absolute overflow-hidden bg-background"
                   style={{
-                    top: borderThickness,
+                    top: borderThickness + (isDesktop ? 24 : 0),
                     left: borderThickness,
                     width: screenWidth,
-                    height: screenHeight,
-                    borderRadius: 38,
+                    height: screenHeight - (isDesktop ? 24 : 0),
+                    borderRadius: isDesktop ? 0 : 38,
                   }}
                 >
                   {screen.render_mode === "ai" && screen.image_url ? (
@@ -401,15 +415,17 @@ export function MockupSuiteViewer({
                   )}
                 </div>
 
-                {/* Home indicator */}
-                <div
-                  className="absolute left-1/2 -translate-x-1/2 bg-foreground/30 rounded-full z-20"
-                  style={{
-                    bottom: Math.max(5, Math.round(frameWidth * 0.025)),
-                    width: Math.round(frameWidth * 0.34),
-                    height: 3,
-                  }}
-                />
+                {/* Home indicator (solo mobile) */}
+                {!isDesktop && (
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 bg-foreground/30 rounded-full z-20"
+                    style={{
+                      bottom: Math.max(5, Math.round(frameWidth * 0.025)),
+                      width: Math.round(frameWidth * 0.34),
+                      height: 3,
+                    }}
+                  />
+                )}
               </div>
             </div>
 
