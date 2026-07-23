@@ -260,7 +260,9 @@ async function uploadDataUrl(client: any, dataUrl: string, path: string): Promis
 async function validateMockupImage(
   lovableKey: string,
   dataUrl: string,
+  device: "mobile" | "desktop" = "mobile",
 ): Promise<{ ok: boolean; issues: string[]; raw?: string }> {
+  const isDesktop = device === "desktop";
   try {
     const r = await fetch(AI_GATEWAY, {
       method: "POST",
