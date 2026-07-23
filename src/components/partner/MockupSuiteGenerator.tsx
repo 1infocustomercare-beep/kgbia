@@ -453,6 +453,7 @@ export function MockupSuiteGenerator({
 
   const [engine, setEngine] = useState<MockupEngine>("react");
   const [templateVariant, setTemplateVariant] = useState<string>(initialTemplate || "auto");
+  const [lowengeldStyleSlug, setLowengeldStyleSlug] = useState<string>("auto");
   // Risincronizza il template quando arriva da deep-link / cambio prop esterno
   // (es. il venditore cambia stile dal form della pagina contenitore).
   useEffect(() => {
