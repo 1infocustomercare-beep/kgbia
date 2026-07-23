@@ -676,7 +676,10 @@ function App() {
                       <Route path="/admin" element={<AuthPage />} />
                       <Route path="/kitchen" element={<KitchenView />} />
                       <Route path="/kitchen/:slug" element={<KitchenView />} />
-                      <Route path="/partner/register" element={<PartnerRegister />} />
+                      {/* Consolidated: /partner/register aliased to canonical /vendor/signup */}
+                      <Route path="/partner/register" element={<Navigate to="/vendor/signup" replace />} />
+                      <Route path="/partner/signup" element={<Navigate to="/vendor/signup" replace />} />
+                      <Route path="/diventa-partner" element={<Navigate to="/join" replace />} />
                       <Route path="/join" element={<JoinPartnerPage />} />
                       <Route path="/pacchetto-base" element={<BasePackagePurchase />} />
                       <Route path="/pacchetto-completo" element={<CustomProjectBrief />} />

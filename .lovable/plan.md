@@ -1,120 +1,127 @@
-# Ristrutturazione pacchetti + Rete venditori
 
-## Obiettivo
-Due percorsi commerciali distinti + rete venditori con link referral e commissioni.
+# Revisione Totale Piattaforma Empire — Piano operativo
 
----
+Nessun Publish. Nessuna modifica ad auth/Supabase/RLS/edge functions core. Solo front-end + pulizia route + copy.
 
-## 1. PACCHETTO BASE — Self-service
+## Fase 1 — Mappatura (read-only, ~15 file)
 
-**Flusso cliente**
-```
-Landing → "Acquista Base" → Checkout Stripe → Onboarding guidato:
- 1. Sceglie stile visivo (galleria da sector-mockups.ts)
- 2. Carica logo + nome + colore primario + font
- 3. Anteprima live → Conferma → Consegna automatica sito webapp
-```
+Leggo in parallelo per costruire l'inventario reale:
+- `src/App.tsx` (tutte le route + guard)
+- `src/pages/OnboardingPage.tsx` + step Brand (bug segnalato ancora aperto)
+- `src/pages/JoinPartnerPage.tsx`, `src/pages/vendor/VendorSignup.tsx`, `src/pages/vendor/VendorDashboard.tsx`
+- `src/pages/CustomProjectBrief.tsx` (pacchetto completo)
+- `src/pages/BasePackagePurchase.tsx` + `SetupCheckoutPage.tsx` + `SetupSuccessPage.tsx` (base self-service)
+- `src/pages/partner/*` (autopilot, api-connections, profile, team) + `src/components/partner/*`
+- `src/pages/superadmin/*`
+- `src/components/empire-home/prestige/PrestigeConversion.tsx`, `PrestigeFooter.tsx`, `PrestigeFinalCTA.tsx`, `PrestigeLeadForm.tsx`
+- `src/components/leads/*` (identifico duplicati LeadSearchPanel vs LeadCommandPanel vs LeadIntelligenceLauncher)
 
-**Nuove pagine / componenti**
-- `src/pages/BasePackagePurchase.tsx` — landing dedicata con prezzo, cosa è incluso, CTA acquisto.
-- `src/pages/BaseStyleSelector.tsx` — gallery filtrabile per settore che riusa i mockup di `src/data/sector-mockups.ts` (sfrutta già `PremiumMockupGallery`). Click su variante → salva `selectedVariantId` nel wizard.
-- Estensione di `OnboardingPage.tsx` (o nuovo `BaseOnboardingWizard.tsx`) con step: Stile → Brand → Contenuti minimi → Publish.
-- Edge function `deploy-base-site`: legge la variante scelta, applica brand overrides (logo/nome/colori) su `public_site_config`, crea record `companies`, ritorna URL `/b/:slug`.
+Output: matrice "route → componente → importatori → stato (attiva/orfana/duplicata)".
 
-**Dati/DB**
-- Tabella `base_orders(id, user_id, seller_id nullable, variant_id, brand_json, stripe_session_id, status, company_id, created_at)`.
-- Colonna `public_site_config.template_variant_id` per tracciare lo stile scelto.
+## Fase 2 — Deduplica & pulizia
 
----
+Regola: due sistemi che fanno la stessa cosa → tengo il migliore, l'altro diventa redirect (mai delete di file, per la regola "sviluppo non distruttivo"). Elenco atteso di aree con duplicazione da consolidare:
 
-## 2. PACCHETTO COMPLETO — Su misura (no acquisto diretto)
+- Home legacy wrappers (CinematicHero21, HeroExplosion, ecc.) → verifico che siano tutti alias di `EmpirePrestigeHome`.
+- Route `/home`, `/index`, `/main-home`, `/landing` → redirect a `/`.
+- Mockup generator: mantengo il flusso unificato "Mockup + Sito 1:1" (`custom-preview` con `autoStart+autoBuildSite`), rimuovo bottoni/entry-point paralleli dal cockpit partner se presenti.
+- Lead intelligence: consolido su un solo pannello principale, gli altri diventano wrapper.
+- Pagine demo pubbliche: verifico che il routing `/r/` (food) e `/b/` (altri) non abbia doppioni.
 
-**Flusso cliente**
-```
-Landing → "Richiedi progetto Completo" → Modulo lungo → Submit
- → Notifica admin/venditore → Contatto umano per preventivo/pagamento offline
-```
+Per ogni file neutralizzato: commento in testa + redirect / export dell'alias attivo. Elenco finale nel report.
 
-**Modulo (`src/pages/CustomProjectBrief.tsx`)** — sezioni:
-1. Brand: nome, storia, tone of voice, valori, competitor, moodboard (upload).
-2. Obiettivi: KPI, target, mercato geografico.
-3. Contenuti: testi esistenti (upload/paste), foto/video, servizi/prodotti (elenco), FAQ.
-4. Riferimenti: 3-5 siti che ispirano + note stilistiche.
-5. Feature richieste: booking, e-commerce, area riservata, multilingua, integrazioni (checkbox).
-6. Budget indicativo + timing + referente (nome, email, telefono, WhatsApp).
+## Fase 3 — Funnel acquisizione clienti (home + pacchetti)
 
-**Dati/DB**
-- Tabella `custom_project_briefs(id, submitted_by user_id nullable, seller_id nullable, payload jsonb, files_urls jsonb, status enum[new,contacted,quoted,won,lost], created_at)`.
-- Storage bucket `project-briefs` con RLS strict (solo owner + admin + seller assegnato).
-- Edge function `submit-custom-brief`: valida, salva, invia email admin + eventuale seller.
+Home `/` verifica end-to-end che ogni sezione abbia CTA verso `#pricing`, `#lead` (call), o `/onboarding` (base) / `/brief-progetto` (completo). Nessun vicolo cieco.
 
-**Admin**
-- Pagina `src/pages/admin/CustomBriefsInbox.tsx` con lista, filtri, assegnazione seller, cambio stato.
+Sezione Prezzi (`PrestigeConversion`):
+- Verifico i 3 piani corretti (Digital Start 1.997+49 · Growth AI 4.997+29 · Empire Domination 7.997+0).
+- Bottone "Attiva" → `/onboarding` (base self-service).
+- Aggiungo link "Vuoi tutto su misura?" → `/brief-progetto`.
 
----
+Base self-service (`/onboarding` → `/checkout-setup` → success):
+- Fix step Brand vuoto (se ancora presente): fallback quando `content.brand` è null.
+- Selettore stile dal catalogo mockup (57 stili Lowengeld) integrato allo step design.
+- Autopersonalizzazione logo/nome/colori confermata.
+- Copy pulito: "in omaggio", "senza impegno". Nessun "gratis".
 
-## 3. RETE VENDITORI
+Pacchetto completo (`/brief-progetto`):
+- Verifico che il form salvi su `custom_briefs` e mandi notifica.
+- Pubblico fino al submit (no auth wall preventiva).
 
-**Account & ruolo**
-- Nuovo enum ruolo `seller` nella tabella `user_roles` esistente (memory: user-roles pattern rispettato).
-- Signup dedicato `/vendor/signup` che crea profilo + assegna ruolo seller.
+## Fase 4 — Acquisizione venditori & sottovenditori
 
-**Link referral personale**
-- Tabella `sellers(id, user_id unique, slug unique, commission_pct numeric default 15, active bool, iban, fiscal_data jsonb, created_at)`.
-- Link pubblico: `https://empireia.lovable.app/?ref=<slug>` (funziona su tutte le landing).
-- Middleware/hook `useReferralCapture` in `App.tsx`: al mount legge `?ref=`, salva in `localStorage.empire_ref` + cookie 30gg.
-- Al checkout/submit brief il referral corrente viene letto e salvato in `base_orders.seller_id` / `custom_project_briefs.seller_id`.
+Pagina unica pubblica `/join` (`JoinPartnerPage`) raggiungibile da:
+- Footer home ("Diventa Partner")
+- Sticky CTA / voce nascosta in nav
 
-**Commissioni**
-- Tabella `seller_commissions(id, seller_id, source_type enum[base_order,custom_project], source_id, gross_amount, pct, commission_amount, status enum[pending,approved,paid], paid_at, created_at)`.
-- Trigger DB: alla creazione/completamento di `base_orders` con `seller_id != null` crea riga in `seller_commissions` con `pct = sellers.commission_pct`.
-- Per `custom_project_briefs`: la commissione si genera solo quando l'admin marca `status=won` e inserisce l'importo fatturato.
+Contenuto:
+- Value prop, commissioni %, esempi guadagno.
+- CTA "Registrati" → flusso venditore end-to-end (email + password, ruolo auto-assegnato via metadata come da memoria `auth-resilience-and-reconciliation`).
+- Referral capture: verifico `useReferralCapture` funzionante (sottovenditori ereditano parent tramite `?ref=`).
 
-**Configurazione admin**
-- Pagina `src/pages/admin/SellersManagement.tsx`:
-  - Lista venditori con vendite/commissioni totali.
-  - Edit `commission_pct` per singolo venditore (default globale in `platform_settings.default_commission_pct`).
-  - Attiva/disattiva account.
-  - Segna commissioni come `paid` (batch payout tracking).
+Dashboard venditore `/vendor/dashboard`:
+- Link referral personale copiabile.
+- Tabella commissioni: da `commissions` (leggo schema per confermare struttura, no modifiche).
+- Sotto-team: elenco figli con loro conversioni.
 
-**Dashboard venditore (`/vendor/dashboard`)**
-- Card KPI: vendite mese, vendite totali, commissioni pending, commissioni pagate.
-- Tabella ordini/brief con status.
-- Copia link referral + QR code + link diretto pagina Base / Custom.
-- Bottone "Compila brief per cliente" → apre `CustomProjectBrief` in modalità venditore (associa automaticamente `seller_id`).
-- Toggle vista prospect (partner-content-surfaces per densità dati, coerente con memory).
+Admin: verifico che ci sia un pannello in super admin per configurare la % commissione (se manca il pannello, l'aggiungo come additivo lato UI leggendo la tabella `commission_rates` o simile — solo se già esiste in DB; altrimenti segnalo).
 
-**RLS**
-- Ogni venditore vede SOLO le proprie righe (`user_id = auth.uid()` via join a `sellers`).
-- Admin (has_role admin/super_admin) vede tutto.
-- Tutte le tabelle nuove: GRANT authenticated + service_role, no anon.
+## Fase 5 — Funzioni Partner (priorità massima)
 
----
+Passaggio in rassegna di ogni pagina `src/pages/partner/*`:
+1. Ricerca lead (`LeadSearchPanel` + multi-source) — verifico che fingerprint/cache funzioni, che i canali con API mancante mostrino badge SBLOCCA (come da memoria).
+2. Mockup generator (mobile+desktop, 57 stili) — verifico device toggle, style picker, autoStart+autoBuildSite.
+3. Generazione siti web da mockup — verifico che parta solo con preview approvato (constraint memoria).
+4. Commissioni & referral — dashboard operativa.
+5. Autopilot — pausa settori, cockpit, ROI.
+6. API connections — deep-link funzionante da badge SBLOCCA.
 
-## 4. PAGAMENTI REALI (Stripe) — solo predisposizione
+Ogni voce: click test, error state, empty state, mobile 375px.
 
-Non attivare in questa fase. Serviranno:
+## Fase 6 — Super Admin
 
-1. **Provider consigliato**: Stripe (già abilitabile via `payments--enable_stripe_payments` seamless — no chiavi manuali).
-2. **Prodotti Stripe**: 1 prezzo one-shot per il pacchetto Base (es. €1.997) + eventuali add-on. Nessun prezzo per Completo (fatturazione manuale).
-3. **Edge functions da preparare**:
-   - `create-base-checkout` → crea Checkout Session con `client_reference_id = base_orders.id` e `metadata.seller_id`.
-   - `stripe-webhook` → su `checkout.session.completed` marca `base_orders.status=paid`, trigger commissione, invia email cliente + venditore, lancia deploy sito.
-4. **Secrets richiesti** (se BYOK): `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`. Con integrazione seamless non servono.
-5. **Payout venditori**: fase 1 = manuale (admin bonifico e marca `paid`). Fase 2 opzionale = Stripe Connect Express per split automatici.
-6. **Fatturazione**: riusare `Fiscal Vault 2026` esistente (memory) per emettere fattura B2B al cliente e ricevuta commissione al venditore.
+Rassegna `src/pages/superadmin/*`:
+- Media Library, Brand Assets, Homepage Media Manager: verifico interoperabilità (una sola fonte di verità per media).
+- Sellers management: PII protetta.
+- Feature Requests, Network, Voice Orchestrator, Outreach Health.
 
----
+Deduplica se trovo doppioni tra Media Library / Asset CMS / Brand Assets: consolido su uno, gli altri diventano tab/redirect.
 
-## 5. Rollout consigliato (ordine implementazione)
-1. Schema DB + RLS + GRANT (base_orders, custom_project_briefs, sellers, seller_commissions).
-2. Referral capture globale (`useReferralCapture`).
-3. Pagina Base + selector stile + wizard.
-4. Modulo Completo + inbox admin.
-5. Signup venditore + dashboard venditore + gestione admin.
-6. (Successivo) attivazione Stripe reale + webhook + deploy automatico.
+## Fase 7 — Coerenza copy & palette
 
-## 6. Impatto su codice esistente
-- Nessuna cancellazione (memory: sviluppo non distruttivo).
-- `PrestigeConversion.tsx` aggiornato con 2 CTA distinti (Base "Acquista ora" / Completo "Richiedi progetto").
-- `OnboardingPage.tsx` resta per utenti già attivi; nuovo wizard Base è separato per non rompere il flusso esistente.
+- Grep di `gratis|gratuit|prova gratuita` in tutto `src/` → sostituzione con "in omaggio" / "senza impegno".
+- Grep di classi/token blu residui in home/onboarding/vendor (`sky-|blue-|indigo-|cyan-` che non siano intenzionali per stati sistem) → migrazione a emerald/gold/ivory della palette prestige.
+- Verifica dati societari: solo placeholder ("Empire · Agenzia AI · Italia"), nessun VAT/indirizzo inventato.
+
+## Fase 8 — QA finale
+
+- `tsgo` typecheck.
+- Playwright headless: apro `/`, scroll fino in fondo, controllo che ogni bottone principale abbia href/onClick valido, screenshot mobile 375 + desktop 1280.
+- Console errors capture.
+- Overflow orizzontale: check con `document.documentElement.scrollWidth > innerWidth` in headless.
+
+## Deliverable finale (nel messaggio di chiusura)
+
+Report strutturato:
+1. **File toccati** (lista completa).
+2. **Sistemi deduplicati** (X → Y, motivo).
+3. **Bug trovati/risolti** (con file:linea).
+4. **Warning residui** (cose che richiedono decisione utente o accesso backend).
+5. **Screenshot QA** allegati come path.
+
+## Dettagli tecnici
+
+- Redirect route: uso `<Route path="/x" element={<Navigate to="/y" replace />} />` in `App.tsx`.
+- Neutralizzazione componenti orfani: header comment `// @deprecated — see <replacement>` + re-export.
+- Nessuna migrazione DB. Se serve un campo che non esiste, lo segnalo nel report anziché crearlo.
+- Nessuna chiamata al tool `preview_ui--publish`.
+
+## Scope-out (non farò)
+
+- Non tocco `src/integrations/supabase/client.ts`, `types.ts`, `.env`, `supabase/config.toml`.
+- Non tocco edge functions se non per bug bloccanti (in tal caso chiedo prima).
+- Non elimino file (solo redirect/alias, come da memoria "Sviluppo Non Distruttivo").
+- Non pubblico.
+
+Confermi e procedo? Se ok, in autonomia — non farò altre domande a meno di bloccanti reali.
