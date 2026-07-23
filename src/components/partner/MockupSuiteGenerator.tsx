@@ -1251,6 +1251,41 @@ export function MockupSuiteGenerator({
                 </p>
               )}
 
+              {/* Stile Lowengeld — portfolio-grade AI reference (opzionale) */}
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold flex items-center gap-1.5">
+                  <Layers className="h-3.5 w-3.5" />
+                  Direzione stilistica portfolio (Lowengeld-grade)
+                </Label>
+                <Select value={lowengeldStyleSlug} onValueChange={setLowengeldStyleSlug} disabled={controlsLocked}>
+                  <SelectTrigger className="h-10 text-xs" title="Blocca palette+vibe+layout su uno degli stili del portfolio premium. 'Auto' = miglior match sul settore.">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[400px]">
+                    <SelectItem value="auto">🎯 Auto (match settore)</SelectItem>
+                    {Object.entries(
+                      LOWENGELD_STYLES.reduce<Record<string, typeof LOWENGELD_STYLES>>((acc, s) => {
+                        (acc[s.sector] ||= []).push(s);
+                        return acc;
+                      }, {})
+                    ).map(([sector, items]) => (
+                      <div key={sector}>
+                        <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{sector}</div>
+                        {items.map(s => (
+                          <SelectItem key={s.slug} value={s.slug}>
+                            {s.style_name} · <span className="opacity-60">{s.brand_italian}</span>
+                          </SelectItem>
+                        ))}
+                      </div>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-[11px] text-muted-foreground leading-snug">
+                  57 stili estratti dal portfolio premium — palette, tipografia e vibe agganciati alla reference visiva.
+                </p>
+              </div>
+
+
               {/* Palette swap rapido */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between flex-wrap gap-2">
