@@ -562,14 +562,46 @@ ESATTAMENTE il livello che devi raggiungere.\n`
     ? `\n═══ 🏷️ BRAND REALE DEL CLIENTE (REGOLA PRIORITARIA) ═══\n${brandLines.join("\n")}\n`
     : "";
 
-  return `SCREEN UI MOBILE PREMIUM — schermata "${screen.title}" (${variantIndex + 1}/3 · seed ${variationSeed}) di un'app reale per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}${brandDirective}
-
-═══ FORMATO OUTPUT (REGOLE INDEROGABILI) ═══
+  const formatBlock = isDesktop
+    ? `═══ FORMATO OUTPUT (REGOLE INDEROGABILI) ═══
+• SOLO UI DEL VIEWPORT BROWSER, SENZA laptop/monitor/cornice fisica, SENZA ombra esterna
+• Canvas ORIZZONTALE 16:10 (~1920×1200), riempito al 100% dall'interfaccia web
+• In alto: barra Chrome/Safari finta con 3 pallini (rosso/giallo/verde), tab attivo con favicon e titolo del brand, address bar con "https://${business.name.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it"
+• Sotto la barra browser: sito web landing/dashboard responsivo desktop full-width
+• Deve poter essere inserito dentro un frame browser esterno senza doppia cornice`
+    : `═══ FORMATO OUTPUT (REGOLE INDEROGABILI) ═══
 • SOLO UI DELLO SCHERMO, SENZA telefono, SENZA cornice, SENZA ombra esterna
 • Canvas verticale 9:19.5, riempito al 100% dall'interfaccia
 • Safe area iOS interna già inclusa: status bar, dynamic island e home indicator fanno parte della UI
 • Nessun testo o decorazione fuori dalla UI
-• Deve poter essere inserito dentro un frame iPhone esterno senza doppia cornice
+• Deve poter essere inserito dentro un frame iPhone esterno senza doppia cornice`;
+
+  const componentsBlock = isDesktop
+    ? `═══ UI COMPONENTS OBBLIGATORI INTERNI ALLO SCREEN (DESKTOP WEB) ═══
+• Chrome/Safari browser bar in alto con 3 pallini finestra, tab, address bar https, icone estensioni
+• Header sito full-width con logo brand a sinistra, nav orizzontale (5-6 voci), CTA a destra
+• Hero section grande con foto/video di sfondo e claim italiano tipografia editoriale
+• Layout multi-colonna (2-3 colonne) con card, prezzi, gallery, form
+• Footer completo con contatti, orari, social, mappa embed, P.IVA placeholder
+• Densità informativa desktop: usa tutto lo spazio orizzontale, no vuoti mobile-like
+• Micro-interazioni suggerite: hover states, badge, tooltip, breadcrumb`
+    : `═══ UI COMPONENTS OBBLIGATORI INTERNI ALLO SCREEN (MOBILE iOS) ═══
+• Status bar iOS in alto: ora 9:41, segnale 5G, WiFi, batteria 100%
+• Dynamic Island nera centrata in alto
+• Header app con titolo schermata coerente
+• Contenuto ben spaziato, gerarchia tipografica chiara
+• Card con border-radius 16-20px e ombre soft
+• Bottom navigation bar fissa con 5 icone (${bottomNav}), attiva colorata col primary
+• Home indicator iOS sottile in basso
+• CTA primari grandi (52px altezza), full-width`;
+
+  const forbiddenDevice = isDesktop
+    ? "🚫 VIETATO laptop/monitor/tastiera/mouse/mano/desk/mockup device esterno · niente cornice fisica, solo la UI browser piatta"
+    : "🚫 VIETATO telefono/cornice iPhone/tilt/prospettive 3D/mockup device esterno";
+
+  return `SCREEN UI ${isDesktop ? "DESKTOP WEB" : "MOBILE"} PREMIUM — schermata "${screen.title}" (${variantIndex + 1}/${isDesktop ? 4 : 3} · seed ${variationSeed}) di ${isDesktop ? "un sito web reale" : "un'app reale"} per "${business.name}" (${business.sector}${business.city ? ` · ${business.city}` : ""}).${catalogDirective}${brandDirective}
+
+${formatBlock}
 
 ═══ CONTENUTO SCHERMATA (PERTINENTE AL SETTORE) ═══
 ${screen.prompt_hint || screen.title}
@@ -580,28 +612,20 @@ Il contenuto deve essere AUTENTICO per il settore "${business.sector}":
 • Microcopy 100% in italiano professionale (zero inglese eccetto status bar iOS)
 • ZERO testo placeholder/lorem ipsum/finto
 
-═══ COERENZA LOWENGELD-STYLE TRA LE 3 SCHERMATE ═══
-🎨 Questa è la schermata #${variantIndex + 1} di 3: deve essere diversa nella FUNZIONE, non un altro stile scollegato.
+═══ COERENZA LOWENGELD-STYLE TRA LE SCHERMATE ═══
+🎨 Questa è la schermata #${variantIndex + 1}: deve essere diversa nella FUNZIONE, non un altro stile scollegato.
 • Layout di QUESTA schermata: ${layout.desc}
 • Componenti UI specifici: ${components}
 • Mantieni stessi font, palette, logo, radius e stile iconografico su tutte le schermate
-• Cambia solo architettura e contenuti in base alla funzione: Home / Servizi / Prenota
+• Cambia solo architettura e contenuti in base alla funzione
 • Niente cambi colore casuali: usa ${primaryColor} come accento costante, solo micro-variazione ${accentRotation} sugli stati attivi
-• Deve sembrare una suite di 3 screenshot dello stesso prodotto, pronta per portfolio cliente
+• Deve sembrare una suite di screenshot dello stesso prodotto, pronta per portfolio cliente
 
 ═══ STILE GRAFICO ═══
 ${style}
 Colore primario brand del cliente (accent CTA principale): ${primaryColor}
 
-═══ UI COMPONENTS OBBLIGATORI INTERNI ALLO SCREEN ═══
-• Status bar iOS in alto: ora 9:41, segnale 5G, WiFi, batteria 100%
-• Dynamic Island nera centrata in alto
-• Header app con titolo schermata coerente
-• Contenuto ben spaziato, gerarchia tipografica chiara
-• Card con border-radius 16-20px e ombre soft
-• Bottom navigation bar fissa con 5 icone (${bottomNav}), attiva colorata col primary
-• Home indicator iOS sottile in basso
-• CTA primari grandi (52px altezza), full-width
+${componentsBlock}
 
 ═══ QUALITÀ ═══
 ${quality}
@@ -609,11 +633,11 @@ ${quality}
 ═══ DIVIETI ASSOLUTI ═══
 🚫 VIETATO scrivere "Empire", "Empire AI", "Empire AI Group", "Lovable", "Empireia"
 🚫 VIETATO loghi Apple, Google, Meta o brand di terze parti
-🚫 VIETATO testo in inglese nei contenuti dell'app
-🚫 VIETATO telefono/cornice iPhone/tilt/prospettive 3D/mockup device esterno
+🚫 VIETATO testo in inglese nei contenuti (eccetto url e status bar iOS)
+${forbiddenDevice}
 🚫 VIETATO testo distorto, lorem ipsum, placeholder generici
 🚫 VIETATO mockup wireframe o sketch
-🚫 VIETATO che le schermate sembrino tre template uguali con colori cambiati`;
+🚫 VIETATO che le schermate sembrino template uguali con colori cambiati`;
 }
 
 Deno.serve(async (req) => {
