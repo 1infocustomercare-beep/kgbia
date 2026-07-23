@@ -687,7 +687,10 @@ Deno.serve(async (req) => {
       boost_contrast: boostContrastInput,
       // ── Stile Lowengeld esplicito (portfolio-quality mockups) ──
       style_slug: styleSlugInput,
+      // ── Device: mobile (default) o desktop (browser web) ──
+      device: deviceInput,
     } = body;
+    const device: "mobile" | "desktop" = deviceInput === "desktop" ? "desktop" : "mobile";
     const styleSlug: string | null = typeof styleSlugInput === "string" && styleSlugInput.trim() ? styleSlugInput.trim() : null;
     const lowengeldStyle = resolveLowengeldStyle(styleSlug, business_sector);
     const brandLogoUrl: string | null = typeof brandLogoUrlInput === "string" && brandLogoUrlInput.startsWith("http") ? brandLogoUrlInput : null;
