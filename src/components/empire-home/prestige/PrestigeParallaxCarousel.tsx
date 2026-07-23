@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { allMockupVariants } from "@/data/sector-mockups";
+import PrestigePhone from "./PrestigePhone";
 
 /**
  * PrestigeParallaxCarousel — carosello orizzontale premium con:
@@ -150,8 +151,8 @@ export default function PrestigeParallaxCarousel() {
     items.forEach((img) => {
       const r = img.getBoundingClientRect();
       const dx = (r.left + r.width / 2 - center) / rect.width; // -1..1
-      const parallax = dx * -18; // px
-      img.style.transform = `translate3d(${parallax}px,0,0) scale(1.08)`;
+      const parallax = dx * -14; // px
+      img.style.transform = `translate3d(${parallax}px,0,0)`;
     });
   };
 
@@ -279,37 +280,30 @@ export default function PrestigeParallaxCarousel() {
 
 function SlideCard({ slide }: { slide: Slide }) {
   return (
-    <article
-      className="relative shrink-0 w-[240px] sm:w-[280px] md:w-[320px] lg:w-[360px] aspect-[9/16] rounded-[28px] overflow-hidden border border-white/10 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] bg-black"
-      style={{ boxShadow: `0 30px 80px -30px ${slide.accent}55` }}
-    >
-      <div className="absolute inset-0 overflow-hidden">
-        <img
-          data-slide-img
+    <article className="relative shrink-0 flex flex-col items-center gap-4">
+      <div
+        data-slide-img
+        className="will-change-transform"
+        style={{ transform: "translate3d(0,0,0)" }}
+      >
+        <PrestigePhone
           src={slide.image}
           alt={`${slide.brand} — ${slide.sector}`}
+          width={220}
           loading="lazy"
-          draggable={false}
-          className="h-full w-full object-cover will-change-transform"
-          style={{ transform: "scale(1.08)" }}
         />
       </div>
-      <div
-        aria-hidden
-        className="absolute inset-x-0 bottom-0 h-2/5"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%)",
-        }}
-      />
-      <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+      <div className="text-center px-2">
         <p
           className="text-[10px] uppercase tracking-[0.3em] mb-1"
           style={{ color: slide.accent }}
         >
           {slide.sector}
         </p>
-        <h3 className="text-xl md:text-2xl font-serif leading-tight">
+        <h3
+          className="text-lg md:text-xl font-serif leading-tight"
+          style={{ color: "hsl(var(--pr-text-on-dark))" }}
+        >
           {slide.brand}
         </h3>
       </div>
