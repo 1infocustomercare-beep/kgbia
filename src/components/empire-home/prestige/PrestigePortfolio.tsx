@@ -78,91 +78,96 @@ export default function PrestigePortfolio() {
           </p>
         </div>
 
-        {/* PRIMARY GRID — cinematic 3D scroll gallery */}
-        <ContainerScroll className="mt-14 h-[220vh]">
-          <ContainerSticky className="flex h-screen items-center justify-center">
-            <GalleryContainer className="grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4">
-              {[0, 1, 2, 3].map((colIdx) => {
-                const items = visible.filter((_, i) => i % 4 === colIdx);
-                const ranges: [string, string][] = [
-                  ["0%", "-12%"],
-                  ["0%", "-6%"],
-                  ["0%", "-16%"],
-                  ["0%", "-9%"],
-                ];
-                // On smaller grids (2/3 cols) hide overflow columns gracefully
-                const hideClass =
-                  colIdx === 3
-                    ? "hidden lg:flex"
-                    : colIdx === 2
-                    ? "hidden sm:flex"
-                    : "flex";
-                return (
-                  <GalleryCol
-                    key={colIdx}
-                    yRange={ranges[colIdx]}
-                    className={`${hideClass} items-center gap-8`}
-                  >
-                    {items.map((h) => (
-                      <article
-                        key={h.sectorId}
-                        className="group flex w-full flex-col items-center"
-                      >
-                        <div className="transition-transform duration-500 group-hover:-translate-y-1">
-                          <IPhoneProMaxFrame
-                            src={h.hero!.screen}
-                            alt={`${h.hero!.brand} — ${h.hero!.style}`}
-                            width={220}
-                            onClick={() =>
-                              setSelection({
-                                sectorId: h.sectorId,
-                                sectorLabel: h.sectorLabel,
-                                variants: h.variants,
-                                index: 0,
-                              })
-                            }
-                          />
+        {/* PRIMARY GRID — cinematic 3D reveal + column parallax */}
+        <div
+          ref={gridRef}
+          className="mt-14"
+          style={{ perspective: "1400px" }}
+        >
+          <motion.div
+            style={{
+              rotateX,
+              scale,
+              transformOrigin: "center top",
+              transformStyle: "preserve-3d",
+            }}
+            className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4"
+          >
+            {[0, 1, 2, 3].map((colIdx) => {
+              const items = visible.filter((_, i) => i % 4 === colIdx);
+              const yList = [yA, yB, yC, yD];
+              const hideClass =
+                colIdx === 3
+                  ? "hidden lg:flex"
+                  : colIdx === 2
+                  ? "hidden sm:flex"
+                  : "flex";
+              return (
+                <motion.div
+                  key={colIdx}
+                  style={{ y: yList[colIdx] }}
+                  className={`${hideClass} flex-col items-center gap-10`}
+                >
+                  {items.map((h) => (
+                    <article
+                      key={h.sectorId}
+                      className="group flex w-full flex-col items-center"
+                    >
+                      <div className="transition-transform duration-500 group-hover:-translate-y-1">
+                        <IPhoneProMaxFrame
+                          src={h.hero!.screen}
+                          alt={`${h.hero!.brand} — ${h.hero!.style}`}
+                          width={220}
+                          onClick={() =>
+                            setSelection({
+                              sectorId: h.sectorId,
+                              sectorLabel: h.sectorLabel,
+                              variants: h.variants,
+                              index: 0,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
+                        <div
+                          className="text-[10px] font-bold uppercase tracking-[0.24em]"
+                          style={{ color: "hsl(var(--pr-gold-deep))" }}
+                        >
+                          {h.sectorLabel}
                         </div>
-                        <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
+                        <h3
+                          className="prestige-display mt-1 text-lg"
+                          style={{ color: "hsl(var(--pr-text-on-light))" }}
+                        >
+                          {h.hero!.brand}
+                        </h3>
+                        <p
+                          className="mt-1 text-xs leading-snug"
+                          style={{ color: "hsl(var(--pr-muted-on-light))" }}
+                        >
+                          {h.tagline}
+                        </p>
+                        {h.variants.length > 1 && (
                           <div
-                            className="text-[10px] font-bold uppercase tracking-[0.24em]"
-                            style={{ color: "hsl(var(--pr-gold-deep))" }}
+                            className="mt-2 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                            style={{
+                              background: "hsl(var(--pr-gold) / 0.18)",
+                              color: "hsl(var(--pr-gold-deep))",
+                              border: "1px solid hsl(var(--pr-gold) / 0.35)",
+                            }}
                           >
-                            {h.sectorLabel}
+                            {h.variants.length} stili premium
                           </div>
-                          <h3
-                            className="prestige-display mt-1 text-lg"
-                            style={{ color: "hsl(var(--pr-text-on-light))" }}
-                          >
-                            {h.hero!.brand}
-                          </h3>
-                          <p
-                            className="mt-1 text-xs leading-snug"
-                            style={{ color: "hsl(var(--pr-muted-on-light))" }}
-                          >
-                            {h.tagline}
-                          </p>
-                          {h.variants.length > 1 && (
-                            <div
-                              className="mt-2 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
-                              style={{
-                                background: "hsl(var(--pr-gold) / 0.18)",
-                                color: "hsl(var(--pr-gold-deep))",
-                                border: "1px solid hsl(var(--pr-gold) / 0.35)",
-                              }}
-                            >
-                              {h.variants.length} stili premium
-                            </div>
-                          )}
-                        </div>
-                      </article>
-                    ))}
-                  </GalleryCol>
-                );
-              })}
-            </GalleryContainer>
-          </ContainerSticky>
-        </ContainerScroll>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </div>
+
 
 
         {heroes.length > 8 && (
