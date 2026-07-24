@@ -9,9 +9,6 @@ import PrestigeProofBar from "@/components/empire-home/prestige/PrestigeProofBar
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
-import PrestigeParallaxCarousel from "@/components/empire-home/prestige/PrestigeParallaxCarousel";
-import PrestigeSectorLive from "@/components/empire-home/prestige/PrestigeSectorLive";
-import PrestigeStyleGallery from "@/components/empire-home/prestige/PrestigeStyleGallery";
 
 import PrestigeAgents from "@/components/empire-home/prestige/PrestigeAgents";
 import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA";
