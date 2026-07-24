@@ -17,6 +17,17 @@ export default function PrestigePortfolio() {
   const [expanded, setExpanded] = useState(false);
   const [selection, setSelection] = useState<Selection>(null);
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-mockups", { steps: 4 });
+  const gridRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: gridRef,
+    offset: ["start end", "end start"],
+  });
+  const rotateX = useTransform(scrollYProgress, [0, 0.35], [45, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.35], [0.92, 1]);
+  const yA = useTransform(scrollYProgress, [0, 1], ["0%", "-8%"]);
+  const yB = useTransform(scrollYProgress, [0, 1], ["0%", "-14%"]);
+  const yC = useTransform(scrollYProgress, [0, 1], ["0%", "-4%"]);
+  const yD = useTransform(scrollYProgress, [0, 1], ["0%", "-11%"]);
 
   // Primary hero card per sector — first PRIMARY studio variant only. Homepage
   // shows ONLY our own studio mockups (Lowengeld/reference variants live on
