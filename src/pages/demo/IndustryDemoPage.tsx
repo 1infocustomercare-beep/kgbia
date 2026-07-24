@@ -653,7 +653,7 @@ export default function IndustryDemoPage() {
       <DemoFooterSection sector={resolvedIndustry!} accentColor={accentColor} sectorName={industryConfig?.label || ""} companyName={companyName} tagline={tagline} />
 
       {/* ═══════ FLOATING CTA ═══════ */}
-      <div className="fixed bottom-6 right-4 z-50">
+      <div className="fixed bottom-24 right-4 z-40 sm:bottom-6 sm:right-24">
         <motion.button
           onClick={() => document.getElementById("consulenza")?.scrollIntoView({ behavior: "smooth" })}
           className="h-12 px-5 rounded-full flex items-center gap-2 shadow-2xl font-bold text-sm text-white border-0"
@@ -667,7 +667,7 @@ export default function IndustryDemoPage() {
       </div>
 
       {/* ═══════ FLOATING BACK BUTTON (mobile) ═══════ */}
-      <div className="fixed bottom-6 left-4 z-50 sm:hidden">
+      <div className="fixed bottom-6 left-4 z-40 sm:hidden">
         <button onClick={() => navigate("/")}
           className="w-12 h-12 rounded-full flex items-center justify-center shadow-2xl border border-white/10 backdrop-blur-xl"
           style={{ background: `${theme.bgFrom}ee` }}>
