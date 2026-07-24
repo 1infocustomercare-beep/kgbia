@@ -336,7 +336,7 @@ export default function IndustryDemoPage() {
             </motion.div>
 
             <motion.h1
-              className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 leading-[1.05] tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 leading-[1.05] tracking-tight text-white"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}
             >
               {theme.headline.split(" ").map((word, i, arr) => (
@@ -351,7 +351,7 @@ export default function IndustryDemoPage() {
             </motion.h1>
 
             <motion.p
-              className="text-base sm:text-lg text-white/50 mb-10 max-w-2xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg text-white/85 mb-10 max-w-2xl mx-auto leading-relaxed"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
             >
               {theme.subheadline}
@@ -422,7 +422,8 @@ export default function IndustryDemoPage() {
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
               ⚠️ Ti Riconosci?
             </Badge>
-            <h2 className="text-2xl sm:text-4xl font-bold mb-3">
+            <h2 className="text-2xl sm:text-4xl font-bold mb-3 text-white">
+
               I Problemi che <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>Eliminiamo</span>
             </h2>
             <p className="text-sm text-white/80 max-w-lg mx-auto">
@@ -456,7 +457,8 @@ export default function IndustryDemoPage() {
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
               🚀 La Soluzione Completa
             </Badge>
-            <h2 className="text-2xl sm:text-4xl font-bold mb-3">
+            <h2 className="text-2xl sm:text-4xl font-bold mb-3 text-white">
+
               Cosa Creiamo per il Tuo{" "}
               <span style={{ color: theme.accent }}>{industryConfig?.label}</span>
             </h2>
@@ -527,7 +529,7 @@ export default function IndustryDemoPage() {
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
               ⚡ La Piattaforma
             </Badge>
-            <h2 className="text-2xl sm:text-4xl font-bold mb-3">
+            <h2 className="text-2xl sm:text-4xl font-bold mb-3 text-white">
               Un Ecosistema che <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>Lavora per Te</span>
             </h2>
             <p className="text-white/80 max-w-lg mx-auto text-sm">
@@ -587,7 +589,7 @@ export default function IndustryDemoPage() {
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
               🎯 Consulenza Senza Impegno
             </Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-2">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-white">
               Scopri Come Possiamo Trasformare il Tuo Business
             </h2>
             <p className="text-sm text-white/80">
@@ -601,7 +603,7 @@ export default function IndustryDemoPage() {
                 style={{ backgroundColor: `${theme.accent}20` }}>
                 <CheckCircle className="w-10 h-10" style={{ color: theme.accent }} />
               </div>
-              <h3 className="text-2xl font-bold mb-2">Richiesta Inviata!</h3>
+              <h3 className="text-2xl font-bold mb-2 text-white">Richiesta Inviata!</h3>
               <p className="text-sm text-white/80">Ti contatteremo entro 24 ore per la tua consulenza senza impegno.</p>
             </motion.div>
           ) : (
@@ -651,7 +653,7 @@ export default function IndustryDemoPage() {
       <DemoFooterSection sector={resolvedIndustry!} accentColor={accentColor} sectorName={industryConfig?.label || ""} companyName={companyName} tagline={tagline} />
 
       {/* ═══════ FLOATING CTA ═══════ */}
-      <div className="fixed bottom-6 right-4 z-50">
+      <div className="fixed bottom-24 right-4 z-40 sm:bottom-6 sm:right-24">
         <motion.button
           onClick={() => document.getElementById("consulenza")?.scrollIntoView({ behavior: "smooth" })}
           className="h-12 px-5 rounded-full flex items-center gap-2 shadow-2xl font-bold text-sm text-white border-0"
@@ -665,7 +667,7 @@ export default function IndustryDemoPage() {
       </div>
 
       {/* ═══════ FLOATING BACK BUTTON (mobile) ═══════ */}
-      <div className="fixed bottom-6 left-4 z-50 sm:hidden">
+      <div className="fixed bottom-6 left-4 z-40 sm:hidden">
         <button onClick={() => navigate("/")}
           className="w-12 h-12 rounded-full flex items-center justify-center shadow-2xl border border-white/10 backdrop-blur-xl"
           style={{ background: `${theme.bgFrom}ee` }}>
