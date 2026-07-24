@@ -336,7 +336,7 @@ export default function IndustryDemoPage() {
             </motion.div>
 
             <motion.h1
-              className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 leading-[1.05] tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 leading-[1.05] tracking-tight text-white"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}
             >
               {theme.headline.split(" ").map((word, i, arr) => (
@@ -351,7 +351,7 @@ export default function IndustryDemoPage() {
             </motion.h1>
 
             <motion.p
-              className="text-base sm:text-lg text-white/50 mb-10 max-w-2xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg text-white/85 mb-10 max-w-2xl mx-auto leading-relaxed"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
             >
               {theme.subheadline}
