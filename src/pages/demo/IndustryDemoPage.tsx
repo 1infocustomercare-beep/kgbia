@@ -422,7 +422,8 @@ export default function IndustryDemoPage() {
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
               ⚠️ Ti Riconosci?
             </Badge>
-            <h2 className="text-2xl sm:text-4xl font-bold mb-3">
+            <h2 className="text-2xl sm:text-4xl font-bold mb-3 text-white">
+
               I Problemi che <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>Eliminiamo</span>
             </h2>
             <p className="text-sm text-white/80 max-w-lg mx-auto">
@@ -456,7 +457,8 @@ export default function IndustryDemoPage() {
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
               🚀 La Soluzione Completa
             </Badge>
-            <h2 className="text-2xl sm:text-4xl font-bold mb-3">
+            <h2 className="text-2xl sm:text-4xl font-bold mb-3 text-white">
+
               Cosa Creiamo per il Tuo{" "}
               <span style={{ color: theme.accent }}>{industryConfig?.label}</span>
             </h2>
@@ -527,7 +529,7 @@ export default function IndustryDemoPage() {
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
               ⚡ La Piattaforma
             </Badge>
-            <h2 className="text-2xl sm:text-4xl font-bold mb-3">
+            <h2 className="text-2xl sm:text-4xl font-bold mb-3 text-white">
               Un Ecosistema che <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>Lavora per Te</span>
             </h2>
             <p className="text-white/80 max-w-lg mx-auto text-sm">
