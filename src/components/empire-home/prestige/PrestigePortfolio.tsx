@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ChevronDown, ChevronUp, Sparkles, Layers } from "lucide-react";
+import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
