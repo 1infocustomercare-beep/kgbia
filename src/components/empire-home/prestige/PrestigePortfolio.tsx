@@ -1,11 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
 
 type Selection = {
   sectorId: string;
