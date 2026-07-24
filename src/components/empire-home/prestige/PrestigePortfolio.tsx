@@ -4,6 +4,14 @@ import { useEmpireScrollDirector } from "../ScrollDirector";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
+import {
+  ContainerScroll,
+  ContainerSticky,
+  GalleryContainer,
+  GalleryCol,
+  ContainerStagger,
+  ContainerAnimated,
+} from "@/components/ui/container-scroll";
 
 type Selection = {
   sectorId: string;
