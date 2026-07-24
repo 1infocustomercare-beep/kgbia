@@ -12,15 +12,14 @@ type Selection = {
   index: number;
 } | null;
 
-type ExtendedFlat = SectorMockupVariant & { sectorId: string; sectorLabel: string };
-
 export default function PrestigePortfolio() {
   const [expanded, setExpanded] = useState(false);
-  const [showExtended, setShowExtended] = useState(false);
   const [selection, setSelection] = useState<Selection>(null);
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-mockups", { steps: 4 });
 
-  // Primary hero card per sector — first PRIMARY variant only (folder-based).
+  // Primary hero card per sector — first PRIMARY studio variant only. Homepage
+  // shows ONLY our own studio mockups (Lowengeld/reference variants live on
+  // /portfolio, never here).
   const heroes = useMemo(
     () =>
       SECTOR_MOCKUPS
@@ -39,28 +38,6 @@ export default function PrestigePortfolio() {
   );
   const visible = expanded ? heroes : heroes.slice(0, 8);
 
-  // Extended collection — all "extended" variants across sectors, deduped
-  // against primary brands (case-insensitive brand-name match).
-  const extended = useMemo<ExtendedFlat[]>(() => {
-    const primaryBrands = new Set(
-      SECTOR_MOCKUPS.flatMap((g) =>
-        g.variants.filter((v) => v.tier === "primary").map((v) => v.brand.trim().toLowerCase()),
-      ),
-    );
-    return SECTOR_MOCKUPS.flatMap((g) =>
-      g.variants
-        .filter((v) => v.tier === "extended" && v.source === "reference" && !primaryBrands.has(v.brand.trim().toLowerCase()))
-        .map((v) => ({ ...v, sectorId: g.id, sectorLabel: g.label })),
-    );
-  }, []);
-
-  const openExtended = (v: ExtendedFlat) => {
-    const group = SECTOR_MOCKUPS.find((g) => g.id === v.sectorId);
-    if (!group) return;
-    const variants = group.variants.filter((x) => x.tier === "extended");
-    const index = Math.max(0, variants.findIndex((x) => x.id === v.id));
-    setSelection({ sectorId: v.sectorId, sectorLabel: v.sectorLabel, variants, index });
-  };
 
   return (
     <section
