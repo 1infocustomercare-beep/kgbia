@@ -6,19 +6,22 @@ import PrestigePhone from "./PrestigePhone";
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
-// Premium hero rotation: pick the first variant of the 4 flagship sectors and
-// cycle through their 4-screen sequence. Uses the AI-generated PNGs the team
-// already produced so the hero shows real Empire work.
-const HERO_BRAND_IDS = ["food-onyx-brace", "beauty-aurora-nail", "ncc-marina-riviera", "hospitality-cala-vento"] as const;
-const HERO_VARIANT =
-  SECTOR_MOCKUPS.flatMap((g) => g.variants).find((v) => v.id === "food-onyx-brace") ??
-  SECTOR_MOCKUPS[0].variants[0];
-const HERO_SCREENS = HERO_VARIANT.screens.length
-  ? HERO_VARIANT.screens
-  : [{ label: "Home", caption: "", image: HERO_VARIANT.screen }];
-const HERO_LABELS = HERO_SCREENS.map((s) => s.label);
-const ROTATE_MS = 3600;
-void HERO_BRAND_IDS;
+// Cross-sector hero auto-carousel: one flagship studio mockup per sector so the
+// hero shows the full range of Empire work (Food, Beauty, NCC, Hospitality, …)
+// instead of repeating 4 screens of the same brand.
+const HERO_SCREENS = (() => {
+  const picks: { label: string; brand: string; image: string }[] = [];
+  for (const group of SECTOR_MOCKUPS) {
+    const primary = group.variants.find((v) => v.tier === "primary" && v.source === "studio");
+    if (!primary) continue;
+    const img = primary.screens[0]?.image ?? primary.screen;
+    if (!img) continue;
+    picks.push({ label: group.label, brand: primary.brand, image: img });
+  }
+  return picks.length ? picks : [{ label: "Empire", brand: "Empire", image: SECTOR_MOCKUPS[0]?.variants[0]?.screen ?? "" }];
+})();
+const HERO_LABELS = HERO_SCREENS.map((s) => `${s.label} · ${s.brand}`);
+const ROTATE_MS = 3200;
 
 /**
  * PrestigeHero — hero cinematografico mobile-first.
