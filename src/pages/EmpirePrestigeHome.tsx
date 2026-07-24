@@ -141,8 +141,10 @@ function EmpirePrestigeHomeInner() {
         <PrestigeFooter />
 
         <PrestigeStickyCTA />
-        {!isPreview && <SafeVoiceAgent />}
       </div>
+      {/* Voice agent MUST live outside prestige-root: ancestors with transforms/clip
+          break position:fixed and would drop the FAB at the bottom of the page. */}
+      {!isPreview && <SafeVoiceAgent />}
     </>
   );
 }
