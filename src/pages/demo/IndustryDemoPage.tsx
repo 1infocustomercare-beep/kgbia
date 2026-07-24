@@ -589,7 +589,7 @@ export default function IndustryDemoPage() {
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
               🎯 Consulenza Senza Impegno
             </Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-2">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-white">
               Scopri Come Possiamo Trasformare il Tuo Business
             </h2>
             <p className="text-sm text-white/80">
@@ -603,7 +603,7 @@ export default function IndustryDemoPage() {
                 style={{ backgroundColor: `${theme.accent}20` }}>
                 <CheckCircle className="w-10 h-10" style={{ color: theme.accent }} />
               </div>
-              <h3 className="text-2xl font-bold mb-2">Richiesta Inviata!</h3>
+              <h3 className="text-2xl font-bold mb-2 text-white">Richiesta Inviata!</h3>
               <p className="text-sm text-white/80">Ti contatteremo entro 24 ore per la tua consulenza senza impegno.</p>
             </motion.div>
           ) : (
