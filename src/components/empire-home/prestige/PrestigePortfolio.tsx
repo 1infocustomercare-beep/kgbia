@@ -4,6 +4,14 @@ import { useEmpireScrollDirector } from "../ScrollDirector";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
+import {
+  ContainerScroll,
+  ContainerSticky,
+  GalleryContainer,
+  GalleryCol,
+  ContainerStagger,
+  ContainerAnimated,
+} from "@/components/ui/container-scroll";
 
 type Selection = {
   sectorId: string;
@@ -66,58 +74,92 @@ export default function PrestigePortfolio() {
           </p>
         </div>
 
-        {/* PRIMARY GRID — folder-based, curated */}
-        <div className="mt-14 grid grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
-          {visible.map((h, i) => (
-            <article
-              key={h.sectorId}
-              className="group flex flex-col items-center"
-              style={{ animation: `prestigeSlideUp .7s ${(i % 4) * 0.08}s cubic-bezier(.22,1,.36,1) backwards` }}
-            >
-              <div className="transition-transform duration-500 group-hover:-translate-y-1">
-                <IPhoneProMaxFrame
-                  src={h.hero!.screen}
-                  alt={`${h.hero!.brand} — ${h.hero!.style}`}
-                  width={240}
-                  onClick={() =>
-                    setSelection({
-                      sectorId: h.sectorId,
-                      sectorLabel: h.sectorLabel,
-                      variants: h.variants,
-                      index: 0,
-                    })
-                  }
-                />
-              </div>
-              <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
-                <div
-                  className="text-[10px] font-bold uppercase tracking-[0.24em]"
-                  style={{ color: "hsl(var(--pr-gold-deep))" }}
-                >
-                  {h.sectorLabel}
-                </div>
-                <h3 className="prestige-display mt-1 text-lg" style={{ color: "hsl(var(--pr-text-on-light))" }}>
-                  {h.hero!.brand}
-                </h3>
-                <p className="mt-1 text-xs leading-snug" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-                  {h.tagline}
-                </p>
-                {h.variants.length > 1 && (
-                  <div
-                    className="mt-2 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
-                    style={{
-                      background: "hsl(var(--pr-gold) / 0.18)",
-                      color: "hsl(var(--pr-gold-deep))",
-                      border: "1px solid hsl(var(--pr-gold) / 0.35)",
-                    }}
+        {/* PRIMARY GRID — cinematic 3D scroll gallery */}
+        <ContainerScroll className="mt-14 h-[220vh]">
+          <ContainerSticky className="flex h-screen items-center justify-center">
+            <GalleryContainer className="grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4">
+              {[0, 1, 2, 3].map((colIdx) => {
+                const items = visible.filter((_, i) => i % 4 === colIdx);
+                const ranges: [string, string][] = [
+                  ["0%", "-12%"],
+                  ["0%", "-6%"],
+                  ["0%", "-16%"],
+                  ["0%", "-9%"],
+                ];
+                // On smaller grids (2/3 cols) hide overflow columns gracefully
+                const hideClass =
+                  colIdx === 3
+                    ? "hidden lg:flex"
+                    : colIdx === 2
+                    ? "hidden sm:flex"
+                    : "flex";
+                return (
+                  <GalleryCol
+                    key={colIdx}
+                    yRange={ranges[colIdx]}
+                    className={`${hideClass} items-center gap-8`}
                   >
-                    {h.variants.length} stili premium
-                  </div>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
+                    {items.map((h) => (
+                      <article
+                        key={h.sectorId}
+                        className="group flex w-full flex-col items-center"
+                      >
+                        <div className="transition-transform duration-500 group-hover:-translate-y-1">
+                          <IPhoneProMaxFrame
+                            src={h.hero!.screen}
+                            alt={`${h.hero!.brand} — ${h.hero!.style}`}
+                            width={220}
+                            onClick={() =>
+                              setSelection({
+                                sectorId: h.sectorId,
+                                sectorLabel: h.sectorLabel,
+                                variants: h.variants,
+                                index: 0,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
+                          <div
+                            className="text-[10px] font-bold uppercase tracking-[0.24em]"
+                            style={{ color: "hsl(var(--pr-gold-deep))" }}
+                          >
+                            {h.sectorLabel}
+                          </div>
+                          <h3
+                            className="prestige-display mt-1 text-lg"
+                            style={{ color: "hsl(var(--pr-text-on-light))" }}
+                          >
+                            {h.hero!.brand}
+                          </h3>
+                          <p
+                            className="mt-1 text-xs leading-snug"
+                            style={{ color: "hsl(var(--pr-muted-on-light))" }}
+                          >
+                            {h.tagline}
+                          </p>
+                          {h.variants.length > 1 && (
+                            <div
+                              className="mt-2 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                              style={{
+                                background: "hsl(var(--pr-gold) / 0.18)",
+                                color: "hsl(var(--pr-gold-deep))",
+                                border: "1px solid hsl(var(--pr-gold) / 0.35)",
+                              }}
+                            >
+                              {h.variants.length} stili premium
+                            </div>
+                          )}
+                        </div>
+                      </article>
+                    ))}
+                  </GalleryCol>
+                );
+              })}
+            </GalleryContainer>
+          </ContainerSticky>
+        </ContainerScroll>
+
 
         {heroes.length > 8 && (
           <div className="mt-14 flex justify-center">
