@@ -89,21 +89,12 @@ function EmpirePrestigeHomeInner() {
           <PrestigeIndustries />
         </div>
 
-        {/* SITI SETTORE LIVE — navigabili, cliccabili */}
-        <PrestigeSectorLive />
-
-        {/* PORTFOLIO */}
+        {/* PORTFOLIO — unica galleria mockup della home (hero è il carosello) */}
         <div id="portfolio">
           <PrestigePortfolio />
         </div>
 
-        {/* ARCHIVIO STILI — griglia esplorabile, click apre demo live */}
-        <div id="styles">
-          <PrestigeStyleGallery />
-        </div>
 
-        {/* CAROSELLO PARALLAX — autoplay + drag + pausa hover/touch */}
-        <PrestigeParallaxCarousel />
 
 
 
