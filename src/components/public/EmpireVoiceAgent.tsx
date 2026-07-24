@@ -1751,7 +1751,7 @@ const EmpireVoiceAgent: React.FC = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-0 right-0 z-[9999] w-full sm:w-[380px] sm:bottom-4 sm:right-4 max-h-[70dvh] sm:max-h-[600px] flex flex-col rounded-t-2xl sm:rounded-2xl border border-foreground/[0.08] bg-background/95 backdrop-blur-2xl shadow-[0_0_60px_hsla(265,85%,65%,0.15)]"
+            className="fixed bottom-0 right-0 z-[9999] w-full sm:w-[380px] sm:bottom-4 sm:right-4 max-h-[70dvh] sm:max-h-[600px] flex flex-col rounded-t-2xl sm:rounded-2xl border border-white/10 bg-[#0b0d12]/95 text-white backdrop-blur-2xl shadow-[0_0_60px_hsla(265,85%,65%,0.25)]"
             style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             initial={{ opacity: 0, y: 100, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
