@@ -1,6 +1,7 @@
 // LeadIntelligenceCard — mostra il report Intelligence di un lead:
 // score, categoria, punti deboli, proposta, script vendita, mockup PRIMA/DOPO on-demand.
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -70,6 +71,7 @@ const APPROACH_LABEL: Record<string, { label: string; icon: any }> = {
 };
 
 export default function LeadIntelligenceCard({ report: initialReport, onUpdate, defaultExpanded = false }: Props) {
+  const navigate = useNavigate();
   const [report, setReport] = useState(initialReport);
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [generatingMockup, setGeneratingMockup] = useState(false);
@@ -90,32 +92,19 @@ export default function LeadIntelligenceCard({ report: initialReport, onUpdate, 
     }
   };
 
-  const handleGenerateMockup = async () => {
-    if (generatingMockup) return;
-    setGeneratingMockup(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("lead-mockup-generator", {
-        body: { report_id: report.id },
-      });
-      if (error) throw error;
-      if (!data?.success) {
-        if (data?.error === "insufficient_credits") {
-          toast.error("Crediti insufficienti per generare il mockup (10 crediti)");
-        } else {
-          toast.error(data?.error || "Errore generazione mockup");
-        }
-        return;
-      }
-      const updated = data.report as IntelligenceReport;
-      setReport(updated);
-      setShowMockup(true);
-      onUpdate?.(updated);
-      toast.success(data.cached ? "Mockup già pronto" : "Mockup PRIMA/DOPO generato");
-    } catch (e: any) {
-      toast.error(e?.message || "Errore generazione mockup");
-    } finally {
-      setGeneratingMockup(false);
-    }
+  // Convergenza CTA: la generazione mockup è delegata al MockupSuiteGenerator canonico
+  // (/partner/custom-preview) — single source of truth per crediti e pipeline.
+  const handleGenerateMockup = () => {
+    const params = new URLSearchParams({
+      leadId: report.id,
+      leadName: report.lead_name ?? "",
+      city: report.lead_city ?? "",
+      sector: report.lead_sector ?? "",
+      website: report.lead_website ?? "",
+      autoStart: "1",
+      autoBuildSite: "1",
+    });
+    navigate(`/partner/custom-preview?${params.toString()}`);
   };
 
   return (
@@ -247,7 +236,7 @@ export default function LeadIntelligenceCard({ report: initialReport, onUpdate, 
                     style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.15))", border: "1px solid rgba(124,58,237,0.3)", color: "#e9d5ff" }}
                   >
                     {generatingMockup ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
-                    {generatingMockup ? "Generazione mockup in corso…" : "Genera mockup PRIMA/DOPO (10 crediti)"}
+                    {generatingMockup ? "Apertura generatore…" : "Genera Mockup AI + Sito 1:1 →"}
                   </button>
                 ) : (
                   <div>

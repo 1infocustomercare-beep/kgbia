@@ -1196,7 +1196,7 @@ export default function LeadsPage() {
 
       {/* ═══ TOP-BAR PROFESSIONALE — sticky, mobile-first, app-grade ═══ */}
       <div
-        className="sticky top-0 z-30 -mx-3 sm:-mx-5 md:-mx-6 lg:-mx-8 px-3 sm:px-5 md:px-6 lg:px-8 py-2 sm:py-2.5 md:py-3 backdrop-blur-xl border-double rounded-2xl shadow-premium bg-[empire-violet-surface] bg-accent-foreground"
+        className="sticky top-0 z-30 -mx-3 sm:-mx-5 md:-mx-6 lg:-mx-8 px-3 sm:px-5 md:px-6 lg:px-8 py-2 sm:py-2.5 md:py-3 backdrop-blur-xl border border-white/10 rounded-2xl shadow-premium bg-[hsl(var(--empire-violet-surface))]"
         style={{
           background: "linear-gradient(180deg, rgba(10,10,18,0.96) 0%, rgba(10,10,18,0.86) 65%, rgba(10,10,18,0.55) 100%)",
           borderBottom: "1px solid rgba(167,139,250,0.10)",
@@ -1591,7 +1591,7 @@ export default function LeadsPage() {
 
 
       {/* ═══ SEARCH BAR — responsive: 1-2 col mobile, 4 col desktop ═══ */}
-      <div className="rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4 bg-[empire-violet-surface] bg-slate-900" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
+      <div className="rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4 bg-[hsl(var(--empire-violet-surface))]" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
 
         {/* Row principale: Paese · Città · Settore · Cerca (responsive) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">

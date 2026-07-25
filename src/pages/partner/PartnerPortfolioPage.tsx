@@ -757,9 +757,9 @@ export default function PartnerPortfolioPage() {
                           <Play className="w-2.5 h-2.5 fill-current" /> Mostra
                         </button>
                         <Link
-                          to="/partner/leads"
+                          to="/partner/custom-preview?autoBuildSite=1"
                           className="px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] font-bold flex items-center gap-1 hover:bg-amber-500/20"
-                          title="Genera sito 1:1 in Leads"
+                          title="Apri il generatore Mockup + Sito 1:1"
                         >
                           <Rocket className="w-2.5 h-2.5" /> Genera sito
                         </Link>
