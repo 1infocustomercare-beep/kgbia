@@ -2976,8 +2976,8 @@ export default function LeadsPage() {
                       transition={{ duration: 2.5, delay: agent.delay * 0.5, repeat: Infinity }}>
                       <span className="text-sm">{agent.emoji}</span>
                     </motion.div>
-                    <p className="text-[7px] font-bold text-center leading-tight" style={{ color: agent.color }}>{agent.name}</p>
-                    <motion.p className="text-[6px] text-center mt-0.5 font-mono leading-tight" style={{ color: "#4b5563" }}
+                    <p className="text-[9px] sm:text-[7px] font-bold text-center leading-tight" style={{ color: agent.color }}>{agent.name}</p>
+                    <motion.p className="text-[8px] sm:text-[6px] text-center mt-0.5 font-mono leading-tight" style={{ color: "#4b5563" }}
                       animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, delay: agent.delay, repeat: Infinity }}>
                       {agent.dataLabel}
                     </motion.p>
