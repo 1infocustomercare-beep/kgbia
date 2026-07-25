@@ -2962,7 +2962,7 @@ export default function LeadsPage() {
               </motion.div>
 
               {/* Agent cards grid */}
-              <div className="grid grid-cols-5 gap-1.5 mb-4">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 mb-4">
                 {SCAN_AGENTS.map((agent) => (
                   <motion.div key={agent.name}
                     initial={{ scale: 0, opacity: 0 }}
