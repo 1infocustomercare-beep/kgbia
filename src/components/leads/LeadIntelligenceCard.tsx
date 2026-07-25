@@ -1,6 +1,7 @@
 // LeadIntelligenceCard — mostra il report Intelligence di un lead:
 // score, categoria, punti deboli, proposta, script vendita, mockup PRIMA/DOPO on-demand.
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
