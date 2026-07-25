@@ -1,127 +1,123 @@
+# Piano — Caccia Lead & Generazione Mockup (Partner + Super Admin)
 
-# Revisione Totale Piattaforma Empire — Piano operativo
+Nulla verrà eliminato senza il tuo OK: archiviare = spostare in `src/_legacy/` (recuperabile). Backend/auth/RLS intatti. Approccio additivo/correttivo.
 
-Nessun Publish. Nessuna modifica ad auth/Supabase/RLS/edge functions core. Solo front-end + pulizia route + copy.
+## Diagnosi (dall'audit)
 
-## Fase 1 — Mappatura (read-only, ~15 file)
+- `LeadsPage.tsx` = 3407 righe, 60 `useState`, tutto in un blob lineare.
+- **3 entry point diversi** per "genera sito da lead" con costi crediti **diversi** (10 vs 15) → confusione economica.
+- **2 sistemi Vault** paralleli (`useDemoVault` legacy + `useMockupSuiteVault` nuovo) montati nella stessa pagina.
+- **2 Bottom Nav** implementate 2 volte (`PartnerLayout` inline vs `BottomNav.tsx`).
+- **13 file morti** con 0 import reali (~200KB codice, incluso `PartnerSandbox` 58KB + `LeadEnginePro` 44KB + `DemoFactoryOverlay` 592r).
+- Bug CSS silenzioso: `bg-[empire-violet-surface]` (classe inesistente) in 2 punti.
+- Responsive: `grid-cols-5/4/3` fissi senza fallback su 375px in 8+ punti; `w-[560/1440/1600]px` non clampati; testi a `text-[8px]`.
+- Colori hex hardcoded + `bg-white` letterale in 8 file → rompe tema Prestige.
+- 3 CTA "genera sito" con path diversi, uno rimanda pure a `/partner/leads` invece di aprire il generatore.
 
-Leggo in parallelo per costruire l'inventario reale:
-- `src/App.tsx` (tutte le route + guard)
-- `src/pages/OnboardingPage.tsx` + step Brand (bug segnalato ancora aperto)
-- `src/pages/JoinPartnerPage.tsx`, `src/pages/vendor/VendorSignup.tsx`, `src/pages/vendor/VendorDashboard.tsx`
-- `src/pages/CustomProjectBrief.tsx` (pacchetto completo)
-- `src/pages/BasePackagePurchase.tsx` + `SetupCheckoutPage.tsx` + `SetupSuccessPage.tsx` (base self-service)
-- `src/pages/partner/*` (autopilot, api-connections, profile, team) + `src/components/partner/*`
-- `src/pages/superadmin/*`
-- `src/components/empire-home/prestige/PrestigeConversion.tsx`, `PrestigeFooter.tsx`, `PrestigeFinalCTA.tsx`, `PrestigeLeadForm.tsx`
-- `src/components/leads/*` (identifico duplicati LeadSearchPanel vs LeadCommandPanel vs LeadIntelligenceLauncher)
+## Fase 1 — Sicurezza (nessuna cancellazione, solo mappatura)
 
-Output: matrice "route → componente → importatori → stato (attiva/orfana/duplicata)".
+Ti mostro l'elenco definitivo dei 13 file candidati archivio con conteggio import (già a 0). Tu approvi UNA volta e sposto tutti in `src/_legacy/leads/` e `src/_legacy/partner/` conservandoli.
 
-## Fase 2 — Deduplica & pulizia
+```text
+components/leads/
+  CreditConfirmDialog.tsx           dead-by-comment
+  DemoFactoryOverlay.tsx  (592r)    dead-by-comment
+  LeadAnalysisPanel.tsx
+  LeadCommandPanel.tsx
+  LeadPipelineBoard.tsx
+  LeadResultCard.tsx
+  LeadSearchPanel.tsx
+components/partner/
+  PartnerSandbox.tsx      (58KB)
+  PartnerFullDemo.tsx     (dipendenza di Sandbox)
+  PartnerDemoProjects.tsx
+  PartnerOutreachCRM.tsx  (24KB — precursore di SellerCRM)
+  LeadEnginePro.tsx       (44KB — precursore di LeadsPage/Arianna)
+  PartnerPortfolio.tsx    (sostituito da PartnerPortfolioPage)
+```
 
-Regola: due sistemi che fanno la stessa cosa → tengo il migliore, l'altro diventa redirect (mai delete di file, per la regola "sviluppo non distruttivo"). Elenco atteso di aree con duplicazione da consolidare:
+## Fase 2 — Unificazione generazione mockup/sito (SINGLE SOURCE OF TRUTH)
 
-- Home legacy wrappers (CinematicHero21, HeroExplosion, ecc.) → verifico che siano tutti alias di `EmpirePrestigeHome`.
-- Route `/home`, `/index`, `/main-home`, `/landing` → redirect a `/`.
-- Mockup generator: mantengo il flusso unificato "Mockup + Sito 1:1" (`custom-preview` con `autoStart+autoBuildSite`), rimuovo bottoni/entry-point paralleli dal cockpit partner se presenti.
-- Lead intelligence: consolido su un solo pannello principale, gli altri diventano wrapper.
-- Pagine demo pubbliche: verifico che il routing `/r/` (food) e `/b/` (altri) non abbia doppioni.
+Il "canonico" è **`MockupSuiteGenerator`** in `/partner/custom-preview` (15 crediti, flusso 1:1 mockup-only già in memoria progetto).
 
-Per ogni file neutralizzato: commento in testa + redirect / export dell'alias attivo. Elenco finale nel report.
+1. `LeadIntelligenceCard.handleGenerateMockup` → non genera più localmente, ridirige il lead selezionato a `/partner/custom-preview?leadId=...&autoStart=1` (già supportato da MockupSuiteGenerator via `autoStart`+`autoBuildSite` come da memoria).
+2. `ManualPreviewPicker` → resta come **selettore di template** (fase pre-generazione), ma al conferma passa il testimone al generatore ufficiale invece di chiamare `requestDemoFactory` in proprio.
+3. CTA "Genera sito" in `PartnerPortfolioPage` → apre direttamente il generatore con contesto, non manda su `/partner/leads`.
+4. **Risultato**: 1 solo costo crediti, 1 sola pipeline di generazione, 3 punti d'ingresso che convergono.
 
-## Fase 3 — Funnel acquisizione clienti (home + pacchetti)
+## Fase 3 — Vault unico
 
-Home `/` verifica end-to-end che ogni sezione abbia CTA verso `#pricing`, `#lead` (call), o `/onboarding` (base) / `/brief-progetto` (completo). Nessun vicolo cieco.
+- Marchio `useDemoVault` come deprecated (banner in file, non rimosso).
+- `DemoVaultPanel` riscritto per leggere SOLO da `useMockupSuiteVault`.
+- Aggiungo migrazione soft: se un utente ha ancora entries legacy, le mostro con badge "Legacy" ma dallo stesso pannello (nessuna perdita dati, nessuna migrazione DB obbligatoria).
 
-Sezione Prezzi (`PrestigeConversion`):
-- Verifico i 3 piani corretti (Digital Start 1.997+49 · Growth AI 4.997+29 · Empire Domination 7.997+0).
-- Bottone "Attiva" → `/onboarding` (base self-service).
-- Aggiungo link "Vuoi tutto su misura?" → `/brief-progetto`.
+## Fase 4 — Information Architecture della pagina `LeadsPage`
 
-Base self-service (`/onboarding` → `/checkout-setup` → success):
-- Fix step Brand vuoto (se ancora presente): fallback quando `content.brand` è null.
-- Selettore stile dal catalogo mockup (57 stili Lowengeld) integrato allo step design.
-- Autopersonalizzazione logo/nome/colori confermata.
-- Copy pulito: "in omaggio", "senza impegno". Nessun "gratis".
+Da monoblocco a **4 tab + 2 drawer**, senza cancellare logica:
 
-Pacchetto completo (`/brief-progetto`):
-- Verifico che il form salvi su `custom_briefs` e mandi notifica.
-- Pubblico fino al submit (no auth wall preventiva).
+```text
+┌─ Tab RICERCA ────────────────────────────────────────┐
+│ SmartCity + SmartSector + QuickSearch + [🔽 Sorgenti avanzate → drawer: GpsRadar, LeadSearchSources]│
+├─ Tab RISULTATI ──────────────────────────────────────┤
+│ Griglia lead + AriannaLeadScoutPanel collassabile a destra│
+├─ Tab PIPELINE (CRM) ─────────────────────────────────┤
+│ SellerCRM (unico centro follow-up/stage/note)        │
+├─ Tab INTELLIGENCE ───────────────────────────────────┤
+│ LeadIntelligenceInbox + drawer DeepLeadIntel on-demand│
+└─ FAB unificato (SpeedDial + SalesPlaybook fusi) ─────┘
+```
 
-## Fase 4 — Acquisizione venditori & sottovenditori
+- Onboarding wizard/checklist → overlay one-time, non componente sempre montato.
+- Nessuno stato viene perso: mantengo tutti i `useState` esistenti, li raggruppo in sotto-componenti per tab (spezzo il file da 3407→ ~800 righe orchestrator + 3-4 sub-page da 400-600 righe).
 
-Pagina unica pubblica `/join` (`JoinPartnerPage`) raggiungibile da:
-- Footer home ("Diventa Partner")
-- Sticky CTA / voce nascosta in nav
+## Fase 5 — Fix responsive & visual polish
 
-Contenuto:
-- Value prop, commissioni %, esempi guadagno.
-- CTA "Registrati" → flusso venditore end-to-end (email + password, ruolo auto-assegnato via metadata come da memoria `auth-resilience-and-reconciliation`).
-- Referral capture: verifico `useReferralCapture` funzionante (sottovenditori ereditano parent tramite `?ref=`).
+**Mobile (375-430):**
+- `grid-cols-N` fissi → `grid-cols-{2|3} sm:grid-cols-N` (LeadsPage, WhatsAppABDialog, DeepLeadIntel).
+- `text-[8px]` → `text-[10px]` minimo.
+- `w-[Npx]` fissi → wrapper `max-w-full overflow-hidden` sistematico (7 punti).
+- Fix classe no-op `bg-[empire-violet-surface]` (2 occorrenze).
 
-Dashboard venditore `/vendor/dashboard`:
-- Link referral personale copiabile.
-- Tabella commissioni: da `commissions` (leggo schema per confermare struttura, no modifiche).
-- Sotto-team: elenco figli con loro conversioni.
+**Tablet (768-1024):**
+- `w-[1440/1600]px` device preview e autopilot container → `max-w-full` con `overflow-x-auto` controllato + scale factor.
 
-Admin: verifico che ci sia un pannello in super admin per configurare la % commissione (se manca il pannello, l'aggiungo come additivo lato UI leggendo la tabella `commission_rates` o simile — solo se già esiste in DB; altrimenti segnalo).
+**Desktop 1280+:**
+- Coerenza `max-w-[1600px]` da variabile CSS, non magic number ripetuto in 3 file.
 
-## Fase 5 — Funzioni Partner (priorità massima)
+**Visual coerenza:**
+- Rimpiazzo `bg-white` letterale e hex hardcoded (`#a78bfa` ecc.) con token semantici Prestige (`bg-card`, `text-primary`, ecc.) in 8 file identificati.
+- z-index → introduco scala documentata `z-fab (40) | z-dock (50) | z-drawer (60) | z-modal (70) | z-toast (80) | z-voice (90)`.
 
-Passaggio in rassegna di ogni pagina `src/pages/partner/*`:
-1. Ricerca lead (`LeadSearchPanel` + multi-source) — verifico che fingerprint/cache funzioni, che i canali con API mancante mostrino badge SBLOCCA (come da memoria).
-2. Mockup generator (mobile+desktop, 57 stili) — verifico device toggle, style picker, autoStart+autoBuildSite.
-3. Generazione siti web da mockup — verifico che parta solo con preview approvato (constraint memoria).
-4. Commissioni & referral — dashboard operativa.
-5. Autopilot — pausa settori, cockpit, ROI.
-6. API connections — deep-link funzionante da badge SBLOCCA.
+## Fase 6 — Bottom Nav unificata
 
-Ogni voce: click test, error state, empty state, mobile 375px.
+Estraggo pattern comune. `PartnerLayout` e `AppLayout` consumano lo stesso `<AdaptiveBottomNav variant="partner|app" />`. Nessuna rimozione: `BottomNav.tsx` diventa il canonico, `PartnerLayout` perde il duplicato inline.
 
-## Fase 6 — Super Admin
+## Fase 7 — Super Admin (intersezione)
 
-Rassegna `src/pages/superadmin/*`:
-- Media Library, Brand Assets, Homepage Media Manager: verifico interoperabilità (una sola fonte di verità per media).
-- Sellers management: PII protetta.
-- Feature Requests, Network, Voice Orchestrator, Outreach Health.
+- **DemoAccountsPage**: verifico se duplica logica vault → se sì, faccio leggere da `useMockupSuiteVault` con filtro `scope=all`.
+- **MediaLibraryPage vs AssetCMSPage vs AssetVault**: audit dedicato, poi propongo unificazione (Fase 7b, dopo tua approvazione — non incluso in questa esecuzione).
+- **OutreachHealthPage vs OutreachChannelsLiveMonitor**: unifico la query sottostante (stessa fonte dati, viste diverse).
 
-Deduplica se trovo doppioni tra Media Library / Asset CMS / Brand Assets: consolido su uno, gli altri diventano tab/redirect.
+## Ordine di esecuzione
 
-## Fase 7 — Coerenza copy & palette
+```text
+1. [FASE 1] Sposto 13 file in _legacy/ (dopo tuo OK esplicito qui sotto)
+2. [FASE 5-fix critici] Fix bug CSS + responsive urgente (visibili subito)
+3. [FASE 6] Bottom nav unificata (rimuove duplicato manutenzione)
+4. [FASE 2] Convergenza CTA "genera mockup" (single source of truth)
+5. [FASE 3] Vault unico
+6. [FASE 4] IA a tab su LeadsPage (refactor grosso, ultima cosa)
+7. [FASE 7] Super admin intersezioni
+8. Verifica: typecheck + smoke test visivo mobile/tablet/desktop
+```
 
-- Grep di `gratis|gratuit|prova gratuita` in tutto `src/` → sostituzione con "in omaggio" / "senza impegno".
-- Grep di classi/token blu residui in home/onboarding/vendor (`sky-|blue-|indigo-|cyan-` che non siano intenzionali per stati sistem) → migrazione a emerald/gold/ivory della palette prestige.
-- Verifica dati societari: solo placeholder ("Empire · Agenzia AI · Italia"), nessun VAT/indirizzo inventato.
+## Cosa NON tocco
 
-## Fase 8 — QA finale
+- Auth, RLS, tabelle Supabase, Edge Functions (nessuna migrazione DB).
+- Modello dati crediti, prezzi, business logic Arianna/Autopilot.
+- Homepage Prestige, portfolio pubblico, siti demo pubblici.
+- Nessun `git rm`: tutto in `_legacy/`, recuperabile.
 
-- `tsgo` typecheck.
-- Playwright headless: apro `/`, scroll fino in fondo, controllo che ogni bottone principale abbia href/onClick valido, screenshot mobile 375 + desktop 1280.
-- Console errors capture.
-- Overflow orizzontale: check con `document.documentElement.scrollWidth > innerWidth` in headless.
+## Domanda unica prima di partire
 
-## Deliverable finale (nel messaggio di chiusura)
-
-Report strutturato:
-1. **File toccati** (lista completa).
-2. **Sistemi deduplicati** (X → Y, motivo).
-3. **Bug trovati/risolti** (con file:linea).
-4. **Warning residui** (cose che richiedono decisione utente o accesso backend).
-5. **Screenshot QA** allegati come path.
-
-## Dettagli tecnici
-
-- Redirect route: uso `<Route path="/x" element={<Navigate to="/y" replace />} />` in `App.tsx`.
-- Neutralizzazione componenti orfani: header comment `// @deprecated — see <replacement>` + re-export.
-- Nessuna migrazione DB. Se serve un campo che non esiste, lo segnalo nel report anziché crearlo.
-- Nessuna chiamata al tool `preview_ui--publish`.
-
-## Scope-out (non farò)
-
-- Non tocco `src/integrations/supabase/client.ts`, `types.ts`, `.env`, `supabase/config.toml`.
-- Non tocco edge functions se non per bug bloccanti (in tal caso chiedo prima).
-- Non elimino file (solo redirect/alias, come da memoria "Sviluppo Non Distruttivo").
-- Non pubblico.
-
-Confermi e procedo? Se ok, in autonomia — non farò altre domande a meno di bloccanti reali.
+**Confermi l'archiviazione dei 13 file listati in Fase 1?** Se sì, procedo con tutto il piano nell'ordine indicato. Se hai dubbi su uno specifico file, dimmi quale e lo lascio dov'è.
