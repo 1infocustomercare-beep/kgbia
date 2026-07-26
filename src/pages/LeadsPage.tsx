@@ -1590,9 +1590,16 @@ export default function LeadsPage() {
       {/* ═══ ONBOARDING WIZARD (one-time) — leggero, sempre montato ═══ */}
       <SellerOnboardingWizard />
 
+      {/* ═══ WORKFLOW TABS — flusso di lavoro in ordine logico (Ricerca → Intelligence → Risultati → CRM) ═══ */}
+      <WorkflowTabs
+        resultsCount={results.length}
+        hotCount={hotLeads}
+        onOpenCRM={() => setCrmOpen(true)}
+      />
 
       {/* ═══ SEARCH BAR — responsive: 1-2 col mobile, 4 col desktop ═══ */}
-      <div className="rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4 bg-[hsl(var(--empire-violet-surface))]" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
+      <div id="wf-search" className="scroll-mt-32 rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4 bg-[hsl(var(--empire-violet-surface))]" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
+
 
         {/* Row principale: Paese · Città · Settore · Cerca (responsive) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
