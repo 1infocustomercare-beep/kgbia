@@ -2051,6 +2051,7 @@ export default function LeadsPage() {
         ]}
       />
 
+      <div id="wf-results" className="scroll-mt-32" aria-hidden="true" />
       {/* ═══ RESULTS LIST ═══ */}
       <AnimatePresence>
         {results.length > 0 && (
