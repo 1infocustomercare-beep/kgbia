@@ -1871,6 +1871,7 @@ export default function LeadsPage() {
         </AnimatePresence>
       </div>
 
+      <div id="wf-intel" className="scroll-mt-32" aria-hidden="true" />
       {/* ═══ STRUMENTI & AUTOMAZIONI AI — collassabile, chiuso di default su mobile ═══
            Contiene: Tips, Arianna Autopilot, Insights, Intelligence Inbox, Voice, Stepper.
            Su desktop tutto è espanso/visibile come prima.
