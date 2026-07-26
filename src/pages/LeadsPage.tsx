@@ -35,6 +35,7 @@ import SellerOnboardingWizard from "@/components/leads/SellerOnboardingWizard";
 import { LeadSearchSourcesPanel } from "@/components/leads/LeadSearchSourcesPanel";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
+import WorkflowTabs from "@/components/leads/WorkflowTabs";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
@@ -1589,9 +1590,16 @@ export default function LeadsPage() {
       {/* ═══ ONBOARDING WIZARD (one-time) — leggero, sempre montato ═══ */}
       <SellerOnboardingWizard />
 
+      {/* ═══ WORKFLOW TABS — flusso di lavoro in ordine logico (Ricerca → Intelligence → Risultati → CRM) ═══ */}
+      <WorkflowTabs
+        resultsCount={results.length}
+        hotCount={hotLeads}
+        onOpenCRM={() => setCrmOpen(true)}
+      />
 
       {/* ═══ SEARCH BAR — responsive: 1-2 col mobile, 4 col desktop ═══ */}
-      <div className="rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4 bg-[hsl(var(--empire-violet-surface))]" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
+      <div id="wf-search" className="scroll-mt-32 rounded-2xl p-4 md:p-5 lg:p-6 space-y-3 md:space-y-4 bg-[hsl(var(--empire-violet-surface))]" style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.06), rgba(16,185,129,0.03))", border: "1px solid rgba(20,184,166,0.15)" }}>
+
 
         {/* Row principale: Paese · Città · Settore · Cerca (responsive) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
@@ -1863,6 +1871,7 @@ export default function LeadsPage() {
         </AnimatePresence>
       </div>
 
+      <div id="wf-intel" className="scroll-mt-32" aria-hidden="true" />
       {/* ═══ STRUMENTI & AUTOMAZIONI AI — collassabile, chiuso di default su mobile ═══
            Contiene: Tips, Arianna Autopilot, Insights, Intelligence Inbox, Voice, Stepper.
            Su desktop tutto è espanso/visibile come prima.
@@ -2042,6 +2051,7 @@ export default function LeadsPage() {
         ]}
       />
 
+      <div id="wf-results" className="scroll-mt-32" aria-hidden="true" />
       {/* ═══ RESULTS LIST ═══ */}
       <AnimatePresence>
         {results.length > 0 && (
