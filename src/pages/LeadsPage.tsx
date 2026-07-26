@@ -35,6 +35,7 @@ import SellerOnboardingWizard from "@/components/leads/SellerOnboardingWizard";
 import { LeadSearchSourcesPanel } from "@/components/leads/LeadSearchSourcesPanel";
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
+import WorkflowTabs from "@/components/leads/WorkflowTabs";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
