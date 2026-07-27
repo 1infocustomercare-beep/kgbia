@@ -49,13 +49,12 @@ async function fetchSiteSnapshot(url: string): Promise<{
   const start = Date.now();
   let html = "";
   try {
-    const resp = await fetch(url.startsWith("http") ? url : `https://${url}`, {
+    const resp = await safeFetch(url.startsWith("http") ? url : `https://${url}`, {
       headers: { "User-Agent": "Mozilla/5.0 EmpireAutopilot/1.0" },
-      signal: AbortSignal.timeout(12000),
-    });
+    }, { timeoutMs: 12000, maxBytes: 2_000_000 });
     html = await resp.text();
   } catch (e) {
-    console.warn("Site fetch failed:", e);
+    console.warn("Site fetch failed:", (e as Error)?.message);
   }
   const loadTimeMs = Date.now() - start;
   const lower = html.toLowerCase();
