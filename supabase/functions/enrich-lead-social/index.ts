@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { safeFetch } from "../_shared/ssrf-guard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -286,14 +287,12 @@ serve(async (req) => {
     if (website) {
       const url = website.startsWith("http") ? website : `https://${website}`;
       try {
-        const resp = await fetch(url, {
+        const resp = await safeFetch(url, {
           headers: {
             "User-Agent": "Mozilla/5.0 (compatible; EmpireAI-Bot/1.0; +https://empireaigroup.com)",
             "Accept": "text/html",
           },
-          redirect: "follow",
-          signal: AbortSignal.timeout(8000),
-        });
+        }, { timeoutMs: 8000, maxBytes: 2_000_000 });
         if (resp.ok) {
           const html = await resp.text();
           const igHandles = extractInstagramHandles(html);
@@ -365,10 +364,9 @@ Username Instagram:`;
         if (profile.website && !result.email) {
           // If we got a website from IG bio but haven't scraped it yet
           try {
-            const siteResp = await fetch(profile.website, {
+            const siteResp = await safeFetch(profile.website, {
               headers: { "User-Agent": "Mozilla/5.0", "Accept": "text/html" },
-              redirect: "follow", signal: AbortSignal.timeout(5000),
-            });
+            }, { timeoutMs: 5000, maxBytes: 2_000_000 });
             if (siteResp.ok) {
               const siteHtml = await siteResp.text();
               const siteEmails = extractEmails(siteHtml);

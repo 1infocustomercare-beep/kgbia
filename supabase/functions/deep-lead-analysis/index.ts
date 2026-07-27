@@ -2,6 +2,7 @@
 // to produce a real, structured intelligence report a salesperson can use to close.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { safeFetch } from "../_shared/ssrf-guard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -260,14 +261,12 @@ async function auditWebsite(url: string | null): Promise<WebsiteAudit | null> {
   if (!url) return null;
   const fullUrl = url.startsWith("http") ? url : `https://${url}`;
   try {
-    const resp = await fetch(fullUrl, {
+    const resp = await safeFetch(fullUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0 (compatible; EmpireAI-LeadAudit/1.0; +https://empireaigroup.com)",
         "Accept": "text/html,application/xhtml+xml",
       },
-      redirect: "follow",
-      signal: AbortSignal.timeout(9000),
-    });
+    }, { timeoutMs: 9000, maxBytes: 2_000_000 });
     if (!resp.ok) {
       return {
         reachable: false, has_https: fullUrl.startsWith("https"), has_booking: false,
