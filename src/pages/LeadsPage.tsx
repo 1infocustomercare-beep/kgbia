@@ -1874,6 +1874,8 @@ export default function LeadsPage() {
       </div>
 
       <div id="wf-intel" className="scroll-mt-32" aria-hidden="true" />
+      <WorkflowSectionHeader step="intel" subtitle="Arianna Autopilot, insight e inbox operativa" />
+
       {/* ═══ STRUMENTI & AUTOMAZIONI AI — collassabile, chiuso di default su mobile ═══
            Contiene: Tips, Arianna Autopilot, Insights, Intelligence Inbox, Voice, Stepper.
            Su desktop tutto è espanso/visibile come prima.
