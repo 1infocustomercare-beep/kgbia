@@ -287,14 +287,12 @@ serve(async (req) => {
     if (website) {
       const url = website.startsWith("http") ? website : `https://${website}`;
       try {
-        const resp = await fetch(url, {
+        const resp = await safeFetch(url, {
           headers: {
             "User-Agent": "Mozilla/5.0 (compatible; EmpireAI-Bot/1.0; +https://empireaigroup.com)",
             "Accept": "text/html",
           },
-          redirect: "follow",
-          signal: AbortSignal.timeout(8000),
-        });
+        }, { timeoutMs: 8000, maxBytes: 2_000_000 });
         if (resp.ok) {
           const html = await resp.text();
           const igHandles = extractInstagramHandles(html);
