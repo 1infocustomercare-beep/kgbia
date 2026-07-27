@@ -36,6 +36,7 @@ import { LeadSearchSourcesPanel } from "@/components/leads/LeadSearchSourcesPane
 import PartnerFlowStepper from "@/components/partner/PartnerFlowStepper";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
 import WorkflowTabs from "@/components/leads/WorkflowTabs";
+import WorkflowSectionHeader from "@/components/leads/WorkflowSectionHeader";
 import { useDemoVault } from "@/hooks/useDemoVault";
 import { useSellerPipeline, getOverdueFollowups } from "@/hooks/useSellerPipeline";
 import { useSellerCredits } from "@/hooks/useSellerCredits";
