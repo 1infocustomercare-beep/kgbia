@@ -2056,6 +2056,8 @@ export default function LeadsPage() {
       />
 
       <div id="wf-results" className="scroll-mt-32" aria-hidden="true" />
+      <WorkflowSectionHeader step="results" subtitle="Lead trovati, filtri, azioni rapide e messaggi personalizzati" />
+
       {/* ═══ RESULTS LIST ═══ */}
       <AnimatePresence>
         {results.length > 0 && (
