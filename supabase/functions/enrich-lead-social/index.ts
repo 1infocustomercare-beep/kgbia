@@ -364,10 +364,9 @@ Username Instagram:`;
         if (profile.website && !result.email) {
           // If we got a website from IG bio but haven't scraped it yet
           try {
-            const siteResp = await fetch(profile.website, {
+            const siteResp = await safeFetch(profile.website, {
               headers: { "User-Agent": "Mozilla/5.0", "Accept": "text/html" },
-              redirect: "follow", signal: AbortSignal.timeout(5000),
-            });
+            }, { timeoutMs: 5000, maxBytes: 2_000_000 });
             if (siteResp.ok) {
               const siteHtml = await siteResp.text();
               const siteEmails = extractEmails(siteHtml);
