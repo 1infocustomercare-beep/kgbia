@@ -383,11 +383,8 @@ export default function PrestigeHero() {
           .prestige-hero-phone-stage { margin: 0 auto; }
         }
 
-        @media (prefers-reduced-motion: reduce) {
-          .prestige-hero-stagger { transition: none !important; opacity: 1 !important; transform: none !important; }
-          .prestige-hero-beam, .prestige-hero-halo { transform: none !important; }
-          .prestige-hero-scroll-line { animation: none !important; }
-        }
+
+
         @media (prefers-reduced-motion: reduce) {
           .prestige-hero-stagger { transition: none !important; opacity: 1 !important; transform: none !important; }
           .prestige-hero-beam, .prestige-hero-halo { transform: none !important; }
