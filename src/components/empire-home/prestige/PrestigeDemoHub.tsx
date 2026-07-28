@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowUpRight, Maximize2 } from "lucide-react";
 import PrestigePhone from "./PrestigePhone";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
-import MockupLightbox from "@/components/portfolio/MockupLightbox";
+import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { useT } from "./PrestigeLang";
 
 /**
