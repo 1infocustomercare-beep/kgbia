@@ -209,6 +209,21 @@ export default function PrestigeHero() {
               transform: `translate3d(0, calc(var(--empire-progress, 0) * -30px), 0)`,
             }}
           >
+            {/* Rotating gold ring — editorial signature */}
+            <div aria-hidden className="prestige-hero-goldring" />
+
+            {/* Secondary companion phone (tilt -12°, glass) */}
+            {HERO_SCREENS.length > 1 && (
+              <div aria-hidden className="prestige-hero-companion hidden sm:block">
+                <PrestigePhone
+                  src={HERO_SCREENS[(active + 1) % HERO_SCREENS.length].image}
+                  alt=""
+                  width={Math.round(phoneW * 0.62)}
+                  loading="lazy"
+                />
+              </div>
+            )}
+
             {/* Floor reflection */}
             <div
               aria-hidden
