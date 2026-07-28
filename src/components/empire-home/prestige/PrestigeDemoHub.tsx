@@ -278,7 +278,9 @@ export default function PrestigeDemoHub() {
         <MockupLightbox
           open={!!openVariant}
           onClose={() => setOpenId(null)}
-          variant={openVariant}
+          sectorLabel={cards.find((c) => c.id === openId)?.sectorLabel ?? ""}
+          variants={[openVariant]}
+          initialIndex={0}
         />
       )}
     </section>
