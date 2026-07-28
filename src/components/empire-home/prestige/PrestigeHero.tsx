@@ -378,49 +378,6 @@ export default function PrestigeHero() {
           .prestige-hero-goldring { animation: none !important; }
         }
 
-        /* ── Rotating gold ring behind the phone stack ─────────────── */
-        .prestige-hero-goldring {
-          position: absolute;
-          top: 50%; left: 50%;
-          width: 128%; height: 128%;
-          transform: translate(-50%, -50%);
-          border-radius: 999px;
-          border: 1px solid hsl(var(--pr-gold) / 0.22);
-          pointer-events: none;
-          animation: prestige-hero-ring-spin 24s linear infinite;
-        }
-        .prestige-hero-goldring::before,
-        .prestige-hero-goldring::after {
-          content: "";
-          position: absolute;
-          inset: 6%;
-          border-radius: 999px;
-          border: 1px dashed hsl(var(--pr-gold) / 0.14);
-        }
-        .prestige-hero-goldring::after {
-          inset: 14%;
-          border-style: solid;
-          border-color: hsl(var(--pr-gold) / 0.08);
-        }
-        @keyframes prestige-hero-ring-spin {
-          to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        /* ── Companion phone — editorial dual-mockup ─────────────── */
-        .prestige-hero-companion {
-          position: absolute;
-          left: -14%;
-          bottom: -6%;
-          transform: rotate(-12deg);
-          filter: drop-shadow(0 30px 40px hsl(var(--pr-emerald-dark, 160 70% 6%) / 0.55));
-          opacity: 0.9;
-          z-index: 1;
-          transition: transform .8s cubic-bezier(.22,1,.36,1), opacity .8s;
-        }
-        .prestige-hero-phone-stage:hover .prestige-hero-companion {
-          transform: rotate(-8deg) translateY(-6px);
-          opacity: 1;
-        }
       `}</style>
     </section>
   );
