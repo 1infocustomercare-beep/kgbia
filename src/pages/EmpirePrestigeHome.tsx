@@ -9,6 +9,7 @@ import PrestigeProofBar from "@/components/empire-home/prestige/PrestigeProofBar
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
+import PrestigeDemoHub from "@/components/empire-home/prestige/PrestigeDemoHub";
 
 import PrestigeAgents from "@/components/empire-home/prestige/PrestigeAgents";
 import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA";
@@ -87,6 +88,11 @@ function EmpirePrestigeHomeInner() {
         {/* SETTORI */}
         <div id="sectors">
           <PrestigeIndustries />
+        </div>
+
+        {/* DEMO HUB 3D — scroll-driven, primary/studio mockups only */}
+        <div id="demo-hub">
+          <PrestigeDemoHub />
         </div>
 
         {/* PORTFOLIO — unica galleria mockup della home (hero è il carosello) */}
