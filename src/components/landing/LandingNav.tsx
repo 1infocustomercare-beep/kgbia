@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Grid3x3, Sparkles, LayoutGrid, Tag, Bot, HelpCircle, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PrestigeLangToggle } from "@/components/empire-home/prestige/PrestigeLang";
 import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 
 
 const NAV_LINKS = [
-  { label: "Settori", href: "#sectors" },
-  { label: "Servizi", href: "#services" },
-  { label: "Portfolio", href: "#portfolio" },
-  { label: "Prezzi", href: "#pricing" },
-  { label: "AI Agents", href: "#agents" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Contatti", href: "#contatti" },
+  { label: "Settori", href: "#sectors", icon: Grid3x3, from: "#0B3B2E", to: "#1F7A5A" },
+  { label: "Servizi", href: "#services", icon: Sparkles, from: "#1F7A5A", to: "#C9A24B" },
+  { label: "Portfolio", href: "#portfolio", icon: LayoutGrid, from: "#C9A24B", to: "#F4D58D" },
+  { label: "Prezzi", href: "#pricing", icon: Tag, from: "#B8862F", to: "#E8C36B" },
+  { label: "AI Agents", href: "#agents", icon: Bot, from: "#2F80ED", to: "#56CCF2" },
+  { label: "FAQ", href: "#faq", icon: HelpCircle, from: "#0B3B2E", to: "#C9A24B" },
+  { label: "Contatti", href: "#contatti", icon: Mail, from: "#C9A24B", to: "#0B3B2E" },
 ];
 
 export default function LandingNav() {
