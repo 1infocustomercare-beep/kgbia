@@ -4,13 +4,20 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 
+const HOME_LIKE = /^\/(home|index|landing|empire|prestige|homepage|main|start|welcome|hero|cosmic|revolutionary|21st|ai)(-|\/|$)/i;
+
 const NotFound = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Auto-recover for stale/legacy homepage-like URLs from old cached bundles.
+    if (HOME_LIKE.test(location.pathname) || location.pathname === "/index.html") {
+      navigate("/", { replace: true });
+      return;
+    }
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
+  }, [location.pathname, navigate]);
 
   return (
     <div className="flex min-h-screen items-center justify-center px-6"
