@@ -105,14 +105,21 @@ export default function PrestigeHero() {
   }, [isMobile]);
 
   return (
-    <section
+    <div ref={scrollContainerRef} className="relative" style={{ height: "180svh" }}>
+    <motion.section
       ref={ref}
       data-section="prestige-hero"
-      className={`prestige-section prestige-dark prestige-hero-root relative flex items-center overflow-hidden ${mounted ? "is-mounted" : ""}`}
+      className={`prestige-section prestige-dark prestige-hero-root sticky top-0 flex items-center overflow-hidden ${mounted ? "is-mounted" : ""}`}
       style={{
+        scale: heroScale,
+        rotate: heroRotate,
+        opacity: heroOpacity,
+        borderRadius: heroBorderRadius,
+        transformOrigin: "center top",
         paddingTop: "clamp(104px, 13svh, 148px)",
         paddingBottom: "clamp(72px, 9svh, 112px)",
-        minHeight: "min(100svh, 900px)",
+        height: "100svh",
+        willChange: "transform, opacity",
       }}
     >
       {/* Cinematic gold beams — parallax by scroll */}
