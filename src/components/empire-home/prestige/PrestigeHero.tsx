@@ -398,6 +398,7 @@ export default function PrestigeHero() {
         }
 
       `}</style>
-    </section>
+    </motion.section>
+    </div>
   );
 }
