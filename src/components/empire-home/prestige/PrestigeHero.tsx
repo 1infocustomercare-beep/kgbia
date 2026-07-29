@@ -41,8 +41,19 @@ export default function PrestigeHero() {
   const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [phoneW, setPhoneW] = useState(260);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Cinematic scroll — sticky hero scales down + slight tilt as user scrolls
+  const { scrollYProgress } = useScroll({
+    target: scrollContainerRef,
+    offset: ["start start", "end start"],
+  });
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.82]);
+  const heroRotate = useTransform(scrollYProgress, [0, 1], [0, -4]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.6, 0]);
+  const heroBorderRadius = useTransform(scrollYProgress, [0, 1], ["0px", "36px"]);
 
   // Responsive phone width + breakpoint
   useEffect(() => {
