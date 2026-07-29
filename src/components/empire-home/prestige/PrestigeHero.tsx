@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import PrestigePhone from "./PrestigePhone";
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
@@ -40,8 +41,19 @@ export default function PrestigeHero() {
   const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [phoneW, setPhoneW] = useState(260);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Cinematic scroll — sticky hero scales down + slight tilt as user scrolls
+  const { scrollYProgress } = useScroll({
+    target: scrollContainerRef,
+    offset: ["start start", "end start"],
+  });
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.82]);
+  const heroRotate = useTransform(scrollYProgress, [0, 1], [0, -4]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.6, 0]);
+  const heroBorderRadius = useTransform(scrollYProgress, [0, 1], ["0px", "36px"]);
 
   // Responsive phone width + breakpoint
   useEffect(() => {
@@ -93,14 +105,21 @@ export default function PrestigeHero() {
   }, [isMobile]);
 
   return (
-    <section
+    <div ref={scrollContainerRef} className="relative" style={{ height: "180svh" }}>
+    <motion.section
       ref={ref}
       data-section="prestige-hero"
-      className={`prestige-section prestige-dark prestige-hero-root relative flex items-center overflow-hidden ${mounted ? "is-mounted" : ""}`}
+      className={`prestige-section prestige-dark prestige-hero-root sticky top-0 flex items-center overflow-hidden ${mounted ? "is-mounted" : ""}`}
       style={{
+        scale: heroScale,
+        rotate: heroRotate,
+        opacity: heroOpacity,
+        borderRadius: heroBorderRadius,
+        transformOrigin: "center top",
         paddingTop: "clamp(104px, 13svh, 148px)",
         paddingBottom: "clamp(72px, 9svh, 112px)",
-        minHeight: "min(100svh, 900px)",
+        height: "100svh",
+        willChange: "transform, opacity",
       }}
     >
       {/* Cinematic gold beams — parallax by scroll */}
@@ -379,6 +398,7 @@ export default function PrestigeHero() {
         }
 
       `}</style>
-    </section>
+    </motion.section>
+    </div>
   );
 }
