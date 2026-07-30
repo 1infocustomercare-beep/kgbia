@@ -78,7 +78,7 @@ function EmpirePrestigeHomeInner() {
         </div>
 
         {/* PROOF BAR onesto — sopra la hero sticky, sfondo opaco per evitare sovrapposizioni */}
-        <div className="relative z-10 bg-[hsl(var(--pr-bg,222_20%_8%))]">
+        <div className="relative z-10" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
           <PrestigeProofBar />
         </div>
 
