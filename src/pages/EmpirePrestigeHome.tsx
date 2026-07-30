@@ -77,8 +77,11 @@ function EmpirePrestigeHomeInner() {
           <PrestigeHero />
         </div>
 
-        {/* PROOF BAR onesto */}
-        <PrestigeProofBar />
+        {/* PROOF BAR onesto — sopra la hero sticky, sfondo opaco per evitare sovrapposizioni */}
+        <div className="relative z-10 bg-[hsl(var(--pr-bg,222_20%_8%))]">
+          <PrestigeProofBar />
+        </div>
+
 
         {/* SERVIZI bento */}
         <div id="services">
