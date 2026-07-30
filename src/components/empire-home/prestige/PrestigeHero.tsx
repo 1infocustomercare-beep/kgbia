@@ -45,15 +45,16 @@ export default function PrestigeHero() {
   const [phoneW, setPhoneW] = useState(260);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Cinematic scroll — sticky hero scales down + slight tilt as user scrolls
+  // Cinematic scroll — sticky hero scales down slightly as the user scrolls away.
+  // No rotation: it caused visual overlap with the next section.
   const { scrollYProgress } = useScroll({
     target: scrollContainerRef,
     offset: ["start start", "end start"],
   });
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.82]);
-  const heroRotate = useTransform(scrollYProgress, [0, 1], [0, -4]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.6, 0]);
-  const heroBorderRadius = useTransform(scrollYProgress, [0, 1], ["0px", "36px"]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.85, 0]);
+  const heroBorderRadius = useTransform(scrollYProgress, [0, 1], ["0px", "32px"]);
+
 
   // Responsive phone width + breakpoint
   useEffect(() => {
@@ -105,14 +106,13 @@ export default function PrestigeHero() {
   }, [isMobile]);
 
   return (
-    <div ref={scrollContainerRef} className="relative" style={{ height: "180svh" }}>
+    <div ref={scrollContainerRef} className="relative isolate z-0" style={{ height: "150svh" }}>
     <motion.section
       ref={ref}
       data-section="prestige-hero"
       className={`prestige-section prestige-dark prestige-hero-root sticky top-0 flex items-center overflow-hidden ${mounted ? "is-mounted" : ""}`}
       style={{
         scale: heroScale,
-        rotate: heroRotate,
         opacity: heroOpacity,
         borderRadius: heroBorderRadius,
         transformOrigin: "center top",
@@ -122,6 +122,7 @@ export default function PrestigeHero() {
         willChange: "transform, opacity",
       }}
     >
+
       {/* Cinematic gold beams — parallax by scroll */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
