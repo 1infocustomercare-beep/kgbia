@@ -3382,13 +3382,19 @@ body:has(nav.fixed.bottom-0) main {
   }
 }
 
-/* 10. Image / video safety: never bigger than container, preserve ratio */
+/* 10. Image / video safety: never bigger than container, preserve ratio.
+       NOTE: this block is UNLAYERED, so it beats every Tailwind utility.
+       - svg must keep its Tailwind height and width utilities (otherwise all
+         lucide icons collapse to 0 inside flex rows).
+       - imgs that explicitly declare a height/fit utility (object-cover
+         screens inside iPhone frames, avatars, hero art) must keep it too. */
 img, video, canvas, svg {
   max-width: 100%;
-  height: auto;
 }
-img[width][height], video[width][height] {
-  height: auto; /* keep ratio when only width shrinks */
+img:not([class*="h-"]):not([class*="object-"]):not([class*="inset-"]),
+video:not([class*="h-"]),
+canvas:not([class*="h-"]) {
+  height: auto;
 }
 
 /* 11. Grid / flex containers occasionally inherit a fixed width that
