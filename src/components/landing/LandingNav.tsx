@@ -83,8 +83,10 @@ export default function LandingNav() {
                   >
                     <span className="absolute inset-0 rounded-full bg-[linear-gradient(45deg,var(--gf),var(--gt))] opacity-0 transition-opacity duration-500 group-hover/pill:opacity-100" />
                     <span className="pointer-events-none absolute inset-x-2 top-2 h-full rounded-full bg-[linear-gradient(45deg,var(--gf),var(--gt))] opacity-0 blur-[14px] transition-opacity duration-500 group-hover/pill:opacity-50 -z-10" />
-                    <Icon className="relative z-10 h-[18px] w-[18px] text-foreground/70 transition-all duration-500 group-hover/pill:scale-0 group-hover/pill:opacity-0" />
-                    <span className="relative z-10 scale-0 whitespace-nowrap text-[12px] font-semibold uppercase tracking-wide text-white opacity-0 transition-all duration-500 delay-100 group-hover/pill:scale-100 group-hover/pill:opacity-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                    {/* shrink-0 is required: the label sibling is wider than the
+                        40px collapsed pill and would squeeze the icon to 0px. */}
+                    <Icon className="relative z-10 h-[18px] w-[18px] shrink-0 text-foreground/80 transition-all duration-500 group-hover/pill:scale-0 group-hover/pill:opacity-0" />
+                    <span className="pointer-events-none absolute inset-0 z-10 flex scale-0 items-center justify-center whitespace-nowrap text-[12px] font-semibold uppercase tracking-wide text-white opacity-0 transition-all duration-500 delay-100 group-hover/pill:scale-100 group-hover/pill:opacity-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
                       {l.label}
                     </span>
                   </button>

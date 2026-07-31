@@ -58,15 +58,32 @@ export function EmpireLogo({
         background: EMPIRE_BRAND.colors.emerald,
       }}
     >
-      <img
-        src={EMPIRE_BRAND.logoUrl}
-        alt={alt}
-        draggable={false}
-        className="h-full w-full object-cover"
-      />
+      {/* Crisp vector monogram: the raster wordmark asset became illegible at
+          small sizes (nav/footer), so the mark is drawn instead of cropped. */}
+      <svg
+        viewBox="0 0 48 48"
+        role="img"
+        aria-label={alt}
+        style={{ width: "100%", height: "100%", display: "block" }}
+      >
+        <defs>
+          <linearGradient id="empire-mark-g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor={EMPIRE_BRAND.colors.gold} />
+            <stop offset="100%" stopColor="#F4D58D" />
+          </linearGradient>
+        </defs>
+        <rect width="48" height="48" fill={EMPIRE_BRAND.colors.emerald} />
+        <g fill="url(#empire-mark-g)">
+          <rect x="14" y="13" width="20" height="4.4" rx="2.2" />
+          <rect x="14" y="21.8" width="14" height="4.4" rx="2.2" />
+          <rect x="14" y="30.6" width="20" height="4.4" rx="2.2" />
+        </g>
+      </svg>
     </span>
   );
 }
+
+
 
 /**
  * Wordmark "EMPIRE.AI" con lo split gold sul suffisso.
