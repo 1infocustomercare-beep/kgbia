@@ -258,14 +258,17 @@ export default function PrestigeHero() {
               const isActive = i === active;
               const dist = i - active;
               const modDist = ((dist % HERO_SCREENS.length) + HERO_SCREENS.length) % HERO_SCREENS.length;
-              // depth stack: front / behind-right / behind-left / back
+              const isRight = modDist === 1;
+              const isLeft = modDist === HERO_SCREENS.length - 1;
+              // Solo attivo + 2 vicini restano visibili: gli altri escono di scena,
+              // così i telefoni non si accavallano più sopra quello in primo piano.
               const stackTransform = isActive
-                ? `translate3d(0, 0, 0) rotateY(calc(var(--mx, 0) * 14deg)) rotateX(calc(var(--my, 0) * -10deg)) scale(1)`
-                : modDist === 1
-                  ? `translate3d(28%, 6%, -120px) rotateY(-18deg) scale(.9)`
-                  : modDist === HERO_SCREENS.length - 1
-                    ? `translate3d(-28%, 6%, -120px) rotateY(18deg) scale(.9)`
-                    : `translate3d(0, 10%, -220px) rotateY(0deg) scale(.8)`;
+                ? `translate3d(0, 0, 0) rotateY(calc(var(--mx, 0) * 12deg)) rotateX(calc(var(--my, 0) * -8deg)) scale(1)`
+                : isRight
+                  ? `translate3d(36%, 7%, -260px) rotateY(-20deg) scale(.84)`
+                  : isLeft
+                    ? `translate3d(-36%, 7%, -260px) rotateY(20deg) scale(.84)`
+                    : `translate3d(0, 12%, -420px) scale(.7)`;
 
               return (
                 <div
@@ -280,16 +283,17 @@ export default function PrestigeHero() {
                     }
                   }}
                   aria-label={`Mostra mockup ${i + 1}: ${HERO_LABELS[i]}`}
-                  className="absolute inset-0 flex items-center justify-center transition-all duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] focus:outline-none"
+                  className="absolute inset-0 flex items-center justify-center transition-all duration-[1000ms] ease-[cubic-bezier(.22,1,.36,1)] focus:outline-none"
                   style={{
-                    opacity: isActive ? 1 : 0.55,
+                    opacity: isActive ? 1 : isRight || isLeft ? 0.3 : 0,
                     transform: stackTransform,
                     transformStyle: "preserve-3d",
-                    pointerEvents: isActive ? "auto" : "auto",
-                    zIndex: isActive ? 3 : modDist === 1 || modDist === HERO_SCREENS.length - 1 ? 2 : 1,
-                    filter: isActive ? "none" : "blur(2px) saturate(.85)",
+                    pointerEvents: isActive || isRight || isLeft ? "auto" : "none",
+                    zIndex: isActive ? 3 : isRight || isLeft ? 2 : 1,
+                    filter: isActive ? "none" : "blur(4px) saturate(.7) brightness(.65)",
                   }}
                 >
+
                   <PrestigePhone
                     src={screen.image}
                     alt={`Mockup ${HERO_LABELS[i]}`}
