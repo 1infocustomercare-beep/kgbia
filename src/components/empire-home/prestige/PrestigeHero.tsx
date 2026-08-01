@@ -151,8 +151,8 @@ export default function PrestigeHero() {
         />
       </div>
 
-      {/* Floating lang toggle */}
-      <div className="prestige-hero-lang-floating absolute right-3 top-[76px] z-20 scale-90 origin-top-right sm:right-6 sm:top-[96px] sm:scale-100">
+      {/* Lang toggle: vive solo nella navbar (evita doppione sovrapposto in desktop) */}
+      <div className="prestige-hero-lang-floating absolute right-3 top-[76px] z-20 scale-90 origin-top-right lg:hidden">
         <PrestigeLangToggle />
       </div>
 
