@@ -92,6 +92,12 @@ export default function PrestigeDemoHub() {
     Math.floor(progress * cards.length * 0.999)
   );
   const localProgress = progress * cards.length - activeIndex;
+  // Indice del telefono realmente al centro dello stage (rel più vicino a 0):
+  // usato per label e badge così testo e telefono in evidenza combaciano sempre.
+  const centerIndex = Math.min(
+    cards.length - 1,
+    Math.max(0, activeIndex + (localProgress > 0.5 ? 1 : 0))
+  );
 
   const openVariant = cards.find((c) => c.id === openId)?.variant ?? null;
 
