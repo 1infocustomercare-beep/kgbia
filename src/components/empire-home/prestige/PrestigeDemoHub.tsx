@@ -175,7 +175,7 @@ export default function PrestigeDemoHub() {
                 const rotY = Math.max(-35, Math.min(35, -rel * 22));
                 const scale = Math.max(0.55, 1 - abs * 0.14);
                 const opacity = abs > visibleRange ? 0 : Math.max(0.18, 1 - abs * 0.28);
-                const isActive = i === activeIndex && localProgress < 0.75;
+                const isActive = i === centerIndex;
 
                 return (
                   <button
@@ -232,13 +232,13 @@ export default function PrestigeDemoHub() {
 
           {/* meta + progress */}
           <div className="mt-8 flex flex-col items-center gap-4">
-            {cards[activeIndex] && (
+            {cards[centerIndex] && (
               <div className="text-center">
                 <div
                   className="text-[10px] font-bold uppercase tracking-[0.32em]"
                   style={{ color: "hsl(var(--pr-gold-light))" }}
                 >
-                  {cards[activeIndex].sectorLabel}
+                  {cards[centerIndex].sectorLabel}
                 </div>
                 <div
                   className="prestige-display mt-1"
@@ -247,20 +247,20 @@ export default function PrestigeDemoHub() {
                     color: "hsl(var(--pr-text-on-dark))",
                   }}
                 >
-                  {cards[activeIndex].brand}
+                  {cards[centerIndex].brand}
                 </div>
                 <div
                   className="mt-1 text-xs sm:text-sm"
                   style={{ color: "hsl(var(--pr-muted-on-dark))" }}
                 >
-                  {cards[activeIndex].style} · {cards[activeIndex].palette}
+                  {cards[centerIndex].style} · {cards[centerIndex].palette}
                 </div>
               </div>
             )}
 
-            <div className="flex items-center gap-3">
+            <div className="flex w-full flex-col items-stretch gap-3 pb-16 sm:w-auto sm:flex-row sm:items-center sm:pb-0">
               <button
-                onClick={() => cards[activeIndex] && setOpenId(cards[activeIndex].id)}
+                onClick={() => cards[centerIndex] && setOpenId(cards[centerIndex].id)}
                 className="prestige-cta"
               >
                 <span>{t({ it: "Apri fullscreen", en: "Open fullscreen" })}</span>
