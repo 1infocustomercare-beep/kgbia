@@ -185,7 +185,7 @@ export default function PrestigeIndustries() {
             />
             <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 65%, hsl(var(--pr-emerald-deep) / 0.6))" }} />
             <div
-              className="absolute left-3 top-3 flex h-11 w-11 items-center justify-center rounded-xl"
+              className="absolute bottom-3 left-3 flex h-11 w-11 items-center justify-center rounded-xl"
               style={{
                 background: "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))",
                 color: "hsl(var(--pr-emerald-deep))",
