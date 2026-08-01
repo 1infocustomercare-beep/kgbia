@@ -49,6 +49,18 @@ export default function PrestigeDemoHub() {
     return out;
   }, []);
 
+  // Larghezza viewport → dimensioni telefoni e spread 3D responsive
+  const [vw, setVw] = useState(() => (typeof window !== "undefined" ? window.innerWidth : 1200));
+  useEffect(() => {
+    const onResize = () => setVw(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  const phoneWidth = vw < 420 ? 168 : vw < 640 ? 190 : vw < 1024 ? 210 : 230;
+  const spread = Math.round(phoneWidth * (vw < 640 ? 0.82 : 1.13));
+  const depth = vw < 640 ? 130 : 200;
+  const visibleRange = vw < 640 ? 2.2 : 3.2;
+
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
