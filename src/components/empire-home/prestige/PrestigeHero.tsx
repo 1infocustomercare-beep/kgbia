@@ -7,19 +7,30 @@ import PrestigePhone from "./PrestigePhone";
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
-// Cross-sector hero auto-carousel: one flagship studio mockup per sector so the
-// hero shows the full range of Empire work (Food, Beauty, NCC, Hospitality, …)
-// instead of repeating 4 screens of the same brand.
+// Hero auto-carousel — selezione curata a mano dei mockup studio migliori
+// (dark luxury + editoriali) in ordine cinematografico, così la hero non mostra
+// più il primo mockup disponibile per settore ma solo i flagship approvati.
+const HERO_PICKS = [
+  "ncc-aurora-drive",
+  "food-onyx-brace",
+  "hosp-palazzo-novecento",
+  "beauty-serena-spa",
+  "health-aurora",
+  "fit-iron-box",
+  "food-ryo-sushi",
+];
+
 const HERO_SCREENS = (() => {
+  const flat = SECTOR_MOCKUPS.flatMap((g) => g.variants.map((v) => ({ g, v })));
   const picks: { label: string; brand: string; image: string }[] = [];
-  for (const group of SECTOR_MOCKUPS) {
-    const primary = group.variants.find((v) => v.tier === "primary" && v.source === "studio");
-    if (!primary) continue;
-    const img = primary.screens[0]?.image ?? primary.screen;
-    if (!img) continue;
-    picks.push({ label: group.label, brand: primary.brand, image: img });
+  for (const id of HERO_PICKS) {
+    const hit = flat.find(({ v }) => v.id === id);
+    const img = hit?.v.screens?.[0]?.image ?? hit?.v.screen;
+    if (hit && img) picks.push({ label: hit.g.label, brand: hit.v.brand, image: img });
   }
-  return picks.length ? picks : [{ label: "Empire", brand: "Empire", image: SECTOR_MOCKUPS[0]?.variants[0]?.screen ?? "" }];
+  if (picks.length) return picks;
+  const fb = flat[0];
+  return [{ label: fb?.g.label ?? "Empire", brand: fb?.v.brand ?? "Empire", image: fb?.v.screen ?? "" }];
 })();
 const HERO_LABELS = HERO_SCREENS.map((s) => `${s.label} · ${s.brand}`);
 const ROTATE_MS = 3200;
