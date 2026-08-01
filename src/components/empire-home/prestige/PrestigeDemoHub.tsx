@@ -49,6 +49,18 @@ export default function PrestigeDemoHub() {
     return out;
   }, []);
 
+  // Larghezza viewport → dimensioni telefoni e spread 3D responsive
+  const [vw, setVw] = useState(() => (typeof window !== "undefined" ? window.innerWidth : 1200));
+  useEffect(() => {
+    const onResize = () => setVw(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  const phoneWidth = vw < 420 ? 168 : vw < 640 ? 190 : vw < 1024 ? 210 : 230;
+  const spread = Math.round(phoneWidth * (vw < 640 ? 0.82 : 1.13));
+  const depth = vw < 640 ? 130 : 200;
+  const visibleRange = vw < 640 ? 2.2 : 3.2;
+
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
@@ -80,6 +92,12 @@ export default function PrestigeDemoHub() {
     Math.floor(progress * cards.length * 0.999)
   );
   const localProgress = progress * cards.length - activeIndex;
+  // Indice del telefono realmente al centro dello stage (rel più vicino a 0):
+  // usato per label e badge così testo e telefono in evidenza combaciano sempre.
+  const centerIndex = Math.min(
+    cards.length - 1,
+    Math.max(0, activeIndex + (localProgress > 0.5 ? 1 : 0))
+  );
 
   const openVariant = cards.find((c) => c.id === openId)?.variant ?? null;
 
@@ -141,7 +159,7 @@ export default function PrestigeDemoHub() {
           <div
             className="prestige-hub-stage relative mx-auto"
             style={{
-              perspective: "1800px",
+              perspective: vw < 640 ? "1100px" : "1800px",
               height: "min(58svh, 560px)",
             }}
           >
@@ -152,12 +170,12 @@ export default function PrestigeDemoHub() {
               {cards.map((c, i) => {
                 const rel = i - activeIndex - localProgress;
                 const abs = Math.abs(rel);
-                const x = rel * 260; // px offset
-                const z = -abs * 200;
+                const x = rel * spread; // px offset
+                const z = -abs * depth;
                 const rotY = Math.max(-35, Math.min(35, -rel * 22));
                 const scale = Math.max(0.55, 1 - abs * 0.14);
-                const opacity = abs > 3.2 ? 0 : Math.max(0.18, 1 - abs * 0.28);
-                const isActive = i === activeIndex && localProgress < 0.75;
+                const opacity = abs > visibleRange ? 0 : Math.max(0.18, 1 - abs * 0.28);
+                const isActive = i === centerIndex;
 
                 return (
                   <button
@@ -171,15 +189,17 @@ export default function PrestigeDemoHub() {
                       opacity,
                       zIndex: 100 - Math.round(abs * 10),
                       filter: isActive ? "none" : "saturate(.85)",
+                      pointerEvents: opacity < 0.25 ? "none" : "auto",
                     }}
                     aria-label={`Apri mockup ${c.brand}`}
                   >
                     <PrestigePhone
                       src={c.image}
                       alt={c.brand}
-                      width={230}
+                      width={phoneWidth}
                       loading="lazy"
                     />
+
                     {isActive && (
                       <span
                         className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em]"
@@ -212,13 +232,13 @@ export default function PrestigeDemoHub() {
 
           {/* meta + progress */}
           <div className="mt-8 flex flex-col items-center gap-4">
-            {cards[activeIndex] && (
+            {cards[centerIndex] && (
               <div className="text-center">
                 <div
                   className="text-[10px] font-bold uppercase tracking-[0.32em]"
                   style={{ color: "hsl(var(--pr-gold-light))" }}
                 >
-                  {cards[activeIndex].sectorLabel}
+                  {cards[centerIndex].sectorLabel}
                 </div>
                 <div
                   className="prestige-display mt-1"
@@ -227,20 +247,20 @@ export default function PrestigeDemoHub() {
                     color: "hsl(var(--pr-text-on-dark))",
                   }}
                 >
-                  {cards[activeIndex].brand}
+                  {cards[centerIndex].brand}
                 </div>
                 <div
                   className="mt-1 text-xs sm:text-sm"
                   style={{ color: "hsl(var(--pr-muted-on-dark))" }}
                 >
-                  {cards[activeIndex].style} · {cards[activeIndex].palette}
+                  {cards[centerIndex].style} · {cards[centerIndex].palette}
                 </div>
               </div>
             )}
 
-            <div className="flex items-center gap-3">
+            <div className="flex w-full flex-col items-stretch gap-3 pb-16 sm:w-auto sm:flex-row sm:items-center sm:pb-0">
               <button
-                onClick={() => cards[activeIndex] && setOpenId(cards[activeIndex].id)}
+                onClick={() => cards[centerIndex] && setOpenId(cards[centerIndex].id)}
                 className="prestige-cta"
               >
                 <span>{t({ it: "Apri fullscreen", en: "Open fullscreen" })}</span>
