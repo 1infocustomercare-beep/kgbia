@@ -7,19 +7,30 @@ import PrestigePhone from "./PrestigePhone";
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
-// Cross-sector hero auto-carousel: one flagship studio mockup per sector so the
-// hero shows the full range of Empire work (Food, Beauty, NCC, Hospitality, …)
-// instead of repeating 4 screens of the same brand.
+// Hero auto-carousel — selezione curata a mano dei mockup studio migliori
+// (dark luxury + editoriali) in ordine cinematografico, così la hero non mostra
+// più il primo mockup disponibile per settore ma solo i flagship approvati.
+const HERO_PICKS = [
+  "ncc-aurora-drive",
+  "food-onyx-brace",
+  "hosp-palazzo-novecento",
+  "beauty-serena-spa",
+  "health-aurora",
+  "fit-iron-box",
+  "food-ryo-sushi",
+];
+
 const HERO_SCREENS = (() => {
+  const flat = SECTOR_MOCKUPS.flatMap((g) => g.variants.map((v) => ({ g, v })));
   const picks: { label: string; brand: string; image: string }[] = [];
-  for (const group of SECTOR_MOCKUPS) {
-    const primary = group.variants.find((v) => v.tier === "primary" && v.source === "studio");
-    if (!primary) continue;
-    const img = primary.screens[0]?.image ?? primary.screen;
-    if (!img) continue;
-    picks.push({ label: group.label, brand: primary.brand, image: img });
+  for (const id of HERO_PICKS) {
+    const hit = flat.find(({ v }) => v.id === id);
+    const img = hit?.v.screens?.[0]?.image ?? hit?.v.screen;
+    if (hit && img) picks.push({ label: hit.g.label, brand: hit.v.brand, image: img });
   }
-  return picks.length ? picks : [{ label: "Empire", brand: "Empire", image: SECTOR_MOCKUPS[0]?.variants[0]?.screen ?? "" }];
+  if (picks.length) return picks;
+  const fb = flat[0];
+  return [{ label: fb?.g.label ?? "Empire", brand: fb?.v.brand ?? "Empire", image: fb?.v.screen ?? "" }];
 })();
 const HERO_LABELS = HERO_SCREENS.map((s) => `${s.label} · ${s.brand}`);
 const ROTATE_MS = 3200;
@@ -61,7 +72,7 @@ export default function PrestigeHero() {
     const compute = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      setPhoneW(mobile ? Math.min(220, window.innerWidth * 0.58) : 300);
+      setPhoneW(mobile ? Math.min(210, window.innerWidth * 0.56) : 262);
     };
     compute();
     window.addEventListener("resize", compute);
@@ -140,8 +151,8 @@ export default function PrestigeHero() {
         />
       </div>
 
-      {/* Floating lang toggle */}
-      <div className="prestige-hero-lang-floating absolute right-3 top-[76px] z-20 scale-90 origin-top-right sm:right-6 sm:top-[96px] sm:scale-100">
+      {/* Lang toggle: vive solo nella navbar (evita doppione sovrapposto in desktop) */}
+      <div className="prestige-hero-lang-floating absolute right-3 top-[76px] z-20 scale-90 origin-top-right lg:hidden">
         <PrestigeLangToggle />
       </div>
 
@@ -247,14 +258,17 @@ export default function PrestigeHero() {
               const isActive = i === active;
               const dist = i - active;
               const modDist = ((dist % HERO_SCREENS.length) + HERO_SCREENS.length) % HERO_SCREENS.length;
-              // depth stack: front / behind-right / behind-left / back
+              const isRight = modDist === 1;
+              const isLeft = modDist === HERO_SCREENS.length - 1;
+              // Solo attivo + 2 vicini restano visibili: gli altri escono di scena,
+              // così i telefoni non si accavallano più sopra quello in primo piano.
               const stackTransform = isActive
-                ? `translate3d(0, 0, 0) rotateY(calc(var(--mx, 0) * 14deg)) rotateX(calc(var(--my, 0) * -10deg)) scale(1)`
-                : modDist === 1
-                  ? `translate3d(28%, 6%, -120px) rotateY(-18deg) scale(.9)`
-                  : modDist === HERO_SCREENS.length - 1
-                    ? `translate3d(-28%, 6%, -120px) rotateY(18deg) scale(.9)`
-                    : `translate3d(0, 10%, -220px) rotateY(0deg) scale(.8)`;
+                ? `translate3d(0, 0, 0) rotateY(calc(var(--mx, 0) * 12deg)) rotateX(calc(var(--my, 0) * -8deg)) scale(1)`
+                : isRight
+                  ? `translate3d(36%, 7%, -260px) rotateY(-20deg) scale(.84)`
+                  : isLeft
+                    ? `translate3d(-36%, 7%, -260px) rotateY(20deg) scale(.84)`
+                    : `translate3d(0, 12%, -420px) scale(.7)`;
 
               return (
                 <div
@@ -269,16 +283,17 @@ export default function PrestigeHero() {
                     }
                   }}
                   aria-label={`Mostra mockup ${i + 1}: ${HERO_LABELS[i]}`}
-                  className="absolute inset-0 flex items-center justify-center transition-all duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] focus:outline-none"
+                  className="absolute inset-0 flex items-center justify-center transition-all duration-[1000ms] ease-[cubic-bezier(.22,1,.36,1)] focus:outline-none"
                   style={{
-                    opacity: isActive ? 1 : 0.55,
+                    opacity: isActive ? 1 : isRight || isLeft ? 0.3 : 0,
                     transform: stackTransform,
                     transformStyle: "preserve-3d",
-                    pointerEvents: isActive ? "auto" : "auto",
-                    zIndex: isActive ? 3 : modDist === 1 || modDist === HERO_SCREENS.length - 1 ? 2 : 1,
-                    filter: isActive ? "none" : "blur(2px) saturate(.85)",
+                    pointerEvents: isActive || isRight || isLeft ? "auto" : "none",
+                    zIndex: isActive ? 3 : isRight || isLeft ? 2 : 1,
+                    filter: isActive ? "none" : "blur(4px) saturate(.7) brightness(.65)",
                   }}
                 >
+
                   <PrestigePhone
                     src={screen.image}
                     alt={`Mockup ${HERO_LABELS[i]}`}
@@ -291,8 +306,14 @@ export default function PrestigeHero() {
             })}
           </div>
 
-          {/* Dot indicators */}
-          <div className="mt-10 flex justify-center gap-2" role="tablist" aria-label="Cambia mockup">
+          {/* Etichetta mockup attivo + dot indicators */}
+          <div
+            className="mt-6 text-center text-[10px] font-semibold uppercase tracking-[0.26em]"
+            style={{ color: "hsl(var(--pr-gold-light))" }}
+          >
+            {HERO_LABELS[active]}
+          </div>
+          <div className="mt-3 flex justify-center gap-2" role="tablist" aria-label="Cambia mockup">
             {HERO_SCREENS.map((_, i) => (
               <button
                 key={i}
