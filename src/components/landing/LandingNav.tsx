@@ -50,7 +50,17 @@ export default function LandingNav() {
 
       <nav className={`fixed top-[3px] z-[10000] w-full transition-all duration-500 ${scrolled ? "py-2" : "py-3"}`}>
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-3 sm:px-5 lg:px-10">
-          <div className="w-full rounded-full border border-white/10 bg-[hsl(162_30%_8%/0.82)] px-3 shadow-[0_18px_48px_-28px_hsl(0_0%_0%/0.7)] backdrop-blur-2xl transition-all duration-500 sm:px-5">
+          <div
+            className="w-full rounded-full px-3 backdrop-blur-2xl transition-all duration-500 sm:px-5"
+            style={{
+              // Vetro ink neutro (non verde fangoso) con bordo oro tenue:
+              // resta leggibile sopra la hero smeraldo e sopra le sezioni chiare.
+              background: scrolled ? "hsl(220 22% 5% / 0.92)" : "hsl(220 22% 6% / 0.66)",
+              border: "1px solid hsl(43 55% 70% / 0.18)",
+              boxShadow: "0 22px 60px -32px hsl(0 0% 0% / 0.85)",
+            }}
+          >
+
 
             <div className="flex items-center justify-between py-2.5">
           <a
