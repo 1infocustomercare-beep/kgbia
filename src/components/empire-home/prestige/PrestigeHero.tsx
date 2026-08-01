@@ -302,8 +302,14 @@ export default function PrestigeHero() {
             })}
           </div>
 
-          {/* Dot indicators */}
-          <div className="mt-10 flex justify-center gap-2" role="tablist" aria-label="Cambia mockup">
+          {/* Etichetta mockup attivo + dot indicators */}
+          <div
+            className="mt-6 text-center text-[10px] font-semibold uppercase tracking-[0.26em]"
+            style={{ color: "hsl(var(--pr-gold-light))" }}
+          >
+            {HERO_LABELS[active]}
+          </div>
+          <div className="mt-3 flex justify-center gap-2" role="tablist" aria-label="Cambia mockup">
             {HERO_SCREENS.map((_, i) => (
               <button
                 key={i}
