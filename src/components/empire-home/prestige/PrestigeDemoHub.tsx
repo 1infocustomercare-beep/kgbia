@@ -153,7 +153,7 @@ export default function PrestigeDemoHub() {
           <div
             className="prestige-hub-stage relative mx-auto"
             style={{
-              perspective: "1800px",
+              perspective: vw < 640 ? "1100px" : "1800px",
               height: "min(58svh, 560px)",
             }}
           >
@@ -164,11 +164,11 @@ export default function PrestigeDemoHub() {
               {cards.map((c, i) => {
                 const rel = i - activeIndex - localProgress;
                 const abs = Math.abs(rel);
-                const x = rel * 260; // px offset
-                const z = -abs * 200;
+                const x = rel * spread; // px offset
+                const z = -abs * depth;
                 const rotY = Math.max(-35, Math.min(35, -rel * 22));
                 const scale = Math.max(0.55, 1 - abs * 0.14);
-                const opacity = abs > 3.2 ? 0 : Math.max(0.18, 1 - abs * 0.28);
+                const opacity = abs > visibleRange ? 0 : Math.max(0.18, 1 - abs * 0.28);
                 const isActive = i === activeIndex && localProgress < 0.75;
 
                 return (
@@ -183,15 +183,17 @@ export default function PrestigeDemoHub() {
                       opacity,
                       zIndex: 100 - Math.round(abs * 10),
                       filter: isActive ? "none" : "saturate(.85)",
+                      pointerEvents: opacity < 0.25 ? "none" : "auto",
                     }}
                     aria-label={`Apri mockup ${c.brand}`}
                   >
                     <PrestigePhone
                       src={c.image}
                       alt={c.brand}
-                      width={230}
+                      width={phoneWidth}
                       loading="lazy"
                     />
+
                     {isActive && (
                       <span
                         className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em]"
