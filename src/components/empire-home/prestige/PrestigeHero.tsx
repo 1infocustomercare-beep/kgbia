@@ -72,7 +72,7 @@ export default function PrestigeHero() {
     const compute = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      setPhoneW(mobile ? Math.min(220, window.innerWidth * 0.58) : 300);
+      setPhoneW(mobile ? Math.min(210, window.innerWidth * 0.56) : 262);
     };
     compute();
     window.addEventListener("resize", compute);
