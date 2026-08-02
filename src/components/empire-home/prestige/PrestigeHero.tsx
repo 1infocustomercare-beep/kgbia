@@ -56,15 +56,15 @@ export default function PrestigeHero() {
   const [phoneW, setPhoneW] = useState(260);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Cinematic scroll — sticky hero scales down slightly as the user scrolls away.
-  // No rotation: it caused visual overlap with the next section.
+  // Cinematic scroll senza pin: la hero accompagna l'uscita ma non trattiene
+  // il documento, evitando vuoti, sovrapposizioni e contenuti tagliati.
   const { scrollYProgress } = useScroll({
     target: scrollContainerRef,
     offset: ["start start", "end start"],
   });
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.85, 0]);
-  const heroBorderRadius = useTransform(scrollYProgress, [0, 1], ["0px", "32px"]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.92, 1], [1, 1, 0.92]);
+  const heroBorderRadius = useTransform(scrollYProgress, [0, 1], ["0px", "24px"]);
 
 
   // Responsive phone width + breakpoint
@@ -117,19 +117,18 @@ export default function PrestigeHero() {
   }, [isMobile]);
 
   return (
-    <div ref={scrollContainerRef} className="relative isolate z-0" style={{ height: "150svh" }}>
+    <div ref={scrollContainerRef} className="relative isolate z-0">
     <motion.section
       ref={ref}
       data-section="prestige-hero"
-      className={`prestige-section prestige-dark prestige-hero-root sticky top-0 flex items-center overflow-hidden ${mounted ? "is-mounted" : ""}`}
+      className={`prestige-section prestige-dark prestige-hero-root flex min-h-[100svh] items-center overflow-hidden ${mounted ? "is-mounted" : ""}`}
       style={{
         scale: heroScale,
         opacity: heroOpacity,
         borderRadius: heroBorderRadius,
         transformOrigin: "center top",
-        paddingTop: "clamp(104px, 13svh, 148px)",
-        paddingBottom: "clamp(72px, 9svh, 112px)",
-        height: "100svh",
+        paddingTop: "clamp(112px, 14svh, 156px)",
+        paddingBottom: "clamp(56px, 8svh, 96px)",
         willChange: "transform, opacity",
       }}
     >
@@ -156,7 +155,7 @@ export default function PrestigeHero() {
         <PrestigeLangToggle />
       </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-12 gap-x-4 gap-y-12 px-4 sm:px-6 lg:gap-x-8 lg:px-10">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-12 gap-x-4 gap-y-10 px-4 sm:px-6 lg:gap-x-8 lg:gap-y-6 lg:px-10">
         {/* ── LEFT — Editorial copy ── */}
         <div className="col-span-12 lg:col-span-7 min-w-0 relative text-center lg:text-left">
           {/* Eyebrow */}
@@ -170,8 +169,8 @@ export default function PrestigeHero() {
 
           {/* Monumental headline */}
           <h1
-            className="prestige-display prestige-hero-headline mt-7"
-            style={{ fontSize: "clamp(2.2rem, 6.8vw, 5.8rem)" }}
+            className="prestige-display prestige-hero-headline mt-6"
+            style={{ fontSize: "clamp(2.2rem, 6.3vw, 5.35rem)" }}
           >
             <span className="prestige-hero-stagger prestige-hero-stagger--2 block">
               {t({ it: "Trasformiamo la tua azienda", en: "We turn your business" })}
@@ -186,7 +185,7 @@ export default function PrestigeHero() {
 
           {/* Subcopy */}
           <p
-            className="prestige-hero-stagger prestige-hero-stagger--4 mt-8 max-w-2xl text-base leading-relaxed sm:text-lg mx-auto lg:mx-0"
+            className="prestige-hero-stagger prestige-hero-stagger--4 mt-6 max-w-2xl text-base leading-relaxed sm:text-lg mx-auto lg:mx-0"
             style={{ color: "hsl(var(--pr-muted-on-dark))", fontFamily: "'Inter', sans-serif", fontWeight: 400 }}
           >
             {t({
@@ -200,7 +199,7 @@ export default function PrestigeHero() {
           </p>
 
           {/* CTAs */}
-          <div className="prestige-hero-stagger prestige-hero-stagger--5 mt-9 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center lg:justify-start gap-3">
+          <div className="prestige-hero-stagger prestige-hero-stagger--5 mt-7 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center lg:justify-start gap-3">
             <button
               className="prestige-cta justify-center w-full sm:w-auto"
               onClick={() => navigate("/onboarding")}
@@ -218,7 +217,7 @@ export default function PrestigeHero() {
           </div>
 
           {/* Trust strip */}
-          <div className="prestige-hero-stagger prestige-hero-stagger--6 mt-9 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-[11px] uppercase tracking-[0.22em]"
+          <div className="prestige-hero-stagger prestige-hero-stagger--6 mt-7 flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-2 text-[10px] uppercase tracking-[0.18em] sm:gap-x-6 sm:text-[11px] sm:tracking-[0.22em]"
                style={{ color: "hsl(var(--pr-muted-on-dark))", fontWeight: 600 }}>
             <span>{t({ it: "Setup in 7 giorni", en: "7-day setup" })}</span>
             <span aria-hidden="true">·</span>
@@ -408,6 +407,19 @@ export default function PrestigeHero() {
         @media (max-width: 767px) {
           .prestige-hero-root { text-align: center; }
           .prestige-hero-phone-stage { margin: 0 auto; }
+          .prestige-hero-root {
+            padding-top: 112px !important;
+            padding-bottom: 64px !important;
+          }
+          .prestige-hero-lang-floating { top: 92px; }
+          .prestige-hero-headline { overflow-wrap: anywhere; }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .prestige-hero-root {
+            padding-top: 128px !important;
+            padding-bottom: 72px !important;
+          }
         }
 
 

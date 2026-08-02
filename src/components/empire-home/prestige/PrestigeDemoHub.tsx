@@ -56,10 +56,10 @@ export default function PrestigeDemoHub() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  const phoneWidth = vw < 420 ? 168 : vw < 640 ? 190 : vw < 1024 ? 210 : 230;
-  const spread = Math.round(phoneWidth * (vw < 640 ? 0.82 : 1.13));
-  const depth = vw < 640 ? 130 : 200;
-  const visibleRange = vw < 640 ? 2.2 : 3.2;
+  const phoneWidth = vw < 420 ? 136 : vw < 640 ? 150 : vw < 1024 ? 184 : 220;
+  const spread = Math.round(phoneWidth * (vw < 640 ? 0.72 : vw < 1024 ? 0.92 : 1.08));
+  const depth = vw < 640 ? 110 : 180;
+  const visibleRange = vw < 640 ? 1.65 : vw < 1024 ? 2.4 : 3.2;
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -111,7 +111,7 @@ export default function PrestigeDemoHub() {
       style={{ height: `${heightVh}vh` }}
       aria-label="Demo Hub 3D"
     >
-      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden">
+      <div className="prestige-hub-sticky sticky top-0 flex h-[100svh] w-full items-center overflow-hidden">
         {/* aurora bg */}
         <div
           aria-hidden
@@ -122,9 +122,9 @@ export default function PrestigeDemoHub() {
           }}
         />
 
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-4 pt-20 sm:px-6 sm:pb-6 sm:pt-24 lg:px-10 lg:py-8">
           {/* header */}
-          <div className="mb-8 flex flex-col items-center text-center lg:mb-12">
+          <div className="mb-4 flex flex-col items-center text-center sm:mb-6 lg:mb-8">
             <span
               className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.28em]"
               style={{
@@ -136,8 +136,8 @@ export default function PrestigeDemoHub() {
               {t({ it: "Demo Hub · 3D interattivo", en: "Demo Hub · 3D interactive" })}
             </span>
             <h2
-              className="prestige-display mt-4"
-              style={{ fontSize: "clamp(1.9rem, 4.4vw, 3.6rem)" }}
+              className="prestige-display mt-3 max-w-4xl"
+              style={{ fontSize: "clamp(1.65rem, 4.2vw, 3.35rem)" }}
             >
               {t({
                 it: "Scorri e scopri ogni settore, in movimento.",
@@ -145,7 +145,7 @@ export default function PrestigeDemoHub() {
               })}
             </h2>
             <p
-              className="mt-3 max-w-2xl text-sm sm:text-base"
+              className="mt-2 max-w-2xl text-xs leading-relaxed sm:text-sm lg:text-base"
               style={{ color: "hsl(var(--pr-muted-on-dark))" }}
             >
               {t({
@@ -160,7 +160,7 @@ export default function PrestigeDemoHub() {
             className="prestige-hub-stage relative mx-auto"
             style={{
               perspective: vw < 640 ? "1100px" : "1800px",
-              height: "min(58svh, 560px)",
+              height: vw < 640 ? "292px" : vw < 1024 ? "410px" : "min(50svh, 520px)",
             }}
           >
             <div
@@ -231,7 +231,7 @@ export default function PrestigeDemoHub() {
           </div>
 
           {/* meta + progress */}
-          <div className="mt-8 flex flex-col items-center gap-4">
+          <div className="mt-3 flex flex-col items-center gap-3 sm:mt-5 sm:gap-4">
             {cards[centerIndex] && (
               <div className="text-center">
                 <div
@@ -258,17 +258,17 @@ export default function PrestigeDemoHub() {
               </div>
             )}
 
-            <div className="flex w-full flex-col items-stretch gap-3 pb-16 sm:w-auto sm:flex-row sm:items-center sm:pb-0">
+            <div className="flex w-full flex-row items-stretch justify-center gap-2 sm:w-auto sm:items-center sm:gap-3">
               <button
                 onClick={() => cards[centerIndex] && setOpenId(cards[centerIndex].id)}
-                className="prestige-cta"
+                className="prestige-cta min-w-0 flex-1 justify-center sm:flex-none"
               >
                 <span>{t({ it: "Apri fullscreen", en: "Open fullscreen" })}</span>
                 <Maximize2 size={14} />
               </button>
               <button
                 onClick={() => navigate("/portfolio")}
-                className="prestige-cta-ghost"
+                className="prestige-cta-ghost min-w-0 flex-1 justify-center sm:flex-none"
               >
                 <span>{t({ it: "Tutti gli stili", en: "All styles" })}</span>
                 <ArrowUpRight size={14} />
