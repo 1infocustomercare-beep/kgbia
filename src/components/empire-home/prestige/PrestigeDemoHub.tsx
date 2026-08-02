@@ -101,8 +101,13 @@ export default function PrestigeDemoHub() {
 
   const openVariant = cards.find((c) => c.id === openId)?.variant ?? null;
 
-  // Sezione alta per creare lo scroll pinato (2 viewport per card scorreranno).
-  const heightVh = Math.max(220, 140 + cards.length * 55);
+  // Una durata compatta mantiene il gesto 3D leggibile senza intrappolare
+  // l'utente per migliaia di pixel, soprattutto su telefono e tablet.
+  const heightVh = vw < 640
+    ? Math.max(260, 150 + cards.length * 20)
+    : vw < 1024
+      ? Math.max(320, 170 + cards.length * 24)
+      : Math.max(380, 180 + cards.length * 28);
 
   return (
     <section
