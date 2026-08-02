@@ -3019,6 +3019,16 @@ video::-webkit-media-controls-enclosure {
   .empire-voice-agent-container {
     bottom: 72px !important;
   }
+
+  /* Lascia liberi CTA e contenuti della homepage: il FAB resta raggiungibile
+     ma non invade più la colonna centrale su viewport stretti. */
+  .prestige-root ~ .empire-voice-agent-container,
+  body:has(.prestige-root) .empire-voice-agent-container {
+    right: 0.5rem !important;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom)) !important;
+    transform: scale(0.82);
+    transform-origin: right bottom;
+  }
 }
 
 /* ═══ TEXT GLOW ON HOVER ═══ */

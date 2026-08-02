@@ -24,10 +24,6 @@ export default function PrestigePortfolio() {
   });
   const rotateX = useTransform(scrollYProgress, [0, 0.35], [45, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.35], [0.92, 1]);
-  const yA = useTransform(scrollYProgress, [0, 1], ["0%", "-8%"]);
-  const yB = useTransform(scrollYProgress, [0, 1], ["0%", "-14%"]);
-  const yC = useTransform(scrollYProgress, [0, 1], ["0%", "-4%"]);
-  const yD = useTransform(scrollYProgress, [0, 1], ["0%", "-11%"]);
 
   // Primary hero card per sector — first PRIMARY studio variant only. Homepage
   // shows ONLY our own studio mockups (Lowengeld/reference variants live on
@@ -91,24 +87,9 @@ export default function PrestigePortfolio() {
               transformOrigin: "center top",
               transformStyle: "preserve-3d",
             }}
-            className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4"
+            className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-6"
           >
-            {[0, 1, 2, 3].map((colIdx) => {
-              const items = visible.filter((_, i) => i % 4 === colIdx);
-              const yList = [yA, yB, yC, yD];
-              const hideClass =
-                colIdx === 3
-                  ? "hidden lg:flex"
-                  : colIdx === 2
-                  ? "hidden sm:flex"
-                  : "flex";
-              return (
-                <motion.div
-                  key={colIdx}
-                  style={{ y: yList[colIdx] }}
-                  className={`${hideClass} flex-col items-center gap-10`}
-                >
-                  {items.map((h) => (
+            {visible.map((h) => (
                     <article
                       key={h.sectorId}
                       className="group flex w-full flex-col items-center"
@@ -161,10 +142,7 @@ export default function PrestigePortfolio() {
                         )}
                       </div>
                     </article>
-                  ))}
-                </motion.div>
-              );
-            })}
+            ))}
           </motion.div>
         </div>
 

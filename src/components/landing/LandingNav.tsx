@@ -120,7 +120,7 @@ export default function LandingNav() {
         </div>
 
         {menuOpen && (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="absolute left-4 right-4 top-full mt-2 flex flex-col gap-4 rounded-[28px] border border-border/80 bg-background/90 px-5 py-6 shadow-[0_30px_90px_-40px_hsl(0_0%_0%_/_0.92)] backdrop-blur-2xl lg:hidden">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="absolute left-3 right-3 top-full mt-2 flex max-h-[calc(100svh-96px)] flex-col gap-3 overflow-y-auto rounded-[24px] border border-border/80 bg-background/95 px-5 py-5 shadow-[0_30px_90px_-40px_hsl(0_0%_0%_/_0.92)] backdrop-blur-2xl sm:left-5 sm:right-5 lg:hidden">
             {NAV_LINKS.map((l) => (
               <button key={l.href} onClick={() => scrollTo(l.href)} className="text-left text-sm font-medium text-foreground/74 transition-colors hover:text-foreground">{l.label}</button>
             ))}
