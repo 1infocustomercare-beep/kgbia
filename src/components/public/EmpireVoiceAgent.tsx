@@ -590,7 +590,8 @@ const EmpireVoiceAgent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"voice" | "chat">("voice");
-  const [messages, setMessages] = useState<Msg[]>([]);
+  // Memoria di sessione: ripristina la conversazione precedente nella stessa tab
+  const [messages, setMessages] = useState<Msg[]>(() => loadSessionMemory().messages as Msg[]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
