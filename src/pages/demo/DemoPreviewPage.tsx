@@ -175,7 +175,8 @@ export default function DemoPreviewPage() {
 
       const { data: restaurant } = await supabase
         .from("restaurants")
-        .select("*")
+        // Payment identifiers (stripe_*) excluded: not readable by client roles.
+        .select("id, owner_id, name, slug, logo_url, primary_color, tagline, address, phone, city, email, opening_hours, languages, is_active, business_type, theme_config, menu_pdf_url, delivery_enabled, takeaway_enabled, table_orders_enabled, created_at, updated_at")
         .eq("slug", slug)
         .eq("is_active", true)
         .maybeSingle();

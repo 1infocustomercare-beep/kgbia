@@ -113,7 +113,8 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
     queryKey: ["food-pub-reviews", restaurantId],
     queryFn: async () => {
       if (!restaurantId) return [];
-      const { data } = await supabase.from("reviews").select("*").eq("restaurant_id", restaurantId).eq("is_public", true).order("created_at", { ascending: false }).limit(6);
+      // customer_id excluded: not readable by anonymous visitors (privacy).
+      const { data } = await supabase.from("reviews").select("id, restaurant_id, customer_name, rating, comment, is_public, created_at").eq("restaurant_id", restaurantId).eq("is_public", true).order("created_at", { ascending: false }).limit(6);
       return data || [];
     },
     enabled: !!restaurantId,
