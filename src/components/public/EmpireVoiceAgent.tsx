@@ -845,6 +845,13 @@ const EmpireVoiceAgent: React.FC = () => {
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
+  // Persisti la conversazione + i dettagli estratti (memoria di sessione)
+  useEffect(() => {
+    if (messages.length === 0) return;
+    const lastUser = [...messages].reverse().find((m) => m.role === "user")?.content;
+    const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant")?.content;
+    rememberTurn({ messages, userText: lastUser, assistantText: lastAssistant });
+  }, [messages]);
   useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
   useEffect(() => { autoNarratingRef.current = autoNarrating; }, [autoNarrating]);
   useEffect(() => { isTouchDeviceRef.current = isTouchDevice; }, [isTouchDevice]);
