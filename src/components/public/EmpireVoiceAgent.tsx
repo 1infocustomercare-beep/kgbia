@@ -9,6 +9,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { stopSplashNarration, isSplashNarrationDone, isSplashNarrationSpeaking } from "@/lib/splash-narration";
 import { ARIANNA_SYSTEM_PROMPT } from "@/config/ariannaPrompt";
 import { claimVoiceAgent, releaseVoiceAgent, isVoiceAgentActive, getActiveVoiceAgent } from "@/lib/voice-agent-mutex";
+import {
+  loadSessionMemory,
+  rememberTurn,
+  buildMemoryPayload,
+} from "@/lib/arianna-session-memory";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
@@ -477,9 +482,10 @@ function isChatCreditsExhausted(): boolean {
 
 // ── Stream chat helper ──
 async function streamChat({
-  messages, mode, pageContent, sectionId, onDelta, onDone, onCreditError, signal,
+  messages, mode, pageContent, sectionId, memory, onDelta, onDone, onCreditError, signal,
 }: {
   messages: Msg[]; mode?: string; pageContent?: string; sectionId?: string;
+  memory?: ReturnType<typeof buildMemoryPayload>;
   onDelta: (t: string) => void; onDone: () => void; onCreditError?: () => void;
   signal?: AbortSignal;
 }) {
@@ -489,7 +495,7 @@ async function streamChat({
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages, mode, pageContent, sectionId }),
+    body: JSON.stringify({ messages, mode, pageContent, sectionId, memory }),
     signal,
   });
 
@@ -583,7 +589,8 @@ const EmpireVoiceAgent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"voice" | "chat">("voice");
-  const [messages, setMessages] = useState<Msg[]>([]);
+  // Memoria di sessione: ripristina la conversazione precedente nella stessa tab
+  const [messages, setMessages] = useState<Msg[]>(() => loadSessionMemory().messages as Msg[]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -837,6 +844,13 @@ const EmpireVoiceAgent: React.FC = () => {
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
+  // Persisti la conversazione + i dettagli estratti (memoria di sessione)
+  useEffect(() => {
+    if (messages.length === 0) return;
+    const lastUser = [...messages].reverse().find((m) => m.role === "user")?.content;
+    const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant")?.content;
+    rememberTurn({ messages, userText: lastUser, assistantText: lastAssistant });
+  }, [messages]);
   useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
   useEffect(() => { autoNarratingRef.current = autoNarrating; }, [autoNarrating]);
   useEffect(() => { isTouchDeviceRef.current = isTouchDevice; }, [isTouchDevice]);
@@ -1415,6 +1429,7 @@ const EmpireVoiceAgent: React.FC = () => {
         messages: allMessages,
         mode: "landing-assistant",
         sectionId: currentSection,
+        memory: buildMemoryPayload(rememberTurn({ messages: allMessages, userText: text })),
         signal: controller.signal,
         onDelta: upsert,
         onDone: async () => {
