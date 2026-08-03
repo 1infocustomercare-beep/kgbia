@@ -560,6 +560,25 @@ serve(async (req) => {
       { role: "system", content: ATLAS_STABILITY_PROMPT },
     ];
 
+    // ─── MEMORIA DI SESSIONE: dettagli già raccolti + domande già poste ───
+    const memFacts = Array.isArray(memory?.facts) ? memory!.facts!.filter(Boolean) : [];
+    const memAsked = Array.isArray(memory?.askedTopics) ? memory!.askedTopics!.filter(Boolean) : [];
+    if (memFacts.length > 0 || memAsked.length > 0) {
+      systemMessages.push({
+        role: "system",
+        content: `## MEMORIA DELLA SESSIONE (usala, non ignorarla)
+${memFacts.length ? `Dettagli già forniti dall'utente:\n- ${memFacts.join("\n- ")}` : "Nessun dettaglio ancora raccolto."}
+${memAsked.length ? `\nDomande GIÀ POSTE (non ripeterle mai): ${memAsked.join(", ")}.` : ""}
+
+REGOLE:
+- Non chiedere di nuovo informazioni che l'utente ha già dato: riusale con naturalezza (es. "per il tuo ${memFacts.find((f) => f.startsWith("Settore"))?.split(": ")[1] ?? "settore"}...").
+- Se un dettaglio è noto, personalizza esempi, numeri e scenari su quel dettaglio.
+- Chiedi solo UNA informazione nuova per volta, e solo se davvero necessaria per avanzare.
+- Mantieni coerenza con quanto già detto nella conversazione.`,
+      });
+    }
+
+
     if (mode === "narrate") {
       systemMessages.push({
         role: "system",
