@@ -9,6 +9,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { stopSplashNarration, isSplashNarrationDone, isSplashNarrationSpeaking } from "@/lib/splash-narration";
 import { ARIANNA_SYSTEM_PROMPT } from "@/config/ariannaPrompt";
 import { claimVoiceAgent, releaseVoiceAgent, isVoiceAgentActive, getActiveVoiceAgent } from "@/lib/voice-agent-mutex";
+import {
+  loadSessionMemory,
+  rememberTurn,
+  buildMemoryPayload,
+  clearSessionMemory,
+} from "@/lib/arianna-session-memory";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
