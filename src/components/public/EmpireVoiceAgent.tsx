@@ -483,9 +483,10 @@ function isChatCreditsExhausted(): boolean {
 
 // ── Stream chat helper ──
 async function streamChat({
-  messages, mode, pageContent, sectionId, onDelta, onDone, onCreditError, signal,
+  messages, mode, pageContent, sectionId, memory, onDelta, onDone, onCreditError, signal,
 }: {
   messages: Msg[]; mode?: string; pageContent?: string; sectionId?: string;
+  memory?: ReturnType<typeof buildMemoryPayload>;
   onDelta: (t: string) => void; onDone: () => void; onCreditError?: () => void;
   signal?: AbortSignal;
 }) {
@@ -495,7 +496,7 @@ async function streamChat({
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages, mode, pageContent, sectionId }),
+    body: JSON.stringify({ messages, mode, pageContent, sectionId, memory }),
     signal,
   });
 
