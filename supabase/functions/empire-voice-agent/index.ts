@@ -865,9 +865,11 @@ Dashboard IA predittiva, CRM avanzato con storico completo, Review Shield™, Gh
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: mode === "partner-assistant" ? "google/gemini-2.5-pro" : "google/gemini-3-flash-preview",
-        messages: [...systemMessages, ...messages],
-        temperature: mode === "partner-assistant" ? 0.35 : 0.45,
+        model: "google/gemini-2.5-pro",
+        // Keep only the last 16 turns: enough memory, no context drift or latency spikes.
+        messages: [...systemMessages, ...messages.slice(-16)],
+        temperature: mode === "partner-assistant" ? 0.35 : 0.6,
+        max_tokens: 600,
         stream: true,
       }),
     });
