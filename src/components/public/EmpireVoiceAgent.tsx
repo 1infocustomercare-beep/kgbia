@@ -13,7 +13,6 @@ import {
   loadSessionMemory,
   rememberTurn,
   buildMemoryPayload,
-  clearSessionMemory,
 } from "@/lib/arianna-session-memory";
 
 type Msg = { role: "user" | "assistant"; content: string };
