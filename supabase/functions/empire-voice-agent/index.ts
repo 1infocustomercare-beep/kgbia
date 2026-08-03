@@ -511,6 +511,9 @@ serve(async (req) => {
     const mode = payload?.mode as string | undefined;
     const pageContent = payload?.pageContent as string | undefined;
     const sectionId = payload?.sectionId as string | undefined;
+    const memory = payload?.memory as
+      | { facts?: string[]; askedTopics?: string[]; turns?: number }
+      | undefined;
 
     // ─── AUTH GUARD: restricted modes require authenticated partner/team_leader ───
     const RESTRICTED_MODES = new Set(["partner-assistant"]);
