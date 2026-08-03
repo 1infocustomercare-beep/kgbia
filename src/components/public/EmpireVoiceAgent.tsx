@@ -477,10 +477,11 @@ function isChatCreditsExhausted(): boolean {
 
 // ── Stream chat helper ──
 async function streamChat({
-  messages, mode, pageContent, sectionId, onDelta, onDone, onCreditError,
+  messages, mode, pageContent, sectionId, onDelta, onDone, onCreditError, signal,
 }: {
   messages: Msg[]; mode?: string; pageContent?: string; sectionId?: string;
   onDelta: (t: string) => void; onDone: () => void; onCreditError?: () => void;
+  signal?: AbortSignal;
 }) {
   const resp = await fetch(CHAT_URL, {
     method: "POST",
@@ -489,6 +490,7 @@ async function streamChat({
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
     body: JSON.stringify({ messages, mode, pageContent, sectionId }),
+    signal,
   });
 
   if (!resp.ok) {
@@ -1404,11 +1406,16 @@ const EmpireVoiceAgent: React.FC = () => {
       });
     };
 
+    // Watchdog: never let the UI stay stuck in "loading" if the stream hangs.
+    const controller = new AbortController();
+    const watchdog = window.setTimeout(() => controller.abort(), 30000);
+
     try {
       await streamChat({
         messages: allMessages,
         mode: "landing-assistant",
         sectionId: currentSection,
+        signal: controller.signal,
         onDelta: upsert,
         onDone: async () => {
           setIsLoading(false);
@@ -1427,10 +1434,16 @@ const EmpireVoiceAgent: React.FC = () => {
         },
       });
     } catch (error) {
+      // If we already streamed something, keep it: no error bubble on partial answers.
+      if (full.trim().length === 0) {
+        const fallback = getLocalFallbackResponse(text);
+        setMessages((prev) => [...prev, { role: "assistant", content: fallback }]);
+        if (!abortRef.current) void speakAssistantReply(fallback);
+      }
+      console.warn("[Arianna] chat error:", error);
+    } finally {
+      window.clearTimeout(watchdog);
       setIsLoading(false);
-      const fallbackMessage = "Mi scuso, c'è stato un problema. Riprova tra un momento.";
-      const message = error instanceof Error ? error.message : fallbackMessage;
-      setMessages((prev) => [...prev, { role: "assistant", content: message || fallbackMessage }]);
     }
   }, [currentSection, isLoading, speakAssistantReply, stopAll]);
 
