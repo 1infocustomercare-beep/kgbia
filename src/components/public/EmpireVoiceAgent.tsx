@@ -1430,6 +1430,7 @@ const EmpireVoiceAgent: React.FC = () => {
         messages: allMessages,
         mode: "landing-assistant",
         sectionId: currentSection,
+        memory: buildMemoryPayload(rememberTurn({ messages: allMessages, userText: text })),
         signal: controller.signal,
         onDelta: upsert,
         onDone: async () => {
