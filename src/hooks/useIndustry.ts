@@ -103,7 +103,9 @@ export function useIndustry() {
         // Fallback: check existing restaurants table for food businesses
         const { data: restaurant } = await supabase
           .from("restaurants")
-          .select("*")
+          // Sensitive payment identifiers (stripe_*) are intentionally excluded:
+          // they are not readable by client roles.
+          .select("id, owner_id, name, slug, logo_url, primary_color, tagline, address, phone, city, is_active, business_type, theme_config, setup_paid, is_blocked, blocked_reason, created_at, updated_at")
           .eq("owner_id", user.id)
           .limit(1)
           .maybeSingle();
