@@ -268,7 +268,7 @@ export default function PremiumMockupGallery() {
               <button
                 key={s.id}
                 onClick={() => setActiveSector(s.id)}
-                className="rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition"
+                className="shrink-0 snap-start rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition"
                 style={
                   active
                     ? { background: "white", color: "#0a0b12", borderColor: "white" }
