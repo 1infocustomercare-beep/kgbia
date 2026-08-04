@@ -150,8 +150,8 @@ export default function PrestigePortfolio() {
 
 
 
-        {heroes.length > 8 && (
-          <div className="mt-14 flex justify-center">
+        <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
+          {heroes.length > 8 && (
             <button
               onClick={() => setExpanded((v) => !v)}
               className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all"
@@ -167,8 +167,19 @@ export default function PrestigePortfolio() {
                 <>Vedi tutti i {heroes.length} settori <ChevronDown size={16} /></>
               )}
             </button>
-          </div>
-        )}
+          )}
+          <button
+            onClick={() => navigate("/portfolio")}
+            className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all hover:gap-3"
+            style={{
+              background: "transparent",
+              color: "hsl(var(--pr-emerald-deep))",
+              border: "1px solid hsl(var(--pr-emerald) / 0.45)",
+            }}
+          >
+            Vedi tutti i siti demo <ArrowUpRight size={16} />
+          </button>
+        </div>
 
         {/* Homepage = solo studio mockups Empire. Le varianti Lowengeld/reference vivono su /portfolio. */}
       </div>
