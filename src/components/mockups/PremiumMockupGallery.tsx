@@ -261,7 +261,7 @@ export default function PremiumMockupGallery() {
         </div>
 
         {/* Sector filter */}
-        <div className="mb-4 flex flex-wrap gap-2">
+        <div className="mb-4 -mx-5 flex snap-x gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
           {sectors.map((s) => {
             const active = s.id === activeSector;
             return (
