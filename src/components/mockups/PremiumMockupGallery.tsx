@@ -321,39 +321,46 @@ export default function PremiumMockupGallery() {
                   }}
                   aria-label={`Apri il progetto ${c.brand}`}
                 >
-                  {/* Preview: due iPhone affiancati */}
-                  <div className="relative flex h-[300px] items-end justify-center gap-3 overflow-hidden px-5 pt-8 sm:h-[330px]">
+                  {/* Preview: due iPhone affiancati, verticali, su pannello chiaro (leggibilità max) */}
+                  <div
+                    className="relative flex h-[340px] items-center justify-center gap-2.5 overflow-hidden px-5 pt-7 sm:h-[370px]"
+                    style={{
+                      background:
+                        "radial-gradient(120% 90% at 50% 0%, #f4f5f7 0%, #e7e9ee 55%, #d8dbe2 100%)",
+                    }}
+                  >
                     <div
                       aria-hidden
-                      className="absolute inset-0 opacity-[0.07]"
+                      className="absolute inset-0 opacity-[0.10]"
                       style={{
-                        backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1.5px)",
+                        backgroundImage: "radial-gradient(circle, #0a0b12 1px, transparent 1.5px)",
                         backgroundSize: "18px 18px",
                       }}
                     />
-                    <div className="translate-y-3 -rotate-3 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:rotate-[-1.5deg]">
+                    <div className="translate-y-0 transition-transform duration-500 group-hover:-translate-y-2">
                       <IPhoneProMaxFrame
                         src={c.screen}
                         alt={`${c.brand} — ${c.style} · schermata principale`}
-                        width={124}
+                        width={138}
                         glow={false}
                       />
                     </div>
                     {second && (
-                      <div className="translate-y-1 rotate-3 transition-transform duration-500 group-hover:translate-y-0 group-hover:rotate-[1.5deg]">
+                      <div className="translate-y-5 transition-transform duration-500 group-hover:translate-y-3">
                         <IPhoneProMaxFrame
                           src={second}
                           alt={`${c.brand} — ${c.screens[1].label}`}
-                          width={124}
+                          width={138}
                           glow={false}
                         />
                       </div>
                     )}
 
-                    <span className="pointer-events-none absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white/80 opacity-0 backdrop-blur transition group-hover:opacity-100">
+                    <span className="pointer-events-none absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-[#0a0b12]/85 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white opacity-0 backdrop-blur transition group-hover:opacity-100">
                       Vedi progetto <ArrowRight size={11} />
                     </span>
                   </div>
+
 
                   {/* Info */}
                   <div className="border-t border-white/10 px-5 pb-5 pt-4">
