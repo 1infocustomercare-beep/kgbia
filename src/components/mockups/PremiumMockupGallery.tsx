@@ -337,20 +337,20 @@ export default function PremiumMockupGallery() {
                         backgroundSize: "18px 18px",
                       }}
                     />
-                    <div className="translate-y-4 transition-transform duration-500 group-hover:translate-y-2">
+                    <div className="translate-y-0 transition-transform duration-500 group-hover:-translate-y-2">
                       <IPhoneProMaxFrame
                         src={c.screen}
                         alt={`${c.brand} — ${c.style} · schermata principale`}
-                        width={150}
+                        width={138}
                         glow={false}
                       />
                     </div>
                     {second && (
-                      <div className="translate-y-9 transition-transform duration-500 group-hover:translate-y-6">
+                      <div className="translate-y-5 transition-transform duration-500 group-hover:translate-y-3">
                         <IPhoneProMaxFrame
                           src={second}
                           alt={`${c.brand} — ${c.screens[1].label}`}
-                          width={150}
+                          width={138}
                           glow={false}
                         />
                       </div>
