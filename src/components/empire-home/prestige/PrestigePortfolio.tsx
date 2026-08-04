@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from "react";
-import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ArrowUpRight, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
