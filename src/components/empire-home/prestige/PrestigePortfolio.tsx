@@ -47,7 +47,20 @@ export default function PrestigePortfolio() {
         .filter((h) => !!h.hero),
     [],
   );
-  const visible = expanded ? heroes : heroes.slice(0, 8);
+  /** Chip di filtro per settore con conteggio stili (come la barra categorie del competitor). */
+  const chips = useMemo(
+    () => [
+      { id: "all", label: "Tutti", count: heroes.reduce((n, h) => n + h.variants.length, 0) },
+      ...heroes.map((h) => ({ id: h.sectorId, label: h.sectorLabel, count: h.variants.length })),
+    ],
+    [heroes],
+  );
+
+  const filtered = useMemo(
+    () => (filter === "all" ? heroes : heroes.filter((h) => h.sectorId === filter)),
+    [heroes, filter],
+  );
+  const visible = expanded || filter !== "all" ? filtered : filtered.slice(0, 8);
 
 
   return (
