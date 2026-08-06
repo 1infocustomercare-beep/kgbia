@@ -40,6 +40,27 @@ const SERVICES = [
   },
 ];
 
+/** Tappe reali del progetto — trasparenza sui tempi. */
+const MILESTONES = [
+  { label: "Analisi", when: "Giorno 1" },
+  { label: "Design", when: "Giorni 2–3" },
+  { label: "Sviluppo", when: "Giorni 3–5" },
+  { label: "Collaudo", when: "Giorno 6" },
+  { label: "Lancio", when: "Giorno 7" },
+];
+
+/** Stack tecnologico effettivamente in uso sulla piattaforma. */
+const TECH_STACK = [
+  "React",
+  "TypeScript",
+  "Tailwind",
+  "Supabase",
+  "Stripe",
+  "WhatsApp API",
+  "Gemini AI",
+  "Hosting UE",
+];
+
 export default function PrestigeServices() {
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-services", { steps: SERVICES.length });
 
