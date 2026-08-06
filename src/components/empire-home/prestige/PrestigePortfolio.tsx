@@ -90,6 +90,41 @@ export default function PrestigePortfolio() {
           </p>
         </div>
 
+        {/* FILTRI PER SETTORE con conteggio stili */}
+        <div className="mt-8 -mx-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:px-0">
+          <div className="flex w-max items-center gap-2 lg:w-auto lg:flex-wrap">
+            {chips.map((c) => {
+              const on = filter === c.id;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => setFilter(c.id)}
+                  aria-pressed={on}
+                  className="flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all"
+                  style={{
+                    background: on ? "hsl(var(--pr-emerald))" : "transparent",
+                    color: on ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-text-on-light))",
+                    border: `1px solid ${on ? "hsl(var(--pr-gold) / 0.45)" : "hsl(var(--pr-emerald) / 0.28)"}`,
+                  }}
+                >
+                  {c.label}
+                  <span
+                    className="rounded-full px-1.5 text-[10px] tabular-nums"
+                    style={{
+                      background: on ? "hsl(var(--pr-gold) / 0.25)" : "hsl(var(--pr-emerald) / 0.1)",
+                      color: on ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-emerald))",
+                    }}
+                  >
+                    {c.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+
         {/* PRIMARY GRID — cinematic 3D reveal + column parallax */}
         <div
           ref={gridRef}
