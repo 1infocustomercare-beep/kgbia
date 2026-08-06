@@ -145,7 +145,7 @@ export default function PrestigePortfolio() {
                       key={h.sectorId}
                       className="group flex w-full flex-col items-center"
                     >
-                      <div className="transition-transform duration-500 group-hover:-translate-y-1">
+                      <div className="relative transition-transform duration-500 group-hover:-translate-y-1">
                         <IPhoneProMaxFrame
                           src={h.hero!.screen}
                           alt={`${h.hero!.brand} — ${h.hero!.style}`}
@@ -159,7 +159,55 @@ export default function PrestigePortfolio() {
                             })
                           }
                         />
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                          style={{
+                            background: "hsl(var(--pr-gold))",
+                            color: "hsl(var(--pr-emerald-deep))",
+                          }}
+                        >
+                          Apri
+                        </span>
                       </div>
+
+                      {/* Anteprime schermate collegate (Menu / Dettaglio / Prenota) */}
+                      {h.hero!.screens?.length > 1 && (
+                        <div className="mt-3 flex items-center justify-center gap-2">
+                          {h.hero!.screens.slice(1, 4).map((s, si) => (
+                            <button
+                              key={s.src}
+                              type="button"
+                              title={s.label}
+                              onClick={() =>
+                                setSelection({
+                                  sectorId: h.sectorId,
+                                  sectorLabel: h.sectorLabel,
+                                  variants: h.variants,
+                                  index: 0,
+                                })
+                              }
+                              className="overflow-hidden rounded-[10px] transition-transform duration-300 hover:-translate-y-0.5"
+                              style={{
+                                width: 46,
+                                height: 92,
+                                border: "1px solid hsl(var(--pr-gold) / 0.3)",
+                                background: "hsl(var(--pr-emerald-deep))",
+                                animationDelay: `${si * 60}ms`,
+                              }}
+                            >
+                              <img
+                                src={s.src}
+                                alt={`${h.hero!.brand} — ${s.label}`}
+                                loading="lazy"
+                                decoding="async"
+                                className="h-full w-full object-cover object-top"
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
                       <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
                         <div
                           className="text-[10px] font-bold uppercase tracking-[0.24em]"
