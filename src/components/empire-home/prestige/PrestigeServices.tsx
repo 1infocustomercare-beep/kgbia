@@ -114,6 +114,72 @@ export default function PrestigeServices() {
             </div>
           </div>
         </div>
+
+        {/* MILESTONES + TECH STACK — trasparenza di processo e stack */}
+        <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-12">
+          <div className="prestige-card lg:col-span-7">
+            <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-deep))" }}>
+              Come procede il progetto
+            </div>
+            <ol className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-3">
+              {MILESTONES.map((m, i) => (
+                <li key={m.label} className="relative flex flex-1 items-start gap-3 sm:flex-col sm:items-center sm:text-center">
+                  <span
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--pr-emerald) / 0.95), hsl(var(--pr-emerald-deep)))",
+                      color: "hsl(var(--pr-gold-light))",
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  {i < MILESTONES.length - 1 && (
+                    <span
+                      aria-hidden
+                      className="absolute left-4 top-8 hidden h-[calc(100%-2rem)] w-px sm:left-1/2 sm:top-4 sm:block sm:h-px sm:w-full"
+                      style={{ background: "hsl(var(--pr-gold) / 0.28)" }}
+                    />
+                  )}
+                  <div className="min-w-0 sm:mt-2">
+                    <div
+                      className="text-sm font-semibold"
+                      style={{ color: "hsl(var(--pr-text-on-light))" }}
+                    >
+                      {m.label}
+                    </div>
+                    <div className="text-[11px]" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
+                      {m.when}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="prestige-card lg:col-span-5">
+            <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-deep))" }}>
+              Tecnologie che usiamo
+            </div>
+            <p className="mt-3 text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
+              Stack moderno, nessun lock-in artigianale: gli stessi strumenti delle app che usi ogni giorno.
+            </p>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {TECH_STACK.map((tech) => (
+                <li
+                  key={tech}
+                  className="rounded-full px-3 py-1.5 text-xs font-semibold"
+                  style={{
+                    background: "hsl(var(--pr-gold) / 0.12)",
+                    color: "hsl(var(--pr-gold-deep))",
+                    border: "1px solid hsl(var(--pr-gold) / 0.3)",
+                  }}
+                >
+                  {tech}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
       <style>{`
         @keyframes prestigeSlideIn {
