@@ -578,11 +578,12 @@ export function PrestigeLeadForm() {
       const msg =
         `🟢 ${t({ it: "Nuova richiesta demo Empire", en: "New Empire demo request" })}\n\n` +
         `👤 ${parsed.data.name}\n🏢 ${parsed.data.business}\n📞 ${parsed.data.contact}` +
-        (parsed.data.sector ? `\n🏷️ ${parsed.data.sector}` : "");
+        (parsed.data.sector ? `\n🏷️ ${parsed.data.sector}` : "") +
+        (form.projectType ? `\n🎯 ${form.projectType}` : "");
       const url = `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
       window.open(url, "_blank", "noopener,noreferrer");
       toast.success(t({ it: "Richiesta inviata. Ti contattiamo a breve.", en: "Request sent. We'll be in touch shortly." }));
-      setForm({ name: "", business: "", contact: "", sector: "" });
+      setForm({ name: "", business: "", contact: "", sector: "", projectType: "" });
     } finally {
       setBusy(false);
     }
@@ -607,6 +608,31 @@ export function PrestigeLeadForm() {
             <Field label={t({ it: "Nome attività", en: "Business name" })} value={form.business} onChange={(v) => setForm({ ...form, business: v })} placeholder={t({ it: "Pizzeria da Mario", en: "Mario's Pizza" })} />
             <Field label={t({ it: "Telefono o email", en: "Phone or email" })} value={form.contact} onChange={(v) => setForm({ ...form, contact: v })} placeholder="+39 …" />
             <Field label={t({ it: "Settore (opz.)", en: "Industry (opt.)" })} value={form.sector} onChange={(v) => setForm({ ...form, sector: v })} placeholder={t({ it: "Es. ristorazione", en: "e.g. hospitality" })} />
+
+            {/* Tipo di progetto — qualifica la richiesta come fa il competitor */}
+            <label className="block sm:col-span-2">
+              <span className="block text-xs uppercase tracking-widest mb-1.5" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+                {t({ it: "Di cosa hai bisogno?", en: "What do you need?" })}
+              </span>
+              <select
+                value={form.projectType}
+                onChange={(e) => setForm({ ...form, projectType: e.target.value })}
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none transition focus:ring-2"
+                style={{
+                  background: "hsl(var(--pr-emerald-deep) / 0.6)",
+                  color: "hsl(var(--pr-text-on-dark))",
+                  border: "1px solid hsl(var(--pr-gold) / 0.25)",
+                }}
+              >
+                <option value="">{t({ it: "Seleziona…", en: "Select…" })}</option>
+                <option value="Sito web professionale">{t({ it: "Sito web professionale", en: "Professional website" })}</option>
+                <option value="App / webapp clienti">{t({ it: "App / webapp per i clienti", en: "Customer app / webapp" })}</option>
+                <option value="Agente AI (chat, WhatsApp, telefono)">{t({ it: "Agente AI (chat, WhatsApp, telefono)", en: "AI agent (chat, WhatsApp, phone)" })}</option>
+                <option value="Sistema completo Empire">{t({ it: "Sistema completo Empire", en: "Full Empire system" })}</option>
+                <option value="Altro / più cose">{t({ it: "Altro / più cose", en: "Other / multiple" })}</option>
+              </select>
+            </label>
+
             <div className="sm:col-span-2 mt-2 flex flex-col sm:flex-row gap-3">
               <button type="submit" disabled={busy} className="prestige-cta justify-center w-full sm:flex-1">
                 <Send size={16} /> <span>{busy ? "…" : t({ it: "Prenota la demo", en: "Book the demo" })}</span>
@@ -615,10 +641,22 @@ export function PrestigeLeadForm() {
                 <MessageSquare size={14} /> <span>WhatsApp</span>
               </a>
             </div>
+            <div
+              className="sm:col-span-2 mt-1 flex items-center justify-center gap-2 rounded-full px-3 py-2 text-[11px] font-semibold"
+              style={{
+                background: "hsl(var(--pr-gold) / 0.12)",
+                border: "1px solid hsl(var(--pr-gold) / 0.3)",
+                color: "hsl(var(--pr-gold-light))",
+              }}
+            >
+              <span className="inline-block h-2 w-2 rounded-full" style={{ background: "hsl(var(--pr-gold))" }} aria-hidden />
+              {t({ it: "Risposta entro 2–4 ore lavorative", en: "Reply within 2–4 business hours" })}
+            </div>
             <p className="sm:col-span-2 mt-2 text-[11px] text-center" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
               <ShieldCheck size={12} className="inline mr-1" />
               {t({ it: "Dati protetti GDPR. Nessuno spam. Mai venduti.", en: "GDPR-protected. No spam. Never sold." })}
             </p>
+
           </form>
         </div>
       </div>
