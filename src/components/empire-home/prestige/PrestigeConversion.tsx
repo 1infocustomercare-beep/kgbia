@@ -563,7 +563,7 @@ const leadSchema = z.object({
 export function PrestigeLeadForm() {
   const t = useT();
   const WA = "393000000000";
-  const [form, setForm] = useState({ name: "", business: "", contact: "", sector: "" });
+  const [form, setForm] = useState({ name: "", business: "", contact: "", sector: "", projectType: "" });
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
