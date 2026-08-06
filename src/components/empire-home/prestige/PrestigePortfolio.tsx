@@ -17,6 +17,7 @@ type Selection = {
 export default function PrestigePortfolio() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
+  const [filter, setFilter] = useState<string>("all");
   const [selection, setSelection] = useState<Selection>(null);
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-mockups", { steps: 4 });
   const gridRef = useRef<HTMLDivElement>(null);
@@ -46,7 +47,20 @@ export default function PrestigePortfolio() {
         .filter((h) => !!h.hero),
     [],
   );
-  const visible = expanded ? heroes : heroes.slice(0, 8);
+  /** Chip di filtro per settore con conteggio stili (come la barra categorie del competitor). */
+  const chips = useMemo(
+    () => [
+      { id: "all", label: "Tutti", count: heroes.reduce((n, h) => n + h.variants.length, 0) },
+      ...heroes.map((h) => ({ id: h.sectorId, label: h.sectorLabel, count: h.variants.length })),
+    ],
+    [heroes],
+  );
+
+  const filtered = useMemo(
+    () => (filter === "all" ? heroes : heroes.filter((h) => h.sectorId === filter)),
+    [heroes, filter],
+  );
+  const visible = expanded || filter !== "all" ? filtered : filtered.slice(0, 8);
 
 
   return (
@@ -76,6 +90,41 @@ export default function PrestigePortfolio() {
           </p>
         </div>
 
+        {/* FILTRI PER SETTORE con conteggio stili */}
+        <div className="mt-8 -mx-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:px-0">
+          <div className="flex w-max items-center gap-2 lg:w-auto lg:flex-wrap">
+            {chips.map((c) => {
+              const on = filter === c.id;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => setFilter(c.id)}
+                  aria-pressed={on}
+                  className="flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all"
+                  style={{
+                    background: on ? "hsl(var(--pr-emerald))" : "transparent",
+                    color: on ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-text-on-light))",
+                    border: `1px solid ${on ? "hsl(var(--pr-gold) / 0.45)" : "hsl(var(--pr-emerald) / 0.28)"}`,
+                  }}
+                >
+                  {c.label}
+                  <span
+                    className="rounded-full px-1.5 text-[10px] tabular-nums"
+                    style={{
+                      background: on ? "hsl(var(--pr-gold) / 0.25)" : "hsl(var(--pr-emerald) / 0.1)",
+                      color: on ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-emerald))",
+                    }}
+                  >
+                    {c.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+
         {/* PRIMARY GRID — cinematic 3D reveal + column parallax */}
         <div
           ref={gridRef}
@@ -96,7 +145,7 @@ export default function PrestigePortfolio() {
                       key={h.sectorId}
                       className="group flex w-full flex-col items-center"
                     >
-                      <div className="transition-transform duration-500 group-hover:-translate-y-1">
+                      <div className="relative transition-transform duration-500 group-hover:-translate-y-1">
                         <IPhoneProMaxFrame
                           src={h.hero!.screen}
                           alt={`${h.hero!.brand} — ${h.hero!.style}`}
@@ -110,7 +159,55 @@ export default function PrestigePortfolio() {
                             })
                           }
                         />
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                          style={{
+                            background: "hsl(var(--pr-gold))",
+                            color: "hsl(var(--pr-emerald-deep))",
+                          }}
+                        >
+                          Apri
+                        </span>
                       </div>
+
+                      {/* Anteprime schermate collegate (Menu / Dettaglio / Prenota) */}
+                      {h.hero!.screens?.length > 1 && (
+                        <div className="mt-3 flex items-center justify-center gap-2">
+                          {h.hero!.screens.slice(1, 4).map((s, si) => (
+                            <button
+                              key={s.image}
+                              type="button"
+                              title={s.label}
+                              onClick={() =>
+                                setSelection({
+                                  sectorId: h.sectorId,
+                                  sectorLabel: h.sectorLabel,
+                                  variants: h.variants,
+                                  index: 0,
+                                })
+                              }
+                              className="overflow-hidden rounded-[10px] transition-transform duration-300 hover:-translate-y-0.5"
+                              style={{
+                                width: 46,
+                                height: 92,
+                                border: "1px solid hsl(var(--pr-gold) / 0.3)",
+                                background: "hsl(var(--pr-emerald-deep))",
+                                animationDelay: `${si * 60}ms`,
+                              }}
+                            >
+                              <img
+                                src={s.image}
+                                alt={`${h.hero!.brand} — ${s.label}`}
+                                loading="lazy"
+                                decoding="async"
+                                className="h-full w-full object-cover object-top"
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
                       <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
                         <div
                           className="text-[10px] font-bold uppercase tracking-[0.24em]"

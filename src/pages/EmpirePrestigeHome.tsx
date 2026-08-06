@@ -6,6 +6,7 @@ import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import PrestigeEffects from "@/components/empire-home/prestige/PrestigeEffects";
 import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
 import PrestigeProofBar from "@/components/empire-home/prestige/PrestigeProofBar";
+import PrestigeMetrics from "@/components/empire-home/prestige/PrestigeMetrics";
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
@@ -80,6 +81,7 @@ function EmpirePrestigeHomeInner() {
         {/* PROOF BAR onesto — sopra la hero sticky, sfondo opaco per evitare sovrapposizioni */}
         <div className="relative z-10" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
           <PrestigeProofBar />
+          <PrestigeMetrics />
         </div>
 
 
