@@ -176,7 +176,7 @@ export default function PrestigePortfolio() {
                         <div className="mt-3 flex items-center justify-center gap-2">
                           {h.hero!.screens.slice(1, 4).map((s, si) => (
                             <button
-                              key={s.src}
+                              key={s.image}
                               type="button"
                               title={s.label}
                               onClick={() =>
@@ -197,7 +197,7 @@ export default function PrestigePortfolio() {
                               }}
                             >
                               <img
-                                src={s.src}
+                                src={s.image}
                                 alt={`${h.hero!.brand} — ${s.label}`}
                                 loading="lazy"
                                 decoding="async"
