@@ -17,6 +17,7 @@ type Selection = {
 export default function PrestigePortfolio() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
+  const [filter, setFilter] = useState<string>("all");
   const [selection, setSelection] = useState<Selection>(null);
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-mockups", { steps: 4 });
   const gridRef = useRef<HTMLDivElement>(null);
