@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "mockup:qa": "python3 scripts/mockup-qa.py --gate"
   },
   "dependencies": {
     "@elevenlabs/react": "^0.14.2",
