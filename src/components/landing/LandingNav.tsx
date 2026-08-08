@@ -73,15 +73,16 @@ export default function LandingNav() {
           <a
             href="#hero"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-            className="group/logo relative flex items-center gap-2.5 rounded-full px-2 py-1 transition-all duration-500 hover:bg-white/5"
+            className="group/logo relative flex min-w-0 items-center gap-2 rounded-full px-1.5 py-1 transition-all duration-500 hover:bg-white/5 sm:gap-2.5 sm:px-2"
             aria-label="Empire AI — Home"
           >
-            <span className="relative">
+            <span className="relative shrink-0">
               <span className="absolute inset-0 rounded-lg bg-[linear-gradient(45deg,#0B3B2E,#C9A24B)] opacity-40 blur-md transition-opacity duration-500 group-hover/logo:opacity-90" />
-              <EmpireLogo size={36} rounded="lg" glow />
+              <EmpireLogo size={32} rounded="lg" glow />
             </span>
-            <EmpireWordmark size={17} className="hidden sm:inline text-base sm:text-lg" />
+            <EmpireWordmark size={16} className="truncate text-[15px] sm:text-lg" />
           </a>
+
 
 
           <ul className="hidden lg:flex items-center gap-3">
