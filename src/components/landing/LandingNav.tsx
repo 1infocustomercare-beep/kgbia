@@ -120,9 +120,23 @@ export default function LandingNav() {
           </div>
 
 
-          <button className="text-foreground lg:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}>
-            {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile/tablet: CTA compatta + hamburger (44px touch target) */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <button
+              onClick={() => scrollTo("#contatti")}
+              className="landing-button-primary !text-black h-10 whitespace-nowrap px-4 text-[12px] font-semibold"
+            >
+              Inizia ora
+            </button>
+            <button
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-foreground"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
+            >
+              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
+
             </div>
           </div>
         </div>
