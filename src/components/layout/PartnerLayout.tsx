@@ -85,10 +85,19 @@ export default function PartnerLayout() {
     return saved === "soft" || saved === "off" ? saved : "full";
   });
   const [showSplash, setShowSplash] = useState(() => {
+    // Lo splash cinematico vale solo come "benvenuto" sulla home partner:
+    // aprendo direttamente una rotta operativa (es. /partner/leads) non deve
+    // bloccare il lavoro del venditore.
+    const isPartnerHome = window.location.pathname.replace(/\/+$/, "") === "/partner";
+    if (!isPartnerHome) {
+      sessionStorage.setItem("partner_splash_ts", String(Date.now()));
+      return false;
+    }
     const lastTs = sessionStorage.getItem("partner_splash_ts");
     if (!lastTs) return true;
     return Date.now() - Number(lastTs) > 30 * 60 * 1000;
   });
+
   const [partnerAvatar, setPartnerAvatar] = useState<string | null>(null);
   const [profileFullName, setProfileFullName] = useState<string | null>(null);
   const [moreOpen, setMoreOpen] = useState(false);
