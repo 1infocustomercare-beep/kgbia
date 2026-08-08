@@ -35,8 +35,15 @@ export default function LandingNav() {
   const scrollTo = (href: string) => {
     setMenuOpen(false);
     const el = document.querySelector(href);
-    el?.scrollIntoView({ behavior: "smooth" });
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    // Nav riusata fuori dalla home (es. /portfolio): l'ancora non esiste →
+    // torniamo in home sulla sezione richiesta invece di non fare nulla.
+    navigate(`/${href}`);
   };
+
 
   return (
     <>
