@@ -408,10 +408,11 @@ export default function PrestigeHero() {
           .prestige-hero-root { text-align: center; }
           .prestige-hero-phone-stage { margin: 0 auto; }
           .prestige-hero-root {
-            padding-top: 112px !important;
-            padding-bottom: 64px !important;
+            padding-top: 92px !important;
+            padding-bottom: 56px !important;
           }
-          .prestige-hero-lang-floating { top: 92px; }
+          .prestige-hero-lang-floating { top: 78px; }
+
           .prestige-hero-headline { overflow-wrap: anywhere; }
         }
 

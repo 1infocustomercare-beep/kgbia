@@ -178,7 +178,7 @@ export default function PremiumMockupGallery() {
   }, []);
 
   return (
-    <section className="min-h-screen bg-[#0a0b12] pb-28 pt-20 text-white sm:pt-24">
+    <section className="min-h-screen bg-[#0a0b12] pb-28 pt-28 text-white sm:pt-32">
       <div className="mx-auto max-w-7xl px-5 lg:px-10">
         {/* Header */}
         <div className="mb-8">
@@ -189,10 +189,11 @@ export default function PremiumMockupGallery() {
           <h1 className="font-heading text-[2.1rem] font-black leading-[1.04] sm:text-5xl md:text-6xl">
             Un progetto per ogni settore.
             <br />
-            <span className="bg-gradient-to-r from-amber-300 via-fuchsia-300 to-sky-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#F4D58D] via-[#C9A24B] to-[#1F7A5A] bg-clip-text text-transparent">
               Uno stile per ogni esigenza.
             </span>
           </h1>
+
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/70 md:text-base">
             {allCards.length} progetti reali, {totalScreens} schermate disegnate una per una: colore, layout,
             componenti e funzioni sono studiati sul settore. Tocca un progetto per aprirlo a schermo intero e
