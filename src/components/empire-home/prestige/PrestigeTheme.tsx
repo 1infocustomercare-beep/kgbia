@@ -1,33 +1,35 @@
 /**
- * Emerald Prestige — design tokens scoped to the new homepage.
- * Tema: smeraldo profondo + oro caldo + crema avorio.
- * Sezioni alternate dark (smeraldo) / light (avorio) per ritmo agency.
+ * Midnight Indigo — design tokens scoped to the new homepage.
+ * Tema: navy notturno + indigo elettrico, superfici vetro e bordi 1px.
+ * I nomi delle variabili restano storici (emerald/gold/ivory) per compatibilità:
+ * i VALORI sono ora Midnight Indigo, così tutta la home cambia in un colpo.
  */
 export default function PrestigeTheme() {
   return (
     <style>{`
       .prestige-root {
-        --pr-emerald-deep: 162 65% 8%;
-        --pr-emerald: 162 60% 15%;
-        --pr-emerald-mid: 162 55% 22%;
-        --pr-emerald-glow: 158 70% 45%;
-        --pr-gold: 42 65% 58%;
-        --pr-gold-light: 42 75% 72%;
-        --pr-gold-deep: 38 70% 42%;
-        --pr-ivory: 42 35% 96%;
-        --pr-ivory-warm: 38 30% 92%;
-        --pr-ink: 162 30% 10%;
-        --pr-text-on-dark: 42 30% 94%;
-        --pr-text-on-light: 162 35% 12%;
-        --pr-muted-on-dark: 42 22% 86%;
-        --pr-muted-on-light: 162 28% 22%;
+        --pr-emerald-deep: 240 44% 7%;
+        --pr-emerald: 240 43% 12%;
+        --pr-emerald-mid: 240 45% 20%;
+        --pr-emerald-glow: 244 80% 62%;
+        --pr-gold: 244 76% 62%;
+        --pr-gold-light: 250 92% 78%;
+        --pr-gold-deep: 238 72% 48%;
+        --pr-ivory: 240 20% 97%;
+        --pr-ivory-warm: 240 16% 93%;
+        --pr-ink: 240 32% 9%;
+        --pr-text-on-dark: 240 30% 97%;
+        --pr-text-on-light: 240 36% 12%;
+        --pr-muted-on-dark: 240 22% 84%;
+        --pr-muted-on-light: 240 20% 32%;
 
         background: hsl(var(--pr-emerald-deep));
         color: hsl(var(--pr-text-on-dark));
-        font-family: 'Fira Sans', 'Inter', system-ui, sans-serif;
+        font-family: 'Manrope', 'Inter', system-ui, sans-serif;
         font-weight: 400;
         position: relative;
       }
+
 
 
 
@@ -64,18 +66,43 @@ export default function PrestigeTheme() {
       }
 
       .prestige-display {
-        font-family: 'DM Serif Display', 'Playfair Display', Georgia, serif;
-        font-weight: 400;
-        letter-spacing: -0.022em;
-        line-height: 1.02;
+        font-family: 'Sora', 'Manrope', system-ui, sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        line-height: 1.04;
         text-transform: none;
-        font-feature-settings: "ss01", "liga", "dlig";
+        font-feature-settings: "ss01", "liga";
+      }
+
+      /* ── Bento surface (Midnight Cosmic) ─────────────────────────── */
+      .prestige-bento {
+        position: relative;
+        background: hsl(var(--pr-emerald) / 0.45);
+        border: 1px solid hsl(0 0% 100% / 0.06);
+        border-radius: 2.5rem;
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        box-shadow: 0 40px 90px -50px hsl(var(--pr-gold) / 0.45), inset 0 1px 0 hsl(0 0% 100% / 0.05);
+        transition: border-color .5s ease, background .5s ease;
+      }
+      .prestige-bento:hover { border-color: hsl(var(--pr-gold) / 0.32); }
+      @media (max-width: 640px) {
+        .prestige-bento { border-radius: 1.75rem; }
+      }
+
+      /* Nav CTA riallineata alla palette Midnight Indigo */
+      .prestige-root .landing-button-primary,
+      .prestige-root .landing-button-primary.\!text-black {
+        color: hsl(var(--pr-ivory)) !important;
+        background: linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)) 55%, hsl(var(--pr-gold-deep)));
+        box-shadow: 0 22px 60px -28px hsl(var(--pr-gold) / 0.7), inset 0 1px 0 hsl(0 0% 100% / 0.28);
       }
 
 
 
+
       .prestige-eyebrow {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Manrope', 'Inter', sans-serif;
         font-size: 11px;
         letter-spacing: 0.32em;
         text-transform: uppercase;
@@ -336,19 +363,24 @@ export default function PrestigeTheme() {
       /* ── Editorial typography polish ─────────────────────────────── */
       .prestige-display em,
       .prestige-italic {
-        font-family: 'DM Serif Display', Georgia, serif;
-        font-style: italic;
-        font-weight: 400;
-        letter-spacing: -0.015em;
-        color: hsl(var(--pr-gold-light));
+        font-family: 'Sora', 'Manrope', system-ui, sans-serif;
+        font-style: normal;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        background: linear-gradient(100deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)) 55%, hsl(var(--pr-gold-deep)));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
       }
+
 
 
       .prestige-eyebrow-indexed {
         display: inline-flex;
         align-items: center;
         gap: 0.6rem;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Manrope', 'Inter', sans-serif;
         font-size: 11px;
         letter-spacing: 0.28em;
         text-transform: uppercase;
@@ -417,7 +449,7 @@ export default function PrestigeTheme() {
         display: inline-flex;
         align-items: center;
         gap: 1rem;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Manrope', 'Inter', sans-serif;
         font-size: 12px;
         letter-spacing: 0.24em;
         text-transform: uppercase;

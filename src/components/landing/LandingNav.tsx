@@ -7,13 +7,13 @@ import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 
 
 const NAV_LINKS = [
-  { label: "Settori", href: "#sectors", icon: Grid3x3, from: "#0B3B2E", to: "#1F7A5A" },
-  { label: "Servizi", href: "#services", icon: Sparkles, from: "#1F7A5A", to: "#C9A24B" },
-  { label: "Portfolio", href: "#portfolio", icon: LayoutGrid, from: "#C9A24B", to: "#F4D58D" },
-  { label: "Prezzi", href: "#pricing", icon: Tag, from: "#B8862F", to: "#E8C36B" },
-  { label: "AI Agents", href: "#agents", icon: Bot, from: "#2F80ED", to: "#56CCF2" },
-  { label: "FAQ", href: "#faq", icon: HelpCircle, from: "#0B3B2E", to: "#C9A24B" },
-  { label: "Contatti", href: "#contatti", icon: Mail, from: "#C9A24B", to: "#0B3B2E" },
+  { label: "Settori", href: "#sectors", icon: Grid3x3, from: "#1e1e5a", to: "#4f46e5" },
+  { label: "Servizi", href: "#services", icon: Sparkles, from: "#4f46e5", to: "#6366f1" },
+  { label: "Portfolio", href: "#portfolio", icon: LayoutGrid, from: "#6366f1", to: "#a78bfa" },
+  { label: "Prezzi", href: "#pricing", icon: Tag, from: "#4f46e5", to: "#a78bfa" },
+  { label: "AI Agents", href: "#agents", icon: Bot, from: "#4338ca", to: "#818cf8" },
+  { label: "FAQ", href: "#faq", icon: HelpCircle, from: "#1e1e5a", to: "#6366f1" },
+  { label: "Contatti", href: "#contatti", icon: Mail, from: "#6366f1", to: "#1e1e5a" },
 ];
 
 export default function LandingNav() {
@@ -51,7 +51,7 @@ export default function LandingNav() {
         className="fixed left-0 top-0 z-[10002] h-[3px] rounded-r-full"
         style={{
           width: `${progress}%`,
-          background: "linear-gradient(90deg, #0B3B2E, #C9A24B)",
+          background: "linear-gradient(90deg, #1e1e5a, #6366f1)",
         }}
       />
 
@@ -77,7 +77,7 @@ export default function LandingNav() {
             aria-label="Empire AI — Home"
           >
             <span className="relative shrink-0">
-              <span className="absolute inset-0 rounded-lg bg-[linear-gradient(45deg,#0B3B2E,#C9A24B)] opacity-40 blur-md transition-opacity duration-500 group-hover/logo:opacity-90" />
+              <span className="absolute inset-0 rounded-lg bg-[linear-gradient(45deg,#1e1e5a,#6366f1)] opacity-40 blur-md transition-opacity duration-500 group-hover/logo:opacity-90" />
               <EmpireLogo size={32} rounded="lg" glow />
             </span>
             <EmpireWordmark size={16} className="truncate text-[15px] sm:text-lg" />

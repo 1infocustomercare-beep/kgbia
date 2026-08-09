@@ -157,7 +157,7 @@ export default function PrestigeHero() {
 
       <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-12 gap-x-4 gap-y-10 px-4 sm:px-6 lg:gap-x-8 lg:gap-y-6 lg:px-10">
         {/* ── LEFT — Editorial copy ── */}
-        <div className="col-span-12 lg:col-span-7 min-w-0 relative text-center lg:text-left">
+        <div className="prestige-bento col-span-12 lg:col-span-7 min-w-0 relative text-center lg:text-left p-6 sm:p-9 lg:p-12">
           {/* Eyebrow */}
           <div
             className="prestige-hero-stagger prestige-hero-stagger--1 inline-flex items-center gap-3 rounded-full border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.28em] sm:text-[11px]"
@@ -186,7 +186,7 @@ export default function PrestigeHero() {
           {/* Subcopy */}
           <p
             className="prestige-hero-stagger prestige-hero-stagger--4 mt-6 max-w-2xl text-base leading-relaxed sm:text-lg mx-auto lg:mx-0"
-            style={{ color: "hsl(var(--pr-muted-on-dark))", fontFamily: "'Inter', sans-serif", fontWeight: 400 }}
+            style={{ color: "hsl(var(--pr-muted-on-dark))", fontFamily: "'Manrope', sans-serif", fontWeight: 400 }}
           >
             {t({
               it: "Siti, web app, gestionali e agenti AI su misura per ",
@@ -228,7 +228,7 @@ export default function PrestigeHero() {
         </div>
 
         {/* ── RIGHT — Phone cinematic stage ── */}
-        <div className="prestige-hero-stagger prestige-hero-stagger--stage col-span-12 lg:col-span-5 relative flex flex-col items-center justify-center lg:items-end">
+        <div className="prestige-bento prestige-hero-stagger prestige-hero-stagger--stage col-span-12 lg:col-span-5 relative flex flex-col items-center justify-center lg:items-center overflow-hidden p-6 sm:p-8">
           <div
             ref={stageRef}
             className="prestige-hero-phone-stage relative will-change-transform mx-auto"
