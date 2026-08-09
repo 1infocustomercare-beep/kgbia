@@ -90,6 +90,14 @@ export default function PrestigeTheme() {
         .prestige-bento { border-radius: 1.75rem; }
       }
 
+      /* Nav CTA riallineata alla palette Midnight Indigo */
+      .prestige-root .landing-button-primary,
+      .prestige-root .landing-button-primary.\!text-black {
+        color: hsl(var(--pr-ivory)) !important;
+        background: linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)) 55%, hsl(var(--pr-gold-deep)));
+        box-shadow: 0 22px 60px -28px hsl(var(--pr-gold) / 0.7), inset 0 1px 0 hsl(0 0% 100% / 0.28);
+      }
+
 
 
 
