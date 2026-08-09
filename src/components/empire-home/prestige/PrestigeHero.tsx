@@ -228,7 +228,7 @@ export default function PrestigeHero() {
         </div>
 
         {/* ── RIGHT — Phone cinematic stage ── */}
-        <div className="prestige-hero-stagger prestige-hero-stagger--stage col-span-12 lg:col-span-5 relative flex flex-col items-center justify-center lg:items-end">
+        <div className="prestige-bento prestige-hero-stagger prestige-hero-stagger--stage col-span-12 lg:col-span-5 relative flex flex-col items-center justify-center lg:items-center overflow-hidden p-6 sm:p-8">
           <div
             ref={stageRef}
             className="prestige-hero-phone-stage relative will-change-transform mx-auto"
