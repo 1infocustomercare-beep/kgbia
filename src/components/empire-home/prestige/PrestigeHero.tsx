@@ -186,7 +186,7 @@ export default function PrestigeHero() {
           {/* Subcopy */}
           <p
             className="prestige-hero-stagger prestige-hero-stagger--4 mt-6 max-w-2xl text-base leading-relaxed sm:text-lg mx-auto lg:mx-0"
-            style={{ color: "hsl(var(--pr-muted-on-dark))", fontFamily: "'Inter', sans-serif", fontWeight: 400 }}
+            style={{ color: "hsl(var(--pr-muted-on-dark))", fontFamily: "'Manrope', sans-serif", fontWeight: 400 }}
           >
             {t({
               it: "Siti, web app, gestionali e agenti AI su misura per ",
