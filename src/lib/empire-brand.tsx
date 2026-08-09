@@ -10,10 +10,10 @@ export const EMPIRE_BRAND = {
   tagline: "Autonomous AI",
   logoUrl: empireLogoAsset.url,
   colors: {
-    deep: "#081824",
-    emerald: "#0B3B2E",
-    gold: "#C9A24B",
-    cream: "#F7F3EC",
+    deep: "#0a0a1a",
+    emerald: "#141432",
+    gold: "#6366f1",
+    cream: "#F4F4FB",
   },
 } as const;
 
@@ -53,8 +53,8 @@ export function EmpireLogo({
         height: px,
         borderRadius: radius,
         boxShadow: glow
-          ? `inset 0 0 0 1px rgba(201,162,75,0.45), 0 8px 28px -10px rgba(201,162,75,0.55)`
-          : `inset 0 0 0 1px rgba(201,162,75,0.35)`,
+          ? `inset 0 0 0 1px rgba(99,102,241,0.45), 0 8px 28px -10px rgba(99,102,241,0.55)`
+          : `inset 0 0 0 1px rgba(99,102,241,0.35)`,
         background: EMPIRE_BRAND.colors.emerald,
       }}
     >
@@ -69,7 +69,7 @@ export function EmpireLogo({
         <defs>
           <linearGradient id="empire-mark-g" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor={EMPIRE_BRAND.colors.gold} />
-            <stop offset="100%" stopColor="#F4D58D" />
+            <stop offset="100%" stopColor="#a78bfa" />
           </linearGradient>
         </defs>
         <rect width="48" height="48" fill={EMPIRE_BRAND.colors.emerald} />
