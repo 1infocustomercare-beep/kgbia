@@ -340,11 +340,16 @@ export default function PrestigeTheme() {
       .prestige-display em,
       .prestige-italic {
         font-family: 'Sora', 'Manrope', system-ui, sans-serif;
-        font-style: italic;
-        font-weight: 400;
-        letter-spacing: -0.015em;
-        color: hsl(var(--pr-gold-light));
+        font-style: normal;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        background: linear-gradient(100deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)) 55%, hsl(var(--pr-gold-deep)));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
       }
+
 
 
       .prestige-eyebrow-indexed {
