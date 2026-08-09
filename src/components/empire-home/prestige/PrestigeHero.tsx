@@ -157,7 +157,7 @@ export default function PrestigeHero() {
 
       <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-12 gap-x-4 gap-y-10 px-4 sm:px-6 lg:gap-x-8 lg:gap-y-6 lg:px-10">
         {/* ── LEFT — Editorial copy ── */}
-        <div className="col-span-12 lg:col-span-7 min-w-0 relative text-center lg:text-left">
+        <div className="prestige-bento col-span-12 lg:col-span-7 min-w-0 relative text-center lg:text-left p-6 sm:p-9 lg:p-12">
           {/* Eyebrow */}
           <div
             className="prestige-hero-stagger prestige-hero-stagger--1 inline-flex items-center gap-3 rounded-full border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.28em] sm:text-[11px]"
