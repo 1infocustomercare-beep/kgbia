@@ -67,12 +67,13 @@ export default function PrestigeTheme() {
 
       .prestige-display {
         font-family: 'Sora', 'Manrope', system-ui, sans-serif;
-        font-weight: 400;
-        letter-spacing: -0.022em;
-        line-height: 1.02;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        line-height: 1.04;
         text-transform: none;
-        font-feature-settings: "ss01", "liga", "dlig";
+        font-feature-settings: "ss01", "liga";
       }
+
 
 
 
