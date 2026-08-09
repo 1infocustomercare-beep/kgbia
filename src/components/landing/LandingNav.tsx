@@ -10,8 +10,8 @@ const NAV_LINKS = [
   { label: "Settori", href: "#sectors", icon: Grid3x3, from: "#1e1e5a", to: "#4f46e5" },
   { label: "Servizi", href: "#services", icon: Sparkles, from: "#4f46e5", to: "#6366f1" },
   { label: "Portfolio", href: "#portfolio", icon: LayoutGrid, from: "#6366f1", to: "#a78bfa" },
-  { label: "Prezzi", href: "#pricing", icon: Tag, from: "#B8862F", to: "#E8C36B" },
-  { label: "AI Agents", href: "#agents", icon: Bot, from: "#2F80ED", to: "#56CCF2" },
+  { label: "Prezzi", href: "#pricing", icon: Tag, from: "#4f46e5", to: "#a78bfa" },
+  { label: "AI Agents", href: "#agents", icon: Bot, from: "#4338ca", to: "#818cf8" },
   { label: "FAQ", href: "#faq", icon: HelpCircle, from: "#1e1e5a", to: "#6366f1" },
   { label: "Contatti", href: "#contatti", icon: Mail, from: "#6366f1", to: "#1e1e5a" },
 ];
