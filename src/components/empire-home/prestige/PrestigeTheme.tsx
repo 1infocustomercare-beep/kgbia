@@ -1,33 +1,35 @@
 /**
- * Emerald Prestige — design tokens scoped to the new homepage.
- * Tema: smeraldo profondo + oro caldo + crema avorio.
- * Sezioni alternate dark (smeraldo) / light (avorio) per ritmo agency.
+ * Midnight Indigo — design tokens scoped to the new homepage.
+ * Tema: navy notturno + indigo elettrico, superfici vetro e bordi 1px.
+ * I nomi delle variabili restano storici (emerald/gold/ivory) per compatibilità:
+ * i VALORI sono ora Midnight Indigo, così tutta la home cambia in un colpo.
  */
 export default function PrestigeTheme() {
   return (
     <style>{`
       .prestige-root {
-        --pr-emerald-deep: 162 65% 8%;
-        --pr-emerald: 162 60% 15%;
-        --pr-emerald-mid: 162 55% 22%;
-        --pr-emerald-glow: 158 70% 45%;
-        --pr-gold: 42 65% 58%;
-        --pr-gold-light: 42 75% 72%;
-        --pr-gold-deep: 38 70% 42%;
-        --pr-ivory: 42 35% 96%;
-        --pr-ivory-warm: 38 30% 92%;
-        --pr-ink: 162 30% 10%;
-        --pr-text-on-dark: 42 30% 94%;
-        --pr-text-on-light: 162 35% 12%;
-        --pr-muted-on-dark: 42 22% 86%;
-        --pr-muted-on-light: 162 28% 22%;
+        --pr-emerald-deep: 240 44% 7%;
+        --pr-emerald: 240 43% 12%;
+        --pr-emerald-mid: 240 45% 20%;
+        --pr-emerald-glow: 244 80% 62%;
+        --pr-gold: 244 76% 62%;
+        --pr-gold-light: 250 92% 78%;
+        --pr-gold-deep: 238 72% 48%;
+        --pr-ivory: 240 20% 97%;
+        --pr-ivory-warm: 240 16% 93%;
+        --pr-ink: 240 32% 9%;
+        --pr-text-on-dark: 240 30% 97%;
+        --pr-text-on-light: 240 36% 12%;
+        --pr-muted-on-dark: 240 22% 84%;
+        --pr-muted-on-light: 240 20% 32%;
 
         background: hsl(var(--pr-emerald-deep));
         color: hsl(var(--pr-text-on-dark));
-        font-family: 'Fira Sans', 'Inter', system-ui, sans-serif;
+        font-family: 'Manrope', 'Inter', system-ui, sans-serif;
         font-weight: 400;
         position: relative;
       }
+
 
 
 
