@@ -74,6 +74,22 @@ export default function PrestigeTheme() {
         font-feature-settings: "ss01", "liga";
       }
 
+      /* ── Bento surface (Midnight Cosmic) ─────────────────────────── */
+      .prestige-bento {
+        position: relative;
+        background: hsl(var(--pr-emerald) / 0.45);
+        border: 1px solid hsl(0 0% 100% / 0.06);
+        border-radius: 2.5rem;
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        box-shadow: 0 40px 90px -50px hsl(var(--pr-gold) / 0.45), inset 0 1px 0 hsl(0 0% 100% / 0.05);
+        transition: border-color .5s ease, background .5s ease;
+      }
+      .prestige-bento:hover { border-color: hsl(var(--pr-gold) / 0.32); }
+      @media (max-width: 640px) {
+        .prestige-bento { border-radius: 1.75rem; }
+      }
+
 
 
 
