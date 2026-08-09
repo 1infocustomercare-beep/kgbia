@@ -66,7 +66,7 @@ export default function PrestigeTheme() {
       }
 
       .prestige-display {
-        font-family: 'DM Serif Display', 'Playfair Display', Georgia, serif;
+        font-family: 'Sora', 'Manrope', system-ui, sans-serif;
         font-weight: 400;
         letter-spacing: -0.022em;
         line-height: 1.02;
@@ -77,7 +77,7 @@ export default function PrestigeTheme() {
 
 
       .prestige-eyebrow {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Manrope', 'Inter', sans-serif;
         font-size: 11px;
         letter-spacing: 0.32em;
         text-transform: uppercase;
@@ -338,7 +338,7 @@ export default function PrestigeTheme() {
       /* ── Editorial typography polish ─────────────────────────────── */
       .prestige-display em,
       .prestige-italic {
-        font-family: 'DM Serif Display', Georgia, serif;
+        font-family: 'Sora', 'Manrope', system-ui, sans-serif;
         font-style: italic;
         font-weight: 400;
         letter-spacing: -0.015em;
@@ -350,7 +350,7 @@ export default function PrestigeTheme() {
         display: inline-flex;
         align-items: center;
         gap: 0.6rem;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Manrope', 'Inter', sans-serif;
         font-size: 11px;
         letter-spacing: 0.28em;
         text-transform: uppercase;
@@ -419,7 +419,7 @@ export default function PrestigeTheme() {
         display: inline-flex;
         align-items: center;
         gap: 1rem;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Manrope', 'Inter', sans-serif;
         font-size: 12px;
         letter-spacing: 0.24em;
         text-transform: uppercase;
