@@ -90,6 +90,17 @@ export default function PrestigeTheme() {
         .prestige-bento { border-radius: 1.75rem; }
       }
 
+      /* ── Anti-clipping titoli su mobile/tablet ───────────────────── */
+      .prestige-root .prestige-display {
+        overflow-wrap: break-word;
+        word-break: normal;
+        max-width: 100%;
+      }
+      @media (max-width: 1023px) {
+        .prestige-root .prestige-display { overflow-wrap: anywhere; }
+      }
+
+
       /* Nav CTA riallineata alla palette Midnight Indigo */
       .prestige-root .landing-button-primary,
       .prestige-root .landing-button-primary.\!text-black {
