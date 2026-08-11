@@ -232,6 +232,9 @@ export default function PrestigeHero() {
 
         {/* ── RIGHT — Phone cinematic stage ── */}
         <div className="prestige-bento prestige-hero-stagger prestige-hero-stagger--stage col-span-12 lg:col-span-5 relative flex flex-col items-center justify-center lg:items-center overflow-hidden lg:overflow-visible p-6 sm:p-8">
+          {/* Wrapper dedicato al float idle: il figlio conserva il transform di
+              parallasse, così animazione e scroll non si sovrascrivono. */}
+          <div className="prestige-hero-float mx-auto">
           <div
             ref={stageRef}
             className="prestige-hero-phone-stage relative will-change-transform mx-auto"
@@ -242,6 +245,7 @@ export default function PrestigeHero() {
               transform: `translate3d(0, calc(var(--empire-progress, 0) * -30px), 0)`,
             }}
           >
+
 
             {/* Floor reflection */}
             <div
