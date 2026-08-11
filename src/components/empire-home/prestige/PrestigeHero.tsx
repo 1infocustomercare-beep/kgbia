@@ -519,11 +519,13 @@ export default function PrestigeHero() {
 
 
         @media (prefers-reduced-motion: reduce) {
-          .prestige-hero-stagger { transition: none !important; opacity: 1 !important; transform: none !important; }
+          .prestige-hero-stagger { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
           .prestige-hero-beam, .prestige-hero-halo { transform: none !important; }
           .prestige-hero-scroll-line { animation: none !important; }
           .prestige-hero-goldring { animation: none !important; }
+          .prestige-hero-float { animation: none !important; }
         }
+
 
       `}</style>
     </motion.section>
