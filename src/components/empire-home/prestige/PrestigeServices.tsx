@@ -76,7 +76,7 @@ export default function PrestigeServices() {
             <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-deep))" }}>
               ✦ Cosa facciamo per te
             </div>
-            <h2 className="prestige-display mt-4 text-4xl font-semibold sm:text-5xl md:text-6xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
+            <h2 className="prestige-display mt-4 text-4xl font-semibold sm:text-5xl lg:text-6xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
               Sei servizi.<br /> Una sola <span className="prestige-gold-text">agenzia.</span>
             </h2>
             <div className="prestige-divider mt-5" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--pr-gold) / 0.7), transparent)" }} />

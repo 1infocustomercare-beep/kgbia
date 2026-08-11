@@ -31,7 +31,7 @@ export default function PrestigeFooter() {
 
         {/* CTA finale */}
         <div className="flex flex-col items-center text-center gap-6">
-          <h2 className="font-serif text-4xl md:text-6xl tracking-tight text-white">
+          <h2 className="font-serif text-4xl lg:text-6xl tracking-tight text-white">
             Pronto a iniziare?
           </h2>
           <p className="max-w-xl text-sm md:text-base text-white/65">

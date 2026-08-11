@@ -30,7 +30,7 @@ export default function PrestigeStorytelling() {
           <div className="prestige-eyebrow inline-flex items-center gap-2" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il problema · La soluzione
           </div>
-          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl md:text-6xl">
+          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl lg:text-6xl">
             Da <span className="text-red-400/80 italic line-through decoration-red-400/40">caos quotidiano</span>
             <br />
             a <span className="prestige-gold-text italic">impero ordinato</span>

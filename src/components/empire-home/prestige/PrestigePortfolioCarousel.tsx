@@ -309,7 +309,7 @@ export default function PrestigePortfolioCarousel() {
               ✦ Casi reali · Risultati concreti
             </div>
             <h2
-              className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"
+              className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl lg:text-6xl"
               style={{ color: "hsl(var(--pr-text-on-light))" }}
             >
               Un sito non basta.<br />
@@ -541,7 +541,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             ✦ Caso studio · {project.tag}
           </div>
           <h3
-            className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"
+            className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl lg:text-6xl"
             style={{ color: "hsl(var(--pr-text-on-dark))" }}
           >
             {project.title}

@@ -26,7 +26,7 @@ export default function PrestigeAgents() {
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Gli agenti AI
           </div>
-          <h2 className="prestige-display mt-4 text-3xl sm:text-5xl md:text-6xl">
+          <h2 className="prestige-display mt-4 text-3xl sm:text-5xl lg:text-6xl">
             Otto agenti.{" "}
             <span className="prestige-italic prestige-gold-text">Un solo team che non dorme mai.</span>
           </h2>

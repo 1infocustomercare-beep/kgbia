@@ -36,7 +36,7 @@ export function PrestigeProblem() {
       <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
         <div className="max-w-3xl">
           <SectionEyebrow index="01">{t({ it: "Il problema reale", en: "The real problem" })}</SectionEyebrow>
-          <h2 className="prestige-display mt-4 text-3xl sm:text-5xl md:text-6xl">
+          <h2 className="prestige-display mt-4 text-3xl sm:text-5xl lg:text-6xl">
             {t({ it: "Mentre leggi questo, ", en: "While you read this, " })}
             <span className="prestige-gold-text italic">{t({ it: "stai perdendo clienti.", en: "you're losing customers." })}</span>
           </h2>

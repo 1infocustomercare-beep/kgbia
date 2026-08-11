@@ -37,7 +37,7 @@ export default function PrestigeProcess() {
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Come lavoriamo
           </div>
-          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl md:text-6xl break-words">
+          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl lg:text-6xl break-words">
             Quattro passi. <span className="prestige-gold-text italic">Zero stress.</span>
           </h2>
           <div className="prestige-divider mx-auto mt-5" />

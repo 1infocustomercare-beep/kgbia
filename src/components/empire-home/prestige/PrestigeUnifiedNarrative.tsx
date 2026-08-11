@@ -93,7 +93,7 @@ export default function PrestigeUnifiedNarrative() {
             style={{ borderColor: "hsl(var(--pr-gold) / 0.35)", color: "hsl(var(--pr-gold-light))" }}>
             <Sparkles size={12} /> {t({ it: "La soluzione", en: "The solution" })}
           </div>
-          <h3 className="prestige-display mt-6 max-w-3xl text-3xl sm:text-5xl md:text-6xl leading-[1.08]">
+          <h3 className="prestige-display mt-6 max-w-3xl text-3xl sm:text-5xl lg:text-6xl leading-[1.08]">
             {t({ it: "Empire è l'", en: "Empire is the " })}
             <span className="prestige-gold-text italic">{t({ it: "unico sistema", en: "single system" })}</span>
             {t({
