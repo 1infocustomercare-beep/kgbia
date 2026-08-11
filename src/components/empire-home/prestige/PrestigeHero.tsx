@@ -355,13 +355,29 @@ export default function PrestigeHero() {
 
       <style>{`
         /* ── Staggered reveal on mount ─────────────────────────────── */
+        /* Solo transform+opacity (compositing GPU): nessun layout/paint
+           per frame, quindi il costo su mobile resta prossimo a zero.
+           Il blur d'ingresso è desktop-only e one-shot. */
         .prestige-hero-stagger {
           opacity: 0;
-          transform: translateY(28px);
-          transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
+          transform: translate3d(0, 26px, 0) scale(.985);
+          transition:
+            opacity .95s cubic-bezier(.16,1,.3,1),
+            transform 1.05s cubic-bezier(.16,1,.3,1),
+            filter .95s cubic-bezier(.16,1,.3,1);
           will-change: transform, opacity;
         }
-        .prestige-hero-root.is-mounted .prestige-hero-stagger { opacity: 1; transform: translateY(0); }
+        @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+          .prestige-hero-stagger { filter: blur(10px); }
+          .prestige-hero-root.is-mounted .prestige-hero-stagger { filter: blur(0); }
+        }
+        .prestige-hero-root.is-mounted .prestige-hero-stagger {
+          opacity: 1;
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        /* Libera la GPU al termine del reveal */
+        .prestige-hero-root.is-mounted .prestige-hero-stagger { will-change: auto; }
+
         .prestige-hero-root.is-mounted .prestige-hero-stagger--1 { transition-delay: 60ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--2 { transition-delay: 180ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--3 { transition-delay: 320ms; }
