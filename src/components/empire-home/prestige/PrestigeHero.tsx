@@ -264,12 +264,13 @@ export default function PrestigeHero() {
               const isLeft = modDist === HERO_SCREENS.length - 1;
               // Solo attivo + 2 vicini restano visibili: gli altri escono di scena,
               // così i telefoni non si accavallano più sopra quello in primo piano.
+              const side = isMobile ? 26 : 30;
               const stackTransform = isActive
                 ? `translate3d(0, 0, 0) rotateY(calc(var(--mx, 0) * 12deg)) rotateX(calc(var(--my, 0) * -8deg)) scale(1)`
                 : isRight
-                  ? `translate3d(36%, 7%, -260px) rotateY(-20deg) scale(.84)`
+                  ? `translate3d(${side}%, 7%, -260px) rotateY(-20deg) scale(.82)`
                   : isLeft
-                    ? `translate3d(-36%, 7%, -260px) rotateY(20deg) scale(.84)`
+                    ? `translate3d(-${side}%, 7%, -260px) rotateY(20deg) scale(.82)`
                     : `translate3d(0, 12%, -420px) scale(.7)`;
 
               return (
