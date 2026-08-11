@@ -386,6 +386,72 @@ export default function PrestigeHero() {
         .prestige-hero-root.is-mounted .prestige-hero-stagger--6 { transition-delay: 760ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--stage { transition-delay: 260ms; }
 
+        /* ── Float idle dello stage telefoni (solo desktop/tablet) ──── */
+        .prestige-hero-float { transform: translateZ(0); }
+        @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+          .prestige-hero-float {
+            animation: prestige-hero-float 7.5s cubic-bezier(.45,0,.55,1) infinite;
+            will-change: transform;
+          }
+        }
+        @keyframes prestige-hero-float {
+          0%, 100% { transform: translate3d(0, 0, 0); }
+          50%      { transform: translate3d(0, -12px, 0); }
+        }
+
+        /* ── Shimmer del titolo in oro/violetto ────────────────────── */
+        @media (prefers-reduced-motion: no-preference) {
+          .prestige-hero-root.is-mounted .prestige-hero-headline .prestige-italic {
+            background-image: linear-gradient(
+              100deg,
+              hsl(var(--pr-gold-light)) 0%,
+              hsl(var(--pr-gold)) 34%,
+              hsl(0 0% 100% / 0.92) 50%,
+              hsl(var(--pr-gold)) 66%,
+              hsl(var(--pr-gold-light)) 100%
+            );
+            background-size: 260% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: prestige-hero-shimmer 9s ease-in-out 1.4s infinite;
+          }
+        }
+        @keyframes prestige-hero-shimmer {
+          0%, 100% { background-position: 130% 50%; }
+          50%      { background-position: -30% 50%; }
+        }
+
+        /* ── Sheen sulla CTA primaria (solo puntatore fine) ────────── */
+        @media (hover: hover) and (pointer: fine) {
+          .prestige-hero-root .prestige-cta {
+            position: relative;
+            overflow: hidden;
+            transition: transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s ease;
+          }
+          .prestige-hero-root .prestige-cta::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            transform: translate3d(-120%, 0, 0);
+            background: linear-gradient(100deg, transparent, hsl(0 0% 100% / 0.38), transparent);
+            pointer-events: none;
+          }
+          .prestige-hero-root .prestige-cta:hover { transform: translate3d(0, -2px, 0); }
+          .prestige-hero-root .prestige-cta:hover::after {
+            animation: prestige-hero-sheen .85s cubic-bezier(.22,1,.36,1);
+          }
+          .prestige-hero-root .prestige-cta-ghost {
+            transition: transform .45s cubic-bezier(.16,1,.3,1), border-color .45s ease, background .45s ease;
+          }
+          .prestige-hero-root .prestige-cta-ghost:hover { transform: translate3d(0, -2px, 0); }
+        }
+        @keyframes prestige-hero-sheen {
+          to { transform: translate3d(120%, 0, 0); }
+        }
+
+
+
         /* ── Gold beams — cinematic light ──────────────────────────── */
         .prestige-hero-beam {
           position: absolute;
