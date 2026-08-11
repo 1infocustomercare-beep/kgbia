@@ -312,6 +312,9 @@ export default function PrestigeHero() {
               );
             })}
           </div>
+          </div>
+
+
 
           {/* Etichetta mockup attivo + dot indicators */}
           <div
