@@ -70,9 +70,12 @@ export default function PrestigeHero() {
   // Responsive phone width + breakpoint
   useEffect(() => {
     const compute = () => {
-      const mobile = window.innerWidth < 768;
+      const w = window.innerWidth;
+      const mobile = w < 768;
       setIsMobile(mobile);
-      setPhoneW(mobile ? Math.min(210, window.innerWidth * 0.56) : 262);
+      // Tablet (768–1023) usa un telefono più contenuto: la colonna è a piena
+      // larghezza e un phone da 262px rendeva la tile sproporzionata.
+      setPhoneW(mobile ? Math.min(210, w * 0.56) : w < 1024 ? 224 : 262);
     };
     compute();
     window.addEventListener("resize", compute);
