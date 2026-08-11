@@ -232,6 +232,9 @@ export default function PrestigeHero() {
 
         {/* ── RIGHT — Phone cinematic stage ── */}
         <div className="prestige-bento prestige-hero-stagger prestige-hero-stagger--stage col-span-12 lg:col-span-5 relative flex flex-col items-center justify-center lg:items-center overflow-hidden lg:overflow-visible p-6 sm:p-8">
+          {/* Wrapper dedicato al float idle: il figlio conserva il transform di
+              parallasse, così animazione e scroll non si sovrascrivono. */}
+          <div className="prestige-hero-float mx-auto">
           <div
             ref={stageRef}
             className="prestige-hero-phone-stage relative will-change-transform mx-auto"
@@ -242,6 +245,7 @@ export default function PrestigeHero() {
               transform: `translate3d(0, calc(var(--empire-progress, 0) * -30px), 0)`,
             }}
           >
+
 
             {/* Floor reflection */}
             <div
@@ -308,6 +312,9 @@ export default function PrestigeHero() {
               );
             })}
           </div>
+          </div>
+
+
 
           {/* Etichetta mockup attivo + dot indicators */}
           <div
@@ -348,13 +355,29 @@ export default function PrestigeHero() {
 
       <style>{`
         /* ── Staggered reveal on mount ─────────────────────────────── */
+        /* Solo transform+opacity (compositing GPU): nessun layout/paint
+           per frame, quindi il costo su mobile resta prossimo a zero.
+           Il blur d'ingresso è desktop-only e one-shot. */
         .prestige-hero-stagger {
           opacity: 0;
-          transform: translateY(28px);
-          transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
+          transform: translate3d(0, 26px, 0) scale(.985);
+          transition:
+            opacity .95s cubic-bezier(.16,1,.3,1),
+            transform 1.05s cubic-bezier(.16,1,.3,1),
+            filter .95s cubic-bezier(.16,1,.3,1);
           will-change: transform, opacity;
         }
-        .prestige-hero-root.is-mounted .prestige-hero-stagger { opacity: 1; transform: translateY(0); }
+        @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+          .prestige-hero-stagger { filter: blur(10px); }
+          .prestige-hero-root.is-mounted .prestige-hero-stagger { filter: blur(0); }
+        }
+        .prestige-hero-root.is-mounted .prestige-hero-stagger {
+          opacity: 1;
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        /* Libera la GPU al termine del reveal */
+        .prestige-hero-root.is-mounted .prestige-hero-stagger { will-change: auto; }
+
         .prestige-hero-root.is-mounted .prestige-hero-stagger--1 { transition-delay: 60ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--2 { transition-delay: 180ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--3 { transition-delay: 320ms; }
@@ -362,6 +385,72 @@ export default function PrestigeHero() {
         .prestige-hero-root.is-mounted .prestige-hero-stagger--5 { transition-delay: 620ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--6 { transition-delay: 760ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--stage { transition-delay: 260ms; }
+
+        /* ── Float idle dello stage telefoni (solo desktop/tablet) ──── */
+        .prestige-hero-float { transform: translateZ(0); }
+        @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+          .prestige-hero-float {
+            animation: prestige-hero-float 7.5s cubic-bezier(.45,0,.55,1) infinite;
+            will-change: transform;
+          }
+        }
+        @keyframes prestige-hero-float {
+          0%, 100% { transform: translate3d(0, 0, 0); }
+          50%      { transform: translate3d(0, -12px, 0); }
+        }
+
+        /* ── Shimmer del titolo in oro/violetto ────────────────────── */
+        @media (prefers-reduced-motion: no-preference) {
+          .prestige-hero-root.is-mounted .prestige-hero-headline .prestige-italic {
+            background-image: linear-gradient(
+              100deg,
+              hsl(var(--pr-gold-light)) 0%,
+              hsl(var(--pr-gold)) 34%,
+              hsl(0 0% 100% / 0.92) 50%,
+              hsl(var(--pr-gold)) 66%,
+              hsl(var(--pr-gold-light)) 100%
+            );
+            background-size: 260% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: prestige-hero-shimmer 9s ease-in-out 1.4s infinite;
+          }
+        }
+        @keyframes prestige-hero-shimmer {
+          0%, 100% { background-position: 130% 50%; }
+          50%      { background-position: -30% 50%; }
+        }
+
+        /* ── Sheen sulla CTA primaria (solo puntatore fine) ────────── */
+        @media (hover: hover) and (pointer: fine) {
+          .prestige-hero-root .prestige-cta {
+            position: relative;
+            overflow: hidden;
+            transition: transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s ease;
+          }
+          .prestige-hero-root .prestige-cta::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            transform: translate3d(-120%, 0, 0);
+            background: linear-gradient(100deg, transparent, hsl(0 0% 100% / 0.38), transparent);
+            pointer-events: none;
+          }
+          .prestige-hero-root .prestige-cta:hover { transform: translate3d(0, -2px, 0); }
+          .prestige-hero-root .prestige-cta:hover::after {
+            animation: prestige-hero-sheen .85s cubic-bezier(.22,1,.36,1);
+          }
+          .prestige-hero-root .prestige-cta-ghost {
+            transition: transform .45s cubic-bezier(.16,1,.3,1), border-color .45s ease, background .45s ease;
+          }
+          .prestige-hero-root .prestige-cta-ghost:hover { transform: translate3d(0, -2px, 0); }
+        }
+        @keyframes prestige-hero-sheen {
+          to { transform: translate3d(120%, 0, 0); }
+        }
+
+
 
         /* ── Gold beams — cinematic light ──────────────────────────── */
         .prestige-hero-beam {
@@ -430,11 +519,13 @@ export default function PrestigeHero() {
 
 
         @media (prefers-reduced-motion: reduce) {
-          .prestige-hero-stagger { transition: none !important; opacity: 1 !important; transform: none !important; }
+          .prestige-hero-stagger { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
           .prestige-hero-beam, .prestige-hero-halo { transform: none !important; }
           .prestige-hero-scroll-line { animation: none !important; }
           .prestige-hero-goldring { animation: none !important; }
+          .prestige-hero-float { animation: none !important; }
         }
+
 
       `}</style>
     </motion.section>
