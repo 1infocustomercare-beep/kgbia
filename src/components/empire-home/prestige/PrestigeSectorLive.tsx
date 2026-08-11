@@ -317,7 +317,7 @@ export default function PrestigeSectorLive() {
           </div>
           <h2
             id="settori-live-title"
-            className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight text-[hsl(var(--pr-ivory))] sm:text-5xl md:text-6xl"
+            className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight text-[hsl(var(--pr-ivory))] sm:text-5xl lg:text-6xl"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             Siti settore live ·{" "}

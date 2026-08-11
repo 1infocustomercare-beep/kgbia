@@ -70,9 +70,12 @@ export default function PrestigeHero() {
   // Responsive phone width + breakpoint
   useEffect(() => {
     const compute = () => {
-      const mobile = window.innerWidth < 768;
+      const w = window.innerWidth;
+      const mobile = w < 768;
       setIsMobile(mobile);
-      setPhoneW(mobile ? Math.min(210, window.innerWidth * 0.56) : 262);
+      // Tablet (768–1023) usa un telefono più contenuto: la colonna è a piena
+      // larghezza e un phone da 262px rendeva la tile sproporzionata.
+      setPhoneW(mobile ? Math.min(210, w * 0.56) : w < 1024 ? 224 : 262);
     };
     compute();
     window.addEventListener("resize", compute);
@@ -228,7 +231,7 @@ export default function PrestigeHero() {
         </div>
 
         {/* ── RIGHT — Phone cinematic stage ── */}
-        <div className="prestige-bento prestige-hero-stagger prestige-hero-stagger--stage col-span-12 lg:col-span-5 relative flex flex-col items-center justify-center lg:items-center overflow-hidden p-6 sm:p-8">
+        <div className="prestige-bento prestige-hero-stagger prestige-hero-stagger--stage col-span-12 lg:col-span-5 relative flex flex-col items-center justify-center lg:items-center overflow-hidden lg:overflow-visible p-6 sm:p-8">
           <div
             ref={stageRef}
             className="prestige-hero-phone-stage relative will-change-transform mx-auto"
@@ -261,12 +264,13 @@ export default function PrestigeHero() {
               const isLeft = modDist === HERO_SCREENS.length - 1;
               // Solo attivo + 2 vicini restano visibili: gli altri escono di scena,
               // così i telefoni non si accavallano più sopra quello in primo piano.
+              const side = isMobile ? 26 : 30;
               const stackTransform = isActive
                 ? `translate3d(0, 0, 0) rotateY(calc(var(--mx, 0) * 12deg)) rotateX(calc(var(--my, 0) * -8deg)) scale(1)`
                 : isRight
-                  ? `translate3d(36%, 7%, -260px) rotateY(-20deg) scale(.84)`
+                  ? `translate3d(${side}%, 7%, -260px) rotateY(-20deg) scale(.82)`
                   : isLeft
-                    ? `translate3d(-36%, 7%, -260px) rotateY(20deg) scale(.84)`
+                    ? `translate3d(-${side}%, 7%, -260px) rotateY(20deg) scale(.82)`
                     : `translate3d(0, 12%, -420px) scale(.7)`;
 
               return (

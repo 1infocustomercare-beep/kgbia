@@ -201,7 +201,7 @@ export default function PrestigeParallaxCarousel() {
         <p className="text-xs uppercase tracking-[0.35em] text-[hsl(var(--gold))] mb-4">
           Portfolio in movimento
         </p>
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif leading-[1.05]">
+        <h2 className="text-4xl lg:text-5xl xl:text-6xl font-serif leading-[1.05]">
           Ogni progetto è una vetrina{" "}
           <span className="italic text-[hsl(var(--gold))]">viva</span>.
         </h2>

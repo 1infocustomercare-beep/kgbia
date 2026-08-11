@@ -17,7 +17,7 @@ export default function PrestigeCTA() {
           ✦ La decisione
         </div>
         <h2
-          className="prestige-display mt-5 text-3xl font-semibold sm:text-6xl md:text-7xl break-words leading-tight"
+          className="prestige-display mt-5 text-3xl font-semibold sm:text-6xl lg:text-7xl break-words leading-tight"
           style={{ color: "hsl(var(--pr-text-on-light))" }}
         >
           Pronto a costruire il <span className="prestige-gold-text italic">tuo impero?</span>

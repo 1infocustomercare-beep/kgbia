@@ -46,7 +46,7 @@ export default function PrestigeStoryPinned() {
             >
               ✦ {t({ it: "Il problema · La soluzione", en: "The problem · The solution" })}
             </div>
-            <h2 className="prestige-display mt-3 text-2xl font-semibold sm:text-5xl md:text-6xl break-words leading-tight">
+            <h2 className="prestige-display mt-3 text-2xl font-semibold sm:text-5xl lg:text-6xl break-words leading-tight">
               <span
                 className="italic line-through"
                 style={{

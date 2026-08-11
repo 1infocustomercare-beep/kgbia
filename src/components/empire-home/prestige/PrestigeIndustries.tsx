@@ -124,7 +124,7 @@ export default function PrestigeIndustries() {
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
           </div>
-          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl md:text-6xl break-words">
+          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl lg:text-6xl break-words">
             Empire parla la lingua del{" "}
             <span className="prestige-gold-text italic">tuo settore</span>
           </h2>

@@ -91,7 +91,7 @@ export default function PrestigeMetrics() {
           {items.map((it) => (
             <div key={it.label} className="flex min-w-0 flex-col items-center gap-2 text-center">
               <span
-                className="prestige-display text-4xl leading-none tabular-nums sm:text-5xl md:text-6xl"
+                className="prestige-display text-4xl leading-none tabular-nums sm:text-5xl lg:text-6xl"
                 style={{ color: "hsl(var(--pr-gold-light))" }}
               >
                 {it.value}

@@ -77,7 +77,7 @@ export default function PrestigePortfolio() {
               <Sparkles size={12} /> Portfolio · webapp reali su iPhone
             </div>
             <h2
-              className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"
+              className="prestige-display mt-3 text-4xl font-semibold sm:text-5xl lg:text-6xl"
               style={{ color: "hsl(var(--pr-text-on-light))" }}
             >
               Casi reali.
