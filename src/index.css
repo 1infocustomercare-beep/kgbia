@@ -3452,6 +3452,9 @@ summary:focus-visible,
   outline-color: hsl(var(--ring)) !important;
   outline-offset: 3px;
   border-radius: 8px;
+  /* Doppio anello: alcune utility Tailwind (outline-none) azzerano l'outline
+     su elementi custom, il box-shadow garantisce il focus sempre visibile. */
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring)) !important;
 }
 
 /* Skip link: fuori schermo finché non riceve focus da tastiera */
