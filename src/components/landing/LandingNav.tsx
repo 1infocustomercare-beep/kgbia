@@ -49,13 +49,14 @@ export default function LandingNav() {
     <>
       <div
         className="fixed left-0 top-0 z-[10002] h-[3px] rounded-r-full"
+        aria-hidden="true"
         style={{
           width: `${progress}%`,
           background: "linear-gradient(90deg, #1e1e5a, #6366f1)",
         }}
       />
 
-      <nav className={`fixed top-[3px] z-[10000] w-full transition-all duration-500 ${scrolled ? "py-2" : "py-3"}`}>
+      <nav aria-label="Navigazione principale" className={`fixed top-[3px] z-[10000] w-full transition-all duration-500 ${scrolled ? "py-2" : "py-3"}`}>
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-3 sm:px-5 lg:px-10">
           <div
             className="w-full rounded-full px-3 backdrop-blur-2xl transition-all duration-500 sm:px-5"
@@ -103,7 +104,7 @@ export default function LandingNav() {
                     <span className="pointer-events-none absolute inset-x-2 top-2 h-full rounded-full bg-[linear-gradient(45deg,var(--gf),var(--gt))] opacity-0 blur-[14px] transition-opacity duration-500 group-hover/pill:opacity-50 -z-10" />
                     {/* shrink-0 is required: the label sibling is wider than the
                         40px collapsed pill and would squeeze the icon to 0px. */}
-                    <Icon className="relative z-10 h-[18px] w-[18px] shrink-0 text-foreground/80 transition-all duration-500 group-hover/pill:scale-0 group-hover/pill:opacity-0" />
+                    <Icon aria-hidden="true" className="relative z-10 h-[18px] w-[18px] shrink-0 text-foreground/80 transition-all duration-500 group-hover/pill:scale-0 group-hover/pill:opacity-0" />
                     <span className="pointer-events-none absolute inset-0 z-10 flex scale-0 items-center justify-center whitespace-nowrap text-[12px] font-semibold uppercase tracking-wide text-white opacity-0 transition-all duration-500 delay-100 group-hover/pill:scale-100 group-hover/pill:opacity-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
                       {l.label}
                     </span>
@@ -132,6 +133,8 @@ export default function LandingNav() {
               className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-foreground"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
+              aria-expanded={menuOpen}
+              aria-controls="landing-mobile-menu"
             >
               {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -142,7 +145,7 @@ export default function LandingNav() {
         </div>
 
         {menuOpen && (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="absolute left-3 right-3 top-full mt-2 flex max-h-[calc(100svh-96px)] flex-col gap-3 overflow-y-auto rounded-[24px] border border-border/80 bg-background/95 px-5 py-5 shadow-[0_30px_90px_-40px_hsl(0_0%_0%_/_0.92)] backdrop-blur-2xl sm:left-5 sm:right-5 lg:hidden">
+          <motion.div id="landing-mobile-menu" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="absolute left-3 right-3 top-full mt-2 flex max-h-[calc(100svh-96px)] flex-col gap-3 overflow-y-auto rounded-[24px] border border-border/80 bg-background/95 px-5 py-5 shadow-[0_30px_90px_-40px_hsl(0_0%_0%_/_0.92)] backdrop-blur-2xl sm:left-5 sm:right-5 lg:hidden">
             {NAV_LINKS.map((l) => (
               <button key={l.href} onClick={() => scrollTo(l.href)} className="text-left text-sm font-medium text-foreground/74 transition-colors hover:text-foreground">{l.label}</button>
             ))}
