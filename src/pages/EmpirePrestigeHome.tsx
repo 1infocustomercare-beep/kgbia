@@ -71,8 +71,14 @@ function EmpirePrestigeHomeInner() {
         <PrestigeEffects />
         <div className="prestige-noise" aria-hidden="true" />
 
+        <a href="#main-content" className="empire-skip-link">
+          Salta al contenuto principale
+        </a>
+
         <LandingNav />
 
+        {/* Landmark unico della pagina: tutto il funnel vive dentro <main>. */}
+        <main id="main-content">
         {/* HERO */}
         <div id="hero">
           <PrestigeHero />
@@ -135,6 +141,7 @@ function EmpirePrestigeHomeInner() {
 
         {/* CTA FINALE (ancora #contatti per la navbar) */}
         <PrestigeFinalCTA />
+        </main>
 
         {/* FOOTER */}
         <PrestigeFooter />
