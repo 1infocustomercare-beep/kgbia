@@ -71,7 +71,10 @@ function EmpirePrestigeHomeInner() {
         <PrestigeEffects />
         <div className="prestige-noise" aria-hidden="true" />
 
-        <a href="#main-content" className="empire-skip-link">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-1/2 focus:top-2 focus:z-[100000] focus:-translate-x-1/2 focus:rounded-xl focus:border focus:border-border focus:bg-background focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-foreground focus:shadow-2xl"
+        >
           Salta al contenuto principale
         </a>
 
