@@ -61,14 +61,14 @@ export function TopBar() {
         {/* Search */}
         <div className="relative flex-1 max-w-sm hidden md:block">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input placeholder="Cerca..." className="pl-9 h-9 bg-secondary/30 border-border/30 focus:border-primary/50 transition-colors" />
+          <Input aria-label="Cerca nella dashboard" placeholder="Cerca..." className="pl-9 h-9 bg-secondary/30 border-border/30 focus:border-primary/50 transition-colors" />
         </div>
 
         <div className="ml-auto flex items-center gap-1.5">
           <DarkModeToggle />
           {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-xl hover:bg-secondary/50">
-            <Bell className="w-4 h-4" />
+          <Button variant="ghost" size="icon" aria-label="Notifiche" className="relative h-9 w-9 rounded-xl hover:bg-secondary/50">
+            <Bell className="w-4 h-4" aria-hidden="true" />
             <motion.span
               className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"
               animate={{ scale: [1, 1.3, 1] }}
@@ -79,7 +79,7 @@ export function TopBar() {
           {/* User menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-xl h-9 w-9 hover:bg-secondary/50">
+              <Button variant="ghost" size="icon" aria-label="Menu account" className="rounded-xl h-9 w-9 hover:bg-secondary/50">
                 <div className="w-8 h-8 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
                   <User className="w-4 h-4 text-primary" />
                 </div>

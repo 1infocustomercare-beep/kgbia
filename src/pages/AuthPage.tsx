@@ -307,10 +307,10 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 landing-dark force-dark auth-contrast"
+    <main className="min-h-screen flex items-center justify-center px-4 py-12 landing-dark force-dark auth-contrast"
       style={{ background: "linear-gradient(160deg, hsl(228 22% 8%), hsl(250 20% 10%), hsl(228 22% 7%))" }}>
 
-      <button onClick={() => navigate("/")}
+      <button onClick={() => navigate("/")} aria-label="Torna alla home"
         className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-foreground/85 hover:text-foreground transition-colors">
         <ArrowLeft className="w-4 h-4" /> Home
       </button>
@@ -363,14 +363,14 @@ export default function AuthPage() {
               <div className="space-y-3">
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
-                  <Input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                    className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                  <Input type="email" aria-label="Email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
+                    className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
-                  <Input type={showPw ? "text" : "password"} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-                    className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
-                  <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
+                  <Input type={showPw ? "text" : "password"} aria-label="Password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
+                    className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
+                  <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
                     {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
@@ -409,26 +409,26 @@ export default function AuthPage() {
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input placeholder="Nome completo" value={fullName} onChange={e => setFullName(e.target.value)}
-                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                     </div>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
-                      <Input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                      <Input type="email" aria-label="Email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
+                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                     </div>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input type={showPw ? "text" : "password"} placeholder="Password (min 8 caratteri)" value={password} onChange={e => setPassword(e.target.value)}
-                        className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
-                      <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
+                        className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
+                      <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
                         {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
                     {role === "partner" && (
                       <div className="relative">
                         <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
-                        <Input placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
-                          className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                        <Input aria-label="Nome azienda (opzionale)" placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
+                          className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                     </div>
                     )}
 
@@ -495,6 +495,6 @@ export default function AuthPage() {
           )}
         </div>
       </motion.div>
-    </div>
+    </main>
   );
 }

@@ -3433,3 +3433,45 @@ canvas:not([class*="h-"]) {
   }
 }
 
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCESSIBILITÀ GLOBALE (additiva)
+   Focus visibile su ogni elemento interattivo + skip link.
+   Solo :focus-visible → nessun anello visibile al click col mouse.
+   ═══════════════════════════════════════════════════════════════ */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="link"]:focus-visible,
+[role="menuitem"]:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+  outline-width: 2px !important;
+  outline-style: solid !important;
+  outline-color: hsl(var(--ring)) !important;
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Skip link: fuori schermo finché non riceve focus da tastiera */
+.empire-skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 100000;
+  transform: translate(-50%, -140%);
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 12px 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 12px 40px -12px hsl(0 0% 0% / 0.6);
+  transition: transform 0.2s ease;
+}
+.empire-skip-link:focus-visible {
+  transform: translate(-50%, 0);
+  outline-offset: -2px;
+}
