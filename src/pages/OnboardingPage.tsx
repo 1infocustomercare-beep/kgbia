@@ -307,7 +307,7 @@ export default function OnboardingPage() {
               <div className="relative mb-3">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input value={searchIndustry} onChange={e => setSearchIndustry(e.target.value)}
-                  placeholder="Cerca settore..." className="pl-10 h-11 min-h-[44px]" />
+                  aria-label="Cerca settore" placeholder="Cerca settore..." className="pl-10 h-11 min-h-[44px]" />
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 max-h-[35vh] overflow-y-auto pr-1 mb-6">
@@ -357,17 +357,17 @@ export default function OnboardingPage() {
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Dati Azienda</h1>
               <p className="text-center text-muted-foreground mb-6">Inserisci le informazioni della tua attività</p>
               <div className="space-y-3">
-                <div><Label>Nome Azienda *</Label><Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} placeholder="Es. Transfer Roma Luxury" className="h-11 min-h-[44px]" /></div>
-                <div><Label>P.IVA</Label><Input value={form.piva} onChange={e => setForm(p => ({ ...p, piva: e.target.value }))} placeholder="IT01234567890" className="h-11 min-h-[44px]" /></div>
+                <div><Label>Nome Azienda *</Label><Input aria-label="Nome Azienda" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} placeholder="Es. Transfer Roma Luxury" className="h-11 min-h-[44px]" /></div>
+                <div><Label>P.IVA</Label><Input aria-label="P.IVA" value={form.piva} onChange={e => setForm(p => ({ ...p, piva: e.target.value }))} placeholder="IT01234567890" className="h-11 min-h-[44px]" /></div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div><Label>Indirizzo</Label><Input value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} placeholder="Via Roma 1" className="h-11 min-h-[44px]" /></div>
-                  <div><Label>Città</Label><Input value={form.city} onChange={e => setForm(p => ({ ...p, city: e.target.value }))} placeholder="Roma" className="h-11 min-h-[44px]" /></div>
+                  <div><Label>Indirizzo</Label><Input aria-label="Indirizzo" value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} placeholder="Via Roma 1" className="h-11 min-h-[44px]" /></div>
+                  <div><Label>Città</Label><Input aria-label="Città" value={form.city} onChange={e => setForm(p => ({ ...p, city: e.target.value }))} placeholder="Roma" className="h-11 min-h-[44px]" /></div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div><Label>Telefono</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} placeholder="+39 06..." className="h-11 min-h-[44px]" /></div>
-                  <div><Label>Email aziendale</Label><Input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} placeholder="info@azienda.it" className="h-11 min-h-[44px]" /></div>
+                  <div><Label>Telefono</Label><Input aria-label="Telefono" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} placeholder="+39 06..." className="h-11 min-h-[44px]" /></div>
+                  <div><Label>Email aziendale</Label><Input aria-label="Email aziendale" type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} placeholder="info@azienda.it" className="h-11 min-h-[44px]" /></div>
                 </div>
-                <div><Label>WhatsApp</Label><Input value={form.whatsapp} onChange={e => setForm(p => ({ ...p, whatsapp: e.target.value }))} placeholder="+39 333..." className="h-11 min-h-[44px]" /></div>
+                <div><Label>WhatsApp</Label><Input aria-label="WhatsApp" value={form.whatsapp} onChange={e => setForm(p => ({ ...p, whatsapp: e.target.value }))} placeholder="+39 333..." className="h-11 min-h-[44px]" /></div>
                 <div className="flex gap-3 mt-4">
                   <Button variant="outline" onClick={() => setStep(0)} className="flex-1 h-11 min-h-[44px]"><ArrowLeft className="w-4 h-4 mr-2" /> Indietro</Button>
                   <Button onClick={() => setStep(2)} disabled={!form.name} className="flex-1 h-11 min-h-[44px]">Continua <ArrowRight className="w-4 h-4 ml-2" /></Button>
@@ -451,9 +451,9 @@ export default function OnboardingPage() {
                         <p className="text-xs text-muted-foreground">Puoi aggiungere altri membri dopo</p>
                       </div>
                     </div>
-                    <div><Label>Nome</Label><Input value={form.staffName} onChange={e => setForm(p => ({ ...p, staffName: e.target.value }))} placeholder="Mario Rossi" className="h-11 min-h-[44px]" /></div>
-                    <div><Label>Email</Label><Input type="email" value={form.staffEmail} onChange={e => setForm(p => ({ ...p, staffEmail: e.target.value }))} placeholder="staff@azienda.it" className="h-11 min-h-[44px]" /></div>
-                    <div><Label>PIN Cucina/Staff (4-6 cifre)</Label><Input type="text" inputMode="numeric" value={form.staffPin} onChange={e => setForm(p => ({ ...p, staffPin: e.target.value.replace(/\D/g, "").slice(0, 6) }))} placeholder="1234" className="h-11 min-h-[44px] font-mono tracking-widest" /></div>
+                    <div><Label>Nome</Label><Input aria-label="Nome" value={form.staffName} onChange={e => setForm(p => ({ ...p, staffName: e.target.value }))} placeholder="Mario Rossi" className="h-11 min-h-[44px]" /></div>
+                    <div><Label>Email</Label><Input aria-label="Email" type="email" value={form.staffEmail} onChange={e => setForm(p => ({ ...p, staffEmail: e.target.value }))} placeholder="staff@azienda.it" className="h-11 min-h-[44px]" /></div>
+                    <div><Label>PIN Cucina/Staff (4-6 cifre)</Label><Input aria-label="PIN Cucina/Staff (4-6 cifre)" type="text" inputMode="numeric" value={form.staffPin} onChange={e => setForm(p => ({ ...p, staffPin: e.target.value.replace(/\D/g, "").slice(0, 6) }))} placeholder="1234" className="h-11 min-h-[44px] font-mono tracking-widest" /></div>
                   </CardContent>
                 </Card>
 
