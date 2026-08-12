@@ -270,11 +270,18 @@ export default function OnboardingPage() {
           background: transparent !important;
         }
       `}</style>
-      <div className="prestige-root prestige-section prestige-light onboarding-scope min-h-screen flex items-center justify-center p-4">
+      <div role="main" aria-label="Configurazione account" className="prestige-root prestige-section prestige-light onboarding-scope min-h-screen flex items-center justify-center p-4">
 
       <div className="w-full max-w-3xl">
         {/* Progress bar — 5 steps */}
-        <div className="flex items-center justify-center gap-2 mb-6">
+        <div
+          className="flex items-center justify-center gap-2 mb-6"
+          role="progressbar"
+          aria-valuemin={1}
+          aria-valuemax={5}
+          aria-valuenow={step + 1}
+          aria-label={`Passo ${step + 1} di 5`}
+        >
           {["Settore", "Dati Azienda", "Brand", "Team", "Go Live"].map((label, i) => (
             <div key={i} className="flex items-center gap-1">
               <div
