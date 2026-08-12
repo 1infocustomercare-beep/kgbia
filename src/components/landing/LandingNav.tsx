@@ -93,7 +93,7 @@ export default function LandingNav() {
                 <li
                   key={l.href}
                   style={{ ["--gf" as any]: l.from, ["--gt" as any]: l.to }}
-                  className="group/pill relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/[0.04] transition-all duration-500 hover:w-[140px] hover:border-transparent"
+                  className="group/pill relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/[0.04] transition-all duration-500 hover:w-[140px] hover:border-transparent focus-within:w-[140px] focus-within:ring-2 focus-within:ring-[hsl(var(--ring))] focus-within:ring-offset-2 focus-within:ring-offset-[hsl(220_22%_6%)]"
                 >
                   <button
                     onClick={() => scrollTo(l.href)}
