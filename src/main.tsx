@@ -25,6 +25,33 @@ if (root) {
   createRoot(root).render(<App />);
 }
 
+// Universal cleanup: any service worker still registered on this origin can
+// serve a cached (old) Empire homepage after a refresh. Unregister every SW
+// and drop app-shell caches on ALL hosts (dev, preview, iframe, production),
+// then reload once so the fresh build takes over.
+if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+  const RELOAD_FLAG = "empire_sw_purged_v1";
+  navigator.serviceWorker
+    .getRegistrations()
+    .then(async (regs) => {
+      if (!regs.length) return;
+      await Promise.allSettled(regs.map((r) => r.unregister()));
+      if ("caches" in window) {
+        const names = await caches.keys();
+        await Promise.allSettled(
+          names
+            .filter((n) => /precache|runtime|workbox|pages|static|media|fonts/i.test(n))
+            .map((n) => caches.delete(n)),
+        );
+      }
+      if (!sessionStorage.getItem(RELOAD_FLAG)) {
+        sessionStorage.setItem(RELOAD_FLAG, "1");
+        window.location.reload();
+      }
+    })
+    .catch(() => undefined);
+}
+
 // Kill-switch: force registration of /sw.js on production so returning
 // visitors (even without an existing SW) fetch the cleanup worker, which
 // clears legacy caches, reloads open tabs onto the fresh build, and then
@@ -47,4 +74,5 @@ if (typeof window !== "undefined" && "serviceWorker" in navigator && import.meta
     });
   }
 }
+
 
