@@ -364,12 +364,12 @@ export default function AuthPage() {
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                   <Input type="email" aria-label="Email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                    className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                    className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                   <Input type={showPw ? "text" : "password"} aria-label="Password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-                    className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                    className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                   <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
                     {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -409,17 +409,17 @@ export default function AuthPage() {
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input placeholder="Nome completo" value={fullName} onChange={e => setFullName(e.target.value)}
-                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                     </div>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input type="email" aria-label="Email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                     </div>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                       <Input type={showPw ? "text" : "password"} placeholder="Password (min 8 caratteri)" value={password} onChange={e => setPassword(e.target.value)}
-                        className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                        className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                       <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
                         {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -428,7 +428,7 @@ export default function AuthPage() {
                       <div className="relative">
                         <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                         <Input aria-label="Nome azienda (opzionale)" placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
-                          className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/50 focus:border-primary/55" />
+                          className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
                     </div>
                     )}
 
