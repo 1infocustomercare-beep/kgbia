@@ -3447,7 +3447,9 @@ summary:focus-visible,
 [role="link"]:focus-visible,
 [role="menuitem"]:focus-visible,
 [tabindex]:not([tabindex="-1"]):focus-visible {
-  outline: 2px solid hsl(var(--ring, 265 70% 65%));
+  outline-width: 2px !important;
+  outline-style: solid !important;
+  outline-color: hsl(var(--ring)) !important;
   outline-offset: 3px;
   border-radius: 8px;
 }
