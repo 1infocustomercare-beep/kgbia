@@ -231,7 +231,8 @@ export default function PrestigeTheme() {
         inset: 0;
         z-index: 0;
         pointer-events: none;
-        background-color: hsl(240 44% 7%);
+        background:
+          radial-gradient(ellipse at 50% 0%, hsl(244 60% 14%) 0%, hsl(240 44% 7%) 55%, hsl(240 50% 5%) 100%);
         overflow: hidden;
       }
       .prestige-scrub-backdrop canvas {
@@ -239,20 +240,12 @@ export default function PrestigeTheme() {
         inset: 0;
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        opacity: 0.5;
-        filter: saturate(0.8) contrast(1.06);
-      }
-      .prestige-scrub-veil {
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(180deg, hsl(240 44% 7% / 0.72) 0%, hsl(240 44% 7% / 0.45) 45%, hsl(240 44% 7% / 0.8) 100%);
+        display: block;
       }
       .prestige-scrub-vignette {
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at center, transparent 45%, hsl(240 50% 4% / 0.75) 100%);
+        background: radial-gradient(ellipse at center, transparent 42%, hsl(240 55% 4% / 0.72) 100%);
       }
 
       /* ── Premium additive layer ─────────────────────────────────── */
