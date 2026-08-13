@@ -123,6 +123,9 @@ export default function PrestigeHorizontalScroll() {
             display: flex; align-items: center; justify-content: center;
             padding: 0 6vw;
           }
+          .prestige-hscroll-panel > .prestige-bento {
+            height: min(74vh, 620px);
+          }
         }
       `}</style>
     </section>
@@ -166,7 +169,7 @@ function PanelCard({
             loading="lazy"
             decoding="async"
             className="h-full w-full object-cover"
-            style={{ aspectRatio: large ? "4 / 3" : "16 / 10" }}
+            style={{ aspectRatio: large ? "4 / 3" : "16 / 10", objectPosition: "center top" }}
           />
         </div>
       )}
