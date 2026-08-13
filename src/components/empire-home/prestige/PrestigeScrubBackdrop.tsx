@@ -24,6 +24,8 @@ export default function PrestigeScrubBackdrop() {
   const rafRef = useRef<number | null>(null);
   const scrollRef = useRef({ y: 0, v: 0, p: 0 });
   const pointerRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
+  // Centro di repulsione (mouse o dito) + intensità animata (ts = target)
+  const repelRef = useRef({ x: -9999, y: -9999, tx: -9999, ty: -9999, s: 0, ts: 0 });
   const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
