@@ -24,6 +24,8 @@ export default function PrestigeScrubBackdrop() {
   const rafRef = useRef<number | null>(null);
   const scrollRef = useRef({ y: 0, v: 0, p: 0 });
   const pointerRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
+  // Centro di repulsione (mouse o dito) + intensità animata (ts = target)
+  const repelRef = useRef({ x: -9999, y: -9999, tx: -9999, ty: -9999, s: 0, ts: 0 });
   const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
@@ -81,16 +83,38 @@ export default function PrestigeScrubBackdrop() {
       s.p = Math.min(1, Math.max(0, y / max));
     };
 
+    const setPointerTarget = (cx: number, cy: number) => {
+      pointerRef.current.tx = (cx / w - 0.5) * 2;
+      pointerRef.current.ty = (cy / h - 0.5) * 2;
+      repelRef.current.tx = cx;
+      repelRef.current.ty = cy;
+    };
+
     const onPointer = (e: PointerEvent) => {
-      pointerRef.current.tx = (e.clientX / w - 0.5) * 2;
-      pointerRef.current.ty = (e.clientY / h - 0.5) * 2;
+      setPointerTarget(e.clientX, e.clientY);
+      repelRef.current.ts = e.pointerType === "touch" ? 1 : 0.55;
+    };
+
+    const onTouch = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (!t) return;
+      setPointerTarget(t.clientX, t.clientY);
+      repelRef.current.ts = 1;
+    };
+
+    const onTouchEnd = () => {
+      repelRef.current.ts = 0;
     };
 
     const draw = () => {
       const s = scrollRef.current;
       const pt = pointerRef.current;
+      const rp = repelRef.current;
       pt.x += (pt.tx - pt.x) * 0.06;
       pt.y += (pt.ty - pt.y) * 0.06;
+      rp.x += (rp.tx - rp.x) * 0.18;
+      rp.y += (rp.ty - rp.y) * 0.18;
+      rp.s += (rp.ts - rp.s) * 0.08;
       s.v *= 0.9;
 
       ctx.clearRect(0, 0, w, h);
@@ -131,10 +155,26 @@ export default function PrestigeScrubBackdrop() {
         }
       }
 
+      // Raggio di repulsione: più ampio su touch (dito meno preciso del mouse)
+      const repelR = Math.min(220, Math.max(110, Math.min(w, h) * 0.28));
+      const repelR2 = repelR * repelR;
+
       for (let i = 0; i < list.length; i++) {
         const p = list[i];
         p.x += p.vx + pt.x * p.z * 0.35;
         p.y += p.vy - drift * p.z;
+
+        if (rp.s > 0.01) {
+          const dx = p.x - rp.x;
+          const dy = p.y - rp.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < repelR2 && d2 > 0.01) {
+            const d = Math.sqrt(d2);
+            const force = (1 - d / repelR) * rp.s * (0.6 + p.z) * 6;
+            p.x += (dx / d) * force;
+            p.y += (dy / d) * force;
+          }
+        }
 
         if (p.x < -40) p.x = w + 40;
         if (p.x > w + 40) p.x = -40;
@@ -171,6 +211,11 @@ export default function PrestigeScrubBackdrop() {
       rafRef.current = window.requestAnimationFrame(draw);
       window.addEventListener("scroll", onScroll, { passive: true });
       window.addEventListener("pointermove", onPointer, { passive: true });
+      // Fallback touch esplicito (iOS/Android): parallasse + repulsione col dito
+      window.addEventListener("touchstart", onTouch, { passive: true });
+      window.addEventListener("touchmove", onTouch, { passive: true });
+      window.addEventListener("touchend", onTouchEnd, { passive: true });
+      window.addEventListener("touchcancel", onTouchEnd, { passive: true });
     }
     window.addEventListener("resize", resize);
 
@@ -178,6 +223,10 @@ export default function PrestigeScrubBackdrop() {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("touchstart", onTouch);
+      window.removeEventListener("touchmove", onTouch);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
       window.removeEventListener("resize", resize);
     };
   }, [reduced]);
