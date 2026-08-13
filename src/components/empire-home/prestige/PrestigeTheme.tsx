@@ -240,14 +240,14 @@ export default function PrestigeTheme() {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.34;
-        filter: saturate(0.75) contrast(1.05);
+        opacity: 0.5;
+        filter: saturate(0.8) contrast(1.06);
       }
       .prestige-scrub-veil {
         position: absolute;
         inset: 0;
         background:
-          linear-gradient(180deg, hsl(240 44% 7% / 0.82) 0%, hsl(240 44% 7% / 0.62) 45%, hsl(240 44% 7% / 0.88) 100%);
+          linear-gradient(180deg, hsl(240 44% 7% / 0.72) 0%, hsl(240 44% 7% / 0.45) 45%, hsl(240 44% 7% / 0.8) 100%);
       }
       .prestige-scrub-vignette {
         position: absolute;
