@@ -4,6 +4,7 @@ import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import PrestigeEffects from "@/components/empire-home/prestige/PrestigeEffects";
+import PrestigeScrubBackdrop from "@/components/empire-home/prestige/PrestigeScrubBackdrop";
 import PrestigeHero from "@/components/empire-home/prestige/PrestigeHero";
 import PrestigeProofBar from "@/components/empire-home/prestige/PrestigeProofBar";
 import PrestigeMetrics from "@/components/empire-home/prestige/PrestigeMetrics";
