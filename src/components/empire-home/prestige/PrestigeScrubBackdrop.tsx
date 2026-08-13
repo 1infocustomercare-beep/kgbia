@@ -155,10 +155,26 @@ export default function PrestigeScrubBackdrop() {
         }
       }
 
+      // Raggio di repulsione: più ampio su touch (dito meno preciso del mouse)
+      const repelR = Math.min(220, Math.max(110, Math.min(w, h) * 0.28));
+      const repelR2 = repelR * repelR;
+
       for (let i = 0; i < list.length; i++) {
         const p = list[i];
         p.x += p.vx + pt.x * p.z * 0.35;
         p.y += p.vy - drift * p.z;
+
+        if (rp.s > 0.01) {
+          const dx = p.x - rp.x;
+          const dy = p.y - rp.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < repelR2 && d2 > 0.01) {
+            const d = Math.sqrt(d2);
+            const force = (1 - d / repelR) * rp.s * (0.6 + p.z) * 6;
+            p.x += (dx / d) * force;
+            p.y += (dy / d) * force;
+          }
+        }
 
         if (p.x < -40) p.x = w + 40;
         if (p.x > w + 40) p.x = -40;
