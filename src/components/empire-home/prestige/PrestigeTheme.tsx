@@ -23,7 +23,7 @@ export default function PrestigeTheme() {
         --pr-muted-on-dark: 240 22% 84%;
         --pr-muted-on-light: 240 20% 32%;
 
-        background: hsl(var(--pr-emerald-deep));
+        background: transparent;
         color: hsl(var(--pr-text-on-dark));
         font-family: 'Manrope', 'Inter', system-ui, sans-serif;
         font-weight: 400;
