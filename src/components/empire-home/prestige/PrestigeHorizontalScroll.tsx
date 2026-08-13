@@ -56,6 +56,7 @@ export default function PrestigeHorizontalScroll() {
     <section
       id="prestige-horizontal"
       data-section="prestige-horizontal"
+      data-no-reveal
       className="prestige-section prestige-dark prestige-hscroll"
       aria-label="Il metodo Empire in cinque fasi"
     >
