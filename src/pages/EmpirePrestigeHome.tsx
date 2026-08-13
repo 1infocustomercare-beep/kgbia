@@ -69,6 +69,7 @@ function EmpirePrestigeHomeInner() {
       <PrestigeTheme />
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen [overflow-x:clip]">
+        <PrestigeScrubBackdrop />
         <PrestigeEffects />
         <div className="prestige-noise" aria-hidden="true" />
 
