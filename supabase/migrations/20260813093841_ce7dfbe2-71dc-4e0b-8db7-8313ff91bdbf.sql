@@ -1,0 +1,2 @@
+GRANT SELECT (address, phone, email, is_blocked, blocked_reason) ON public.companies TO anon, authenticated;
+GRANT SELECT (phone, email, is_blocked, blocked_reason, policy_accepted, policy_accepted_at) ON public.restaurants TO anon, authenticated;
