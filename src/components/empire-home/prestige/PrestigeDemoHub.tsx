@@ -263,13 +263,21 @@ export default function PrestigeDemoHub() {
               </div>
             )}
 
-            <div className="flex w-full flex-row items-stretch justify-center gap-2 sm:w-auto sm:items-center sm:gap-3">
+            <div className="flex w-full flex-col items-stretch justify-center gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
               <button
                 onClick={() => cards[centerIndex] && setOpenId(cards[centerIndex].id)}
                 className="prestige-cta min-w-0 flex-1 justify-center sm:flex-none"
               >
                 <span>{t({ it: "Apri fullscreen", en: "Open fullscreen" })}</span>
                 <Maximize2 size={14} />
+              </button>
+              <button
+                onClick={() => navigate("/demo")}
+                className="prestige-cta min-w-0 flex-1 justify-center sm:flex-none"
+                aria-label={t({ it: "Vedi tutti i siti demo dei settori", en: "See all sector demo sites" })}
+              >
+                <span>{t({ it: "Siti demo live", en: "Live demo sites" })}</span>
+                <ArrowUpRight size={14} />
               </button>
               <button
                 onClick={() => navigate("/portfolio")}
@@ -279,6 +287,7 @@ export default function PrestigeDemoHub() {
                 <ArrowUpRight size={14} />
               </button>
             </div>
+
 
             {/* progress bar */}
             <div
