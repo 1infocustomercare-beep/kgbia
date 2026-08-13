@@ -612,7 +612,7 @@ export default function PrestigeTheme() {
       }
 
       /* Keep content above aurora */
-      .prestige-root > *:not(.prestige-aurora):not(.prestige-noise) { position: relative; z-index: 2; }
+      .prestige-root > *:not(.prestige-aurora):not(.prestige-noise):not(.prestige-scrub-backdrop) { position: relative; z-index: 2; }
 
       /* Mobile stability guardrails: no vertically clipped sections, no sticky viewport traps. */
       @media (max-width: 767px) {
