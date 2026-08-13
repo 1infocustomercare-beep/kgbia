@@ -295,7 +295,7 @@ export default function IndustryDemoPage() {
   };
 
   return (
-    <div className="min-h-screen text-white overflow-x-hidden" style={{ background: `linear-gradient(180deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
+    <div className="min-h-screen text-white overflow-x-clip" style={{ background: `linear-gradient(180deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
       <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
 
       {/* Partner branding banner */}
