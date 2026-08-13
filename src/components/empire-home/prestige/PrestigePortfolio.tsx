@@ -266,6 +266,18 @@ export default function PrestigePortfolio() {
             </button>
           )}
           <button
+            onClick={() => navigate("/demo")}
+            className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all hover:gap-3"
+            style={{
+              background: "hsl(var(--pr-gold))",
+              color: "hsl(var(--pr-emerald-deep))",
+              border: "1px solid hsl(var(--pr-gold) / 0.6)",
+              boxShadow: "0 14px 40px -18px hsl(var(--pr-gold) / 0.7)",
+            }}
+          >
+            Apri i siti demo live <ArrowUpRight size={16} />
+          </button>
+          <button
             onClick={() => navigate("/portfolio")}
             className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all hover:gap-3"
             style={{
@@ -274,9 +286,10 @@ export default function PrestigePortfolio() {
               border: "1px solid hsl(var(--pr-emerald) / 0.45)",
             }}
           >
-            Vedi tutti i siti demo <ArrowUpRight size={16} />
+            Portfolio mockup completo <ArrowUpRight size={16} />
           </button>
         </div>
+
 
         {/* Homepage = solo studio mockups Empire. Le varianti Lowengeld/reference vivono su /portfolio. */}
       </div>
