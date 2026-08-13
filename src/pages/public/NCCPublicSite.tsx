@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
+import { HeroScrub } from "@/components/public/HeroScrub";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import heroMercedesImg from "@/assets/ncc-hero-mercedes-amalfi.jpg";
@@ -476,7 +477,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
   const reviewCities = ["Roma", "Milano", "Napoli", "Firenze", "Torino"];
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: NCC.bg, color: NCC.white }}>
+    <div className="min-h-screen [overflow-x:clip]" style={{ background: NCC.bg, color: NCC.white }}>
 
       {/* ═══════════ NAVBAR ═══════════ */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${navScrolled ? "py-0" : "py-1"}`} style={{ background: NCC.bg, borderBottom: `1px solid rgba(201,168,76,0.3)` }}>
@@ -595,6 +596,18 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
       </section>
 
       {afterHero}
+
+      {/* ═══════════ CINEMATIC SCRUB — la flotta in movimento ═══════════ */}
+      <HeroScrub
+        frameCount={60}
+        frameUrl={(i) => `/frames/ncc/${String(i + 1).padStart(3, "0")}.jpg`}
+        titleTop="LUXURY"
+        titleBottom="TRANSFER"
+        bgClassName=""
+        accentHex="#0a0a0a"
+        defaultAspect={1920 / 1088}
+      />
+
 
       {/* ═══════════ TICKER — infinite marquee ═══════════ */}
       <section className="py-4 overflow-hidden border-y" style={{ background: NCC.ticker, borderColor: `rgba(201,168,76,0.3)` }}>
