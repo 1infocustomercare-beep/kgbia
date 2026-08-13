@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 
-const HOME_LIKE = /^\/(home|index|landing|empire|prestige|homepage|main|start|welcome|hero|cosmic|revolutionary|21st|ai)(-|\/|$)/i;
+const HOME_LIKE = /^\/(home|index|landing|empire|prestige|homepage|main|start|welcome|hero|cosmic|revolutionary|21st|ai|old-home|new-home)(-|\/|$)/i;
 
 const NotFound = () => {
   const location = useLocation();
