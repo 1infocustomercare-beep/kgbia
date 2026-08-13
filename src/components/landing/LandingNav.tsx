@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, X, Grid3x3, Sparkles, LayoutGrid, Tag, Bot, HelpCircle, Mail } from "lucide-react";
+import { Menu, X, Grid3x3, Sparkles, LayoutGrid, Tag, Bot, HelpCircle, Mail, MonitorSmartphone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PrestigeLangToggle } from "@/components/empire-home/prestige/PrestigeLang";
 import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
@@ -9,12 +9,14 @@ import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 const NAV_LINKS = [
   { label: "Settori", href: "#sectors", icon: Grid3x3, from: "#1e1e5a", to: "#4f46e5" },
   { label: "Servizi", href: "#services", icon: Sparkles, from: "#4f46e5", to: "#6366f1" },
+  { label: "Siti Demo", href: "/demo", icon: MonitorSmartphone, from: "#4338ca", to: "#a78bfa" },
   { label: "Portfolio", href: "#portfolio", icon: LayoutGrid, from: "#6366f1", to: "#a78bfa" },
   { label: "Prezzi", href: "#pricing", icon: Tag, from: "#4f46e5", to: "#a78bfa" },
   { label: "AI Agents", href: "#agents", icon: Bot, from: "#4338ca", to: "#818cf8" },
   { label: "FAQ", href: "#faq", icon: HelpCircle, from: "#1e1e5a", to: "#6366f1" },
   { label: "Contatti", href: "#contatti", icon: Mail, from: "#6366f1", to: "#1e1e5a" },
 ];
+
 
 export default function LandingNav() {
   const navigate = useNavigate();
@@ -34,6 +36,11 @@ export default function LandingNav() {
 
   const scrollTo = (href: string) => {
     setMenuOpen(false);
+    // Link di rotta (es. /demo): navighiamo, non è un'ancora della home.
+    if (href.startsWith("/")) {
+      navigate(href);
+      return;
+    }
     const el = document.querySelector(href);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
@@ -43,6 +50,7 @@ export default function LandingNav() {
     // torniamo in home sulla sezione richiesta invece di non fare nulla.
     navigate(`/${href}`);
   };
+
 
 
   return (
