@@ -65,6 +65,11 @@ export default function PrestigeHero() {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.92, 1], [1, 1, 0.92]);
   const heroBorderRadius = useTransform(scrollYProgress, [0, 1], ["0px", "24px"]);
+  // Camera dolly cinematografica: il blocco contenuti si inclina in 3D e
+  // "sprofonda" mentre la hero esce, sincronizzato col warp tunnel dietro.
+  const heroRotateX = useTransform(scrollYProgress, [0, 1], [0, 12]);
+  const heroLift = useTransform(scrollYProgress, [0, 1], [0, -70]);
+  const heroBlur = useTransform(scrollYProgress, [0, 0.7, 1], ["blur(0px)", "blur(0px)", "blur(3px)"]);
 
 
   // Responsive phone width + breakpoint
