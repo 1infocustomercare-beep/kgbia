@@ -158,7 +158,17 @@ export default function PrestigeHero() {
         <PrestigeLangToggle />
       </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-12 gap-x-4 gap-y-10 px-4 sm:px-6 lg:gap-x-8 lg:gap-y-6 lg:px-10">
+      <motion.div
+        className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-12 gap-x-4 gap-y-10 px-4 sm:px-6 lg:gap-x-8 lg:gap-y-6 lg:px-10"
+        style={{
+          perspective: 1400,
+          transformStyle: "preserve-3d",
+          rotateX: heroRotateX,
+          y: heroLift,
+          filter: heroBlur,
+          willChange: "transform, filter",
+        }}
+      >
         {/* ── LEFT — Editorial copy ── */}
         <div className="prestige-bento col-span-12 lg:col-span-7 min-w-0 relative text-center lg:text-left p-6 sm:p-9 lg:p-12">
           {/* Eyebrow */}
