@@ -50,7 +50,7 @@ export default function PrestigeHorizontalScroll() {
     offset: ["start start", "end end"],
   });
   const smooth = useSpring(scrollYProgress, { stiffness: 120, damping: 24, mass: 0.4 });
-  const x = useTransform(smooth, [0, 1], ["0%", `-${(PANELS.length - 1) * 100}%`]);
+  const x = useTransform(smooth, [0, 1], ["0vw", `-${(PANELS.length - 1) * 100}vw`]);
 
   return (
     <section
@@ -88,7 +88,7 @@ export default function PrestigeHorizontalScroll() {
         <div className="prestige-hscroll-viewport">
           <motion.div
             className="prestige-hscroll-row"
-            style={{ x: reduce ? "0%" : x, width: `${PANELS.length * 100}vw` }}
+            style={{ x: reduce ? "0vw" : x, width: `${PANELS.length * 100}vw` }}
           >
             {PANELS.map((p) => (
               <div key={p.word} className="prestige-hscroll-panel">
