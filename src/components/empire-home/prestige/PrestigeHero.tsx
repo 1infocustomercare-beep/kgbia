@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import PrestigePhone from "./PrestigePhone";
+import PrestigeHeroImmersive from "./PrestigeHeroImmersive";
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
