@@ -12,6 +12,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
+const HeroScrub = lazy(() => import("@/components/public/HeroScrub"));
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -293,7 +295,7 @@ export default function IndustryDemoPage() {
   };
 
   return (
-    <div className="min-h-screen text-white overflow-x-hidden" style={{ background: `linear-gradient(180deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
+    <div className="min-h-screen text-white overflow-x-clip" style={{ background: `linear-gradient(180deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
       <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
 
       {/* Partner branding banner */}
@@ -520,6 +522,22 @@ export default function IndustryDemoPage() {
         </div>
         <IndustryPhoneShowcase industryId={resolvedIndustry!} />
       </AnimSection>
+
+      {/* ═══════ CINEMATIC SCRUB — solo settore automotive ═══════ */}
+      {safeIndustry === "garage" && (
+        <Suspense fallback={null}>
+          <HeroScrub
+            frameCount={60}
+            frameUrl={(i) => `/frames/auto/${String(i + 1).padStart(3, "0")}.jpg`}
+            titleTop="OFFICINA"
+            titleBottom="DIGITALE"
+            accentHex={theme.accent}
+            bgClassName="bg-black"
+            defaultAspect={16 / 9}
+          />
+        </Suspense>
+      )}
+
 
       {/* ═══════ PLATFORM CAPABILITIES GRID ═══════ */}
       <AnimSection id="platform" className="py-20 px-4"
