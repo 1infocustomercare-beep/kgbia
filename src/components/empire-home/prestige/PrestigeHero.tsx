@@ -141,6 +141,9 @@ export default function PrestigeHero() {
       }}
     >
 
+      {/* Warp tunnel 3D interattivo — dietro a tutto, non intercetta eventi */}
+      <PrestigeHeroImmersive />
+
       {/* Cinematic gold beams — parallax by scroll */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
