@@ -351,7 +351,7 @@ export default function PrestigeHero() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Scroll cue */}
       <div
