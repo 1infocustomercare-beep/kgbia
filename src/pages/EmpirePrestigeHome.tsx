@@ -99,6 +99,10 @@ function EmpirePrestigeHomeInner() {
           <PrestigeServices />
         </div>
 
+        {/* METODO — scroll orizzontale pinnato (additivo, nessun altro effetto in questa zona) */}
+        <PrestigeHorizontalScroll />
+
+
         {/* SETTORI */}
         <div id="sectors">
           <PrestigeIndustries />
