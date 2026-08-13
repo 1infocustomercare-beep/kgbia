@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
+import { HeroScrub } from "@/components/public/HeroScrub";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import heroMercedesImg from "@/assets/ncc-hero-mercedes-amalfi.jpg";
