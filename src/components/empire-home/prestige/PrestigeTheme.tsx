@@ -222,6 +222,39 @@ export default function PrestigeTheme() {
         .prestige-shimmer::after, .prestige-noise { animation: none !important; }
       }
 
+      /* ── Sfondo cinematico scroll-scrubbed (sotto a TUTTO) ──────── */
+      html:has(.prestige-root), body:has(.prestige-root) {
+        background-color: hsl(240 44% 7%);
+      }
+      .prestige-scrub-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-color: hsl(240 44% 7%);
+        overflow: hidden;
+      }
+      .prestige-scrub-backdrop canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.34;
+        filter: saturate(0.75) contrast(1.05);
+      }
+      .prestige-scrub-veil {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, hsl(240 44% 7% / 0.82) 0%, hsl(240 44% 7% / 0.62) 45%, hsl(240 44% 7% / 0.88) 100%);
+      }
+      .prestige-scrub-vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center, transparent 45%, hsl(240 50% 4% / 0.75) 100%);
+      }
+
       /* ── Premium additive layer ─────────────────────────────────── */
 
       /* Subtle film grain — sits above background, below content */
