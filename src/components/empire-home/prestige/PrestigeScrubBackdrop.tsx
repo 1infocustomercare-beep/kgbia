@@ -47,7 +47,7 @@ export default function PrestigeScrubBackdrop() {
     const seed = () => {
       const area = w * h;
       const count = Math.round(
-        Math.min(160, Math.max(45, area / (window.innerWidth < 768 ? 16000 : 11000))),
+        Math.min(220, Math.max(60, area / (window.innerWidth < 768 ? 12000 : 7500))),
       );
       particles.current = Array.from({ length: count }, () => {
         const z = 0.2 + Math.random() * 0.8;
@@ -57,7 +57,7 @@ export default function PrestigeScrubBackdrop() {
           z,
           vx: (Math.random() - 0.5) * 0.14 * z,
           vy: (Math.random() - 0.5) * 0.12 * z,
-          r: (0.7 + Math.random() * 1.9) * z,
+          r: (1.1 + Math.random() * 2.4) * z,
         };
       });
     };
@@ -120,7 +120,7 @@ export default function PrestigeScrubBackdrop() {
             const dy = a.y - b.y;
             const d2 = dx * dx + dy * dy;
             if (d2 < 15000) {
-              const alpha = (1 - d2 / 15000) * 0.14;
+              const alpha = (1 - d2 / 15000) * 0.22;
               ctx.strokeStyle = `hsla(246, 88%, 74%, ${alpha})`;
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
@@ -142,7 +142,7 @@ export default function PrestigeScrubBackdrop() {
         if (p.y > h + 40) p.y = -40;
 
         const hueP = HUES[i % HUES.length] + s.p * 18;
-        const a = 0.18 + p.z * 0.5;
+        const a = 0.3 + p.z * 0.6;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `hsla(${hueP}, 92%, ${68 + p.z * 12}%, ${a})`;
