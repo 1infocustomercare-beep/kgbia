@@ -399,11 +399,16 @@ export default function DemoDirectoryPage() {
     });
   }, [search]);
 
+  /**
+   * Apre SEMPRE il sito pubblico reale del settore (quello che converte il cliente):
+   * food → /r/:slug, tutti gli altri settori → /b/:slug (template per industry).
+   */
   const navigateToDemo = (id: IndustryId) => {
     const slug = DEMO_SLUGS[id];
     if (id === "food") navigate(`/r/${slug}`);
-    else navigate(`/demo/${slug}`);
+    else navigate(`/b/${slug}`);
   };
+
 
   const isFeatured = (id: IndustryId) => FEATURED_DEMOS.some(f => f.id === id);
   const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
