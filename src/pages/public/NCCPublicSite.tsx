@@ -477,7 +477,7 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
   const reviewCities = ["Roma", "Milano", "Napoli", "Firenze", "Torino"];
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: NCC.bg, color: NCC.white }}>
+    <div className="min-h-screen [overflow-x:clip]" style={{ background: NCC.bg, color: NCC.white }}>
 
       {/* ═══════════ NAVBAR ═══════════ */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${navScrolled ? "py-0" : "py-1"}`} style={{ background: NCC.bg, borderBottom: `1px solid rgba(201,168,76,0.3)` }}>
