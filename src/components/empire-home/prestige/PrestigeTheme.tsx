@@ -23,7 +23,7 @@ export default function PrestigeTheme() {
         --pr-muted-on-dark: 240 22% 84%;
         --pr-muted-on-light: 240 20% 32%;
 
-        background: hsl(var(--pr-emerald-deep));
+        background: transparent;
         color: hsl(var(--pr-text-on-dark));
         font-family: 'Manrope', 'Inter', system-ui, sans-serif;
         font-weight: 400;
@@ -220,6 +220,39 @@ export default function PrestigeTheme() {
         .prestige-fade-up { opacity: 1 !important; transform: none !important; }
         .prestige-cta, .prestige-card { transition: none !important; }
         .prestige-shimmer::after, .prestige-noise { animation: none !important; }
+      }
+
+      /* ── Sfondo cinematico scroll-scrubbed (sotto a TUTTO) ──────── */
+      html:has(.prestige-root), body:has(.prestige-root) {
+        background-color: hsl(240 44% 7%);
+      }
+      .prestige-scrub-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-color: hsl(240 44% 7%);
+        overflow: hidden;
+      }
+      .prestige-scrub-backdrop canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.5;
+        filter: saturate(0.8) contrast(1.06);
+      }
+      .prestige-scrub-veil {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, hsl(240 44% 7% / 0.72) 0%, hsl(240 44% 7% / 0.45) 45%, hsl(240 44% 7% / 0.8) 100%);
+      }
+      .prestige-scrub-vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center, transparent 45%, hsl(240 50% 4% / 0.75) 100%);
       }
 
       /* ── Premium additive layer ─────────────────────────────────── */
@@ -579,7 +612,7 @@ export default function PrestigeTheme() {
       }
 
       /* Keep content above aurora */
-      .prestige-root > *:not(.prestige-aurora):not(.prestige-noise) { position: relative; z-index: 2; }
+      .prestige-root > *:not(.prestige-aurora):not(.prestige-noise):not(.prestige-scrub-backdrop) { position: relative; z-index: 2; }
 
       /* Mobile stability guardrails: no vertically clipped sections, no sticky viewport traps. */
       @media (max-width: 767px) {
