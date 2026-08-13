@@ -102,7 +102,7 @@ export default function PrestigeHeroImmersive() {
         const k = (i + offset) / rows; // 0 = horizon, 1 = vicino
         const y = horizon + Math.pow(k, 2.6) * (h - horizon) * 1.35;
         if (y > h + 4) continue;
-        const a = (1 - k) * 0.16 + 0.02;
+        const a = (1 - k) * 0.3 + 0.04;
         ctx.strokeStyle = `hsla(44, 78%, 62%, ${a.toFixed(3)})`;
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -115,7 +115,7 @@ export default function PrestigeHeroImmersive() {
         const nx = (i / cols - 0.5) * 2;
         const vx = cx + nx * 60;
         const bx = cx + nx * w * 1.9;
-        ctx.strokeStyle = `hsla(258, 74%, 70%, ${(0.055 + Math.abs(nx) * 0.03).toFixed(3)})`;
+        ctx.strokeStyle = `hsla(258, 74%, 70%, ${(0.11 + Math.abs(nx) * 0.05).toFixed(3)})`;
         ctx.beginPath();
         ctx.moveTo(vx, horizon);
         ctx.lineTo(bx, h);
@@ -127,7 +127,7 @@ export default function PrestigeHeroImmersive() {
       for (let i = 0; i < 3; i++) {
         const phase = (t * 0.22 + i / 3) % 1;
         const rad = 60 + phase * (isMobile ? 320 : 560);
-        const a = (1 - phase) * 0.22 * (0.5 + warp);
+        const a = (1 - phase) * 0.34 * (0.6 + warp);
         ctx.strokeStyle = `hsla(44, 84%, 64%, ${a.toFixed(3)})`;
         ctx.lineWidth = 1.4;
         ctx.beginPath();
@@ -150,7 +150,7 @@ export default function PrestigeHeroImmersive() {
         if (x < -40 || x > w + 40 || y < -40 || y > h + 40) continue;
 
         const depth = 1 - p.z / 1900;
-        const alpha = Math.min(0.85, depth * 0.9);
+        const alpha = Math.min(0.95, depth * 1.15);
         const radius = Math.max(0.4, p.r * s * 1.5);
 
         // scia in warp: la particella diventa un tratto luminoso
@@ -199,7 +199,7 @@ export default function PrestigeHeroImmersive() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 45%, transparent 0%, hsl(250 40% 5% / 0.45) 58%, hsl(250 42% 4% / 0.82) 100%)",
+            "radial-gradient(ellipse at 50% 45%, transparent 0%, hsl(250 40% 5% / 0.2) 62%, hsl(250 42% 4% / 0.6) 100%)",
         }}
       />
     </div>
