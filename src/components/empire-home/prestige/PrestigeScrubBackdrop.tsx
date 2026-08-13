@@ -211,6 +211,11 @@ export default function PrestigeScrubBackdrop() {
       rafRef.current = window.requestAnimationFrame(draw);
       window.addEventListener("scroll", onScroll, { passive: true });
       window.addEventListener("pointermove", onPointer, { passive: true });
+      // Fallback touch esplicito (iOS/Android): parallasse + repulsione col dito
+      window.addEventListener("touchstart", onTouch, { passive: true });
+      window.addEventListener("touchmove", onTouch, { passive: true });
+      window.addEventListener("touchend", onTouchEnd, { passive: true });
+      window.addEventListener("touchcancel", onTouchEnd, { passive: true });
     }
     window.addEventListener("resize", resize);
 
@@ -218,6 +223,10 @@ export default function PrestigeScrubBackdrop() {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("touchstart", onTouch);
+      window.removeEventListener("touchmove", onTouch);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
       window.removeEventListener("resize", resize);
     };
   }, [reduced]);
