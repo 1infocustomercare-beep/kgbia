@@ -70,7 +70,6 @@ export default function PrestigeHero() {
   // "sprofonda" mentre la hero esce, sincronizzato col warp tunnel dietro.
   const heroRotateX = useTransform(scrollYProgress, [0, 1], [0, 12]);
   const heroLift = useTransform(scrollYProgress, [0, 1], [0, -70]);
-  const heroBlur = useTransform(scrollYProgress, [0, 0.7, 1], ["blur(0px)", "blur(0px)", "blur(3px)"]);
 
 
   // Responsive phone width + breakpoint
@@ -174,8 +173,7 @@ export default function PrestigeHero() {
           transformStyle: "preserve-3d",
           rotateX: heroRotateX,
           y: heroLift,
-          filter: heroBlur,
-          willChange: "transform, filter",
+          willChange: "transform",
         }}
       >
         {/* ── LEFT — Editorial copy ── */}
