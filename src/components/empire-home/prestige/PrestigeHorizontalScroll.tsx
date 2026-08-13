@@ -106,7 +106,7 @@ export default function PrestigeHorizontalScroll() {
                 {i === PANELS.length - 1 && (
                   <button
                     onClick={() => navigate("/demo")}
-                    className="prestige-cta mt-4 justify-center"
+                    className="prestige-cta mt-4 self-center justify-center"
                   >
                     <span>Apri i siti demo live</span>
                     <ArrowUpRight size={14} />
@@ -161,7 +161,7 @@ const HSCROLL_CSS = `
   }
   .prestige-hscroll-panel {
     flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center;
-    padding: 0 1rem 0.5rem; height: 100%; overflow: hidden;
+    padding: 0 1rem 3rem; height: 100%; overflow: hidden;
   }
   .prestige-hscroll-panel > .prestige-bento { max-height: 100%; overflow: hidden; }
   .prestige-hscroll-media { max-height: 34svh; }
@@ -177,7 +177,7 @@ const HSCROLL_CSS = `
     box-shadow: 0 0 12px hsl(var(--pr-gold) / .6);
   }
   @media (min-width: 1024px) {
-    .prestige-hscroll-panel { padding: 0 6vw 2rem; }
+    .prestige-hscroll-panel { padding: 0 6vw 3.5rem; }
   }
 `;
 
