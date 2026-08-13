@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import PrestigePhone from "./PrestigePhone";
+import PrestigeHeroImmersive from "./PrestigeHeroImmersive";
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
@@ -65,6 +66,10 @@ export default function PrestigeHero() {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.92, 1], [1, 1, 0.92]);
   const heroBorderRadius = useTransform(scrollYProgress, [0, 1], ["0px", "24px"]);
+  // Camera dolly cinematografica: il blocco contenuti si inclina in 3D e
+  // "sprofonda" mentre la hero esce, sincronizzato col warp tunnel dietro.
+  const heroRotateX = useTransform(scrollYProgress, [0, 1], [0, 12]);
+  const heroLift = useTransform(scrollYProgress, [0, 1], [0, -70]);
 
 
   // Responsive phone width + breakpoint
@@ -136,6 +141,9 @@ export default function PrestigeHero() {
       }}
     >
 
+      {/* Warp tunnel 3D interattivo — dietro a tutto, non intercetta eventi */}
+      <PrestigeHeroImmersive />
+
       {/* Cinematic gold beams — parallax by scroll */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
@@ -158,7 +166,16 @@ export default function PrestigeHero() {
         <PrestigeLangToggle />
       </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-12 gap-x-4 gap-y-10 px-4 sm:px-6 lg:gap-x-8 lg:gap-y-6 lg:px-10">
+      <motion.div
+        className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-12 gap-x-4 gap-y-10 px-4 sm:px-6 lg:gap-x-8 lg:gap-y-6 lg:px-10"
+        style={{
+          perspective: 1400,
+          transformStyle: "preserve-3d",
+          rotateX: heroRotateX,
+          y: heroLift,
+          willChange: "transform",
+        }}
+      >
         {/* ── LEFT — Editorial copy ── */}
         <div className="prestige-bento col-span-12 lg:col-span-7 min-w-0 relative text-center lg:text-left p-6 sm:p-9 lg:p-12">
           {/* Eyebrow */}
@@ -341,7 +358,7 @@ export default function PrestigeHero() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Scroll cue */}
       <div
