@@ -48,19 +48,73 @@ export default function PrestigeAgents() {
       />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
-        <div className="max-w-2xl">
-          <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
-            ✦ Gli agenti AI
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-7">
+            <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
+              ✦ Agenti AI, automazioni e gestionali
+            </div>
+            <h2 className="prestige-display mt-4 text-3xl sm:text-5xl lg:text-6xl">
+              Otto agenti.{" "}
+              <span className="prestige-italic prestige-gold-text">Un solo team che non dorme mai.</span>
+            </h2>
+            <p className="mt-5 max-w-2xl text-base sm:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+              Non un chatbot generico: costruiamo agenti addestrati sul tuo settore, le automazioni che
+              eliminano il lavoro manuale, il gestionale che tiene tutto in ordine e le web app che i tuoi
+              clienti usano davvero.
+            </p>
+
+            <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {CAPABILITIES.map((c) => {
+                const Icon = c.icon;
+                return (
+                  <li
+                    key={c.label}
+                    className="flex items-start gap-3 rounded-2xl p-3.5"
+                    style={{
+                      background: "hsl(var(--pr-emerald-mid) / 0.5)",
+                      border: "1px solid hsl(var(--pr-gold) / 0.18)",
+                    }}
+                  >
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+                      style={{
+                        background: "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))",
+                        color: "hsl(var(--pr-emerald-deep))",
+                      }}
+                    >
+                      <Icon size={18} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold text-white">{c.label}</span>
+                      <span className="mt-0.5 block text-xs leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+                        {c.desc}
+                      </span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-          <h2 className="prestige-display mt-4 text-3xl sm:text-5xl lg:text-6xl">
-            Otto agenti.{" "}
-            <span className="prestige-italic prestige-gold-text">Un solo team che non dorme mai.</span>
-          </h2>
-          <p className="mt-5 text-base sm:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
-            Non un chatbot generico: ogni agente è addestrato sul tuo settore, con il tuo tono di voce
-            e i tuoi processi. Attivi solo quelli che ti servono davvero.
-          </p>
+
+          {/* ROBOT AGENTICO INTERATTIVO — segue il puntatore (mouse e touch) */}
+          <div className="lg:col-span-5">
+            <div
+              className="relative overflow-hidden rounded-[28px] p-4 sm:p-6"
+              style={{
+                background: "linear-gradient(160deg, hsl(var(--pr-emerald-mid) / 0.62), hsl(var(--pr-emerald-deep) / 0.85))",
+                border: "1px solid hsl(var(--pr-gold) / 0.25)",
+                boxShadow: "0 30px 80px -40px hsl(var(--pr-gold) / 0.35)",
+              }}
+            >
+              <PrestigeAgentRobot />
+              <div className="mt-2 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.28em]" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                <Sparkles size={12} />
+                Muovi il mouse — l'agente ti segue
+              </div>
+            </div>
+          </div>
         </div>
+
 
         <div className="prestige-agents-marquee mt-12">
           <div className="prestige-agents-track">
