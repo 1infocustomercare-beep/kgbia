@@ -157,7 +157,7 @@ export default function LandingNav() {
           <>
             {/* Scrim: chiude il menu al tap e stacca il pannello dal contenuto */}
             <div
-              className="fixed inset-0 z-[10040] bg-[hsl(240_44%_4%/0.72)] backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-[9990] bg-[hsl(240_44%_4%/0.72)] backdrop-blur-sm md:hidden"
               onClick={() => setMenuOpen(false)}
               aria-hidden="true"
             />
@@ -198,7 +198,8 @@ export default function LandingNav() {
               </button>
               <button
                 onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }}
-                className="landing-button-primary mt-2 min-h-[48px] rounded-full px-6 text-center text-sm font-bold"
+                className="mt-2 min-h-[48px] rounded-full px-6 text-center text-sm font-bold text-white shadow-[0_18px_40px_-18px_rgba(99,102,241,0.8)]"
+                style={{ background: "linear-gradient(135deg,#a78bfa,#6366f1 55%,#4338ca)" }}
               >
                 Inizia Ora
               </button>
