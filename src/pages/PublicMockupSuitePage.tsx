@@ -29,19 +29,18 @@ export default function PublicMockupSuitePage() {
   useEffect(() => {
     if (!slug) return;
     (async () => {
-      const { data } = await supabase
-        .from("seller_mockup_suites")
-        .select("*")
-        .eq("share_slug", slug)
-        .eq("status", "complete")
-        .maybeSingle();
-      setSuite(data);
+      // Lettura tramite funzione dedicata: espone solo i campi necessari alla
+      // preview condivisa, nessun accesso diretto alla tabella.
+      const { data } = await (supabase as any).rpc("get_public_mockup_suite", { p_slug: slug });
+      const row = Array.isArray(data) ? data[0] : data;
+      setSuite(row || null);
       setLoading(false);
-      if (data) {
-        await supabase.from("seller_mockup_suites").update({ view_count: (data.view_count || 0) + 1 }).eq("id", data.id);
+      if (row) {
+        await (supabase as any).rpc("increment_mockup_suite_view", { p_slug: slug });
       }
     })();
   }, [slug]);
+
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;

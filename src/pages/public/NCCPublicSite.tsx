@@ -298,10 +298,13 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
   const { data: reviews = [] } = useQuery({
     queryKey: ["ncc-pub-reviews", companyId],
     queryFn: async () => {
-      const { data } = await supabase.from("ncc_reviews").select("*").eq("company_id", companyId).eq("is_public", true).order("created_at", { ascending: false }).limit(10);
-      return data || [];
+      // Le recensioni pubbliche arrivano da una funzione dedicata che non espone
+      // il nome completo del cliente (solo "Nome C.").
+      const { data } = await (supabase as any).rpc("get_public_ncc_reviews", { p_company_id: companyId, p_limit: 10 });
+      return (data || []).map((r: any) => ({ ...r, customer_name: r.display_name }));
     },
   });
+
 
   const { data: boatPrices = [] } = useQuery({
     queryKey: ["ncc-pub-boat", companyId],

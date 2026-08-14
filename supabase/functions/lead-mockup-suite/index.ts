@@ -757,7 +757,9 @@ Deno.serve(async (req) => {
     }
 
     const creditsSpent = creditCheck?.credits_used ?? 0;
-    const shareSlug = crypto.randomUUID().slice(0, 12);
+    // Slug ad alta entropia (~128 bit): non enumerabile.
+    const shareSlug = `${crypto.randomUUID()}${crypto.randomUUID()}`.replace(/-/g, "").slice(0, 32);
+
 
     // Pre-insert suite con stato generating
     const { data: suite, error: insErr } = await adminClient

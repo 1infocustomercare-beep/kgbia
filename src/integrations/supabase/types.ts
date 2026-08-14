@@ -9235,6 +9235,30 @@ export type Database = {
           preview_html: string
         }[]
       }
+      get_public_mockup_suite: {
+        Args: { p_slug: string }
+        Returns: {
+          business_city: string
+          business_name: string
+          business_sector: string
+          id: string
+          primary_color: string
+          screens: Json
+          template_variant: string
+          view_count: number
+        }[]
+      }
+      get_public_ncc_reviews: {
+        Args: { p_company_id: string; p_limit?: number }
+        Returns: {
+          admin_reply: string
+          comment: string
+          created_at: string
+          display_name: string
+          id: string
+          rating: number
+        }[]
+      }
       get_seller_credit_balance: {
         Args: { p_user_id?: string }
         Returns: number
@@ -9256,6 +9280,10 @@ export type Database = {
         Returns: undefined
       }
       increment_custom_preview_view: {
+        Args: { p_slug: string }
+        Returns: undefined
+      }
+      increment_mockup_suite_view: {
         Args: { p_slug: string }
         Returns: undefined
       }
