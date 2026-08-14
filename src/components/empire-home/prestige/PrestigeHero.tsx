@@ -101,6 +101,13 @@ export default function PrestigeHero() {
     return () => window.clearInterval(id);
   }, []);
 
+  // L'etichetta segue il telefono con il ritardo del crossfade (evita che
+  // testo e mockup mostrino settori diversi a metà transizione).
+  useEffect(() => {
+    const id = window.setTimeout(() => setLabelIdx(active), 380);
+    return () => window.clearTimeout(id);
+  }, [active]);
+
   // Pointer tilt for the stack (desktop only)
   useEffect(() => {
     const el = stageRef.current;
