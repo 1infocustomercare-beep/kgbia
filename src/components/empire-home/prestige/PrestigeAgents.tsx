@@ -27,7 +27,7 @@ export default function PrestigeAgents() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0 opacity-40 sm:opacity-50"
       >
-        <SplineScene scene={SECTOR_SCENES.default} sector="default" glow={false} className="h-full w-full" />
+        <SplineScene sector="default" glow={false} className="h-full w-full" />
       </div>
       <div
         aria-hidden="true"
