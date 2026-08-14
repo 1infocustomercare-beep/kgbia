@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { Menu, X, Grid3x3, Sparkles, LayoutGrid, Tag, Bot, HelpCircle, Mail, MonitorSmartphone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -94,7 +95,7 @@ export default function LandingNav() {
 
 
 
-          <ul className="hidden lg:flex items-center gap-3">
+          <ul className="hidden md:flex items-center gap-3">
             {NAV_LINKS.map((l) => {
               const Icon = l.icon;
               return (
@@ -122,7 +123,7 @@ export default function LandingNav() {
             })}
           </ul>
 
-          <div className="hidden lg:flex gap-3 items-center">
+          <div className="hidden md:flex gap-3 items-center">
             <PrestigeLangToggle />
             <button onClick={() => navigate("/auth")} className="text-[13px] font-medium text-foreground/85 transition-colors hover:text-foreground">Accedi</button>
             <button onClick={() => scrollTo("#contatti")} className="landing-button-primary !text-black px-6 py-2.5 text-sm font-semibold">Inizia Ora</button>
@@ -130,7 +131,7 @@ export default function LandingNav() {
 
 
           {/* Mobile/tablet: CTA compatta + hamburger (44px touch target) */}
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={() => scrollTo("#contatti")}
               className="landing-button-primary !text-black h-10 whitespace-nowrap px-4 text-[12px] font-semibold"
@@ -138,7 +139,7 @@ export default function LandingNav() {
               Inizia ora
             </button>
             <button
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-foreground"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[hsl(43_55%_70%/0.35)] bg-[hsl(240_32%_9%/0.9)] text-[hsl(240_20%_97%)] shadow-[0_10px_30px_-14px_hsl(0_0%_0%/0.9)]"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
               aria-expanded={menuOpen}
@@ -152,18 +153,59 @@ export default function LandingNav() {
           </div>
         </div>
 
-        {menuOpen && (
-          <motion.div id="landing-mobile-menu" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="absolute left-3 right-3 top-full mt-2 flex max-h-[calc(100svh-96px)] flex-col gap-3 overflow-y-auto rounded-[24px] border border-border/80 bg-background/95 px-5 py-5 shadow-[0_30px_90px_-40px_hsl(0_0%_0%_/_0.92)] backdrop-blur-2xl sm:left-5 sm:right-5 lg:hidden">
-            {NAV_LINKS.map((l) => (
-              <button key={l.href} onClick={() => scrollTo(l.href)} className="text-left text-sm font-medium text-foreground/85 transition-colors hover:text-foreground">{l.label}</button>
-            ))}
-            <div className="flex items-center justify-between pt-2 border-t border-border/40">
-              <span className="text-[11px] uppercase tracking-wider text-foreground/75 font-semibold">Lingua</span>
-              <PrestigeLangToggle />
-            </div>
-            <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-left text-sm font-medium text-foreground/85 transition-colors hover:text-foreground">Accedi</button>
-            <button onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }} className="landing-button-primary !text-black mt-1 px-6 py-3 text-center text-sm font-semibold">Inizia Ora</button>
-          </motion.div>
+        {menuOpen && createPortal(
+          <>
+            {/* Scrim: chiude il menu al tap e stacca il pannello dal contenuto */}
+            <div
+              className="fixed inset-0 z-[9990] bg-[hsl(240_44%_4%/0.72)] backdrop-blur-sm md:hidden"
+              onClick={() => setMenuOpen(false)}
+              aria-hidden="true"
+            />
+            <motion.div
+              id="landing-mobile-menu"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="fixed left-3 right-3 top-[76px] z-[10050] flex max-h-[calc(100svh-110px)] flex-col gap-1 overflow-y-auto rounded-[24px] border border-[hsl(43_55%_70%/0.22)] px-4 py-4 shadow-[0_30px_90px_-30px_hsl(0_0%_0%/0.95)] sm:left-5 sm:right-5 md:hidden"
+              style={{ background: "hsl(240 34% 8% / 0.98)", color: "hsl(240 20% 97%)" }}
+            >
+              {NAV_LINKS.map((l) => {
+                const Icon = l.icon;
+                return (
+                  <button
+                    key={l.href}
+                    onClick={() => scrollTo(l.href)}
+                    className="flex min-h-[44px] items-center gap-3 rounded-xl px-3 text-left text-[15px] font-semibold text-[hsl(240_20%_97%)] transition-colors hover:bg-white/10"
+                  >
+                    <span
+                      className="flex h-8 w-8 items-center justify-center rounded-lg"
+                      style={{ background: `linear-gradient(45deg, ${l.from}, ${l.to})` }}
+                    >
+                      <Icon aria-hidden="true" className="h-4 w-4 text-white" />
+                    </span>
+                    {l.label}
+                  </button>
+                );
+              })}
+              <div className="mt-2 flex items-center justify-between border-t border-white/12 pt-3">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[hsl(240_20%_88%)]">Lingua</span>
+                <PrestigeLangToggle />
+              </div>
+              <button
+                onClick={() => { setMenuOpen(false); navigate("/auth"); }}
+                className="mt-1 min-h-[44px] rounded-xl border border-white/15 px-3 text-left text-[15px] font-semibold text-[hsl(240_20%_97%)] transition-colors hover:bg-white/10"
+              >
+                Accedi
+              </button>
+              <button
+                onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }}
+                className="mt-2 min-h-[48px] rounded-full px-6 text-center text-sm font-bold text-white shadow-[0_18px_40px_-18px_rgba(99,102,241,0.8)]"
+                style={{ background: "linear-gradient(135deg,#a78bfa,#6366f1 55%,#4338ca)" }}
+              >
+                Inizia Ora
+              </button>
+            </motion.div>
+          </>,
+          document.body
         )}
 
       </nav>
