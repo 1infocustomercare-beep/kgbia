@@ -108,8 +108,8 @@ export default function PrestigeFooter() {
         <div className="mt-12 space-y-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-[11px] leading-relaxed text-white/55">
           <p>
             <span className="font-semibold text-white/75">{LEGAL.legalName ?? LEGAL.brandName}</span>
-            {legalIdentityLines().length > 1 && (
-              <span> · {legalIdentityLines().slice(1).join(" · ")}</span>
+            {legalIdentityLines().filter((r) => r !== LEGAL.legalName).length > 0 && (
+              <span> · {legalIdentityLines().filter((r) => r !== LEGAL.legalName).join(" · ")}</span>
             )}
           </p>
           <p>{AI_DISCLAIMER_IT}</p>
