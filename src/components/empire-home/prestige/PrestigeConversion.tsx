@@ -8,6 +8,8 @@ import {
 import { useT } from "./PrestigeLang";
 import { z } from "zod";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { LEGAL, PRICING_LEGAL_NOTE_IT, PRICING_LEGAL_NOTE_EN } from "@/config/legal";
 
 /* ============================================================
  *  Prestige Conversion Suite — ADDITIVE
@@ -458,7 +460,12 @@ export function PrestigePricing() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
+        {/* Nota legale obbligatoria su IVA, fatturazione e recesso */}
+        <p className="mx-auto mt-8 max-w-3xl text-center text-[11px] leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
+          {t({ it: PRICING_LEGAL_NOTE_IT, en: PRICING_LEGAL_NOTE_EN })}
+        </p>
+
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
           <span className="inline-flex items-center gap-1.5"><ShieldCheck size={14} /> {t({ it: "GDPR compliant", en: "GDPR compliant" })}</span>
           <span>·</span>
           <span className="inline-flex items-center gap-1.5"><Lock size={14} /> {t({ it: "Dati in EU", en: "Data hosted in EU" })}</span>
@@ -562,8 +569,9 @@ const leadSchema = z.object({
 
 export function PrestigeLeadForm() {
   const t = useT();
-  const WA = "393000000000";
+  const WA = LEGAL.whatsapp;
   const [form, setForm] = useState({ name: "", business: "", contact: "", sector: "", projectType: "" });
+  const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -573,17 +581,40 @@ export function PrestigeLeadForm() {
       toast.error(parsed.error.issues[0]?.message ?? "Dati non validi");
       return;
     }
+    if (!consent) {
+      toast.error(t({ it: "Devi accettare l'informativa privacy per inviare la richiesta.", en: "You must accept the privacy notice to submit." }));
+      return;
+    }
     setBusy(true);
     try {
-      const msg =
-        `🟢 ${t({ it: "Nuova richiesta demo Empire", en: "New Empire demo request" })}\n\n` +
-        `👤 ${parsed.data.name}\n🏢 ${parsed.data.business}\n📞 ${parsed.data.contact}` +
-        (parsed.data.sector ? `\n🏷️ ${parsed.data.sector}` : "") +
-        (form.projectType ? `\n🎯 ${form.projectType}` : "");
-      const url = `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
-      window.open(url, "_blank", "noopener,noreferrer");
-      toast.success(t({ it: "Richiesta inviata. Ti contattiamo a breve.", en: "Request sent. We'll be in touch shortly." }));
+      // Il lead viene SEMPRE persistito: nessuna richiesta si perde più anche
+      // se il canale WhatsApp non è configurato.
+      const { error } = await supabase.from("website_inquiries").insert({
+        name: parsed.data.name,
+        business: parsed.data.business,
+        contact: parsed.data.contact,
+        sector: parsed.data.sector || null,
+        project_type: form.projectType || null,
+        source: "homepage",
+        privacy_consent: true,
+        consent_at: new Date().toISOString(),
+      });
+      if (error) throw error;
+
+      if (WA) {
+        const msg =
+          `🟢 ${t({ it: "Nuova richiesta demo Empire", en: "New Empire demo request" })}\n\n` +
+          `👤 ${parsed.data.name}\n🏢 ${parsed.data.business}\n📞 ${parsed.data.contact}` +
+          (parsed.data.sector ? `\n🏷️ ${parsed.data.sector}` : "") +
+          (form.projectType ? `\n🎯 ${form.projectType}` : "");
+        window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+      }
+      toast.success(t({ it: "Richiesta inviata. Ti contattiamo entro 2–4 ore lavorative.", en: "Request sent. We'll reply within 2–4 business hours." }));
       setForm({ name: "", business: "", contact: "", sector: "", projectType: "" });
+      setConsent(false);
+    } catch (err) {
+      console.error("[PrestigeLeadForm] submit failed", err);
+      toast.error(t({ it: "Invio non riuscito. Riprova o scrivici via email.", en: "Submission failed. Please retry or email us." }));
     } finally {
       setBusy(false);
     }
@@ -633,13 +664,44 @@ export function PrestigeLeadForm() {
               </select>
             </label>
 
+            {/* Consenso privacy esplicito (art. 6 e 13 GDPR) */}
+            <label className="sm:col-span-2 mt-2 flex items-start gap-3 text-left text-[12px] leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                required
+                className="mt-0.5 h-4 w-4 shrink-0 accent-amber-400"
+                aria-describedby="prestige-consent-note"
+              />
+              <span id="prestige-consent-note">
+                {t({
+                  it: "Ho letto l'",
+                  en: "I have read the ",
+                })}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "hsl(var(--pr-gold-light))" }}>
+                  {t({ it: "informativa privacy", en: "privacy notice" })}
+                </a>
+                {t({
+                  it: " e acconsento al trattamento dei miei dati per essere ricontattato in merito a questa richiesta. Nessun uso marketing senza un ulteriore consenso.",
+                  en: " and consent to the processing of my data to be contacted about this request. No marketing use without further consent.",
+                })}
+              </span>
+            </label>
+
             <div className="sm:col-span-2 mt-2 flex flex-col sm:flex-row gap-3">
-              <button type="submit" disabled={busy} className="prestige-cta justify-center w-full sm:flex-1">
+              <button type="submit" disabled={busy || !consent} className="prestige-cta justify-center w-full sm:flex-1 disabled:cursor-not-allowed disabled:opacity-60">
                 <Send size={16} /> <span>{busy ? "…" : t({ it: "Prenota la demo", en: "Book the demo" })}</span>
               </button>
-              <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener noreferrer" className="prestige-cta-ghost justify-center w-full sm:w-auto">
-                <MessageSquare size={14} /> <span>WhatsApp</span>
-              </a>
+              {WA ? (
+                <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener noreferrer" className="prestige-cta-ghost justify-center w-full sm:w-auto">
+                  <MessageSquare size={14} /> <span>WhatsApp</span>
+                </a>
+              ) : (
+                <a href={`mailto:${LEGAL.email}`} className="prestige-cta-ghost justify-center w-full sm:w-auto">
+                  <MessageSquare size={14} /> <span>{t({ it: "Scrivici via email", en: "Email us" })}</span>
+                </a>
+              )}
             </div>
             <div
               className="sm:col-span-2 mt-1 flex items-center justify-center gap-2 rounded-full px-3 py-2 text-[11px] font-semibold"
