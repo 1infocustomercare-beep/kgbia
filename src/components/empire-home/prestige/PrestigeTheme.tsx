@@ -242,11 +242,53 @@ export default function PrestigeTheme() {
         height: 100%;
         display: block;
       }
+      .prestige-scrub-aura {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(10px);
+      }
+      .prestige-scrub-aura--violet {
+        top: -25%; left: 50%;
+        width: 110vw; height: 90vh;
+        transform: translateX(-50%);
+        background: radial-gradient(ellipse 46% 42% at 50% 45%, hsl(258 70% 56% / 0.20), transparent 72%);
+        animation: prestige-breathe 20s ease-in-out infinite;
+      }
+      .prestige-scrub-aura--gold {
+        bottom: -30%; left: -15%;
+        width: 80vw; height: 80vh;
+        background: radial-gradient(ellipse 50% 50% at 45% 55%, hsl(44 80% 56% / 0.12), transparent 74%);
+        animation: prestige-breathe 28s ease-in-out infinite reverse;
+      }
+      .prestige-scrub-grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.14;
+        background-image:
+          linear-gradient(to right, hsl(0 0% 100% / 0.12) 1px, transparent 1px),
+          linear-gradient(to bottom, hsl(0 0% 100% / 0.12) 1px, transparent 1px);
+        background-size: 80px 80px;
+        -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 38%, black 15%, transparent 82%);
+        mask-image: radial-gradient(ellipse 72% 62% at 50% 38%, black 15%, transparent 82%);
+      }
       .prestige-scrub-vignette {
         position: absolute;
         inset: 0;
         background: radial-gradient(ellipse at center, transparent 42%, hsl(240 55% 4% / 0.72) 100%);
       }
+      @keyframes prestige-breathe {
+        0%, 100% { opacity: 0.75; transform: translateX(var(--pb-tx, 0)) scale(1); }
+        50% { opacity: 1; transform: translateX(var(--pb-tx, 0)) scale(1.06); }
+      }
+      .prestige-scrub-aura--violet { --pb-tx: -50%; }
+      @keyframes prestige-sweep {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(300%); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .prestige-scrub-aura { animation: none !important; }
+      }
+
 
       /* ── Premium additive layer ─────────────────────────────────── */
 
