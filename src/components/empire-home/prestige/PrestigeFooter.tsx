@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
+import { LEGAL, AI_DISCLAIMER_IT, legalIdentityLines } from "@/config/legal";
 
 /**
  * PrestigeFooter — footer pulito e statico per la home Empire.
@@ -101,6 +102,27 @@ export default function PrestigeFooter() {
               <li><span className="text-white/40">Dati in EU · GDPR</span></li>
             </ul>
           </div>
+        </div>
+
+        {/* Identità del titolare + trasparenza AI (D.lgs. 70/2003 · AI Act art. 50) */}
+        <div className="mt-12 space-y-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-[11px] leading-relaxed text-white/55">
+          <p>
+            <span className="font-semibold text-white/75">{LEGAL.legalName ?? LEGAL.brandName}</span>
+            {legalIdentityLines().filter((r) => r !== LEGAL.legalName).length > 0 && (
+              <span> · {legalIdentityLines().filter((r) => r !== LEGAL.legalName).join(" · ")}</span>
+            )}
+          </p>
+          <p>{AI_DISCLAIMER_IT}</p>
+          <p>
+            Titolare del trattamento dei dati:{" "}
+            <span className="text-white/70">{LEGAL.legalName ?? LEGAL.brandName}</span> · Dati ospitati
+            nell'Unione Europea · Diritti degli interessati (artt. 15–22 GDPR) esercitabili scrivendo a{" "}
+            <a className="underline hover:text-white" href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>.
+          </p>
+          <p>
+            Prezzi indicati IVA 22% esclusa. Le stime di risultato mostrate nel sito sono indicative e non
+            costituiscono garanzia di rendimento.
+          </p>
         </div>
 
         {/* Bottom bar */}

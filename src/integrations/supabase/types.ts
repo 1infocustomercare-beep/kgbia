@@ -8758,6 +8758,51 @@ export type Database = {
           },
         ]
       }
+      website_inquiries: {
+        Row: {
+          business: string
+          consent_at: string | null
+          contact: string
+          created_at: string
+          id: string
+          message: string | null
+          name: string
+          privacy_consent: boolean
+          project_type: string | null
+          sector: string | null
+          source: string
+          status: string
+        }
+        Insert: {
+          business: string
+          consent_at?: string | null
+          contact: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          name: string
+          privacy_consent?: boolean
+          project_type?: string | null
+          sector?: string | null
+          source?: string
+          status?: string
+        }
+        Update: {
+          business?: string
+          consent_at?: string | null
+          contact?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          name?: string
+          privacy_consent?: boolean
+          project_type?: string | null
+          sector?: string | null
+          source?: string
+          status?: string
+        }
+        Relationships: []
+      }
       whatsapp_config: {
         Row: {
           access_token: string | null

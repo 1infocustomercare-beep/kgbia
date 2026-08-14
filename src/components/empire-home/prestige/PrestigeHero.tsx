@@ -51,6 +51,7 @@ export default function PrestigeHero() {
   const navigate = useNavigate();
   const { ref, progress } = useEmpireScrollDirector<HTMLDivElement>("prestige-hero", { steps: 4 });
   const [active, setActive] = useState(0);
+  const [labelIdx, setLabelIdx] = useState(0);
   const [mounted, setMounted] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -100,6 +101,13 @@ export default function PrestigeHero() {
     }, ROTATE_MS);
     return () => window.clearInterval(id);
   }, []);
+
+  // L'etichetta segue il telefono con il ritardo del crossfade (evita che
+  // testo e mockup mostrino settori diversi a metà transizione).
+  useEffect(() => {
+    const id = window.setTimeout(() => setLabelIdx(active), 380);
+    return () => window.clearTimeout(id);
+  }, [active]);
 
   // Pointer tilt for the stack (desktop only)
   useEffect(() => {
@@ -307,7 +315,7 @@ export default function PrestigeHero() {
                     }
                   }}
                   aria-label={`Mostra mockup ${i + 1}: ${HERO_LABELS[i]}`}
-                  className="absolute inset-0 flex items-center justify-center transition-all duration-[1000ms] ease-[cubic-bezier(.22,1,.36,1)] focus:outline-none"
+                  className="absolute inset-0 flex items-center justify-center transition-all duration-[700ms] ease-[cubic-bezier(.22,1,.36,1)] focus:outline-none"
                   style={{
                     opacity: isActive ? 1 : isRight || isLeft ? 0.3 : 0,
                     transform: stackTransform,
@@ -333,12 +341,17 @@ export default function PrestigeHero() {
 
 
 
-          {/* Etichetta mockup attivo + dot indicators */}
+          {/* Etichetta mockup attivo + dot indicators.
+              L'etichetta cambia in ritardo rispetto allo scatto di stato così
+              non descrive mai il telefono sbagliato durante il crossfade. */}
           <div
-            className="mt-6 text-center text-[10px] font-semibold uppercase tracking-[0.26em]"
+            className="mt-6 min-h-[1.2em] text-center text-[10px] font-semibold uppercase tracking-[0.26em]"
             style={{ color: "hsl(var(--pr-gold-light))" }}
+            aria-live="polite"
           >
-            {HERO_LABELS[active]}
+            <span key={labelIdx} className="prestige-hero-label inline-block">
+              {HERO_LABELS[labelIdx]}
+            </span>
           </div>
           <div className="mt-3 flex justify-center gap-2" role="tablist" aria-label="Cambia mockup">
             {HERO_SCREENS.map((_, i) => (
@@ -402,6 +415,13 @@ export default function PrestigeHero() {
         .prestige-hero-root.is-mounted .prestige-hero-stagger--5 { transition-delay: 620ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--6 { transition-delay: 760ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--stage { transition-delay: 260ms; }
+
+        /* ── Etichetta mockup: fade-in sincronizzato col crossfade ──── */
+        .prestige-hero-label { animation: prestige-hero-label-in 420ms ease-out both; }
+        @keyframes prestige-hero-label-in {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
 
         /* ── Float idle dello stage telefoni (solo desktop/tablet) ──── */
         .prestige-hero-float { transform: translateZ(0); }
