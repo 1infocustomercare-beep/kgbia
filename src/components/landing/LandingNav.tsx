@@ -203,7 +203,8 @@ export default function LandingNav() {
                 Inizia Ora
               </button>
             </motion.div>
-          </>
+          </>,
+          document.body
         )}
 
       </nav>
