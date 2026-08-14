@@ -25,31 +25,49 @@ if (root) {
   createRoot(root).render(<App />);
 }
 
-// Universal cleanup: any service worker still registered on this origin can
-// serve a cached (old) Empire homepage after a refresh. Unregister every SW
-// and drop app-shell caches on ALL hosts (dev, preview, iframe, production),
-// then reload once so the fresh build takes over.
-if (typeof window !== "undefined" && "serviceWorker" in navigator) {
-  const RELOAD_FLAG = "empire_sw_purged_v1";
-  navigator.serviceWorker
-    .getRegistrations()
-    .then(async (regs) => {
-      if (!regs.length) return;
-      await Promise.allSettled(regs.map((r) => r.unregister()));
+// Universal cleanup (v2): any service worker or Cache Storage entry left on
+// this origin can still serve an OLD Empire homepage after a refresh.
+// This pass unregisters every SW and deletes EVERY cache on the origin, on all
+// hosts (dev, preview, iframe, production), then reloads once per browser
+// (localStorage flag) so the fresh build definitively takes over.
+if (typeof window !== "undefined") {
+  const PURGE_FLAG = "empire_cache_purge_v2";
+  const alreadyPurged = (() => {
+    try {
+      return localStorage.getItem(PURGE_FLAG) === "1";
+    } catch {
+      return false;
+    }
+  })();
+
+  (async () => {
+    let foundStale = false;
+    try {
+      if ("serviceWorker" in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        if (regs.length) {
+          foundStale = true;
+          await Promise.allSettled(regs.map((r) => r.unregister()));
+        }
+      }
       if ("caches" in window) {
         const names = await caches.keys();
-        await Promise.allSettled(
-          names
-            .filter((n) => /precache|runtime|workbox|pages|static|media|fonts/i.test(n))
-            .map((n) => caches.delete(n)),
-        );
+        if (names.length) {
+          foundStale = true;
+          await Promise.allSettled(names.map((n) => caches.delete(n)));
+        }
       }
-      if (!sessionStorage.getItem(RELOAD_FLAG)) {
-        sessionStorage.setItem(RELOAD_FLAG, "1");
-        window.location.reload();
-      }
-    })
-    .catch(() => undefined);
+    } catch {
+      // ignore
+    }
+
+    if (!alreadyPurged) {
+      try {
+        localStorage.setItem(PURGE_FLAG, "1");
+      } catch {}
+      if (foundStale) window.location.reload();
+    }
+  })();
 }
 
 // Kill-switch: force registration of /sw.js on production so returning
