@@ -750,7 +750,7 @@ function Field({ label, value, onChange, placeholder }: { label: string; value: 
 export function PrestigeStickyCTA() {
   const t = useT();
   const [show, setShow] = useState(false);
-  const WA = "393000000000";
+  const WA = LEGAL.whatsapp;
 
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > window.innerHeight * 0.8);
@@ -769,9 +769,15 @@ export function PrestigeStickyCTA() {
         <a href="#prestige-lead" className="prestige-cta flex-1 justify-center" style={{ padding: "0.7rem 1rem", fontSize: 13 }}>
           <Calendar size={14} /> <span>{t({ it: "Prenota demo", en: "Book demo" })}</span>
         </a>
-        <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center rounded-full px-4" style={{ background: "hsl(142 70% 45%)", color: "white" }} aria-label="WhatsApp">
-          <MessageSquare size={18} />
-        </a>
+        {WA ? (
+          <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center rounded-full px-4" style={{ background: "hsl(142 70% 45%)", color: "white" }} aria-label="WhatsApp">
+            <MessageSquare size={18} />
+          </a>
+        ) : (
+          <a href={`mailto:${LEGAL.email}`} className="flex items-center justify-center rounded-full px-4" style={{ background: "hsl(var(--pr-gold))", color: "hsl(var(--pr-emerald-deep))" }} aria-label={t({ it: "Scrivici via email", en: "Email us" })}>
+            <MessageSquare size={18} />
+          </a>
+        )}
       </div>
     </div>
   );
