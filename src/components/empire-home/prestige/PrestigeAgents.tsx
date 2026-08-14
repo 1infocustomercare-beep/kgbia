@@ -1,6 +1,7 @@
 import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart, Workflow, Globe, Database, Sparkles } from "lucide-react";
 import { SplineScene } from "@/components/ui/spline-scene";
 import PrestigeAgentRobot from "./PrestigeAgentRobot";
+import PrestigeAgentScene from "./PrestigeAgentScene";
 
 const CAPABILITIES = [
   { icon: Bot, label: "Agenti AI su misura", desc: "Voce, chat, WhatsApp: addestrati sul tuo business." },
