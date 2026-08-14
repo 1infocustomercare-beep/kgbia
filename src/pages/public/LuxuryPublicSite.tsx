@@ -232,11 +232,13 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
   const { data: reviews = [] } = useQuery({
     queryKey: ["luxury-reviews", companyId],
     queryFn: async () => {
-      const { data } = await supabase.from("ncc_reviews").select("*").eq("company_id", companyId!).eq("is_public", true).order("created_at", { ascending: false }).limit(6);
-      return data || [];
+      // Solo dati non identificativi: la funzione restituisce "Nome C.".
+      const { data } = await (supabase as any).rpc("get_public_ncc_reviews", { p_company_id: companyId, p_limit: 6 });
+      return (data || []).map((r: any) => ({ ...r, customer_name: r.display_name }));
     },
     enabled: !!companyId,
   });
+
 
   const { data: faqs = [] } = useQuery({
     queryKey: ["luxury-faq", companyId],
