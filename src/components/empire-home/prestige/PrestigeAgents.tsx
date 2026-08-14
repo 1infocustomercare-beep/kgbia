@@ -1,4 +1,5 @@
 import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart } from "lucide-react";
+import { SplineScene } from "@/components/ui/spline-scene";
 
 const AGENTS = [
   { icon: Bot, name: "Sales AI", desc: "Qualifica lead, risponde ai preventivi e chiude la trattativa in chat." },
