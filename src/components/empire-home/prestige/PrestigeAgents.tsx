@@ -1,5 +1,14 @@
-import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart } from "lucide-react";
+import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart, Workflow, Globe, Database, Sparkles } from "lucide-react";
 import { SplineScene } from "@/components/ui/spline-scene";
+import PrestigeAgentRobot from "./PrestigeAgentRobot";
+
+const CAPABILITIES = [
+  { icon: Bot, label: "Agenti AI su misura", desc: "Voce, chat, WhatsApp: addestrati sul tuo business." },
+  { icon: Workflow, label: "Automazioni", desc: "Follow-up, reminder, preventivi e recensioni in automatico." },
+  { icon: Database, label: "Gestionali", desc: "Ordini, agenda, clienti e magazzino in un'unica dashboard." },
+  { icon: Globe, label: "Siti e web app", desc: "Sito, mini-app clienti e pagamenti integrati." },
+];
+
 
 const AGENTS = [
   { icon: Bot, name: "Sales AI", desc: "Qualifica lead, risponde ai preventivi e chiude la trattativa in chat." },
