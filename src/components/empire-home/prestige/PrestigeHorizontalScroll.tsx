@@ -164,7 +164,7 @@ export default function PrestigeHorizontalScroll() {
         style={{ height: `${PANELS.length * 100}svh` }}
       >
         <div className="prestige-hscroll-viewport">
-          <Header sticky progress={smooth} />
+          <Header sticky />
 
           <motion.div
             className="prestige-hscroll-row"
@@ -197,13 +197,7 @@ export default function PrestigeHorizontalScroll() {
   );
 }
 
-function Header({
-  sticky = false,
-  progress,
-}: {
-  sticky?: boolean;
-  progress?: ReturnType<typeof useSpring>;
-}) {
+function Header({ sticky = false }: { sticky?: boolean }) {
   return (
     <div className={`mx-auto w-full max-w-6xl shrink-0 px-4 sm:px-6 ${sticky ? "pb-2 pt-16 sm:pt-20" : "pt-16"}`}>
       <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
@@ -215,19 +209,11 @@ function Header({
       <p className="mt-2 max-w-xl text-sm sm:text-base" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
         Un processo chiuso, con tempi e deliverable dichiarati: sai cosa ricevi in ogni fase.
       </p>
-      {sticky && progress && (
+      {sticky && (
         <div className="prestige-hscroll-steps" aria-hidden>
-          {PANELS.map((p, i) => {
-            const active = useTransform(progress, (v) => {
-              const idx = Math.round(v * (PANELS.length - 1));
-              return idx >= i ? 1 : 0.28;
-            });
-            return (
-              <motion.span key={p.n} style={{ opacity: active }}>
-                {p.n}
-              </motion.span>
-            );
-          })}
+          {PANELS.map((p) => (
+            <span key={p.n}>{p.n}</span>
+          ))}
         </div>
       )}
     </div>
