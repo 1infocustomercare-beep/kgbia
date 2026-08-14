@@ -1,6 +1,7 @@
 import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart, Workflow, Globe, Database, Sparkles } from "lucide-react";
 import { SplineScene } from "@/components/ui/spline-scene";
 import PrestigeAgentRobot from "./PrestigeAgentRobot";
+import PrestigeAgentScene from "./PrestigeAgentScene";
 
 const CAPABILITIES = [
   { icon: Bot, label: "Agenti AI su misura", desc: "Voce, chat, WhatsApp: addestrati sul tuo business." },
@@ -96,22 +97,9 @@ export default function PrestigeAgents() {
             </ul>
           </div>
 
-          {/* ROBOT AGENTICO INTERATTIVO — segue il puntatore (mouse e touch) */}
+          {/* ROBOT AGENTICO 3D INTERATTIVO (Spline) in livrea Empire */}
           <div className="lg:col-span-5">
-            <div
-              className="relative overflow-hidden rounded-[28px] p-4 sm:p-6"
-              style={{
-                background: "linear-gradient(160deg, hsl(var(--pr-emerald-mid) / 0.62), hsl(var(--pr-emerald-deep) / 0.85))",
-                border: "1px solid hsl(var(--pr-gold) / 0.25)",
-                boxShadow: "0 30px 80px -40px hsl(var(--pr-gold) / 0.35)",
-              }}
-            >
-              <PrestigeAgentRobot />
-              <div className="mt-2 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.28em]" style={{ color: "hsl(var(--pr-gold-light))" }}>
-                <Sparkles size={12} />
-                Muovi il mouse — l'agente ti segue
-              </div>
-            </div>
+            <PrestigeAgentScene />
           </div>
         </div>
 
