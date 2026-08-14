@@ -51,6 +51,7 @@ export default function PrestigeHero() {
   const navigate = useNavigate();
   const { ref, progress } = useEmpireScrollDirector<HTMLDivElement>("prestige-hero", { steps: 4 });
   const [active, setActive] = useState(0);
+  const [labelIdx, setLabelIdx] = useState(0);
   const [mounted, setMounted] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
