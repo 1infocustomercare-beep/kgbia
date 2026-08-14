@@ -1,4 +1,5 @@
 import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart } from "lucide-react";
+import { SplineScene } from "@/components/ui/spline-scene";
 
 const AGENTS = [
   { icon: Bot, name: "Sales AI", desc: "Qualifica lead, risponde ai preventivi e chiude la trattativa in chat." },
@@ -19,9 +20,25 @@ export default function PrestigeAgents() {
     <section
       id="agents"
       data-section="prestige-agents"
-      className="prestige-section prestige-dark py-20 sm:py-28"
+      className="prestige-section prestige-dark relative py-20 sm:py-28"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
+      {/* Spline 3D — sfondo immersivo dietro la sezione agenti */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 opacity-40 sm:opacity-50"
+      >
+        <SplineScene sector="ai" glow={false} className="h-full w-full" />
+      </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background:
+            "linear-gradient(180deg, hsl(var(--pr-emerald-deep)) 0%, transparent 35%, transparent 65%, hsl(var(--pr-emerald-deep)) 100%)",
+        }}
+      />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
         <div className="max-w-2xl">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Gli agenti AI
