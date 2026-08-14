@@ -94,7 +94,7 @@ export default function LandingNav() {
 
 
 
-          <ul className="hidden lg:flex items-center gap-3">
+          <ul className="hidden md:flex items-center gap-3">
             {NAV_LINKS.map((l) => {
               const Icon = l.icon;
               return (
@@ -122,7 +122,7 @@ export default function LandingNav() {
             })}
           </ul>
 
-          <div className="hidden lg:flex gap-3 items-center">
+          <div className="hidden md:flex gap-3 items-center">
             <PrestigeLangToggle />
             <button onClick={() => navigate("/auth")} className="text-[13px] font-medium text-foreground/85 transition-colors hover:text-foreground">Accedi</button>
             <button onClick={() => scrollTo("#contatti")} className="landing-button-primary !text-black px-6 py-2.5 text-sm font-semibold">Inizia Ora</button>
@@ -130,7 +130,7 @@ export default function LandingNav() {
 
 
           {/* Mobile/tablet: CTA compatta + hamburger (44px touch target) */}
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={() => scrollTo("#contatti")}
               className="landing-button-primary !text-black h-10 whitespace-nowrap px-4 text-[12px] font-semibold"
@@ -156,7 +156,7 @@ export default function LandingNav() {
           <>
             {/* Scrim: chiude il menu al tap e stacca il pannello dal contenuto */}
             <div
-              className="fixed inset-0 z-[10040] bg-[hsl(240_44%_4%/0.72)] backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-[10040] bg-[hsl(240_44%_4%/0.72)] backdrop-blur-sm md:hidden"
               onClick={() => setMenuOpen(false)}
               aria-hidden="true"
             />
@@ -164,7 +164,7 @@ export default function LandingNav() {
               id="landing-mobile-menu"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="fixed left-3 right-3 top-[76px] z-[10050] flex max-h-[calc(100svh-110px)] flex-col gap-1 overflow-y-auto rounded-[24px] border border-[hsl(43_55%_70%/0.22)] px-4 py-4 shadow-[0_30px_90px_-30px_hsl(0_0%_0%/0.95)] sm:left-5 sm:right-5 lg:hidden"
+              className="fixed left-3 right-3 top-[76px] z-[10050] flex max-h-[calc(100svh-110px)] flex-col gap-1 overflow-y-auto rounded-[24px] border border-[hsl(43_55%_70%/0.22)] px-4 py-4 shadow-[0_30px_90px_-30px_hsl(0_0%_0%/0.95)] sm:left-5 sm:right-5 md:hidden"
               style={{ background: "hsl(240 34% 8% / 0.98)", color: "hsl(240 20% 97%)" }}
             >
               {NAV_LINKS.map((l) => {
