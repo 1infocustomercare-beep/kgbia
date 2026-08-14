@@ -152,7 +152,7 @@ export default function LandingNav() {
           </div>
         </div>
 
-        {menuOpen && (
+        {menuOpen && createPortal(
           <>
             {/* Scrim: chiude il menu al tap e stacca il pannello dal contenuto */}
             <div
