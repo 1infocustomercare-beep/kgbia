@@ -315,7 +315,7 @@ export default function PrestigeHero() {
                     }
                   }}
                   aria-label={`Mostra mockup ${i + 1}: ${HERO_LABELS[i]}`}
-                  className="absolute inset-0 flex items-center justify-center transition-all duration-[1000ms] ease-[cubic-bezier(.22,1,.36,1)] focus:outline-none"
+                  className="absolute inset-0 flex items-center justify-center transition-all duration-[700ms] ease-[cubic-bezier(.22,1,.36,1)] focus:outline-none"
                   style={{
                     opacity: isActive ? 1 : isRight || isLeft ? 0.3 : 0,
                     transform: stackTransform,
@@ -415,6 +415,13 @@ export default function PrestigeHero() {
         .prestige-hero-root.is-mounted .prestige-hero-stagger--5 { transition-delay: 620ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--6 { transition-delay: 760ms; }
         .prestige-hero-root.is-mounted .prestige-hero-stagger--stage { transition-delay: 260ms; }
+
+        /* ── Etichetta mockup: fade-in sincronizzato col crossfade ──── */
+        .prestige-hero-label { animation: prestige-hero-label-in 420ms ease-out both; }
+        @keyframes prestige-hero-label-in {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
 
         /* ── Float idle dello stage telefoni (solo desktop/tablet) ──── */
         .prestige-hero-float { transform: translateZ(0); }
