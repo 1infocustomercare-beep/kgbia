@@ -78,8 +78,9 @@ export default function AIMarketplacePage() {
   const { data: configs = [] } = useQuery({
     queryKey: ["ai-agent-configs-marketplace"],
     queryFn: async () => {
-      const { data } = await supabase.from("ai_agent_configs").select("*");
-      return data || [];
+      // Safe projection: internal limits/budget/prompt overrides are not exposed here.
+      const { data } = await supabase.rpc("get_public_ai_agent_configs" as any);
+      return (data as any[]) || [];
     },
   });
 
@@ -87,7 +88,7 @@ export default function AIMarketplacePage() {
     mutationFn: async ({ agentId, enabled }: { agentId: string; enabled: boolean }) => {
       const existing = configs.find((c: any) => c.agent_name === agentId);
       if (existing) {
-        await supabase.from("ai_agent_configs").update({ is_enabled: enabled }).eq("id", existing.id);
+        await supabase.from("ai_agent_configs").update({ is_enabled: enabled }).eq("agent_name", agentId);
       } else {
         await supabase.from("ai_agent_configs").insert({ agent_name: agentId, is_enabled: enabled });
       }
