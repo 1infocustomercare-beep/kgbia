@@ -5,24 +5,9 @@
 // pick it up on their next SW update check, then it clears the old app
 // caches, reloads open tabs onto the fresh build, and unregisters itself.
 //
-// Cache Storage is origin-scoped, so we ONLY delete caches this SW created
-// (Workbox precache/runtime buckets scoped to this registration). Other
-// origin caches (Firebase Messaging, OneSignal, etc.) are left alone.
-
-function isWorkboxCacheForThisRegistration(name) {
-  const hasWorkboxBucket = /(^|-)precache-v\d+-|(^|-)runtime-|(^|-)googleAnalytics-/.test(name);
-  return hasWorkboxBucket && name.endsWith(self.registration.scope);
-}
-
-// Also nuke the named runtime caches the previous vite.config used, since
-// they were created by our own old SW and are safe to remove regardless of
-// suffix matching.
-const LEGACY_APP_CACHE_NAMES = new Set([
-  "pages-runtime",
-  "static-runtime",
-  "media-runtime",
-  "fonts-runtime",
-]);
+// This app no longer uses Cache Storage. Delete every origin-scoped bucket:
+// legacy builds used several changing Workbox prefixes, so filtering by a
+// partial name could leave an old index.html/app shell alive.
 
 self.addEventListener("install", () => self.skipWaiting());
 
@@ -31,13 +16,12 @@ self.addEventListener("activate", (event) =>
     (async () => {
       try {
         const cacheNames = await caches.keys();
-        const toDelete = cacheNames.filter(
-          (name) => isWorkboxCacheForThisRegistration(name) || LEGACY_APP_CACHE_NAMES.has(name),
-        );
-        await Promise.allSettled(toDelete.map((name) => caches.delete(name)));
+        await Promise.allSettled(cacheNames.map((name) => caches.delete(name)));
         await self.clients.claim();
-        const windowClients = await self.clients.matchAll({ type: "window" });
-        await Promise.allSettled(windowClients.map((client) => client.navigate(client.url)));
+        if (cacheNames.length > 0) {
+          const windowClients = await self.clients.matchAll({ type: "window" });
+          await Promise.allSettled(windowClients.map((client) => client.navigate(client.url)));
+        }
       } finally {
         await self.registration.unregister();
       }
