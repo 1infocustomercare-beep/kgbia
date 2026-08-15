@@ -6,7 +6,8 @@ export interface SellerActionCost {
   action: string;
   label: string;
   credit_cost: number;
-  cost_eur_estimate: number;
+  /** Internal margin data — visible only to super admin, absent for sellers. */
+  cost_eur_estimate?: number | null;
   description: string | null;
 }
 
