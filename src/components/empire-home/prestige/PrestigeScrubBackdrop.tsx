@@ -19,6 +19,7 @@ export default function PrestigeScrubBackdrop() {
 
   useEffect(() => {
     const el = rootRef.current;
+    const root = document.documentElement;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -42,9 +43,9 @@ export default function PrestigeScrubBackdrop() {
       if (dirty) {
         cx += (tx - cx) * 0.06;
         cy += (ty - cy) * 0.06;
-        el.style.setProperty("--pr-mx", cx.toFixed(4));
-        el.style.setProperty("--pr-my", cy.toFixed(4));
-        el.style.setProperty("--pr-scroll", scroll.toFixed(4));
+        root.style.setProperty("--pr-mx", cx.toFixed(4));
+        root.style.setProperty("--pr-my", cy.toFixed(4));
+        root.style.setProperty("--pr-scroll", scroll.toFixed(4));
         if (Math.abs(tx - cx) < 0.0015 && Math.abs(ty - cy) < 0.0015) dirty = false;
       }
       raf = requestAnimationFrame(tick);
