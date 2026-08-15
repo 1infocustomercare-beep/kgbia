@@ -246,7 +246,7 @@ function AgentDetailSheet({ agent, configs, configTab, setConfigTab }: { agent: 
     mutationFn: async () => {
       const payload = { agent_name: agent.id, system_prompt_override: customRules, is_enabled: config?.is_enabled ?? true };
       if (config) {
-        await supabase.from("ai_agent_configs").update(payload).eq("id", config.id);
+        await supabase.from("ai_agent_configs").update(payload).eq("agent_name", agent.id);
       } else {
         await supabase.from("ai_agent_configs").insert(payload);
       }
