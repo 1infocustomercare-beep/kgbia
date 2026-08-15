@@ -44,6 +44,16 @@ export default function PrestigeHeroImmersive() {
         }}
       />
 
+      {/* 2b. spotlight interattivo coerente col backdrop globale */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle 30vmax at calc(var(--pr-mx, 0.5) * 100%) calc(var(--pr-my, 0.35) * 100%), hsl(250 85% 72% / 0.16), hsl(44 80% 60% / 0.05) 45%, transparent 72%)",
+          mixBlendMode: "screen",
+        }}
+      />
+
       {/* 3. sweep di luce diagonale */}
       <div
         className="absolute inset-y-0 -left-1/2 w-1/2 opacity-40 motion-safe:animate-[prestige-sweep_16s_linear_infinite]"
@@ -52,6 +62,7 @@ export default function PrestigeHeroImmersive() {
             "linear-gradient(105deg, transparent, hsl(0 0% 100% / 0.05) 45%, transparent)",
         }}
       />
+
 
       {/* 4. vignette */}
       <div
