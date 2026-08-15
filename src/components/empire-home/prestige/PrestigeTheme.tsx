@@ -246,6 +246,7 @@ export default function PrestigeTheme() {
         position: absolute;
         border-radius: 50%;
         filter: blur(10px);
+        will-change: transform, opacity;
       }
       .prestige-scrub-aura--violet {
         top: -25%; left: 50%;
@@ -253,16 +254,20 @@ export default function PrestigeTheme() {
         transform: translateX(-50%);
         background: radial-gradient(ellipse 46% 42% at 50% 45%, hsl(258 70% 56% / 0.20), transparent 72%);
         animation: prestige-breathe 20s ease-in-out infinite;
+        --pb-px: calc((var(--pr-mx, 0.5) - 0.5) * -34px);
+        --pb-py: calc((var(--pr-my, 0.35) - 0.5) * -22px);
       }
       .prestige-scrub-aura--gold {
         bottom: -30%; left: -15%;
         width: 80vw; height: 80vh;
         background: radial-gradient(ellipse 50% 50% at 45% 55%, hsl(44 80% 56% / 0.12), transparent 74%);
         animation: prestige-breathe 28s ease-in-out infinite reverse;
+        --pb-px: calc((var(--pr-mx, 0.5) - 0.5) * 26px);
+        --pb-py: calc((var(--pr-my, 0.35) - 0.5) * 18px);
       }
       .prestige-scrub-grid {
         position: absolute;
-        inset: 0;
+        inset: -10%;
         opacity: 0.14;
         background-image:
           linear-gradient(to right, hsl(0 0% 100% / 0.12) 1px, transparent 1px),
@@ -270,6 +275,24 @@ export default function PrestigeTheme() {
         background-size: 80px 80px;
         -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 38%, black 15%, transparent 82%);
         mask-image: radial-gradient(ellipse 72% 62% at 50% 38%, black 15%, transparent 82%);
+        transform: translate3d(
+          calc((var(--pr-mx, 0.5) - 0.5) * 18px),
+          calc((var(--pr-my, 0.35) - 0.5) * 12px - var(--pr-scroll, 0) * 40px),
+          0
+        );
+        will-change: transform;
+      }
+      /* spotlight morbido che segue il puntatore: interattivo ma sobrio */
+      .prestige-scrub-spot {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle 38vmax at calc(var(--pr-mx, 0.5) * 100%) calc(var(--pr-my, 0.35) * 100%),
+          hsl(250 85% 70% / 0.14),
+          hsl(250 85% 70% / 0.05) 42%,
+          transparent 70%
+        );
+        mix-blend-mode: screen;
       }
       .prestige-scrub-vignette {
         position: absolute;
@@ -277,8 +300,14 @@ export default function PrestigeTheme() {
         background: radial-gradient(ellipse at center, transparent 42%, hsl(240 55% 4% / 0.72) 100%);
       }
       @keyframes prestige-breathe {
-        0%, 100% { opacity: 0.75; transform: translateX(var(--pb-tx, 0)) scale(1); }
-        50% { opacity: 1; transform: translateX(var(--pb-tx, 0)) scale(1.06); }
+        0%, 100% {
+          opacity: 0.75;
+          transform: translate(calc(var(--pb-tx, 0px) + var(--pb-px, 0px)), var(--pb-py, 0px)) scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: translate(calc(var(--pb-tx, 0px) + var(--pb-px, 0px)), var(--pb-py, 0px)) scale(1.06);
+        }
       }
       .prestige-scrub-aura--violet { --pb-tx: -50%; }
       @keyframes prestige-sweep {
@@ -287,7 +316,9 @@ export default function PrestigeTheme() {
       }
       @media (prefers-reduced-motion: reduce) {
         .prestige-scrub-aura { animation: none !important; }
+        .prestige-scrub-grid { transform: none !important; }
       }
+
 
 
       /* ── Premium additive layer ─────────────────────────────────── */
