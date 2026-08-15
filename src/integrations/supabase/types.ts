@@ -9216,6 +9216,18 @@ export type Database = {
           stripe_account_id: string
         }[]
       }
+      get_public_ai_agent_configs: {
+        Args: never
+        Returns: {
+          agent_name: string
+          allowed_industries: string[]
+          color: string
+          description: string
+          display_name: string
+          icon: string
+          is_enabled: boolean
+        }[]
+      }
       get_public_company_settings: {
         Args: { p_company_id: string }
         Returns: {
@@ -9257,6 +9269,15 @@ export type Database = {
           display_name: string
           id: string
           rating: number
+        }[]
+      }
+      get_seller_action_prices: {
+        Args: never
+        Returns: {
+          action: string
+          credit_cost: number
+          description: string
+          label: string
         }[]
       }
       get_seller_credit_balance: {

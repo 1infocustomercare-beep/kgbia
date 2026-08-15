@@ -51,7 +51,9 @@ export default function SellerCreditsHistory() {
               <span className="text-muted-foreground">{c.label}</span>
               <span className="font-semibold text-amber-400 flex items-center gap-1">
                 <Coins className="w-3 h-3" /> {c.credit_cost}
-                <span className="text-[9px] text-muted-foreground font-normal">(~€{c.cost_eur_estimate.toFixed(2)})</span>
+                {typeof c.cost_eur_estimate === "number" && (
+                  <span className="text-[9px] text-muted-foreground font-normal">(~€{c.cost_eur_estimate.toFixed(2)})</span>
+                )}
               </span>
             </div>
           ))}
