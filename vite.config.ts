@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import { VitePWA } from "vite-plugin-pwa";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 
 export default defineConfig(({ mode }) => ({
@@ -28,80 +27,6 @@ export default defineConfig(({ mode }) => ({
     react(),
     mcpPlugin(),
     mode === "development" && componentTagger(),
-    VitePWA({
-      // Pre-lancio: niente app-shell/cache PWA. La home deve caricare sempre
-      // la build corrente e non può riproporre vecchie landing al refresh.
-      disable: true,
-      registerType: "autoUpdate",
-      workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,svg,webp}"],
-        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
-        navigateFallbackDenylist: [/^\/~oauth/],
-        cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: true,
-        runtimeCaching: [
-          {
-            urlPattern: ({ request }) => request.mode === "navigate",
-            handler: "NetworkFirst",
-            options: {
-              cacheName: "pages-runtime",
-              networkTimeoutSeconds: 5,
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-              expiration: {
-                maxEntries: 60,
-                maxAgeSeconds: 60 * 60 * 24 * 7,
-              },
-            },
-          },
-          {
-            urlPattern: /^https?:\/\/.*\.(?:js|mjs|css)$/i,
-            handler: "StaleWhileRevalidate",
-            options: {
-              cacheName: "static-runtime",
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-              expiration: {
-                maxEntries: 120,
-                maxAgeSeconds: 60 * 60 * 24 * 14,
-              },
-            },
-          },
-          {
-            urlPattern: /^https?:\/\/.*\.(?:png|jpg|jpeg|webp|svg|gif|avif|mp4|webm)$/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "media-runtime",
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-              expiration: {
-                maxEntries: 120,
-                maxAgeSeconds: 60 * 60 * 24 * 30,
-              },
-            },
-          },
-          {
-            urlPattern: /^https?:\/\/.*\.(?:woff2|woff|ttf|otf)$/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "fonts-runtime",
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-              expiration: {
-                maxEntries: 40,
-                maxAgeSeconds: 60 * 60 * 24 * 365,
-              },
-            },
-          },
-        ],
-      },
-      manifest: false,
-    }),
   ].filter(Boolean),
   resolve: {
     alias: {

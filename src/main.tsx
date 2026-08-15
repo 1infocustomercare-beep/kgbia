@@ -25,21 +25,12 @@ if (root) {
   createRoot(root).render(<App />);
 }
 
-// Universal cleanup (v2): any service worker or Cache Storage entry left on
+// Universal cleanup (v3): any service worker or Cache Storage entry left on
 // this origin can still serve an OLD Empire homepage after a refresh.
 // This pass unregisters every SW and deletes EVERY cache on the origin, on all
-// hosts (dev, preview, iframe, production), then reloads once per browser
-// (localStorage flag) so the fresh build definitively takes over.
+// hosts (dev, preview, iframe, production), then reloads after a successful
+// purge so the fresh build definitively takes over.
 if (typeof window !== "undefined") {
-  const PURGE_FLAG = "empire_cache_purge_v2";
-  const alreadyPurged = (() => {
-    try {
-      return localStorage.getItem(PURGE_FLAG) === "1";
-    } catch {
-      return false;
-    }
-  })();
-
   (async () => {
     let foundStale = false;
     try {
@@ -61,36 +52,17 @@ if (typeof window !== "undefined") {
       // ignore
     }
 
-    if (!alreadyPurged) {
-      try {
-        localStorage.setItem(PURGE_FLAG, "1");
-      } catch {}
-      if (foundStale) window.location.reload();
-    }
+    if (foundStale) window.location.reload();
   })();
 }
 
-// Kill-switch: force registration of /sw.js on production so returning
-// visitors (even without an existing SW) fetch the cleanup worker, which
-// clears legacy caches, reloads open tabs onto the fresh build, and then
-// unregisters itself. Skipped in dev, iframes, and Lovable preview hosts.
+// Kill-switch: register the cleanup worker on every production origin,
+// including preview hosts. This is essential because the duplicate legacy
+// home was being served specifically from preview-origin app-shell caches.
 if (typeof window !== "undefined" && "serviceWorker" in navigator && import.meta.env.PROD) {
-  const host = window.location.hostname;
-  const inIframe = window.self !== window.top;
-  const isPreview =
-    host.startsWith("id-preview--") ||
-    host.startsWith("preview--") ||
-    host === "lovableproject.com" ||
-    host.endsWith(".lovableproject.com") ||
-    host === "lovableproject-dev.com" ||
-    host.endsWith(".lovableproject-dev.com") ||
-    host === "beta.lovable.dev" ||
-    host.endsWith(".beta.lovable.dev");
-  if (!inIframe && !isPreview) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/sw.js").catch(() => undefined);
-    });
-  }
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).catch(() => undefined);
+  });
 }
 
 

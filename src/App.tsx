@@ -634,9 +634,12 @@ function App() {
                           Caos→Empire, services, industries, portfolio, process,
                           proof, CTA. Bilingue IT/EN. */}
                       <Route path="/" element={<EmpirePrestigeHome />} />
-                      {/* Gli alias legacy (/home, /index.html, /empire-ai, /home-v2, ...)
-                          NON sono più rotte: NotFound.tsx li intercetta con il regex
-                          HOME_LIKE e reindirizza automaticamente a "/". */}
+                      {/* Alias espliciti: nessun vecchio URL può montare o mostrare
+                          anche per un frame una homepage Empire alternativa. */}
+                      <Route path="/home" element={<Navigate to="/" replace />} />
+                      <Route path="/index.html" element={<Navigate to="/" replace />} />
+                      <Route path="/empire-ai" element={<Navigate to="/" replace />} />
+                      <Route path="/home-v2" element={<Navigate to="/" replace />} />
 
 
 
