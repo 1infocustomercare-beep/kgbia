@@ -76,7 +76,8 @@ export function useSellerCredits() {
     let cancelled = false;
     (async () => {
       const [{ data: costsData }] = await Promise.all([
-        supabase.from("seller_action_costs" as any).select("action, label, credit_cost, cost_eur_estimate, description").eq("is_active", true),
+        // Safe price list: internal EUR cost estimates stay server-side (super admin only).
+        supabase.rpc("get_seller_action_prices" as any),
         refreshBalance(),
         refreshHistory(),
       ]);
