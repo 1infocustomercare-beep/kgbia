@@ -107,6 +107,7 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
   const sector = HERO_SECTORS[activeIdx];
   const heroImageSources = useMemo(
     () => uniqueImageSources([
+      ...getPremiumSectorShots(sector.id).map((shot) => shot.url),
       ...(SECTOR_MOCKUP_IMAGES[sector.id] || []),
       ...getSectorHeroImages(sector.id),
       SECTOR_MOCKUP_CATALOG[sector.id]?.heroImage,
