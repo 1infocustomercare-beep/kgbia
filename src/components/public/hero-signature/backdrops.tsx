@@ -243,7 +243,7 @@ export function BeachTideRise({ progress }: BackdropProps) {
   const skyY = useTransform(progress, [0, 1], [0, -80]);
   const seaY = useTransform(progress, [0, 1], [0, 130]);
   const foamY = useTransform(progress, [0, 1], [0, 260]);
-  const boatX = useTransform([progress, px] as const, ([p, m]: number[]) => `${-8 + p * 22 + m * 6}%`);
+  const boatX = useTransform([progress, px] as const, ([p, m]: number[]) => `${46 + p * 26 + m * 6}%`);
   const boatY = useTransform(py, (p) => p * 10);
   const sunTop = useTransform(progress, [0, 1], ["16%", "44%"]);
   const tilt = useTransform(py, (p) => p * -3);
