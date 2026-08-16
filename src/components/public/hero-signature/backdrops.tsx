@@ -372,10 +372,15 @@ export function TradesBlueprintDraw({ progress, industry }: BackdropProps) {
   );
 }
 
-/* ═══════════════ LUXURY — IRIDE (diaframma che si apre sul dettaglio) ═══════════════ */
+/* ═══════════════ LUXURY — IRIDE CHE SEGUE LO SGUARDO (diaframma da macro) ═══════════════ */
 export function LuxuryMonolith({ progress }: BackdropProps) {
-  const radius = useTransform(progress, [0, 0.8], ["10%", "78%"]);
-  const clip = useTransform(radius, (r) => `circle(${r} at 50% 45%)`);
+  const { px, py } = usePointerParallax(35, 24);
+  const radius = useTransform(progress, [0, 0.8], [10, 78]);
+  const clip = useTransform(
+    [radius, px, py] as const,
+    ([r, x, y]: number[]) => `circle(${r}% at ${50 + x * 8}% ${45 + y * 8}%)`,
+  );
+
   const zoom = useTransform(progress, [0, 1], [1.35, 1.05]);
   const rimRotate = useTransform(progress, [0, 1], [0, 120]);
   const sheen = useTransform(progress, [0, 1], ["-30%", "120%"]);
