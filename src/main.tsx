@@ -56,13 +56,9 @@ if (typeof window !== "undefined") {
   })();
 }
 
-// Kill-switch: register the cleanup worker on every production origin,
-// including preview hosts. This is essential because the duplicate legacy
-// home was being served specifically from preview-origin app-shell caches.
-if (typeof window !== "undefined" && "serviceWorker" in navigator && import.meta.env.PROD) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).catch(() => undefined);
-  });
-}
+// Do not register another service worker after the purge. The previous
+// kill-switch registration recreated a worker on every production load, so
+// the following refresh found it again and could keep the embedded preview in
+// a reload/legacy-shell cycle. Cache cleanup above is now the final state.
 
 
