@@ -615,6 +615,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
   const route = featured?.route || (id === "food" ? `/r/${DEMO_SLUGS[id]}` : `/b/${DEMO_SLUGS[id]}`);
   const previewSources = useMemo(
     () => uniqueImageSources([
+      ...getPremiumSectorShots(id).map((shot) => shot.url),
       ...getSectorHeroImages(id),
       ...(SECTOR_MOCKUP_IMAGES[id] || []),
       SECTOR_MOCKUP_CATALOG[id]?.heroImage,
