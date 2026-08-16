@@ -10,9 +10,25 @@ import retailSneaker from "@/assets/hero-cinematic/retail-sneaker.png";
 import tradesTool from "@/assets/hero-cinematic/trades-tool.png";
 import luxuryWatch from "@/assets/hero-cinematic/luxury-watch.png";
 import nccSedan from "@/assets/hero-cinematic/ncc-sedan-single.png";
+import tradesElectrician from "@/assets/hero-cinematic/trades-electrician.png";
+import tradesPlumber from "@/assets/hero-cinematic/trades-plumber.png";
+import tradesConstruction from "@/assets/hero-cinematic/trades-construction.png";
+import tradesGardening from "@/assets/hero-cinematic/trades-gardening.png";
+import tradesCleaning from "@/assets/hero-cinematic/trades-cleaning.png";
+import tradesGarage from "@/assets/hero-cinematic/trades-garage.png";
+import tradesPhotography from "@/assets/hero-cinematic/trades-photography.png";
+import tradesVeterinary from "@/assets/hero-cinematic/trades-veterinary.png";
+import tradesTattoo from "@/assets/hero-cinematic/trades-tattoo.png";
+import tradesChildcare from "@/assets/hero-cinematic/trades-childcare.png";
+import tradesEducation from "@/assets/hero-cinematic/trades-education.png";
+import tradesEvents from "@/assets/hero-cinematic/trades-events.png";
+import tradesLogistics from "@/assets/hero-cinematic/trades-logistics.png";
+import tradesAgriturismo from "@/assets/hero-cinematic/trades-agriturismo.png";
+import tradesLegal from "@/assets/hero-cinematic/trades-legal.png";
+import tradesAccounting from "@/assets/hero-cinematic/trades-accounting.png";
 
 const layer = "pointer-events-none absolute inset-0 overflow-hidden";
-export type BackdropProps = { progress: MotionValue<number>; reduced?: boolean };
+export type BackdropProps = { progress: MotionValue<number>; reduced?: boolean; industry?: string };
 
 function CinematicGlow({ progress, travel = false }: BackdropProps & { travel?: boolean }) {
   const opacity = useTransform(progress, [0, 0.45, 1], [0.18, 0.62, 0.2]);
@@ -175,17 +191,51 @@ export function RetailShutterGrid({ progress }: BackdropProps) {
   );
 }
 
-/* TRADES — utensile e progetto entrano in diagonale mentre il disegno si traccia. */
-export function TradesBlueprintDraw({ progress }: BackdropProps) {
-  const x = useTransform(progress, [0, 0.55, 1], ["80vw", "8vw", "-36vw"]);
-  const y = useTransform(progress, [0, 0.55, 1], ["45vh", "-1vh", "-24vh"]);
-  const scale = useTransform(progress, [0, 0.55, 1], [0.38, 1.14, 1.36]);
-  const rotate = useTransform(progress, [0, 1], [34, -18]);
-  const grid = useTransform(progress, [0, 0.5, 1], [0.05, 0.34, 0.08]);
+type TradeScene = {
+  asset: string;
+  x: [string, string, string];
+  y: [string, string, string];
+  scale: [number, number, number];
+  rotate: [number, number, number];
+  atmosphere: "circuit" | "ripple" | "build" | "grow" | "prism" | "speed" | "focus" | "pulse" | "ink" | "float" | "pages" | "spotlight" | "route" | "sun" | "columns" | "chart";
+};
+
+const TRADE_SCENES: Record<string, TradeScene> = {
+  electrician: { asset: tradesElectrician, x: ["-70vw", "10vw", "46vw"], y: ["-25vh", "2vh", "18vh"], scale: [.34, 1.18, .82], rotate: [-42, 8, 68], atmosphere: "circuit" },
+  plumber: { asset: tradesPlumber, x: ["34vw", "5vw", "-18vw"], y: ["58vh", "-2vh", "-28vh"], scale: [.46, 1.08, 1.34], rotate: [12, -5, -18], atmosphere: "ripple" },
+  construction: { asset: tradesConstruction, x: ["28vw", "4vw", "-12vw"], y: ["58vh", "3vh", "-8vh"], scale: [.28, 1.04, 1.28], rotate: [0, -3, 4], atmosphere: "build" },
+  gardening: { asset: tradesGardening, x: ["-16vw", "5vw", "18vw"], y: ["62vh", "4vh", "-12vh"], scale: [.38, 1.04, 1.22], rotate: [-8, 2, 9], atmosphere: "grow" },
+  cleaning: { asset: tradesCleaning, x: ["-82vw", "4vw", "92vw"], y: ["28vh", "4vh", "-8vh"], scale: [.42, 1.12, .64], rotate: [-12, 0, 15], atmosphere: "prism" },
+  garage: { asset: tradesGarage, x: ["74vw", "7vw", "-52vw"], y: ["18vh", "0vh", "-14vh"], scale: [.4, 1.2, 1.5], rotate: [130, 8, -95], atmosphere: "speed" },
+  photography: { asset: tradesPhotography, x: ["8vw", "3vw", "-4vw"], y: ["30vh", "0vh", "-12vh"], scale: [.22, 1.15, 1.65], rotate: [-4, 1, 5], atmosphere: "focus" },
+  veterinary: { asset: tradesVeterinary, x: ["-30vw", "5vw", "18vw"], y: ["48vh", "1vh", "-8vh"], scale: [.5, 1.02, 1.16], rotate: [-8, 0, 5], atmosphere: "pulse" },
+  tattoo: { asset: tradesTattoo, x: ["70vw", "6vw", "-28vw"], y: ["-34vh", "0vh", "22vh"], scale: [.32, 1.08, 1.42], rotate: [55, -8, -34], atmosphere: "ink" },
+  childcare: { asset: tradesChildcare, x: ["-38vw", "4vw", "24vw"], y: ["60vh", "2vh", "-38vh"], scale: [.38, 1.02, .84], rotate: [-16, 3, 22], atmosphere: "float" },
+  education: { asset: tradesEducation, x: ["4vw", "2vw", "0vw"], y: ["58vh", "4vh", "-22vh"], scale: [.38, 1.12, 1.34], rotate: [0, 0, -3], atmosphere: "pages" },
+  events: { asset: tradesEvents, x: ["-66vw", "5vw", "58vw"], y: ["22vh", "-2vh", "12vh"], scale: [.4, 1.06, .72], rotate: [-22, 7, 34], atmosphere: "spotlight" },
+  logistics: { asset: tradesLogistics, x: ["-92vw", "5vw", "108vw"], y: ["20vh", "3vh", "-5vh"], scale: [.42, 1.08, .74], rotate: [-3, 0, 4], atmosphere: "route" },
+  agriturismo: { asset: tradesAgriturismo, x: ["22vw", "3vw", "-10vw"], y: ["62vh", "5vh", "-15vh"], scale: [.42, 1.06, 1.24], rotate: [12, -2, -10], atmosphere: "sun" },
+  legal: { asset: tradesLegal, x: ["-12vw", "3vw", "10vw"], y: ["-58vh", "1vh", "20vh"], scale: [.38, 1.04, 1.2], rotate: [-5, 0, 4], atmosphere: "columns" },
+  accounting: { asset: tradesAccounting, x: ["58vw", "4vw", "-24vw"], y: ["45vh", "1vh", "-18vh"], scale: [.34, 1.08, 1.3], rotate: [14, -3, -10], atmosphere: "chart" },
+};
+
+/* Shared renderer, but every trade has its own subject, trajectory and visual grammar. */
+export function TradesBlueprintDraw({ progress, industry }: BackdropProps) {
+  const scene = TRADE_SCENES[industry ?? ""] ?? { asset: tradesTool, x: ["80vw", "8vw", "-36vw"], y: ["45vh", "-1vh", "-24vh"], scale: [.38, 1.14, 1.36], rotate: [34, -4, -18], atmosphere: "build" as const };
+  const x = useTransform(progress, [0, 0.55, 1], scene.x);
+  const y = useTransform(progress, [0, 0.55, 1], scene.y);
+  const scale = useTransform(progress, [0, 0.55, 1], scene.scale);
+  const rotate = useTransform(progress, [0, 0.55, 1], scene.rotate);
+  const atmosphere = useTransform(progress, [0, 0.5, 1], [0.04, 0.38, 0.08]);
+  const sweep = useTransform(progress, [0, 1], ["-110%", "135%"]);
+  const ringScale = useTransform(progress, [0, 1], [.35, 1.7]);
   return (
     <div className={layer} aria-hidden>
-      <motion.div className="absolute inset-0" style={{ opacity: grid, background: "repeating-linear-gradient(0deg, var(--sig-accent) 0 1px, transparent 1px 48px), repeating-linear-gradient(90deg, var(--sig-accent) 0 1px, transparent 1px 48px)" }} />
-      <motion.img src={tradesTool} alt="" width={1024} height={1024} className="absolute left-0 top-[8%] w-[min(70vw,850px)] object-contain drop-shadow-2xl" style={{ x, y, scale, rotate }} />
+      {(scene.atmosphere === "build" || scene.atmosphere === "circuit" || scene.atmosphere === "chart") && <motion.div className="absolute inset-0" style={{ opacity: atmosphere, background: scene.atmosphere === "chart" ? "repeating-linear-gradient(0deg, var(--sig-accent) 0 1px, transparent 1px 64px)" : "repeating-linear-gradient(0deg, var(--sig-accent) 0 1px, transparent 1px 48px), repeating-linear-gradient(90deg, var(--sig-accent) 0 1px, transparent 1px 48px)" }} />}
+      {(scene.atmosphere === "ripple" || scene.atmosphere === "pulse" || scene.atmosphere === "focus") && <motion.div className="absolute left-1/2 top-1/2 aspect-square w-[58vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[color:var(--sig-accent)]" style={{ scale: ringScale, opacity: atmosphere }} />}
+      {(scene.atmosphere === "prism" || scene.atmosphere === "speed" || scene.atmosphere === "route" || scene.atmosphere === "spotlight") && <motion.div className="absolute inset-y-[-20%] w-[28%] skew-x-[-18deg] blur-xl" style={{ x: sweep, opacity: atmosphere, background: "linear-gradient(90deg, transparent, var(--sig-accent), transparent)" }} />}
+      {(scene.atmosphere === "grow" || scene.atmosphere === "float" || scene.atmosphere === "pages" || scene.atmosphere === "sun" || scene.atmosphere === "columns" || scene.atmosphere === "ink") && <motion.div className="absolute bottom-[-22%] left-[18%] h-[75%] w-[64%] rounded-[50%] blur-3xl" style={{ opacity: atmosphere, scale: ringScale, background: "radial-gradient(circle, var(--sig-accent), transparent 68%)" }} />}
+      <motion.img src={scene.asset} alt="" width={1024} height={1024} className="absolute left-[10%] top-[7%] w-[min(72vw,880px)] object-contain drop-shadow-2xl" style={{ x, y, scale, rotate }} />
     </div>
   );
 }

@@ -48,6 +48,8 @@ const alignClass = {
 
 export type SignatureCinematicHeroProps = {
   variant: SignatureVariant;
+  /** Optional sub-sector used to specialize shared sector families. */
+  industry?: string;
   eyebrow: ReactNode;
   title: ReactNode;
   subtitle?: ReactNode;
@@ -63,6 +65,7 @@ export type SignatureCinematicHeroProps = {
 
 export function SignatureCinematicHero({
   variant,
+  industry,
   eyebrow,
   title,
   subtitle,
@@ -119,7 +122,7 @@ export function SignatureCinematicHero({
         )}
         <motion.div className="absolute inset-0 bg-background" style={{ opacity: reduced ? 0.55 : veil }} />
 
-        {!reduced && <Backdrop progress={scrollYProgress} />}
+        {!reduced && <Backdrop progress={scrollYProgress} industry={industry} />}
 
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)/0.75),transparent_35%,hsl(var(--background)/0.85))]" />
         <LuxeGrain opacity={0.05} />

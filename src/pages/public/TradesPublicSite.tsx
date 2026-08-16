@@ -363,6 +363,25 @@ const SECTOR_HERO_ICONS: Record<string, typeof Wrench> = {
   logistics: Truck, agriturismo: TreePine, legal: Scale, accounting: FileText,
 };
 
+const SECTOR_CINEMATIC_COPY: Record<string, { title: string; highlight: string; subtitle: string }> = {
+  electrician: { title: "Energia sotto controllo,", highlight: "senza interruzioni.", subtitle: "Impianti, domotica e assistenza rapida organizzati in un'unica esperienza digitale." },
+  plumber: { title: "Ogni flusso,", highlight: "al posto giusto.", subtitle: "Interventi idraulici prenotabili, urgenze tracciate e preventivi trasparenti." },
+  construction: { title: "Dal progetto,", highlight: "alla materia.", subtitle: "Cantieri, avanzamenti e documenti condivisi con precisione in ogni fase." },
+  gardening: { title: "Il verde cresce,", highlight: "su misura.", subtitle: "Progetti, manutenzioni e stagionalità coordinati senza perdere un dettaglio." },
+  cleaning: { title: "Spazi impeccabili,", highlight: "sempre.", subtitle: "Squadre, frequenze e controlli qualità gestiti con una regia semplice e puntuale." },
+  garage: { title: "Prestazioni precise,", highlight: "dal primo giro.", subtitle: "Diagnosi, lavorazioni e riconsegna del veicolo tracciate in tempo reale." },
+  photography: { title: "Ogni istante,", highlight: "diventa firma.", subtitle: "Shooting, selezione e consegna raccolti in un percorso visivo professionale." },
+  veterinary: { title: "Cura attenta,", highlight: "per ogni compagno.", subtitle: "Visite, terapie e richiami sempre ordinati e accessibili quando servono." },
+  tattoo: { title: "La tua idea,", highlight: "sulla pelle.", subtitle: "Consulto, bozza e sessione diventano un percorso creativo personale e riservato." },
+  childcare: { title: "Crescere insieme,", highlight: "con serenità.", subtitle: "Attività, comunicazioni e iscrizioni in un ambiente digitale pensato per le famiglie." },
+  education: { title: "La conoscenza,", highlight: "prende forma.", subtitle: "Corsi, progressi e materiali costruiscono un percorso chiaro per ogni studente." },
+  events: { title: "La scena si accende,", highlight: "al momento giusto.", subtitle: "Concept, fornitori e scaletta coordinati per trasformare l'evento in esperienza." },
+  logistics: { title: "Ogni consegna,", highlight: "nella giusta direzione.", subtitle: "Tratte, mezzi e aggiornamenti scorrono in una filiera sempre visibile." },
+  agriturismo: { title: "La terra incontra,", highlight: "l'ospitalità.", subtitle: "Soggiorni, esperienze e prodotti locali raccontati con autenticità contemporanea." },
+  legal: { title: "Chiarezza nelle scelte,", highlight: "forza nelle tutele.", subtitle: "Consulenze, pratiche e documenti gestiti con riservatezza e precisione." },
+  accounting: { title: "Numeri leggibili,", highlight: "decisioni solide.", subtitle: "Scadenze, documenti e indicatori finanziari finalmente ordinati e immediati." },
+};
+
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } }),
@@ -532,6 +551,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
   const stats = SECTOR_STATS[industry] || [{ value: "500+", label: "Clienti" }, { value: "98%", label: "Soddisfatti" }, { value: "24h", label: "Disponibili" }];
   const tickerItems = SECTOR_TICKERS[industry] || ["PROFESSIONALITÀ", "GARANZIA", "QUALITÀ", "ESPERIENZA", "H24"];
   const cta = SECTOR_CTA[industry] || SECTOR_CTA.default;
+  const cinematicCopy = SECTOR_CINEMATIC_COPY[industry] || { title: "Progetto chiaro,", highlight: "lavoro perfetto.", subtitle: "Preventivi trasparenti, squadre certificate e attività sempre tracciate." };
 
   const navLinks = [{ href: "#servizi", label: "Servizi" }, { href: "#perche", label: "Garanzie" }, { href: "#prenota", label: cta.formTitle.split(" ").slice(0, 2).join(" ") }];
 
@@ -574,12 +594,13 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
 
       {/* HERO */}
       <SignatureCinematicHero
-          accent="#F2A63B"
+        accent={A}
         variant="trades"
-        eyebrow="Servizi tecnici"
-        title={<>Progetto chiaro,<br /><span className="text-primary">lavoro perfetto.</span></>}
-        subtitle="Preventivi trasparenti, squadre certificate e cantieri sempre tracciati."
-        reveal={{ kicker: "Preventivi · Interventi · Cantieri", title: <>Richiedi il preventivo<br />in due minuti.</>, text: "Sopralluogo prenotabile, stima immediata e avanzamento lavori condiviso." }}
+        industry={industry}
+        eyebrow={config.label}
+        title={<>{cinematicCopy.title}<br /><span className="text-primary">{cinematicCopy.highlight}</span></>}
+        subtitle={cinematicCopy.subtitle}
+        reveal={{ kicker: tickerItems.slice(0, 3).join(" · "), title: <>{cta.primary}<br />in due minuti.</>, text: cta.formSubtitle }}
       />
       <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
         {/* Hero effect — signature del settore */}
