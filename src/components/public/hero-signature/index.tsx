@@ -27,16 +27,16 @@ const CHOREO: Record<
     height: string;
   }
 > = {
-  food: { align: "left", intro: { y: -70, scale: 0.94 }, reveal: { y: 80, align: "right" }, height: "h-[180svh]" },
-  bakery: { align: "center", intro: { scale: 1.08 }, reveal: { y: 60, align: "center" }, height: "h-[180svh]" },
-  beauty: { align: "center", intro: { y: -50, scale: 1.04 }, reveal: { y: 70, align: "center" }, height: "h-[180svh]" },
+  food: { align: "left", intro: { x: -120, rotate: -2 }, reveal: { x: 130, align: "right" }, height: "h-[220svh]" },
+  bakery: { align: "center", intro: { y: 110, scale: 1.16 }, reveal: { x: -120, align: "left" }, height: "h-[195svh]" },
+  beauty: { align: "right", intro: { y: -110, scale: 0.88 }, reveal: { y: 130, align: "left" }, height: "h-[210svh]" },
   fitness: { align: "left", intro: { x: -70, rotate: -1.5 }, reveal: { x: 90, align: "left" }, height: "h-[180svh]" },
-  healthcare: { align: "center", intro: { y: -40 }, reveal: { y: 50, align: "center" }, height: "h-[180svh]" },
-  hotel: { align: "left", intro: { y: -90 }, reveal: { y: 90, align: "right" }, height: "h-[180svh]" },
-  beach: { align: "left", intro: { y: -60, scale: 0.97 }, reveal: { y: 70, align: "left" }, height: "h-[180svh]" },
-  retail: { align: "center", intro: { scale: 0.92 }, reveal: { y: 60, align: "center" }, height: "h-[180svh]" },
-  trades: { align: "left", intro: { x: -60 }, reveal: { x: 70, align: "left" }, height: "h-[180svh]" },
-  luxury: { align: "right", intro: { y: -70, scale: 1.06 }, reveal: { y: 80, align: "left" }, height: "h-[180svh]" },
+  healthcare: { align: "left", intro: { x: -90 }, reveal: { x: 110, align: "right" }, height: "h-[190svh]" },
+  hotel: { align: "left", intro: { y: -140 }, reveal: { y: 140, align: "right" }, height: "h-[230svh]" },
+  beach: { align: "center", intro: { y: 90, scale: 0.9 }, reveal: { x: -140, align: "left" }, height: "h-[205svh]" },
+  retail: { align: "right", intro: { x: 150, rotate: 3 }, reveal: { x: -150, align: "left" }, height: "h-[200svh]" },
+  trades: { align: "left", intro: { x: -150 }, reveal: { y: -120, align: "right" }, height: "h-[215svh]" },
+  luxury: { align: "center", intro: { scale: 1.42 }, reveal: { y: 150, align: "center" }, height: "h-[240svh]" },
   ncc: { align: "left", intro: { x: -80 }, reveal: { x: 80, align: "right" }, height: "h-[180svh]" },
 };
 
@@ -45,6 +45,105 @@ const alignClass = {
   center: "items-center text-center",
   right: "items-end text-right",
 } as const;
+
+/** The shell is deliberately sector-specific too: backdrop changes alone still feel templated. */
+const PRESENTATION: Record<SignatureVariant, {
+  intro: string;
+  introInner: string;
+  title: string;
+  reveal: string;
+  revealInner: string;
+  chrome: "corners" | "rail" | "crosshair" | "none";
+}> = {
+  food: {
+    intro: "justify-end pb-[16svh] sm:justify-center sm:pb-0",
+    introInner: "mr-auto border-l-4 border-[color:var(--sig-accent)] pl-5 sm:pl-9",
+    title: "max-w-[8ch] uppercase",
+    reveal: "justify-start pt-[22svh]",
+    revealInner: "ml-auto max-w-sm",
+    chrome: "rail",
+  },
+  bakery: {
+    intro: "justify-end pb-[12svh]",
+    introInner: "mx-auto max-w-4xl",
+    title: "italic leading-[0.95]",
+    reveal: "justify-center",
+    revealInner: "mr-auto max-w-md",
+    chrome: "none",
+  },
+  beauty: {
+    intro: "justify-start pt-[18svh]",
+    introInner: "ml-auto max-w-2xl",
+    title: "font-light leading-none",
+    reveal: "justify-end pb-[12svh]",
+    revealInner: "mr-auto max-w-sm",
+    chrome: "none",
+  },
+  fitness: {
+    intro: "justify-center",
+    introInner: "mr-auto",
+    title: "uppercase italic",
+    reveal: "justify-center",
+    revealInner: "mr-auto",
+    chrome: "rail",
+  },
+  healthcare: {
+    intro: "justify-center",
+    introInner: "mr-auto max-w-xl border-t border-[color:var(--sig-accent)] pt-6",
+    title: "leading-[0.96]",
+    reveal: "justify-center",
+    revealInner: "ml-auto max-w-md",
+    chrome: "crosshair",
+  },
+  hotel: {
+    intro: "justify-start pt-[17svh]",
+    introInner: "mr-auto max-w-2xl",
+    title: "max-w-[10ch] font-light",
+    reveal: "justify-end pb-[11svh]",
+    revealInner: "ml-auto max-w-md",
+    chrome: "corners",
+  },
+  beach: {
+    intro: "justify-center",
+    introInner: "mx-auto max-w-5xl",
+    title: "uppercase leading-[0.82]",
+    reveal: "justify-end pb-[9svh]",
+    revealInner: "mr-auto max-w-xl border-t border-[color:var(--sig-accent)] pt-5",
+    chrome: "none",
+  },
+  retail: {
+    intro: "justify-center",
+    introInner: "ml-auto max-w-xl border-r-8 border-[color:var(--sig-accent)] pr-5 sm:pr-9",
+    title: "uppercase leading-[0.84]",
+    reveal: "justify-center",
+    revealInner: "mr-auto max-w-md",
+    chrome: "rail",
+  },
+  trades: {
+    intro: "justify-end pb-[11svh]",
+    introInner: "mr-auto max-w-xl border border-[color:var(--sig-accent)]/40 bg-background/65 p-5 backdrop-blur-md sm:p-8",
+    title: "uppercase leading-[0.9]",
+    reveal: "justify-start pt-[15svh]",
+    revealInner: "ml-auto max-w-sm",
+    chrome: "crosshair",
+  },
+  luxury: {
+    intro: "justify-center",
+    introInner: "mx-auto max-w-4xl",
+    title: "uppercase leading-[0.8]",
+    reveal: "justify-end pb-[10svh]",
+    revealInner: "mx-auto max-w-lg",
+    chrome: "corners",
+  },
+  ncc: {
+    intro: "justify-end pb-[12svh]",
+    introInner: "mr-auto max-w-2xl",
+    title: "uppercase italic leading-[0.86]",
+    reveal: "justify-center",
+    revealInner: "ml-auto max-w-md",
+    chrome: "rail",
+  },
+};
 
 export type SignatureCinematicHeroProps = {
   variant: SignatureVariant;
@@ -81,6 +180,7 @@ export function SignatureCinematicHero({
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end end"] });
 
   const choreo = CHOREO[variant];
+  const presentation = PRESENTATION[variant];
   const Backdrop = BACKDROPS[variant];
 
   const introOpacity = useTransform(scrollYProgress, [0, 0.14, 0.3], [1, 1, 0]);
@@ -126,7 +226,18 @@ export function SignatureCinematicHero({
 
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)/0.75),transparent_35%,hsl(var(--background)/0.85))]" />
         <LuxeGrain opacity={0.05} />
-        <LuxeCorners className="m-5 sm:m-8" />
+        {presentation.chrome === "corners" && <LuxeCorners className="m-5 sm:m-8" />}
+        {presentation.chrome === "rail" && (
+          <div className="pointer-events-none absolute inset-y-0 right-5 z-10 hidden w-px bg-border/40 sm:block">
+            <motion.span className="absolute right-0 w-1 bg-[color:var(--sig-accent)]" style={{ top: useTransform(scrollYProgress, [0, 1], ["0%", "92%"]), height: "8%" }} />
+          </div>
+        )}
+        {presentation.chrome === "crosshair" && (
+          <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-16 w-16 -translate-x-1/2 -translate-y-1/2 opacity-30">
+            <span className="absolute left-0 top-1/2 h-px w-full bg-[color:var(--sig-accent)]" />
+            <span className="absolute left-1/2 top-0 h-full w-px bg-[color:var(--sig-accent)]" />
+          </div>
+        )}
 
         {brand && (
           <header className="absolute inset-x-0 top-0 z-40 flex h-20 items-center justify-between border-b border-border/30 px-5 sm:px-10 lg:px-16">
@@ -152,6 +263,7 @@ export function SignatureCinematicHero({
           className={cn(
             "absolute inset-0 z-20 flex flex-col justify-center px-5 sm:px-10 lg:px-16",
             alignClass[choreo.align],
+            presentation.intro,
             reduced && "relative inset-auto min-h-[80svh]",
           )}
           style={
@@ -160,7 +272,7 @@ export function SignatureCinematicHero({
               : { opacity: introOpacity, y: introY, x: introX, scale: introScale, rotate: introRotate }
           }
         >
-          <div className="max-w-3xl pt-16">
+          <div className={cn("max-w-3xl pt-16", presentation.introInner)}>
             <span
               className="inline-flex items-center gap-2 border bg-background/50 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.26em] backdrop-blur-xl"
               style={{ borderColor: "var(--sig-accent)", color: "var(--sig-accent)" }}
@@ -168,7 +280,7 @@ export function SignatureCinematicHero({
               {eyebrow}
             </span>
             <h2
-              className="mt-6 font-heading text-[clamp(2.4rem,7vw,6.2rem)] font-semibold leading-[0.88] text-foreground [text-shadow:0_2px_28px_hsl(var(--background)/0.9)]"
+              className={cn("mt-6 font-heading text-[clamp(2.4rem,7vw,6.2rem)] font-semibold leading-[0.88] text-foreground [text-shadow:0_2px_28px_hsl(var(--background)/0.9)]", presentation.title)}
             >
               {title}
             </h2>
@@ -183,6 +295,7 @@ export function SignatureCinematicHero({
           className={cn(
             "absolute inset-0 z-20 flex flex-col justify-center px-5 sm:px-10 lg:px-16",
             alignClass[choreo.reveal.align],
+            presentation.reveal,
             reduced && "relative inset-auto pb-24 pt-4",
           )}
           style={reduced ? { opacity: 1 } : { opacity: revealOpacity, y: revealY, x: revealX }}
@@ -190,6 +303,7 @@ export function SignatureCinematicHero({
           <div
             className={cn(
               "mt-20 max-w-lg px-1",
+              presentation.revealInner,
               choreo.reveal.align === "right" ? "border-r pr-6 sm:pr-10" : "border-l pl-6 sm:pl-10",
             )}
             style={{ borderColor: "var(--sig-accent)" }}
