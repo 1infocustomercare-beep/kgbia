@@ -264,7 +264,7 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
       <section id="hero" className="pt-20 pb-8 px-4 relative">
         {/* Hero effect — signature del settore */}
         <BeautySilkRibbons />
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto relative z-[2]">
           <motion.div initial="hidden" animate="show" variants={stagger}>
             {/* Hero Card with image */}
             <motion.div variants={fadeUp} custom={0} className="relative rounded-[28px] overflow-hidden mb-5" style={{ boxShadow: B.shadow }}>
