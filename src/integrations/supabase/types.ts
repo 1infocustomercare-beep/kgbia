@@ -9209,6 +9209,20 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_partner_referred_payments: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          installments_paid: number
+          installments_total: number
+          partner_commission: number
+          partner_paid: boolean
+          plan_type: string
+          restaurant_id: string
+          restaurant_name: string
+        }[]
+      }
       get_partner_stripe_account: {
         Args: { partner_user_id: string }
         Returns: {
