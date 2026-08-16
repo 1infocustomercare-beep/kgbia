@@ -397,30 +397,9 @@ const RestaurantPage = () => {
 
 
         <motion.div className="relative z-10 text-center px-5 max-w-full" style={{ opacity: heroOpacity }}>
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="flex flex-col items-center">
-            {dbRestaurant?.logo_url ? (
-              <>
-                <img
-                  src={dbRestaurant.logo_url}
-                  alt={restaurantName}
-                  className="w-[78vw] max-w-[420px] sm:max-w-[520px] h-auto object-contain drop-shadow-[0_8px_30px_rgba(0,0,0,0.7)]"
-                  loading="eager"
-                />
-                <h1 className="sr-only">{restaurantName}</h1>
-              </>
-            ) : (
-              <h1 className="text-5xl sm:text-7xl md:text-8xl font-display font-bold text-white tracking-[0.08em] uppercase leading-[0.95]">
-                {restaurantName}
-              </h1>
-            )}
-            <div className="flex items-center justify-center gap-3 mt-5 px-2">
-              <span className="w-6 sm:w-12 h-px bg-primary" />
-              <p className="text-[10px] sm:text-sm text-white/85 tracking-[0.18em] uppercase font-light text-center">
-                {restaurantTagline}
-              </p>
-              <span className="w-6 sm:w-12 h-px bg-primary" />
-            </div>
-          </motion.div>
+          {/* Titolo/logo hero rimosso su richiesta: lascia il video visibile. H1 mantenuto per SEO */}
+          <h1 className="sr-only">{restaurantName} — {restaurantTagline}</h1>
+
 
           <div className="mt-7 sm:mt-10 flex flex-wrap items-center justify-center gap-3">
             <motion.a
