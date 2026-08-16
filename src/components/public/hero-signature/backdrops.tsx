@@ -36,6 +36,8 @@ import tradesAgriturismo from "@/assets/hero-cinematic/trades-agriturismo.png";
 import tradesLegal from "@/assets/hero-cinematic/trades-legal.png";
 import tradesAccounting from "@/assets/hero-cinematic/trades-accounting.png";
 
+import { usePointerParallax } from "./use-pointer-parallax";
+
 const layer = "pointer-events-none absolute inset-0 overflow-hidden";
 export type BackdropProps = { progress: MotionValue<number>; reduced?: boolean; industry?: string };
 
