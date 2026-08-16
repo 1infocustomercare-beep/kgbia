@@ -151,6 +151,12 @@ const TEMPLATE_MAP: Record<string, React.LazyExoticComponent<React.ComponentType
   logistics: TradesPublicSite,
   legal: TradesPublicSite,
   accounting: TradesPublicSite,
+  // ── Aviazione / jet privati: usa il layout luxury transfer (con flyby del jet in hero)
+  aviation: NCCPublicSite,
+  jet: NCCPublicSite,
+  private_jet: NCCPublicSite,
+  charter: NCCPublicSite,
+
 };
 
 /* ── Ticker items per sector ── */
