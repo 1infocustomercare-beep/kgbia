@@ -44,6 +44,7 @@ import {
   Tv, Coffee, Baby, Waves, UtensilsCrossed, Camera, Compass, Zap
 } from "lucide-react";
 import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
+import { NccLightSweep } from "@/components/public/hero-effects";
 
 /* ── NCC Design Tokens ── */
 const NCC = {
@@ -541,6 +542,8 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
 
       {/* ═══════════ HERO — 100vh, video bg + 2 columns ═══════════ */}
       <section className="relative min-h-[100svh] flex items-center pt-24 sm:pt-20 pb-8 px-4 overflow-hidden">
+        {/* Hero effect — signature del settore */}
+        <NccLightSweep />
         {/* Dark background image — Amalfi coast */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"

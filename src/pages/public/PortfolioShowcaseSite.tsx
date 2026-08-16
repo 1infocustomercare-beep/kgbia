@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { type IndustryId } from "@/config/industry-config";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { PORTFOLIO_PROJECTS, type PortfolioProject } from "@/data/portfolio-showcase-data";
+import { LuxuryObsidianSheen } from "@/components/public/hero-effects";
 
 /* ─── DESIGN TOKENS ─── */
 const BG = "#08080a";
@@ -108,6 +109,8 @@ export default function PortfolioShowcaseSite({ industry, slug, accentColor }: P
       {/* ═══ HERO SECTION ═══ */}
       <div style={{ paddingTop: project.subProjects ? "96px" : "56px" }}>
         <section className="relative px-4 pt-12 pb-8 sm:pt-16 sm:pb-12">
+        {/* Hero effect — signature del settore */}
+        <LuxuryObsidianSheen />
           <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
             {/* Left: text */}
             <motion.div

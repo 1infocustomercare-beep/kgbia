@@ -15,6 +15,7 @@ import {
   Eye, Droplets, Gem, Crown, Flower2, Palette, Zap, Shield
 } from "lucide-react";
 import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
+import { BeautySilkRibbons } from "@/components/public/hero-effects";
 
 /* ── ATELIER UNGHIE / BEAUTY DESIGN SYSTEM — Pastel Lavender + Glass ── */
 const B = {
@@ -261,6 +262,8 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
 
       {/* ═══ HERO — App-like card layout ═══ */}
       <section id="hero" className="pt-20 pb-8 px-4 relative">
+        {/* Hero effect — signature del settore */}
+        <BeautySilkRibbons />
         <div className="max-w-6xl mx-auto">
           <motion.div initial="hidden" animate="show" variants={stagger}>
             {/* Hero Card with image */}
