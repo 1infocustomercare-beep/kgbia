@@ -12,7 +12,7 @@
  * - static single frame under `prefers-reduced-motion`
  * - ADDITIVE: mount inside an existing hero `<section className="relative">`
  */
-import { useReducedMotion, motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { useReducedMotion, motion, useScroll, useTransform } from "framer-motion";
 import { useRef, type ReactNode } from "react";
 import privateJet from "@/assets/hero-cinematic/private-jet.png";
 
@@ -160,6 +160,9 @@ export function HeroCinematicFlyby({
   const blur = useTransform(p, [0, 0.48, 1], isJet ? ["blur(0px)", "blur(0px)", "blur(5px)"] : ["blur(0px)", "blur(0px)", "blur(2px)"]);
   const opacity = useTransform(p, [0, 0.74, 0.94, 1], [0.96, 1, 0.55, 0]);
   const wipe = useTransform(p, [0, 0.28, 0.64, 0.82], [0.08, 0.52, 0.16, 0]);
+  const jetTrailScale = useTransform(p, [0, 0.5, 0.85], [0.15, 1, 0]);
+  const jetTrailOpacity = useTransform(p, [0, 0.55, 0.85], [0.5, 0.8, 0]);
+  const roadOpacity = useTransform(p, [0, 0.7, 1], [0.18, 0.7, 0]);
 
   const staticStyle = reduced
     ? { transform: `translate(${dir * -18}%, 6%) rotate(${dir * 6}deg)` }
@@ -188,8 +191,8 @@ export function HeroCinematicFlyby({
         <motion.div
           className="absolute left-0 top-[42%] h-px w-[70%] origin-left"
           style={{
-            scaleX: useTransform(p, [0, 0.5, 0.85], [0.15, 1, 0]),
-            opacity: useTransform(p, [0, 0.55, 0.85], [0.5, 0.8, 0]),
+            scaleX: jetTrailScale,
+            opacity: jetTrailOpacity,
             background: `linear-gradient(90deg, transparent, ${glow}bb, transparent)`,
             filter: "blur(1px)",
           }}
@@ -200,7 +203,7 @@ export function HeroCinematicFlyby({
         <motion.div
           className="absolute inset-x-0 bottom-[22%] h-px"
           style={{
-            opacity: useTransform(p, [0, 0.7, 1], [0.18, 0.7, 0]),
+            opacity: roadOpacity,
             background: `linear-gradient(90deg, transparent, ${glow}88, transparent)`,
             boxShadow: `0 10px 28px ${glow}55`,
           }}
