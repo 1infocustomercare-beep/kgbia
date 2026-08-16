@@ -39,18 +39,22 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
 
   const fetchSales = async () => {
     try {
-      // Fetch real payment records where this partner was the referrer
-      const { data } = await supabase
-        .from("restaurant_payments")
-        .select("*, restaurants(name)")
-        .eq("partner_id", user?.id || "")
-        .order("created_at", { ascending: false });
-      if (data) setSales(data);
+      // Safe projection: no Stripe identifiers exposed to partners
+      const { data } = await (supabase as any).rpc("get_partner_referred_payments");
+      if (data) {
+        setSales(
+          (data as any[]).map((row) => ({
+            ...row,
+            restaurants: { name: row.restaurant_name },
+          })),
+        );
+      }
     } catch (e) {
       console.error(e);
     }
     setLoading(false);
   };
+
 
   const handleConnectStripe = async () => {
     if (!user?.id) return;
