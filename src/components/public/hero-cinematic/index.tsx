@@ -12,8 +12,9 @@
  * - static single frame under `prefers-reduced-motion`
  * - ADDITIVE: mount inside an existing hero `<section className="relative">`
  */
-import { useReducedMotion, motion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { useReducedMotion, motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef, type ReactNode } from "react";
+import privateJet from "@/assets/hero-cinematic/private-jet.png";
 
 /* ══════════════════════════════════════════════════════════
    Silhouettes (viewBox 0 0 120 40, nose pointing right)
@@ -48,6 +49,19 @@ const SHAPES: Record<string, string> = {
 export type CinematicShape = keyof typeof SHAPES;
 
 function Silhouette({ shape, color, glow }: { shape: CinematicShape; color: string; glow: string }) {
+  if (shape === "jet") {
+    return (
+      <img
+        src={privateJet}
+        alt=""
+        width={1536}
+        height={1024}
+        className="h-full w-full object-contain"
+        style={{ filter: `drop-shadow(0 20px 35px ${glow}55)` }}
+      />
+    );
+  }
+
   return (
     <svg viewBox="0 0 120 40" className="h-full w-full overflow-visible">
       <defs>
@@ -93,17 +107,59 @@ export function HeroCinematicFlyby({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const p: MotionValue<number> = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.4 });
+  const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
   const dir = from === "left" ? 1 : -1;
-  const x = useTransform(p, [0, 1], [`${dir * -130}%`, `${dir * 130}%`]);
-  const y = useTransform(p, [0, 0.5, 1], ["18%", "0%", "-22%"]);
-  const rotate = useTransform(p, [0, 0.5, 1], [dir * 10, dir * -3, dir * -14]);
-  const scale = useTransform(p, [0, 0.45, 1], [0.72, 1.08, 0.78]);
-  const blur = useTransform(p, [0, 0.45, 1], ["blur(3px)", "blur(0px)", "blur(4px)"]);
-  const opacity = useTransform(p, [0, 0.06, 0.9, 1], [0, 1, 1, 0]);
-  const wipe = useTransform(p, [0.2, 0.45, 0.7], [0, 0.55, 0]);
+  const isJet = shape === "jet";
+  const isCar = shape === "car";
+  const isBoat = shape === "boat";
+  const isPulse = shape === "pulse";
+  const isKey = shape === "key";
+  const isDiamond = shape === "diamond";
+  const isSun = shape === "sun";
+
+  // Direct mapping (no spring) keeps the scene locked to the visitor's finger/wheel.
+  // Every object starts visible in the first viewport and completes before the hero exits.
+  const x = useTransform(
+    p,
+    [0, 0.72, 1],
+    isJet
+      ? ["-18vw", "105vw", "118vw"]
+      : isCar
+        ? ["62vw", "-42vw", "-55vw"]
+        : isBoat
+          ? ["-22vw", "72vw", "88vw"]
+          : isPulse
+            ? ["-8vw", "18vw", "24vw"]
+            : isKey
+              ? ["58vw", "12vw", "4vw"]
+              : isDiamond
+                ? ["8vw", "54vw", "68vw"]
+                : isSun
+                  ? ["58vw", "42vw", "36vw"]
+                  : from === "left"
+                    ? ["-10vw", "70vw", "86vw"]
+                    : ["68vw", "-18vw", "-28vw"],
+  );
+  const y = useTransform(
+    p,
+    [0, 0.5, 1],
+    isJet ? ["10vh", "-8vh", "-20vh"] : isBoat ? ["10vh", "0vh", "8vh"] : isSun ? ["18vh", "-12vh", "-20vh"] : ["4vh", "-3vh", "-10vh"],
+  );
+  const rotate = useTransform(
+    p,
+    [0, 0.5, 1],
+    isJet ? [-8, 1, 5] : isCar ? [-2, 1, 0] : isKey ? [-18, 8, 18] : isDiamond ? [-16, 22, 48] : [dir * 8, dir * -3, dir * -10],
+  );
+  const rotateX = useTransform(p, [0, 0.5, 1], isKey ? [62, 4, -20] : isDiamond ? [32, -12, 24] : [8, 0, -5]);
+  const scale = useTransform(
+    p,
+    [0, 0.48, 1],
+    isJet ? [0.74, 1.16, 0.82] : isSun ? [0.72, 1.18, 1.35] : isKey ? [0.82, 1.08, 0.96] : [0.82, 1.06, 0.88],
+  );
+  const blur = useTransform(p, [0, 0.48, 1], isJet ? ["blur(0px)", "blur(0px)", "blur(5px)"] : ["blur(0px)", "blur(0px)", "blur(2px)"]);
+  const opacity = useTransform(p, [0, 0.74, 0.94, 1], [0.96, 1, 0.55, 0]);
+  const wipe = useTransform(p, [0, 0.28, 0.64, 0.82], [0.08, 0.52, 0.16, 0]);
 
   const staticStyle = reduced
     ? { transform: `translate(${dir * -18}%, 6%) rotate(${dir * 6}deg)` }
@@ -128,20 +184,50 @@ export function HeroCinematicFlyby({
         />
       )}
 
+      {isJet && (
+        <motion.div
+          className="absolute left-0 top-[42%] h-px w-[70%] origin-left"
+          style={{
+            scaleX: useTransform(p, [0, 0.5, 0.85], [0.15, 1, 0]),
+            opacity: useTransform(p, [0, 0.55, 0.85], [0.5, 0.8, 0]),
+            background: `linear-gradient(90deg, transparent, ${glow}bb, transparent)`,
+            filter: "blur(1px)",
+          }}
+        />
+      )}
+
+      {isCar && (
+        <motion.div
+          className="absolute inset-x-0 bottom-[22%] h-px"
+          style={{
+            opacity: useTransform(p, [0, 0.7, 1], [0.18, 0.7, 0]),
+            background: `linear-gradient(90deg, transparent, ${glow}88, transparent)`,
+            boxShadow: `0 10px 28px ${glow}55`,
+          }}
+        />
+      )}
+
+      {isKey && (
+        <motion.div
+          className="absolute right-[12%] top-[18%] h-[48%] w-px"
+          style={{ opacity: wipe, background: `linear-gradient(transparent, ${glow}, transparent)` }}
+        />
+      )}
+
       <motion.div
         className="absolute"
         style={{
           top: `${altitude}%`,
           left: from === "left" ? "0%" : "auto",
           right: from === "right" ? "0%" : "auto",
-          width: `${size}%`,
-          aspectRatio: "3 / 1",
+          width: isJet ? "min(72vw, 980px)" : `${size}%`,
+          aspectRatio: isJet ? "3 / 2" : "3 / 1",
           ...(reduced
             ? staticStyle
-            : { x, y, rotate, scale, filter: blur, opacity, transformStyle: "preserve-3d" as const }),
+            : { x, y, rotate, rotateX, scale, filter: blur, opacity, transformStyle: "preserve-3d" as const }),
         }}
       >
-        {trail && (
+        {trail && !isPulse && !isSun && (
           <div
             className="absolute right-[86%] top-1/2 h-[14%] w-[220%] -translate-y-1/2 rounded-full"
             style={{
@@ -197,19 +283,19 @@ export function HeroCinematicDepth({ color = "#9fb4d8" }: { color?: string }) {
 export const JetFlyby = () => (
   <>
     <HeroCinematicDepth color="#8fb2e0" />
-    <HeroCinematicFlyby shape="jet" color="#f3f6fb" glow="#c9a84c" from="left" altitude={34} size={46} label="Private jet" />
+    <HeroCinematicFlyby shape="jet" color="#f3f6fb" glow="#c9a84c" from="left" altitude={18} size={72} label="Empire Private Aviation" />
   </>
 );
 export const ChauffeurFlyby = () => (
   <>
     <HeroCinematicDepth color="#c9a84c" />
-    <HeroCinematicFlyby shape="car" color="#1b1b1b" glow="#c9a84c" from="right" altitude={58} size={44} />
+    <HeroCinematicFlyby shape="car" color="#1b1b1b" glow="#c9a84c" from="right" altitude={62} size={42} trail={false} />
   </>
 );
 export const YachtFlyby = () => (
   <>
     <HeroCinematicDepth color="#3aa8c1" />
-    <HeroCinematicFlyby shape="boat" color="#ffffff" glow="#3aa8c1" from="left" altitude={62} size={40} />
+    <HeroCinematicFlyby shape="boat" color="#ffffff" glow="#3aa8c1" from="left" altitude={64} size={42} trail={false} />
   </>
 );
 export const CroissantFlyby = () => (
