@@ -372,27 +372,50 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
             </button>
           </>
         )}
+        {/* Brand + screen label */}
+        {(displayImages[idx] as { brand?: string; label?: string })?.brand && (
+          <div className="absolute top-2 left-2 right-2 flex flex-wrap gap-1">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white bg-black/55 backdrop-blur-sm">
+              {(displayImages[idx] as { brand?: string }).brand}
+            </span>
+            {(displayImages[idx] as { label?: string }).label && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold text-white/90"
+                style={{ background: `${color}55`, backdropFilter: "blur(6px)" }}>
+                {(displayImages[idx] as { label?: string }).label}
+              </span>
+            )}
+          </div>
+        )}
         {/* Counter badge */}
         <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-bold text-white/90 bg-black/50 backdrop-blur-sm">
           {idx + 1}/{count}
         </div>
       </div>
 
+      {/* Caption */}
+      {(displayImages[idx] as { caption?: string })?.caption && (
+        <p className="text-[11px] text-foreground/70 text-center max-w-[300px] mx-auto leading-snug">
+          {(displayImages[idx] as { caption?: string }).caption}
+        </p>
+      )}
+
       {/* Thumbnail strip */}
       {count > 1 && (
-        <div className="flex gap-1.5 overflow-x-auto pb-1 px-1 scrollbar-hide">
+        <div className="flex gap-1.5 overflow-x-auto pb-1 px-1 scrollbar-hide justify-center">
           {displayImages.slice(0, 12).map((img, i) => (
             <button key={i} onClick={() => setIdx(i)}
-              className="flex-shrink-0 w-10 h-[18px] rounded-md overflow-hidden transition-all duration-200"
+              className="flex-shrink-0 w-[34px] rounded-md overflow-hidden transition-all duration-200"
               style={{
+                aspectRatio: "9/19.5",
                 border: i === idx ? `2px solid ${color}` : "1px solid hsla(0,0%,100%,0.1)",
-                opacity: i === idx ? 1 : 0.6,
+                opacity: i === idx ? 1 : 0.55,
               }}>
-              <img src={img.url} alt="" className="w-full h-full object-cover" loading="lazy" onError={() => markAsBroken(img.url)} />
+              <img src={img.url} alt="" className="w-full h-full object-cover object-top" loading="lazy" onError={() => markAsBroken(img.url)} />
             </button>
           ))}
         </div>
       )}
+
 
       {/* Mockup count badge */}
       {catalog && (
