@@ -24,7 +24,6 @@ import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import { HealthcareEcgTrace } from "@/components/public/hero-effects";
-import { PulseFlyby } from "@/components/public/hero-cinematic";
 
 /* ─── ARCTIC SAGE + WARM IVORY AESTHETIC ─── */
 const SAGE = "#5B8C6F";
@@ -173,7 +172,7 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
       {/* HERO — warm, trustworthy split layout */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden" style={{ background: NAVY }}>
         {/* Hero effect — signature del settore */}
-        <HealthcareEcgTrace /><PulseFlyby />
+        <HealthcareEcgTrace />
         <HeroVideoBackground primarySrc={HERO_VIDEO} fallbackSrc={fallbackHeroVideo} poster={GALLERY[0]}
           className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.6) saturate(0.9)", opacity: 0.5 }} />
         <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${NAVY}DD 0%, ${NAVY}99 100%)` }} />

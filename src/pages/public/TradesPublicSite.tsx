@@ -29,8 +29,45 @@ import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
-import { TradesBlueprintSparks } from "@/components/public/hero-effects";
-import { WrenchFlyby } from "@/components/public/hero-cinematic";
+
+const SECTOR_MOTION: Record<string, "circuit" | "water" | "structure" | "nature" | "prism" | "speed" | "aperture" | "care" | "ink" | "play" | "learning" | "stage" | "route" | "sunlight" | "columns" | "ledger"> = {
+  electrician: "circuit", plumber: "water", construction: "structure", gardening: "nature",
+  cleaning: "prism", garage: "speed", photography: "aperture", veterinary: "care",
+  tattoo: "ink", childcare: "play", education: "learning", events: "stage",
+  logistics: "route", agriturismo: "sunlight", legal: "columns", accounting: "ledger",
+};
+
+function SectorHeroAtmosphere({ industry, accent }: { industry: string; accent: string }) {
+  const mode = SECTOR_MOTION[industry] || "structure";
+  const repeated = Array.from({ length: 6 }, (_, index) => index);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden>
+      {mode === "circuit" && repeated.map((index) => (
+        <motion.div key={index} className="absolute h-px origin-left" style={{ background: accent, left: `${8 + index * 15}%`, top: `${28 + (index % 3) * 17}%`, width: "18%", rotate: index % 2 ? 90 : 0 }} animate={{ scaleX: [0, 1, 0], opacity: [0, .8, 0] }} transition={{ duration: 2.8, delay: index * .35, repeat: Infinity }} />
+      ))}
+      {mode === "water" && repeated.slice(0, 4).map((index) => (
+        <motion.div key={index} className="absolute left-1/2 top-[58%] aspect-square rounded-full border" style={{ borderColor: accent, width: `${18 + index * 14}%` }} animate={{ x: "-50%", y: "-50%", scale: [.65, 1.15], opacity: [.45, 0] }} transition={{ duration: 4, delay: index, repeat: Infinity, ease: "easeOut" }} />
+      ))}
+      {mode === "structure" && <motion.div className="absolute inset-y-0 left-[-30%] w-[42%] skew-x-[-18deg]" style={{ background: `linear-gradient(90deg, transparent, ${accent}38, transparent)` }} animate={{ x: ["0vw", "170vw"] }} transition={{ duration: 6, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }} />}
+      {mode === "nature" && repeated.map((index) => (
+        <motion.div key={index} className="absolute bottom-[-12%] w-px origin-bottom" style={{ background: `linear-gradient(transparent, ${accent})`, height: `${38 + index * 7}%`, left: `${12 + index * 15}%`, rotate: `${index % 2 ? 8 : -8}deg` }} animate={{ scaleY: [.2, 1], rotate: [index % 2 ? 8 : -8, index % 2 ? 2 : -2] }} transition={{ duration: 5, delay: index * .4, repeat: Infinity, repeatType: "reverse" }} />
+      ))}
+      {mode === "prism" && <motion.div className="absolute -inset-y-1/2 left-[-25%] w-[24%] rotate-12 blur-xl" style={{ background: `linear-gradient(90deg, transparent, ${accent}65, transparent)` }} animate={{ x: ["0vw", "160vw"] }} transition={{ duration: 5, repeat: Infinity, repeatDelay: 1 }} />}
+      {mode === "speed" && repeated.map((index) => <motion.div key={index} className="absolute right-[-20%] h-px" style={{ background: accent, top: `${36 + index * 7}%`, width: `${18 + index * 5}%` }} animate={{ x: [0, "-130vw"], opacity: [0, .7, 0] }} transition={{ duration: 1.8 + index * .12, delay: index * .2, repeat: Infinity }} />)}
+      {mode === "aperture" && <motion.div className="absolute left-1/2 top-1/2 aspect-square w-[68vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border-[10vmin]" style={{ borderColor: `${accent}22`, boxShadow: `0 0 80px ${accent}33` }} animate={{ rotate: [0, 60], scale: [.85, 1.08, .85] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />}
+      {mode === "care" && <motion.svg className="absolute bottom-[18%] left-0 h-28 w-full" viewBox="0 0 1000 120" preserveAspectRatio="none"><motion.path d="M0 65 H310 L350 65 L380 20 L415 105 L450 50 L480 65 H1000" fill="none" stroke={accent} strokeWidth="3" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} /></motion.svg>}
+      {mode === "ink" && <motion.div className="absolute left-1/2 top-1/2 aspect-square w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" style={{ background: `conic-gradient(from 90deg, transparent, ${accent}55, transparent, ${accent}22, transparent)` }} animate={{ rotate: 360, scale: [.8, 1.1, .8] }} transition={{ duration: 14, repeat: Infinity, ease: "linear" }} />}
+      {mode === "play" && repeated.map((index) => <motion.div key={index} className="absolute aspect-square rounded-[35%] border" style={{ borderColor: `${accent}88`, width: `${34 + index * 8}px`, left: `${8 + index * 17}%`, bottom: "-12%" }} animate={{ y: [0, "-110vh"], rotate: [0, index % 2 ? 180 : -180], opacity: [0, .55, 0] }} transition={{ duration: 8 + index, delay: index * .8, repeat: Infinity }} />)}
+      {mode === "learning" && repeated.slice(0, 4).map((index) => <motion.div key={index} className="absolute h-[42%] w-[18%] border-l border-t" style={{ borderColor: `${accent}55`, left: `${18 + index * 18}%`, bottom: `${-8 + index * 4}%`, transform: `skewY(${index % 2 ? -8 : 8}deg)` }} animate={{ y: [30, -15, 30], opacity: [.2, .6, .2] }} transition={{ duration: 6 + index, repeat: Infinity }} />)}
+      {mode === "stage" && repeated.slice(0, 3).map((index) => <motion.div key={index} className="absolute -top-1/4 h-[140%] w-[16%] origin-top blur-md" style={{ left: `${20 + index * 30}%`, background: `linear-gradient(${accent}60, transparent 70%)`, rotate: `${index * 12 - 12}deg` }} animate={{ rotate: [index * 12 - 18, index * 12 - 6, index * 12 - 18] }} transition={{ duration: 7 + index, repeat: Infinity }} />)}
+      {mode === "route" && repeated.slice(0, 3).map((index) => <motion.div key={index} className="absolute left-[-15%] h-px w-[130%] border-t border-dashed" style={{ borderColor: `${accent}88`, top: `${38 + index * 16}%`, rotate: `${index * 3 - 3}deg` }} animate={{ x: [0, 80] }} transition={{ duration: 2.5 + index, repeat: Infinity, ease: "linear" }} />)}
+      {mode === "sunlight" && repeated.slice(0, 5).map((index) => <motion.div key={index} className="absolute -top-1/3 h-[150%] w-[8%] rotate-[18deg] blur-sm" style={{ left: `${8 + index * 22}%`, background: `linear-gradient(transparent, ${accent}30, transparent)` }} animate={{ opacity: [.15, .6, .15] }} transition={{ duration: 7 + index, delay: index, repeat: Infinity }} />)}
+      {mode === "columns" && repeated.slice(0, 5).map((index) => <motion.div key={index} className="absolute bottom-0 w-[9%] border-x" style={{ borderColor: `${accent}35`, height: `${42 + (index % 3) * 12}%`, left: `${13 + index * 18}%` }} animate={{ opacity: [.18, .5, .18] }} transition={{ duration: 5, delay: index * .5, repeat: Infinity }} />)}
+      {mode === "ledger" && <motion.svg className="absolute inset-x-[8%] bottom-[14%] h-[48%] w-[84%]" viewBox="0 0 1000 300" preserveAspectRatio="none"><motion.path d="M0 260 C120 250 145 205 250 220 S420 160 520 180 S680 95 760 120 S900 50 1000 35" fill="none" stroke={accent} strokeWidth="4" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} /></motion.svg>}
+    </div>
+  );
+}
 
 /* ─── DYNAMIC PALETTE PER TRADE TYPE ─── */
 type VisualStyle = "glass" | "solid" | "neon" | "warm" | "minimal" | "bold" | "organic";
@@ -537,7 +574,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
       {/* HERO */}
       <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
         {/* Hero effect — signature del settore */}
-        <TradesBlueprintSparks /><WrenchFlyby />
+        <SectorHeroAtmosphere industry={industry} accent={A} />
         {heroVideo ? (
           <HeroVideoBackground primarySrc={heroVideo} fallbackSrc={fallbackHeroVideo} className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.4) saturate(1.1)" }} />
         ) : (
