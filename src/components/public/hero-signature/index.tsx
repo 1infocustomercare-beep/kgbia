@@ -194,9 +194,9 @@ export function SignatureCinematicHero({
             {reveal.kicker && (
               <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: "var(--sig-accent)" }}>{reveal.kicker}</p>
             )}
-            <p className="font-heading text-3xl font-semibold leading-none sm:text-5xl">{reveal.title}</p>
+            <p className="font-heading text-3xl font-semibold leading-tight text-foreground [text-shadow:0_2px_24px_hsl(var(--background)/0.9)] sm:text-5xl">{reveal.title}</p>
             {reveal.text && (
-              <p className="mt-5 max-w-md text-sm leading-relaxed text-foreground/70 sm:text-base">{reveal.text}</p>
+              <p className="mt-5 max-w-md text-sm leading-relaxed text-foreground/80 sm:text-base">{reveal.text}</p>
             )}
           </div>
         </motion.div>
