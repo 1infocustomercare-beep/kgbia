@@ -14,7 +14,7 @@ import {
   Settings, Camera, HardHat, Flower2, Stethoscope, Pen,
   Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles, Eye,
   ChevronLeft, ChevronRight as ChevronRightIcon, Images,
-  Trees, Cog, Leaf
+  Trees, Cog, Leaf, Plane
 } from "lucide-react";
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
 import privateJetHangar from "@/assets/hero-cinematic/private-jet-hangar.jpg";
