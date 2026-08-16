@@ -61,6 +61,29 @@ function uniqueImageSources(sources: Array<string | null | undefined>) {
   return Array.from(new Set(sources.filter((source): source is string => Boolean(source && source.trim()))));
 }
 
+/* ═══ Premium portfolio mockups (studio, 4-screen sequences) ═══ */
+type PremiumShot = { url: string; label: string; caption: string; brand: string };
+
+function getPremiumSectorShots(sectorId: string): PremiumShot[] {
+  const group = getSectorGroup(sectorId);
+  if (!group) return [];
+  const ordered = [
+    ...group.variants.filter((v) => v.tier === "primary"),
+    ...group.variants.filter((v) => v.tier !== "primary"),
+  ];
+  const seen = new Set<string>();
+  const shots: PremiumShot[] = [];
+  ordered.forEach((variant) => {
+    variant.screens.forEach((screen) => {
+      if (!screen.image || seen.has(screen.image)) return;
+      seen.add(screen.image);
+      shots.push({ url: screen.image, label: screen.label, caption: screen.caption, brand: variant.brand });
+    });
+  });
+  return shots;
+}
+
+
 /* ═══ Hero Phone Showcase — rotating sector previews in iPhone frame ═══ */
 const HERO_SECTORS: { id: IndustryId; label: string; color: string }[] = [
   { id: "food", label: "Food", color: "25 95% 53%" },
