@@ -180,7 +180,7 @@ export function FitnessPulseWave({ color = "#c8ff3d" }: { color?: string }) {
       ctx.globalAlpha = 0.25 * (1 - p);
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(w * 0.5, h * 0.55, p * Math.max(w, h) * 0.6, 0, Math.PI * 2);
+      ctx.arc(w * 0.5, h * 0.55, Math.max(0, p * Math.max(w, h) * 0.6), 0, Math.PI * 2);
       ctx.stroke();
     }
     // Equalizer bars

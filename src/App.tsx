@@ -292,6 +292,7 @@ const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
 const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
 const DemoAdminPage = lazy(() => import("./pages/demo/DemoAdminPage"));
 const DemoPreviewPage = lazy(() => import("./pages/demo/DemoPreviewPage"));
+const PrivateJetPublicSite = lazy(() => import("./pages/public/PrivateJetPublicSite"));
 const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
 const MediaLibraryPage = lazy(() => import("./pages/superadmin/MediaLibraryPage"));
@@ -654,6 +655,7 @@ function App() {
                       <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
                       <Route path="/b/:slug" element={<BusinessPage />} />
                       <Route path="/demo" element={<DemoDirectoryPage />} />
+                      <Route path="/demo/aurea-jet" element={<PrivateJetPublicSite />} />
                       <Route path="/demo/:slug" element={<IndustryDemoPage />} />
                       <Route path="/demo/:slug/admin" element={<DemoAdminPage />} />
                       <Route path="/preview/:slug" element={<DemoPreviewPage />} />
