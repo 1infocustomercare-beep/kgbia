@@ -269,34 +269,45 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
   const catalog = SECTOR_MOCKUP_CATALOG[sectorId];
   const curatedImages = SECTOR_MOCKUP_IMAGES[sectorId as IndustryId] || [];
 
-  // Flatten all images for this sector, prioritize home images first
+  // Premium portfolio mockups first (studio 4-screen sequences), legacy catalog as fallback
   const allImages = useMemo(() => {
-    const curated: MockupImage[] = curatedImages.map((url, index) => ({
+    type GalleryImage = MockupImage & { label?: string; caption?: string; brand?: string };
+
+    const premium: GalleryImage[] = getPremiumSectorShots(sectorId).map((shot) => ({
+      url: shot.url,
+      type: "home",
+      style: shot.brand,
+      device: "mobile",
+      label: shot.label,
+      caption: shot.caption,
+      brand: shot.brand,
+    }));
+
+    const curated: GalleryImage[] = curatedImages.map((url, index) => ({
       url,
       type: "home",
       style: `priority-${index + 1}`,
       device: "mobile",
     }));
 
-    if (!catalog) {
-      return curated;
-    }
-
-    const homes: MockupImage[] = [];
-    const rest: MockupImage[] = [];
-    catalog.projects.forEach(p => {
+    const homes: GalleryImage[] = [];
+    const rest: GalleryImage[] = [];
+    catalog?.projects.forEach(p => {
       p.images.forEach(img => {
         if (img.type === "home") homes.push(img);
         else rest.push(img);
       });
     });
-    const merged = [...curated, ...homes, ...rest];
-    const unique = new Map<string, MockupImage>();
+
+    const merged = premium.length > 0
+      ? [...premium, ...curated, ...homes, ...rest]
+      : [...curated, ...homes, ...rest];
+    const unique = new Map<string, GalleryImage>();
     merged.forEach((image) => {
       if (!unique.has(image.url)) unique.set(image.url, image);
     });
     return Array.from(unique.values());
-  }, [catalog, curatedImages]);
+  }, [catalog, curatedImages, sectorId]);
 
   useEffect(() => {
     setBrokenUrls(new Set());
