@@ -250,11 +250,12 @@ export function BeachTideRise({ progress }: BackdropProps) {
   return (
     <div className={`${layer} [perspective:1400px]`} aria-hidden>
       <motion.div className="absolute inset-0" style={{ rotateX: tilt, transformStyle: "preserve-3d" }}>
-        <motion.div className="absolute inset-x-0 top-0 h-[64%]" style={{ y: skyY, background: "linear-gradient(180deg, color-mix(in srgb, var(--sig-accent) 32%, transparent), transparent)" }} />
-        <motion.div className="absolute left-1/2 h-[26vmin] w-[26vmin] -translate-x-1/2 rounded-full blur-2xl" style={{ top: sunTop, background: "radial-gradient(circle, var(--sig-accent), transparent 70%)", opacity: 0.55 }} />
-        <motion.img src={beachYacht} alt="" className="absolute top-[42%] w-[min(52vw,620px)] object-contain" style={{ x: boatX, y: boatY }} />
-        <motion.div className="absolute inset-x-[-12%] top-[58%] h-[32%] rounded-t-[50%] bg-[color:var(--sig-accent)]/25 backdrop-blur-[2px]" style={{ y: seaY }} />
-        <motion.div className="absolute inset-x-[-16%] top-[74%] h-[36%] rounded-t-[50%] bg-foreground/10" style={{ y: foamY }} />
+        <motion.div className="absolute inset-x-0 top-0 h-[70%]" style={{ y: skyY, background: "linear-gradient(180deg, color-mix(in srgb, var(--sig-accent) 55%, transparent), color-mix(in srgb, var(--sig-accent) 14%, transparent) 60%, transparent)" }} />
+        <motion.div className="absolute left-[68%] h-[30vmin] w-[30vmin] -translate-x-1/2 rounded-full blur-3xl" style={{ top: sunTop, background: "radial-gradient(circle, var(--sig-accent), transparent 70%)", opacity: 0.7 }} />
+        <motion.img src={beachYacht} alt="" className="absolute top-[50%] w-[min(38vw,460px)] object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)]" style={{ left: boatX, y: boatY }} />
+        <motion.div className="absolute inset-x-[-12%] top-[62%] h-[34%] rounded-t-[50%] bg-[color:var(--sig-accent)]/35 backdrop-blur-[2px]" style={{ y: seaY }} />
+        <motion.div className="absolute inset-x-[-16%] top-[78%] h-[36%] rounded-t-[50%] bg-foreground/15" style={{ y: foamY }} />
+
       </motion.div>
     </div>
   );
