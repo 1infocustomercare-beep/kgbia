@@ -5,6 +5,7 @@ import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { SECTOR_MOCKUP_CATALOG, getSectorHeroImages, type MockupImage } from "@/config/demoSiteMockups";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import { getSectorGroup } from "@/data/sector-mockups";
 import { Input } from "@/components/ui/input";
 import {
   ArrowLeft, Search, ArrowRight, ChevronDown, ChevronUp, Crown,
