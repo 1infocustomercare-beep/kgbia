@@ -418,15 +418,13 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
 
 
       {/* Mockup count badge */}
-      {catalog && (
-        <div className="flex justify-center">
-          <span className="text-[11px] px-2.5 py-1 rounded-full font-semibold text-foreground/70"
-            style={{ background: `${color}15`, border: `1px solid ${color}25` }}>
-            <Images className="w-3 h-3 inline mr-1 -mt-0.5" />
-            {catalog ? `${count}/${catalog.totalCount} mockup caricati` : `${count} mockup caricati`}
-          </span>
-        </div>
-      )}
+      <div className="flex justify-center">
+        <span className="text-[11px] px-2.5 py-1 rounded-full font-semibold text-foreground/70"
+          style={{ background: `${color}15`, border: `1px solid ${color}25` }}>
+          <Images className="w-3 h-3 inline mr-1 -mt-0.5" />
+          {`${count} mockup premium`}
+        </span>
+      </div>
     </div>
   );
 }
