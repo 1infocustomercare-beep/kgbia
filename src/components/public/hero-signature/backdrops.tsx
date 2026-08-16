@@ -39,96 +39,107 @@ import tradesAccounting from "@/assets/hero-cinematic/trades-accounting.png";
 const layer = "pointer-events-none absolute inset-0 overflow-hidden";
 export type BackdropProps = { progress: MotionValue<number>; reduced?: boolean; industry?: string };
 
-/* ═══════════════ FOOD — MOSAICO A COLONNE (parallasse verticale opposta) ═══════════════ */
+/* ═══════════════ FOOD — CAROSELLO ORBITALE 3D (camera che ruota attorno al piatto) ═══════════════ */
 export function FoodFlameSweep({ progress }: BackdropProps) {
-  const colA = useTransform(progress, [0, 1], ["6%", "-34%"]);
-  const colB = useTransform(progress, [0, 1], ["-32%", "8%"]);
-  const colC = useTransform(progress, [0, 1], ["2%", "-26%"]);
-  const heat = useTransform(progress, [0, 0.5, 1], [0.1, 0.4, 0.14]);
-  const cols = [colA, colB, colC];
-  const positions = ["18% 22%", "62% 40%", "38% 78%", "80% 18%", "50% 60%"];
+  const { px, py } = usePointerParallax();
+  const spin = useTransform(progress, [0, 1], [-24, 96]);
+  const orbitY = useTransform([spin, px] as const, ([s, p]: number[]) => s + p * 18);
+  const orbitX = useTransform([progress, py] as const, ([p, y]: number[]) => -6 + p * 10 + y * -8);
+  const dolly = useTransform(progress, [0, 0.5, 1], [0.72, 1.02, 1.28]);
+  const heat = useTransform(progress, [0, 0.5, 1], [0.08, 0.42, 0.16]);
+  const cards = [0, 1, 2, 3, 4, 5];
   return (
-    <div className={layer} aria-hidden>
-      <div className="absolute inset-0 grid grid-cols-3 gap-3 px-3 opacity-[0.55]">
-        {cols.map((y, c) => (
-          <motion.div key={c} className="flex flex-col gap-3" style={{ y }}>
-            {positions.map((pos, i) => (
-              <div
-                key={i}
-                className="relative h-[34vh] overflow-hidden rounded-sm border border-[color:var(--sig-accent)]/25"
-              >
-                <img
-                  src={foodDish}
-                  alt=""
-                  className="h-full w-full scale-[1.35] object-cover"
-                  style={{ objectPosition: positions[(i + c) % positions.length] || pos }}
-                />
-              </div>
-            ))}
-          </motion.div>
+    <div className={`${layer} [perspective:1500px]`} aria-hidden>
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[44vh] w-[34vw] -translate-x-1/2 -translate-y-1/2"
+        style={{ rotateY: orbitY, rotateX: orbitX, scale: dolly, transformStyle: "preserve-3d" }}
+      >
+        {cards.map((i) => (
+          <div
+            key={i}
+            className="absolute inset-0 overflow-hidden rounded-md border border-[color:var(--sig-accent)]/40 bg-background/30 shadow-2xl"
+            style={{
+              transform: `rotateY(${(360 / cards.length) * i}deg) translateZ(30vw)`,
+              backfaceVisibility: "hidden",
+            }}
+          >
+            <img
+              src={foodDish}
+              alt=""
+              className="h-full w-full scale-[1.3] object-cover"
+              style={{ objectPosition: `${12 + i * 15}% ${30 + (i % 3) * 20}%` }}
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,hsl(var(--background)/0.72))]" />
+          </div>
         ))}
-      </div>
+      </motion.div>
       <motion.div
         className="absolute inset-0"
         style={{
           opacity: heat,
-          background:
-            "radial-gradient(120% 60% at 50% 110%, var(--sig-accent), transparent 62%)",
-          filter: "blur(24px)",
+          background: "radial-gradient(120% 60% at 50% 108%, var(--sig-accent), transparent 62%)",
+          filter: "blur(26px)",
         }}
       />
     </div>
   );
 }
 
-/* ═══════════════ BAKERY — FILMSTRIP ORIZZONTALE (pan da cinepresa) ═══════════════ */
+/* ═══════════════ BAKERY — DOLLY LATERALE CON RACK FOCUS (banco che sfila a fuoco variabile) ═══════════════ */
 export function BakeryOvenDoors({ progress }: BackdropProps) {
-  const x = useTransform(progress, [0, 1], ["12%", "-58%"]);
-  const rotate = useTransform(progress, [0, 1], [-2.5, 2.5]);
-  const warmth = useTransform(progress, [0, 0.5, 1], [0.12, 0.34, 0.1]);
+  const { px } = usePointerParallax(45, 20);
+  const baseX = useTransform(progress, [0, 1], [18, -72]);
+  const x = useTransform([baseX, px] as const, ([b, p]: number[]) => `${b + p * -5}%`);
+  const skew = useTransform(progress, [0, 0.5, 1], [7, 0, -7]);
+  const warmth = useTransform(progress, [0, 0.5, 1], [0.1, 0.32, 0.1]);
+  const frames = [0, 1, 2, 3, 4, 5, 6];
   return (
-    <div className={layer} aria-hidden>
-      <motion.div
-        className="absolute left-0 top-[26%] flex h-[46vh] items-center gap-4"
-        style={{ x, rotate }}
-      >
-        {[0, 1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className="relative h-full w-[38vw] shrink-0 overflow-hidden border-y-[10px] border-foreground/10 bg-background/40"
-          >
-            <img
-              src={bakeryCroissant}
-              alt=""
-              className="h-full w-full scale-[1.2] object-cover"
-              style={{ objectPosition: `${18 + i * 14}% 50%` }}
-            />
-            <div className="absolute inset-x-0 top-0 flex justify-between px-1">
-              {Array.from({ length: 9 }).map((_, p) => (
-                <span key={p} className="mt-[-6px] h-2 w-2 rounded-[2px] bg-background/80" />
-              ))}
-            </div>
-          </div>
+    <div className={`${layer} [perspective:1200px]`} aria-hidden>
+      <motion.div className="absolute left-0 top-[24%] flex h-[50vh] items-center gap-6" style={{ x, rotateY: skew, transformStyle: "preserve-3d" }}>
+        {frames.map((i) => (
+          <BakeryFrame key={i} progress={progress} index={i} total={frames.length} />
         ))}
       </motion.div>
-      <motion.div
-        className="absolute inset-0"
-        style={{ opacity: warmth, background: "linear-gradient(180deg, var(--sig-accent), transparent 55%)" }}
-      />
+      <motion.div className="absolute inset-0" style={{ opacity: warmth, background: "linear-gradient(180deg, var(--sig-accent), transparent 58%)" }} />
+      <div className="absolute inset-0 bg-[radial-gradient(80%_70%_at_50%_50%,transparent,hsl(var(--background)/0.7))]" />
     </div>
   );
 }
 
-/* ═══════════════ BEAUTY — WIPE CENTRALE (tenda che si apre sul dettaglio) ═══════════════ */
+function BakeryFrame({ progress, index, total }: BackdropProps & { index: number; total: number }) {
+  const focus = index / (total - 1);
+  const blur = useTransform(progress, [Math.max(0, focus - 0.22), focus, Math.min(1, focus + 0.22)], [7, 0, 7]);
+  const filter = useTransform(blur, (b) => `blur(${b}px)`);
+  const z = useTransform(progress, [Math.max(0, focus - 0.25), focus, Math.min(1, focus + 0.25)], [-90, 40, -90]);
+  return (
+    <motion.div
+      className="relative h-full w-[34vw] shrink-0 overflow-hidden border border-border/40 bg-background/40"
+      style={{ filter, z, transformStyle: "preserve-3d" }}
+    >
+      <img src={bakeryCroissant} alt="" className="h-full w-full scale-[1.18] object-cover" style={{ objectPosition: `${12 + index * 13}% 50%` }} />
+      <span className="absolute bottom-3 left-3 h-px w-10 bg-[color:var(--sig-accent)]" />
+    </motion.div>
+  );
+}
+
+/* ═══════════════ BEAUTY — IRIDE VERTICALE + LUCE CHE SEGUE IL PUNTATORE ═══════════════ */
 export function BeautySilkVeils({ progress }: BackdropProps) {
-  const inset = useTransform(progress, [0, 0.75], ["46%", "0%"]);
-  const clip = useTransform(inset, (v) => `inset(0% ${v} 0% ${v})`);
-  const seam = useTransform(progress, [0, 0.75], [0.9, 0]);
-  const zoom = useTransform(progress, [0, 1], [1.22, 1.02]);
+  const { px, py } = usePointerParallax(70, 16);
+  const inset = useTransform(progress, [0, 0.78], [46, 0]);
+  const clip = useTransform(inset, (v) => `inset(${v * 0.4}% ${v}% ${v * 0.4}% ${v}%)`);
+  const seam = useTransform(progress, [0, 0.7], [0.9, 0]);
+  const zoom = useTransform(progress, [0, 1], [1.26, 1.02]);
+  const lightX = useTransform(px, (p) => `${50 + p * 26}%`);
+  const lightY = useTransform(py, (p) => `${45 + p * 20}%`);
+  const glare = useTransform(
+    [lightX, lightY] as const,
+    ([lx, ly]: string[]) => `radial-gradient(42% 46% at ${lx} ${ly}, color-mix(in srgb, var(--sig-accent) 42%, transparent), transparent 70%)`,
+  );
   return (
     <div className={layer} aria-hidden>
       <motion.div className="absolute inset-0" style={{ clipPath: clip }}>
         <motion.img src={beautySerum} alt="" className="h-full w-full object-cover" style={{ scale: zoom }} />
+        <motion.div className="absolute inset-0 mix-blend-screen" style={{ background: glare, opacity: 0.7 }} />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.55))]" />
       </motion.div>
       <motion.div
@@ -138,6 +149,7 @@ export function BeautySilkVeils({ progress }: BackdropProps) {
     </div>
   );
 }
+
 
 /* ═══════════════ FITNESS — INVARIATO (approvato dal cliente) ═══════════════ */
 export function FitnessKineticBlades({ progress }: BackdropProps) {
