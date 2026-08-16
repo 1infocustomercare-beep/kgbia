@@ -27,6 +27,7 @@ import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import { LuxuryObsidianSheen } from "@/components/public/hero-effects";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ── VERIFIED MATCHING VIDEOS — only sectors with confirmed correct content ── */
 const INDUSTRY_VIDEOS: Record<string, string> = {
@@ -349,6 +350,14 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
       </nav>
 
       {/* ═══ HERO — Cinematic with Video ═══ */}
+      <SignatureCinematicHero
+          accent="#D4B678"
+        variant="luxury"
+        eyebrow="Maison privata"
+        title={<>Il lusso,<br /><span className="text-primary">silenzioso.</span></>}
+        subtitle="Selezione riservata, accesso su invito e un servizio che non chiede due volte."
+        reveal={{ kicker: "Private client · Su invito", title: <>Accedi al<br />servizio riservato.</>, text: "Consulenza dedicata, appuntamenti privati e discrezione assoluta." }}
+      />
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-end pb-20 pt-16 overflow-hidden">
         {/* Hero effect — signature del settore */}
         <LuxuryObsidianSheen />

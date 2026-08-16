@@ -29,6 +29,7 @@ import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 const SECTOR_MOTION: Record<string, "circuit" | "water" | "structure" | "nature" | "prism" | "speed" | "aperture" | "care" | "ink" | "play" | "learning" | "stage" | "route" | "sunlight" | "columns" | "ledger"> = {
   electrician: "circuit", plumber: "water", construction: "structure", gardening: "nature",
@@ -572,6 +573,14 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
       </nav>
 
       {/* HERO */}
+      <SignatureCinematicHero
+          accent="#F2A63B"
+        variant="trades"
+        eyebrow="Servizi tecnici"
+        title={<>Progetto chiaro,<br /><span className="text-primary">lavoro perfetto.</span></>}
+        subtitle="Preventivi trasparenti, squadre certificate e cantieri sempre tracciati."
+        reveal={{ kicker: "Preventivi · Interventi · Cantieri", title: <>Richiedi il preventivo<br />in due minuti.</>, text: "Sopralluogo prenotabile, stima immediata e avanzamento lavori condiviso." }}
+      />
       <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
         {/* Hero effect — signature del settore */}
         <SectorHeroAtmosphere industry={industry} accent={A} />

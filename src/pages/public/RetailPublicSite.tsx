@@ -21,6 +21,7 @@ import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
 import { RetailSpotlightSheen } from "@/components/public/hero-effects";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ─── ONYX + CHAMPAGNE HIGH-FASHION EDITORIAL ─── */
 const ONYX = "#111111";
@@ -138,6 +139,14 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
       </nav>
 
       {/* HERO — editorial split */}
+      <SignatureCinematicHero
+          accent="#C9A84C"
+        variant="retail"
+        eyebrow="Retail boutique"
+        title={<>La vetrina,<br /><span className="text-primary">che si apre.</span></>}
+        subtitle="Collezioni curate, disponibilità reale e ritiro in negozio senza attese."
+        reveal={{ kicker: "Catalogo · Stock · Click & collect", title: <>Guarda, scegli,<br />ritira in boutique.</>, text: "Catalogo sincronizzato, prenotazione capi e assistenza personale in store." }}
+      />
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden" style={{ background: ONYX }}>
         {/* Hero effect — signature del settore */}
         <RetailSpotlightSheen />

@@ -6,6 +6,7 @@ import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
 import jetFlyby from "@/assets/hero-cinematic/private-jet.png";
+import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat, LuxeTag } from "@/components/public/luxe";
 
 const services = [
   { icon: Plane, title: "Charter su misura", text: "Rotta, aeromobile e orari costruiti intorno alla tua agenda." },
@@ -122,28 +123,54 @@ export default function PrivateJetPublicSite() {
         </div>
       </section>
 
-      <section className="border-y border-border/50 bg-card py-20 sm:py-28">
-        <div className="mx-auto grid max-w-6xl gap-px bg-border/50 px-5 sm:grid-cols-3 sm:px-8">
-          {services.map(({ icon: Icon, title, text }) => (
-            <article key={title} className="bg-card p-7 sm:p-9">
-              <Icon className="mb-8 h-7 w-7 text-primary" />
-              <h3 className="font-heading text-2xl font-semibold">{title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{text}</p>
-            </article>
-          ))}
+      {/* ═══ Stat strip — instrument panel ═══ */}
+      <section className="relative border-y border-border/50 bg-card/60">
+        <LuxeGrain opacity={0.04} />
+        <div className="relative mx-auto grid max-w-6xl grid-cols-2 divide-x divide-border/50 sm:grid-cols-4">
+          <LuxeStat value="5.000+" label="Aeroporti" />
+          <LuxeStat value="< 2 h" label="Tempo di attivazione" />
+          <LuxeStat value="24/7" label="Flight desk" />
+          <LuxeStat value="100%" label="Operatori certificati" />
         </div>
       </section>
 
-      <section id="richiesta" className="relative overflow-hidden px-5 py-24 sm:px-8 sm:py-36">
-        <div className="mx-auto max-w-5xl text-center">
+      {/* ═══ Services — premium framed panels ═══ */}
+      <section className="relative px-5 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 flex flex-col items-start gap-5">
+            <LuxeTag><Sparkles className="h-3 w-3" /> Servizio privato</LuxeTag>
+            <h2 className="max-w-2xl font-heading text-3xl font-semibold leading-tight sm:text-5xl">
+              Un solo referente. Ogni dettaglio già previsto.
+            </h2>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-3">
+            {services.map(({ icon: Icon, title, text }) => (
+              <LuxePanel key={title} glass glow className="p-7 sm:p-9">
+                <Icon className="mb-8 h-7 w-7 text-primary" />
+                <h3 className="font-heading text-2xl font-semibold">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{text}</p>
+              </LuxePanel>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ Request — VIP console ═══ */}
+      <section id="richiesta" className="relative px-5 pb-24 sm:px-8 sm:pb-36">
+        <LuxePanel glass glow className="mx-auto max-w-5xl px-6 py-16 text-center sm:px-14 sm:py-24">
           <CalendarDays className="mx-auto mb-7 h-8 w-8 text-primary" />
           <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-primary">Flight desk 24/7</p>
-          <h2 className="mx-auto mt-5 max-w-4xl font-heading text-4xl font-semibold sm:text-7xl">Dimmi dove. Al resto pensiamo noi.</h2>
-          <p className="mx-auto mt-6 max-w-xl text-muted-foreground">Ricevi una proposta personalizzata per rotta, passeggeri e preferenze di bordo.</p>
+          <h2 className="mx-auto mt-5 max-w-3xl font-heading text-3xl font-semibold sm:text-6xl">
+            Dimmi dove. Al resto pensiamo noi.
+          </h2>
+          <LuxeDivider className="mx-auto max-w-xs" />
+          <p className="mx-auto max-w-xl text-muted-foreground">
+            Ricevi una proposta personalizzata per rotta, passeggeri e preferenze di bordo.
+          </p>
           <Button asChild size="lg" className="mt-9 min-h-12 rounded-none px-8 uppercase tracking-[0.16em]">
             <Link to="/auth">Parla con un flight advisor <ArrowRight className="h-4 w-4" /></Link>
           </Button>
-        </div>
+        </LuxePanel>
       </section>
     </main>
   );
