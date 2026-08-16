@@ -5,6 +5,7 @@ import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { SECTOR_MOCKUP_CATALOG, getSectorHeroImages, type MockupImage } from "@/config/demoSiteMockups";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import { getSectorGroup } from "@/data/sector-mockups";
 import { Input } from "@/components/ui/input";
 import {
   ArrowLeft, Search, ArrowRight, ChevronDown, ChevronUp, Crown,
@@ -61,6 +62,29 @@ function uniqueImageSources(sources: Array<string | null | undefined>) {
   return Array.from(new Set(sources.filter((source): source is string => Boolean(source && source.trim()))));
 }
 
+/* ═══ Premium portfolio mockups (studio, 4-screen sequences) ═══ */
+type PremiumShot = { url: string; label: string; caption: string; brand: string };
+
+function getPremiumSectorShots(sectorId: string): PremiumShot[] {
+  const group = getSectorGroup(sectorId);
+  if (!group) return [];
+  const ordered = [
+    ...group.variants.filter((v) => v.tier === "primary"),
+    ...group.variants.filter((v) => v.tier !== "primary"),
+  ];
+  const seen = new Set<string>();
+  const shots: PremiumShot[] = [];
+  ordered.forEach((variant) => {
+    variant.screens.forEach((screen) => {
+      if (!screen.image || seen.has(screen.image)) return;
+      seen.add(screen.image);
+      shots.push({ url: screen.image, label: screen.label, caption: screen.caption, brand: variant.brand });
+    });
+  });
+  return shots;
+}
+
+
 /* ═══ Hero Phone Showcase — rotating sector previews in iPhone frame ═══ */
 const HERO_SECTORS: { id: IndustryId; label: string; color: string }[] = [
   { id: "food", label: "Food", color: "25 95% 53%" },
@@ -83,6 +107,7 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
   const sector = HERO_SECTORS[activeIdx];
   const heroImageSources = useMemo(
     () => uniqueImageSources([
+      ...getPremiumSectorShots(sector.id).map((shot) => shot.url),
       ...(SECTOR_MOCKUP_IMAGES[sector.id] || []),
       ...getSectorHeroImages(sector.id),
       SECTOR_MOCKUP_CATALOG[sector.id]?.heroImage,
@@ -244,34 +269,45 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
   const catalog = SECTOR_MOCKUP_CATALOG[sectorId];
   const curatedImages = SECTOR_MOCKUP_IMAGES[sectorId as IndustryId] || [];
 
-  // Flatten all images for this sector, prioritize home images first
+  // Premium portfolio mockups first (studio 4-screen sequences), legacy catalog as fallback
   const allImages = useMemo(() => {
-    const curated: MockupImage[] = curatedImages.map((url, index) => ({
+    type GalleryImage = MockupImage & { label?: string; caption?: string; brand?: string };
+
+    const premium: GalleryImage[] = getPremiumSectorShots(sectorId).map((shot) => ({
+      url: shot.url,
+      type: "home",
+      style: shot.brand,
+      device: "mobile",
+      label: shot.label,
+      caption: shot.caption,
+      brand: shot.brand,
+    }));
+
+    const curated: GalleryImage[] = curatedImages.map((url, index) => ({
       url,
       type: "home",
       style: `priority-${index + 1}`,
       device: "mobile",
     }));
 
-    if (!catalog) {
-      return curated;
-    }
-
-    const homes: MockupImage[] = [];
-    const rest: MockupImage[] = [];
-    catalog.projects.forEach(p => {
+    const homes: GalleryImage[] = [];
+    const rest: GalleryImage[] = [];
+    catalog?.projects.forEach(p => {
       p.images.forEach(img => {
         if (img.type === "home") homes.push(img);
         else rest.push(img);
       });
     });
-    const merged = [...curated, ...homes, ...rest];
-    const unique = new Map<string, MockupImage>();
+
+    const merged = premium.length > 0
+      ? [...premium, ...curated, ...homes, ...rest]
+      : [...curated, ...homes, ...rest];
+    const unique = new Map<string, GalleryImage>();
     merged.forEach((image) => {
       if (!unique.has(image.url)) unique.set(image.url, image);
     });
     return Array.from(unique.values());
-  }, [catalog, curatedImages]);
+  }, [catalog, curatedImages, sectorId]);
 
   useEffect(() => {
     setBrokenUrls(new Set());
@@ -336,38 +372,59 @@ function MockupGallery({ sectorId, color }: { sectorId: string; color: string })
             </button>
           </>
         )}
+        {/* Brand + screen label */}
+        {(displayImages[idx] as { brand?: string; label?: string })?.brand && (
+          <div className="absolute top-2 left-2 right-2 flex flex-wrap gap-1">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white bg-black/55 backdrop-blur-sm">
+              {(displayImages[idx] as { brand?: string }).brand}
+            </span>
+            {(displayImages[idx] as { label?: string }).label && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold text-white/90"
+                style={{ background: `${color}55`, backdropFilter: "blur(6px)" }}>
+                {(displayImages[idx] as { label?: string }).label}
+              </span>
+            )}
+          </div>
+        )}
         {/* Counter badge */}
         <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-bold text-white/90 bg-black/50 backdrop-blur-sm">
           {idx + 1}/{count}
         </div>
       </div>
 
+      {/* Caption */}
+      {(displayImages[idx] as { caption?: string })?.caption && (
+        <p className="text-[11px] text-foreground/70 text-center max-w-[300px] mx-auto leading-snug">
+          {(displayImages[idx] as { caption?: string }).caption}
+        </p>
+      )}
+
       {/* Thumbnail strip */}
       {count > 1 && (
-        <div className="flex gap-1.5 overflow-x-auto pb-1 px-1 scrollbar-hide">
+        <div className="flex gap-1.5 overflow-x-auto pb-1 px-1 scrollbar-hide justify-center">
           {displayImages.slice(0, 12).map((img, i) => (
             <button key={i} onClick={() => setIdx(i)}
-              className="flex-shrink-0 w-10 h-[18px] rounded-md overflow-hidden transition-all duration-200"
+              className="flex-shrink-0 w-[34px] rounded-md overflow-hidden transition-all duration-200"
               style={{
+                aspectRatio: "9/19.5",
                 border: i === idx ? `2px solid ${color}` : "1px solid hsla(0,0%,100%,0.1)",
-                opacity: i === idx ? 1 : 0.6,
+                opacity: i === idx ? 1 : 0.55,
               }}>
-              <img src={img.url} alt="" className="w-full h-full object-cover" loading="lazy" onError={() => markAsBroken(img.url)} />
+              <img src={img.url} alt="" className="w-full h-full object-cover object-top" loading="lazy" onError={() => markAsBroken(img.url)} />
             </button>
           ))}
         </div>
       )}
 
+
       {/* Mockup count badge */}
-      {catalog && (
-        <div className="flex justify-center">
-          <span className="text-[11px] px-2.5 py-1 rounded-full font-semibold text-foreground/70"
-            style={{ background: `${color}15`, border: `1px solid ${color}25` }}>
-            <Images className="w-3 h-3 inline mr-1 -mt-0.5" />
-            {catalog ? `${count}/${catalog.totalCount} mockup caricati` : `${count} mockup caricati`}
-          </span>
-        </div>
-      )}
+      <div className="flex justify-center">
+        <span className="text-[11px] px-2.5 py-1 rounded-full font-semibold text-foreground/70"
+          style={{ background: `${color}15`, border: `1px solid ${color}25` }}>
+          <Images className="w-3 h-3 inline mr-1 -mt-0.5" />
+          {`${count} mockup premium`}
+        </span>
+      </div>
     </div>
   );
 }
@@ -558,6 +615,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
   const route = featured?.route || (id === "food" ? `/r/${DEMO_SLUGS[id]}` : `/b/${DEMO_SLUGS[id]}`);
   const previewSources = useMemo(
     () => uniqueImageSources([
+      ...getPremiumSectorShots(id).map((shot) => shot.url),
       ...getSectorHeroImages(id),
       ...(SECTOR_MOCKUP_IMAGES[id] || []),
       SECTOR_MOCKUP_CATALOG[id]?.heroImage,
