@@ -90,6 +90,10 @@ export function SignatureCinematicHero({
   const revealY = useTransform(scrollYProgress, [0.26, 0.5], [choreo.reveal.y ?? 0, 0]);
   const revealX = useTransform(scrollYProgress, [0.26, 0.5], [choreo.reveal.x ?? 0, 0]);
 
+  // Transform-based pin: works even when an ancestor uses overflow clip/hidden
+  // (position: sticky silently fails inside such containers).
+  const pinY = useTransform(scrollYProgress, [0, 1], ["0svh", "80svh"]);
+
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.04, 1.16]);
   const imgY = useTransform(scrollYProgress, [0, 1], [0, 56]);
   const veil = useTransform(scrollYProgress, [0, 0.6, 1], [0.5, 0.7, 0.42]);
@@ -100,7 +104,10 @@ export function SignatureCinematicHero({
       className={cn("relative bg-background", reduced ? "h-auto" : choreo.height, className)}
       style={{ ["--sig-accent" as string]: accent ?? "hsl(var(--primary))" } as React.CSSProperties}
     >
-      <div className={cn("sticky top-0 overflow-hidden", reduced ? "h-auto min-h-[100svh]" : "h-[100svh]")}>
+      <motion.div
+        className={cn("relative overflow-hidden", reduced ? "h-auto min-h-[100svh]" : "h-[100svh]")}
+        style={reduced ? undefined : { y: pinY, willChange: "transform" }}
+      >
         {image && (
           <motion.img
             src={image}
@@ -201,7 +208,7 @@ export function SignatureCinematicHero({
           <span className="text-[9px] uppercase tracking-[0.3em] text-foreground/60">Scorri</span>
           <ChevronDown className="mx-auto mt-2 h-5 w-5 animate-bounce" style={{ color: "var(--sig-accent)" }} />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }
