@@ -36,99 +36,112 @@ import tradesAgriturismo from "@/assets/hero-cinematic/trades-agriturismo.png";
 import tradesLegal from "@/assets/hero-cinematic/trades-legal.png";
 import tradesAccounting from "@/assets/hero-cinematic/trades-accounting.png";
 
+import { usePointerParallax } from "./use-pointer-parallax";
+
 const layer = "pointer-events-none absolute inset-0 overflow-hidden";
 export type BackdropProps = { progress: MotionValue<number>; reduced?: boolean; industry?: string };
 
-/* ═══════════════ FOOD — MOSAICO A COLONNE (parallasse verticale opposta) ═══════════════ */
+/* ═══════════════ FOOD — CAROSELLO ORBITALE 3D (camera che ruota attorno al piatto) ═══════════════ */
 export function FoodFlameSweep({ progress }: BackdropProps) {
-  const colA = useTransform(progress, [0, 1], ["6%", "-34%"]);
-  const colB = useTransform(progress, [0, 1], ["-32%", "8%"]);
-  const colC = useTransform(progress, [0, 1], ["2%", "-26%"]);
-  const heat = useTransform(progress, [0, 0.5, 1], [0.1, 0.4, 0.14]);
-  const cols = [colA, colB, colC];
-  const positions = ["18% 22%", "62% 40%", "38% 78%", "80% 18%", "50% 60%"];
+  const { px, py } = usePointerParallax();
+  const spin = useTransform(progress, [0, 1], [-24, 96]);
+  const orbitY = useTransform([spin, px] as const, ([s, p]: number[]) => s + p * 18);
+  const orbitX = useTransform([progress, py] as const, ([p, y]: number[]) => -6 + p * 10 + y * -8);
+  const dolly = useTransform(progress, [0, 0.5, 1], [0.72, 1.02, 1.28]);
+  const heat = useTransform(progress, [0, 0.5, 1], [0.08, 0.42, 0.16]);
+  const cards = [0, 1, 2, 3, 4, 5];
   return (
-    <div className={layer} aria-hidden>
-      <div className="absolute inset-0 grid grid-cols-3 gap-3 px-3 opacity-[0.55]">
-        {cols.map((y, c) => (
-          <motion.div key={c} className="flex flex-col gap-3" style={{ y }}>
-            {positions.map((pos, i) => (
-              <div
-                key={i}
-                className="relative h-[34vh] overflow-hidden rounded-sm border border-[color:var(--sig-accent)]/25"
-              >
-                <img
-                  src={foodDish}
-                  alt=""
-                  className="h-full w-full scale-[1.35] object-cover"
-                  style={{ objectPosition: positions[(i + c) % positions.length] || pos }}
-                />
-              </div>
-            ))}
-          </motion.div>
+    <div className={`${layer} [perspective:1500px]`} aria-hidden>
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[44vh] w-[34vw] -translate-x-1/2 -translate-y-1/2"
+        style={{ rotateY: orbitY, rotateX: orbitX, scale: dolly, transformStyle: "preserve-3d" }}
+      >
+        {cards.map((i) => (
+          <div
+            key={i}
+            className="absolute inset-0 overflow-hidden rounded-md border border-[color:var(--sig-accent)]/40 bg-background/30 shadow-2xl"
+            style={{
+              transform: `rotateY(${(360 / cards.length) * i}deg) translateZ(30vw)`,
+              backfaceVisibility: "hidden",
+            }}
+          >
+            <img
+              src={foodDish}
+              alt=""
+              className="h-full w-full scale-[1.3] object-cover"
+              style={{ objectPosition: `${12 + i * 15}% ${30 + (i % 3) * 20}%` }}
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,hsl(var(--background)/0.72))]" />
+          </div>
         ))}
-      </div>
+      </motion.div>
       <motion.div
         className="absolute inset-0"
         style={{
           opacity: heat,
-          background:
-            "radial-gradient(120% 60% at 50% 110%, var(--sig-accent), transparent 62%)",
-          filter: "blur(24px)",
+          background: "radial-gradient(120% 60% at 50% 108%, var(--sig-accent), transparent 62%)",
+          filter: "blur(26px)",
         }}
       />
     </div>
   );
 }
 
-/* ═══════════════ BAKERY — FILMSTRIP ORIZZONTALE (pan da cinepresa) ═══════════════ */
+/* ═══════════════ BAKERY — DOLLY LATERALE CON RACK FOCUS (banco che sfila a fuoco variabile) ═══════════════ */
 export function BakeryOvenDoors({ progress }: BackdropProps) {
-  const x = useTransform(progress, [0, 1], ["12%", "-58%"]);
-  const rotate = useTransform(progress, [0, 1], [-2.5, 2.5]);
-  const warmth = useTransform(progress, [0, 0.5, 1], [0.12, 0.34, 0.1]);
+  const { px } = usePointerParallax(45, 20);
+  const baseX = useTransform(progress, [0, 1], [18, -72]);
+  const x = useTransform([baseX, px] as const, ([b, p]: number[]) => `${b + p * -5}%`);
+  const skew = useTransform(progress, [0, 0.5, 1], [7, 0, -7]);
+  const warmth = useTransform(progress, [0, 0.5, 1], [0.1, 0.32, 0.1]);
+  const frames = [0, 1, 2, 3, 4, 5, 6];
   return (
-    <div className={layer} aria-hidden>
-      <motion.div
-        className="absolute left-0 top-[26%] flex h-[46vh] items-center gap-4"
-        style={{ x, rotate }}
-      >
-        {[0, 1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className="relative h-full w-[38vw] shrink-0 overflow-hidden border-y-[10px] border-foreground/10 bg-background/40"
-          >
-            <img
-              src={bakeryCroissant}
-              alt=""
-              className="h-full w-full scale-[1.2] object-cover"
-              style={{ objectPosition: `${18 + i * 14}% 50%` }}
-            />
-            <div className="absolute inset-x-0 top-0 flex justify-between px-1">
-              {Array.from({ length: 9 }).map((_, p) => (
-                <span key={p} className="mt-[-6px] h-2 w-2 rounded-[2px] bg-background/80" />
-              ))}
-            </div>
-          </div>
+    <div className={`${layer} [perspective:1200px]`} aria-hidden>
+      <motion.div className="absolute left-0 top-[24%] flex h-[50vh] items-center gap-6" style={{ x, rotateY: skew, transformStyle: "preserve-3d" }}>
+        {frames.map((i) => (
+          <BakeryFrame key={i} progress={progress} index={i} total={frames.length} />
         ))}
       </motion.div>
-      <motion.div
-        className="absolute inset-0"
-        style={{ opacity: warmth, background: "linear-gradient(180deg, var(--sig-accent), transparent 55%)" }}
-      />
+      <motion.div className="absolute inset-0" style={{ opacity: warmth, background: "linear-gradient(180deg, var(--sig-accent), transparent 58%)" }} />
+      <div className="absolute inset-0 bg-[radial-gradient(80%_70%_at_50%_50%,transparent,hsl(var(--background)/0.7))]" />
     </div>
   );
 }
 
-/* ═══════════════ BEAUTY — WIPE CENTRALE (tenda che si apre sul dettaglio) ═══════════════ */
+function BakeryFrame({ progress, index, total }: BackdropProps & { index: number; total: number }) {
+  const focus = index / (total - 1);
+  const blur = useTransform(progress, [Math.max(0, focus - 0.22), focus, Math.min(1, focus + 0.22)], [7, 0, 7]);
+  const filter = useTransform(blur, (b) => `blur(${b}px)`);
+  const z = useTransform(progress, [Math.max(0, focus - 0.25), focus, Math.min(1, focus + 0.25)], [-90, 40, -90]);
+  return (
+    <motion.div
+      className="relative h-full w-[34vw] shrink-0 overflow-hidden border border-border/40 bg-background/40"
+      style={{ filter, z, transformStyle: "preserve-3d" }}
+    >
+      <img src={bakeryCroissant} alt="" className="h-full w-full scale-[1.18] object-cover" style={{ objectPosition: `${12 + index * 13}% 50%` }} />
+      <span className="absolute bottom-3 left-3 h-px w-10 bg-[color:var(--sig-accent)]" />
+    </motion.div>
+  );
+}
+
+/* ═══════════════ BEAUTY — IRIDE VERTICALE + LUCE CHE SEGUE IL PUNTATORE ═══════════════ */
 export function BeautySilkVeils({ progress }: BackdropProps) {
-  const inset = useTransform(progress, [0, 0.75], ["46%", "0%"]);
-  const clip = useTransform(inset, (v) => `inset(0% ${v} 0% ${v})`);
-  const seam = useTransform(progress, [0, 0.75], [0.9, 0]);
-  const zoom = useTransform(progress, [0, 1], [1.22, 1.02]);
+  const { px, py } = usePointerParallax(70, 16);
+  const inset = useTransform(progress, [0, 0.78], [46, 0]);
+  const clip = useTransform(inset, (v) => `inset(${v * 0.4}% ${v}% ${v * 0.4}% ${v}%)`);
+  const seam = useTransform(progress, [0, 0.7], [0.9, 0]);
+  const zoom = useTransform(progress, [0, 1], [1.26, 1.02]);
+  const lightX = useTransform(px, (p) => `${50 + p * 26}%`);
+  const lightY = useTransform(py, (p) => `${45 + p * 20}%`);
+  const glare = useTransform(
+    [lightX, lightY] as const,
+    ([lx, ly]: string[]) => `radial-gradient(42% 46% at ${lx} ${ly}, color-mix(in srgb, var(--sig-accent) 42%, transparent), transparent 70%)`,
+  );
   return (
     <div className={layer} aria-hidden>
       <motion.div className="absolute inset-0" style={{ clipPath: clip }}>
         <motion.img src={beautySerum} alt="" className="h-full w-full object-cover" style={{ scale: zoom }} />
+        <motion.div className="absolute inset-0 mix-blend-screen" style={{ background: glare, opacity: 0.7 }} />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.55))]" />
       </motion.div>
       <motion.div
@@ -138,6 +151,7 @@ export function BeautySilkVeils({ progress }: BackdropProps) {
     </div>
   );
 }
+
 
 /* ═══════════════ FITNESS — INVARIATO (approvato dal cliente) ═══════════════ */
 export function FitnessKineticBlades({ progress }: BackdropProps) {
@@ -190,82 +204,98 @@ export function HealthcareDilation({ progress }: BackdropProps) {
   );
 }
 
-/* ═══════════════ HOTEL — VENEZIANA (lamelle che si aprono sulla suite) ═══════════════ */
+/* ═══════════════ HOTEL — VENEZIANA 3D (lamelle che si aprono, camera che oscilla) ═══════════════ */
 export function HotelCurtainRise({ progress }: BackdropProps) {
-  const slats = [0, 1, 2, 3, 4, 5, 6, 7];
-  const zoom = useTransform(progress, [0, 1], [1.18, 1.03]);
+  const { px, py } = usePointerParallax(50, 20);
+  const slats = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const zoom = useTransform(progress, [0, 1], [1.24, 1.04]);
+  const camY = useTransform(px, (p) => p * 5);
+  const camX = useTransform(py, (p) => p * -4);
+  const drift = useTransform(progress, [0, 1], ["-4%", "4%"]);
   return (
-    <div className={`${layer} [perspective:1400px]`} aria-hidden>
-      <motion.img src={hotelKey} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70" style={{ scale: zoom }} />
-      <div className="absolute inset-0 flex flex-col">
+    <div className={`${layer} [perspective:1600px]`} aria-hidden>
+      <motion.img src={hotelKey} alt="" className="absolute inset-0 h-full w-full object-cover opacity-75" style={{ scale: zoom, x: drift }} />
+      <motion.div className="absolute inset-0 flex flex-col" style={{ rotateY: camY, rotateX: camX, transformStyle: "preserve-3d" }}>
         {slats.map((i) => (
           <HotelSlat key={i} progress={progress} index={i} total={slats.length} />
         ))}
-      </div>
+      </motion.div>
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)/0.35),transparent_45%,hsl(var(--background)/0.6))]" />
     </div>
   );
 }
 
 function HotelSlat({ progress, index, total }: BackdropProps & { index: number; total: number }) {
-  const start = 0.05 + (index / total) * 0.45;
-  const rotateX = useTransform(progress, [start, start + 0.4], [0, -88]);
-  const opacity = useTransform(progress, [start, start + 0.4], [1, 0]);
+  const start = 0.04 + (index / total) * 0.5;
+  const rotateX = useTransform(progress, [start, start + 0.34], [0, -90]);
+  const opacity = useTransform(progress, [start, start + 0.34], [1, 0]);
   return (
     <motion.div
-      className="flex-1 origin-top border-b border-border/30 bg-background/95"
+      className="flex-1 origin-top border-b border-border/25 bg-background/95"
       style={{ rotateX, opacity, transformStyle: "preserve-3d" }}
     />
   );
 }
 
-/* ═══════════════ BEACH — PARALLASSE D'ORIZZONTE (strati a velocità diverse) ═══════════════ */
+/* ═══════════════ BEACH — ORIZZONTE A STRATI CON TILT INTERATTIVO ═══════════════ */
 export function BeachTideRise({ progress }: BackdropProps) {
-  const sky = useTransform(progress, [0, 1], ["0%", "-12%"]);
-  const sea = useTransform(progress, [0, 1], ["0%", "18%"]);
-  const foam = useTransform(progress, [0, 1], ["0%", "42%"]);
-  const boat = useTransform(progress, [0, 1], ["-6%", "10%"]);
-  const sun = useTransform(progress, [0, 1], ["18%", "40%"]);
+  const { px, py } = usePointerParallax(40, 22);
+  const skyY = useTransform(progress, [0, 1], [0, -80]);
+  const seaY = useTransform(progress, [0, 1], [0, 130]);
+  const foamY = useTransform(progress, [0, 1], [0, 260]);
+  const boatX = useTransform([progress, px] as const, ([p, m]: number[]) => `${46 + p * 26 + m * 6}%`);
+  const boatY = useTransform(py, (p) => p * 10);
+  const sunTop = useTransform(progress, [0, 1], ["16%", "44%"]);
+  const tilt = useTransform(py, (p) => p * -3);
   return (
-    <div className={layer} aria-hidden>
-      <motion.div className="absolute inset-x-0 top-0 h-[62%]" style={{ y: sky, background: "linear-gradient(180deg, color-mix(in srgb, var(--sig-accent) 30%, transparent), transparent)" }} />
-      <motion.div className="absolute left-1/2 h-[24vmin] w-[24vmin] -translate-x-1/2 rounded-full blur-2xl" style={{ top: sun, background: "radial-gradient(circle, var(--sig-accent), transparent 70%)", opacity: 0.5 }} />
-      <motion.img src={beachYacht} alt="" className="absolute left-[12%] top-[42%] w-[min(52vw,620px)] object-contain opacity-90" style={{ x: boat }} />
-      <motion.div className="absolute inset-x-[-10%] top-[58%] h-[30%] rounded-t-[50%] bg-[color:var(--sig-accent)]/25 backdrop-blur-[2px]" style={{ y: sea }} />
-      <motion.div className="absolute inset-x-[-14%] top-[74%] h-[34%] rounded-t-[50%] bg-foreground/10" style={{ y: foam }} />
+    <div className={`${layer} [perspective:1400px]`} aria-hidden>
+      <motion.div className="absolute inset-0" style={{ rotateX: tilt, transformStyle: "preserve-3d" }}>
+        <motion.div className="absolute inset-x-0 top-0 h-[70%]" style={{ y: skyY, background: "linear-gradient(180deg, color-mix(in srgb, var(--sig-accent) 55%, transparent), color-mix(in srgb, var(--sig-accent) 14%, transparent) 60%, transparent)" }} />
+        <motion.div className="absolute left-[68%] h-[30vmin] w-[30vmin] -translate-x-1/2 rounded-full blur-3xl" style={{ top: sunTop, background: "radial-gradient(circle, var(--sig-accent), transparent 70%)", opacity: 0.7 }} />
+        <motion.img src={beachYacht} alt="" className="absolute top-[50%] w-[min(38vw,460px)] object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)]" style={{ left: boatX, y: boatY }} />
+        <motion.div className="absolute inset-x-[-12%] top-[62%] h-[34%] rounded-t-[50%] bg-[color:var(--sig-accent)]/35 backdrop-blur-[2px]" style={{ y: seaY }} />
+        <motion.div className="absolute inset-x-[-16%] top-[78%] h-[36%] rounded-t-[50%] bg-foreground/15" style={{ y: foamY }} />
+
+      </motion.div>
     </div>
   );
 }
 
-/* ═══════════════ RETAIL — MARQUEE A DUE BINARI (vetrina infinita) ═══════════════ */
+/* ═══════════════ RETAIL — CILINDRO 3D ROTANTE (vetrina che gira su se stessa) ═══════════════ */
 export function RetailShutterGrid({ progress }: BackdropProps) {
-  const rowA = useTransform(progress, [0, 1], ["0%", "-46%"]);
-  const rowB = useTransform(progress, [0, 1], ["-40%", "4%"]);
-  const rows = [rowA, rowB];
+  const { px, py } = usePointerParallax(55, 18);
+  const panels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const baseSpin = useTransform(progress, [0, 1], [0, -150]);
+  const spin = useTransform([baseSpin, px] as const, ([s, p]: number[]) => s + p * 14);
+  const tilt = useTransform([progress, py] as const, ([p, m]: number[]) => 8 - p * 14 + m * -6);
+  const rise = useTransform(progress, [0, 1], ["14%", "-12%"]);
   return (
-    <div className={layer} aria-hidden>
-      {rows.map((x, r) => (
-        <motion.div
-          key={r}
-          className="absolute flex h-[30vh] items-center gap-4"
-          style={{ x, top: r === 0 ? "16%" : "56%" }}
-        >
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="relative h-full w-[26vw] shrink-0 overflow-hidden rounded-lg border border-border/40 bg-card/40">
-              <img
-                src={retailSneaker}
-                alt=""
-                className="h-full w-full scale-[1.15] object-cover"
-                style={{ objectPosition: `${(i * 17 + r * 40) % 100}% 50%` }}
-              />
-              <span className="absolute bottom-2 left-2 h-1 w-8 rounded-full bg-[color:var(--sig-accent)]" />
-            </div>
-          ))}
-        </motion.div>
-      ))}
-      <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_50%,transparent,hsl(var(--background)/0.75))]" />
+    <div className={`${layer} [perspective:1700px]`} aria-hidden>
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[38vh] w-[22vw] -translate-x-1/2 -translate-y-1/2"
+        style={{ rotateY: spin, rotateX: tilt, y: rise, transformStyle: "preserve-3d" }}
+      >
+        {panels.map((i) => (
+          <div
+            key={i}
+            className="absolute inset-0 overflow-hidden rounded-lg border border-border/40 bg-card/40"
+            style={{ transform: `rotateY(${(360 / panels.length) * i}deg) translateZ(36vw)` }}
+          >
+            <img
+              src={retailSneaker}
+              alt=""
+              className="h-full w-full scale-[1.12] object-cover"
+              style={{ objectPosition: `${(i * 21) % 100}% 45%` }}
+            />
+            <span className="absolute bottom-2 left-2 h-1 w-8 rounded-full bg-[color:var(--sig-accent)]" />
+          </div>
+        ))}
+      </motion.div>
+      <div className="absolute inset-0 bg-[radial-gradient(72%_62%_at_50%_50%,transparent,hsl(var(--background)/0.78))]" />
     </div>
   );
 }
+
 
 type TradeScene = {
   asset: string;
@@ -343,10 +373,15 @@ export function TradesBlueprintDraw({ progress, industry }: BackdropProps) {
   );
 }
 
-/* ═══════════════ LUXURY — IRIDE (diaframma che si apre sul dettaglio) ═══════════════ */
+/* ═══════════════ LUXURY — IRIDE CHE SEGUE LO SGUARDO (diaframma da macro) ═══════════════ */
 export function LuxuryMonolith({ progress }: BackdropProps) {
-  const radius = useTransform(progress, [0, 0.8], ["10%", "78%"]);
-  const clip = useTransform(radius, (r) => `circle(${r} at 50% 45%)`);
+  const { px, py } = usePointerParallax(35, 24);
+  const radius = useTransform(progress, [0, 0.8], [10, 78]);
+  const clip = useTransform(
+    [radius, px, py] as const,
+    ([r, x, y]: number[]) => `circle(${r}% at ${50 + x * 8}% ${45 + y * 8}%)`,
+  );
+
   const zoom = useTransform(progress, [0, 1], [1.35, 1.05]);
   const rimRotate = useTransform(progress, [0, 1], [0, 120]);
   const sheen = useTransform(progress, [0, 1], ["-30%", "120%"]);
