@@ -27,6 +27,7 @@ import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import { LuxuryObsidianSheen } from "@/components/public/hero-effects";
+import { DiamondFlyby } from "@/components/public/hero-cinematic";
 
 /* ── VERIFIED MATCHING VIDEOS — only sectors with confirmed correct content ── */
 const INDUSTRY_VIDEOS: Record<string, string> = {
@@ -351,7 +352,7 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
       {/* ═══ HERO — Cinematic with Video ═══ */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-end pb-20 pt-16 overflow-hidden">
         {/* Hero effect — signature del settore */}
-        <LuxuryObsidianSheen />
+        <LuxuryObsidianSheen /><DiamondFlyby />
         {heroVideo ? (
           <HeroVideoBackground
             primarySrc={heroVideo}

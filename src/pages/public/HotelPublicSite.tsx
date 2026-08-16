@@ -24,6 +24,7 @@ import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 import { HotelGoldenAura } from "@/components/public/hero-effects";
+import { KeycardFlyby } from "@/components/public/hero-cinematic";
 
 /* ── HOTEL DESIGN SYSTEM — Emerald + Gold Classico ── */
 const H = {
@@ -205,7 +206,7 @@ export default function HotelPublicSite({ company, afterHero }: Props) {
       {/* ═══ HERO ═══ */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
         {/* Hero effect — signature del settore */}
-        <HotelGoldenAura />
+        <HotelGoldenAura /><KeycardFlyby />
         <HeroVideoBackground primarySrc={HERO_VIDEO} fallbackSrc={fallbackHeroVideo} poster={GALLERY[0]}
           className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.45) saturate(1.1)" }} />
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${H.bgDeep}55 0%, transparent 40%, ${H.bgDeep}88 100%)` }} />
