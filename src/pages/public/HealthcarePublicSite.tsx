@@ -24,6 +24,7 @@ import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import { HealthcareEcgTrace } from "@/components/public/hero-effects";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ─── ARCTIC SAGE + WARM IVORY AESTHETIC ─── */
 const SAGE = "#5B8C6F";
@@ -170,6 +171,14 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
       </nav>
 
       {/* HERO — warm, trustworthy split layout */}
+      <SignatureCinematicHero
+          accent="#4FB8E8"
+        variant="healthcare"
+        eyebrow="Studio clinico"
+        title={<>Cura precisa,<br /><span className="text-primary">tempi certi.</span></>}
+        subtitle="Percorsi diagnostici chiari, con agenda e referti sempre a portata di mano."
+        reveal={{ kicker: "Visite · Referti · Promemoria", title: <>Prenota la visita<br />senza telefonate.</>, text: "Slot reali, richiamo automatico e documenti clinici in area riservata." }}
+      />
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden" style={{ background: NAVY }}>
         {/* Hero effect — signature del settore */}
         <HealthcareEcgTrace />

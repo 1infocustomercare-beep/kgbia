@@ -24,6 +24,7 @@ import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 import { HotelGoldenAura } from "@/components/public/hero-effects";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ── HOTEL DESIGN SYSTEM — Emerald + Gold Classico ── */
 const H = {
@@ -203,6 +204,14 @@ export default function HotelPublicSite({ company, afterHero }: Props) {
       </nav>
 
       {/* ═══ HERO ═══ */}
+      <SignatureCinematicHero
+          accent="#D8B26A"
+        variant="hotel"
+        eyebrow="Hospitality"
+        title={<>Il soggiorno,<br /><span className="text-primary">su misura.</span></>}
+        subtitle="Camere selezionate, servizi anticipati e un concierge che conosce le tue abitudini."
+        reveal={{ kicker: "Camere · Servizi · Concierge", title: <>Prenota la suite<br />che preferisci.</>, text: "Disponibilità live, upgrade proposti e richieste gestite prima dell'arrivo." }}
+      />
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
         {/* Hero effect — signature del settore */}
         <HotelGoldenAura />

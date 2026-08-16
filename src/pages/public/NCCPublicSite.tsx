@@ -46,6 +46,7 @@ import {
 import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
 import { NccLightSweep } from "@/components/public/hero-effects";
 import { JetFlyby } from "@/components/public/hero-cinematic";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ── NCC Design Tokens ── */
 const NCC = {
@@ -545,7 +546,19 @@ function NCCPublicSiteInner({ company, afterHero }: Props) {
         </AnimatePresence>
       </nav>
 
+      {!isAviation && (
+        <SignatureCinematicHero
+          accent="#C9A84C"
+          variant="ncc"
+          eyebrow="Chauffeur service"
+          title={<>Ti muovi,<br /><span className="text-primary">senza pensarci.</span></>}
+          subtitle="Autisti dedicati, vetture selezionate e orari rispettati al minuto."
+          reveal={{ kicker: "Transfer · Tour · Business", title: <>Prenota l'auto<br />e il tuo autista.</>, text: "Preventivo immediato, tracciamento della corsa e assistenza sempre raggiungibile." }}
+        />
+      )}
+
       {/* ═══════════ HERO — 100vh, video bg + 2 columns ═══════════ */}
+
       <section className="relative min-h-[100svh] flex items-center pt-24 sm:pt-20 pb-8 px-4 overflow-hidden">
         {/* Hero effect — signature del settore */}
         {isAviation ? <JetFlyby /> : <NccLightSweep />}

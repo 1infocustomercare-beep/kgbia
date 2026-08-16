@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer";
 import { BeautySilkRibbons } from "@/components/public/hero-effects";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ── ATELIER UNGHIE / BEAUTY DESIGN SYSTEM — Pastel Lavender + Glass ── */
 const B = {
@@ -261,6 +262,14 @@ function BeautyPublicSiteInner({ company, afterHero }: Props) {
       </nav>
 
       {/* ═══ HERO — App-like card layout ═══ */}
+      <SignatureCinematicHero
+          accent="#E86FA6"
+        variant="beauty"
+        eyebrow="Beauty atelier"
+        title={<>La tua luce,<br /><span className="text-primary">al centro.</span></>}
+        subtitle="Trattamenti costruiti sulla tua pelle, con un'agenda che si adatta a te."
+        reveal={{ kicker: "Agenda · Trattamenti · Membership", title: <>Prenota la tua<br />poltrona preferita.</>, text: "Scegli operatrice, servizio e orario: la conferma arriva subito." }}
+      />
       <section id="hero" className="pt-20 pb-8 px-4 relative">
         {/* Hero effect — signature del settore */}
         <BeautySilkRibbons />

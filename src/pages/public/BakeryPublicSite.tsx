@@ -26,6 +26,7 @@ import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCa
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import bakeryHeroPoster from "@/assets/bakery-croissant.jpg";
 import { BakeryFlourLight } from "@/components/public/hero-effects";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ─── WARM TERRACOTTA + VANILLA ARTISANAL ─── */
 const TERRA = "#B8654A";
@@ -167,6 +168,14 @@ export default function BakeryPublicSite({ company, afterHero }: Props) {
       </nav>
 
       {/* HERO */}
+      <SignatureCinematicHero
+          accent="#E0A758"
+        variant="bakery"
+        eyebrow="Forno artigianale"
+        title={<>Il primo pane,<br /><span className="text-primary">alle cinque.</span></>}
+        subtitle="Lievito madre, forno a pietra e la luce del mattino che entra nel laboratorio."
+        reveal={{ kicker: "Ordini · Ritiri · Torte su misura", title: <>Ordina oggi,<br />ritira caldo domani.</>, text: "Prenotazione dolci, ritiro programmato e avvisi automatici quando è pronto." }}
+      />
       <section ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
         {/* Hero effect — signature del settore */}
         <BakeryFlourLight />

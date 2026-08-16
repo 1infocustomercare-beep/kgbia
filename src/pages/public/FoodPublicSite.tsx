@@ -24,6 +24,7 @@ import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import foodHeroPoster from "@/assets/dish-pasta.jpg";
 import { FoodEmberDrift } from "@/components/public/hero-effects";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ─── GASTRONOMIC DESIGN SYSTEM — Bordeaux + Crema ─── */
 const F = {
@@ -268,6 +269,14 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
       </nav>
 
       {/* ── HERO — Cinematic Gastronomic ── */}
+      <SignatureCinematicHero
+          accent="#E0533D"
+        variant="food"
+        eyebrow="Cucina d'autore"
+        title={<>Il gusto,<br /><span className="text-primary">in scena.</span></>}
+        subtitle="Ogni piatto nasce dal fuoco vivo e arriva in tavola come una scena studiata."
+        reveal={{ kicker: "Menu · Prenotazioni · Delivery", title: <>Prenota il tuo tavolo<br />in dieci secondi.</>, text: "Disponibilità reale, menù dinamico e ordini digitali in un'unica esperienza." }}
+      />
       <section ref={heroRef} className="relative min-h-[100svh] flex items-end pb-20 pt-16 overflow-hidden">
         {/* Hero effect — signature del settore */}
         <FoodEmberDrift />

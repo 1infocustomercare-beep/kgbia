@@ -22,6 +22,7 @@ import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-features.mp4";
 import { FitnessPulseWave } from "@/components/public/hero-effects";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ─── NEON VOLT + CARBON BLACK AESTHETIC ─── */
 const VOLT = "#AAFF00";
@@ -188,6 +189,14 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
       </nav>
 
       {/* HERO — glitch-style brutalist */}
+      <SignatureCinematicHero
+          accent="#7DF04A"
+        variant="fitness"
+        eyebrow="Performance club"
+        title={<>Ogni ripetizione,<br /><span className="text-primary">conta.</span></>}
+        subtitle="Programmi misurati, coach dedicati e sale sempre disponibili quando servono."
+        reveal={{ kicker: "Corsi · Abbonamenti · Coach", title: <>Entra in sala<br />con un tap.</>, text: "Prenotazione corsi, check-in digitale e progressi sempre sotto controllo." }}
+      />
       <section id="hero" className="relative min-h-[100svh] flex items-end pb-16 sm:pb-24 overflow-hidden">
         {/* Hero effect — signature del settore */}
         <FitnessPulseWave />

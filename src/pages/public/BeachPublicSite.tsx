@@ -28,6 +28,7 @@ import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer"
 import { resolveVariantTheme } from "@/lib/template-variant-theme";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 import { BeachSunWaves } from "@/components/public/hero-effects";
+import { SignatureCinematicHero } from "@/components/public/hero-signature";
 
 /* ─── SUNSET CORAL + OCEAN DEEP AESTHETIC ─── */
 const CORAL = "#E8725C";
@@ -213,6 +214,14 @@ function BeachPublicSiteInner({ company, afterHero }: Props) {
       </nav>
 
       {/* HERO — sunset gradient */}
+      <SignatureCinematicHero
+          accent="#37B6D9"
+        variant="beach"
+        eyebrow="Beach club"
+        title={<>Il mare,<br /><span className="text-primary">al tuo posto.</span></>}
+        subtitle="Ombrellone scelto sulla mappa, servizio al lettino, tramonto compreso."
+        reveal={{ kicker: "Mappa · Lettini · Food service", title: <>Scegli il tuo<br />posto in prima fila.</>, text: "Mappa interattiva, prenotazione stagionale e ordini direttamente dal lettino." }}
+      />
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
         {/* Hero effect — signature del settore */}
         <BeachSunWaves />
