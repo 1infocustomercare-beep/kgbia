@@ -574,12 +574,13 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
 
       {/* HERO */}
       <SignatureCinematicHero
-          accent="#F2A63B"
+        accent={A}
         variant="trades"
-        eyebrow="Servizi tecnici"
-        title={<>Progetto chiaro,<br /><span className="text-primary">lavoro perfetto.</span></>}
-        subtitle="Preventivi trasparenti, squadre certificate e cantieri sempre tracciati."
-        reveal={{ kicker: "Preventivi · Interventi · Cantieri", title: <>Richiedi il preventivo<br />in due minuti.</>, text: "Sopralluogo prenotabile, stima immediata e avanzamento lavori condiviso." }}
+        industry={industry}
+        eyebrow={config.label}
+        title={<>{cta.heroTitle}<br /><span className="text-primary">{cta.heroHighlight}</span></>}
+        subtitle={cta.heroSubtitle}
+        reveal={{ kicker: tickerItems.slice(0, 3).join(" · "), title: <>{cta.primary}<br />in due minuti.</>, text: cta.formSubtitle }}
       />
       <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
         {/* Hero effect — signature del settore */}
