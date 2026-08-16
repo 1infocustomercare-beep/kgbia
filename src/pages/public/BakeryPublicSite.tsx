@@ -25,6 +25,7 @@ import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import bakeryHeroPoster from "@/assets/bakery-croissant.jpg";
+import { BakeryFlourLight } from "@/components/public/hero-effects";
 
 /* ─── WARM TERRACOTTA + VANILLA ARTISANAL ─── */
 const TERRA = "#B8654A";
@@ -167,6 +168,8 @@ export default function BakeryPublicSite({ company, afterHero }: Props) {
 
       {/* HERO */}
       <section ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
+        {/* Hero effect — signature del settore */}
+        <BakeryFlourLight />
         <HeroVideoBackground primarySrc={HERO_VIDEO} fallbackSrc={fallbackHeroVideo} poster={bakeryHeroPoster} className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.45) saturate(1.1)" }} />
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${ESPRESSO}88 0%, ${ESPRESSO}AA 100%)` }} />
         <motion.div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white pt-20" style={{ y: heroY }}>

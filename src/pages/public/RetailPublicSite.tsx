@@ -20,6 +20,7 @@ import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
+import { RetailSpotlightSheen } from "@/components/public/hero-effects";
 
 /* ─── ONYX + CHAMPAGNE HIGH-FASHION EDITORIAL ─── */
 const ONYX = "#111111";
@@ -138,6 +139,8 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
 
       {/* HERO — editorial split */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden" style={{ background: ONYX }}>
+        {/* Hero effect — signature del settore */}
+        <RetailSpotlightSheen />
         <HeroVideoBackground primarySrc={HERO_VIDEO} fallbackSrc={fallbackHeroVideo} poster={COLLECTIONS[0].img} className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.5) contrast(1.1) saturate(0.8)", opacity: 0.6 }} />
         <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${ONYX}CC 0%, ${ONYX}88 50%, transparent 100%)` }} />
         <div className="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center relative z-10">

@@ -29,6 +29,7 @@ import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
+import { TradesBlueprintSparks } from "@/components/public/hero-effects";
 
 /* ─── DYNAMIC PALETTE PER TRADE TYPE ─── */
 type VisualStyle = "glass" | "solid" | "neon" | "warm" | "minimal" | "bold" | "organic";
@@ -534,6 +535,8 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
 
       {/* HERO */}
       <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
+        {/* Hero effect — signature del settore */}
+        <TradesBlueprintSparks />
         {heroVideo ? (
           <HeroVideoBackground primarySrc={heroVideo} fallbackSrc={fallbackHeroVideo} className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.4) saturate(1.1)" }} />
         ) : (

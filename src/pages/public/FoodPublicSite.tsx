@@ -23,6 +23,7 @@ import {
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import foodHeroPoster from "@/assets/dish-pasta.jpg";
+import { FoodEmberDrift } from "@/components/public/hero-effects";
 
 /* ─── GASTRONOMIC DESIGN SYSTEM — Bordeaux + Crema ─── */
 const F = {
@@ -268,6 +269,8 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
 
       {/* ── HERO — Cinematic Gastronomic ── */}
       <section ref={heroRef} className="relative min-h-[100svh] flex items-end pb-20 pt-16 overflow-hidden">
+        {/* Hero effect — signature del settore */}
+        <FoodEmberDrift />
         <HeroVideoBackground
           primarySrc={HERO_VIDEO}
           fallbackSrc={fallbackHeroVideo}

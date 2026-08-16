@@ -21,6 +21,7 @@ import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-features.mp4";
+import { FitnessPulseWave } from "@/components/public/hero-effects";
 
 /* ─── NEON VOLT + CARBON BLACK AESTHETIC ─── */
 const VOLT = "#AAFF00";
@@ -188,6 +189,8 @@ function FitnessPublicSiteInner({ company, afterHero }: Props) {
 
       {/* HERO — glitch-style brutalist */}
       <section id="hero" className="relative min-h-[100svh] flex items-end pb-16 sm:pb-24 overflow-hidden">
+        {/* Hero effect — signature del settore */}
+        <FitnessPulseWave />
         <HeroVideoBackground primarySrc={HERO_VIDEO} fallbackSrc={fallbackHeroVideo} poster={GALLERY[0]} className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.35) contrast(1.2) saturate(0.8)" }} />
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${CARBON}44 0%, ${CARBON}CC 70%, ${CARBON} 100%)` }} />
         {/* Grid overlay */}
