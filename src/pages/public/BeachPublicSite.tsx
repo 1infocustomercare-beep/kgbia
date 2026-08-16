@@ -28,7 +28,6 @@ import { VariantSiteRenderer } from "@/components/templates/VariantSiteRenderer"
 import { resolveVariantTheme } from "@/lib/template-variant-theme";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 import { BeachSunWaves } from "@/components/public/hero-effects";
-import { SunFlyby, YachtFlyby } from "@/components/public/hero-cinematic";
 
 /* ─── SUNSET CORAL + OCEAN DEEP AESTHETIC ─── */
 const CORAL = "#E8725C";
@@ -216,7 +215,7 @@ function BeachPublicSiteInner({ company, afterHero }: Props) {
       {/* HERO — sunset gradient */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
         {/* Hero effect — signature del settore */}
-        <BeachSunWaves /><SunFlyby /><YachtFlyby />
+        <BeachSunWaves />
         <HeroVideoBackground primarySrc={HERO_VIDEO} fallbackSrc={fallbackHeroVideo} poster={GALLERY[0]}
           className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.6) saturate(1.2)" }} />
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${OCEAN}55 0%, transparent 40%, ${CORAL}33 80%, ${OCEAN}CC 100%)` }} />
