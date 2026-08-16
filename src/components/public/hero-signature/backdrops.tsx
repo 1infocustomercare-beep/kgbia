@@ -1,3 +1,12 @@
+/**
+ * ═══ SECTOR BACKDROPS ═══
+ *
+ * Ogni settore ha una MECCANICA visiva diversa (non solo un soggetto diverso):
+ * mosaico a colonne, filmstrip, wipe, tracciato ECG, veneziana, parallasse
+ * d'orizzonte, marquee, blueprint disegnato, iride, tracking shot.
+ *
+ * NON TOCCARE: `FitnessKineticBlades` (approvato) e il jet (pagina dedicata).
+ */
 import { motion, type MotionValue, useTransform } from "framer-motion";
 import foodDish from "@/assets/hero-cinematic/food-flame-dish.png";
 import bakeryCroissant from "@/assets/hero-cinematic/bakery-croissant.png";
@@ -30,86 +39,107 @@ import tradesAccounting from "@/assets/hero-cinematic/trades-accounting.png";
 const layer = "pointer-events-none absolute inset-0 overflow-hidden";
 export type BackdropProps = { progress: MotionValue<number>; reduced?: boolean; industry?: string };
 
-function CinematicGlow({ progress, travel = false }: BackdropProps & { travel?: boolean }) {
-  const opacity = useTransform(progress, [0, 0.45, 1], [0.18, 0.62, 0.2]);
-  const x = useTransform(progress, [0, 1], travel ? ["-35%", "35%"] : ["0%", "0%"]);
-  return (
-    <motion.div
-      className="absolute left-[15%] top-[12%] h-[76%] w-[70%] rounded-full blur-3xl"
-      style={{
-        opacity,
-        x,
-        background: "radial-gradient(circle, color-mix(in srgb, var(--sig-accent) 40%, transparent), transparent 68%)",
-      }}
-    />
-  );
-}
-
-/* FOOD — il piatto attraversa il calore, poi arriva in tavola in primo piano. */
+/* ═══════════════ FOOD — MOSAICO A COLONNE (parallasse verticale opposta) ═══════════════ */
 export function FoodFlameSweep({ progress }: BackdropProps) {
-  const x = useTransform(progress, [0, 0.18, 0.58, 1], ["74vw", "38vw", "7vw", "-16vw"]);
-  const y = useTransform(progress, [0, 0.5, 1], ["20vh", "2vh", "13vh"]);
-  const scale = useTransform(progress, [0, 0.55, 1], [0.52, 1.15, 1.42]);
-  const rotate = useTransform(progress, [0, 0.55, 1], [9, -3, -9]);
-  const opacity = useTransform(progress, [0, 0.08, 0.88, 1], [0, 1, 1, 0.15]);
-  const flameRotate = useTransform(progress, [0, 1], [-35, 125]);
+  const colA = useTransform(progress, [0, 1], ["6%", "-34%"]);
+  const colB = useTransform(progress, [0, 1], ["-32%", "8%"]);
+  const colC = useTransform(progress, [0, 1], ["2%", "-26%"]);
+  const heat = useTransform(progress, [0, 0.5, 1], [0.1, 0.4, 0.14]);
+  const cols = [colA, colB, colC];
+  const positions = ["18% 22%", "62% 40%", "38% 78%", "80% 18%", "50% 60%"];
   return (
     <div className={layer} aria-hidden>
-      <CinematicGlow progress={progress} travel />
+      <div className="absolute inset-0 grid grid-cols-3 gap-3 px-3 opacity-[0.55]">
+        {cols.map((y, c) => (
+          <motion.div key={c} className="flex flex-col gap-3" style={{ y }}>
+            {positions.map((pos, i) => (
+              <div
+                key={i}
+                className="relative h-[34vh] overflow-hidden rounded-sm border border-[color:var(--sig-accent)]/25"
+              >
+                <img
+                  src={foodDish}
+                  alt=""
+                  className="h-full w-full scale-[1.35] object-cover"
+                  style={{ objectPosition: positions[(i + c) % positions.length] || pos }}
+                />
+              </div>
+            ))}
+          </motion.div>
+        ))}
+      </div>
       <motion.div
-        className="absolute right-[4%] top-[17%] h-[62vh] w-[62vh] rounded-full border border-[color:var(--sig-accent)]/50"
-        style={{ rotate: flameRotate, background: "conic-gradient(from 40deg, transparent, var(--sig-accent), transparent 38%)", filter: "blur(10px)" }}
+        className="absolute inset-0"
+        style={{
+          opacity: heat,
+          background:
+            "radial-gradient(120% 60% at 50% 110%, var(--sig-accent), transparent 62%)",
+          filter: "blur(24px)",
+        }}
       />
-      <motion.img src={foodDish} alt="" width={1024} height={1024} className="absolute left-0 top-[16%] w-[min(74vw,920px)] object-contain drop-shadow-2xl" style={{ x, y, scale, rotate, opacity }} />
     </div>
   );
 }
 
-/* BAKERY — il croissant ruota fuori dal forno e libera una nuvola di farina. */
+/* ═══════════════ BAKERY — FILMSTRIP ORIZZONTALE (pan da cinepresa) ═══════════════ */
 export function BakeryOvenDoors({ progress }: BackdropProps) {
-  const y = useTransform(progress, [0, 0.48, 1], ["72vh", "4vh", "-38vh"]);
-  const x = useTransform(progress, [0, 0.55, 1], ["-24vw", "8vw", "26vw"]);
-  const scale = useTransform(progress, [0, 0.5, 1], [0.35, 1.24, 1.52]);
-  const rotate = useTransform(progress, [0, 1], [-28, 22]);
-  const doorLeft = useTransform(progress, [0.08, 0.62], ["0%", "-105%"]);
-  const doorRight = useTransform(progress, [0.08, 0.62], ["0%", "105%"]);
+  const x = useTransform(progress, [0, 1], ["12%", "-58%"]);
+  const rotate = useTransform(progress, [0, 1], [-2.5, 2.5]);
+  const warmth = useTransform(progress, [0, 0.5, 1], [0.12, 0.34, 0.1]);
   return (
     <div className={layer} aria-hidden>
-      <CinematicGlow progress={progress} />
-      <motion.div className="absolute inset-y-0 left-0 w-1/2 border-r border-border/40 bg-background/90" style={{ x: doorLeft }} />
-      <motion.div className="absolute inset-y-0 right-0 w-1/2 border-l border-border/40 bg-background/90" style={{ x: doorRight }} />
-      <motion.img src={bakeryCroissant} alt="" width={1024} height={1024} className="absolute left-[20%] top-[12%] w-[min(62vw,760px)] object-contain drop-shadow-2xl" style={{ x, y, scale, rotate }} />
-      {[0, 1, 2, 3, 4].map((i) => <FlourParticle key={i} progress={progress} index={i} />)}
+      <motion.div
+        className="absolute left-0 top-[26%] flex h-[46vh] items-center gap-4"
+        style={{ x, rotate }}
+      >
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <div
+            key={i}
+            className="relative h-full w-[38vw] shrink-0 overflow-hidden border-y-[10px] border-foreground/10 bg-background/40"
+          >
+            <img
+              src={bakeryCroissant}
+              alt=""
+              className="h-full w-full scale-[1.2] object-cover"
+              style={{ objectPosition: `${18 + i * 14}% 50%` }}
+            />
+            <div className="absolute inset-x-0 top-0 flex justify-between px-1">
+              {Array.from({ length: 9 }).map((_, p) => (
+                <span key={p} className="mt-[-6px] h-2 w-2 rounded-[2px] bg-background/80" />
+              ))}
+            </div>
+          </div>
+        ))}
+      </motion.div>
+      <motion.div
+        className="absolute inset-0"
+        style={{ opacity: warmth, background: "linear-gradient(180deg, var(--sig-accent), transparent 55%)" }}
+      />
     </div>
   );
 }
 
-function FlourParticle({ progress, index }: BackdropProps & { index: number }) {
-  const y = useTransform(progress, [0.18, 1], [40, -260 - index * 35]);
-  const x = useTransform(progress, [0.18, 1], [0, (index - 2) * 85]);
-  const opacity = useTransform(progress, [0.15, 0.42, 1], [0, 0.55, 0]);
-  return <motion.span className="absolute left-1/2 top-[62%] h-2 w-2 rounded-full bg-foreground/60 blur-[1px]" style={{ x, y, opacity }} />;
-}
-
-/* BEAUTY — il flacone emerge in una rotazione lenta, con nastri di luce verticali. */
+/* ═══════════════ BEAUTY — WIPE CENTRALE (tenda che si apre sul dettaglio) ═══════════════ */
 export function BeautySilkVeils({ progress }: BackdropProps) {
-  const y = useTransform(progress, [0, 0.5, 1], ["58vh", "-2vh", "-20vh"]);
-  const x = useTransform(progress, [0, 0.5, 1], ["36vw", "7vw", "-8vw"]);
-  const scale = useTransform(progress, [0, 0.55, 1], [0.48, 1.08, 1.3]);
-  const rotate = useTransform(progress, [0, 1], [16, -12]);
-  const veil = useTransform(progress, [0, 1], ["-30%", "115%"]);
+  const inset = useTransform(progress, [0, 0.75], ["46%", "0%"]);
+  const clip = useTransform(inset, (v) => `inset(0% ${v} 0% ${v})`);
+  const seam = useTransform(progress, [0, 0.75], [0.9, 0]);
+  const zoom = useTransform(progress, [0, 1], [1.22, 1.02]);
   return (
     <div className={layer} aria-hidden>
-      <CinematicGlow progress={progress} />
-      {[0, 1, 2].map((i) => (
-        <motion.div key={i} className="absolute top-[-20%] h-[135%] w-[18%] blur-2xl" style={{ left: `${18 + i * 27}%`, x: veil, rotate: `${i % 2 ? 12 : -10}deg`, background: "linear-gradient(180deg, transparent, var(--sig-accent), transparent)", opacity: 0.18 }} />
-      ))}
-      <motion.img src={beautySerum} alt="" width={1024} height={1024} className="absolute left-[18%] top-[2%] w-[min(58vw,690px)] object-contain drop-shadow-2xl" style={{ x, y, scale, rotate }} />
+      <motion.div className="absolute inset-0" style={{ clipPath: clip }}>
+        <motion.img src={beautySerum} alt="" className="h-full w-full object-cover" style={{ scale: zoom }} />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,hsl(var(--background)/0.55))]" />
+      </motion.div>
+      <motion.div
+        className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-[color:var(--sig-accent)]"
+        style={{ opacity: seam, boxShadow: "0 0 40px var(--sig-accent)" }}
+      />
     </div>
   );
 }
 
-/* FITNESS — il manubrio scatta verso camera con accelerazione e scie cinetiche. */
+/* ═══════════════ FITNESS — INVARIATO (approvato dal cliente) ═══════════════ */
 export function FitnessKineticBlades({ progress }: BackdropProps) {
   const x = useTransform(progress, [0, 0.5, 1], ["-66vw", "4vw", "70vw"]);
   const y = useTransform(progress, [0, 0.5, 1], ["30vh", "0vh", "-18vh"]);
@@ -124,139 +154,217 @@ export function FitnessKineticBlades({ progress }: BackdropProps) {
   );
 }
 
-/* HEALTHCARE — il cuore si avvicina e pulsa mentre la diagnostica si espande. */
+/* ═══════════════ HEALTHCARE — TRACCIATO ECG DISEGNATO (stroke draw) ═══════════════ */
 export function HealthcareDilation({ progress }: BackdropProps) {
-  const scale = useTransform(progress, [0, 0.38, 0.46, 0.54, 1], [0.62, 1, 1.1, 1, 1.34]);
-  const rotate = useTransform(progress, [0, 1], [-8, 10]);
-  const y = useTransform(progress, [0, 1], ["16vh", "-16vh"]);
+  const pathLength = useTransform(progress, [0.02, 0.85], [0, 1]);
+  const gridOpacity = useTransform(progress, [0, 0.5, 1], [0.05, 0.2, 0.07]);
+  const imgOpacity = useTransform(progress, [0.35, 0.8], [0, 0.35]);
+  const imgScale = useTransform(progress, [0.35, 1], [1.1, 1]);
   return (
     <div className={layer} aria-hidden>
-      <CinematicGlow progress={progress} />
-      {[0, 1, 2].map((i) => <DiagnosticRing key={i} progress={progress} index={i} />)}
-      <motion.img src={healthcareHeart} alt="" width={1024} height={1024} className="absolute left-1/2 top-[8%] w-[min(52vw,620px)] -translate-x-1/2 object-contain drop-shadow-2xl" style={{ y, scale, rotate }} />
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          opacity: gridOpacity,
+          background:
+            "repeating-linear-gradient(0deg, var(--sig-accent) 0 1px, transparent 1px 40px), repeating-linear-gradient(90deg, var(--sig-accent) 0 1px, transparent 1px 40px)",
+        }}
+      />
+      <motion.img
+        src={healthcareHeart}
+        alt=""
+        className="absolute left-1/2 top-1/2 w-[min(46vw,540px)] -translate-x-1/2 -translate-y-1/2 object-contain"
+        style={{ opacity: imgOpacity, scale: imgScale }}
+      />
+      <svg viewBox="0 0 1200 400" preserveAspectRatio="none" className="absolute inset-x-0 top-1/2 h-[42vh] w-full -translate-y-1/2">
+        <motion.path
+          d="M0 200 H160 l30 -8 l24 16 l26 -120 l30 236 l28 -124 l30 0 H520 l26 -14 l24 22 l26 -108 l30 214 l28 -114 h34 H1200"
+          fill="none"
+          stroke="var(--sig-accent)"
+          strokeWidth={3}
+          strokeLinejoin="round"
+          style={{ pathLength, filter: "drop-shadow(0 0 12px var(--sig-accent))" }}
+        />
+      </svg>
     </div>
   );
 }
 
-function DiagnosticRing({ progress, index }: BackdropProps & { index: number }) {
-  const scale = useTransform(progress, [0, 1], [0.35 + index * 0.18, 1.2 + index * 0.25]);
-  const opacity = useTransform(progress, [0, 0.6, 1], [0.5, 0.2, 0]);
-  return <motion.span className="absolute left-1/2 top-1/2 aspect-square w-[42vw] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[color:var(--sig-accent)]" style={{ scale, opacity }} />;
-}
-
-/* HOTEL — la chiave scende, oscilla e apre una fascia di luce come una suite. */
+/* ═══════════════ HOTEL — VENEZIANA (lamelle che si aprono sulla suite) ═══════════════ */
 export function HotelCurtainRise({ progress }: BackdropProps) {
-  const y = useTransform(progress, [0, 0.58, 1], ["-82vh", "-4vh", "28vh"]);
-  const x = useTransform(progress, [0, 1], ["30vw", "-8vw"]);
-  const rotate = useTransform(progress, [0, 0.5, 1], [-26, 13, -8]);
-  const scale = useTransform(progress, [0, 0.58, 1], [0.6, 1.18, 1.36]);
-  const curtain = useTransform(progress, [0.08, 0.72], ["0%", "-104%"]);
+  const slats = [0, 1, 2, 3, 4, 5, 6, 7];
+  const zoom = useTransform(progress, [0, 1], [1.18, 1.03]);
   return (
-    <div className={layer} aria-hidden>
-      <CinematicGlow progress={progress} />
-      <motion.div className="absolute inset-0 border-b border-border/40 bg-background/90" style={{ y: curtain }} />
-      <motion.img src={hotelKey} alt="" width={1024} height={1024} className="absolute left-[22%] top-[8%] w-[min(58vw,690px)] origin-top object-contain drop-shadow-2xl" style={{ x, y, scale, rotate }} />
+    <div className={`${layer} [perspective:1400px]`} aria-hidden>
+      <motion.img src={hotelKey} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70" style={{ scale: zoom }} />
+      <div className="absolute inset-0 flex flex-col">
+        {slats.map((i) => (
+          <HotelSlat key={i} progress={progress} index={i} total={slats.length} />
+        ))}
+      </div>
     </div>
   );
 }
 
-/* BEACH — lo yacht taglia l'orizzonte e solleva una marea luminosa. */
+function HotelSlat({ progress, index, total }: BackdropProps & { index: number; total: number }) {
+  const start = 0.05 + (index / total) * 0.45;
+  const rotateX = useTransform(progress, [start, start + 0.4], [0, -88]);
+  const opacity = useTransform(progress, [start, start + 0.4], [1, 0]);
+  return (
+    <motion.div
+      className="flex-1 origin-top border-b border-border/30 bg-background/95"
+      style={{ rotateX, opacity, transformStyle: "preserve-3d" }}
+    />
+  );
+}
+
+/* ═══════════════ BEACH — PARALLASSE D'ORIZZONTE (strati a velocità diverse) ═══════════════ */
 export function BeachTideRise({ progress }: BackdropProps) {
-  const x = useTransform(progress, [0, 0.52, 1], ["-78vw", "8vw", "104vw"]);
-  const y = useTransform(progress, [0, 0.5, 1], ["20vh", "3vh", "-5vh"]);
-  const scale = useTransform(progress, [0, 0.5, 1], [0.55, 1.2, 0.86]);
-  const tide = useTransform(progress, [0, 1], ["82%", "48%"]);
+  const sky = useTransform(progress, [0, 1], ["0%", "-12%"]);
+  const sea = useTransform(progress, [0, 1], ["0%", "18%"]);
+  const foam = useTransform(progress, [0, 1], ["0%", "42%"]);
+  const boat = useTransform(progress, [0, 1], ["-6%", "10%"]);
+  const sun = useTransform(progress, [0, 1], ["18%", "40%"]);
   return (
     <div className={layer} aria-hidden>
-      <CinematicGlow progress={progress} travel />
-      <motion.div className="absolute inset-x-0 bottom-0 bg-[color:var(--sig-accent)]/15 backdrop-blur-sm" style={{ top: tide }} />
-      <motion.img src={beachYacht} alt="" width={1024} height={1024} className="absolute left-0 top-[21%] w-[min(76vw,980px)] object-contain drop-shadow-2xl" style={{ x, y, scale }} />
+      <motion.div className="absolute inset-x-0 top-0 h-[62%]" style={{ y: sky, background: "linear-gradient(180deg, color-mix(in srgb, var(--sig-accent) 30%, transparent), transparent)" }} />
+      <motion.div className="absolute left-1/2 h-[24vmin] w-[24vmin] -translate-x-1/2 rounded-full blur-2xl" style={{ top: sun, background: "radial-gradient(circle, var(--sig-accent), transparent 70%)", opacity: 0.5 }} />
+      <motion.img src={beachYacht} alt="" className="absolute left-[12%] top-[42%] w-[min(52vw,620px)] object-contain opacity-90" style={{ x: boat }} />
+      <motion.div className="absolute inset-x-[-10%] top-[58%] h-[30%] rounded-t-[50%] bg-[color:var(--sig-accent)]/25 backdrop-blur-[2px]" style={{ y: sea }} />
+      <motion.div className="absolute inset-x-[-14%] top-[74%] h-[34%] rounded-t-[50%] bg-foreground/10" style={{ y: foam }} />
     </div>
   );
 }
 
-/* RETAIL — la sneaker sale dalla vetrina e compie una rotazione prodotto. */
+/* ═══════════════ RETAIL — MARQUEE A DUE BINARI (vetrina infinita) ═══════════════ */
 export function RetailShutterGrid({ progress }: BackdropProps) {
-  const y = useTransform(progress, [0, 0.5, 1], ["68vh", "-2vh", "-28vh"]);
-  const scale = useTransform(progress, [0, 0.55, 1], [0.42, 1.18, 1.48]);
-  const rotate = useTransform(progress, [0, 1], [-14, 20]);
-  const x = useTransform(progress, [0, 1], ["-18vw", "18vw"]);
-  const plinthY = useTransform(progress, [0, 0.7], ["30vh", "4vh"]);
+  const rowA = useTransform(progress, [0, 1], ["0%", "-46%"]);
+  const rowB = useTransform(progress, [0, 1], ["-40%", "4%"]);
+  const rows = [rowA, rowB];
   return (
-    <div className={`${layer} [perspective:1200px]`} aria-hidden>
-      <CinematicGlow progress={progress} />
-      <motion.div className="absolute bottom-[12%] left-1/2 h-20 w-[52vw] -translate-x-1/2 rounded-[50%] border border-border/50 bg-card/60 blur-[1px]" style={{ y: plinthY, rotateX: 68 }} />
-      <motion.img src={retailSneaker} alt="" width={1024} height={1024} className="absolute left-[20%] top-[3%] w-[min(62vw,760px)] object-contain drop-shadow-2xl" style={{ x, y, scale, rotate }} />
+    <div className={layer} aria-hidden>
+      {rows.map((x, r) => (
+        <motion.div
+          key={r}
+          className="absolute flex h-[30vh] items-center gap-4"
+          style={{ x, top: r === 0 ? "16%" : "56%" }}
+        >
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="relative h-full w-[26vw] shrink-0 overflow-hidden rounded-lg border border-border/40 bg-card/40">
+              <img
+                src={retailSneaker}
+                alt=""
+                className="h-full w-full scale-[1.15] object-cover"
+                style={{ objectPosition: `${(i * 17 + r * 40) % 100}% 50%` }}
+              />
+              <span className="absolute bottom-2 left-2 h-1 w-8 rounded-full bg-[color:var(--sig-accent)]" />
+            </div>
+          ))}
+        </motion.div>
+      ))}
+      <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_50%,transparent,hsl(var(--background)/0.75))]" />
     </div>
   );
 }
 
 type TradeScene = {
   asset: string;
-  x: [string, string, string];
-  y: [string, string, string];
-  scale: [number, number, number];
-  rotate: [number, number, number];
-  atmosphere: "circuit" | "ripple" | "build" | "grow" | "prism" | "speed" | "focus" | "pulse" | "ink" | "float" | "pages" | "spotlight" | "route" | "sun" | "columns" | "chart";
+  /** Geometria tecnica disegnata (stroke-draw) diversa per mestiere. */
+  path: string;
+  frame: "left" | "right" | "center";
+  grid: "square" | "lines" | "dots";
 };
 
 const TRADE_SCENES: Record<string, TradeScene> = {
-  electrician: { asset: tradesElectrician, x: ["-70vw", "10vw", "46vw"], y: ["-25vh", "2vh", "18vh"], scale: [.34, 1.18, .82], rotate: [-42, 8, 68], atmosphere: "circuit" },
-  plumber: { asset: tradesPlumber, x: ["34vw", "5vw", "-18vw"], y: ["58vh", "-2vh", "-28vh"], scale: [.46, 1.08, 1.34], rotate: [12, -5, -18], atmosphere: "ripple" },
-  construction: { asset: tradesConstruction, x: ["28vw", "4vw", "-12vw"], y: ["58vh", "3vh", "-8vh"], scale: [.28, 1.04, 1.28], rotate: [0, -3, 4], atmosphere: "build" },
-  gardening: { asset: tradesGardening, x: ["-16vw", "5vw", "18vw"], y: ["62vh", "4vh", "-12vh"], scale: [.38, 1.04, 1.22], rotate: [-8, 2, 9], atmosphere: "grow" },
-  cleaning: { asset: tradesCleaning, x: ["-82vw", "4vw", "92vw"], y: ["28vh", "4vh", "-8vh"], scale: [.42, 1.12, .64], rotate: [-12, 0, 15], atmosphere: "prism" },
-  garage: { asset: tradesGarage, x: ["74vw", "7vw", "-52vw"], y: ["18vh", "0vh", "-14vh"], scale: [.4, 1.2, 1.5], rotate: [130, 8, -95], atmosphere: "speed" },
-  photography: { asset: tradesPhotography, x: ["8vw", "3vw", "-4vw"], y: ["30vh", "0vh", "-12vh"], scale: [.22, 1.15, 1.65], rotate: [-4, 1, 5], atmosphere: "focus" },
-  veterinary: { asset: tradesVeterinary, x: ["-30vw", "5vw", "18vw"], y: ["48vh", "1vh", "-8vh"], scale: [.5, 1.02, 1.16], rotate: [-8, 0, 5], atmosphere: "pulse" },
-  tattoo: { asset: tradesTattoo, x: ["70vw", "6vw", "-28vw"], y: ["-34vh", "0vh", "22vh"], scale: [.32, 1.08, 1.42], rotate: [55, -8, -34], atmosphere: "ink" },
-  childcare: { asset: tradesChildcare, x: ["-38vw", "4vw", "24vw"], y: ["60vh", "2vh", "-38vh"], scale: [.38, 1.02, .84], rotate: [-16, 3, 22], atmosphere: "float" },
-  education: { asset: tradesEducation, x: ["4vw", "2vw", "0vw"], y: ["58vh", "4vh", "-22vh"], scale: [.38, 1.12, 1.34], rotate: [0, 0, -3], atmosphere: "pages" },
-  events: { asset: tradesEvents, x: ["-66vw", "5vw", "58vw"], y: ["22vh", "-2vh", "12vh"], scale: [.4, 1.06, .72], rotate: [-22, 7, 34], atmosphere: "spotlight" },
-  logistics: { asset: tradesLogistics, x: ["-92vw", "5vw", "108vw"], y: ["20vh", "3vh", "-5vh"], scale: [.42, 1.08, .74], rotate: [-3, 0, 4], atmosphere: "route" },
-  agriturismo: { asset: tradesAgriturismo, x: ["22vw", "3vw", "-10vw"], y: ["62vh", "5vh", "-15vh"], scale: [.42, 1.06, 1.24], rotate: [12, -2, -10], atmosphere: "sun" },
-  legal: { asset: tradesLegal, x: ["-12vw", "3vw", "10vw"], y: ["-58vh", "1vh", "20vh"], scale: [.38, 1.04, 1.2], rotate: [-5, 0, 4], atmosphere: "columns" },
-  accounting: { asset: tradesAccounting, x: ["58vw", "4vw", "-24vw"], y: ["45vh", "1vh", "-18vh"], scale: [.34, 1.08, 1.3], rotate: [14, -3, -10], atmosphere: "chart" },
+  electrician: { asset: tradesElectrician, path: "M60 320 H240 l40 -80 l40 80 l40 -80 l40 80 H700 l60 -120 H1140", frame: "right", grid: "square" },
+  plumber: { asset: tradesPlumber, path: "M80 80 V260 h280 v-120 h240 v300 h420", frame: "left", grid: "lines" },
+  construction: { asset: tradesConstruction, path: "M80 360 L300 90 L520 360 M180 240 H420 M300 90 V360 M600 360 V140 H1080 V360", frame: "center", grid: "square" },
+  gardening: { asset: tradesGardening, path: "M600 380 C600 240 480 200 440 120 M600 380 C600 250 720 210 780 130 M600 380 V150", frame: "left", grid: "dots" },
+  cleaning: { asset: tradesCleaning, path: "M60 200 Q300 40 540 200 T1020 200", frame: "right", grid: "dots" },
+  garage: { asset: tradesGarage, path: "M120 300 h160 l60 -80 h300 l60 80 h200 M240 300 a60 60 0 1 0 0.1 0 M840 300 a60 60 0 1 0 0.1 0", frame: "center", grid: "lines" },
+  photography: { asset: tradesPhotography, path: "M240 80 H960 V340 H240 Z M600 210 a110 110 0 1 0 0.1 0", frame: "center", grid: "dots" },
+  veterinary: { asset: tradesVeterinary, path: "M300 240 a70 70 0 1 0 0.1 0 M480 140 a55 55 0 1 0 0.1 0 M700 140 a55 55 0 1 0 0.1 0 M880 240 a70 70 0 1 0 0.1 0", frame: "right", grid: "dots" },
+  tattoo: { asset: tradesTattoo, path: "M100 380 C320 380 300 60 520 60 S740 380 960 380 S1120 120 1180 120", frame: "left", grid: "lines" },
+  childcare: { asset: tradesChildcare, path: "M120 380 Q220 140 320 380 Q420 120 520 380 Q620 160 720 380 Q820 130 920 380", frame: "right", grid: "dots" },
+  education: { asset: tradesEducation, path: "M200 320 H1000 M280 320 V140 H920 V320 M400 140 V320 M760 140 V320", frame: "center", grid: "lines" },
+  events: { asset: tradesEvents, path: "M600 40 L360 380 M600 40 L840 380 M600 40 L200 300 M600 40 L1000 300", frame: "center", grid: "dots" },
+  logistics: { asset: tradesLogistics, path: "M60 300 H420 l80 -140 H900 l60 140 H1160", frame: "left", grid: "lines" },
+  agriturismo: { asset: tradesAgriturismo, path: "M60 340 Q300 260 540 340 T1020 340 M300 340 V200 M760 340 V220", frame: "right", grid: "dots" },
+  legal: { asset: tradesLegal, path: "M240 340 V120 M420 340 V120 M600 340 V120 M780 340 V120 M960 340 V120 M180 120 H1020", frame: "center", grid: "lines" },
+  accounting: { asset: tradesAccounting, path: "M120 360 V180 h120 v180 M320 360 V100 h120 v260 M520 360 V240 h120 v120 M720 360 V60 h120 v300", frame: "left", grid: "square" },
 };
 
-/* Shared renderer, but every trade has its own subject, trajectory and visual grammar. */
+const DEFAULT_TRADE: TradeScene = {
+  asset: tradesTool,
+  path: "M100 320 H400 l80 -160 h300 l80 160 h200",
+  frame: "center",
+  grid: "square",
+};
+
+/* ═══════════════ TRADES — BLUEPRINT DISEGNATO + foto in cornice tecnica ═══════════════ */
 export function TradesBlueprintDraw({ progress, industry }: BackdropProps) {
-  const scene = TRADE_SCENES[industry ?? ""] ?? { asset: tradesTool, x: ["80vw", "8vw", "-36vw"], y: ["45vh", "-1vh", "-24vh"], scale: [.38, 1.14, 1.36], rotate: [34, -4, -18], atmosphere: "build" as const };
-  const x = useTransform(progress, [0, 0.55, 1], scene.x);
-  const y = useTransform(progress, [0, 0.55, 1], scene.y);
-  const scale = useTransform(progress, [0, 0.55, 1], scene.scale);
-  const rotate = useTransform(progress, [0, 0.55, 1], scene.rotate);
-  const atmosphere = useTransform(progress, [0, 0.5, 1], [0.04, 0.38, 0.08]);
-  const sweep = useTransform(progress, [0, 1], ["-110%", "135%"]);
-  const ringScale = useTransform(progress, [0, 1], [.35, 1.7]);
+  const scene = TRADE_SCENES[industry ?? ""] ?? DEFAULT_TRADE;
+  const pathLength = useTransform(progress, [0.03, 0.8], [0, 1]);
+  const gridOpacity = useTransform(progress, [0, 0.5, 1], [0.05, 0.22, 0.08]);
+  const revealW = useTransform(progress, [0.15, 0.7], ["0%", "100%"]);
+  const frameOpacity = useTransform(progress, [0.12, 0.45], [0, 1]);
+  const gridBg =
+    scene.grid === "square"
+      ? "repeating-linear-gradient(0deg, var(--sig-accent) 0 1px, transparent 1px 44px), repeating-linear-gradient(90deg, var(--sig-accent) 0 1px, transparent 1px 44px)"
+      : scene.grid === "lines"
+        ? "repeating-linear-gradient(90deg, var(--sig-accent) 0 1px, transparent 1px 76px)"
+        : "radial-gradient(var(--sig-accent) 1px, transparent 1.6px) 0 0/34px 34px";
+  const framePos =
+    scene.frame === "left" ? "left-[6%]" : scene.frame === "right" ? "right-[6%]" : "left-1/2 -translate-x-1/2";
   return (
     <div className={layer} aria-hidden>
-      {(scene.atmosphere === "build" || scene.atmosphere === "circuit" || scene.atmosphere === "chart") && <motion.div className="absolute inset-0" style={{ opacity: atmosphere, background: scene.atmosphere === "chart" ? "repeating-linear-gradient(0deg, var(--sig-accent) 0 1px, transparent 1px 64px)" : "repeating-linear-gradient(0deg, var(--sig-accent) 0 1px, transparent 1px 48px), repeating-linear-gradient(90deg, var(--sig-accent) 0 1px, transparent 1px 48px)" }} />}
-      {(scene.atmosphere === "ripple" || scene.atmosphere === "pulse" || scene.atmosphere === "focus") && <motion.div className="absolute left-1/2 top-1/2 aspect-square w-[58vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[color:var(--sig-accent)]" style={{ scale: ringScale, opacity: atmosphere }} />}
-      {(scene.atmosphere === "prism" || scene.atmosphere === "speed" || scene.atmosphere === "route" || scene.atmosphere === "spotlight") && <motion.div className="absolute inset-y-[-20%] w-[28%] skew-x-[-18deg] blur-xl" style={{ x: sweep, opacity: atmosphere, background: "linear-gradient(90deg, transparent, var(--sig-accent), transparent)" }} />}
-      {(scene.atmosphere === "grow" || scene.atmosphere === "float" || scene.atmosphere === "pages" || scene.atmosphere === "sun" || scene.atmosphere === "columns" || scene.atmosphere === "ink") && <motion.div className="absolute bottom-[-22%] left-[18%] h-[75%] w-[64%] rounded-[50%] blur-3xl" style={{ opacity: atmosphere, scale: ringScale, background: "radial-gradient(circle, var(--sig-accent), transparent 68%)" }} />}
-      <motion.img src={scene.asset} alt="" width={1024} height={1024} className="absolute left-[10%] top-[7%] w-[min(72vw,880px)] object-contain drop-shadow-2xl" style={{ x, y, scale, rotate }} />
+      <motion.div className="absolute inset-0" style={{ opacity: gridOpacity, background: gridBg }} />
+      <svg viewBox="0 0 1200 420" preserveAspectRatio="none" className="absolute inset-x-0 top-1/2 h-[52vh] w-full -translate-y-1/2">
+        <motion.path
+          d={scene.path}
+          fill="none"
+          stroke="var(--sig-accent)"
+          strokeWidth={2.5}
+          strokeLinecap="round"
+          style={{ pathLength, filter: "drop-shadow(0 0 10px var(--sig-accent))" }}
+        />
+      </svg>
+      <motion.div
+        className={`absolute bottom-[10%] ${framePos} h-[38vh] w-[min(46vw,460px)] overflow-hidden border border-[color:var(--sig-accent)]/50 bg-background/40`}
+        style={{ opacity: frameOpacity }}
+      >
+        <motion.div className="h-full overflow-hidden" style={{ width: revealW }}>
+          <img src={scene.asset} alt="" className="h-full w-[min(46vw,460px)] object-cover" />
+        </motion.div>
+        <span className="absolute left-2 top-2 h-3 w-3 border-l border-t border-[color:var(--sig-accent)]" />
+        <span className="absolute bottom-2 right-2 h-3 w-3 border-b border-r border-[color:var(--sig-accent)]" />
+      </motion.div>
     </div>
   );
 }
 
-/* LUXURY — macro orologio: rotazione lenta, avvicinamento e lama di luce. */
+/* ═══════════════ LUXURY — IRIDE (diaframma che si apre sul dettaglio) ═══════════════ */
 export function LuxuryMonolith({ progress }: BackdropProps) {
-  const scale = useTransform(progress, [0, 0.56, 1], [0.48, 1.18, 1.7]);
-  const rotate = useTransform(progress, [0, 1], [-22, 28]);
-  const x = useTransform(progress, [0, 0.56, 1], ["-30vw", "6vw", "26vw"]);
-  const y = useTransform(progress, [0, 1], ["26vh", "-18vh"]);
+  const radius = useTransform(progress, [0, 0.8], ["10%", "78%"]);
+  const clip = useTransform(radius, (r) => `circle(${r} at 50% 45%)`);
+  const zoom = useTransform(progress, [0, 1], [1.35, 1.05]);
+  const rimRotate = useTransform(progress, [0, 1], [0, 120]);
   const sheen = useTransform(progress, [0, 1], ["-30%", "120%"]);
   return (
     <div className={layer} aria-hidden>
-      <CinematicGlow progress={progress} />
-      <motion.img src={luxuryWatch} alt="" width={1024} height={1024} className="absolute left-[18%] top-[5%] w-[min(58vw,700px)] object-contain drop-shadow-2xl" style={{ x, y, scale, rotate }} />
-      <motion.div className="absolute inset-y-0 w-[18%] skew-x-[-18deg] bg-foreground/10 blur-xl" style={{ x: sheen }} />
+      <motion.div className="absolute inset-0" style={{ clipPath: clip }}>
+        <motion.img src={luxuryWatch} alt="" className="h-full w-full object-cover" style={{ scale: zoom }} />
+      </motion.div>
+      <motion.div
+        className="absolute left-1/2 top-[45%] aspect-square w-[86vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[color:var(--sig-accent)]/40"
+        style={{ rotate: rimRotate, background: "conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--sig-accent) 22%, transparent), transparent 30%)" }}
+      />
+      <motion.div className="absolute inset-y-0 w-[16%] skew-x-[-18deg] bg-foreground/10 blur-xl" style={{ x: sheen }} />
     </div>
   );
 }
 
-/* NCC — la limousine percorre la scena sull'orizzonte, come un tracking shot. */
+/* ═══════════════ NCC — TRACKING SHOT (invariato, coerente col settore) ═══════════════ */
 export function NccRoadSweep({ progress }: BackdropProps) {
   const x = useTransform(progress, [0, 0.16, 0.6, 1], ["-96vw", "-48vw", "12vw", "112vw"]);
   const y = useTransform(progress, [0, 0.6, 1], ["22vh", "4vh", "-4vh"]);
@@ -265,7 +373,6 @@ export function NccRoadSweep({ progress }: BackdropProps) {
   const road = useTransform(progress, [0, 1], ["-45%", "40%"]);
   return (
     <div className={layer} aria-hidden>
-      <CinematicGlow progress={progress} travel />
       <motion.div className="absolute bottom-[18%] h-px w-[145%] bg-gradient-to-r from-transparent via-[color:var(--sig-accent)] to-transparent" style={{ x: road }} />
       <motion.img src={nccSedan} alt="" width={1280} height={768} className="absolute left-0 top-[24%] w-[min(82vw,1080px)] object-contain drop-shadow-2xl" style={{ x, y, scale, opacity }} />
     </div>
