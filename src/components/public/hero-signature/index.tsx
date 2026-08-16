@@ -200,6 +200,7 @@ export function SignatureCinematicHero({
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.04, 1.16]);
   const imgY = useTransform(scrollYProgress, [0, 1], [0, 56]);
   const veil = useTransform(scrollYProgress, [0, 0.6, 1], [0.5, 0.7, 0.42]);
+  const railTop = useTransform(scrollYProgress, [0, 1], ["0%", "92%"]);
 
   return (
     <section
@@ -229,7 +230,7 @@ export function SignatureCinematicHero({
         {presentation.chrome === "corners" && <LuxeCorners className="m-5 sm:m-8" />}
         {presentation.chrome === "rail" && (
           <div className="pointer-events-none absolute inset-y-0 right-5 z-10 hidden w-px bg-border/40 sm:block">
-            <motion.span className="absolute right-0 w-1 bg-[color:var(--sig-accent)]" style={{ top: useTransform(scrollYProgress, [0, 1], ["0%", "92%"]), height: "8%" }} />
+            <motion.span className="absolute right-0 h-[8%] w-1 bg-[color:var(--sig-accent)]" style={{ top: railTop }} />
           </div>
         )}
         {presentation.chrome === "crosshair" && (
