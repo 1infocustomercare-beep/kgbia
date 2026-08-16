@@ -17,6 +17,7 @@ import {
   Trees, Cog, Leaf
 } from "lucide-react";
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
+import privateJetHangar from "@/assets/hero-cinematic/private-jet-hangar.jpg";
 
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
@@ -261,6 +262,35 @@ const FEATURED_DEMOS = [
   { id: "food" as IndustryId, name: "Food & Ristorazione", tagline: "Menu Digitale · Ordini · QR · Cucina Live", route: "/r/impero-roma", color: "#e85d04" },
   { id: "ncc" as IndustryId, name: "NCC & Trasporto Premium", tagline: "Flotta · Tratte · Booking · Autisti", route: "/b/amalfi-luxury-transfer", color: "#C9A84C" },
 ];
+
+function PrivateJetDemoCard({ onOpen }: { onOpen: () => void }) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="relative mb-8 min-h-[310px] overflow-hidden border border-primary/35 bg-card sm:min-h-[360px]"
+    >
+      <img src={privateJetHangar} alt="Aurea Jet, demo charter privato" width={1920} height={1088} className="absolute inset-0 h-full w-full object-cover object-center" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background)/0.98)_0%,hsl(var(--background)/0.74)_48%,hsl(var(--background)/0.12)_100%)]" />
+      <div className="relative z-10 flex min-h-[310px] max-w-xl flex-col justify-end p-6 sm:min-h-[360px] sm:p-10">
+        <div className="mb-auto flex w-fit items-center gap-2 border border-primary/45 bg-background/60 px-3 py-2 backdrop-blur-xl">
+          <Plane className="h-4 w-4 text-primary" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Nuova demo cinematografica</span>
+        </div>
+        <h2 className="font-heading text-3xl font-semibold text-foreground sm:text-5xl">Aurea Jet</h2>
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-foreground/75 sm:text-base">Noleggio jet privato · Charter globale · Concierge 24/7. Hero scroll con flyby ultrarealistico.</p>
+        <motion.button
+          onClick={onOpen}
+          className="mt-6 flex min-h-11 w-fit items-center gap-2 bg-primary px-6 text-xs font-bold uppercase tracking-[0.14em] text-primary-foreground"
+          whileHover={{ x: 4 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          Apri demo Jet Privato <ArrowRight className="h-4 w-4" />
+        </motion.button>
+      </div>
+    </motion.article>
+  );
+}
 
 /* ═══ Mockup Gallery Component ═══ */
 function MockupGallery({ sectorId, color }: { sectorId: string; color: string }) {
@@ -528,6 +558,7 @@ export default function DemoDirectoryPage() {
       <HeroPhoneShowcase navigate={navigate} />
 
       <div id="demo-list" className="max-w-5xl mx-auto px-4 py-2 relative z-10">
+        <PrivateJetDemoCard onOpen={() => navigate("/demo/aurea-jet")} />
         {/* ═══ SEARCH ═══ */}
         <div className="relative mb-6">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/80" />
