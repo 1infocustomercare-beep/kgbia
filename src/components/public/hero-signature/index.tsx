@@ -162,6 +162,32 @@ export type SignatureCinematicHeroProps = {
   className?: string;
 };
 
+type MotionSignature = {
+  introStops: number[];
+  introValues: number[];
+  revealStops: number[];
+  revealValues: number[];
+  pinTravel: string;
+  imageScale: [number, number, number];
+  imageY: [number, number, number];
+  veil: [number, number, number];
+};
+
+/** Independent pacing/camera signatures. Fitness keeps the approved original timing. */
+const MOTION_SIGNATURES: Record<SignatureVariant, MotionSignature> = {
+  food: { introStops: [0, 0.09, 0.2], introValues: [1, 1, 0], revealStops: [0.5, 0.64, 1], revealValues: [0, 1, 1], pinTravel: "120svh", imageScale: [1.18, 1.04, 1.32], imageY: [70, 0, -45], veil: [0.34, 0.66, 0.46] },
+  bakery: { introStops: [0, 0.32, 0.48], introValues: [1, 1, 0], revealStops: [0.54, 0.74, 1], revealValues: [0, 1, 1], pinTravel: "95svh", imageScale: [1.02, 1.14, 1.08], imageY: [-20, 24, 68], veil: [0.58, 0.42, 0.62] },
+  beauty: { introStops: [0, 0.16, 0.38], introValues: [1, 0.8, 0], revealStops: [0.42, 0.56, 1], revealValues: [0, 1, 1], pinTravel: "110svh", imageScale: [1.3, 1.08, 1.02], imageY: [0, -32, -8], veil: [0.66, 0.32, 0.5] },
+  fitness: { introStops: [0, 0.14, 0.3], introValues: [1, 1, 0], revealStops: [0.26, 0.42, 1], revealValues: [0, 1, 1], pinTravel: "80svh", imageScale: [1.04, 1.1, 1.16], imageY: [0, 28, 56], veil: [0.5, 0.7, 0.42] },
+  healthcare: { introStops: [0, 0.38, 0.5], introValues: [1, 1, 0], revealStops: [0.48, 0.7, 1], revealValues: [0, 1, 1], pinTravel: "90svh", imageScale: [1.06, 1.06, 1.12], imageY: [0, 0, 20], veil: [0.7, 0.54, 0.66] },
+  hotel: { introStops: [0, 0.12, 0.26], introValues: [1, 1, 0], revealStops: [0.66, 0.8, 1], revealValues: [0, 1, 1], pinTravel: "130svh", imageScale: [1.28, 1.12, 1.01], imageY: [60, 0, -24], veil: [0.72, 0.34, 0.52] },
+  beach: { introStops: [0, 0.25, 0.42], introValues: [1, 1, 0], revealStops: [0.58, 0.72, 1], revealValues: [0, 1, 1], pinTravel: "105svh", imageScale: [1.01, 1.08, 1.18], imageY: [-30, 15, 70], veil: [0.4, 0.28, 0.46] },
+  retail: { introStops: [0, 0.08, 0.24], introValues: [1, 1, 0], revealStops: [0.34, 0.5, 0.82, 1], revealValues: [0, 1, 1, 0.78], pinTravel: "100svh", imageScale: [1.12, 1.24, 1.04], imageY: [20, -25, 10], veil: [0.6, 0.36, 0.68] },
+  trades: { introStops: [0, 0.45, 0.56], introValues: [1, 1, 0], revealStops: [0.6, 0.84, 1], revealValues: [0, 1, 1], pinTravel: "115svh", imageScale: [1.04, 1.04, 1.04], imageY: [0, 0, 0], veil: [0.78, 0.64, 0.72] },
+  luxury: { introStops: [0, 0.18, 0.44], introValues: [1, 0.65, 0], revealStops: [0.7, 0.86, 1], revealValues: [0, 1, 1], pinTravel: "140svh", imageScale: [1.46, 1.18, 1.02], imageY: [0, 0, 0], veil: [0.82, 0.3, 0.58] },
+  ncc: { introStops: [0, 0.14, 0.3], introValues: [1, 1, 0], revealStops: [0.38, 0.58, 1], revealValues: [0, 1, 1], pinTravel: "80svh", imageScale: [1.08, 1.14, 1.2], imageY: [20, 0, -20], veil: [0.58, 0.66, 0.44] },
+};
+
 export function SignatureCinematicHero({
   variant,
   industry,
@@ -181,25 +207,26 @@ export function SignatureCinematicHero({
 
   const choreo = CHOREO[variant];
   const presentation = PRESENTATION[variant];
+  const signature = MOTION_SIGNATURES[variant];
   const Backdrop = BACKDROPS[variant];
 
-  const introOpacity = useTransform(scrollYProgress, [0, 0.14, 0.3], [1, 1, 0]);
+  const introOpacity = useTransform(scrollYProgress, signature.introStops, signature.introValues);
   const introY = useTransform(scrollYProgress, [0, 0.3], [0, choreo.intro.y ?? 0]);
   const introX = useTransform(scrollYProgress, [0, 0.3], [0, choreo.intro.x ?? 0]);
   const introScale = useTransform(scrollYProgress, [0, 0.3], [1, choreo.intro.scale ?? 1]);
   const introRotate = useTransform(scrollYProgress, [0, 0.3], [0, choreo.intro.rotate ?? 0]);
 
-  const revealOpacity = useTransform(scrollYProgress, [0.26, 0.42, 1], [0, 1, 1]);
+  const revealOpacity = useTransform(scrollYProgress, signature.revealStops, signature.revealValues);
   const revealY = useTransform(scrollYProgress, [0.26, 0.5], [choreo.reveal.y ?? 0, 0]);
   const revealX = useTransform(scrollYProgress, [0.26, 0.5], [choreo.reveal.x ?? 0, 0]);
 
   // Transform-based pin: works even when an ancestor uses overflow clip/hidden
   // (position: sticky silently fails inside such containers).
-  const pinY = useTransform(scrollYProgress, [0, 1], ["0svh", "80svh"]);
+  const pinY = useTransform(scrollYProgress, [0, 1], ["0svh", signature.pinTravel]);
 
-  const imgScale = useTransform(scrollYProgress, [0, 1], [1.04, 1.16]);
-  const imgY = useTransform(scrollYProgress, [0, 1], [0, 56]);
-  const veil = useTransform(scrollYProgress, [0, 0.6, 1], [0.5, 0.7, 0.42]);
+  const imgScale = useTransform(scrollYProgress, [0, 0.55, 1], signature.imageScale);
+  const imgY = useTransform(scrollYProgress, [0, 0.55, 1], signature.imageY);
+  const veil = useTransform(scrollYProgress, [0, 0.6, 1], signature.veil);
   const railTop = useTransform(scrollYProgress, [0, 1], ["0%", "92%"]);
 
   return (
