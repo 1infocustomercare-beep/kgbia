@@ -36,7 +36,26 @@ export type IdentityFamily =
   | "neon-club-poster" | "champagne-gala" | "festival-ticket-stub"
   | "kinetic-typography" | "velvet-curtain"
   | "chalkboard-scholastic" | "playful-block-primary" | "campus-modernist"
-  | "notebook-dotgrid" | "cyber-academy";
+  | "notebook-dotgrid" | "cyber-academy"
+  /* --- estensione: stili ispirati ai migliori portfolio internazionali --- */
+  | "napoletana-doc" | "fuoco-moderno" | "street-graffiti-slab" | "stone-hearth-craft"
+  | "sakura-nikkei-mist" | "ice-marble-crudo" | "aegean-whitewash" | "saigon-noir-silk"
+  | "tiki-tropical-lagoon" | "espresso-sand-dessert"
+  | "frosted-vision-glass" | "spa-aura-silk" | "blush-rose-editorial"
+  | "midnight-emerald-drive" | "neon-velocity-grid" | "crimson-sport-rental"
+  | "blush-pilates-aesthetic" | "sage-editorial-move" | "burgundy-bold-strength"
+  | "ice-turquoise-resort" | "champagne-blush-suite"
+  | "milanese-eleganza" | "nero-lusso-tower" | "rosa-cipria-living"
+  | "ethereal-glass-medtech" | "ice-crystal-luxury-care"
+  | "fresh-minimal-blanc" | "furniture-showroom-warm"
+  | "playful-paw-color" | "pastel-pet-minimal" | "pet-resort-luxury" | "vet-clinical-trust"
+  | "sunbeam-nursery-joy" | "autumn-maple-care" | "crayon-craft-paper" | "montessori-wood-calm"
+  | "clean-white-green-service" | "dark-amber-technician" | "blueprint-plumbing-tech" | "van-fleet-orange"
+  | "riviera-sunset-vibrant" | "ocean-deep-blue-boats" | "azure-coast-charter" | "jetski-adrenaline-spray"
+  | "fairway-turf-scoreboard" | "clubhouse-heritage-wood" | "night-range-floodlight"
+  | "ocean-azure-resident" | "rose-gold-editorial-hoa" | "ice-blue-ethereal-tower"
+  | "velvet-saddle-heritage" | "midnight-stable-arena" | "ivory-equestrian-classic"
+  | "voice-agent-waveform" | "ai-dark-terminal-node" | "saas-gradient-mesh";
 
 export type ScreenSpec = {
   key: string;
