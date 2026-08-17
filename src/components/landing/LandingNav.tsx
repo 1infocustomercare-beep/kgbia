@@ -161,8 +161,18 @@ export default function LandingNav() {
 
           <div className="hidden shrink-0 items-center gap-2 md:flex">
             <PrestigeLangToggle />
-            <button onClick={() => navigate("/auth")} className="rounded-full px-3 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground/80 transition-colors hover:text-foreground">Accedi</button>
-            <button onClick={() => scrollTo("#contatti")} className="landing-button-primary rounded-full px-6 py-2.5 text-[12.5px] font-semibold uppercase tracking-[0.09em]">Inizia Ora</button>
+            <button
+              onClick={() => navigate("/auth")}
+              className="empire-nav-ghost rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground/80"
+            >
+              Accedi
+            </button>
+            <button
+              onClick={() => scrollTo("#contatti")}
+              className="landing-button-primary empire-cta-glass rounded-full px-6 py-2.5 text-[12.5px] font-semibold uppercase tracking-[0.09em]"
+            >
+              Inizia Ora
+            </button>
           </div>
 
 
@@ -170,20 +180,21 @@ export default function LandingNav() {
           <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={() => scrollTo("#contatti")}
-              className="landing-button-primary h-10 whitespace-nowrap rounded-full px-4 text-[11.5px] font-semibold uppercase tracking-[0.08em]"
+              className="landing-button-primary empire-cta-glass h-11 min-w-11 whitespace-nowrap rounded-full px-4 text-[11.5px] font-semibold uppercase tracking-[0.08em]"
             >
               Inizia ora
             </button>
             <button
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[hsl(178_74%_60%/0.28)] bg-[hsl(202_56%_8%/0.9)] text-[hsl(178_40%_96%)] shadow-[0_10px_30px_-14px_hsl(202_60%_3%/0.9)]"
+              className="empire-nav-icon-btn flex h-11 w-11 items-center justify-center rounded-full text-[hsl(178_40%_96%)]"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
               aria-expanded={menuOpen}
               aria-controls="landing-mobile-menu"
             >
-              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {menuOpen ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
             </button>
           </div>
+
 
             </div>
           </div>
