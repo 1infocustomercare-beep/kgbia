@@ -934,6 +934,51 @@ export default function PrestigeGlassSkin() {
         100% { transform: translate3d(0, 8px, 0); }
       }
 
+      /* ═══════════ STATI UNIFORMI SU FORM E CONTROLLI NATIVI (webapp Empire) ═══════════ */
+      body.pglass-app button:not(:disabled):not([aria-disabled="true"]):hover,
+      body.pglass-app [role="button"]:not([aria-disabled="true"]):hover {
+        filter: brightness(1.06);
+      }
+      body.pglass-app button:not(:disabled):not([aria-disabled="true"]):active,
+      body.pglass-app [role="button"]:not([aria-disabled="true"]):active {
+        transform: translateY(1px) scale(.985);
+      }
+      body.pglass-app button:disabled,
+      body.pglass-app [aria-disabled="true"],
+      body.pglass-app input:disabled,
+      body.pglass-app select:disabled,
+      body.pglass-app textarea:disabled {
+        cursor: not-allowed;
+        opacity: .5;
+        filter: saturate(.4);
+        transform: none !important;
+        box-shadow: none !important;
+      }
+      body.pglass-app [aria-busy="true"] { cursor: progress; }
+      body.pglass-app input:read-only:not([type="checkbox"]):not([type="radio"]),
+      body.pglass-app textarea:read-only { opacity: .8; }
+      body.pglass-app input[aria-invalid="true"],
+      body.pglass-app select[aria-invalid="true"],
+      body.pglass-app textarea[aria-invalid="true"] {
+        border-color: hsl(0 78% 62% / .7) !important;
+        box-shadow: 0 0 0 3px hsl(0 78% 62% / .16) !important;
+      }
+      body.pglass-app input:not(:disabled):hover,
+      body.pglass-app select:not(:disabled):hover,
+      body.pglass-app textarea:not(:disabled):hover {
+        border-color: hsl(var(--pr-aqua) / .42);
+      }
+      body.pglass-app :focus-visible {
+        outline: 2px solid hsl(var(--pr-aqua-light) / .9);
+        outline-offset: 2px;
+      }
+      body.pglass-app input[type="checkbox"],
+      body.pglass-app input[type="radio"] {
+        accent-color: hsl(var(--pr-aqua));
+        min-width: 20px;
+        min-height: 20px;
+      }
+
 
       @media (prefers-reduced-motion: reduce) {
         .prestige-root .prestige-dark,
