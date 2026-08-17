@@ -85,7 +85,7 @@ export default function PortfolioCasePage() {
 
   if (!group || variants.length === 0) {
     return (
-      <div className="pglass-scope min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
+      <div className="pglass-scope pglass-bg min-h-screen">
         <PrestigeTheme />
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-5 px-6 py-32 text-center">
           <h1 className="prestige-display text-3xl" style={{ color: "hsl(var(--pr-gold-light))" }}>
@@ -96,8 +96,7 @@ export default function PortfolioCasePage() {
           </p>
           <Link
             to="/portfolio"
-            className="rounded-full px-6 py-3 text-sm font-semibold"
-            style={{ background: "hsl(var(--pr-gold))", color: "hsl(var(--pr-emerald-deep))" }}
+            className="pglass-btn"
           >
             Vai al portfolio
           </Link>
@@ -120,7 +119,7 @@ export default function PortfolioCasePage() {
   ];
 
   return (
-    <div className="pglass-scope min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
+    <div className="pglass-scope pglass-bg min-h-screen">
       <PrestigeTheme />
 
       {/* ───────── HERO EDITORIALE ───────── */}
@@ -208,11 +207,7 @@ export default function PortfolioCasePage() {
 
       {/* ───────── FILTRO STILI (sticky) ───────── */}
       <div
-        className="sticky top-0 z-30 border-y backdrop-blur-xl"
-        style={{
-          background: "hsl(var(--pr-emerald-deep) / 0.85)",
-          borderColor: "hsl(var(--pr-gold) / 0.18)",
-        }}
+        className="pglass-stickybar sticky top-0 z-30"
       >
         <div className="mx-auto max-w-7xl overflow-x-auto px-5 py-3 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden">
           <div className="flex w-max items-center gap-2">
@@ -242,7 +237,7 @@ export default function PortfolioCasePage() {
           const idx = variants.findIndex((x) => x.id === v.id);
           const screens = v.screens?.length ? v.screens : [{ label: "Home", caption: "", image: v.screen }];
           return (
-            <section key={v.id} className="border-b py-14" style={{ borderColor: "hsl(var(--pr-gold) / 0.12)" }}>
+            <section key={v.id} className="pglass-divider py-14">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <div
@@ -266,22 +261,12 @@ export default function PortfolioCasePage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em]"
-                    style={{
-                      background: "hsl(var(--pr-gold) / 0.14)",
-                      color: "hsl(var(--pr-gold))",
-                      border: "1px solid hsl(var(--pr-gold) / 0.3)",
-                    }}
+                    className="pglass-tag pglass-tag-accent"
                   >
                     {v.palette}
                   </span>
                   <span
-                    className="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em]"
-                    style={{
-                      background: "hsl(var(--pr-gold-light) / 0.06)",
-                      color: "hsl(var(--pr-gold-light) / 0.8)",
-                      border: "1px solid hsl(var(--pr-gold-light) / 0.16)",
-                    }}
+                    className="pglass-tag"
                   >
                     {screens.length} {screens.length === 1 ? "schermata" : "schermate"}
                   </span>
@@ -337,7 +322,7 @@ export default function PortfolioCasePage() {
 
         {/* ───────── GRIGLIA COMPATTA: altre direzioni visive ───────── */}
         {compact.length > 0 && (
-          <section className="border-b py-14" style={{ borderColor: "hsl(var(--pr-gold) / 0.12)" }}>
+          <section className="pglass-divider py-14">
             <div
               className="text-[10px] font-bold uppercase tracking-[0.26em]"
               style={{ color: "hsl(var(--pr-gold))" }}
@@ -412,12 +397,7 @@ export default function PortfolioCasePage() {
                 <Link
                   key={g.id}
                   to={`/portfolio/${g.id}`}
-                  className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all hover:gap-2.5"
-                  style={{
-                    background: "hsl(var(--pr-gold-light) / 0.05)",
-                    color: "hsl(var(--pr-gold-light) / 0.85)",
-                    border: "1px solid hsl(var(--pr-gold) / 0.24)",
-                  }}
+                  className="pglass-chip pglass-chip-dark"
                 >
                   {g.label} <ArrowUpRight size={13} />
                 </Link>
@@ -427,22 +407,13 @@ export default function PortfolioCasePage() {
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
                 to="/demo"
-                className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold"
-                style={{
-                  background: "hsl(var(--pr-gold))",
-                  color: "hsl(var(--pr-emerald-deep))",
-                  boxShadow: "0 14px 40px -18px hsl(var(--pr-gold) / 0.7)",
-                }}
+                className="pglass-btn"
               >
                 Apri i siti demo live <ArrowUpRight size={16} />
               </Link>
               <Link
                 to="/portfolio"
-                className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold"
-                style={{
-                  color: "hsl(var(--pr-gold-light))",
-                  border: "1px solid hsl(var(--pr-gold) / 0.35)",
-                }}
+                className="pglass-btn-ghost"
               >
                 Portfolio completo <ArrowUpRight size={16} />
               </Link>
