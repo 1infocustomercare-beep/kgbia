@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { applyPerfTier } from "@/lib/perf-tier";
 
 /**
  * PrestigeScrubBackdrop — sfondo globale della home Prestige.
