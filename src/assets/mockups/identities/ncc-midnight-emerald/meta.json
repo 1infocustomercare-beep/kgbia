@@ -1,0 +1,18 @@
+{
+  "identityId": "ncc-midnight-emerald",
+  "sector": "ncc",
+  "brand": "Verdenotte Noleggio",
+  "style": "brutal-slab/grid-4-dense/inner-glow-hairline/glass-panel/form-stepper/count-up/type-highlight/sidebar-drawer-hint",
+  "family": "midnight-emerald-drive",
+  "palette": "mobile",
+  "description": "Verdenotte Noleggio: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Fleet"
+  ],
+  "captions": [
+    "Schermata fleet."
+  ],
+  "features": [
+    "Fleet"
+  ]
+}

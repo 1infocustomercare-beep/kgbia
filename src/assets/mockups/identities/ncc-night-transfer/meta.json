@@ -1,0 +1,18 @@
+{
+  "identityId": "ncc-night-transfer",
+  "sector": "ncc",
+  "brand": "Notte Lunga",
+  "style": "mono-technical/grid-6-editorial/no-border-soft-shadow/square-flat/segmented-tabs-tables/shimmer-load/cta-only/no-tabbar-bottom-cta",
+  "family": "night-transfer-viola-club",
+  "palette": "mobile",
+  "description": "Notte Lunga: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

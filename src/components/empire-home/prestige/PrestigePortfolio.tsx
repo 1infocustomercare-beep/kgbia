@@ -28,39 +28,46 @@ export default function PrestigePortfolio() {
   const rotateX = useTransform(scrollYProgress, [0, 0.35], [45, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.35], [0.92, 1]);
 
-  // Primary hero card per sector — first PRIMARY studio variant only. Homepage
-  // shows ONLY our own studio mockups (Lowengeld/reference variants live on
-  // /portfolio, never here).
-  const heroes = useMemo(
+  // UNA CARD PER OGNI IDENTITÀ STUDIO — la home mostra tutti i mockup premium
+  // generati dal nostro studio (le varianti reference restano su /portfolio).
+  const cards = useMemo(
     () =>
-      SECTOR_MOCKUPS
-        .map((g) => {
-          const primary = g.variants.filter((v) => v.tier === "primary" && v.source === "studio");
-          return {
-            sectorId: g.id,
-            sectorLabel: g.label,
-            tagline: g.tagline,
-            variants: primary,
-            hero: primary[0] as SectorMockupVariant | undefined,
-          };
-        })
-        .filter((h) => !!h.hero),
+      SECTOR_MOCKUPS.flatMap((g) => {
+        const primary = g.variants.filter((v) => v.tier === "primary" && v.source === "studio");
+        return primary.map((v, i) => ({
+          key: `${g.id}-${v.id}`,
+          sectorId: g.id,
+          sectorLabel: g.label,
+          tagline: v.description || g.tagline,
+          variants: primary,
+          index: i,
+          hero: v as SectorMockupVariant,
+        }));
+      }),
     [],
   );
-  /** Chip di filtro per settore con conteggio stili (come la barra categorie del competitor). */
+
+  const sectors = useMemo(() => {
+    const map = new Map<string, { id: string; label: string; count: number }>();
+    cards.forEach((c) => {
+      const row = map.get(c.sectorId) ?? { id: c.sectorId, label: c.sectorLabel, count: 0 };
+      row.count += 1;
+      map.set(c.sectorId, row);
+    });
+    return [...map.values()].sort((a, b) => b.count - a.count);
+  }, [cards]);
+
+  /** Chip di filtro per settore con conteggio stili. */
   const chips = useMemo(
-    () => [
-      { id: "all", label: "Tutti", count: heroes.reduce((n, h) => n + h.variants.length, 0) },
-      ...heroes.map((h) => ({ id: h.sectorId, label: h.sectorLabel, count: h.variants.length })),
-    ],
-    [heroes],
+    () => [{ id: "all", label: "Tutti", count: cards.length }, ...sectors],
+    [cards, sectors],
   );
 
   const filtered = useMemo(
-    () => (filter === "all" ? heroes : heroes.filter((h) => h.sectorId === filter)),
-    [heroes, filter],
+    () => (filter === "all" ? cards : cards.filter((c) => c.sectorId === filter)),
+    [cards, filter],
   );
-  const visible = expanded || filter !== "all" ? filtered : filtered.slice(0, 8);
+  const visible = expanded ? filtered : filtered.slice(0, 12);
 
 
   return (
@@ -142,7 +149,7 @@ export default function PrestigePortfolio() {
           >
             {visible.map((h) => (
                     <article
-                      key={h.sectorId}
+                      key={h.key}
                       className="group flex w-full flex-col items-center"
                     >
                       <div className="relative transition-transform duration-500 group-hover:-translate-y-1">
@@ -155,7 +162,7 @@ export default function PrestigePortfolio() {
                               sectorId: h.sectorId,
                               sectorLabel: h.sectorLabel,
                               variants: h.variants,
-                              index: 0,
+                              index: h.index,
                             })
                           }
                         />
@@ -184,7 +191,7 @@ export default function PrestigePortfolio() {
                                   sectorId: h.sectorId,
                                   sectorLabel: h.sectorLabel,
                                   variants: h.variants,
-                                  index: 0,
+                                  index: h.index,
                                 })
                               }
                               className="overflow-hidden rounded-[10px] transition-transform duration-300 hover:-translate-y-0.5"
@@ -248,7 +255,7 @@ export default function PrestigePortfolio() {
 
 
         <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
-          {heroes.length > 8 && (
+          {filtered.length > 12 && (
             <button
               onClick={() => setExpanded((v) => !v)}
               className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all"
@@ -261,7 +268,7 @@ export default function PrestigePortfolio() {
               {expanded ? (
                 <>Mostra meno <ChevronUp size={16} /></>
               ) : (
-                <>Vedi tutti i {heroes.length} settori <ChevronDown size={16} /></>
+                <>Vedi tutti i {filtered.length} mockup <ChevronDown size={16} /></>
               )}
             </button>
           )}
