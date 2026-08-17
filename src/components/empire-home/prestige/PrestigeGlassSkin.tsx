@@ -999,25 +999,6 @@ export default function PrestigeGlassSkin() {
       }
 
       /* ============================================================
-         GPU BUDGET — modalita' "lite" (hardware modesto / save-data)
-         Il backdrop-filter e' l'operazione piu' costosa del design glass:
-         su device deboli scende a 10px e le superfici guadagnano una tinta
-         piu' densa, così restano leggibili senza il pass di blur pesante.
-         ============================================================ */
-      html[data-perf-tier="lite"] .pglass,
-      html[data-perf-tier="lite"] .pglass-soft,
-      html[data-perf-tier="lite"] .pglass-chip,
-      html[data-perf-tier="lite"] .pglass-btn,
-      html[data-perf-tier="lite"] .pglass-bar {
-        backdrop-filter: blur(10px) saturate(120%);
-        -webkit-backdrop-filter: blur(10px) saturate(120%);
-      }
-      html[data-perf-tier="lite"] .pglass-wave::before { animation: none; }
-      html[data-perf-tier="lite"] .pglass-lift,
-      html[data-perf-tier="lite"] .pglass-glow,
-      html[data-perf-tier="lite"] .pglass-drift { will-change: auto; }
-
-      /* ============================================================
          MOBILE GLASS OPTIMIZATION
          - safe area (notch / home indicator / landscape)
          - nessun overflow orizzontale dalle superfici vetro
