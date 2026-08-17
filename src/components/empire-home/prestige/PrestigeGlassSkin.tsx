@@ -678,6 +678,30 @@ export default function PrestigeGlassSkin() {
         color: hsl(var(--pr-text-on-dark));
         font-family: 'Manrope', 'Inter', system-ui, sans-serif;
       }
+      /* Contesti legacy che ridichiarano i token (landing-dark / force-dark / .dark):
+         li riallineo all'aqua Empire, così nessuna pagina resta blu o viola. */
+      body.pglass-app .landing-dark,
+      body.pglass-app .force-dark,
+      body.pglass-app .dark,
+      body.pglass-app [class*="landing-"] {
+        --primary: 178 74% 48%;
+        --primary-foreground: 202 56% 8%;
+        --accent: 176 82% 62%;
+        --ring: 178 74% 48%;
+        --landing-accent: 178 74% 48%;
+        --landing-accent-strong: 176 82% 74%;
+        --empire-violet: 186 78% 54%;
+        --empire-violet-deep: 190 72% 34%;
+        --empire-violet-glow: 176 82% 72%;
+        --neon-blue: 186 82% 56%;
+        --neon-cyan: 178 84% 58%;
+        --neon-emerald: 172 76% 46%;
+      }
+      body.pglass-app .bg-vibrant-gradient,
+      body.pglass-app .bg-empire-gradient {
+        background-image: linear-gradient(135deg, hsl(var(--pr-aqua-deep)), hsl(var(--pr-aqua)) 55%, hsl(var(--pr-aqua-light))) !important;
+      }
+
       body.pglass-app h1, body.pglass-app h2, body.pglass-app h3 {
         font-family: 'Sora', 'Manrope', system-ui, sans-serif;
         letter-spacing: -0.025em;
