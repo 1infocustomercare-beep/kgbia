@@ -149,27 +149,40 @@ export default function PrestigeHero() {
       }}
     >
 
-      {/* FUI jelly background effect — sotto tutto, non intercetta eventi */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-[-1] overflow-hidden">
+      {/* FUI jelly background effect — sopra il fondo della section, sotto contenuti/telefoni */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         {/* Gradient base: dark prestige adaptation of FUI hero */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, hsl(var(--pr-bg) / 1) 10%, hsl(var(--pr-bg) / 1) 30%, hsl(var(--pr-surface) / 1) 98%)",
+              "linear-gradient(to bottom, hsl(var(--pr-bg)) 10%, hsl(var(--pr-bg)) 30%, hsl(var(--pr-surface)) 98%)",
           }}
         />
         {/* Blue glow — same hue/position/rotation as FUI reference */}
         <div
-          className="absolute left-0 top-0 h-80 w-[90%]"
+          className="absolute -left-[10%] -top-[15%] h-[420px] w-[90%]"
           style={{
             background: "rgb(54,157,253)",
-            opacity: 0.4,
-            filter: "blur(337.4px)",
+            opacity: 0.42,
+            filter: "blur(180px)",
             transform: "rotate(-30deg)",
+            mixBlendMode: "screen",
+          }}
+        />
+        {/* Secondo glow aqua per profondità jelly */}
+        <div
+          className="absolute right-[-8%] top-[35%] h-[380px] w-[60%]"
+          style={{
+            background: "hsl(var(--pr-aqua))",
+            opacity: 0.22,
+            filter: "blur(160px)",
+            transform: "rotate(18deg)",
+            mixBlendMode: "screen",
           }}
         />
       </div>
+
 
       {/* Warp tunnel 3D interattivo — dietro a tutto, non intercetta eventi */}
       <PrestigeHeroImmersive />
