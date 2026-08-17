@@ -28,24 +28,32 @@ export default function PrestigePortfolio() {
   const rotateX = useTransform(scrollYProgress, [0, 0.35], [45, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.35], [0.92, 1]);
 
-  // UNA CARD PER OGNI IDENTITÀ STUDIO — la home mostra tutti i mockup premium
-  // generati dal nostro studio (le varianti reference restano su /portfolio).
+  // UNA CARD PER SETTORE — la home mostra il mockup migliore (sequenza più
+  // completa) di ogni settore e rimanda al caso studio con tutti gli stili a
+  // confronto. Le varianti reference restano su /portfolio.
   const cards = useMemo(
     () =>
-      SECTOR_MOCKUPS.flatMap((g) => {
-        const primary = g.variants.filter((v) => v.tier === "primary" && v.source === "studio");
-        return primary.map((v, i) => ({
-          key: `${g.id}-${v.id}`,
+      SECTOR_MOCKUPS.map((g) => {
+        const studio = g.variants.filter((v) => v.source === "studio");
+        const pool = studio.length ? studio : g.variants;
+        const ranked = [...pool].sort(
+          (a, b) => (b.screens?.length ?? 1) - (a.screens?.length ?? 1),
+        );
+        const hero = ranked[0];
+        if (!hero) return null;
+        return {
+          key: `${g.id}-${hero.id}`,
           sectorId: g.id,
           sectorLabel: g.label,
-          tagline: v.description || g.tagline,
-          variants: primary,
-          index: i,
-          hero: v as SectorMockupVariant,
-        }));
-      }),
+          tagline: g.tagline,
+          variants: ranked,
+          index: 0,
+          hero: hero as SectorMockupVariant,
+        };
+      }).filter((c): c is NonNullable<typeof c> => c !== null),
     [],
   );
+
 
   const sectors = useMemo(() => {
     const map = new Map<string, { id: string; label: string; count: number }>();
