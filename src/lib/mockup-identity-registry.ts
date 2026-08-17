@@ -16,10 +16,12 @@ import { FITNESS_EXPANSION } from "./mockup-identity-expansion-fitness";
 import { HOSPITALITY_EXPANSION } from "./mockup-identity-expansion-hospitality";
 import { REALESTATE_EXPANSION } from "./mockup-identity-expansion-realestate";
 import { HEALTHCARE_EXPANSION } from "./mockup-identity-expansion-healthcare";
+import { WAVE2_A } from "./mockup-identity-expansion-wave2-a";
 
 const EXPANSIONS: ExpansionRow[] = [
   ...FOOD_EXPANSION, ...BEAUTY_EXPANSION, ...NCC_EXPANSION, ...FITNESS_EXPANSION,
   ...HOSPITALITY_EXPANSION, ...REALESTATE_EXPANSION, ...HEALTHCARE_EXPANSION,
+  ...WAVE2_A,
 ];
 
 /** Firme di superficie complete (base + espansioni). */
