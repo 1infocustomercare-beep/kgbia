@@ -28,23 +28,52 @@ export default function LandingNav() {
   // Nav "classy": resta visibile mentre si scorre verso l'alto, si ritira
   // elegantemente quando si scende (torna con un micro-scroll su).
   const [hidden, setHidden] = useState(false);
+  const [active, setActive] = useState<string>("");
 
   useEffect(() => {
     let last = window.scrollY;
-    const onScroll = () => {
+    let acc = 0;
+    let raf = 0;
+
+    const compute = () => {
+      raf = 0;
       const y = window.scrollY;
-      setScrolled(y > 60);
+      setScrolled(y > 40);
+
+      // Isteresi: accumula il movimento nella stessa direzione per evitare
+      // apparizioni/sparizioni nervose durante lo scroll fluido.
       const delta = y - last;
-      if (Math.abs(delta) > 6) {
-        setHidden(delta > 0 && y > 220);
-        last = y;
-      }
+      last = y;
+      if ((delta > 0 && acc < 0) || (delta < 0 && acc > 0)) acc = 0;
+      acc += delta;
+      if (acc > 90 && y > 240) { setHidden(true); acc = 0; }
+      else if (acc < -40) { setHidden(false); acc = 0; }
+      if (y < 120) setHidden(false);
+
       const h = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(h > 0 ? (y / h) * 100 : 0);
+      setProgress(h > 0 ? Math.min(100, (y / h) * 100) : 0);
+
+      // Sezione attiva (link ancora presenti nel documento).
+      let current = "";
+      for (const l of NAV_LINKS) {
+        if (!l.href.startsWith("#")) continue;
+        const el = document.querySelector(l.href) as HTMLElement | null;
+        if (el && el.getBoundingClientRect().top <= 160) current = l.href;
+      }
+      setActive(current);
     };
+
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(compute); };
+    compute();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
+
 
   const scrollTo = (href: string) => {
     setMenuOpen(false);
