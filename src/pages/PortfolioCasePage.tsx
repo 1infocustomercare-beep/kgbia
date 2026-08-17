@@ -292,7 +292,7 @@ export default function PortfolioCasePage() {
                       border: "1px solid hsl(var(--pr-gold-light) / 0.16)",
                     }}
                   >
-                    {screens.length} schermate
+                    {screens.length} {screens.length === 1 ? "schermata" : "schermate"}
                   </span>
                 </div>
               </div>
