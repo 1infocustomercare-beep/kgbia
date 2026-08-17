@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import { supabase } from "@/integrations/supabase/client";
+import { GlassCard, GlassButton } from "@/components/glass";
 import { toast } from "sonner";
 import { Copy, ExternalLink, TrendingUp, Wallet, Users, FileText } from "lucide-react";
 
@@ -47,7 +48,7 @@ export default function VendorDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a1512] text-white">
+      <div className="pglass-scope pglass-app min-h-screen flex items-center justify-center text-white">
         Caricamento...
       </div>
     );
@@ -61,43 +62,40 @@ export default function VendorDashboard() {
   const paidCount = orders.filter(o => o.status === "paid").length;
 
   const Card = ({ icon: Icon, label, value }: any) => (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <GlassCard className="rounded-2xl p-4">
       <div className="flex items-center gap-2 opacity-70 text-xs mb-1"><Icon className="w-4 h-4" />{label}</div>
       <div className="text-2xl font-bold">{value}</div>
-    </div>
+    </GlassCard>
   );
 
   return (
     <>
       <PrestigeTheme />
-      <div className="prestige-root prestige-section min-h-screen p-4 sm:p-8">
+      <div className="prestige-root prestige-section pglass-scope pglass-app min-h-screen p-4 sm:p-8">
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <h1 className="text-2xl font-bold font-heading">Ciao {seller.display_name}</h1>
               <p className="text-sm opacity-70">Commissione attuale: <strong>{seller.commission_pct}%</strong></p>
             </div>
-            <button onClick={() => supabase.auth.signOut().then(() => navigate("/"))} className="text-sm opacity-70 hover:opacity-100">
+            <GlassButton variant="ghost" size="sm" onClick={() => supabase.auth.signOut().then(() => navigate("/"))}>
               Esci
-            </button>
+            </GlassButton>
           </div>
 
           {/* Referral link */}
-          <div className="rounded-2xl border border-[hsl(var(--pr-gold))]/30 bg-[hsl(var(--pr-gold))]/10 p-5">
+          <GlassCard lift={false} className="rounded-2xl p-5">
             <div className="text-xs font-semibold uppercase tracking-wider opacity-80 mb-2">Il tuo link referral</div>
             <div className="flex items-center gap-2 flex-wrap">
               <code className="flex-1 min-w-0 bg-black/30 rounded-lg px-3 py-2 text-sm truncate">{refLink}</code>
-              <button
-                onClick={() => { navigator.clipboard.writeText(refLink); toast.success("Copiato!"); }}
-                className="h-10 px-3 rounded-lg bg-[hsl(var(--pr-gold))] text-[hsl(var(--pr-emerald-deep))] font-semibold text-sm flex items-center gap-1"
-              >
+              <GlassButton size="sm" onClick={() => { navigator.clipboard.writeText(refLink); toast.success("Copiato!"); }}>
                 <Copy className="w-4 h-4" /> Copia
-              </button>
-              <a href={refLink} target="_blank" rel="noreferrer" className="h-10 px-3 rounded-lg border border-white/20 text-sm flex items-center gap-1">
+              </GlassButton>
+              <GlassButton variant="ghost" size="sm" onClick={() => window.open(refLink, "_blank", "noopener")}>
                 <ExternalLink className="w-4 h-4" /> Apri
-              </a>
+              </GlassButton>
             </div>
-          </div>
+          </GlassCard>
 
           {/* KPI */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -109,11 +107,11 @@ export default function VendorDashboard() {
 
           {/* Quick actions */}
           <div className="grid sm:grid-cols-2 gap-3">
-            <a href="/pacchetto-base" className="rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+            <a href="/pacchetto-base" className="pglass pglass-lift rounded-2xl p-4 block">
               <div className="font-bold">Vendi Pacchetto Base</div>
               <div className="text-xs opacity-70 mt-1">Apri il flusso self-service e chiudi la vendita.</div>
             </a>
-            <a href="/pacchetto-completo" className="rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+            <a href="/pacchetto-completo" className="pglass pglass-lift rounded-2xl p-4 block">
               <div className="font-bold">Compila brief Su Misura</div>
               <div className="text-xs opacity-70 mt-1">Raccogli tutte le info per un progetto personalizzato.</div>
             </a>
@@ -122,9 +120,9 @@ export default function VendorDashboard() {
           {/* Orders */}
           <section>
             <h2 className="font-bold mb-3 flex items-center gap-2"><Users className="w-4 h-4" /> Ordini Base</h2>
-            <div className="rounded-2xl border border-white/10 overflow-hidden">
+            <div className="pglass partner-table-surface rounded-2xl overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-white/10 text-xs uppercase">
+                <thead className="bg-[hsl(var(--pr-aqua))]/12 text-xs uppercase">
                   <tr>
                     <th className="text-left p-3">Cliente</th>
                     <th className="text-left p-3">Attività</th>
@@ -150,9 +148,9 @@ export default function VendorDashboard() {
           {/* Briefs */}
           <section>
             <h2 className="font-bold mb-3 flex items-center gap-2"><FileText className="w-4 h-4" /> Brief Completo</h2>
-            <div className="rounded-2xl border border-white/10 overflow-hidden">
+            <div className="pglass partner-table-surface rounded-2xl overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-white/10 text-xs uppercase">
+                <thead className="bg-[hsl(var(--pr-aqua))]/12 text-xs uppercase">
                   <tr>
                     <th className="text-left p-3">Cliente</th>
                     <th className="text-left p-3">Attività</th>
