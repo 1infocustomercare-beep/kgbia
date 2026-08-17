@@ -635,10 +635,11 @@ export default function DemoDirectoryPage() {
                 onNavigate={navigateToDemo} isFeatured={isFeatured(id)} featured={getFeatured(id)} />
             ))}
             {filtered.length === 0 && (
-              <div className="text-center py-16">
-                  <p className="text-foreground/70 text-sm">Nessun settore trovato per "{search}"</p>
-              </div>
+              <GlassCard variant="soft" lift={false} className="px-6 py-14 text-center">
+                <p className="text-foreground/70 text-sm">Nessun settore trovato per "{search}"</p>
+              </GlassCard>
             )}
+
           </div>
         ) : (
           /* Categorized view */
