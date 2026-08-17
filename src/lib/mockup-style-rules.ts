@@ -199,13 +199,25 @@ export const FRAMING_CONTRACT = [
   "display nitido, pixel-perfect, resa realistica del vetro senza riflessi che coprano la UI",
 ].join("; ");
 
+/**
+ * Regole di CONTENUTO non negoziabili: il modello deve scrivere copy reale
+ * italiano, non ripetere le istruzioni di stile come testo dentro lo schermo.
+ */
+export const CONTENT_CONTRACT = [
+  "tutti i testi visibili sono copy reale in italiano coerente col brand (nomi di piatti/servizi/persone plausibili, prezzi in €, orari, date)",
+  "VIETATO scrivere nello schermo termini descrittivi del brief: mai 'giant headline', 'display serif', 'price pill', 'two-line titles', 'accent rule', 'lorem', 'placeholder', 'card', 'component'",
+  "nessuna parola inventata o storpiata: solo italiano corretto e leggibile",
+  "l'ultima riga o card visibile deve essere completa: nessun elemento tagliato dal bordo inferiore del display",
+  "immagine finale VERTICALE, formato ritratto 3:4, il telefono occupa la maggior parte dell'altezza",
+].join("; ");
+
 export function buildScreenPrompt(identity: MockupIdentity, screenKey: string): string {
   const rules = STYLE_RULES[identity.id];
   const screen = identity.screens.find((s) => s.key === screenKey) ?? identity.screens[0];
   const p = identity.palette;
   return [
     `Mockup fotorealistico di app iOS in italiano — identità "${identity.label}" per ${identity.brand} (${identity.tagline}).`,
-    `Schermata: ${screen.title} — ${screen.purpose}. Elementi obbligatori: ${screen.elements.join(", ")}.`,
+    `Schermata: ${screen.title} — ${screen.purpose}. Funzioni da rappresentare (rendile con contenuti reali, NON scrivere queste parole): ${screen.elements.join(", ")}.`,
     `Palette: fondo ${p.bg}, superfici ${p.surface}, testo ${p.text}, muted ${p.muted}, accento ${p.accent}, secondario ${p.accent2}.`,
     `Tipografia: ${identity.typography.display} / ${identity.typography.body} / ${identity.typography.treatment}. Scala ${rules?.type.scale} (${rules?.type.key}), ${rules?.type.case}, tracking ${rules?.type.tracking}, leading ${rules?.type.leading}.`,
     `Spaziatura: ${rules?.spacing.key} — unità ${rules?.spacing.unit}, gutter ${rules?.spacing.gutter}, ritmo ${rules?.spacing.rhythm}, padding ${rules?.spacing.padding}.`,
@@ -214,5 +226,7 @@ export function buildScreenPrompt(identity: MockupIdentity, screenKey: string): 
     `Micro-animazione congelata nel frame: ${rules?.motion.desc}.`,
     `Fotografia della scena: ${identity.photography}. Composizione UI: ${identity.composition}.`,
     `Vincoli di inquadratura: ${FRAMING_CONTRACT}.`,
+    `Vincoli di contenuto: ${CONTENT_CONTRACT}.`,
   ].join("\n");
 }
+

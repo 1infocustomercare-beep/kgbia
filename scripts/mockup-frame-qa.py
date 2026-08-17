@@ -57,33 +57,61 @@ def _edges(img: Image.Image) -> np.ndarray:
     return e
 
 
-def _phone_box(edges: np.ndarray) -> dict:
-    """Bounding box del soggetto principale (corpo telefono) via energia di bordo."""
-    H, W = edges.shape
-    ink = edges > 28
-    col = ink.mean(axis=0)
-    row = ink.mean(axis=1)
-
-    def span(profile: np.ndarray, floor: float) -> tuple[int, int]:
-        idx = np.where(profile > floor)[0]
-        if idx.size == 0:
-            return 0, len(profile) - 1
-        return int(idx[0]), int(idx[-1])
-
-    x0, x1 = span(col, max(0.02, col.max() * 0.16))
-    y0, y1 = span(row, max(0.02, row.max() * 0.16))
-    return {"x0": x0, "x1": x1, "y0": y0, "y1": y1, "W": W, "H": H,
-            "w": max(1, x1 - x0), "h": max(1, y1 - y0)}
+def _subject_mask(img: Image.Image) -> np.ndarray:
+    """Maschera del soggetto = pixel che differiscono dal fondo (campionato ai bordi)."""
+    a = np.asarray(img, dtype=np.float32)
+    H, W, _ = a.shape
+    k = max(4, min(H, W) // 40)
+    corners = np.concatenate([
+        a[:k, :k].reshape(-1, 3), a[:k, -k:].reshape(-1, 3),
+        a[-k:, :k].reshape(-1, 3), a[-k:, -k:].reshape(-1, 3),
+    ])
+    bg = np.median(corners, axis=0)
+    dist = np.sqrt(((a - bg) ** 2).sum(axis=2))
+    return dist > 42.0
 
 
-def _tilt_deg(edges: np.ndarray, box: dict) -> float:
-    """Stima rotazione: per ogni riga trova il bordo sinistro del corpo e fitta una retta."""
-    ink = edges > 28
+def _blobs(mask: np.ndarray) -> list[dict]:
+    from scipy import ndimage
+    filled = ndimage.binary_closing(mask, structure=np.ones((7, 7)))
+    filled = ndimage.binary_fill_holes(filled)
+    labels, n = ndimage.label(filled)
+    out = []
+    H, W = mask.shape
+    for idx, sl in enumerate(ndimage.find_objects(labels), start=1):
+        ys, xs = sl
+        area = int((labels[sl] == idx).sum())
+        if area < 0.01 * H * W:
+            continue
+        out.append({
+            "x0": int(xs.start), "x1": int(xs.stop - 1),
+            "y0": int(ys.start), "y1": int(ys.stop - 1),
+            "area": area,
+        })
+    out.sort(key=lambda b: -b["area"])
+    return out
+
+
+def _phone_box(img: Image.Image) -> tuple[dict, list[dict]]:
+    mask = _subject_mask(img)
+    H, W = mask.shape
+    blobs = _blobs(mask)
+    if not blobs:
+        box = {"x0": 0, "x1": W - 1, "y0": 0, "y1": H - 1, "area": H * W}
+    else:
+        box = blobs[0]
+    box.update({"W": W, "H": H,
+                "w": max(1, box["x1"] - box["x0"]),
+                "h": max(1, box["y1"] - box["y0"])})
+    return box, blobs
+
+
+def _tilt_deg(mask: np.ndarray, box: dict) -> float:
     ys, xs = [], []
-    y_start = box["y0"] + int(box["h"] * 0.15)
-    y_end = box["y0"] + int(box["h"] * 0.85)
+    y_start = box["y0"] + int(box["h"] * 0.2)
+    y_end = box["y0"] + int(box["h"] * 0.8)
     for y in range(y_start, max(y_start + 1, y_end)):
-        row = np.where(ink[y, box["x0"]:box["x1"] + 1])[0]
+        row = np.where(mask[y, box["x0"]:box["x1"] + 1])[0]
         if row.size:
             ys.append(y)
             xs.append(row[0])
@@ -94,46 +122,49 @@ def _tilt_deg(edges: np.ndarray, box: dict) -> float:
 
 
 def _scene_ink(edges: np.ndarray, box: dict) -> float:
-    """Ink ad alto contrasto fuori dal corpo telefono (elementi UI fuori dal display)."""
     mask = np.ones_like(edges, dtype=bool)
-    mask[box["y0"]:box["y1"] + 1, box["x0"]:box["x1"] + 1] = False
+    pad_x = int(box["w"] * 0.04)
+    pad_y = int(box["h"] * 0.04)
+    mask[max(0, box["y0"] - pad_y):box["y1"] + 1 + pad_y,
+         max(0, box["x0"] - pad_x):box["x1"] + 1 + pad_x] = False
     outside = edges[mask]
     if outside.size == 0:
         return 0.0
-    return float((outside > 60).mean())
+    return float((outside > 70).mean())
 
 
-def _nested_frame(edges: np.ndarray, box: dict) -> float:
-    """Cerca un secondo bordo verticale continuo dentro il display (telefono nel telefono)."""
-    inner_x0 = box["x0"] + int(box["w"] * 0.10)
-    inner_x1 = box["x1"] - int(box["w"] * 0.10)
-    inner_y0 = box["y0"] + int(box["h"] * 0.12)
-    inner_y1 = box["y1"] - int(box["h"] * 0.12)
-    if inner_x1 <= inner_x0 or inner_y1 <= inner_y0:
-        return 0.0
-    region = edges[inner_y0:inner_y1, inner_x0:inner_x1] > 55
-    colwise = region.mean(axis=0)
-    # un telefono annidato produce 2 colonne quasi piene di bordo
-    strong = np.sort(colwise)[-2:]
-    return float(strong.min()) if strong.size == 2 else 0.0
+def _nested_count(blobs: list[dict], box: dict) -> int:
+    """Numero di ulteriori blob con proporzioni da telefono (secondo telefono in scena)."""
+    n = 0
+    for b in blobs[1:]:
+        w = max(1, b["x1"] - b["x0"]); h = max(1, b["y1"] - b["y0"])
+        if b["area"] < 0.05 * box["W"] * box["H"]:
+            continue
+        if ASPECT_MIN <= w / h <= ASPECT_MAX:
+            n += 1
+    return n
 
 
 def validate_frame(path: str) -> dict:
     img = _load(path)
     e = _edges(img)
-    box = _phone_box(e)
+    box, blobs = _phone_box(img)
+    mask = _subject_mask(img)
     W, H = box["W"], box["H"]
 
-    tilt = _tilt_deg(e, box)
+    tilt = _tilt_deg(mask, box)
     ml, mr = box["x0"] / W, (W - 1 - box["x1"]) / W
     mt, mb = box["y0"] / H, (H - 1 - box["y1"]) / H
     aspect = box["w"] / box["h"]
     scene = _scene_ink(e, box)
-    nested = _nested_frame(e, box)
+    nested = _nested_count(blobs, box)
+    portrait = H >= W
 
     issues: list[dict] = []
     add = lambda code, sev, msg: issues.append({"code": code, "severity": sev, "message": msg})
 
+    if not portrait:
+        add("landscape", "blocker", f"immagine orizzontale {W}x{H}: serve formato verticale 3:4")
     if tilt > MAX_TILT_DEG:
         add("tilt", "blocker", f"telefono ruotato di ~{tilt:.1f}° (max {MAX_TILT_DEG}°)")
     if min(ml, mr, mt, mb) < MIN_MARGIN_RATIO:
@@ -144,17 +175,18 @@ def validate_frame(path: str) -> dict:
         add("aspect", "blocker", f"proporzioni corpo non da iPhone Pro Max (w/h {aspect:.2f})")
     if scene > SCENE_INK_MAX:
         add("outside-ui", "blocker", f"elementi grafici/testo fuori dal display (ink scena {scene:.3f})")
-    if nested > NESTED_EDGE_MAX:
-        add("nested-phone", "blocker", f"cornice/telefono annidato dentro il display ({nested:.3f})")
+    if nested > 0:
+        add("nested-phone", "blocker", f"{nested} telefono/i aggiuntivo/i in scena")
 
     blockers = [i for i in issues if i["severity"] == "blocker"]
     hints = {
+        "landscape": "immagine verticale formato ritratto 3:4",
         "tilt": "iPhone perfettamente frontale e verticale, zero rotazione e zero prospettiva",
         "clipped": "inquadra il telefono intero con margine libero su tutti i lati",
         "asymmetry": "vista ortogonale centrata, margini laterali identici",
         "aspect": "un solo iPhone 17 Pro Max in proporzioni reali (circa 1:2.16)",
         "outside-ui": "TUTTA la UI dentro il display: nessun riquadro, badge o testo nella scena",
-        "nested-phone": "nessuna cornice di telefono dentro lo schermo, solo la UI",
+        "nested-phone": "un solo telefono nell'immagine, nessuna cornice di telefono dentro lo schermo",
     }
     return {
         "file": path,
@@ -163,7 +195,7 @@ def validate_frame(path: str) -> dict:
         "aspect": round(aspect, 3),
         "margins": {"l": round(ml, 3), "r": round(mr, 3), "t": round(mt, 3), "b": round(mb, 3)},
         "scene_ink": round(scene, 4),
-        "nested": round(nested, 4),
+        "nested": nested,
         "issues": issues,
         "retry_hint": " · ".join(hints[i["code"]] for i in blockers) or None,
     }

@@ -37,7 +37,7 @@ frame_qa = SourceFileLoader("frame_qa", os.path.join(HERE, "mockup-frame-qa.py")
 content_qa = SourceFileLoader("mockup_qa", os.path.join(HERE, "mockup-qa.py")).load_module()
 
 GATEWAY = "https://ai.gateway.lovable.dev/v1/images/generations"
-MODEL = "google/gemini-3-pro-image"
+MODEL = os.environ.get("MOCKUP_MODEL", "google/gemini-3-pro-image")
 
 
 def generate(prompt: str, api_key: str) -> bytes:
@@ -79,6 +79,9 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--retries", type=int, default=2)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--screen-index", type=int, default=-1, help="genera solo la schermata N (0 = hero)")
+    ap.add_argument("--workers", type=int, default=1)
+    ap.add_argument("--skip-existing", action="store_true")
     args = ap.parse_args()
 
     with open(args.manifest) as f:
@@ -88,6 +91,11 @@ def main() -> int:
         jobs = [j for j in jobs if j["sector"] == args.sector]
     if args.identity:
         jobs = [j for j in jobs if j["identityId"] == args.identity]
+    if args.screen_index >= 0:
+        jobs = [j for j in jobs if j["index"] == args.screen_index]
+    if args.skip_existing:
+        jobs = [j for j in jobs if not os.path.exists(
+            os.path.join(args.out, f"{j['identityId']}-{j['index']}-{j['screenKey']}.png"))]
     if args.limit:
         jobs = jobs[: args.limit]
 
@@ -107,7 +115,7 @@ def main() -> int:
     os.makedirs(rejected_dir, exist_ok=True)
     report, ok_count = [], 0
 
-    for j in jobs:
+    def run_job(j):
         name = f"{j['identityId']}-{j['index']}-{j['screenKey']}.png"
         target = os.path.join(args.out, name)
         prompt = j["prompt"]
@@ -132,11 +140,11 @@ def main() -> int:
                 if probe != target:
                     os.replace(probe, target)
                 print(f"  ✓ {name} (tentativo {attempt + 1})")
-                accepted, ok_count = True, ok_count + 1
+                accepted = True
                 report.append({"job": name, "status": "ok", "attempts": attempt + 1})
                 break
 
-            codes = ", ".join(i["code"] for i in res["issues"] if i["severity"] == "blocker")
+            codes = ", ".join(str(i.get("code") or i.get("type")) for i in res["issues"] if i["severity"] == "blocker")
             print(f"  ✗ {name} tentativo {attempt + 1}: {codes or 'qa'}")
             if attempt < args.retries:
                 prompt = f"{j['prompt']}\nCORREZIONI OBBLIGATORIE: {res['retry_hint']}."
@@ -146,6 +154,13 @@ def main() -> int:
                 report.append({"job": name, "status": "rejected", "issues": res["issues"]})
         if not accepted:
             print(f"  → {name} scartato: non entra nel catalogo")
+        return accepted
+
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=max(1, args.workers)) as pool:
+        for accepted in pool.map(run_job, jobs):
+            if accepted:
+                ok_count += 1
 
     with open(os.path.join(args.out, "qa-report.json"), "w") as f:
         json.dump({"ok": ok_count, "total": len(jobs), "items": report}, f, indent=2)

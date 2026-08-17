@@ -264,6 +264,43 @@ def _check_density(words: list[dict], W: int, H: int) -> list[dict]:
     return []
 
 
+BANNED_TOKENS = (
+    "lorem", "ipsum", "placeholder", "giant headline", "display serif", "price pill",
+    "two-line", "accent rule", "call-to-action", "call to action", "cta button",
+    "segmento", "scrollinso", "component", "card title", "body text", "sample text",
+    "heading", "subheading", "label text", "your text", "text here", "button",
+)
+
+ITALIAN_HINT_WORDS = (
+    "prenota", "menu", "menù", "orari", "servizi", "cliente", "clienti", "oggi",
+    "disponibile", "conferma", "totale", "prezzo", "recensioni", "contatti",
+    "dettagli", "scopri", "iscriviti", "chiama", "sedi", "€",
+)
+
+
+def _check_lexicon(words: list[dict]) -> list[dict]:
+    """Gate lessicale: nessun testo segnaposto/brief e copy realmente italiano."""
+    if pytesseract is None:
+        return []
+    readable = [w for w in words if w["conf"] >= OCR_CONF_MIN and w["text"].strip()]
+    text = " ".join(w["text"] for w in readable).lower()
+    issues = []
+    hits = sorted({t for t in BANNED_TOKENS if t in text})
+    if hits:
+        issues.append({
+            "type": "placeholder_text",
+            "severity": "blocker",
+            "detail": f"testo segnaposto/di brief nello schermo: {', '.join(hits[:5])}",
+        })
+    if len(readable) >= 10 and not any(w in text for w in ITALIAN_HINT_WORDS):
+        issues.append({
+            "type": "not_italian_copy",
+            "severity": "warning",
+            "detail": "nessuna parola italiana riconosciuta: copy probabilmente inglese o inventato",
+        })
+    return issues
+
+
 def _retry_hint(issues: list[dict]) -> str:
     kinds = {i["type"] for i in issues}
     hints = []
@@ -275,6 +312,10 @@ def _retry_hint(issues: list[dict]) -> str:
         hints.append("scala tipografica da app reale: hero max 64px, titoli 28-34px, body 16-18px")
     if "text_too_small" in kinds or "text_unreadable_at_edge" in kinds:
         hints.append("nessun testo sotto 14px, glifi completi e nitidi")
+    if "placeholder_text" in kinds:
+        hints.append("scrivi SOLO copy reale in italiano (piatti/servizi, prezzi in €, orari): mai parole del brief come 'call-to-action', 'headline', 'placeholder', 'segmento'")
+    if "not_italian_copy" in kinds:
+        hints.append("tutti i testi in italiano corretto, nessuna parola inventata")
     if "low_ui_density" in kinds:
         hints.append("densità UI di produzione: status bar iOS, header, contenuto multi-riga, tab bar in basso")
     return " · ".join(hints)
@@ -310,6 +351,7 @@ def validate_image(path: str) -> dict:
     issues += _check_safe_area(edges, W, H, geo)
     issues += _check_overflow_and_truncation(words, W, H, geo)
     issues += _check_density(words, W, H)
+    issues += _check_lexicon(words)
 
     blockers = [i for i in issues if i["severity"] == "blocker"]
     warnings = [i for i in issues if i["severity"] != "blocker"]
