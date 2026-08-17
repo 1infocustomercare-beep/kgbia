@@ -658,6 +658,18 @@ export default function PrestigeGlassSkin() {
          Fondale + tipografia Empire su tutte le pagine della webapp.
          I siti demo NON ricevono queste classi. */
       body.pglass-app {
+        /* Token semantici allineati alla home Empire: niente più blu/viola legacy */
+        --primary: 178 74% 48%;
+        --primary-foreground: 202 56% 8%;
+        --accent: 176 82% 62%;
+        --accent-foreground: 202 56% 8%;
+        --ring: 178 74% 48%;
+        --sidebar-primary: 178 74% 48%;
+        --sidebar-primary-foreground: 202 56% 8%;
+        --sidebar-ring: 178 74% 48%;
+        --landing-accent: 178 74% 48%;
+        --landing-accent-strong: 176 82% 74%;
+
         background:
           radial-gradient(ellipse 70% 45% at 15% 0%, hsl(var(--pr-aqua) / 0.10), transparent 62%),
           radial-gradient(ellipse 55% 40% at 88% 12%, hsl(var(--pr-aqua-deep) / 0.16), transparent 68%),
