@@ -109,9 +109,10 @@ export default function LandingNav() {
       <nav
         aria-label="Navigazione principale"
         data-hidden={hidden && !menuOpen ? "true" : "false"}
+        data-glass-safe-top
         className={`fixed top-[3px] z-[10000] w-full will-change-transform transition-[transform,opacity,padding] duration-[700ms] [transition-timing-function:cubic-bezier(.22,.75,.2,1)] ${scrolled ? "py-1.5" : "py-3"} ${hidden && !menuOpen ? "pointer-events-none -translate-y-[130%] opacity-0" : "translate-y-0 opacity-100"}`}
       >
-        <div className="mx-auto flex max-w-[1400px] items-center justify-between px-3 sm:px-5 lg:px-10">
+        <div className="pglass-safe-x mx-auto flex max-w-[1400px] items-center justify-between px-3 sm:px-5 lg:px-10">
           <div
             className={`empire-glass-nav w-full rounded-full px-3 transition-all duration-700 sm:px-5 ${scrolled ? "backdrop-blur-3xl" : "backdrop-blur-xl"}`}
             data-scrolled={scrolled ? "true" : "false"}
