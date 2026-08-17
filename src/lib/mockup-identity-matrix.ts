@@ -139,7 +139,7 @@ const FOOD: MockupIdentity[] = [
   },
   {
     id: "food-neo-brutalist", sector: "food", family: "neo-brutalist-industrial",
-    label: "Neo-Brutalist Industrial", brand: "Cantiere 47", tagline: "Burger e taproom.",
+    label: "Neo-Brutalist Industrial", brand: "Officina del Panino", tagline: "Burger e taproom urbana.",
     palette: { bg: "#D9D6D0", surface: "#FFFFFF", text: "#000000", muted: "#4A4A4A", accent: "#E8FF35", accent2: "#FF3B1F" },
     typography: { display: "Grotesque nero all-caps", body: "Mono 13px", treatment: "leading strettissimo, sticker ruotati" },
     geometry: { radius: "0px", border: "2px solid nero", grid: "blocchi rigidi, asimmetria voluta", density: "dense" },
