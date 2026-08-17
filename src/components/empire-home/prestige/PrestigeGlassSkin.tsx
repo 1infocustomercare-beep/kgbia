@@ -286,6 +286,28 @@ export default function PrestigeGlassSkin() {
         box-shadow: 0 22px 60px -28px hsl(178 74% 48% / 0.7), inset 0 1px 0 hsl(0 0% 100% / 0.35);
       }
 
+      /* Pill di navigazione: vetro classy con alone acqua all'hover */
+      .empire-nav-pill {
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.07), hsl(0 0% 100% / 0.015));
+        border: 1px solid hsl(0 0% 100% / 0.10);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.12);
+        transition: transform .5s cubic-bezier(.22,.75,.2,1), border-color .5s ease, box-shadow .5s ease;
+      }
+      .empire-nav-pill:hover {
+        transform: translateY(-1px);
+        border-color: hsl(178 74% 55% / 0.42);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.22), 0 14px 34px -18px hsl(178 74% 45% / 0.6);
+      }
+      .empire-nav-pill-glow {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        background: linear-gradient(120deg, var(--gf), var(--gt));
+        opacity: 0;
+        transition: opacity .5s ease;
+      }
+      .empire-nav-pill:hover .empire-nav-pill-glow { opacity: 0.9; }
+
       /* ═══════════ 7. ONDA DECORATIVA ═══════════ */
       .pglass-wave {
         position: relative;
