@@ -652,18 +652,16 @@ export default function DemoDirectoryPage() {
               const categoryIndustries = cat.ids.filter(id => ALL_INDUSTRIES.includes(id));
               if (categoryIndustries.length === 0) return null;
               return (
-                <motion.div key={cat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: ci * 0.06 }}>
-                  {/* Category header */}
+                <div key={cat.label} className="pglass-reveal">
+                  {/* Category header — micro-ondeggio decorativo (solo linee, testo fermo) */}
                   <div className="flex items-center gap-2.5 mb-3 px-1">
-                    <div className="h-px flex-1 max-w-[20px]"
+                    <div className={`h-px flex-1 max-w-[20px] pglass-drift${ci % 2 ? " pglass-drift-alt" : ""}`}
                       style={{ background: "linear-gradient(90deg, hsla(190,40%,50%,0.25), transparent)" }} />
                     <span className="text-[0.64rem] font-bold tracking-[2.5px] uppercase text-foreground/90">{cat.label}</span>
-                    <div className="h-px flex-1"
+                    <div className={`h-px flex-1 pglass-drift${ci % 2 ? "" : " pglass-drift-alt"}`}
                       style={{ background: "linear-gradient(90deg, transparent, hsla(190,30%,40%,0.08))" }} />
                   </div>
+
 
                   <div className="space-y-2">
                     {categoryIndustries.map((id, i) => (
@@ -672,7 +670,7 @@ export default function DemoDirectoryPage() {
                         onNavigate={navigateToDemo} isFeatured={isFeatured(id)} featured={getFeatured(id)} />
                     ))}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>

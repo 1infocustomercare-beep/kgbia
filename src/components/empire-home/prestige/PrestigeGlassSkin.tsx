@@ -673,11 +673,57 @@ export default function PrestigeGlassSkin() {
         to { transform: translateX(100%); }
       }
 
+      /* ═══════════ 9b. MICRO-ONDEGGIO IN SCORRIMENTO ═══════════
+         Scroll-linked (CSS scroll-driven animations) dove supportato:
+         zero JS, compositor-only (transform/opacity), leggibilità intatta. */
+      .pglass-drift,
+      .pglass-reveal {
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+      }
+
+      @supports (animation-timeline: view()) {
+        /* reveal morbido all'ingresso della sezione */
+        .pglass-reveal {
+          animation: pglassReveal linear both;
+          animation-timeline: view();
+          animation-range: entry 8% cover 32%;
+        }
+        /* ondeggio continuo, ampiezza minima (max 8px) legato allo scroll */
+        .pglass-drift {
+          animation: pglassDrift linear both;
+          animation-timeline: view();
+          animation-range: cover 0% cover 100%;
+        }
+        .pglass-drift-alt {
+          animation-direction: reverse;
+        }
+      }
+
+      /* Fallback senza scroll-driven animations: fade-in una volta sola */
+      @supports not (animation-timeline: view()) {
+        .pglass-reveal { animation: pglassReveal .7s cubic-bezier(.22,1,.36,1) both; }
+      }
+
+      @keyframes pglassReveal {
+        from { opacity: 0; transform: translate3d(0, 22px, 0) scale(.985); }
+        to   { opacity: 1; transform: none; }
+      }
+      @keyframes pglassDrift {
+        0%   { transform: translate3d(0, 8px, 0); }
+        50%  { transform: translate3d(0, -6px, 0); }
+        100% { transform: translate3d(0, 8px, 0); }
+      }
+
+
       @media (prefers-reduced-motion: reduce) {
         .prestige-root .prestige-dark,
         .prestige-root .prestige-light,
         .pglass-wave::before,
+        .pglass-drift,
+        .pglass-reveal,
         .pglass-skeleton::after { animation: none !important; }
+        .pglass-drift, .pglass-reveal { opacity: 1 !important; transform: none !important; }
         .pglass, .pglass-soft, .pglass-chip, .pglass-btn,
         .pglass-lift, .pglass-press {
           transition: none !important;
