@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
 import privateJetHangar from "@/assets/hero-cinematic/private-jet-hangar.jpg";
+import aureliaCardHero from "@/assets/demo-aurelia/aurelia-card-hero.jpg";
 
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
