@@ -1101,16 +1101,59 @@ export function matchSector(raw: string): SectorKey {
 }
 
 /**
- * Costruisce il prompt image-to-text per una singola schermata.
- * Il prompt è deliberatamente ricco: palette, tipografia, geometria, chrome,
- * fotografia e composizione arrivano dall'identità → due identità non possono
- * generare la stessa immagine.
+ * FIRMA MATERICA per famiglia visiva: come "vive" la superficie
+ * (vetro liquido, carta, lacca, cemento, velluto…) e il backdrop del device.
+ * È ciò che rende ogni mockup "rivoluzionario" e non un semplice layout piatto.
+ */
+export type SurfaceSignature = { material: string; light: string; backdrop: string };
+
+const DEFAULT_SURFACE: SurfaceSignature = {
+  material: "superfici opache con bordi hairline e microtexture coerente all'identità",
+  light: "luce diffusa uniforme, contrasto controllato",
+  backdrop: "fondale studio a gradiente neutro coerente con la palette",
+};
+
+export const SURFACE_SIGNATURES: Partial<Record<IdentityFamily, SurfaceSignature>> = {
+  "neo-editorial-magazine": { material: "carta avorio con grana 3%, nessuna ombra, filetti stampati", light: "luce di finestra naturale radente", backdrop: "fondale avorio caldo a gradiente morbido" },
+  "midnight-lacquer": { material: "lacca nera profonda, pannelli semi-riflettenti, bordo luminoso 1px", light: "rim light caldo singolo, ombre profonde", backdrop: "fondale carbone con sweep morbido" },
+  "neo-brutalist-industrial": { material: "cemento e carta riso, tratti 2px pieni, zero morbidezze", light: "flash diretto duro", backdrop: "fondale cemento grigio piatto" },
+  "nocturne-jazz-lounge": { material: "VETRO LIQUIDO: pannelli traslucidi con backdrop-blur pesante, bordo bianco 12%, glow interno, highlight speculare sul bordo superiore", light: "bokeh blu notturno dietro il vetro, riflessi champagne", backdrop: "fondale midnight con bokeh sfocato" },
+  "glass-tower-metropolitan": { material: "VETRO ARCHITETTONICO: pannelli trasparenti sovrapposti, riflesso diagonale, profondità a strati", light: "blue hour con riflessi a specchio", backdrop: "fondale grafite con skyline sfocato" },
+  "aviation-instrument": { material: "vetro strumento antiriflesso, reticoli incisi, tacche graduate", light: "retroilluminazione fredda da cockpit", backdrop: "fondale blu notte con vignettatura" },
+  "porcelain-couture": { material: "porcellana satinata, bordi hairline rosati, ombre pastose", light: "beauty dish morbidissimo", backdrop: "fondale cipria a gradiente" },
+  "chrome-y2k-gloss": { material: "cromo liquido specchiante, pillole 3D, riflessi iridescenti", light: "gel lighting magenta/ciano", backdrop: "fondale nero lucido con riflesso" },
+  "vitrine-jewel-box": { material: "velluto nero e filetti oro, scintillio puntiforme", light: "luce puntiforme singola da vetrina", backdrop: "fondale nero velluto" },
+  "chancery-oxblood": { material: "pelle e legno di noce, sigillo in ceralacca in rilievo, filetti oro incisi", light: "lampada da studio calda laterale", backdrop: "fondale marrone scuro profondo" },
+  "acid-performance": { material: "gomma tecnica opaca e blocchi pieni, spigoli netti", light: "neon duro da palestra", backdrop: "fondale antracite con alone acido" },
+  "monastic-recovery": { material: "lino e legno chiaro, superfici latte opaline", light: "luce naturale nebbiosa", backdrop: "fondale sabbia opaco" },
+  "mediterranean-sunlit": { material: "marmo bianco e ceramica smaltata", light: "sole a picco con ombre nette di foglie", backdrop: "fondale calce luminoso" },
+  "sterile-mint-clinic": { material: "superfici cliniche opache, bordi menta chiarissimi", light: "luce clinica diffusa senza ombre", backdrop: "fondale menta pallidissimo" },
+  "velvet-curtain": { material: "velluto bordeaux con drappeggio e cordoni oro", light: "luci di scena calde radenti", backdrop: "fondale sipario in penombra" },
+};
+
+export function getSurface(identity: MockupIdentity): SurfaceSignature {
+  return SURFACE_SIGNATURES[identity.family] ?? DEFAULT_SURFACE;
+}
+
+/**
+ * Costruisce il prompt per una singola schermata.
+ * Mobile → render fotorealistico DENTRO iPhone 16 Pro Max perfettamente frontale.
+ * Desktop → screenshot flat full-bleed senza cornice (massima visibilità contenuto).
  */
 export function buildScreenPrompt(identity: MockupIdentity, screen: ScreenSpec): string {
   const isDesktop = screen.surface === "desktop";
+  const s = getSurface(identity);
+
   const canvas = isDesktop
-    ? "Ultra-realistic full-bleed DESKTOP web app screenshot, 16:10, no browser chrome, no device frame — pure UI canvas."
-    : "Ultra-realistic full-bleed MOBILE app screenshot, 9:19.5, no phone frame, no device bezel — pure UI canvas.";
+    ? [
+        "Ultra-realistic full-bleed DESKTOP web app screenshot, 16:10, NO browser chrome, NO device frame — puro canvas UI a tutta immagine, nitidezza retina.",
+      ].join("\n")
+    : [
+        "Render fotorealistico 8K di UN SOLO iPhone 16 Pro Max in titanio naturale, vista perfettamente FRONTALE, ZERO rotazione e ZERO inclinazione, dispositivo verticale e centrato, ombra morbida realistica sotto.",
+        "Illuminazione studio a 3 punti, micro-highlight sul bevel in titanio, Dynamic Island centrata, home indicator iOS.",
+        `Fondale: ${s.backdrop}. Nessun secondo telefono, nessun oggetto, nessun testo fuori dallo schermo.`,
+        "LO SCHERMO deve mostrare la UI a tutta superficie, nitidissima e leggibile in ogni dettaglio.",
+      ].join("\n");
 
   return [
     canvas,
@@ -1121,22 +1164,27 @@ export function buildScreenPrompt(identity: MockupIdentity, screen: ScreenSpec):
     `PALETTE (usare esattamente): bg ${identity.palette.bg}, surface ${identity.palette.surface}, testo ${identity.palette.text}, muted ${identity.palette.muted}, accento ${identity.palette.accent}, secondario ${identity.palette.accent2}.`,
     `TIPOGRAFIA: display ${identity.typography.display}; body ${identity.typography.body}; trattamento ${identity.typography.treatment}.`,
     `GEOMETRIA: raggio ${identity.geometry.radius}; bordi ${identity.geometry.border}; griglia ${identity.geometry.grid}; densità ${identity.geometry.density}.`,
+    `MATERIA DELLE SUPERFICI: ${s.material}.`,
+    `LUCE DELL'INTERFACCIA: ${s.light}.`,
     `CHROME: ${identity.chrome.nav}; status bar ${identity.chrome.statusBar === "light" ? "chiara su fondo scuro" : "scura su fondo chiaro"} con 9:41; segno distintivo: ${identity.chrome.signature}.`,
-    `FOTOGRAFIA: ${identity.photography}.`,
+    `FOTOGRAFIA INTERNA: ${identity.photography}.`,
     `RITMO COMPOSITIVO: ${identity.composition}.`,
     ``,
     `SCHERMATA: ${screen.title} — ${screen.purpose}.`,
     `ELEMENTI OBBLIGATORI: ${screen.elements.join(", ")}.`,
     ``,
-    `CRAFT: griglia 8pt rigorosa, allineamenti ottici perfetti, testo nitido retina, tutte le stringhe in italiano professionale reale (nessun lorem ipsum, nessun testo inglese, nessuna scritta illeggibile), target touch realistici.`,
-    `VIETATI: cornici di dispositivo, iPhone dentro iPhone, watermark, loghi Apple/Google/Meta, wireframe, aspetto di template generico, ombre attorno al canvas.`,
+    `CRAFT: griglia 8pt rigorosa, allineamenti ottici perfetti, gerarchia tipografica da studio premiato, testo nitido retina, numeri credibili e coerenti, tutte le stringhe in italiano professionale reale (nessun lorem ipsum, nessun testo inglese, nessuna scritta illeggibile), target touch realistici.`,
+    isDesktop
+      ? `VIETATI: cornici di dispositivo, MacBook, finestre browser, watermark, loghi Apple/Google/Meta, wireframe, template generico, ombre attorno al canvas.`
+      : `VIETATI: iPhone dentro iPhone, screenshot dentro screenshot, secondo dispositivo, watermark, loghi Apple/Google/Meta, wireframe, template generico, prospettiva inclinata.`,
   ].join("\n");
 }
 
-/** Prompt completo di una identità (tutte le sue schermate). */
+/** Prompt completo di una identità (tutte le sue schermate: mobile in cornice + desktop flat). */
 export function buildIdentityPrompts(identity: MockupIdentity): { screen: ScreenSpec; prompt: string }[] {
   return identity.screens.map((screen) => ({ screen, prompt: buildScreenPrompt(identity, screen) }));
 }
+
 
 /** Verifica che nessuna famiglia visiva sia riusata tra settori. */
 export function assertMatrixIntegrity(): { ok: boolean; duplicates: string[]; totals: Record<string, number> } {
