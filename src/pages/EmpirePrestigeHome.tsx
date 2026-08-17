@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, lazy } from "react";
+import DeferredSection, { IdleMount } from "@/components/perf/DeferredSection";
 import LandingNav from "@/components/landing/LandingNav";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 
