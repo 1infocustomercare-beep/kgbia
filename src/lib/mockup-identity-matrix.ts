@@ -1973,6 +1973,79 @@ export const SURFACE_SIGNATURES: Record<IdentityFamily, SurfaceSignature> = {
   "campus-modernist": { material: "cemento a vista e vetro verde bottiglia modernista", light: "luce architettonica laterale", backdrop: "beige cemento", staging: "device su cemento, ombra architettonica netta", motif: "moduli quadrati e segnaletica da campus" },
   "notebook-dotgrid": { material: "carta dot-grid con inchiostro blu e washi tape", light: "luce da scrivania naturale", backdrop: "bianco carta puntinata", staging: "device come quaderno aperto, ombra di pagina", motif: "puntinatura visibile, note a margine e washi tape" },
   "cyber-academy": { material: "vetro scuro con reticolo neon viola e scanline", light: "backlight viola con leggero glitch", backdrop: "viola notte con griglia in fuga", staging: "device in ambiente cyber, griglia prospettica dietro", motif: "barre XP, scanline e badge di livello" },
+
+  // ---------- ESTENSIONE ----------
+  "napoletana-doc": { material: "maiolica dipinta e legno di forno", light: "bagliore di bocca del forno a legna", backdrop: "avorio caldo con muro di maiolica", staging: "device davanti a bocca di forno sfocata", motif: "insegne dipinte a mano e nastri tricolore" },
+  "fuoco-moderno": { material: "metallo brunito con crosta di brace", light: "controluce arancio pulsante", backdrop: "nero fumo con brace incandescente", staging: "device con scintille sospese attorno", motif: "gradienti brace che salgono dai bordi" },
+  "street-graffiti-slab": { material: "muro di mattoni con spray e carta paglia", light: "flash notturno da strada", backdrop: "muro urbano taggato", staging: "device fissato al muro con nastro adesivo", motif: "tag spray e stencil sovrapposti al layout" },
+  "stone-hearth-craft": { material: "pietra molare e farina impalpabile", light: "luce laterale calda con pulviscolo di farina", backdrop: "grigio pietra con velo di farina", staging: "device su pietra con impronte di farina", motif: "sigillo in pietra e venature scolpite" },
+  "sakura-nikkei-mist": { material: "velo di petali e vetro appannato", light: "luce fredda rosata da giardino in fiore", backdrop: "rosa nebbia con rami sfocati", staging: "device tra petali in caduta", motif: "petali che attraversano le card in trasparenza" },
+  "ice-marble-crudo": { material: "marmo freddo e ghiaccio tritato", light: "luce cristallina bluastra", backdrop: "grigio ghiaccio con gocce", staging: "device appoggiato su ghiaccio con condensa", motif: "cristalli di ghiaccio agli angoli delle card" },
+  "aegean-whitewash": { material: "calce bianca ruvida e ceramica blu", light: "sole delle isole a picco", backdrop: "muro a calce con ombra blu", staging: "device su muretto imbiancato, mare sfocato", motif: "greca decorativa come separatore" },
+  "saigon-noir-silk": { material: "seta damascata scura e lacca rossa", light: "luce di lanterna calda soffusa", backdrop: "nero seta con lanterne sfocate", staging: "device tra lanterne rosse fuori fuoco", motif: "trama di seta damascata sotto i titoli" },
+  "tiki-tropical-lagoon": { material: "legno tiki, foglie e acqua di laguna", light: "luce tropicale satura di mezzogiorno", backdrop: "verde laguna con foglie", staging: "device tra foglie di monstera in primo piano", motif: "foglie ritagliate che sbordano dalle card" },
+  "espresso-sand-dessert": { material: "porcellana crema e cacao in polvere", light: "luce calda da bancone di bar", backdrop: "sabbia con spolverata di cacao", staging: "device accanto a tazzina sfocata", motif: "spolverata di cacao come texture di sezione" },
+
+  "frosted-vision-glass": { material: "vetro smerigliato spesso, pannelli traslucidi sovrapposti", light: "luce diffusa a specchio lavanda", backdrop: "lavanda-pesca sfumato", staging: "device sospeso tra lastre di vetro smerigliato", motif: "pannelli traslucidi che si accavallano in profondità" },
+  "spa-aura-silk": { material: "seta liquida e acqua ferma", light: "luce nebbiosa senza direzione", backdrop: "avorio con vapore", staging: "device su lino con vapore attorno", motif: "onde di seta lentissime nello sfondo" },
+  "blush-rose-editorial": { material: "carta patinata beauty e cipria", light: "beauty light frontale con catchlight", backdrop: "cipria uniforme", staging: "device come copertina di rivista appoggiata", motif: "numero di uscita e crediti fotografici" },
+
+  "midnight-emerald-drive": { material: "vernice metallizzata verde e vetro fumé", light: "luci di garage radenti verdi", backdrop: "nero garage con alone smeraldo", staging: "device davanti a carrozzeria riflettente", motif: "alone smeraldo che segue la silhouette dell'auto" },
+  "neon-velocity-grid": { material: "acrilico nero con tubi al neon", light: "neon viola-ciano con motion blur", backdrop: "griglia in fuga notturna", staging: "device con scie luminose che lo attraversano", motif: "scie neon che accompagnano lo scroll" },
+  "crimson-sport-rental": { material: "livrea laccata rossa e fibra opaca", light: "luci da pit lane calde e dure", backdrop: "asfalto bagnato con riflessi rossi", staging: "device inclinato zero, ombra secca da flash", motif: "numero di gara e bandiera a scacchi" },
+
+  "blush-pilates-aesthetic": { material: "tessuto tecnico rosato e legno chiaro", light: "luce di studio rosata frontale", backdrop: "rosa cipria opaco", staging: "device su tappetino, ombra morbidissima", motif: "cerchio del respiro sopra il titolo" },
+  "sage-editorial-move": { material: "carta verde salvia e inchiostro scuro", light: "luce piatta editoriale", backdrop: "salvia chiaro uniforme", staging: "device come pagina di rivista sportiva", motif: "indice numerato delle sezioni" },
+  "burgundy-bold-strength": { material: "ghisa verniciata e magnesite", light: "luce dura industriale dall'alto", backdrop: "bordeaux profondo con polvere", staging: "device tra dischi da bilanciere sfocati", motif: "barra di carico con dischi stilizzati" },
+
+  "ice-turquoise-resort": { material: "acqua turchese e intonaco bianco", light: "riverbero di piscina", backdrop: "turchese chiarissimo", staging: "device con riflessi d'acqua mobili", motif: "onda che taglia il bordo delle card" },
+  "champagne-blush-suite": { material: "seta champagne e ottone chiaro", light: "luce di fine pomeriggio dalle tende", backdrop: "cipria dorata", staging: "device su tessuto increspato", motif: "monogramma cipria e oro" },
+
+  "milanese-eleganza": { material: "parquet a spina e stucco chiaro", light: "luce laterale da finestra alta", backdrop: "avorio grafite", staging: "device su consolle d'epoca", motif: "stemma cittadino inciso" },
+  "nero-lusso-tower": { material: "vetro nero e oro brunito", light: "skyline notturno riflesso", backdrop: "nero con luci di città", staging: "device sospeso davanti a skyline sfocato", motif: "cornice oro sottile su tutta la schermata" },
+  "rosa-cipria-living": { material: "intonaco rosato e tessuti morbidi", light: "luce diurna diffusa e gentile", backdrop: "rosa chiarissimo", staging: "device su cuscino, ombra tondeggiante", motif: "illustrazioni lineari di case" },
+
+  "ethereal-glass-medtech": { material: "vetro medicale ultra chiaro e acciaio", light: "luce da camera bianca uniforme", backdrop: "azzurro chiarissimo sterile", staging: "device tra lastre di vetro chiaro", motif: "sfere di vetro azzurre in profondità" },
+  "ice-crystal-luxury-care": { material: "cristallo sfaccettato e ceramica bianca", light: "luce fredda con rifrazioni", backdrop: "bianco con prismi di luce", staging: "device con rifrazioni prismatiche ai bordi", motif: "sfaccettature cristalline negli angoli" },
+
+  "fresh-minimal-blanc": { material: "vetro di flacone e carta bianca opaca", light: "luce da packshot con ombra netta", backdrop: "bianco puro con ombra del flacone", staging: "device accanto a packshot sfocato", motif: "filetto rose gold sotto il logo" },
+  "furniture-showroom-warm": { material: "legno oliato e tessuto bouclé", light: "luce naturale da showroom", backdrop: "sabbia con parete arredata", staging: "device su tavolino in legno", motif: "quote dimensionali accanto ai prodotti" },
+
+  "playful-paw-color": { material: "gomma colorata e feltro morbido", light: "luce allegra ad alta saturazione", backdrop: "pesca vivace", staging: "device tra giochi per animali sfocati", motif: "impronte di zampa come separatori" },
+  "pastel-pet-minimal": { material: "ceramica pastello opaca", light: "luce morbidissima senza ombre", backdrop: "azzurro polvere", staging: "device su coperta pastello", motif: "badge di stato pet colorati" },
+  "pet-resort-luxury": { material: "velluto beige e ottone spazzolato", light: "luce serale calda da abat-jour", backdrop: "marrone tortora", staging: "device su cuscino di velluto", motif: "targhetta suite con nome dell'animale" },
+  "vet-clinical-trust": { material: "acciaio ambulatoriale e nitrile verde", light: "luce ambulatoriale neutra", backdrop: "verde acqua chiarissimo", staging: "device su lettino da visita", motif: "croce veterinaria con impronta" },
+
+  "sunbeam-nursery-joy": { material: "feltro giallo e plastica morbida", light: "luce solare a raggi visibili", backdrop: "giallo sole tenue", staging: "device con raggi di sole disegnati dietro", motif: "raggi di sole dietro l'header" },
+  "autumn-maple-care": { material: "legno caldo e foglie secche", light: "luce dorata di ottobre", backdrop: "ambra con foglie", staging: "device tra foglie d'acero", motif: "bordo a foglie d'acero" },
+  "crayon-craft-paper": { material: "cartoncino e pastelli a cera", light: "luce piatta da banco di laboratorio", backdrop: "carta bianca con scarabocchi", staging: "device tra pastelli e ritagli", motif: "scarabocchi e washi tape colorati" },
+  "montessori-wood-calm": { material: "legno naturale non trattato e tappeto di lana", light: "luce naturale calma da finestra bassa", backdrop: "beige naturale", staging: "device su tappeto di lana", motif: "materiali montessoriani illustrati" },
+
+  "clean-white-green-service": { material: "smalto bianco lucido e tubi in rame", light: "luce chiara domestica", backdrop: "bianco con dettaglio verde", staging: "device accanto a attrezzi puliti", motif: "badge 'intervento in 60 minuti'" },
+  "dark-amber-technician": { material: "lamiera verniciata e manometri", light: "luce ambrata da officina", backdrop: "nero con alone ambra", staging: "device davanti a caldaia sfocata", motif: "led di stato impianto" },
+  "blueprint-plumbing-tech": { material: "acetato tecnico e acciaio zincato", light: "luce fredda da cantiere", backdrop: "blu tecnico con schemi", staging: "device su tavolo da cantiere", motif: "quote e simboli impiantistici" },
+  "van-fleet-orange": { material: "PVC arancione e alluminio da furgone", light: "luce piena di giornata", backdrop: "arancio caldo", staging: "device su portellone di furgone", motif: "furgone stilizzato come indicatore attivo" },
+
+  "riviera-sunset-vibrant": { material: "gelcoat lucido e cielo sfumato", light: "golden hour rosa-arancio", backdrop: "tramonto sul mare", staging: "device controluce al tramonto", motif: "sole che tramonta dietro l'header" },
+  "ocean-deep-blue-boats": { material: "teak e acciaio nautico", light: "luce di mare aperto ad alto contrasto", backdrop: "blu profondo con scia", staging: "device su plancia in teak", motif: "rosa dei venti sull'header" },
+  "azure-coast-charter": { material: "marmo bianco e cima nautica", light: "luce mediterranea limpida", backdrop: "turchese con marmo", staging: "device su marmo con cima accanto", motif: "bandierine nautiche come separatori" },
+  "jetski-adrenaline-spray": { material: "vetroresina lucida e spruzzi d'acqua", light: "sole a picco con riflessi bagnati", backdrop: "verde acqua con schizzi congelati", staging: "device con spruzzi congelati attorno", motif: "getti d'acqua che tagliano le card" },
+
+  "fairway-turf-scoreboard": { material: "erba rasata e gomma da tappetino", light: "luce di tramonto sul green", backdrop: "verde prato con righe di taglio", staging: "device appoggiato sull'erba", motif: "texture di erba rasata sul fondo" },
+  "clubhouse-heritage-wood": { material: "mogano lucidato e ottone da trofeo", light: "luce calda da finestre alte", backdrop: "legno scuro con trofei sfocati", staging: "device su scrivania in mogano", motif: "crest del circolo con anno di fondazione" },
+  "night-range-floodlight": { material: "acciaio e vetro con aloni da faro", light: "fari alogeni con aloni netti", backdrop: "notte con coni di luce", staging: "device sotto un cono di luce", motif: "coni di luce dei fari sul fondo" },
+
+  "ocean-azure-resident": { material: "vetro chiaro e cemento levigato", light: "luce diurna da hall vetrata", backdrop: "azzurro con torre sfocata", staging: "device su banco della hall", motif: "silhouette della torre sull'header" },
+  "rose-gold-editorial-hoa": { material: "carta patinata e rose gold spazzolato", light: "luce museale da hall di design", backdrop: "bianco caldo con marmo", staging: "device come rivista sul tavolino della hall", motif: "testata con numero di edizione mensile" },
+  "ice-blue-ethereal-tower": { material: "vetro azzurrino ultra sottile", light: "luce d'alba fredda", backdrop: "azzurro albeggiante", staging: "device con ombre lunghissime all'alba", motif: "riflesso verticale continuo sui pannelli" },
+
+  "velvet-saddle-heritage": { material: "cuoio da sella e velluto scuro", light: "luce calda da lucernario di scuderia", backdrop: "marrone cuoio", staging: "device su sella in cuoio", motif: "targhetta in ottone con nome del cavallo" },
+  "midnight-stable-arena": { material: "sabbia da campo e acciaio zincato", light: "fari da campo coperto con polvere sospesa", backdrop: "notte con sabbia illuminata", staging: "device a bordo campo, polvere nell'aria", motif: "tracciato del percorso ostacoli" },
+  "ivory-equestrian-classic": { material: "avorio, tweed e nastro da coccarda", light: "luce di mattina su campo erboso", backdrop: "avorio con verde erba", staging: "device accanto a coccarda di premiazione", motif: "coccarda di premiazione con nastri" },
+
+  "voice-agent-waveform": { material: "vetro scuro con onde sonore luminose", light: "backlight ciano pulsante a ritmo", backdrop: "blu notte con onda sonora", staging: "device con onda vocale che lo circonda", motif: "forma d'onda animata sotto l'header" },
+  "ai-dark-terminal-node": { material: "policarbonato nero opaco da rack", light: "led di server verdi puntiformi", backdrop: "nero server con led", staging: "device incastonato in un rack", motif: "cursore lampeggiante e prompt di terminale" },
+  "saas-gradient-mesh": { material: "vetro chiaro su mesh gradient morbido", light: "luce chiara ottimista senza ombre dure", backdrop: "mesh indaco-rosa sfumato", staging: "device su fondo mesh sfumato, ombra ampia", motif: "mesh gradient viola-rosa in sottofondo" },
 };
 
 export function getSurface(identity: MockupIdentity): SurfaceSignature {
