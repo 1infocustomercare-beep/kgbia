@@ -69,7 +69,7 @@ export default function VendorSignup() {
     }
   };
 
-  const inputCls = "w-full h-12 px-3 rounded-xl bg-white text-black border border-white/40 outline-none focus:border-[hsl(var(--pr-aqua))] focus:ring-2 focus:ring-[hsl(var(--pr-aqua))]/35 placeholder:text-black/45";
+  const inputCls = "auth-white-input w-full h-12 px-3 rounded-xl bg-white text-black border border-white/40 outline-none focus:border-[hsl(var(--pr-aqua))] focus:ring-2 focus:ring-[hsl(var(--pr-aqua))]/35 placeholder:text-black/45";
 
   return (
     <>
