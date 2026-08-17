@@ -182,10 +182,14 @@ export default function PremiumMockupGallery() {
       <div className="mx-auto max-w-7xl px-5 lg:px-10">
         {/* Header */}
         <div className="mb-8">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-white/80">
-            <Sparkles size={12} />
-            Our Work · Portfolio Empire
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <GlassBackButton to="/" label="Home" variant="inline" className="px-4 text-xs" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-white/80">
+              <Sparkles size={12} />
+              Our Work · Portfolio Empire
+            </div>
           </div>
+
           <h1 className="font-heading text-[2.1rem] font-black leading-[1.04] sm:text-5xl md:text-6xl">
             Un progetto per ogni settore.
             <br />
