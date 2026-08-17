@@ -110,15 +110,11 @@ function EmpirePrestigeHomeInner() {
           <PrestigeIndustries />
         </div>
 
-        {/* DEMO HUB 3D — scroll-driven, primary/studio mockups only */}
-        <div id="demo-hub">
-          <PrestigeDemoHub />
-        </div>
-
-        {/* PORTFOLIO — unica galleria mockup della home (hero è il carosello) */}
-        <div id="portfolio">
+        {/* PORTFOLIO — UNICA sezione mockup della home (case study per settore) */}
+        <div id="portfolio" data-portfolio-root>
           <PrestigePortfolio />
         </div>
+
 
 
 
