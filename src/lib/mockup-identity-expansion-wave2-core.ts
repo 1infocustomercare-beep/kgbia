@@ -124,10 +124,12 @@ export function buildWave2(rows: Wave2Row[]): ExpansionRow[] {
  */
 export function W(line: string): Wave2Row {
   const f = line.split("¦").map((s) => s.trim());
-  if (f.length !== 14) throw new Error(`Riga wave2 malformata (${f.length} campi): ${f[1] ?? line}`);
+  if (f.length < 14) throw new Error(`Riga wave2 malformata (${f.length} campi): ${f[1] ?? line}`);
+  // le 5 componenti della firma di superficie possono essere separate da "¦"
+  const surface = f.slice(12, f.length - 1).join("|");
   return {
     sector: f[0] as SectorKey, id: f[1], family: f[2], label: f[3], brand: f[4], tagline: f[5],
     palette: f[6], typography: f[7], geometry: f[8], chrome: f[9],
-    photography: f[10], composition: f[11], surface: f[12], path: Number(f[13]),
+    photography: f[10], composition: f[11], surface, path: Number(f[f.length - 1]),
   };
 }
