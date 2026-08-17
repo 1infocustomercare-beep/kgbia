@@ -719,6 +719,8 @@ function App() {
                       
                       <Route path="/catalogo" element={<MockupCatalogPage />} />
                       <Route path="/portfolio" element={<MockupCatalogPage />} />
+                      {/* Case study per singolo settore: tutti gli stili a confronto */}
+                      <Route path="/portfolio/:sectorId" element={<PortfolioCasePage />} />
 
                       {/* Onboarding wizard PUBLIC: l'account viene richiesto solo al momento del salvataggio */}
                       <Route path="/onboarding" element={<OnboardingPage />} />
