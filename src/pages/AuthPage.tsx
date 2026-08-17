@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { GlassCard, GlassButton } from "@/components/glass";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import {
   ArrowLeft, ArrowRight, Store, ChefHat, Car, Scissors, Heart,
@@ -307,8 +308,11 @@ export default function AuthPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-12 landing-dark force-dark auth-contrast"
-      style={{ background: "linear-gradient(160deg, hsl(228 22% 8%), hsl(250 20% 10%), hsl(228 22% 7%))" }}>
+    <main className="pglass-scope pglass-app min-h-screen flex items-center justify-center px-4 py-12 landing-dark force-dark auth-contrast"
+      style={{
+        background:
+          "radial-gradient(ellipse 70% 50% at 12% 0%, hsl(var(--pr-aqua) / 0.14), transparent 62%), radial-gradient(ellipse 60% 45% at 90% 10%, hsl(var(--pr-aqua-deep) / 0.18), transparent 68%), linear-gradient(180deg, hsl(var(--pr-emerald-deep)), hsl(var(--pr-emerald)) 55%, hsl(var(--pr-emerald-deep)))",
+      }}>
 
       <button onClick={() => navigate("/")} aria-label="Torna alla home"
         className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-foreground/85 hover:text-foreground transition-colors">
@@ -326,12 +330,7 @@ export default function AuthPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl p-6 sm:p-8"
-          style={{
-            background: "linear-gradient(155deg, hsla(260,20%,15%,0.95), hsla(250,18%,11%,0.93))",
-            border: "1px solid hsla(265,40%,50%,0.2)",
-            boxShadow: "0 20px 60px hsla(0,0%,0%,0.4), inset 0 1px 0 hsla(210,20%,96%,0.05)"
-          }}>
+        <GlassCard lift={false} className="rounded-3xl p-6 sm:p-8">
 
           <div className="mb-5 grid grid-cols-2 rounded-xl border border-white/10 p-1 bg-white/[0.03]">
             <button
@@ -362,21 +361,20 @@ export default function AuthPage() {
               </div>
               <div className="space-y-3">
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                   <Input type="email" aria-label="Email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                    className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
+                    className="pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                   <Input type={showPw ? "text" : "password"} aria-label="Password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-                    className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
-                  <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
+                    className="pl-10 pr-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
+                  <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-black/50 hover:text-black">
                     {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
-              <Button onClick={handleLogin} disabled={loading} className="w-full py-3 rounded-xl font-bold text-sm"
-                style={{ background: "linear-gradient(135deg, hsl(38 65% 58%), hsl(38 55% 48%))", color: "hsl(var(--primary-foreground))" }}>
+              <GlassButton onClick={handleLogin} disabled={loading} block size="lg">
                 {loading ? "Accesso..." : "Accedi"}
               </Button>
               <div className="text-center space-y-2">
@@ -407,28 +405,28 @@ export default function AuthPage() {
                   </div>
                   <div className="space-y-3">
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                       <Input placeholder="Nome completo" value={fullName} onChange={e => setFullName(e.target.value)}
-                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
+                        className="pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                     </div>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                       <Input type="email" aria-label="Email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                        className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
+                        className="pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                     </div>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                       <Input type={showPw ? "text" : "password"} placeholder="Password (min 8 caratteri)" value={password} onChange={e => setPassword(e.target.value)}
-                        className="pl-10 pr-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
-                      <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
+                        className="pl-10 pr-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
+                      <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-black/50 hover:text-black">
                         {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
                     {role === "partner" && (
                       <div className="relative">
-                        <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
+                        <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                         <Input aria-label="Nome azienda (opzionale)" placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
-                          className="pl-10 !bg-white/[0.08] border-white/15 text-white placeholder:text-white/70 focus:border-primary/55" />
+                          className="pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                     </div>
                     )}
 
@@ -481,8 +479,7 @@ export default function AuthPage() {
                       </div>
                     )}
                   </div>
-                  <Button onClick={handleRegister} disabled={loading || (role !== "partner" && !sector)} className="w-full py-3 rounded-xl font-bold text-sm"
-                    style={{ background: role === "partner" ? "linear-gradient(135deg, hsl(270 60% 55%), hsl(285 50% 45%))" : "linear-gradient(135deg, hsl(265 70% 58%), hsl(250 60% 50%))", color: "hsl(var(--primary-foreground))" }}>
+                  <GlassButton onClick={handleRegister} disabled={loading || (role !== "partner" && !sector)} block size="lg">
                     {loading ? "Registrazione..." : role === "partner" ? "Registrati come Venditore" : "Crea Account"}
                   </Button>
                   <p className="text-xs text-center text-foreground/75">
@@ -493,7 +490,7 @@ export default function AuthPage() {
               )}
             </AnimatePresence>
           )}
-        </div>
+        </GlassCard>
       </motion.div>
     </main>
   );
