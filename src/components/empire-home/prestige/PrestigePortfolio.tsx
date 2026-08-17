@@ -275,7 +275,7 @@ export default function PrestigePortfolio() {
               {expanded ? (
                 <>Mostra meno <ChevronUp size={16} /></>
               ) : (
-                <>Vedi tutti i {filtered.length} mockup <ChevronDown size={16} /></>
+                <>Vedi tutti i {filtered.length} settori <ChevronDown size={16} /></>
               )}
             </button>
           )}
