@@ -654,6 +654,76 @@ export default function PrestigeGlassSkin() {
         box-shadow: 0 0 0 3px hsl(var(--pr-aqua) / 0.16), inset 0 1px 0 hsl(0 0% 100% / 0.08) !important;
       }
 
+      /* ═══════════ 8ter. APP SHELL GLOBALE (EmpireGlassShell) ═══════════
+         Fondale + tipografia Empire su tutte le pagine della webapp.
+         I siti demo NON ricevono queste classi. */
+      body.pglass-app {
+        /* Token semantici allineati alla home Empire: niente più blu/viola legacy */
+        --primary: 178 74% 48%;
+        --primary-foreground: 202 56% 8%;
+        --accent: 176 82% 62%;
+        --accent-foreground: 202 56% 8%;
+        --ring: 178 74% 48%;
+        --sidebar-primary: 178 74% 48%;
+        --sidebar-primary-foreground: 202 56% 8%;
+        --sidebar-ring: 178 74% 48%;
+        --landing-accent: 178 74% 48%;
+        --landing-accent-strong: 176 82% 74%;
+
+        background:
+          radial-gradient(ellipse 70% 45% at 15% 0%, hsl(var(--pr-aqua) / 0.10), transparent 62%),
+          radial-gradient(ellipse 55% 40% at 88% 12%, hsl(var(--pr-aqua-deep) / 0.16), transparent 68%),
+          linear-gradient(180deg, hsl(var(--pr-emerald-deep)), hsl(var(--pr-emerald)) 55%, hsl(var(--pr-emerald-deep)));
+        background-attachment: fixed;
+        color: hsl(var(--pr-text-on-dark));
+        font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+      }
+      /* Contesti legacy che ridichiarano i token (landing-dark / force-dark / .dark):
+         li riallineo all'aqua Empire, così nessuna pagina resta blu o viola. */
+      body.pglass-app .landing-dark,
+      body.pglass-app .force-dark,
+      body.pglass-app .dark,
+      body.pglass-app [class*="landing-"] {
+        --primary: 178 74% 48%;
+        --primary-foreground: 202 56% 8%;
+        --accent: 176 82% 62%;
+        --ring: 178 74% 48%;
+        --landing-accent: 178 74% 48%;
+        --landing-accent-strong: 176 82% 74%;
+        --empire-violet: 186 78% 54%;
+        --empire-violet-deep: 190 72% 34%;
+        --empire-violet-glow: 176 82% 72%;
+        --neon-blue: 186 82% 56%;
+        --neon-cyan: 178 84% 58%;
+        --neon-emerald: 172 76% 46%;
+      }
+      body.pglass-app .bg-vibrant-gradient,
+      body.pglass-app .bg-empire-gradient {
+        background-image: linear-gradient(135deg, hsl(var(--pr-aqua-deep)), hsl(var(--pr-aqua)) 55%, hsl(var(--pr-aqua-light))) !important;
+      }
+
+      body.pglass-app h1, body.pglass-app h2, body.pglass-app h3 {
+        font-family: 'Sora', 'Manrope', system-ui, sans-serif;
+        letter-spacing: -0.025em;
+      }
+      body.pglass-app button,
+      body.pglass-app a,
+      body.pglass-app [role="button"],
+      body.pglass-app input,
+      body.pglass-app textarea,
+      body.pglass-app select {
+        transition: transform .28s cubic-bezier(.22,1,.36,1),
+                    box-shadow .28s ease,
+                    border-color .28s ease,
+                    background-color .28s ease,
+                    color .28s ease, opacity .28s ease;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        body.pglass-app * { animation-duration: .01ms !important; }
+      }
+
+
+
 
       /* ═══════════ 9. SKELETON LOADING GLASS ═══════════ */
       .pglass-skeleton {

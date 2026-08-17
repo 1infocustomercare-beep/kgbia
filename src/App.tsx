@@ -13,6 +13,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import SetupPaidGuard from "@/components/SetupPaidGuard";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
+import EmpireGlassShell from "@/components/glass/EmpireGlassShell";
 import { useReferralCapture } from "@/hooks/useReferralCapture";
 
 
@@ -628,6 +629,7 @@ function App() {
               )}
 
               <BrowserRouter>
+                <EmpireGlassShell />
                 <ConditionalDNABackground />
                 <RouteErrorBoundary>
                   <Suspense fallback={<PageLoader />}>
