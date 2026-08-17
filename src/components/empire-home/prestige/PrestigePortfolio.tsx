@@ -228,18 +228,22 @@ export default function PrestigePortfolio() {
                         >
                           {h.tagline}
                         </p>
-                        {h.variants.length > 1 && (
-                          <div
-                            className="mt-2 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
-                            style={{
-                              background: "hsl(var(--pr-gold) / 0.18)",
-                              color: "hsl(var(--pr-gold-deep))",
-                              border: "1px solid hsl(var(--pr-gold) / 0.35)",
-                            }}
-                          >
-                            {h.variants.length} stili premium
-                          </div>
-                        )}
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
+                          className="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold transition-all hover:gap-2"
+                          style={{
+                            background: "hsl(var(--pr-gold) / 0.18)",
+                            color: "hsl(var(--pr-gold-deep))",
+                            border: "1px solid hsl(var(--pr-gold) / 0.35)",
+                          }}
+                        >
+                          {h.variants.length > 1
+                            ? `Confronta ${h.variants.length} stili`
+                            : "Apri il caso studio"}
+                          <ArrowUpRight size={11} />
+                        </button>
+
                       </div>
                     </article>
             ))}
