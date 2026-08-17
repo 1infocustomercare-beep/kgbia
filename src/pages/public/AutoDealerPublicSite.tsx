@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -6,9 +6,11 @@ import {
   Car,
   Gauge,
   MessageCircle,
+  Monitor,
   Phone,
   Repeat,
   ShieldCheck,
+  Smartphone,
   Sparkles,
   Wrench,
 } from "lucide-react";
@@ -18,6 +20,68 @@ import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat, LuxeTag } from "@/componen
 
 const HeroScrub = lazy(() => import("@/components/public/HeroScrub"));
 const AureliaApp = lazy(() => import("@/components/public/aurelia/AureliaApp"));
+const AureliaLivePhone = lazy(() => import("@/components/public/aurelia/AureliaLivePhone"));
+
+/** Webapp live in due viste: desktop full-width e mobile dentro iPhone 17 Pro Max. */
+function AureliaWebappSection() {
+  const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
+
+  return (
+    <section id="webapp" className="relative px-5 pb-24 sm:px-8">
+      <div className="mx-auto mb-8 max-w-6xl">
+        <LuxeTag><Gauge className="h-3 w-3" /> Webapp live · cliente, staff, admin</LuxeTag>
+        <h2 className="mt-4 font-heading text-3xl font-semibold sm:text-5xl">Provala: funziona davvero.</h2>
+        <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+          10 interfacce reali: home cliente, vetrina con filtri, scheda con simulatore rata, test drive, permuta con
+          stima IA, consulente IA, agenda ponti officina, magazzino ricambi, garage digitale e CRM vendite.
+        </p>
+
+        <div className="mt-6 inline-flex rounded-full border border-border/60 bg-card/60 p-1">
+          {([
+            { id: "desktop", label: "Desktop", icon: Monitor },
+            { id: "mobile", label: "iPhone 17 Pro Max", icon: Smartphone },
+          ] as const).map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setDevice(id)}
+              aria-pressed={device === id}
+              className={`inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-xs font-semibold uppercase tracking-[0.14em] transition-colors ${
+                device === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Icon className="h-4 w-4" /> {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {device === "desktop" ? (
+        <Suspense fallback={<div className="mx-auto h-[520px] max-w-6xl rounded-3xl border border-border/60 bg-card/40" />}>
+          <AureliaApp />
+        </Suspense>
+      ) : (
+        <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-8 rounded-3xl border border-border/60 bg-card/40 px-4 py-14 lg:flex-row lg:justify-center lg:gap-16">
+          <Suspense fallback={<div className="h-[870px] w-[410px] rounded-[60px] border border-border/60 bg-black" />}>
+            <AureliaLivePhone width={390} screenHeight={844} className="origin-top scale-[0.86] sm:scale-100">
+              <AureliaApp variant="mobile" />
+            </AureliaLivePhone>
+          </Suspense>
+          <div className="max-w-sm text-center lg:text-left">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary">Versione mobile 1:1</p>
+            <h3 className="mt-4 font-heading text-2xl font-semibold sm:text-3xl">
+              Lo stesso mockup, ma vivo nel telefono.
+            </h3>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Status bar, header, tab bar in basso e menu &laquo;Altro&raquo; con le aree staff e admin: naviga
+              direttamente dentro lo schermo, come farebbe un cliente della concessionaria oggi.
+            </p>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
 
 const PILLARS = [
   {
@@ -119,20 +183,8 @@ export default function AutoDealerPublicSite() {
         </div>
       </section>
 
-      {/* ═══ Webapp reale e navigabile ═══ */}
-      <section id="webapp" className="relative px-5 pb-24 sm:px-8">
-        <div className="mx-auto mb-10 max-w-6xl">
-          <LuxeTag><Gauge className="h-3 w-3" /> Webapp live · cliente, staff, admin</LuxeTag>
-          <h2 className="mt-4 font-heading text-3xl font-semibold sm:text-5xl">Provala: funziona davvero.</h2>
-          <p className="mt-3 max-w-xl text-sm text-muted-foreground">
-            Filtra la vetrina, apri una scheda, simula la rata, prenota il test drive, calcola la permuta con l&apos;IA,
-            gestisci i ponti dell&apos;officina e leggi il CRM. Tutto interattivo, dati dimostrativi.
-          </p>
-        </div>
-        <Suspense fallback={<div className="mx-auto h-[520px] max-w-6xl rounded-3xl border border-border/60 bg-card/40" />}>
-          <AureliaApp />
-        </Suspense>
-      </section>
+      {/* ═══ Webapp reale e navigabile: desktop + mobile 1:1 col mockup ═══ */}
+      <AureliaWebappSection />
 
       {/* ═══ Journey ═══ */}
       <section className="relative border-t border-border/50 px-5 py-20 sm:px-8 sm:py-28">
