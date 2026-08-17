@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import { supabase } from "@/integrations/supabase/client";
+import { GlassCard, GlassButton } from "@/components/glass";
 import { toast } from "sonner";
 import { UserPlus } from "lucide-react";
 
@@ -68,13 +69,13 @@ export default function VendorSignup() {
     }
   };
 
-  const inputCls = "w-full h-11 px-3 rounded-lg bg-white text-black";
+  const inputCls = "auth-white-input w-full h-12 px-3 rounded-xl bg-white text-black border border-white/40 outline-none focus:border-[hsl(var(--pr-aqua))] focus:ring-2 focus:ring-[hsl(var(--pr-aqua))]/35 placeholder:text-black/45";
 
   return (
     <>
       <PrestigeTheme />
-      <div className="prestige-root prestige-section min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+      <div className="prestige-root prestige-section pglass-scope pglass-app min-h-screen flex items-center justify-center p-4">
+        <GlassCard lift={false} className="w-full max-w-md rounded-3xl p-6 space-y-4">
           <div className="text-center">
             <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-[hsl(var(--pr-gold-light))] to-[hsl(var(--pr-gold-deep))] flex items-center justify-center mb-3">
               <UserPlus className="w-7 h-7 text-[hsl(var(--pr-emerald-deep))]" />
@@ -105,17 +106,13 @@ export default function VendorSignup() {
             <label className="text-xs font-semibold block mb-1">Password *</label>
             <input type="password" className={inputCls} value={form.password} onChange={e=>setForm({...form,password:e.target.value})} />
           </div>
-          <button
-            disabled={loading}
-            onClick={submit}
-            className="w-full h-11 rounded-lg bg-gradient-to-r from-[hsl(var(--pr-gold-light))] to-[hsl(var(--pr-gold-deep))] text-[hsl(var(--pr-emerald-deep))] font-bold disabled:opacity-40"
-          >
+          <GlassButton disabled={loading} onClick={submit} block size="lg">
             {loading ? "Creazione..." : "Crea account venditore"}
-          </button>
+          </GlassButton>
           <p className="text-xs text-center opacity-60">
             Hai già un account? <a href="/auth" className="underline">Accedi</a>
           </p>
-        </div>
+        </GlassCard>
       </div>
     </>
   );
