@@ -105,7 +105,7 @@ export default function LandingNav() {
 
 
 
-          <ul className="hidden min-w-0 items-center gap-1.5 md:flex">
+          <ul className="hidden min-w-0 flex-1 items-center justify-center gap-1.5 px-2 md:flex">
             {NAV_LINKS.map((l) => {
               const Icon = l.icon;
               return (
@@ -117,7 +117,7 @@ export default function LandingNav() {
                   >
                     <span aria-hidden="true" className="empire-nav-pill-glow" />
                     <Icon aria-hidden="true" className="relative z-10 h-[16px] w-[16px] shrink-0 text-[hsl(178_70%_78%)] transition-colors duration-500 group-hover/pill:text-white" />
-                    <span className="relative z-10 hidden whitespace-nowrap text-[11.5px] font-semibold uppercase tracking-[0.09em] text-foreground/85 transition-colors duration-500 group-hover/pill:text-white xl:inline">
+                    <span className="relative z-10 hidden whitespace-nowrap text-[11.5px] font-semibold uppercase tracking-[0.09em] text-foreground/85 transition-colors duration-500 group-hover/pill:text-white 2xl:inline">
                       {l.label}
                     </span>
                   </button>
