@@ -242,17 +242,18 @@ export default function LandingNav() {
               </div>
               <button
                 onClick={() => { setMenuOpen(false); navigate("/auth"); }}
-                className="mt-1 min-h-[44px] rounded-xl border border-white/15 px-3 text-left text-[15px] font-semibold text-[hsl(178_25%_97%)] transition-colors hover:bg-white/10"
+                className="empire-nav-mobile-link mt-1 min-h-[48px] rounded-xl border border-white/15 px-3 text-left text-[15px] font-semibold text-[hsl(178_25%_97%)]"
               >
                 Accedi
               </button>
               <button
                 onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }}
-                className="mt-2 min-h-[48px] rounded-full px-6 text-center text-sm font-bold uppercase tracking-[0.08em] text-white shadow-[0_18px_40px_-18px_rgba(46,196,182,0.85)]"
+                className="empire-cta-glass mt-2 min-h-[52px] rounded-full px-6 text-center text-sm font-bold uppercase tracking-[0.08em] text-white shadow-[0_18px_40px_-18px_rgba(46,196,182,0.85)]"
                 style={{ background: "linear-gradient(135deg,#7fe3d6,#2ec4b6 55%,#0d6c7e)" }}
               >
                 Inizia Ora
               </button>
+
             </motion.div>
           </>,
           document.body
