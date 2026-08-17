@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
+import { applyPerfTier } from "@/lib/perf-tier";
 
 /**
  * EmpireGlassShell — applica la skin "Empire Liquid Glass" a TUTTE le pagine
