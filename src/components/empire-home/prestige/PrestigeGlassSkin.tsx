@@ -458,6 +458,116 @@ export default function PrestigeGlassSkin() {
         .empire-glass-nav::after { animation: none; }
       }
 
+      /* ═══════════ 6c. STATI CLASSY (hover / active / focus) ═══════════ */
+      /* Focus ring unificato: visibile solo da tastiera, mai su click mouse */
+      .empire-nav-pill:focus-visible,
+      .empire-nav-ghost:focus-visible,
+      .empire-cta-glass:focus-visible,
+      .empire-nav-icon-btn:focus-visible,
+      .empire-nav-mobile-link:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px hsl(202 56% 6%), 0 0 0 4px hsl(178 80% 62% / 0.85),
+                    0 18px 44px -22px hsl(178 74% 45% / 0.65);
+      }
+
+      /* Pill: sweep luminoso sottile all'hover */
+      .empire-nav-pill::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        background: linear-gradient(115deg, transparent 20%, hsl(0 0% 100% / 0.28) 48%, transparent 76%);
+        transform: translateX(-120%);
+        opacity: 0;
+        transition: transform .85s cubic-bezier(.22,.75,.2,1), opacity .35s ease;
+        pointer-events: none;
+      }
+      .empire-nav-pill:hover::before,
+      .empire-nav-pill:focus-visible::before { transform: translateX(120%); opacity: 1; }
+
+      /* Ghost link (Accedi): sottofondo vetro che emerge */
+      .empire-nav-ghost {
+        position: relative;
+        border: 1px solid transparent;
+        transition: color .45s ease, background .45s ease, border-color .45s ease,
+                    transform .45s cubic-bezier(.22,.75,.2,1);
+      }
+      .empire-nav-ghost:hover {
+        color: hsl(178 40% 97%);
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.08), hsl(0 0% 100% / 0.02));
+        border-color: hsl(178 74% 55% / 0.32);
+        transform: translateY(-1px);
+      }
+      .empire-nav-ghost:active { transform: translateY(0) scale(.985); }
+
+      /* CTA vetro: alone che respira all'hover, pressione morbida */
+      .empire-cta-glass {
+        position: relative;
+        overflow: hidden;
+        transition: transform .45s cubic-bezier(.22,.75,.2,1), box-shadow .45s ease, filter .45s ease;
+      }
+      .empire-cta-glass::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(115deg, transparent 25%, hsl(0 0% 100% / 0.35) 50%, transparent 75%);
+        transform: translateX(-130%);
+        transition: transform .9s cubic-bezier(.22,.75,.2,1);
+        pointer-events: none;
+      }
+      .empire-cta-glass:hover::after,
+      .empire-cta-glass:focus-visible::after { transform: translateX(130%); }
+      .empire-cta-glass:hover { transform: translateY(-2px); filter: saturate(1.06); }
+      .empire-cta-glass:active { transform: translateY(0) scale(.982); }
+
+      /* Icon button (hamburger): vetro con alone acqua */
+      .empire-nav-icon-btn {
+        border: 1px solid hsl(178 74% 60% / 0.28);
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.08), hsl(0 0% 100% / 0.02)), hsl(202 56% 8% / 0.9);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.14), 0 10px 30px -14px hsl(202 60% 3% / 0.9);
+        transition: transform .4s cubic-bezier(.22,.75,.2,1), border-color .4s ease, box-shadow .4s ease;
+      }
+      .empire-nav-icon-btn:hover {
+        border-color: hsl(178 74% 60% / 0.5);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.22), 0 16px 40px -18px hsl(178 74% 45% / 0.7);
+        transform: translateY(-1px);
+      }
+      .empire-nav-icon-btn:active { transform: translateY(0) scale(.94); }
+
+      /* Voci menu mobile: barra acqua a sinistra su hover/attivo */
+      .empire-nav-mobile-link {
+        position: relative;
+        transition: background .35s ease, transform .35s cubic-bezier(.22,.75,.2,1);
+      }
+      .empire-nav-mobile-link::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 22%;
+        bottom: 22%;
+        width: 2px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, hsl(178 85% 72%), hsl(190 72% 45%));
+        opacity: 0;
+        transition: opacity .35s ease;
+      }
+      .empire-nav-mobile-link:hover { background: hsl(0 0% 100% / 0.10); }
+      .empire-nav-mobile-link:active { transform: scale(.99); }
+      .empire-nav-mobile-link:hover::before,
+      .empire-nav-mobile-link[data-active="true"]::before { opacity: 1; }
+      .empire-nav-mobile-link[data-active="true"] { background: hsl(178 74% 55% / 0.12); }
+
+      @media (prefers-reduced-motion: reduce) {
+        .empire-nav-pill,
+        .empire-nav-pill::before,
+        .empire-nav-ghost,
+        .empire-cta-glass,
+        .empire-cta-glass::after,
+        .empire-nav-icon-btn,
+        .empire-nav-mobile-link { transition-duration: .01ms !important; transform: none !important; }
+      }
+
+
 
       /* ═══════════ 7. ONDA DECORATIVA ═══════════ */
       .pglass-wave {

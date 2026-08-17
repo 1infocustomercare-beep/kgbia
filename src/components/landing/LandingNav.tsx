@@ -161,8 +161,18 @@ export default function LandingNav() {
 
           <div className="hidden shrink-0 items-center gap-2 md:flex">
             <PrestigeLangToggle />
-            <button onClick={() => navigate("/auth")} className="rounded-full px-3 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground/80 transition-colors hover:text-foreground">Accedi</button>
-            <button onClick={() => scrollTo("#contatti")} className="landing-button-primary rounded-full px-6 py-2.5 text-[12.5px] font-semibold uppercase tracking-[0.09em]">Inizia Ora</button>
+            <button
+              onClick={() => navigate("/auth")}
+              className="empire-nav-ghost rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground/80"
+            >
+              Accedi
+            </button>
+            <button
+              onClick={() => scrollTo("#contatti")}
+              className="landing-button-primary empire-cta-glass rounded-full px-6 py-2.5 text-[12.5px] font-semibold uppercase tracking-[0.09em]"
+            >
+              Inizia Ora
+            </button>
           </div>
 
 
@@ -170,20 +180,21 @@ export default function LandingNav() {
           <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={() => scrollTo("#contatti")}
-              className="landing-button-primary h-10 whitespace-nowrap rounded-full px-4 text-[11.5px] font-semibold uppercase tracking-[0.08em]"
+              className="landing-button-primary empire-cta-glass h-11 min-w-11 whitespace-nowrap rounded-full px-4 text-[11.5px] font-semibold uppercase tracking-[0.08em]"
             >
               Inizia ora
             </button>
             <button
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[hsl(178_74%_60%/0.28)] bg-[hsl(202_56%_8%/0.9)] text-[hsl(178_40%_96%)] shadow-[0_10px_30px_-14px_hsl(202_60%_3%/0.9)]"
+              className="empire-nav-icon-btn flex h-11 w-11 items-center justify-center rounded-full text-[hsl(178_40%_96%)]"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
               aria-expanded={menuOpen}
               aria-controls="landing-mobile-menu"
             >
-              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {menuOpen ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
             </button>
           </div>
+
 
             </div>
           </div>
@@ -210,8 +221,11 @@ export default function LandingNav() {
                   <button
                     key={l.href}
                     onClick={() => scrollTo(l.href)}
-                    className="flex min-h-[44px] items-center gap-3 rounded-xl px-3 text-left text-[15px] font-semibold text-[hsl(178_25%_97%)] transition-colors hover:bg-white/10"
+                    data-active={active === l.href ? "true" : "false"}
+                    aria-current={active === l.href ? "true" : undefined}
+                    className="empire-nav-mobile-link flex min-h-[48px] items-center gap-3 rounded-xl px-3 text-left text-[15px] font-semibold text-[hsl(178_25%_97%)]"
                   >
+
                     <span
                       className="flex h-8 w-8 items-center justify-center rounded-lg"
                       style={{ background: `linear-gradient(45deg, ${l.from}, ${l.to})` }}
@@ -228,17 +242,18 @@ export default function LandingNav() {
               </div>
               <button
                 onClick={() => { setMenuOpen(false); navigate("/auth"); }}
-                className="mt-1 min-h-[44px] rounded-xl border border-white/15 px-3 text-left text-[15px] font-semibold text-[hsl(178_25%_97%)] transition-colors hover:bg-white/10"
+                className="empire-nav-mobile-link mt-1 min-h-[48px] rounded-xl border border-white/15 px-3 text-left text-[15px] font-semibold text-[hsl(178_25%_97%)]"
               >
                 Accedi
               </button>
               <button
                 onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }}
-                className="mt-2 min-h-[48px] rounded-full px-6 text-center text-sm font-bold uppercase tracking-[0.08em] text-white shadow-[0_18px_40px_-18px_rgba(46,196,182,0.85)]"
+                className="empire-cta-glass mt-2 min-h-[52px] rounded-full px-6 text-center text-sm font-bold uppercase tracking-[0.08em] text-white shadow-[0_18px_40px_-18px_rgba(46,196,182,0.85)]"
                 style={{ background: "linear-gradient(135deg,#7fe3d6,#2ec4b6 55%,#0d6c7e)" }}
               >
                 Inizia Ora
               </button>
+
             </motion.div>
           </>,
           document.body
