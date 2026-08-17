@@ -87,7 +87,9 @@ export type MockupIdentity = {
 
 export type SectorKey =
   | "food" | "beauty" | "ncc" | "fitness" | "hospitality"
-  | "realestate" | "healthcare" | "legal" | "retail" | "events" | "education";
+  | "realestate" | "healthcare" | "legal" | "retail" | "events" | "education"
+  | "petcare" | "childcare" | "homeservices" | "watersports" | "golf"
+  | "condo" | "equestrian" | "aiservices";
 
 const m = (key: string, title: string, purpose: string, elements: string[]): ScreenSpec =>
   ({ key, title, purpose, elements, surface: "mobile" });
