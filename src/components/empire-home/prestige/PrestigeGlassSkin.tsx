@@ -720,7 +720,10 @@ export default function PrestigeGlassSkin() {
         .prestige-root .prestige-dark,
         .prestige-root .prestige-light,
         .pglass-wave::before,
+        .pglass-drift,
+        .pglass-reveal,
         .pglass-skeleton::after { animation: none !important; }
+        .pglass-drift, .pglass-reveal { opacity: 1 !important; transform: none !important; }
         .pglass, .pglass-soft, .pglass-chip, .pglass-btn,
         .pglass-lift, .pglass-press {
           transition: none !important;
