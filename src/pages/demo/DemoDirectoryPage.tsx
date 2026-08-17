@@ -502,9 +502,10 @@ export default function DemoDirectoryPage() {
   const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
 
   return (
-    <div className="min-h-screen relative overflow-hidden landing-dark force-dark" style={{ background: "linear-gradient(180deg, hsl(196 20% 5%) 0%, hsl(196 18% 7%) 30%, hsl(196 16% 6%) 60%, hsl(196 20% 5%) 100%)" }}>
+    <div className="pglass-scope prestige-root min-h-screen relative overflow-hidden landing-dark force-dark" style={{ background: "linear-gradient(180deg, hsl(196 20% 5%) 0%, hsl(196 18% 7%) 30%, hsl(196 16% 6%) 60%, hsl(196 20% 5%) 100%)" }}>
+      <PrestigeTheme />
       {/* ═══ PREMIUM BACKGROUND — fully opaque, no DNA bleed ═══ */}
-      <div className="fixed inset-0 pointer-events-none z-0">
+      <div className="fixed inset-0 pointer-events-none z-0 pglass-wave">
         {/* Rich gradient base */}
         <div className="absolute inset-0" style={{
           background: "linear-gradient(165deg, hsl(196 20% 6%) 0%, hsl(196 18% 8%) 20%, hsl(196 16% 7%) 40%, hsl(196 20% 9%) 60%, hsl(196 18% 6%) 80%, hsl(196 20% 5%) 100%)"
@@ -530,20 +531,14 @@ export default function DemoDirectoryPage() {
           style={{ background: "linear-gradient(90deg, transparent 10%, hsla(190,50%,50%,0.15) 30%, hsla(178,45%,50%,0.12) 50%, hsla(190,50%,50%,0.1) 70%, transparent 90%)" }} />
       </div>
 
-      {/* ═══ HEADER ═══ */}
-      <div className="sticky top-0 z-40 border-b"
-        style={{
-          background: "linear-gradient(180deg, hsla(190,22%,10%,0.98), hsla(198,20%,8%,0.96))",
-          backdropFilter: "blur(30px) saturate(1.6)",
-          borderColor: "hsla(190,40%,50%,0.15)",
-          boxShadow: "0 4px 20px hsla(190,40%,15%,0.3)"
-        }}>
+      {/* ═══ HEADER — barra vetro Empire ═══ */}
+      <div className="pglass-stickybar sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center gap-3">
-          <button onClick={() => navigate("/")}
-            className="p-2 rounded-xl transition-all duration-200 hover:scale-105"
-            style={{ background: "hsla(190,30%,30%,0.12)", border: "1px solid hsla(190,30%,40%,0.1)" }}>
+          <button onClick={() => navigate("/")} aria-label="Torna alla home"
+            className="pglass-icon-btn w-11 h-11">
             <ArrowLeft className="w-4 h-4 text-foreground/85" />
           </button>
+
           <div className="flex-1 min-w-0">
             <h1 className="text-base font-bold text-foreground font-heading tracking-tight">Esplora i Settori</h1>
             <p className="text-[0.72rem] sm:text-xs text-foreground/90 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
