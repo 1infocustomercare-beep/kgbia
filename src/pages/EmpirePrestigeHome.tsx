@@ -68,6 +68,8 @@ function EmpirePrestigeHomeInner() {
     <>
       <EmpireLogoSplash />
       <PrestigeTheme />
+      <PrestigeGlassSkin />
+
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen [overflow-x:clip]">
         <PrestigeScrubBackdrop />
