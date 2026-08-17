@@ -918,6 +918,18 @@ const IDENTITY_SECTOR_LABELS: Record<string, { label: string; tagline: string }>
   plumber: { label: "Artigiani & Impianti", tagline: "Interventi urgenti, preventivi e assistenza." },
 };
 
+/** Trasforma la firma di stile tecnica in un'etichetta leggibile. */
+const prettifyStudioStyle = (raw?: string): string => {
+  if (!raw) return "Empire Studio";
+  const words = raw
+    .split(/[\/|·]+/)
+    .map((w) => w.trim().replace(/-/g, " "))
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+  return words.length ? `Studio · ${words.join(" · ")}` : "Empire Studio";
+};
+
 const identityDirs = (): string[] => {
   const set = new Set<string>();
   for (const path of Object.keys(identityFiles)) {
@@ -973,7 +985,7 @@ for (const dir of identityDirs()) {
   const variant: SectorMockupVariant = {
     id: `studio-${dir}`,
     brand,
-    style: meta?.style ?? "Empire Studio",
+    style: prettifyStudioStyle(meta?.style),
     palette: meta?.palette ?? "Palette dedicata",
     description:
       meta?.description ??
