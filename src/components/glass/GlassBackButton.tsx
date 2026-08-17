@@ -12,6 +12,8 @@ export interface GlassBackButtonProps {
   variant?: "floating" | "inline" | "bar";
   /** titolo mostrato accanto al bottone nella variante `bar` */
   title?: string;
+  /** sposta la pillola `floating` sotto la nav fissa */
+  belowNav?: boolean;
   className?: string;
 }
 
@@ -24,6 +26,7 @@ export default function GlassBackButton({
   to,
   variant = "floating",
   title,
+  belowNav = false,
   className,
 }: GlassBackButtonProps) {
   const navigate = useNavigate();
@@ -66,7 +69,16 @@ export default function GlassBackButton({
   }
 
   if (variant === "floating") {
-    return <div className="fixed left-4 top-4 z-50 md:left-6 md:top-6">{button}</div>;
+    return (
+      <div
+        className={cn(
+          "fixed left-4 z-40 md:left-6",
+          belowNav ? "top-24 md:top-28" : "top-4 md:top-6",
+        )}
+      >
+        {button}
+      </div>
+    );
   }
 
   return button;

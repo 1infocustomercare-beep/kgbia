@@ -9,7 +9,7 @@ export default function MockupCatalogPage() {
       <PrestigeTheme />
       {/* Nav condivisa con la home: da /portfolio le ancore riportano in home */}
       <LandingNav />
-      <GlassBackButton to="/" label="Home" variant="floating" />
+      <GlassBackButton to="/" label="Home" variant="floating" belowNav />
       <PremiumMockupGallery />
     </main>
   );
