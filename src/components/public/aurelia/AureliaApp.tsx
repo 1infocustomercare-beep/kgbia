@@ -126,34 +126,52 @@ const FILTERS = [
 ] as const;
 
 const TABS = [
+  { id: "home", label: "Home", icon: Home, role: "Cliente" },
   { id: "vetrina", label: "Vetrina", icon: Car, role: "Cliente" },
   { id: "scheda", label: "Scheda veicolo", icon: Gauge, role: "Cliente" },
   { id: "testdrive", label: "Test drive", icon: CalendarDays, role: "Cliente" },
   { id: "permuta", label: "Permuta IA", icon: Repeat, role: "IA" },
+  { id: "chat", label: "Consulente IA", icon: MessageSquare, role: "IA" },
   { id: "officina", label: "Officina", icon: Wrench, role: "Staff" },
+  { id: "ricambi", label: "Ricambi", icon: Package, role: "Staff" },
   { id: "garage", label: "Il mio garage", icon: ShieldCheck, role: "Cliente" },
   { id: "crm", label: "CRM vendite", icon: LayoutDashboard, role: "Admin" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
 
+/** Tab in evidenza nella bottom-bar mobile (le altre nel menu "Altro") */
+const MOBILE_PRIMARY: TabId[] = ["home", "vetrina", "testdrive", "garage"];
+
 const eur = (n: number) => n.toLocaleString("it-IT", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
 /* ══════════ Chrome dell'app ══════════ */
 
 function AppShell({ children, title, subtitle }: { children: React.ReactNode; title: string; subtitle: string }) {
+  const variant = useVariant();
+  const mobile = variant === "mobile";
   return (
-    <div className="flex min-h-[520px] flex-col">
-      <div className="flex items-center justify-between border-b border-border/60 px-5 py-4 sm:px-7">
+    <div className={`flex flex-col ${mobile ? "" : "min-h-[520px]"}`}>
+      <div
+        className={`flex items-center justify-between border-b border-border/60 ${
+          mobile ? "px-4 py-3" : "px-5 py-4 sm:px-7"
+        }`}
+      >
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-primary">{subtitle}</p>
-          <h3 className="mt-1 font-heading text-xl font-semibold sm:text-2xl">{title}</h3>
+          <p className={`font-bold uppercase tracking-[0.28em] text-primary ${mobile ? "text-[9px]" : "text-[10px]"}`}>
+            {subtitle}
+          </p>
+          <h3 className={`mt-1 font-heading font-semibold ${mobile ? "text-base leading-tight" : "text-xl sm:text-2xl"}`}>
+            {title}
+          </h3>
         </div>
-        <span className="hidden items-center gap-2 rounded-full border border-border/60 bg-[#0f1c1b] px-3 py-1.5 text-[11px] text-muted-foreground sm:inline-flex">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary" /> live
-        </span>
+        {!mobile && (
+          <span className="hidden items-center gap-2 rounded-full border border-border/60 bg-[#0f1c1b] px-3 py-1.5 text-[11px] text-muted-foreground sm:inline-flex">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" /> live
+          </span>
+        )}
       </div>
-      <div className="flex-1 p-5 sm:p-7">{children}</div>
+      <div className={`flex-1 ${mobile ? "p-4" : "p-5 sm:p-7"}`}>{children}</div>
     </div>
   );
 }
