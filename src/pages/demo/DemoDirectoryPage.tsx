@@ -612,23 +612,16 @@ export default function DemoDirectoryPage() {
         </button>
 
         {/* ═══ SEARCH ═══ */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/80" />
-          <Input
+        <div className="mb-6">
+          <GlassInput
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cerca settore..."
-            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/70 text-sm"
-            style={{
-              background: "hsla(196,22%,12%,0.72)",
-              backdropFilter: "blur(18px) saturate(150%)",
-              WebkitBackdropFilter: "blur(18px) saturate(150%)",
-              border: "1px solid hsl(178 74% 48% / 0.24)",
-              borderRadius: "0.875rem"
-            }}
-
+            aria-label="Cerca settore"
+            icon={<Search className="w-4 h-4" />}
           />
         </div>
+
 
         {/* ═══ CONTENT ═══ */}
         {search.trim() ? (
