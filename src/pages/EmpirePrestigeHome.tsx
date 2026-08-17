@@ -12,7 +12,7 @@ import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices
 import PrestigeHorizontalScroll from "@/components/empire-home/prestige/PrestigeHorizontalScroll";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
-import PrestigeDemoHub from "@/components/empire-home/prestige/PrestigeDemoHub";
+import PrestigeGlassSkin from "@/components/empire-home/prestige/PrestigeGlassSkin";
 
 import PrestigeAgents from "@/components/empire-home/prestige/PrestigeAgents";
 import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA";
