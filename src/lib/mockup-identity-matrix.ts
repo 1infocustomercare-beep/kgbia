@@ -1867,6 +1867,14 @@ export function matchSector(raw: string): SectorKey {
     ["retail", ["negozio", "boutique", "ferramenta", "gioieller", "abbigliament", "shop", "store", "vinil"]],
     ["events", ["event", "wedding", "teatro", "festival", "club", "discotec", "congress"]],
     ["education", ["scuola", "corso", "accademia", "formazion", "ripetizion", "bootcamp", "doposcuola"]],
+    ["petcare", ["toeletta", "pet", "veterinar", "animali", "cane", "gatto", "dog", "grooming"]],
+    ["childcare", ["nido", "asilo", "infanzia", "babysit", "ludotec", "materna", "montessori"]],
+    ["homeservices", ["idraulic", "elettricist", "caldaie", "climatizz", "fabbro", "manutenzion", "impiant"]],
+    ["watersports", ["charter", "barca", "barche", "yacht", "gommon", "jet ski", "diving", "vela", "nautic"]],
+    ["golf", ["golf", "driving range", "putting", "fairway"]],
+    ["condo", ["condomin", "amministratore", "residenz", "hoa", "portineria"]],
+    ["equestrian", ["maneggio", "scuderi", "ippic", "cavall", "equitazion"]],
+    ["aiservices", ["agenzia ia", "intelligenza artificiale", "automazion", "voice agent", "chatbot", "software"]],
   ];
   for (const [key, kws] of table) if (kws.some((k) => s.includes(k))) return key;
   return "retail";
