@@ -46,7 +46,24 @@ const JOURNEY = [
 
 export default function AutoDealerPublicSite() {
   return (
-    <main className="min-h-screen overflow-x-clip bg-background text-foreground">
+    <main
+      className="min-h-screen overflow-x-clip bg-background text-foreground"
+      style={{
+        // palette locale Aurelia: notte profonda + smeraldo motorsport
+        ["--background" as string]: "195 30% 5%",
+        ["--foreground" as string]: "40 20% 96%",
+        ["--card" as string]: "195 24% 9%",
+        ["--card-foreground" as string]: "40 20% 96%",
+        ["--muted" as string]: "195 18% 16%",
+        ["--muted-foreground" as string]: "180 8% 65%",
+        ["--primary" as string]: "170 62% 42%",
+        ["--primary-foreground" as string]: "195 40% 6%",
+        ["--border" as string]: "180 14% 22%",
+        ["--accent" as string]: "170 62% 42%",
+        ["--accent-foreground" as string]: "195 40% 6%",
+      }}
+    >
+
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
 
       {/* ═══ Hero cinematico: dallo showroom dentro l'abitacolo ═══ */}
