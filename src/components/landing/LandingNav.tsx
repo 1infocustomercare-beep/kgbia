@@ -221,8 +221,11 @@ export default function LandingNav() {
                   <button
                     key={l.href}
                     onClick={() => scrollTo(l.href)}
-                    className="flex min-h-[44px] items-center gap-3 rounded-xl px-3 text-left text-[15px] font-semibold text-[hsl(178_25%_97%)] transition-colors hover:bg-white/10"
+                    data-active={active === l.href ? "true" : "false"}
+                    aria-current={active === l.href ? "true" : undefined}
+                    className="empire-nav-mobile-link flex min-h-[48px] items-center gap-3 rounded-xl px-3 text-left text-[15px] font-semibold text-[hsl(178_25%_97%)]"
                   >
+
                     <span
                       className="flex h-8 w-8 items-center justify-center rounded-lg"
                       style={{ background: `linear-gradient(45deg, ${l.from}, ${l.to})` }}
