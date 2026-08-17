@@ -59,10 +59,21 @@ export default function PortfolioCasePage() {
     meta.setAttribute("content", desc.slice(0, 158));
   }, [group, variants.length]);
 
-  const shown = useMemo(
+  const selected = useMemo(
     () => (filter === "all" ? variants : variants.filter((v) => v.id === filter)),
     [variants, filter],
   );
+  /** Stili con sequenza completa: riga dedicata con tutte le schermate. */
+  const shown = useMemo(
+    () => (filter === "all" ? selected.filter((v) => (v.screens?.length ?? 1) > 1) : selected),
+    [selected, filter],
+  );
+  /** Stili con una sola schermata: griglia compatta di confronto. */
+  const compact = useMemo(
+    () => (filter === "all" ? selected.filter((v) => (v.screens?.length ?? 1) <= 1) : []),
+    [selected, filter],
+  );
+
 
   const setStyle = (id: string) => {
     setFilter(id);
