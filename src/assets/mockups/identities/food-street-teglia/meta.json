@@ -1,0 +1,18 @@
+{
+  "identityId": "food-street-teglia",
+  "sector": "food",
+  "brand": "Teglia Urbana",
+  "style": "airy-serif/grid-10-airy/gradient-edge/ticket-notch/map-floating-sheet/sheet-drag/hairline-details/floating-frosted-tabbar",
+  "family": "street-graffiti-slab",
+  "palette": "mobile",
+  "description": "Teglia Urbana: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

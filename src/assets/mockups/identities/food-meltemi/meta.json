@@ -1,0 +1,18 @@
+{
+  "identityId": "food-meltemi",
+  "sector": "food",
+  "brand": "Meltemi Bistrò",
+  "style": "airy-serif/grid-10-airy/dashed-technical/stacked-paper/map-floating-sheet/sheet-drag/cta-only/no-tabbar-bottom-cta",
+  "family": "aegean-whitewash",
+  "palette": "mobile",
+  "description": "Meltemi Bistrò: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

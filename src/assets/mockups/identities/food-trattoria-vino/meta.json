@@ -1,0 +1,18 @@
+{
+  "identityId": "food-trattoria-vino",
+  "sector": "food",
+  "brand": "Vino e Tovaglia",
+  "style": "brutal-slab/grid-edge-to-edge/double-rule-classic/pill-soft/form-stepper/count-up/gradient-wash/top-segmented-only",
+  "family": "trattoria-enoteca-legno",
+  "palette": "mobile",
+  "description": "Vino e Tovaglia: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

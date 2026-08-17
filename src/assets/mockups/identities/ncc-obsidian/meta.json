@@ -1,0 +1,18 @@
+{
+  "identityId": "ncc-obsidian",
+  "sector": "ncc",
+  "brand": "Linea Nera Milano",
+  "style": "humanist-soft/grid-4-dense/frosted-stroke/bento-mosaic/chips-grid-cards/parallax-scroll/gradient-wash/top-segmented-only",
+  "family": "obsidian-chauffeur",
+  "palette": "mobile",
+  "description": "Linea Nera Milano: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Prenotazione"
+  ],
+  "captions": [
+    "Flusso di prenotazione in pochi tap con conferma immediata."
+  ],
+  "features": [
+    "Prenotazione"
+  ]
+}

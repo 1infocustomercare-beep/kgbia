@@ -1,0 +1,18 @@
+{
+  "identityId": "food-lanterna",
+  "sector": "food",
+  "brand": "Lanterna d'Oriente",
+  "style": "poster-condensed/grid-10-airy/no-border-soft-shadow/square-flat/timeline-steps/morph-tab/hairline-details/floating-frosted-tabbar",
+  "family": "saigon-noir-silk",
+  "palette": "mobile",
+  "description": "Lanterna d'Oriente: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

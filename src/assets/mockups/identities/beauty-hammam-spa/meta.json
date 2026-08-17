@@ -1,0 +1,18 @@
+{
+  "identityId": "beauty-hammam-spa",
+  "sector": "beauty",
+  "brand": "Bagno di Levante",
+  "style": "numeric-first/grid-10-airy/hairline-rule/chamfer-tech/map-floating-sheet/sheet-drag/hairline-details/floating-frosted-tabbar",
+  "family": "hammam-vapore-ottone",
+  "palette": "mobile",
+  "description": "Bagno di Levante: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

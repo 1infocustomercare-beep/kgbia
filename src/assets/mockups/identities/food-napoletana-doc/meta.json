@@ -1,0 +1,18 @@
+{
+  "identityId": "food-napoletana-doc",
+  "sector": "food",
+  "brand": "Antica Ruota",
+  "style": "swiss-tight/grid-10-airy/gradient-edge/ticket-notch/media-first-editorial/ink-reveal/badge-system/large-title-collapsing",
+  "family": "napoletana-doc",
+  "palette": "mobile",
+  "description": "Antica Ruota: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

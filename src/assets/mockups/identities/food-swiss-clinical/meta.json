@@ -1,0 +1,18 @@
+{
+  "identityId": "food-swiss-clinical",
+  "sector": "food",
+  "brand": "Verde Protocollo",
+  "style": "editorial-giant/grid-edge-to-edge/inner-glow-hairline/glass-panel/calendar-slots/swipe-peek/full-flood/flat-tabbar-topline",
+  "family": "swiss-clinical-grid",
+  "palette": "mobile",
+  "description": "Verde Protocollo: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Plan"
+  ],
+  "captions": [
+    "Schermata plan."
+  ],
+  "features": [
+    "Plan"
+  ]
+}
