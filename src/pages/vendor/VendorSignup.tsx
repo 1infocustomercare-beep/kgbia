@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import { supabase } from "@/integrations/supabase/client";
 import { GlassCard, GlassButton } from "@/components/glass";
+import GlassBackButton from "@/components/glass/GlassBackButton";
 import { toast } from "sonner";
 import { UserPlus } from "lucide-react";
 
@@ -75,6 +76,7 @@ export default function VendorSignup() {
     <>
       <PrestigeTheme />
       <div className="prestige-root prestige-section pglass-scope pglass-app min-h-screen flex items-center justify-center p-4">
+        <GlassBackButton to="/" label="Home" variant="floating" />
         <GlassCard lift={false} className="w-full max-w-md rounded-3xl p-6 space-y-4">
           <div className="text-center">
             <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-[hsl(var(--pr-gold-light))] to-[hsl(var(--pr-gold-deep))] flex items-center justify-center mb-3">

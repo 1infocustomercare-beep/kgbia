@@ -167,7 +167,7 @@ export default function CustomProjectBrief() {
                     key={f}
                     type="button"
                     onClick={() => toggleFeature(f)}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
+                    className={`inline-flex items-center min-h-[40px] px-4 py-2 rounded-full text-xs border transition-all ${
                       form.features.includes(f)
                         ? "bg-[hsl(var(--pr-gold))] text-[hsl(var(--pr-emerald-deep))] border-transparent"
                         : "border-white/20 hover:border-white/40"

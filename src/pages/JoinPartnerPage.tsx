@@ -6,6 +6,7 @@ import {
   DollarSign, Users, Star, Zap, Shield, TrendingUp
 } from "lucide-react";
 import empireLogoNew from "@/assets/empire-logo-new.png";
+import GlassBackButton from "@/components/glass/GlassBackButton";
 
 const JoinPartnerPage = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const JoinPartnerPage = () => {
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b border-border/10" style={{ background: "hsla(228,22%,6%,0.85)" }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between px-5 py-3">
           <div className="flex items-center gap-2.5">
+            <GlassBackButton to="/" label="Home" variant="inline" className="px-3 text-xs" />
             <img src={empireLogoNew} alt="Empire" className="w-8 h-8 rounded-full object-cover border border-primary/30" />
             <span className="font-heading font-bold text-sm tracking-wider uppercase text-foreground">EMPIRE</span>
           </div>

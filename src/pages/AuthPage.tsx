@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { GlassCard, GlassButton } from "@/components/glass";
+import GlassBackButton from "@/components/glass/GlassBackButton";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import {
   ArrowLeft, ArrowRight, Store, ChefHat, Car, Scissors, Heart,
@@ -314,10 +315,7 @@ export default function AuthPage() {
           "radial-gradient(ellipse 70% 50% at 12% 0%, hsl(var(--pr-aqua) / 0.14), transparent 62%), radial-gradient(ellipse 60% 45% at 90% 10%, hsl(var(--pr-aqua-deep) / 0.18), transparent 68%), linear-gradient(180deg, hsl(var(--pr-emerald-deep)), hsl(var(--pr-emerald)) 55%, hsl(var(--pr-emerald-deep)))",
       }}>
 
-      <button onClick={() => navigate("/")} aria-label="Torna alla home"
-        className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-foreground/85 hover:text-foreground transition-colors">
-        <ArrowLeft className="w-4 h-4" /> Home
-      </button>
+      <GlassBackButton to="/" label="Home" variant="floating" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
@@ -369,7 +367,7 @@ export default function AuthPage() {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/70" />
                   <Input type={showPw ? "text" : "password"} aria-label="Password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
                     className="auth-white-input pl-10 pr-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
-                  <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-black/50 hover:text-black">
+                  <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-black/50 transition-colors hover:text-black active:scale-95">
                     {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
@@ -418,7 +416,7 @@ export default function AuthPage() {
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/70" />
                       <Input type={showPw ? "text" : "password"} placeholder="Password (min 8 caratteri)" value={password} onChange={e => setPassword(e.target.value)}
                         className="auth-white-input pl-10 pr-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
-                      <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-black/50 hover:text-black">
+                      <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-black/50 transition-colors hover:text-black active:scale-95">
                         {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
