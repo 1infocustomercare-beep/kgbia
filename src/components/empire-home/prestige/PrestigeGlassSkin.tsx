@@ -270,6 +270,22 @@ export default function PrestigeGlassSkin() {
         border-radius: 16px;
       }
 
+      /* ═══════════ 6b. NAV VETRO ═══════════ */
+      .empire-glass-nav {
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.09), hsl(0 0% 100% / 0.02)), hsl(202 56% 6% / 0.72);
+        border: 1px solid hsl(0 0% 100% / 0.14);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.16), 0 22px 60px -32px hsl(202 56% 4% / 0.9);
+      }
+      .empire-glass-nav[data-scrolled="true"] {
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.10), hsl(0 0% 100% / 0.03)), hsl(202 56% 5% / 0.93);
+        border-color: hsl(178 74% 48% / 0.28);
+      }
+      .empire-glass-nav .landing-button-primary {
+        color: #ffffff !important;
+        background: linear-gradient(135deg, hsl(176 82% 62%), hsl(178 74% 44%) 55%, hsl(190 72% 30%));
+        box-shadow: 0 22px 60px -28px hsl(178 74% 48% / 0.7), inset 0 1px 0 hsl(0 0% 100% / 0.35);
+      }
+
       /* ═══════════ 7. ONDA DECORATIVA ═══════════ */
       .pglass-wave {
         position: relative;

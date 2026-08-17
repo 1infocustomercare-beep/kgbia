@@ -68,14 +68,8 @@ export default function LandingNav() {
       <nav aria-label="Navigazione principale" className={`fixed top-[3px] z-[10000] w-full transition-all duration-500 ${scrolled ? "py-2" : "py-3"}`}>
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-3 sm:px-5 lg:px-10">
           <div
-            className="w-full rounded-full px-3 backdrop-blur-2xl transition-all duration-500 sm:px-5"
-            style={{
-              // Vetro ink neutro (non verde fangoso) con bordo oro tenue:
-              // resta leggibile sopra la hero smeraldo e sopra le sezioni chiare.
-              background: scrolled ? "hsl(220 22% 5% / 0.92)" : "hsl(220 22% 6% / 0.66)",
-              border: "1px solid hsl(43 55% 70% / 0.18)",
-              boxShadow: "0 22px 60px -32px hsl(0 0% 0% / 0.85)",
-            }}
+            className="empire-glass-nav w-full rounded-full px-3 backdrop-blur-2xl transition-all duration-500 sm:px-5"
+            data-scrolled={scrolled ? "true" : "false"}
           >
 
 
@@ -87,7 +81,7 @@ export default function LandingNav() {
             aria-label="Empire AI — Home"
           >
             <span className="relative shrink-0">
-              <span className="absolute inset-0 rounded-lg bg-[linear-gradient(45deg,#1e1e5a,#6366f1)] opacity-40 blur-md transition-opacity duration-500 group-hover/logo:opacity-90" />
+              <span className="absolute inset-0 rounded-lg bg-[linear-gradient(45deg,#0d6c7e,#2ec4b6)] opacity-40 blur-md transition-opacity duration-500 group-hover/logo:opacity-90" />
               <EmpireLogo size={32} rounded="lg" glow />
             </span>
             <EmpireWordmark size={16} className="truncate text-[15px] sm:text-lg" />
