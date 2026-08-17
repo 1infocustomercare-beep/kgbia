@@ -31,7 +31,7 @@ export const BEAUTY_EXPANSION: ExpansionRow[] = [
     "12px|1px verde tenue|8pt · elenco protocolli|balanced", "tab bar clinica con icone lineari|dark|scheda protocollo numerata",
     "cabina pulita, teli bianchi, strumenti ordinati, luce neutra",
     "protocolli → zone corpo → preparazione → richiamo ciclo",
-    "resina depilatoria e telo di cotone teso|luce neutra da cabina estetica|verde acqua chiarissimo|device su lettino con telo bianco teso|mappa delle zone corpo in filigrana",
+    "resina depilatoria e telo di cotone teso|luce neutra da cabina estetica|verde acqua chiarissimo con teli piegati|device su lettino con telo bianco teso|mappa delle zone corpo in filigrana",
     ["home:Protocolli pelle", "catalog:Zone e durate", "detail:Preparazione e post", "booking:Richiamo del ciclo", "D:admin:Cabine e ricambi cere"]),
 
   X("beauty", "beauty-massage-oil", "massage-olio-terracotta", "Massage Olio", "Mani Sapienti", "Massaggi decontratturanti e sportivi.",
