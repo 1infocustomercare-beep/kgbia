@@ -561,28 +561,59 @@ export default function DemoDirectoryPage() {
         <PrivateJetDemoCard onOpen={() => navigate("/demo/aurea-jet")} />
         <button
           onClick={() => navigate("/demo/aurelia-motori")}
-          className="group relative mb-6 block w-full overflow-hidden rounded-2xl border border-primary/25 text-left"
-          style={{ background: "linear-gradient(135deg, hsl(220 25% 7%), hsl(180 28% 10%))" }}
+          className="group relative mb-6 block w-full overflow-hidden rounded-[1.75rem] text-left"
+          style={{
+            background: "linear-gradient(135deg, hsl(220 30% 5%), hsl(168 30% 8%))",
+            border: "1px solid hsla(160,60%,45%,0.22)",
+            boxShadow: "0 30px 70px -35px hsla(160,70%,25%,0.55), inset 0 1px 0 hsla(160,60%,70%,0.12)"
+          }}
         >
-          <img
-            src="/frames/showroom/045.jpg"
-            alt="Aurelia Motori, demo concessionaria e officina"
-            loading="lazy"
-            width={1280}
-            height={720}
-            className="absolute inset-0 h-full w-full object-cover opacity-45 transition-transform duration-700 group-hover:scale-105"
-          />
-          <div className="relative z-10 p-5 sm:p-7">
-            <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-primary">Nuova demo 360°</span>
-            <h2 className="mt-2 font-heading text-2xl font-semibold text-white sm:text-4xl">Aurelia Motori</h2>
-            <p className="mt-2 max-w-md text-xs text-white/70 sm:text-sm">
-              Concessionaria &amp; officina · Showroom con rotazione 360° reale, test drive, permuta e agenda ponti.
-            </p>
-            <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              Apri demo <ArrowRight className="h-3.5 w-3.5" />
-            </span>
+          <div className="relative aspect-[16/10] w-full sm:aspect-[21/9]">
+            <img
+              src={aureliaCardHero}
+              alt="Showroom notturno Aurelia Motori: coupé smeraldo con luci lineari e riflessi sul pavimento"
+              loading="lazy"
+              width={1600}
+              height={912}
+              className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1400ms] ease-out will-change-transform group-hover:scale-[1.06]"
+            />
+            {/* grading cinematografico coerente con il sito demo */}
+            <div className="pointer-events-none absolute inset-0"
+              style={{ background: "radial-gradient(120% 90% at 78% 30%, hsla(160,80%,45%,0.20), transparent 60%)" }} />
+            <div className="pointer-events-none absolute inset-0"
+              style={{ background: "linear-gradient(to top, hsl(220 32% 4%) 4%, hsla(220,32%,5%,0.88) 38%, hsla(220,30%,6%,0.28) 68%, transparent 100%)" }} />
+            <div className="pointer-events-none absolute inset-0 opacity-60"
+              style={{ background: "linear-gradient(100deg, hsla(220,32%,4%,0.92) 0%, hsla(220,32%,4%,0.35) 45%, transparent 70%)" }} />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px"
+              style={{ background: "linear-gradient(90deg, transparent, hsla(160,70%,60%,0.5), transparent)" }} />
+
+            <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 sm:p-8">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-white"
+                  style={{ background: "hsla(160,70%,35%,0.28)", border: "1px solid hsla(160,70%,55%,0.4)" }}>
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: "hsl(158 80% 55%)" }} />
+                  Live 360°
+                </span>
+                <span className="text-[9px] font-semibold uppercase tracking-[0.26em] text-white/55">Automotive</span>
+              </div>
+              <h2 className="font-heading text-[1.7rem] font-semibold leading-[1.05] text-white sm:text-[2.75rem]"
+                style={{ textShadow: "0 6px 30px hsla(220,40%,2%,0.85)" }}>
+                Aurelia Motori
+              </h2>
+              <p className="mt-2 max-w-lg text-[0.78rem] leading-relaxed text-white/78 sm:text-sm">
+                Concessionaria &amp; officina · showroom con rotazione 360° reale, test drive, permuta IA e agenda ponti.
+              </p>
+              <div className="mt-4 flex items-center gap-2.5">
+                <span className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition-transform duration-300 group-hover:translate-x-1"
+                  style={{ background: "linear-gradient(135deg, hsl(160 70% 32%), hsl(172 60% 26%))", boxShadow: "0 10px 30px -12px hsla(160,80%,40%,0.7)" }}>
+                  Apri demo <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+                <span className="hidden text-[10px] uppercase tracking-[0.2em] text-white/45 sm:inline">Webapp completa · desktop &amp; iPhone</span>
+              </div>
+            </div>
           </div>
         </button>
+
         {/* ═══ SEARCH ═══ */}
         <div className="relative mb-6">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/80" />
