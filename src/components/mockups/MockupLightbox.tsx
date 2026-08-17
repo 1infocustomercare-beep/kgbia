@@ -139,7 +139,7 @@ export default function MockupLightbox({
       <button
         onClick={onClose}
         aria-label="Chiudi"
-        className="fixed right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15"
+        className="pglass-icon-btn fixed right-4 top-4 z-20 h-11 w-11"
       >
         <X size={20} />
       </button>
@@ -153,7 +153,7 @@ export default function MockupLightbox({
               setIndex((i) => (i - 1 + variants.length) % variants.length);
             }}
             aria-label="Variante precedente"
-            className="fixed left-3 top-1/2 z-20 hidden -translate-y-1/2 md:grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:left-6"
+            className="pglass-icon-btn fixed left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 md:grid md:left-6"
           >
             <ChevronLeft size={22} />
           </button>
@@ -163,7 +163,7 @@ export default function MockupLightbox({
               setIndex((i) => (i + 1) % variants.length);
             }}
             aria-label="Variante successiva"
-            className="fixed right-3 top-1/2 z-20 hidden -translate-y-1/2 md:grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 md:right-6"
+            className="pglass-icon-btn fixed right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 md:grid md:right-6"
           >
             <ChevronRight size={22} />
           </button>
