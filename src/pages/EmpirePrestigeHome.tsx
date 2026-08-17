@@ -12,7 +12,7 @@ import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices
 import PrestigeHorizontalScroll from "@/components/empire-home/prestige/PrestigeHorizontalScroll";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
-import PrestigeDemoHub from "@/components/empire-home/prestige/PrestigeDemoHub";
+import PrestigeGlassSkin from "@/components/empire-home/prestige/PrestigeGlassSkin";
 
 import PrestigeAgents from "@/components/empire-home/prestige/PrestigeAgents";
 import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA";
@@ -68,6 +68,8 @@ function EmpirePrestigeHomeInner() {
     <>
       <EmpireLogoSplash />
       <PrestigeTheme />
+      <PrestigeGlassSkin />
+
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen [overflow-x:clip]">
         <PrestigeScrubBackdrop />
@@ -110,15 +112,11 @@ function EmpirePrestigeHomeInner() {
           <PrestigeIndustries />
         </div>
 
-        {/* DEMO HUB 3D — scroll-driven, primary/studio mockups only */}
-        <div id="demo-hub">
-          <PrestigeDemoHub />
-        </div>
-
-        {/* PORTFOLIO — unica galleria mockup della home (hero è il carosello) */}
-        <div id="portfolio">
+        {/* PORTFOLIO — UNICA sezione mockup della home (case study per settore) */}
+        <div id="portfolio" data-portfolio-root>
           <PrestigePortfolio />
         </div>
+
 
 
 

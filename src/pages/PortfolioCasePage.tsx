@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Smartphone, Sparkles, UserRound } from "lucide-react";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
+import PrestigeGlassSkin from "@/components/empire-home/prestige/PrestigeGlassSkin";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
@@ -85,8 +86,9 @@ export default function PortfolioCasePage() {
 
   if (!group || variants.length === 0) {
     return (
-      <div className="min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
+      <div className="pglass-scope min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
         <PrestigeTheme />
+      <PrestigeGlassSkin />
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-5 px-6 py-32 text-center">
           <h1 className="prestige-display text-3xl" style={{ color: "hsl(var(--pr-gold-light))" }}>
             Settore non trovato
@@ -120,8 +122,9 @@ export default function PortfolioCasePage() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
+    <div className="pglass-scope min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
       <PrestigeTheme />
+      <PrestigeGlassSkin />
 
       {/* ───────── HERO EDITORIALE ───────── */}
       <header className="relative overflow-hidden">
@@ -185,11 +188,7 @@ export default function PortfolioCasePage() {
               {meta.map(({ icon: Icon, k, v }) => (
                 <div
                   key={k}
-                  className="rounded-2xl p-4"
-                  style={{
-                    background: "hsl(var(--pr-gold-light) / 0.05)",
-                    border: "1px solid hsl(var(--pr-gold) / 0.22)",
-                  }}
+                  className="pglass p-4"
                 >
                   <dt
                     className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em]"
@@ -229,12 +228,7 @@ export default function PortfolioCasePage() {
                     type="button"
                     onClick={() => setStyle(chip.id)}
                     aria-pressed={on}
-                    className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-all"
-                    style={{
-                      background: on ? "hsl(var(--pr-gold))" : "transparent",
-                      color: on ? "hsl(var(--pr-emerald-deep))" : "hsl(var(--pr-gold-light) / 0.8)",
-                      border: `1px solid ${on ? "hsl(var(--pr-gold))" : "hsl(var(--pr-gold) / 0.28)"}`,
-                    }}
+                    className="pglass-chip pglass-chip-dark"
                   >
                     {chip.label}
                   </button>
@@ -320,11 +314,7 @@ export default function PortfolioCasePage() {
                 {screens.map((s, si) => (
                   <figure key={`${v.id}-${si}`} className="group flex flex-col items-center">
                     <div
-                      className="w-full rounded-[28px] p-3 transition-all duration-500 group-hover:-translate-y-1.5"
-                      style={{
-                        background: "hsl(var(--pr-gold-light) / 0.04)",
-                        border: "1px solid hsl(var(--pr-gold) / 0.16)",
-                      }}
+                      className="pglass w-full p-3 group-hover:-translate-y-1.5"
                     >
                       <IPhoneProMaxFrame
                         src={s.image}
@@ -377,11 +367,7 @@ export default function PortfolioCasePage() {
                 return (
                   <figure key={v.id} className="group flex flex-col items-center">
                     <div
-                      className="w-full rounded-[26px] p-2.5 transition-all duration-500 group-hover:-translate-y-1.5"
-                      style={{
-                        background: "hsl(var(--pr-gold-light) / 0.04)",
-                        border: "1px solid hsl(var(--pr-gold) / 0.16)",
-                      }}
+                      className="pglass w-full p-2.5 group-hover:-translate-y-1.5"
                     >
                       <IPhoneProMaxFrame
                         src={v.screens?.[0]?.image ?? v.screen}

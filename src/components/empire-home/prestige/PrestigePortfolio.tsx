@@ -96,7 +96,7 @@ export default function PrestigePortfolio() {
             >
               Casi reali.
               <br />
-              <span className="prestige-gold-text">Decine di stili per settore.</span>
+              <span className="pglass-aqua-text">Decine di stili per settore.</span>
             </h2>
           </div>
           <p className="max-w-sm text-sm sm:text-base" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
@@ -117,26 +117,14 @@ export default function PrestigePortfolio() {
                   type="button"
                   onClick={() => setFilter(c.id)}
                   aria-pressed={on}
-                  className="flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all"
-                  style={{
-                    background: on ? "hsl(var(--pr-emerald))" : "transparent",
-                    color: on ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-text-on-light))",
-                    border: `1px solid ${on ? "hsl(var(--pr-gold) / 0.45)" : "hsl(var(--pr-emerald) / 0.28)"}`,
-                  }}
+                  className="pglass-chip"
                 >
                   {c.label}
-                  <span
-                    className="rounded-full px-1.5 text-[10px] tabular-nums"
-                    style={{
-                      background: on ? "hsl(var(--pr-gold) / 0.25)" : "hsl(var(--pr-emerald) / 0.1)",
-                      color: on ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-emerald))",
-                    }}
-                  >
-                    {c.count}
-                  </span>
+                  <span className="pglass-chip-count">{c.count}</span>
                 </button>
               );
             })}
+
           </div>
         </div>
 
@@ -154,108 +142,106 @@ export default function PrestigePortfolio() {
               transformOrigin: "center top",
               transformStyle: "preserve-3d",
             }}
-            className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-6"
+            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
           >
             {visible.map((h) => (
-                    <article
-                      key={h.key}
-                      className="group flex w-full flex-col items-center"
-                    >
-                      <div className="relative transition-transform duration-500 group-hover:-translate-y-1">
-                        <IPhoneProMaxFrame
-                          src={h.hero!.screen}
-                          alt={`${h.hero!.brand} — ${h.hero!.style}`}
-                          width={220}
-                          onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
+              <article key={h.key} className="group pglass-soft flex w-full flex-col items-center p-5">
+                <div className="relative transition-transform duration-500">
+                  <IPhoneProMaxFrame
+                    src={h.hero!.screen}
+                    alt={`${h.hero!.brand} — ${h.hero!.style}`}
+                    width={210}
+                    onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
+                  />
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--pr-aqua) / 0.95), hsl(var(--pr-aqua-deep)))",
+                      color: "hsl(0 0% 100%)",
+                      boxShadow: "0 10px 26px -12px hsl(var(--pr-aqua) / 0.8)",
+                    }}
+                  >
+                    Vedi il caso
+                  </span>
+                </div>
+
+                {/* Anteprime schermate collegate (Menu / Dettaglio / Prenota) */}
+                {h.hero!.screens?.length > 1 && (
+                  <div className="mt-4 flex items-center justify-center gap-2">
+                    {h.hero!.screens.filter((s) => !!s.image).slice(1, 4).map((s) => (
+                      <button
+                        key={s.image}
+                        type="button"
+                        title={s.label}
+                        onClick={() =>
+                          setSelection({
+                            sectorId: h.sectorId,
+                            sectorLabel: h.sectorLabel,
+                            variants: h.variants,
+                            index: h.index,
+                          })
+                        }
+                        className="overflow-hidden rounded-[12px] transition-transform duration-300 hover:-translate-y-0.5"
+                        style={{
+                          width: 46,
+                          height: 92,
+                          border: "1px solid hsl(var(--pr-aqua) / 0.3)",
+                          background: "hsl(var(--pr-emerald-deep))",
+                          boxShadow: "0 10px 22px -14px hsl(var(--pr-aqua-deep) / 0.7)",
+                        }}
+                      >
+                        <img
+                          src={s.image}
+                          alt={`${h.hero!.brand} — ${s.label}`}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-full w-full object-cover object-top"
+                          onError={(e) => { (e.currentTarget.closest("button") as HTMLElement | null)?.style.setProperty("display", "none"); }}
                         />
-                        <span
-                          aria-hidden
-                          className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                          style={{
-                            background: "hsl(var(--pr-gold))",
-                            color: "hsl(var(--pr-emerald-deep))",
-                          }}
-                        >
-                          Vedi il caso
-                        </span>
-                      </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
 
-                      {/* Anteprime schermate collegate (Menu / Dettaglio / Prenota) */}
-                      {h.hero!.screens?.length > 1 && (
-                        <div className="mt-3 flex items-center justify-center gap-2">
-                          {h.hero!.screens.slice(1, 4).map((s, si) => (
-                            <button
-                              key={s.image}
-                              type="button"
-                              title={s.label}
-                              onClick={() =>
-                                setSelection({
-                                  sectorId: h.sectorId,
-                                  sectorLabel: h.sectorLabel,
-                                  variants: h.variants,
-                                  index: h.index,
-                                })
-                              }
-                              className="overflow-hidden rounded-[10px] transition-transform duration-300 hover:-translate-y-0.5"
-                              style={{
-                                width: 46,
-                                height: 92,
-                                border: "1px solid hsl(var(--pr-gold) / 0.3)",
-                                background: "hsl(var(--pr-emerald-deep))",
-                                animationDelay: `${si * 60}ms`,
-                              }}
-                            >
-                              <img
-                                src={s.image}
-                                alt={`${h.hero!.brand} — ${s.label}`}
-                                loading="lazy"
-                                decoding="async"
-                                className="h-full w-full object-cover object-top"
-                              />
-                            </button>
-                          ))}
-                        </div>
-                      )}
-
-
-                      <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
-                        <div
-                          className="text-[10px] font-bold uppercase tracking-[0.24em]"
-                          style={{ color: "hsl(var(--pr-gold-deep))" }}
-                        >
-                          {h.sectorLabel}
-                        </div>
-                        <h3
-                          className="prestige-display mt-1 text-lg"
-                          style={{ color: "hsl(var(--pr-text-on-light))" }}
-                        >
-                          {h.hero!.brand}
-                        </h3>
-                        <p
-                          className="mt-1 text-xs leading-snug"
-                          style={{ color: "hsl(var(--pr-muted-on-light))" }}
-                        >
-                          {h.tagline}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
-                          className="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold transition-all hover:gap-2"
-                          style={{
-                            background: "hsl(var(--pr-gold) / 0.18)",
-                            color: "hsl(var(--pr-gold-deep))",
-                            border: "1px solid hsl(var(--pr-gold) / 0.35)",
-                          }}
-                        >
-                          {h.variants.length > 1
-                            ? `Confronta ${h.variants.length} stili`
-                            : "Apri il caso studio"}
-                          <ArrowUpRight size={11} />
-                        </button>
-
-                      </div>
-                    </article>
+                <div className="mt-4 flex w-full flex-col items-center text-center">
+                  <div
+                    className="text-[10px] font-bold uppercase tracking-[0.24em]"
+                    style={{ color: "hsl(var(--pr-aqua-deep))" }}
+                  >
+                    {h.sectorLabel}
+                  </div>
+                  <h3
+                    className="prestige-display mt-1 text-lg"
+                    style={{ color: "hsl(var(--pr-text-on-light))" }}
+                  >
+                    {h.hero!.brand}
+                  </h3>
+                  <p
+                    className="mt-1 text-xs leading-snug"
+                    style={{ color: "hsl(var(--pr-muted-on-light))" }}
+                  >
+                    {h.tagline}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
+                    className="mt-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold transition-all hover:gap-2"
+                    style={{
+                      background: "hsl(var(--pr-aqua) / 0.12)",
+                      color: "hsl(var(--pr-aqua-deep))",
+                      border: "1px solid hsl(var(--pr-aqua) / 0.32)",
+                    }}
+                  >
+                    {h.variants.length > 1
+                      ? `Confronta ${h.variants.length} stili`
+                      : "Apri il caso studio"}
+                    <ArrowUpRight size={11} />
+                  </button>
+                </div>
+              </article>
             ))}
+
           </motion.div>
         </div>
 
@@ -263,15 +249,7 @@ export default function PrestigePortfolio() {
 
         <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
           {filtered.length > 12 && (
-            <button
-              onClick={() => setExpanded((v) => !v)}
-              className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all"
-              style={{
-                background: "hsl(var(--pr-emerald))",
-                color: "hsl(var(--pr-gold-light))",
-                border: "1px solid hsl(var(--pr-gold) / 0.35)",
-              }}
-            >
+            <button onClick={() => setExpanded((v) => !v)} className="pglass-btn-ghost">
               {expanded ? (
                 <>Mostra meno <ChevronUp size={16} /></>
               ) : (
@@ -279,30 +257,14 @@ export default function PrestigePortfolio() {
               )}
             </button>
           )}
-          <button
-            onClick={() => navigate("/demo")}
-            className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all hover:gap-3"
-            style={{
-              background: "hsl(var(--pr-gold))",
-              color: "hsl(var(--pr-emerald-deep))",
-              border: "1px solid hsl(var(--pr-gold) / 0.6)",
-              boxShadow: "0 14px 40px -18px hsl(var(--pr-gold) / 0.7)",
-            }}
-          >
-            Apri i siti demo live <ArrowUpRight size={16} />
-          </button>
-          <button
-            onClick={() => navigate("/portfolio")}
-            className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all hover:gap-3"
-            style={{
-              background: "transparent",
-              color: "hsl(var(--pr-emerald-deep))",
-              border: "1px solid hsl(var(--pr-emerald) / 0.45)",
-            }}
-          >
+          <button onClick={() => navigate("/portfolio")} className="pglass-btn">
             Portfolio mockup completo <ArrowUpRight size={16} />
           </button>
+          <button onClick={() => navigate("/demo")} className="pglass-btn-ghost">
+            Siti demo live <ArrowUpRight size={16} />
+          </button>
         </div>
+
 
 
         {/* Homepage = solo studio mockups Empire. Le varianti Lowengeld/reference vivono su /portfolio. */}
