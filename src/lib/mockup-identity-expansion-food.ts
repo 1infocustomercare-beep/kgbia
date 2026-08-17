@@ -1,0 +1,60 @@
+/** Espansione FOOD — sotto-settori distinti, stili mai riusati. */
+import { X, type ExpansionRow } from "./mockup-identity-expansion-core";
+
+export const FOOD_EXPANSION: ExpansionRow[] = [
+  X("food", "food-teglia-romana", "teglia-romana-ferro", "Teglia Romana", "Teglia Nove", "Pizza in teglia, al taglio e al peso.",
+    "#F3EEE3,#FFFFFF,#1A1613,#7C7263,#D2521E,#E8DCC6", "Slab condensato 42px|Sans 14px|prezzi al kg in tabulare",
+    "6px|1px solido|8pt · 2 colonne|balanced", "tab bar con icona teglia|dark|timbro forno stampato a inchiostro",
+    "teglie fotografate dall'alto su carta da forno, luce calda radente",
+    "hero teglia → griglia gusti → calcolo al peso → ritiro",
+    "impasto lievitato e carta da forno oleata|luce calda dalla bocca del forno elettrico|beige con spolverata di farina|device appoggiato su teglia in ferro blu|righello del taglio al peso lungo il bordo laterale",
+    ["home:Vetrina teglie del giorno", "catalog:Gusti al taglio", "order:Ordine al peso", "booking:Ritiro programmato", "D:admin:Forno, teglie e incassi"]),
+
+  X("food", "food-braceria-fumo", "braceria-carbone-fumo", "Braceria Carbone", "Bracere Otto", "Carne alla brace, frollature lunghe.",
+    "#121110,#1C1A18,#F5EFE6,#93887B,#E2622B,#8C6A3F", "Sans nero 36px tutto maiuscolo|Sans 15px|etichette grammatura in mono",
+    "4px|1px rgba(255,255,255,.1)|8pt · liste larghe|dense", "tab bar nera con separatore rame|light|sigillo di frollatura con giorni",
+    "tagli di carne su griglia rovente, fumo visibile, controluce arancione",
+    "hero brace → tagli per peso → cottura scelta → tavolo",
+    "ghisa da griglia e carbone spento|luce di brace pulsante dal basso|nero fumo con scintille sospese|device sopra griglia in ghisa fredda|termometro di cottura con tacche al vivo",
+    ["home:Il taglio del giorno", "catalog:Tagli e frollature", "detail:Cottura e contorni", "booking:Tavolo alla brace", "D:admin:Cella, tagli e margini"]),
+
+  X("food", "food-rosticceria-vetrina", "rosticceria-vetrina-acciaio", "Rosticceria Vetrina", "Rosticceria Marani", "Pronto da portare via, tutti i giorni.",
+    "#FFF8EC,#FFFFFF,#241C12,#877B6B,#F0A500,#C64B1E", "Sans grasso 34px|Sans 15px|orari in numerali larghi",
+    "10px|1px caldo|8pt · card orizzontali|balanced", "tab bar chiara con badge quantità|dark|cartellino prezzo a mano",
+    "vassoi in vetrina riscaldata, vapore leggero, luce da lampada gialla",
+    "hero vetrina → vassoi disponibili → quantità → ritiro in giornata",
+    "acciaio da vetrina calda e vassoi smaltati|luce gialla da lampada scaldavivande|avorio con riflesso d'acciaio|device davanti a vetrina calda sfocata|cartellini prezzo a molletta sulle card",
+    ["home:Vetrina di oggi", "catalog:Vassoi e porzioni", "order:Ordine da ritirare", "loyalty:Tessera cliente abituale", "D:admin:Produzione e sprechi"]),
+
+  X("food", "food-gelateria-artigiana", "gelateria-latte-menta", "Gelateria Artigiana", "Latteria Bianca", "Gelato mantecato ogni mattina.",
+    "#F2FBF7,#FFFFFF,#0F2A22,#6E8A80,#2FBF8F,#F2A0B4", "Rotondo morbido 38px|Sans 15px|gusti in title case grande",
+    "22px|nessuno|8pt · bolle affiancate|airy", "tab bar bianca con pill verde menta|dark|coppetta illustrata come marchio",
+    "coni e vaschette su marmo bianco, luce fredda pulita, gocce di latte",
+    "hero coppetta → gusti del giorno → composizione coppa → fila virtuale",
+    "marmo bianco e crema mantecata|luce fredda da laboratorio del gelato|verde menta chiarissimo|device su banco di marmo con goccia di latte|palline di gelato che sbordano dalle card",
+    ["home:Gusti mantecati oggi", "catalog:Carta dei gusti", "order:Componi la coppa", "tracking:Fila virtuale al banco", "D:admin:Produzione vaschette"]),
+
+  X("food", "food-pasticceria-mignon", "pasticceria-zucchero-velo", "Pasticceria Mignon", "Zucchero & Miele", "Pasticceria mignon e torte su ordinazione.",
+    "#FBF3F5,#FFFFFF,#2A1A20,#8C7580,#C2185B,#D9B06A", "Serif alto contrasto 40px|Sans 14px|numeri in corsivo elegante",
+    "18px|hairline rosata|8pt · griglia 3 colonne|airy", "tab bar candida con filetto oro|dark|monogramma intrecciato",
+    "mignon su alzatina di porcellana, zucchero a velo sospeso, luce da pasticceria",
+    "hero alzatina → vassoio mignon → torta su misura → data di ritiro",
+    "porcellana e zucchero a velo|luce morbida da vetrina di pasticceria|rosa cipria con velo di zucchero|device accanto ad alzatina in porcellana|zucchero a velo che cade sopra le card",
+    ["home:Vetrina mignon", "catalog:Vassoi e monoporzioni", "quote:Torta su misura", "booking:Data di ritiro", "D:admin:Ordini torte e produzione"]),
+
+  X("food", "food-trattoria-vino", "trattoria-enoteca-legno", "Trattoria Enoteca", "Vino e Tovaglia", "Trattoria con cantina di quartiere.",
+    "#1B1512,#241C17,#F3E9DA,#A08E79,#8E2F3C,#C9A227", "Serif rustico 38px|Sans 15px|annate in numerali romani",
+    "8px|1px bruno|8pt · lista con filetti|balanced", "tab bar legno scuro|light|etichetta di bottiglia scritta a mano",
+    "bottiglie e tovaglie a quadri, luce da lampadina calda, ombre morbide",
+    "hero cantina → carta dei vini → abbinamento piatto → tavolo",
+    "legno oliato e vetro di bottiglia|luce calda da lampadina a filamento|bruno cantina con bottiglie sfocate|device su tavolo di legno con cavatappi|etichette di bottiglia come intestazioni di sezione",
+    ["home:Cantina e cucina", "catalog:Carta dei vini", "detail:Abbinamento del sommelier", "booking:Tavolo in enoteca", "D:admin:Cantina e rotazione bottiglie"]),
+
+  X("food", "food-poke-bowl", "poke-neon-tropic-clean", "Poke Neon Clean", "Isola Bowl", "Bowl da comporre, ingredienti freschi.",
+    "#F4FEFF,#FFFFFF,#08262B,#5E8A90,#00C2A8,#FF7A59", "Sans geometrico 36px|Sans 14px|contatore calorie in mono",
+    "16px|1px acqua|8pt · step orizzontali|balanced", "tab bar con progress di composizione|dark|onda ciano come marcatore di step",
+    "bowl dall'alto su fondo acqua, ingredienti a spicchi, luce brillante",
+    "hero bowl → base e proteine → topping → consegna",
+    "acqua ferma e ceramica satinata|luce brillante da studio food|ciano acqua chiarissimo|device su superficie bagnata con riflesso|onda ciano che separa gli step di composizione",
+    ["home:Bowl del giorno", "catalog:Base, proteine, topping", "order:Componi e paga", "tracking:Consegna in corso", "D:admin:Ingredienti e scorte"]),
+];
