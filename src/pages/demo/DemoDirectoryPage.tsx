@@ -7,6 +7,7 @@ import { SECTOR_MOCKUP_CATALOG, getSectorHeroImages, type MockupImage } from "@/
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { getSectorGroup } from "@/data/sector-mockups";
 import { Input } from "@/components/ui/input";
+import { GlassCard, GlassButton, GlassInput } from "@/components/glass";
 import {
   ArrowLeft, Search, ArrowRight, ChevronDown, ChevronUp, Crown,
   ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
@@ -177,17 +178,18 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
           </div>
 
           <div className="flex gap-2.5 justify-center sm:justify-start">
-            <button onClick={() => navigate("/auth")}
-              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-transform hover:scale-105"
-              style={{ background: "linear-gradient(135deg, hsl(174 60% 45%), hsl(190 55% 40%))", boxShadow: "0 4px 20px hsla(174,60%,30%,0.4)" }}>
+            <GlassButton size="sm" onClick={() => navigate("/auth")}>
               Inizia Omaggio <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-            <button onClick={() => { const el = document.getElementById("demo-list"); el?.scrollIntoView({ behavior: "smooth" }); }}
-              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white/80 flex items-center gap-1.5 transition-transform hover:scale-105"
-              style={{ background: "hsla(220,20%,16%,0.7)", border: "1px solid hsla(190,30%,45%,0.25)", backdropFilter: "blur(12px)" }}>
+            </GlassButton>
+            <GlassButton
+              size="sm"
+              variant="ghost"
+              onClick={() => { const el = document.getElementById("demo-list"); el?.scrollIntoView({ behavior: "smooth" }); }}
+            >
               <Eye className="w-3.5 h-3.5" /> Vedi Demo
-            </button>
+            </GlassButton>
           </div>
+
         </div>
 
         {/* Right: iPhone with rotating preview */}
@@ -612,23 +614,16 @@ export default function DemoDirectoryPage() {
         </button>
 
         {/* ═══ SEARCH ═══ */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/80" />
-          <Input
+        <div className="mb-6">
+          <GlassInput
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cerca settore..."
-            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/70 text-sm"
-            style={{
-              background: "hsla(196,22%,12%,0.72)",
-              backdropFilter: "blur(18px) saturate(150%)",
-              WebkitBackdropFilter: "blur(18px) saturate(150%)",
-              border: "1px solid hsl(178 74% 48% / 0.24)",
-              borderRadius: "0.875rem"
-            }}
-
+            aria-label="Cerca settore"
+            icon={<Search className="w-4 h-4" />}
           />
         </div>
+
 
         {/* ═══ CONTENT ═══ */}
         {search.trim() ? (
@@ -640,10 +635,11 @@ export default function DemoDirectoryPage() {
                 onNavigate={navigateToDemo} isFeatured={isFeatured(id)} featured={getFeatured(id)} />
             ))}
             {filtered.length === 0 && (
-              <div className="text-center py-16">
-                  <p className="text-foreground/70 text-sm">Nessun settore trovato per "{search}"</p>
-              </div>
+              <GlassCard variant="soft" lift={false} className="px-6 py-14 text-center">
+                <p className="text-foreground/70 text-sm">Nessun settore trovato per "{search}"</p>
+              </GlassCard>
             )}
+
           </div>
         ) : (
           /* Categorized view */

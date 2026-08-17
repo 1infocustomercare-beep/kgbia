@@ -647,6 +647,14 @@ export default function PrestigeGlassSkin() {
       .pglass-press { transition: transform .18s cubic-bezier(.22,1,.36,1), opacity .18s ease; }
       .pglass-press:active { transform: scale(.96); opacity: .9; }
 
+      /* ═══════════ 8bis. GLASS FIELD (GlassInput) ═══════════ */
+      .pglass-field:hover { border-color: hsl(var(--pr-aqua) / 0.4) !important; }
+      .pglass-field:focus-within {
+        border-color: hsl(var(--pr-aqua) / 0.65) !important;
+        box-shadow: 0 0 0 3px hsl(var(--pr-aqua) / 0.16), inset 0 1px 0 hsl(0 0% 100% / 0.08) !important;
+      }
+
+
       /* ═══════════ 9. SKELETON LOADING GLASS ═══════════ */
       .pglass-skeleton {
         position: relative;
