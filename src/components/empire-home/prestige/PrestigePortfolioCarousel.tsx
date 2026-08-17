@@ -399,11 +399,7 @@ export default function PrestigePortfolioCarousel() {
 
                   {/* Hover hint */}
                   <div
-                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    style={{
-                      background: "hsl(var(--pr-emerald-deep))",
-                      color: "hsl(var(--pr-gold-light))",
-                    }}
+                    className="pglass-icon-btn absolute right-4 top-4 h-8 w-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   >
                     <ExternalLink size={12} />
                   </div>
@@ -525,12 +521,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
         <button
           onClick={onClose}
           aria-label="Chiudi"
-          className="fixed right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full"
-          style={{
-            background: "hsl(var(--pr-gold))",
-            color: "hsl(var(--pr-emerald-deep))",
-            boxShadow: "0 8px 30px -8px hsl(0 0% 0% / 0.5)",
-          }}
+          className="pglass-icon-btn fixed right-4 top-4 z-10 h-11 w-11"
         >
           <X size={20} />
         </button>
@@ -580,21 +571,8 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   <button
                     key={v}
                     onClick={() => setPhoneIdx(i)}
-                    className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider transition-all"
-                    style={{
-                      background:
-                        i === phoneIdx
-                          ? "hsl(var(--pr-gold))"
-                          : "hsl(var(--pr-emerald-mid) / 0.6)",
-                      color:
-                        i === phoneIdx
-                          ? "hsl(var(--pr-emerald-deep))"
-                          : "hsl(var(--pr-gold-light))",
-                      border:
-                        i === phoneIdx
-                          ? "1px solid transparent"
-                          : "1px solid hsl(var(--pr-gold) / 0.3)",
-                    }}
+                    aria-pressed={i === phoneIdx}
+                    className="pglass-chip pglass-chip-dark"
                   >
                     {v}
                   </button>

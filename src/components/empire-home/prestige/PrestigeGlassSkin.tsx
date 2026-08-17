@@ -78,6 +78,59 @@ export default function PrestigeGlassSkin() {
         color: hsl(var(--pr-aqua-light));
       }
 
+      /* ═══════════ 1c. ICONE E TASTI — vetro coerente ═══════════ */
+      .pglass-icon-btn {
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: hsl(var(--pr-text-on-dark));
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.09), hsl(0 0% 100% / 0.02));
+        border: 1px solid hsl(0 0% 100% / 0.14);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.16), 0 12px 30px -22px hsl(var(--pr-aqua) / 0.65);
+        backdrop-filter: blur(18px) saturate(150%);
+        -webkit-backdrop-filter: blur(18px) saturate(150%);
+        transition: transform .4s cubic-bezier(.22,.75,.2,1), border-color .4s ease, box-shadow .4s ease, background .4s ease;
+      }
+      .pglass-icon-btn:hover {
+        transform: translateY(-1px) scale(1.04);
+        border-color: hsl(var(--pr-aqua) / 0.5);
+        background: linear-gradient(160deg, hsl(var(--pr-aqua) / 0.22), hsl(0 0% 100% / 0.04));
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.24), 0 18px 40px -20px hsl(var(--pr-aqua) / 0.75);
+      }
+      .pglass-icon-btn:active { transform: translateY(0) scale(0.98); }
+      .pglass-icon-btn:focus-visible {
+        outline: 2px solid hsl(var(--pr-aqua) / 0.75);
+        outline-offset: 3px;
+      }
+      /* Icone dentro superfici vetro: tinta acqua coerente */
+      .pglass-scope .pglass svg, .prestige-root .pglass svg { color: inherit; }
+      .pglass-scope .pglass-btn svg, .pglass-scope .pglass-btn-ghost svg,
+      .prestige-root .pglass-btn svg, .prestige-root .pglass-btn-ghost svg {
+        flex: none;
+      }
+      /* Focus ring unificato su tutti i tasti della webapp Empire */
+      .pglass-scope button:focus-visible, .pglass-scope a:focus-visible,
+      .prestige-root button:focus-visible, .prestige-root a:focus-visible {
+        outline: 2px solid hsl(var(--pr-aqua) / 0.7);
+        outline-offset: 3px;
+        border-radius: 999px;
+      }
+
+      /* Frecce carousel: stesso vetro dei tasti icona */
+      .prestige-root .prestige-arrow, .pglass-scope .prestige-arrow {
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.09), hsl(0 0% 100% / 0.02));
+        color: hsl(var(--pr-text-on-dark));
+        border: 1px solid hsl(0 0% 100% / 0.14);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.16), 0 12px 30px -22px hsl(var(--pr-aqua) / 0.65);
+        backdrop-filter: blur(18px) saturate(150%);
+        -webkit-backdrop-filter: blur(18px) saturate(150%);
+      }
+      .prestige-root .prestige-arrow:hover, .pglass-scope .prestige-arrow:hover {
+        background: linear-gradient(160deg, hsl(var(--pr-aqua) / 0.22), hsl(0 0% 100% / 0.04));
+        border-color: hsl(var(--pr-aqua) / 0.5);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.24), 0 18px 40px -20px hsl(var(--pr-aqua) / 0.75);
+      }
+
       /* ═══════════ 2. FONDALI ONDEGGIANTI ═══════════ */
       .prestige-root .prestige-dark {
         background:

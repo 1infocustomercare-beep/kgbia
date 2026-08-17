@@ -217,15 +217,8 @@ export default function PrestigeStyleGallery() {
               <button
                 key={s.id}
                 onClick={() => setActive(s.id)}
-                className="rounded-full border px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.22em] transition-all"
-                style={{
-                  color: on ? "hsl(var(--pr-emerald-deep))" : "hsl(var(--pr-gold-light))",
-                  borderColor: on ? "hsl(var(--pr-gold))" : "hsl(var(--pr-gold) / 0.3)",
-                  background: on
-                    ? "linear-gradient(90deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold)))"
-                    : "hsl(var(--pr-emerald-mid) / 0.35)",
-                  boxShadow: on ? "0 10px 30px -14px hsl(var(--pr-gold) / 0.7)" : "none",
-                }}
+                aria-pressed={on}
+                className="pglass-chip pglass-chip-dark"
               >
                 {s.label}
               </button>
