@@ -363,12 +363,12 @@ export default function AuthPage() {
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                   <Input type="email" aria-label="Email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                    className="pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
+                    className="auth-white-input pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                   <Input type={showPw ? "text" : "password"} aria-label="Password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-                    className="pl-10 pr-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
+                    className="auth-white-input pl-10 pr-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                   <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-black/50 hover:text-black">
                     {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -407,17 +407,17 @@ export default function AuthPage() {
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                       <Input placeholder="Nome completo" value={fullName} onChange={e => setFullName(e.target.value)}
-                        className="pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
+                        className="auth-white-input pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                     </div>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                       <Input type="email" aria-label="Email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                        className="pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
+                        className="auth-white-input pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                     </div>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                       <Input type={showPw ? "text" : "password"} placeholder="Password (min 8 caratteri)" value={password} onChange={e => setPassword(e.target.value)}
-                        className="pl-10 pr-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
+                        className="auth-white-input pl-10 pr-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                       <button type="button" onClick={() => setShowPw(!showPw)} aria-label={showPw ? "Nascondi password" : "Mostra password"} aria-pressed={showPw} className="absolute right-3 top-1/2 -translate-y-1/2 text-black/50 hover:text-black">
                         {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -426,7 +426,7 @@ export default function AuthPage() {
                       <div className="relative">
                         <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/45" />
                         <Input aria-label="Nome azienda (opzionale)" placeholder="Nome azienda (opzionale)" value={companyName} onChange={e => setCompanyName(e.target.value)}
-                          className="pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
+                          className="auth-white-input pl-10 !bg-white !text-black border-white/40 placeholder:text-black/45 focus:border-[hsl(var(--pr-aqua))] focus-visible:ring-[hsl(var(--pr-aqua))]" />
                     </div>
                     )}
 

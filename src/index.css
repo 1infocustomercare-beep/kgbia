@@ -3481,3 +3481,20 @@ summary:focus-visible,
   top: 0;
   outline-offset: -2px;
 }
+
+/* ═══ EMPIRE GLASS AUTH — campi bianchi ad alto contrasto (standard leggibilità auth) ═══ */
+.auth-contrast input.auth-white-input,
+.auth-contrast input.auth-white-input:focus,
+.auth-contrast input.auth-white-input:hover {
+  background-color: #ffffff !important;
+  color: #0b1220 !important;
+  caret-color: #0b1220;
+  border-color: hsl(0 0% 100% / 0.45) !important;
+}
+.auth-contrast input.auth-white-input::placeholder {
+  color: hsl(222 30% 12% / 0.45) !important;
+}
+.landing-dark.auth-contrast input.auth-white-input:-webkit-autofill {
+  -webkit-text-fill-color: #0b1220 !important;
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;
+}
