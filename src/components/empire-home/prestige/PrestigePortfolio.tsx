@@ -157,14 +157,7 @@ export default function PrestigePortfolio() {
                           src={h.hero!.screen}
                           alt={`${h.hero!.brand} — ${h.hero!.style}`}
                           width={220}
-                          onClick={() =>
-                            setSelection({
-                              sectorId: h.sectorId,
-                              sectorLabel: h.sectorLabel,
-                              variants: h.variants,
-                              index: h.index,
-                            })
-                          }
+                          onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
                         />
                         <span
                           aria-hidden
@@ -174,7 +167,7 @@ export default function PrestigePortfolio() {
                             color: "hsl(var(--pr-emerald-deep))",
                           }}
                         >
-                          Apri
+                          Vedi il caso
                         </span>
                       </div>
 
@@ -214,6 +207,7 @@ export default function PrestigePortfolio() {
                           ))}
                         </div>
                       )}
+
 
                       <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
                         <div
