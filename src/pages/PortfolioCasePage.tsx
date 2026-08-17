@@ -30,8 +30,11 @@ export default function PortfolioCasePage() {
   const variants = useMemo<SectorMockupVariant[]>(() => {
     if (!group) return [];
     const studio = group.variants.filter((v) => v.source === "studio");
-    return studio.length ? studio : group.variants;
+    const base = studio.length ? studio : group.variants;
+    // Gli stili con la sequenza completa aprono il confronto.
+    return [...base].sort((a, b) => (b.screens?.length ?? 1) - (a.screens?.length ?? 1));
   }, [group]);
+
 
   const styleParam = params.get("style") ?? "all";
   const [filter, setFilter] = useState<string>(styleParam);
