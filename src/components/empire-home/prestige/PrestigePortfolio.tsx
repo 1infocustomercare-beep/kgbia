@@ -169,7 +169,7 @@ export default function PrestigePortfolio() {
                 {/* Anteprime schermate collegate (Menu / Dettaglio / Prenota) */}
                 {h.hero!.screens?.length > 1 && (
                   <div className="mt-4 flex items-center justify-center gap-2">
-                    {h.hero!.screens.slice(1, 4).map((s) => (
+                    {h.hero!.screens.filter((s) => !!s.image).slice(1, 4).map((s) => (
                       <button
                         key={s.image}
                         type="button"
@@ -197,6 +197,7 @@ export default function PrestigePortfolio() {
                           loading="lazy"
                           decoding="async"
                           className="h-full w-full object-cover object-top"
+                          onError={(e) => { (e.currentTarget.closest("button") as HTMLElement | null)?.style.setProperty("display", "none"); }}
                         />
                       </button>
                     ))}
