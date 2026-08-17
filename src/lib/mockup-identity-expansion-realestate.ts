@@ -60,7 +60,7 @@ export const REALESTATE_EXPANSION: ExpansionRow[] = [
 
   X("realestate", "re-coworking", "coworking-giallo-postazione", "Coworking Postazione", "Scrivania Comune", "Coworking con postazioni e sale riunioni.",
     "#FFFDF4,#FFFFFF,#1A1808,#7C7862,#FACC15,#2563EB", "Sans amichevole 36px|Sans 14px|postazioni numerate in cerchi",
-    "20px|1px giallo|8pt · planimetria a postazioni|balanced", "tab bar chiara con postazione attiva|dark:planimetria con postazioni libere",
+    "20px|1px giallo|8pt · planimetria a postazioni|balanced", "tab bar chiara con postazione attiva|dark|planimetria con postazioni libere",
     "scrivanie condivise, piante, luce naturale abbondante",
     "postazioni libere → abbonamento → sale riunioni → community",
     "laminato giallo e feltro fonoassorbente|luce naturale abbondante da lucernari|avorio con planimetria gialla|device su scrivania condivisa con pianta accanto|planimetria con postazioni libere illuminate",
