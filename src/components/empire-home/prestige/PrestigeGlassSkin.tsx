@@ -364,18 +364,55 @@ export default function PrestigeGlassSkin() {
 
       /* ═══════════ 6b. NAV VETRO ═══════════ */
       .empire-glass-nav {
-        background: linear-gradient(160deg, hsl(0 0% 100% / 0.09), hsl(0 0% 100% / 0.02)), hsl(202 56% 6% / 0.72);
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.09), hsl(0 0% 100% / 0.02)), hsl(202 56% 6% / 0.62);
         border: 1px solid hsl(0 0% 100% / 0.14);
-        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.16), 0 22px 60px -32px hsl(202 56% 4% / 0.9);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.16), 0 22px 60px -34px hsl(202 56% 4% / 0.85);
+        transition: background .7s cubic-bezier(.22,.75,.2,1), border-color .7s ease,
+                    box-shadow .7s ease, backdrop-filter .7s ease;
+      }
+      /* velo luminoso interno (bordo alto) */
+      .empire-glass-nav::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, hsl(178 80% 70% / 0.55), transparent);
+        opacity: 0.5;
+        transition: opacity .7s ease;
+        pointer-events: none;
+      }
+      /* riflesso liquido che scorre lentamente */
+      .empire-glass-nav::after {
+        content: "";
+        position: absolute;
+        inset: -40% -10%;
+        background: radial-gradient(60% 120% at 20% 0%, hsl(178 74% 55% / 0.16), transparent 70%),
+                    radial-gradient(50% 120% at 80% 100%, hsl(190 72% 52% / 0.13), transparent 72%);
+        animation: empireNavSheen 16s ease-in-out infinite alternate;
+        pointer-events: none;
+      }
+      @keyframes empireNavSheen {
+        0%   { transform: translate3d(-4%, 0, 0) scale(1); opacity: .75; }
+        100% { transform: translate3d(4%, 0, 0) scale(1.06); opacity: 1; }
       }
       .empire-glass-nav[data-scrolled="true"] {
-        background: linear-gradient(160deg, hsl(0 0% 100% / 0.10), hsl(0 0% 100% / 0.03)), hsl(202 56% 5% / 0.93);
-        border-color: hsl(178 74% 48% / 0.28);
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.11), hsl(0 0% 100% / 0.035)), hsl(202 56% 5% / 0.88);
+        border-color: hsl(178 74% 48% / 0.30);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.20), 0 26px 70px -34px hsl(178 74% 30% / 0.55);
       }
+      .empire-glass-nav[data-scrolled="true"]::before { opacity: 0.9; }
       .empire-glass-nav .landing-button-primary {
         color: #ffffff !important;
         background: linear-gradient(135deg, hsl(176 82% 62%), hsl(178 74% 44%) 55%, hsl(190 72% 30%));
         box-shadow: 0 22px 60px -28px hsl(178 74% 48% / 0.7), inset 0 1px 0 hsl(0 0% 100% / 0.35);
+        transition: transform .5s cubic-bezier(.22,.75,.2,1), box-shadow .5s ease, filter .5s ease;
+      }
+      .empire-glass-nav .landing-button-primary:hover {
+        transform: translateY(-1px);
+        filter: saturate(1.08);
+        box-shadow: 0 26px 70px -26px hsl(178 74% 48% / 0.85), inset 0 1px 0 hsl(0 0% 100% / 0.45);
       }
 
       /* Pill di navigazione: vetro classy con alone acqua all'hover */
@@ -390,6 +427,7 @@ export default function PrestigeGlassSkin() {
         border-color: hsl(178 74% 55% / 0.42);
         box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.22), 0 14px 34px -18px hsl(178 74% 45% / 0.6);
       }
+      .empire-nav-pill:active { transform: translateY(0) scale(.985); }
       .empire-nav-pill-glow {
         position: absolute;
         inset: 0;
@@ -399,6 +437,27 @@ export default function PrestigeGlassSkin() {
         transition: opacity .5s ease;
       }
       .empire-nav-pill:hover .empire-nav-pill-glow { opacity: 0.9; }
+      /* sezione attiva: pill acqua persistente con puntino */
+      .empire-nav-pill[data-active="true"] {
+        border-color: hsl(178 74% 55% / 0.55);
+        box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.24), 0 16px 40px -20px hsl(178 74% 45% / 0.7);
+      }
+      .empire-nav-pill[data-active="true"] .empire-nav-pill-glow { opacity: 0.42; }
+      .empire-nav-pill[data-active="true"]::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 3px;
+        width: 14px;
+        height: 2px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, hsl(178 85% 72%), transparent);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .empire-glass-nav::after { animation: none; }
+      }
+
 
       /* ═══════════ 7. ONDA DECORATIVA ═══════════ */
       .pglass-wave {
