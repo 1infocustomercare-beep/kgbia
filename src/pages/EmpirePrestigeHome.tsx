@@ -125,51 +125,59 @@ function EmpirePrestigeHomeInner() {
         </div>
 
         {/* PORTFOLIO — UNICA sezione mockup della home (case study per settore) */}
-        <div id="portfolio" data-portfolio-root>
-          <PrestigePortfolio />
-        </div>
-
-
-
-
-
-
+        <DeferredSection id="portfolio" minHeight={900}>
+          <div data-portfolio-root>
+            <PrestigePortfolio />
+          </div>
+        </DeferredSection>
 
         {/* COME FUNZIONA — 3 step con linea di progresso */}
-        <div id="how">
+        <DeferredSection id="how" minHeight={620}>
           <PrestigeHowItWorks />
-        </div>
+        </DeferredSection>
 
         {/* AI AGENTS marquee */}
-        <PrestigeAgents />
+        <DeferredSection minHeight={520}>
+          <PrestigeAgents />
+        </DeferredSection>
 
         {/* PREZZI */}
-        <div id="pricing">
+        <DeferredSection id="pricing" minHeight={860}>
           <PrestigePricing />
-        </div>
+        </DeferredSection>
 
         {/* FAQ */}
-        <div id="faq">
+        <DeferredSection id="faq" minHeight={620}>
           <PrestigeFAQ />
-        </div>
+        </DeferredSection>
 
         {/* LEAD FORM (ancora #lead per Parla con un consulente) */}
-        <div id="lead">
+        <DeferredSection id="lead" minHeight={720}>
           <PrestigeLeadForm />
-        </div>
+        </DeferredSection>
 
         {/* CTA FINALE (ancora #contatti per la navbar) */}
-        <PrestigeFinalCTA />
+        <DeferredSection minHeight={520}>
+          <PrestigeFinalCTA />
+        </DeferredSection>
         </main>
 
         {/* FOOTER */}
-        <PrestigeFooter />
+        <DeferredSection minHeight={420}>
+          <PrestigeFooter />
+        </DeferredSection>
 
-        <PrestigeStickyCTA />
+        <IdleMount delay={1800}>
+          <PrestigeStickyCTA />
+        </IdleMount>
       </div>
       {/* Voice agent MUST live outside prestige-root: ancestors with transforms/clip
           break position:fixed and would drop the FAB at the bottom of the page. */}
-      {!isPreview && <SafeVoiceAgent />}
+      {!isPreview && (
+        <IdleMount delay={2600}>
+          <SafeVoiceAgent />
+        </IdleMount>
+      )}
     </>
   );
 }
