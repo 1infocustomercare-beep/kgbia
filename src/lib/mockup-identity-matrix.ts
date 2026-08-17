@@ -1215,7 +1215,8 @@ export function buildScreenPrompt(identity: MockupIdentity, screen: ScreenSpec):
       ].join("\n")
     : [
         "Render fotorealistico 8K di UN SOLO iPhone 16 Pro Max in titanio naturale, vista perfettamente FRONTALE, ZERO rotazione e ZERO inclinazione, dispositivo verticale e centrato, ombra morbida realistica sotto.",
-        "Illuminazione studio a 3 punti, micro-highlight sul bevel in titanio, Dynamic Island centrata, home indicator iOS.",
+        "Micro-highlight sul bevel in titanio, Dynamic Island centrata, home indicator iOS.",
+        `MESSA IN SCENA (esclusiva di questo stile): ${s.staging}.`,
         `Fondale: ${s.backdrop}. Nessun secondo telefono, nessun oggetto, nessun testo fuori dallo schermo.`,
         "LO SCHERMO deve mostrare la UI a tutta superficie, nitidissima e leggibile in ogni dettaglio.",
       ].join("\n");
@@ -1224,13 +1225,14 @@ export function buildScreenPrompt(identity: MockupIdentity, screen: ScreenSpec):
     canvas,
     ``,
     `BRAND: "${identity.brand}" — ${identity.tagline}`,
-    `IDENTITÀ VISIVA: ${identity.label} (famiglia ${identity.family}) — deve risultare inconfondibile e diversa da qualsiasi altro stile.`,
+    `IDENTITÀ VISIVA: ${identity.label} (famiglia ${identity.family}) — deve risultare inconfondibile e diversa al 360% da qualsiasi altro stile: nessuna base condivisa, nessun layout ripetuto.`,
     ``,
     `PALETTE (usare esattamente): bg ${identity.palette.bg}, surface ${identity.palette.surface}, testo ${identity.palette.text}, muted ${identity.palette.muted}, accento ${identity.palette.accent}, secondario ${identity.palette.accent2}.`,
     `TIPOGRAFIA: display ${identity.typography.display}; body ${identity.typography.body}; trattamento ${identity.typography.treatment}.`,
     `GEOMETRIA: raggio ${identity.geometry.radius}; bordi ${identity.geometry.border}; griglia ${identity.geometry.grid}; densità ${identity.geometry.density}.`,
     `MATERIA DELLE SUPERFICI: ${s.material}.`,
     `LUCE DELL'INTERFACCIA: ${s.light}.`,
+    `EFFETTO-FIRMA UNICO (deve essere visibile e non comparire in nessun altro stile): ${s.motif}.`,
     `CHROME: ${identity.chrome.nav}; status bar ${identity.chrome.statusBar === "light" ? "chiara su fondo scuro" : "scura su fondo chiaro"} con 9:41; segno distintivo: ${identity.chrome.signature}.`,
     `FOTOGRAFIA INTERNA: ${identity.photography}.`,
     `RITMO COMPOSITIVO: ${identity.composition}.`,
@@ -1240,8 +1242,8 @@ export function buildScreenPrompt(identity: MockupIdentity, screen: ScreenSpec):
     ``,
     `CRAFT: griglia 8pt rigorosa, allineamenti ottici perfetti, gerarchia tipografica da studio premiato, testo nitido retina, numeri credibili e coerenti, tutte le stringhe in italiano professionale reale (nessun lorem ipsum, nessun testo inglese, nessuna scritta illeggibile), target touch realistici.`,
     isDesktop
-      ? `VIETATI: cornici di dispositivo, MacBook, finestre browser, watermark, loghi Apple/Google/Meta, wireframe, template generico, ombre attorno al canvas.`
-      : `VIETATI: iPhone dentro iPhone, screenshot dentro screenshot, secondo dispositivo, watermark, loghi Apple/Google/Meta, wireframe, template generico, prospettiva inclinata.`,
+      ? `VIETATI: cornici di dispositivo, MacBook, finestre browser, watermark, loghi Apple/Google/Meta, wireframe, template generico, ombre attorno al canvas, riuso di layout visti in altri stili.`
+      : `VIETATI: iPhone dentro iPhone, screenshot dentro screenshot, secondo dispositivo, watermark, loghi Apple/Google/Meta, wireframe, template generico, prospettiva inclinata, riuso di layout/effetti visti in altri stili.`,
   ].join("\n");
 }
 
