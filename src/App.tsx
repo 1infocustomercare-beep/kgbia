@@ -296,6 +296,7 @@ const PrivateJetPublicSite = lazy(() => import("./pages/public/PrivateJetPublicS
 const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
 const MediaLibraryPage = lazy(() => import("./pages/superadmin/MediaLibraryPage"));
+const MockupCurationPage = lazy(() => import("./pages/superadmin/MockupCurationPage"));
 const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
 const DemoAccountsPage = lazy(() => import("./pages/superadmin/DemoAccountsPage"));
 const ConnectionsPage = lazy(() => import("./pages/superadmin/ConnectionsPage"));
@@ -767,6 +768,11 @@ function App() {
                       <Route path="/superadmin/media-library" element={
                         <ProtectedRoute requiredRole="super_admin">
                           <MediaLibraryPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/superadmin/mockup-curation" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <MockupCurationPage />
                         </ProtectedRoute>
                       } />
                       <Route path="/superadmin/brand-assets" element={
