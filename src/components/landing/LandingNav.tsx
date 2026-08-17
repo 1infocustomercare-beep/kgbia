@@ -97,7 +97,7 @@ export default function LandingNav() {
   return (
     <>
       <div
-        className="fixed left-0 top-0 z-[10002] h-[3px] rounded-r-full"
+        className="fixed left-0 top-0 z-[10002] h-[3px] rounded-r-full transition-[width] duration-200 ease-out"
         aria-hidden="true"
         style={{
           width: `${progress}%`,
@@ -109,16 +109,16 @@ export default function LandingNav() {
       <nav
         aria-label="Navigazione principale"
         data-hidden={hidden && !menuOpen ? "true" : "false"}
-        className={`fixed top-[3px] z-[10000] w-full transition-all duration-[600ms] [transition-timing-function:cubic-bezier(.22,.75,.2,1)] ${scrolled ? "py-2" : "py-3"} ${hidden && !menuOpen ? "pointer-events-none -translate-y-[130%] opacity-0" : "translate-y-0 opacity-100"}`}
+        className={`fixed top-[3px] z-[10000] w-full will-change-transform transition-[transform,opacity,padding] duration-[700ms] [transition-timing-function:cubic-bezier(.22,.75,.2,1)] ${scrolled ? "py-1.5" : "py-3"} ${hidden && !menuOpen ? "pointer-events-none -translate-y-[130%] opacity-0" : "translate-y-0 opacity-100"}`}
       >
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-3 sm:px-5 lg:px-10">
           <div
-            className="empire-glass-nav w-full rounded-full px-3 backdrop-blur-2xl transition-all duration-500 sm:px-5"
+            className={`empire-glass-nav w-full rounded-full px-3 transition-all duration-700 sm:px-5 ${scrolled ? "backdrop-blur-3xl" : "backdrop-blur-xl"}`}
             data-scrolled={scrolled ? "true" : "false"}
           >
 
 
-            <div className="flex items-center justify-between py-2.5">
+            <div className={`flex items-center justify-between transition-all duration-700 [transition-timing-function:cubic-bezier(.22,.75,.2,1)] ${scrolled ? "py-1.5" : "py-2.5"}`}>
           <a
             href="#hero"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
@@ -137,14 +137,18 @@ export default function LandingNav() {
           <ul className="hidden min-w-0 flex-1 items-center justify-center gap-1.5 px-2 md:flex">
             {NAV_LINKS.map((l) => {
               const Icon = l.icon;
+              const isActive = active === l.href;
               return (
                 <li key={l.href} style={{ ["--gf" as any]: l.from, ["--gt" as any]: l.to }}>
                   <button
                     onClick={() => scrollTo(l.href)}
+                    data-active={isActive ? "true" : "false"}
+                    aria-current={isActive ? "true" : undefined}
                     className="empire-nav-pill group/pill relative flex h-10 items-center gap-2 overflow-hidden rounded-full px-3 xl:px-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(178_74%_55%/0.7)]"
                     aria-label={l.label}
                   >
                     <span aria-hidden="true" className="empire-nav-pill-glow" />
+
                     <Icon aria-hidden="true" className="relative z-10 h-[16px] w-[16px] shrink-0 text-[hsl(178_70%_78%)] transition-colors duration-500 group-hover/pill:text-white" />
                     <span className="relative z-10 hidden whitespace-nowrap text-[11.5px] font-semibold uppercase tracking-[0.09em] text-foreground/85 transition-colors duration-500 group-hover/pill:text-white 2xl:inline">
                       {l.label}
