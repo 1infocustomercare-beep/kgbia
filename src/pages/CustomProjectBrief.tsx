@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getReferralSlug } from "@/hooks/useReferralCapture";
 import { toast } from "sonner";
 import { ArrowLeft, Send } from "lucide-react";
+import GlassBackButton from "@/components/glass/GlassBackButton";
 
 export default function CustomProjectBrief() {
   const navigate = useNavigate();
@@ -107,12 +108,9 @@ export default function CustomProjectBrief() {
       <PrestigeTheme />
       <div className="prestige-root prestige-section min-h-screen p-4 sm:p-8">
         <div className="max-w-3xl mx-auto">
-          <button
-            onClick={() => navigate("/")}
-            className="text-sm opacity-70 hover:opacity-100 mb-4 flex items-center gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" /> Home
-          </button>
+          <div className="mb-4">
+            <GlassBackButton to="/" label="Home" variant="inline" className="px-4 text-xs" />
+          </div>
 
           <div className="text-center mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold font-heading mb-2">
