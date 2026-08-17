@@ -119,20 +119,8 @@ export default function AutoDealerPublicSite() {
         </div>
       </section>
 
-      {/* ═══ Webapp reale e navigabile ═══ */}
-      <section id="webapp" className="relative px-5 pb-24 sm:px-8">
-        <div className="mx-auto mb-10 max-w-6xl">
-          <LuxeTag><Gauge className="h-3 w-3" /> Webapp live · cliente, staff, admin</LuxeTag>
-          <h2 className="mt-4 font-heading text-3xl font-semibold sm:text-5xl">Provala: funziona davvero.</h2>
-          <p className="mt-3 max-w-xl text-sm text-muted-foreground">
-            Filtra la vetrina, apri una scheda, simula la rata, prenota il test drive, calcola la permuta con l&apos;IA,
-            gestisci i ponti dell&apos;officina e leggi il CRM. Tutto interattivo, dati dimostrativi.
-          </p>
-        </div>
-        <Suspense fallback={<div className="mx-auto h-[520px] max-w-6xl rounded-3xl border border-border/60 bg-card/40" />}>
-          <AureliaApp />
-        </Suspense>
-      </section>
+      {/* ═══ Webapp reale e navigabile: desktop + mobile 1:1 col mockup ═══ */}
+      <AureliaWebappSection />
 
       {/* ═══ Journey ═══ */}
       <section className="relative border-t border-border/50 px-5 py-20 sm:px-8 sm:py-28">
