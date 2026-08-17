@@ -237,6 +237,11 @@ export default function PrestigeTheme() {
         background:
           radial-gradient(ellipse at 50% 0%, hsl(244 60% 14%) 0%, hsl(240 44% 7%) 55%, hsl(240 50% 5%) 100%);
         overflow: hidden;
+        /* Isola il backdrop dal resto della pagina: i suoi repaint non
+           invalidano più il layout/paint dei contenuti sopra. */
+        contain: strict;
+        transform: translateZ(0);
+        backface-visibility: hidden;
       }
       .prestige-scrub-backdrop canvas {
         position: absolute;
